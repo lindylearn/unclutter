@@ -1,5 +1,4 @@
 {
-	"private": true,
 	"scripts": {
 		"build": "parcel build source/manifest.json --no-content-hash --no-source-maps --dist-dir distribution --no-cache --detailed-report 0",
 		"lint": "run-p lint:*",
