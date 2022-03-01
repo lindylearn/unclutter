@@ -1,0 +1,48 @@
+{
+	"private": true,
+	"scripts": {
+		"build": "parcel build source/manifest.json --no-content-hash --no-source-maps --dist-dir distribution --no-cache --detailed-report 0",
+		"lint": "run-p lint:*",
+		"lint-fix": "run-p 'lint:* -- --fix'",
+		"lint:css": "stylelint source/**/*.css",
+		"lint:js": "xo",
+		"test": "run-p lint:* build",
+		"watch": "parcel watch source/manifest.json --dist-dir distribution --no-cache --no-hmr"
+	},
+	"browserslist": [
+		"last 1 Chrome version",
+		"last 1 Firefox version"
+	],
+	"xo": {
+		"envs": [
+			"browser"
+		],
+		"rules": {
+			"no-unused-vars": [
+				"error",
+				{
+					"varsIgnorePattern": "browser"
+				}
+			]
+		}
+	},
+	"stylelint": {
+		"extends": "stylelint-config-xo"
+	},
+	"dependencies": {
+		"webext-options-sync": "^2.0.1",
+		"webextension-polyfill": "^0.8.0"
+	},
+	"devDependencies": {
+		"@parcel/config-webextension": "^2.0.0-rc.0",
+		"@parcel/transformer-image": "^2.0.0-rc.0",
+		"npm-run-all": "^4.1.5",
+		"parcel": "^2.0.0-rc.0",
+		"stylelint": "^13.13.1",
+		"stylelint-config-xo": "^0.20.0",
+		"xo": "^0.44.0"
+	},
+	"webExt": {
+		"sourceDir": "distribution"
+	}
+}
