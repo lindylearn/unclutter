@@ -21,8 +21,7 @@ function injectSidebar() {
 	document.body.classList.add("pageview");
 
 	const sidebarIframe = document.createElement("iframe");
-	// sidebarIframe.src =
-	// 	"https://lostechies.com/derekgreer/2017/05/25/hello-react-a-beginners-setup-tutorial/";
+	sidebarIframe.src = browser.runtime.getURL("/sidebar/index.html");
 	sidebarIframe.className = "sidebar";
 	sidebarIframe.setAttribute("id", "lindylearn-annotations-sidebar");
 	sidebarIframe.setAttribute("scrolling", "no");

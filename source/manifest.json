@@ -23,5 +23,6 @@
 	"background": {
 		"persistent": false,
 		"scripts": ["background.js"]
-	}
+	},
+	"web_accessible_resources": ["sidebar/index.html"]
 }
