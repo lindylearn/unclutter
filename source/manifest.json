@@ -15,12 +15,14 @@
 		"128": "icon.png"
 	},
 	"permissions": [
-		"https://github.com/fregante/browser-extension-template/*",
-		"storage"
+		"https://www.theatlantic.com/*",
+		"storage",
+		"activeTab",
+		"scripting"
 	],
 	"content_scripts": [
 		{
-			"matches": ["https://github.com/fregante/browser-extension-template/*"],
+			"matches": ["https://www.theatlantic.com/*"],
 			"js": ["content.js"],
 			"css": ["content.css"],
 			"run_at": "document_end"

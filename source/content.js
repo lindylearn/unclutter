@@ -1,15 +1,18 @@
-import optionsStorage from './options-storage.js';
+import optionsStorage from "./options-storage.js";
 
 async function init() {
-	const options = await optionsStorage.getAll();
-	const color = 'rgb(' + options.colorRed + ', ' + options.colorGreen + ',' + options.colorBlue + ')';
-	const text = options.text;
-	const notice = document.createElement('div');
-	notice.innerHTML = text;
+	// const options = await optionsStorage.getAll();
+
+	const notice = document.createElement("div");
+	notice.innerHTML = "Sidebar";
 	document.body.append(notice);
-	notice.id = 'text-notice';
-	notice.style.border = '2px solid ' + color;
-	notice.style.color = color;
+	notice.className = "sidebar";
+}
+
+function addStyles(element, styles) {
+	for (id in styles) {
+		element.style[id] = styles[id];
+	}
 }
 
 init();

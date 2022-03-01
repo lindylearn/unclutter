@@ -1,8 +1,29 @@
-#text-notice {
-	position: fixed;
-	bottom: 10px;
-	right: 10px;
-	padding: 10px;
-	background: #fff;
-	z-index: 999999;
+html {
+	background: radial-gradient(rgb(229 231 235) 0px, rgb(243 244 246) 2px);
+	background-size: 25px 25px;
+}
+
+body {
+	width: 60% !important;
+	margin: 20px !important;
+	background-color: white;
+
+	border-radius: 10px;
+	overflow-x: hidden;
+	filter: drop-shadow(0 10px 8px rgb(0 0 0 / 0.04))
+		drop-shadow(0 4px 3px rgb(0 0 0 / 0.1));
+	position: relative;
+}
+
+body * {
+	overflow: hidden;
+}
+
+.sidebar {
+	position: absolute;
+	top: 0;
+	left: calc(100% + 20px);
+	width: calc(100vw - 100% - 20px - 2 * 20px - 10px);
+
+	background-color: red;
 }
