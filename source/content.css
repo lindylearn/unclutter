@@ -10,6 +10,10 @@ body {
 
 	filter: drop-shadow(0 10px 8px rgb(0 0 0 / 0.04))
 		drop-shadow(0 4px 3px rgb(0 0 0 / 0.1));
+
+	/* easeOutExpo from easings.net */
+	transition: margin 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+		width 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 body.pageview {
@@ -18,10 +22,6 @@ body.pageview {
 
 	border-radius: 10px !important;
 	overflow-x: hidden;
-
-	/* easeOutExpo from easings.net */
-	transition: margin 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-		width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 body * {
@@ -33,6 +33,5 @@ body * {
 	top: 0;
 	left: calc(100% + 20px);
 	width: calc(100vw - 100% - 20px - 2 * 20px - 10px);
-
-	background-color: red;
+	height: 100%;
 }

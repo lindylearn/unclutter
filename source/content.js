@@ -1,14 +1,38 @@
-import optionsStorage from "./options-storage.js";
+import browser from "webextension-polyfill";
 
-async function init() {
-	// const options = await optionsStorage.getAll();
+browser.runtime.onMessage.addListener((event) => {
+	if (event === "togglePageView") {
+		togglePageView();
+	}
+});
 
-	document.body.classList.add("pageview");
-
-	const notice = document.createElement("div");
-	notice.innerHTML = "sdsd";
-	document.body.append(notice);
-	notice.className = "sidebar";
+async function togglePageView() {
+	const existingSidebar = document.getElementById(
+		"lindylearn-annotations-sidebar"
+	);
+	if (!existingSidebar) {
+		injectSidebar();
+	} else {
+		destroySidebar(existingSidebar);
+	}
 }
 
-init();
+function injectSidebar() {
+	document.body.classList.add("pageview");
+
+	const sidebarIframe = document.createElement("iframe");
+	// sidebarIframe.src =
+	// 	"https://lostechies.com/derekgreer/2017/05/25/hello-react-a-beginners-setup-tutorial/";
+	sidebarIframe.className = "sidebar";
+	sidebarIframe.setAttribute("id", "lindylearn-annotations-sidebar");
+	sidebarIframe.setAttribute("scrolling", "no");
+	sidebarIframe.setAttribute("frameBorder", "0");
+
+	document.body.append(sidebarIframe);
+}
+
+function destroySidebar(existingSidebar) {
+	document.body.classList.remove("pageview");
+
+	existingSidebar.parentNode.removeChild(existingSidebar);
+}

@@ -1,11 +1,11 @@
-// eslint-disable-next-line import/no-unassigned-import
-import "./options-storage.js";
+import browser from "webextension-polyfill";
 
-chrome.browserAction.onClicked.addListener((tab) => {
-	chrome.tabs.insertCSS(tab.id, {
-		file: "content.css",
-	});
-	chrome.tabs.executeScript(tab.id, {
+browser.browserAction.onClicked.addListener(async (tab) => {
+	await browser.tabs.executeScript(tab.id, {
 		file: "content.js",
 	});
+	await browser.tabs.insertCSS(tab.id, {
+		file: "content.css",
+	});
+	await browser.tabs.sendMessage(tab.id, "togglePageView");
 });
