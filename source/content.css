@@ -4,15 +4,24 @@ html {
 }
 
 body {
-	width: 60% !important;
-	margin: 20px !important;
-	background-color: white;
+	width: 100%;
+	margin: 0px;
+	background: white;
 
-	border-radius: 10px;
-	overflow-x: hidden;
 	filter: drop-shadow(0 10px 8px rgb(0 0 0 / 0.04))
 		drop-shadow(0 4px 3px rgb(0 0 0 / 0.1));
-	position: relative;
+}
+
+body.pageview {
+	width: 60% !important;
+	margin: 20px !important;
+
+	border-radius: 10px !important;
+	overflow-x: hidden;
+
+	/* easeOutExpo from easings.net */
+	transition: margin 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+		width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 body * {

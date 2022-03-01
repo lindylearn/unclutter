@@ -11,23 +11,11 @@
 			"strict_min_version": "67.0"
 		}
 	},
+	"browser_action": {},
 	"icons": {
 		"128": "icon.png"
 	},
-	"permissions": [
-		"https://www.theatlantic.com/*",
-		"storage",
-		"activeTab",
-		"scripting"
-	],
-	"content_scripts": [
-		{
-			"matches": ["https://www.theatlantic.com/*"],
-			"js": ["content.js"],
-			"css": ["content.css"],
-			"run_at": "document_end"
-		}
-	],
+	"permissions": ["storage", "activeTab", "scripting"],
 	"options_ui": {
 		"chrome_style": true,
 		"page": "options.html"
