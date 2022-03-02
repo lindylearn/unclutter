@@ -19,7 +19,13 @@ export function unPatchDocument() {
 function insertPageViewStyle() {
 	// set start properties for animation immediately
 	document.body.style.width = '100%';
-	document.body.style.magin = '0';
+	document.body.style.margin = '0';
+
+	// set animation style inline to have ease-out
+	// easeOutExpo from easings.net
+	document.body.style.transition = `margin-top 0.15s cubic-bezier(0.16, 1, 0.3, 1),
+	margin-left 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+	width 0.3s cubic-bezier(0.16, 1, 0.3, 1)`;
 
 	createStylesheetLink(browser.runtime.getURL('/pageview/content.css'));
 }

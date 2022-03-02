@@ -8,17 +8,11 @@ html {
 }
 
 body {
-	width: 100%;
-	margin: 0px;
-	background: white;
+	/* animation properties set inline */
 
+	background: white;
 	filter: drop-shadow(0 10px 8px rgb(0 0 0 / 0.04))
 		drop-shadow(0 4px 3px rgb(0 0 0 / 0.1));
-
-	/* easeOutExpo from easings.net */
-	transition: margin-top 0.15s cubic-bezier(0.16, 1, 0.3, 1),
-		margin-left 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-		width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 body.pageview {

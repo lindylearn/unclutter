@@ -15,10 +15,10 @@ async function togglePageView() {
 
 		document.body.classList.add('pageview');
 	} else {
+		document.body.classList.remove('pageview');
+
 		unPatchDocument();
 		destroySidebar();
-
-		document.body.classList.remove('pageview');
 	}
 }
 
