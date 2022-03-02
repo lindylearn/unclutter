@@ -1,9 +1,10 @@
 html {
-	background: radial-gradient(
+	background-color: rgb(243 244 246);
+	/* background: radial-gradient(
 		rgb(229 231 235) 0px,
 		rgb(243 244 246) 2px
 	) !important;
-	background-size: 25px 25px !important;
+	background-size: 25px 25px !important; */
 }
 
 body {
