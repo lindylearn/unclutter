@@ -1,5 +1,7 @@
 import browser from "webextension-polyfill";
 
+import { beautifyDocument, unBeautifyDocument } from "./pageview/patching";
+
 browser.runtime.onMessage.addListener((event) => {
 	if (event === "togglePageView") {
 		togglePageView();
@@ -12,8 +14,10 @@ async function togglePageView() {
 	);
 	if (!existingSidebar) {
 		injectSidebar();
+		beautifyDocument(document);
 	} else {
 		destroySidebar(existingSidebar);
+		unBeautifyDocument(document);
 	}
 }
 

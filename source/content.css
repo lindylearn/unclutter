@@ -1,6 +1,9 @@
 html {
-	background: radial-gradient(rgb(229 231 235) 0px, rgb(243 244 246) 2px);
-	background-size: 25px 25px;
+	background: radial-gradient(
+		rgb(229 231 235) 0px,
+		rgb(243 244 246) 2px
+	) !important;
+	background-size: 25px 25px !important;
 }
 
 body {
@@ -12,8 +15,9 @@ body {
 		drop-shadow(0 4px 3px rgb(0 0 0 / 0.1));
 
 	/* easeOutExpo from easings.net */
-	transition: margin 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-		width 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+	transition: margin-top 0.15s cubic-bezier(0.16, 1, 0.3, 1),
+		margin-left 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+		width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 body.pageview {
@@ -21,12 +25,12 @@ body.pageview {
 	margin: 20px !important;
 
 	border-radius: 10px !important;
-	overflow-x: hidden;
+	overflow-x: hidden !important;
 }
 
-body * {
+/* body * {
 	overflow: hidden;
-}
+} */
 
 .sidebar {
 	position: absolute;
