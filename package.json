@@ -29,8 +29,8 @@
 		"default": {
 			"source": [
 				"source/manifest.json",
-				"source/background.js",
-				"source/content.js",
+				"source/background/background.js",
+				"source/content-script/content.js",
 				"source/pageview/content.css",
 				"source/sidebar/index.html"
 			]

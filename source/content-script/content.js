@@ -1,6 +1,6 @@
 import browser from 'webextension-polyfill';
 
-import { patchDocument, unPatchDocument } from './pageview/patching';
+import { patchDocument, unPatchDocument } from '../pageview/patching';
 
 browser.runtime.onMessage.addListener((event) => {
 	if (event === 'togglePageView') {
