@@ -15,7 +15,7 @@
 	"icons": {
 		"128": "icon.png"
 	},
-	"permissions": ["storage", "activeTab", "scripting"],
+	"permissions": ["storage", "activeTab", "scripting", "history"],
 	"options_ui": {
 		"chrome_style": true,
 		"page": "options/options.html"

@@ -34,11 +34,10 @@ function insertPageViewStyle() {
 	var el = document.createElement('div');
 	el.className = `${overrideClassname} body-background`;
 	el.style.height = `${document.body.scrollHeight}px`;
-	const siteBodyColor = window.getComputedStyle(
-		document.body
-	).backgroundColor;
-	el.style.backgroundColor =
-		siteBodyColor === 'rgba(0, 0, 0, 0)' ? 'white' : siteBodyColor;
+	const siteBackground = window.getComputedStyle(document.body).background;
+	el.style.background = siteBackground.includes('rgba(0, 0, 0, 0)')
+		? 'white'
+		: siteBackground;
 	document.body.appendChild(el);
 }
 

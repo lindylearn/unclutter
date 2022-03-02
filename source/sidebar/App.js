@@ -3,6 +3,9 @@ import React, { useEffect, useState } from 'react';
 import AnnotationsList from './components/AnnotationsList';
 import { getAnnotations } from './common/api';
 import { createDraftAnnotation } from '../common/getAnnotations';
+import PageNote from './components/PageNote';
+import PopularityMessage from './components/PopularityMessage';
+import PageMetadataMessage from './components/PageMetadataMessage';
 
 export default function App({ url }) {
 	const [annotations, setAnnotations] = useState([]);
@@ -32,16 +35,19 @@ export default function App({ url }) {
 	// console.log(annotations);
 
 	return (
-		<div>
-			<div>
-				<AnnotationsList
-					url={url}
-					annotations={annotations}
-					setAnnotations={setAnnotations}
-					// upvotedAnnotations={upvotedAnnotations}
-					// upvoteAnnotation={upvoteAnnotation}
-				/>
+		<div className="filter-none">
+			<div className="absolute">
+				<PageMetadataMessage url={url} />
+				{/* <PopularityMessage url={url} /> */}
+				<PageNote />
 			</div>
+			<AnnotationsList
+				url={url}
+				annotations={annotations}
+				setAnnotations={setAnnotations}
+				// upvotedAnnotations={upvotedAnnotations}
+				// upvoteAnnotation={upvoteAnnotation}
+			/>
 		</div>
 	);
 }
