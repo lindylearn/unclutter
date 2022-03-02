@@ -1,30 +1,6 @@
 import browser from 'webextension-polyfill';
 
-import { patchDocument, unPatchDocument } from '../pageview/patching';
-import { injectAnnotationListener } from './annotationListener';
-
-browser.runtime.onMessage.addListener((event) => {
-	if (event === 'togglePageView') {
-		togglePageView();
-	}
-});
-
-async function togglePageView() {
-	if (!document.body.classList.contains('pageview')) {
-		patchDocument();
-		const sidebarIframe = injectSidebar();
-		injectAnnotationListener(sidebarIframe);
-
-		document.body.classList.add('pageview');
-	} else {
-		document.body.classList.remove('pageview');
-
-		unPatchDocument();
-		destroySidebar();
-	}
-}
-
-function injectSidebar() {
+export function injectSidebar() {
 	const iframeUrl = new URL(browser.runtime.getURL('/sidebar/index.html'));
 	iframeUrl.searchParams.append('url', window.location.href);
 
@@ -39,7 +15,7 @@ function injectSidebar() {
 	return sidebarIframe;
 }
 
-function destroySidebar() {
+export function removeSidebar() {
 	const existingSidebar = document.getElementById(
 		'lindylearn-annotations-sidebar'
 	);

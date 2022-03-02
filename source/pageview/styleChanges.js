@@ -1,6 +1,6 @@
 import browser from 'webextension-polyfill';
 
-export function patchDocument() {
+export function patchDocumentStyle() {
 	insertPageViewStyle();
 
 	insertOverrideRules();
@@ -10,7 +10,7 @@ export function patchDocument() {
 
 const overrideClassname = 'lindylearn-document-override';
 
-export function unPatchDocument() {
+export function unPatchDocumentStyle() {
 	document
 		.querySelectorAll(`.${overrideClassname}`)
 		.forEach((e) => e.remove());

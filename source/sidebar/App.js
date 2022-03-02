@@ -16,15 +16,13 @@ export default function App({ url }) {
 
 	window.onmessage = function ({ data }) {
 		if (data.event === 'createHighlight') {
-			// offset will be updated by EmbeddedPage callback
-			updateAnnotations([
-				...annotations,
-				createDraftAnnotation(url, data.selectors),
-			]);
+			setAnnotations([...annotations, data.annotation]);
 		} else if (data.event === 'anchoredAnnotations') {
 			setAnnotations(data.annotations);
 		}
 	};
+
+	console.log(annotations);
 
 	useEffect(async () => {
 		let { annotations } = await getAnnotations(url);

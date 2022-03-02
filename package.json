@@ -30,7 +30,7 @@
 			"source": [
 				"source/manifest.json",
 				"source/background/background.js",
-				"source/content-script/content.js",
+				"source/content-script/index.js",
 				"source/pageview/content.css",
 				"source/sidebar/index.html"
 			]

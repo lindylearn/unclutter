@@ -218,6 +218,7 @@ function wholeTextNodesInRange(range) {
  * @return {HighlightElement[]} - Elements wrapping text in `normedRange` to add a highlight effect
  */
 export function highlightRange(
+  annotationId,
   range,
   backgroundColor,
   cssClass = "lindy-highlight"
@@ -262,6 +263,7 @@ export function highlightRange(
     /** @type {HighlightElement} */
     const highlightEl = document.createElement("lindy-highlight");
     highlightEl.className = cssClass;
+    highlightEl.id = annotationId;
     highlightEl.style.backgroundColor = backgroundColor;
 
     nodes[0].parentNode.replaceChild(highlightEl, nodes[0]);
