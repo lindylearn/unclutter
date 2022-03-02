@@ -8,11 +8,21 @@ html {
 }
 
 body {
-	/* animation properties set inline */
+	/* animation properties are set inline */
 
-	background: white;
+	background-color: white;
 	filter: drop-shadow(0 10px 8px rgb(0 0 0 / 0.04))
 		drop-shadow(0 4px 3px rgb(0 0 0 / 0.1));
+}
+.body-background {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+
+	z-index: -100;
+	content: '';
+	background-color: inherit;
 }
 
 body.pageview {
@@ -22,10 +32,6 @@ body.pageview {
 	border-radius: 10px !important;
 	overflow-x: hidden !important;
 }
-
-/* body * {
-	overflow: hidden;
-} */
 
 .sidebar {
 	position: absolute;
