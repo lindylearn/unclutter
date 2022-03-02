@@ -16,7 +16,7 @@ function AnnotationDraft({
 	return (
 		<div
 			className={
-				'py-1 px-2 bg-white border-l-4 rounded-r-lg drop-shadow-lg md:drop-shadow-sm ' +
+				'annotationContainer py-1 px-2 bg-white border-l-4 rounded-r drop-shadow' +
 				className
 			}
 			style={{ top: offset, borderColor: getAnnotationColor(annotation) }}
@@ -28,7 +28,7 @@ function AnnotationDraft({
 				onChange={(e) => setText(e.target.value)}
 			/>
 			<div className="text-xs md:text-sm flex justify-end gap-2">
-				<div
+				{/* <div
 					className="rounded-md px-1 cursor-pointer font-bold"
 					onClick={deleteAnnotation}
 				>
@@ -39,7 +39,7 @@ function AnnotationDraft({
 					onClick={() => postAnnotation(text, annotation)}
 				>
 					Annotate anonymously
-				</div>
+				</div> */}
 			</div>
 		</div>
 	);

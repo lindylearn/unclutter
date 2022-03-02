@@ -13,11 +13,6 @@ function AnnotationsList({
 		return <div></div>;
 	}
 
-	annotations = annotations.map((a) => ({
-		...a,
-		displayOffset: a.displayOffset - 20,
-	}));
-
 	const orderedAnnotations = annotations.sort(
 		(a, b) => a.displayOffset - b.displayOffset
 	);

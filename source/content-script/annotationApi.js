@@ -64,11 +64,11 @@ export function getHighlightOffsets() {
 	return offsetById;
 }
 
-function _getNodeOffset(node, documentScale = 1) {
+function _getNodeOffset(node, documentScale = 1, listOffsetTop = 20) {
 	const pageOffset = document.body.offsetTop;
 
 	// getBoundingClientRect() is relative to scrolled viewport
 	const elementOffset = node.getBoundingClientRect().top + window.scrollY;
 	const displayOffset = pageOffset + elementOffset * documentScale;
-	return displayOffset;
+	return displayOffset - listOffsetTop;
 }

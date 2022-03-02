@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 
 import { getAnnotationColor } from '../../common/styling';
 
+import ycIcon from '../../assets/icons/yc.svg';
+import hypothesisIcon from '../../assets/icons/hypothesis.svg';
+
 function Annotation({
 	annotation,
 	className,
@@ -26,7 +29,7 @@ function Annotation({
 	return (
 		<div
 			className={
-				'annotationContainer py-1 px-2 bg-white border-l-4 rounded-r-lg drop-shadow-lg md:drop-shadow-sm ' +
+				'annotationContainer py-1 px-2 bg-white border-l-4 rounded-r drop-shadow' +
 				className
 			}
 			style={{ top: offset, borderColor: getAnnotationColor(annotation) }}
@@ -108,20 +111,17 @@ function Annotation({
 					href={`/@${author.username || author}`}
 					target="_blank"
 					rel="noreferrer"
-					className="font-mono text-black"
+					className="font-mono text-gray-400"
 				>
 					{author.username || author}
 					{platform == 'h' && (
 						<img
-							src="/icons/hypothesis.svg"
-							className="inline-block w-4 mx-2"
+							src={hypothesisIcon}
+							className="inline-block w-4 ml-1"
 						/>
 					)}
 					{platform == 'hn' && (
-						<img
-							src="/icons/yc.svg"
-							className="inline-block w-4 mx-2"
-						/>
+						<img src={ycIcon} className="inline-block w-4 ml-1" />
 					)}
 				</a>
 			</div>
