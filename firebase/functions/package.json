@@ -1,0 +1,32 @@
+{
+	"name": "functions",
+	"scripts": {
+		"build": "tsc",
+		"serve": "npm run build && firebase emulators:start --only functions",
+		"shell": "npm run build && firebase functions:shell",
+		"start": "npm run shell",
+		"deploy": "firebase deploy --only functions:getCssOverrides",
+		"logs": "firebase functions:log"
+	},
+	"engines": {
+		"node": "16"
+	},
+	"main": "lib/index.js",
+	"dependencies": {
+		"axios": "^0.26.0",
+		"cors": "^2.8.5",
+		"css": "https://github.com/phgn0/css",
+		"firebase-admin": "^9.8.0",
+		"firebase-functions": "^3.14.1"
+	},
+	"devDependencies": {
+		"@typescript-eslint/eslint-plugin": "^3.9.1",
+		"@typescript-eslint/parser": "^3.8.0",
+		"eslint": "^7.6.0",
+		"eslint-config-google": "^0.14.0",
+		"eslint-plugin-import": "^2.22.0",
+		"firebase-functions-test": "^0.2.0",
+		"typescript": "^3.8.0"
+	},
+	"private": true
+}
