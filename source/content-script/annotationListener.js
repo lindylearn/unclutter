@@ -4,9 +4,10 @@ import {
 	getHighlightOffsets,
 } from './annotationApi';
 
+let listenerRef;
 export function createAnnotationListener(sidebarIframe) {
 	// highlight new sent annotations, and send back display offsets
-	window.onmessage = async function ({ data }) {
+	const onMessage = async function ({ data }) {
 		if (data.event == 'anchorAnnotations') {
 			console.log(
 				`anchoring ${data.annotations.length} annotations on page...`
@@ -23,6 +24,8 @@ export function createAnnotationListener(sidebarIframe) {
 			);
 		}
 	};
+	window.addEventListener('message', onMessage);
+	listenerRef = onMessage;
 
 	// update offsets if the page changes (e.g. after insert of mobile css)
 	// _observeHeightChange(document, () => {
@@ -38,7 +41,10 @@ export function createAnnotationListener(sidebarIframe) {
 	// });
 }
 
-export function removeAnnotationListener(sidebarIframe) {}
+export function removeAnnotationListener() {
+	removeAllHighlights();
+	window.removeEventListener('message', listenerRef);
+}
 
 function _observeHeightChange(document, callback) {
 	const observer = new MutationObserver(function (mutations) {
