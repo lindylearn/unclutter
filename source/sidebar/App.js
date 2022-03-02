@@ -12,13 +12,11 @@ export default function App({ url }) {
 			setAnnotations([...annotations, data.annotation]);
 		} else if (data.event === 'anchoredAnnotations') {
 			setAnnotations(data.annotations);
-			console.log('anchored');
 		} else if (data.event === 'changedDisplayOffset') {
 			const updatedAnnotations = annotations.map((a) => ({
 				...a,
 				displayOffset: data.offsetById[a.id],
 			}));
-			console.log('u', updatedAnnotations);
 			setAnnotations(updatedAnnotations);
 		}
 	};
@@ -31,7 +29,7 @@ export default function App({ url }) {
 		);
 	}, []);
 
-	console.log(annotations);
+	// console.log(annotations);
 
 	return (
 		<div>

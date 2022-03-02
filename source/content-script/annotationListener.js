@@ -3,6 +3,7 @@ import {
 	removeAllHighlights,
 	getHighlightOffsets,
 } from './annotationApi';
+import throttle from 'lodash/throttle';
 
 let listenerRef;
 export function createAnnotationListener(sidebarIframe) {
@@ -49,12 +50,14 @@ export function removeAnnotationListener() {
 
 let resizeObserver;
 function _observeHeightChange(document, callback) {
+	const throttledCallback = throttle(callback, 2000);
+
 	let oldHeight = document.body.scrollHeight;
 	resizeObserver = new ResizeObserver((entries) => {
 		const newHeight = entries[0].target.scrollHeight;
 
 		if (newHeight !== oldHeight) {
-			callback(document.body.scrollHeight + 'px');
+			throttledCallback(document.body.scrollHeight + 'px');
 			oldHeight = newHeight;
 		}
 	});

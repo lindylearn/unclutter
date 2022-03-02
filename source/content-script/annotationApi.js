@@ -33,7 +33,7 @@ export async function highlightAnnotations(annotations) {
 
 				anchoredAnnotations.push({ displayOffset, ...annotation });
 			} catch (err) {
-				console.error(`Could not anchor annotation:`, annotation, err);
+				// console.error(`Could not anchor annotation:`, annotation, err);
 			}
 		})
 	);
