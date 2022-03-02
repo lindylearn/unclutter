@@ -1,13 +1,27 @@
-export function beautifyDocument(document) {
-	// patchMediaRules(document);
+import browser from 'webextension-polyfill';
 
-	insertOverrideRules(document);
+export function patchDocument() {
+	insertPageViewStyle();
+
+	insertOverrideRules();
+
+	// patchMediaRules(document);
 }
 
-export function unBeautifyDocument(document) {
+const overrideClassname = 'lindylearn-document-override';
+
+export function unPatchDocument() {
 	document
-		.querySelectorAll('.pageview-media-override')
+		.querySelectorAll(`.${overrideClassname}`)
 		.forEach((e) => e.remove());
+}
+
+function insertPageViewStyle() {
+	// set start properties for animation immediately
+	document.body.style.width = '100%';
+	document.body.style.magin = '0';
+
+	createStylesheetLink(browser.runtime.getURL('/pageview/content.css'));
 }
 
 function insertOverrideRules() {
@@ -18,19 +32,25 @@ function insertOverrideRules() {
 	console.log(cssUrls);
 
 	cssUrls.forEach((url) => {
-		var link = document.createElement('link');
-		link.className = 'pageview-media-override';
-		link.type = 'text/css';
-		link.rel = 'stylesheet';
-		link.href = `https://us-central1-lindylearn2.cloudfunctions.net/getCssOverrides?cssUrl=${encodeURIComponent(
-			url
-		)}&conditionScale=${1.6}`;
-		link.crossOrigin = 'anonymous';
-		document.head.appendChild(link);
+		createStylesheetLink(
+			`https://us-central1-lindylearn2.cloudfunctions.net/getCssOverrides?cssUrl=${encodeURIComponent(
+				url
+			)}&conditionScale=${1.6}`
+		);
 	});
 }
 
-export function patchMediaRules() {
+function createStylesheetLink(url) {
+	var link = document.createElement('link');
+	link.className = overrideClassname;
+	link.type = 'text/css';
+	link.rel = 'stylesheet';
+	link.href = url;
+	// link.crossOrigin = 'anonymous';
+	document.head.appendChild(link);
+}
+
+function patchMediaRules() {
 	const cssLinks = [...document.getElementsByTagName('link')].filter(
 		(elem) => elem.rel === 'stylesheet'
 	);

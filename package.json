@@ -31,7 +31,7 @@
 				"source/manifest.json",
 				"source/background.js",
 				"source/content.js",
-				"source/content.css",
+				"source/pageview/content.css",
 				"source/sidebar/index.html"
 			]
 		}

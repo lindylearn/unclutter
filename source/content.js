@@ -1,41 +1,41 @@
-import browser from "webextension-polyfill";
+import browser from 'webextension-polyfill';
 
-import { beautifyDocument, unBeautifyDocument } from "./pageview/patching";
+import { patchDocument, unPatchDocument } from './pageview/patching';
 
 browser.runtime.onMessage.addListener((event) => {
-	if (event === "togglePageView") {
+	if (event === 'togglePageView') {
 		togglePageView();
 	}
 });
 
 async function togglePageView() {
-	const existingSidebar = document.getElementById(
-		"lindylearn-annotations-sidebar"
-	);
-	if (!existingSidebar) {
+	if (!document.body.classList.contains('pageview')) {
+		patchDocument();
 		injectSidebar();
-		beautifyDocument(document);
+
+		document.body.classList.add('pageview');
 	} else {
-		destroySidebar(existingSidebar);
-		unBeautifyDocument(document);
+		unPatchDocument();
+		destroySidebar();
+
+		document.body.classList.remove('pageview');
 	}
 }
 
 function injectSidebar() {
-	document.body.classList.add("pageview");
-
-	const sidebarIframe = document.createElement("iframe");
-	sidebarIframe.src = browser.runtime.getURL("/sidebar/index.html");
-	sidebarIframe.className = "sidebar";
-	sidebarIframe.setAttribute("id", "lindylearn-annotations-sidebar");
-	sidebarIframe.setAttribute("scrolling", "no");
-	sidebarIframe.setAttribute("frameBorder", "0");
+	const sidebarIframe = document.createElement('iframe');
+	sidebarIframe.src = browser.runtime.getURL('/sidebar/index.html');
+	sidebarIframe.className = 'sidebar';
+	sidebarIframe.setAttribute('id', 'lindylearn-annotations-sidebar');
+	sidebarIframe.setAttribute('scrolling', 'no');
+	sidebarIframe.setAttribute('frameBorder', '0');
 
 	document.body.append(sidebarIframe);
 }
 
-function destroySidebar(existingSidebar) {
-	document.body.classList.remove("pageview");
-
+function destroySidebar() {
+	const existingSidebar = document.getElementById(
+		'lindylearn-annotations-sidebar'
+	);
 	existingSidebar.parentNode.removeChild(existingSidebar);
 }
