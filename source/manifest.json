@@ -15,13 +15,20 @@
 	"icons": {
 		"128": "icon.png"
 	},
-	"permissions": ["storage", "activeTab", "scripting", "history"],
+	"permissions": [
+		"storage",
+		"activeTab",
+		"scripting",
+		"history",
+		"<all_urls>",
+		"tabs"
+	],
 	"options_ui": {
 		"chrome_style": true,
 		"page": "options/options.html"
 	},
 	"background": {
-		"persistent": false,
+		"persistent": true,
 		"scripts": ["background/background.js"]
 	},
 	"web_accessible_resources": ["sidebar/index.html", "pageview/content.css"]

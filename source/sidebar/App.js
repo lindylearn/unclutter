@@ -36,7 +36,7 @@ export default function App({ url }) {
 
 	return (
 		<div className="filter-none">
-			<div className="absolute">
+			<div className="absolute flex flex-col gap-2">
 				<PageMetadataMessage url={url} />
 				{/* <PopularityMessage url={url} /> */}
 				<PageNote />

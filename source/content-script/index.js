@@ -17,28 +17,40 @@ import {
 browser.runtime.onMessage.addListener((event) => {
 	if (event === 'togglePageView') {
 		togglePageView();
+	} else {
+		console.log(event);
 	}
 });
 
 async function togglePageView() {
 	const isInPageView = document.body.classList.contains('pageview');
 	if (!isInPageView) {
-		patchDocumentStyle();
-		const sidebarIframe = injectSidebar();
-
-		createAnnotationListener(sidebarIframe);
-		createSelectionListener(sidebarIframe);
-
-		// make visible once set up
-		document.body.classList.add('pageview');
+		await enable();
 	} else {
-		// immediately hide
-		document.body.classList.remove('pageview');
-
-		unPatchDocumentStyle();
-		removeSidebar();
-
-		removeAnnotationListener();
-		removeSelectionListener();
+		await disable();
 	}
 }
+
+async function enable() {
+	patchDocumentStyle();
+	const sidebarIframe = injectSidebar();
+
+	createAnnotationListener(sidebarIframe);
+	createSelectionListener(sidebarIframe);
+
+	// make visible once set up
+	document.body.classList.add('pageview');
+}
+async function disable() {
+	// immediately hide
+	document.body.classList.remove('pageview');
+
+	unPatchDocumentStyle();
+	removeSidebar();
+
+	removeAnnotationListener();
+	removeSelectionListener();
+}
+
+disable();
+enable();
