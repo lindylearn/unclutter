@@ -52,18 +52,16 @@ export function getHighlightOffsets() {
 
 	// highlight may include multiple nodes across html tags
 	// so iterate nodes in sequence and only take the first offset
-	const seenIds = new Set();
-	const annotationOffsets = [];
+	const offsetById = {};
 	for (const node of highlightNodes) {
-		if (seenIds.has(node.id)) {
+		if (offsetById[node.id]) {
 			continue;
 		}
 		const displayOffset = _getNodeOffset(node);
-		annotationOffsets.push({ displayOffset, id: node.id });
-		seenIds.add(node.id);
+		offsetById[node.id] = displayOffset;
 	}
 
-	return annotationOffsets;
+	return offsetById;
 }
 
 function _getNodeOffset(node, documentScale = 1) {

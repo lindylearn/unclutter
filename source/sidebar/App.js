@@ -7,27 +7,31 @@ import { createDraftAnnotation } from '../common/getAnnotations';
 export default function App({ url }) {
 	const [annotations, setAnnotations] = useState([]);
 
-	function updateAnnotations(newAnnotations) {
-		window.top.postMessage(
-			{ event: 'anchorAnnotations', annotations: newAnnotations },
-			'*'
-		);
-	}
-
 	window.onmessage = function ({ data }) {
 		if (data.event === 'createHighlight') {
 			setAnnotations([...annotations, data.annotation]);
 		} else if (data.event === 'anchoredAnnotations') {
 			setAnnotations(data.annotations);
+			console.log('anchored');
+		} else if (data.event === 'changedDisplayOffset') {
+			const updatedAnnotations = annotations.map((a) => ({
+				...a,
+				displayOffset: data.offsetById[a.id],
+			}));
+			console.log('u', updatedAnnotations);
+			setAnnotations(updatedAnnotations);
 		}
 	};
 
-	console.log(annotations);
-
 	useEffect(async () => {
 		let { annotations } = await getAnnotations(url);
-		updateAnnotations(annotations);
+		window.top.postMessage(
+			{ event: 'anchorAnnotations', annotations },
+			'*'
+		);
 	}, []);
+
+	console.log(annotations);
 
 	return (
 		<div>

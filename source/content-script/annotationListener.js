@@ -28,35 +28,36 @@ export function createAnnotationListener(sidebarIframe) {
 	listenerRef = onMessage;
 
 	// update offsets if the page changes (e.g. after insert of mobile css)
-	// _observeHeightChange(document, () => {
-	// 	console.log(`page resized, recalculating annotation offsets...`);
-	// 	const anchoredAnnotations = getHighlightOffsets();
-	// 	sidebarIframe.contentWindow.postMessage(
-	// 		{
-	// 			event: 'anchoredAnnotations',
-	// 			annotations: anchoredAnnotations,
-	// 		},
-	// 		'*'
-	// 	);
-	// });
+	_observeHeightChange(document, () => {
+		console.log(`page resized, recalculating annotation offsets...`);
+		const offsetById = getHighlightOffsets();
+		sidebarIframe.contentWindow.postMessage(
+			{
+				event: 'changedDisplayOffset',
+				offsetById,
+			},
+			'*'
+		);
+	});
 }
 
 export function removeAnnotationListener() {
 	removeAllHighlights();
 	window.removeEventListener('message', listenerRef);
+	resizeObserver?.unobserve(document.body);
 }
 
+let resizeObserver;
 function _observeHeightChange(document, callback) {
-	const observer = new MutationObserver(function (mutations) {
-		callback(document.body.scrollHeight + 'px');
+	let oldHeight = document.body.scrollHeight;
+	resizeObserver = new ResizeObserver((entries) => {
+		const newHeight = entries[0].target.scrollHeight;
+
+		if (newHeight !== oldHeight) {
+			callback(document.body.scrollHeight + 'px');
+			oldHeight = newHeight;
+		}
 	});
 
-	observer.observe(document.body, {
-		attributes: true,
-		attributeOldValue: false,
-		characterData: true,
-		characterDataOldValue: false,
-		childList: true,
-		subtree: true,
-	});
+	resizeObserver.observe(document.body);
 }
