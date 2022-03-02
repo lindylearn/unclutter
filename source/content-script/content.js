@@ -1,6 +1,7 @@
 import browser from 'webextension-polyfill';
 
 import { patchDocument, unPatchDocument } from '../pageview/patching';
+import { injectAnnotationListener } from './annotationListener';
 
 browser.runtime.onMessage.addListener((event) => {
 	if (event === 'togglePageView') {
@@ -11,7 +12,8 @@ browser.runtime.onMessage.addListener((event) => {
 async function togglePageView() {
 	if (!document.body.classList.contains('pageview')) {
 		patchDocument();
-		injectSidebar();
+		const sidebarIframe = injectSidebar();
+		injectAnnotationListener(sidebarIframe);
 
 		document.body.classList.add('pageview');
 	} else {
@@ -34,6 +36,7 @@ function injectSidebar() {
 	sidebarIframe.setAttribute('frameBorder', '0');
 
 	document.body.append(sidebarIframe);
+	return sidebarIframe;
 }
 
 function destroySidebar() {

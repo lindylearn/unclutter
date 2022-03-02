@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { getAnnotationColor } from '../common/styling';
+import { getAnnotationColor } from '../../common/styling';
 
 function Annotation({
 	annotation,

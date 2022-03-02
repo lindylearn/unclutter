@@ -2,16 +2,34 @@ import React, { useEffect, useState } from 'react';
 
 import AnnotationsList from './components/AnnotationsList';
 import { getAnnotations } from './common/api';
+import { createDraftAnnotation } from '../common/getAnnotations';
 
 export default function App({ url }) {
 	const [annotations, setAnnotations] = useState([]);
 
+	function updateAnnotations(newAnnotations) {
+		window.top.postMessage(
+			{ event: 'anchorAnnotations', annotations: newAnnotations },
+			'*'
+		);
+	}
+
+	window.onmessage = function ({ data }) {
+		if (data.event === 'createHighlight') {
+			// offset will be updated by EmbeddedPage callback
+			updateAnnotations([
+				...annotations,
+				createDraftAnnotation(url, data.selectors),
+			]);
+		} else if (data.event === 'anchoredAnnotations') {
+			setAnnotations(data.annotations);
+		}
+	};
+
 	useEffect(async () => {
 		let { annotations } = await getAnnotations(url);
-		setAnnotations(annotations);
+		updateAnnotations(annotations);
 	}, []);
-
-	console.log(annotations);
 
 	return (
 		<div>
