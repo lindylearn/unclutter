@@ -1,7 +1,29 @@
 import React, { useEffect, useState } from 'react';
 
-export default function App({}) {
+import AnnotationsList from './components/AnnotationsList';
+import { getAnnotations } from './common/api';
+
+export default function App({ url }) {
 	const [annotations, setAnnotations] = useState([]);
 
-	return <div className="font-bold text-xl">Hey!</div>;
+	useEffect(async () => {
+		let { annotations } = await getAnnotations(url);
+		setAnnotations(annotations);
+	}, []);
+
+	console.log(annotations);
+
+	return (
+		<div>
+			<div>
+				<AnnotationsList
+					url={url}
+					annotations={annotations}
+					setAnnotations={setAnnotations}
+					// upvotedAnnotations={upvotedAnnotations}
+					// upvoteAnnotation={upvoteAnnotation}
+				/>
+			</div>
+		</div>
+	);
 }
