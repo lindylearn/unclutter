@@ -1,0 +1,80 @@
+@use '../../variables' as var;
+@use '../../mixins/utils';
+
+.AutocompleteList {
+  position: relative;
+  &.is-hidden {
+    display: none;
+  }
+}
+
+.AutocompleteList__items {
+  @include utils.shadow;
+  @supports (clip-path: polygon(0 0, 100% 0, 0% 100%, 0% 100%)) {
+    &:before {
+      /**
+       * Creates a small outlined triangle above the drop down menu
+       * that works nicely with a box-shadow and the dark/light themes.
+       */
+      background-color: inherit;
+      border: inherit;
+      border-top-left-radius: 0.125rem;
+      clip-path: polygon(0 0, 100% 0, 0% 100%, 0% 100%);
+      content: '';
+      display: inline-block;
+      height: 0.5rem;
+      left: 0.5rem;
+      position: absolute;
+      top: -0.3125rem;
+      transform: rotate(45deg);
+      width: 0.5rem;
+    }
+  }
+  position: absolute;
+  top: 5px;
+  max-width: 100%;
+  min-width: 10em;
+  background-color: var.$white;
+  border: 1px solid var.$grey-3;
+  z-index: 10;
+
+  @media (pointer: coarse) {
+    line-height: var.$touch-target-size;
+  }
+}
+
+.AutocompleteList__li {
+  padding: 0.25em 1.5em 0.25em 1em;
+  border-left: 4px transparent solid;
+
+  &.is-selected {
+    border-left: 4px var.$color-brand solid;
+    background-color: var.$grey-1;
+  }
+  &:hover {
+    cursor: pointer;
+    background-color: var.$grey-2;
+  }
+}
+
+/* Dark theme */
+
+@media screen and (prefers-color-scheme: dark) {
+  .AutocompleteList__items {
+    list-style: none;
+    padding: 0;
+    color: var.$white;
+    background-color: var.$grey-6;
+  }
+  .AutocompleteList__arrow-down {
+    border-bottom: 7px solid var.$grey-6;
+  }
+  .AutocompleteList__li {
+    &.is-selected {
+      background-color: var.$grey-mid;
+    }
+    &:hover {
+      background-color: var.$grey-5;
+    }
+  }
+}

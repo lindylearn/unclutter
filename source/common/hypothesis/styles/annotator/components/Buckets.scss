@@ -1,0 +1,52 @@
+@use '../mixins/buttons';
+@use '../variables' as var;
+
+$bucket-bar-width: 22px;
+
+// Bucket-bar styles are nested inside `.annotator-frame` to ensure they take
+// precedence over the CSS reset applied to `.annotator-frame`.
+.annotator-frame {
+  .Buckets__list {
+    background: var.$grey-2; // When sidebar is unfolded, remove the background transparency
+    pointer-events: none;
+    position: absolute;
+    height: 100%;
+    // 2020-11-20: interim and pragmatic solution for an apparent glitch on Safari and Chrome.
+    // Adding one pixel resolve this issue: https://github.com/hypothesis/client/pull/2750
+    width: $bucket-bar-width + 1;
+    left: -($bucket-bar-width);
+  }
+
+  // When the sidebar is collapsed, make the background semi-transparent so the
+  // text is visible throughout (useful for pages with tight margins)
+  &.annotator-collapsed .Buckets__list {
+    background: rgba(0, 0, 0, 0.08);
+  }
+
+  .Buckets__bucket {
+    position: absolute;
+    right: 0;
+  }
+
+  .Buckets__button {
+    // Need pointer events again. Necessary because of `pointer-events` rule
+    // in `.Buckets__list`
+    pointer-events: all;
+  }
+
+  .Buckets__button--left {
+    // Center the indicator vertically (the element is 16px tall)
+    margin-top: -8px;
+    @include buttons.indicator--left;
+  }
+
+  .Buckets__button--up {
+    @include buttons.indicator--up;
+    // Vertically center the element (which is 22px high)
+    margin-top: -11px;
+  }
+
+  .Buckets__button--down {
+    @include buttons.indicator--down;
+  }
+}

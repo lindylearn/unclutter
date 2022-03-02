@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    "lib": ["es2018", "dom", "dom.iterable"],
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact",
+    "module": "commonjs",
+    "noEmit": true,
+    "strict": true,
+    "noImplicitAny": false,
+    "target": "ES2020",
+
+    // Let argument to catch statement be `any` rather than `unknown`.
+    "useUnknownInCatchVariables": false
+  },
+  "include": ["**/*.js"],
+  "exclude": [
+    // Tests are not checked.
+    "**/test/**/*.js",
+    "test-util/**/*.js",
+    "karma.config.js"
+  ]
+}

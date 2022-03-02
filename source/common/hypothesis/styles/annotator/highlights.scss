@@ -1,0 +1,80 @@
+@use '../variables' as var;
+@use '../mixins/a11y';
+
+// SVG highlights when the "Show Highlights" toggle is turned off.
+.hypothesis-svg-highlight {
+  fill: transparent;
+}
+
+// `hypothesis-highlights-always-on` is a class that is toggled on the root
+// of the annotated document when highlights are enabled/disabled.
+.hypothesis-highlights-always-on {
+  .hypothesis-svg-highlight {
+    fill: var.$color-highlight;
+
+    &.is-opaque {
+      fill: yellow;
+    }
+
+    &.is-focused {
+      fill: var.$color-highlight-focused;
+    }
+  }
+
+  .hypothesis-highlight {
+    background-color: var.$color-highlight;
+
+    // For PDFs, we still create highlight elements to wrap the text but the
+    // highlight effect is created by another element.
+    &.is-transparent {
+      background-color: transparent;
+    }
+
+    cursor: pointer;
+
+    // Make highlights visible to screen readers.
+    // See also - https://developer.paciellogroup.com/blog/2017/12/short-note-on-making-your-mark-more-accessible/.
+    &::before {
+      @include a11y.screen-reader-only;
+
+      // nb. The leading/trailing spaces are intended to ensure the text is treated
+      // as separate words by assistive technologies from the content before/after it.
+      content: ' annotation start ';
+    }
+    &::after {
+      @include a11y.screen-reader-only;
+      content: ' annotation end ';
+    }
+
+    // Give a highlight inside a larger highlight a different color to stand out.
+    & .hypothesis-highlight {
+      background-color: var.$color-highlight-second;
+      &.is-transparent {
+        background-color: transparent;
+      }
+
+      // In document viewers where the highlight is drawn _on top of_ the text
+      // (eg. PDF.js) too many nested highlights can make the underlying text unreadable.
+      // Therefore we make any highlights that are 3+ levels deep transparent.
+      //
+      // In web pages highlights are drawn _underneath_ the text so nested
+      // highlights don't reduce text contrast as much, but we still only use
+      // two levels of highlight color for consistency.
+      //
+      // See https://github.com/hypothesis/client/issues/1995.
+      & .hypothesis-highlight {
+        background-color: transparent;
+      }
+    }
+
+    // When an annotation card is hovered in the sidebar, the corresponding
+    // highlights are shown with a "focused" color.
+    &.hypothesis-highlight-focused {
+      background-color: var.$color-highlight-focused !important;
+
+      .hypothesis-highlight {
+        background-color: transparent !important;
+      }
+    }
+  }
+}

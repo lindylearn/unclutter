@@ -1,0 +1,70 @@
+@use '../../mixins/layout';
+@use '../../variables' as var;
+
+.Thread {
+  @include layout.row;
+
+  &--reply {
+    margin-top: var.$layout-space--xsmall;
+  }
+
+  &--reply &__content {
+    margin-left: var.$layout-space;
+  }
+
+  // Left "channel" of thread
+  &__collapse {
+    position: relative;
+    // Ensure that even when this thread is collapsed, it is allotted a minimal
+    // bit of vertical real estate so that the expand/collapse toggle (which is
+    // positioned absolute) has "room". This applies when collapsing a thread
+    // with a deleted annotation in it, as otherwise there is no content when
+    // collapsed.
+    min-height: 2em;
+    border-right: 1px dashed var.$color-border;
+    // The entire channel is not clickable so don't make it look like it is
+    // (overrides `pointer` cursor applied to entire card)
+    cursor: auto;
+
+    // Darken thread line on hover as a visual cue to show related thread items
+    &:hover {
+      border-color: var.$grey-4;
+    }
+
+    .is-collapsed & {
+      border-right: none;
+    }
+  }
+
+  // Container holding the thread's collapse/expand "chevron" icon button
+  &__collapse-button-container {
+    position: absolute;
+    // Position this element (and its button) such that it is horizontally
+    // centered on the parent element's right border and aligned vertically
+    // with the content on the right
+    top: -0.25em;
+    left: -1em;
+    // Give a non-transparent background to this element so that the dashed
+    // border (vertical) on the parent element doesn't show through the
+    // child button
+    background-color: var.$white;
+  }
+
+  &__hidden-toggle-button-container {
+    // This makes the vertical alignment of the "Show x more in conversation"
+    // button more precise with thread-collapse chevrons
+    margin-top: -0.25em;
+  }
+
+  &__top-annotation-header {
+    // This disables the vertical alignment for the parent thread which contain
+    // an annotation header.
+    margin-bottom: 0.5em;
+  }
+
+  &__content {
+    flex-grow: 1;
+    // Prevent annotation content from overflowing the container
+    max-width: 100%;
+  }
+}

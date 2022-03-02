@@ -1,0 +1,35 @@
+@import '../variables';
+
+// In order for our highlights to be visible we need to use solid colors.
+#viewer.has-transparent-text-layer .textLayer {
+  opacity: 1;
+  ::selection {
+    background: rgba(0, 0, 255, 0.2);
+  }
+  ::-moz-selection {
+    background: rgba(0, 0, 255, 0.2);
+  }
+}
+
+// Hide annotation layer while selecting text.
+// See https://github.com/hypothesis/client/issues/1464
+#viewer.is-selecting .annotationLayer {
+  display: none;
+}
+
+// When using search funcionality of PDF.js the matches should highlight the content but not cover it. Fix for #648
+.textLayer .highlight.selected {
+  background-color: rgba(0, 100, 0, 0.5);
+}
+
+// Make sure sidebar bucket bar/toolbar don't obscure PDF JS tools menu
+// This gives enough room for `.annotator-frame-button` which uses a hard-coded
+// width of 30px
+#toolbarViewer {
+  margin-right: 30px;
+}
+
+// The affordance is not needed in side-by-side mode
+.hypothesis-side-by-side #toolbarViewer {
+  margin-right: 0;
+}

@@ -1,0 +1,296 @@
+/**
+ * Button mixins for use by the `Button` component or any component that wishes
+ * to override default `Button`-component styling. These mixins are meant to be
+ * applied to `<button>` HTML elements, with an optional contained icon
+ * (i.e. `SvgIcon` component or `<svg>` element).
+ *
+ * To customize default `Button` styling, start with an appropriate button mixin
+ * and extend or or override rules as necessary in your component's SCSS module.
+ *
+ * e.g., let's pretend you wish the `Button` used in `MyComponent`
+ * to have a pink background. In `my-component.scss`, you might do something like:
+ *
+ * .my-component-button {
+ *    @include button--labeled;
+ *    background-color: pink;
+ * }
+ *
+ * And pass 'my-component-button' as the `className` prop to `Button`.
+ */
+@use 'sass:math';
+
+@use '@hypothesis/frontend-shared/styles/mixins/focus';
+
+@use './layout';
+@use './utils';
+@use '../variables' as var;
+
+@mixin reset-native-btn-styles {
+  @include focus.outline-on-keyboard-focus;
+
+  padding: 0;
+  margin: 0;
+  background-color: transparent;
+  border-style: none;
+}
+
+@mixin button-hover {
+  &:hover:not([disabled]),
+  &:focus:not([disabled]) {
+    color: var.$grey-7;
+  }
+}
+
+/**
+ * Basic color, sizing, padding and hover for buttons.
+ */
+@mixin button {
+  @include reset-native-btn-styles;
+  @include layout.row(center, center);
+  padding: 0.5em;
+  border-radius: var.$border-radius;
+  border: none;
+  transition: color 0.2s ease-out, background-color 0.2s ease-out,
+    opacity 0.2s ease-out;
+
+  // Icon
+  svg {
+    @include utils.icon--medium;
+  }
+  @include button-hover;
+}
+
+/*
+ * A button with an icon and no displayed text.
+ *
+ * @param {boolean} [$with-active-state] - Adds an active state color when pressed / expanded
+ * @param {boolean} [$coarse-min-size] - Overrides the minimum height and width in mobile view.
+ */
+@mixin button--icon-only(
+  $with-active-state: true,
+  $coarse-min-size: var.$touch-target-size
+) {
+  @include button;
+  color: var.$grey-mid;
+  @media (pointer: coarse) {
+    min-width: $coarse-min-size;
+    min-height: $coarse-min-size;
+  }
+  @if $with-active-state == true {
+    &[aria-expanded='true'],
+    &[aria-pressed='true'] {
+      color: var.$color-brand;
+
+      &:hover:not([disabled]),
+      &:focus:not([disabled]) {
+        color: var.$color-brand;
+      }
+    }
+  }
+}
+
+/**
+ * A button with displayed text. It may or may not have an icon. The default
+ * colors assume the button is displayed on a white background.
+ *
+ * @param {CSSColor} [$background-color] - The button's background color when
+ *   neither hovered nor active.
+ * @param {CSSColor} [$active-background-color]
+ */
+@mixin button--labeled(
+  $background-color: var.$grey-1,
+  $active-background-color: var.$grey-2
+) {
+  @include button;
+  white-space: nowrap; // Keep multi-word button labels from wrapping
+  color: var.$grey-mid;
+  font-weight: 700;
+  background-color: $background-color;
+
+  &:hover:not([disabled]),
+  &:focus:not([disabled]) {
+    background-color: $active-background-color;
+  }
+
+  // Icon
+  svg {
+    margin: 0 5px 0 0;
+  }
+}
+
+/**
+ * A labeled button that is a primary action.
+ */
+@mixin button--primary {
+  @include button;
+  @include button--labeled;
+  color: var.$color-text--inverted;
+  background-color: var.$grey-mid;
+
+  &:hover:not([disabled]),
+  &:focus:not([disabled]) {
+    color: var.$color-text--inverted;
+    background-color: var.$grey-6;
+  }
+
+  &:disabled {
+    // Note: this color does not meet WCAG contrast requirements,
+    // but is admissable because it is applied to disabled elements
+    color: var.$grey-semi;
+  }
+}
+
+/**
+ * A button pattern that looks like a link with a small icon on the right
+ * Used, e.g., in the help panel to navigate between sub-panels
+ */
+@mixin button--navigation {
+  @include reset-native-btn-styles;
+  @include layout.row($justify: right, $align: center);
+  color: var.$color-brand;
+
+  svg {
+    margin-left: 2px;
+    width: 12px;
+    height: 12px;
+  }
+}
+
+/**
+ * Mixins that style buttons to appear as lozenges with an integrated arrow
+ * pointing left, up or down (right doesn't exist yet but could easily be added).
+ * These indicators are used, e.g., in the bucket bar.
+ *
+ * These button or button-like elements consist of styles applied to the
+ * element itself, which create a rounded-rectangle lozenge with small-sized
+ * label text, as well as composited ::before and ::after pseudo-elements to
+ * create an arrow-pointer effect.
+ *
+ * The arrow-points are created by the combination of borders and positioning.
+ * See https://css-tricks.com/snippets/css/css-triangle/ for a few examples
+ *
+ */
+$indicator-width: 26px;
+$indicator-height: 16px;
+
+// How far the arrow-pointer "sticks out" from the main body of the lozenge
+$indicator-horizontal-offset: 5px;
+$indicator-vertical-offset: 6px;
+
+@mixin indicator-base {
+  @include reset-native-btn-styles;
+  @include utils.border;
+  position: absolute;
+  right: 0;
+
+  background-color: var.$color-background;
+
+  width: $indicator-width;
+  height: $indicator-height;
+
+  // Font/text
+  text-align: center;
+  color: var.$color-text--light;
+  font-weight: bold;
+  font-family: var.$sans-font-family;
+  font-size: var.$annotator-bucket-bar-font-size;
+  line-height: 1;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    // NB: use of 'inset' here fixes jagged diagonals in FF
+    // https://github.com/zurb/foundation/issues/2230
+    border: inset transparent;
+  }
+}
+
+@mixin indicator-vertical-base {
+  @include indicator-base;
+  @include utils.shadow;
+  z-index: 1;
+
+  &::before,
+  &::after {
+    left: 50%;
+  }
+}
+
+@mixin indicator--left {
+  @include indicator-base;
+  border-radius: 2px 4px 4px 2px;
+
+  &::before,
+  &::after {
+    right: 100%;
+    top: 50%;
+  }
+
+  // This creates a left-pointing "wedge" in grey
+  // offset to the left of the element
+  &::before {
+    border-width: math.div($indicator-height, 2);
+    border-right: $indicator-horizontal-offset solid var.$grey-3;
+    margin-top: -1 * math.div($indicator-height, 2);
+  }
+
+  // This creates a left-pointing "wedge" in white, on top
+  // of the grey wedge and one pixel narrower so that the
+  // grey wedge appears as a border around it
+  &::after {
+    border-width: math.div($indicator-height, 2) - 1;
+    border-right: ($indicator-horizontal-offset - 1) solid var.$color-background;
+    margin-top: -1 * (math.div($indicator-height, 2) - 1);
+  }
+}
+
+@mixin indicator--up {
+  @include indicator-vertical-base;
+  border-radius: 2px 2px 4px 4px;
+
+  &::before,
+  &::after {
+    top: auto;
+    bottom: 100%;
+  }
+
+  // Grey (border) arrow pointing up
+  &::before {
+    border-width: math.div($indicator-width, 2);
+    border-bottom: $indicator-vertical-offset solid var.$grey-3;
+    margin-left: -1 * math.div($indicator-width, 2);
+  }
+
+  // White (fill) arrow pointing up
+  &::after {
+    border-width: math.div($indicator-width, 2) - 1;
+    border-bottom: ($indicator-vertical-offset - 1) solid var.$color-background;
+    margin-left: -1 * (math.div($indicator-width, 2) - 1);
+  }
+}
+
+@mixin indicator--down {
+  @include indicator-vertical-base;
+  margin-top: 0;
+  border-radius: 4px 4px 2px 2px;
+
+  &::before,
+  &::after {
+    top: 100%;
+  }
+
+  // Grey (border) arrow, pointing down
+  &::before {
+    border-width: math.div($indicator-width, 2);
+    border-top: $indicator-vertical-offset solid var.$grey-3;
+    margin-left: -1 * math.div($indicator-width, 2);
+  }
+
+  // White (fill) arrow, pointing down
+  &::after {
+    border-width: math.div($indicator-width, 2) - 1;
+    border-top: ($indicator-vertical-offset - 1) solid var.$color-background;
+    margin-left: -1 * (math.div($indicator-width, 2) - 1);
+  }
+}

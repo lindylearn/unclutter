@@ -1,0 +1,7 @@
+@use '../mixins/molecules';
+@use '../variables' as var;
+
+.WarningBanner {
+  @include molecules.banner;
+  font-size: var.$annotator-adder-font-size;
+}

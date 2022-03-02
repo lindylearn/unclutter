@@ -1,0 +1,36 @@
+@use '../../mixins/buttons';
+@use '../../mixins/layout';
+@use '../../variables' as var;
+
+.LoggedOutMessage {
+  @include layout.column;
+  margin: 25px auto;
+  width: 70%;
+  text-align: center;
+  color: var.$color-text;
+}
+
+.LoggedOutMessage__link {
+  padding: 0;
+  display: inline;
+  color: var.$color-text;
+  text-decoration: underline;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.LoggedOutMessage__logo {
+  @include layout.row(center);
+  margin-top: 25px;
+}
+
+.LoggedOutMessage__logo-icon {
+  width: 30px;
+  height: 30px;
+  color: var.$grey-mid;
+
+  &:hover {
+    color: var.$grey-7;
+  }
+}

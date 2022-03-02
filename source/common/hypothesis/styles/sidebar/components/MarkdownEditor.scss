@@ -1,0 +1,99 @@
+@use '../../mixins/buttons';
+@use '../../mixins/forms';
+@use '../../mixins/layout';
+@use '../../mixins/utils';
+@use '../../variables' as var;
+
+.MarkdownEditor {
+  /* Reset line-height to avoid having extra gaps/vertical spacing in the
+     element's container
+  */
+  line-height: 1;
+}
+
+.MarkdownEditor__toolbar {
+  @include layout.row;
+  // Toolbar buttons wrap on non-touch devices if they don't fit. We don't use
+  // scrolling because that's less convenient to use with a mouse/touchpad.
+  flex-wrap: wrap;
+
+  @include utils.border;
+  border-bottom: none;
+
+  background-color: white;
+  border-radius: var.$border-radius var.$border-radius 0 0;
+  width: 100%;
+  margin-bottom: -0.1em;
+  padding: 5px 5px;
+}
+
+.MarkdownEditor__toolbar-button {
+  @include buttons.button--icon-only($with-active-state: false);
+  min-width: 24px;
+  min-height: 24px;
+
+  padding-top: 0;
+  padding-bottom: 0;
+
+  color: var.$grey-5;
+  transition: none;
+
+  &:disabled {
+    color: var.$grey-3;
+  }
+}
+
+svg.MarkdownEditor__toolbar-button-icon {
+  // Stronger specificity to override mixin button styling
+  @include utils.icon--xsmall;
+}
+
+.MarkdownEditor__preview {
+  @include utils.border;
+  background-color: var.$grey-1;
+  padding: 10px;
+}
+
+.MarkdownEditor__toolbar-help-link {
+  @include layout.row($align: center);
+  margin-bottom: 2px; // Tweak to align help icon better with adjacent buttons
+}
+
+.MarkdownEditor__input {
+  @include forms.form-input;
+
+  line-height: var.$line-height;
+  min-height: 8em;
+  resize: vertical;
+  width: 100%;
+}
+
+@media (pointer: coarse) {
+  .MarkdownEditor__toolbar {
+    // Remove the padding to avoid the toolbar taking up too much space as we
+    // make the buttons larger.
+    padding: 0;
+
+    // Some extra padding at the bottom is needed though as otherwise the
+    // browser is likely to confuse taps on the toolbar buttons and taps on
+    // selection handles, if some text in the first line of the input is
+    // selected.
+    padding-bottom: 10px;
+
+    // Use scrolling rather than wrapping to handle overflow for touch devices.
+    // This saves vertical space.
+    flex-wrap: unset;
+    overflow-x: scroll;
+  }
+
+  // Make the toolbar buttons larger and easier to tap.
+  .MarkdownEditor__toolbar-button {
+    min-width: var.$touch-target-size;
+    min-height: var.$touch-target-size;
+  }
+
+  svg.MarkdownEditor__toolbar-button-icon {
+    // Stronger specificity to override mixin button styling
+    @include utils.icon--small;
+  }
+}

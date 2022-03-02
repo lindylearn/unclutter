@@ -1,0 +1,272 @@
+@use '../variables' as var;
+@use './buttons';
+@use './layout';
+@use './utils';
+
+/**
+ * A straightforward "frame" that serves as a basis for other card-like
+ * patterns. May be used on its own for components that don't need all of
+ * `card` or `panel's` bells and whistles.
+ */
+@mixin card-frame {
+  @include utils.border;
+  @include utils.shadow;
+  border-radius: var.$border-radius;
+  background-color: var.$color-background;
+}
+
+/**
+ * A "card"-like pattern that may be displayed in vertical lists, a la
+ * annotation (thread) cards. Will vertically-space its children. Adds a
+ * hover/active intensified box shadow and accounts for "theme-clean" affordances.
+ */
+@mixin card($rhythm: var.$layout-space) {
+  @include card-frame;
+  @include layout.vertical-rhythm($rhythm);
+  padding: var.$layout-space;
+
+  &:hover,
+  &.is-focused {
+    @include utils.shadow--active;
+  }
+
+  /** Clean theme affordances */
+  #{var.$sidebar--theme-clean} & {
+    // Give a little more space so that the border appears centered
+    // between cards
+    padding-bottom: 1.5em;
+    border-width: 0 0 1px 0;
+    border-bottom-style: solid;
+    border-bottom-color: var.$grey-2;
+    box-shadow: none;
+
+    &:hover {
+      box-shadow: none;
+    }
+  }
+}
+
+/**
+ * horizontally-oriented collection of linked icons
+ */
+@mixin footer-links {
+  @include layout.row(center);
+  @include utils.border--top;
+  padding-top: 8px;
+
+  &__icon {
+    @include layout.row;
+    @include utils.icon--medium;
+    margin: 0 8px;
+    color: var.$grey-5;
+
+    &:hover {
+      color: var.$grey-6;
+    }
+  }
+}
+
+/**
+ * A pattern for styling a little "pointer" (arrow) icon that attaches to
+ * menu content and serves as a visual anchor back to the triggering
+ * button/element. When using, you'll need to provide the appropriate
+ * positioning details to get the pointer to be where you want it in the
+ * given menu.
+ *
+ * @param {string} [$direction] - Which direction the arrow should "point"
+ */
+@mixin menu-arrow($direction: 'up') {
+  position: absolute;
+  z-index: 2;
+  color: var.$color-border;
+  fill: var.$color-background;
+  @if ($direction == 'down') {
+    transform: rotateX(180deg);
+  }
+}
+
+/**
+ * A pattern for displaying redacted (moderated) text content
+ */
+@mixin redacted-content {
+  text-decoration: line-through;
+  // Make any images within this content greyscale, and low-contrast
+  filter: grayscale(100%) contrast(65%);
+}
+
+/**
+ * Represent quoted text, as in an excerpt, with a hover or focused state.
+ */
+@mixin quoted-text {
+  border-left: 3px solid var.$color-border;
+  color: var.$color-text--light;
+  font-style: italic;
+  padding: 0 var.$layout-space;
+
+  // Prevent long URLs etc. in quote causing overflow
+  overflow-wrap: break-word;
+
+  &.is-focused,
+  &:hover {
+    border-left: var.$color-quote 3px solid;
+  }
+}
+/**
+ * Base styles for a "panel"-like element, with appropriate
+ * padding, heading and close-button styles.
+ *
+ * @param {length} [$rhythm] - An optional value to use for vertical rhythm
+ *   (spacing, vertically)
+ */
+@mixin panel($rhythm: var.$layout-space) {
+  @include card($rhythm);
+
+  &__header {
+    @include layout.row($align: center);
+    @include utils.border--bottom;
+    padding-bottom: var.$layout-space;
+  }
+
+  &__header-icon {
+    margin-right: var.$layout-space--xsmall;
+  }
+
+  &__title {
+    @include utils.font--large;
+    color: var.$color-brand;
+    font-weight: 700;
+  }
+
+  &__button {
+    @include buttons.button--labeled;
+  }
+
+  &__button--primary {
+    @include buttons.button--primary;
+  }
+
+  &__actions {
+    @include layout.row(right);
+    @include layout.horizontal-rhythm(10px);
+  }
+}
+
+/**
+ * `panel` with tighter margins and padding, for use in more confined spaces
+ */
+@mixin panel--compact {
+  @include panel($rhythm: var.$layout-space--xsmall);
+  width: 24em;
+  // Keep panel constrained within annotation card boundaries and not cut off
+  // on left side when sidebar is extremely narrow
+  max-width: 85vw;
+  padding: var.$layout-space--small;
+
+  &__header {
+    padding-bottom: var.$layout-space--xsmall;
+  }
+}
+
+/**
+ * Styled external-linked "tabs" with icons, intended for use in a panel
+ */
+@mixin panel-tabs {
+  @include layout.row($align: center);
+
+  &__tab {
+    @include utils.font--large;
+    @include utils.border--right;
+    flex: 1 1;
+    text-align: center;
+    color: var.$color-text--light;
+
+    &:last-of-type {
+      border-right: none;
+    }
+  }
+
+  &__link {
+    color: var.$color-text--light;
+  }
+
+  &__icon {
+    @include utils.icon--xsmall;
+  }
+}
+
+/**
+ * A full-width banner with optional "type" and styled icon at left
+ */
+@mixin banner {
+  @include layout.row($align: center);
+  width: 100%;
+  background-color: var.$color-background;
+  border-style: solid;
+  border-width: 2px 0;
+
+  &--success {
+    border-color: var.$color-success;
+  }
+
+  &--error {
+    border-color: var.$color-error;
+  }
+
+  &--notice {
+    border-color: var.$color-notice;
+  }
+
+  &__type {
+    @include layout.row($align: center);
+    padding: var.$layout-space--small var.$layout-space;
+    color: white;
+  }
+
+  &--success &__type {
+    background-color: var.$color-success;
+  }
+
+  &--error &__type {
+    background-color: var.$color-error;
+  }
+
+  &--notice &__type {
+    background-color: var.$color-notice;
+  }
+
+  &__message {
+    padding: var.$layout-space--small;
+    width: 100%;
+  }
+}
+
+/**
+ * A variant of `banner` for use as a toast message container. Narrower,
+ * lighter border, more padding around message text.
+ */
+@mixin toast-message {
+  @include banner;
+  @include layout.row($align: stretch);
+  @include card-frame;
+  position: relative;
+  margin-bottom: var.$layout-space--small;
+  border-width: 1px;
+
+  &__type {
+    padding: var.$layout-space;
+  }
+
+  &__icon {
+    // Specific adjustments for success and error icons
+    margin-top: 2px;
+  }
+
+  &__message {
+    padding: var.$layout-space;
+  }
+
+  &__link {
+    text-align: right;
+    text-decoration: underline;
+  }
+}

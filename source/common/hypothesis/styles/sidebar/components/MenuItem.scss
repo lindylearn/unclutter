@@ -1,0 +1,151 @@
+@use '@hypothesis/frontend-shared/styles/mixins/focus';
+
+@use 'sass:color';
+@use '../../mixins/layout';
+@use '../../mixins/utils';
+@use '../../variables' as var;
+
+$MenuItem-padding: 10px;
+$item-height: 40px;
+
+// The container for the clickable area of the menu item which triggers an
+// action or link. For menu items without submenus, this covers the full area of
+// the menu item. For menu items with submenus, this covers the full area
+// except for the toggle button that opens the submenu.
+
+a.MenuItem:hover {
+  color: var.$color-link-hover;
+}
+
+.MenuItem {
+  @include focus.outline-on-keyboard-focus($inset: true);
+  @include layout.row($align: center);
+  align-self: stretch;
+  flex-grow: 1;
+
+  appearance: none;
+  padding-left: $MenuItem-padding;
+  color: var.$color-text;
+  border: none;
+  padding-right: 0;
+  font-weight: 500;
+  min-height: 40px;
+  width: 100%;
+  min-width: 150px;
+  // Prevent height changes when .is-expanded border is rendered.
+  border-bottom: solid 1px transparent;
+  // Prevent menu item text from being selected when user toggles menu.
+  user-select: none;
+
+  &:hover {
+    background-color: var.$grey-1;
+    .MenuItem__toggle {
+      // Make it a bit darker when its a submenu item.
+      background-color: var.$grey-3;
+    }
+  }
+
+  &.is-submenu {
+    min-height: $item-height - 10px;
+    background: var.$grey-1;
+    color: var.$color-text;
+    font-weight: normal;
+    &:hover {
+      background-color: var.$grey-3;
+    }
+  }
+
+  &.is-selected {
+    $border-width: 4px;
+    border-left: $border-width solid var.$color-brand;
+    padding-left: $MenuItem-padding - $border-width;
+  }
+
+  &.is-expanded {
+    @include utils.border--bottom;
+    background-color: var.$grey-1;
+    color: var.$color-text;
+    &:hover {
+      background-color: var.$grey-3;
+    }
+    .MenuItem__toggle {
+      // Make it a bit darker when its expanded. This is needed for
+      // a color darker than hover while expanded.
+      background-color: var.$grey-4;
+    }
+  }
+  &.is-disabled {
+    color: var.$color-text--light;
+  }
+}
+.MenuItem__icon {
+  @include utils.icon--medium;
+  color: inherit;
+  display: inline-block;
+  margin-right: 4px;
+  position: relative;
+  &-container {
+    margin-right: 10px;
+    // TODO Not using icon mixins for now until reviewing this entire pattern
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.MenuItem__label {
+  @include layout.row($align: center);
+  align-self: stretch;
+
+  color: inherit;
+  white-space: nowrap;
+  flex-grow: 1;
+  font-weight: inherit;
+
+  padding-right: $MenuItem-padding;
+
+  &--submenu {
+    font-weight: normal;
+  }
+}
+
+// Toggle button used to expand or collapse the submenu associated with a menu
+// item.
+.MenuItem__toggle {
+  @include layout.column(center, center);
+  align-self: stretch;
+  width: 40px;
+  padding: 0;
+  height: 40px;
+
+  color: var.$grey-5;
+
+  // Add a wide transparent border to provide a large-enough hit target (~40px),
+  // larger than the visual size of the button (~20px).
+  background-color: var.$grey-1;
+  background-clip: content-box;
+  border: 7px solid transparent;
+
+  // Add slight rounded borders. border-radius sets the outer radius, but
+  // what the user sees is the inner radius, which is much smaller.
+  border-radius: 12px;
+
+  &:hover {
+    background-color: var.$grey-4;
+    color: var.$grey-6;
+  }
+
+  &-icon {
+    // TODO not an icon in the general sense of the term; rename class?
+    width: 12px;
+    height: 12px;
+  }
+}
+
+// The container for open submenus
+.MenuItem__submenu {
+  @include utils.border--bottom;
+  &:hover {
+    // Make it a bit darker on hover.
+    background-color: var.$grey-3;
+  }
+}

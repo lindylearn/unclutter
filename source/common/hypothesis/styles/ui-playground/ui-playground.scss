@@ -1,0 +1,5 @@
+// Shared pattern-library styles
+@use '@hypothesis/frontend-shared/styles/pattern-library';
+
+// This app pattern styles
+@use '../sidebar/buttons';

@@ -1,0 +1,33 @@
+@use 'sass:map';
+
+@use '../variables' as var;
+
+// Similar to `.LinkButton`, with inline layout (so button can be used
+// within text)
+.InlineLinkButton {
+  display: inline;
+}
+
+.InlineLinkButton--underlined {
+  text-decoration: underline;
+}
+
+// Disable border-radius on right side so it can align with a button next to it
+.PublishControlButton {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+// This button style has asymmetrical padding. Hold it here to see if
+// this kind of padding is useful in other patterns.
+.PaginationPageButton {
+  padding: var.$layout-space--small var.$layout-space;
+}
+
+// An IconButton, but override minimum height/width on touch screen devices
+.NonResponsiveIconButton {
+  @media (pointer: coarse) {
+    min-width: auto;
+    min-height: auto;
+  }
+}

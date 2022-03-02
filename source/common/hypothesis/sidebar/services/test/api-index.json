@@ -1,0 +1,89 @@
+{
+  "links": {
+    "profile": {
+      "read": {
+        "url": "https://example.com/api/profile",
+        "method": "GET",
+        "desc": "Fetch the user's profile"
+      },
+      "update": {
+        "url": "https://example.com/api/profile",
+        "method": "PATCH",
+        "desc": "Update a user's preferences"
+      }
+    },
+    "search": {
+      "url": "https://example.com/api/search",
+      "method": "GET",
+      "desc": "Search for annotations"
+    },
+    "group": {
+      "member": {
+        "add": {
+          "url": "https://example.com/api/groups/:pubid/members/:userid",
+          "method": "POST",
+          "desc": "Add the user in the request params to a group."
+        },
+        "delete": {
+          "url": "https://example.com/api/groups/:pubid/members/:userid",
+          "method": "DELETE",
+          "desc": "Remove the current user from a group."
+        }
+      },
+      "read": {
+        "url": "https://example.com/api/groups/:id",
+        "method": "GET",
+        "desc": "Fetch a group."
+      }
+    },
+    "links": {
+      "url": "https://example.com/api/links",
+      "method": "GET",
+      "desc": "URL templates for generating URLs for HTML pages"
+    },
+    "groups": {
+      "read": {
+        "url": "https://example.com/api/groups",
+        "method": "GET",
+        "desc": "Fetch the user's groups"
+      }
+    },
+    "annotation": {
+      "hide": {
+        "url": "https://example.com/api/annotations/:id/hide",
+        "method": "PUT",
+        "desc": "Hide an annotation as a group moderator."
+      },
+      "unhide": {
+        "url": "https://example.com/api/annotations/:id/hide",
+        "method": "DELETE",
+        "desc": "Unhide an annotation as a group moderator."
+      },
+      "read": {
+        "url": "https://example.com/api/annotations/:id",
+        "method": "GET",
+        "desc": "Fetch an annotation"
+      },
+      "create": {
+        "url": "https://example.com/api/annotations",
+        "method": "POST",
+        "desc": "Create an annotation"
+      },
+      "update": {
+        "url": "https://example.com/api/annotations/:id",
+        "method": "PATCH",
+        "desc": "Update an annotation"
+      },
+      "flag": {
+        "url": "https://example.com/api/annotations/:id/flag",
+        "method": "PUT",
+        "desc": "Flag an annotation for review."
+      },
+      "delete": {
+        "url": "https://example.com/api/annotations/:id",
+        "method": "DELETE",
+        "desc": "Delete an annotation"
+      }
+    }
+  }
+}

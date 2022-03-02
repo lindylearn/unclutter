@@ -1,0 +1,20 @@
+@use '../../variables' as var;
+@use '../../mixins/layout';
+@use '../../mixins/utils';
+
+.Tutorial {
+  &__list {
+    @include layout.vertical-rhythm(var.$layout-space--xsmall);
+  }
+
+  &__icon {
+    @include utils.icon--inline;
+    margin-right: 1px;
+    margin-bottom: -1px; // Pull the icon a little toward the baseline
+    color: var.$grey-5;
+  }
+
+  &__instruction {
+    white-space: nowrap; // Keep icons and their associated names on the same line
+  }
+}

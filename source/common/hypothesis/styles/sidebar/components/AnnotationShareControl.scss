@@ -1,0 +1,58 @@
+@use '../../mixins/buttons';
+@use '../../mixins/forms';
+@use '../../mixins/layout';
+@use '../../mixins/molecules';
+@use '../../mixins/utils';
+@use '../../variables' as var;
+
+.AnnotationShareControl {
+  // Allow pointer arrow to be positioned absolutely relative to this container
+  position: relative;
+}
+
+// A compact panel that appears/disappears by tapping the "share" icon on a
+// single annotation.
+.annotation-share-panel {
+  @include molecules.panel--compact;
+  // Position panel to align with share-annotation icon and alignment arrow
+  position: absolute;
+  right: 5px;
+  bottom: 32px;
+
+  @media (pointer: coarse) {
+    // Adjust arrow/panel positioning to account for larger icon target
+    right: 13px;
+    bottom: 40px;
+  }
+
+  // Override the pointer cursor that applies to the entire card
+  cursor: default;
+
+  // Hide the bottom border on the panel's header if displaying
+  // input (with sharing link) directly below
+  &__header {
+    border-bottom: none;
+  }
+
+  &__inputs {
+    @include utils.font--small;
+    width: 100%;
+  }
+
+  &__details {
+    @include utils.font--small;
+    padding: var.$layout-space--xsmall 0;
+  }
+
+  // Position the pointer icon absolutely and flip it to make it point at the
+  // share icon
+  &__arrow {
+    @include molecules.menu-arrow($direction: 'down');
+    right: 0px;
+    bottom: -8px;
+  }
+
+  .ShareLinks__icon {
+    @include utils.icon--medium;
+  }
+}

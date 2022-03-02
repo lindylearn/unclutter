@@ -1,0 +1,32 @@
+@use '../../mixins/utils';
+@use '../../variables' as var;
+
+.FilterSelect {
+  &__menu {
+    // Prevent the list from overflowing off screen in most cases.
+    max-height: 70vh;
+    overflow-y: auto;
+
+    // Limit the length for large screens.
+    @media only screen and (min-height: 44em) {
+      max-height: 36em;
+    }
+  }
+
+  &__menu-label {
+    @include utils.font--large;
+    align-items: center;
+    color: var.$color-text;
+    display: flex;
+
+    // Prevent label from wrapping if top bar is too narrow to fit all of its
+    // items.
+    flex-shrink: 0;
+    font-weight: bold;
+  }
+
+  &__menu-icon {
+    @include utils.icon--medium;
+    margin-right: var.$layout-space--xsmall;
+  }
+}

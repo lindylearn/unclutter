@@ -1,0 +1,46 @@
+@use '../../mixins/forms';
+@use '../../mixins/buttons';
+@use '../../mixins/layout';
+@use '../../mixins/utils';
+@use '../../variables' as var;
+
+.TagEditor {
+  @include layout.vertical-rhythm(var.$layout-space--xsmall);
+  &__input {
+    @include forms.form-input;
+    width: 100%;
+  }
+
+  &__tags {
+    @include layout.row;
+    flex-wrap: wrap;
+  }
+
+  &__item {
+    @include layout.row;
+    margin: var.$layout-space--xxsmall var.$layout-space--xsmall
+      var.$layout-space--xsmall 0;
+  }
+
+  &__edit {
+    @include utils.border;
+    color: var.$color-text;
+    background: var.$grey-1;
+    border-radius: var.$border-radius 0 0 var.$border-radius;
+    border-right-width: 0;
+    padding: 2px var.$layout-space--xsmall;
+  }
+
+  &__delete {
+    @include buttons.button;
+    @include utils.border;
+    color: var.$grey-mid;
+    background-color: var.$grey-1;
+    padding: 0 var.$layout-space--xsmall;
+    border-radius: 0 var.$border-radius var.$border-radius 0;
+
+    &:hover {
+      background-color: var.$grey-2;
+    }
+  }
+}

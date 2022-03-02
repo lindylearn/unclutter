@@ -1,0 +1,10 @@
+@use '../../mixins/utils';
+@use '../../mixins/molecules';
+
+.ShareLinks {
+  @include molecules.footer-links;
+
+  &__icon {
+    @include utils.icon--large;
+  }
+}
