@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 import { getAnnotationColor } from '../../common/styling';
+import Switch from './Switch';
 
 function AnnotationDraft({
 	annotation,
@@ -16,7 +17,7 @@ function AnnotationDraft({
 	return (
 		<div
 			className={
-				'annotationContainer py-1 px-2 bg-white border-l-4 rounded-r drop-shadow' +
+				'annotationContainer py-1 px-2 border-l-4 rounded-r drop-shadow' +
 				className
 			}
 			style={{ top: offset, borderColor: getAnnotationColor(annotation) }}
@@ -24,9 +25,17 @@ function AnnotationDraft({
 		>
 			<textarea
 				className="text-sm md:text-base w-full bg-gray-100 rounded-r-md py-1 px-2 outline-none"
+				placeholder="Note"
 				value={text}
 				onChange={(e) => setText(e.target.value)}
 			/>
+			<div className="flex">
+				<input
+					className="text-sm md:text-base w-full bg-gray-100 rounded-r-md py-1 px-2 outline-none"
+					placeholder="Tags"
+				/>
+				<Switch />
+			</div>
 			<div className="text-xs md:text-sm flex justify-end gap-2">
 				{/* <div
 					className="rounded-md px-1 cursor-pointer font-bold"
