@@ -89,3 +89,10 @@
 
 	background: linear-gradient(to top, #e5e7eb, rgba(0, 0, 0, 0));
 }
+
+.annotation .top-icon {
+	visibility: hidden;
+}
+.annotation:hover .top-icon {
+	visibility: visible;
+}

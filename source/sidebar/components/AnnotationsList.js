@@ -56,7 +56,12 @@ function AnnotationsList({
 
 						return (
 							<div
-								className="annotation-group-item w-full hover:z-10 hover:drop-shadow rounded-r "
+								className={
+									'annotation-group-item w-full rounded-r ' +
+									(groupedAnnotations.length > 1
+										? 'hover:z-10 hover:drop-shadow'
+										: '')
+								}
 								style={{
 									position: 'absolute',
 									top: `${i * 40}px`,
