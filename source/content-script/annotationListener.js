@@ -2,6 +2,7 @@ import {
 	highlightAnnotations,
 	removeAllHighlights,
 	getHighlightOffsets,
+	removeHighlight,
 } from './annotationApi';
 import throttle from 'lodash/throttle';
 
@@ -28,6 +29,8 @@ export function createAnnotationListener(sidebarIframe) {
 				},
 				'*'
 			);
+		} else if (data.event === 'removeHighlight') {
+			removeHighlight(data.annotation);
 		}
 	};
 	window.addEventListener('message', onMessage);

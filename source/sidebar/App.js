@@ -32,7 +32,11 @@ export default function App({ url }) {
 			);
 			setAnnotations([
 				...annotations,
-				{ ...annotation, displayOffset: localAnnotation.displayOffset },
+				{
+					...annotation,
+					displayOffset: localAnnotation.displayOffset,
+					localId: localAnnotation.localId,
+				},
 			]);
 		} else if (data.event === 'anchoredAnnotations') {
 			// data.annotations.push({
@@ -43,7 +47,8 @@ export default function App({ url }) {
 		} else if (data.event === 'changedDisplayOffset') {
 			const updatedAnnotations = annotations.map((a) => ({
 				...a,
-				displayOffset: data.offsetById[a.id],
+				displayOffset:
+					data.offsetById[a.localId] || data.offsetById[a.id],
 			}));
 			setAnnotations(updatedAnnotations);
 		}
@@ -59,6 +64,8 @@ export default function App({ url }) {
 
 	async function deleteAnnotation(annotation) {
 		setAnnotations(annotations.filter((a) => a.id != annotation.id));
+		window.top.postMessage({ event: 'removeHighlight', annotation }, '*');
+
 		deleteAnnotationApi(annotation.id);
 	}
 

@@ -1,7 +1,8 @@
 import { anchor as anchorHTML } from '../common/hypothesis/annotator/anchoring/html';
 import {
 	highlightRange,
-	removeAllHighlights,
+	removeAllHighlights as removeAllHighlightsApi,
+	removeHighlights as removeHighlightsApi,
 } from '../common/hypothesis/annotator/highlighter';
 import { getAnnotationColor } from '../common/styling';
 
@@ -42,7 +43,14 @@ export async function highlightAnnotations(annotations) {
 }
 
 export function removeAllHighlights() {
-	removeAllHighlights(document.body);
+	removeAllHighlightsApi(document.body);
+}
+
+export function removeHighlight(annotation) {
+	const nodes = document.querySelectorAll(
+		`[id=${annotation.localId || annotation.id}]`
+	);
+	removeHighlightsApi([...nodes]);
 }
 
 export function getHighlightOffsets() {

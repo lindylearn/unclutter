@@ -4,6 +4,7 @@ export function createDraftAnnotation(url, selector) {
 	const id = `draft_${Math.random().toString(36).slice(-5)}`;
 	return {
 		id: id,
+		localId: id,
 		url,
 		quote_text: selector?.[2]?.exact || '_',
 		text: '',
