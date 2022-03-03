@@ -20,14 +20,14 @@ function AnnotationsList({
 	const groupedAnnotations = [];
 	let lastOffset = -Infinity;
 	for (const annotation of orderedAnnotations) {
-		if (annotation.displayOffset < lastOffset + 200) {
-			// conflict
+		if (annotation.displayOffset < lastOffset + 100) {
+			// conflict, append to last group
 			groupedAnnotations[groupedAnnotations.length - 1] = [
 				...groupedAnnotations[groupedAnnotations.length - 1],
 				annotation,
 			];
 		} else {
-			// no conflict
+			// no conflict, start new group
 			groupedAnnotations.push([annotation]);
 		}
 		lastOffset = annotation.displayOffset;
@@ -42,38 +42,49 @@ function AnnotationsList({
 			{groupedAnnotations.map((groupedAnnotations) => (
 				<div
 					key={groupedAnnotations[0].displayOffset}
-					className="absolute w-full flex flex-col gap-2"
-					style={{ top: groupedAnnotations[0].displayOffset }}
+					className="absolute w-full"
+					style={{
+						top: groupedAnnotations[0].displayOffset,
+						position: 'relative',
+					}}
 				>
-					{groupedAnnotations.slice(0, 6).map((annotation, i) => {
+					{groupedAnnotations.slice(0, 5).map((annotation, i) => {
 						const Component = annotation.is_draft
 							? AnnotationDraft
 							: Annotation;
 
 						return (
-							<Component
-								key={annotation.link}
-								annotation={annotation}
-								deleteAnnotation={() =>
-									deleteAnnotation(annotation)
-								}
-								offset={annotation.displayOffset}
-								charLimit={
-									i == groupedAnnotations.length - 1
-										? 300
-										: 150
-								}
-								upvoted={upvotedAnnotations[annotation.id]}
-								upvoteAnnotation={(isUpvote) =>
-									upvoteAnnotation(
-										url,
-										annotation.id,
-										isUpvote
-									)
-								}
-							/>
+							<div
+								className="annotation-group-item w-full hover:z-10 hover:drop-shadow-lg rounded-r "
+								style={{
+									position: 'absolute',
+									top: `${i * 40}px`,
+								}}
+							>
+								<Component
+									key={annotation.link}
+									annotation={annotation}
+									deleteAnnotation={() =>
+										deleteAnnotation(annotation)
+									}
+									charLimit={
+										i == groupedAnnotations.length - 1
+											? 300
+											: 150
+									}
+									upvoted={upvotedAnnotations[annotation.id]}
+									upvoteAnnotation={(isUpvote) =>
+										upvoteAnnotation(
+											url,
+											annotation.id,
+											isUpvote
+										)
+									}
+								/>
+							</div>
 						);
 					})}
+					{/* <div>{groupedAnnotations.length - 1} more annotations</div> */}
 				</div>
 			))}
 		</div>

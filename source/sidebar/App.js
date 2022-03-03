@@ -14,10 +14,10 @@ export default function App({ url }) {
 		if (data.event === 'createHighlight') {
 			setAnnotations([...annotations, data.annotation]);
 		} else if (data.event === 'anchoredAnnotations') {
-			data.annotations.push({
-				...createDraftAnnotation(url, []),
-				displayOffset: 400,
-			});
+			// data.annotations.push({
+			// 	...createDraftAnnotation(url, []),
+			// 	displayOffset: 400,
+			// });
 			setAnnotations(data.annotations);
 		} else if (data.event === 'changedDisplayOffset') {
 			const updatedAnnotations = annotations.map((a) => ({
@@ -39,11 +39,12 @@ export default function App({ url }) {
 	// console.log(annotations);
 
 	return (
-		<div className="filter-none">
+		// x margin to show slight shadow (iframe allows no overflow)
+		<div className="filter-none mx-2">
 			<div className="absolute flex flex-col gap-2">
 				{/* <PageMetadataMessage url={url} /> */}
 				{/* <PopularityMessage url={url} /> */}
-				<PageNote />
+				{/* <PageNote /> */}
 			</div>
 			<AnnotationsList
 				url={url}
