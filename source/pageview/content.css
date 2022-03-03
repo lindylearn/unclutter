@@ -9,18 +9,21 @@ html {
 
 body {
 	/* animation properties are set inline */
-	filter: drop-shadow(0 10px 8px rgb(0 0 0 / 0.04))
-		drop-shadow(0 4px 3px rgb(0 0 0 / 0.1));
+
+	position: relative;
 }
 .body-background {
 	position: absolute;
 	top: 0;
 	left: 0;
 	width: 100%;
-	/* height and background-color set via JS */
-
 	z-index: -100;
 	content: '';
+	/* height and background-color set via JS */
+
+	border-radius: 10px;
+	filter: drop-shadow(0 10px 8px rgb(0 0 0 / 0.04))
+		drop-shadow(0 4px 3px rgb(0 0 0 / 0.1));
 }
 
 body.pageview {
