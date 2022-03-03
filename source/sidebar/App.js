@@ -42,7 +42,7 @@ export default function App({ url }) {
 		<div className="filter-none">
 			<div className="absolute flex flex-col gap-2">
 				{/* <PageMetadataMessage url={url} /> */}
-				<PopularityMessage url={url} />
+				{/* <PopularityMessage url={url} /> */}
 				<PageNote />
 			</div>
 			<AnnotationsList
