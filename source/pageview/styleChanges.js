@@ -5,6 +5,7 @@ export function patchDocumentStyle() {
 
 	insertOverrideRules();
 
+	insertShareButton();
 	// patchMediaRules(document);
 }
 
@@ -128,4 +129,17 @@ function patchMediaRules() {
 	});
 
 	console.log(style.sheet.cssRules);
+}
+
+function insertShareButton() {
+	var a = document.createElement('a');
+	a.href = `https://annotations.lindylearn.io/page?url=${window.location.href}`;
+	a.className = `${overrideClassname} share-icon`;
+	a.target = '_blank';
+	a.rel = 'noopener noreferrer';
+	document.body.appendChild(a);
+
+	var img = document.createElement('img');
+	img.src = browser.runtime.getURL('assets/icons/share.svg');
+	a.appendChild(img);
 }

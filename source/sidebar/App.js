@@ -6,6 +6,7 @@ import { createDraftAnnotation } from '../common/getAnnotations';
 import PageNote from './components/PageNote';
 import PopularityMessage from './components/PopularityMessage';
 import PageMetadataMessage from './components/PageMetadataMessage';
+import AnnotationsInfoMessage from './components/AnnotationsInfoMessage';
 
 export default function App({ url }) {
 	const [annotations, setAnnotations] = useState([]);
@@ -40,11 +41,12 @@ export default function App({ url }) {
 
 	return (
 		// x margin to show slight shadow (iframe allows no overflow)
-		<div className="filter-none mx-2">
-			<div className="absolute flex flex-col gap-2">
+		<div className="mx-2">
+			<div className="absolute w-full px-2 flex flex-col gap-2">
 				{/* <PageMetadataMessage url={url} /> */}
-				{/* <PopularityMessage url={url} /> */}
-				{/* <PageNote /> */}
+				<PopularityMessage url={url} />
+				{/* <AnnotationsInfoMessage annotations={annotations} /> */}
+				<PageNote />
 			</div>
 			<AnnotationsList
 				url={url}

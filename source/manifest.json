@@ -31,5 +31,9 @@
 		"persistent": true,
 		"scripts": ["background/background.js"]
 	},
-	"web_accessible_resources": ["sidebar/index.html", "pageview/content.css"]
+	"web_accessible_resources": [
+		"sidebar/index.html",
+		"pageview/content.css",
+		"assets/**"
+	]
 }
