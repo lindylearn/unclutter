@@ -1,5 +1,6 @@
 import axios from 'axios';
 import browser from 'webextension-polyfill';
+import { hypothesisToLindyFormat } from '../../common/getAnnotations';
 
 // const lindyApiUrl = 'http://127.0.0.1:8000';
 const lindyApiUrl = 'https://api2.lindylearn.io';
@@ -8,19 +9,48 @@ const hypothesisApi = 'https://api.hypothes.is/api';
 // --- global fetching
 
 export async function getAnnotations(url) {
-	const annotations = (
-		await axios.get(`${lindyApiUrl}/annotations`, {
-			...(await _getConfig()),
-			params: {
-				page_url: url,
-			},
-		})
-	).data.results;
+	const [publicAnnotations, userAnnotations] = await Promise.all([
+		getLindyAnnotations(url),
+		getHypothesisAnnotations(url),
+	]);
 
-	return {
-		annotations,
-		needsGeneration: annotations.length == 0,
-	};
+	// take from lindy preferrably, otherwise hypothesis
+	// -> show replies, upvotes metadata when available, but new annotations immediately
+	// edits might take a while to propagate this way
+	const seenIds = new Set(publicAnnotations.map((a) => a.id));
+	const annotations = publicAnnotations;
+	for (const annotation of userAnnotations) {
+		if (!seenIds.has(annotation.id)) {
+			annotations.push(annotation);
+		}
+	}
+
+	return annotations;
+}
+
+// public annotations via lindy api
+async function getLindyAnnotations(url) {
+	const response = await axios.get(`${lindyApiUrl}/annotations`, {
+		...(await _getConfig()),
+		params: {
+			page_url: url,
+		},
+	});
+
+	return response.data.results;
+}
+
+// private annotations directly from hypothesis
+async function getHypothesisAnnotations(url) {
+	const response = await axios.get(`${hypothesisApi}/search`, {
+		...(await _getConfig()),
+		params: {
+			url,
+			user: `acct:peterhagen@hypothes.is`,
+		},
+	});
+
+	return response.data.rows.map(hypothesisToLindyFormat);
 }
 
 export async function getPageHistory(url) {
@@ -36,8 +66,51 @@ export async function getPageHistory(url) {
 
 // --- user actions
 
+export async function createAnnotation(pageUrl, htmlSelector) {
+	const response = await axios.post(
+		`${hypothesisApi}/annotations`,
+		{
+			uri: pageUrl,
+			target: [
+				{
+					source: pageUrl,
+					selector: htmlSelector,
+				},
+			],
+		},
+		await _getConfig()
+	);
+	return response.data;
+}
+
+export async function deleteAnnotation(annotationId) {
+	await axios.delete(
+		`${hypothesisApi}/annotations/${annotationId}`,
+		await _getConfig()
+	);
+}
+
+export async function editAnnotation(annotationId, text, tags, isPublic) {
+	const reponse = await axios.patch(
+		`${hypothesisApi}/annotations/${annotationId}`,
+		{
+			text,
+			tags,
+			permissions: {
+				read: [
+					isPublic
+						? 'group:__world__'
+						: 'acct:peterhagen@hypothes.is',
+				],
+			},
+		},
+		await _getConfig()
+	);
+	return response.data;
+}
+
 export async function upvoteAnnotation(pageUrl, annotationId, isUpvote) {
-	axios.post(
+	await axios.post(
 		`${lindyApiUrl}/annotations/upvote`,
 		{
 			annotation_id: annotationId,
@@ -82,7 +155,7 @@ async function _getConfig() {
 
 	if (apiToken) {
 		return {
-			headers: { Authorization: apiToken },
+			headers: { Authorization: `Bearer ${apiToken}` },
 		};
 	}
 	return {};

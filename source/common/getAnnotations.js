@@ -15,3 +15,21 @@ export function createDraftAnnotation(url, selector) {
 		is_draft: true,
 	};
 }
+
+export function hypothesisToLindyFormat(annotation) {
+	return {
+		id: annotation.id,
+		author: annotation.user.match(/([^:]+)@/)[1],
+		platform: 'h',
+		link: `https://hypothes.is/a/${annotation.id}`,
+		created_at: annotation.created,
+		reply_count: 0,
+		quote_text: null,
+		text: annotation.text,
+		replies: [],
+		upvote_count: 0,
+		tags: annotation.tags,
+		quote_html_selector: annotation.target[0].selector,
+		user_upvoted: false,
+	};
+}

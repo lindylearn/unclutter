@@ -6,7 +6,7 @@ function AnnotationsList({
 	url,
 	annotations,
 	onClick = null,
-	setAnnotations,
+	deleteAnnotation,
 	upvotedAnnotations = {},
 	upvoteAnnotation = null,
 }) {
@@ -32,10 +32,6 @@ function AnnotationsList({
 			groupedAnnotations.push([annotation]);
 		}
 		lastOffset = annotation.displayOffset;
-	}
-
-	function deleteAnnotation(annotation) {
-		setAnnotations(annotations.filter((a) => a.link != annotation.link));
 	}
 
 	return (

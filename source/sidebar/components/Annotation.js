@@ -12,6 +12,7 @@ function Annotation({
 	swipeHandlers = {},
 	upvoted,
 	upvoteAnnotation,
+	deleteAnnotation,
 	isMyAnnotation = false,
 }) {
 	const { text, offset, author, platform, link, reply_count } = annotation;
@@ -119,6 +120,7 @@ function Annotation({
 			<div className="top-icon absolute top-2 right-2 text-gray-400 cursor-pointer">
 				{isMyAnnotation ? (
 					<svg
+						onClick={deleteAnnotation}
 						className="h-3"
 						xmlns="http://www.w3.org/2000/svg"
 						viewBox="0 0 448 512"

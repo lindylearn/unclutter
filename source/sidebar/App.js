@@ -1,8 +1,15 @@
 import React, { useEffect, useState } from 'react';
 
 import AnnotationsList from './components/AnnotationsList';
-import { getAnnotations } from './common/api';
-import { createDraftAnnotation } from '../common/getAnnotations';
+import {
+	getAnnotations,
+	createAnnotation,
+	deleteAnnotation as deleteAnnotationApi,
+} from './common/api';
+import {
+	createDraftAnnotation,
+	hypothesisToLindyFormat,
+} from '../common/getAnnotations';
 import PageNote from './components/PageNote';
 import PopularityMessage from './components/PopularityMessage';
 import PageMetadataMessage from './components/PageMetadataMessage';
@@ -11,9 +18,22 @@ import AnnotationsInfoMessage from './components/AnnotationsInfoMessage';
 export default function App({ url }) {
 	const [annotations, setAnnotations] = useState([]);
 
-	window.onmessage = function ({ data }) {
+	window.onmessage = async function ({ data }) {
 		if (data.event === 'createHighlight') {
-			setAnnotations([...annotations, data.annotation]);
+			const localAnnotation = data.annotation;
+			// setAnnotations([...annotations, data.annotation]);
+			const hypothesisAnnotation = await createAnnotation(
+				url,
+				localAnnotation.quote_html_selector
+			);
+			const annotation = hypothesisToLindyFormat(
+				hypothesisAnnotation,
+				localAnnotation.displayOffset
+			);
+			setAnnotations([
+				...annotations,
+				{ ...annotation, displayOffset: localAnnotation.displayOffset },
+			]);
 		} else if (data.event === 'anchoredAnnotations') {
 			// data.annotations.push({
 			// 	...createDraftAnnotation(url, []),
@@ -30,14 +50,17 @@ export default function App({ url }) {
 	};
 
 	useEffect(async () => {
-		let { annotations } = await getAnnotations(url);
+		const annotations = await getAnnotations(url);
 		window.top.postMessage(
 			{ event: 'anchorAnnotations', annotations },
 			'*'
 		);
 	}, []);
 
-	// console.log(annotations);
+	async function deleteAnnotation(annotation) {
+		setAnnotations(annotations.filter((a) => a.id != annotation.id));
+		deleteAnnotationApi(annotation.id);
+	}
 
 	return (
 		// x margin to show slight shadow (iframe allows no overflow)
@@ -52,6 +75,7 @@ export default function App({ url }) {
 				url={url}
 				annotations={annotations}
 				setAnnotations={setAnnotations}
+				deleteAnnotation={deleteAnnotation}
 				// upvotedAnnotations={upvotedAnnotations}
 				// upvoteAnnotation={upvoteAnnotation}
 			/>
