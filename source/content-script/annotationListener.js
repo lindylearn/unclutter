@@ -19,13 +19,16 @@ export function createAnnotationListener(sidebarIframe) {
 			console.info(
 				`anchoring ${data.annotations.length} annotations on page...`
 			);
+			const pageNotes = data.annotations.filter(
+				(a) => !a.quote_html_selector
+			);
 			const anchoredAnnotations = await highlightAnnotations(
 				data.annotations
 			);
 			sidebarIframe.contentWindow.postMessage(
 				{
 					event: 'anchoredAnnotations',
-					annotations: anchoredAnnotations,
+					annotations: anchoredAnnotations.concat(pageNotes),
 				},
 				'*'
 			);

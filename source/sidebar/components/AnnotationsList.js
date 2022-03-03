@@ -14,9 +14,9 @@ function AnnotationsList({
 		return <div></div>;
 	}
 
-	const orderedAnnotations = annotations.sort(
-		(a, b) => a.displayOffset - b.displayOffset
-	);
+	const orderedAnnotations = annotations
+		.filter((a) => a.displayOffset)
+		.sort((a, b) => a.displayOffset - b.displayOffset);
 
 	const groupedAnnotations = [];
 	let lastOffset = -Infinity;

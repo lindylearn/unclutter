@@ -55,7 +55,9 @@ async function getHypothesisAnnotations(url) {
 		},
 	});
 
-	return response.data.rows.map(hypothesisToLindyFormat);
+	return response.data.rows
+		.filter((a) => !a.references || a.references.length === 0)
+		.map(hypothesisToLindyFormat);
 }
 
 export async function getPageHistory(url) {

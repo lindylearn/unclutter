@@ -10,7 +10,7 @@ import {
 	createDraftAnnotation,
 	hypothesisToLindyFormat,
 } from '../common/getAnnotations';
-import PageNote from './components/PageNote';
+import PageNotesList from './components/PageNotesList';
 import PopularityMessage from './components/PopularityMessage';
 import PageMetadataMessage from './components/PageMetadataMessage';
 import AnnotationsInfoMessage from './components/AnnotationsInfoMessage';
@@ -21,7 +21,6 @@ export default function App({ url }) {
 	window.onmessage = async function ({ data }) {
 		if (data.event === 'createHighlight') {
 			const localAnnotation = data.annotation;
-			// setAnnotations([...annotations, data.annotation]);
 			const hypothesisAnnotation = await createAnnotation(
 				url,
 				localAnnotation.quote_html_selector
@@ -40,10 +39,6 @@ export default function App({ url }) {
 				},
 			]);
 		} else if (data.event === 'anchoredAnnotations') {
-			// data.annotations.push({
-			// 	...createDraftAnnotation(url, []),
-			// 	displayOffset: 400,
-			// });
 			setAnnotations(data.annotations);
 		} else if (data.event === 'changedDisplayOffset') {
 			const updatedAnnotations = annotations.map((a) => ({
@@ -77,7 +72,12 @@ export default function App({ url }) {
 				{/* <PageMetadataMessage url={url} /> */}
 				<PopularityMessage url={url} />
 				{/* <AnnotationsInfoMessage annotations={annotations} /> */}
-				<PageNote />
+				<PageNotesList
+					annotations={annotations.filter(
+						(a) => !a.quote_html_selector
+					)}
+					deleteAnnotation={deleteAnnotation}
+				/>
 			</div>
 			<AnnotationsList
 				url={url}
