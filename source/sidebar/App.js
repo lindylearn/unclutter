@@ -36,6 +36,7 @@ export default function App({ url }) {
 					...annotation,
 					displayOffset: localAnnotation.displayOffset,
 					localId: localAnnotation.localId,
+					isMyAnnotation: true,
 				},
 			]);
 		} else if (data.event === 'anchoredAnnotations') {
@@ -62,7 +63,7 @@ export default function App({ url }) {
 		);
 	}, []);
 
-	async function deleteAnnotation(annotation) {
+	function deleteAnnotation(annotation) {
 		setAnnotations(annotations.filter((a) => a.id != annotation.id));
 		window.top.postMessage({ event: 'removeHighlight', annotation }, '*');
 

@@ -42,7 +42,7 @@ async function getLindyAnnotations(url) {
 		},
 	});
 
-	return response.data.results;
+	return response.data.results.map((a) => ({ ...a, isPublic: true }));
 }
 
 // private annotations directly from hypothesis
@@ -95,15 +95,15 @@ export async function deleteAnnotation(annotationId) {
 	);
 }
 
-export async function editAnnotation(annotationId, text, tags, isPublic) {
-	const reponse = await axios.patch(
-		`${hypothesisApi}/annotations/${annotationId}`,
+export async function patchAnnotation(annotation) {
+	const response = await axios.patch(
+		`${hypothesisApi}/annotations/${annotation.id}`,
 		{
-			text,
-			tags,
+			text: annotation.text,
+			tags: annotation.tags,
 			permissions: {
 				read: [
-					isPublic
+					annotation.isPublic
 						? 'group:__world__'
 						: 'acct:peterhagen@hypothes.is',
 				],

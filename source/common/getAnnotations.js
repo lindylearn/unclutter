@@ -15,6 +15,7 @@ export function createDraftAnnotation(url, selector) {
 		reply_count: null,
 		is_draft: true,
 		isMyAnnotation: true,
+		isPublic: false,
 	};
 }
 
@@ -26,12 +27,15 @@ export function hypothesisToLindyFormat(annotation) {
 		link: `https://hypothes.is/a/${annotation.id}`,
 		created_at: annotation.created,
 		reply_count: 0,
-		quote_text: null,
+		quote_text: annotation.target?.[0].selector?.filter(
+			(s) => s.type == 'TextQuoteSelector'
+		)[0].exact,
 		text: annotation.text,
 		replies: [],
 		upvote_count: 0,
 		tags: annotation.tags,
 		quote_html_selector: annotation.target[0].selector,
 		user_upvoted: false,
+		isPublic: annotation.permissions.read[0] === '__world__',
 	};
 }
