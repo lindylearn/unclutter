@@ -42,7 +42,7 @@ function AnnotationsList({
 			{groupedAnnotations.map((groupedAnnotations) => (
 				<div
 					key={groupedAnnotations[0].displayOffset}
-					className="absolute w-5/6 flex flex-col gap-2"
+					className="absolute w-full flex flex-col gap-2"
 					style={{ top: groupedAnnotations[0].displayOffset }}
 				>
 					{groupedAnnotations.slice(0, 6).map((annotation, i) => {

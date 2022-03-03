@@ -14,6 +14,10 @@ export default function App({ url }) {
 		if (data.event === 'createHighlight') {
 			setAnnotations([...annotations, data.annotation]);
 		} else if (data.event === 'anchoredAnnotations') {
+			data.annotations.push({
+				...createDraftAnnotation(url, []),
+				displayOffset: 400,
+			});
 			setAnnotations(data.annotations);
 		} else if (data.event === 'changedDisplayOffset') {
 			const updatedAnnotations = annotations.map((a) => ({

@@ -5,7 +5,7 @@ export function createDraftAnnotation(url, selector) {
 	return {
 		id: id,
 		url,
-		quote_text: selector?.[2].exact,
+		quote_text: selector?.[2]?.exact || '_',
 		text: '',
 		author: { username: '' },
 		quote_html_selector: selector,

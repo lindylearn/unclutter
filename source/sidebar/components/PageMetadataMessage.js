@@ -7,7 +7,6 @@ export default function PageMetadataMessage({ url }) {
 	useEffect(async () => {
 		const visits = await browser.history.getVisits({ url });
 		setVisits(visits);
-		console.log(visits);
 	}, []);
 
 	return (
