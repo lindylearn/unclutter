@@ -13,7 +13,6 @@ function Annotation({
 	upvoted,
 	upvoteAnnotation,
 	deleteAnnotation,
-	isMyAnnotation = false,
 }) {
 	const { text, offset, author, platform, link, reply_count } = annotation;
 
@@ -118,7 +117,7 @@ function Annotation({
 			</div>
 
 			<div className="top-icon absolute top-2 right-2 text-gray-400 cursor-pointer">
-				{isMyAnnotation ? (
+				{annotation.isMyAnnotation ? (
 					<svg
 						onClick={deleteAnnotation}
 						className="h-3"

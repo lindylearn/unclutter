@@ -1,13 +1,16 @@
 import Annotation from './Annotation';
+import AnnotationDraft from './AnnotationDraft';
 
 function AnnotationThread(props) {
 	const replyLevel = props.replyLevel || 0;
+
+	const Component = props.annotation.isMyAnnotation
+		? AnnotationDraft
+		: Annotation;
+
 	return (
 		<div className="">
-			<Annotation
-				{...props}
-				isMyAnnotation={props.annotation.author === 'peterhagen'}
-			/>
+			<Component {...props} />
 			{replyLevel < 1 && (
 				<div className="ml-5">
 					{props.annotation.replies?.map((reply) => (

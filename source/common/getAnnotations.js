@@ -14,6 +14,7 @@ export function createDraftAnnotation(url, selector) {
 		link: id,
 		reply_count: null,
 		is_draft: true,
+		isMyAnnotation: true,
 	};
 }
 

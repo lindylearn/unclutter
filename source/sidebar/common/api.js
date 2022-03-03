@@ -18,12 +18,17 @@ export async function getAnnotations(url) {
 	// -> show replies, upvotes metadata when available, but new annotations immediately
 	// edits might take a while to propagate this way
 	const seenIds = new Set(publicAnnotations.map((a) => a.id));
-	const annotations = publicAnnotations;
+	let annotations = publicAnnotations;
 	for (const annotation of userAnnotations) {
 		if (!seenIds.has(annotation.id)) {
 			annotations.push(annotation);
 		}
 	}
+
+	annotations = annotations.map((a) => ({
+		...a,
+		isMyAnnotation: a.author === 'peterhagen',
+	}));
 
 	return annotations;
 }

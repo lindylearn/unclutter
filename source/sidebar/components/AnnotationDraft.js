@@ -34,7 +34,7 @@ function AnnotationDraft({
 					className="text-sm md:text-base w-full bg-gray-50 rounded-md py-1 px-2 outline-none"
 					placeholder="Tags"
 				/>
-				<Switch />
+				<Switch annotationId={annotation.id} />
 			</div>
 		</div>
 	);
