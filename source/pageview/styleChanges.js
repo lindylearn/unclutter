@@ -47,7 +47,7 @@ function insertOverrideRules() {
 		.filter((elem) => elem.rel === 'stylesheet')
 		.map((elem) => elem.href);
 
-	console.log(cssUrls);
+	// console.log(cssUrls);
 
 	cssUrls.forEach((url) => {
 		createStylesheetLink(

@@ -96,7 +96,9 @@ function Annotation({
 				</div>
 				<div className="flex-grow" />
 				<a
-					href={`/@${author.username || author}`}
+					href={`https://annotations.lindylearn.io/@${
+						author.username || author
+					}`}
 					target="_blank"
 					rel="noreferrer"
 					className="font-mono text-gray-400"

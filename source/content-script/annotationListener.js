@@ -15,7 +15,7 @@ export function createAnnotationListener(sidebarIframe) {
 		}
 
 		if (data.event == 'anchorAnnotations') {
-			console.log(
+			console.info(
 				`anchoring ${data.annotations.length} annotations on page...`
 			);
 			const anchoredAnnotations = await highlightAnnotations(
@@ -40,7 +40,7 @@ export function createAnnotationListener(sidebarIframe) {
 			return;
 		}
 
-		console.log(`page resized, recalculating annotation offsets...`);
+		console.info(`page resized, recalculating annotation offsets...`);
 		const offsetById = getHighlightOffsets();
 		sidebarIframe.contentWindow.postMessage(
 			{
