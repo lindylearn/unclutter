@@ -1,5 +1,6 @@
 import Annotation from './Annotation';
 import AnnotationDraft from './AnnotationDraft';
+import AnnotationThread from './AnnotationThread';
 
 function AnnotationsList({
 	url,
@@ -51,11 +52,11 @@ function AnnotationsList({
 					{groupedAnnotations.slice(0, 5).map((annotation, i) => {
 						const Component = annotation.is_draft
 							? AnnotationDraft
-							: Annotation;
+							: AnnotationThread;
 
 						return (
 							<div
-								className="annotation-group-item w-full hover:z-10 hover:drop-shadow-lg rounded-r "
+								className="annotation-group-item w-full hover:z-10 hover:drop-shadow rounded-r "
 								style={{
 									position: 'absolute',
 									top: `${i * 40}px`,

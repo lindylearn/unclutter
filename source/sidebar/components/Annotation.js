@@ -16,6 +16,7 @@ function Annotation({
 	const { text, offset, author, platform, link, reply_count } = annotation;
 
 	const textLines = text.slice(0, charLimit).split('\n');
+	//.filter((line) => line.trim() != '');
 
 	const [upvoteCount, setLocalUpvoteCount] = useState(
 		annotation.upvote_count || 0
@@ -29,29 +30,29 @@ function Annotation({
 	return (
 		<div
 			className={
-				'py-1 px-2 bg-white border-l-4 rounded-r drop-shadow-sm ' +
+				'py-1 px-2 bg-white border-l-4 rounded drop-shadow-sm ' +
 				className
 			}
 			style={{ top: offset, borderColor: getAnnotationColor(annotation) }}
 			{...swipeHandlers}
 		>
-			<a href={link} target="_blank" rel="noreferrer">
-				<div className="text-sm md:text-base">
-					{textLines.map((item, i) => {
-						return (
-							<span key={i}>
-								{item}
-								{i == textLines.length - 1 &&
-								text.length > charLimit ? (
-									' ...'
-								) : (
-									<br />
-								)}
-							</span>
-						);
-					})}
-				</div>
-			</a>
+			{/* <a href={link} target="_blank" rel="noreferrer"> */}
+			<div className="text-sm md:text-base">
+				{textLines.map((item, i) => {
+					return (
+						<p key={i} className="">
+							{item}
+							{i == textLines.length - 1 &&
+							text.length > charLimit ? (
+								' ...'
+							) : (
+								<br />
+							)}
+						</p>
+					);
+				})}
+			</div>
+			{/* </a> */}
 			<div className="text-xs md:text-sm text-gray-400 flex gap-5 justify-between font-mono">
 				{reply_count && reply_count > 0 ? (
 					<a href={link} target="_blank" rel="noreferrer">
@@ -60,7 +61,7 @@ function Annotation({
 							focusable="false"
 							data-prefix="fas"
 							data-icon="reply"
-							className="inline-block align-baseline fill-gray-400 rotate-180 w-3 mr-1"
+							className="inline-block align-baseline fill-gray-400 rotate-180 w-3 mr-1 -mb-0.5"
 							role="img"
 							xmlns="http://www.w3.org/2000/svg"
 							viewBox="0 0 512 512"
