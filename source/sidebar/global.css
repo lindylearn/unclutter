@@ -2,6 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
+.recharts-area {
+	transform: translate(0, 30%);
+}
+
+.recharts-cartesian-axis-line {
+	display: none;
+}
+.recharts-cartesian-axis-tick-line {
+	display: none;
+}
+.recharts-xAxis {
+	transform: translate(0, -30%);
+	z-index: 20;
+}
+
+/* Switch component */
 .switch-input {
 	display: none;
 }

@@ -20,13 +20,13 @@ export function PopularityMessage({ annotations, url, onClick }) {
 
 	return (
 		<div
-			className="w-5/6 bg-white rounded-lg drop-shadow-lg md:drop-shadow-sm mb-2 overflow-hidden"
+			className="bg-white rounded-lg drop-shadow-sm mb-2 overflow-hidden"
 			onClick={onClick}
 		>
-			<div className="text-xs md:text-sm text-gray-400 text-right font-mono py-1 px-2 z-10 absolute">
+			{/* <div className="text-xs md:text-sm text-gray-400 text-right font-mono py-1 px-2 z-10 absolute">
 				Article popularity
-			</div>
-			<div className="w-full -mt-3 md:-mt-0">
+			</div> */}
+			<div className="w-full -mt-8">
 				{/* Article popularity over time: */}
 				{data && (
 					<ResponsiveContainer

@@ -17,38 +17,24 @@ function AnnotationDraft({
 	return (
 		<div
 			className={
-				'annotationContainer py-1 px-2 border-l-4 rounded-r drop-shadow' +
+				'annotationContainer py-1 px-2 border-l-4 rounded-r-lg bg-white drop-shadow-sm ' +
 				className
 			}
 			style={{ top: offset, borderColor: getAnnotationColor(annotation) }}
 			{...swipeHandlers}
 		>
 			<textarea
-				className="text-sm md:text-base w-full bg-gray-100 rounded-r-md py-1 px-2 outline-none"
-				placeholder="Note"
+				className="text-sm md:text-base w-full bg-gray-50 rounded-md py-1 px-2 outline-none"
+				placeholder="Private note"
 				value={text}
 				onChange={(e) => setText(e.target.value)}
 			/>
-			<div className="flex">
+			<div className="flex gap-2">
 				<input
-					className="text-sm md:text-base w-full bg-gray-100 rounded-r-md py-1 px-2 outline-none"
+					className="text-sm md:text-base w-full bg-gray-50 rounded-md py-1 px-2 outline-none"
 					placeholder="Tags"
 				/>
 				<Switch />
-			</div>
-			<div className="text-xs md:text-sm flex justify-end gap-2">
-				{/* <div
-					className="rounded-md px-1 cursor-pointer font-bold"
-					onClick={deleteAnnotation}
-				>
-					Delete
-				</div>
-				<div
-					className="rounded-md px-1 cursor-pointer font-bold"
-					onClick={() => postAnnotation(text, annotation)}
-				>
-					Annotate anonymously
-				</div> */}
 			</div>
 		</div>
 	);

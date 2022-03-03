@@ -29,7 +29,7 @@ function Annotation({
 	return (
 		<div
 			className={
-				'py-1 px-2 bg-white border-l-4 rounded-r drop-shadow-sm' +
+				'py-1 px-2 bg-white border-l-4 rounded-r drop-shadow-sm ' +
 				className
 			}
 			style={{ top: offset, borderColor: getAnnotationColor(annotation) }}
