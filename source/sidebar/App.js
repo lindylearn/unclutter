@@ -14,8 +14,16 @@ import PageNotesList from './components/PageNotesList';
 import PopularityMessage from './components/PopularityMessage';
 import PageMetadataMessage from './components/PageMetadataMessage';
 import AnnotationsInfoMessage from './components/AnnotationsInfoMessage';
+import LoginMessage from './components/LoginMessage';
+import { getHypothesisUsername } from '../common/storage';
 
 export default function App({ url }) {
+	const [isLoggedIn, setIsLoggedIn] = useState(null);
+	useEffect(async () => {
+		const user = await getHypothesisUsername();
+		setIsLoggedIn(!!user);
+	}, []);
+
 	const [annotations, setAnnotations] = useState([]);
 
 	async function createAnnotation(localAnnotation) {
@@ -76,18 +84,24 @@ export default function App({ url }) {
 	return (
 		// x margin to show slight shadow (iframe allows no overflow)
 		<div className="mx-2">
-			<div className="absolute w-full px-2 flex flex-col gap-2">
+			<div className="absolute w-full pr-4 flex flex-col gap-2">
 				{/* <PageMetadataMessage url={url} /> */}
 				<PopularityMessage url={url} />
+				{isLoggedIn === false && (
+					<LoginMessage onLogin={() => setIsLoggedIn(true)} />
+				)}
+
 				{/* <AnnotationsInfoMessage annotations={annotations} /> */}
-				<PageNotesList
-					url={url}
-					annotations={annotations.filter(
-						(a) => !a.quote_html_selector
-					)}
-					createAnnotation={createAnnotation}
-					deleteAnnotation={deleteAnnotation}
-				/>
+				{isLoggedIn && (
+					<PageNotesList
+						url={url}
+						annotations={annotations.filter(
+							(a) => !a.quote_html_selector
+						)}
+						createAnnotation={createAnnotation}
+						deleteAnnotation={deleteAnnotation}
+					/>
+				)}
 			</div>
 			<AnnotationsList
 				url={url}

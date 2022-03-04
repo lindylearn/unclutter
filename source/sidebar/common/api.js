@@ -1,6 +1,7 @@
 import axios from 'axios';
 import browser from 'webextension-polyfill';
 import { hypothesisToLindyFormat } from '../../common/getAnnotations';
+import { getHypothesisToken } from '../../common/storage';
 
 // const lindyApiUrl = 'http://127.0.0.1:8000';
 const lindyApiUrl = 'https://api2.lindylearn.io';
@@ -166,8 +167,7 @@ export async function getTagDetails(tag) {
 }
 
 async function _getConfig() {
-	const settings = await browser.storage.sync.get('hypothesis-api-token');
-	const apiToken = settings['hypothesis-api-token'];
+	const apiToken = await getHypothesisToken();
 
 	if (apiToken) {
 		return {

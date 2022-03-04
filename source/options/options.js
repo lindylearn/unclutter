@@ -1,25 +1,41 @@
-// Don't forget to import this wherever you use it
-import browser from 'webextension-polyfill';
+import React, { useEffect, useState } from 'react';
 
-import optionsStorage from './options-storage.js';
+import { getHypothesisToken, validateSaveToken } from '../common/storage';
 
-optionsStorage.syncForm('#options-form');
+function OptionsPage({}) {
+	const [token, setToken] = useState('');
+	useEffect(async () => {
+		setToken(await getHypothesisToken());
+	}, []);
+	async function onChangeToken(newToken) {
+		setToken(newToken);
+		await validateSaveToken(newToken, true);
+	}
 
-const rangeInputs = [...document.querySelectorAll('input[type="range"][name^="color"]')];
-const numberInputs = [...document.querySelectorAll('input[type="number"][name^="color"]')];
-const output = document.querySelector('.color-output');
-
-function updateColor() {
-	output.style.backgroundColor = `rgb(${rangeInputs[0].value}, ${rangeInputs[1].value}, ${rangeInputs[2].value})`;
+	return (
+		<div>
+			<h3>Hypothes.is Authentication</h3>
+			<div className="text-input">
+				<label class="text-input">
+					<a
+						className="underline"
+						href="https://hypothes.is/account/developer"
+						target="_blank"
+						rel="noopener noreferrer"
+						style={{ marginRight: '1em' }}
+					>
+						API token
+					</a>
+				</label>
+				<input
+					type="text"
+					style={{ width: '300px' }}
+					spellCheck="false"
+					value={token}
+					onChange={(e) => onChangeToken(e.target.value)}
+				/>
+			</div>
+		</div>
+	);
 }
-
-function updateInputField(event) {
-	numberInputs[rangeInputs.indexOf(event.currentTarget)].value = event.currentTarget.value;
-}
-
-for (const input of rangeInputs) {
-	input.addEventListener('input', updateColor);
-	input.addEventListener('input', updateInputField);
-}
-
-window.addEventListener('load', updateColor);
+export default OptionsPage;
