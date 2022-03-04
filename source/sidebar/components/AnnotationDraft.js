@@ -10,8 +10,9 @@ function AnnotationDraft({
 	url,
 	annotation,
 	className,
-	swipeHandlers = {},
 	deleteAnnotation,
+	placeholder = 'Optional note',
+	swipeHandlers = {},
 }) {
 	const debouncedPatchOrCreate = useCallback(
 		debounce(apiPatchOrCreate, 5000),
@@ -39,7 +40,7 @@ function AnnotationDraft({
 	return (
 		<div
 			className={
-				'annotation py-1 px-2 border-l-4 rounded-r-lg bg-white drop-shadow-sm ' +
+				'annotation py-1 px-1 border-l-4 rounded-r-lg bg-white drop-shadow-sm ' +
 				className
 			}
 			style={{
@@ -50,7 +51,7 @@ function AnnotationDraft({
 		>
 			<textarea
 				className="text-sm md:text-base w-full bg-gray-50 rounded-md py-1 px-2 outline-none"
-				placeholder="Private note"
+				placeholder={placeholder}
 				value={changedAnnotation.text}
 				onChange={(e) =>
 					updateAnnotation({

@@ -37,6 +37,7 @@ export function PageNote({
 			className="border-l-0 rounded"
 			createAnnotation={createAnnotation}
 			deleteAnnotation={deleteAnnotation}
+			placeholder="Page note"
 		/>
 	);
 }
