@@ -17,11 +17,11 @@ Screenshot of extension options:
 
 ## Features
 
-- Use npm dependencies thanks to Parcel 2.
-- Use modern promise-based `browser.*` APIs [webextension-polyfill][link-webext-polyfill].
-- [Auto-syncing options](#auto-syncing-options).
-- [Auto-publishing](#publishing) with auto-versioning and support for manual releases.
-- [Extensive configuration documentation](#configuration).
+-   Use npm dependencies thanks to Parcel 2.
+-   Use modern promise-based `browser.*` APIs [webextension-polyfill][link-webext-polyfill].
+-   [Auto-syncing options](#auto-syncing-options).
+-   [Auto-publishing](#publishing) with auto-versioning and support for manual releases.
+-   [Extensive configuration documentation](#configuration).
 
 ## Getting started
 
@@ -65,9 +65,9 @@ The extension doesn't target any specific ECMAScript environment or provide any 
 
 Being based on Parcel 2 and its [WebExtension transformer](https://parceljs.org/recipes/web-extension/), you get all the good parts:
 
-- Browserlist-based code transpiling (which defaults to just the latest Chrome and Firefox versions)
-- Automatically picks up any new file specified in `manifest.json`
-- Adding TypeScript support is as easy as renaming your files to `.ts`; [sindresorhus/tsconfig][link-tsconfig] is also advised in that case.
+-   Browserlist-based code transpiling (which defaults to just the latest Chrome and Firefox versions)
+-   Automatically picks up any new file specified in `manifest.json`
+-   Adding TypeScript support is as easy as renaming your files to `.ts`; [sindresorhus/tsconfig][link-tsconfig] is also advised in that case.
 
 ### Auto-syncing options
 
@@ -92,8 +92,8 @@ The GitHub Actions workflow will:
 
 Thanks to the included [GitHub Action Workflows](.github/workflows), if you set up those secrets in the repo's Settings, the deployment will automatically happen:
 
-- on a schedule, by default [every week](.github/workflows/deploy-automatic.yml) (but only if there are any new commits in the last tag)
-- manually, by clicking ["Run workflow"](https://github.blog/changelog/2020-07-06-github-actions-manual-triggers-with-workflow_dispatch/) in the Actions tab.
+-   on a schedule, by default [every week](.github/workflows/deploy-automatic.yml) (but only if there are any new commits in the last tag)
+-   manually, by clicking ["Run workflow"](https://github.blog/changelog/2020-07-06-github-actions-manual-triggers-with-workflow_dispatch/) in the Actions tab.
 
 ## Credits
 
@@ -101,7 +101,7 @@ Extension icon made by [Freepik](https://www.freepik.com) from [www.flaticon.com
 
 ## Extensions created using this template
 
-- [notlmn/copy-as-markdown](https://github.com/notlmn/copy-as-markdown) - Browser extension to copy hyperlinks, images, and selected text as Markdown.
+-   [notlmn/copy-as-markdown](https://github.com/notlmn/copy-as-markdown) - Browser extension to copy hyperlinks, images, and selected text as Markdown.
 
 ## License
 

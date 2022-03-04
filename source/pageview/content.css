@@ -1,6 +1,6 @@
 html {
-	background-color: rgb(243 244 246);
-	/* background: radial-gradient(
+    background-color: rgb(243 244 246);
+    /* background: radial-gradient(
 		rgb(229 231 235) 0px,
 		rgb(243 244 246) 2px
 	) !important;
@@ -8,45 +8,45 @@ html {
 }
 
 body {
-	/* animation properties are set inline */
+    /* animation properties are set inline */
 
-	position: relative;
+    position: relative;
 }
 .body-background {
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	z-index: -100;
-	content: '';
-	/* height and background-color set via JS */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: -100;
+    content: "";
+    /* height and background-color set via JS */
 
-	border-radius: 10px;
-	filter: drop-shadow(0 10px 8px rgb(0 0 0 / 0.04))
-		drop-shadow(0 4px 3px rgb(0 0 0 / 0.1));
+    border-radius: 10px;
+    filter: drop-shadow(0 10px 8px rgb(0 0 0 / 0.04))
+        drop-shadow(0 4px 3px rgb(0 0 0 / 0.1));
 }
 
 body.pageview {
-	width: 60% !important;
-	margin: 20px !important;
+    width: 60% !important;
+    margin: 20px !important;
 
-	border-radius: 10px !important;
-	overflow-x: hidden !important;
+    border-radius: 10px !important;
+    overflow-x: hidden !important;
 }
 
 .sidebar {
-	position: absolute;
-	top: 0;
-	left: calc(100% + 20px);
-	width: calc(100vw - 100% - 20px - 2 * 20px - 10px);
-	height: 100%;
+    position: absolute;
+    top: 0;
+    left: calc(100% + 20px);
+    width: calc(100vw - 100% - 20px - 2 * 20px - 10px);
+    height: 100%;
 }
 
 .share-icon {
-	position: absolute;
-	top: 10px;
-	right: 10px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
 }
 .share-icon img {
-	width: 13px;
+    width: 13px;
 }
