@@ -39,7 +39,7 @@ function AnnotationDraft({
 	return (
 		<div
 			className={
-				'annotationContainer py-1 px-2 border-l-4 rounded-r-lg bg-white drop-shadow-sm ' +
+				'annotation py-1 px-2 border-l-4 rounded-r-lg bg-white drop-shadow-sm ' +
 				className
 			}
 			style={{

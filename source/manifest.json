@@ -21,7 +21,8 @@
 		"scripting",
 		"history",
 		"<all_urls>",
-		"tabs"
+		"tabs",
+		"management"
 	],
 	"options_ui": {
 		"chrome_style": true,

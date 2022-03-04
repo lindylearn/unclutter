@@ -9,14 +9,17 @@ browser.browserAction.onClicked.addListener(async (tab) => {
 	await browser.tabs.sendMessage(tab.id, 'togglePageView');
 });
 
-async function hotReload() {
-	console.log('hotreload');
+async function enableDevHotReload() {
+	const { installType } = await browser.management.get(browser.runtime.id);
+	if (installType !== 'development') {
+		return;
+	}
+
+	console.log('Enabling page view hot reload for the first tab');
 	let tabs = await browser.tabs.query({});
 	let tab = tabs[0];
 	await browser.tabs.executeScript(tab.id, {
 		file: 'content-script/index.js',
 	});
 }
-
-browser.runtime.onStartup.addListener(hotReload);
-hotReload();
+enableDevHotReload();
