@@ -20,7 +20,6 @@ jobs:
                   fetch-depth: 20
             - name: install
               run: npm ci || npm install
-            - run: npm test
             - uses: fregante/daily-version-action@v1
               name: Create tag if necessary
               id: daily-version
@@ -36,6 +35,7 @@ jobs:
             fail-fast: false
             matrix:
                 command:
+                    - github
                     - firefox
                     - chrome
         runs-on: ubuntu-latest
@@ -44,18 +44,21 @@ jobs:
             - name: install
               run: npm ci || npm install
             - run: npm run build --if-present
-            - name: Update extension’s meta
+            - name: Update extension meta
               run: >-
                   npx dot-json@1 $DIRECTORY/manifest.json version ${{
                   needs.Version.outputs.version }}
             - name: Submit
               run: |
                   case ${{ matrix.command }} in
-                    chrome)
-                      cd $DIRECTORY && npx chrome-webstore-upload-cli@1 upload --auto-publish
+                    github)
+                      cd $DIRECTORY && npx web-ext-build@6
                       ;;
                     firefox)
                       cd $DIRECTORY && npx web-ext-submit@6
+                      ;;
+                    chrome)
+                      cd $DIRECTORY && npx chrome-webstore-upload-cli@1 upload --auto-publish
                       ;;
                   esac
               env:
