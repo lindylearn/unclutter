@@ -1,4 +1,3 @@
-import Annotation from "./Annotation";
 import AnnotationDraft from "./AnnotationDraft";
 import AnnotationThread from "./AnnotationThread";
 

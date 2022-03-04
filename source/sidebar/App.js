@@ -1,21 +1,18 @@
 import React, { useEffect, useState } from "react";
-
-import AnnotationsList from "./components/AnnotationsList";
-import {
-    getAnnotations,
-    createAnnotation as createAnnotationApi,
-    deleteAnnotation as deleteAnnotationApi,
-} from "./common/api";
 import {
     createDraftAnnotation,
     hypothesisToLindyFormat,
 } from "../common/getAnnotations";
+import { getHypothesisUsername } from "../common/storage";
+import {
+    createAnnotation as createAnnotationApi,
+    deleteAnnotation as deleteAnnotationApi,
+    getAnnotations,
+} from "./common/api";
+import AnnotationsList from "./components/AnnotationsList";
+import LoginMessage from "./components/LoginMessage";
 import PageNotesList from "./components/PageNotesList";
 import PopularityMessage from "./components/PopularityMessage";
-import PageMetadataMessage from "./components/PageMetadataMessage";
-import AnnotationsInfoMessage from "./components/AnnotationsInfoMessage";
-import LoginMessage from "./components/LoginMessage";
-import { getHypothesisUsername } from "../common/storage";
 
 export default function App({ url }) {
     const [isLoggedIn, setIsLoggedIn] = useState(null);

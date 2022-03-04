@@ -1,10 +1,8 @@
-import React, { useState, useCallback } from "react";
-import axios from "axios";
 import debounce from "lodash/debounce";
-
+import React, { useCallback, useState } from "react";
 import { getAnnotationColor } from "../../common/styling";
-import Switch from "./Switch";
 import { createAnnotation, patchAnnotation } from "../common/api";
+import Switch from "./Switch";
 
 function AnnotationDraft({
     url,

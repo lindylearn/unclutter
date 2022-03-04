@@ -1,10 +1,10 @@
+import throttle from "lodash/throttle";
 import {
+    getHighlightOffsets,
     highlightAnnotations,
     removeAllHighlights,
-    getHighlightOffsets,
     removeHighlight,
 } from "./annotationApi";
-import throttle from "lodash/throttle";
 
 let listenerRef;
 export function createAnnotationListener(sidebarIframe) {

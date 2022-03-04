@@ -1,5 +1,4 @@
 import { useState } from "react";
-
 import { validateSaveToken } from "../../common/storage";
 
 export default function LoginMessage({ onLogin }) {

@@ -1,6 +1,6 @@
-import browser from "webextension-polyfill";
 import { useEffect, useState } from "react";
 import { format as formatRelativeTime } from "timeago.js";
+import browser from "webextension-polyfill";
 
 export default function PageMetadataMessage({ url }) {
     const [visits, setVisits] = useState(null);

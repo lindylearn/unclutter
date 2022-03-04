@@ -1,6 +1,6 @@
+import { createDraftAnnotation } from "../common/getAnnotations";
 import { describe as describeAnnotation } from "../common/hypothesis/annotator/anchoring/html";
 import { highlightAnnotations } from "./annotationApi";
-import { createDraftAnnotation } from "../common/getAnnotations";
 
 let listenerRef;
 export function createSelectionListener(sidebarIframe) {

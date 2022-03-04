@@ -1,8 +1,8 @@
-import * as functions from "firebase-functions";
-import * as cors from "cors";
 import axios from "axios";
+import * as cors from "cors";
 // @ts-ignore
 import * as css from "css";
+import * as functions from "firebase-functions";
 
 const corsWrapper = cors({ origin: true });
 

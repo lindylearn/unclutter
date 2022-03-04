@@ -1,6 +1,5 @@
-import { useState, useEffect } from "react";
-import { ResponsiveContainer, AreaChart, Area, XAxis } from "recharts";
-
+import { useEffect, useState } from "react";
+import { Area, AreaChart, ResponsiveContainer, XAxis } from "recharts";
 import { getPageHistory } from "../common/api";
 
 export function PopularityMessage({ annotations, url, onClick }) {

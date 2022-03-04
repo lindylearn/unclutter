@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-
 import { getHypothesisToken, validateSaveToken } from "../common/storage";
 
 function OptionsPage({}) {

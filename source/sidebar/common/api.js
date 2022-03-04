@@ -1,5 +1,4 @@
 import axios from "axios";
-import browser from "webextension-polyfill";
 import { hypothesisToLindyFormat } from "../../common/getAnnotations";
 import {
     getHypothesisToken,

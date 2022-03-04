@@ -1,5 +1,9 @@
 import browser from "webextension-polyfill";
-
+import { injectSidebar, removeSidebar } from "../pageview/injectSidebar";
+import {
+    patchDocumentStyle,
+    unPatchDocumentStyle,
+} from "../pageview/styleChanges";
 import {
     createAnnotationListener,
     removeAnnotationListener,
@@ -8,11 +12,6 @@ import {
     createSelectionListener,
     removeSelectionListener,
 } from "./selectionListener";
-import { injectSidebar, removeSidebar } from "../pageview/injectSidebar";
-import {
-    patchDocumentStyle,
-    unPatchDocumentStyle,
-} from "../pageview/styleChanges";
 
 browser.runtime.onMessage.addListener((event) => {
     if (event === "togglePageView") {

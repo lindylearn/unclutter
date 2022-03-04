@@ -1,5 +1,3 @@
-import axios from "axios";
-
 export function createDraftAnnotation(url, selector) {
     const id = `draft_${Math.random().toString(36).slice(-5)}`;
     return {

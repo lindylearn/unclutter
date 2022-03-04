@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from "react";
-
-import { getAnnotationColor } from "../../common/styling";
-
-import ycIcon from "../../assets/icons/yc.svg";
+import React, { useState } from "react";
 import hypothesisIcon from "../../assets/icons/hypothesis.svg";
+import ycIcon from "../../assets/icons/yc.svg";
+import { getAnnotationColor } from "../../common/styling";
 
 function Annotation({
     annotation,
