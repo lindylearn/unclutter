@@ -1,7 +1,10 @@
 import axios from 'axios';
 import browser from 'webextension-polyfill';
 import { hypothesisToLindyFormat } from '../../common/getAnnotations';
-import { getHypothesisToken } from '../../common/storage';
+import {
+	getHypothesisToken,
+	getHypothesisUsername,
+} from '../../common/storage';
 
 // const lindyApiUrl = 'http://127.0.0.1:8000';
 const lindyApiUrl = 'https://api2.lindylearn.io';
@@ -26,9 +29,10 @@ export async function getAnnotations(url) {
 		}
 	}
 
+	const username = await getHypothesisUsername();
 	annotations = annotations.map((a) => ({
 		...a,
-		isMyAnnotation: a.author === 'peterhagen',
+		isMyAnnotation: a.author === username,
 	}));
 
 	return annotations;
@@ -48,11 +52,12 @@ async function getLindyAnnotations(url) {
 
 // private annotations directly from hypothesis
 async function getHypothesisAnnotations(url) {
+	const username = await getHypothesisUsername();
 	const response = await axios.get(`${hypothesisApi}/search`, {
 		...(await _getConfig()),
 		params: {
 			url,
-			user: `acct:peterhagen@hypothes.is`,
+			user: `acct:${username}@hypothes.is`,
 		},
 	});
 
@@ -75,6 +80,7 @@ export async function getPageHistory(url) {
 // --- user actions
 
 export async function createAnnotation(pageUrl, localAnnotation) {
+	const username = await getHypothesisUsername();
 	const response = await axios.post(
 		`${hypothesisApi}/annotations`,
 		{
@@ -91,7 +97,7 @@ export async function createAnnotation(pageUrl, localAnnotation) {
 				read: [
 					localAnnotation.isPublic
 						? 'group:__world__'
-						: 'acct:peterhagen@hypothes.is',
+						: `acct:${username}@hypothes.is`,
 				],
 			},
 		},
@@ -108,6 +114,7 @@ export async function deleteAnnotation(annotationId) {
 }
 
 export async function patchAnnotation(annotation) {
+	const username = await getHypothesisUsername();
 	const response = await axios.patch(
 		`${hypothesisApi}/annotations/${annotation.id}`,
 		{
@@ -117,7 +124,7 @@ export async function patchAnnotation(annotation) {
 				read: [
 					annotation.isPublic
 						? 'group:__world__'
-						: 'acct:peterhagen@hypothes.is',
+						: `acct:${username}@hypothes.is`,
 				],
 			},
 		},

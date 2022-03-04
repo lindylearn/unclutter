@@ -6,7 +6,7 @@ export async function getHypothesisToken() {
 }
 
 export async function getHypothesisUsername() {
-	return (await getUserInfo())['hypothesis-api-token'];
+	return (await getUserInfo())['hypothesis-username'];
 }
 
 export async function getUserInfo() {
