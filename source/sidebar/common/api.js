@@ -73,17 +73,26 @@ export async function getPageHistory(url) {
 
 // --- user actions
 
-export async function createAnnotation(pageUrl, htmlSelector) {
+export async function createAnnotation(pageUrl, localAnnotation) {
 	const response = await axios.post(
 		`${hypothesisApi}/annotations`,
 		{
 			uri: pageUrl,
+			text: localAnnotation.text,
 			target: [
 				{
 					source: pageUrl,
-					selector: htmlSelector,
+					selector: localAnnotation.htmlSelector,
 				},
 			],
+			tags: localAnnotation.tags,
+			permissions: {
+				read: [
+					localAnnotation.isPublic
+						? 'group:__world__'
+						: 'acct:peterhagen@hypothes.is',
+				],
+			},
 		},
 		await _getConfig()
 	);

@@ -4,23 +4,36 @@ import debounce from 'lodash/debounce';
 
 import { getAnnotationColor } from '../../common/styling';
 import Switch from './Switch';
-import { patchAnnotation } from '../common/api';
+import { createAnnotation, patchAnnotation } from '../common/api';
 
 function AnnotationDraft({
+	url,
 	annotation,
 	className,
 	swipeHandlers = {},
 	deleteAnnotation,
 }) {
-	const debouncedPatchAnnotation = useCallback(
-		debounce(patchAnnotation, 5000),
+	const debouncedPatchOrCreate = useCallback(
+		debounce(apiPatchOrCreate, 5000),
 		[]
 	);
 
 	const [changedAnnotation, setChangedAnnotation] = useState(annotation);
-	function updateAnnotation(newAnnotation) {
+	async function updateAnnotation(newAnnotation) {
 		setChangedAnnotation(newAnnotation);
-		debouncedPatchAnnotation(newAnnotation);
+		const remoteAnnotation = await debouncedPatchOrCreate(
+			url,
+			newAnnotation
+		);
+		// remoteAnnotation is null if debounced call
+		if (remoteAnnotation && newAnnotation.is_draft) {
+			// patch correct id to update in local state
+			setChangedAnnotation((a) => ({
+				...a,
+				id: remoteAnnotation.id,
+				is_draft: false,
+			}));
+		}
 	}
 
 	return (
@@ -87,29 +100,10 @@ function AnnotationDraft({
 }
 export default AnnotationDraft;
 
-async function postAnnotation(text, annotation) {
-	// from https://hypothes.is/account/developer (lindylearn account)
-	const token = '6879-dLUG7Fm-lPT4sNPcnsGBeexJbmzS82bBzGK3PADywQU';
-
-	axios.post(
-		`https://api.hypothes.is/api/annotations`,
-		{
-			uri: annotation.url,
-			text: text,
-			tags: ['via annotations.lindylearn.io'],
-			target: [
-				{
-					source: annotation.url,
-					selector: annotation.quote_html_selector,
-				},
-			],
-			references: [],
-			permissions: {
-				read: ['group:__world__'],
-			},
-		},
-		{
-			headers: { Authorization: `Bearer ${token}` },
-		}
-	);
+async function apiPatchOrCreate(url, annotation) {
+	if (annotation.is_draft) {
+		return await createAnnotation(url, annotation);
+	} else {
+		return await patchAnnotation(annotation);
+	}
 }

@@ -16,6 +16,8 @@ export function createDraftAnnotation(url, selector) {
 		is_draft: true,
 		isMyAnnotation: true,
 		isPublic: false,
+		upvote_count: 0,
+		tags: [],
 	};
 }
 

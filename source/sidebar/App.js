@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import AnnotationsList from './components/AnnotationsList';
 import {
 	getAnnotations,
-	createAnnotation,
+	createAnnotation as createAnnotationApi,
 	deleteAnnotation as deleteAnnotationApi,
 } from './common/api';
 import {
@@ -18,28 +18,30 @@ import AnnotationsInfoMessage from './components/AnnotationsInfoMessage';
 export default function App({ url }) {
 	const [annotations, setAnnotations] = useState([]);
 
+	async function createAnnotation(localAnnotation) {
+		const hypothesisAnnotation = await createAnnotationApi(
+			url,
+			localAnnotation
+		);
+		const annotation = hypothesisToLindyFormat(
+			hypothesisAnnotation,
+			localAnnotation.displayOffset
+		);
+		setAnnotations([
+			...annotations,
+			{
+				...annotation,
+				displayOffset: localAnnotation.displayOffset,
+				localId: localAnnotation.localId,
+				isMyAnnotation: true,
+			},
+		]);
+	}
 	window.onmessage = async function ({ data }) {
 		if (data.event === 'createHighlight') {
-			const localAnnotation = data.annotation;
-			const hypothesisAnnotation = await createAnnotation(
-				url,
-				localAnnotation.quote_html_selector
-			);
-			const annotation = hypothesisToLindyFormat(
-				hypothesisAnnotation,
-				localAnnotation.displayOffset
-			);
-			setAnnotations([
-				...annotations,
-				{
-					...annotation,
-					displayOffset: localAnnotation.displayOffset,
-					localId: localAnnotation.localId,
-					isMyAnnotation: true,
-				},
-			]);
+			createAnnotation(data.annotation);
 		} else if (data.event === 'anchoredAnnotations') {
-			setAnnotations(data.annotations);
+			setAnnotations([...annotations, ...data.annotations]);
 		} else if (data.event === 'changedDisplayOffset') {
 			const updatedAnnotations = annotations.map((a) => ({
 				...a,
@@ -52,6 +54,12 @@ export default function App({ url }) {
 
 	useEffect(async () => {
 		const annotations = await getAnnotations(url);
+		const pageNotes = annotations.filter((a) => !a.quote_html_selector);
+		if (pageNotes.length === 0) {
+			pageNotes.push(createDraftAnnotation(url));
+		}
+
+		setAnnotations(pageNotes);
 		window.top.postMessage(
 			{ event: 'anchorAnnotations', annotations },
 			'*'
@@ -73,9 +81,11 @@ export default function App({ url }) {
 				<PopularityMessage url={url} />
 				{/* <AnnotationsInfoMessage annotations={annotations} /> */}
 				<PageNotesList
+					url={url}
 					annotations={annotations.filter(
 						(a) => !a.quote_html_selector
 					)}
+					createAnnotation={createAnnotation}
 					deleteAnnotation={deleteAnnotation}
 				/>
 			</div>
