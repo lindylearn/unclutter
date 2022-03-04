@@ -1,6 +1,6 @@
-# LindyLearn Annotations Browser Extension
+# LindyLearn Annotations
 
-Browser extension to annotate great web pages, and talk about them. Supports Hypothes.is web annotations and quotes comments from Hacker News.
+Browser extension to annotate and talk about web pages. Supports Hypothes.is web annotations and quotes comments from Hacker News.
 
 ![Alt Text](./media/video.gif)
 
