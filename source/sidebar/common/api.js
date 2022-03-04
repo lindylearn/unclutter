@@ -82,7 +82,7 @@ export async function createAnnotation(pageUrl, localAnnotation) {
 			target: [
 				{
 					source: pageUrl,
-					selector: localAnnotation.htmlSelector,
+					selector: localAnnotation.quote_html_selector,
 				},
 			],
 			tags: localAnnotation.tags,
