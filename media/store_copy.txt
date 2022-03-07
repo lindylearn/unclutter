@@ -1,0 +1,15 @@
+Alternative client for Hypothes.is web annotations.
+
+• One click for everything: simply selecting text creates a highlight, editing a note updates it, there's a switch to make annotations public or private.
+• More annotations: Find inline quote comments from Hacker News, and a graph of the article's popularity over time.
+• The annotation sidebar stays open, so you always see your in-progress notes.
+
+Like the project or found a bug? Create an issue at https://github.com/lindylearn/annotations!
+
+
+-- Privacy practices:
+
+Allow the creation and display of web annotations on article pages.
+Storing user settings and authentication tokens.
+If the user so chooses, change the HTML of the active page to display web annotations about that page.
+References external CSS to adjust a site's style dynamically to the annotation display, if the user so chooses.
