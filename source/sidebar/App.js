@@ -86,7 +86,6 @@ export default function App({ url }) {
         // x margin to show slight shadow (iframe allows no overflow)
         <div className="mx-2">
             <div className="absolute w-full pr-4 flex flex-col gap-2">
-                {/* <PageMetadataMessage url={url} /> */}
                 <PopularityMessage url={url} />
                 {isLoggedIn === false && (
                     <LoginMessage onLogin={() => setIsLoggedIn(true)} />
