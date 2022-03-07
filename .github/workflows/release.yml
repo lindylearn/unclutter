@@ -9,7 +9,7 @@ jobs:
         outputs:
             created: ${{ steps.daily-version.outputs.created }}
             version: ${{ steps.daily-version.outputs.version }}
-            upload_url: ${{ steps.get_release.outputs.upload_url }}
+            upload_url: ${{ steps.latest_release_info.outputs.upload_url }}
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v2
