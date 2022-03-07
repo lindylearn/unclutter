@@ -10,6 +10,7 @@ browser.browserAction.onClicked.addListener(async (tab) => {
 });
 
 async function enableDevHotReload() {
+    // unfortunately, this doesn't distinguish betweem 'web-ext run' and manual installs
     const { installType } = await browser.management.get(browser.runtime.id);
     if (installType !== "development") {
         return;
@@ -22,4 +23,5 @@ async function enableDevHotReload() {
         file: "content-script/index.js",
     });
 }
-enableDevHotReload();
+// should be disabled for releases
+// enableDevHotReload();
