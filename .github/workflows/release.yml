@@ -1,10 +1,6 @@
 env:
     DIRECTORY: distribution
 
-# FILE GENERATED WITH: npx ghat fregante/ghatemplates/webext
-# SOURCE: https://github.com/fregante/ghatemplates
-# OPTIONS: {"exclude":["on.schedule"]}
-
 name: Release
 on:
     workflow_dispatch: null
@@ -13,13 +9,12 @@ jobs:
         outputs:
             created: ${{ steps.daily-version.outputs.created }}
             version: ${{ steps.daily-version.outputs.version }}
+            upload_url: ${{ steps.get_release.outputs.upload_url }}
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v2
               with:
                   fetch-depth: 20
-            - name: install
-              run: npm ci || npm install
             - uses: fregante/daily-version-action@v1
               name: Create tag if necessary
               id: daily-version
@@ -27,44 +22,70 @@ jobs:
               if: steps.daily-version.outputs.created
               with:
                   token: ${{ secrets.GITHUB_TOKEN }}
-                  exclude: true
-    Submit:
+            - name: Get release
+              if: steps.daily-version.outputs.created
+              id: get_release
+              uses: bruceadams/get-release@v1.2.3
+              env:
+                GITHUB_TOKEN: ${{ github.token }}
+    Build:
         needs: Version
         if: github.event_name == 'workflow_dispatch' || needs.Version.outputs.created
-        strategy:
-            fail-fast: false
-            matrix:
-                command:
-                    - github
-                    - firefox
-                    - chrome
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v2
-            - name: install
-              run: npm ci || npm install
-            - run: npm run build --if-present
-            - name: Update extension meta
-              run: >-
-                  npx dot-json@1 $DIRECTORY/manifest.json version ${{
-                  needs.Version.outputs.version }}
-            - name: Submit
-              run: |
-                  case ${{ matrix.command }} in
-                    github)
-                      cd $DIRECTORY && npx web-ext-build@6
-                      ;;
-                    firefox)
-                      cd $DIRECTORY && npx web-ext-submit@6
-                      ;;
-                    chrome)
-                      cd $DIRECTORY && npx chrome-webstore-upload-cli@1 upload --auto-publish
-                      ;;
-                  esac
-              env:
-                  EXTENSION_ID: ${{ secrets.EXTENSION_ID }}
-                  CLIENT_ID: ${{ secrets.CLIENT_ID }}
-                  CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
-                  REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
-                  WEB_EXT_API_KEY: ${{ secrets.WEB_EXT_API_KEY }}
-                  WEB_EXT_API_SECRET: ${{ secrets.WEB_EXT_API_SECRET }}
+          - name: install
+            run: yarn install
+          - name: build
+            run: yarn build
+          - name: Update extension meta
+            run: >-
+                npx dot-json@1 $DIRECTORY/manifest.json version ${{
+                needs.Version.outputs.version }}
+          - name: package
+            run: web-ext build
+          - name: upload artifact
+            uses: actions/upload-release-asset@v1
+            env:
+              GITHUB_TOKEN: ${{ github.token }}
+            with:
+              upload_url: ${{ needs.Version.outputs.upload_url }}
+              asset_path: ./web-ext-artifacts/lindylearn_annotations-${{ needs.Version.outputs.version }}.zip
+              asset_name: lindylearn_annotations-${{ needs.Version.outputs.version }}.zip
+              asset_content_type: application/zip
+    # Submit:
+    #     needs: Version
+    #     if: github.event_name == 'workflow_dispatch' || needs.Version.outputs.created
+    #     strategy:
+    #         fail-fast: false
+    #         matrix:
+    #             command:
+    #                 - firefox
+    #                 - chrome
+    #     runs-on: ubuntu-latest
+    #     steps:
+    #         - uses: actions/checkout@v2
+    #         - name: install
+    #           run: yarn install
+    #         - name: build
+    #           run: yarn build
+    #         - name: Update extension meta
+    #           run: >-
+    #               npx dot-json@1 $DIRECTORY/manifest.json version ${{
+    #               needs.Version.outputs.version }}
+    #         - name: Submit
+    #           run: |
+    #               case ${{ matrix.command }} in
+    #                 firefox)
+    #                   cd $DIRECTORY && npx web-ext-submit@6
+    #                   ;;
+    #                 chrome)
+    #                   cd $DIRECTORY && npx chrome-webstore-upload-cli@1 upload --auto-publish
+    #                   ;;
+    #               esac
+    #           env:
+    #               EXTENSION_ID: ${{ secrets.EXTENSION_ID }}
+    #               CLIENT_ID: ${{ secrets.CLIENT_ID }}
+    #               CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+    #               REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
+    #               WEB_EXT_API_KEY: ${{ secrets.WEB_EXT_API_KEY }}
+    #               WEB_EXT_API_SECRET: ${{ secrets.WEB_EXT_API_SECRET }}

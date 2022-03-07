@@ -2,7 +2,7 @@
     "name": "LindyLearn Annotations",
     "version": "0.1.0",
     "description": "Annotate and highlight web pages in your browser",
-    "homepage_url": "https://github.com/lindylearn/browser-extension",
+    "homepage_url": "https://github.com/lindylearn/annotations",
     "manifest_version": 2,
     "minimum_chrome_version": "74",
     "applications": {

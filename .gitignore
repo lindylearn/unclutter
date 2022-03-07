@@ -1,3 +1,5 @@
 node_modules
 distribution
 .parcel-cache
+web-ext-artifacts
+.DS_Store
