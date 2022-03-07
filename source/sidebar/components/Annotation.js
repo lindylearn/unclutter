@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import hypothesisIcon from "../../assets/icons/hypothesis.svg";
-import ycIcon from "../../assets/icons/yc.svg";
 import { getAnnotationColor } from "../../common/styling";
 
 function Annotation({
@@ -104,12 +102,15 @@ function Annotation({
                     {author.username || author}
                     {platform == "h" && (
                         <img
-                            src={hypothesisIcon}
+                            src="../assets/icons/hypothesis.svg"
                             className="inline-block w-3 ml-1"
                         />
                     )}
                     {platform == "hn" && (
-                        <img src={ycIcon} className="inline-block w-3 ml-1" />
+                        <img
+                            src="../assets/icons/yc.svg"
+                            className="inline-block w-3 ml-1"
+                        />
                     )}
                 </a>
             </div>
