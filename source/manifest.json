@@ -1,26 +1,29 @@
 {
     "name": "LindyLearn Annotations",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "description": "Highlight, annotate, and talk about great articles right in your browser.",
     "homepage_url": "https://github.com/lindylearn/annotations",
-    "manifest_version": 2,
-    "minimum_chrome_version": "74",
-    "browser_action": {},
+    "manifest_version": 3,
+    "action": {},
     "icons": {
-        "512": "assets/icon.png"
+        "128": "assets/icon.png"
     },
-    "permissions": ["storage", "activeTab"],
+    "permissions": ["storage", "scripting", "activeTab"],
     "options_ui": {
         "chrome_style": true,
         "page": "options/options.html"
     },
     "background": {
-        "persistent": true,
-        "scripts": ["background/background.js"]
+        "service_worker": "background/background.js"
     },
     "web_accessible_resources": [
-        "sidebar/index.html",
-        "pageview/content.css",
-        "assets/**"
+        {
+            "resources": [
+                "sidebar/index.html",
+                "pageview/content.css",
+                "assets/icons/share.svg"
+            ],
+            "matches": ["<all_urls>"]
+        }
     ]
 }

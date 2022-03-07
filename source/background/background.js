@@ -1,10 +1,13 @@
 import browser from "webextension-polyfill";
 
 // when extension icon clicked, inject annotations view into active tab
-browser.browserAction.onClicked.addListener(async (tab) => {
+browser.action.onClicked.addListener(async (tab) => {
     // insert most recent JS. will be ignored if already injected
-    await browser.tabs.executeScript(tab.id, {
-        file: "content-script/index.js",
+    await browser.scripting.executeScript({
+        target: {
+            tabId: tab.id,
+        },
+        files: ["content-script/index.js"],
     });
     // start the page view
     await browser.tabs.sendMessage(tab.id, "togglePageView");
@@ -22,9 +25,12 @@ async function enableDevHotReload() {
     console.log("Enabling page view hot reload for the first tab");
     let tabs = await browser.tabs.query({});
     let tab = tabs[0];
-    await browser.tabs.executeScript(tab.id, {
-        file: "content-script/index.js",
+    await browser.scripting.executeScript({
+        target: {
+            tabId: tab.id,
+        },
+        files: ["content-script/index.js"],
     });
 }
-// should be disabled for releases
+// must be disabled for releases
 // enableDevHotReload();
