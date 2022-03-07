@@ -1,4 +1,8 @@
-import { RangeAnchor, TextPositionAnchor, TextQuoteAnchor } from './types';
+import {
+  RangeAnchor,
+  TextPositionAnchor,
+  TextQuoteAnchor,
+} from "../../annotator/anchoring/types";
 
 /**
  * @typedef {import('../../types/api').Selector} Selector
@@ -33,14 +37,14 @@ export function anchor(root, selectors, options = {}) {
   // Collect all the selectors
   for (let selector of selectors) {
     switch (selector.type) {
-      case 'TextPositionSelector':
+      case "TextPositionSelector":
         position = selector;
         options.hint = position.start; // TextQuoteAnchor hint
         break;
-      case 'TextQuoteSelector':
+      case "TextQuoteSelector":
         quote = selector;
         break;
-      case 'RangeSelector':
+      case "RangeSelector":
         range = selector;
         break;
     }
@@ -50,9 +54,9 @@ export function anchor(root, selectors, options = {}) {
    * Assert the quote matches the stored quote, if applicable
    * @param {Range} range
    */
-  const maybeAssertQuote = range => {
+  const maybeAssertQuote = (range) => {
     if (quote?.exact && range.toString() !== quote.exact) {
-      throw new Error('quote mismatch');
+      throw new Error("quote mismatch");
     } else {
       return range;
     }
@@ -61,7 +65,7 @@ export function anchor(root, selectors, options = {}) {
   // From a default of failure, we build up catch clauses to try selectors in
   // order, from simple to complex.
   /** @type {Promise<Range>} */
-  let promise = Promise.reject('unable to anchor');
+  let promise = Promise.reject("unable to anchor");
 
   if (range) {
     promise = promise.catch(() => {
