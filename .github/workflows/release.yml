@@ -27,7 +27,7 @@ jobs:
               id: get_release
               uses: bruceadams/get-release@v1.2.3
               env:
-                GITHUB_TOKEN: ${{ github.token }}
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     Build:
         needs: Version
         if: github.event_name == 'workflow_dispatch' || needs.Version.outputs.created
@@ -46,7 +46,7 @@ jobs:
           - name: upload artifact
             uses: actions/upload-release-asset@v1
             env:
-              GITHUB_TOKEN: ${{ github.token }}
+              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             with:
               upload_url: ${{ needs.Version.outputs.upload_url }}
               asset_path: ./web-ext-artifacts/lindylearn_annotations-${{ needs.Version.outputs.version }}.zip
