@@ -9,6 +9,8 @@ browser.browserAction.onClicked.addListener(async (tab) => {
     await browser.tabs.sendMessage(tab.id, "togglePageView");
 });
 
+// Automatically reload the first tab when the extension is reloaded.
+// Additionally needs the "tabs" and "management" permissions not enabled for prod.
 async function enableDevHotReload() {
     // unfortunately, this doesn't distinguish betweem 'web-ext run' and manual installs
     const { installType } = await browser.management.get(browser.runtime.id);
