@@ -1,15 +1,16 @@
 # LindyLearn Annotations
 
-A browser extension to highlight, annotate, and talk about great articles.
+A simple browser extension to highlight, annotate, and talk about great articles.
 
 ![Alt Text](./media/video.gif)
 
 ## Features
 
--   Take notes and highlight ideas right in your browser. Your annotations are synchronized with [hypothes.is](https://web.hypothes.is).
+-   Take notes and highlight ideas on articles right in your browser, then synchronize them to your notes app.
+-   Uses your existing [hypothes.is](https://web.hypothes.is) account to save annotations.
 -   One click for everything: simply selecting text creates a highlight, editing a note updates it, there's a switch to make annotations public or private.
 -   The annotation sidebar stays open, so you always see all your in-progress notes while reading.
--   In addition to [hypothes.is](https://web.hypothes.is) web annotations, the extension also shows inline quote comments from Hacker News.
+-   In addition to public web annotations, the extension also shows inline quote comments parsed from Hacker News.
 
 ## Installation
 
@@ -17,7 +18,7 @@ Until the extension is approved for the Chrome and Firefox stores, you need to i
 
 For Chrome:
 
-1. Download the latest extension `.zip` file from `https://github.com/lindylearn/annotations/releases`.
+1. Download the latest extension `.zip` file from [/releases](https://github.com/lindylearn/annotations/releases).
 2. Extract the downloaded .zip file in your Downloads folder.
 3. Visit `chrome://extensions/` and enable `Developer mode` in the top right.
 4. Click `Load unpacked` in the top left of the same page, and select the extracted folder.
