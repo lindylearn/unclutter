@@ -24,8 +24,8 @@ jobs:
                   token: ${{ secrets.GITHUB_TOKEN }}
             - name: Get release
               if: steps.daily-version.outputs.created
-              id: get_release
-              uses: bruceadams/get-release@v1.2.3
+              id: latest_release_info
+              uses: jossef/action-latest-release-info@v1.1.0
               env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     Build:
