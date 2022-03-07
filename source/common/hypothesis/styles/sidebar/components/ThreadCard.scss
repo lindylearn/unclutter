@@ -1,9 +1,0 @@
-@use '../../variables' as var;
-@use '../../mixins/layout';
-@use '../../mixins/molecules';
-@use '../../mixins/utils';
-
-.ThreadCard {
-  @include molecules.card;
-  cursor: pointer;
-}
