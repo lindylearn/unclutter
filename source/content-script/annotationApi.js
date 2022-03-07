@@ -6,6 +6,7 @@ import {
 } from "../common/hypothesis/annotator/highlighter";
 import { getAnnotationColor } from "../common/styling";
 
+// highlight text for every passed annotation on the active webpage
 export async function highlightAnnotations(annotations) {
     const body = document.body;
 
@@ -42,10 +43,12 @@ export async function highlightAnnotations(annotations) {
     return anchoredAnnotations;
 }
 
+// remove all text highlighting
 export function removeAllHighlights() {
     removeAllHighlightsApi(document.body);
 }
 
+// remove a specific text highlighting
 export function removeHighlight(annotation) {
     const nodes = document.querySelectorAll(
         `[id=${annotation.localId || annotation.id}]`
@@ -53,6 +56,7 @@ export function removeHighlight(annotation) {
     removeHighlightsApi([...nodes]);
 }
 
+// get the Y position of all text highlighlights
 export function getHighlightOffsets() {
     const body = document.body;
 

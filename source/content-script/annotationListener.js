@@ -6,9 +6,9 @@ import {
     removeHighlight,
 } from "./annotationApi";
 
+// highlight annotations sent from the sidebar iframe, and send back the Y position of those text highlights
 let listenerRef;
 export function createAnnotationListener(sidebarIframe) {
-    // highlight new sent annotations, and send back display offsets
     const onMessage = async function ({ data }) {
         if (!sidebarIframe.contentWindow) {
             window.removeEventListener("message", this);

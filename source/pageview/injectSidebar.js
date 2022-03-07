@@ -1,6 +1,8 @@
 import browser from "webextension-polyfill";
 
+// inject the annotations sidebar HTML elements, but don't show it yet
 export function injectSidebar() {
+    // the sidebar is running in a separate iframe to isolate personal information
     const iframeUrl = new URL(browser.runtime.getURL("/sidebar/index.html"));
     iframeUrl.searchParams.append("url", window.location.href);
 

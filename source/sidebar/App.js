@@ -15,14 +15,31 @@ import PageNotesList from "./components/PageNotesList";
 import PopularityMessage from "./components/PopularityMessage";
 
 export default function App({ url }) {
+    // fetch state from extension settings
     const [isLoggedIn, setIsLoggedIn] = useState(null);
     useEffect(async () => {
         const user = await getHypothesisUsername();
         setIsLoggedIn(!!user);
     }, []);
 
+    // keep the annotations state here
     const [annotations, setAnnotations] = useState([]);
+    // fetch annotations on load
+    useEffect(async () => {
+        const annotations = await getAnnotations(url);
+        const pageNotes = annotations.filter((a) => !a.quote_html_selector);
+        if (pageNotes.length === 0) {
+            pageNotes.push(createDraftAnnotation(url));
+        }
 
+        setAnnotations(pageNotes);
+        window.top.postMessage(
+            { event: "anchorAnnotations", annotations },
+            "*"
+        );
+    }, []);
+
+    // sync local annotation updates to hypothesis
     async function createAnnotation(localAnnotation) {
         const hypothesisAnnotation = await createAnnotationApi(
             url,
@@ -42,6 +59,14 @@ export default function App({ url }) {
             },
         ]);
     }
+    function deleteAnnotation(annotation) {
+        setAnnotations(annotations.filter((a) => a.id != annotation.id));
+        window.top.postMessage({ event: "removeHighlight", annotation }, "*");
+
+        deleteAnnotationApi(annotation.id);
+    }
+
+    // receive events from the text highlighting content script code
     window.onmessage = async function ({ data }) {
         if (data.event === "createHighlight") {
             createAnnotation(data.annotation);
@@ -56,27 +81,6 @@ export default function App({ url }) {
             setAnnotations(updatedAnnotations);
         }
     };
-
-    useEffect(async () => {
-        const annotations = await getAnnotations(url);
-        const pageNotes = annotations.filter((a) => !a.quote_html_selector);
-        if (pageNotes.length === 0) {
-            pageNotes.push(createDraftAnnotation(url));
-        }
-
-        setAnnotations(pageNotes);
-        window.top.postMessage(
-            { event: "anchorAnnotations", annotations },
-            "*"
-        );
-    }, []);
-
-    function deleteAnnotation(annotation) {
-        setAnnotations(annotations.filter((a) => a.id != annotation.id));
-        window.top.postMessage({ event: "removeHighlight", annotation }, "*");
-
-        deleteAnnotationApi(annotation.id);
-    }
 
     return (
         // x margin to show slight shadow (iframe allows no overflow)

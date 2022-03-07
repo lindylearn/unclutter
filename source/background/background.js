@@ -1,5 +1,6 @@
 import browser from "webextension-polyfill";
 
+// when extension icon clicked, inject annotations view into active tab
 browser.browserAction.onClicked.addListener(async (tab) => {
     // insert most recent JS. will be ignored if already injected
     await browser.tabs.executeScript(tab.id, {
