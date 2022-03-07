@@ -36,6 +36,18 @@ The extension sidebar shows public web annotations and quote comments from Hacke
 
 If you're logged in and the annotations sidebar is open, selecting any text on the webpage will create a private highlight. Optionally you can add a note or tags separated by `", "`. All edits are automatically synchronized with your hypothes.is account. If you want to talk about one of your notes, make it public by toggling the switch on that annotation.
 
+## Development
+
+To build the extension yourself, run:
+
+1. `yarn install && yarn build`
+2. `npx web-ext build`
+3. Find the bundled extension code in `/web-ext-artifacts`.
+
+This was tested using node `v17.6.0` and yarn `1.22.17` on Mac, but should work the same in other environments. See `source/README.me` for some documentation on the code structure.
+
+For hot reloading during development, run `yarn watch` and `npx web-ext run` in parallel.
+
 ## License
 
 This project is a simplified rewrite of the official Hypothes.is browser extension. It uses a few code pieces of it, particularly the "annotator" component to anchor text on webpages. See [LICENSE](https://github.com/hypothesis/client/blob/master/LICENSE) for details.
