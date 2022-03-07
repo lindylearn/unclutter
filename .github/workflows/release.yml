@@ -20,6 +20,10 @@ jobs:
               if: steps.daily-version.outputs.created
               with:
                   token: ${{ secrets.GITHUB_TOKEN }}
+            - name: Sleep for 10 seconds
+              uses: whatnick/wait-action@master
+              with:
+                time: '10s'
             - name: Get release
               if: steps.daily-version.outputs.created
               id: latest_release_info
