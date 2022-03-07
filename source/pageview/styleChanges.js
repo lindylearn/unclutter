@@ -1,6 +1,7 @@
 import browser from "webextension-polyfill";
+import { insertOverrideRules } from "./mediaQuery";
 
-// modify the CSS of the active website in order to make room for the annotations sidebar
+// slightly modify the CSS of the active website in order to make room for the annotations sidebar
 const overrideClassname = "lindylearn-document-override";
 export function patchDocumentStyle() {
     insertPageViewStyle();
@@ -26,7 +27,7 @@ function insertPageViewStyle() {
 	margin-left 0.3s cubic-bezier(0.16, 1, 0.3, 1),
 	width 0.3s cubic-bezier(0.16, 1, 0.3, 1)`;
 
-    _createStylesheetLink(browser.runtime.getURL("/pageview/content.css"));
+    createStylesheetLink(browser.runtime.getURL("/pageview/content.css"));
 
     // create element of full height of all children, in case body height != content height
     // TODO update this height on page update
@@ -40,22 +41,7 @@ function insertPageViewStyle() {
     document.body.appendChild(el);
 }
 
-// insert styles that adjust media query CSS to the reduced page width
-function insertOverrideRules() {
-    const cssUrls = [...document.getElementsByTagName("link")]
-        .filter((elem) => elem.rel === "stylesheet")
-        .map((elem) => elem.href);
-
-    cssUrls.forEach((url) => {
-        _createStylesheetLink(
-            `https://us-central1-lindylearn2.cloudfunctions.net/getCssOverrides?cssUrl=${encodeURIComponent(
-                url
-            )}&conditionScale=${1.6}`
-        );
-    });
-}
-
-function _createStylesheetLink(url) {
+export function createStylesheetLink(url) {
     var link = document.createElement("link");
     link.className = overrideClassname;
     link.type = "text/css";
