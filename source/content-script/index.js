@@ -50,6 +50,3 @@ async function disable() {
     removeAnnotationListener();
     removeSelectionListener();
 }
-
-disable();
-enable();
