@@ -13,7 +13,7 @@
     },
     "browser_action": {},
     "icons": {
-        "128": "assets/icon.png"
+        "512": "assets/icon.png"
     },
     "permissions": ["storage", "activeTab"],
     "options_ui": {
