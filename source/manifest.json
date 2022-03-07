@@ -5,12 +5,6 @@
     "homepage_url": "https://github.com/lindylearn/annotations",
     "manifest_version": 2,
     "minimum_chrome_version": "74",
-    "applications": {
-        "gecko": {
-            "id": "awesome-extension@notlmn.github.io",
-            "strict_min_version": "67.0"
-        }
-    },
     "browser_action": {},
     "icons": {
         "512": "assets/icon.png"
