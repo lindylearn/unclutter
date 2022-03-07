@@ -41,7 +41,7 @@ jobs:
                 npx dot-json@1 $DIRECTORY/manifest.json version ${{
                 needs.Version.outputs.version }}
           - name: package
-            run: web-ext build
+            run: npx web-ext build
           - name: upload artifact
             uses: actions/upload-release-asset@v1
             env:
