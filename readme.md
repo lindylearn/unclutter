@@ -50,4 +50,4 @@ For hot reloading during development, run `yarn watch` and `npx web-ext run` in 
 
 ## License
 
-This project is a simplified rewrite of the official Hypothes.is browser extension. It uses a few code pieces of it, particularly the "annotator" component to anchor text on webpages. See [LICENSE](https://github.com/hypothesis/client/blob/master/LICENSE) for details.
+This project is a simplified rewrite of the official Hypothes.is browser extension. It uses a few code pieces of it, particularly the "annotator" component to anchor text on webpages. See [LICENSE](https://github.com/lindylearn/annotations/blob/main/LICENCE) for details.
