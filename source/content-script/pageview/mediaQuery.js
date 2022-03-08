@@ -1,17 +1,25 @@
-import { mediaQueryFunction } from "../../common/api";
-import { createStylesheetLink } from "./styleChanges";
+import { getCssOverride } from "./cssTweaks";
+import { createStylesheetText, overrideClassname } from "./styleChanges";
 
 // insert styles that adjust media query CSS to the reduced page width
 export function insertOverrideRules() {
     const cssUrls = [...document.getElementsByTagName("link")]
-        .filter((elem) => elem.rel === "stylesheet")
+        .filter(
+            (elem) =>
+                elem.rel === "stylesheet" &&
+                elem.className !== overrideClassname
+        )
         .map((elem) => elem.href);
 
-    cssUrls.forEach((url) => {
-        createStylesheetLink(
-            `${mediaQueryFunction}?cssUrl=${encodeURIComponent(
-                url
-            )}&conditionScale=${1.6}`
-        );
+    // console.log(cssUrls);
+
+    cssUrls.forEach(async (url) => {
+        try {
+            const overrideCss = await getCssOverride(url, 1 / 0.6);
+
+            createStylesheetText(overrideCss);
+        } catch (err) {
+            console.error("Error updating CSS media queries:", err);
+        }
     });
 }

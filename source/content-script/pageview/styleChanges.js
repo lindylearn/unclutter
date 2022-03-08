@@ -2,7 +2,7 @@ import browser from "webextension-polyfill";
 import { insertOverrideRules } from "./mediaQuery";
 
 // slightly modify the CSS of the active website in order to make room for the annotations sidebar
-const overrideClassname = "lindylearn-document-override";
+export const overrideClassname = "lindylearn-document-override";
 export function patchDocumentStyle() {
     insertPageViewStyle();
     insertOverrideRules();
@@ -50,6 +50,15 @@ export function createStylesheetLink(url) {
     link.rel = "stylesheet";
     link.href = url;
     document.head.appendChild(link);
+}
+
+export function createStylesheetText(text) {
+    var style = document.createElement("style");
+    style.className = overrideClassname;
+    style.type = "text/css";
+    style.rel = "stylesheet";
+    style.innerHTML = text;
+    document.head.appendChild(style);
 }
 
 // button to share the annotations of the active page
