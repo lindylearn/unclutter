@@ -1,13 +1,13 @@
 import browser from "webextension-polyfill";
-import { injectSidebar, removeSidebar } from "../pageview/injectSidebar";
-import {
-    patchDocumentStyle,
-    unPatchDocumentStyle,
-} from "../pageview/styleChanges";
 import {
     createAnnotationListener,
     removeAnnotationListener,
 } from "./annotationListener";
+import { injectSidebar, removeSidebar } from "./pageview/injectSidebar";
+import {
+    patchDocumentStyle,
+    unPatchDocumentStyle,
+} from "./pageview/styleChanges";
 import {
     createSelectionListener,
     removeSelectionListener,

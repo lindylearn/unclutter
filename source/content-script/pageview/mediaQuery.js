@@ -1,4 +1,4 @@
-import { mediaQueryFunction } from "../common/api";
+import { mediaQueryFunction } from "../../common/api";
 import { createStylesheetLink } from "./styleChanges";
 
 // insert styles that adjust media query CSS to the reduced page width

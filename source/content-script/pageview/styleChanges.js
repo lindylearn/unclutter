@@ -27,7 +27,9 @@ function insertPageViewStyle() {
 	margin-left 0.3s cubic-bezier(0.16, 1, 0.3, 1),
 	width 0.3s cubic-bezier(0.16, 1, 0.3, 1)`;
 
-    createStylesheetLink(browser.runtime.getURL("/pageview/content.css"));
+    createStylesheetLink(
+        browser.runtime.getURL("/content-script/pageview/content.css")
+    );
 
     // create element of full height of all children, in case body height != content height
     // TODO update this height on page update

@@ -19,7 +19,7 @@
         {
             "resources": [
                 "sidebar/index.html",
-                "pageview/content.css",
+                "content-script/pageview/content.css",
                 "assets/icons/*"
             ],
             "matches": ["<all_urls>"]
