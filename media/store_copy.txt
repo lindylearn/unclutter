@@ -9,7 +9,8 @@ Like the project or found a bug? Create an issue at https://github.com/lindylear
 
 -- Privacy practices:
 
-Allow the creation and display of web annotations on article pages.
+Allow the creation and display of web annotations on article pages the user visits.
 Storing user settings and authentication tokens.
 If the user so chooses, change the HTML of the active page to display web annotations about that page.
-References external CSS to adjust a site's style dynamically to the annotation display, if the user so chooses.
+Required to inject a content script into the active tab if the user so chooses. The script modifies the site HTML to display the extension functionality.
+Optionally references external CSS to adjust a website's style dynamically if it would otherwise prevent the extension functionality. This is only done if the user manually actives the extension on a certain page.

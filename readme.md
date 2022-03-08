@@ -6,27 +6,23 @@ A simple browser extension to highlight, annotate, and talk about great articles
 
 ## Features
 
--   Take notes and highlight ideas on articles right in your browser, then synchronize them to your notes app.
--   Uses your existing [hypothes.is](https://web.hypothes.is) account to save annotations.
+-   Take notes and highlight ideas on articles right in your browser, then synchronize them to your notes app. Uses your existing [hypothes.is](https://web.hypothes.is) account to save annotations.
 -   One click for everything: simply selecting text creates a highlight, editing a note updates it, there's a switch to make annotations public or private.
 -   The annotation sidebar stays open, so you always see all your in-progress notes while reading.
 -   In addition to public web annotations, the extension also shows inline quote comments parsed from Hacker News.
 
 ## Installation
 
-Until the extension is approved for the Chrome and Firefox stores, you need to install it manually.
+For Firefox:
 
-For Chrome:
+-   Install the extension from the [Mozilla Add-on Store](https://addons.mozilla.org/en-GB/firefox/addon/lindylearn-annotations/).
+
+For Chrome (the store review is pending):
 
 1. Download the latest extension `.zip` file from [/releases](https://github.com/lindylearn/annotations/releases).
 2. Extract the downloaded .zip file in your Downloads folder.
 3. Visit `chrome://extensions/` and enable `Developer mode` in the top right.
 4. Click `Load unpacked` in the top left of the same page, and select the extracted folder.
-
-Unfortunately it's not currently possible to install the extension for Firefox (it needs to pass a review even for self-distributed extensions).
-
-<!-- 1. Visit `about:addons` and click on the settings icon in the top right.
-2. Select `Install Add-on From File...` and select the .zip file you downloaded. -->
 
 ## Usage
 
