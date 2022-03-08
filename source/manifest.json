@@ -10,7 +10,6 @@
     },
     "permissions": ["storage", "scripting", "activeTab"],
     "options_ui": {
-        "chrome_style": true,
         "page": "options/options.html"
     },
     "background": {
@@ -21,7 +20,7 @@
             "resources": [
                 "sidebar/index.html",
                 "pageview/content.css",
-                "assets/icons/share.svg"
+                "assets/icons/*"
             ],
             "matches": ["<all_urls>"]
         }
