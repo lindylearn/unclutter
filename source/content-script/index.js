@@ -15,7 +15,10 @@ import {
 
 // listen to togglePageView events sent from background script
 browser.runtime.onMessage.addListener((event) => {
-    if (event === "togglePageView") {
+    if (event === "ping") {
+        togglePageView();
+        return true;
+    } else if (event === "togglePageView") {
         togglePageView();
     } else {
         console.log(event);

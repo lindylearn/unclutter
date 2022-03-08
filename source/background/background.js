@@ -2,35 +2,20 @@ import browser from "webextension-polyfill";
 
 // when extension icon clicked, inject annotations view into active tab
 browser.action.onClicked.addListener(async (tab) => {
-    // insert most recent JS. will be ignored if already injected
-    await browser.scripting.executeScript({
-        target: {
-            tabId: tab.id,
-        },
-        files: ["content-script/index.js"],
-    });
-    // start the page view
-    await browser.tabs.sendMessage(tab.id, "togglePageView");
-});
-
-// Automatically reload the first tab when the extension is reloaded.
-// Additionally needs the "tabs" and "management" permissions not enabled for prod.
-async function enableDevHotReload() {
-    // unfortunately, this doesn't distinguish betweem 'web-ext run' and manual installs
-    const { installType } = await browser.management.get(browser.runtime.id);
-    if (installType !== "development") {
-        return;
+    let alreadyInjected = false;
+    try {
+        alreadyInjected = await browser.tabs.sendMessage(tab.id, "ping");
+    } catch {}
+    if (!alreadyInjected) {
+        console.log("Content script not loaded in active tab, injecting it...");
+        await browser.scripting.executeScript({
+            target: {
+                tabId: tab.id,
+            },
+            files: ["content-script/index.js"],
+        });
     }
 
-    console.log("Enabling page view hot reload for the first tab");
-    let tabs = await browser.tabs.query({});
-    let tab = tabs[0];
-    await browser.scripting.executeScript({
-        target: {
-            tabId: tab.id,
-        },
-        files: ["content-script/index.js"],
-    });
-}
-// must be disabled for releases
-// enableDevHotReload();
+    // toggle the page view
+    await browser.tabs.sendMessage(tab.id, "togglePageView");
+});
