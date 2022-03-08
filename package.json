@@ -14,10 +14,13 @@
     "devDependencies": {
         "@parcel/config-webextension": "^2.0.0-rc.0",
         "@parcel/transformer-image": "^2.0.0-rc.0",
+        "@parcel/transformer-webextension": "^2.3.2",
         "autoprefixer": "^10.4.2",
         "npm-run-all": "^4.1.5",
         "parcel": "^2.0.0-rc.0",
+        "patch-package": "^6.4.7",
         "postcss": "^8.4.7",
+        "postinstall-postinstall": "^2.1.0",
         "prettier-plugin-organize-imports": "^2.3.4",
         "process": "^0.11.10",
         "stylelint": "^13.13.1",
@@ -27,7 +30,8 @@
     },
     "scripts": {
         "build": "parcel build --no-content-hash --no-source-maps --dist-dir distribution --no-cache --detailed-report 0",
-        "watch": "parcel watch --dist-dir distribution --no-cache --no-hmr"
+        "watch": "parcel watch --dist-dir distribution --no-cache --no-hmr",
+        "postinstall": "patch-package"
     },
     "browserslist": "defaults",
     "xo": {
