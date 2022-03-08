@@ -1,6 +1,8 @@
 import axios from "axios";
 import css from "css";
 
+const proxyUrl = "https://annotations.lindylearn.io/proxy";
+
 // The extension reduces the website body width to show annotations on the right side.
 // But since CSS media queries work on the actual viewport width, responsive style doesn't take this reduced body width into account.
 // So parse the website CSS here and return media queries with the correct width breakpoints.
@@ -8,8 +10,13 @@ export async function getCssOverride(
     cssUrl: string,
     conditionScale: number
 ): Promise<string> {
-    // Fetch remote CSS
-    const response = await axios.get(cssUrl, { responseType: "blob" });
+    // Fetch CSS of the active tab
+    const response = await axios.get(
+        `${proxyUrl}/${cssUrl.replace("//", "/")}`,
+        {
+            responseType: "blob",
+        }
+    );
     const cssText: string = await response.data.text();
     const rules = css.parse(cssText)?.stylesheet?.rules;
     if (!rules) {
