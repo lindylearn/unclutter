@@ -14,7 +14,7 @@ export function insertOverrideRules() {
             const overrideCss = await getCssOverride(url, 1 / 0.6);
 
             createStylesheetText(overrideCss);
-            disableStylesheet(url);
+            disableStylesheet(elem);
         } catch (err) {
             console.error(`Error patching CSS file ${url}:`, err);
         }
