@@ -1,5 +1,5 @@
 html {
-    background-color: rgb(243 244 246);
+    background-color: #f1f3f4;
     /* background: radial-gradient(
 		rgb(229 231 235) 0px,
 		rgb(243 244 246) 2px
@@ -27,7 +27,7 @@ body {
 }
 
 body.pageview {
-    width: 60% !important;
+    width: 50% !important;
     margin: 20px auto !important;
 
     border-radius: 10px !important;
@@ -49,4 +49,15 @@ body.pageview {
 }
 .share-icon img {
     width: 13px;
+}
+
+@media (prefers-color-scheme: dark) {
+    html {
+        background-color: #202124;
+    }
+
+    .lindy-body-background {
+        filter: drop-shadow(0 10px 8px rgb(255 255 255 / 0.04))
+            drop-shadow(0 4px 3px rgb(255 255 255 / 0.1));
+    }
 }
