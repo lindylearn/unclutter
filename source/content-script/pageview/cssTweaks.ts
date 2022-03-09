@@ -18,68 +18,100 @@ export async function getCssOverride(
         }
     );
     const cssText: string = await response.data.text();
-    const rules = css.parse(cssText)?.stylesheet?.rules;
+    const rules = getRules(cssText);
     if (!rules) {
         return;
     }
 
-    // Filter media rules
-    const textLines = cssText.split("\n");
-    const mediaRules = rules
+    const baseRules = rules
+        .filter((rule: any) => rule.type !== "media")
+        .map((r) => r.text);
+
+    /**
+     * Create override media rules upscaled to the entire page.
+     * Assuming scale factor 2 (page now takes up only 50% of the screen):
+     *     max-width 1 -> max-width 2
+     *     min-width 1 -> min-width 2
+     *         since we remove the old style, no need to negate old [1, 2] range
+     */
+    const overrideRules = rules
         .filter((rule: any) => rule.type === "media")
         .map((rule: any) => {
-            let text = "";
-            if (rule.position.start.line === rule.position.end.line) {
-                text = textLines[rule.position.start.line - 1].slice(
-                    rule.position.start.column - 1,
-                    rule.position.end.column - 1
-                );
-            } else {
-                text =
-                    textLines[rule.position.start.line - 1].slice(
-                        rule.position.start.column - 1
-                    ) +
-                    "\n" +
-                    textLines
-                        .slice(
-                            rule.position.start.line,
-                            rule.position.end.line - 1
-                        )
-                        .join("\n") +
-                    "\n" +
-                    textLines[rule.position.end.line - 1].slice(
-                        0,
-                        rule.position.end.column - 1
-                    );
+            let newCondition = rule.condition;
+
+            for (const match of newCondition.matchAll(/([0-9]+)/g)) {
+                const oldCount = parseInt(match[1]);
+                const newCount = Math.round(conditionScale * oldCount);
+
+                newCondition = newCondition.replace(oldCount, newCount);
             }
 
-            return {
-                condition: rule.media as string,
-                text,
-            };
-        });
-
-    // Create override rules
-    const overrideRules = mediaRules
-        .map((rule: any) => {
-            const oldPxCount = parseInt(
-                /([0-9]+)px/g.exec(rule.condition)?.[1] as string
-            );
-            if (!oldPxCount) {
-                // rule not mentioning screen sizes, e.g. 'print'
-                return;
-            }
-            const newPxCount = Math.round(conditionScale * oldPxCount);
-
-            const newCondition = rule.condition.replace(
-                `${oldPxCount}px`,
-                `${newPxCount}px`
-            );
-            const newRuleText = rule.text.replace(rule.condition, newCondition);
-            return newRuleText;
+            const newText = rule.text.replace(rule.condition, newCondition);
+            return newText;
         })
         .filter((t: string) => t);
 
+    let newText = baseRules
+        .concat(overrideRules)
+        .map((rule) => modifyRulesText(rule, cssUrl))
+        .join("\n\n");
+
+    console.log(cssUrl, newText);
+
     // construct one override document per CSS document
-    return overrideRules.join("\n\n");
+    return newText;
+}
+
+function getRules(text: string) {
+    const rules = css.parse(text, { silent: true })?.stylesheet?.rules;
+    if (!rules) {
+        return;
+    }
+
+    const textLines = text.split("\n");
+    return rules.map((rule: any) => {
+        let text = "";
+        if (rule.position.start.line === rule.position.end.line) {
+            text = textLines[rule.position.start.line - 1].slice(
+                rule.position.start.column - 1,
+                rule.position.end.column - 1
+            );
+        } else {
+            text =
+                textLines[rule.position.start.line - 1].slice(
+                    rule.position.start.column - 1
+                ) +
+                "\n" +
+                textLines
+                    .slice(rule.position.start.line, rule.position.end.line - 1)
+                    .join("\n") +
+                "\n" +
+                textLines[rule.position.end.line - 1].slice(
+                    0,
+                    rule.position.end.column - 1
+                );
+        }
+
+        return {
+            type: rule.type,
+            condition: rule.media as string,
+            selectors: rule.selectors,
+            text,
+        };
+    });
+}
+
+function modifyRulesText(text, cssUrl) {
+    // use absolute paths for files referenced via url()
+    // those paths are relative to the stylesheet url, which we change
+    for (const match of text.matchAll(
+        /url\((?!"?'?(?:data:|#|https?:\/\/))"?'?([^\)]*)"?'?\)/g
+    )) {
+        const url = match[1];
+
+        const absoluteUrl = new URL(url, cssUrl);
+        text = text.replace(url, absoluteUrl.href);
+    }
+
+    return text;
 }

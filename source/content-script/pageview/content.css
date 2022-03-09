@@ -12,7 +12,7 @@ body {
 
     position: relative;
 }
-.body-background {
+.lindy-body-background {
     position: absolute;
     top: 0;
     left: 0;
@@ -28,13 +28,13 @@ body {
 
 body.pageview {
     width: 60% !important;
-    margin: 20px !important;
+    margin: 20px auto !important;
 
     border-radius: 10px !important;
     overflow-x: hidden !important;
 }
 
-.sidebar {
+.lindy-sidebar {
     position: absolute;
     top: 0;
     left: calc(100% + 20px);
