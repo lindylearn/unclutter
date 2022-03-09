@@ -105,7 +105,7 @@ function modifyRulesText(text, cssUrl) {
     // use absolute paths for files referenced via url()
     // those paths are relative to the stylesheet url, which we change
     for (const match of text.matchAll(
-        /url\((?!"?'?(?:data:|#|https?:\/\/))"?'?([^\)]*)"?'?\)/g
+        /url\((?!"?'?(?:data:|#|https?:\/\/))"?'?([^\)]*?)"?'?\)/g
     )) {
         const url = match[1];
 
