@@ -3,8 +3,6 @@
     "version": "0.4.1",
     "description": "Declutter pages without changing their style. Focus on content, not sidebars.",
     "homepage_url": "https://github.com/lindylearn/reader-extension",
-    "manifest_version": 3,
-    "action": {},
     "icons": {
         "128": "assets/icon.png"
     },
@@ -12,17 +10,16 @@
     "options_ui": {
         "page": "options/options.html"
     },
+
+    "manifest_version": 2,
+    "browser_action": {},
     "background": {
-        "service_worker": "background/background.js"
+        "persistent": true,
+        "scripts": ["background/background.js"]
     },
     "web_accessible_resources": [
-        {
-            "resources": [
-                "sidebar/index.html",
-                "content-script/pageview/content.css",
-                "assets/**"
-            ],
-            "matches": ["<all_urls>"]
-        }
+        "sidebar/index.html",
+        "content-script/pageview/content.css",
+        "assets/**"
     ]
 }

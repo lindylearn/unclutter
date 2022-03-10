@@ -34,10 +34,10 @@
         "xo": "^0.44.0"
     },
     "scripts": {
-        "build": "yarn install-v3-manifest && parcel build --no-content-hash --no-source-maps --no-optimize --dist-dir distribution --no-cache --detailed-report 0",
-        "watch": "yarn install-v3-manifest && parcel watch --dist-dir distribution --no-cache --no-hmr",
+        "build": "parcel build --no-content-hash --no-source-maps --no-optimize --dist-dir distribution --no-cache --detailed-report 0",
+        "watch": "parcel watch --dist-dir distribution --no-cache --no-hmr",
         "install-v3-manifest": "cp source/manifest.json distribution/manifest.json",
-        "install-v2-manifest": "jq -s '.[0] * .[1]' source/manifest.json source/manifest_override_v2.json > distribution/manifest.json",
+        "install-v2-manifest": "cp source/manifest_v2.json distribution/manifest.json",
         "package": "yarn build && npx web-ext build -o -n extension_manifest-v3.zip && yarn install-v2-manifest && npx web-ext build -o -n extension_manifest-v2.zip && yarn install-v3-manifest",
         "postinstall": "patch-package"
     },
@@ -58,6 +58,7 @@
     "targets": {
         "default": {
             "source": [
+                "source/manifest.json",
                 "source/background/background.js",
                 "source/content-script/index.js",
                 "source/content-script/pageview/content.css",
