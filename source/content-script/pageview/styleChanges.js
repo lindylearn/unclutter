@@ -40,16 +40,15 @@ function insertPageViewStyle() {
 
     // create element of full height of all children, in case body height != content height
     // TODO update this height on page update
-    var el = document.createElement("div");
-    el.className = `${overrideClassname} lindy-body-background`;
-    el.style.height = `${document.body.scrollHeight}px`;
-
+    var background = document.createElement("div");
+    background.className = `${overrideClassname} lindy-body-background`;
+    background.style.height = `${document.body.scrollHeight}px`;
     // const siteBackground = window.getComputedStyle(document.body).background;
-    // el.style.background = siteBackground.includes("rgba(0, 0, 0, 0)")
+    // background.style.background = siteBackground.includes("rgba(0, 0, 0, 0)")
     //     ? "white"
     //     : siteBackground;
 
-    document.body.appendChild(el);
+    document.body.appendChild(background);
 }
 
 export function createStylesheetLink(url) {

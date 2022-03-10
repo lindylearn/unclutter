@@ -37,8 +37,18 @@ async function enablePageView() {
 
     // make visible once set up
     document.body.classList.add("pageview");
+
+    // allow exiting pageview by clicking on background surrounding pageview (bare <html>)
+    document.onclick = (event) => {
+        if (event.target.tagName === "HTML") {
+            togglePageView();
+        }
+    };
 }
 async function disablePageView() {
+    // disable page view exiting
+    document.onclick = null;
+
     // immediately hide
     document.body.classList.remove("pageview");
 
