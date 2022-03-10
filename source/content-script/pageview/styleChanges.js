@@ -35,6 +35,13 @@ function insertPageViewStyle() {
 	margin-left 0.3s cubic-bezier(0.16, 1, 0.3, 1),
 	width 0.3s cubic-bezier(0.16, 1, 0.3, 1)`;
 
+    // add miniscule top padding if not already present, to prevent top margin collapse
+    document.body.style.paddingTop = ["", "0px"].includes(
+        document.body.style.paddingTop
+    )
+        ? "0.05px"
+        : document.body.style.paddingTop;
+
     createStylesheetLink(
         browser.runtime.getURL("/content-script/pageview/content.css")
     );
