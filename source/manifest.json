@@ -1,8 +1,8 @@
 {
-    "name": "LindyLearn Annotations",
-    "version": "0.3.0",
-    "description": "Highlight, annotate, and talk about great articles right in your browser.",
-    "homepage_url": "https://github.com/lindylearn/annotations",
+    "name": "Lindy Reading View - Declutter beautiful web pages",
+    "version": "0.4.0",
+    "description": "Remove clutter from articles, without changing their style. Read without distractions.",
+    "homepage_url": "https://github.com/lindylearn/reader-extension",
     "manifest_version": 3,
     "action": {},
     "icons": {
