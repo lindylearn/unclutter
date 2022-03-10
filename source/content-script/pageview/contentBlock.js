@@ -22,7 +22,7 @@ export function unContentBlock() {}
 const blockedTags = ["footer", "aside", "nav"];
 const blockedWords = [
     "masthead",
-    "banner",
+    // "banner",
     "menu",
     // "sidebar",
     "footer",
@@ -31,7 +31,7 @@ const blockedWords = [
     "recommendation",
     "social",
     "popular",
-    "promo",
+    // "promo",
     "overlay",
     "login",
     "registration",

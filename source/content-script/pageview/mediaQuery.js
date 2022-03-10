@@ -8,13 +8,19 @@ const proxyUrl = "https://annotations.lindylearn.io/proxy";
 export async function insertOverrideRules() {
     // keep in sync with body width set via css
     // ideally, update when page resizes (but that would require regenering the css)
-    const conditionScale = window.innerWidth / 800; // 1 / 0.5;
+    const conditionScale = window.innerWidth / 750; // 1 / 0.5;
 
     const cssElems = [
         ...document.getElementsByTagName("link"),
         ...document.getElementsByTagName("style"),
     ]
-        .filter((elem) => elem.tagName !== "LINK" || elem.rel === "stylesheet")
+        .filter(
+            (elem) =>
+                elem.tagName === "STYLE" ||
+                (elem.tagName === "LINK" &&
+                    elem.rel === "stylesheet" &&
+                    elem.media !== "print") // to be correct, we should parse this media query
+        )
         .filter((elem) => elem.className !== overrideClassname);
 
     await Promise.all(
@@ -24,7 +30,7 @@ export async function insertOverrideRules() {
                 let cssText;
                 if (elem.tagName === "LINK") {
                     const response = await axios.get(
-                        `${proxyUrl}/${url.replaceAll("//", "/")}`,
+                        `${proxyUrl}/${encodeURIComponent(url)}`,
                         {
                             responseType: "blob",
                         }
@@ -32,6 +38,9 @@ export async function insertOverrideRules() {
                     cssText = await response.data.text();
                 } else {
                     cssText = elem.innerHTML;
+                }
+                if (!cssText) {
+                    return;
                 }
 
                 const overrideCss = await getCssOverride(
