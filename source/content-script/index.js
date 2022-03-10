@@ -51,7 +51,7 @@ async function disablePageView() {
     // immediately hide
     document.body.classList.remove("pageview");
 
-    unPatchDocumentStyle();
+    await unPatchDocumentStyle();
     // removeSidebar();
 
     // removeAnnotationListener();

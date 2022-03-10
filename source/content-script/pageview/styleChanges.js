@@ -13,13 +13,16 @@ export function patchDocumentStyle() {
     // insertShareButton();
 }
 
-export function unPatchDocumentStyle() {
+export async function unPatchDocumentStyle() {
+    // restore original styles first
+    removeOverrideRules();
+    await new Promise((resolve, _) => setTimeout(resolve, 0));
+
     // this removes most modifications
     document
         .querySelectorAll(`.${overrideClassname}`)
         .forEach((e) => e.remove());
 
-    removeOverrideRules();
     unContentBlock();
 }
 
