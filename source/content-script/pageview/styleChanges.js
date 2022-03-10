@@ -5,6 +5,7 @@ import { insertOverrideRules, removeOverrideRules } from "./mediaQuery";
 // slightly modify the CSS of the active website in order to make room for the annotations sidebar
 export const overrideClassname = "lindylearn-document-override";
 export function patchDocumentStyle() {
+    insertBackground();
     insertPageViewStyle();
     insertOverrideRules();
 
@@ -37,18 +38,38 @@ function insertPageViewStyle() {
     createStylesheetLink(
         browser.runtime.getURL("/content-script/pageview/content.css")
     );
+}
 
+function insertBackground() {
     // create element of full height of all children, in case body height != content height
-    // TODO update this height on page update
     var background = document.createElement("div");
+    background.id = "lindy-body-background";
     background.className = `${overrideClassname} lindy-body-background`;
-    background.style.height = `${document.body.scrollHeight}px`;
-    // const siteBackground = window.getComputedStyle(document.body).background;
-    // background.style.background = siteBackground.includes("rgba(0, 0, 0, 0)")
-    //     ? "white"
-    //     : siteBackground;
+    const siteBackground = window.getComputedStyle(document.body).background;
+    background.style.background = siteBackground.includes("rgba(0, 0, 0, 0)")
+        ? "white"
+        : siteBackground;
 
+    // body '100%' may not refer to full height of children (e.g. https://torontolife.com/memoir/the-horrifying-truth-about-my-biological-father/)
+    background.style.height = `${document.body.scrollHeight}px`;
     document.body.appendChild(background);
+
+    // update height after style fixes are done
+    // TODO use MutationObserver or setTimeout(, 0) after style changes inserted?
+    setTimeout(updateBackgroundHeight, 3000);
+}
+
+function updateBackgroundHeight() {
+    // get height of body children to exclude background element itself
+    // TODO exclude absolute positioned elements?
+    const childHeights = [...document.body.children]
+        .filter((node) => node.id !== "lindy-body-background")
+        .map((node) => node.scrollHeight);
+
+    const bodyHeigth = childHeights.reduce((sum, height) => sum + height, 0);
+
+    const background = document.getElementById("lindy-body-background");
+    background.style.height = `${bodyHeigth}px`;
 }
 
 export function createStylesheetLink(url) {

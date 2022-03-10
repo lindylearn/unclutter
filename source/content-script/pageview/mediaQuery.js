@@ -2,24 +2,26 @@ import { getCssOverride } from "./cssTweaks";
 import { createStylesheetText, overrideClassname } from "./styleChanges";
 
 // insert styles that adjust media query CSS to the reduced page width
-export function insertOverrideRules() {
+export async function insertOverrideRules() {
     const cssElems = [...document.getElementsByTagName("link")].filter(
         (elem) =>
             elem.rel === "stylesheet" && elem.className !== overrideClassname
     );
 
-    cssElems.forEach(async (elem) => {
-        const url = elem.href;
-        // console.log(url);
-        try {
-            const overrideCss = await getCssOverride(url, 1 / 0.6);
+    await Promise.all(
+        cssElems.map(async (elem) => {
+            const url = elem.href;
+            // console.log(url);
+            try {
+                const overrideCss = await getCssOverride(url, 1 / 0.6);
 
-            createStylesheetText(overrideCss);
-            disableStylesheet(elem);
-        } catch (err) {
-            console.error(`Error patching CSS file ${url}:`, err);
-        }
-    });
+                createStylesheetText(overrideCss);
+                disableStylesheet(elem);
+            } catch (err) {
+                console.error(`Error patching CSS file ${url}:`, err);
+            }
+        })
+    );
 }
 export function removeOverrideRules() {
     reenableOriginalStylesheets();

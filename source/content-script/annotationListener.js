@@ -8,6 +8,7 @@ import {
 
 // highlight annotations sent from the sidebar iframe, and send back the Y position of those text highlights
 let listenerRef;
+let resizeObserver;
 export function createAnnotationListener(sidebarIframe) {
     const onMessage = async function ({ data }) {
         if (!sidebarIframe.contentWindow) {
@@ -38,7 +39,7 @@ export function createAnnotationListener(sidebarIframe) {
     listenerRef = onMessage;
 
     // update offsets if the page changes (e.g. after insert of mobile css)
-    _observeHeightChange(document, () => {
+    resizeObserver = observeHeightChange(document, () => {
         if (!sidebarIframe.contentWindow) {
             resizeObserver?.unobserve(document.body);
             return;
@@ -62,12 +63,15 @@ export function removeAnnotationListener() {
     removeAllHighlights();
 }
 
-let resizeObserver;
-function _observeHeightChange(document, callback) {
-    const throttledCallback = throttle(callback, 2000);
+export function observeHeightChange(
+    document,
+    callback,
+    throtteDuration = 2000
+) {
+    const throttledCallback = throttle(callback, throtteDuration);
 
     let oldHeight = document.body.scrollHeight;
-    resizeObserver = new ResizeObserver((entries) => {
+    const resizeObserver = new ResizeObserver((entries) => {
         const newHeight = entries[0].target.scrollHeight;
 
         if (newHeight !== oldHeight) {
@@ -77,4 +81,5 @@ function _observeHeightChange(document, callback) {
     });
 
     resizeObserver.observe(document.body);
+    return resizeObserver;
 }
