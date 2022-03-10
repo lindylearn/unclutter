@@ -1,6 +1,6 @@
 # LindyLearn Annotations
 
-A simple browser extension to simplify web articles and annotate them.
+A browser extension to declutter web articles and to annotate them.
 
 ![Alt Text](./media/screenshot1.png)
 
@@ -35,7 +35,7 @@ To build the extension yourself, run:
 
 1. `yarn install && yarn build`
 2. `yarn package`
-3. Find the bundled extension code in `/web-ext-artifacts` (`_manifest-v2`). `_manifest-v2` is for Firefox, `_manifest-v3` for Chromium browsers.
+3. Find the bundled extension code in `/web-ext-artifacts`. `_manifest-v2` is for Firefox, `_manifest-v3` for Chromium browsers.
 
 This was tested using node `v17.6.0` and yarn `1.22.17` on Mac, but should work the same in other environments. See `source/README.me` for some documentation on the code structure.
 

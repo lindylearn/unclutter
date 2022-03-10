@@ -27,7 +27,8 @@ body {
 }
 
 body.pageview {
-    width: 60% !important;
+    width: 100%;
+    max-width: 900px !important;
     margin: 20px auto !important;
 
     border-radius: 10px !important;
