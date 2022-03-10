@@ -63,7 +63,7 @@ function insertBackground() {
 
     // update height after style fixes are done
     // TODO use MutationObserver or setTimeout(, 0) after style changes inserted?
-    setTimeout(updateBackgroundHeight, 3000);
+    setTimeout(updateBackgroundHeight, 5000);
 }
 
 function updateBackgroundHeight() {

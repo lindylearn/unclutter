@@ -5,12 +5,11 @@ import {
 } from "./pageview/styleChanges";
 
 // listen to togglePageView events sent from background script
-browser.runtime.onMessage.addListener((event) => {
+browser.runtime.onMessage.addListener(async (event) => {
     if (event === "ping") {
-        togglePageView();
         return true;
     } else if (event === "togglePageView") {
-        togglePageView();
+        await togglePageView();
     } else {
         console.log(event);
     }
