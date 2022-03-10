@@ -1,3 +1,5 @@
+-- annotation focused
+
 Alternative client for Hypothes.is web annotations.
 
 • One click for everything: simply selecting text creates a highlight, editing a note updates it, there's a switch to make annotations public or private.
@@ -6,11 +8,34 @@ Alternative client for Hypothes.is web annotations.
 
 Like the project or found a bug? Create an issue at https://github.com/lindylearn/annotations!
 
+-- reader focused
+
+This extension hides everything you didn't visit a page for: attention-grabbing promotions, sidebars, or cookie banners. 
+
+But in comparison to all other "reader modes", websites keep their original style, identity, and functionality.
+
+More features are coming soon! Like the project or found a bug? Create an issue at https://github.com/lindylearn/reader-extension!
 
 -- Privacy practices:
+
+Improve the readability of articles the user visits.
+If the user so chooses, change the HTML of the active page to display the extension functionality.
+
 
 Allow the creation and display of web annotations on article pages the user visits.
 Storing user settings and authentication tokens.
 If the user so chooses, change the HTML of the active page to display web annotations about that page.
 Required to inject a content script into the active tab if the user so chooses. The script modifies the site HTML to display the extension functionality.
 Optionally references external CSS to adjust a website's style dynamically if it would otherwise prevent the extension functionality. This is only done if the user manually actives the extension on a certain page.
+
+
+-- ideas
+
+"gives you back control over how you read content on the web"
+The internet should be about exploration, not consuming more and more content in the same sans-serif font.
+Would you read all your books in the same sans-serif font?
+
+
+-- screenshots
+
+https://tonsky.me/blog/disenchantment/
