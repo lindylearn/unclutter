@@ -1,17 +1,8 @@
 import browser from "webextension-polyfill";
 import {
-    createAnnotationListener,
-    removeAnnotationListener,
-} from "./annotationListener";
-import { injectSidebar, removeSidebar } from "./pageview/injectSidebar";
-import {
     patchDocumentStyle,
     unPatchDocumentStyle,
 } from "./pageview/styleChanges";
-import {
-    createSelectionListener,
-    removeSelectionListener,
-} from "./selectionListener";
 
 // listen to togglePageView events sent from background script
 browser.runtime.onMessage.addListener((event) => {
@@ -38,11 +29,11 @@ async function togglePageView() {
 
 async function enablePageView() {
     patchDocumentStyle();
-    const sidebarIframe = injectSidebar();
+    // const sidebarIframe = injectSidebar();
 
     // listen and react to annotation events from the sidebar iframe
-    createAnnotationListener(sidebarIframe);
-    createSelectionListener(sidebarIframe);
+    // createAnnotationListener(sidebarIframe);
+    // createSelectionListener(sidebarIframe);
 
     // make visible once set up
     document.body.classList.add("pageview");
@@ -52,8 +43,8 @@ async function disablePageView() {
     document.body.classList.remove("pageview");
 
     unPatchDocumentStyle();
-    removeSidebar();
+    // removeSidebar();
 
-    removeAnnotationListener();
-    removeSelectionListener();
+    // removeAnnotationListener();
+    // removeSelectionListener();
 }
