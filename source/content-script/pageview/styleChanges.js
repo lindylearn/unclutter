@@ -1,4 +1,5 @@
 import browser from "webextension-polyfill";
+import { contentBlock, unContentBlock } from "./contentBlock";
 import { insertOverrideRules, removeOverrideRules } from "./mediaQuery";
 
 // slightly modify the CSS of the active website in order to make room for the annotations sidebar
@@ -6,6 +7,8 @@ export const overrideClassname = "lindylearn-document-override";
 export function patchDocumentStyle() {
     insertPageViewStyle();
     insertOverrideRules();
+
+    contentBlock();
     // insertShareButton();
 }
 
@@ -16,6 +19,7 @@ export function unPatchDocumentStyle() {
         .forEach((e) => e.remove());
 
     removeOverrideRules();
+    unContentBlock();
 }
 
 // add style to show the sidebar
@@ -39,10 +43,12 @@ function insertPageViewStyle() {
     var el = document.createElement("div");
     el.className = `${overrideClassname} lindy-body-background`;
     el.style.height = `${document.body.scrollHeight}px`;
-    const siteBackground = window.getComputedStyle(document.body).background;
-    el.style.background = siteBackground.includes("rgba(0, 0, 0, 0)")
-        ? "white"
-        : siteBackground;
+
+    // const siteBackground = window.getComputedStyle(document.body).background;
+    // el.style.background = siteBackground.includes("rgba(0, 0, 0, 0)")
+    //     ? "white"
+    //     : siteBackground;
+
     document.body.appendChild(el);
 }
 
@@ -53,6 +59,15 @@ export function createStylesheetLink(url) {
     link.rel = "stylesheet";
     link.href = url;
     document.head.appendChild(link);
+}
+
+export function createStylesheetText(text) {
+    var style = document.createElement("style");
+    style.className = overrideClassname;
+    style.type = "text/css";
+    style.rel = "stylesheet";
+    style.innerHTML = text;
+    document.head.appendChild(style);
 }
 
 // button to share the annotations of the active page

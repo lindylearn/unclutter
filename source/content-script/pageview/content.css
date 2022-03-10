@@ -1,5 +1,5 @@
 html {
-    background-color: #f1f3f4;
+    background-color: #f1f3f4 !important;
     /* background: radial-gradient(
 		rgb(229 231 235) 0px,
 		rgb(243 244 246) 2px
@@ -27,7 +27,7 @@ body {
 }
 
 body.pageview {
-    width: 50% !important;
+    width: 60% !important;
     margin: 20px auto !important;
 
     border-radius: 10px !important;
@@ -53,7 +53,7 @@ body.pageview {
 
 @media (prefers-color-scheme: dark) {
     html {
-        background-color: #202124;
+        background-color: #202124 !important;
     }
 
     .lindy-body-background {

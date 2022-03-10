@@ -12,7 +12,7 @@ export async function getCssOverride(
 ): Promise<string> {
     // Fetch CSS of the active tab
     const response = await axios.get(
-        `${proxyUrl}/${cssUrl.replace("//", "/")}`,
+        `${proxyUrl}/${cssUrl.replaceAll("//", "/")}`,
         {
             responseType: "blob",
         }
