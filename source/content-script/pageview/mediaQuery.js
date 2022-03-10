@@ -1,5 +1,8 @@
+import axios from "axios";
 import { getCssOverride } from "./cssTweaks";
 import { createStylesheetText, overrideClassname } from "./styleChanges";
+
+const proxyUrl = "https://annotations.lindylearn.io/proxy";
 
 // insert styles that adjust media query CSS to the reduced page width
 export async function insertOverrideRules() {
@@ -7,17 +10,35 @@ export async function insertOverrideRules() {
     // ideally, update when page resizes (but that would require regenering the css)
     const conditionScale = window.innerWidth / 800; // 1 / 0.5;
 
-    const cssElems = [...document.getElementsByTagName("link")].filter(
-        (elem) =>
-            elem.rel === "stylesheet" && elem.className !== overrideClassname
-    );
+    const cssElems = [
+        ...document.getElementsByTagName("link"),
+        ...document.getElementsByTagName("style"),
+    ]
+        .filter((elem) => elem.tagName !== "LINK" || elem.rel === "stylesheet")
+        .filter((elem) => elem.className !== overrideClassname);
 
     await Promise.all(
         cssElems.map(async (elem) => {
-            const url = elem.href;
-            // console.log(url);
+            const url = elem.href || window.location.href;
             try {
-                const overrideCss = await getCssOverride(url, conditionScale);
+                let cssText;
+                if (elem.tagName === "LINK") {
+                    const response = await axios.get(
+                        `${proxyUrl}/${url.replaceAll("//", "/")}`,
+                        {
+                            responseType: "blob",
+                        }
+                    );
+                    cssText = await response.data.text();
+                } else {
+                    cssText = elem.innerHTML;
+                }
+
+                const overrideCss = await getCssOverride(
+                    url,
+                    cssText,
+                    conditionScale
+                );
 
                 createStylesheetText(overrideCss);
                 disableStylesheet(elem);

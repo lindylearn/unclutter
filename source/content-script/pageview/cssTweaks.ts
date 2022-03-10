@@ -1,23 +1,13 @@
-import axios from "axios";
 import css from "css";
-
-const proxyUrl = "https://annotations.lindylearn.io/proxy";
 
 // The extension reduces the website body width to show annotations on the right side.
 // But since CSS media queries work on the actual viewport width, responsive style doesn't take this reduced body width into account.
 // So parse the website CSS here and return media queries with the correct width breakpoints.
 export async function getCssOverride(
     cssUrl: string,
+    cssText: string,
     conditionScale: number
 ): Promise<string> {
-    // Fetch CSS of the active tab
-    const response = await axios.get(
-        `${proxyUrl}/${cssUrl.replaceAll("//", "/")}`,
-        {
-            responseType: "blob",
-        }
-    );
-    const cssText: string = await response.data.text();
     const rules = getRules(cssText);
     if (!rules) {
         return;
@@ -46,14 +36,17 @@ export async function getCssOverride(
                 newCondition = newCondition.replace(oldCount, newCount);
             }
 
-            const newText = rule.text.replace(rule.condition, newCondition);
+            let newText = rule.text.replace(rule.condition, newCondition);
+            if (rule.wrappedBySelector) {
+                newText = `${rule.wrappedBySelector} { ${newText} }`;
+            }
             return newText;
         })
-        .filter((t: string) => t);
+        .filter((text: string) => text);
 
     let newText = baseRules
         .concat(overrideRules)
-        .map((rule) => modifyRulesText(rule, cssUrl))
+        .map((text) => modifyRulesText(text, cssUrl))
         .join("\n\n");
 
     // console.log(cssUrl, newText);
@@ -69,36 +62,62 @@ function getRules(text: string) {
     }
 
     const textLines = text.split("\n");
-    return rules.map((rule: any) => {
-        let text = "";
-        if (rule.position.start.line === rule.position.end.line) {
-            text = textLines[rule.position.start.line - 1].slice(
-                rule.position.start.column - 1,
+    const mappedRules = rules.map((rule: any) =>
+        mapRuleFormat(rule, textLines)
+    );
+
+    // rules wrapped by non-media rules, e.g. @supports (...) {}
+    // assume only one level nesting
+    const nonWrappedRules = mappedRules.filter(
+        (rule: any) => !rule.rules || rule.type === "media"
+    );
+    const wrappedRules = mappedRules
+        .filter((rule: any) => rule.rules && rule.type !== "media")
+        .flatMap((wrapper) => {
+            const wrappedBySelector = wrapper.text.match(/(.*?)\{/)[1];
+
+            return wrapper.rules.map((rule) => {
+                const mappedRule = mapRuleFormat(rule, textLines);
+                return {
+                    ...mappedRule,
+                    wrappedBySelector,
+                };
+            });
+        });
+
+    return nonWrappedRules.concat(wrappedRules);
+}
+
+function mapRuleFormat(rule: any, completeTextLines: string[]) {
+    let text = "";
+    if (rule.position.start.line === rule.position.end.line) {
+        text = completeTextLines[rule.position.start.line - 1].slice(
+            rule.position.start.column - 1,
+            rule.position.end.column - 1
+        );
+    } else {
+        text =
+            completeTextLines[rule.position.start.line - 1].slice(
+                rule.position.start.column - 1
+            ) +
+            "\n" +
+            completeTextLines
+                .slice(rule.position.start.line, rule.position.end.line - 1)
+                .join("\n") +
+            "\n" +
+            completeTextLines[rule.position.end.line - 1].slice(
+                0,
                 rule.position.end.column - 1
             );
-        } else {
-            text =
-                textLines[rule.position.start.line - 1].slice(
-                    rule.position.start.column - 1
-                ) +
-                "\n" +
-                textLines
-                    .slice(rule.position.start.line, rule.position.end.line - 1)
-                    .join("\n") +
-                "\n" +
-                textLines[rule.position.end.line - 1].slice(
-                    0,
-                    rule.position.end.column - 1
-                );
-        }
+    }
 
-        return {
-            type: rule.type,
-            condition: rule.media as string,
-            selectors: rule.selectors,
-            text,
-        };
-    });
+    return {
+        type: rule.type,
+        condition: rule.media as string,
+        selectors: rule.selectors,
+        rules: rule.rules,
+        text,
+    };
 }
 
 function modifyRulesText(text, cssUrl) {
