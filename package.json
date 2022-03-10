@@ -55,7 +55,6 @@
                 "source/background/background.js",
                 "source/content-script/index.js",
                 "source/content-script/pageview/content.css",
-                "source/sidebar/index.html",
                 "source/options/options.html"
             ]
         }

@@ -16,7 +16,6 @@ browser.runtime.onMessage.addListener(async (event) => {
 });
 
 // toggle the "page view" for the current tab.
-// the "page view" includes the web annotations sidebar iframe and CSS changes that make the sidebar visible
 async function togglePageView() {
     const isInPageView = document.body.classList.contains("pageview");
     if (!isInPageView) {
@@ -28,11 +27,6 @@ async function togglePageView() {
 
 async function enablePageView() {
     patchDocumentStyle();
-    // const sidebarIframe = injectSidebar();
-
-    // listen and react to annotation events from the sidebar iframe
-    // createAnnotationListener(sidebarIframe);
-    // createSelectionListener(sidebarIframe);
 
     // make visible once set up
     document.body.classList.add("pageview");
@@ -52,8 +46,4 @@ async function disablePageView() {
     document.body.classList.remove("pageview");
 
     await unPatchDocumentStyle();
-    // removeSidebar();
-
-    // removeAnnotationListener();
-    // removeSelectionListener();
 }
