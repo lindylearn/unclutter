@@ -55,10 +55,21 @@ function insertBackground() {
     var background = document.createElement("div");
     background.id = "lindy-body-background";
     background.className = `${overrideClassname} lindy-body-background`;
-    const siteBackground = window.getComputedStyle(document.body).background;
-    background.style.background = siteBackground.includes("rgba(0, 0, 0, 0)")
-        ? "white"
-        : siteBackground;
+
+    // get page background to use
+    const htmlBackground = window.getComputedStyle(
+        document.documentElement
+    ).background;
+    const bodyBackground = window.getComputedStyle(document.body).background;
+    let backgroundColor;
+    if (bodyBackground && !bodyBackground.includes("rgba(0, 0, 0, 0)")) {
+        backgroundColor = bodyBackground;
+    } else if (htmlBackground && !htmlBackground.includes("rgba(0, 0, 0, 0)")) {
+        backgroundColor = htmlBackground;
+    } else {
+        backgroundColor = "white";
+    }
+    background.style.background = backgroundColor;
 
     // body '100%' may not refer to full height of children (e.g. https://torontolife.com/memoir/the-horrifying-truth-about-my-biological-father/)
     background.style.height = `${document.body.scrollHeight}px`;
