@@ -1,8 +1,21 @@
 import axios from "axios";
 import { getCssOverride } from "./cssTweaks";
-import { createStylesheetText } from "./styleChanges";
+import { createStylesheetText, overrideClassname } from "./styleChanges";
 
 const proxyUrl = "https://annotations.lindylearn.io/proxy";
+
+export async function patchStylesheets(newStylesheets) {
+    const newStylesheetsToPatch = newStylesheets.filter(
+        (sheet) =>
+            !sheet.disabled && sheet.ownerNode?.className !== overrideClassname
+    );
+    console.log(Date.now(), "newStylesheetsToPatch", newStylesheetsToPatch);
+
+    const conditionScale = window.innerWidth / 750;
+    newStylesheetsToPatch.map((sheet) =>
+        patchStylesheetNode(sheet.ownerNode, conditionScale)
+    );
+}
 
 export async function patchStylesheetNode(elem, conditionScale) {
     const url = elem.href || window.location.href;
@@ -40,7 +53,7 @@ export async function patchStylesheetNode(elem, conditionScale) {
     }
 }
 
-export function removeOverrideRules() {
+export function unPatchStylesheets() {
     reenableOriginalStylesheets();
 }
 

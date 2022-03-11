@@ -1,29 +1,25 @@
 import browser from "webextension-polyfill";
-import { contentBlock, unContentBlock } from "./contentBlock";
-import { removeOverrideRules } from "./mediaQuery";
+import { insertContentBlockStyle } from "./contentBlock";
+import { patchStylesheets, unPatchStylesheets } from "./patchStylesheets";
 
-// slightly modify the CSS of the active website in order to make room for the annotations sidebar
 export const overrideClassname = "lindylearn-document-override";
+
 export function patchDocumentStyle() {
     insertBackground();
-    // insertPageViewStyle();
-    // insertOverrideRules();
-
-    contentBlock();
-    // insertShareButton();
+    patchStylesheets(document.styleSheets);
+    insertContentBlockStyle();
 }
 
 export async function unPatchDocumentStyle() {
     // restore original styles first
-    removeOverrideRules();
+    unPatchStylesheets();
+    // wait for rerender
     await new Promise((resolve, _) => setTimeout(resolve, 0));
 
-    // this removes most modifications
+    // remove most modifications
     document
         .querySelectorAll(`.${overrideClassname}`)
         .forEach((e) => e.remove());
-
-    unContentBlock();
 }
 
 // add style to show the sidebar
@@ -46,7 +42,7 @@ function insertPageViewStyle() {
         : document.body.style.paddingTop;
 }
 
-function insertBackground() {
+export function insertBackground() {
     // create element of full height of all children, in case body height != content height
     var background = document.createElement("div");
     background.id = "lindy-body-background";
@@ -88,7 +84,9 @@ function updateBackgroundHeight() {
     const bodyHeigth = childHeights.reduce((sum, height) => sum + height, 0);
 
     const background = document.getElementById("lindy-body-background");
-    background.style.height = `${bodyHeigth}px`;
+    if (background) {
+        background.style.height = `${bodyHeigth}px`;
+    }
 }
 
 export function createStylesheetLink(url) {

@@ -22,6 +22,11 @@
             "js": ["content-script/boot.js"],
             "css": ["content-script/pageview/content.css"],
             "run_at": "document_start"
+        },
+        {
+            "matches": ["<all_urls>"],
+            "js": ["content-script/toggle.js"],
+            "run_at": "document_idle"
         }
     ],
     "web_accessible_resources": [

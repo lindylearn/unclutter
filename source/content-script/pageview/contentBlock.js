@@ -1,7 +1,7 @@
 import { createStylesheetText } from "./styleChanges";
 
 // hide page elements unrelated to the article
-export function contentBlock() {
+export function insertContentBlockStyle() {
     const tagSelectors = blockedTags;
     const classSelectors = blockedWords.map((word) => `[class*=${word} i]`);
     const idSelectors = blockedWords.map((word) => `[id*=${word} i]`);
@@ -15,9 +15,6 @@ export function contentBlock() {
 
     createStylesheetText(css);
 }
-
-// inserted stylesheets are already removed elsewhere
-export function unContentBlock() {}
 
 const blockedTags = ["footer", "aside", "nav"];
 const blockedWords = [
