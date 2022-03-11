@@ -27,6 +27,7 @@ async function boot() {
     // listen to new stylesheet dom nodes, and start their patch process immediately (before entire dom constructed)
     let lastStylesheetCount = 0;
     const observer = new MutationObserver((mutations, observer) => {
+        // TODO is iterating through mutations list faster?
         const stylesheets = [...document.styleSheets];
         const newStylesheets = stylesheets.slice(lastStylesheetCount);
         lastStylesheetCount = stylesheets.length;
@@ -48,7 +49,8 @@ async function boot() {
         );
     });
     observer.observe(document, { childList: true, subtree: true });
-    // document.addEventListener("DOMContentLoaded", (e) => observer.disconnect());
+    // executing site JS may add style elements, e.g. cookie banners. so wait a bit.
+    window.onload = (e) => setTimeout(observer.disconnect.bind(observer), 3000);
 
     document.onreadystatechange = function () {
         if (document.readyState === "interactive") {

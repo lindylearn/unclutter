@@ -53,15 +53,17 @@ function insertBackground() {
     background.className = `${overrideClassname} lindy-body-background`;
 
     // get page background to use
-    const htmlBackground = window.getComputedStyle(
-        document.documentElement
-    ).background;
+    // const htmlBackground = window.getComputedStyle(
+    //     document.documentElement
+    // ).background;
     const bodyBackground = window.getComputedStyle(document.body).background;
     let backgroundColor;
     if (bodyBackground && !bodyBackground.includes("rgba(0, 0, 0, 0)")) {
         backgroundColor = bodyBackground;
-    } else if (htmlBackground && !htmlBackground.includes("rgba(0, 0, 0, 0)")) {
-        backgroundColor = htmlBackground;
+
+        // else if (htmlBackground && !htmlBackground.includes("rgba(0, 0, 0, 0)")) {
+        //     backgroundColor = htmlBackground;
+        // }
     } else {
         backgroundColor = "white";
     }

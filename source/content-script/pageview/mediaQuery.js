@@ -16,8 +16,16 @@ export async function patchStylesheetNode(elem, conditionScale) {
                 }
             );
             cssText = await response.data.text();
-        } else {
+        } else if (elem.innerHTML) {
             cssText = elem.innerHTML;
+        } else {
+            // stylesheet rules that were created through js
+            // which means they are accessible to us too
+
+            // TODO optimize this, don't do the parsing or at least rule splitting for js rules?
+            cssText = [...elem.sheet.cssRules]
+                .map((rule) => rule.cssText)
+                .join("\n");
         }
         if (!cssText) {
             return;
