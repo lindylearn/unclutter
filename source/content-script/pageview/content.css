@@ -1,17 +1,19 @@
-html {
+html.pageview {
     background-color: #f1f3f4 !important;
-    /* background: radial-gradient(
-		rgb(229 231 235) 0px,
-		rgb(243 244 246) 2px
-	) !important;
-	background-size: 25px 25px !important; */
 }
 
-body {
+html.pageview > body {
     /* animation properties are set inline */
-
     position: relative;
+
+    width: 100%;
+    max-width: 800px !important;
+    margin: 20px auto !important;
+
+    border-radius: 10px !important;
+    overflow-x: hidden !important;
 }
+
 .lindy-body-background {
     position: absolute;
     top: 0;
@@ -26,16 +28,7 @@ body {
         drop-shadow(0 4px 3px rgb(0 0 0 / 0.1));
 }
 
-body.pageview {
-    width: 100%;
-    max-width: 800px !important;
-    margin: 20px auto !important;
-
-    border-radius: 10px !important;
-    overflow-x: hidden !important;
-}
-
-.lindy-sidebar {
+/* .lindy-sidebar {
     position: absolute;
     top: 0;
     left: calc(100% + 20px);
@@ -50,9 +43,9 @@ body.pageview {
 }
 .share-icon img {
     width: 13px;
-}
+} */
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
     html {
         background-color: #202124 !important;
     }
@@ -61,4 +54,4 @@ body.pageview {
         filter: drop-shadow(0 10px 8px rgb(255 255 255 / 0.04))
             drop-shadow(0 4px 3px rgb(255 255 255 / 0.1));
     }
-}
+} */

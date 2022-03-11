@@ -9,21 +9,15 @@ browser.runtime.onMessage.addListener(async (event) => {
     if (event === "ping") {
         return true;
     } else if (event === "togglePageView") {
-        await togglePageView();
-    } else {
-        console.log(event);
+        const isPageView =
+            document.documentElement.classList.contains("pageview");
+        if (!isPageView) {
+            await enablePageView();
+        } else {
+            await disablePageView();
+        }
     }
 });
-
-// toggle the "page view" for the current tab.
-async function togglePageView() {
-    const isInPageView = document.body.classList.contains("pageview");
-    if (!isInPageView) {
-        await enablePageView();
-    } else {
-        await disablePageView();
-    }
-}
 
 async function enablePageView() {
     patchDocumentStyle();
@@ -32,15 +26,15 @@ async function enablePageView() {
     document.body.classList.add("pageview");
 
     // allow exiting pageview by clicking on background surrounding pageview (bare <html>)
-    document.onclick = (event) => {
+    document.documentElement.onclick = (event) => {
         if (event.target.tagName === "HTML") {
-            togglePageView();
+            disablePageView();
         }
     };
 }
 async function disablePageView() {
     // disable page view exiting
-    document.onclick = null;
+    document.documentElement.onclick = null;
 
     // immediately hide
     document.body.classList.remove("pageview");

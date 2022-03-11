@@ -60,7 +60,7 @@
             "source": [
                 "source/manifest.json",
                 "source/background/background.js",
-                "source/content-script/index.js",
+                "source/content-script/boot.js",
                 "source/content-script/pageview/content.css",
                 "source/options/options.html"
             ]

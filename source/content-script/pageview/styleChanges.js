@@ -1,13 +1,13 @@
 import browser from "webextension-polyfill";
 import { contentBlock, unContentBlock } from "./contentBlock";
-import { insertOverrideRules, removeOverrideRules } from "./mediaQuery";
+import { removeOverrideRules } from "./mediaQuery";
 
 // slightly modify the CSS of the active website in order to make room for the annotations sidebar
 export const overrideClassname = "lindylearn-document-override";
 export function patchDocumentStyle() {
     insertBackground();
-    insertPageViewStyle();
-    insertOverrideRules();
+    // insertPageViewStyle();
+    // insertOverrideRules();
 
     contentBlock();
     // insertShareButton();
@@ -44,10 +44,6 @@ function insertPageViewStyle() {
     )
         ? "0.05px"
         : document.body.style.paddingTop;
-
-    createStylesheetLink(
-        browser.runtime.getURL("/content-script/pageview/content.css")
-    );
 }
 
 function insertBackground() {
