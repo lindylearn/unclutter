@@ -9,7 +9,6 @@ export async function patchStylesheets(newStylesheets) {
         (sheet) =>
             !sheet.disabled && sheet.ownerNode?.className !== overrideClassname
     );
-    console.log(Date.now(), "newStylesheetsToPatch", newStylesheetsToPatch);
 
     const conditionScale = window.innerWidth / 750;
     newStylesheetsToPatch.map((sheet) =>

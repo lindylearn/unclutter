@@ -35,4 +35,7 @@ const blockedWords = [
     "modal",
     "cookie",
     "consent",
+    "cleanslate",
+    "smartfeed",
+    "adslot",
 ];
