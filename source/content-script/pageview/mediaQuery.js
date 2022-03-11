@@ -23,12 +23,20 @@ export async function insertOverrideRules() {
         )
         .filter((elem) => elem.className !== overrideClassname);
 
+    const processedUrls = new Set();
     await Promise.all(
         cssElems.map(async (elem) => {
             const url = elem.href || window.location.href;
             try {
                 let cssText;
                 if (elem.tagName === "LINK") {
+                    if (processedUrls.has(url)) {
+                        // process each stylesheet only once
+                        // e.g. multiple github gist embeds
+                        return;
+                    }
+                    processedUrls.add(url);
+
                     const response = await axios.get(
                         `${proxyUrl}/${encodeURIComponent(url)}`,
                         {
