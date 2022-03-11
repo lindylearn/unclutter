@@ -2,7 +2,6 @@
     "dependencies": {
         "approx-string-match": "^2.0.0",
         "axios": "^0.26.0",
-        "css": "https://github.com/phgn0/css",
         "lodash": "^4.17.21",
         "react": "^17.0.2",
         "react-dom": "^17.0.2",
@@ -22,7 +21,7 @@
         "parcel": "^2.0.0-rc.0",
         "patch-package": "^6.4.7",
         "path-browserify": "^1.0.1",
-        "postcss": "^8.4.7",
+        "postcss": "^8.4.8",
         "postinstall-postinstall": "^2.1.0",
         "prettier-plugin-organize-imports": "^2.3.4",
         "process": "^0.11.10",
