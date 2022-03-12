@@ -31,7 +31,11 @@ const scaleBreakpointsPlugin: PluginCreator<number> = (conditionScale) => ({
     postcssPlugin: "scale-media-breakpoints",
     AtRule(rule) {
         if (rule.name === "media") {
-            // modify temp variable, otherwise matchAll() might loop endlessly
+            // any change will re-trigger listeners
+            if (rule["alreadyProcessed"]) {
+                return;
+            }
+
             let condition = rule.params;
             for (const match of rule.params.matchAll(/([0-9]+)/g)) {
                 const oldCount = parseInt(match[1]);
@@ -44,6 +48,7 @@ const scaleBreakpointsPlugin: PluginCreator<number> = (conditionScale) => ({
             }
 
             rule.params = condition;
+            rule["alreadyProcessed"] = true;
         }
     },
 });
@@ -62,12 +67,15 @@ const urlRewritePlugin: PluginCreator<string> = (baseUrl) => ({
     },
     Declaration(decl) {
         if (decl.value.startsWith("url(")) {
+            // any change will re-trigger listeners
+            if (decl["alreadyProcessed"]) {
+                return;
+            }
+            // short-circuit base64 urls for performance
             if (decl.value.startsWith("url(data:")) {
-                // short-circuit for performance
                 return;
             }
 
-            // modify temp variable, otherwise matchAll() might loop endlessly
             let newValue = decl.value;
             for (const match of decl.value.matchAll(
                 /url\((?!"?'?(?:data:|#|https?:\/\/))"?'?([^\)]*?)"?'?\)/g
@@ -76,6 +84,9 @@ const urlRewritePlugin: PluginCreator<string> = (baseUrl) => ({
                 const absoluteUrl = new URL(url, baseUrl);
                 newValue = newValue.replace(url, absoluteUrl.href);
             }
+
+            decl.value = newValue;
+            decl["alreadyProcessed"] = true;
         }
     },
 });
