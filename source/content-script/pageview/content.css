@@ -47,11 +47,11 @@ html.pageview > body {
 
 @media (prefers-color-scheme: dark) {
     html.pageview {
-        background-color: #202124 !important;
+        background-color: #35363a !important;
     }
 
     .lindy-body-background {
-        filter: drop-shadow(0 10px 8px rgb(255 255 255 / 0.04))
-            drop-shadow(0 4px 3px rgb(255 255 255 / 0.1));
+        filter: drop-shadow(0 10px 8px rgb(255 255 255 / 0.15))
+            drop-shadow(0 4px 3px rgb(255 255 255 / 0.2));
     }
 }
