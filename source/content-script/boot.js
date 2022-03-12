@@ -48,15 +48,13 @@ function boot() {
     // once dom loaded, do rest of style tweaks
     document.onreadystatechange = async function () {
         if (document.readyState === "interactive") {
-            patchStylesheets([...document.styleSheets]);
-
-            // wait for rerender
-            // await new Promise((resolve, _) => setTimeout(resolve, 0));
-
-            modifyBodyStyle();
-
             insertBackground();
             insertContentBlockStyle();
+
+            await patchStylesheets([...document.styleSheets]);
+
+            // patch after new style applied
+            modifyBodyStyle();
         }
     };
 }

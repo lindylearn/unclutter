@@ -28,16 +28,13 @@ export function modifyBodyStyle() {
 	margin-left 0.3s cubic-bezier(0.16, 1, 0.3, 1),
 	width 0.3s cubic-bezier(0.16, 1, 0.3, 1)`;
 
-    // add miniscule top padding if not already present, to prevent top margin collapse
-    document.body.style.paddingTop = ["", "0px"].includes(
-        document.body.style.paddingTop
-    )
-        ? "0.05px"
-        : document.body.style.paddingTop;
+    const bodyStyle = window.getComputedStyle(document.body);
 
-    // document.body.style.padding = window.getComputedStyle(document.body).margin;
-    // TODO add original padding
-    // document.body.style.margin = "10px auto";
+    // add miniscule top padding if not already present, to prevent top margin collapse
+    // note that body margin is rewritten into padding in cssTweaks.ts
+    if (["", "0px"].includes(bodyStyle.paddingTop)) {
+        document.body.style.paddingTop = "0.05px";
+    }
 }
 
 export function insertBackground() {

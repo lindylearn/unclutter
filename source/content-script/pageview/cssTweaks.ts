@@ -12,6 +12,7 @@ export async function getCssOverride(
         scaleBreakpointsPlugin(conditionScale),
         urlRewritePlugin(cssUrl),
         hideFixedElementsPlugin,
+        styleTweaksPlugin,
     ]).process(cssText);
 
     // console.log(cssUrl, result.css);
@@ -75,6 +76,15 @@ urlRewritePlugin.postcss = true;
 // hide fixed and sticky positioned elements (highly unlikely to be part of the text)
 const hideFixedElementsPlugin: Plugin = {
     postcssPlugin: "hide-fixed-elements",
+    Rule(rule) {
+        if (rule.selector === "body") {
+            rule.each((node) => {
+                if (node.type === "decl" && node.prop.startsWith("margin")) {
+                    node.prop = node.prop.replace("margin", "padding");
+                }
+            });
+        }
+    },
     Declaration(decl) {
         if (
             decl.prop === "position" &&
@@ -87,6 +97,21 @@ const hideFixedElementsPlugin: Plugin = {
                     important: true,
                 })
             );
+        }
+    },
+};
+
+const styleTweaksPlugin: Plugin = {
+    postcssPlugin: "style-tweaks",
+    Rule(rule) {
+        // rewrite body margin (which we overwrite) into padding
+        if (rule.selector === "body") {
+            rule.each((node) => {
+                if (node.type === "decl" && node.prop.startsWith("margin")) {
+                    // caveat: this uses either margin or padding if present, does not add them
+                    node.prop = node.prop.replace("margin", "padding");
+                }
+            });
         }
     },
 };
