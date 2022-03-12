@@ -3,7 +3,9 @@ import { createStylesheetText } from "./styleChanges";
 // hide page elements unrelated to the article
 export function insertContentBlockStyle() {
     const tagSelectors = blockedTags;
-    const classSelectors = blockedWords.map((word) => `[class*=${word} i]`);
+    const classSelectors = blockedWords.map(
+        (word) => `*:not(body)[class*=${word} i]`
+    );
     const idSelectors = blockedWords.map((word) => `[id*=${word} i]`);
     const roleSelectors = blockedWords.map((word) => `[role*=${word} i]`);
 
@@ -28,7 +30,7 @@ const blockedWords = [
     "recommendation",
     "social",
     "popular",
-    "promo",
+    // "promo",
     "overlay",
     "login",
     "registration",
