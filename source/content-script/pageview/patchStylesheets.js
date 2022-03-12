@@ -45,7 +45,7 @@ export async function patchStylesheetNode(elem, conditionScale) {
 
         const overrideCss = await getCssOverride(url, cssText, conditionScale);
 
-        createStylesheetText(overrideCss);
+        createStylesheetText(overrideCss, elem.href);
         disableStylesheet(elem);
     } catch (err) {
         console.error(`Error patching CSS file ${url}:`, err);

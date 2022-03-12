@@ -98,9 +98,10 @@ export function createStylesheetLink(url) {
     document.head.appendChild(link);
 }
 
-export function createStylesheetText(text) {
+export function createStylesheetText(text, id = null) {
     var style = document.createElement("style");
     style.className = overrideClassname;
+    style.id = id;
     style.type = "text/css";
     style.rel = "stylesheet";
     style.innerHTML = text;

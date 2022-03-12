@@ -55,13 +55,19 @@ scaleBreakpointsPlugin.postcss = true;
 // those paths are relative to the stylesheet url, which we change
 const urlRewritePlugin: PluginCreator<string> = (baseUrl) => ({
     postcssPlugin: "rewrite-relative-urls",
+    AtRule(rule) {
+        if (rule.name === "import") {
+            const url = rule.params.match(/"?'?([^\)]*?)"?'?\)/g)?.[1];
+            const absoluteUrl = new URL(url, baseUrl);
+            rule.params = rule.params.replace(url, absoluteUrl.href);
+        }
+    },
     Declaration(decl) {
         if (decl.value.startsWith("url(")) {
             for (const match of decl.value.matchAll(
                 /url\((?!"?'?(?:data:|#|https?:\/\/))"?'?([^\)]*?)"?'?\)/g
             )) {
                 const url = match[1];
-
                 const absoluteUrl = new URL(url, baseUrl);
                 decl.value = decl.value.replace(url, absoluteUrl.href);
             }
