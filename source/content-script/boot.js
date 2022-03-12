@@ -5,7 +5,13 @@ import { patchStylesheets } from "./pageview/patchStylesheets";
 import { insertBackground } from "./pageview/styleChanges";
 import { disablePageView } from "./toggle";
 
-const excludedHosts = ["google.com", "news.ycombinator.com", "twitter.com"];
+const excludedHosts = [
+    "google.com",
+    "news.ycombinator.com",
+    "twitter.com",
+    "linkedin.com",
+    "reddit.com",
+];
 
 // optimized version of enablePageView() that runs in every user tab
 async function boot() {
@@ -13,6 +19,9 @@ async function boot() {
     const url = new URL(window.location.href);
     const hostname = url.hostname.replace("www.", "");
     if (excludedHosts.includes(hostname)) {
+        return;
+    }
+    if (url.pathname === "/") {
         return;
     }
 

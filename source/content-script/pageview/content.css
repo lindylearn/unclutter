@@ -45,8 +45,8 @@ html.pageview > body {
     width: 13px;
 } */
 
-/* @media (prefers-color-scheme: dark) {
-    html {
+@media (prefers-color-scheme: dark) {
+    html.pageview {
         background-color: #202124 !important;
     }
 
@@ -54,4 +54,4 @@ html.pageview > body {
         filter: drop-shadow(0 10px 8px rgb(255 255 255 / 0.04))
             drop-shadow(0 4px 3px rgb(255 255 255 / 0.1));
     }
-} */
+}
