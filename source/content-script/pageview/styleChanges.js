@@ -15,7 +15,6 @@ export async function unPatchDocumentStyle() {
         .forEach((e) => e.remove());
 }
 
-// add style to show the sidebar
 export function modifyBodyStyle() {
     // set start properties for animation immediately
     document.body.style.width = "100%";
@@ -34,6 +33,11 @@ export function modifyBodyStyle() {
     // note that body margin is rewritten into padding in cssTweaks.ts
     if (["", "0px"].includes(bodyStyle.paddingTop)) {
         document.body.style.paddingTop = "0.05px";
+    }
+    // add some minimal padding if none present (0 padding looks quite ugly)
+    if (["", "0px"].includes(bodyStyle.paddingLeft)) {
+        document.body.style.paddingLeft = "20px";
+        document.body.style.paddingRight = "20px";
     }
 }
 
