@@ -7,8 +7,8 @@ html.pageview > body {
     position: relative;
 
     width: 100%;
-    max-width: 800px !important;
-    margin: 20px auto !important;
+    max-width: 900px !important;
+    margin: 10px auto !important;
 
     border-radius: 10px !important;
     overflow-x: hidden !important;

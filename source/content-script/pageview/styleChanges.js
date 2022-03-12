@@ -1,14 +1,7 @@
 import browser from "webextension-polyfill";
-import { insertContentBlockStyle } from "./contentBlock";
-import { patchStylesheets, unPatchStylesheets } from "./patchStylesheets";
+import { unPatchStylesheets } from "./patchStylesheets";
 
 export const overrideClassname = "lindylearn-document-override";
-
-export function patchDocumentStyle() {
-    insertBackground();
-    patchStylesheets(document.styleSheets);
-    insertContentBlockStyle();
-}
 
 export async function unPatchDocumentStyle() {
     // restore original styles first
@@ -23,12 +16,13 @@ export async function unPatchDocumentStyle() {
 }
 
 // add style to show the sidebar
-function insertPageViewStyle() {
+export function modifyBodyStyle() {
     // set start properties for animation immediately
     document.body.style.width = "100%";
-    document.body.style.margin = "0";
+    // document.body.style.margin = "0";
+    // document.body.style.maxWidth = "none";
 
-    // set animation style inline to have ease-out
+    // set animation style inline to have out transition
     // easeOutExpo from easings.net
     document.body.style.transition = `margin-top 0.15s cubic-bezier(0.16, 1, 0.3, 1),
 	margin-left 0.3s cubic-bezier(0.16, 1, 0.3, 1),
@@ -40,6 +34,10 @@ function insertPageViewStyle() {
     )
         ? "0.05px"
         : document.body.style.paddingTop;
+
+    // document.body.style.padding = window.getComputedStyle(document.body).margin;
+    // TODO add original padding
+    // document.body.style.margin = "10px auto";
 }
 
 export function insertBackground() {
@@ -98,10 +96,9 @@ export function createStylesheetLink(url) {
     document.head.appendChild(link);
 }
 
-export function createStylesheetText(text, id = null) {
+export function createStylesheetText(text, styleId) {
     var style = document.createElement("style");
-    style.className = overrideClassname;
-    style.id = id;
+    style.className = `${overrideClassname} ${styleId}`;
     style.type = "text/css";
     style.rel = "stylesheet";
     style.innerHTML = text;

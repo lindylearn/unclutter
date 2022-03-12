@@ -13,10 +13,10 @@ export function insertContentBlockStyle() {
         .concat(roleSelectors);
     const css = `${selectors.join(", ")} { display: none !important; }`;
 
-    createStylesheetText(css);
+    createStylesheetText(css, "content-block");
 }
 
-const blockedTags = ["footer", "aside", "nav"];
+const blockedTags = ["footer", "aside", "nav", "gpt-ad"];
 const blockedWords = [
     "masthead",
     // "banner",
@@ -28,7 +28,7 @@ const blockedWords = [
     "recommendation",
     "social",
     "popular",
-    // "promo",
+    "promo",
     "overlay",
     "login",
     "registration",

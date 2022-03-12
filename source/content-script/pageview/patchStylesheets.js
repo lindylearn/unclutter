@@ -11,12 +11,18 @@ export async function patchStylesheets(newStylesheets) {
     );
 
     const conditionScale = window.innerWidth / 750;
-    newStylesheetsToPatch.map((sheet) =>
-        patchStylesheetNode(sheet.ownerNode, conditionScale)
+    await Promise.all(
+        newStylesheetsToPatch.map((sheet) =>
+            patchStylesheetNode(sheet.ownerNode, conditionScale)
+        )
     );
 }
 
 export async function patchStylesheetNode(elem, conditionScale) {
+    const start = performance.now();
+
+    // random id to corraborate original & override style
+    const styleId = `style_${Math.random()}`;
     const url = elem.href || window.location.href;
     try {
         let cssText;
@@ -45,8 +51,15 @@ export async function patchStylesheetNode(elem, conditionScale) {
 
         const overrideCss = await getCssOverride(url, cssText, conditionScale);
 
-        createStylesheetText(overrideCss, elem.href);
-        disableStylesheet(elem);
+        createStylesheetText(overrideCss, styleId);
+        disableStylesheet(elem, styleId);
+
+        const duration = performance.now() - start;
+        console.log(
+            `Took ${Math.round(duration)}ms to rewrite ${
+                elem.href || "inline style"
+            } '${styleId}'`
+        );
     } catch (err) {
         console.error(`Error patching CSS file ${url}:`, err);
     }
@@ -57,9 +70,10 @@ export function unPatchStylesheets() {
 }
 
 const disabledClassname = "lindylearn-disabled-style";
-function disableStylesheet(elem) {
+function disableStylesheet(elem, styleId) {
     elem.disabled = true;
     elem.classList.add(disabledClassname);
+    elem.classList.add(styleId);
 }
 
 function reenableOriginalStylesheets() {

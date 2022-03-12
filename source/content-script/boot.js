@@ -2,19 +2,25 @@
 
 import { insertContentBlockStyle } from "./pageview/contentBlock";
 import { patchStylesheets } from "./pageview/patchStylesheets";
-import { insertBackground } from "./pageview/styleChanges";
+import { insertBackground, modifyBodyStyle } from "./pageview/styleChanges";
 import { disablePageView } from "./toggle";
 
 const excludedHosts = [
     "google.com",
+    "keep.google.com",
+    "calendar.google.com",
+    "drive.google.com",
+    "youtube.com",
     "news.ycombinator.com",
     "twitter.com",
     "linkedin.com",
     "reddit.com",
+    "github.com",
+    "stackoverflow.com",
 ];
 
 // optimized version of enablePageView() that runs in every user tab
-async function boot() {
+function boot() {
     // check if extension should be enabled on this page
     const url = new URL(window.location.href);
     const hostname = url.hostname.replace("www.", "");
@@ -37,11 +43,18 @@ async function boot() {
     };
 
     // listen to created stylesheet elements
-    patchStylesheetsOnceCreated();
+    // patchStylesheetsOnceCreated();
 
     // once dom loaded, do rest of style tweaks
-    document.onreadystatechange = function () {
+    document.onreadystatechange = async function () {
         if (document.readyState === "interactive") {
+            patchStylesheets([...document.styleSheets]);
+
+            // wait for rerender
+            // await new Promise((resolve, _) => setTimeout(resolve, 0));
+
+            modifyBodyStyle();
+
             insertBackground();
             insertContentBlockStyle();
         }

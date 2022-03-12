@@ -8,15 +8,11 @@ export async function getCssOverride(
     cssText: string,
     conditionScale: number
 ): Promise<string> {
-    const start = performance.now();
     const result = await postcss([
         scaleBreakpointsPlugin(conditionScale),
         urlRewritePlugin(cssUrl),
         hideFixedElementsPlugin,
     ]).process(cssText);
-
-    const duration = performance.now() - start;
-    console.log(`Took ${Math.round(duration)}ms to rewrite ${cssUrl}`);
 
     // console.log(cssUrl, result.css);
 
