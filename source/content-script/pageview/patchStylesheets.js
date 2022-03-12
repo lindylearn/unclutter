@@ -19,8 +19,6 @@ export async function patchStylesheets(newStylesheets) {
 }
 
 export async function patchStylesheetNode(elem, conditionScale) {
-    const start = performance.now();
-
     // random id to corraborate original & override style
     const styleId = `style_${Math.random()}`;
     const url = elem.href || window.location.href;
@@ -49,17 +47,17 @@ export async function patchStylesheetNode(elem, conditionScale) {
             return;
         }
 
+        const start = performance.now();
         const overrideCss = await getCssOverride(url, cssText, conditionScale);
-
-        createStylesheetText(overrideCss, styleId);
-        disableStylesheet(elem, styleId);
-
         const duration = performance.now() - start;
         console.log(
             `Took ${Math.round(duration)}ms to rewrite ${
                 elem.href || "inline style"
             } '${styleId}'`
         );
+
+        createStylesheetText(overrideCss, styleId);
+        disableStylesheet(elem, styleId);
     } catch (err) {
         console.error(`Error patching CSS file ${url}:`, err);
     }

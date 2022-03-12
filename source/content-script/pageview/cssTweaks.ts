@@ -31,8 +31,9 @@ const scaleBreakpointsPlugin: PluginCreator<number> = (conditionScale) => ({
     postcssPlugin: "scale-media-breakpoints",
     AtRule(rule) {
         if (rule.name === "media") {
+            // modify temp variable, otherwise matchAll() might loop endlessly
             let condition = rule.params;
-            for (const match of condition.matchAll(/([0-9]+)/g)) {
+            for (const match of rule.params.matchAll(/([0-9]+)/g)) {
                 const oldCount = parseInt(match[1]);
                 const newCount = Math.round(conditionScale * oldCount);
 
@@ -61,12 +62,19 @@ const urlRewritePlugin: PluginCreator<string> = (baseUrl) => ({
     },
     Declaration(decl) {
         if (decl.value.startsWith("url(")) {
+            if (decl.value.startsWith("url(data:")) {
+                // short-circuit for performance
+                return;
+            }
+
+            // modify temp variable, otherwise matchAll() might loop endlessly
+            let newValue = decl.value;
             for (const match of decl.value.matchAll(
                 /url\((?!"?'?(?:data:|#|https?:\/\/))"?'?([^\)]*?)"?'?\)/g
             )) {
                 const url = match[1];
                 const absoluteUrl = new URL(url, baseUrl);
-                decl.value = decl.value.replace(url, absoluteUrl.href);
+                newValue = newValue.replace(url, absoluteUrl.href);
             }
         }
     },
