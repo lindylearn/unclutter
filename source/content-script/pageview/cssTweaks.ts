@@ -20,8 +20,6 @@ export async function getCssOverride(
         parser: safeParser,
     });
 
-    // console.log(cssUrl, result.css);
-
     return result.css;
 }
 

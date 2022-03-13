@@ -39,6 +39,10 @@ export function modifyBodyStyle() {
         document.body.style.paddingLeft = "20px";
         document.body.style.paddingRight = "20px";
     }
+
+    // html or body tags may have classes with fixed style applied (which we hide via css rewrite)
+    document.documentElement.style.setProperty("display", "block", "important");
+    document.body.style.setProperty("display", "block", "important");
 }
 
 export function insertBackground() {

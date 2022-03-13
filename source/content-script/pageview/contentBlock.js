@@ -4,7 +4,7 @@ import { createStylesheetLink, createStylesheetText } from "./styleChanges";
 // hide page elements unrelated to the article
 export function insertContentBlockStyle() {
     const classWordSelectors = blockedWords.map(
-        (word) => `*:not(body)[class*=${word} i]`
+        (word) => `*:not(html):not(body)[class*=${word} i]`
     );
     const idSelectors = blockedWords.map((word) => `[id*=${word} i]`);
     const roleSelectors = blockedWords.map((word) => `[role*=${word} i]`);
@@ -48,4 +48,12 @@ const blockedWords = [
     "adslot",
     "advert",
 ];
-const blockedClasses = [".ad", ".ad-stickyhero"];
+const blockedClasses = [
+    ".ad",
+    ".ad-stickyhero",
+    ".main-nav",
+    ".secondary-nav",
+    ".email",
+    ".movable-ad",
+    ".no-ad-layout",
+];

@@ -54,3 +54,55 @@
 #postBody ~ * {
     display: none !important;
 }
+
+/* https://restofworld.org/2021/lost-in-translation-the-global-streaming-boom-is-creating-a-translator-shortage/ */
+main {
+    margin-top: 0 !important;
+}
+
+/* https://medium.com/swlh/working-on-dom-nodes-and-its-properties-in-javascript-af3ac77f803 */
+.v.w.x,
+.ez.fa {
+    display: none !important;
+}
+.eu.ev ~ .o.ct {
+    display: none !important;
+}
+
+/* https://www.gamesindustry.biz/articles/2022-02-24-studios-call-for-support-in-face-of-russian-invasion-of-ukraine */
+.coverage-promo,
+.article-coverage-promo,
+.newsletter-promo,
+.header-container {
+    display: none !important;
+}
+
+/* https://gizmodo.com/barbed-wire-fences-were-an-early-diy-telephone-network-1493157700 */
+.bxm4mm-6,
+.wdg44t-8,
+.js_ymal-below-post,
+.js_more-below-post {
+    display: none !important;
+}
+
+/* https://www.protocol.com/newsletters/entertainment/elden-ring?rebelltitem=1#rebelltitem1 */
+.last-added {
+    display: none !important;
+}
+
+/* https://slatestarcodex.com/2014/07/30/meditations-on-moloch/ */
+.left-sidebar,
+.widget-area {
+    display: none !important;
+}
+body {
+    padding: 0 !important;
+}
+body > div {
+    margin: 0 !important;
+}
+#pjgm-header,
+#pjgm-main {
+    box-shadow: none !important;
+    -webkit-box-shadow: none !important;
+}
