@@ -114,3 +114,29 @@ body > div {
 section[name="articleBody"] ~ div {
     display: none !important;
 }
+
+/* https://sive.rs/itunes */
+body#article {
+    padding: 1px 20px;
+}
+
+/* https://www.theguardian.com/global-development/2022/mar/09/ukraine-urged-to-take-humane-approach-as-men-try-to-flee-war */
+body > a[href="#maincontent"],
+body > a[href="#navigation"],
+div[data-gu-name="lines"],
+div[data-gu-name="border"] {
+    display: none !important;
+}
+.dcr-1c5ohp {
+    grid-template-columns: none !important;
+}
+gu-island,
+gu-island ~ section {
+    display: none !important;
+}
+
+/* https://www.polygon.com/22969625/sony-playstation-sexism-allegations-lawsuit */
+.outbrain-container,
+.outbrain-container ~ div {
+    display: none !important;
+}

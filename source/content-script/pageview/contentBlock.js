@@ -26,7 +26,7 @@ const blockedTags = ["footer", "aside", "nav", "gpt-ad"];
 const blockedWords = [
     "masthead",
     // "banner",
-    "menu",
+    // "menu",
     // "sidebar",
     "footer",
     "comments",
@@ -56,4 +56,6 @@ const blockedClasses = [
     ".email",
     ".movable-ad",
     ".no-ad-layout",
+    ".adsbygoogle",
+    ".google-auto-placed",
 ];
