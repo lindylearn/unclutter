@@ -43,3 +43,14 @@
 [class*="regular-article-layout__body"] {
     margin-top: 0 !important;
 }
+
+/* https://www.quantamagazine.org/in-new-experiment-astronomers-see-no-sign-of-cosmic-dawn-20220228/ */
+.cookie-not-accepted {
+    margin-top: 0 !important;
+}
+.header-spacer {
+    display: none !important;
+}
+#postBody ~ * {
+    display: none !important;
+}

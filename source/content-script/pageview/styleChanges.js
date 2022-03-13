@@ -62,10 +62,14 @@ export function insertBackground() {
     } else {
         backgroundColor = "white";
     }
-    background.style.background = backgroundColor;
+    background.style.setProperty("background", backgroundColor, "important");
 
     // body '100%' may not refer to full height of children (e.g. https://torontolife.com/memoir/the-horrifying-truth-about-my-biological-father/)
-    background.style.height = `${document.body.scrollHeight}px`;
+    background.style.setProperty(
+        "height",
+        `${document.body.scrollHeight}px`,
+        "important"
+    );
     document.body.appendChild(background);
 
     // update height after style fixes are done
@@ -84,7 +88,7 @@ function updateBackgroundHeight() {
 
     const background = document.getElementById("lindy-body-background");
     if (background) {
-        background.style.height = `${bodyHeigth}px`;
+        background.style.height = `${bodyHeigth}px !important`;
     }
 }
 
