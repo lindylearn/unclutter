@@ -1,0 +1,45 @@
+/* https://www.newyorker.com/news/our-columnists/the-evolution-of-alexey-navalnys-nationalism */
+[class*="VideoFigure"] {
+    display: none !important;
+}
+/* https://www.wired.com/2016/01/phil-kennedy-mind-control-computer/ */
+.BasePageWrapper {
+    padding-top: 0 !important;
+}
+
+/* https://www.theatlantic.com/ideas/archive/2022/03/ben-rhodes-alexey-navalny-maria-stepanova/627049/ */
+[class*="SubOnlyPromo"] {
+    display: none !important;
+}
+
+/* https://www.worksinprogress.co/issue/the-housing-theory-of-everything/ */
+.site-content {
+    padding-top: 0 !important;
+}
+.spotImagWrap {
+    display: none !important;
+}
+.detail-start-wrap {
+    top: 0 !important;
+    padding-top: 0 !important;
+}
+.issueSumBlockWrap {
+    visibility: visible !important;
+    height: auto !important;
+}
+
+/* https://www.economist.com/business/2022/03/09/what-oil-bosses-are-saying-about-the-global-energy-crisis */
+.styled-masthead {
+    display: none !important;
+}
+.global-layout > div {
+    top: 40px !important;
+}
+
+/* https://www.reuters.com/business/britain-start-approval-process-rolls-royce-mini-nuclear-reactor-2022-03-07/ */
+[class*="regular-article-layout__header"] {
+    display: none !important;
+}
+[class*="regular-article-layout__body"] {
+    margin-top: 0 !important;
+}

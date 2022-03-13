@@ -1,21 +1,25 @@
-import { createStylesheetText } from "./styleChanges";
+import browser from "webextension-polyfill";
+import { createStylesheetLink, createStylesheetText } from "./styleChanges";
 
 // hide page elements unrelated to the article
 export function insertContentBlockStyle() {
-    const tagSelectors = blockedTags;
-    const classSelectors = blockedWords.map(
+    const classWordSelectors = blockedWords.map(
         (word) => `*:not(body)[class*=${word} i]`
     );
     const idSelectors = blockedWords.map((word) => `[id*=${word} i]`);
     const roleSelectors = blockedWords.map((word) => `[role*=${word} i]`);
 
-    const selectors = tagSelectors
-        .concat(classSelectors)
+    const selectors = blockedTags
+        .concat(blockedClasses)
+        .concat(classWordSelectors)
         .concat(idSelectors)
         .concat(roleSelectors);
     const css = `${selectors.join(", ")} { display: none !important; }`;
 
     createStylesheetText(css, "content-block");
+    createStylesheetLink(
+        browser.runtime.getURL("content-script/pageview/manualContentBlock.css")
+    );
 }
 
 const blockedTags = ["footer", "aside", "nav", "gpt-ad"];
@@ -34,6 +38,7 @@ const blockedWords = [
     // "overlay",
     "login",
     "registration",
+    "subscribe",
     "modal",
     "announcement",
     "cookie",
@@ -43,3 +48,4 @@ const blockedWords = [
     "adslot",
     "advert",
 ];
+const blockedClasses = [".ad", ".ad-stickyhero"];
