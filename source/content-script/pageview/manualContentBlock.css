@@ -140,3 +140,8 @@ gu-island ~ section {
 .outbrain-container ~ div {
     display: none !important;
 }
+
+/* https://causalinf.substack.com/p/how-can-we-know-if-paid-search-advertising?s=r */
+/* body {
+    padding: 0;
+} */

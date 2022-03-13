@@ -26,7 +26,7 @@ const blockedTags = ["footer", "aside", "nav", "gpt-ad"];
 const blockedWords = [
     "masthead",
     // "banner",
-    // "menu",
+    "menu",
     // "sidebar",
     "footer",
     "comments",

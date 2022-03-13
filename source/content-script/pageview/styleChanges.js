@@ -74,11 +74,15 @@ export function insertBackground() {
         `${document.body.scrollHeight}px`,
         "important"
     );
-    document.body.appendChild(background);
 
-    // update height after style fixes are done
-    // TODO use MutationObserver or setTimeout(, 0) after style changes inserted?
-    setTimeout(updateBackgroundHeight, 5000);
+    // observe children height changes
+    const observer = new ResizeObserver(function () {
+        console.log("New scrollHeight");
+        updateBackgroundHeight();
+    });
+    [...document.body.children].map((node) => observer.observe(node));
+
+    document.body.appendChild(background);
 }
 
 function updateBackgroundHeight() {
@@ -92,7 +96,7 @@ function updateBackgroundHeight() {
 
     const background = document.getElementById("lindy-body-background");
     if (background) {
-        background.style.height = `${bodyHeigth}px !important`;
+        background.style.setProperty("height", `${bodyHeigth}px`, "important");
     }
 }
 
