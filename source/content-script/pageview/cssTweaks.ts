@@ -1,4 +1,5 @@
 import postcss, { Declaration, Plugin, PluginCreator } from "postcss";
+import safeParser from "postcss-safe-parser";
 
 // The extension reduces the website body width to show annotations on the right side.
 // But since CSS media queries work on the actual viewport width, responsive style doesn't take this reduced body width into account.
@@ -8,12 +9,16 @@ export async function getCssOverride(
     cssText: string,
     conditionScale: number
 ): Promise<string> {
-    const result = await postcss([
+    const plugins = [
         scaleBreakpointsPlugin(conditionScale),
         urlRewritePlugin(cssUrl),
         hideFixedElementsPlugin,
         styleTweaksPlugin,
-    ]).process(cssText);
+    ];
+
+    const result = await postcss(plugins).process(cssText, {
+        parser: safeParser,
+    });
 
     // console.log(cssUrl, result.css);
 

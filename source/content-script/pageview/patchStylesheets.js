@@ -22,8 +22,6 @@ export async function patchStylesheets(newStylesheets) {
 }
 
 export async function patchStylesheetNode(elem, conditionScale) {
-    // console.log(elem.tagName, elem.className, elem.href);
-
     // random id to corraborate original & override style
     const styleId = `style_${Math.random()}`;
     const url = elem.href || window.location.href;
@@ -39,14 +37,6 @@ export async function patchStylesheetNode(elem, conditionScale) {
             cssText = await response.data.text();
         } else if (elem.innerHTML) {
             cssText = elem.innerHTML;
-        } else {
-            // stylesheet rules that were created through js
-            // which means they are accessible to us too
-
-            // TODO optimize this, don't do the parsing or at least rule splitting for js rules?
-            cssText = [...elem.sheet.cssRules]
-                .map((rule) => rule.cssText)
-                .join("\n");
         }
         if (!cssText) {
             return;
@@ -64,7 +54,11 @@ export async function patchStylesheetNode(elem, conditionScale) {
         createStylesheetText(overrideCss, styleId);
         disableStylesheet(elem, styleId);
     } catch (err) {
-        console.error(`Error patching CSS file ${url}:`, err);
+        console.error(
+            `Error rewriting ${elem.href || "inline style"} '${styleId}'`,
+            elem,
+            err
+        );
     }
 }
 
