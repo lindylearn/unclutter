@@ -31,7 +31,7 @@ const blockedWords = [
     "social",
     "popular",
     // "promo",
-    "overlay",
+    // "overlay",
     "login",
     "registration",
     "modal",
