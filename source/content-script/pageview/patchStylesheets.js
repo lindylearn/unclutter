@@ -5,20 +5,25 @@ import { createStylesheetText, overrideClassname } from "./styleChanges";
 const proxyUrl = "https://annotations.lindylearn.io/proxy";
 
 export async function patchStylesheets(newStylesheets) {
-    const newStylesheetsToPatch = newStylesheets.filter(
-        (sheet) =>
-            !sheet.disabled && sheet.ownerNode?.className !== overrideClassname
-    );
+    const newStylesheetsToPatch = newStylesheets
+        .map((sheet) => sheet.ownerNode)
+        .filter(
+            (node) =>
+                !node.classList.contains(overrideClassname) &&
+                !node.classList.contains(disabledClassname)
+        );
 
     const conditionScale = window.innerWidth / 750;
     await Promise.all(
-        newStylesheetsToPatch.map((sheet) =>
-            patchStylesheetNode(sheet.ownerNode, conditionScale)
+        newStylesheetsToPatch.map((node) =>
+            patchStylesheetNode(node, conditionScale)
         )
     );
 }
 
 export async function patchStylesheetNode(elem, conditionScale) {
+    // console.log(elem.tagName, elem.className, elem.href);
+
     // random id to corraborate original & override style
     const styleId = `style_${Math.random()}`;
     const url = elem.href || window.location.href;

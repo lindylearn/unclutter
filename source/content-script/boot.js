@@ -46,7 +46,7 @@ function boot() {
     };
 
     // listen to created stylesheet elements
-    // patchStylesheetsOnceCreated();
+    patchStylesheetsOnceCreated();
 
     // once dom loaded, do rest of style tweaks
     document.onreadystatechange = async function () {
@@ -54,7 +54,7 @@ function boot() {
             insertBackground();
             insertContentBlockStyle();
 
-            await patchStylesheets([...document.styleSheets]);
+            // await patchStylesheets([...document.styleSheets]);
 
             // patch after new style applied
             modifyBodyStyle();
@@ -82,5 +82,5 @@ function patchStylesheetsOnceCreated() {
     });
     observer.observe(document, { childList: true, subtree: true });
     // executing site JS may add style elements, e.g. cookie banners. so wait a bit.
-    window.onload = (e) => setTimeout(observer.disconnect.bind(observer), 3000);
+    // window.onload = (e) => setTimeout(observer.disconnect.bind(observer), 3000);
 }

@@ -90,7 +90,7 @@ function updateBackgroundHeight() {
 
 export function createStylesheetLink(url) {
     var link = document.createElement("link");
-    link.className = overrideClassname;
+    link.classList.add(overrideClassname);
     link.type = "text/css";
     link.rel = "stylesheet";
     link.href = url;
@@ -99,7 +99,8 @@ export function createStylesheetLink(url) {
 
 export function createStylesheetText(text, styleId) {
     var style = document.createElement("style");
-    style.className = `${overrideClassname} ${styleId}`;
+    style.classList.add(overrideClassname);
+    style.classList.add(styleId);
     style.type = "text/css";
     style.rel = "stylesheet";
     style.innerHTML = text;
