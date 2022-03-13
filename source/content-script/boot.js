@@ -10,6 +10,8 @@ const excludedHosts = [
     "keep.google.com",
     "calendar.google.com",
     "drive.google.com",
+    "mail.google.com",
+    "mail.protonmail.com",
     "youtube.com",
     "news.ycombinator.com",
     "twitter.com",
@@ -17,6 +19,7 @@ const excludedHosts = [
     "reddit.com",
     "github.com",
     "stackoverflow.com",
+    "developer.mozilla.org",
 ];
 
 // optimized version of enablePageView() that runs in every user tab
@@ -55,6 +58,8 @@ function boot() {
 
             // patch after new style applied
             modifyBodyStyle();
+
+            // insertDomainToggle(hostname);
         }
     };
 }

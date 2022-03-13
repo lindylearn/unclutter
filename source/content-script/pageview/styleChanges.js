@@ -106,6 +106,17 @@ export function createStylesheetText(text, styleId) {
     document.head.appendChild(style);
 }
 
+export function insertDomainToggle(domain) {
+    var div = document.createElement("div");
+    div.innerHTML = `Unclutter ${domain}`;
+    div.className = `${overrideClassname} lindy-domain-toggle`;
+    document.body.appendChild(div);
+
+    // var img = document.createElement("img");
+    // img.src = browser.runtime.getURL("assets/icons/share.svg");
+    // a.appendChild(img);
+}
+
 // button to share the annotations of the active page
 function insertShareButton() {
     var a = document.createElement("a");
