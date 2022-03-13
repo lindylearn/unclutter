@@ -39,23 +39,34 @@ const scaleBreakpointsPlugin: PluginCreator<number> = (conditionScale) => ({
                 return;
             }
 
-            let condition = rule.params;
-            for (const match of rule.params.matchAll(/([0-9]+)/g)) {
-                const oldCount = parseInt(match[1]);
-                const newCount = Math.round(conditionScale * oldCount);
-
-                condition = condition.replace(
-                    oldCount.toString(),
-                    newCount.toString()
-                );
+            rule.params = scaleString(rule.params, conditionScale);
+            rule["alreadyProcessed"] = true;
+        }
+    },
+    Declaration(decl) {
+        if (decl.prop === "width" && decl.value.includes("vw")) {
+            if (decl["alreadyProcessed"]) {
+                return;
             }
 
-            rule.params = condition;
-            rule["alreadyProcessed"] = true;
+            // hack: remove for now (mostly used to add side margin, which we already add elsewhere)
+            // conditionScale is not neccessarily equal to actual pageview with, so not correct margin
+            decl.remove();
+
+            decl["alreadyProcessed"] = true;
         }
     },
 });
 scaleBreakpointsPlugin.postcss = true;
+function scaleString(string: string, conditionScale: number) {
+    for (const match of string.matchAll(/([0-9]+)/g)) {
+        const oldCount = parseInt(match[1]);
+        const newCount = Math.round(conditionScale * oldCount);
+
+        string = string.replace(oldCount.toString(), newCount.toString());
+    }
+    return string;
+}
 
 // use absolute paths for files referenced via url()
 // those paths are relative to the stylesheet url, which we change

@@ -56,6 +56,7 @@ export function modifyBodyStyle() {
         "important"
     );
     document.body.style.setProperty("height", "auto", "important");
+    document.body.style.setProperty("margin", "10px auto", "important");
 }
 
 export function insertBackground() {
@@ -90,7 +91,6 @@ export function insertBackground() {
 
     // observe children height changes
     const observer = new ResizeObserver(function () {
-        console.log("New scrollHeight");
         updateBackgroundHeight();
     });
     [...document.body.children].map((node) => observer.observe(node));

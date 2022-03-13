@@ -4,7 +4,7 @@ import { createStylesheetLink, createStylesheetText } from "./styleChanges";
 // hide page elements unrelated to the article
 export function insertContentBlockStyle() {
     const classWordSelectors = blockedWords.map(
-        (word) => `*:not(html):not(body)[class*=${word} i]`
+        (word) => `*:not(html):not(body):not(article)[class*=${word} i]`
     );
     const idSelectors = blockedWords.map((word) => `[id*=${word} i]`);
     const roleSelectors = blockedWords.map((word) => `[role*=${word} i]`);
@@ -27,6 +27,7 @@ const blockedWords = [
     "masthead",
     // "banner",
     "menu",
+    "nav",
     // "sidebar",
     "footer",
     "comments",
@@ -34,7 +35,7 @@ const blockedWords = [
     "recommendation",
     "social",
     "popular",
-    // "promo",
+    "promo",
     // "overlay",
     "login",
     "registration",
@@ -58,4 +59,6 @@ const blockedClasses = [
     ".no-ad-layout",
     ".adsbygoogle",
     ".google-auto-placed",
+    ".breaker-ad",
+    ".pbs__player",
 ];
