@@ -43,6 +43,19 @@ export function modifyBodyStyle() {
     // html or body tags may have classes with fixed style applied (which we hide via css rewrite)
     document.documentElement.style.setProperty("display", "block", "important");
     document.body.style.setProperty("display", "block", "important");
+
+    // set inline styles to overwrite scroll-locks
+    document.documentElement.style.setProperty(
+        "position",
+        "relative",
+        "important"
+    );
+    document.documentElement.style.setProperty(
+        "overflow-y",
+        "scroll",
+        "important"
+    );
+    document.body.style.setProperty("height", "auto", "important");
 }
 
 export function insertBackground() {
