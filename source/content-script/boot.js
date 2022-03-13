@@ -20,6 +20,8 @@ const excludedHosts = [
     "github.com",
     "stackoverflow.com",
     "developer.mozilla.org",
+    "twitch.tv",
+    "amazon.de",
 ];
 
 // optimized version of enablePageView() that runs in every user tab
@@ -38,15 +40,28 @@ function boot() {
     // add to <html> element since <body> not contructed yet
     document.documentElement.classList.add("pageview");
 
+    // ensure pageview class stays active (e.g. nytimes JS replaces classes)
+    const observer = new MutationObserver((mutations, observer) => {
+        if (!mutations[0].target.classList.contains("pageview")) {
+            document.documentElement.classList.add("pageview");
+        }
+    });
+    observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ["class"],
+    });
+
+    // listen to created stylesheet elements
+    const unobserveStyle = patchStylesheetsOnceCreated();
+
     // allow exiting pageview by clicking on background surrounding pageview (bare <html>)
     document.documentElement.onclick = (event) => {
         if (event.target.tagName === "HTML") {
+            observer.disconnect();
+            unobserveStyle();
             disablePageView();
         }
     };
-
-    // listen to created stylesheet elements
-    patchStylesheetsOnceCreated();
 
     // once dom loaded, do rest of style tweaks
     document.onreadystatechange = async function () {
@@ -82,5 +97,5 @@ function patchStylesheetsOnceCreated() {
     observer.observe(document, { childList: true, subtree: true });
     // executing site JS may add style elements, e.g. cookie banners
     // so continue listening for new stylesheets
-    // window.onload = (e) => setTimeout(observer.disconnect.bind(observer), 3000);
+    return () => observer.disconnect.bind(observer);
 }

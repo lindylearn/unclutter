@@ -36,17 +36,22 @@ export async function patchStylesheetNode(elem, conditionScale) {
             );
             cssText = await response.data.text();
         } else if (elem.innerHTML) {
-            if (elem.attributes["data-styled"]) {
+            if (
+                elem.attributes["data-styled"] ||
+                elem.attributes["data-emotion"]
+            ) {
                 // skip rewrite of styled-components inline content
                 // these will be injected via CSSOM and processed by elem.sheet.cssRules below
-                console.log("Skipping rewrite of inline styled-components");
+                console.log(
+                    "Skipping rewrite of inline styled-components",
+                    elem
+                );
                 return;
             }
             cssText = elem.innerHTML;
         } else {
             // style rules created through javascript, e.g. via styled-components
             // see https://developer.chrome.com/blog/css-in-js/
-
             cssText = [...elem.sheet.cssRules]
                 .map((rule) => rule.cssText)
                 .join("\n");

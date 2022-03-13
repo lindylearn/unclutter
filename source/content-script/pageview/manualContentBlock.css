@@ -95,7 +95,7 @@ main {
 .widget-area {
     display: none !important;
 }
-body {
+body.post-template-default {
     padding: 0 !important;
 }
 body > div {
@@ -105,4 +105,12 @@ body > div {
 #pjgm-main {
     box-shadow: none !important;
     -webkit-box-shadow: none !important;
+}
+
+/* https://www.nytimes.com/2020/06/17/learning/bringing-ethics-to-your-plate.html */
+.css-tux0zj {
+    display: none !important;
+}
+section[name="articleBody"] ~ div {
+    display: none !important;
 }
