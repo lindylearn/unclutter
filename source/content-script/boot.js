@@ -68,19 +68,19 @@ boot();
 
 // listen to new stylesheet dom nodes, and start their patch process immediately
 function patchStylesheetsOnceCreated() {
-    let lastStylesheetCount = 0;
+    const seenStylesheets = new Set();
     const observer = new MutationObserver((mutations, observer) => {
-        // TODO is iterating through mutations list faster?
         const stylesheets = [...document.styleSheets];
-        const newStylesheets = stylesheets.slice(lastStylesheetCount);
-        lastStylesheetCount = stylesheets.length;
-        if (newStylesheets.length === 0) {
-            return;
-        }
+
+        const newStylesheets = stylesheets.filter(
+            (sheet) => !seenStylesheets.has(sheet)
+        );
+        newStylesheets.map((sheet) => seenStylesheets.add(sheet));
 
         patchStylesheets(newStylesheets);
     });
     observer.observe(document, { childList: true, subtree: true });
-    // executing site JS may add style elements, e.g. cookie banners. so wait a bit.
+    // executing site JS may add style elements, e.g. cookie banners
+    // so continue listening for new stylesheets
     // window.onload = (e) => setTimeout(observer.disconnect.bind(observer), 3000);
 }
