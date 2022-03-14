@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+    width: 400px;
+    /* height: 100px; */
+
+    background-color: #f1f3f4;
+}
+
+@media (prefers-color-scheme: dark) {
+    .html {
+        background-color: #35363a;
+    }
+}
+
+input:checked ~ .dot {
+    transform: translateX(100%);
+    background-color: #48bb78;
+}
