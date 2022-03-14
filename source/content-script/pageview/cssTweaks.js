@@ -1,14 +1,10 @@
-import postcss, { Declaration, Plugin, PluginCreator } from "postcss";
+import postcss, { Declaration } from "postcss";
 import safeParser from "postcss-safe-parser";
 
 // The extension reduces the website body width to show annotations on the right side.
 // But since CSS media queries work on the actual viewport width, responsive style doesn't take this reduced body width into account.
 // So parse the website CSS here and return media queries with the correct width breakpoints.
-export async function getCssOverride(
-    cssUrl: string,
-    cssText: string,
-    conditionScale: number
-): Promise<string> {
+export async function getCssOverride(cssUrl, cssText, conditionScale) {
     const plugins = [
         scaleBreakpointsPlugin(conditionScale),
         urlRewritePlugin(cssUrl),
@@ -30,7 +26,7 @@ export async function getCssOverride(
  *     min-width 1 -> min-width 2
  *         since we remove the old style, no need to negate old [1, 2] range
  */
-const scaleBreakpointsPlugin: PluginCreator<number> = (conditionScale) => ({
+const scaleBreakpointsPlugin = (conditionScale) => ({
     postcssPlugin: "scale-media-breakpoints",
     AtRule(rule) {
         if (rule.name === "media") {
@@ -58,7 +54,7 @@ const scaleBreakpointsPlugin: PluginCreator<number> = (conditionScale) => ({
     },
 });
 scaleBreakpointsPlugin.postcss = true;
-function scaleString(string: string, conditionScale: number) {
+function scaleString(string, conditionScale) {
     for (const match of string.matchAll(/([0-9]+)/g)) {
         const oldCount = parseInt(match[1]);
         const newCount = Math.round(conditionScale * oldCount);
@@ -70,7 +66,7 @@ function scaleString(string: string, conditionScale: number) {
 
 // use absolute paths for files referenced via url()
 // those paths are relative to the stylesheet url, which we change
-const urlRewritePlugin: PluginCreator<string> = (baseUrl) => ({
+const urlRewritePlugin = (baseUrl) => ({
     postcssPlugin: "rewrite-relative-urls",
     AtRule(rule) {
         if (rule.name === "import") {
@@ -107,7 +103,7 @@ const urlRewritePlugin: PluginCreator<string> = (baseUrl) => ({
 urlRewritePlugin.postcss = true;
 
 // hide fixed and sticky positioned elements (highly unlikely to be part of the text)
-const hideFixedElementsPlugin: Plugin = {
+const hideFixedElementsPlugin = {
     postcssPlugin: "hide-fixed-elements",
     Rule(rule) {
         if (rule.selector === "body") {
@@ -134,7 +130,7 @@ const hideFixedElementsPlugin: Plugin = {
     },
 };
 
-const styleTweaksPlugin: Plugin = {
+const styleTweaksPlugin = {
     postcssPlugin: "style-tweaks",
     Rule(rule) {
         // rewrite body margin (which we overwrite) into padding
