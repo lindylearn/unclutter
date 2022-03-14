@@ -1,12 +1,12 @@
 // setup listeners on document_start
 
 import { shouldEnableForDomain } from "../common/storage";
-import { patchStylesheetsOnceCreated } from "./pageview/patchStylesheets";
 import {
     disableStyleChanges,
     enablePageView,
     enableStyleChanges,
-} from "./toggle";
+} from "./pageview";
+import { patchStylesheetsOnceCreated } from "./pageview/patchStylesheets";
 
 // optimized version of enablePageView() that runs in every user tab
 async function boot() {

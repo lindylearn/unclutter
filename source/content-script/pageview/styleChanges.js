@@ -1,19 +1,6 @@
 import browser from "webextension-polyfill";
-import { unPatchStylesheets } from "./patchStylesheets";
 
 export const overrideClassname = "lindylearn-document-override";
-
-export async function unPatchDocumentStyle() {
-    // restore original styles first
-    unPatchStylesheets();
-    // wait for rerender
-    await new Promise((resolve, _) => setTimeout(resolve, 0));
-
-    // remove most modifications
-    document
-        .querySelectorAll(`.${overrideClassname}`)
-        .forEach((e) => e.remove());
-}
 
 export function modifyBodyStyle() {
     // set start properties for animation immediately

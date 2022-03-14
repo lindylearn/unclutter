@@ -25,7 +25,7 @@
         },
         {
             "matches": ["<all_urls>"],
-            "js": ["content-script/toggle.js"],
+            "js": ["content-script/enhance.js"],
             "run_at": "document_idle"
         }
     ],
@@ -34,6 +34,9 @@
             "resources": [
                 "sidebar/index.html",
                 "content-script/pageview/content.css",
+                "content-script/pageview/manualContentBlock.css",
+                "content-script/switch/index.html",
+                "content-script/switch/index.js",
                 "assets/**"
             ],
             "matches": ["<all_urls>"]
