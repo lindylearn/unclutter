@@ -150,3 +150,15 @@ gu-island ~ section {
 .transporter {
     display: none !important;
 }
+
+/* https://en.wikipedia.org/wiki/Erotetics */
+.noprint {
+    display: none !important;
+}
+#content {
+    border: none !important;
+    padding: 0 !important;
+    background: none !important;
+    margin-top: 20px !important;
+    margin-bottom: 20px !important;
+}

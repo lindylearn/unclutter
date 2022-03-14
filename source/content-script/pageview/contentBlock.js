@@ -53,6 +53,7 @@ const blockedClasses = [
     ".ad",
     ".ad-stickyhero",
     ".main-nav",
+    ".global-header",
     ".secondary-nav",
     ".email",
     ".movable-ad",
