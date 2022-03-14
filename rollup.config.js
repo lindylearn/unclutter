@@ -33,8 +33,20 @@ const serviceWorkerConfig = {
         preserveModules: true,
     },
     plugins: [
-        nodeResolve({ browser: true, preferBuiltins: true }),
+        nodeResolve({ preferBuiltins: true }),
+        commonjs({ include: /node_modules/ }),
         // babel({ babelHelpers: "bundled" }),
+        {
+            // don't write to "source" subdirectory
+            async generateBundle(_, bundle) {
+                const files = Object.entries(bundle);
+                for (const [key, file] of files) {
+                    if (file.fileName.startsWith("source/")) {
+                        file.fileName = file.fileName.replace("source/", "");
+                    }
+                }
+            },
+        },
     ],
 };
 
