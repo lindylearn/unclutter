@@ -1,5 +1,4 @@
-import axios from "axios";
-import { getCssOverride } from "./cssTweaks";
+import browser from "../../common/polyfill";
 import { createStylesheetText, overrideClassname } from "./styleChanges";
 
 // listen to new stylesheet dom nodes, and start their patch process immediately
@@ -38,48 +37,47 @@ export async function patchStylesheets(newStylesheets) {
     );
 }
 
-const proxyUrl = "https://annotations.lindylearn.io/proxy";
 export async function patchStylesheetNode(elem, conditionScale) {
     // random id to corraborate original & override style
     const styleId = `style_${Math.random()}`;
-    const url = elem.href || window.location.href;
     try {
-        let cssText;
-        if (elem.tagName === "LINK") {
-            const response = await axios.get(
-                `${proxyUrl}/${encodeURIComponent(url)}`,
-                {
-                    responseType: "blob",
+        let inlineCss;
+        if (elem.tagName !== "LINK") {
+            if (elem.innerHTML) {
+                if (
+                    elem.attributes["data-styled"] ||
+                    elem.attributes["data-emotion"]
+                ) {
+                    // skip rewrite of styled-components inline content
+                    // these will be injected via CSSOM and processed by elem.sheet.cssRules below
+                    console.log(
+                        "Skipping rewrite of inline styled-components",
+                        elem
+                    );
+                    return;
                 }
-            );
-            cssText = await response.data.text();
-        } else if (elem.innerHTML) {
-            if (
-                elem.attributes["data-styled"] ||
-                elem.attributes["data-emotion"]
-            ) {
-                // skip rewrite of styled-components inline content
-                // these will be injected via CSSOM and processed by elem.sheet.cssRules below
-                console.log(
-                    "Skipping rewrite of inline styled-components",
-                    elem
-                );
+                inlineCss = elem.innerHTML;
+            } else {
+                // style rules created through javascript, e.g. via styled-components
+                // see https://developer.chrome.com/blog/css-in-js/
+                inlineCss = [...elem.sheet.cssRules]
+                    .map((rule) => rule.cssText)
+                    .join("\n");
+            }
+            if (!inlineCss) {
                 return;
             }
-            cssText = elem.innerHTML;
-        } else {
-            // style rules created through javascript, e.g. via styled-components
-            // see https://developer.chrome.com/blog/css-in-js/
-            cssText = [...elem.sheet.cssRules]
-                .map((rule) => rule.cssText)
-                .join("\n");
-        }
-        if (!cssText) {
-            return;
         }
 
         const start = performance.now();
-        const overrideCss = await getCssOverride(url, cssText, conditionScale);
+        const overrideCss = await rewriteCssRemote({
+            styleId: styleId,
+            cssUrl: elem.href,
+            cssInlineText: inlineCss,
+            baseUrl: window.location.href,
+            conditionScale: conditionScale,
+        });
+        console.log(overrideCss);
         const duration = performance.now() - start;
         console.log(
             `Took ${Math.round(duration)}ms to rewrite ${
@@ -98,8 +96,16 @@ export async function patchStylesheetNode(elem, conditionScale) {
     }
 }
 
-export function unPatchStylesheets() {
-    reenableOriginalStylesheets();
+async function rewriteCssRemote(params) {
+    const response = await browser.runtime.sendMessage(null, {
+        event: "rewriteCss",
+        params,
+    });
+    if (response.status === "success") {
+        return response.css;
+    }
+    console.error(response);
+    throw Error(response);
 }
 
 const disabledClassname = "lindylearn-disabled-style";
@@ -107,6 +113,10 @@ function disableStylesheet(elem, styleId) {
     elem.disabled = true;
     elem.classList.add(disabledClassname);
     elem.classList.add(styleId);
+}
+
+export function unPatchStylesheets() {
+    reenableOriginalStylesheets();
 }
 
 function reenableOriginalStylesheets() {

@@ -1,5 +1,5 @@
 import browser from "../common/polyfill";
-import rewriteCss from "./rewriteCss";
+import fetchAndRewriteCss from "./rewriteCss";
 
 // when extension icon clicked, inject annotations view into active tab
 (chrome.action || browser.browserAction).onClicked.addListener(async (tab) => {
@@ -34,4 +34,11 @@ async function _executeScript(tabId, filePath) {
     }
 }
 
-rewriteCss;
+// events from content scripts
+browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if ((message.event = "rewriteCss")) {
+        fetchAndRewriteCss(message.params).then(sendResponse);
+        return true;
+    }
+    return false;
+});

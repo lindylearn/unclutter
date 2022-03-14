@@ -1,5 +1,6 @@
 import commonjs from "@rollup/plugin-commonjs";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
+import replace from "@rollup/plugin-replace";
 import fs from "fs";
 import glob from "glob";
 import path from "path";
@@ -18,7 +19,7 @@ const contentScriptConfigs = [
         format: "iife", // no way to use es modules, split code by logic instead
     },
     plugins: [
-        nodeResolve({ browser: true, preferBuiltins: true }),
+        nodeResolve({ browser: true }),
         commonjs({ include: /node_modules/ }),
         // babel({ babelHelpers: "bundled" }),
     ],
@@ -28,12 +29,13 @@ const contentScriptConfigs = [
 const serviceWorkerConfig = {
     input: "source/background/events.js",
     output: {
-        dir: "distribution",
-        format: "es", // can use es modules here
-        preserveModules: true,
+        file: "distribution/background/events.js",
+        // dir: "distribution",
+        format: "iife", // can use es modules here
+        // preserveModules: true,
     },
     plugins: [
-        nodeResolve({ preferBuiltins: true }),
+        nodeResolve({ browser: true }),
         commonjs({ include: /node_modules/ }),
         // babel({ babelHelpers: "bundled" }),
         {
@@ -47,6 +49,10 @@ const serviceWorkerConfig = {
                 }
             },
         },
+        replace({
+            preventAssignment: true,
+            "process.env.NODE_ENV": JSON.stringify("production"),
+        }),
     ],
 };
 
