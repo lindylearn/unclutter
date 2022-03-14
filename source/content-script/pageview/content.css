@@ -81,8 +81,8 @@ html.pageview > body {
             drop-shadow(0 4px 3px rgb(255 255 255 / 0.2));
     }
 
-    .lindy-domain-toggle {
-        color: white;
+    .report-broken {
+        color: #d1d5db;
     }
 }
 @media (max-width: 1450px) {
