@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import browser from "webextension-polyfill";
+import browser from "../common/polyfill";
 import { getHypothesisToken, validateSaveToken } from "../common/storage";
 import Switch from "./Switch";
 

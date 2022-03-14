@@ -1,5 +1,5 @@
-import browser from "webextension-polyfill";
 import { defaultExcludedDomains } from "./defaultStorage";
+import browser from "./polyfill";
 
 export async function shouldEnableForDomain(domain) {
     const config = await browser.storage.sync.get([

@@ -1,4 +1,4 @@
-import browser from "webextension-polyfill";
+import browser from "../common/polyfill";
 import {
     disableStyleChanges,
     enablePageView,

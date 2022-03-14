@@ -1,7 +1,7 @@
-import browser from "webextension-polyfill";
+import browser from "../common/polyfill";
 
 // when extension icon clicked, inject annotations view into active tab
-(browser.action || browser.browserAction).onClicked.addListener(async (tab) => {
+(chrome.action || browser.browserAction).onClicked.addListener(async (tab) => {
     let alreadyInjected = false;
     try {
         alreadyInjected = await browser.tabs.sendMessage(tab.id, "ping");
@@ -12,7 +12,7 @@ import browser from "webextension-polyfill";
     }
     if (!alreadyInjected) {
         console.log("Content script not loaded in active tab, injecting it...");
-        await _executeScript(tab.id, "content-script/index.js");
+        await _executeScript(tab.id, "content-script/boot.js");
     }
 
     // toggle the page view
@@ -21,8 +21,8 @@ import browser from "webextension-polyfill";
 
 async function _executeScript(tabId, filePath) {
     // different calls for v2 and v3 manifest
-    if (browser.scripting) {
-        await browser.scripting.executeScript({
+    if (chrome?.scripting) {
+        await chrome.scripting.executeScript({
             target: { tabId },
             files: [filePath],
         });

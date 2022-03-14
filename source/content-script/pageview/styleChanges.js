@@ -1,4 +1,4 @@
-import browser from "webextension-polyfill";
+import browser from "../../common/polyfill";
 
 export const overrideClassname = "lindylearn-document-override";
 
