@@ -27,6 +27,11 @@ export function insertContentBlockStyle() {
             "html.pageview > body { overflow-y: visible !important; padding: 0 !important; }",
             "page-specific-fix"
         );
+    } else if (window.location.href.includes("substack.com")) {
+        createStylesheetText(
+            "html.pageview > body { padding: 0 !important; }",
+            "page-specific-fix"
+        );
     }
 }
 

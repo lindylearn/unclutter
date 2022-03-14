@@ -164,3 +164,14 @@ gu-island ~ section {
 body.mediawiki {
     background-color: white !important;
 }
+
+/* https://arstechnica.com/tech-policy/2022/03/google-hijacked-millions-of-customers-and-orders-from-restaurants-lawsuit-says/ */
+.ad.ad.ad.ad {
+    display: none !important;
+}
+.site-wrapper {
+    background-color: white !important;
+}
+.sidebar {
+    display: none !important;
+}
