@@ -6,20 +6,41 @@
     "icons": {
         "128": "assets/icon.png"
     },
-    "permissions": ["storage", "scripting", "activeTab"],
+    "permissions": ["storage", "scripting", "activeTab", "<all_urls>"],
     "options_ui": {
         "page": "options/options.html"
     },
 
     "manifest_version": 2,
+    "browser_specific_settings": {
+        "gecko": {
+            "id": "{8f8c4c52-216c-4c6f-aae0-c214a870d9d9}"
+        }
+    },
     "browser_action": {},
     "background": {
         "persistent": true,
         "scripts": ["background/background.js"]
     },
+    "content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "js": ["content-script/boot.js"],
+            "css": ["content-script/pageview/content.css"],
+            "run_at": "document_start"
+        },
+        {
+            "matches": ["<all_urls>"],
+            "js": ["content-script/enhance.js"],
+            "run_at": "document_idle"
+        }
+    ],
     "web_accessible_resources": [
         "sidebar/index.html",
         "content-script/pageview/content.css",
+        "content-script/pageview/manualContentBlock.css",
+        "content-script/switch/index.html",
+        "content-script/switch/index.js",
         "assets/**"
     ]
 }
