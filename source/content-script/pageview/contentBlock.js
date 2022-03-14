@@ -20,6 +20,14 @@ export function insertContentBlockStyle() {
     createStylesheetLink(
         browser.runtime.getURL("content-script/pageview/manualContentBlock.css")
     );
+    // TODO parse config to add page-specific CSS
+    if (window.location.href.includes("medium.com")) {
+        // they seem to JS CSSOM trickery for the page height
+        createStylesheetText(
+            "html.pageview > body { overflow-y: visible !important; }",
+            "page-specific-fix"
+        );
+    }
 }
 
 const blockedTags = ["footer", "aside", "nav", "gpt-ad"];
