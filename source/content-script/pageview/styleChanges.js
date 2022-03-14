@@ -132,7 +132,10 @@ export function createStylesheetText(text, styleId) {
     document.head.appendChild(style);
 }
 
-export function insertDomainToggle(domain) {
+export function insertDomainToggle() {
+    const url = new URL(window.location.href);
+    const domain = url.hostname.replace("www.", "");
+
     const iframeUrl = new URL(
         browser.runtime.getURL("content-script/switch/index.html")
     );

@@ -2,7 +2,24 @@ import axios from "axios";
 import { getCssOverride } from "./cssTweaks";
 import { createStylesheetText, overrideClassname } from "./styleChanges";
 
-const proxyUrl = "https://annotations.lindylearn.io/proxy";
+// listen to new stylesheet dom nodes, and start their patch process immediately
+export function patchStylesheetsOnceCreated() {
+    const seenStylesheets = new Set();
+    const observer = new MutationObserver((mutations, observer) => {
+        const stylesheets = [...document.styleSheets];
+
+        const newStylesheets = stylesheets.filter(
+            (sheet) => !seenStylesheets.has(sheet)
+        );
+        newStylesheets.map((sheet) => seenStylesheets.add(sheet));
+
+        patchStylesheets(newStylesheets);
+    });
+    observer.observe(document, { childList: true, subtree: true });
+    // executing site JS may add style elements, e.g. cookie banners
+    // so continue listening for new stylesheets
+    return () => observer.disconnect.bind(observer);
+}
 
 export async function patchStylesheets(newStylesheets) {
     const newStylesheetsToPatch = newStylesheets
@@ -21,6 +38,7 @@ export async function patchStylesheets(newStylesheets) {
     );
 }
 
+const proxyUrl = "https://annotations.lindylearn.io/proxy";
 export async function patchStylesheetNode(elem, conditionScale) {
     // random id to corraborate original & override style
     const styleId = `style_${Math.random()}`;
