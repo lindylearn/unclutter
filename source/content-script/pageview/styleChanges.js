@@ -133,14 +133,18 @@ export function createStylesheetText(text, styleId) {
 }
 
 export function insertDomainToggle(domain) {
-    var div = document.createElement("div");
-    div.innerHTML = `Unclutter ${domain}`;
-    div.className = `${overrideClassname} lindy-domain-toggle`;
-    document.body.appendChild(div);
+    const iframeUrl = new URL(
+        browser.runtime.getURL("content-script/switch/index.html")
+    );
+    iframeUrl.searchParams.append("domain", domain);
 
-    // var img = document.createElement("img");
-    // img.src = browser.runtime.getURL("assets/icons/share.svg");
-    // a.appendChild(img);
+    var iframe = document.createElement("iframe");
+    iframe.src = iframeUrl.toString();
+    iframe.className = `${overrideClassname} lindy-domain-switch`;
+    iframe.setAttribute("scrolling", "no");
+    iframe.setAttribute("frameBorder", "0");
+
+    document.documentElement.appendChild(iframe);
 }
 
 // button to share the annotations of the active page

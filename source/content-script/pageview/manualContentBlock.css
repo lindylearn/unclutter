@@ -159,6 +159,8 @@ gu-island ~ section {
     border: none !important;
     padding: 0 !important;
     background: none !important;
-    margin-top: 20px !important;
-    margin-bottom: 20px !important;
+    margin: 20px 0 !important;
+}
+body.mediawiki {
+    background-color: white !important;
 }

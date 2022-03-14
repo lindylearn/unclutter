@@ -2,7 +2,11 @@
 
 import { insertContentBlockStyle } from "./pageview/contentBlock";
 import { patchStylesheets } from "./pageview/patchStylesheets";
-import { insertBackground, modifyBodyStyle } from "./pageview/styleChanges";
+import {
+    insertBackground,
+    insertDomainToggle,
+    modifyBodyStyle,
+} from "./pageview/styleChanges";
 import { disablePageView } from "./toggle";
 
 const excludedHosts = [
@@ -22,6 +26,7 @@ const excludedHosts = [
     "developer.mozilla.org",
     "twitch.tv",
     "amazon.de",
+    "tailwindcss.com",
 ];
 
 // optimized version of enablePageView() that runs in every user tab
@@ -74,7 +79,7 @@ function boot() {
             // patch after new style applied
             modifyBodyStyle();
 
-            // insertDomainToggle(hostname);
+            insertDomainToggle(hostname);
         }
     };
 }
