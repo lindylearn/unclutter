@@ -5,6 +5,8 @@ import safeParser from "postcss-safe-parser";
 // But since CSS media queries work on the actual viewport width, responsive style doesn't take this reduced body width into account.
 // So parse the website CSS here and return media queries with the correct width breakpoints.
 export async function getCssOverride(cssUrl, cssText, conditionScale) {
+    window.process = { env: { NODE_ENV: "browser" } };
+
     const plugins = [
         scaleBreakpointsPlugin(conditionScale),
         urlRewritePlugin(cssUrl),
