@@ -20,7 +20,7 @@
     "browser_action": {},
     "background": {
         "persistent": true,
-        "scripts": ["background/background.js"]
+        "scripts": ["background/events.js"]
     },
     "content_scripts": [
         {

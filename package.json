@@ -60,7 +60,7 @@
         "default": {
             "source": [
                 "source/manifest.json",
-                "source/background/background.js",
+                "source/background/events.js",
                 "source/content-script/boot.js",
                 "source/content-script/pageview/content.css",
                 "source/content-script/switch/index.js",

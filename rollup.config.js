@@ -4,6 +4,41 @@ import fs from "fs";
 import glob from "glob";
 import path from "path";
 
+// bundle content scripts
+const contentScriptConfigs = [
+    "source/content-script/boot.js",
+    "source/content-script/enhance.js",
+    "source/content-script/switch/index.js",
+    // "source/options/index.js",
+    // "source/popup/index.js",
+].map((entryPoint) => ({
+    input: entryPoint,
+    output: {
+        file: entryPoint.replace("source", "distribution"),
+        format: "iife", // no way to use es modules, split code by logic instead
+    },
+    plugins: [
+        nodeResolve({ browser: true, preferBuiltins: true }),
+        commonjs({ include: /node_modules/ }),
+        // babel({ babelHelpers: "bundled" }),
+    ],
+}));
+
+// bundle background service worker
+const serviceWorkerConfig = {
+    input: "source/background/events.js",
+    output: {
+        dir: "distribution",
+        format: "es", // can use es modules here
+        preserveModules: true,
+    },
+    plugins: [
+        nodeResolve({ browser: true, preferBuiltins: true }),
+        // babel({ babelHelpers: "bundled" }),
+    ],
+};
+
+// copy static assets
 const fileWatcher = (globs) => ({
     buildStart() {
         for (const item of globs) {
@@ -26,43 +61,25 @@ const fileWatcher = (globs) => ({
         }
     },
 });
-
-export default [
-    "source/background/background.js",
-    "source/content-script/boot.js",
-    "source/content-script/enhance.js",
-    "source/content-script/switch/index.js",
-    // "source/options/index.js",
-    // "source/popup/index.js",
-]
-    .map((entryPoint) => ({
-        input: entryPoint,
-        output: {
-            file: entryPoint.replace("source", "distribution"),
-            format: "iife",
-            // preserveModules: true,
-        },
-        plugins: [
-            nodeResolve({ browser: true, preferBuiltins: true }),
-            commonjs({ include: /node_modules/ }),
-            // babel({ babelHelpers: "bundled" }),
-        ],
-    }))
-    .concat({
-        // needs dummy source file
-        input: "source/common/api.js",
-        output: {
-            file: "distribution/dummy",
-        },
-        plugins: [
-            fileWatcher([
-                "source/assets/**/*.{png,svg}",
-                "source/**/*.{html,css,json}",
-            ]),
-            {
-                writeBundle() {
-                    fs.rmSync("distribution/dummy");
-                },
+const staticFilesConfig = {
+    // needs dummy source file
+    input: "source/common/api.js",
+    output: {
+        file: "distribution/dummy",
+    },
+    plugins: [
+        fileWatcher([
+            "source/assets/**/*.{png,svg}",
+            "source/**/*.{html,css,json}",
+        ]),
+        {
+            writeBundle() {
+                fs.rmSync("distribution/dummy");
             },
-        ],
-    });
+        },
+    ],
+};
+
+export default contentScriptConfigs
+    .concat([serviceWorkerConfig])
+    .concat([staticFilesConfig]);
