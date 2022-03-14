@@ -175,3 +175,12 @@ body.mediawiki {
 .sidebar {
     display: none !important;
 }
+
+/* https://www.independent.co.uk/news/turkish-far-right-on-the-rise-1088461.html */
+#newsletter-component,
+.tbl-feed-container {
+    display: none !important;
+}
+#main.sc-WivXX > div {
+    display: none !important;
+}

@@ -16,14 +16,15 @@ browser.runtime.onMessage.addListener(async (event) => {
         const isPageView =
             document.documentElement.classList.contains("pageview");
         if (!isPageView) {
-            // rewrite existing stylesheets
-            patchStylesheets([...document.styleSheets]);
-
             enablePageView(() => {
                 // when user exists page view
                 // undo all modifications (including css rewrites and style changes)
                 disableStyleChanges();
             });
+
+            // rewrite existing stylesheets
+            patchStylesheets([...document.styleSheets]);
+
             enableStyleChanges();
         } else {
             // hack: simulate click to call disable handlers with correct state
