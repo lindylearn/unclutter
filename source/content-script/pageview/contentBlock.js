@@ -24,7 +24,7 @@ export function insertContentBlockStyle() {
     if (window.location.href.includes("medium.com")) {
         // they seem to JS CSSOM trickery for the page height
         createStylesheetText(
-            "html.pageview > body { overflow-y: visible !important; }",
+            "html.pageview > body { overflow-y: visible !important; padding: 0 !important; }",
             "page-specific-fix"
         );
     }

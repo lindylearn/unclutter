@@ -98,7 +98,7 @@ main {
 body.post-template-default {
     padding: 0 !important;
 }
-body > div {
+#pjgm-wrap {
     margin: 0 !important;
 }
 #pjgm-header,
