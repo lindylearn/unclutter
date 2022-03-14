@@ -1,11 +1,7 @@
 // setup listeners on document_start
 
 import { shouldEnableForDomain } from "../common/storage";
-import {
-    disableStyleChanges,
-    enablePageView,
-    enableStyleChanges,
-} from "./pageview";
+import { enablePageView } from "./pageview/enablePageView";
 import { patchStylesheetsOnceCreated } from "./pageview/patchStylesheets";
 
 // optimized version of enablePageView() that runs in every user tab
@@ -27,17 +23,9 @@ async function boot() {
     enablePageView(() => {
         // when user exists page view, disable rewrites
         unobserveRewrite();
-
-        // undo all modifications (including css rewrites and style changes)
-        disableStyleChanges();
     });
 
-    // once dom rendered, do rest of style tweaks
-    document.onreadystatechange = async function () {
-        if (document.readyState === "interactive") {
-            enableStyleChanges();
-        }
-    };
+    // do rest of style tweaks in enhance.js
 }
 
 boot();
