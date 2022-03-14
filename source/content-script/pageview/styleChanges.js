@@ -137,6 +137,14 @@ export function insertDomainToggle() {
     document.documentElement.appendChild(iframe);
 }
 
+export function insertReportButton() {
+    const div = document.createElement("div");
+    div.className = `${overrideClassname} report-broken`;
+    div.innerHTML =
+        ":( Page broken?<br />Please report it <a href='https://github.com/lindylearn/reader-extension/issues/new' target='_blank' rel='noopener noreferrer'>on GitHub</a>.";
+    document.documentElement.appendChild(div);
+}
+
 // button to share the annotations of the active page
 function insertShareButton() {
     var a = document.createElement("a");

@@ -3,6 +3,7 @@ import { unPatchStylesheets } from "./patchStylesheets";
 import {
     insertBackground,
     insertDomainToggle,
+    insertReportButton,
     modifyBodyStyle,
     overrideClassname,
 } from "./styleChanges";
@@ -46,6 +47,7 @@ export async function enableStyleChanges() {
     modifyBodyStyle();
 
     insertDomainToggle();
+    insertReportButton();
 }
 export async function disableStyleChanges() {
     // restore original styles first
