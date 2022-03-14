@@ -10,6 +10,9 @@
             cursor: auto;
             padding: 15px;
             margin: 0;
+
+            /* show through JS once data loaded */
+            visibility: hidden;
         }
 
         /* switch adapted from https://codepen.io/sajran/pen/dMKvpb */
@@ -81,7 +84,7 @@
             }
         }
     </style>
-    <script src="./index.js" defer></script>
+    <script src="./index.js" defer type="module"></script>
 </head>
 <body>
     <span id="text"

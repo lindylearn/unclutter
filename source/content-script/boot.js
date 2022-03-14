@@ -1,5 +1,6 @@
 // setup listeners on document_start
 
+import { shouldEnableForDomain } from "../common/storage";
 import { insertContentBlockStyle } from "./pageview/contentBlock";
 import { patchStylesheets } from "./pageview/patchStylesheets";
 import {
@@ -9,35 +10,15 @@ import {
 } from "./pageview/styleChanges";
 import { disablePageView } from "./toggle";
 
-const excludedHosts = [
-    "google.com",
-    "keep.google.com",
-    "calendar.google.com",
-    "drive.google.com",
-    "mail.google.com",
-    "mail.protonmail.com",
-    "youtube.com",
-    "news.ycombinator.com",
-    "twitter.com",
-    "linkedin.com",
-    "reddit.com",
-    "github.com",
-    "stackoverflow.com",
-    "developer.mozilla.org",
-    "twitch.tv",
-    "amazon.de",
-    "tailwindcss.com",
-];
-
 // optimized version of enablePageView() that runs in every user tab
-function boot() {
+async function boot() {
     // check if extension should be enabled on this page
     const url = new URL(window.location.href);
-    const hostname = url.hostname.replace("www.", "");
-    if (excludedHosts.includes(hostname)) {
+    if (url.pathname === "/") {
         return;
     }
-    if (url.pathname === "/") {
+    const domain = url.hostname.replace("www.", "");
+    if (!(await shouldEnableForDomain(domain))) {
         return;
     }
 
@@ -79,7 +60,7 @@ function boot() {
             // patch after new style applied
             modifyBodyStyle();
 
-            insertDomainToggle(hostname);
+            insertDomainToggle(domain);
         }
     };
 }
