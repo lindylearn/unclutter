@@ -24,19 +24,32 @@ const contentScriptConfigs = [
 }));
 
 // bundle react views
+const removeSourceFolder = {
+    // don't write to "source" subdirectory
+    async generateBundle(_, bundle) {
+        const files = Object.entries(bundle);
+        for (const [key, file] of files) {
+            if (file.fileName.startsWith("source/")) {
+                file.fileName = file.fileName.replace("source/", "");
+            }
+        }
+    },
+};
 const reactConfigs = [
     // "source/options/index.js",
     "source/popup/index.js",
 ].map((entryPoint) => ({
     input: entryPoint,
     output: {
-        file: entryPoint.replace("source", "distribution"),
-        format: "iife", // no way to use es modules, split code by logic instead
+        dir: "distribution",
+        format: "es",
+        preserveModules: true,
     },
     plugins: [
         nodeResolve({ browser: true }),
         commonjs({ include: /node_modules/ }),
         babel({ babelHelpers: "bundled", presets: ["@babel/preset-react"] }),
+        removeSourceFolder,
         replace({
             preventAssignment: true,
             "process.env.NODE_ENV": JSON.stringify("production"),
@@ -55,17 +68,7 @@ const serviceWorkerConfig = {
     plugins: [
         nodeResolve({ browser: true }),
         commonjs({ include: /node_modules/ }),
-        {
-            // don't write to "source" subdirectory
-            async generateBundle(_, bundle) {
-                const files = Object.entries(bundle);
-                for (const [key, file] of files) {
-                    if (file.fileName.startsWith("source/")) {
-                        file.fileName = file.fileName.replace("source/", "");
-                    }
-                }
-            },
-        },
+        removeSourceFolder,
         replace({
             preventAssignment: true,
             "process.env.NODE_ENV": JSON.stringify("production"),
