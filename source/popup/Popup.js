@@ -1,17 +1,13 @@
 import React, { useEffect, useState } from "react";
 import browser from "../common/polyfill";
+import {
+    getAutomaticallyEnabled,
+    getManualDomainLists,
+    setAutomaticallyEnabled,
+} from "../common/storage";
 import Switch from "./Switch";
 
 function OptionsPage({}) {
-    // const [token, setToken] = useState("");
-    // useEffect(async () => {
-    //     setToken(await getHypothesisToken());
-    // }, []);
-    // async function onChangeToken(newToken) {
-    //     setToken(newToken);
-    //     await validateSaveToken(newToken, true);
-    // }
-
     const [currentTab, setCurrentTab] = useState(null);
     const [currentDomain, setCurrentDomain] = useState(null);
     useEffect(async () => {
@@ -26,10 +22,25 @@ function OptionsPage({}) {
         setCurrentDomain(hostname);
     }, []);
 
+    const [automatic, setAutomatic] = useState(null);
+    useEffect(async () => {
+        const state = await getAutomaticallyEnabled();
+        setAutomatic(state);
+    }, []);
+    function toggleAutomaticLocalFirst() {
+        setAutomatic(!automatic);
+        setAutomaticallyEnabled(!automatic);
+    }
+
+    const [domainLists, setDomainLists] = useState(null);
+    useEffect(async () => {
+        const lists = await getManualDomainLists();
+        setDomainLists(lists);
+    }, []);
+
     return (
         <div className="flex flex-col gap-3">
-            <div>
-                {/* <div className="text-base flex justify-between align-middle">
+            {/* <div className="text-base flex justify-between align-middle">
                     <div>
                         Automatically unclutter{" "}
                         <span className="font-mono">{currentDomain}</span>
@@ -37,14 +48,39 @@ function OptionsPage({}) {
 
                     <Switch />
                 </div> */}
-                <div className="text-base flex justify-between align-middle">
-                    <div>Automatically unclutter all pages</div> <Switch />
-                </div>
-                <div className="text-base">
-                    Except 7 domains including google.com
-                </div>
+            <div className="text-base flex justify-between align-middle">
+                <div>Automatically unclutter all pages</div>{" "}
+                <Switch
+                    id="automatic"
+                    state={automatic}
+                    toggle={toggleAutomaticLocalFirst}
+                />
             </div>
+            {!automatic && domainLists && (
+                <ManualList status="Enabled" list={domainLists.allow} />
+            )}
+            {automatic && domainLists && (
+                <ManualList status="Disabled" list={domainLists.deny} />
+            )}
         </div>
     );
 }
 export default OptionsPage;
+
+function ManualList({ status, list, maxCount = 3 }) {
+    return (
+        <div className="text-base">
+            {status} on {list.length} domain
+            {list.length !== 1 ? "s" : ""} including
+            <div>
+                {list.slice(0, maxCount).map((domain, i) => (
+                    <>
+                        <span className="font-mono">{domain}</span>
+                        {i < Math.min(list.length, maxCount) - 1 ? ", " : ""}
+                    </>
+                ))}
+                {list.length > maxCount && ", ..."}
+            </div>
+        </div>
+    );
+}

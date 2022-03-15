@@ -1,6 +1,27 @@
 import { defaultExcludedDomains } from "./defaultStorage";
 import browser from "./polyfill";
 
+export async function getAutomaticallyEnabled() {
+    const config = await browser.storage.sync.get(["automatically-enabled"]);
+    return config["automatically-enabled"] || false;
+}
+
+export async function setAutomaticallyEnabled(status) {
+    await browser.storage.sync.set({ "automatically-enabled": status });
+}
+
+export async function getManualDomainLists() {
+    const config = await browser.storage.sync.get([
+        "domain-allowlist",
+        "domain-denylist",
+        "automatically-enabled",
+    ]);
+    return {
+        allow: Object.keys(config["domain-allowlist"]),
+        deny: Object.keys(config["domain-denylist"]),
+    };
+}
+
 export async function shouldEnableForDomain(domain) {
     const config = await browser.storage.sync.get([
         "domain-allowlist",
