@@ -38,7 +38,7 @@ function OptionsPage({}) {
     }, []);
 
     return (
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3 text-gray-700">
             {/* <div className="text-base flex justify-between align-middle">
                     <div>
                         Automatically unclutter{" "}
@@ -48,7 +48,7 @@ function OptionsPage({}) {
                     <Switch />
                 </div> */}
             <div className="text-base flex justify-between align-middle">
-                <div>Automatically unclutter all articles</div>{" "}
+                <div>Automatically unclutter articles</div>{" "}
                 <Switch
                     id="automatic"
                     state={automatic}
@@ -64,6 +64,19 @@ function OptionsPage({}) {
             {automatic && domainLists && (
                 <ManualList status="Disabled" list={domainLists.deny} />
             )}
+
+            <div className="text-xs text-right text-gray-400">
+                Report issues{" "}
+                <a
+                    href="https://github.com/lindylearn/reader-extension"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline"
+                >
+                    on GitHub
+                </a>
+                .
+            </div>
         </div>
     );
 }
