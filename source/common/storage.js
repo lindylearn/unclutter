@@ -22,8 +22,8 @@ export async function getManualDomainLists() {
         "automatically-enabled",
     ]);
     return {
-        allow: Object.keys(config["domain-allowlist"]),
-        deny: Object.keys(config["domain-denylist"]),
+        allow: Object.keys(config["domain-allowlist"] || {}),
+        deny: Object.keys(config["domain-denylist"] || {}),
     };
 }
 

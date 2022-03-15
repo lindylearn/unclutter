@@ -6,7 +6,7 @@
     "icons": {
         "128": "assets/icon.png"
     },
-    "permissions": ["storage", "scripting", "activeTab", "<all_urls>"],
+    "permissions": ["storage", "activeTab", "<all_urls>"],
     "options_ui": {
         "page": "options/options.html"
     },
@@ -30,11 +30,6 @@
             "js": ["content-script/boot.js"],
             "css": ["content-script/pageview/content.css"],
             "run_at": "document_start"
-        },
-        {
-            "matches": ["<all_urls>"],
-            "js": ["content-script/enhance.js"],
-            "run_at": "document_idle"
         }
     ],
     "web_accessible_resources": [

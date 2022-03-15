@@ -56,7 +56,7 @@ async function _injectScript(tabId, filePath) {
         });
     } else {
         await browser.tabs.executeScript(tabId, {
-            file: filePath,
+            file: browser.runtime.getURL(filePath),
         });
     }
 }
