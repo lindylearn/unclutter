@@ -48,6 +48,7 @@ export async function patchStylesheetNode(elem, conditionScale) {
              * https://fonts.googleapis.com/css?family=Open+Sans%3A300%2C300italic%2C600%2C600italic&ver=5.9.2
              * https://sites.lsa.umich.edu/mje/wp-content/themes/astrid/fonts/font-awesome.min.css?ver=5.9.2
              * https://pro.fontawesome.com/releases/v5.3.1/css/all.css
+             * https://www.newyorker.comhttps//www.newyorker.com/verso/static/assets/fonts/NeutrafaceNewYorker-SemiBold.woff2
              */
 
             const url = new URL(elem.href);
@@ -58,7 +59,10 @@ export async function patchStylesheetNode(elem, conditionScale) {
             ) {
                 return;
             }
-            if (url.pathname.includes("font")) {
+            if (
+                url.pathname.includes("font") ||
+                url.pathname.endsWith(".woff2")
+            ) {
                 return;
             }
         }
