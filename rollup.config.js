@@ -24,14 +24,21 @@ const contentScriptConfigs = [
 }));
 
 // bundle react views
-const removeSourceFolder = {
-    // don't write to "source" subdirectory
+const moveVirtualFolder = {
+    // chrome doesn't like underscores at root, so move _virtual inside _node_modules
     async generateBundle(_, bundle) {
         const files = Object.entries(bundle);
         for (const [key, file] of files) {
-            if (file.fileName.startsWith("source/")) {
-                file.fileName = file.fileName.replace("source/", "");
+            if (file.fileName.startsWith("_virtual/")) {
+                file.fileName = file.fileName.replace(
+                    "_virtual",
+                    "node_modules/_virtual"
+                );
             }
+            file.code = file.code.replaceAll(
+                "/_virtual/",
+                "/node_modules/_virtual/"
+            );
         }
     },
 };
@@ -45,12 +52,13 @@ const reactConfigs = [
         dir: "distribution",
         format: "es",
         preserveModules: true,
+        preserveModulesRoot: "source",
     },
     plugins: [
         nodeResolve({ browser: true }),
         commonjs({ include: /node_modules/ }),
         babel({ babelHelpers: "bundled", presets: ["@babel/preset-react"] }),
-        removeSourceFolder,
+        moveVirtualFolder,
         replace({
             preventAssignment: true,
             "process.env.NODE_ENV": JSON.stringify("production"),
@@ -65,11 +73,12 @@ const serviceWorkerConfig = {
         dir: "distribution",
         format: "es", // can use es modules here
         preserveModules: true,
+        preserveModulesRoot: "source",
     },
     plugins: [
         nodeResolve({ browser: true }),
         commonjs({ include: /node_modules/ }),
-        removeSourceFolder,
+        moveVirtualFolder,
         replace({
             preventAssignment: true,
             "process.env.NODE_ENV": JSON.stringify("production"),
