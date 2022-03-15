@@ -55,14 +55,14 @@ function OptionsPage({}) {
                     toggle={toggleAutomaticLocalFirst}
                 />
             </div>
-            {!automatic && domainLists && (
+            {!automatic && (
                 <ManualList
                     status="Manually enabled"
-                    list={domainLists.allow}
+                    list={domainLists?.allow || []}
                 />
             )}
-            {automatic && domainLists && (
-                <ManualList status="Disabled" list={domainLists.deny} />
+            {automatic && (
+                <ManualList status="Disabled" list={domainLists?.deny || []} />
             )}
 
             <div className="text-xs text-right text-gray-400">

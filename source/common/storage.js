@@ -1,9 +1,14 @@
-import { defaultExcludedDomains } from "./defaultStorage";
+import {
+    defaultAutomaticallyEnabled,
+    defaultExcludedDomains,
+} from "./defaultStorage";
 import browser from "./polyfill";
 
 export async function getAutomaticallyEnabled() {
     const config = await browser.storage.sync.get(["automatically-enabled"]);
-    return config["automatically-enabled"] || false;
+    return config["automatically-enabled"] !== undefined
+        ? config["automatically-enabled"]
+        : defaultAutomaticallyEnabled;
 }
 
 export async function setAutomaticallyEnabled(status) {
@@ -38,7 +43,9 @@ export async function shouldEnableForDomain(domain) {
     if (defaultExcludedDomains.includes(domain)) {
         return false;
     }
-    return config["automatically-enabled"];
+    return config["automatically-enabled"] !== undefined
+        ? config["automatically-enabled"]
+        : defaultAutomaticallyEnabled;
 }
 export async function setAutomaticStatusForDomain(domain, status) {
     const config = await browser.storage.sync.get([

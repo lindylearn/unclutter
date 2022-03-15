@@ -17,3 +17,4 @@ export const defaultExcludedDomains = [
     "amazon.de",
     "tailwindcss.com",
 ];
+export const defaultAutomaticallyEnabled = true;
