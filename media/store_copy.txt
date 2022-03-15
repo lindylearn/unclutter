@@ -18,17 +18,18 @@ More features are coming soon! Like the project or found a bug? Create an issue 
 
 -- Privacy practices:
 
-Improve the readability of articles the user visits.
+Improve the readability of articles the user visits by simplifying a website's CSS.
 If the user so chooses, change the HTML of the active page to display the extension functionality.
 
 
 Allow the creation and display of web annotations on article pages the user visits.
 Storing user settings and authentication tokens.
 If the user so chooses, change the HTML of the active page to display web annotations about that page.
-Required to inject a content script into the active tab if the user so chooses. The script modifies the site HTML to display the extension functionality.
-Optionally references external CSS to adjust a website's style dynamically if it would otherwise prevent the extension functionality. This is only done if the user manually actives the extension on a certain page.
 
 
+Required to inject a "bootloader" content script into every webpage the user visits. This small script checks if the extension was configured by the user to activate on a given website.
+If the extension was configured to activate, the bootloader script performs a few cosmetic HTML changes and requests the injection of another larger content script from the background service worker. If the extension was not configured for a given website, the bootloader script does nothing. 
+The activation check runs inside a content script instead of the background service worker to perform HTML modifications faster (if so configured). This improves the user experience.
 -- ideas
 
 "gives you back control over how you read content on the web"
