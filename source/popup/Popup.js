@@ -47,19 +47,16 @@ function OptionsPage({}) {
 
                     <Switch />
                 </div> */}
-            <div className="text-base flex justify-between align-middle">
-                <div>Automatically unclutter articles</div>{" "}
+            <div className="text-base flex">
+                <div className="mr-3">Automatically unclutter articles</div>{" "}
                 <Switch
                     id="automatic"
                     state={automatic}
                     toggle={toggleAutomaticLocalFirst}
                 />
             </div>
-            {!automatic && (
-                <ManualList
-                    status="Manually enabled"
-                    list={domainLists?.allow || []}
-                />
+            {automatic === false && (
+                <ManualList status="Enabled" list={domainLists?.allow || []} />
             )}
             {automatic && (
                 <ManualList status="Disabled" list={domainLists?.deny || []} />
