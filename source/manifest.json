@@ -9,7 +9,6 @@
         "128": "assets/icon.png"
     },
     "permissions": ["storage", "scripting", "activeTab"],
-    "host_permissions": ["<all_urls>"],
     "options_ui": {
         "page": "options/options.html"
     },

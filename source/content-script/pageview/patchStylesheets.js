@@ -41,8 +41,31 @@ export async function patchStylesheetNode(elem, conditionScale) {
     // random id to corraborate original & override style
     const styleId = `style_${Math.random()}`;
     try {
+        if (elem.tagName === "LINK") {
+            // exclude font stylesheets
+            /**
+             * e.g.
+             * https://fonts.googleapis.com/css?family=Open+Sans%3A300%2C300italic%2C600%2C600italic&ver=5.9.2
+             * https://sites.lsa.umich.edu/mje/wp-content/themes/astrid/fonts/font-awesome.min.css?ver=5.9.2
+             * https://pro.fontawesome.com/releases/v5.3.1/css/all.css
+             */
+
+            const url = new URL(elem.href);
+            if (
+                ["fonts.googleapis.com", "pro.fontawesome.com"].includes(
+                    url.hostname
+                )
+            ) {
+                return;
+            }
+            if (url.pathname.includes("font")) {
+                return;
+            }
+        }
+
         let inlineCss;
         if (elem.tagName !== "LINK") {
+            // get inline css
             if (elem.innerHTML) {
                 if (
                     elem.attributes["data-styled"] ||
@@ -74,10 +97,9 @@ export async function patchStylesheetNode(elem, conditionScale) {
             styleId: styleId,
             cssUrl: elem.href,
             cssInlineText: inlineCss,
-            baseUrl: window.location.href,
+            baseUrl: elem.href || window.location.href,
             conditionScale: conditionScale,
         });
-        console.log(overrideCss);
         const duration = performance.now() - start;
         console.log(
             `Took ${Math.round(duration)}ms to rewrite ${
@@ -104,7 +126,9 @@ async function rewriteCssRemote(params) {
     if (response.status === "success") {
         return response.css;
     }
-    console.error(response);
+    if (response.status === "error") {
+        throw response.err;
+    }
     throw Error(response);
 }
 

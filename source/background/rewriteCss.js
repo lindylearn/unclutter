@@ -6,7 +6,7 @@ import safeParser from "postcss-safe-parser";
 // So parse the website CSS here and return media queries with the correct width breakpoints.
 export default async function fetchAndRewriteCss(params) {
     const { styleId, cssUrl, cssInlineText, baseUrl, conditionScale } = params;
-    console.log(styleId, cssUrl);
+    console.log(`Rewriting ${cssUrl || "inline style"} ${styleId}...`);
 
     try {
         let cssText = cssInlineText;
@@ -20,7 +20,6 @@ export default async function fetchAndRewriteCss(params) {
             baseUrl,
             conditionScale
         );
-        console.log(rewrittenText);
         return {
             status: "success",
             css: rewrittenText,
