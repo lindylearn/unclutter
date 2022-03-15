@@ -27,17 +27,21 @@ function OptionsPage({}) {
     }, []);
 
     return (
-        <div className="m-3">
-            <h1 className="text-lg mb-2">Page view</h1>
+        <div className="flex flex-col gap-3">
             <div>
-                <div>
-                    Automatically enable on{" "}
-                    <span className="font-mono">{currentDomain}</span>
+                {/* <div className="text-base flex justify-between align-middle">
+                    <div>
+                        Automatically unclutter{" "}
+                        <span className="font-mono">{currentDomain}</span>
+                    </div>
+
                     <Switch />
+                </div> */}
+                <div className="text-base flex justify-between align-middle">
+                    <div>Automatically unclutter all pages</div> <Switch />
                 </div>
-                <div className="">
-                    Automatically on other domains
-                    <Switch />
+                <div className="text-base">
+                    Except 7 domains including google.com
                 </div>
             </div>
         </div>

@@ -58,18 +58,6 @@
             ]
         }
     },
-    "targets": {
-        "default": {
-            "source": [
-                "source/manifest.json",
-                "source/background/events.js",
-                "source/content-script/boot.js",
-                "source/content-script/pageview/content.css",
-                "source/content-script/switch/index.js",
-                "source/options/options.html"
-            ]
-        }
-    },
     "stylelint": {
         "extends": "stylelint-config-xo"
     },

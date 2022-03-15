@@ -11,6 +11,20 @@ const contentScriptConfigs = [
     "source/content-script/boot.js",
     "source/content-script/enhance.js",
     "source/content-script/switch/index.js",
+].map((entryPoint) => ({
+    input: entryPoint,
+    output: {
+        file: entryPoint.replace("source", "distribution"),
+        format: "iife", // no way to use es modules, split code by logic instead
+    },
+    plugins: [
+        nodeResolve({ browser: true }),
+        commonjs({ include: /node_modules/ }),
+    ],
+}));
+
+// bundle react views
+const reactConfigs = [
     // "source/options/index.js",
     "source/popup/index.js",
 ].map((entryPoint) => ({
@@ -23,6 +37,10 @@ const contentScriptConfigs = [
         nodeResolve({ browser: true }),
         commonjs({ include: /node_modules/ }),
         babel({ babelHelpers: "bundled", presets: ["@babel/preset-react"] }),
+        replace({
+            preventAssignment: true,
+            "process.env.NODE_ENV": JSON.stringify("production"),
+        }),
     ],
 }));
 
@@ -37,7 +55,6 @@ const serviceWorkerConfig = {
     plugins: [
         nodeResolve({ browser: true }),
         commonjs({ include: /node_modules/ }),
-        // babel({ babelHelpers: "bundled" }),
         {
             // don't write to "source" subdirectory
             async generateBundle(_, bundle) {
@@ -100,5 +117,6 @@ const staticFilesConfig = {
 };
 
 export default contentScriptConfigs
+    .concat(reactConfigs)
     .concat([serviceWorkerConfig])
     .concat([staticFilesConfig]);
