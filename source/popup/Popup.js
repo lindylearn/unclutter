@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from "react";
 import browser from "../common/polyfill";
-import { getHypothesisToken, validateSaveToken } from "../common/storage";
 import Switch from "./Switch";
 
 function OptionsPage({}) {
-    const [token, setToken] = useState("");
-    useEffect(async () => {
-        setToken(await getHypothesisToken());
-    }, []);
-    async function onChangeToken(newToken) {
-        setToken(newToken);
-        await validateSaveToken(newToken, true);
-    }
+    // const [token, setToken] = useState("");
+    // useEffect(async () => {
+    //     setToken(await getHypothesisToken());
+    // }, []);
+    // async function onChangeToken(newToken) {
+    //     setToken(newToken);
+    //     await validateSaveToken(newToken, true);
+    // }
 
     const [currentTab, setCurrentTab] = useState(null);
     const [currentDomain, setCurrentDomain] = useState(null);

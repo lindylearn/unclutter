@@ -1,3 +1,4 @@
+import babel from "@rollup/plugin-babel";
 import commonjs from "@rollup/plugin-commonjs";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
 import replace from "@rollup/plugin-replace";
@@ -11,7 +12,7 @@ const contentScriptConfigs = [
     "source/content-script/enhance.js",
     "source/content-script/switch/index.js",
     // "source/options/index.js",
-    // "source/popup/index.js",
+    "source/popup/index.js",
 ].map((entryPoint) => ({
     input: entryPoint,
     output: {
@@ -21,7 +22,7 @@ const contentScriptConfigs = [
     plugins: [
         nodeResolve({ browser: true }),
         commonjs({ include: /node_modules/ }),
-        // babel({ babelHelpers: "bundled" }),
+        babel({ babelHelpers: "bundled", presets: ["@babel/preset-react"] }),
     ],
 }));
 
