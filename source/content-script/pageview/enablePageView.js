@@ -1,5 +1,4 @@
-// in separate file to import without other style patching code in boot.js
-
+// Enable the "page view" on a webpage, which restricts the rendered content to a fraction of the browser window.
 export function enablePageView(disableHook = () => {}) {
     // base css is already injected, activate it by adding class
     // add to <html> element since <body> not contructed yet

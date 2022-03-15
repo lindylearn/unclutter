@@ -8,6 +8,7 @@ import {
     overrideClassname,
 } from "./styleChanges";
 
+// tweak a site's style dynamically
 export async function enableStyleChanges() {
     insertBackground();
     insertContentBlockStyle();

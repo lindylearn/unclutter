@@ -1,11 +1,10 @@
-// setup listeners on document_start
-
 import browser from "../common/polyfill";
 import { shouldEnableForDomain } from "../common/storage";
 import { enablePageView } from "./pageview/enablePageView";
 import { patchStylesheetsOnceCreated } from "./pageview/patchStylesheets";
 
-// optimized version of enablePageView() that runs in every user tab
+// script injected into every tab before dom constructed
+// if configured by the user, initialize the extension funcationality
 async function boot() {
     // check if extension should be enabled on this page
     const url = new URL(window.location.href);
@@ -20,9 +19,9 @@ async function boot() {
     // rewrite stylesheets immediately once created
     const unobserveRewrite = patchStylesheetsOnceCreated();
 
-    // enable "page view" width restriction immediately before first render
+    // enable basic "page view" style changes immediately
     enablePageView(() => {
-        // when user exists page view, disable rewrites
+        // when user exists page view, stop rewriting new stylesheets
         unobserveRewrite();
     });
 

@@ -35,7 +35,6 @@
         }
     ],
     "web_accessible_resources": [
-        "sidebar/index.html",
         "content-script/pageview/content.css",
         "content-script/pageview/manualContentBlock.css",
         "content-script/switch/index.html",

@@ -3,6 +3,8 @@ import {
     shouldEnableForDomain,
 } from "../../common/storage";
 
+// Allow the user control the automatic extension enablement on the current domain.
+// This is injected as an iframe into enabled tabs from `styleChanges.js`.
 async function main() {
     const currentDomain = new URLSearchParams(document.location.search).get(
         "domain"

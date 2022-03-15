@@ -20,6 +20,7 @@ export function patchStylesheetsOnceCreated() {
     return () => observer.disconnect.bind(observer);
 }
 
+// patch a set of stylesheet elements
 export async function patchStylesheets(newStylesheets) {
     const newStylesheetsToPatch = newStylesheets
         .map((sheet) => sheet.ownerNode)
@@ -37,6 +38,10 @@ export async function patchStylesheets(newStylesheets) {
     );
 }
 
+// Patch (parse, tweak, re-serialize) the CSS of a specific <style> or <link> DOM node.
+// This is done to improve the readability of text content, and not always possible through the CSSOM api.
+// This function communicates with the background service worker where we run the actual patching.
+// See `background/rewriteCss.js`.
 export async function patchStylesheetNode(elem, conditionScale) {
     // random id to corraborate original & override style
     const styleId = `style_${Math.random()}`;
@@ -97,6 +102,8 @@ export async function patchStylesheetNode(elem, conditionScale) {
         }
 
         const start = performance.now();
+
+        // rewrite css in service worker
         const overrideCss = await rewriteCssRemote({
             styleId: styleId,
             cssUrl: elem.href,
@@ -104,6 +111,7 @@ export async function patchStylesheetNode(elem, conditionScale) {
             baseUrl: elem.href || window.location.href,
             conditionScale: conditionScale,
         });
+
         const duration = performance.now() - start;
         console.log(
             `Took ${Math.round(duration)}ms to rewrite ${
@@ -111,6 +119,8 @@ export async function patchStylesheetNode(elem, conditionScale) {
             } '${styleId}'`
         );
 
+        // create new dom node for rewritten css, and disable the old style
+        // this is undone when the user disables the pageview
         createStylesheetText(overrideCss, styleId);
         disableStylesheet(elem, styleId);
     } catch (err) {
@@ -122,6 +132,7 @@ export async function patchStylesheetNode(elem, conditionScale) {
     }
 }
 
+// Send an event to the extensions service worker to rewrite a stylesheet, and wait for a response.
 async function rewriteCssRemote(params) {
     const response = await browser.runtime.sendMessage(null, {
         event: "rewriteCss",
@@ -136,15 +147,16 @@ async function rewriteCssRemote(params) {
     throw Error(response);
 }
 
+// Re-enable all original stylesheets on a page.
+export function unPatchStylesheets() {
+    reenableOriginalStylesheets();
+}
+
 const disabledClassname = "lindylearn-disabled-style";
 function disableStylesheet(elem, styleId) {
     elem.disabled = true;
     elem.classList.add(disabledClassname);
     elem.classList.add(styleId);
-}
-
-export function unPatchStylesheets() {
-    reenableOriginalStylesheets();
 }
 
 function reenableOriginalStylesheets() {

@@ -2,6 +2,7 @@ import browser from "../../common/polyfill";
 
 export const overrideClassname = "lindylearn-document-override";
 
+// Perform various fixes to a site's body tag, to improve the page view display
 export function modifyBodyStyle() {
     // set start properties for animation immediately
     document.body.style.width = "100%";
@@ -46,6 +47,8 @@ export function modifyBodyStyle() {
     document.body.style.setProperty("margin", "10px auto", "important");
 }
 
+// Insert an element behind a site's <body> content to show a white background if the page doesn't provide it.
+// The height of this element needs to be dynamically kept in sync with the body height.
 export function insertBackground() {
     // create element of full height of all children, in case body height != content height
     var background = document.createElement("div");
@@ -78,14 +81,14 @@ export function insertBackground() {
 
     // observe children height changes
     const observer = new ResizeObserver(function () {
-        updateBackgroundHeight();
+        _updateBackgroundHeight();
     });
     [...document.body.children].map((node) => observer.observe(node));
 
     document.body.appendChild(background);
 }
 
-function updateBackgroundHeight() {
+function _updateBackgroundHeight() {
     // get height of body children to exclude background element itself
     // TODO exclude absolute positioned elements?
     const childHeights = [...document.body.children]
@@ -100,25 +103,7 @@ function updateBackgroundHeight() {
     }
 }
 
-export function createStylesheetLink(url) {
-    var link = document.createElement("link");
-    link.classList.add(overrideClassname);
-    link.type = "text/css";
-    link.rel = "stylesheet";
-    link.href = url;
-    document.head.appendChild(link);
-}
-
-export function createStylesheetText(text, styleId) {
-    var style = document.createElement("style");
-    style.classList.add(overrideClassname);
-    style.classList.add(styleId);
-    style.type = "text/css";
-    style.rel = "stylesheet";
-    style.innerHTML = text;
-    document.head.appendChild(style);
-}
-
+// Insert a small UI for the user to control the automatic pageview enablement on the current domain.
 export function insertDomainToggle() {
     const url = new URL(window.location.href);
     const domain = url.hostname.replace("www.", "");
@@ -137,6 +122,7 @@ export function insertDomainToggle() {
     document.documentElement.appendChild(iframe);
 }
 
+// Insert text behind the <body> background in case the site fails to render.
 export function insertReportButton() {
     const div = document.createElement("div");
     div.className = `${overrideClassname} report-broken`;
@@ -157,4 +143,23 @@ function insertShareButton() {
     var img = document.createElement("img");
     img.src = browser.runtime.getURL("assets/icons/share.svg");
     a.appendChild(img);
+}
+
+export function createStylesheetLink(url) {
+    var link = document.createElement("link");
+    link.classList.add(overrideClassname);
+    link.type = "text/css";
+    link.rel = "stylesheet";
+    link.href = url;
+    document.head.appendChild(link);
+}
+
+export function createStylesheetText(text, styleId) {
+    var style = document.createElement("style");
+    style.classList.add(overrideClassname);
+    style.classList.add(styleId);
+    style.type = "text/css";
+    style.rel = "stylesheet";
+    style.innerHTML = text;
+    document.head.appendChild(style);
 }

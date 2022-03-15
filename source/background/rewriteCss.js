@@ -1,9 +1,8 @@
 import postcss, { Declaration } from "postcss";
 import safeParser from "postcss-safe-parser";
 
-// The extension reduces the website body width to show annotations on the right side.
-// But since CSS media queries work on the actual viewport width, responsive style doesn't take this reduced body width into account.
-// So parse the website CSS here and return media queries with the correct width breakpoints.
+// Perform various changes on a website's CSS to make it more readable
+// This is run in the extension background script, on css links or inline text sent from content scripts.
 export default async function fetchAndRewriteCss(params) {
     const { styleId, cssUrl, cssInlineText, baseUrl, conditionScale } = params;
     console.log(`Rewriting ${cssUrl || "inline style"} ${styleId}...`);
@@ -11,6 +10,8 @@ export default async function fetchAndRewriteCss(params) {
     try {
         let cssText = cssInlineText;
         if (cssUrl) {
+            // Can't always use CSSOM api of link tags, so fetch files seperately.
+            // This should usually hit the browser cache.
             const response = await fetch(cssUrl);
             cssText = await response.text();
         }
@@ -20,6 +21,8 @@ export default async function fetchAndRewriteCss(params) {
             baseUrl,
             conditionScale
         );
+
+        // return results for content scripts
         return {
             status: "success",
             css: rewrittenText,
@@ -33,6 +36,7 @@ export default async function fetchAndRewriteCss(params) {
     }
 }
 
+// Rewrite CSS text using custom postcss plugins defined below
 export async function rewriteCss(cssText, baseUrl, conditionScale) {
     const plugins = [
         scaleBreakpointsPlugin(conditionScale),
@@ -49,11 +53,17 @@ export async function rewriteCss(cssText, baseUrl, conditionScale) {
 }
 
 /**
- * Create override media rules upscaled to the entire page.
+ * This extension reduces the width of displayed webpages by setting a max-width on <body>.
+ * However since CSS media queries use the actual browser viewport width, responsive styles
+ * won't take this changed body width into account.
+ *
+ * So change those CSS media query conditions to use upscaled viewport width breakpoints.
+ *
  * Assuming scale factor 2 (page now takes up only 50% of the screen):
- *     max-width 1 -> max-width 2
- *     min-width 1 -> min-width 2
- *         since we remove the old style, no need to negate old [1, 2] range
+ *   @media (max-width 1) -> @media (max-width 2)
+ *   @media (min-width 1) -> @media (min-width 2)
+ *      Since the original style is disabled after the rewritten one is enabled, we don't need to
+ *      negate style in the [1, 2] width range.
  */
 const scaleBreakpointsPlugin = (conditionScale) => ({
     postcssPlugin: "scale-media-breakpoints",
@@ -74,7 +84,7 @@ const scaleBreakpointsPlugin = (conditionScale) => ({
                 return;
             }
 
-            // hack: remove for now (mostly used to add side margin, which we already add elsewhere)
+            // hack: remove vw rules for now (mostly used to add side margin, which we already add elsewhere)
             // conditionScale is not neccessarily equal to actual pageview with, so not correct margin
             decl.remove();
 
@@ -131,7 +141,7 @@ const urlRewritePlugin = (baseUrl) => ({
 });
 urlRewritePlugin.postcss = true;
 
-// hide fixed and sticky positioned elements (highly unlikely to be part of the text)
+// hide fixed and sticky positioned elements (highly unlikely to be part of the readable text)
 const hideFixedElementsPlugin = {
     postcssPlugin: "hide-fixed-elements",
     Rule(rule) {
@@ -159,6 +169,7 @@ const hideFixedElementsPlugin = {
     },
 };
 
+// other small style tweaks to improve the pageview display
 const styleTweaksPlugin = {
     postcssPlugin: "style-tweaks",
     Rule(rule) {

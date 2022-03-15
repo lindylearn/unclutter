@@ -1,21 +1,16 @@
 # Code documentation
 
-## Basic structure
+Basic code documentation for extension review and open-source contribution purposes. For more, see the source code at https://github.com/lindylearn/reader-extension.
 
--   `background` contains the extension background script that injects and sends events to the content script.
--   `content-script` contains code that is injected into the active tab by the background script. It calls the "page view" feature initialization and configures listeners to user selection and annotation update events.
--   `options` contains the React code for the browser extension settings page.
+## Functionality
 
-<!-- Not enabled currently: -->
-<!-- `content-script/annotationApi.js` supports the highlighting of text on the active webpage. -->
-<!-- -   `content-script/pageview` configures the annotations sidebar and related CSS changes.
--   `sidebar` contains the annotations sidebar which is injected as iframe into the active tab. All data fetching and synchronization happens here to isolate it from the webpage. -->
+This browser extension adjusts and changes the CSS of webpages to make them more readable.
 
-## Security implications
+## File structure
 
--   The extension only has access to user tabs when the user clicks its icon.
+This web extension uses the following script entry points:
 
-<!-- Not enabled currently: -->
-<!-- -   The HTMl of the active browser tab is then modified to show annotation information, and to capture user text selections (which create visible annotations in the sidebar).
--   All user notes and backend communication is contained within the inserted iframe, so the active website has no access to it. The React annotation sidebar only has access to the active website via the limited event communication defined in `content-script/annotationListener.js` and `content-script/selectionListener.js`.
--   When the user activates the extension on a webpage, multiple requests containing the page URL and user authorization token are made to `api2.lindylearn.io` and `api.hypothes.is`, in order to fetch the data to display. User edits on these annotations produce more API requests. -->
+-   `content-script/boot.js` to boostrap the extension functionality inside a tab if the user configured it as such. This minimal script is injected into every tab before DOM construction.
+-   `content-script/enhance.js` to enable the full extension functionality inside a tab. This script is only injected for URLs the user allowlisted (as determined by `boot.js`).
+-   `background/events.js` to handle persistent background events like extension icon clicks.
+-   `background/rewriteCss.js` executed by `events.js` to rewrite a website's CSS, to fullfill the extension functionality.

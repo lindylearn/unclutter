@@ -1,7 +1,8 @@
 import browser from "../../common/polyfill";
 import { createStylesheetLink, createStylesheetText } from "./styleChanges";
 
-// hide page elements unrelated to the article
+// hide page elements unrelated to the article via custom CSS, to make a page more readable
+// TODO use statically generated CSS
 export function insertContentBlockStyle() {
     const classWordSelectors = blockedWords.map(
         (word) => `*:not(html):not(body):not(article)[class*=${word} i]`
