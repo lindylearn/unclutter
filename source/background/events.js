@@ -5,6 +5,8 @@ import fetchAndRewriteCss from "./rewriteCss";
 browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.event === "enablePageView") {
         enableInTab(message.tabId);
+    } else if (message.event === "disablePageView") {
+        togglePageView(message.tabId);
     } else if (message.event === "requestEnhance") {
         // event sent from boot.js to inject additional functionality
         // browser apis are only available in scripts injected from background scripts or manifest.json
@@ -35,8 +37,12 @@ async function enableInTab(tabId) {
 
     // toggle the page view if not active
     if (!pageViewEnabled) {
-        await browser.tabs.sendMessage(tabId, { event: "togglePageView" });
+        togglePageView(tabId);
     }
+}
+
+async function togglePageView(tabId) {
+    await browser.tabs.sendMessage(tabId, { event: "togglePageView" });
 }
 
 // inject a content script

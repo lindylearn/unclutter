@@ -1,3 +1,4 @@
+import browser from "../../common/polyfill";
 import {
     setAutomaticStatusForDomain,
     shouldEnableForDomain,
@@ -15,8 +16,25 @@ async function main() {
 
     const switch1 = document.getElementById("switch1");
     switch1.checked = await shouldEnableForDomain(currentDomain);
-    switch1.onclick = (e) =>
-        setAutomaticStatusForDomain(currentDomain, e.target.checked);
+    switch1.onclick = (e) => {
+        const newState = e.target.checked;
+        setAutomaticStatusForDomain(currentDomain, newState);
+
+        // convenience: also disable pageview if automatic status disabled
+        if (!newState) {
+            browser.tabs
+                .query({
+                    active: true,
+                    currentWindow: true,
+                })
+                .then((tabs) => {
+                    browser.runtime.sendMessage(null, {
+                        event: "disablePageView",
+                        tabId: tabs[0].id,
+                    });
+                });
+        }
+    };
 
     document.body.style.visibility = "visible";
 }
