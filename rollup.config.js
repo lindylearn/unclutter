@@ -86,6 +86,7 @@ const staticFilesConfig = {
     },
     plugins: [
         fileWatcher([
+            "package.json",
             "source/assets/**/*.{png,svg}",
             "source/**/*.{html,css,json,md}",
         ]),

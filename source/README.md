@@ -14,3 +14,9 @@ This web extension uses the following script entry points:
 -   `content-script/enhance.js` to enable the full extension functionality inside a tab. This script is only injected for URLs the user allowlisted (as determined by `boot.js`).
 -   `background/events.js` to handle persistent background events like extension icon clicks.
 -   `background/rewriteCss.js` executed by `events.js` to rewrite a website's CSS, to fullfill the extension functionality.
+
+## Bundling
+
+The content scripts are bundled as 'immediately invoked functions' with inlined dependencies, the background scripts use ES modules for code readability.
+
+All library code in the `node_modules` folders is unmodified but bundled using Rollup. For the used dependency versions see `package.json`.
