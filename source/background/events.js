@@ -13,16 +13,32 @@ import fetchAndRewriteCss from "./rewriteCss";
     }
     if (!alreadyInjected) {
         console.log("Content script not loaded in active tab, injecting it...");
-        await _executeScript(tab.id, "content-script/boot.js");
+        await _injectScript(tab.id, "content-script/enhance.js");
     }
 
     // toggle the page view
     await browser.tabs.sendMessage(tab.id, "togglePageView");
 });
 
-async function _executeScript(tabId, filePath) {
+// events from content scripts
+browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.event === "requestEnhance") {
+        // event sent from boot.js to inject additional functionality
+        // browser apis are only available in scripts injected from background scripts or manifest.json
+        console.log("boot.js requested injection into tab");
+        _injectScript(sender.tab.id, "content-script/enhance.js");
+    } else if (message.event === "rewriteCss") {
+        fetchAndRewriteCss(message.params).then(sendResponse);
+        return true;
+    }
+    return false;
+});
+
+// inject a content script
+async function _injectScript(tabId, filePath) {
     // different calls for v2 and v3 manifest
     if (chrome?.scripting) {
+        // default runAt=document_idle
         await chrome.scripting.executeScript({
             target: { tabId },
             files: [filePath],
@@ -33,12 +49,3 @@ async function _executeScript(tabId, filePath) {
         });
     }
 }
-
-// events from content scripts
-browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    if ((message.event = "rewriteCss")) {
-        fetchAndRewriteCss(message.params).then(sendResponse);
-        return true;
-    }
-    return false;
-});

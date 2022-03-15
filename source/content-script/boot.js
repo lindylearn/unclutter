@@ -1,5 +1,6 @@
 // setup listeners on document_start
 
+import browser from "../common/polyfill";
 import { shouldEnableForDomain } from "../common/storage";
 import { enablePageView } from "./pageview/enablePageView";
 import { patchStylesheetsOnceCreated } from "./pageview/patchStylesheets";
@@ -25,7 +26,10 @@ async function boot() {
         unobserveRewrite();
     });
 
-    // do rest of style tweaks in enhance.js
+    // request injection of additional extension functionality
+    browser.runtime.sendMessage(null, {
+        event: "requestEnhance",
+    });
 }
 
 boot();
