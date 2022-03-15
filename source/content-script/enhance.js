@@ -6,14 +6,17 @@ import { patchStylesheets } from "./pageview/patchStylesheets";
 // complete extension functionality injected into a tab
 
 // listen to events sent from background script
-browser.runtime.onMessage.addListener(async (event) => {
-    if (event === "ping") {
+browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    const pageViewEnabled =
+        document.documentElement.classList.contains("pageview");
+
+    if (message.event === "ping") {
         // respond that extension is active in this tab
+        sendResponse({ pageViewEnabled });
         return true;
-    } else if (event === "togglePageView") {
+    } else if (message.event === "togglePageView") {
         // manually toggle pageview status in this tab
-        const pageViewEnabled =
-            document.documentElement.classList.contains("pageview");
+
         if (!pageViewEnabled) {
             enablePageView(() => {
                 // when user exists page view
@@ -29,6 +32,8 @@ browser.runtime.onMessage.addListener(async (event) => {
             // hack: simulate click to call disable handlers with correct state
             document.documentElement.click();
         }
+
+        return false;
     }
 });
 
