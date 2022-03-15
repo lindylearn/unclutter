@@ -5,7 +5,7 @@
     "homepage_url": "https://github.com/lindylearn/reader-extension",
     "manifest_version": 3,
     "action": {
-        "default_title": "Click Me",
+        "default_title": "Lindy Reading View",
         "default_popup": "popup/index.html"
     },
     "icons": {

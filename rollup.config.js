@@ -38,6 +38,7 @@ const removeSourceFolder = {
 const reactConfigs = [
     // "source/options/index.js",
     "source/popup/index.js",
+    "source/popup/onclick.js",
 ].map((entryPoint) => ({
     input: entryPoint,
     output: {
