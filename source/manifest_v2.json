@@ -19,8 +19,7 @@
     },
     "browser_action": {},
     "background": {
-        "persistent": true,
-        "scripts": ["background/events.js"]
+        "page": "background/firefox-page.html"
     },
     "content_scripts": [
         {

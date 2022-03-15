@@ -29,10 +29,9 @@ const contentScriptConfigs = [
 const serviceWorkerConfig = {
     input: "source/background/events.js",
     output: {
-        file: "distribution/background/events.js",
-        // dir: "distribution",
-        format: "iife", // can use es modules here
-        // preserveModules: true,
+        dir: "distribution",
+        format: "es", // can use es modules here
+        preserveModules: true,
     },
     plugins: [
         nodeResolve({ browser: true }),
@@ -83,7 +82,7 @@ const staticFilesConfig = {
     // needs dummy source file
     input: "source/common/api.js",
     output: {
-        file: "distribution/dummy",
+        file: "distribution/staticFiles",
     },
     plugins: [
         fileWatcher([
@@ -92,7 +91,7 @@ const staticFilesConfig = {
         ]),
         {
             writeBundle() {
-                fs.rmSync("distribution/dummy");
+                fs.rmSync("distribution/staticFiles");
             },
         },
     ],
