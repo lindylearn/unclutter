@@ -56,7 +56,10 @@ function OptionsPage({}) {
                 />
             </div>
             {automatic === false && (
-                <ManualList status="Enabled" list={domainLists?.allow || []} />
+                <ManualList
+                    status="Manually enabled"
+                    list={domainLists?.allow || []}
+                />
             )}
             {automatic && (
                 <ManualList status="Disabled" list={domainLists?.deny || []} />
