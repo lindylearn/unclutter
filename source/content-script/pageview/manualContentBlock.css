@@ -184,3 +184,8 @@ body.mediawiki {
 #main.sc-WivXX > div {
     display: none !important;
 }
+
+/* https://tomcritchlow.com/2022/03/08/architecture-blogging/ */
+.w-two-thirds-ns {
+    width: 100% !important;
+}

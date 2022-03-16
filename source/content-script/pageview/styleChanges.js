@@ -118,6 +118,7 @@ export function insertDomainToggle() {
     iframe.className = `${overrideClassname} lindy-domain-switch`;
     iframe.setAttribute("scrolling", "no");
     iframe.setAttribute("frameBorder", "0");
+    iframe.setAttribute("allowTransparency", "true");
 
     document.documentElement.appendChild(iframe);
 }
