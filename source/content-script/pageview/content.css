@@ -36,7 +36,7 @@ html.pageview > body {
     position: absolute;
     top: 0;
     right: 0;
-    width: 250px;
+    width: 300px;
     height: 50px;
 }
 
@@ -86,7 +86,7 @@ html.pageview > body {
     }
 }
 @media (max-width: 1450px) {
-    .lindy-domain-switch {
+    /* .lindy-domain-switch {
         width: 200px;
-    }
+    } */
 }

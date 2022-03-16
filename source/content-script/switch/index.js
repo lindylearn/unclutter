@@ -10,6 +10,7 @@ async function main() {
     const currentDomain = new URLSearchParams(document.location.search).get(
         "domain"
     );
+    document.getElementById("domain").innerText = currentDomain;
     document.getElementById(
         "text"
     ).title = `Automatically unclutter pages from ${currentDomain}`;
