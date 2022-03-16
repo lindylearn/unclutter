@@ -1,8 +1,8 @@
 {
-    "name": "Lindy Reading View",
-    "version": "0.5.0",
-    "description": "Declutter pages without changing their style. Focus on content, not sidebars.",
-    "homepage_url": "https://github.com/lindylearn/reader-extension",
+    "name": "Unclutter - Content blocker for articles",
+    "version": "0.5.1",
+    "description": "Remove distractions from web articles, automatically.",
+    "homepage_url": "https://github.com/lindylearn/unclutter",
     "icons": {
         "128": "assets/icon.png"
     },
