@@ -16,5 +16,6 @@ export const defaultExcludedDomains = [
     "twitch.tv",
     "amazon.de",
     "tailwindcss.com",
+    "consent.yahoo.com",
 ];
 export const defaultAutomaticallyEnabled = true;

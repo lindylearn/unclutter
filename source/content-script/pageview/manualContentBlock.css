@@ -210,7 +210,7 @@ body.mediawiki {
 .site-wrapper {
     background-color: white !important;
 }
-.sidebar {
+.story-sidebar {
     display: none !important;
 }
 
@@ -339,4 +339,30 @@ body.mediawiki {
 /* https://www.independent.co.uk/news/world/europe/mcdonalds-russia-fast-food-trademark-b2037987.html */
 .sc-jcZdLI {
     display: none !important;
+}
+
+/* https://developers.google.com/web/updates/2018/03/cssom */
+.devsite-wrapper.devsite-wrapper > devsite-book-nav[fixed] {
+    display: none !important;
+}
+
+/* https://webkit.org/blog/12445/new-webkit-features-in-safari-15-4/ */
+main#content {
+    overflow: visible !important;
+}
+.table-of-contents,
+#logo {
+    display: none !important;
+}
+
+/* https://web.dev/text-fragments/ */
+.wrapper,
+.prose {
+    width: 100% !important;
+    max-width: none !important;
+}
+
+/* https://www.engadget.com/steam-deck-review-small-hands-180026719.html */
+.drawer-swipeable > .wrapper {
+    position: static !important;
 }

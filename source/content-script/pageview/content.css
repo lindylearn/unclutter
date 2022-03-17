@@ -38,6 +38,7 @@ html.pageview > body {
     right: 0;
     width: 350px;
     height: 50px;
+    z-index: 300;
 }
 
 .report-broken {
