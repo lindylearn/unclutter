@@ -2,6 +2,9 @@
 [class*="VideoFigure"] {
     display: none !important;
 }
+.BasePageWrapper-bQpzig {
+    padding-top: 0 !important;
+}
 /* https://www.wired.com/2016/01/phil-kennedy-mind-control-computer/ */
 .BasePageWrapper {
     padding-top: 0 !important;
@@ -41,7 +44,42 @@
     display: none !important;
 }
 [class*="regular-article-layout__body"] {
-    margin-top: 0 !important;
+    margin: 0 !important;
+}
+[class*="article-header__container"] {
+    padding: 30px !important;
+    grid-template-rows: repeat(1, max-content) !important;
+}
+.regular-article-layout__main__1tzD8 {
+    margin: 0 !important;
+}
+.article-header__heading__15OpQ {
+    margin-bottom: 0 !important;
+}
+.article-body__side-rail__3jORK,
+.regular-article-layout__right-rail__3o6zT,
+.spacing-container__container__2g5QT {
+    display: none !important;
+}
+.article-header__author__3PcB3,
+.article-header__buttons__1NoIL,
+.article-header__share__3z79M,
+.article-header__button-right-side__ts-xJ,
+.article-header__read-time__1-q8x {
+    display: none !important;
+}
+.primary-gallery__carousel-container__2zDCt {
+    height: 400px !important;
+    padding-bottom: 0 !important;
+}
+.primary-gallery__carousel__2zjf4 {
+    height: 100% !important;
+}
+.article-body__element__OOj6H {
+    margin: 20px 0 !important;
+}
+#fusion-app {
+    margin: 0 -15px !important;
 }
 
 /* https://www.quantamagazine.org/in-new-experiment-astronomers-see-no-sign-of-cosmic-dawn-20220228/ */
@@ -188,4 +226,74 @@ body.mediawiki {
 /* https://tomcritchlow.com/2022/03/08/architecture-blogging/ */
 .w-two-thirds-ns {
     width: 100% !important;
+}
+
+/* https://www.npr.org/2022/03/17/1087133199/netflix-plans-to-start-charging-for-password-sharing-and-customers-arent-happy */
+#main-section {
+    margin: 0 !important;
+}
+#main-sidebar,
+#globalheader {
+    display: none !important;
+}
+.tmplNewsStory {
+    padding: 0 !important;
+}
+.storytext > p {
+    max-width: none !important;
+}
+
+/* https://www.cbsnews.com/news/ukraine-european-power-grid-russia/ */
+.embed--type-content_video {
+    display: none !important;
+}
+.site-header {
+    display: none !important;
+}
+.content__header.content__header {
+    display: block !important;
+    background: initial !important;
+    color: initial !important;
+}
+.content__title {
+    padding-bottom: 0 !important;
+}
+.content__header {
+    padding-bottom: 0 !important;
+}
+.content__body {
+    margin-top: 0 !important;
+}
+
+/* https://www.lbc.co.uk/world-news/60fd7d63153c4125ab21a32e7e6ac9eb/ */
+.row21 {
+    max-width: none !important;
+}
+.cadmus-article {
+    background-color: white !important;
+}
+.header--twin {
+    display: none !important;
+}
+.seemore,
+.seemore ~ * {
+    display: none !important;
+}
+
+/* https://www.extremetech.com/extreme/332818-nasa-completes-james-webb-space-telescope-alignment-instrument-performing-above-expectations */
+.wrapper {
+    margin-top: 0 !important;
+}
+.wrapper > .row {
+    border: none !important;
+}
+.affiliate-text,
+#share_container,
+.hybrid-bar {
+    display: none !important;
+}
+
+/* https://www.nasa.gov/content/goddard/hubble-space-telescope-science-instruments */
+#content {
+    margin-top: 0 !important;
 }
