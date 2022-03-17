@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 html {
-    width: 320px;
+    width: 315px;
     overflow-x: hidden; /* Required to hide horizontal scroll on Firefox */
     /* height: 100px; */
 
@@ -55,7 +55,7 @@ body {
 .switch__label::before {
     content: "";
     position: absolute;
-    top: 6px;
+    top: 4px; /* tweak this */
     left: 0;
     width: 36px;
     height: 14px;
@@ -67,7 +67,7 @@ body {
 .switch__label::after {
     content: "";
     position: absolute;
-    top: 3px;
+    top: 1px; /* tweak this */
     left: 0;
     width: 20px;
     height: 20px;
