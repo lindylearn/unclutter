@@ -1,13 +1,14 @@
-# LindyLearn Annotations
+# Unclutter Browser Extension
 
-A browser extension to declutter web articles and to annotate them.
+Unlutter web articles automatically (hide cookie banners, auto-playing videos distracting sidebars, etc.)
 
-![Alt Text](./media/screenshot1.png)
+![Alt Text](./media/preview1.png)
 
 ## Features
 
--   Rewrites a website's CSS to use mobile styles even at larger viewports. This usually increases readability since column widths are shorter and margins smaller.
--   Simplifies pages by removing headers, sidebars, banners, or any other HTML elements not related to the content.
+-   Rewrites a website's CSS to use mobile styles even at larger viewports. This usually hides most superficial pages elements.
+-   Simplifies pages by removing headers, sidebars, cookie banners, or related articles through global rules.
+-   Has custom CSS fixes for a few popular sites.
 -   More to come :)
 
 <!-- -   Take notes and highlight ideas on articles right in your browser, then synchronize them to your notes app. Uses your existing [hypothes.is](https://web.hypothes.is) account to save annotations.
@@ -21,9 +22,13 @@ Install the extension from the [Chrome Web Store](https://chrome.google.com/webs
 
 ## Usage
 
-After installing the browser extension, move the "book" icon to your extension bar. Clicking the icon will reduce the size of the active webpage and simplify it. Clicking on the background outside the article restores the original page.
+After installing the browser extension, move the extension icon to your extension bar. Clicking the icon will reduce the size of the active webpage and simplify it. Clicking on the background outside the article restores the original page.
 
 In theory this should work on any page, but sometimes there are CSS issues -- please open an issue for those!
+
+## Contributing
+
+Please open an issue for anything that's broken or that could work better. If you want to fix a site that always annoyed you, add some CSS overwrites to `source/content-script/pageview/manualContentBlock.css`.
 
 <!-- The extension sidebar shows public web annotations and quote comments from Hacker News. If you link your [hypothes.is](https://web.hypothes.is) account it also shows your private annotations and highlights. On many older articles there will be graph of social references to that link over time.
 
