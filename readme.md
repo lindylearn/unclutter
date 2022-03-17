@@ -1,6 +1,6 @@
 # Unclutter Browser Extension
 
-Unlutter web articles automatically (hide cookie banners, auto-playing videos distracting sidebars, etc.)
+A simple browser extension to hide cookie banners, auto-playing videos distracting sidebars, etc.
 
 ![Alt Text](./media/preview1.png)
 
