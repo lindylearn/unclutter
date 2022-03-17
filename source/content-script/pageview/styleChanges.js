@@ -4,6 +4,19 @@ export const overrideClassname = "lindylearn-document-override";
 
 // Perform various fixes to a site's body tag, to improve the page view display
 export function modifyBodyStyle() {
+    _modifyBodyStyle();
+
+    // re-run on <html> inline style changes (e.g. scroll-locks)
+    const styleObserver = new MutationObserver((mutations, observer) => {
+        _modifyBodyStyle();
+    });
+    styleObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ["style"],
+    });
+}
+
+export function _modifyBodyStyle() {
     // set start properties for animation immediately
     document.body.style.width = "100%";
     // document.body.style.margin = "0";
