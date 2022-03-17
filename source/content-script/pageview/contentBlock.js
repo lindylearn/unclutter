@@ -50,6 +50,7 @@ const blockedWords = [
     "social",
     "popular",
     "promo",
+    "sponsored",
     // "overlay",
     "login",
     "registration",
@@ -62,6 +63,7 @@ const blockedWords = [
     "smartfeed",
     "adslot",
     "advert",
+    "video",
 ];
 const blockedClasses = [
     ".ad",
@@ -76,4 +78,5 @@ const blockedClasses = [
     ".google-auto-placed",
     ".breaker-ad",
     ".pbs__player",
+    ".dotcom-ad",
 ];

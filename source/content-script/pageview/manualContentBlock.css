@@ -242,6 +242,12 @@ body.mediawiki {
 .storytext > p {
     max-width: none !important;
 }
+/* https://www.npr.org/2022/03/16/1086896823/vladimir-strzhalkovsky-superyacht-norway?t=1647533782416 */
+.contentheader,
+.internallink,
+.backstage-sponsor-language {
+    display: none !important;
+}
 
 /* https://www.cbsnews.com/news/ukraine-european-power-grid-russia/ */
 .embed--type-content_video {
@@ -296,4 +302,41 @@ body.mediawiki {
 /* https://www.nasa.gov/content/goddard/hubble-space-telescope-science-instruments */
 #content {
     margin-top: 0 !important;
+}
+
+/* https://www.nbcnews.com/news/us-news/kanye-west-banned-instagram-violating-hate-speech-bullying-policies-rcna20397 */
+.black-print,
+.article-dek {
+    color: black !important;
+}
+#cx_bottom_banner {
+    display: none !important;
+}
+
+/* https://www.bbc.com/news/60773595 */
+.ssrcss-hhhbpo-ContainerWithSidebarWrapper {
+    display: block !important;
+}
+.ssrcss-rgov1k-MainColumn ~ div,
+.ssrcss-11faxz6-TagShareWrapper,
+.ssrcss-msolhr-LinksWrapper {
+    display: none !important;
+}
+.ssrcss-181c4hk-SectionWrapper {
+    height: 100% !important;
+}
+.ssrcss-uf6wea-RichTextComponentWrapper {
+    max-width: none !important;
+}
+
+/* https://edition.cnn.com/2022/03/16/media/disney-walkout-florida-bill/index.html */
+.ticker-ribbon,
+.el__embedded,
+.zn-body-text ~ * {
+    display: none !important;
+}
+
+/* https://www.independent.co.uk/news/world/europe/mcdonalds-russia-fast-food-trademark-b2037987.html */
+.sc-jcZdLI {
+    display: none !important;
 }
