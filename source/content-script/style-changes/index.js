@@ -3,7 +3,6 @@ import { unPatchStylesheets } from "../pageview/patchStylesheets";
 import { insertDomainToggle } from "../switch/insert";
 import { insertBackground, overrideClassname } from "./background";
 import { modifyBodyStyle, unModifyBodyStyle } from "./body";
-import { insertReportButton } from "./insert";
 
 // tweak a site's style dynamically
 export async function enableStyleChanges() {
@@ -14,7 +13,7 @@ export async function enableStyleChanges() {
     modifyBodyStyle();
 
     insertDomainToggle();
-    insertReportButton();
+    // insertReportButton();
 }
 export async function disableStyleChanges() {
     // restore original styles first
