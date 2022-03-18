@@ -199,7 +199,8 @@ gu-island ~ section {
 
 /* https://en.wikipedia.org/wiki/Erotetics */
 .noprint,
-#p-logo {
+#p-logo,
+#right-navigation {
     display: none !important;
 }
 #content {
