@@ -20,7 +20,7 @@ export function patchStylesheetsOnceCreated() {
     observer.observe(document, { childList: true, subtree: true });
     // executing site JS may add style elements, e.g. cookie banners
     // so continue listening for new stylesheets
-    return () => observer.disconnect.bind(observer);
+    return () => observer.disconnect();
 }
 
 // patch a set of stylesheet elements
@@ -166,6 +166,6 @@ function disableStylesheet(elem, styleId) {
 function reenableOriginalStylesheets() {
     [...document.getElementsByClassName(disabledClassname)].map((elem) => {
         elem.classList.remove(disabledClassname);
-        elem.disabled = false;
+        elem.removeAttribute("disabled");
     });
 }
