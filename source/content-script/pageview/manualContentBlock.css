@@ -198,7 +198,8 @@ gu-island ~ section {
 }
 
 /* https://en.wikipedia.org/wiki/Erotetics */
-.noprint {
+.noprint,
+#p-logo {
     display: none !important;
 }
 #content {
@@ -312,7 +313,10 @@ body.blog-us.sticky_support {
 }
 
 /* https://www.nasa.gov/content/goddard/hubble-space-telescope-science-instruments */
-#content {
+.html.page-node {
+    padding: 0 !important;
+}
+#main-content > .wrapper > #content {
     margin-top: 0 !important;
 }
 
