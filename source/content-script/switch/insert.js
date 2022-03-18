@@ -7,7 +7,7 @@ import { togglePageView } from "../enhance";
 import {
     createStylesheetLink,
     overrideClassname,
-} from "../pageview/styleChanges";
+} from "../style-changes/common";
 
 // Insert a small UI for the user to control the automatic pageview enablement on the current domain.
 // Creating an iframe for this doesn't work from injected scripts

@@ -1,5 +1,8 @@
 import browser from "../../common/polyfill";
-import { createStylesheetText, overrideClassname } from "./styleChanges";
+import {
+    createStylesheetText,
+    overrideClassname,
+} from "../style-changes/common";
 
 // listen to new stylesheet dom nodes, and start their patch process immediately
 export function patchStylesheetsOnceCreated() {

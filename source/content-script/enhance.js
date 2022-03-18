@@ -1,7 +1,7 @@
 import browser from "../common/polyfill";
-import { disableStyleChanges, enableStyleChanges } from "./pageview";
 import { enablePageView } from "./pageview/enablePageView";
 import { patchStylesheets } from "./pageview/patchStylesheets";
+import { disableStyleChanges, enableStyleChanges } from "./style-changes";
 
 // complete extension functionality injected into a tab
 

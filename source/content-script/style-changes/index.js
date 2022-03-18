@@ -1,12 +1,9 @@
+import { insertContentBlockStyle } from "../pageview/contentBlock";
+import { unPatchStylesheets } from "../pageview/patchStylesheets";
 import { insertDomainToggle } from "../switch/insert";
-import { insertContentBlockStyle } from "./contentBlock";
-import { unPatchStylesheets } from "./patchStylesheets";
-import {
-    insertBackground,
-    insertReportButton,
-    modifyBodyStyle,
-    overrideClassname,
-} from "./styleChanges";
+import { insertBackground, overrideClassname } from "./background";
+import { modifyBodyStyle } from "./body";
+import { insertReportButton } from "./insert";
 
 // tweak a site's style dynamically
 export async function enableStyleChanges() {
