@@ -253,7 +253,8 @@ body.mediawiki {
 .embed--type-content_video {
     display: none !important;
 }
-.site-header {
+.site-header,
+.top-ad-container {
     display: none !important;
 }
 .content__header.content__header {
