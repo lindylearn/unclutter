@@ -29,6 +29,7 @@ export async function patchStylesheets(newStylesheets) {
         .map((sheet) => sheet.ownerNode)
         .filter(
             (node) =>
+                node &&
                 !node.classList.contains(overrideClassname) &&
                 !node.classList.contains(disabledClassname)
         );

@@ -181,6 +181,18 @@ gu-island ~ section {
     display: none !important;
 }
 
+/* https://www.theguardian.com/world/2022/mar/15/volunteer-hackers-fight-russia */
+article > div:first-child > div:first-child {
+    grid-template-columns: none !important;
+}
+div[data-gu-name="body"] > div:first-child {
+    width: 100% !important;
+}
+.dcr-ln5upl,
+.dcr-ffjusr {
+    display: none !important;
+}
+
 /* https://www.polygon.com/22969625/sony-playstation-sexism-allegations-lawsuit */
 .outbrain-container,
 .outbrain-container ~ div {
@@ -267,8 +279,13 @@ body.blog-us.sticky_support {
     display: none !important;
 }
 .site-header,
-.top-ad-container {
+.top-ad-container,
+.super-nav {
     display: none !important;
+}
+#article-header {
+    margin-left: 0 !important;
+    min-height: 0 !important;
 }
 .content__header.content__header {
     display: block !important;
@@ -281,7 +298,11 @@ body.blog-us.sticky_support {
 .content__header {
     padding-bottom: 0 !important;
 }
+article.content {
+    width: 100% !important;
+}
 .content__body {
+    width: 95% !important;
     margin-top: 0 !important;
 }
 
@@ -309,8 +330,13 @@ body.blog-us.sticky_support {
 }
 .affiliate-text,
 #share_container,
-.hybrid-bar {
+.hybrid-bar,
+.hide-for-small-only {
     display: none !important;
+}
+html.flexbox.flexboxlegacy > body {
+    padding: 0 !important;
+    background-color: white !important;
 }
 
 /* https://www.nasa.gov/content/goddard/hubble-space-telescope-science-instruments */
