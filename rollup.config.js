@@ -10,7 +10,6 @@ import path from "path";
 const contentScriptConfigs = [
     "source/content-script/boot.js",
     "source/content-script/enhance.js",
-    "source/content-script/switch/index.js",
 ].map((entryPoint) => ({
     input: entryPoint,
     output: {

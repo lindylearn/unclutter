@@ -1,8 +1,8 @@
+import { insertDomainToggle } from "../switch/insert";
 import { insertContentBlockStyle } from "./contentBlock";
 import { unPatchStylesheets } from "./patchStylesheets";
 import {
     insertBackground,
-    insertDomainToggle,
     insertReportButton,
     modifyBodyStyle,
     overrideClassname,

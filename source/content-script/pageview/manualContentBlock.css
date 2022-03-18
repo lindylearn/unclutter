@@ -366,3 +366,8 @@ main#content {
 .drawer-swipeable > .wrapper {
     position: static !important;
 }
+
+/* https://developer.chrome.com/docs/extensions/mv3/migrating_to_service_workers/ */
+.scaffold {
+    height: 100% !important;
+}

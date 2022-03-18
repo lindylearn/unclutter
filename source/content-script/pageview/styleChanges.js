@@ -116,26 +116,6 @@ function _updateBackgroundHeight() {
     }
 }
 
-// Insert a small UI for the user to control the automatic pageview enablement on the current domain.
-export function insertDomainToggle() {
-    const url = new URL(window.location.href);
-    const domain = url.hostname.replace("www.", "");
-
-    const iframeUrl = new URL(
-        browser.runtime.getURL("content-script/switch/index.html")
-    );
-    iframeUrl.searchParams.append("domain", domain);
-
-    var iframe = document.createElement("iframe");
-    iframe.src = iframeUrl.toString();
-    iframe.className = `${overrideClassname} lindy-domain-switch`;
-    iframe.setAttribute("scrolling", "no");
-    iframe.setAttribute("frameBorder", "0");
-    iframe.setAttribute("allowTransparency", "true");
-
-    document.documentElement.appendChild(iframe);
-}
-
 // Insert text behind the <body> background in case the site fails to render.
 export function insertReportButton() {
     const div = document.createElement("div");

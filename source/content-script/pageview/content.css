@@ -32,15 +32,6 @@ html.pageview > body {
         drop-shadow(0 4px 3px rgb(0 0 0 / 0.1)) !important;
 }
 
-.lindy-domain-switch {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 350px;
-    height: 50px;
-    z-index: 300;
-}
-
 .report-broken {
     position: fixed;
     top: 20%;
@@ -55,23 +46,6 @@ html.pageview > body {
     color: #374151;
 }
 
-/* .lindy-sidebar {
-    position: absolute;
-    top: 0;
-    left: calc(100% + 20px);
-    width: calc(100vw - 100% - 20px - 2 * 20px - 10px);
-    height: 100%;
-}
-
-.share-icon {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-}
-.share-icon img {
-    width: 13px;
-} */
-
 @media (prefers-color-scheme: dark) {
     html.pageview {
         background-color: #35363a !important;
@@ -85,9 +59,4 @@ html.pageview > body {
     .report-broken {
         color: #d1d5db;
     }
-}
-@media (max-width: 1450px) {
-    /* .lindy-domain-switch {
-        width: 200px;
-    } */
 }

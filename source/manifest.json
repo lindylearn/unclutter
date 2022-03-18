@@ -16,6 +16,7 @@
     "options_ui": {
         "page": "settings-page/index.html"
     },
+    "minimum_chrome_version": "93",
     "background": {
         "service_worker": "background/events.js",
         "type": "module"
@@ -33,8 +34,7 @@
             "resources": [
                 "content-script/pageview/content.css",
                 "content-script/pageview/manualContentBlock.css",
-                "content-script/switch/index.html",
-                "content-script/switch/index.js",
+                "content-script/switch/index.css",
                 "assets/**"
             ],
             "matches": ["<all_urls>"]
