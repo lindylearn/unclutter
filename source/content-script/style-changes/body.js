@@ -1,9 +1,10 @@
 // Perform various fixes to a site's body tag, to improve the page view display
+let styleObserver;
 export function modifyBodyStyle() {
     _modifyBodyStyle();
 
     // re-run on <html> inline style changes (e.g. scroll-locks)
-    const styleObserver = new MutationObserver((mutations, observer) => {
+    styleObserver = new MutationObserver((mutations, observer) => {
         _modifyBodyStyle();
     });
     styleObserver.observe(document.documentElement, {
@@ -12,7 +13,7 @@ export function modifyBodyStyle() {
     });
 }
 
-export function _modifyBodyStyle() {
+function _modifyBodyStyle() {
     // set start properties for animation immediately
     document.body.style.width = "100%";
     // document.body.style.margin = "0";
@@ -54,4 +55,12 @@ export function _modifyBodyStyle() {
     );
     document.body.style.setProperty("height", "auto", "important");
     document.body.style.setProperty("margin", "10px auto", "important");
+}
+
+export function unModifyBodyStyle() {
+    styleObserver.disconnect();
+
+    document.body.style.setProperty("margin", "unset");
+    document.body.style.setProperty("padding", "unset");
+    document.body.style.setProperty("height", "unset");
 }
