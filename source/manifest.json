@@ -5,7 +5,7 @@
     "homepage_url": "https://github.com/lindylearn/unclutter",
     "manifest_version": 3,
     "action": {
-        "default_title": "Lindy Reading View",
+        "default_title": "Unclutter Article",
         "default_popup": "popup/index.html"
     },
     "icons": {

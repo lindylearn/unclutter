@@ -44,7 +44,6 @@ function OptionsPage({}) {
                 display: "flex",
                 flexDirection: "column",
                 gap: "15px",
-                color: "#374151",
             }}
         >
             {/* <div className="text-base flex justify-between align-middle">
