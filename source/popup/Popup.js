@@ -91,6 +91,7 @@ function OptionsPage({}) {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="underline"
+                    style={{ color: "#9ca3af" }}
                 >
                     on GitHub
                 </a>

@@ -33,6 +33,7 @@
 }
 .lindy-domain-switch > .lindy-switch > input {
     position: absolute !important;
+    border: none !important;
     top: 0;
     left: 0;
     width: 36px;
@@ -55,8 +56,10 @@
     height: 14px;
     background-color: var(--bg-disabled-color);
     border-radius: 14px;
+    border: none !important;
     z-index: 1;
     transition: background-color 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: none !important;
 }
 .lindy-domain-switch > .lindy-switch > label::after {
     content: "";
@@ -67,11 +70,14 @@
     height: 20px;
     background-color: var(--lever-disabled-color);
     border-radius: 14px;
+    border: none !important;
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
         0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
     z-index: 2;
     transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
     transition-property: left, background-color;
+    transform: none !important;
+    opacity: 1 !important;
 }
 /* Checked */
 .lindy-domain-switch > .lindy-switch > input:checked + label::before {

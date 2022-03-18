@@ -79,7 +79,10 @@ const scaleBreakpointsPlugin = (conditionScale) => ({
         }
     },
     Declaration(decl) {
-        if (decl.prop === "width" && decl.value.includes("vw")) {
+        if (
+            (decl.prop === "width" || decl.prop === "min-width") &&
+            decl.value.includes("vw")
+        ) {
             if (decl["alreadyProcessed"]) {
                 return;
             }

@@ -53,6 +53,7 @@ function _modifyBodyStyle() {
         "scroll",
         "important"
     );
+    document.documentElement.style.setProperty("height", "auto", "important");
     document.body.style.setProperty("height", "auto", "important");
     document.body.style.setProperty("margin", "10px auto", "important");
 }
