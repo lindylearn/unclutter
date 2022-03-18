@@ -16,10 +16,10 @@ export function insertDomainToggle() {
     const domain = url.hostname.replace("www.", "");
 
     const html = `
-    <span id="text">Unclutter <span id="domain">${domain}</span></span>
-    <div class="switch">
-        <input type="checkbox" id="lindy-domain-switch-input" class="switch__input" />
-        <label for="lindy-domain-switch-input" class="switch__label"></label>
+    <span>Unclutter <span id="domain">${domain}</span></span>
+    <div class="lindy-switch">
+        <input type="checkbox" id="lindy-domain-switch-input"/>
+        <label for="lindy-domain-switch-input"></label>
     </div>
     `;
 

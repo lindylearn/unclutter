@@ -1,37 +1,38 @@
 .lindy-domain-switch {
-    position: absolute;
+    position: absolute !important;
     top: 0;
     right: 0;
-    width: 350px;
-    height: 50px;
     z-index: 300;
 }
 
 .lindy-domain-switch {
     font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-        "Segoe UI", Roboto;
-    font-size: medium;
-    font-weight: 500;
-    text-align: right;
-    color: #374151;
-    cursor: auto;
-    padding: 15px;
-    margin: 0;
+        "Segoe UI", Roboto !important;
+    font-size: medium !important;
+    font-weight: 500 !important;
+    text-align: right !important;
+    color: #374151 !important;
+    cursor: auto !important;
+    padding: 15px !important;
+    margin: 0 !important;
+
+    display: flex !important;
+    justify-content: flex-end !important;
+    gap: 5px !important;
 }
 
 /* switch adapted from https://codepen.io/sajran/pen/dMKvpb */
-.lindy-domain-switch > .switch {
-    display: inline-block;
-    position: relative;
-    margin: 0 0 10px 2px;
+.lindy-domain-switch > .lindy-switch {
+    display: inline-block !important;
+    position: relative !important;
 
     --bg-disabled-color: rgba(0, 0, 0, 0.26);
     --bg-enabled-color: rgba(63, 81, 181, 0.5);
     --lever-disabled-color: #fff;
     --lever-enabled-color: #3f51b5;
 }
-.lindy-domain-switch > .switch > .switch__input {
-    position: absolute;
+.lindy-domain-switch > .lindy-switch > input {
+    position: absolute !important;
     top: 0;
     left: 0;
     width: 36px;
@@ -40,15 +41,15 @@
     z-index: 0;
 }
 /* Unchecked */
-.lindy-domain-switch > .switch > .switch__label {
+.lindy-domain-switch > .lindy-switch > label {
     display: block;
     padding: 0 0 0 35px;
     cursor: pointer;
 }
-.lindy-domain-switch > .switch > .switch__label::before {
+.lindy-domain-switch > .lindy-switch > label::before {
     content: "";
     position: absolute;
-    top: -2px;
+    top: 3px;
     left: 0;
     width: 36px;
     height: 14px;
@@ -57,10 +58,10 @@
     z-index: 1;
     transition: background-color 0.28s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.lindy-domain-switch > .switch > .switch__label::after {
+.lindy-domain-switch > .lindy-switch > label::after {
     content: "";
     position: absolute;
-    top: -5px;
+    top: 0px;
     left: 0;
     width: 20px;
     height: 20px;
@@ -73,16 +74,10 @@
     transition-property: left, background-color;
 }
 /* Checked */
-.lindy-domain-switch
-    > .switch
-    > .switch__input:checked
-    + .switch__label::before {
+.lindy-domain-switch > .switch > input:checked + label::before {
     background-color: var(--bg-enabled-color);
 }
-.lindy-domain-switch
-    > .switch
-    > .switch__input:checked
-    + .switch__label::after {
+.lindy-domain-switch > .switch > input:checked + label::after {
     left: 16px;
     background-color: var(--lever-enabled-color);
 }
@@ -93,8 +88,8 @@
         background: transparent;
     }
 }
-@media (max-width: 200px) {
-    .lindy-domain-switch > .domain {
+@media (max-width: 1200px) {
+    .lindy-domain-switch > span > #domain {
         display: none;
     }
 }
