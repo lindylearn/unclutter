@@ -90,8 +90,7 @@
 
 @media (prefers-color-scheme: dark) {
     .lindy-domain-switch {
-        color: #d1d5db;
-        background: transparent;
+        color: #d1d5db !important;
     }
 }
 @media (max-width: 1200px) {
