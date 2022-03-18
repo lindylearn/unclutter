@@ -25,9 +25,12 @@ export function insertBackground() {
     }
     background.style.setProperty("background", backgroundColor, "important");
 
+    background.style.setProperty("height", "100%", "important");
+
     // body '100%' may not refer to full height of children (e.g. https://torontolife.com/memoir/the-horrifying-truth-about-my-biological-father/)
+    // so also se min-height based on children scollHeight
     background.style.setProperty(
-        "height",
+        "min-height",
         `${document.body.scrollHeight}px`,
         "important"
     );
@@ -52,6 +55,10 @@ function _updateBackgroundHeight() {
 
     const background = document.getElementById("lindy-body-background");
     if (background) {
-        background.style.setProperty("height", `${bodyHeigth}px`, "important");
+        background.style.setProperty(
+            "min-height",
+            `${bodyHeigth}px`,
+            "important"
+        );
     }
 }
