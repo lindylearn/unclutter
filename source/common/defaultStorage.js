@@ -13,9 +13,13 @@ export const defaultExcludedDomains = [
     "github.com",
     "stackoverflow.com",
     "developer.mozilla.org",
+    "css-tricks.com",
     "twitch.tv",
     "amazon.de",
     "tailwindcss.com",
     "consent.yahoo.com",
+    "messenger.com",
+    "facebook.com",
+    "scanofthemonth.com",
 ];
 export const defaultAutomaticallyEnabled = true;

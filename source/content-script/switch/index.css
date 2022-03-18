@@ -74,10 +74,10 @@
     transition-property: left, background-color;
 }
 /* Checked */
-.lindy-domain-switch > .switch > input:checked + label::before {
+.lindy-domain-switch > .lindy-switch > input:checked + label::before {
     background-color: var(--bg-enabled-color);
 }
-.lindy-domain-switch > .switch > input:checked + label::after {
+.lindy-domain-switch > .lindy-switch > input:checked + label::after {
     left: 16px;
     background-color: var(--lever-enabled-color);
 }

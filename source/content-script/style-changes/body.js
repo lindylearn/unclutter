@@ -60,7 +60,10 @@ function _modifyBodyStyle() {
 export function unModifyBodyStyle() {
     styleObserver.disconnect();
 
-    document.body.style.setProperty("margin", "unset");
-    document.body.style.setProperty("padding", "unset");
-    document.body.style.setProperty("height", "unset");
+    document.body.style.removeProperty("display");
+    document.body.style.removeProperty("width");
+    document.body.style.removeProperty("height");
+    document.body.style.removeProperty("margin");
+    document.body.style.removeProperty("padding");
+    document.body.style.removeProperty("transition");
 }
