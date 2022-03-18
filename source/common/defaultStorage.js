@@ -34,5 +34,12 @@ export const defaultExcludedDomains = [
     "tiktok.com",
     "discord.com",
     "microsoft.com",
+    "imgur.com",
+    "i.imgur.com",
+    "producthunt.com",
+    "awwwards.com",
+    "figma.com",
+    "Unsplash.com",
+    "pudding.cool",
 ];
 export const defaultAutomaticallyEnabled = true;

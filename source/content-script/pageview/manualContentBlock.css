@@ -133,7 +133,7 @@ main {
 .widget-area {
     display: none !important;
 }
-body.post-template-default {
+body.post-template-default.s1-collapse.s2-collapse {
     padding: 0 !important;
 }
 #pjgm-wrap {
@@ -156,6 +156,14 @@ section[name="articleBody"] ~ div {
 /* https://sive.rs/itunes */
 body#article {
     padding: 1px 20px;
+}
+
+/* https://www.nytimes.com/interactive/2022/03/18/upshot/ukraine-aid-details.html */
+#site-content {
+    position: relative !important;
+}
+.g-body {
+    max-width: 800px !important;
 }
 
 /* https://www.theguardian.com/global-development/2022/mar/09/ukraine-urged-to-take-humane-approach-as-men-try-to-flee-war */
@@ -212,6 +220,9 @@ body.mediawiki {
 }
 .story-sidebar {
     display: none !important;
+}
+body.blog-us.sticky_support {
+    padding: 0 !important;
 }
 
 /* https://www.independent.co.uk/news/turkish-far-right-on-the-rise-1088461.html */
@@ -371,4 +382,149 @@ main#content {
 /* https://developer.chrome.com/docs/extensions/mv3/migrating_to_service_workers/ */
 .scaffold {
     height: 100% !important;
+}
+
+/* https://www.businessinsider.com/zelenskyy-aide-biden-does-more-for-ukraine-than-his-predecessors-2022-3?international=true&r=US&IR=T */
+.with-rail-video-ad.with-rail-video-ad {
+    display: block !important;
+}
+section.post-content {
+    width: 100% !important;
+}
+.in-post-sticky,
+.inline-newsletter-signup,
+.live-updates-module-full-width,
+.markets-post-border {
+    display: none !important;
+}
+#infinite_scroll_content > .content-section ~ .content-section {
+    display: none !important;
+}
+
+/* https://www.wsj.com/articles/ivermectin-didnt-reduce-covid-19-hospitalizations-in-largest-trial-to-date-11647601200 */
+.sharedStyles__BelowTop-sc-1ext442-1,
+.MarketDataStrip__MdSector-sc-15rifxt-0 {
+    display: none !important;
+}
+
+#cx-what-to-read-next,
+.Box-sc-m4230u-0,
+.Box-sc-m4230u-0 ~ * {
+    display: none !important;
+}
+
+/* https://www.aljazeera.com/news/2022/3/18/personal-ties-that-bind-how-xi-putin-relationship-has-evolved */
+.header-is-sticky,
+.more-on,
+#article-newsletter-slot {
+    display: none !important;
+}
+
+/* https://techcrunch.com/2022/03/18/porsche-is-turning-its-mid-engine-718-roadster-into-an-ev-by-2025/ */
+.feature-island__posts ~ *,
+.article-container ~ *,
+.newsletter-signup-block {
+    display: none !important;
+}
+article.article-container.article--post {
+    padding: 30px 0 !important;
+    border: none !important;
+}
+.breakout {
+    display: none !important;
+}
+
+/* https://aeon.co/essays/against-han-or-why-koreans-are-not-defined-by-sadness */
+.NewsletterPopup__NewsletterPopupWrapper-sc-1giz7ld-1,
+.article__MaxWidthContainer-sc-br4ey4-0 ~ div {
+    display: none !important;
+}
+.article__Main-sc-br4ey4-5 {
+    grid-template-columns: none !important;
+}
+
+/* https://a16z.com/2022/03/15/investing-in-rutter/ */
+.bio-lp-newsletter {
+    display: none !important;
+}
+
+/* https://www.ycombinator.com/blog/2021-yc-year-in-review */
+.ycdc2.blog_page {
+    background-color: white !important;
+}
+
+/* https://www.msn.com/nl-nl/nieuws/buitenland/nog-geen-nieuwe-afspraken-humanitaire-corridors-veilige-evacuatie-marioepol-onmogelijk/ar-AAV6KLK?li=BBoPEwG */
+.filmstripouter,
+#maincontent ~ div,
+.sameoab_ad_container {
+    display: none !important;
+}
+
+/* https://www.washingtonpost.com/dc-md-va/2022/03/18/dc-covid-inequality-maryland-virginia/ */
+.hide-for-print {
+    display: none !important;
+}
+.bc-secondary {
+    display: none !important;
+}
+
+/* https://www.forbes.com/sites/sergeiklebnikov/2022/03/17/buffett-buys-more-occidental-shares-heres-how-his-top-holdings-have-fared-in-this-years-brutal-market/?sh=4b23e9595fc9 */
+.right-rail,
+.vestpocket,
+.cnx-in-desktop {
+    display: none !important;
+}
+article ~ article {
+    display: none !important;
+}
+.main-content--desktop-article {
+    background-color: white !important;
+}
+
+/* https://increment.com/planning/reframing-tech-debt/ */
+.ArticlePage {
+    background-color: white !important;
+}
+.ContinueReading {
+    display: none !important;
+}
+
+/* https://www.theverge.com/2022/3/16/22981230/amazonians-united-warehouse-walkouts-3-raise-breaks */
+.entry_key_unison_standard {
+    padding: 0 !important;
+}
+
+/* https://www.fastcompany.com/90730789/cyber-partisans-hacking-belarus-putin-ukraine-invasion */
+.post__article-top-ad-wrapper,
+.finite-scroll-experience,
+.recirc__container {
+    display: none !important;
+}
+body.fastcompany {
+    padding-top: 20px !important;
+}
+.post__body > .post__container {
+    justify-content: flex-start !important;
+}
+.post__container > .post__content {
+    flex: 1 !important;
+    max-width: 100% !important;
+}
+
+/* https://www.bloomberg.com/news/articles/2022-02-28/why-russian-oligarchs-can-t-escape-the-twitter-teen-who-tracked-elon-musk-s-jet */
+.news-wallet__wrapper {
+    display: none !important;
+}
+.transporter-item ~ .transporter-item {
+    display: none !important;
+}
+
+/* https://finance.yahoo.com/news/goldman-sachs-ceo-demanded-employees-210608499.html */
+#module-article > .caas.caas-cc.enableAdSlotsOneSlot {
+    display: block !important;
+}
+.wafer-rapid-module,
+.xray-side-rail,
+#HeadlineSection {
+    display: none !important;
 }

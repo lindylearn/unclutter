@@ -44,7 +44,7 @@ const blockedWords = [
     "masthead",
     // "banner",
     "menu",
-    "nav",
+    // "nav",
     // "sidebar",
     "footer",
     "comments",
@@ -67,6 +67,7 @@ const blockedWords = [
     "adslot",
     "advert",
     "video",
+    "newslettersignup",
 ];
 const blockedClasses = [
     ".ad",
@@ -82,4 +83,7 @@ const blockedClasses = [
     ".breaker-ad",
     ".pbs__player",
     ".dotcom-ad",
+    ".subnav-ad-layout",
+    "#marquee-ad",
+    ".ad-unit",
 ];
