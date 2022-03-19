@@ -7,6 +7,7 @@ export const defaultExcludedDomains = [
     "calendar.google.com",
     "drive.google.com",
     "mail.google.com",
+    "news.google.com",
     "mail.protonmail.com",
     "youtube.com",
     "news.ycombinator.com",
