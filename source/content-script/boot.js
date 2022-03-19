@@ -8,7 +8,7 @@ import { patchStylesheetsOnceCreated } from "./pageview/patchStylesheets";
 async function boot() {
     // check if extension should be enabled on this page
     const url = new URL(window.location.href);
-    if (url.pathname === "/") {
+    if (url.pathname === "/" || url.pathname.endsWith(".pdf")) {
         return;
     }
     const domain = url.hostname.replace("www.", "");
