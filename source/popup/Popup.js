@@ -102,7 +102,7 @@ function OptionsPage({}) {
 }
 export default OptionsPage;
 
-function ManualList({ status, list, maxCount = 4 }) {
+function ManualList({ status, list, maxCount = 3 }) {
     return (
         <div className="text-base">
             {status} on {list.length} domain
