@@ -372,6 +372,15 @@ html.flexbox.flexboxlegacy > body {
     max-width: none !important;
 }
 
+/* https://www.bbc.com/news */
+.gs-c-promo-heading,
+.gs-c-promo {
+    display: block !important;
+}
+.nw-c-leaderboard-ad {
+    display: none !important;
+}
+
 /* https://edition.cnn.com/2022/03/16/media/disney-walkout-florida-bill/index.html */
 .ticker-ribbon,
 .el__embedded,

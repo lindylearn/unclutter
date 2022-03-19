@@ -52,7 +52,7 @@ const blockedWords = [
     "recommendation",
     "social",
     "popular",
-    "promo",
+    // "promo",
     "sponsored",
     // "overlay",
     "login",
