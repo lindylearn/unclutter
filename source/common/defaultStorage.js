@@ -4,6 +4,7 @@ export const defaultExcludedDomains = [
     "bing.com",
     "duckduckgo.com",
     "keep.google.com",
+    "docs.google.com",
     "calendar.google.com",
     "drive.google.com",
     "mail.google.com",
@@ -43,4 +44,4 @@ export const defaultExcludedDomains = [
     "Unsplash.com",
     "pudding.cool",
 ];
-export const defaultAutomaticallyEnabled = true;
+export const defaultAutomaticallyEnabled = false;
