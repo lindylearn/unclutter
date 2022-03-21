@@ -1,13 +1,48 @@
-.lindy-page-settings {
+.lindy-page-settings-topright {
+    position: fixed !important;
+    top: 0;
+    right: 0;
+    z-index: 300;
+    padding: 10px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 5px;
+}
+
+.lindy-page-settings-pageadjacent {
     position: absolute !important;
-    top: 10px;
+    top: 15px;
     left: calc((100vw - 900px) / 2 + 900px);
     z-index: 300;
     /* padding: 10px; */
 
     display: flex;
     flex-direction: column;
+    align-items: flex-end;
     gap: 5px;
+}
+
+.lindy-domain-switch-icon {
+    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", Roboto !important;
+    font-size: 15px !important;
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    color: #6b7280 !important;
+
+    display: flex;
+}
+
+.lindy-domain-switch-short {
+    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", Roboto !important;
+    font-size: 15px !important;
+    color: #22c55e !important;
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    cursor: pointer !important;
 }
 
 .lindy-domain-switch {
@@ -25,16 +60,26 @@
     display: flex !important;
     justify-content: flex-end !important;
     gap: 5px !important;
+
+    /* position: absolute !important;
+    top: 10px;
+    left: calc((100vw - 900px) / 2 + 900px);
+    padding: 10px; */
 }
 
-.lindy-page-settings > img,
-.lindy-page-settings > a > img {
+#lindy-settings-icon,
+#lindy-bug-icon,
+#lindy-domain-switch-icon {
     width: 20px;
+    height: 20px;
     padding: 3px;
     cursor: pointer;
+    box-sizing: content-box !important;
+    color: #6b7280 !important;
 }
-.lindy-page-settings > img:hover,
-.lindy-page-settings > a > img:hover {
+#lindy-settings-icon:hover,
+#lindy-bug-icon:hover,
+#lindy-domain-switch-icon:hover {
     filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.05));
 }
 

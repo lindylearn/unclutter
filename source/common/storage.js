@@ -27,6 +27,22 @@ export async function getManualDomainLists() {
 }
 
 export async function shouldEnableForDomain(domain) {
+    const userSetting = await getUserSettingForDomain(domain);
+    if (userSetting === "allow") {
+        return true;
+    }
+    if (userSetting === "deny") {
+        return false;
+    }
+    if (defaultExcludedDomains.includes(domain)) {
+        return false;
+    }
+
+    return config["automatically-enabled"] !== undefined
+        ? config["automatically-enabled"]
+        : defaultAutomaticallyEnabled;
+}
+export async function getUserSettingForDomain(domain) {
     const config = await browser.storage.sync.get([
         "domain-allowlist",
         "domain-denylist",
@@ -34,18 +50,14 @@ export async function shouldEnableForDomain(domain) {
     ]);
 
     if (config["domain-allowlist"]?.[domain]) {
-        return true;
+        return "allow";
     }
     if (config["domain-denylist"]?.[domain]) {
-        return false;
+        return "deny";
     }
-    if (defaultExcludedDomains.includes(domain)) {
-        return false;
-    }
-    return config["automatically-enabled"] !== undefined
-        ? config["automatically-enabled"]
-        : defaultAutomaticallyEnabled;
+    return null;
 }
+
 export async function setAutomaticStatusForDomain(domain, status) {
     const config = await browser.storage.sync.get([
         "domain-allowlist",

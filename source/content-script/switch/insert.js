@@ -1,7 +1,7 @@
 import browser from "../../common/polyfill";
 import {
+    getUserSettingForDomain,
     setAutomaticStatusForDomain,
-    shouldEnableForDomain,
 } from "../../common/storage";
 import { togglePageView } from "../enhance";
 import {
@@ -26,13 +26,6 @@ function insertPageSettings() {
     )}`;
 
     const html = `
-        <div class="lindy-domain-switch">
-            <div class="lindy-switch">
-                <input type="checkbox" id="lindy-domain-switch-input"/>
-                <label for="lindy-domain-switch-input"></label>
-            </div>
-            <span>Unclutter <span id="domain">${domain}</span></span>
-        </div>
         <img id="lindy-settings-icon" src="${browser.runtime.getURL(
             "assets/icons/settings.svg"
         )}"></img>
@@ -42,34 +35,64 @@ function insertPageSettings() {
             )}"></img>
         </a>
     `;
-
     const container = document.createElement("div");
-    container.className = `${overrideClassname} lindy-page-settings`;
+    container.className = `${overrideClassname} lindy-page-settings-topright`;
     container.innerHTML = html;
     document.documentElement.appendChild(container);
+
+    const html2 = `
+        <div class="lindy-domain-switch-icon">
+            <img id="lindy-domain-switch-icon"></img>
+        </div>
+    `;
+    const container2 = document.createElement("div");
+    container2.className = `${overrideClassname} lindy-page-settings-pageadjacent`;
+    container2.innerHTML = html2;
+    document.documentElement.appendChild(container2);
 
     createStylesheetLink(
         browser.runtime.getURL("content-script/switch/index.css")
     );
 
-    // _setupDomainToggleHandler(domain);
+    _setupDomainToggleState(domain);
     _setupLinkHandlers();
 }
 
-async function _setupDomainToggleHandler(currentDomain) {
-    const switch1 = document.getElementById("lindy-domain-switch-input");
-    switch1.checked = await shouldEnableForDomain(currentDomain);
+async function _setupDomainToggleState(currentDomain) {
+    const svg = document.getElementById("lindy-domain-switch-icon");
+    let userSetting = await getUserSettingForDomain(currentDomain);
+    svg.src = _getDomainToggleIcon(userSetting);
 
-    switch1.onclick = (e) => {
-        const newState = e.target.checked;
-        setAutomaticStatusForDomain(currentDomain, newState);
+    svg.onclick = (e) => {
+        userSetting = _nextUserSetting(userSetting);
+        svg.src = _getDomainToggleIcon(userSetting);
+        setAutomaticStatusForDomain(currentDomain, userSetting === "allow");
 
         // convenience: also disable pageview if automatic status disabled
-        if (!newState) {
+        if (userSetting === "deny") {
             // ideally send a message here -- but can't access current tab id in this context
-            togglePageView();
+            // leave some time for the user to see the new state icon
+            setTimeout(togglePageView, 100);
         }
     };
+}
+function _nextUserSetting(userSetting) {
+    if (userSetting === "allow") {
+        return "deny";
+    } else if (userSetting === "deny") {
+        return "allow";
+    } else {
+        return "deny";
+    }
+}
+function _getDomainToggleIcon(userSetting) {
+    if (userSetting === "allow") {
+        return browser.runtime.getURL("assets/icons/bolt.svg");
+    } else if (userSetting === "deny") {
+        return browser.runtime.getURL("assets/icons/bolt-slash.svg");
+    } else {
+        return browser.runtime.getURL("assets/icons/bolt-auto.svg");
+    }
 }
 
 export function _setupLinkHandlers() {
