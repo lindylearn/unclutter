@@ -14,17 +14,6 @@ export function modifyBodyStyle() {
 }
 
 function _modifyBodyStyle() {
-    // set start properties for animation immediately
-    document.body.style.width = "100%";
-    // document.body.style.margin = "0";
-    // document.body.style.maxWidth = "none";
-
-    // set animation style inline to have out transition
-    // easeOutExpo from easings.net
-    document.body.style.transition = `margin-top 0.15s cubic-bezier(0.16, 1, 0.3, 1),
-	margin-left 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-	width 0.3s cubic-bezier(0.16, 1, 0.3, 1)`;
-
     const bodyStyle = window.getComputedStyle(document.body);
 
     // add miniscule top padding if not already present, to prevent top margin collapse
@@ -63,6 +52,7 @@ export function unModifyBodyStyle() {
 
     document.body.style.removeProperty("display");
     document.body.style.removeProperty("width");
+    document.body.style.removeProperty("max-width");
     document.body.style.removeProperty("height");
     document.body.style.removeProperty("margin");
     document.body.style.removeProperty("padding");
