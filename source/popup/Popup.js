@@ -7,20 +7,6 @@ import {
 import Switch from "./Switch";
 
 function OptionsPage({}) {
-    // const [currentTab, setCurrentTab] = useState(null);
-    // const [currentDomain, setCurrentDomain] = useState(null);
-    // useEffect(async () => {
-    //     const tabs = await browser.tabs.query({
-    //         active: true,
-    //         currentWindow: true,
-    //     });
-    //     setCurrentTab(tabs[0]);
-
-    //     const url = new URL(tabs[0]?.url);
-    //     const hostname = url.hostname.replace("www.", "");
-    //     setCurrentDomain(hostname);
-    // }, []);
-
     const [automatic, setAutomatic] = useState(null);
     useEffect(async () => {
         const state = await getAutomaticallyEnabled();
