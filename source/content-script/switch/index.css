@@ -32,13 +32,13 @@
     padding: 3px;
     cursor: pointer;
     box-sizing: content-box !important;
-    color: #6b7280 !important;
+    color: #9ca3af !important;
     overflow: visible;
 }
 #lindy-settings-icon:hover,
 #lindy-bug-icon:hover,
 #lindy-domain-switch-icon:hover {
-    color: #374151 !important;
+    color: #4b5563 !important;
     filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.05));
 }
 
@@ -60,16 +60,17 @@
     right: calc(100% + 6px);
     padding: 5px 7px;
 
-    background: #4b5563;
-    border-radius: 5px;
-    color: #d1d5db;
-    white-space: nowrap;
-
     content: attr(data-title);
     font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
         "Segoe UI", Roboto !important;
     font-size: 12px;
     font-weight: 600;
+
+    background: white;
+    border-radius: 5px;
+    color: #4b5563;
+    white-space: nowrap;
+    filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.05));
 }
 .lindy-tooltip:after {
     /* arrow */
@@ -81,7 +82,7 @@
 
     border-top: 6px solid transparent;
     border-bottom: 6px solid transparent;
-    border-left: 6px solid #4b5563;
+    border-left: 6px solid white;
 }
 
 .lindy-tooltip.lindy-fade:after,
@@ -112,10 +113,25 @@
 }
 
 @media (prefers-color-scheme: dark) {
+    #lindy-settings-icon,
+    #lindy-bug-icon,
+    #lindy-domain-switch-icon {
+        color: #6b7280 !important;
+    }
+
     #lindy-settings-icon:hover,
     #lindy-bug-icon:hover,
     #lindy-domain-switch-icon:hover {
         color: #d1d5db !important;
-        filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.05));
+        filter: none;
+    }
+
+    .lindy-tooltip:before {
+        background: #4b5563;
+        color: #d1d5db;
+        filter: none;
+    }
+    .lindy-tooltip:after {
+        border-left: 6px solid #4b5563;
     }
 }
