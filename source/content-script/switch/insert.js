@@ -19,6 +19,12 @@ function insertPageSettings() {
     const url = new URL(window.location.href);
     const domain = url.hostname.replace("www.", "");
 
+    const githubLink = `https://github.com/lindylearn/unclutter/issues/new?labels=broken-website&title=${encodeURIComponent(
+        `Article doesn't show correctly on ${domain}`
+    )}&body=${encodeURIComponent(
+        `The following article doesn't appear correctly in Unclutter. Please take a look!\n\n${window.location.href}`
+    )}`;
+
     const html = `
         <div class="lindy-domain-switch">
             <div class="lindy-switch">
@@ -30,9 +36,11 @@ function insertPageSettings() {
         <img id="lindy-settings-icon" src="${browser.runtime.getURL(
             "assets/icons/settings.svg"
         )}"></img>
-        <img id="lindy-bug-icon" src="${browser.runtime.getURL(
-            "assets/icons/bug.svg"
-        )}"></img>
+        <a href="${githubLink}" target="_blank" rel="noopener noreferrer">
+            <img id="lindy-bug-icon" src="${browser.runtime.getURL(
+                "assets/icons/bug.svg"
+            )}"></img>
+        </a>
     `;
 
     const container = document.createElement("div");
@@ -67,9 +75,5 @@ async function _setupDomainToggleHandler(currentDomain) {
 export function _setupLinkHandlers() {
     const settings = document.getElementById("lindy-settings-icon");
     settings.onclick = () =>
-        chrome.runtime.sendMessage({ event: "openOptionsPage" });
-
-    const bug = document.getElementById("lindy-bug-icon");
-    bug.onclick = () =>
         chrome.runtime.sendMessage({ event: "openOptionsPage" });
 }
