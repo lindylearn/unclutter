@@ -91,8 +91,7 @@ function DomainList({}) {
     return (
         <>
             <p className="">
-                Above global settings are overriden for {overrideList?.length}{" "}
-                domain{overrideList?.length !== 1 ? "s" : ""}:
+                Override the global settings for specific domains:
             </p>
             <ul className="ml-10 pt-2 flex flex-col gap-1">
                 {overrideList?.map(({ domain, status }) => (
@@ -116,10 +115,10 @@ function DomainList({}) {
                             }
                         >
                             <option value="allow" className="bg-white">
-                                Enabled
+                                Always enabled
                             </option>
                             <option value="deny" className="bg-white">
-                                Disabled
+                                Always disabled
                             </option>
                         </select>
                     </li>
