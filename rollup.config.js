@@ -5,6 +5,7 @@ import replace from "@rollup/plugin-replace";
 import fs from "fs";
 import glob from "glob";
 import path from "path";
+import postcss from "rollup-plugin-postcss";
 
 // bundle content scripts
 const contentScriptConfigs = [
@@ -56,6 +57,7 @@ const reactConfigs = [
     plugins: [
         nodeResolve({ browser: true }),
         commonjs({ include: /node_modules/ }),
+        postcss(),
         babel({ babelHelpers: "bundled", presets: ["@babel/preset-react"] }),
         moveVirtualFolder,
         replace({

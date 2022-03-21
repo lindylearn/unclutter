@@ -27,21 +27,9 @@ function OptionsPage({}) {
     }, []);
 
     return (
-        <div
-            className="flex flex-col gap-3"
-            style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "15px",
-            }}
-        >
-            <div
-                className="text-base flex"
-                style={{ fontSize: "medium", display: "flex" }}
-            >
-                <div className="mr-3" style={{ marginRight: "5px" }}>
-                    Automatically unclutter articles
-                </div>{" "}
+        <div className="flex flex-col gap-3">
+            <div className="text-base flex">
+                <div className="mr-3">Automatically unclutter articles</div>{" "}
                 <Switch
                     id="automatic"
                     state={automatic}
@@ -54,21 +42,13 @@ function OptionsPage({}) {
             />
             <ManualList status="Disabled" list={domainLists?.deny || []} />
 
-            <div
-                className="text-xs text-right text-gray-400"
-                style={{
-                    fontSize: "small",
-                    color: "#9ca3af",
-                    textAlign: "right",
-                }}
-            >
+            <div className="text-xs text-right text-gray-400">
                 Please report issues{" "}
                 <a
                     href="https://github.com/lindylearn/reader-extension"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="underline"
-                    style={{ color: "#9ca3af" }}
                 >
                     on GitHub
                 </a>
@@ -91,12 +71,7 @@ function ManualList({ status, list, maxCount = 3 }) {
                     <div>
                         {list.slice(0, maxCount).map((domain, i) => (
                             <>
-                                <span
-                                    className="font-mono"
-                                    style={{ fontFamily: "monospace" }}
-                                >
-                                    {domain}
-                                </span>
+                                <span className="font-mono">{domain}</span>
                                 {i < Math.min(list.length, maxCount) - 1
                                     ? ", "
                                     : ""}
