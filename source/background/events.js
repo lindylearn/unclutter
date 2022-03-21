@@ -2,7 +2,7 @@ import browser from "../common/polyfill";
 import fetchAndRewriteCss from "./rewriteCss";
 
 // toggle page view on extension icon click
-browser.action.onClicked.addListener(async (tab) => {
+(chrome.action || browser.browserAction).onClicked.addListener(async (tab) => {
     const didEnable = await enableInTab(tab.id);
     if (!didEnable) {
         // already active, so disable
