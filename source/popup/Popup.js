@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from "react";
+import { automaticallyEnabledFeatureFlag } from "../common/defaultStorage";
 import {
-    getAutomaticallyEnabled,
+    getFeatureFlag,
     getManualDomainLists,
-    setAutomaticallyEnabled,
+    setFeatureFlag,
 } from "../common/storage";
 import Switch from "./Switch";
 
 function OptionsPage({}) {
     const [automatic, setAutomatic] = useState(null);
     useEffect(async () => {
-        const state = await getAutomaticallyEnabled();
+        const state = await getFeatureFlag(automaticallyEnabledFeatureFlag);
         setAutomatic(state);
     }, []);
     function toggleAutomaticLocalFirst() {
         setAutomatic(!automatic);
-        setAutomaticallyEnabled(!automatic);
+        setFeatureFlag(automaticallyEnabledFeatureFlag, !automatic);
     }
 
     const [domainLists, setDomainLists] = useState(null);

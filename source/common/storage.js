@@ -1,18 +1,16 @@
 import {
-    defaultAutomaticallyEnabled,
+    automaticallyEnabledFeatureFlag,
     defaultExcludedDomains,
+    defaultFeatureFlags,
 } from "./defaultStorage";
 import browser from "./polyfill";
 
-export async function getAutomaticallyEnabled() {
-    const config = await browser.storage.sync.get(["automatically-enabled"]);
-    return config["automatically-enabled"] !== undefined
-        ? config["automatically-enabled"]
-        : defaultAutomaticallyEnabled;
+export async function getFeatureFlag(key) {
+    const config = await browser.storage.sync.get([key]);
+    return config[key] !== undefined ? config[key] : defaultFeatureFlags[key];
 }
-
-export async function setAutomaticallyEnabled(status) {
-    await browser.storage.sync.set({ "automatically-enabled": status });
+export async function setFeatureFlag(key, status) {
+    await browser.storage.sync.set({ [key]: status });
 }
 
 export async function getManualDomainLists() {
@@ -38,10 +36,7 @@ export async function shouldEnableForDomain(domain) {
         return false;
     }
 
-    const config = await browser.storage.sync.get(["automatically-enabled"]);
-    return config["automatically-enabled"] !== undefined
-        ? config["automatically-enabled"]
-        : defaultAutomaticallyEnabled;
+    return getFeatureFlag(automaticallyEnabledFeatureFlag);
 }
 export async function getUserSettingForDomain(domain) {
     const config = await browser.storage.sync.get([

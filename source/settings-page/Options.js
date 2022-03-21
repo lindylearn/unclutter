@@ -1,34 +1,22 @@
 import React from "react";
 import {
-    getAutomaticallyEnabled,
+    allowlistDomainOnManualActivationFeatureFlag,
+    automaticallyEnabledFeatureFlag,
+    collectAnonymousMetricsFeatureFlag,
+} from "../common/defaultStorage";
+import {
     getManualDomainLists,
-    setAutomaticallyEnabled,
     setAutomaticStatusForDomain,
 } from "../common/storage";
-import Switch from "./Switch";
-
-// there's a weird bundling error on firefox when importing React, {useState}
-// so use React.useState
+import FeatureFlagSwitch from "./FeatureFlagSwitch";
 
 function OptionsPage({}) {
-    const [automatic, setAutomatic] = React.useState(null);
-    React.useEffect(async () => {
-        const state = await getAutomaticallyEnabled();
-        setAutomatic(state);
-    }, []);
-    function toggleAutomaticLocalFirst() {
-        setAutomatic(!automatic);
-        setAutomaticallyEnabled(!automatic);
-    }
-
     return (
         <div className="flex flex-col gap-3">
             <div>
                 <h2 className="text-lg font-semibold mb-1">Global settings</h2>
-                <Switch
-                    id="automatic"
-                    state={automatic}
-                    toggle={toggleAutomaticLocalFirst}
+                <FeatureFlagSwitch
+                    featureFlagKey={automaticallyEnabledFeatureFlag}
                 >
                     Automatically unclutter pages{" "}
                     <a
@@ -39,20 +27,20 @@ function OptionsPage({}) {
                     >
                         that look like articles
                     </a>
-                </Switch>
+                </FeatureFlagSwitch>
             </div>
             <div>
                 <h2 className="text-lg font-semibold mb-1">
                     Website-specific settings
                 </h2>
                 <DomainList />
-                <Switch
-                    id="automatic"
-                    // state={automatic}
-                    // toggle={toggleAutomaticLocalFirst}
+                <FeatureFlagSwitch
+                    featureFlagKey={
+                        allowlistDomainOnManualActivationFeatureFlag
+                    }
                 >
                     Add the current domain when clicking the extension icon
-                </Switch>
+                </FeatureFlagSwitch>
                 <p className="mt-1">
                     You can also change website-specific settings by clicking
                     the "bolt" icon next to each article.
@@ -60,10 +48,8 @@ function OptionsPage({}) {
             </div>
             <div>
                 <h2 className="text-lg font-bold mb-1">Other</h2>
-                <Switch
-                    id="metrics"
-                    // state={automatic}
-                    // toggle={toggleAutomaticLocalFirst}
+                <FeatureFlagSwitch
+                    featureFlagKey={collectAnonymousMetricsFeatureFlag}
                 >
                     Collect anonymous{" "}
                     <a
@@ -74,7 +60,7 @@ function OptionsPage({}) {
                     >
                         usage metrics
                     </a>
-                </Switch>
+                </FeatureFlagSwitch>
             </div>
 
             <div className="text-right text-gray-400 mt-5">
