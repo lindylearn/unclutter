@@ -19,7 +19,6 @@ export async function getManualDomainLists() {
     const config = await browser.storage.sync.get([
         "domain-allowlist",
         "domain-denylist",
-        "automatically-enabled",
     ]);
     return {
         allow: Object.keys(config["domain-allowlist"] || {}),
