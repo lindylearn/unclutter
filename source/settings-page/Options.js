@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
     getAutomaticallyEnabled,
     getManualDomainLists,
@@ -6,9 +6,12 @@ import {
 } from "../common/storage";
 import Switch from "./Switch";
 
+// there's a weird bundling error on firefox when importing React, {useState}
+// so use React.useState
+
 function OptionsPage({}) {
-    const [automatic, setAutomatic] = useState(null);
-    useEffect(async () => {
+    const [automatic, setAutomatic] = React.useState(null);
+    React.useEffect(async () => {
         const state = await getAutomaticallyEnabled();
         setAutomatic(state);
     }, []);
@@ -17,8 +20,8 @@ function OptionsPage({}) {
         setAutomaticallyEnabled(!automatic);
     }
 
-    const [domainLists, setDomainLists] = useState(null);
-    useEffect(async () => {
+    const [domainLists, setDomainLists] = React.useState(null);
+    React.useEffect(async () => {
         const lists = await getManualDomainLists();
         setDomainLists(lists);
     }, []);

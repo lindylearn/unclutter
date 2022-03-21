@@ -8,7 +8,7 @@
     },
     "permissions": ["storage", "activeTab", "<all_urls>"],
     "options_ui": {
-        "page": "options/options.html"
+        "page": "settings-page/index.html"
     },
 
     "manifest_version": 2,
@@ -18,8 +18,7 @@
         }
     },
     "browser_action": {
-        "default_title": "Lindy Reading View",
-        "default_popup": "popup/index.html"
+        "default_title": "Unclutter current page"
     },
     "background": {
         "page": "background/firefox-page.html"
