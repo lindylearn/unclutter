@@ -15,7 +15,10 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
     } else if (message.event === "rewriteCss") {
         fetchAndRewriteCss(message.params).then(sendResponse);
         return true;
+    } else if (message.event === "openOptionsPage") {
+        chrome.runtime.openOptionsPage();
     }
+
     return false;
 });
 

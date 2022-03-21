@@ -1,24 +1,33 @@
-.lindy-domain-switch {
+.lindy-page-settings {
     position: absolute !important;
-    top: 0;
-    right: 0;
+    top: 10px;
+    left: calc((100vw - 900px) / 2 + 900px);
     z-index: 300;
+    padding: 10px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .lindy-domain-switch {
     font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
         "Segoe UI", Roboto !important;
     font-size: medium !important;
-    font-weight: 500 !important;
+    font-weight: 600 !important;
     text-align: right !important;
-    color: #1f2937 !important;
+    color: #374151 !important;
     cursor: auto !important;
-    padding: 15px !important;
     margin: 0 !important;
 
     display: flex !important;
     justify-content: flex-end !important;
     gap: 5px !important;
+}
+
+.lindy-page-settings > img {
+    width: 22px;
+    cursor: pointer;
 }
 
 /* switch adapted from https://codepen.io/sajran/pen/dMKvpb */
@@ -36,17 +45,16 @@
     border: none !important;
     top: 0;
     left: 0;
-    width: 36px;
-    height: 20px;
     opacity: 0;
     z-index: 0;
 }
-/* Unchecked */
+/* text */
 .lindy-domain-switch > .lindy-switch > label {
     display: block;
     padding: 0 0 0 35px;
     cursor: pointer;
 }
+/* background bar */
 .lindy-domain-switch > .lindy-switch > label::before {
     content: "";
     position: absolute;
@@ -61,6 +69,7 @@
     transition: background-color 0.28s cubic-bezier(0.4, 0, 0.2, 1);
     transform: none !important;
 }
+/* switch handle */
 .lindy-domain-switch > .lindy-switch > label::after {
     content: "";
     position: absolute;
@@ -79,7 +88,7 @@
     transform: none !important;
     opacity: 1 !important;
 }
-/* Checked */
+/* Checked updates */
 .lindy-domain-switch > .lindy-switch > input:checked + label::before {
     background-color: var(--bg-enabled-color);
 }

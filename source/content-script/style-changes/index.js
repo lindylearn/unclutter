@@ -1,6 +1,6 @@
 import { insertContentBlockStyle } from "../pageview/contentBlock";
 import { unPatchStylesheets } from "../pageview/patchStylesheets";
-import { insertDomainToggle } from "../switch/insert";
+import insert from "../switch/insert";
 import { insertBackground, overrideClassname } from "./background";
 import { modifyBodyStyle, unModifyBodyStyle } from "./body";
 
@@ -12,8 +12,8 @@ export async function enableStyleChanges() {
     // patch after new style applied
     modifyBodyStyle();
 
-    insertDomainToggle();
-    // insertReportButton();
+    insert();
+    // insertPageBrokenText();
 }
 export async function disableStyleChanges() {
     // restore original styles first

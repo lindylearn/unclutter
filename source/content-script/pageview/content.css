@@ -32,7 +32,7 @@ html.pageview > body {
         drop-shadow(0 4px 3px rgb(0 0 0 / 0.1)) !important;
 }
 
-.report-broken {
+.lindy-page-broken {
     position: fixed;
     top: 20%;
     width: 100%;
@@ -56,7 +56,7 @@ html.pageview > body {
             drop-shadow(0 4px 3px rgb(255 255 255 / 0.2));
     }
 
-    .report-broken {
+    .lindy-page-broken {
         color: #d1d5db;
     }
 }
