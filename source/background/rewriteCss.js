@@ -186,4 +186,10 @@ const styleTweaksPlugin = {
             });
         }
     },
+    Declaration(decl) {
+        // force scroll at body element
+        if (decl.prop === "height" && decl.value === "100vh") {
+            decl.value = "100%";
+        }
+    },
 };
