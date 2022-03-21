@@ -42,7 +42,7 @@ const moveVirtualFolder = {
     },
 };
 const reactConfigs = [
-    // "source/options/index.js",
+    "source/settings-page/index.js",
     "source/popup/index.js",
     "source/popup/onclick.js",
 ].map((entryPoint) => ({

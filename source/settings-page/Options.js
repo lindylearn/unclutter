@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { getHypothesisToken, validateSaveToken } from "../common/storage";
+// import { getHypothesisToken, validateSaveToken } from "../common/storage";
 
 function OptionsPage({}) {
     const [token, setToken] = useState("");
     useEffect(async () => {
-        setToken(await getHypothesisToken());
+        // setToken(await getHypothesisToken());
     }, []);
     async function onChangeToken(newToken) {
         setToken(newToken);
-        await validateSaveToken(newToken, true);
+        // await validateSaveToken(newToken, true);
     }
 
     return (
