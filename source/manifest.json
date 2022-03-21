@@ -5,8 +5,7 @@
     "homepage_url": "https://github.com/lindylearn/unclutter",
     "manifest_version": 3,
     "action": {
-        "default_title": "Unclutter Article",
-        "default_popup": "popup/index.html"
+        "default_title": "Unclutter current page"
     },
     "icons": {
         "128": "assets/icon.png"

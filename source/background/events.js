@@ -1,12 +1,21 @@
 import browser from "../common/polyfill";
 import fetchAndRewriteCss from "./rewriteCss";
 
+// toggle page view on extension icon click
+browser.action.onClicked.addListener(async (tab) => {
+    const didEnable = await enableInTab(tab.id);
+    if (!didEnable) {
+        // already active, so disable
+        togglePageViewMessage(tab.id);
+    }
+});
+
 // events from content scripts or popup view
 browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.event === "enablePageView") {
         enableInTab(message.tabId);
     } else if (message.event === "disablePageView") {
-        togglePageView(message.tabId);
+        togglePageViewMessage(message.tabId);
     } else if (message.event === "requestEnhance") {
         // event sent from boot.js to inject additional functionality
         // browser apis are only available in scripts injected from background scripts or manifest.json
@@ -40,11 +49,13 @@ async function enableInTab(tabId) {
 
     // toggle the page view if not active
     if (!pageViewEnabled) {
-        togglePageView(tabId);
+        togglePageViewMessage(tabId);
+        return true;
     }
+    return false;
 }
 
-async function togglePageView(tabId) {
+async function togglePageViewMessage(tabId) {
     await browser.tabs.sendMessage(tabId, { event: "togglePageView" });
 }
 
