@@ -16,6 +16,9 @@ html.pageview > body {
     overflow-y: hidden !important;
 
     cursor: auto;
+
+    filter: drop-shadow(0 4px 3px rgb(0 0 0 / 0.07))
+        drop-shadow(0 2px 2px rgb(0 0 0 / 0.06)) !important;
 }
 
 .lindy-body-background {
@@ -28,8 +31,6 @@ html.pageview > body {
     /* height and background-color set via JS */
 
     border-radius: 10px !important;
-    filter: drop-shadow(0 10px 8px rgb(0 0 0 / 0.04))
-        drop-shadow(0 4px 3px rgb(0 0 0 / 0.1)) !important;
 }
 
 .lindy-page-broken {
