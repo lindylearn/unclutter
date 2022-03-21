@@ -53,7 +53,7 @@ html.pageview > body {
         background-color: #35363a !important;
     }
 
-    .lindy-body-background {
+    .html.pageview > body {
         filter: drop-shadow(0 10px 8px rgb(255 255 255 / 0.15))
             drop-shadow(0 4px 3px rgb(255 255 255 / 0.2));
     }

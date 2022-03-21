@@ -7,6 +7,7 @@ html {
     min-height: 100px;
     overflow-x: hidden; /* Required to hide horizontal scroll on Firefox */
     /* color: #1f2937; */
+    color-scheme: light dark;
 }
 
 body {
@@ -20,7 +21,7 @@ body {
 }
 
 @media (prefers-color-scheme: dark) {
-    .html {
+    html {
         background-color: #35363a;
     }
 }
