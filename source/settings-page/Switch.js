@@ -1,12 +1,9 @@
 import React from "react";
 
-export default function Switch({ id, state, toggle, text }) {
+export default function Switch({ id, state, toggle, children }) {
     return (
         <div className="flex">
-            <div
-                className="mr-1"
-                dangerouslySetInnerHTML={{ __html: text }}
-            ></div>
+            <p className="mr-2">{children}</p>
             <div class="switch">
                 <input
                     type="checkbox"

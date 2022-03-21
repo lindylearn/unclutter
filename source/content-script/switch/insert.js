@@ -77,7 +77,7 @@ async function _setupDomainToggleState(currentDomain) {
             _getDomainToggleTooltip(userSetting, currentDomain)
         );
 
-        setAutomaticStatusForDomain(currentDomain, userSetting === "allow");
+        setAutomaticStatusForDomain(currentDomain, userSetting);
 
         // convenience: also disable pageview if automatic status disabled
         if (userSetting === "densy") {
