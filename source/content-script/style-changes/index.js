@@ -19,10 +19,12 @@ export async function disableStyleChanges() {
     // restore original styles first
     unPatchStylesheets();
 
-    unModifyBodyStyle();
-
     // remove most modifications
     document
         .querySelectorAll(`.${overrideClassname}`)
         .forEach((e) => e.remove());
+
+    // remove body style overrides last, as they include the animation settings
+    await new Promise((r) => setTimeout(r, 200));
+    unModifyBodyStyle();
 }

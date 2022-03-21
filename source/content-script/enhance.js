@@ -33,7 +33,7 @@ export function togglePageView() {
             // when user exists page view
             // undo all modifications (including css rewrites and style changes)
             disableStyleChanges();
-        });
+        }, true);
 
         // rewrite existing stylesheets
         patchStylesheets([...document.styleSheets]);
