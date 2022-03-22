@@ -43,4 +43,8 @@ export const defaultExcludedDomains = [
     "figma.com",
     "Unsplash.com",
     "pudding.cool",
+    "feedly.com",
+    "notion.so",
+    "lever.co",
+    "angel.co",
 ];
