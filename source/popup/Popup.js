@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { automaticallyEnabledFeatureFlag } from "../common/defaultStorage";
 import {
+    automaticallyEnabledFeatureFlag,
     getFeatureFlag,
-    getManualDomainLists,
     setFeatureFlag,
-} from "../common/storage";
+} from "../common/featureFlags";
+import { getManualDomainLists } from "../common/storage";
 import Switch from "./Switch";
 
 function OptionsPage({}) {

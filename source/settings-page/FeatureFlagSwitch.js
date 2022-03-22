@@ -1,5 +1,5 @@
 import React from "react";
-import { getFeatureFlag, setFeatureFlag } from "../common/storage";
+import { getFeatureFlag, setFeatureFlag } from "../common/featureFlags";
 
 // there's a weird bundling error on firefox when importing React, {useState}
 // so use React.useState

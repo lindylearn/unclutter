@@ -1,17 +1,9 @@
+import { defaultExcludedDomains } from "./defaultStorage";
 import {
     automaticallyEnabledFeatureFlag,
-    defaultExcludedDomains,
-    defaultFeatureFlags,
-} from "./defaultStorage";
+    getFeatureFlag,
+} from "./featureFlags";
 import browser from "./polyfill";
-
-export async function getFeatureFlag(key) {
-    const config = await browser.storage.sync.get([key]);
-    return config[key] !== undefined ? config[key] : defaultFeatureFlags[key];
-}
-export async function setFeatureFlag(key, status) {
-    await browser.storage.sync.set({ [key]: status });
-}
 
 export async function getManualDomainLists() {
     const config = await browser.storage.sync.get([
@@ -53,7 +45,7 @@ export async function getUserSettingForDomain(domain) {
     return null;
 }
 
-export async function setAutomaticStatusForDomain(domain, status) {
+export async function setUserSettingsForDomain(domain, status) {
     const config = await browser.storage.sync.get([
         "domain-allowlist",
         "domain-denylist",

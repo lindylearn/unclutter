@@ -3,10 +3,10 @@ import {
     allowlistDomainOnManualActivationFeatureFlag,
     automaticallyEnabledFeatureFlag,
     collectAnonymousMetricsFeatureFlag,
-} from "../common/defaultStorage";
+} from "../common/featureFlags";
 import {
     getManualDomainLists,
-    setAutomaticStatusForDomain,
+    setUserSettingsForDomain,
 } from "../common/storage";
 import FeatureFlagSwitch from "./FeatureFlagSwitch";
 
@@ -92,7 +92,7 @@ function DomainList({}) {
     }, []);
 
     function updateDomainStatus(domain, newStatus) {
-        setAutomaticStatusForDomain(domain, newStatus);
+        setUserSettingsForDomain(domain, newStatus);
         // patch here to retain list order
         let updatedList;
         if (newStatus) {
