@@ -2,7 +2,9 @@ import React from "react";
 import {
     allowlistDomainOnManualActivationFeatureFlag,
     automaticallyEnabledFeatureFlag,
+    collectAnonymousMetricsFeatureFlag,
 } from "../common/featureFlags";
+import { reportEvent } from "../common/metrics";
 import {
     getManualDomainLists,
     setUserSettingsForDomain,
@@ -10,6 +12,10 @@ import {
 import FeatureFlagSwitch from "./FeatureFlagSwitch";
 
 function OptionsPage({}) {
+    React.useEffect(() => {
+        reportEvent("openSettings");
+    }, []);
+
     return (
         <div className="flex flex-col gap-3">
             <div>
@@ -17,7 +23,7 @@ function OptionsPage({}) {
                 <FeatureFlagSwitch
                     featureFlagKey={automaticallyEnabledFeatureFlag}
                 >
-                    Automatically unclutter new pages{" "}
+                    Automatically unclutter pages{" "}
                     <a
                         href="https://github.com/lindylearn/unclutter/tree/main/docs/article-detection.md"
                         className="underline"
@@ -46,7 +52,7 @@ function OptionsPage({}) {
                     the "bolt" icon next to each article.
                 </p>
             </div>
-            {/* <div>
+            <div>
                 <h2 className="text-lg font-bold mb-1">Other</h2>
                 <FeatureFlagSwitch
                     featureFlagKey={collectAnonymousMetricsFeatureFlag}
@@ -61,7 +67,7 @@ function OptionsPage({}) {
                         usage metrics
                     </a>
                 </FeatureFlagSwitch>
-            </div> */}
+            </div>
 
             <div className="text-right text-gray-400 mt-5">
                 This extension is open source! Post issues and feature ideas{" "}

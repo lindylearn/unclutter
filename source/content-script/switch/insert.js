@@ -1,3 +1,4 @@
+import { reportEvent } from "../../common/metrics";
 import browser from "../../common/polyfill";
 import {
     getUserSettingForDomain,
@@ -84,7 +85,11 @@ async function _setupDomainToggleState(currentDomain) {
             // ideally send a message here -- but can't access current tab id in this context
             // leave some time for the user to see the new state icon
             setTimeout(togglePageView, 300);
+
+            reportEvent("disablePageview", { trigger: "blocklistDomain" });
         }
+
+        reportEvent("changeDomainSetting", { newState: userSetting });
     };
 }
 function _nextUserSetting(userSetting) {

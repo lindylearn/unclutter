@@ -2,6 +2,7 @@ import {
     allowlistDomainOnManualActivationFeatureFlag,
     getFeatureFlag,
 } from "../common/featureFlags";
+import { reportEvent } from "../common/metrics";
 import browser from "../common/polyfill";
 import {
     getUserSettingForDomain,
@@ -16,6 +17,8 @@ import fetchAndRewriteCss from "./rewriteCss";
     if (!didEnable) {
         // already active, so disable
         togglePageViewMessage(tab.id);
+
+        reportEvent("disablePageview", { trigger: "extensionIcon" });
     }
 
     if (didEnable) {
@@ -24,12 +27,13 @@ import fetchAndRewriteCss from "./rewriteCss";
             await getFeatureFlag(allowlistDomainOnManualActivationFeatureFlag)
         ) {
             const domain = getDomainFrom(new URL(tab.url));
-            console.log(domain);
             const currentDomainSetting = await getUserSettingForDomain(domain);
             if (currentDomainSetting === null) {
                 setUserSettingsForDomain(domain, "allow");
             }
         }
+
+        reportEvent("enablePageview", { trigger: "manual" });
     }
 });
 
@@ -44,6 +48,14 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
         // browser apis are only available in scripts injected from background scripts or manifest.json
         console.log("boot.js requested injection into tab");
         _injectScript(sender.tab.id, "content-script/enhance.js");
+
+        const domain = getDomainFrom(new URL(sender.tab.url));
+        getUserSettingForDomain(domain).then((userDomainSetting) =>
+            reportEvent("enablePageview", {
+                trigger:
+                    userDomainSetting === "allow" ? "allowlisted" : "automatic",
+            })
+        );
     } else if (message.event === "rewriteCss") {
         fetchAndRewriteCss(message.params).then(sendResponse);
         return true;
