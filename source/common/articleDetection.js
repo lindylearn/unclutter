@@ -52,8 +52,9 @@ function _isNonLeafPage(url) {
         https://en.wikipedia.org/wiki/Supernatural
         https://ae.studio/blog/victims-of-vimeo
         https://www.atlasobscura.com/articles/what-is-tomato-soup-cake
+        https://www.moderndescartes.com/essays/deep_learning_emr/
     */
-    if (url.pathname.match(/\/(posts|wiki|blog|articles)\//)) {
+    if (url.pathname.match(/\/(posts|wiki|blog|articles|essays)\//)) {
         return false;
     }
 

@@ -15,9 +15,10 @@ export const collectAnonymousMetricsFeatureFlag = "collect-anonymous-metrics";
 export const defaultFeatureFlags = {
     [automaticallyEnabledFeatureFlag]: false,
     [allowlistDomainOnManualActivationFeatureFlag]: true,
-    [collectAnonymousMetricsFeatureFlag]: !isDevMode(),
+    [collectAnonymousMetricsFeatureFlag]: true, //!isDevMode(),
 };
 
+// untested in firefox
 export function isDevMode() {
     return !("update_url" in browser.runtime.getManifest());
 }
