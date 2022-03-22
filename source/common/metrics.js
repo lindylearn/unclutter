@@ -8,7 +8,7 @@ import { getManualDomainLists } from "./storage";
 
 // Anonymously report usage events (if the user allowed it)
 // See https://github.com/lindylearn/unclutter/blob/main/docs/metrics.md
-export async function reportEvent(name, data = {}) {
+export async function reportEvent(name, data = {}, isDev = false) {
     // Check if user allowed metrics reporting
     const metricsEnabled = await getFeatureFlag(
         collectAnonymousMetricsFeatureFlag
@@ -27,7 +27,7 @@ export async function reportEvent(name, data = {}) {
             },
             body: JSON.stringify({
                 domain: "unclutter-extension",
-                url: `app://unclutter-extension/test`,
+                url: `app://unclutter-extension/${isDev ? "test" : ""}`,
                 name,
                 props: data,
             }),
