@@ -1,5 +1,10 @@
 import React from "react";
-import { getFeatureFlag, setFeatureFlag } from "../common/featureFlags";
+import {
+    collectAnonymousMetricsFeatureFlag,
+    getFeatureFlag,
+    setFeatureFlag,
+} from "../common/featureFlags";
+import { reportEvent } from "../common/metrics";
 
 // there's a weird bundling error on firefox when importing React, {useState}
 // so use React.useState
@@ -10,8 +15,14 @@ export default function FeatureFlagSwitch({ featureFlagKey, children }) {
         const newState = await getFeatureFlag(featureFlagKey);
         setState(newState);
     }, []);
-    function toggleStateLocalFirst() {
+    async function toggleStateLocalFirst() {
         setState(!state);
+
+        if (featureFlagKey === collectAnonymousMetricsFeatureFlag && state) {
+            // report that metrics were disabled before applying new config (after that reportEvent no-nops)
+            await reportEvent("disableMetrics");
+        }
+
         setFeatureFlag(featureFlagKey, !state);
     }
 
