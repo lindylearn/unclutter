@@ -1,8 +1,9 @@
 import browser from "../../common/polyfill";
 import {
     getUserSettingForDomain,
-    setAutomaticStatusForDomain,
+    setUserSettingsForDomain,
 } from "../../common/storage";
+import { getDomainFrom } from "../../common/util";
 import { togglePageView } from "../enhance";
 import {
     createStylesheetLink,
@@ -16,8 +17,7 @@ export default function insert() {
 // Insert a small UI for the user to control the automatic pageview enablement on the current domain.
 // Creating an iframe for this doesn't work from injected scripts
 function insertPageSettings() {
-    const url = new URL(window.location.href);
-    const domain = url.hostname.replace("www.", "");
+    const domain = getDomainFrom(new URL(window.location.href));
 
     const githubLink = `https://github.com/lindylearn/unclutter/issues/new?labels=broken-website&title=${encodeURIComponent(
         `Article doesn't show correctly on ${domain}`
@@ -77,13 +77,13 @@ async function _setupDomainToggleState(currentDomain) {
             _getDomainToggleTooltip(userSetting, currentDomain)
         );
 
-        setAutomaticStatusForDomain(currentDomain, userSetting);
+        setUserSettingsForDomain(currentDomain, userSetting);
 
         // convenience: also disable pageview if automatic status disabled
-        if (userSetting === "densy") {
+        if (userSetting === "deny") {
             // ideally send a message here -- but can't access current tab id in this context
             // leave some time for the user to see the new state icon
-            setTimeout(togglePageView, 100);
+            setTimeout(togglePageView, 300);
         }
     };
 }

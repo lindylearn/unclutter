@@ -1,5 +1,6 @@
 import browser from "../common/polyfill";
 import { shouldEnableForDomain } from "../common/storage";
+import { getDomainFrom } from "../common/util";
 import { enablePageView } from "./pageview/enablePageView";
 import { patchStylesheetsOnceCreated } from "./pageview/patchStylesheets";
 
@@ -11,8 +12,9 @@ async function boot() {
     if (url.pathname === "/" || url.pathname.endsWith(".pdf")) {
         return;
     }
-    const domain = url.hostname.replace("www.", "");
-    if (!(await shouldEnableForDomain(domain))) {
+    const domain = getDomainFrom(url);
+    const shouldEnable = await shouldEnableForDomain(domain);
+    if (!shouldEnable) {
         return;
     }
 
