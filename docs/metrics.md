@@ -22,4 +22,4 @@ The following events are logged:
 -   How many domains you configured the extension to activate or never activate on, and how often this is changed. The domains itself are never logged.
 -   Whether settings like automatic mode or the metrics collection are enabled.
 
-To verify this, search for all references of `reportEvent()` in this code base or where you downloaded the extension. The released code is bundled in a way to be as readable as possible.
+To verify this, [search for all references](https://github.com/lindylearn/unclutter/search?q=reportEvent) of `reportEvent()` in this code base or where you downloaded the extension. The released code is bundled in a way to be as readable as possible.
