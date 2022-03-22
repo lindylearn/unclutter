@@ -17,7 +17,7 @@ function OptionsPage({}) {
                 <FeatureFlagSwitch
                     featureFlagKey={automaticallyEnabledFeatureFlag}
                 >
-                    Automatically unclutter pages{" "}
+                    Automatically unclutter new pages{" "}
                     <a
                         href="https://github.com/lindylearn/unclutter/tree/main/docs/article-detection.md"
                         className="underline"
@@ -38,10 +38,10 @@ function OptionsPage({}) {
                         allowlistDomainOnManualActivationFeatureFlag
                     }
                 >
-                    Always enable the current domain when clicking the extension
+                    Enable on the current domain when clicking the extension
                     icon
                 </FeatureFlagSwitch>
-                <p className="mt-1">
+                <p className="mt-2">
                     You can also change website-specific settings by clicking
                     the "bolt" icon next to each article.
                 </p>
@@ -141,10 +141,10 @@ function DomainList({}) {
                             }
                         >
                             <option value="allow" className="bg-white">
-                                Always enabled
+                                Enable extension
                             </option>
                             <option value="deny" className="bg-white">
-                                Always disabled
+                                Disable extension
                             </option>
                         </select>
                         <svg
