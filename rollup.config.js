@@ -5,6 +5,7 @@ import replace from "@rollup/plugin-replace";
 import fs from "fs";
 import glob from "glob";
 import path from "path";
+import multiInput from "rollup-plugin-multi-input";
 import postcss from "rollup-plugin-postcss";
 
 // bundle content scripts
@@ -23,7 +24,8 @@ const contentScriptConfigs = [
     ],
 }));
 
-// bundle react views
+// bundle react views and background workers
+// using es modules because we can here and it's more readable
 const moveVirtualFolder = {
     // chrome doesn't like underscores at root, so move _virtual inside _node_modules
     async generateBundle(_, bundle) {
@@ -42,12 +44,13 @@ const moveVirtualFolder = {
         }
     },
 };
-const reactConfigs = [
-    "source/settings-page/index.js",
-    // "source/popup/index.js",
-    // "source/popup/onclick.js",
-].map((entryPoint) => ({
-    input: entryPoint,
+const esModuleConfig = {
+    input: [
+        "source/settings-page/index.js",
+        // "source/popup/index.js",
+        // "source/popup/onclick.js",
+        "source/background/events.js",
+    ],
     output: {
         dir: "distribution",
         format: "es",
@@ -55,30 +58,17 @@ const reactConfigs = [
         preserveModulesRoot: "source",
     },
     plugins: [
+        // multiple bundles would overwrite each other's tree-shaked common imports
+        multiInput({
+            transformOutputPath: (output, input) => {
+                // only called for input files - put those in same folder as in source/
+                return `${path.basename(output)}`;
+            },
+        }),
         nodeResolve({ browser: true }),
         commonjs({ include: /node_modules/ }),
         postcss(),
         babel({ babelHelpers: "bundled", presets: ["@babel/preset-react"] }),
-        moveVirtualFolder,
-        replace({
-            preventAssignment: true,
-            "process.env.NODE_ENV": JSON.stringify("production"),
-        }),
-    ],
-}));
-
-// bundle background service worker
-const serviceWorkerConfig = {
-    input: "source/background/events.js",
-    output: {
-        dir: "distribution",
-        format: "es", // can use es modules here
-        preserveModules: true,
-        preserveModulesRoot: "source",
-    },
-    plugins: [
-        nodeResolve({ browser: true }),
-        commonjs({ include: /node_modules/ }),
         moveVirtualFolder,
         replace({
             preventAssignment: true,
@@ -131,6 +121,5 @@ const staticFilesConfig = {
 };
 
 export default contentScriptConfigs
-    .concat(reactConfigs)
-    .concat([serviceWorkerConfig])
+    .concat(esModuleConfig)
     .concat([staticFilesConfig]);
