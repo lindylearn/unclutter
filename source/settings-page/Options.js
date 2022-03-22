@@ -44,7 +44,7 @@ function OptionsPage({}) {
                         allowlistDomainOnManualActivationFeatureFlag
                     }
                 >
-                    Add current domain as "Activate extension" when clicking the
+                    Enable extension on the current domain when clicking the
                     extension icon
                 </FeatureFlagSwitch>
                 <p className="mt-2">
