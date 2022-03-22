@@ -1,9 +1,15 @@
 import {
+    allowlistDomainOnManualActivationFeatureFlag,
+    automaticallyEnabledFeatureFlag,
     collectAnonymousMetricsFeatureFlag,
     getFeatureFlag,
 } from "./featureFlags";
+import { getManualDomainLists } from "./storage";
 
+// Anonymously report usage events (if the user allowed it)
+// See https://github.com/lindylearn/unclutter/blob/main/docs/metrics.md
 export async function reportEvent(name, data = {}) {
+    // Check if user allowed metrics reporting
     const metricsEnabled = await getFeatureFlag(
         collectAnonymousMetricsFeatureFlag
     );
@@ -30,4 +36,33 @@ export async function reportEvent(name, data = {}) {
             console.error(`Error reporting metric:`, response);
         }
     } catch {}
+}
+
+// Report anonymous aggregates on enabled extension features (if the user allowed it)
+export async function reportSettings() {
+    // true / false state of enabled features
+    const featureFlagSettings = {
+        [automaticallyEnabledFeatureFlag]: await getFeatureFlag(
+            automaticallyEnabledFeatureFlag
+        ),
+        [allowlistDomainOnManualActivationFeatureFlag]: await getFeatureFlag(
+            allowlistDomainOnManualActivationFeatureFlag
+        ),
+        [collectAnonymousMetricsFeatureFlag]: await getFeatureFlag(
+            collectAnonymousMetricsFeatureFlag
+        ),
+    };
+
+    // count allowlisted and blocklisted domains
+    // do not report the actual domains
+    const lists = await getManualDomainLists();
+    const domainSettings = {
+        allowlistedCount: lists.allow.length,
+        blocklistedCount: lists.deny.length,
+    };
+
+    reportEvent("reportSettings", {
+        ...featureFlagSettings,
+        ...domainSettings,
+    });
 }

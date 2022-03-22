@@ -1,8 +1,8 @@
 # Anonymous metrics collection
 
-By default the extension collects some anonymous usage metrics, which can be turned off. This document describes what's logged, and why.
+By default this extension collects some anonymous usage metrics, in order to understand how people use it. These metrics notably do not include any identifying information or any data about the sites and domains you visit.
 
-It's a first draft, please raise an issue here if you have a problem with any of this!
+This is a first draft, please raise an issue here if you have a problem with any of this!
 
 ## Goal
 

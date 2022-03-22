@@ -71,7 +71,8 @@ function OptionsPage({}) {
             </div>
 
             <div className="text-right text-gray-400 mt-5">
-                This project is open source! Post issues and feature ideas{" "}
+                This project is open source! Please post issues and feature
+                ideas{" "}
                 <a
                     href="https://github.com/lindylearn/unclutter"
                     target="_blank"

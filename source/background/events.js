@@ -2,7 +2,7 @@ import {
     allowlistDomainOnManualActivationFeatureFlag,
     getFeatureFlag,
 } from "../common/featureFlags";
-import { reportEvent } from "../common/metrics";
+import { reportEvent, reportSettings } from "../common/metrics";
 import browser from "../common/polyfill";
 import {
     getUserSettingForDomain,
@@ -64,6 +64,13 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }
 
     return false;
+});
+
+// run on install, extension update, or browser update
+browser.runtime.onInstalled.addListener(() => {
+    // report aggregates on enabled extension features
+    // this function should be executed every few days
+    reportSettings();
 });
 
 async function enableInTab(tabId) {
