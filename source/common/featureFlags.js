@@ -1,3 +1,5 @@
+import browser from "./polyfill";
+
 export async function getFeatureFlag(key) {
     const config = await browser.storage.sync.get([key]);
     return config[key] !== undefined ? config[key] : defaultFeatureFlags[key];

@@ -1,4 +1,13 @@
+import {
+    allowlistDomainOnManualActivationFeatureFlag,
+    getFeatureFlag,
+} from "../common/featureFlags";
 import browser from "../common/polyfill";
+import {
+    getUserSettingForDomain,
+    setUserSettingsForDomain,
+} from "../common/storage";
+import { getDomainFrom } from "../common/util";
 import fetchAndRewriteCss from "./rewriteCss";
 
 // toggle page view on extension icon click
@@ -7,6 +16,20 @@ import fetchAndRewriteCss from "./rewriteCss";
     if (!didEnable) {
         // already active, so disable
         togglePageViewMessage(tab.id);
+    }
+
+    if (didEnable) {
+        // if enabled, allowlist current domain if user manually actives extension
+        if (
+            await getFeatureFlag(allowlistDomainOnManualActivationFeatureFlag)
+        ) {
+            const domain = getDomainFrom(new URL(tab.url));
+            console.log(domain);
+            const currentDomainSetting = await getUserSettingForDomain(domain);
+            if (currentDomainSetting === null) {
+                setUserSettingsForDomain(domain, "allow");
+            }
+        }
     }
 });
 
