@@ -68,7 +68,7 @@ function _isNonLeafPage(url) {
         https://www.marketwatch.com/personal-finance
         https://www.msn.com/nl-nl/
     */
-    const dashCount = url.pathname.match(/\-/g).length;
+    const dashCount = url.pathname.match(/\-/g)?.length || 0;
     if (dashCount <= 1) {
         return true;
     }
