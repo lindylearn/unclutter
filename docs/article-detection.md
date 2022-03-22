@@ -15,7 +15,7 @@ You can always explicitly disable or enable Unclutter on specific domains.
 The current logic to automatically detect articles in the absence of an overriding website-specific setting is as follows:
 
 -   Never activate the extension on the domains listed in ([common/defaultStorage.js](https://github.com/lindylearn/unclutter/blob/main/source/common/defaultStorage.js)).
--   Otherwise active the extension if the current page passes the "non-leaf" check below.
+-   Otherwise activate the extension if the current page passes the "non-leaf" check below.
 
 ## Detecting non-leaf pages
 
@@ -29,6 +29,6 @@ Unclutter does not activate on pages that are likely directories rather than art
 
 ## Status
 
-See the implementation in [common/articleDetection.js](https://github.com/lindylearn/unclutter/blob/main/source/common/articleDetection.js).
+See the implementation and URL examples in [common/articleDetection.js](https://github.com/lindylearn/unclutter/blob/main/source/common/articleDetection.js).
 
 These checks are work in progress. Please create an issue if you found bugs or want to contribute!
