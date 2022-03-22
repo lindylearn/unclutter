@@ -57,20 +57,21 @@ function OptionsPage({}) {
                 <FeatureFlagSwitch
                     featureFlagKey={collectAnonymousMetricsFeatureFlag}
                 >
-                    Collect basic anonymous{" "}
+                    Collect anonymous{" "}
                     <a
-                        href=""
+                        href="https://github.com/lindylearn/unclutter/tree/main/docs/metrics.md"
                         className="underline"
                         target="_blank"
                         rel="noopener noreferrer"
                     >
                         usage metrics
-                    </a>
+                    </a>{" "}
+                    to make the extension better
                 </FeatureFlagSwitch>
             </div>
 
             <div className="text-right text-gray-400 mt-5">
-                This extension is open source! Post issues and feature ideas{" "}
+                This project is open source! Post issues and feature ideas{" "}
                 <a
                     href="https://github.com/lindylearn/unclutter"
                     target="_blank"
