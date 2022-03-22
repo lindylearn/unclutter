@@ -1,8 +1,3 @@
-import { defaultExcludedDomains } from "./defaultStorage";
-import {
-    automaticallyEnabledFeatureFlag,
-    getFeatureFlag,
-} from "./featureFlags";
 import browser from "./polyfill";
 
 export async function getManualDomainLists() {
@@ -16,20 +11,6 @@ export async function getManualDomainLists() {
     };
 }
 
-export async function shouldEnableForDomain(domain) {
-    const userSetting = await getUserSettingForDomain(domain);
-    if (userSetting === "allow") {
-        return true;
-    }
-    if (userSetting === "deny") {
-        return false;
-    }
-    if (defaultExcludedDomains.includes(domain)) {
-        return false;
-    }
-
-    return getFeatureFlag(automaticallyEnabledFeatureFlag);
-}
 export async function getUserSettingForDomain(domain) {
     const config = await browser.storage.sync.get([
         "domain-allowlist",

@@ -1,6 +1,5 @@
+import shouldEnableOnURL from "../common/articleDetection";
 import browser from "../common/polyfill";
-import { shouldEnableForDomain } from "../common/storage";
-import { getDomainFrom } from "../common/util";
 import { enablePageView } from "./pageview/enablePageView";
 import { patchStylesheetsOnceCreated } from "./pageview/patchStylesheets";
 
@@ -8,12 +7,7 @@ import { patchStylesheetsOnceCreated } from "./pageview/patchStylesheets";
 // if configured by the user, initialize the extension funcationality
 async function boot() {
     // check if extension should be enabled on this page
-    const url = new URL(window.location.href);
-    if (url.pathname === "/" || url.pathname.endsWith(".pdf")) {
-        return;
-    }
-    const domain = getDomainFrom(url);
-    const shouldEnable = await shouldEnableForDomain(domain);
+    const shouldEnable = await shouldEnableOnURL(window.location.href);
     if (!shouldEnable) {
         return;
     }

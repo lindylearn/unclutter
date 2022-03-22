@@ -2,7 +2,6 @@ import React from "react";
 import {
     allowlistDomainOnManualActivationFeatureFlag,
     automaticallyEnabledFeatureFlag,
-    collectAnonymousMetricsFeatureFlag,
 } from "../common/featureFlags";
 import {
     getManualDomainLists,
@@ -20,7 +19,7 @@ function OptionsPage({}) {
                 >
                     Automatically unclutter pages{" "}
                     <a
-                        href=""
+                        href="https://github.com/lindylearn/unclutter/tree/main/docs/article-detection.md"
                         className="underline"
                         target="_blank"
                         rel="noopener noreferrer"
@@ -39,19 +38,20 @@ function OptionsPage({}) {
                         allowlistDomainOnManualActivationFeatureFlag
                     }
                 >
-                    Add the current domain when clicking the extension icon
+                    Always enable the current domain when clicking the extension
+                    icon
                 </FeatureFlagSwitch>
                 <p className="mt-1">
                     You can also change website-specific settings by clicking
                     the "bolt" icon next to each article.
                 </p>
             </div>
-            <div>
+            {/* <div>
                 <h2 className="text-lg font-bold mb-1">Other</h2>
                 <FeatureFlagSwitch
                     featureFlagKey={collectAnonymousMetricsFeatureFlag}
                 >
-                    Collect anonymous{" "}
+                    Collect basic anonymous{" "}
                     <a
                         href=""
                         className="underline"
@@ -61,7 +61,7 @@ function OptionsPage({}) {
                         usage metrics
                     </a>
                 </FeatureFlagSwitch>
-            </div>
+            </div> */}
 
             <div className="text-right text-gray-400 mt-5">
                 This extension is open source! Post issues and feature ideas{" "}
@@ -119,7 +119,7 @@ function DomainList({}) {
             <ul className="ml-10 mt-2 mb-5 flex flex-col gap-1">
                 {overrideList?.map(({ domain, status }) => (
                     <li className="flex gap-3 items-center">
-                        <div className="underline w-32">
+                        <div className="underline w-52">
                             <a
                                 href={`https://${domain}`}
                                 target="_blank"
