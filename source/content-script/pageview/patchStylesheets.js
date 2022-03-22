@@ -166,6 +166,6 @@ function disableStylesheet(elem, styleId) {
 function reenableOriginalStylesheets() {
     [...document.getElementsByClassName(disabledClassname)].map((elem) => {
         elem.classList.remove(disabledClassname);
-        elem.removeAttribute("disabled");
+        elem.disabled = false;
     });
 }
