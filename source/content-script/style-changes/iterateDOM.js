@@ -21,6 +21,7 @@ export default function iterateDOM() {
     let largestElem = document.body;
     let maxTextLength = 0;
     candidates.forEach((elem) => {
+        // Ignore invisible nodes
         if (elem.offsetHeight === 0) {
             return;
         }
@@ -105,7 +106,7 @@ export default function iterateDOM() {
 function _getNodeSelector(node) {
     // Create new unique class
     const containerId = `container_${Math.random().toString().slice(2)}`;
-    currentElem.classList.add(containerId); // will only be applied in next loop
+    node.classList.add(containerId); // will only be applied in next loop
 
     // ...currentElem.classList,
     // // only allow valid CSS classnames, e.g. not starting with number
@@ -115,8 +116,8 @@ function _getNodeSelector(node) {
 
     // construct selector in "tag.class[id='id']" format
     const classNames = [containerId].map((className) => `.${className}`);
-    const completeSelector = `${currentElem.tagName.toLowerCase()}${classNames.join(
+    const completeSelector = `${node.tagName.toLowerCase()}${classNames.join(
         ""
-    )}${currentElem.id ? `[id='${currentElem.id}']` : ""}`;
+    )}${node.id ? `[id='${node.id}']` : ""}`;
     return completeSelector;
 }
