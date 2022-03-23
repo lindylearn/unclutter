@@ -11,8 +11,15 @@
 }
 
 /* https://www.theatlantic.com/ideas/archive/2022/03/ben-rhodes-alexey-navalny-maria-stepanova/627049/ */
-[class*="SubOnlyPromo"] {
+[class*="SubOnlyPromo"],
+.ArticleWell_root__MEFqL,
+.ArticleLayoutComponent_articleUtilityBar__Vc8st,
+.ArticleBooksModule_inset__I4Kx2 {
     display: none !important;
+}
+.ArticleLeadFigure_caption__qhLOF {
+    max-width: none !important;
+    margin-left: 24px !important;
 }
 
 /* https://www.worksinprogress.co/issue/the-housing-theory-of-everything/ */

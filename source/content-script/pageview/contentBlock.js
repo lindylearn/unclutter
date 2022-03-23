@@ -39,6 +39,7 @@ const blockedWords = [
     "masthead",
     // "banner",
     "menu",
+    "aside",
     // "nav",
     // "sidebar",
     "footer",

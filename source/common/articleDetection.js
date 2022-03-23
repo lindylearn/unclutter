@@ -58,6 +58,17 @@ function _isNonLeafPage(url) {
         return false;
     }
 
+    // Exlude URLs where the following checks fail]
+    const excludedDomains = [
+        "paulgraham.com",
+        "sive.rs",
+        "fs.blog",
+        "danluu.com",
+    ];
+    if (excludedDomains.includes(getDomainFrom(url))) {
+        return false;
+    }
+
     /*
     Heuristic: articles usually include title in URL:
         https://thoughtspile.github.io/2022/03/21/bad-tech-interview/
