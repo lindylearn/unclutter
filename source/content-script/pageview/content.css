@@ -18,8 +18,8 @@ html.pageview > body {
 
     cursor: auto;
 
-    filter: drop-shadow(0 4px 3px rgb(0 0 0 / 0.07))
-        drop-shadow(0 2px 2px rgb(0 0 0 / 0.06)) !important;
+    /* caution: using filter: drop-shadow() here causes rendering lag */
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1) !important;
 }
 
 .lindy-body-background {
