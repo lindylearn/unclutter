@@ -48,3 +48,5 @@ export const defaultExcludedDomains = [
     "lever.co",
     "angel.co",
 ];
+
+export const minFontSizePx = 15;

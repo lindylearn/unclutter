@@ -1,3 +1,4 @@
+import { minFontSizePx } from "../../common/defaultStorage";
 import { createStylesheetText } from "./common";
 
 const globalParagraphSelector = "p, font, pre";
@@ -142,6 +143,16 @@ function _setTextFontOverride(largestElem) {
     // Base on size of largest text element
     const activeStyle = window.getComputedStyle(largestElem);
 
+    // Set font size to use as CSS variable
+    const activeFontSizePx = Math.max(
+        parseFloat(activeStyle.fontSize),
+        minFontSizePx
+    );
+    document.body.style.setProperty(
+        "--lindy-active-font-size",
+        `${activeFontSizePx}px`
+    );
+
     // Convert line-height to relative and specify override, in case it was set as px
     // results in NaN if line-height: normal -- which is fine.
     const relativeLineHeight = (
@@ -156,10 +167,6 @@ function _setTextFontOverride(largestElem) {
 
     document.body.style.setProperty(
         "--lindy-original-font-size",
-        activeStyle.fontSize
-    );
-    document.body.style.setProperty(
-        "--lindy-active-font-size",
         activeStyle.fontSize
     );
     createStylesheetText(fontSizeStyle, "lindy-font-size");
