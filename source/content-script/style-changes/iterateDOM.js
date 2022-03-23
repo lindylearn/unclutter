@@ -35,25 +35,23 @@ export default function iterateDOM() {
     });
     console.log(`Largest paragraph element:`, largestElem);
 
-    // Iterate upwards in DOM tree from paragraph node
+    // Collect elements that contain text nodes
     const containerSelectors = [];
+    // Collect overrides for specific container elements (insert as stylesheet for easy unpatching)
+    const overrideCssDeclarations = [];
+
+    // Iterate upwards in DOM tree from paragraph node
     let currentElem = largestElem.parentElement;
     while (currentElem !== document.body) {
         // Construct and save element selector
-        containerSelectors.push(_getNodeSelector(currentElem));
+        const currentSelector = _getNodeSelector(currentElem);
+        containerSelectors.push(currentSelector);
 
         // Perform other style changes based on applied runtime style and DOM structure
         const activeStyle = window.getComputedStyle(currentElem);
-
-        // Remove horizontal partitioning
-        // e.g. https://www.nationalgeographic.com/science/article/the-controversial-quest-to-make-a-contagious-vaccine
-        if (
-            activeStyle.display === "flex" &&
-            activeStyle.flexDirection === "row"
-        ) {
-            currentElem.style.setProperty("display", "block");
-            // TODO hide siblings instead
-        }
+        overrideCssDeclarations = overrideCssDeclarations.concat(
+            _getNodeOverrideStyles(currentElem, activeStyle)
+        );
 
         // TODO parse and pass-up text background
         // if (!activeStyle.background.includes("rgba(0, 0, 0, 0)")) {
@@ -62,6 +60,11 @@ export default function iterateDOM() {
 
         currentElem = currentElem.parentElement;
     }
+
+    createStylesheetText(
+        overrideCssDeclarations.join("\n"),
+        "lindy-node-overrides"
+    );
 
     // Selector for paragraphs we detected
     const matchedParagraphSelector = globalParagraphSelector
@@ -120,4 +123,18 @@ function _getNodeSelector(node) {
         ""
     )}${node.id ? `[id='${node.id}']` : ""}`;
     return completeSelector;
+}
+
+function _getNodeOverrideStyles(node, activeStyle) {
+    const overrideCssDeclarations = [];
+    // Remove horizontal partitioning
+    // e.g. https://www.nationalgeographic.com/science/article/the-controversial-quest-to-make-a-contagious-vaccine
+    if (activeStyle.display === "flex" && activeStyle.flexDirection === "row") {
+        overrideCssDeclarations.push(`${currentSelector} {
+                display: block;
+            }`);
+        // TODO hide siblings instead
+    }
+
+    return overrideCssDeclarations;
 }
