@@ -1,6 +1,8 @@
 import {
     allowlistDomainOnManualActivationFeatureFlag,
+    collectAnonymousMetricsFeatureFlag,
     getFeatureFlag,
+    setFeatureFlag,
 } from "../common/featureFlags";
 import { reportEvent, reportSettings } from "../common/metrics";
 import browser from "../common/polyfill";
@@ -67,10 +69,18 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
 });
 
 // run on install, extension update, or browser update
-browser.runtime.onInstalled.addListener(() => {
+browser.runtime.onInstalled.addListener(async () => {
+    const extensionInfo = await browser.management.getSelf();
+    const isDevelopment = extensionInfo.installType === "development";
+
+    if (isDevelopment) {
+        // disable metrics in dev mode
+        await setFeatureFlag(collectAnonymousMetricsFeatureFlag, false);
+    }
+
     // report aggregates on enabled extension features
     // this function should be executed every few days
-    reportSettings();
+    reportSettings(extensionInfo.version);
 });
 
 async function enableInTab(tabId) {

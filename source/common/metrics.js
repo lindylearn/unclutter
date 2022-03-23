@@ -39,7 +39,7 @@ export async function reportEvent(name, data = {}, isDev = false) {
 }
 
 // Report anonymous aggregates on enabled extension features (if the user allowed it)
-export async function reportSettings() {
+export async function reportSettings(version) {
     // true / false state of enabled features
     const featureFlagSettings = {
         [automaticallyEnabledFeatureFlag]: await getFeatureFlag(
@@ -62,6 +62,7 @@ export async function reportSettings() {
     };
 
     reportEvent("reportSettings", {
+        version,
         ...featureFlagSettings,
         ...domainSettings,
     });
