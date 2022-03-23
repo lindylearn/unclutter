@@ -3,6 +3,7 @@ import { unPatchStylesheets } from "../pageview/patchStylesheets";
 import insert from "../switch/insert";
 import { insertBackground, overrideClassname } from "./background";
 import { modifyBodyStyle, unModifyBodyStyle } from "./body";
+import iterateDOM from "./iterateDOM";
 
 // tweak a site's style dynamically
 export async function enableStyleChanges() {
@@ -14,6 +15,8 @@ export async function enableStyleChanges() {
 
     insert();
     // insertPageBrokenText();
+
+    iterateDOM();
 }
 export async function disableStyleChanges() {
     // restore original styles first
