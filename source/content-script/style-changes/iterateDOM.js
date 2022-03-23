@@ -38,7 +38,7 @@ export default function iterateDOM() {
     // Collect elements that contain text nodes
     const containerSelectors = [];
     // Collect overrides for specific container elements (insert as stylesheet for easy unpatching)
-    const overrideCssDeclarations = [];
+    let overrideCssDeclarations = [];
 
     // Iterate upwards in DOM tree from paragraph node
     let currentElem = largestElem.parentElement;
@@ -50,7 +50,7 @@ export default function iterateDOM() {
         // Perform other style changes based on applied runtime style and DOM structure
         const activeStyle = window.getComputedStyle(currentElem);
         overrideCssDeclarations = overrideCssDeclarations.concat(
-            _getNodeOverrideStyles(currentElem, activeStyle)
+            _getNodeOverrideStyles(currentElem, currentSelector, activeStyle)
         );
 
         // TODO parse and pass-up text background
@@ -61,33 +61,24 @@ export default function iterateDOM() {
         currentElem = currentElem.parentElement;
     }
 
-    createStylesheetText(
-        overrideCssDeclarations.join("\n"),
-        "lindy-node-overrides"
-    );
-
-    // Selector for paragraphs we detected
+    // Selector for text paragraphs we detected
     const matchedParagraphSelector = globalParagraphSelector
         .split(", ")
         .map((tag) => `${containerSelectors[0]} > ${tag}`)
         .join(", ");
 
-    // Remove margin from matched paragraphs and all their parent DOM nodes
-    const matchedTextSelector = containerSelectors
-        .concat([matchedParagraphSelector])
-        .join(", ");
-    const overrideParagraphStyle = `${matchedTextSelector} {
-        width: 100% !important;
-        max-width: 100% !important;
-        margin-left: 0 !important;
-        margin-right: 0 !important;
-        padding-left: 0 !important;
-        padding-right: 0 !important;
-        background: none !important;
-        border: none !important;
-        box-shadow: none !important;
-    }`;
-    createStylesheetText(overrideParagraphStyle, "lindy-text-chain-override");
+    // Insert override styles
+    createStylesheetText(
+        overrideCssDeclarations.join("\n"),
+        "lindy-node-overrides"
+    );
+    createStylesheetText(
+        _getTextElementChainOverrideStyle(
+            containerSelectors,
+            matchedParagraphSelector
+        ),
+        "lindy-text-chain-override"
+    );
 
     // const activeStyle = window.getComputedStyle(largestElem);
 
@@ -125,7 +116,7 @@ function _getNodeSelector(node) {
     return completeSelector;
 }
 
-function _getNodeOverrideStyles(node, activeStyle) {
+function _getNodeOverrideStyles(node, currentSelector, activeStyle) {
     const overrideCssDeclarations = [];
     // Remove horizontal partitioning
     // e.g. https://www.nationalgeographic.com/science/article/the-controversial-quest-to-make-a-contagious-vaccine
@@ -137,4 +128,25 @@ function _getNodeOverrideStyles(node, activeStyle) {
     }
 
     return overrideCssDeclarations;
+}
+
+function _getTextElementChainOverrideStyle(
+    containerSelectors,
+    matchedParagraphSelector
+) {
+    // Remove margin from matched paragraphs and all their parent DOM nodes
+    const matchedTextSelector = containerSelectors
+        .concat([matchedParagraphSelector])
+        .join(", ");
+    return `${matchedTextSelector} {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        background: none !important;
+        border: none !important;
+        box-shadow: none !important;
+    }`;
 }
