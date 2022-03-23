@@ -44,12 +44,12 @@ function insertPageSettings() {
             </svg>
             <div class="lindy-theme-popup" id="lindy-theme-popup">
                 <div class="lindy-plusminus">
-                    <div>
+                    <div id="lindy-fontsize-decrease">
                         <svg class="lindy-ui-icon" viewBox="0 0 448 512">
                             <path fill="currentColor" d="M400 288h-352c-17.69 0-32-14.32-32-32.01s14.31-31.99 32-31.99h352c17.69 0 32 14.3 32 31.99S417.7 288 400 288z"/>
                         </svg>
                     </div>
-                    <div>
+                    <div id="lindy-fontsize-increase">
                         <svg class="lindy-ui-icon" viewBox="0 0 448 512">
                             <path fill="currentColor" d="M432 256c0 17.69-14.33 32.01-32 32.01H256v144c0 17.69-14.33 31.99-32 31.99s-32-14.3-32-31.99v-144H48c-17.67 0-32-14.32-32-32.01s14.33-31.99 32-31.99H192v-144c0-17.69 14.33-32.01 32-32.01s32 14.32 32 32.01v144h144C417.7 224 432 238.3 432 256z"/>
                         </svg>
@@ -97,6 +97,7 @@ function insertPageSettings() {
 
     _setupDomainToggleState(domain);
     _setupLinkHandlers();
+    _setupThemePopupHandlers();
 }
 
 function _insertHtml(className, html) {
@@ -174,8 +175,25 @@ function _getDomainToggleIcon(userSetting) {
     }
 }
 
-export function _setupLinkHandlers() {
-    const settings = document.getElementById("lindy-settings-icon");
-    settings.onclick = () =>
+function _setupLinkHandlers() {
+    document.getElementById("lindy-settings-icon").onclick = () =>
         chrome.runtime.sendMessage({ event: "openOptionsPage" });
+}
+
+function _setupThemePopupHandlers() {
+    function _changeFontSize(delta) {
+        const currentSize = document.body.style
+            .getPropertyValue("--lindy-active-font-size")
+            .replace("px", "");
+
+        document.body.style.setProperty(
+            "--lindy-active-font-size",
+            `${parseFloat(currentSize) + delta}px`
+        );
+    }
+
+    document.getElementById("lindy-fontsize-decrease").onclick = () =>
+        _changeFontSize(-1);
+    document.getElementById("lindy-fontsize-increase").onclick = () =>
+        _changeFontSize(1);
 }

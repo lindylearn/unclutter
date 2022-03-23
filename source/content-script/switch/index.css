@@ -111,9 +111,6 @@
 .lindy-theme-popup-container {
     position: relative;
 }
-.lindy-theme-popup-container:hover > .lindy-theme-popup {
-    visibility: visible;
-}
 
 /* popup box */
 .lindy-theme-popup {
@@ -130,6 +127,12 @@
     cursor: auto;
 
     visibility: hidden;
+    /* transform: translate3d(10px, 0, 0);
+    transition: all 0.05s ease-in; */
+}
+.lindy-theme-popup-container:hover > .lindy-theme-popup {
+    visibility: visible;
+    /* transform: translate3d(0, 0, 0); */
 }
 
 /* row with plus and minus buttons */

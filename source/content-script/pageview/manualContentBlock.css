@@ -200,10 +200,11 @@ div[data-gu-name="body"] > div:first-child {
 }
 
 /* https://www.theguardian.com/music/2022/mar/23/lots-of-great-actors-are-not-exactly-oil-paintings-valerie-lemercier-on-her-horrifying-celine-dion-biopic */
-figure[data-spacefinder-role="supporting"] {
+/* https://www.theguardian.com/lifeandstyle/2022/mar/23/im-proud-to-be-called-a-nerd-the-pop-and-rock-greats-who-love-model-railways */
+.article-body-commercial-selector > figure {
     margin-left: 0 !important;
 }
-figure[data-spacefinder-role="supporting"] > figcaption {
+.article-body-commercial-selector > figure > figcaption {
     position: relative !important;
     width: auto !important;
 }
@@ -567,5 +568,12 @@ body.fastcompany {
 .wafer-rapid-module,
 .xray-side-rail,
 #HeadlineSection {
+    display: none !important;
+}
+
+/* https://hackernoon.com/how-to-take-screenshots-in-the-browser-using-javascript-l92k3xq7 */
+.reactions,
+.Header__Layout-sc-le0go0-0,
+.StoryAudio__AudioContainer-sc-ijji4c-0 {
     display: none !important;
 }
