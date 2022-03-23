@@ -112,7 +112,10 @@ const urlRewritePlugin = (baseUrl) => ({
     postcssPlugin: "rewrite-relative-urls",
     AtRule(rule) {
         if (rule.name === "import") {
-            const url = rule.params.match(/"?'?([^\)]*?)"?'?\)/g)?.[1];
+            // e.g. 'file.css', file.css, url(file.css), url("file.css")
+            const url = rule.params.match(
+                /^(?:url\()?"?'?([^'"\)]*)"?'?\)?/
+            )?.[1];
             const absoluteUrl = new URL(url, baseUrl);
             rule.params = rule.params.replace(url, absoluteUrl.href);
         }
