@@ -14,7 +14,9 @@
 .lindy-page-settings-pageadjacent {
     position: absolute !important;
     top: 7px;
-    left: calc((100vw - 900px) / 2 + 900px - 5px);
+    left: calc(
+        (100vw - var(--lindy-pagewidth)) / 2 + var(--lindy-pagewidth) - 5px
+    );
     z-index: 300;
     padding: 10px;
 

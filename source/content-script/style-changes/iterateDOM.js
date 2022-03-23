@@ -148,7 +148,7 @@ function _setTextFontOverride(largestElem) {
         parseFloat(activeStyle.fontSize),
         minFontSizePx
     );
-    document.body.style.setProperty(
+    document.documentElement.style.setProperty(
         "--lindy-active-font-size",
         `${activeFontSizePx}px`
     );
@@ -165,7 +165,7 @@ function _setTextFontOverride(largestElem) {
         line-height: ${relativeLineHeight} !important;
     }`;
 
-    document.body.style.setProperty(
+    document.documentElement.style.setProperty(
         "--lindy-original-font-size",
         activeStyle.fontSize
     );

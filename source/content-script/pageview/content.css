@@ -1,6 +1,11 @@
 html.pageview {
     background-color: #f1f3f4 !important;
     cursor: zoom-out;
+
+    /* initial theme variables, updated by JS later */
+    /* need on html element to access outside body */
+    --lindy-pagewidth: 900px;
+    /* --lindy-active-font-size set in iterateDOM() */
 }
 
 html.pageview > body {
@@ -8,7 +13,7 @@ html.pageview > body {
     position: relative !important;
 
     width: 100%;
-    max-width: 900px !important;
+    max-width: var(--lindy-pagewidth) !important;
     margin: 10px auto !important;
     box-sizing: border-box !important; /* reduce inner width if there's padding */
 
