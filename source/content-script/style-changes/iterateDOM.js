@@ -80,20 +80,7 @@ export default function iterateDOM() {
         "lindy-text-chain-override"
     );
 
-    // const activeStyle = window.getComputedStyle(largestElem);
-
-    // Convert line-height to relative and specify override, in case it was set as px
-    // results in NaN if line-height: normal, which is fine.
-    // const relativeLineHeight = (
-    //     parseFloat(activeStyle.lineHeight.replace("px", "")) /
-    //     parseFloat(activeStyle.fontSize.replace("px", ""))
-    // ).toFixed(1);
-
-    // const fontSizeStyle = `${globalParagraphSelector} {
-    //     font-size: 19px !important;
-    //     line-height: ${relativeLineHeight} !important;
-    // }`;
-    // createStylesheetText(fontSizeStyle, "font-size");
+    _setTextFontOverride(largestElem);
 }
 
 // Get a CSS selector for the passed node with a high specifity
@@ -149,4 +136,31 @@ function _getTextElementChainOverrideStyle(
         border: none !important;
         box-shadow: none !important;
     }`;
+}
+
+function _setTextFontOverride(largestElem) {
+    // Base on size of largest text element
+    const activeStyle = window.getComputedStyle(largestElem);
+
+    // Convert line-height to relative and specify override, in case it was set as px
+    // results in NaN if line-height: normal -- which is fine.
+    const relativeLineHeight = (
+        parseFloat(activeStyle.lineHeight.replace("px", "")) /
+        parseFloat(activeStyle.fontSize.replace("px", ""))
+    ).toFixed(1);
+
+    const fontSizeStyle = `${globalParagraphSelector} {
+        font-size: var(--lindy-active-font-size) !important;
+        line-height: ${relativeLineHeight} !important;
+    }`;
+
+    document.body.style.setProperty(
+        "--lindy-original-font-size",
+        activeStyle.fontSize
+    );
+    document.body.style.setProperty(
+        "--lindy-active-font-size",
+        activeStyle.fontSize
+    );
+    createStylesheetText(fontSizeStyle, "lindy-font-size");
 }
