@@ -133,13 +133,12 @@ main {
 .widget-area {
     display: none !important;
 }
-body.post-template-default.s1-collapse.s2-collapse {
-    padding: 0 !important;
-}
 #pjgm-wrap {
     margin: 0 !important;
 }
-#pjgm-header,
+#pjgm-header {
+    display: none !important;
+}
 #pjgm-main {
     box-shadow: none !important;
     -webkit-box-shadow: none !important;
@@ -193,16 +192,20 @@ div[data-gu-name="body"] > div:first-child {
     display: none !important;
 }
 
+/* https://www.theguardian.com/music/2022/mar/23/lots-of-great-actors-are-not-exactly-oil-paintings-valerie-lemercier-on-her-horrifying-celine-dion-biopic */
+figure[data-spacefinder-role="supporting"] {
+    margin-left: 0 !important;
+}
+figure[data-spacefinder-role="supporting"] > figcaption {
+    position: relative !important;
+    width: auto !important;
+}
+
 /* https://www.polygon.com/22969625/sony-playstation-sexism-allegations-lawsuit */
 .outbrain-container,
 .outbrain-container ~ div {
     display: none !important;
 }
-
-/* https://causalinf.substack.com/p/how-can-we-know-if-paid-search-advertising?s=r */
-/* body {
-    padding: 0;
-} */
 
 /* https://www.popularmechanics.com/adventure/outdoors/a19225/marooned-among-the-polar-bears/ */
 .transporter {
@@ -217,9 +220,7 @@ div[data-gu-name="body"] > div:first-child {
 }
 #content {
     border: none !important;
-    padding: 0 !important;
     background: none !important;
-    margin: 20px 0 !important;
 }
 body.mediawiki {
     background-color: white !important;
@@ -234,9 +235,6 @@ body.mediawiki {
 }
 .story-sidebar {
     display: none !important;
-}
-body.blog-us.sticky_support {
-    padding: 0 !important;
 }
 
 /* https://www.independent.co.uk/news/turkish-far-right-on-the-rise-1088461.html */
@@ -260,9 +258,6 @@ body.blog-us.sticky_support {
 #main-sidebar,
 #globalheader {
     display: none !important;
-}
-.tmplNewsStory {
-    padding: 0 !important;
 }
 .storytext > p {
     max-width: none !important;
@@ -467,7 +462,6 @@ section.post-content {
     display: none !important;
 }
 article.article-container.article--post {
-    padding: 30px 0 !important;
     border: none !important;
 }
 .breakout {
@@ -530,8 +524,8 @@ article ~ article {
 }
 
 /* https://www.theverge.com/2022/3/16/22981230/amazonians-united-warehouse-walkouts-3-raise-breaks */
-.entry_key_unison_standard {
-    padding: 0 !important;
+.l-header {
+    display: none !important;
 }
 
 /* https://www.fastcompany.com/90730789/cyber-partisans-hacking-belarus-putin-ukraine-invasion */

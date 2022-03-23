@@ -48,7 +48,7 @@ export async function patchStylesheets(newStylesheets) {
 // See `background/rewriteCss.js`.
 export async function patchStylesheetNode(elem, conditionScale) {
     // random id to corraborate original & override style
-    const styleId = `style_${Math.random()}`;
+    const styleId = `style_${Math.random().toString().slice(2)}`;
     try {
         if (elem.tagName === "LINK") {
             // exclude font stylesheets

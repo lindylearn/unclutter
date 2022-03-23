@@ -21,11 +21,8 @@ function _modifyBodyStyle() {
     if (["", "0px"].includes(bodyStyle.paddingTop)) {
         document.body.style.paddingTop = "0.05px";
     }
-    // add some minimal padding if none present (0 padding looks quite ugly)
-    if (["", "0px"].includes(bodyStyle.paddingLeft)) {
-        document.body.style.paddingLeft = "20px";
-        document.body.style.paddingRight = "20px";
-    }
+    document.body.style.paddingLeft = "30px";
+    document.body.style.paddingRight = "30px";
 
     // html or body tags may have classes with fixed style applied (which we hide via css rewrite)
     document.documentElement.style.setProperty("display", "block", "important");

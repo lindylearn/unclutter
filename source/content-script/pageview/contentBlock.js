@@ -28,12 +28,7 @@ export function insertContentBlockStyle() {
     if (window.location.href.includes("medium.com")) {
         // they seem to JS CSSOM trickery for the page height
         createStylesheetText(
-            "html.pageview > body { overflow-y: visible !important; padding: 0 !important; }",
-            "page-specific-fix"
-        );
-    } else if (window.location.href.includes("substack.com")) {
-        createStylesheetText(
-            "html.pageview > body { padding: 0 !important; }",
+            "html.pageview > body { overflow-y: visible !important; }",
             "page-specific-fix"
         );
     }
@@ -86,4 +81,5 @@ const blockedClasses = [
     ".subnav-ad-layout",
     "#marquee-ad",
     ".ad-unit",
+    ".GlobalNav",
 ];
