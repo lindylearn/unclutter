@@ -577,3 +577,11 @@ body.fastcompany {
 .StoryAudio__AudioContainer-sc-ijji4c-0 {
     display: none !important;
 }
+
+/* http://www.paulgraham.com/goodtaste.html */
+body[link="000099"] {
+    padding-top: 20px !important;
+}
+body[link="000099"] > table > tbody > tr > td:not(:last-child) {
+    display: none !important;
+}

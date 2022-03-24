@@ -71,13 +71,13 @@ function insertPageSettings() {
                 <div class="lindy-theme-popup-row-spacer"></div>
                 <div class="lindy-theme-row">
                     <div>
+                        <div class="lindy-theme-button lindy-active-theme" id="lindy-sepia-theme-button"></div>
+                    </div>
+                    <div>
                         <div class="lindy-theme-button" id="lindy-white-theme-button"></div>
                     </div>
                     <div>
                         <div class="lindy-theme-button" id="lindy-dark-theme-button"></div>
-                    </div>
-                    <div>
-                        <div class="lindy-theme-button" id="lindy-sepia-theme-button"></div>
                     </div>
                 </div>
             </div>
