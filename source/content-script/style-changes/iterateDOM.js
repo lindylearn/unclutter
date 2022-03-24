@@ -1,6 +1,7 @@
 import { minFontSizePx } from "../../common/defaultStorage";
 import { createStylesheetText } from "./common";
 import {
+    activeColorThemeVariable,
     backgroundColorThemeVariable,
     fontSizeThemeVariable,
     getThemeValue,
@@ -193,7 +194,7 @@ function _processBackgroundColors(textBackgroundColors) {
     }
     setCssThemeVariable(originalBackgroundThemeVariable, pickedColor, true);
 
-    const themeName = getThemeValue(backgroundColorThemeVariable);
+    const themeName = getThemeValue(activeColorThemeVariable);
     if (!themeName || themeName === "auto") {
         setCssThemeVariable(backgroundColorThemeVariable, pickedColor, true);
     }

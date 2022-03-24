@@ -228,7 +228,6 @@ div[data-gu-name="body"] > div:first-child {
 }
 #content {
     border: none !important;
-    background: none !important;
 }
 body.mediawiki {
     background-color: white !important;
