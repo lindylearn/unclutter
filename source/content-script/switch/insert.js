@@ -1,4 +1,3 @@
-import throttle from "lodash/throttle";
 import { reportEvent } from "../../common/metrics";
 import browser from "../../common/polyfill";
 import {
@@ -186,11 +185,21 @@ function _setupLinkHandlers() {
 }
 
 function _setupThemePopupHandlers(domain) {
-    // Call reportEvent immediately in case page is closed, but don't send an event for every theme change
-    const throttledReportEvent = throttle(
-        () => reportEvent("changeTheme"),
-        30 * 1000
-    );
+    // Only report each type of modification once per page
+    const reportedEventType = {};
+    function _reportThemeEvent(changedProperty) {
+        // Use nicer names
+        if (changedProperty === fontSizeThemeVariable) {
+            changedProperty = "fontSize";
+        } else if (changedProperty === pageWidthThemeVariable) {
+            changedProperty = "pageWidth";
+        }
+
+        if (!reportedEventType[changedProperty]) {
+            reportEvent("changeTheme", { changedProperty });
+            reportedEventType[changedProperty] = true;
+        }
+    }
 
     // Setup plus and minus buttons
     function _changeCssPixelVariable(varName, delta) {
@@ -198,7 +207,8 @@ function _setupThemePopupHandlers(domain) {
         const newSizePx = `${parseFloat(currentSize) + delta}px`;
 
         applySaveThemeOverride(domain, varName, newSizePx);
-        throttledReportEvent();
+
+        _reportThemeEvent(varName);
     }
     document.getElementById("lindy-fontsize-decrease").onclick = () =>
         _changeCssPixelVariable(fontSizeThemeVariable, -1);
@@ -217,6 +227,8 @@ function _setupThemePopupHandlers(domain) {
 
         // Update active theme color
         applySaveThemeOverride(domain, activeColorThemeVariable, themeName);
+
+        _reportThemeEvent("colorTheme");
     }
     document.getElementById("lindy-auto-theme-button").onclick = () =>
         _setTheme("auto");
