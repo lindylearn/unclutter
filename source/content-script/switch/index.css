@@ -124,7 +124,7 @@
     position: absolute;
     top: -5px;
     right: calc(100% + 10px);
-    width: 140px;
+    width: 130px;
     z-index: 300;
 
     background-color: white;
@@ -194,7 +194,7 @@
     justify-content: space-between;
 
     height: 40px;
-    gap: 12px;
+    gap: 8px;
     margin: 0 8px;
 }
 .lindy-theme-row > div {
@@ -203,7 +203,7 @@
 .lindy-theme-button {
     height: 20px;
 
-    border: 3px solid #f3f4f6;
+    border: 2.5px solid #f3f4f6;
     border-radius: 5px;
     box-sizing: content-box !important;
     cursor: pointer;
@@ -212,7 +212,7 @@
     box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
 }
 .lindy-active-theme {
-    border: 3px solid #d1d5db;
+    border: 2.5px solid #9ca3af;
 }
 #lindy-auto-theme-button {
     background-color: var(--lindy-original-background-color);
@@ -303,6 +303,6 @@
         border: none;
     }
     .lindy-active-theme {
-        border: 3px solid #6b7280;
+        border: 2.5px solid #6b7280;
     }
 }
