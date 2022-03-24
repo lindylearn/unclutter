@@ -14,7 +14,7 @@ function OptionsPage({}) {
     }, []);
 
     return (
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3 dark:text-white">
             <div>
                 <h2 className="text-lg font-semibold mb-1">Global settings</h2>
                 <FeatureFlagSwitch
