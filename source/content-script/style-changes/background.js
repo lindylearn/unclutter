@@ -14,18 +14,15 @@ export function insertBackground() {
     background.id = "lindy-body-background";
     background.className = `${overrideClassname} lindy-body-background`;
 
-    // get page background to use
-    // const htmlBackground = window.getComputedStyle(
-    //     document.documentElement
-    // ).background;
-    const bodyBackground = window.getComputedStyle(
-        document.body
-    ).backgroundColor;
-    if (bodyBackground && !bodyBackground.includes("rgba(0, 0, 0, 0)")) {
-        console.log("body", bodyBackground);
-        setCssThemeVariable(backgroundColorThemeVariable, bodyBackground);
-        setCssThemeVariable(originalBackgroundThemeVariable, bodyBackground);
+    // Save original <body> background in theme variable (not modified yet)
+    let bodyBackground = window.getComputedStyle(document.body).backgroundColor;
+    // console.log("body", bodyBackground);
+
+    if (bodyBackground.includes("rgba(0, 0, 0, 0)")) {
+        bodyBackground = "white"; // transparent
     }
+    setCssThemeVariable(backgroundColorThemeVariable, bodyBackground);
+    setCssThemeVariable(originalBackgroundThemeVariable, bodyBackground);
 
     // Set background color on both <body> and the background element to be more resistant
     document.body.style.setProperty(

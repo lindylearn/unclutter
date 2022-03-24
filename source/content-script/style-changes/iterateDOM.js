@@ -1,6 +1,11 @@
 import { minFontSizePx } from "../../common/defaultStorage";
 import { createStylesheetText } from "./common";
-import { fontSizeThemeVariable, setCssThemeVariable } from "./theme";
+import {
+    backgroundColorThemeVariable,
+    fontSizeThemeVariable,
+    originalBackgroundThemeVariable,
+    setCssThemeVariable,
+} from "./theme";
 
 const globalParagraphSelector = "p, font, pre";
 
@@ -41,6 +46,8 @@ export default function iterateDOM() {
     const containerSelectors = [];
     // Collect overrides for specific container elements (insert as stylesheet for easy unpatching)
     let overrideCssDeclarations = [];
+    // Remember background colors on text containers
+    const backgroundColors = [];
 
     // Iterate upwards in DOM tree from paragraph node
     let currentElem = largestElem.parentElement;
@@ -55,10 +62,10 @@ export default function iterateDOM() {
             _getNodeOverrideStyles(currentElem, currentSelector, activeStyle)
         );
 
-        // TODO parse and pass-up text background
-        // if (!activeStyle.background.includes("rgba(0, 0, 0, 0)")) {
-        //     console.log(activeStyle.background);
-        // }
+        // Remember background colors on text containers
+        if (!activeStyle.backgroundColor.includes("rgba(0, 0, 0, 0)")) {
+            backgroundColors.push(activeStyle.backgroundColor);
+        }
 
         currentElem = currentElem.parentElement;
     }
@@ -83,6 +90,8 @@ export default function iterateDOM() {
     );
 
     _setTextFontOverride(largestElem);
+
+    _processBackgroundColors(backgroundColors);
 }
 
 // Get a CSS selector for the passed node with a high specifity
@@ -165,4 +174,19 @@ function _setTextFontOverride(largestElem) {
 
     // setCssThemeVariable("--lindy-original-font-size", activeStyle.fontSize);
     createStylesheetText(fontSizeStyle, "lindy-font-size");
+}
+
+function _processBackgroundColors(textBackgroundColors) {
+    // Colors are in reverse-hierarchical order, with ones closest to the text first
+    // console.log("Found background colors:", textBackgroundColors);
+
+    // <body> background color was already saved in ${originalBackgroundThemeVariable} in background.js
+    // Continue to use that if we found no further text colors
+    if (textBackgroundColors.length === 0) {
+        return;
+    }
+
+    const usedColor = textBackgroundColors[0];
+    setCssThemeVariable(originalBackgroundThemeVariable, usedColor, true);
+    setCssThemeVariable(backgroundColorThemeVariable, usedColor, true);
 }

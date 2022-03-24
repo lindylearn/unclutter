@@ -26,6 +26,11 @@
     gap: 5px;
 }
 
+.lindy-page-settings-topright > a {
+    text-decoration: none !important;
+    border: none !important;
+}
+
 .lindy-ui-icon {
     width: 20px;
     height: 20px;
