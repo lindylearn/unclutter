@@ -3,11 +3,7 @@ export async function enablePageView(
     disableHook = () => {},
     enableAnimation = false
 ) {
-    if (enableAnimation && document.body) {
-        _enableAnimation();
-        // wait until next execution loop so animation works
-        await new Promise((r) => setTimeout(r, 0));
-    }
+    await _enableAnimation(enableAnimation);
 
     // base css is already injected, activate it by adding class
     // add to <html> element since <body> not contructed yet
@@ -32,7 +28,7 @@ export async function enablePageView(
                 htmlClassObserver.disconnect();
 
                 // make sure the animation is enabled
-                _enableAnimation();
+                _enableAnimation(true);
                 await new Promise((r) => setTimeout(r, 0));
 
                 // disable page view exiting
@@ -47,11 +43,10 @@ export async function enablePageView(
     );
 }
 
-function _enableAnimation() {
-    // set start properties for animation immediately
-    // document.body.style.margin = "0";
-    document.body.style.width = "100%";
-    document.body.style.maxWidth = "100%";
+async function _enableAnimation(activateNow = false) {
+    if (!document.body) {
+        return;
+    }
 
     // set animation style inline to have out transition
     // easeOutExpo from easings.net
@@ -60,4 +55,14 @@ function _enableAnimation() {
         margin-left 0.3s cubic-bezier(0.16, 1, 0.3, 1),
         max-width  0.3s cubic-bezier(0.16, 1, 0.3, 1)
     `;
+
+    if (activateNow) {
+        // set start properties for animation immediately
+        // document.body.style.margin = "0";
+        document.body.style.width = "100%";
+        document.body.style.maxWidth = "100%";
+
+        // wait until next execution loop so animation works
+        await new Promise((r) => setTimeout(r, 0));
+    }
 }
