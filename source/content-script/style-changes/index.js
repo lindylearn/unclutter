@@ -12,8 +12,8 @@ export async function enableStyleChanges() {
     const domain = getDomainFrom(new URL(window.location.href));
 
     initTheme(domain);
-
     insertBackground();
+
     insertContentBlockStyle();
 
     // patch after new style applied
@@ -22,7 +22,8 @@ export async function enableStyleChanges() {
     insert(domain);
     // insertPageBrokenText();
 
-    iterateDOM();
+    // this will remove all text side margin, so wait until pageview is likely enabled
+    setTimeout(iterateDOM, 100);
 }
 export async function disableStyleChanges() {
     // restore original styles first
