@@ -4,7 +4,7 @@ import {
     collectAnonymousMetricsFeatureFlag,
     getFeatureFlag,
 } from "./featureFlags";
-import { getManualDomainLists } from "./storage";
+import { getAllCustomDomainSettings } from "./storage";
 
 // Anonymously report usage events (if the user allowed it)
 // See https://github.com/lindylearn/unclutter/blob/main/docs/metrics.md
@@ -55,7 +55,7 @@ export async function reportSettings(version) {
 
     // count allowlisted and blocklisted domains
     // do not report the actual domains
-    const lists = await getManualDomainLists();
+    const lists = await getAllCustomDomainSettings();
     const domainSettings = {
         allowlistedCount: lists.allow.length,
         blocklistedCount: lists.deny.length,

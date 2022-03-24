@@ -1,13 +1,15 @@
 import browser from "./polyfill";
 
-export async function getManualDomainLists() {
+export async function getAllCustomDomainSettings() {
     const config = await browser.storage.sync.get([
         "domain-allowlist",
         "domain-denylist",
+        "custom-domain-themes",
     ]);
     return {
         allow: Object.keys(config["domain-allowlist"] || {}),
         deny: Object.keys(config["domain-denylist"] || {}),
+        themes: config["custom-domain-themes"],
     };
 }
 
@@ -67,5 +69,12 @@ export async function mergeDomainUserTheme(domain, partialTheme) {
         ...themeConfig[domain],
         ...partialTheme,
     };
+    await browser.storage.sync.set({ "custom-domain-themes": themeConfig });
+}
+export async function deleteDomainUserTheme(domain) {
+    const config = await browser.storage.sync.get(["custom-domain-themes"]);
+    const themeConfig = config["custom-domain-themes"];
+
+    delete themeConfig[domain];
     await browser.storage.sync.set({ "custom-domain-themes": themeConfig });
 }
