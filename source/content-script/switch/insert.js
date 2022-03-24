@@ -191,6 +191,8 @@ function _setupThemePopupHandlers(domain) {
         () => reportEvent("changeTheme"),
         30 * 1000
     );
+
+    // Setup plus and minus buttons
     function _changeCssPixelVariable(varName, delta) {
         const currentSize = getThemeValue(varName).replace("px", "");
         const newSizePx = `${parseFloat(currentSize) + delta}px`;
@@ -198,7 +200,6 @@ function _setupThemePopupHandlers(domain) {
         applySaveThemeOverride(domain, varName, newSizePx);
         throttledReportEvent();
     }
-
     document.getElementById("lindy-fontsize-decrease").onclick = () =>
         _changeCssPixelVariable(fontSizeThemeVariable, -1);
     document.getElementById("lindy-fontsize-increase").onclick = () =>
@@ -209,18 +210,10 @@ function _setupThemePopupHandlers(domain) {
     document.getElementById("lindy-pagewidth-increase").onclick = () =>
         _changeCssPixelVariable(pageWidthThemeVariable, 50);
 
+    // Setup theme selection
     function _setTheme(themeName) {
         // Update active state
-        document
-            .querySelectorAll(
-                `.lindy-theme-button:not(#lindy-${themeName}-theme-button)`
-            )
-            .forEach((otherThemeNode) =>
-                otherThemeNode.classList.remove("lindy-active-theme")
-            );
-        document
-            .getElementById(`lindy-${themeName}-theme-button`)
-            .classList.add("lindy-active-theme");
+        highlightActiveColorThemeButton(themeName);
 
         // Update active theme color
         applySaveThemeOverride(domain, activeColorThemeVariable, themeName);
@@ -231,4 +224,21 @@ function _setupThemePopupHandlers(domain) {
         _setTheme("white");
     document.getElementById("lindy-sepia-theme-button").onclick = () =>
         _setTheme("sepia");
+
+    // If there's a saved theme, highlightActiveColorThemeButton() is called from theme.js
+    // Retrieving theme settings takes some time, to we can't set the initial theme here.
+}
+
+export function highlightActiveColorThemeButton(themeName) {
+    document
+        .querySelectorAll(
+            `.lindy-theme-button:not(#lindy-${themeName}-theme-button)`
+        )
+        .forEach((otherThemeNode) =>
+            otherThemeNode.classList.remove("lindy-active-theme")
+        );
+
+    document
+        .getElementById(`lindy-${themeName}-theme-button`)
+        .classList.add("lindy-active-theme");
 }

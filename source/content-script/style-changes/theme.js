@@ -1,4 +1,5 @@
 import { getDomainUserTheme, mergeDomainUserTheme } from "../../common/storage";
+import { highlightActiveColorThemeButton } from "../switch/insert";
 
 export async function initTheme(domain) {
     // Get saved domain-specific theme
@@ -19,6 +20,8 @@ export async function initTheme(domain) {
 
         const concreteColor = colorThemeToBackgroundColor(theme.colorTheme);
         setCssThemeVariable(backgroundColorThemeVariable, concreteColor, true);
+
+        highlightActiveColorThemeButton(theme.colorTheme);
     }
 }
 
