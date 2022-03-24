@@ -209,14 +209,23 @@
 .lindy-active-theme {
     border: 3px solid #d1d5db;
 }
+#lindy-auto-theme-button {
+    background-color: var(--lindy-original-background-color);
+    position: relative;
+}
+#lindy-auto-theme-button > svg {
+    position: absolute;
+    top: 3px;
+    left: 6px;
+
+    width: 14px;
+    color: #9ca3af;
+}
 #lindy-white-theme-button {
     background-color: white;
 }
 #lindy-dark-theme-button {
     background-color: #35363a;
-}
-#lindy-sepia-theme-button {
-    background-color: #fed7aa;
 }
 
 /* popup arrow */

@@ -1,3 +1,9 @@
+import {
+    backgroundColorThemeVariable,
+    originalBackgroundThemeVariable,
+    setCssThemeVariable,
+} from "./theme";
+
 export const overrideClassname = "lindylearn-document-override";
 
 // Insert an element behind a site's <body> content to show a white background if the page doesn't provide it.
@@ -12,23 +18,25 @@ export function insertBackground() {
     // const htmlBackground = window.getComputedStyle(
     //     document.documentElement
     // ).background;
-    const bodyBackground = window.getComputedStyle(document.body).background;
-    let backgroundColor;
+    const bodyBackground = window.getComputedStyle(
+        document.body
+    ).backgroundColor;
     if (bodyBackground && !bodyBackground.includes("rgba(0, 0, 0, 0)")) {
-        backgroundColor = bodyBackground;
-
-        // else if (htmlBackground && !htmlBackground.includes("rgba(0, 0, 0, 0)")) {
-        //     backgroundColor = htmlBackground;
-        // }
-    } else {
-        backgroundColor = "white";
+        console.log("body", bodyBackground);
+        setCssThemeVariable(backgroundColorThemeVariable, bodyBackground);
+        setCssThemeVariable(originalBackgroundThemeVariable, bodyBackground);
     }
-    background.style.setProperty("background", backgroundColor, "important");
 
-    background.style.setProperty("height", "100%", "important");
+    // Set background color on both <body> and the background element to be more resistant
+    document.body.style.setProperty(
+        "background",
+        `var(${backgroundColorThemeVariable})`,
+        "important"
+    );
 
     // body '100%' may not refer to full height of children (e.g. https://torontolife.com/memoir/the-horrifying-truth-about-my-biological-father/)
     // so also se min-height based on children scollHeight
+    background.style.setProperty("height", "100%", "important");
     background.style.setProperty(
         "min-height",
         `${document.body.scrollHeight}px`,

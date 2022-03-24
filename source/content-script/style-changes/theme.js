@@ -18,6 +18,9 @@ export async function initTheme(domain) {
 
 export const fontSizeThemeVariable = "--lindy-active-font-size";
 export const pageWidthThemeVariable = "--lindy-pagewidth";
+export const backgroundColorThemeVariable = "--lindy-background-color";
+export const originalBackgroundThemeVariable =
+    "--lindy-original-background-color";
 
 export function applySaveThemeOverride(domain, varName, value) {
     // Apply theme change on page
