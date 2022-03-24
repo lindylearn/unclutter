@@ -82,7 +82,7 @@ export default function insertPageSettings(domain) {
                         <div class="lindy-theme-button" id="lindy-white-theme-button"></div>
                     </div>
                     <div>
-                        <div class="lindy-theme-button" id="lindy-dark-theme-button"></div>
+                        <div class="lindy-theme-button" id="lindy-sepia-theme-button"></div>
                     </div>
                 </div>
             </div>
@@ -229,6 +229,6 @@ function _setupThemePopupHandlers(domain) {
         _setTheme("auto");
     document.getElementById("lindy-white-theme-button").onclick = () =>
         _setTheme("white");
-    document.getElementById("lindy-dark-theme-button").onclick = () =>
-        _setTheme("dark");
+    document.getElementById("lindy-sepia-theme-button").onclick = () =>
+        _setTheme("sepia");
 }
