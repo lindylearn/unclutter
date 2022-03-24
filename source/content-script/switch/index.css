@@ -119,7 +119,7 @@
     position: absolute;
     top: -5px;
     right: calc(100% + 10px);
-    width: 150px;
+    width: 130px;
     z-index: 300;
 
     background-color: white;
@@ -153,8 +153,8 @@
 
 /* individual buttons */
 .lindy-plusminus > div {
-    width: 50%;
-    height: 40px;
+    width: 100%;
+    height: 35px;
 
     display: flex;
     justify-content: center;
