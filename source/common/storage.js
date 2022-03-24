@@ -9,7 +9,7 @@ export async function getAllCustomDomainSettings() {
     return {
         allow: Object.keys(config["domain-allowlist"] || {}),
         deny: Object.keys(config["domain-denylist"] || {}),
-        themes: config["custom-domain-themes"],
+        themes: config["custom-domain-themes"] || {},
     };
 }
 

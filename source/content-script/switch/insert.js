@@ -1,3 +1,4 @@
+import throttle from "lodash/throttle";
 import { reportEvent } from "../../common/metrics";
 import browser from "../../common/polyfill";
 import {
@@ -180,11 +181,17 @@ function _setupLinkHandlers() {
 }
 
 function _setupThemePopupHandlers(domain) {
+    // Call reportEvent immediately in case page is closed, but don't send an event for every theme change
+    const throttledReportEvent = throttle(
+        () => reportEvent("changeTheme"),
+        30 * 1000
+    );
     function _changeCssVariable(varName, delta) {
         const currentSize = getThemeValue(varName).replace("px", "");
         const newSizePx = `${parseFloat(currentSize) + delta}px`;
 
         applySaveThemeOverride(domain, varName, newSizePx);
+        throttledReportEvent();
     }
 
     document.getElementById("lindy-fontsize-decrease").onclick = () =>
