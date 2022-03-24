@@ -55,7 +55,12 @@ export default function iterateDOM() {
     let currentElem = largestElem.parentElement;
     while (currentElem !== document.body) {
         // Construct and save element selector
-        const currentSelector = _getNodeSelector(currentElem);
+        const siblingSelector = _getSiblingSelector(currentElem);
+        if (siblingSelector) {
+            containerSelectors.push(siblingSelector);
+        }
+
+        const currentSelector = _getNodeSelector(currentElem); // this adds a unique additional classname
         containerSelectors.push(currentSelector);
 
         // Perform other style changes based on applied runtime style and DOM structure
@@ -102,18 +107,21 @@ function _getNodeSelector(node) {
     const containerId = `container_${Math.random().toString().slice(2)}`;
     node.classList.add(containerId); // will only be applied in next loop
 
-    // ...currentElem.classList,
-    // // only allow valid CSS classnames, e.g. not starting with number
-    // .filter((classname) =>
-    //     /^-?[_a-zA-Z]+[_a-zA-Z0-9-]*$/.test(classname)
-    // )
-
     // construct selector in "tag.class[id='id']" format
     const classNames = [containerId].map((className) => `.${className}`);
     const completeSelector = `${node.tagName.toLowerCase()}${classNames.join(
         ""
     )}${node.id ? `[id='${node.id}']` : ""}`;
     return completeSelector;
+}
+// Get a CSS selector that uses all classes of this element
+// Used to select sibling text containers that use the same style
+function _getSiblingSelector(node) {
+    // only allow valid CSS classnames, e.g. not starting with number
+    return [...node.classList]
+        .filter((classname) => /^-?[_a-zA-Z]+[_a-zA-Z0-9-]*$/.test(classname))
+        .map((className) => `.${className}`)
+        .join("");
 }
 
 function _getNodeOverrideStyles(node, currentSelector, activeStyle) {
