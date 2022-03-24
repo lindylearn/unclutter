@@ -12,6 +12,10 @@ export default async function shouldEnableOnURL(urlText) {
     const url = new URL(urlText);
     const domain = getDomainFrom(url);
 
+    if (!extensionSupportsUrl(url)) {
+        return false;
+    }
+
     // Exclude non-leaf pages
     if (_isNonLeafPage(url)) {
         return false;
@@ -41,8 +45,8 @@ export default async function shouldEnableOnURL(urlText) {
 // Exclude non-leaf directory pages like bbc.com or bcc.com/news.
 // This uses heurstics and won't always be accurate.
 function _isNonLeafPage(url) {
-    // Very clearly not articles
-    if (url.pathname === "/" || url.pathname.endsWith(".pdf")) {
+    // Very likely not articles
+    if (url.pathname === "/") {
         return true;
     }
 
@@ -99,3 +103,21 @@ TODO: should not be enabled here:
     https://www.nytimes.com/interactive/2022/03/11/nyregion/nyc-chinatown-signs.html
     https://www.theatlantic.com/projects/america-in-person/
 */
+
+// If the extension technically supports this extension
+export function extensionSupportsUrl(url) {
+    const fileExtension = url.pathname.split(".").pop();
+    // Can't easily detect blank html path, so blocklist unsupported instead
+    return ![
+        "pdf",
+        "png",
+        "gif",
+        "jpg",
+        "jpeg",
+        "webp",
+        "mp3",
+        "mp4",
+        "css",
+        "js",
+    ].includes(fileExtension);
+}

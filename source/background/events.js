@@ -1,3 +1,4 @@
+import { extensionSupportsUrl } from "../common/articleDetection";
 import {
     allowlistDomainOnManualActivationFeatureFlag,
     collectAnonymousMetricsFeatureFlag,
@@ -15,6 +16,14 @@ import fetchAndRewriteCss from "./rewriteCss";
 
 // toggle page view on extension icon click
 (chrome.action || browser.browserAction).onClicked.addListener(async (tab) => {
+    const url = new URL(tab.url);
+    const domain = getDomainFrom(url);
+
+    if (!extensionSupportsUrl(url)) {
+        // TODO, ideally show some error message here
+        return;
+    }
+
     const didEnable = await enableInTab(tab.id);
     if (!didEnable) {
         // already active, so disable
@@ -28,7 +37,6 @@ import fetchAndRewriteCss from "./rewriteCss";
         if (
             await getFeatureFlag(allowlistDomainOnManualActivationFeatureFlag)
         ) {
-            const domain = getDomainFrom(new URL(tab.url));
             const currentDomainSetting = await getUserSettingForDomain(domain);
             if (currentDomainSetting === null) {
                 setUserSettingsForDomain(domain, "allow");
