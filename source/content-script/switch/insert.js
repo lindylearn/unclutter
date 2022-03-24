@@ -12,9 +12,12 @@ import {
 } from "../style-changes/common";
 import {
     applySaveThemeOverride,
+    backgroundColorThemeVariable,
     fontSizeThemeVariable,
     getThemeValue,
+    originalBackgroundThemeVariable,
     pageWidthThemeVariable,
+    setCssThemeVariable,
 } from "../style-changes/theme";
 
 // Insert a small UI for the user to control the automatic pageview enablement on the current domain.
@@ -190,7 +193,7 @@ function _setupThemePopupHandlers(domain) {
         () => reportEvent("changeTheme"),
         30 * 1000
     );
-    function _changeCssVariable(varName, delta) {
+    function _changeCssPixelVariable(varName, delta) {
         const currentSize = getThemeValue(varName).replace("px", "");
         const newSizePx = `${parseFloat(currentSize) + delta}px`;
 
@@ -199,12 +202,49 @@ function _setupThemePopupHandlers(domain) {
     }
 
     document.getElementById("lindy-fontsize-decrease").onclick = () =>
-        _changeCssVariable(fontSizeThemeVariable, -1);
+        _changeCssPixelVariable(fontSizeThemeVariable, -1);
     document.getElementById("lindy-fontsize-increase").onclick = () =>
-        _changeCssVariable(fontSizeThemeVariable, 1);
+        _changeCssPixelVariable(fontSizeThemeVariable, 1);
 
     document.getElementById("lindy-pagewidth-decrease").onclick = () =>
-        _changeCssVariable(pageWidthThemeVariable, -50);
+        _changeCssPixelVariable(pageWidthThemeVariable, -50);
     document.getElementById("lindy-pagewidth-increase").onclick = () =>
-        _changeCssVariable(pageWidthThemeVariable, 50);
+        _changeCssPixelVariable(pageWidthThemeVariable, 50);
+
+    function _setTheme(themeName) {
+        // Update active state
+        document
+            .querySelectorAll(
+                `.lindy-theme-button:not(#lindy-${themeName}-theme-button)`
+            )
+            .forEach((otherThemeNode) =>
+                otherThemeNode.classList.remove("lindy-active-theme")
+            );
+        document
+            .getElementById(`lindy-${themeName}-theme-button`)
+            .classList.add("lindy-active-theme");
+
+        // Get color of selected theme
+        let backgroundColor;
+        if (themeName === "white") {
+            backgroundColor = "white";
+        } else if (themeName === "dark") {
+            backgroundColor = "black";
+        } else if (themeName === "auto") {
+            backgroundColor = getThemeValue(originalBackgroundThemeVariable);
+        }
+
+        // Update active theme color
+        setCssThemeVariable(
+            backgroundColorThemeVariable,
+            backgroundColor,
+            true
+        );
+    }
+    document.getElementById("lindy-auto-theme-button").onclick = () =>
+        _setTheme("auto");
+    document.getElementById("lindy-white-theme-button").onclick = () =>
+        _setTheme("white");
+    document.getElementById("lindy-dark-theme-button").onclick = () =>
+        _setTheme("dark");
 }
