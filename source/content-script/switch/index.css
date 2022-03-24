@@ -35,7 +35,7 @@
     color: #9ca3af !important;
     overflow: visible;
 }
-.lindy-ui-icon:hover {
+.lindy-tooltip:hover > .lindy-ui-icon:hover {
     color: #4b5563 !important;
     filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.05));
 }
@@ -129,12 +129,18 @@
     cursor: auto;
 
     visibility: hidden;
-    /* transform: translate3d(10px, 0, 0);
-    transition: all 0.05s ease-in; */
+    opacity: 0;
+    transform: translate3d(10px, 0, 0);
+    transition: all 0.05s ease-in;
 }
 .lindy-theme-popup-container:hover > .lindy-theme-popup {
     visibility: visible;
-    /* transform: translate3d(0, 0, 0); */
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+}
+.lindy-theme-popup-container:hover > .lindy-ui-icon {
+    color: #4b5563 !important;
+    filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.05));
 }
 
 /* row with plus and minus buttons */
@@ -234,12 +240,13 @@
 .lindy-theme-popup-container:hover:before {
     position: absolute;
     top: 0;
-    right: calc(100%);
+    right: 0;
 
     display: block;
     content: "";
-    width: 100%;
-    height: 100%;
+    width: 200%;
+    height: 300%;
+    cursor: auto;
 }
 
 @media (prefers-color-scheme: dark) {
