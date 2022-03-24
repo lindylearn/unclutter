@@ -10,7 +10,7 @@ The goal of collecting usage metrics is to understand how the extension is used 
 
 -   How many people who download the extension actually use it? This correllates with my motivation to improve it further.
 -   Is the [automatic mode](https://github.com/lindylearn/unclutter/blob/main/docs/article-detection.md) working as expected? How many people choose to activate it versus configuring a custom list of domains?
--   Are some features actually used, like the website-specific configurations?
+-   Are features like the font size adjustment or custom color scheme worth spending more time on?
 
 ## Collected data
 
@@ -20,6 +20,7 @@ The following events are logged:
 
 -   How often the extension is activated and deactivated on articles, and what triggered the activation (manual icon click, allowlisted domain, or automatic mode).
 -   How many domains you configured the extension to activate or never activate on, and how often this is changed. The domains itself are never logged.
+-   How many custom themes are configured.
 -   Whether settings like automatic mode or the metrics collection are enabled.
 
 To verify this, [search for all references](https://github.com/lindylearn/unclutter/search?q=reportEvent) of `reportEvent()` in this code base or where you downloaded the extension. The released code is bundled in a way to be as readable as possible.
