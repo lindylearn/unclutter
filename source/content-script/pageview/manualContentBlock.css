@@ -338,7 +338,6 @@ article.content {
     display: none !important;
 }
 html.flexbox.flexboxlegacy > body {
-    padding: 0 !important;
     background-color: white !important;
 }
 
