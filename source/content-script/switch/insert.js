@@ -4,22 +4,21 @@ import {
     getUserSettingForDomain,
     setUserSettingsForDomain,
 } from "../../common/storage";
-import { getDomainFrom } from "../../common/util";
 import { togglePageView } from "../enhance";
 import {
     createStylesheetLink,
     overrideClassname,
 } from "../style-changes/common";
-
-export default function insert() {
-    insertPageSettings();
-}
+import {
+    applySaveThemeOverride,
+    fontSizeThemeVariable,
+    getThemeValue,
+    pageWidthThemeVariable,
+} from "../style-changes/theme";
 
 // Insert a small UI for the user to control the automatic pageview enablement on the current domain.
 // Creating an iframe for this doesn't work from injected scripts
-function insertPageSettings() {
-    const domain = getDomainFrom(new URL(window.location.href));
-
+export default function insertPageSettings(domain) {
     const githubLink = `https://github.com/lindylearn/unclutter/issues/new?labels=broken-website&title=${encodeURIComponent(
         `Article doesn't show correctly on ${domain}`
     )}&body=${encodeURIComponent(
@@ -97,7 +96,7 @@ function insertPageSettings() {
 
     _setupDomainToggleState(domain);
     _setupLinkHandlers();
-    _setupThemePopupHandlers();
+    _setupThemePopupHandlers(domain);
 }
 
 function _insertHtml(className, html) {
@@ -180,26 +179,21 @@ function _setupLinkHandlers() {
         chrome.runtime.sendMessage({ event: "openOptionsPage" });
 }
 
-function _setupThemePopupHandlers() {
+function _setupThemePopupHandlers(domain) {
     function _changeCssVariable(varName, delta) {
-        const currentSize = window
-            .getComputedStyle(document.documentElement)
-            .getPropertyValue(varName)
-            .replace("px", "");
+        const currentSize = getThemeValue(varName).replace("px", "");
+        const newSizePx = `${parseFloat(currentSize) + delta}px`;
 
-        document.documentElement.style.setProperty(
-            varName,
-            `${parseFloat(currentSize) + delta}px`
-        );
+        applySaveThemeOverride(domain, varName, newSizePx);
     }
 
     document.getElementById("lindy-fontsize-decrease").onclick = () =>
-        _changeCssVariable("--lindy-active-font-size", -1);
+        _changeCssVariable(fontSizeThemeVariable, -1);
     document.getElementById("lindy-fontsize-increase").onclick = () =>
-        _changeCssVariable("--lindy-active-font-size", 1);
+        _changeCssVariable(fontSizeThemeVariable, 1);
 
     document.getElementById("lindy-pagewidth-decrease").onclick = () =>
-        _changeCssVariable("--lindy-pagewidth", -50);
+        _changeCssVariable(pageWidthThemeVariable, -50);
     document.getElementById("lindy-pagewidth-increase").onclick = () =>
-        _changeCssVariable("--lindy-pagewidth", 50);
+        _changeCssVariable(pageWidthThemeVariable, 50);
 }

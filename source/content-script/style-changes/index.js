@@ -1,19 +1,25 @@
+import { getDomainFrom } from "../../common/util";
 import { insertContentBlockStyle } from "../pageview/contentBlock";
 import { unPatchStylesheets } from "../pageview/patchStylesheets";
 import insert from "../switch/insert";
 import { insertBackground, overrideClassname } from "./background";
 import { modifyBodyStyle, unModifyBodyStyle } from "./body";
 import iterateDOM from "./iterateDOM";
+import { initTheme } from "./theme";
 
 // tweak a site's style dynamically
 export async function enableStyleChanges() {
+    const domain = getDomainFrom(new URL(window.location.href));
+
+    initTheme(domain);
+
     insertBackground();
     insertContentBlockStyle();
 
     // patch after new style applied
     modifyBodyStyle();
 
-    insert();
+    insert(domain);
     // insertPageBrokenText();
 
     iterateDOM();

@@ -1,5 +1,6 @@
 import { minFontSizePx } from "../../common/defaultStorage";
 import { createStylesheetText } from "./common";
+import { fontSizeThemeVariable, setCssThemeVariable } from "./theme";
 
 const globalParagraphSelector = "p, font, pre";
 
@@ -148,10 +149,7 @@ function _setTextFontOverride(largestElem) {
         parseFloat(activeStyle.fontSize),
         minFontSizePx
     );
-    document.documentElement.style.setProperty(
-        "--lindy-active-font-size",
-        `${activeFontSizePx}px`
-    );
+    setCssThemeVariable(fontSizeThemeVariable, `${activeFontSizePx}px`);
 
     // Convert line-height to relative and specify override, in case it was set as px
     // results in NaN if line-height: normal -- which is fine.
@@ -161,13 +159,10 @@ function _setTextFontOverride(largestElem) {
     ).toFixed(1);
 
     const fontSizeStyle = `${globalParagraphSelector} {
-        font-size: var(--lindy-active-font-size) !important;
+        font-size: var(${fontSizeThemeVariable}) !important;
         line-height: ${relativeLineHeight} !important;
     }`;
 
-    document.documentElement.style.setProperty(
-        "--lindy-original-font-size",
-        activeStyle.fontSize
-    );
+    // setCssThemeVariable("--lindy-original-font-size", activeStyle.fontSize);
     createStylesheetText(fontSizeStyle, "lindy-font-size");
 }

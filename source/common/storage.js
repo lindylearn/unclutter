@@ -54,3 +54,18 @@ export async function setUserSettingsForDomain(domain, status) {
         "domain-denylist": config["domain-denylist"],
     });
 }
+
+export async function getDomainUserTheme(domain) {
+    const config = await browser.storage.sync.get(["custom-domain-themes"]);
+    return config["custom-domain-themes"]?.[domain];
+}
+export async function mergeDomainUserTheme(domain, partialTheme) {
+    const config = await browser.storage.sync.get(["custom-domain-themes"]);
+    const themeConfig = config["custom-domain-themes"];
+
+    themeConfig[domain] = {
+        ...themeConfig[domain],
+        ...partialTheme,
+    };
+    await browser.storage.sync.set({ "custom-domain-themes": themeConfig });
+}
