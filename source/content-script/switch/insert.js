@@ -11,13 +11,11 @@ import {
     overrideClassname,
 } from "../style-changes/common";
 import {
+    activeColorThemeVariable,
     applySaveThemeOverride,
-    backgroundColorThemeVariable,
     fontSizeThemeVariable,
     getThemeValue,
-    originalBackgroundThemeVariable,
     pageWidthThemeVariable,
-    setCssThemeVariable,
 } from "../style-changes/theme";
 
 // Insert a small UI for the user to control the automatic pageview enablement on the current domain.
@@ -224,22 +222,8 @@ function _setupThemePopupHandlers(domain) {
             .getElementById(`lindy-${themeName}-theme-button`)
             .classList.add("lindy-active-theme");
 
-        // Get color of selected theme
-        let backgroundColor;
-        if (themeName === "white") {
-            backgroundColor = "white";
-        } else if (themeName === "dark") {
-            backgroundColor = "black";
-        } else if (themeName === "auto") {
-            backgroundColor = getThemeValue(originalBackgroundThemeVariable);
-        }
-
         // Update active theme color
-        setCssThemeVariable(
-            backgroundColorThemeVariable,
-            backgroundColor,
-            true
-        );
+        applySaveThemeOverride(domain, activeColorThemeVariable, themeName);
     }
     document.getElementById("lindy-auto-theme-button").onclick = () =>
         _setTheme("auto");

@@ -3,6 +3,7 @@ import { createStylesheetText } from "./common";
 import {
     backgroundColorThemeVariable,
     fontSizeThemeVariable,
+    getThemeValue,
     originalBackgroundThemeVariable,
     setCssThemeVariable,
 } from "./theme";
@@ -181,12 +182,19 @@ function _processBackgroundColors(textBackgroundColors) {
     // console.log("Found background colors:", textBackgroundColors);
 
     // <body> background color was already saved in ${originalBackgroundThemeVariable} in background.js
-    // Continue to use that if we found no further text colors
-    if (textBackgroundColors.length === 0) {
-        return;
-    }
+    const bodyColor = getThemeValue(originalBackgroundThemeVariable);
 
-    const usedColor = textBackgroundColors[0];
-    setCssThemeVariable(originalBackgroundThemeVariable, usedColor, true);
-    setCssThemeVariable(backgroundColorThemeVariable, usedColor, true);
+    // Pick original color from text stack if set, otherwise use body color
+    let pickedColor;
+    if (textBackgroundColors.length > 0) {
+        pickedColor = textBackgroundColors[0];
+    } else {
+        pickedColor = bodyColor;
+    }
+    setCssThemeVariable(originalBackgroundThemeVariable, pickedColor, true);
+
+    const themeName = getThemeValue(backgroundColorThemeVariable);
+    if (!themeName || themeName === "auto") {
+        setCssThemeVariable(backgroundColorThemeVariable, pickedColor, true);
+    }
 }

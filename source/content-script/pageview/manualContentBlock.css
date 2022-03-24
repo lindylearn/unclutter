@@ -584,3 +584,10 @@ body[link="000099"] {
 body[link="000099"] > table > tbody > tr > td:not(:last-child) {
     display: none !important;
 }
+
+/* https://tonsky.me/blog/disenchantment/ */
+figure {
+    width: 100% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}

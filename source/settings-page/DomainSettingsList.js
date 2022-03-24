@@ -35,8 +35,6 @@ export default function DomainSettingsList({}) {
                 theme: customSettings.themes[obj.domain],
             }));
 
-        console.log(completeList);
-
         setOverrideList(completeList);
     }, []);
 

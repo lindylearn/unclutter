@@ -63,7 +63,7 @@ export async function getDomainUserTheme(domain) {
 }
 export async function mergeDomainUserTheme(domain, partialTheme) {
     const config = await browser.storage.sync.get(["custom-domain-themes"]);
-    const themeConfig = config["custom-domain-themes"];
+    const themeConfig = config["custom-domain-themes"] || {};
 
     themeConfig[domain] = {
         ...themeConfig[domain],

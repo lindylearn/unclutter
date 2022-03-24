@@ -14,24 +14,40 @@ export async function initTheme(domain) {
     if (theme.pageWidth) {
         setCssThemeVariable(pageWidthThemeVariable, theme.pageWidth, true);
     }
+    if (theme.colorTheme) {
+        setCssThemeVariable(activeColorThemeVariable, theme.colorTheme, true);
+
+        const concreteColor = colorThemeToBackgroundColor(theme.colorTheme);
+        setCssThemeVariable(backgroundColorThemeVariable, concreteColor, true);
+    }
 }
 
+// persisted
 export const fontSizeThemeVariable = "--lindy-active-font-size";
 export const pageWidthThemeVariable = "--lindy-pagewidth";
+export const activeColorThemeVariable = "--lindy-color-theme";
+
+// computed
 export const backgroundColorThemeVariable = "--lindy-background-color";
 export const originalBackgroundThemeVariable =
     "--lindy-original-background-color";
 
 export function applySaveThemeOverride(domain, varName, value) {
-    // Apply theme change on page
-    setCssThemeVariable(varName, value, true);
-
-    // Save in storage
     if (varName === fontSizeThemeVariable) {
+        setCssThemeVariable(varName, value, true);
+
         mergeDomainUserTheme(domain, { fontSize: value });
-    }
-    if (varName === pageWidthThemeVariable) {
+    } else if (varName === pageWidthThemeVariable) {
+        setCssThemeVariable(varName, value, true);
+
         mergeDomainUserTheme(domain, { pageWidth: value });
+    } else if (varName === activeColorThemeVariable) {
+        setCssThemeVariable(activeColorThemeVariable, value, true);
+
+        const concreteColor = colorThemeToBackgroundColor(value);
+        setCssThemeVariable(backgroundColorThemeVariable, concreteColor, true);
+
+        mergeDomainUserTheme(domain, { colorTheme: value });
     }
 }
 
@@ -50,4 +66,15 @@ export function setCssThemeVariable(varName, value, overwrite = false) {
     }
 
     document.documentElement.style.setProperty(varName, value);
+}
+
+export function colorThemeToBackgroundColor(themeName) {
+    // Get concrete color of selected theme
+    if (themeName === "white") {
+        return "white";
+    } else if (themeName === "dark") {
+        return "black";
+    } else if (themeName === "auto") {
+        return getThemeValue(originalBackgroundThemeVariable);
+    }
 }
