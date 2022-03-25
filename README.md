@@ -2,7 +2,7 @@
 
 A browser extension to automatically remove distractions from web articles. Contributions are welcome!
 
-![Alt Text](./media/preview1.png)
+![Alt Text](./media/design-demo.gif)
 
 ## Features
 
