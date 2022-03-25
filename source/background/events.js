@@ -77,8 +77,9 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
 });
 
 // run on install, extension update, or browser update
-browser.runtime.onInstalled.addListener(async () => {
+browser.runtime.onInstalled.addListener(async ({ reason }) => {
     const extensionInfo = await browser.management.getSelf();
+    const isNewInstall = reason === "install";
     const isDevelopment = extensionInfo.installType === "development";
 
     if (isDevelopment) {
@@ -88,7 +89,7 @@ browser.runtime.onInstalled.addListener(async () => {
 
     // report aggregates on enabled extension features
     // this function should be executed every few days
-    reportSettings(extensionInfo.version);
+    reportSettings(extensionInfo.version, isNewInstall);
 });
 
 async function enableInTab(tabId) {
