@@ -216,9 +216,9 @@ function _setupThemePopupHandlers(domain) {
         _changeCssPixelVariable(fontSizeThemeVariable, 1);
 
     document.getElementById("lindy-pagewidth-decrease").onclick = () =>
-        _changeCssPixelVariable(pageWidthThemeVariable, -50);
+        _changeCssPixelVariable(pageWidthThemeVariable, -100);
     document.getElementById("lindy-pagewidth-increase").onclick = () =>
-        _changeCssPixelVariable(pageWidthThemeVariable, 50);
+        _changeCssPixelVariable(pageWidthThemeVariable, 100);
 
     // Setup theme selection
     function _setTheme(themeName) {

@@ -61,7 +61,7 @@ function OptionsPage({}) {
                         target="_blank"
                         rel="noopener noreferrer"
                     >
-                        usage metrics
+                        usage statistics
                     </a>{" "}
                     to make the extension better
                 </FeatureFlagSwitch>
