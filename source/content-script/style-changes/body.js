@@ -21,8 +21,8 @@ function _modifyBodyStyle() {
     if (["", "0px"].includes(bodyStyle.paddingTop)) {
         document.body.style.paddingTop = "0.05px";
     }
-    document.body.style.paddingLeft = "30px";
-    document.body.style.paddingRight = "30px";
+    document.body.style.paddingLeft = "40px";
+    document.body.style.paddingRight = "40px";
 
     // html or body tags may have classes with fixed style applied (which we hide via css rewrite)
     document.documentElement.style.setProperty("display", "block", "important");

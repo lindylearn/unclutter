@@ -4,7 +4,7 @@ html.pageview {
 
     /* initial theme variables, updated by JS later */
     /* need on html element to access outside body */
-    --lindy-pagewidth: 900px;
+    --lindy-pagewidth: 780px;
     /* --lindy-active-font-size set in iterateDOM() */
 }
 
