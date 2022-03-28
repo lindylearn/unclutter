@@ -69,3 +69,34 @@ export async function reportSettings(version, isNewInstall) {
         ...domainSettings,
     });
 }
+
+let pageViewEnableTrigger;
+let pageViewEnableStartTime;
+export async function reportEnablePageView(trigger) {
+    reportEvent("enablePageview", { trigger });
+
+    pageViewEnableTrigger = trigger;
+    pageViewEnableStartTime = new Date();
+}
+
+export async function reportDisablePageView(trigger) {
+    let activeSeconds;
+    if (pageViewEnableStartTime) {
+        activeSeconds = (new Date() - pageViewEnableStartTime) / 1000;
+    }
+    reportEvent("disablePageview", {
+        trigger,
+        enableTrigger: pageViewEnableTrigger,
+        elapsedTime: _bucketSeconds(activeSeconds),
+    });
+}
+
+const secondBuckets = [0, 5, 10, 15, 30, 60, 120, 240, 480, 960, 1920, 3840];
+function _bucketSeconds(seconds) {
+    const matchingBuckets = secondBuckets.filter(
+        (breakpoint) => seconds >= breakpoint
+    );
+
+    // return last bucket the numbers falls into
+    return matchingBuckets[matchingBuckets.length - 1];
+}

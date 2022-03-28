@@ -1,4 +1,3 @@
-import { reportEvent } from "../common/metrics";
 import browser from "../common/polyfill";
 import { enablePageView } from "./pageview/enablePageView";
 import { patchStylesheets } from "./pageview/patchStylesheets";
@@ -35,7 +34,10 @@ export function togglePageView() {
             // undo all modifications (including css rewrites and style changes)
             disableStyleChanges();
 
-            reportEvent("disablePageview", { trigger: "backgroundClick" });
+            browser.runtime.sendMessage(null, {
+                event: "disabledPageView",
+                trigger: "backgroundClick",
+            });
         }, true);
 
         // rewrite existing stylesheets

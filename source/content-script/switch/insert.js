@@ -136,7 +136,10 @@ async function _setupDomainToggleState(currentDomain) {
             // leave some time for the user to see the new state icon
             setTimeout(togglePageView, 300);
 
-            reportEvent("disablePageview", { trigger: "blocklistDomain" });
+            browser.runtime.sendMessage(null, {
+                event: "disabledPageView",
+                trigger: "blocklistDomain",
+            });
         }
 
         reportEvent("changeDomainSetting", { newState: userSetting });

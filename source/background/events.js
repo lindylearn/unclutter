@@ -5,7 +5,11 @@ import {
     getFeatureFlag,
     setFeatureFlag,
 } from "../common/featureFlags";
-import { reportEvent, reportSettings } from "../common/metrics";
+import {
+    reportDisablePageView,
+    reportEnablePageView,
+    reportSettings,
+} from "../common/metrics";
 import browser from "../common/polyfill";
 import {
     getUserSettingForDomain,
@@ -20,7 +24,7 @@ import fetchAndRewriteCss from "./rewriteCss";
     const domain = getDomainFrom(url);
 
     if (!extensionSupportsUrl(url)) {
-        // TODO, ideally show some error message here
+        // ideally show some error message here
         return;
     }
 
@@ -29,7 +33,7 @@ import fetchAndRewriteCss from "./rewriteCss";
         // already active, so disable
         togglePageViewMessage(tab.id);
 
-        reportEvent("disablePageview", { trigger: "extensionIcon" });
+        reportDisablePageView("extensionIcon");
     }
 
     if (didEnable) {
@@ -43,16 +47,16 @@ import fetchAndRewriteCss from "./rewriteCss";
             }
         }
 
-        reportEvent("enablePageview", { trigger: "manual" });
+        reportEnablePageView("manual");
     }
 });
 
 // events from content scripts or popup view
 browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    if (message.event === "enablePageView") {
-        enableInTab(message.tabId);
-    } else if (message.event === "disablePageView") {
-        togglePageViewMessage(message.tabId);
+    console.log(`Received '${message.event}' message:`, message);
+
+    if (message.event === "disabledPageView") {
+        reportDisablePageView(message.trigger);
     } else if (message.event === "requestEnhance") {
         // event sent from boot.js to inject additional functionality
         // browser apis are only available in scripts injected from background scripts or manifest.json
@@ -61,10 +65,9 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
         const domain = getDomainFrom(new URL(sender.tab.url));
         getUserSettingForDomain(domain).then((userDomainSetting) =>
-            reportEvent("enablePageview", {
-                trigger:
-                    userDomainSetting === "allow" ? "allowlisted" : "automatic",
-            })
+            reportEnablePageView(
+                userDomainSetting === "allow" ? "allowlisted" : "automatic"
+            )
         );
     } else if (message.event === "rewriteCss") {
         fetchAndRewriteCss(message.params).then(sendResponse);
@@ -104,7 +107,7 @@ async function enableInTab(tabId) {
         // throws error if message listener not loaded
 
         // in that case, just load the content script
-        console.log("Content script not loaded in active tab, injecting it...");
+        console.log("Injecting enhance.js...");
         await _injectScript(tabId, "content-script/enhance.js");
     }
 
