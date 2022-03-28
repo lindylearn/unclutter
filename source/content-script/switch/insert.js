@@ -185,6 +185,9 @@ function _getDomainToggleIcon(userSetting) {
 function _setupLinkHandlers() {
     document.getElementById("lindy-settings-icon").onclick = () =>
         chrome.runtime.sendMessage({ event: "openOptionsPage" });
+
+    document.getElementById("lindy-bug-icon").onclick = () =>
+        reportEvent("reportBugClick");
 }
 
 function _setupThemePopupHandlers(domain) {
