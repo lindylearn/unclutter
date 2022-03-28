@@ -341,9 +341,6 @@ html.flexbox.flexboxlegacy > body {
 }
 
 /* https://www.nasa.gov/content/goddard/hubble-space-telescope-science-instruments */
-.html.page-node {
-    padding: 0 !important;
-}
 #main-content > .wrapper > #content {
     margin-top: 0 !important;
 }
