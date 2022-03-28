@@ -21,26 +21,30 @@ export async function enablePageView(
     });
 
     // allow exiting pageview by clicking on background surrounding pageview (bare <html>)
-    document.documentElement.addEventListener(
-        "click",
-        async (event) => {
-            if (event.target.tagName === "HTML") {
-                htmlClassObserver.disconnect();
+    async function clickListener(event) {
+        if (event.target.tagName === "HTML") {
+            htmlClassObserver.disconnect();
 
-                // make sure the animation is enabled
-                _enableAnimation(true);
-                await new Promise((r) => setTimeout(r, 0));
+            // make sure the animation is enabled
+            _enableAnimation(true);
+            await new Promise((r) => setTimeout(r, 0));
 
-                // disable page view exiting
-                document.documentElement.onclick = null;
-                // disable css style
-                document.documentElement.classList.remove("pageview");
+            // disable page view exiting
+            document.documentElement.onclick = null;
+            // disable css style
+            document.documentElement.classList.remove("pageview");
 
-                disableHook();
-            }
-        },
-        true
-    );
+            disableHook();
+
+            // unsubscribe this handler to prevent future duplicate even handling
+            document.documentElement.removeEventListener(
+                "click",
+                clickListener,
+                true
+            );
+        }
+    }
+    document.documentElement.addEventListener("click", clickListener, true);
 }
 
 async function _enableAnimation(activateNow = false) {

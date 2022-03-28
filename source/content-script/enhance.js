@@ -22,6 +22,7 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }
 });
 
+let isSimulatedClick = false;
 export function togglePageView() {
     // manually toggle pageview status in this tab
 
@@ -29,15 +30,19 @@ export function togglePageView() {
         document.documentElement.classList.contains("pageview");
 
     if (!pageViewEnabled) {
+        isSimulatedClick = false;
         enablePageView(() => {
             // when user exists page view
             // undo all modifications (including css rewrites and style changes)
             disableStyleChanges();
 
-            browser.runtime.sendMessage(null, {
-                event: "disabledPageView",
-                trigger: "backgroundClick",
-            });
+            if (!isSimulatedClick) {
+                // already emitted elsewhere for simulated non-background clicks
+                browser.runtime.sendMessage(null, {
+                    event: "disabledPageView",
+                    trigger: "backgroundClick",
+                });
+            }
         }, true);
 
         // rewrite existing stylesheets
@@ -45,7 +50,8 @@ export function togglePageView() {
 
         enableStyleChanges();
     } else {
-        // hack: simulate click to call disable handlers with correct state
+        // hack: simulate click to call disable handlers with correct state (also from boot.js)
+        isSimulatedClick = true;
         document.documentElement.click();
     }
 }
