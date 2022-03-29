@@ -84,12 +84,13 @@ export default function iterateDOM() {
         .join(", ");
 
     function fadeOut() {
-        // Adjust font and background according to theme
-        _setTextFontOverride(largestElem);
         _processBackgroundColors(backgroundColors);
     }
 
     function pageViewTransition() {
+        // Adjust font according to theme
+        _setTextFontOverride(largestElem);
+
         // Removing margin and cleaning up background, shadows etc
         createStylesheetText(
             _getTextElementChainOverrideStyle(
@@ -156,10 +157,10 @@ function _getTextElementChainOverrideStyle(
         .join(", ");
     return `${matchedTextSelector} {
         width: 100% !important;
-        min-width: 100% !important;
-        max-width: 100% !important;
-        margin-left: 0 !important;
-        margin-right: 0 !important;
+        min-width: 0 !important;
+        max-width: var(--lindy-pagewidth) !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
         padding-left: 0 !important;
         padding-right: 0 !important;
         background: none !important;

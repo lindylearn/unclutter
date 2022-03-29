@@ -9,8 +9,6 @@ export async function enableStyleChanges() {
     // set inline styles to overwrite conflicting site styles
     // re-applies some pageview styles, so run after pageview enabled
     // modifyBodyStyle();
-    // insert Unclutter UI
-    // insert(domain);
     // this will remove all text side margin, so wait until pageview enabled
     // setTimeout(iterateDOM, 100);
 }

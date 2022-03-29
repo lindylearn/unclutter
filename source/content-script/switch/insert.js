@@ -19,7 +19,7 @@ import {
 
 // Insert a small UI for the user to control the automatic pageview enablement on the current domain.
 // Creating an iframe for this doesn't work from injected scripts
-export default function insertPageSettings(domain) {
+export function insertPageSettings(domain) {
     const githubLink = `https://github.com/lindylearn/unclutter/issues/new?labels=broken-website&title=${encodeURIComponent(
         `Article doesn't show correctly on ${domain}`
     )}&body=${encodeURIComponent(

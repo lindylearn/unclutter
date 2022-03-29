@@ -8,6 +8,7 @@ import { insertBackground } from "./style-changes/background";
 import { modifyBodyStyle } from "./style-changes/body";
 import iterateDOM from "./style-changes/iterateDOM";
 import { initTheme } from "./style-changes/theme";
+import { insertPageSettings } from "./switch/insert";
 
 // complete extension functionality injected into a tab
 
@@ -57,16 +58,19 @@ export async function togglePageView() {
         fadeOutDom();
 
         initTheme(domain);
+        insertBackground();
 
         // too small delay here causes jumping transitions
         await new Promise((r) => setTimeout(r, 600));
+
+        // *** PageView transition phase ***
+        // Shift layout and reduce page width in one go
 
         document.body.style.setProperty("transition", "all 0.5s");
 
         enableResponsiveStyle();
         contentBlockHide();
         patchDom();
-        insertBackground();
 
         modifyBodyStyle();
 
@@ -84,6 +88,10 @@ export async function togglePageView() {
                 });
             }
         }, true);
+
+        setTimeout(() => {
+            insertPageSettings(domain);
+        }, 500);
     } else {
         // hack: simulate click to call disable handlers with correct state (also from boot.js)
         isSimulatedClick = true;

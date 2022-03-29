@@ -109,6 +109,8 @@ function hideNoise(fixedPositionRules, expiredRules, newRules) {
             "transition",
             "visibility 0.5s, opacity 0.5s linear"
         );
+
+        animatedRulesToHide.push(rule);
     });
 
     // expiredRules.map((rule) => {
