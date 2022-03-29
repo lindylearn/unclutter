@@ -110,6 +110,15 @@ export default function iterateDOM() {
     return [fadeOut, pageViewTransition];
 }
 
+// undo pageViewTransition()
+export function unPatchDomTransform() {
+    document
+        .querySelectorAll(
+            ".lindy-font-size, .lindy-text-chain-override, .lindy-node-overrides"
+        )
+        .forEach((e) => e.remove());
+}
+
 // Get a CSS selector for the passed node with a high specifity
 function _getNodeSelector(node) {
     // Create new unique class

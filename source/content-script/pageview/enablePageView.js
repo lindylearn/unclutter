@@ -31,17 +31,15 @@ export async function enablePageView(
 
             // disable page view exiting
             document.documentElement.onclick = null;
-            // disable css style
-            document.documentElement.classList.remove("pageview");
-
-            disableHook();
-
             // unsubscribe this handler to prevent future duplicate even handling
             document.documentElement.removeEventListener(
                 "click",
                 clickListener,
                 true
             );
+
+            // pageview class should be removed in disableHook
+            disableHook();
         }
     }
     document.documentElement.addEventListener("click", clickListener, true);

@@ -5,9 +5,8 @@ import {
     disableStyleChanges,
     enableStyleChanges,
     fadeOut,
+    pageViewTransition,
 } from "./style-changes";
-import { modifyBodyStyle } from "./style-changes/body";
-import { insertPageSettings } from "./switch/insert";
 
 // complete extension functionality injected into a tab
 
@@ -41,31 +40,35 @@ export async function togglePageView() {
         // *** Fade-out phase ***
         // Visibly hide noisy elements and meanwhile perform heavy operation
 
-        // wait up to 300ms for animation completion
+        // wait up to 200ms for animation completion
         // don't wait after very long parsing time
         const [transitionTriggers, _] = await Promise.all([
             fadeOut(domain),
             new Promise((r) => setTimeout(r, 200)),
         ]);
-        const [contentBlockHide, enableResponsiveStyle, patchDom] =
-            transitionTriggers;
+        const [
+            contentBlockHide,
+            enableResponsiveStyle,
+            patchDom,
+            restoreOriginalStyle,
+            contentBlockFadeIn,
+        ] = transitionTriggers;
 
         // *** PageView transition phase ***
         // Shift layout and reduce page width in one go
 
-        document.body.style.setProperty("transition", "all 0.2s");
-
-        enableResponsiveStyle();
-        contentBlockHide();
-        patchDom();
-
-        modifyBodyStyle();
+        pageViewTransition(
+            domain,
+            enableResponsiveStyle,
+            contentBlockHide,
+            patchDom
+        );
 
         isSimulatedClick = false;
         await enablePageView(() => {
             // when user exists page view
             // undo all modifications (including css rewrites and style changes)
-            disableStyleChanges();
+            disableStyleChanges(restoreOriginalStyle, contentBlockFadeIn);
 
             if (!isSimulatedClick) {
                 // already emitted elsewhere for simulated non-background clicks
@@ -75,10 +78,6 @@ export async function togglePageView() {
                 });
             }
         }, true);
-
-        setTimeout(() => {
-            insertPageSettings(domain);
-        }, 500);
     } else {
         // hack: simulate click to call disable handlers with correct state (also from boot.js)
         isSimulatedClick = true;

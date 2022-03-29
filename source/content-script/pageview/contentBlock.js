@@ -25,22 +25,32 @@ export function insertContentBlockStyle() {
         )} { visibility: hidden !important; opacity: 0 !important; transition: visibility 0.2s, opacity 0.2s linear; }`;
         // TODO animate to 0 area? height: 0; width: 0; overflow: hidden;
 
-        createStylesheetText(css, "content-block");
+        createStylesheetText(css, "content-block-fadeout");
+    }
+
+    function fadeIn() {
+        const css = `${selectors.join(
+            ", "
+        )} { visibility: visible !important; opacity: 1 !important; transition: visibility 0.2s, opacity 0.2s linear; }`;
+        // TODO animate to 0 area? height: 0; width: 0; overflow: hidden;
+
+        createStylesheetText(css, "content-block-fadein");
     }
 
     // need to actually remove in pageview (may override responsive style)
     function remove() {
         const css = `${selectors.join(", ")} { display: none !important; }`;
-        createStylesheetText(css, "content-block");
+        createStylesheetText(css, "content-block-hide");
 
         createStylesheetLink(
             browser.runtime.getURL(
                 "content-script/pageview/manualContentBlock.css"
-            )
+            ),
+            "content-block-custom-sites"
         );
     }
 
-    return [fadeOut, remove];
+    return [fadeOut, remove, fadeIn];
 }
 
 const blockedTags = ["footer", "aside", "nav", "gpt-ad"];

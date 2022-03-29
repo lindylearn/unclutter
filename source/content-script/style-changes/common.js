@@ -1,8 +1,9 @@
 export const overrideClassname = "lindylearn-document-override";
 
-export function createStylesheetLink(url) {
+export function createStylesheetLink(url, styleId) {
     const link = document.createElement("link");
     link.classList.add(overrideClassname);
+    link.classList.add(styleId);
     link.type = "text/css";
     link.rel = "stylesheet";
     link.href = url;

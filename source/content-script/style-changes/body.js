@@ -53,5 +53,6 @@ export function unModifyBodyStyle() {
     document.body.style.removeProperty("height");
     document.body.style.removeProperty("margin");
     document.body.style.removeProperty("padding");
+    document.body.style.removeProperty("background");
     document.body.style.removeProperty("transition");
 }

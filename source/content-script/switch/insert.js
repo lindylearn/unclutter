@@ -96,7 +96,8 @@ export function insertPageSettings(domain) {
     );
 
     createStylesheetLink(
-        browser.runtime.getURL("content-script/switch/index.css")
+        browser.runtime.getURL("content-script/switch/index.css"),
+        "lindy-switch-style"
     );
 
     _setupDomainToggleState(domain);

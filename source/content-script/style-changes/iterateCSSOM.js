@@ -19,9 +19,12 @@ export async function iterateCSSOM() {
                 cssText = transformProxyCssText(cssText, baseUrl);
 
                 if (cssText) {
-                    const element = createStylesheetText(cssText, styleId);
+                    const element = createStylesheetText(
+                        cssText,
+                        "lindy-stylesheet-proxy"
+                    );
 
-                    sheet.disabled = true;
+                    disableStylesheet(sheet.ownerNode, styleId);
 
                     return element.sheet;
                 }
@@ -81,6 +84,7 @@ export async function iterateCSSOM() {
     return [
         hideNoise.bind(null, fixedPositionRules, expiredRules, newRules),
         enableResponsiveStyle.bind(null, expiredRules, newRules),
+        restoreOriginalStyle.bind(null, expiredRules, newRules),
     ];
 }
 
@@ -182,10 +186,22 @@ function hideNoise(fixedPositionRules, expiredRules, newRules) {
     });
 }
 
+const originalStyleList = [];
+const addedRules = [];
 function enableResponsiveStyle(expiredRules, newRules) {
-    expiredRules.map((rule) => {
-        // actually deleting & reinserting rule is much harder -- need to keep track of (mutating) rule index
+    expiredRules.map((rule, index) => {
+        // actually deleting & reinserting rule is hard -- need to keep track of mutating rule index
         // so simply remove style properties from rule
+
+        // save properties for restoration later
+        // TODO measure performance of this
+        const obj = {};
+        for (const key of rule.style) {
+            obj[key] = rule.style.getPropertyValue(key);
+        }
+        originalStyleList.push(obj);
+
+        // this works, even if it should be read-only in theory
         rule.style = {};
     });
 
@@ -195,12 +211,63 @@ function enableResponsiveStyle(expiredRules, newRules) {
             rule.parentStyleSheet.cssRules.length
         );
         const newRule = rule.parentStyleSheet.cssRules[newIndex];
+
+        addedRules.push(newRule);
     });
 
     animatedRulesToHide.map((rule) => {
         // TODO handle importance
         rule.style.setProperty("display", "none");
     });
+}
+
+function restoreOriginalStyle(expiredRules) {
+    expiredRules.map((rule, index) => {
+        for (const [key, value] of Object.entries(originalStyleList[index])) {
+            rule.style.setProperty(key, value);
+        }
+    });
+
+    addedRules.map((rule) => {
+        rule.style = {};
+    });
+
+    // set up for animation again
+    animatedRulesToHide.map((rule) => {
+        rule.style.setProperty("opacity", "0", "important");
+        rule.style.setProperty("visibility", "hidden", "important");
+
+        rule.style.removeProperty("display");
+    });
+}
+
+export function fadeInNoise() {
+    animatedRulesToHide.map((rule) => {
+        rule.style.setProperty("opacity", "1", "important");
+        rule.style.setProperty("visibility", "visible", "important");
+        rule.style.setProperty(
+            "transition",
+            "visibility 0.2s, opacity 0.2s linear"
+        );
+    });
+}
+
+const disabledClassname = "lindylearn-disabled-style";
+function disableStylesheet(elem, styleId) {
+    elem.disabled = true;
+    elem.classList.add(disabledClassname);
+    elem.classList.add(styleId);
+}
+
+export function reenableOriginalStylesheets() {
+    [...document.getElementsByClassName(disabledClassname)].map((elem) => {
+        elem.classList.remove(disabledClassname);
+        elem.disabled = false;
+    });
+
+    document
+        .querySelectorAll(".lindy-stylesheet-proxy")
+        .forEach((e) => e.remove());
 }
 
 // Send an event to the extensions service worker to rewrite a stylesheet, and wait for a response.
