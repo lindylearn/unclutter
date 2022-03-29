@@ -13,7 +13,11 @@ export async function iterateCSSOM() {
 
                 const styleId = sheet.href.split("/").pop().split(".")[0];
 
-                const cssText = await fetchCssRemote(sheet.href);
+                let cssText = await fetchCssRemote(sheet.href);
+
+                const baseUrl = sheet.href || window.location.href;
+                cssText = transformProxyCssText(cssText, baseUrl);
+
                 if (cssText) {
                     const element = createStylesheetText(cssText, styleId);
 
@@ -41,6 +45,7 @@ export async function iterateCSSOM() {
                 ) {
                     fixedPositionRules.push(rule);
                 }
+                styleRuleTweaks(rule);
             } else if (rule.type === CSSRule.SUPPORTS_RULE) {
                 // recurse
                 mapAggregatedRule(rule);
@@ -114,6 +119,25 @@ function unitToPx(unit, value) {
     } else {
         console.error(`Unexpected media query breakpoint unit ${unit}:`, value);
         return 1000000;
+    }
+}
+
+function styleRuleTweaks(rule) {
+    // hack: remove vw and vh rules for now (mostly used to add margin, which we already add elsewhere)
+    // conditionScale is not neccessarily equal to actual pageview with, so cannot easily get correct margin
+    if (
+        rule.style.getPropertyValue("width")?.includes("vw") ||
+        rule.style.getPropertyValue("min-width")?.includes("vw")
+    ) {
+        rule.style.setProperty("width", "100%");
+        rule.style.setProperty("min-width", "100%");
+    }
+    if (
+        rule.style.getPropertyValue("height")?.includes("vh") ||
+        rule.style.getPropertyValue("min-height")?.includes("vh")
+    ) {
+        rule.style.setProperty("height", "100%");
+        rule.style.setProperty("min-height", "100%");
     }
 }
 
@@ -194,6 +218,54 @@ async function fetchCssRemote(url) {
     }
     console.error(`Error fetching CSS`);
     return null;
+}
+function transformProxyCssText(cssText, baseUrl) {
+    // Transform css text before old style is replaced to prevent flicker
+
+    // New inline style will have different base ref than imported stylesheets, so replace relative file references
+    // e.g. https://arstechnica.com/science/2022/03/plant-based-nanocrystals-could-be-the-secret-to-preventing-crunchy-ice-cream/
+    cssText = cssText.replace(
+        /url\((('.+?')|(".+?")|([^\)]*?))\)/g,
+        (match) => {
+            try {
+                const relativeUrl = match
+                    .replace(/^url\((.*)\)$/, "$1")
+                    .trim()
+                    .replace(/^"(.*)"$/, "$1")
+                    .replace(/^'(.*)'$/, "$1");
+                const absoluteUrl = new URL(relativeUrl, baseUrl);
+
+                return `url("${absoluteUrl}")`;
+            } catch (err) {
+                console.error(
+                    "Not able to replace relative URL with Absolute URL, skipping",
+                    err
+                );
+                return match;
+            }
+        }
+    );
+
+    // TODO parse imported sheets as well? or get notified through listener?
+    // TODO find example site for import rules
+    // cssText = cssText.replace(
+    //     /@import\s*(url\()?(('.+?')|(".+?")|([^\)]*?))\)? ?(screen)?;?/gi,
+    //     (match) => {
+    //         try {
+    //             console.log(match);
+
+    //             return match;
+    //         } catch (err) {
+    //             console.error(
+    //                 "Not able to replace relative URL with Absolute URL, skipping",
+    //                 err
+    //             );
+    //             return match;
+    //         }
+    //     }
+    // );
+
+    return cssText;
 }
 
 export function disable() {}
