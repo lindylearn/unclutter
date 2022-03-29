@@ -113,6 +113,12 @@ main {
 .eu.ev ~ .o.ct {
     display: none !important;
 }
+.pw-post-byline-header {
+    display: none !important;
+}
+.fb.l > .o.dd > .ds {
+    display: none !important;
+}
 
 /* https://www.gamesindustry.biz/articles/2022-02-24-studios-call-for-support-in-face-of-russian-invasion-of-ukraine */
 .coverage-promo,
@@ -527,7 +533,8 @@ article ~ article {
 }
 
 /* https://www.theverge.com/2022/3/16/22981230/amazonians-united-warehouse-walkouts-3-raise-breaks */
-.l-header {
+.l-header,
+.remixd-wrapper {
     display: none !important;
 }
 
@@ -586,4 +593,9 @@ figure {
     width: 100% !important;
     margin-left: auto !important;
     margin-right: auto !important;
+}
+
+/* https://science.ubc.ca/news/new-nasal-spray-treats-delta-variant-infection-mice-indicating-broad-spectrum-results */
+header[role="banner"] {
+    display: none !important;
 }

@@ -1,4 +1,4 @@
-// Perform various fixes to a site's body tag to improve the page view display
+// Perform various inline style fixes to overwrite site styles
 let styleObserver;
 export function modifyBodyStyle() {
     _modifyBodyStyle();

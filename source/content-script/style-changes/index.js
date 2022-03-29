@@ -1,29 +1,18 @@
-import { getDomainFrom } from "../../common/util";
-import { insertContentBlockStyle } from "../pageview/contentBlock";
 import { unPatchStylesheets } from "../pageview/patchStylesheets";
-import insert from "../switch/insert";
-import { insertBackground, overrideClassname } from "./background";
-import { modifyBodyStyle, unModifyBodyStyle } from "./body";
-import iterateDOM from "./iterateDOM";
-import { initTheme } from "./theme";
+import { overrideClassname } from "./background";
+import { unModifyBodyStyle } from "./body";
 
 // tweak a site's style dynamically
 export async function enableStyleChanges() {
-    const domain = getDomainFrom(new URL(window.location.href));
-
-    initTheme(domain);
-    insertBackground();
-
-    insertContentBlockStyle();
-
-    // patch after new style applied
-    modifyBodyStyle();
-
-    insert(domain);
-    // insertPageBrokenText();
-
-    // this will remove all text side margin, so wait until pageview is likely enabled
-    setTimeout(iterateDOM, 100);
+    // set up theme variables, does not apply them yet
+    // insert background that respects theme variables, may be overshadowed by text containers
+    // set inline styles to overwrite conflicting site styles
+    // re-applies some pageview styles, so run after pageview enabled
+    // modifyBodyStyle();
+    // insert Unclutter UI
+    // insert(domain);
+    // this will remove all text side margin, so wait until pageview enabled
+    // setTimeout(iterateDOM, 100);
 }
 export async function disableStyleChanges() {
     // restore original styles first

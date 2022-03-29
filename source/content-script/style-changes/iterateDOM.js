@@ -83,22 +83,30 @@ export default function iterateDOM() {
         .map((tag) => `${containerSelectors[0]} > ${tag}`)
         .join(", ");
 
-    // Insert override styles
-    createStylesheetText(
-        overrideCssDeclarations.join("\n"),
-        "lindy-node-overrides"
-    );
-    createStylesheetText(
-        _getTextElementChainOverrideStyle(
-            containerSelectors,
-            matchedParagraphSelector
-        ),
-        "lindy-text-chain-override"
-    );
+    function fadeOut() {
+        // Adjust font and background according to theme
+        _setTextFontOverride(largestElem);
+        _processBackgroundColors(backgroundColors);
+    }
 
-    _setTextFontOverride(largestElem);
+    function pageViewTransition() {
+        // Removing margin and cleaning up background, shadows etc
+        createStylesheetText(
+            _getTextElementChainOverrideStyle(
+                containerSelectors,
+                matchedParagraphSelector
+            ),
+            "lindy-text-chain-override"
+        );
 
-    _processBackgroundColors(backgroundColors);
+        // Display fixes with visible layout shift (e.g. removing horizontal partitioning)
+        createStylesheetText(
+            overrideCssDeclarations.join("\n"),
+            "lindy-node-overrides"
+        );
+    }
+
+    return [fadeOut, pageViewTransition];
 }
 
 // Get a CSS selector for the passed node with a high specifity
@@ -157,6 +165,7 @@ function _getTextElementChainOverrideStyle(
         background: none !important;
         border: none !important;
         box-shadow: none !important;
+        transition: all 0.5s;
     }`;
 }
 

@@ -74,10 +74,30 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
         return true;
     } else if (message.event === "openOptionsPage") {
         chrome.runtime.openOptionsPage();
+    } else if (message.event === "fetchCss") {
+        fetchCss(message.url).then(sendResponse);
+        return true;
     }
 
     return false;
 });
+
+async function fetchCss(url) {
+    try {
+        const response = await fetch(url);
+        const cssText = await response.text();
+
+        return {
+            status: "success",
+            cssText,
+        };
+    } catch (err) {
+        return {
+            status: "error",
+            err,
+        };
+    }
+}
 
 // run on install, extension update, or browser update
 browser.runtime.onInstalled.addListener(async ({ reason }) => {

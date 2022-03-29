@@ -18,20 +18,29 @@ export function insertContentBlockStyle() {
         .concat(classWordSelectors)
         .concat(idSelectors)
         .concat(roleSelectors);
-    const css = `${selectors.join(", ")} { display: none !important; }`;
 
-    createStylesheetText(css, "content-block");
-    createStylesheetLink(
-        browser.runtime.getURL("content-script/pageview/manualContentBlock.css")
-    );
-    // TODO parse config to add page-specific CSS
-    if (window.location.href.includes("medium.com")) {
-        // they seem to JS CSSOM trickery for the page height
-        createStylesheetText(
-            "html.pageview > body { overflow-y: visible !important; }",
-            "page-specific-fix"
+    function fadeOut() {
+        const css = `${selectors.join(
+            ", "
+        )} { visibility: hidden !important; opacity: 0 !important; transition: visibility 0.5s, opacity 0.5s linear; }`;
+        // TODO animate to 0 area? height: 0; width: 0; overflow: hidden;
+
+        createStylesheetText(css, "content-block");
+    }
+
+    // need to actually remove in pageview (may override responsive style)
+    function remove() {
+        const css = `${selectors.join(", ")} { display: none !important; }`;
+        createStylesheetText(css, "content-block");
+
+        createStylesheetLink(
+            browser.runtime.getURL(
+                "content-script/pageview/manualContentBlock.css"
+            )
         );
     }
+
+    return [fadeOut, remove];
 }
 
 const blockedTags = ["footer", "aside", "nav", "gpt-ad"];
@@ -56,6 +65,7 @@ const blockedWords = [
     "subscribe",
     // "modal",
     "announcement",
+    "alert",
     // "cookie",
     "consent",
     "cleanslate",
@@ -83,4 +93,7 @@ const blockedClasses = [
     "#marquee-ad",
     ".ad-unit",
     ".GlobalNav",
+    "#bannerandheader",
+    ".site-header",
+    "#site_banner",
 ];

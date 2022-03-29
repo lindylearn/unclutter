@@ -21,6 +21,11 @@ html.pageview > body {
     overflow-x: hidden !important;
     overflow-y: hidden !important;
 
+    /* margins are also set inline in body.js for higher specifity */
+    margin-top: 0.05px !important;
+    padding-left: 40px !important;
+    padding-right: 40px !important;
+
     cursor: auto;
 
     /* caution: using filter: drop-shadow() here causes rendering lag */

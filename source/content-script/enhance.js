@@ -1,7 +1,13 @@
 import browser from "../common/polyfill";
+import { getDomainFrom } from "../common/util";
+import { insertContentBlockStyle } from "./pageview/contentBlock";
+import { iterateCSSOM } from "./pageview/cssom";
 import { enablePageView } from "./pageview/enablePageView";
-import { patchStylesheets } from "./pageview/patchStylesheets";
 import { disableStyleChanges, enableStyleChanges } from "./style-changes";
+import { insertBackground } from "./style-changes/background";
+import { modifyBodyStyle } from "./style-changes/body";
+import iterateDOM from "./style-changes/iterateDOM";
+import { initTheme } from "./style-changes/theme";
 
 // complete extension functionality injected into a tab
 
@@ -23,15 +29,49 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
 });
 
 let isSimulatedClick = false;
-export function togglePageView() {
+export async function togglePageView() {
     // manually toggle pageview status in this tab
 
     const pageViewEnabled =
         document.documentElement.classList.contains("pageview");
 
     if (!pageViewEnabled) {
+        const domain = getDomainFrom(new URL(window.location.href));
+
+        // *** Fade-out phase ***
+        // Visibly hide noisy elements, and meanwhile perform heavy operation
+
+        const start = performance.now();
+        const [hideNoise, enableResponsiveStyle] = await iterateCSSOM();
+        const duration = performance.now() - start;
+        console.log(`Took ${Math.round(duration)}ms to iterate CSSOM`);
+
+        hideNoise();
+
+        // hide some noisy DOM elements with fade-out effect
+        const [contentBlockFadeOut, contentBlockHide] =
+            insertContentBlockStyle();
+        contentBlockFadeOut();
+
+        const [fadeOutDom, patchDom] = iterateDOM();
+        fadeOutDom();
+
+        initTheme(domain);
+
+        // too small delay here causes jumping transitions
+        await new Promise((r) => setTimeout(r, 600));
+
+        document.body.style.setProperty("transition", "all 0.5s");
+
+        enableResponsiveStyle();
+        contentBlockHide();
+        patchDom();
+        insertBackground();
+
+        modifyBodyStyle();
+
         isSimulatedClick = false;
-        enablePageView(() => {
+        await enablePageView(() => {
             // when user exists page view
             // undo all modifications (including css rewrites and style changes)
             disableStyleChanges();
@@ -44,11 +84,6 @@ export function togglePageView() {
                 });
             }
         }, true);
-
-        // rewrite existing stylesheets
-        patchStylesheets([...document.styleSheets]);
-
-        enableStyleChanges();
     } else {
         // hack: simulate click to call disable handlers with correct state (also from boot.js)
         isSimulatedClick = true;
