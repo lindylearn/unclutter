@@ -22,7 +22,7 @@ export function insertContentBlockStyle() {
     function fadeOut() {
         const css = `${selectors.join(
             ", "
-        )} { visibility: hidden !important; opacity: 0 !important; transition: visibility 0.3s, opacity 0.3s linear; }`;
+        )} { visibility: hidden !important; opacity: 0 !important; transition: visibility 0.2s, opacity 0.2s linear; }`;
         // TODO animate to 0 area? height: 0; width: 0; overflow: hidden;
 
         createStylesheetText(css, "content-block");

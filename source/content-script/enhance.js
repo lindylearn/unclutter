@@ -45,7 +45,7 @@ export async function togglePageView() {
         // don't wait after very long parsing time
         const [transitionTriggers, _] = await Promise.all([
             fadeOut(domain),
-            new Promise((r) => setTimeout(r, 300)),
+            new Promise((r) => setTimeout(r, 200)),
         ]);
         const [contentBlockHide, enableResponsiveStyle, patchDom] =
             transitionTriggers;
@@ -53,7 +53,7 @@ export async function togglePageView() {
         // *** PageView transition phase ***
         // Shift layout and reduce page width in one go
 
-        document.body.style.setProperty("transition", "all 0.3s");
+        document.body.style.setProperty("transition", "all 0.2s");
 
         enableResponsiveStyle();
         contentBlockHide();
