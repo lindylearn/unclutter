@@ -1,11 +1,11 @@
 import browser from "../common/polyfill";
 import { getDomainFrom } from "../common/util";
 import { insertContentBlockStyle } from "./pageview/contentBlock";
-import { iterateCSSOM } from "./pageview/cssom";
 import { enablePageView } from "./pageview/enablePageView";
 import { disableStyleChanges, enableStyleChanges } from "./style-changes";
 import { insertBackground } from "./style-changes/background";
 import { modifyBodyStyle } from "./style-changes/body";
+import { iterateCSSOM } from "./style-changes/iterateCSSOM";
 import iterateDOM from "./style-changes/iterateDOM";
 import { initTheme } from "./style-changes/theme";
 import { insertPageSettings } from "./switch/insert";

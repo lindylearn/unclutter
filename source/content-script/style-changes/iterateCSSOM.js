@@ -1,5 +1,5 @@
 import browser from "../../common/polyfill";
-import { createStylesheetText } from "../style-changes/common";
+import { createStylesheetText } from "./common";
 
 export async function iterateCSSOM() {
     const stylesheets = [...document.styleSheets];
@@ -48,28 +48,11 @@ export async function iterateCSSOM() {
                 // recurse
                 mapAggregatedRule(rule);
 
-                // TODO ideally, iterate the media list
-                const condition = rule.media[0];
-
-                // get viewport range where condition applies
-                let min = 0;
-                let max = Infinity;
-                let minMatch = /\(min-width:\s*([0-9]+)px/g.exec(
-                    condition
-                )?.[1];
-                let maxMatch = /\(max-width:\s*([0-9]+)px/g.exec(
-                    condition
-                )?.[1];
-                if (minMatch) {
-                    min = parseInt(minMatch);
-                }
-                if (maxMatch) {
-                    max = parseInt(maxMatch);
-                }
-
-                const appliedBefore = min <= oldWidth && oldWidth <= max;
-                const appliesNow = min <= newWidth && newWidth <= max;
-
+                const [appliedBefore, appliesNow] = parseMediaCondition(
+                    rule,
+                    oldWidth,
+                    newWidth
+                );
                 if (appliedBefore && !appliesNow) {
                     expiredRules.push(
                         ...[...rule.cssRules].filter((rule) => !!rule.style)
@@ -90,13 +73,48 @@ export async function iterateCSSOM() {
             mapAggregatedRule(sheet);
         });
 
-    // console.log("expiredRules", expiredRules);
-    // console.log("newRules", newRules);
-
     return [
         hideNoise.bind(null, fixedPositionRules, expiredRules, newRules),
         enableResponsiveStyle.bind(null, expiredRules, newRules),
     ];
+}
+
+function parseMediaCondition(rule, oldWidth, newWidth) {
+    // TODO ideally, iterate the media list
+    const condition = rule.media[0];
+
+    // get viewport range where condition applies
+    let min = 0;
+    let max = Infinity;
+    let minMatch = /\(min-width:\s*([0-9]+)([a-z]+)/g.exec(condition);
+    let maxMatch = /\(max-width:\s*([0-9]+)([a-z]+)/g.exec(condition);
+    if (minMatch) {
+        min = unitToPx(minMatch[2], parseFloat(minMatch[1]));
+    }
+    if (maxMatch) {
+        max = unitToPx(maxMatch[2], parseFloat(maxMatch[1]));
+    }
+
+    const appliedBefore = min <= oldWidth && oldWidth <= max;
+    const appliesNow = min <= newWidth && newWidth <= max;
+
+    return [appliedBefore, appliesNow];
+}
+
+function unitToPx(unit, value) {
+    if (unit === "px") {
+        return value;
+    } else if (unit === "em" || unit === "rem") {
+        const rootFontSize = window
+            .getComputedStyle(document.documentElement)
+            .getPropertyValue("font-size");
+        const rootFontSizePx = parseFloat(rootFontSize.match(/\d+/)[0]);
+
+        return value * rootFontSizePx;
+    } else {
+        console.error(`Unexpected media query breakpoint unit ${unit}:`, value);
+        return 1000000;
+    }
 }
 
 const animatedRulesToHide = [];
@@ -161,8 +179,6 @@ function enableResponsiveStyle(expiredRules, newRules) {
     });
 }
 
-export function disable() {}
-
 // Send an event to the extensions service worker to rewrite a stylesheet, and wait for a response.
 async function fetchCssRemote(url) {
     const response = await browser.runtime.sendMessage(null, {
@@ -179,3 +195,5 @@ async function fetchCssRemote(url) {
     console.error(`Error fetching CSS`);
     return null;
 }
+
+export function disable() {}
