@@ -55,10 +55,10 @@ async function _enableAnimation(activateNow = false) {
     // set animation style inline to have out transition
     // easeOutExpo from easings.net
     document.body.style.transition = `
-        margin 0.6s cubic-bezier(0.16, 1, 0.3, 1),
-        padding 0.6s cubic-bezier(0.16, 1, 0.3, 1s,
-        width  0.6s cubic-bezier(0.16, 1, 0.3, 1),
-        max-width  0.6s cubic-bezier(0.16, 1, 0.3, 1)
+        margin 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+        padding 0.3s cubic-bezier(0.16, 1, 0.3, 1s,
+        width  0.3s cubic-bezier(0.16, 1, 0.3, 1),
+        max-width  0.3s cubic-bezier(0.16, 1, 0.3, 1)
     `;
 
     if (activateNow) {

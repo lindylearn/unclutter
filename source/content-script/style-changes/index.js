@@ -1,17 +1,33 @@
+import { insertContentBlockStyle } from "../pageview/contentBlock";
 import { unPatchStylesheets } from "../pageview/patchStylesheets";
-import { overrideClassname } from "./background";
+import { insertBackground, overrideClassname } from "./background";
 import { unModifyBodyStyle } from "./body";
+import { iterateCSSOM } from "./iterateCSSOM";
+import iterateDOM from "./iterateDOM";
+import { initTheme } from "./theme";
 
-// tweak a site's style dynamically
-export async function enableStyleChanges() {
-    // set up theme variables, does not apply them yet
-    // insert background that respects theme variables, may be overshadowed by text containers
-    // set inline styles to overwrite conflicting site styles
-    // re-applies some pageview styles, so run after pageview enabled
-    // modifyBodyStyle();
-    // this will remove all text side margin, so wait until pageview enabled
-    // setTimeout(iterateDOM, 100);
+export async function enableStyleChanges() {}
+
+export async function fadeOut(domain) {
+    // do content block first as it shows changes immediately
+    const [contentBlockFadeOut, contentBlockHide] = insertContentBlockStyle();
+    contentBlockFadeOut();
+
+    const start = performance.now();
+    const [hideNoise, enableResponsiveStyle] = await iterateCSSOM();
+    const duration = performance.now() - start;
+    console.log(`Took ${Math.round(duration)}ms to iterate CSSOM`);
+    hideNoise();
+
+    const [fadeOutDom, patchDom] = iterateDOM();
+    fadeOutDom();
+
+    initTheme(domain);
+    insertBackground();
+
+    return [contentBlockHide, enableResponsiveStyle, patchDom];
 }
+
 export async function disableStyleChanges() {
     // restore original styles first
     unPatchStylesheets();

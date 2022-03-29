@@ -1,13 +1,12 @@
 import browser from "../common/polyfill";
 import { getDomainFrom } from "../common/util";
-import { insertContentBlockStyle } from "./pageview/contentBlock";
 import { enablePageView } from "./pageview/enablePageView";
-import { disableStyleChanges, enableStyleChanges } from "./style-changes";
-import { insertBackground } from "./style-changes/background";
+import {
+    disableStyleChanges,
+    enableStyleChanges,
+    fadeOut,
+} from "./style-changes";
 import { modifyBodyStyle } from "./style-changes/body";
-import { iterateCSSOM } from "./style-changes/iterateCSSOM";
-import iterateDOM from "./style-changes/iterateDOM";
-import { initTheme } from "./style-changes/theme";
 import { insertPageSettings } from "./switch/insert";
 
 // complete extension functionality injected into a tab
@@ -40,33 +39,21 @@ export async function togglePageView() {
         const domain = getDomainFrom(new URL(window.location.href));
 
         // *** Fade-out phase ***
-        // Visibly hide noisy elements, and meanwhile perform heavy operation
+        // Visibly hide noisy elements and meanwhile perform heavy operation
 
-        const start = performance.now();
-        const [hideNoise, enableResponsiveStyle] = await iterateCSSOM();
-        const duration = performance.now() - start;
-        console.log(`Took ${Math.round(duration)}ms to iterate CSSOM`);
-
-        hideNoise();
-
-        // hide some noisy DOM elements with fade-out effect
-        const [contentBlockFadeOut, contentBlockHide] =
-            insertContentBlockStyle();
-        contentBlockFadeOut();
-
-        const [fadeOutDom, patchDom] = iterateDOM();
-        fadeOutDom();
-
-        initTheme(domain);
-        insertBackground();
-
-        // too small delay here causes jumping transitions
-        await new Promise((r) => setTimeout(r, 600));
+        // wait up to 300ms for animation completion
+        // don't wait after very long parsing time
+        const [transitionTriggers, _] = await Promise.all([
+            fadeOut(domain),
+            new Promise((r) => setTimeout(r, 300)),
+        ]);
+        const [contentBlockHide, enableResponsiveStyle, patchDom] =
+            transitionTriggers;
 
         // *** PageView transition phase ***
         // Shift layout and reduce page width in one go
 
-        document.body.style.setProperty("transition", "all 0.5s");
+        document.body.style.setProperty("transition", "all 0.3s");
 
         enableResponsiveStyle();
         contentBlockHide();

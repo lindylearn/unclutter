@@ -125,7 +125,7 @@ function hideNoise(fixedPositionRules, expiredRules, newRules) {
         rule.style.setProperty("visibility", "hidden", "important");
         rule.style.setProperty(
             "transition",
-            "visibility 0.5s, opacity 0.5s linear"
+            "visibility 0.3s, opacity 0.3s linear"
         );
 
         animatedRulesToHide.push(rule);
@@ -150,7 +150,7 @@ function hideNoise(fixedPositionRules, expiredRules, newRules) {
             rule.style.setProperty("visibility", "hidden", "important");
             rule.style.setProperty(
                 "transition",
-                "visibility 0.5s, opacity 0.5s linear"
+                "visibility 0.3s, opacity 0.3s linear"
             );
 
             animatedRulesToHide.push(rule);
