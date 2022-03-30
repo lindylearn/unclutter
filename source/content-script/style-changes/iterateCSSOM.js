@@ -145,32 +145,38 @@ function styleRuleTweaks(rule) {
     }
 }
 
-const animatedRulesToHide = [];
-function hideNoise(fixedPositionRules, expiredRules, newRules) {
-    fixedPositionRules.map((rule) => {
-        rule.style.setProperty("display", "block", "important");
+const animatedRulesToHide = []; // list of obj and previous display style
+let fixedPositionRules = [];
+function hideNoise(fixedPositionRulesArg, expiredRules, newRules) {
+    fixedPositionRules = fixedPositionRulesArg;
+
+    fixedPositionRulesArg.map((rule) => {
+        // Check which elements were actually visible
+        // This does not catch all visible elements, e.g. if another rule overrides opacity
+        // Alternative is window.getComputedStyle(), which is more expensive to call
+        if (
+            rule.style.getPropertyValue("display") !== "none" &&
+            rule.style.getPropertyValue("opacity") !== "0"
+        ) {
+            // Element is visible right now, so re-enable when disabling pageview
+            // might be hidden by another rule, which is fine
+
+            // Save current display to keep e.g. flex at https://www.esa.int/Enabling_Support/Space_Transportation/Ariane_6_Vega-C_microlaunchers_ESA_looks_to_full_range_of_launch_options_for_European_institutional_missions
+            animatedRulesToHide.push([
+                rule,
+                rule.style.getPropertyValue("display"),
+            ]);
+        }
+
+        // Hide every static element as it could popup up later
+        rule.style.removeProperty("display");
         rule.style.setProperty("opacity", "0", "important");
         rule.style.setProperty("visibility", "hidden", "important");
         rule.style.setProperty(
             "transition",
             "visibility 0.2s, opacity 0.2s linear"
         );
-
-        animatedRulesToHide.push(rule);
     });
-
-    // expiredRules.map((rule) => {
-    //     // CSSStyleDeclaration has getters for every CSS property
-    //     // Alternative to for...of is iterate via index and item()
-    //     for (const key of rule.style) {
-    //         const value = rule.style.getPropertyValue(key);
-    //         console.log("removed", key, value);
-
-    //         if (key === "display" && value !== "none") {
-    //             rule.style.setProperty("background-color", "red", "important");
-    //         }
-    //     }
-    // });
 
     newRules.map((rule) => {
         if (rule.style.getPropertyValue("display") === "none") {
@@ -181,7 +187,9 @@ function hideNoise(fixedPositionRules, expiredRules, newRules) {
                 "visibility 0.2s, opacity 0.2s linear"
             );
 
-            animatedRulesToHide.push(rule);
+            // TODO insert a new rule?
+
+            animatedRulesToHide.push([rule, "block"]);
         }
     });
 }
@@ -215,9 +223,11 @@ function enableResponsiveStyle(expiredRules, newRules) {
         addedRules.push(newRule);
     });
 
-    animatedRulesToHide.map((rule) => {
-        // TODO handle importance
-        rule.style.setProperty("display", "none");
+    fixedPositionRules.map((rule) => {
+        rule.style.setProperty("display", "none", "important");
+    });
+    animatedRulesToHide.map(([rule, display]) => {
+        rule.style.setProperty("display", "none", "important");
     });
 }
 
@@ -233,18 +243,22 @@ function restoreOriginalStyle(expiredRules) {
     });
 
     // set up for animation again
-    animatedRulesToHide.map((rule) => {
+    animatedRulesToHide.map(([rule, display]) => {
         rule.style.setProperty("opacity", "0", "important");
         rule.style.setProperty("visibility", "hidden", "important");
 
-        rule.style.removeProperty("display");
+        // Position: sticky doesn't show correctly unfortunately
+        // e.g. at https://slack.com/intl/en-gb/blog/collaboration/etiquette-tips-in-slack
+
+        rule.style.setProperty("display", display);
     });
 }
 
 export function fadeInNoise() {
-    animatedRulesToHide.map((rule) => {
-        rule.style.setProperty("opacity", "1", "important");
-        rule.style.setProperty("visibility", "visible", "important");
+    animatedRulesToHide.map(([rule, display]) => {
+        console.log(rule.selectorText, display);
+        rule.style.removeProperty("opacity", "1");
+        rule.style.removeProperty("visibility", "visible");
         rule.style.setProperty(
             "transition",
             "visibility 0.2s, opacity 0.2s linear"
