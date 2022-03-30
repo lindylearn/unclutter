@@ -8,13 +8,18 @@ export async function iterateCSSOM() {
             // Only consider applicable stylesheets
             // e.g. 'print' at https://www.theguardian.com/world/2022/mar/25/russian-troops-mutiny-commander-ukraine-report-western-officials
             // TODO also consider responsive styles that would become valid?
+
             if (
                 sheet.disabled ||
+                sheet.ownerNode?.classList.contains(
+                    "lindylearn-document-override"
+                ) ||
+                sheet.ownerNode?.classList.contains("darkreader") ||
                 !window.matchMedia(sheet.media.mediaText).matches
             ) {
-                console.log(
-                    `Excluding stylesheet with media condition '${sheet.media.mediaText}'`
-                );
+                // console.log(
+                //     `Excluding stylesheet with class ${sheet.ownerNode?.classList} and media condition '${sheet.media.mediaText}'`
+                // );
                 return;
             }
 
@@ -40,9 +45,15 @@ export async function iterateCSSOM() {
                 sheet.cssRules;
                 return sheet;
             } catch (err) {
+                if (!sheet.href) {
+                    // e.g. cannot access CSSOM style rules created by Dark Reader on Firefox
+                    console.log(`Inaccessible stylesheet:`, sheet, err);
+                    return;
+                }
+
                 console.log(`Replicating ${sheet.href}...`);
 
-                const styleId = sheet.href.split("/").pop().split(".")[0];
+                const styleId = sheet.href?.split("/").pop().split(".")[0];
 
                 let cssText = await fetchCssRemote(sheet.href);
 
@@ -67,6 +78,7 @@ export async function iterateCSSOM() {
         })
     );
     // TODO listen to new
+    console.log(accessibleStylesheets);
 
     const oldWidth = window.innerWidth;
     const newWidth = 750;
