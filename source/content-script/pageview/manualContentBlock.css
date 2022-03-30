@@ -142,6 +142,9 @@ main {
 .scroll_of_posts {
     display: none !important;
 }
+#s_Bulletins_Post_Page_0_0_11_0_0_0_1_0_1_2 .body {
+    margin-top: 0 !important;
+}
 
 /* https://slatestarcodex.com/2014/07/30/meditations-on-moloch/ */
 .left-sidebar,
@@ -334,6 +337,7 @@ article.content {
 }
 .affiliate-text,
 #share_container,
+#toprightrail,
 .hybrid-bar,
 .hide-for-small-only {
     display: none !important;

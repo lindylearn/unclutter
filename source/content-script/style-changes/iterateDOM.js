@@ -70,7 +70,6 @@ export default function iterateDOM() {
 
             // Remember background colors on text containers
             if (!activeStyle.backgroundColor.includes("rgba(0, 0, 0, 0)")) {
-                console.log(currentElem);
                 backgroundColors.push(activeStyle.backgroundColor);
             }
 
@@ -78,6 +77,8 @@ export default function iterateDOM() {
         }
     }
 
+    const paragraphFontSizes = {};
+    const exampleNodePerFontSize = {};
     paragraphs.forEach((elem) => {
         // Ignore invisible nodes
         // Note: iterateDOM is called before content block, so may not catch all hidden nodes (e.g. in footer)
@@ -85,8 +86,23 @@ export default function iterateDOM() {
             return;
         }
 
+        const activeStyle = window.getComputedStyle(elem);
+        const fontSize = parseFloat(activeStyle.fontSize);
+        if (paragraphFontSizes[fontSize]) {
+            paragraphFontSizes[fontSize] += 1;
+        } else {
+            paragraphFontSizes[fontSize] = 1;
+            exampleNodePerFontSize[fontSize] = elem;
+        }
+
         iterateParents(elem.parentElement);
     });
+    // console.log(`Found font sizes: `, paragraphFontSizes);
+    // Just use the most common font size for now
+    // Note that the actual font size might be changed by responsive styles
+    const mainFontSize = Object.keys(paragraphFontSizes).reduce((a, b) =>
+        paragraphFontSizes[a] > paragraphFontSizes[b] ? a : b
+    );
 
     function fadeOut() {
         _processBackgroundColors(backgroundColors);
@@ -94,7 +110,8 @@ export default function iterateDOM() {
 
     function pageViewTransition() {
         // Adjust font according to theme
-        // _setTextFontOverride(largestElem);
+        // TODO scale all font sizes?
+        _setTextFontOverride(exampleNodePerFontSize[mainFontSize]);
 
         // Removing margin and cleaning up background, shadows etc
         createStylesheetText(
@@ -206,12 +223,11 @@ function _getTextElementChainOverrideStyle(containerSelectors) {
         background: none !important;
         border: none !important;
         box-shadow: none !important;
-        transition: all 0.2s;
+        transition: margin 0.2s;
     }`;
 }
 
 function _setTextFontOverride(largestElem) {
-    // Base on size of largest text element
     const activeStyle = window.getComputedStyle(largestElem);
 
     // Set font size to use as CSS variable
@@ -243,7 +259,6 @@ function _processBackgroundColors(textBackgroundColors) {
 
     // <body> background color was already saved in ${originalBackgroundThemeVariable} in background.js
     const bodyColor = getThemeValue(originalBackgroundThemeVariable);
-    console.log(textBackgroundColors, bodyColor);
 
     // Pick original color from text stack if set, otherwise use body color
     let pickedColor;
