@@ -48,7 +48,6 @@ export async function iterateCSSOM() {
 
     const oldWidth = window.innerWidth;
     const newWidth = 750;
-
     const fixedPositionRules = [];
     const expiredRules = [];
     const newRules = [];
@@ -191,8 +190,12 @@ function hideNoise(fixedPositionRulesArg, expiredRules, newRules) {
         );
     });
 
+    // TODO fade-out expiredRules?
+
     newRules.map((rule) => {
         if (rule.style.getPropertyValue("display") === "none") {
+            // Modify old style to get updated cssText
+            rule.style.removeProperty("display");
             rule.style.setProperty("opacity", "0", "important");
             rule.style.setProperty("visibility", "hidden", "important");
             rule.style.setProperty(
@@ -200,9 +203,18 @@ function hideNoise(fixedPositionRulesArg, expiredRules, newRules) {
                 "visibility 0.2s, opacity 0.2s linear"
             );
 
-            // TODO insert a new rule?
+            // Insert new rule for the fade-out
+            const newIndex = rule.parentStyleSheet.insertRule(
+                rule.cssText,
+                rule.parentStyleSheet.cssRules.length
+            );
+            const newRule = rule.parentStyleSheet.cssRules[newIndex];
 
-            animatedRulesToHide.push([rule, "block"]);
+            // Revert old style changes
+            rule.style.setProperty("display", "none");
+
+            // Handle fade-in
+            animatedRulesToHide.push([newRule, "block"]);
         }
     });
 }
@@ -269,7 +281,6 @@ function restoreOriginalStyle(expiredRules) {
 
 export function fadeInNoise() {
     animatedRulesToHide.map(([rule, display]) => {
-        console.log(rule.selectorText, display);
         rule.style.removeProperty("opacity", "1");
         rule.style.removeProperty("visibility", "visible");
         rule.style.setProperty(
