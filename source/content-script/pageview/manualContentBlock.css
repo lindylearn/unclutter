@@ -599,3 +599,20 @@ figure {
 header[role="banner"] {
     display: none !important;
 }
+
+/* https://news.sky.com/story/south-korea-fires-multiple-missiles-in-response-to-north-koreas-rocket-launch-its-military-says-12573876 */
+div[role="banner"] {
+    display: none !important;
+}
+
+/* https://kotaku.com/guitar-hero-clone-schmooey-cheating-esports-speedrun-ac-1848470920 */
+.js_global-nav {
+    display: none !important;
+}
+
+/* https://theconversation.com/how-fast-can-we-stop-earth-from-warming-178295 */
+.content-sidebar,
+.page-addendum,
+.promo {
+    display: none !important;
+}

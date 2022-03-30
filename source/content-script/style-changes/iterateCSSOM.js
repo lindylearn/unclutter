@@ -18,6 +18,24 @@ export async function iterateCSSOM() {
                 return;
             }
 
+            // Exclude font stylesheets
+            if (sheet.href) {
+                const url = new URL(sheet.href);
+                if (
+                    ["fonts.googleapis.com", "pro.fontawesome.com"].includes(
+                        url.hostname
+                    )
+                ) {
+                    return;
+                }
+                if (
+                    url.pathname.includes("font") ||
+                    url.pathname.endsWith(".woff2")
+                ) {
+                    return;
+                }
+            }
+
             try {
                 sheet.cssRules;
                 return sheet;
@@ -37,7 +55,11 @@ export async function iterateCSSOM() {
                         "lindy-stylesheet-proxy"
                     );
 
-                    disableStylesheet(sheet.ownerNode, styleId);
+                    if (sheet.ownerNode) {
+                        // In theory this should never be null, but it can happen
+                        // e.g. on https://theconversation.com/how-fast-can-we-stop-earth-from-warming-178295
+                        disableStylesheet(sheet.ownerNode, styleId);
+                    }
 
                     return element.sheet;
                 }

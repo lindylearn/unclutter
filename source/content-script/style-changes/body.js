@@ -23,6 +23,12 @@ function _modifyBodyStyle() {
     }
     document.body.style.setProperty("padding-left", "40px", "important");
     document.body.style.setProperty("padding-right", "40px", "important");
+    document.body.style.setProperty("min-width", "0", "important");
+    document.body.style.setProperty(
+        "max-width",
+        "var(--lindy-pagewidth",
+        "important"
+    );
 
     // html or body tags may have classes with fixed style applied (which we hide via css rewrite)
     document.documentElement.style.setProperty("display", "block", "important");
@@ -49,6 +55,7 @@ export function unModifyBodyStyle() {
 
     document.body.style.removeProperty("display");
     document.body.style.removeProperty("width");
+    document.body.style.removeProperty("min-width");
     document.body.style.removeProperty("max-width");
     document.body.style.removeProperty("height");
     document.body.style.removeProperty("margin");

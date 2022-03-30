@@ -13,6 +13,7 @@ html.pageview > body {
     position: relative !important;
 
     width: 100%;
+    min-width: 0 !important;
     max-width: var(--lindy-pagewidth) !important;
     margin: 10px auto !important;
     box-sizing: border-box !important; /* reduce inner width if there's padding */

@@ -58,7 +58,7 @@ const blockedWords = [
     "masthead",
     // "banner",
     "menu",
-    "aside",
+    // "aside", https://www.sec.gov/news/press-release/2022-55
     // "nav",
     // "sidebar",
     "footer",
@@ -84,6 +84,8 @@ const blockedWords = [
     "advert",
     "video",
     "newslettersignup",
+    "sticky",
+    "share",
 ];
 const blockedClasses = [
     ".ad",
