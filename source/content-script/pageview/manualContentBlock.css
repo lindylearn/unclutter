@@ -296,6 +296,8 @@ body.mediawiki {
 }
 .content__header.content__header {
     display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
     background: initial !important;
     color: initial !important;
 }
@@ -363,6 +365,8 @@ html.flexbox.flexboxlegacy > body {
 /* https://www.bbc.com/news/60773595 */
 .ssrcss-hhhbpo-ContainerWithSidebarWrapper {
     display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
 }
 .ssrcss-rgov1k-MainColumn ~ div,
 .ssrcss-11faxz6-TagShareWrapper,
@@ -380,6 +384,8 @@ html.flexbox.flexboxlegacy > body {
 .gs-c-promo-heading,
 .gs-c-promo {
     display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
 }
 .nw-c-leaderboard-ad {
     display: none !important;
@@ -431,6 +437,8 @@ main#content {
 /* https://www.businessinsider.com/zelenskyy-aide-biden-does-more-for-ukraine-than-his-predecessors-2022-3?international=true&r=US&IR=T */
 .with-rail-video-ad.with-rail-video-ad {
     display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
 }
 section.post-content {
     width: 100% !important;
@@ -623,4 +631,28 @@ div[role="banner"] {
 code {
     margin-left: 0 !important;
     width: 100% !important;
+}
+
+/* https://aws.amazon.com/blogs/aws/aws-lambda-now-supports-up-to-10-gb-ephemeral-storage/ */
+.aws-blog-has-related-posts.aws-blog-has-related-posts {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+.blog-sidebar {
+    display: none !important;
+}
+
+/* https://www.medievalists.net/2021/09/everyday-magic-middle-ages/ */
+.contentwrap > #socialicons-sticky {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* https://www.thedailybeast.com/bruce-willis-is-stepping-away-from-acting-as-he-battles-aphasia-disorder-caused-by-brain-damage */
+.Cheat__body-and-footer.Cheat__body-and-footer {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
 }

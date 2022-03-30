@@ -22,9 +22,11 @@ This is done so that we can:
  - Get the current font size of the main text elements.
 */
 export default function iterateDOM() {
-    let paragraphs = document.body.querySelectorAll(globalParagraphSelector);
-    if (!paragraphs) {
-        paragraphs = document.body.querySelectorAll("div, span");
+    let paragraphSelector = globalParagraphSelector;
+    let paragraphs = document.body.querySelectorAll(paragraphSelector);
+    if (paragraphs.length === 0) {
+        paragraphSelector = "div, span";
+        paragraphs = document.body.querySelectorAll(paragraphSelector);
     }
 
     // Collect elements that contain text nodes
@@ -39,7 +41,12 @@ export default function iterateDOM() {
         // Select paragraph children
         if (!seenNodes.has(elem)) {
             const currentSelector = _getNodeSelector(elem);
-            containerSelectors.push(`${currentSelector} > p`);
+            containerSelectors.push(
+                paragraphSelector
+                    .split(", ")
+                    .map((tag) => `${currentSelector} > ${tag}`)
+                    .join(", ")
+            );
         }
 
         // Iterate upwards in DOM tree from paragraph node
@@ -49,11 +56,6 @@ export default function iterateDOM() {
                 break;
             }
             seenNodes.add(currentElem);
-
-            // only iterate main text containers here
-            if (_isAsideEquivalent(currentElem)) {
-                break;
-            }
 
             const currentSelector = _getNodeSelector(currentElem); // this adds a unique additional classname
             containerSelectors.push(currentSelector);
@@ -68,9 +70,12 @@ export default function iterateDOM() {
                 )
             );
 
-            // Remember background colors on text containers
-            if (!activeStyle.backgroundColor.includes("rgba(0, 0, 0, 0)")) {
-                backgroundColors.push(activeStyle.backgroundColor);
+            if (!_isAsideEquivalent(currentElem)) {
+                // Remember background colors on text containers
+                if (!activeStyle.backgroundColor.includes("rgba(0, 0, 0, 0)")) {
+                    // console.log(activeStyle.backgroundColor, elem);
+                    backgroundColors.push(activeStyle.backgroundColor);
+                }
             }
 
             currentElem = currentElem.parentElement;
@@ -100,8 +105,9 @@ export default function iterateDOM() {
     // console.log(`Found font sizes: `, paragraphFontSizes);
     // Just use the most common font size for now
     // Note that the actual font size might be changed by responsive styles
-    const mainFontSize = Object.keys(paragraphFontSizes).reduce((a, b) =>
-        paragraphFontSizes[a] > paragraphFontSizes[b] ? a : b
+    const mainFontSize = Object.keys(paragraphFontSizes).reduce(
+        (a, b) => (paragraphFontSizes[a] > paragraphFontSizes[b] ? a : b),
+        0
     );
 
     function fadeOut() {
@@ -111,7 +117,9 @@ export default function iterateDOM() {
     function pageViewTransition() {
         // Adjust font according to theme
         // TODO scale all font sizes?
-        _setTextFontOverride(exampleNodePerFontSize[mainFontSize]);
+        if (mainFontSize) {
+            _setTextFontOverride(exampleNodePerFontSize[mainFontSize]);
+        }
 
         // Removing margin and cleaning up background, shadows etc
         createStylesheetText(
@@ -145,6 +153,7 @@ const asideWordBlocklist = [
     "sidebar",
     "comment",
     "language",
+    "banner",
 ];
 function _isAsideEquivalent(node) {
     return (
