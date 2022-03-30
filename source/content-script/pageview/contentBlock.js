@@ -84,7 +84,7 @@ const blockedWords = [
     "advert",
     "video",
     "newslettersignup",
-    "sticky",
+    // "sticky", // https://news.yahoo.com/exclusive-secret-cia-training-program-in-ukraine-helped-kyiv-prepare-for-russian-invasion-090052743.html?guccounter=2
     "share",
 ];
 const blockedClasses = [

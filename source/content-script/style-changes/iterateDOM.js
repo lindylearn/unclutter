@@ -1,3 +1,4 @@
+import tinycolor from "tinycolor2";
 import { minFontSizePx } from "../../common/defaultStorage";
 import { createStylesheetText } from "./common";
 import {
@@ -21,28 +22,10 @@ This is done so that we can:
  - Get the current font size of the main text elements.
 */
 export default function iterateDOM() {
-    let candidates = document.body.querySelectorAll(globalParagraphSelector);
-    if (!candidates) {
-        candidates = document.body.querySelectorAll("div, span");
+    let paragraphs = document.body.querySelectorAll(globalParagraphSelector);
+    if (!paragraphs) {
+        paragraphs = document.body.querySelectorAll("div, span");
     }
-
-    // Get paragraph element with largest text content
-    let largestElem = document.body;
-    let maxTextLength = 0;
-    candidates.forEach((elem) => {
-        // Ignore invisible nodes
-        if (elem.offsetHeight === 0) {
-            return;
-        }
-
-        // const nodeText = elem.childNodes[0]?.nodeValue; // text of just this element, not including children
-        const nodeText = elem.textContent;
-        if (nodeText?.length > maxTextLength) {
-            largestElem = elem;
-            maxTextLength = nodeText.length;
-        }
-    });
-    console.log(`Largest paragraph element:`, largestElem);
 
     // Collect elements that contain text nodes
     const containerSelectors = [];
@@ -51,37 +34,53 @@ export default function iterateDOM() {
     // Remember background colors on text containers
     const backgroundColors = [];
 
-    // Iterate upwards in DOM tree from paragraph node
-    let currentElem = largestElem.parentElement;
-    while (currentElem !== document.body) {
-        // Construct and save element selector
-        const siblingSelector = _getSiblingSelector(currentElem);
-        if (siblingSelector) {
-            containerSelectors.push(siblingSelector);
+    const seenNodes = new Set();
+    function iterateParents(elem) {
+        // Select paragraph children
+        if (!seenNodes.has(elem)) {
+            const currentSelector = _getNodeSelector(elem);
+            containerSelectors.push(`${currentSelector} > p`);
         }
 
-        const currentSelector = _getNodeSelector(currentElem); // this adds a unique additional classname
-        containerSelectors.push(currentSelector);
+        // Iterate upwards in DOM tree from paragraph node
+        let currentElem = elem;
+        while (currentElem !== document.body) {
+            if (seenNodes.has(currentElem)) {
+                break;
+            }
+            seenNodes.add(currentElem);
 
-        // Perform other style changes based on applied runtime style and DOM structure
-        const activeStyle = window.getComputedStyle(currentElem);
-        overrideCssDeclarations = overrideCssDeclarations.concat(
-            _getNodeOverrideStyles(currentElem, currentSelector, activeStyle)
-        );
+            const currentSelector = _getNodeSelector(currentElem); // this adds a unique additional classname
+            containerSelectors.push(currentSelector);
 
-        // Remember background colors on text containers
-        if (!activeStyle.backgroundColor.includes("rgba(0, 0, 0, 0)")) {
-            backgroundColors.push(activeStyle.backgroundColor);
+            // Perform other style changes based on applied runtime style and DOM structure
+            const activeStyle = window.getComputedStyle(currentElem);
+            overrideCssDeclarations = overrideCssDeclarations.concat(
+                _getNodeOverrideStyles(
+                    currentElem,
+                    currentSelector,
+                    activeStyle
+                )
+            );
+
+            // Remember background colors on text containers
+            if (!activeStyle.backgroundColor.includes("rgba(0, 0, 0, 0)")) {
+                backgroundColors.push(activeStyle.backgroundColor);
+            }
+
+            currentElem = currentElem.parentElement;
         }
-
-        currentElem = currentElem.parentElement;
     }
 
-    // Selector for text paragraphs we detected
-    const matchedParagraphSelector = globalParagraphSelector
-        .split(", ")
-        .map((tag) => `${containerSelectors[0]} > ${tag}`)
-        .join(", ");
+    paragraphs.forEach((elem) => {
+        // Ignore invisible nodes
+        // Note: iterateDOM is called before content block, so may not catch all hidden nodes (e.g. in footer)
+        if (elem.offsetHeight === 0) {
+            return;
+        }
+
+        iterateParents(elem.parentElement);
+    });
 
     function fadeOut() {
         _processBackgroundColors(backgroundColors);
@@ -89,14 +88,11 @@ export default function iterateDOM() {
 
     function pageViewTransition() {
         // Adjust font according to theme
-        _setTextFontOverride(largestElem);
+        // _setTextFontOverride(largestElem);
 
         // Removing margin and cleaning up background, shadows etc
         createStylesheetText(
-            _getTextElementChainOverrideStyle(
-                containerSelectors,
-                matchedParagraphSelector
-            ),
+            _getTextElementChainOverrideStyle(containerSelectors),
             "lindy-text-chain-override"
         );
 
@@ -132,6 +128,7 @@ function _getNodeSelector(node) {
     )}${node.id ? `[id='${node.id}']` : ""}`;
     return completeSelector;
 }
+
 // Get a CSS selector that uses all classes of this element
 // Used to select sibling text containers that use the same style
 function _getSiblingSelector(node) {
@@ -147,9 +144,7 @@ function _getNodeOverrideStyles(node, currentSelector, activeStyle) {
     // Remove horizontal flex partitioning
     // e.g. https://www.nationalgeographic.com/science/article/the-controversial-quest-to-make-a-contagious-vaccine
     if (activeStyle.display === "flex" && activeStyle.flexDirection === "row") {
-        overrideCssDeclarations.push(`${currentSelector} {
-            display: block;
-        }`);
+        overrideCssDeclarations.push(`${currentSelector} { display: block; }`);
         // TODO hide siblings instead
     }
 
@@ -168,14 +163,9 @@ function _getNodeOverrideStyles(node, currentSelector, activeStyle) {
     return overrideCssDeclarations;
 }
 
-function _getTextElementChainOverrideStyle(
-    containerSelectors,
-    matchedParagraphSelector
-) {
+function _getTextElementChainOverrideStyle(containerSelectors) {
     // Remove margin from matched paragraphs and all their parent DOM nodes
-    const matchedTextSelector = containerSelectors
-        .concat([matchedParagraphSelector])
-        .join(", ");
+    const matchedTextSelector = containerSelectors.join(", ");
     return `${matchedTextSelector} {
         width: 100% !important;
         min-width: 0 !important;
@@ -233,6 +223,13 @@ function _processBackgroundColors(textBackgroundColors) {
     } else {
         pickedColor = bodyColor;
     }
+
+    const brightness = tinycolor(pickedColor).getBrightness();
+    if (brightness > 230) {
+        // too light colors conflict with white background
+        pickedColor = "white";
+    }
+
     setCssThemeVariable(originalBackgroundThemeVariable, pickedColor, true);
 
     const themeName = getThemeValue(activeColorThemeVariable);

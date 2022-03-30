@@ -9,6 +9,7 @@
         "recharts": "^2.1.9",
         "seedrandom": "^3.0.5",
         "timeago.js": "^4.0.2",
+        "tinycolor2": "^1.4.2",
         "webext-options-sync": "^2.0.1",
         "webextension-polyfill": "^0.8.0"
     },

@@ -137,7 +137,9 @@ main {
 }
 
 /* https://www.protocol.com/newsletters/entertainment/elden-ring?rebelltitem=1#rebelltitem1 */
-.last-added {
+.last-added,
+.sidebar_post_layout,
+.scroll_of_posts {
     display: none !important;
 }
 
@@ -560,6 +562,8 @@ body.fastcompany {
 /* https://finance.yahoo.com/news/goldman-sachs-ceo-demanded-employees-210608499.html */
 #module-article > .caas.caas-cc.enableAdSlotsOneSlot {
     display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
 }
 .wafer-rapid-module,
 .xray-side-rail,

@@ -19,14 +19,17 @@ export async function fadeOut(domain) {
         insertContentBlockStyle();
     contentBlockFadeOut();
 
-    const start = performance.now();
+    let start = performance.now();
     const [hideNoise, enableResponsiveStyle, restoreOriginalStyle] =
         await iterateCSSOM();
-    const duration = performance.now() - start;
+    let duration = performance.now() - start;
     console.log(`Took ${Math.round(duration)}ms to iterate CSSOM`);
     hideNoise();
 
+    start = performance.now();
     const [fadeOutDom, patchDom] = iterateDOM();
+    duration = performance.now() - start;
+    console.log(`Took ${Math.round(duration)}ms to iterate DOM`);
     fadeOutDom();
 
     initTheme(domain);
