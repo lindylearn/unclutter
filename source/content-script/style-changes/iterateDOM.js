@@ -179,7 +179,7 @@ function _getTextElementChainOverrideStyle(
     return `${matchedTextSelector} {
         width: 100% !important;
         min-width: 0 !important;
-        max-width: var(--lindy-pagewidth) !important;
+        max-width: calc(var(--lindy-pagewidth) - 2 * 40px) !important;
         margin-left: auto !important;
         margin-right: auto !important;
         padding-left: 0 !important;

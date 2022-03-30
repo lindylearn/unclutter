@@ -49,9 +49,9 @@ export function pageViewTransition(
 ) {
     document.body.style.setProperty("transition", "all 0.2s");
 
-    enableResponsiveStyle();
-    patchDom(); // TODO how to make transition from original position smoother?
     contentBlockHide();
+    enableResponsiveStyle();
+    patchDom(); // TODO how to make transition from original position
 
     modifyBodyStyle();
 

@@ -76,9 +76,10 @@ export async function iterateCSSOM() {
     function mapAggregatedRule(aggregationNode) {
         for (const rule of aggregationNode.cssRules) {
             if (rule.type === CSSRule.STYLE_RULE) {
+                const position = rule.style.position;
                 if (
-                    rule.style.getPropertyValue("position") === "fixed" ||
-                    rule.style.getPropertyValue("position") === "sticky"
+                    position &&
+                    (position === "fixed" || position === "sticky")
                 ) {
                     fixedPositionRules.push(rule);
                 }
@@ -161,6 +162,13 @@ function unitToPx(unit, value) {
 }
 
 function styleRuleTweaks(rule) {
+    // performance is important here, as this run on every single CSS declation
+    // can take up to 600ms e.g. for https://slack.com/intl/en-gb/blog/collaboration/etiquette-tips-in-slack
+
+    if (!rule.style.width && !rule.style && !rule.height && !rule.maxHeight) {
+        return;
+    }
+
     // hack: remove vw and vh rules for now (mostly used to add margin, which we already add elsewhere)
     // conditionScale is not neccessarily equal to actual pageview with, so cannot easily get correct margin
     if (
