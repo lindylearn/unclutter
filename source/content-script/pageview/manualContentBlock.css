@@ -185,18 +185,12 @@ div[data-gu-name="lines"],
 div[data-gu-name="border"] {
     display: none !important;
 }
-.dcr-1c5ohp {
-    grid-template-columns: none !important;
-}
 gu-island,
 gu-island ~ section {
     display: none !important;
 }
 
 /* https://www.theguardian.com/world/2022/mar/15/volunteer-hackers-fight-russia */
-article > div:first-child > div:first-child {
-    grid-template-columns: none !important;
-}
 div[data-gu-name="body"] > div:first-child {
     width: 100% !important;
 }

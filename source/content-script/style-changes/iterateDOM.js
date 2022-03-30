@@ -144,13 +144,25 @@ function _getSiblingSelector(node) {
 
 function _getNodeOverrideStyles(node, currentSelector, activeStyle) {
     const overrideCssDeclarations = [];
-    // Remove horizontal partitioning
+    // Remove horizontal flex partitioning
     // e.g. https://www.nationalgeographic.com/science/article/the-controversial-quest-to-make-a-contagious-vaccine
     if (activeStyle.display === "flex" && activeStyle.flexDirection === "row") {
         overrideCssDeclarations.push(`${currentSelector} {
-                display: block;
-            }`);
+            display: block;
+        }`);
         // TODO hide siblings instead
+    }
+
+    // Remove grids
+    // e.g. https://www.washingtonpost.com/business/2022/02/27/bp-russia-rosneft-ukraine
+    // https://www.trickster.dev/post/decrypting-your-own-https-traffic-with-wireshark/
+    if (activeStyle.display === "grid") {
+        overrideCssDeclarations.push(`${currentSelector} {
+            display: block;
+            grid-template-columns: 1fr;
+            grid-template-areas: none;
+            column-gap: 0;
+        }`);
     }
 
     return overrideCssDeclarations;
@@ -212,6 +224,7 @@ function _processBackgroundColors(textBackgroundColors) {
 
     // <body> background color was already saved in ${originalBackgroundThemeVariable} in background.js
     const bodyColor = getThemeValue(originalBackgroundThemeVariable);
+    // console.log(textBackgroundColors, bodyColor);
 
     // Pick original color from text stack if set, otherwise use body color
     let pickedColor;
