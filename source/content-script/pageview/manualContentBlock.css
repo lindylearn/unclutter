@@ -610,3 +610,9 @@ div[role="banner"] {
 .promo {
     display: none !important;
 }
+
+/* https://notes.eatonphil.com/documentdb.html */
+code {
+    margin-left: 0 !important;
+    width: 100% !important;
+}

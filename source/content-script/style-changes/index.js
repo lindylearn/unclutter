@@ -50,8 +50,8 @@ export function pageViewTransition(
     document.body.style.setProperty("transition", "all 0.2s");
 
     enableResponsiveStyle();
+    patchDom(); // TODO how to make transition from original position smoother?
     contentBlockHide();
-    patchDom();
 
     modifyBodyStyle();
 
@@ -77,7 +77,7 @@ export async function disableStyleChanges(
         .forEach((e) => e.remove());
 
     document.documentElement.classList.remove("pageview");
-    await new Promise((r) => setTimeout(r, 300));
+    await new Promise((r) => setTimeout(r, 400));
 
     // fade-in
     // just hide overrides for now

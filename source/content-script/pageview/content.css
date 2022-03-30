@@ -1,11 +1,13 @@
-html.pageview {
-    background-color: #f1f3f4 !important;
-    cursor: zoom-out;
-
+html {
     /* initial theme variables, updated by JS later */
     /* need on html element to access outside body */
     --lindy-pagewidth: 780px;
     /* --lindy-active-font-size set in iterateDOM() */
+}
+
+html.pageview {
+    background-color: #f1f3f4 !important;
+    cursor: zoom-out;
 }
 
 html.pageview > body {

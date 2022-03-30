@@ -187,7 +187,7 @@ function _getTextElementChainOverrideStyle(
         background: none !important;
         border: none !important;
         box-shadow: none !important;
-        transition: all 0.5s;
+        transition: all 0.2s;
     }`;
 }
 
