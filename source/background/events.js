@@ -123,20 +123,21 @@ async function enableInTab(tabId) {
         });
         pageViewEnabled = response?.pageViewEnabled;
         console.log("Got ping response from open tab:", response);
+
+        // toggle the page view if not active
+        if (!pageViewEnabled) {
+            togglePageViewMessage(tabId);
+            return true;
+        }
+        return false;
     } catch (err) {
         // throws error if message listener not loaded
 
         // in that case, just load the content script
         console.log("Injecting enhance.js...");
         await _injectScript(tabId, "content-script/enhance.js");
-    }
-
-    // toggle the page view if not active
-    if (!pageViewEnabled) {
-        togglePageViewMessage(tabId);
         return true;
     }
-    return false;
 }
 
 async function togglePageViewMessage(tabId) {

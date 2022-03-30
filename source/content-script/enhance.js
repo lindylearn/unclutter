@@ -1,15 +1,11 @@
 import browser from "../common/polyfill";
 import { getDomainFrom } from "../common/util";
-import { insertContentBlockStyle } from "./pageview/contentBlock";
 import { enablePageView } from "./pageview/enablePageView";
 import {
     disableStyleChanges,
     fadeOut,
     pageViewTransition,
 } from "./style-changes";
-import { insertBackground } from "./style-changes/background";
-import iterateDOM from "./style-changes/iterateDOM";
-import { initTheme } from "./style-changes/theme";
 
 // complete extension functionality injected into a tab
 
@@ -96,30 +92,32 @@ async function enhance() {
         togglePageView();
         return;
     }
-    console.log("enhance page");
+    // use normal enhance workflow for now
 
-    const domain = getDomainFrom(new URL(window.location.href));
+    // console.log("enhance page");
 
-    const [contentBlockFadeOut, contentBlockHide, contentBlockFadeIn] =
-        insertContentBlockStyle();
+    // const domain = getDomainFrom(new URL(window.location.href));
 
-    const [fadeOutDom, patchDom] = iterateDOM();
-    fadeOutDom();
+    // const [contentBlockFadeOut, contentBlockHide, contentBlockFadeIn] =
+    //     insertContentBlockStyle();
 
-    initTheme(domain);
-    insertBackground();
+    // const [fadeOutDom, patchDom] = iterateDOM();
+    // fadeOutDom();
 
-    pageViewTransition(domain, () => {}, contentBlockHide, patchDom);
+    // initTheme(domain);
+    // insertBackground();
 
-    // attach additional style unpatch functionality on pageview hide
-    document.documentElement.addEventListener(
-        "click",
-        (event) => {
-            if (event.target.tagName === "HTML") {
-                disableStyleChanges();
-            }
-        },
-        true
-    );
+    // pageViewTransition(domain, () => {}, contentBlockHide, patchDom);
+
+    // // attach additional style unpatch functionality on pageview hide
+    // document.documentElement.addEventListener(
+    //     "click",
+    //     (event) => {
+    //         if (event.target.tagName === "HTML") {
+    //             disableStyleChanges();
+    //         }
+    //     },
+    //     true
+    // );
 }
 enhance();
