@@ -16,7 +16,6 @@ import {
     setUserSettingsForDomain,
 } from "../common/storage";
 import { getDomainFrom } from "../common/util";
-import fetchAndRewriteCss from "./rewriteCss";
 
 // toggle page view on extension icon click
 (chrome.action || browser.browserAction).onClicked.addListener(async (tab) => {
@@ -69,9 +68,6 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
                 userDomainSetting === "allow" ? "allowlisted" : "automatic"
             )
         );
-    } else if (message.event === "rewriteCss") {
-        fetchAndRewriteCss(message.params).then(sendResponse);
-        return true;
     } else if (message.event === "openOptionsPage") {
         chrome.runtime.openOptionsPage();
     } else if (message.event === "fetchCss") {
