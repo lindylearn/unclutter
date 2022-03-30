@@ -5,6 +5,19 @@ export async function iterateCSSOM() {
     const stylesheets = [...document.styleSheets];
     const accessibleStylesheets = await Promise.all(
         stylesheets.map(async (sheet) => {
+            // Only consider applicable stylesheets
+            // e.g. 'print' at https://www.theguardian.com/world/2022/mar/25/russian-troops-mutiny-commander-ukraine-report-western-officials
+            // TODO also consider responsive styles that would become valid?
+            if (
+                sheet.disabled ||
+                !window.matchMedia(sheet.media.mediaText).matches
+            ) {
+                console.log(
+                    `Excluding stylesheet with media condition '${sheet.media.mediaText}'`
+                );
+                return;
+            }
+
             try {
                 sheet.cssRules;
                 return sheet;
