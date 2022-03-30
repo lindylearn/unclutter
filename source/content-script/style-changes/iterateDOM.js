@@ -50,6 +50,11 @@ export default function iterateDOM() {
             }
             seenNodes.add(currentElem);
 
+            // only iterate main text containers here
+            if (_isAsideEquivalent(currentElem)) {
+                break;
+            }
+
             const currentSelector = _getNodeSelector(currentElem); // this adds a unique additional classname
             containerSelectors.push(currentSelector);
 
@@ -65,6 +70,7 @@ export default function iterateDOM() {
 
             // Remember background colors on text containers
             if (!activeStyle.backgroundColor.includes("rgba(0, 0, 0, 0)")) {
+                console.log(currentElem);
                 backgroundColors.push(activeStyle.backgroundColor);
             }
 
@@ -113,6 +119,29 @@ export function unPatchDomTransform() {
             ".lindy-font-size, .lindy-text-chain-override, .lindy-node-overrides"
         )
         .forEach((e) => e.remove());
+}
+
+const asideWordBlocklist = [
+    "header",
+    "footer",
+    "aside",
+    "sidebar",
+    "comment",
+    "language",
+];
+function _isAsideEquivalent(node) {
+    return (
+        node.tagName === "HEADER" ||
+        node.tagName === "FOOTER" ||
+        node.tagName === "ASIDE" ||
+        node.tagName === "CODE" ||
+        asideWordBlocklist.some(
+            (word) =>
+                node.className.toLowerCase().includes(word) ||
+                node.id.toLowerCase().includes(word)
+        ) ||
+        node.hasAttribute("data-language")
+    );
 }
 
 // Get a CSS selector for the passed node with a high specifity
@@ -214,7 +243,7 @@ function _processBackgroundColors(textBackgroundColors) {
 
     // <body> background color was already saved in ${originalBackgroundThemeVariable} in background.js
     const bodyColor = getThemeValue(originalBackgroundThemeVariable);
-    // console.log(textBackgroundColors, bodyColor);
+    console.log(textBackgroundColors, bodyColor);
 
     // Pick original color from text stack if set, otherwise use body color
     let pickedColor;
