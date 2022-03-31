@@ -1,6 +1,7 @@
 import { reportEvent } from "../../common/metrics";
 import browser from "../../common/polyfill";
 import {
+    getDomainUserTheme,
     getUserSettingForDomain,
     setUserSettingsForDomain,
 } from "../../common/storage";
@@ -191,7 +192,7 @@ function _setupLinkHandlers() {
         reportEvent("reportBugClick");
 }
 
-function _setupThemePopupHandlers(domain) {
+async function _setupThemePopupHandlers(domain) {
     // Only report each type of modification once per page
     const reportedEventType = {};
     function _reportThemeEvent(changedProperty) {
@@ -244,8 +245,10 @@ function _setupThemePopupHandlers(domain) {
     document.getElementById("lindy-dark-theme-button").onclick = () =>
         _setTheme("dark");
 
-    // If there's a saved theme, highlightActiveColorThemeButton() is called from theme.js
-    // Retrieving theme settings takes some time, to we can't set the initial theme here.
+    const activeTheme = await getDomainUserTheme(domain);
+    if (activeTheme?.colorTheme) {
+        highlightActiveColorThemeButton(activeTheme.colorTheme);
+    }
 }
 
 export function highlightActiveColorThemeButton(themeName) {
