@@ -9,14 +9,14 @@ import { togglePageView } from "../enhance";
 import {
     createStylesheetLink,
     overrideClassname,
-} from "../style-changes/common";
+} from "../modifications/common";
 import {
     activeColorThemeVariable,
     applySaveThemeOverride,
     fontSizeThemeVariable,
     getThemeValue,
     pageWidthThemeVariable,
-} from "../style-changes/theme";
+} from "../modifications/theme";
 
 // Insert a small UI for the user to control the automatic pageview enablement on the current domain.
 // Creating an iframe for this doesn't work from injected scripts

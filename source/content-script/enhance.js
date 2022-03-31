@@ -1,11 +1,11 @@
 import browser from "../common/polyfill";
 import { getDomainFrom } from "../common/util";
-import { enablePageView } from "./pageview/enablePageView";
 import {
     disableStyleChanges,
     fadeOut,
     pageViewTransition,
-} from "./style-changes";
+} from "./modifications";
+import { enablePageView } from "./pageview/enablePageView";
 
 // complete extension functionality injected into a tab
 

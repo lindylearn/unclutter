@@ -2,7 +2,7 @@ import browser from "../../common/polyfill";
 import {
     createStylesheetLink,
     createStylesheetText,
-} from "../style-changes/common";
+} from "../modifications/common";
 
 // hide page elements unrelated to the article via custom CSS, to make a page more readable
 // TODO use statically generated CSS
