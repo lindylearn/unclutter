@@ -1,4 +1,4 @@
-import { highlightActiveColorThemeButton } from "../content-script/switch/insert";
+import { highlightActiveColorThemeButton } from "../content-script/overlay/insert";
 import { getDomainUserTheme, mergeDomainUserTheme } from "./storage";
 
 export type themeName = "auto" | "white" | "sepia" | "dark";

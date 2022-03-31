@@ -4,7 +4,7 @@ import BodyStyleModifier from "./modifications/bodyStyle";
 import ContentBlockModifier from "./modifications/contentBlock";
 import CSSOMModifier from "./modifications/CSSOM";
 import DOMModifier from "./modifications/DOM";
-import { insertPageSettings } from "./switch/insert";
+import OverlayManager from "./modifications/overlay";
 
 export async function fadeOutNoise(
     domain: string,
@@ -27,7 +27,8 @@ export async function transitionIn(
     contentBlockModifier: ContentBlockModifier,
     bodyStyleModifier: BodyStyleModifier,
     domModifier: DOMModifier,
-    cssomModifer: CSSOMModifier
+    cssomModifer: CSSOMModifier,
+    overlayManager: OverlayManager
 ) {
     document.body.style.setProperty("transition", "all 0.2s");
 
@@ -39,7 +40,7 @@ export async function transitionIn(
     await bodyStyleModifier.transitionIn();
 
     setTimeout(() => {
-        insertPageSettings(domain);
+        overlayManager.transitionIn();
     }, 300);
 }
 
@@ -47,17 +48,14 @@ export async function transitionOut(
     contentBlockModifier: ContentBlockModifier,
     bodyStyleModifier: BodyStyleModifier,
     domModifier: DOMModifier,
-    cssomModifer: CSSOMModifier
+    cssomModifer: CSSOMModifier,
+    overlayManager: OverlayManager
 ) {
     await cssomModifer.transitionOut();
     await domModifier.transitionOut();
 
     await contentBlockModifier.transitionOut();
-    document
-        .querySelectorAll(
-            ".lindy-page-settings-topright, .lindy-page-settings-pageadjacent"
-        )
-        .forEach((e) => e.remove());
+    await overlayManager.transitionOut();
 
     document.documentElement.classList.remove("pageview");
     await new Promise((r) => setTimeout(r, 400));

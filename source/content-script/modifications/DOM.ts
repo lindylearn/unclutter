@@ -33,7 +33,7 @@ export default class DOMModifier implements PageModifier {
     private mainFontSize;
     private exampleMainFontSizeElement;
 
-    constructor() {
+    parse() {
         let paragraphSelector = globalParagraphSelector;
         let paragraphs = document.body.querySelectorAll(paragraphSelector);
         if (paragraphs.length === 0) {

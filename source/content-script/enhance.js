@@ -6,6 +6,7 @@ import BodyStyleModifier from "./modifications/bodyStyle";
 import ContentBlockModifier from "./modifications/contentBlock";
 import CSSOMModifier from "./modifications/CSSOM";
 import DOMModifier from "./modifications/DOM";
+import OverlayManager from "./modifications/overlay";
 import { enablePageView } from "./pageview/enablePageView";
 import { fadeOutNoise, transitionIn, transitionOut } from "./transitions";
 
@@ -44,9 +45,11 @@ export async function togglePageView() {
         const bodyStyleModifier = new BodyStyleModifier();
         const domModifier = new DOMModifier();
         const cssomModifer = new CSSOMModifier();
+        const overlayManager = new OverlayManager(domain);
 
         const themeName = await initTheme(domain);
         cssomModifer.parse(themeName);
+        domModifier.parse();
 
         // *** Fade-out phase ***
         // Visibly hide noisy elements and meanwhile perform heavy operation
@@ -72,7 +75,8 @@ export async function togglePageView() {
             contentBlockModifier,
             bodyStyleModifier,
             domModifier,
-            cssomModifer
+            cssomModifer,
+            overlayManager
         );
 
         isSimulatedClick = false;
@@ -83,7 +87,8 @@ export async function togglePageView() {
                 contentBlockModifier,
                 bodyStyleModifier,
                 domModifier,
-                cssomModifer
+                cssomModifer,
+                overlayManager
             );
 
             if (!isSimulatedClick) {
