@@ -55,7 +55,7 @@ export function darkModeStyleRuleMap(rule: CSSStyleRule) {
 
 function changeTextColor(colorString: string, selectorText): string {
     if (colorString === "initial") {
-        return "rgb(232, 230, 227)";
+        return "var(--lindy-dark-theme-text-color)";
     }
 
     const hslColor = parseHslColor(colorString);
@@ -69,7 +69,7 @@ function changeTextColor(colorString: string, selectorText): string {
         // standardize most text around this
 
         // l e.g. 0.35 at https://fly.io/blog/a-foolish-consistency/
-        newColor = "rgb(232, 230, 227)";
+        newColor = "var(--lindy-dark-theme-text-color)";
     } else {
         // make other colors more visible
 

@@ -64,7 +64,7 @@ html.pageview > body {
 
 @media (prefers-color-scheme: dark) {
     html.pageview {
-        background-color: #35363a !important;
+        background-color: #000 !important;
     }
 
     .html.pageview > body {
@@ -74,5 +74,18 @@ html.pageview > body {
 
     .lindy-page-broken {
         color: #d1d5db;
+    }
+
+    :root {
+        --lindy-dark-theme-text-color: rgb(232, 230, 227);
+        color: var(--lindy-dark-theme-text-color);
+    }
+    a {
+        color: #3391ff;
+    }
+
+    img {
+        mix-blend-mode: difference !important;
+        /* filter: brightness(80%) !important; */
     }
 }
