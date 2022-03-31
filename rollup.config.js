@@ -2,6 +2,7 @@ import babel from "@rollup/plugin-babel";
 import commonjs from "@rollup/plugin-commonjs";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
 import replace from "@rollup/plugin-replace";
+import typescript from "@rollup/plugin-typescript";
 import fs from "fs";
 import glob from "glob";
 import path from "path";
@@ -19,6 +20,7 @@ const contentScriptConfigs = [
         format: "iife", // no way to use es modules, split code by logic instead
     },
     plugins: [
+        typescript(),
         nodeResolve({ browser: true }),
         commonjs({ include: /node_modules/ }),
     ],
@@ -53,6 +55,8 @@ const esModuleConfig = {
         preserveModulesRoot: "source",
     },
     plugins: [
+        typescript(),
+        babel({ babelHelpers: "bundled", presets: ["@babel/preset-react"] }),
         // multiple bundles would overwrite each other's tree-shaked common imports
         multiInput({
             transformOutputPath: (output, input) => {
@@ -63,7 +67,6 @@ const esModuleConfig = {
         nodeResolve({ browser: true }),
         commonjs({ include: /node_modules/ }),
         postcss(),
-        babel({ babelHelpers: "bundled", presets: ["@babel/preset-react"] }),
         moveVirtualFolder,
         replace({
             preventAssignment: true,
