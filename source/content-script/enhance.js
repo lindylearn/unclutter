@@ -1,8 +1,10 @@
+import { initTheme } from "source/common/theme";
 import browser from "../common/polyfill";
 import { getDomainFrom } from "../common/util";
 import BackgroundModifier from "./modifications/background";
 import BodyStyleModifier from "./modifications/bodyStyle";
 import ContentBlockModifier from "./modifications/contentBlock";
+import CSSOMModifier from "./modifications/CSSOM";
 import DOMModifier from "./modifications/DOM";
 import { enablePageView } from "./pageview/enablePageView";
 import { fadeOutNoise, transitionIn, transitionOut } from "./transitions";
@@ -41,33 +43,36 @@ export async function togglePageView() {
         const contentBlockModifier = new ContentBlockModifier();
         const bodyStyleModifier = new BodyStyleModifier();
         const domModifier = new DOMModifier();
+        const cssomModifer = new CSSOMModifier();
+
+        const themeName = await initTheme(domain);
+        cssomModifer.parse(themeName);
 
         // *** Fade-out phase ***
         // Visibly hide noisy elements and meanwhile perform heavy operation
 
         // wait up to 200ms for animation completion
         // don't wait after very long parsing time
-        const [transitionTriggers, _] = await Promise.all([
+        await Promise.all([
             fadeOutNoise(
                 domain,
                 backgroundModifier,
                 contentBlockModifier,
-                domModifier
+                domModifier,
+                cssomModifer
             ),
             new Promise((r) => setTimeout(r, 300)),
         ]);
-        const [enableResponsiveStyle, restoreOriginalStyle] =
-            transitionTriggers;
 
         // *** PageView transition phase ***
         // Shift layout and reduce page width in one go
 
         await transitionIn(
             domain,
-            enableResponsiveStyle,
             contentBlockModifier,
             bodyStyleModifier,
-            domModifier
+            domModifier,
+            cssomModifer
         );
 
         isSimulatedClick = false;
@@ -75,10 +80,10 @@ export async function togglePageView() {
             // when user exists page view
             // undo all modifications (including css rewrites and style changes)
             await transitionOut(
-                restoreOriginalStyle,
                 contentBlockModifier,
                 bodyStyleModifier,
-                domModifier
+                domModifier,
+                cssomModifer
             );
 
             if (!isSimulatedClick) {

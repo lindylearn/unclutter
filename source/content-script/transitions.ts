@@ -1,49 +1,39 @@
 import { overrideClassname } from "../common/stylesheets";
-import { initTheme } from "../common/theme";
 import BackgroundModifier from "./modifications/background";
 import BodyStyleModifier from "./modifications/bodyStyle";
 import ContentBlockModifier from "./modifications/contentBlock";
+import CSSOMModifier from "./modifications/CSSOM";
 import DOMModifier from "./modifications/DOM";
-import {
-    fadeInNoise,
-    iterateCSSOM,
-    reenableOriginalStylesheets,
-} from "./modifications/iterateCSSOM";
 import { insertPageSettings } from "./switch/insert";
 
 export async function fadeOutNoise(
     domain: string,
     backgroundModifier: BackgroundModifier,
     contentBlockModifier: ContentBlockModifier,
-    domModifier: DOMModifier
+    domModifier: DOMModifier,
+    cssomModifer: CSSOMModifier
 ) {
     // do content block first as it shows changes immediately
     await contentBlockModifier.fadeOutNoise();
 
-    const themeName = await initTheme(domain);
-
-    const [hideNoise, enableResponsiveStyle, restoreOriginalStyle] =
-        await iterateCSSOM(themeName);
-    hideNoise();
-
+    await cssomModifer.fadeOutNoise();
     await domModifier.fadeOutNoise();
 
     await backgroundModifier.fadeOutNoise();
-
-    return [enableResponsiveStyle, restoreOriginalStyle];
 }
 
 export async function transitionIn(
     domain,
-    enableResponsiveStyle,
     contentBlockModifier: ContentBlockModifier,
     bodyStyleModifier: BodyStyleModifier,
-    domModifier: DOMModifier
+    domModifier: DOMModifier,
+    cssomModifer: CSSOMModifier
 ) {
     document.body.style.setProperty("transition", "all 0.2s");
 
     await contentBlockModifier.transitionIn();
-    enableResponsiveStyle();
+
+    await cssomModifer.transitionIn();
     await domModifier.transitionIn(); // TODO how to make transition from original position
 
     await bodyStyleModifier.transitionIn();
@@ -54,20 +44,18 @@ export async function transitionIn(
 }
 
 export async function transitionOut(
-    restoreOriginalResponsiveStyle,
     contentBlockModifier: ContentBlockModifier,
     bodyStyleModifier: BodyStyleModifier,
-    domModifier: DOMModifier
+    domModifier: DOMModifier,
+    cssomModifer: CSSOMModifier
 ) {
-    // revert CSSOM changes
-    // restore original width
-
-    restoreOriginalResponsiveStyle();
+    await cssomModifer.transitionOut();
     await domModifier.transitionOut();
 
+    await contentBlockModifier.transitionOut();
     document
         .querySelectorAll(
-            ".content-block-hide, .content-block-custom-sites, .lindy-page-settings-topright, .lindy-page-settings-pageadjacent"
+            ".lindy-page-settings-topright, .lindy-page-settings-pageadjacent"
         )
         .forEach((e) => e.remove());
 
@@ -77,11 +65,11 @@ export async function transitionOut(
     // fade-in
     // just hide overrides for now
 
-    fadeInNoise();
+    await cssomModifer.fadeInNoise();
     await contentBlockModifier.fadeInNoise();
 
     // remove proxy stylesheets
-    reenableOriginalStylesheets();
+    await cssomModifer.reenableOriginalStylesheets();
 
     // remove rest
     document

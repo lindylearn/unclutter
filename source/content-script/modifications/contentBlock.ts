@@ -55,6 +55,14 @@ export default class ContentBlockModifier implements PageModifier {
             "content-block-custom-sites"
         );
     }
+
+    async transitionOut() {
+        document
+            .querySelectorAll(
+                ".content-block-hide, .content-block-custom-sites"
+            )
+            .forEach((e) => e.remove());
+    }
 }
 
 const blockedTags = ["footer", "aside", "nav", "gpt-ad"];
