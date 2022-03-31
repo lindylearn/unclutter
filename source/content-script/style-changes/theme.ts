@@ -1,7 +1,9 @@
 import { getDomainUserTheme, mergeDomainUserTheme } from "../../common/storage";
 import { highlightActiveColorThemeButton } from "../switch/insert";
 
-export async function initTheme(domain) {
+export type themeName = "auto" | "white" | "sepia" | "dark";
+
+export async function initTheme(domain: string): Promise<themeName> {
     // Get saved domain-specific theme
     const theme = await getDomainUserTheme(domain);
     if (!theme) {
@@ -23,6 +25,8 @@ export async function initTheme(domain) {
 
         highlightActiveColorThemeButton(theme.colorTheme);
     }
+
+    return theme.colorTheme;
 }
 
 // persisted

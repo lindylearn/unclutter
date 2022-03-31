@@ -1,7 +1,9 @@
 import browser from "../../common/polyfill";
 import { createStylesheetText } from "./common";
+import { darkModeStyleRuleMap } from "./darkMode";
+import { themeName } from "./theme";
 
-export async function iterateCSSOM() {
+export async function iterateCSSOM(themeName: themeName) {
     const stylesheets = [...document.styleSheets];
     const accessibleStylesheets = await Promise.all(
         stylesheets.map(async (sheet) => {
@@ -78,7 +80,7 @@ export async function iterateCSSOM() {
         })
     );
     // TODO listen to new
-    console.log(accessibleStylesheets);
+    // console.log(accessibleStylesheets);
 
     const oldWidth = window.innerWidth;
     const newWidth = 750;
@@ -96,6 +98,11 @@ export async function iterateCSSOM() {
                     fixedPositionRules.push(rule);
                 }
                 styleRuleTweaks(rule);
+
+                // TODO run later?
+                if (themeName === "dark") {
+                    darkModeStyleRuleMap(rule);
+                }
             } else if (rule.type === CSSRule.SUPPORTS_RULE) {
                 // recurse
                 mapAggregatedRule(rule);

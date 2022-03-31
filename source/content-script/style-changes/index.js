@@ -19,9 +19,11 @@ export async function fadeOut(domain) {
         insertContentBlockStyle();
     contentBlockFadeOut();
 
+    const themeName = await initTheme(domain);
+
     let start = performance.now();
     const [hideNoise, enableResponsiveStyle, restoreOriginalStyle] =
-        await iterateCSSOM();
+        await iterateCSSOM(themeName);
     let duration = performance.now() - start;
     console.log(`Took ${Math.round(duration)}ms to iterate CSSOM`);
     hideNoise();
@@ -32,7 +34,6 @@ export async function fadeOut(domain) {
     console.log(`Took ${Math.round(duration)}ms to iterate DOM`);
     fadeOutDom();
 
-    initTheme(domain);
     insertBackground();
 
     return [
