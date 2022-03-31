@@ -199,7 +199,9 @@ function _getNodeOverrideStyles(node, currentSelector, activeStyle) {
     // Remove horizontal flex partitioning
     // e.g. https://www.nationalgeographic.com/science/article/the-controversial-quest-to-make-a-contagious-vaccine
     if (activeStyle.display === "flex" && activeStyle.flexDirection === "row") {
-        overrideCssDeclarations.push(`${currentSelector} { display: block; }`);
+        overrideCssDeclarations.push(
+            `${currentSelector} { display: block !important; }`
+        );
         // TODO hide siblings instead
     }
 

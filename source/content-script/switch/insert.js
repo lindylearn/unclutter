@@ -81,7 +81,7 @@ export function insertPageSettings(domain) {
                         <div class="lindy-theme-button" id="lindy-white-theme-button"></div>
                     </div>
                     <div>
-                        <div class="lindy-theme-button" id="lindy-sepia-theme-button"></div>
+                        <div class="lindy-theme-button" id="lindy-dark-theme-button"></div>
                     </div>
                 </div>
             </div>
@@ -241,8 +241,8 @@ function _setupThemePopupHandlers(domain) {
         _setTheme("auto");
     document.getElementById("lindy-white-theme-button").onclick = () =>
         _setTheme("white");
-    document.getElementById("lindy-sepia-theme-button").onclick = () =>
-        _setTheme("sepia");
+    document.getElementById("lindy-dark-theme-button").onclick = () =>
+        _setTheme("dark");
 
     // If there's a saved theme, highlightActiveColorThemeButton() is called from theme.js
     // Retrieving theme settings takes some time, to we can't set the initial theme here.
@@ -259,5 +259,5 @@ export function highlightActiveColorThemeButton(themeName) {
 
     document
         .getElementById(`lindy-${themeName}-theme-button`)
-        .classList.add("lindy-active-theme");
+        ?.classList.add("lindy-active-theme");
 }

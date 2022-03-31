@@ -76,7 +76,7 @@ export function colorThemeToBackgroundColor(themeName) {
     if (themeName === "white") {
         return "white";
     } else if (themeName === "dark") {
-        return "black";
+        return "#131516";
     } else if (themeName === "sepia") {
         return "#F4ECD8"; // firefox sepia
     } else if (themeName === "auto") {
