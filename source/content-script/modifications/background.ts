@@ -1,10 +1,10 @@
 import { overrideClassname } from "../../common/stylesheets";
-import type { PageModifier } from "./PageModifier";
 import {
     backgroundColorThemeVariable,
     originalBackgroundThemeVariable,
     setCssThemeVariable,
-} from "./theme";
+} from "../../common/theme";
+import type { PageModifier } from "./PageModifier";
 
 export default class BackgroundModifier implements PageModifier {
     constructor() {}
@@ -50,7 +50,7 @@ export default class BackgroundModifier implements PageModifier {
         );
 
         // observe children height changes
-        const observer = new ResizeObserver(function () {
+        const observer = new ResizeObserver(() => {
             this.updateBackgroundHeight();
         });
         [...document.body.children].map((node) => observer.observe(node));

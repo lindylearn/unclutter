@@ -1,7 +1,7 @@
 import browser from "../../common/polyfill";
 import { createStylesheetText } from "../../common/stylesheets";
+import { themeName } from "../../common/theme";
 import { darkModeStyleRuleMap } from "./darkMode";
-import { themeName } from "./theme";
 
 export async function iterateCSSOM(themeName: themeName) {
     const stylesheets = [...document.styleSheets];

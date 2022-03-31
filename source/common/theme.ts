@@ -1,5 +1,5 @@
-import { getDomainUserTheme, mergeDomainUserTheme } from "../../common/storage";
-import { highlightActiveColorThemeButton } from "../switch/insert";
+import { highlightActiveColorThemeButton } from "../content-script/switch/insert";
+import { getDomainUserTheme, mergeDomainUserTheme } from "./storage";
 
 export type themeName = "auto" | "white" | "sepia" | "dark";
 

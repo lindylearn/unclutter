@@ -1,7 +1,9 @@
 import browser from "../common/polyfill";
 import { getDomainFrom } from "../common/util";
 import BackgroundModifier from "./modifications/background";
+import BodyStyleModifier from "./modifications/bodyStyle";
 import ContentBlockModifier from "./modifications/contentBlock";
+import DOMModifier from "./modifications/DOM";
 import { enablePageView } from "./pageview/enablePageView";
 import { fadeOutNoise, transitionIn, transitionOut } from "./transitions";
 
@@ -37,6 +39,8 @@ export async function togglePageView() {
         // construct modifier classes
         const backgroundModifier = new BackgroundModifier();
         const contentBlockModifier = new ContentBlockModifier();
+        const bodyStyleModifier = new BodyStyleModifier();
+        const domModifier = new DOMModifier();
 
         // *** Fade-out phase ***
         // Visibly hide noisy elements and meanwhile perform heavy operation
@@ -44,10 +48,15 @@ export async function togglePageView() {
         // wait up to 200ms for animation completion
         // don't wait after very long parsing time
         const [transitionTriggers, _] = await Promise.all([
-            fadeOutNoise(domain, backgroundModifier, contentBlockModifier),
+            fadeOutNoise(
+                domain,
+                backgroundModifier,
+                contentBlockModifier,
+                domModifier
+            ),
             new Promise((r) => setTimeout(r, 300)),
         ]);
-        const [enableResponsiveStyle, patchDom, restoreOriginalStyle] =
+        const [enableResponsiveStyle, restoreOriginalStyle] =
             transitionTriggers;
 
         // *** PageView transition phase ***
@@ -56,15 +65,21 @@ export async function togglePageView() {
         await transitionIn(
             domain,
             enableResponsiveStyle,
-            patchDom,
-            contentBlockModifier
+            contentBlockModifier,
+            bodyStyleModifier,
+            domModifier
         );
 
         isSimulatedClick = false;
         await enablePageView(async () => {
             // when user exists page view
             // undo all modifications (including css rewrites and style changes)
-            await transitionOut(restoreOriginalStyle, contentBlockModifier);
+            await transitionOut(
+                restoreOriginalStyle,
+                contentBlockModifier,
+                bodyStyleModifier,
+                domModifier
+            );
 
             if (!isSimulatedClick) {
                 // already emitted elsewhere for simulated non-background clicks

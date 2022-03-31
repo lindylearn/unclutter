@@ -1,57 +1,52 @@
 import { overrideClassname } from "../common/stylesheets";
+import { initTheme } from "../common/theme";
 import BackgroundModifier from "./modifications/background";
-import { modifyBodyStyle, unModifyBodyStyle } from "./modifications/body";
+import BodyStyleModifier from "./modifications/bodyStyle";
 import ContentBlockModifier from "./modifications/contentBlock";
+import DOMModifier from "./modifications/DOM";
 import {
     fadeInNoise,
     iterateCSSOM,
     reenableOriginalStylesheets,
 } from "./modifications/iterateCSSOM";
-import iterateDOM, { unPatchDomTransform } from "./modifications/iterateDOM";
-import { initTheme } from "./modifications/theme";
 import { insertPageSettings } from "./switch/insert";
 
 export async function fadeOutNoise(
     domain: string,
     backgroundModifier: BackgroundModifier,
-    contentBlockModifier: ContentBlockModifier
+    contentBlockModifier: ContentBlockModifier,
+    domModifier: DOMModifier
 ) {
     // do content block first as it shows changes immediately
     await contentBlockModifier.fadeOutNoise();
 
     const themeName = await initTheme(domain);
 
-    let start = performance.now();
     const [hideNoise, enableResponsiveStyle, restoreOriginalStyle] =
         await iterateCSSOM(themeName);
-    let duration = performance.now() - start;
-    console.log(`Took ${Math.round(duration)}ms to iterate CSSOM`);
     hideNoise();
 
-    start = performance.now();
-    const [fadeOutDom, patchDom] = iterateDOM();
-    duration = performance.now() - start;
-    console.log(`Took ${Math.round(duration)}ms to iterate DOM`);
-    fadeOutDom();
+    await domModifier.fadeOutNoise();
 
     await backgroundModifier.fadeOutNoise();
 
-    return [enableResponsiveStyle, patchDom, restoreOriginalStyle];
+    return [enableResponsiveStyle, restoreOriginalStyle];
 }
 
 export async function transitionIn(
     domain,
     enableResponsiveStyle,
-    patchDom,
-    contentBlockModifier: ContentBlockModifier
+    contentBlockModifier: ContentBlockModifier,
+    bodyStyleModifier: BodyStyleModifier,
+    domModifier: DOMModifier
 ) {
     document.body.style.setProperty("transition", "all 0.2s");
 
     await contentBlockModifier.transitionIn();
     enableResponsiveStyle();
-    patchDom(); // TODO how to make transition from original position
+    await domModifier.transitionIn(); // TODO how to make transition from original position
 
-    modifyBodyStyle();
+    await bodyStyleModifier.transitionIn();
 
     setTimeout(() => {
         insertPageSettings(domain);
@@ -60,13 +55,15 @@ export async function transitionIn(
 
 export async function transitionOut(
     restoreOriginalResponsiveStyle,
-    contentBlockModifier: ContentBlockModifier
+    contentBlockModifier: ContentBlockModifier,
+    bodyStyleModifier: BodyStyleModifier,
+    domModifier: DOMModifier
 ) {
     // revert CSSOM changes
     // restore original width
 
     restoreOriginalResponsiveStyle();
-    unPatchDomTransform();
+    await domModifier.transitionOut();
 
     document
         .querySelectorAll(
@@ -93,5 +90,5 @@ export async function transitionOut(
 
     // final cleanup, includes removing animation settings
     await new Promise((r) => setTimeout(r, 300));
-    unModifyBodyStyle();
+    await bodyStyleModifier.transitionOut();
 }
