@@ -1,6 +1,6 @@
 import tinycolor from "tinycolor2";
 import { minFontSizePx } from "../../common/defaultStorage";
-import { createStylesheetText } from "./common";
+import { createStylesheetText } from "../../common/stylesheets";
 import {
     activeColorThemeVariable,
     backgroundColorThemeVariable,

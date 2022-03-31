@@ -1,5 +1,5 @@
 import browser from "../../common/polyfill";
-import { createStylesheetText } from "./common";
+import { createStylesheetText } from "../../common/stylesheets";
 import { darkModeStyleRuleMap } from "./darkMode";
 import { themeName } from "./theme";
 

@@ -1,23 +1,23 @@
-import { insertContentBlockStyle } from "../pageview/contentBlock";
-import { insertPageSettings } from "../switch/insert";
-import { insertBackground } from "./background";
-import { modifyBodyStyle, unModifyBodyStyle } from "./body";
-import { overrideClassname } from "./common";
+import { overrideClassname } from "../common/stylesheets";
+import BackgroundModifier from "./modifications/background";
+import { modifyBodyStyle, unModifyBodyStyle } from "./modifications/body";
+import ContentBlockModifier from "./modifications/contentBlock";
 import {
     fadeInNoise,
     iterateCSSOM,
     reenableOriginalStylesheets,
-} from "./iterateCSSOM";
-import iterateDOM, { unPatchDomTransform } from "./iterateDOM";
-import { initTheme } from "./theme";
+} from "./modifications/iterateCSSOM";
+import iterateDOM, { unPatchDomTransform } from "./modifications/iterateDOM";
+import { initTheme } from "./modifications/theme";
+import { insertPageSettings } from "./switch/insert";
 
-export async function enableStyleChanges() {}
-
-export async function fadeOut(domain) {
+export async function fadeOutNoise(
+    domain: string,
+    backgroundModifier: BackgroundModifier,
+    contentBlockModifier: ContentBlockModifier
+) {
     // do content block first as it shows changes immediately
-    const [contentBlockFadeOut, contentBlockHide, contentBlockFadeIn] =
-        insertContentBlockStyle();
-    contentBlockFadeOut();
+    await contentBlockModifier.fadeOutNoise();
 
     const themeName = await initTheme(domain);
 
@@ -34,26 +34,20 @@ export async function fadeOut(domain) {
     console.log(`Took ${Math.round(duration)}ms to iterate DOM`);
     fadeOutDom();
 
-    insertBackground();
+    await backgroundModifier.fadeOutNoise();
 
-    return [
-        contentBlockHide,
-        enableResponsiveStyle,
-        patchDom,
-        restoreOriginalStyle,
-        contentBlockFadeIn,
-    ];
+    return [enableResponsiveStyle, patchDom, restoreOriginalStyle];
 }
 
-export function pageViewTransition(
+export async function transitionIn(
     domain,
     enableResponsiveStyle,
-    contentBlockHide,
-    patchDom
+    patchDom,
+    contentBlockModifier: ContentBlockModifier
 ) {
     document.body.style.setProperty("transition", "all 0.2s");
 
-    contentBlockHide();
+    await contentBlockModifier.transitionIn();
     enableResponsiveStyle();
     patchDom(); // TODO how to make transition from original position
 
@@ -64,9 +58,9 @@ export function pageViewTransition(
     }, 300);
 }
 
-export async function disableStyleChanges(
+export async function transitionOut(
     restoreOriginalResponsiveStyle,
-    contentBlockFadeIn
+    contentBlockModifier: ContentBlockModifier
 ) {
     // revert CSSOM changes
     // restore original width
@@ -87,7 +81,7 @@ export async function disableStyleChanges(
     // just hide overrides for now
 
     fadeInNoise();
-    contentBlockFadeIn();
+    await contentBlockModifier.fadeInNoise();
 
     // remove proxy stylesheets
     reenableOriginalStylesheets();

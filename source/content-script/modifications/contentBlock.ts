@@ -2,25 +2,29 @@ import browser from "../../common/polyfill";
 import {
     createStylesheetLink,
     createStylesheetText,
-} from "../modifications/common";
+} from "../../common/stylesheets";
+import { PageModifier } from "./PageModifier";
 
 // hide page elements unrelated to the article via custom CSS, to make a page more readable
-// TODO use statically generated CSS
-export function insertContentBlockStyle() {
-    const classWordSelectors = blockedWords.map(
-        (word) => `*:not(html):not(body):not(article)[class*=${word} i]`
-    );
-    const idSelectors = blockedWords.map((word) => `[id*=${word} i]`);
-    const roleSelectors = blockedWords.map((word) => `[role*=${word} i]`);
+// TODO use statically generated CSS?
+export default class ContentBlockModifier implements PageModifier {
+    private selectors: string[];
+    constructor() {
+        const classWordSelectors = blockedWords.map(
+            (word) => `*:not(html):not(body):not(article)[class*=${word} i]`
+        );
+        const idSelectors = blockedWords.map((word) => `[id*=${word} i]`);
+        const roleSelectors = blockedWords.map((word) => `[role*=${word} i]`);
 
-    const selectors = blockedTags
-        .concat(blockedClasses)
-        .concat(classWordSelectors)
-        .concat(idSelectors)
-        .concat(roleSelectors);
+        this.selectors = blockedTags
+            .concat(blockedClasses)
+            .concat(classWordSelectors)
+            .concat(idSelectors)
+            .concat(roleSelectors);
+    }
 
-    function fadeOut() {
-        const css = `${selectors.join(
+    async fadeOutNoise() {
+        const css = `${this.selectors.join(
             ", "
         )} { visibility: hidden !important; opacity: 0 !important; transition: visibility 0.2s, opacity 0.2s linear; }`;
         // TODO animate to 0 area? height: 0; width: 0; overflow: hidden;
@@ -28,8 +32,8 @@ export function insertContentBlockStyle() {
         createStylesheetText(css, "content-block-fadeout");
     }
 
-    function fadeIn() {
-        const css = `${selectors.join(
+    async fadeInNoise() {
+        const css = `${this.selectors.join(
             ", "
         )} { visibility: visible !important; opacity: 1 !important; transition: visibility 0.2s, opacity 0.2s linear; }`;
         // TODO animate to 0 area? height: 0; width: 0; overflow: hidden;
@@ -38,8 +42,10 @@ export function insertContentBlockStyle() {
     }
 
     // need to actually remove in pageview (may override responsive style)
-    function remove() {
-        const css = `${selectors.join(", ")} { display: none !important; }`;
+    async transitionIn() {
+        const css = `${this.selectors.join(
+            ", "
+        )} { display: none !important; }`;
         createStylesheetText(css, "content-block-hide");
 
         createStylesheetLink(
@@ -49,8 +55,6 @@ export function insertContentBlockStyle() {
             "content-block-custom-sites"
         );
     }
-
-    return [fadeOut, remove, fadeIn];
 }
 
 const blockedTags = ["footer", "aside", "nav", "gpt-ad"];

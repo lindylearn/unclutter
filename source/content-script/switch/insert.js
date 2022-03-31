@@ -5,11 +5,11 @@ import {
     getUserSettingForDomain,
     setUserSettingsForDomain,
 } from "../../common/storage";
-import { togglePageView } from "../enhance";
 import {
     createStylesheetLink,
     overrideClassname,
-} from "../modifications/common";
+} from "../../common/stylesheets";
+import { togglePageView } from "../enhance";
 import {
     activeColorThemeVariable,
     applySaveThemeOverride,
