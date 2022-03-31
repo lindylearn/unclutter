@@ -298,8 +298,8 @@ body.mediawiki {
     display: block !important;
     opacity: 1 !important;
     visibility: visible !important;
-    background: initial !important;
-    color: initial !important;
+    background: revert !important;
+    color: revert !important;
 }
 .content__title {
     padding-bottom: 0 !important;
@@ -455,7 +455,9 @@ section.post-content {
 
 /* https://www.wsj.com/articles/ivermectin-didnt-reduce-covid-19-hospitalizations-in-largest-trial-to-date-11647601200 */
 .sharedStyles__BelowTop-sc-1ext442-1,
-.MarketDataStrip__MdSector-sc-15rifxt-0 {
+.MarketDataStrip__MdSector-sc-15rifxt-0,
+div[data-module-zone="ribbon"],
+div[data-module-zone="header"] {
     display: none !important;
 }
 
@@ -655,4 +657,9 @@ code {
     display: block !important;
     opacity: 1 !important;
     visibility: visible !important;
+}
+
+/* https://aeon.co/essays/corruption-has-shaped-history-why-do-we-still-ignore-it */
+.SupportBannerHeader__BannerWrapper-sc-9g9mv2-0 {
+    display: none !important;
 }

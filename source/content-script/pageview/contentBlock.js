@@ -109,4 +109,5 @@ const blockedClasses = [
     ".site-header",
     "#site_banner",
     ".header-main", // https://www.statnews.com/2020/09/24/crows-possess-higher-intelligence-long-thought-primarily-human/
+    ".top-bar", // https://www.pathsensitive.com/2022/03/abstraction-not-what-you-think-it-is.html
 ];
