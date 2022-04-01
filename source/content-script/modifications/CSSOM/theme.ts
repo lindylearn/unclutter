@@ -42,40 +42,76 @@ export default class ThemeModifier implements PageModifier {
     }
 
     async afterTransitionIn() {
-        this.enableColorTheme(this.activeColorTheme);
+        await this.applyColorTheme(this.activeColorTheme);
+    }
 
-        if (this.activeColorTheme === "dark") {
+    // also called from overlay theme selector
+    async applyColorTheme(colorThemeName: themeName) {
+        // State for UI switch
+        setCssThemeVariable(activeColorThemeVariable, colorThemeName, true);
+        highlightActiveColorThemeButton(colorThemeName);
+
+        // Background color
+        const concreteColor = colorThemeToBackgroundColor(colorThemeName);
+        setCssThemeVariable(backgroundColorThemeVariable, concreteColor, true);
+
+        if (colorThemeName === "dark") {
             setCssThemeVariable(
                 "--lindy-dark-theme-text-color",
                 "rgb(232, 230, 227)",
                 true
             );
-            await this.enableDarkMode();
+
+            // CSS tweaks for dark mode
+            await this.enableDarkModeStyleTweaks();
+        } else if (this.activeDarkModeStyleTweaks.length !== 0) {
+            // undo dark mode style tweaks
+            await this.disableDarkModeStyleTweaks();
         }
     }
 
-    public enableColorTheme(colorThemeName: themeName) {
-        // Background color
-        const concreteColor = colorThemeToBackgroundColor(colorThemeName);
-        setCssThemeVariable(backgroundColorThemeVariable, concreteColor, true);
-
-        // State for UI switch
-        setCssThemeVariable(activeColorThemeVariable, colorThemeName, true);
-        highlightActiveColorThemeButton(colorThemeName);
+    async transitionOut() {
+        if (this.activeColorTheme === "dark") {
+            await this.disableDarkModeStyleTweaks();
+        }
     }
 
-    async enableDarkMode() {
+    private activeDarkModeStyleTweaks: [CSSStyleRule, object][] = [];
+    private async enableDarkModeStyleTweaks() {
         // patch site stylesheet colors
         this.cssomProvider.stylesheets.map((sheet) => {
             for (let rule of sheet.cssRules) {
-                if (isStyleRule(rule)) {
-                    darkModeStyleRuleMap(rule);
+                if (!isStyleRule(rule)) {
+                    continue;
                 }
+                if (
+                    !rule.style.color &&
+                    !rule.style.backgroundColor &&
+                    !rule.style.boxShadow
+                ) {
+                    continue;
+                }
+
+                // save properties for restoration later
+                // TODO measure performance of this
+                const obj = {};
+                for (const key of rule.style) {
+                    obj[key] = rule.style.getPropertyValue(key);
+                }
+                this.activeDarkModeStyleTweaks.push([rule, obj]);
+
+                darkModeStyleRuleMap(rule);
             }
         });
     }
 
-    async disableDarkMode() {}
+    private async disableDarkModeStyleTweaks() {
+        this.activeDarkModeStyleTweaks.map(([rule, originalStyle]) => {
+            for (const [key, value] of Object.entries(originalStyle)) {
+                rule.style.setProperty(key, value);
+            }
+        });
+    }
 }
 
 function darkModeStyleRuleMap(rule: CSSStyleRule) {

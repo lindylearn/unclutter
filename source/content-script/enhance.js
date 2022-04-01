@@ -44,7 +44,6 @@ export async function togglePageView() {
         isSimulatedClick = false;
         await enablePageView(async () => {
             // when user exists page view
-            await transitions.transitionOut();
 
             if (!isSimulatedClick) {
                 // already emitted elsewhere for simulated non-background clicks
@@ -53,6 +52,9 @@ export async function togglePageView() {
                     trigger: "backgroundClick",
                 });
             }
+
+            await transitions.transitionOut();
+            await transitions.fadeinNoise();
         }, true);
 
         await transitions.afterTransitionIn();

@@ -75,13 +75,13 @@ export default class TransitionManager implements PageModifier {
 
         await this.contentBlockModifier.transitionOut();
         await this.overlayManager.transitionOut();
+        await this.themeModifier.transitionOut();
 
         document.documentElement.classList.remove("pageview");
         await new Promise((r) => setTimeout(r, 400));
+    }
 
-        // fade-in
-        // just hide overrides for now
-
+    async fadeinNoise() {
         await this.responsiveStyleModifier.fadeInNoise();
         await this.contentBlockModifier.fadeInNoise();
 

@@ -243,7 +243,7 @@ async function _setupThemePopupHandlers(
     // Setup theme selection
     function _setTheme(themeName: themeName) {
         // Update active state
-        themeModifier.enableColorTheme(themeName);
+        themeModifier.applyColorTheme(themeName);
 
         // Save in storage
         applySaveThemeOverride(domain, activeColorThemeVariable, themeName);
