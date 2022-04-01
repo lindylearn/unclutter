@@ -2,16 +2,16 @@ import { overrideClassname } from "../common/stylesheets";
 import BackgroundModifier from "./modifications/background";
 import BodyStyleModifier from "./modifications/bodyStyle";
 import ContentBlockModifier from "./modifications/contentBlock";
-import CSSOMModifier from "./modifications/CSSOM";
-import DOMModifier from "./modifications/DOM";
+import ResponsiveStyleModifier from "./modifications/CSSOM/responsiveStyle";
+import TextContainerModifier from "./modifications/DOM/textContainer";
 import OverlayManager from "./modifications/overlay";
 
 export async function fadeOutNoise(
     domain: string,
     backgroundModifier: BackgroundModifier,
     contentBlockModifier: ContentBlockModifier,
-    domModifier: DOMModifier,
-    cssomModifer: CSSOMModifier
+    domModifier: TextContainerModifier,
+    cssomModifer: ResponsiveStyleModifier
 ) {
     // do content block first as it shows changes immediately
     await contentBlockModifier.fadeOutNoise();
@@ -26,8 +26,8 @@ export async function transitionIn(
     domain,
     contentBlockModifier: ContentBlockModifier,
     bodyStyleModifier: BodyStyleModifier,
-    domModifier: DOMModifier,
-    cssomModifer: CSSOMModifier,
+    domModifier: TextContainerModifier,
+    cssomModifer: ResponsiveStyleModifier,
     overlayManager: OverlayManager
 ) {
     document.body.style.setProperty("transition", "all 0.2s");
@@ -47,8 +47,8 @@ export async function transitionIn(
 export async function transitionOut(
     contentBlockModifier: ContentBlockModifier,
     bodyStyleModifier: BodyStyleModifier,
-    domModifier: DOMModifier,
-    cssomModifer: CSSOMModifier,
+    domModifier: TextContainerModifier,
+    cssomModifer: ResponsiveStyleModifier,
     overlayManager: OverlayManager
 ) {
     await cssomModifer.transitionOut();

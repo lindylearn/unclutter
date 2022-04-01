@@ -4,8 +4,8 @@ import { getDomainFrom } from "../common/util";
 import BackgroundModifier from "./modifications/background";
 import BodyStyleModifier from "./modifications/bodyStyle";
 import ContentBlockModifier from "./modifications/contentBlock";
-import CSSOMModifier from "./modifications/CSSOM";
-import DOMModifier from "./modifications/DOM";
+import ResponsiveStyleModifier from "./modifications/CSSOM/responsiveStyle";
+import TextContainerModifier from "./modifications/DOM/textContainer";
 import OverlayManager from "./modifications/overlay";
 import { enablePageView } from "./pageview/enablePageView";
 import { fadeOutNoise, transitionIn, transitionOut } from "./transitions";
@@ -43,8 +43,8 @@ export async function togglePageView() {
         const backgroundModifier = new BackgroundModifier();
         const contentBlockModifier = new ContentBlockModifier();
         const bodyStyleModifier = new BodyStyleModifier();
-        const domModifier = new DOMModifier();
-        const cssomModifer = new CSSOMModifier();
+        const domModifier = new TextContainerModifier();
+        const cssomModifer = new ResponsiveStyleModifier();
         const overlayManager = new OverlayManager(domain);
 
         const themeName = await initTheme(domain);

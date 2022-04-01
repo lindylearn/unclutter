@@ -1,4 +1,4 @@
-import { PageModifier } from "./PageModifier";
+import { PageModifier } from "./_interface";
 
 // Perform various inline style fixes to overwrite site styles
 export default class BodyStyleModifier implements PageModifier {

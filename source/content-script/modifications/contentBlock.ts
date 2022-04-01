@@ -3,7 +3,7 @@ import {
     createStylesheetLink,
     createStylesheetText,
 } from "../../common/stylesheets";
-import { PageModifier } from "./PageModifier";
+import { PageModifier } from "./_interface";
 
 // hide page elements unrelated to the article via custom CSS, to make a page more readable
 // TODO use statically generated CSS?
@@ -122,4 +122,5 @@ const blockedClasses = [
     "#site_banner",
     ".header-main", // https://www.statnews.com/2020/09/24/crows-possess-higher-intelligence-long-thought-primarily-human/
     ".top-bar", // https://www.pathsensitive.com/2022/03/abstraction-not-what-you-think-it-is.html
+    "[role=complementary]",
 ];

@@ -1,6 +1,6 @@
 import tinycolor from "tinycolor2";
-import { minFontSizePx } from "../../common/defaultStorage";
-import { createStylesheetText } from "../../common/stylesheets";
+import { minFontSizePx } from "../../../common/defaultStorage";
+import { createStylesheetText } from "../../../common/stylesheets";
 import {
     activeColorThemeVariable,
     backgroundColorThemeVariable,
@@ -8,8 +8,8 @@ import {
     getThemeValue,
     originalBackgroundThemeVariable,
     setCssThemeVariable,
-} from "../../common/theme";
-import { PageModifier } from "./PageModifier";
+} from "../../../common/theme";
+import { PageModifier } from "../_interface";
 
 const globalParagraphSelector = "p, font, pre";
 
@@ -22,7 +22,7 @@ This is done so that we can:
  - Remove borders, shadows, and background colors from elements that contain article text.
  - Get the current font size of the main text elements.
 */
-export default class DOMModifier implements PageModifier {
+export default class TextContainerModifier implements PageModifier {
     // Collect elements that contain text nodes
     private containerSelectors = [];
     // Collect overrides for specific container elements (insert as stylesheet for easy unpatching)

@@ -1,12 +1,13 @@
-import browser from "../../common/polyfill";
-import { createStylesheetText } from "../../common/stylesheets";
-import { themeName } from "../../common/theme";
-import { darkModeStyleRuleMap } from "./darkMode";
-import { PageModifier } from "./PageModifier";
+import browser from "../../../common/polyfill";
+import { createStylesheetText } from "../../../common/stylesheets";
+import { themeName } from "../../../common/theme";
+import { darkModeStyleRuleMap } from "../darkMode";
+import { PageModifier } from "../_interface";
 
-export default class CSSOMModifier implements PageModifier {
+export default class ResponsiveStyleModifier implements PageModifier {
     private oldWidth = window.innerWidth;
     private newWidth = 750;
+
     private fixedPositionRules = [];
     private expiredRules = [];
     private newRules = [];

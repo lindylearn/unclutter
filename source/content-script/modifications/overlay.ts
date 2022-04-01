@@ -1,5 +1,5 @@
 import { insertPageSettings } from "../overlay/insert";
-import { PageModifier } from "./PageModifier";
+import { PageModifier } from "./_interface";
 
 export default class OverlayManager implements PageModifier {
     private domain;
