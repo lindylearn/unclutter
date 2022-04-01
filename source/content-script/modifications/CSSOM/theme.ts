@@ -16,6 +16,7 @@ import CSSOMProvider, { isStyleRule } from "./_provider";
 @trackModifierExecution
 export default class ThemeModifier implements PageModifier {
     private cssomProvider: CSSOMProvider;
+    private activeColorTheme: themeName;
 
     constructor(cssomProvider: CSSOMProvider) {
         this.cssomProvider = cssomProvider;
@@ -34,8 +35,22 @@ export default class ThemeModifier implements PageModifier {
             setCssThemeVariable(pageWidthThemeVariable, theme.pageWidth, true);
         }
 
-        if (theme.colorTheme) {
-            this.enableColorTheme(theme.colorTheme);
+        this.activeColorTheme = theme.colorTheme;
+        if (!this.activeColorTheme) {
+            this.activeColorTheme = "auto";
+        }
+    }
+
+    async afterTransitionIn() {
+        this.enableColorTheme(this.activeColorTheme);
+
+        if (this.activeColorTheme === "dark") {
+            setCssThemeVariable(
+                "--lindy-dark-theme-text-color",
+                "rgb(232, 230, 227)",
+                true
+            );
+            await this.enableDarkMode();
         }
     }
 
@@ -47,14 +62,6 @@ export default class ThemeModifier implements PageModifier {
         // State for UI switch
         setCssThemeVariable(activeColorThemeVariable, colorThemeName, true);
         highlightActiveColorThemeButton(colorThemeName);
-    }
-
-    async afterTransitionIn(themeName: themeName) {
-        if (themeName !== "dark") {
-            return;
-        }
-
-        await this.enableDarkMode();
     }
 
     async enableDarkMode() {

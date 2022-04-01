@@ -1,4 +1,3 @@
-import { themeName } from "source/common/theme";
 import { getDomainFrom } from "source/common/util";
 import { overrideClassname } from "../common/stylesheets";
 import BackgroundModifier from "./modifications/background";
@@ -18,7 +17,6 @@ import {
 @trackModifierExecution
 export default class TransitionManager implements PageModifier {
     private domain = getDomainFrom(new URL(window.location.href));
-    private themeName: themeName;
 
     private cssomProvider = new CSSOMProvider();
 
@@ -67,7 +65,7 @@ export default class TransitionManager implements PageModifier {
     }
 
     async afterTransitionIn() {
-        await this.themeModifier.afterTransitionIn(this.themeName);
+        await this.themeModifier.afterTransitionIn();
         await this.stylePatchesModifier.afterTransitionIn();
     }
 

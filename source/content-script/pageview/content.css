@@ -77,7 +77,6 @@ html.pageview > body {
     }
 
     :root {
-        --lindy-dark-theme-text-color: rgb(232, 230, 227);
         color: var(--lindy-dark-theme-text-color);
     }
     a {

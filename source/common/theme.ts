@@ -22,8 +22,6 @@ export function applySaveThemeOverride(domain, varName, value) {
 
         mergeDomainUserTheme(domain, { pageWidth: value });
     } else if (varName === activeColorThemeVariable) {
-        setCssThemeVariable(activeColorThemeVariable, value, true);
-
         const concreteColor = colorThemeToBackgroundColor(value);
         setCssThemeVariable(backgroundColorThemeVariable, concreteColor, true);
 
