@@ -1,4 +1,4 @@
-import { mergeDomainUserTheme } from "./storage";
+import { mergeUserTheme } from "./storage";
 
 export type themeName = "auto" | "white" | "sepia" | "dark";
 
@@ -17,15 +17,15 @@ export function applySaveThemeOverride(domain, varName, value) {
     if (varName === fontSizeThemeVariable) {
         setCssThemeVariable(varName, value, true);
 
-        mergeDomainUserTheme(domain, { fontSize: value });
+        mergeUserTheme({ fontSize: value });
     } else if (varName === pageWidthThemeVariable) {
         setCssThemeVariable(varName, value, true);
 
-        mergeDomainUserTheme(domain, { pageWidth: value });
+        mergeUserTheme({ pageWidth: value });
     } else if (varName === activeColorThemeVariable) {
         // apply handled in ThemeModifier.ts
 
-        mergeDomainUserTheme(domain, { colorTheme: value });
+        mergeUserTheme({ colorTheme: value });
     }
 }
 

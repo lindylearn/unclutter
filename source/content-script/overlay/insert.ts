@@ -2,8 +2,8 @@ import { reportEvent } from "../../common/metrics";
 import browser from "../../common/polyfill";
 import {
     domainUserSetting,
-    getDomainUserTheme,
     getUserSettingForDomain,
+    getUserTheme,
     setUserSettingsForDomain,
 } from "../../common/storage";
 import {
@@ -252,7 +252,7 @@ async function _setupThemePopupHandlers(
     document.getElementById("lindy-dark-theme-button").onclick = () =>
         _setTheme("dark");
 
-    const activeTheme = await getDomainUserTheme(domain);
+    const activeTheme = await getUserTheme();
     if (activeTheme?.colorTheme) {
         highlightActiveColorThemeButton(activeTheme.colorTheme);
     }

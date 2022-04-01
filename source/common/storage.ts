@@ -4,12 +4,10 @@ export async function getAllCustomDomainSettings() {
     const config = await browser.storage.sync.get([
         "domain-allowlist",
         "domain-denylist",
-        "custom-domain-themes",
     ]);
     return {
         allow: Object.keys(config["domain-allowlist"] || {}),
         deny: Object.keys(config["domain-denylist"] || {}),
-        themes: config["custom-domain-themes"] || {},
     };
 }
 
@@ -60,24 +58,15 @@ export async function setUserSettingsForDomain(domain, status) {
     });
 }
 
-export async function getDomainUserTheme(domain) {
-    const config = await browser.storage.sync.get(["custom-domain-themes"]);
-    return config["custom-domain-themes"]?.[domain];
+export async function getUserTheme() {
+    const config = await browser.storage.sync.get(["custom-global-theme"]);
+    return config["custom-global-theme"];
 }
-export async function mergeDomainUserTheme(domain, partialTheme) {
-    const config = await browser.storage.sync.get(["custom-domain-themes"]);
-    const themeConfig = config["custom-domain-themes"] || {};
-
-    themeConfig[domain] = {
-        ...themeConfig[domain],
+export async function mergeUserTheme(partialTheme) {
+    const config = await browser.storage.sync.get(["custom-global-theme"]);
+    const themeConfig = {
+        ...(config["custom-global-theme"] || {}),
         ...partialTheme,
     };
-    await browser.storage.sync.set({ "custom-domain-themes": themeConfig });
-}
-export async function deleteDomainUserTheme(domain) {
-    const config = await browser.storage.sync.get(["custom-domain-themes"]);
-    const themeConfig = config["custom-domain-themes"];
-
-    delete themeConfig[domain];
-    await browser.storage.sync.set({ "custom-domain-themes": themeConfig });
+    await browser.storage.sync.set({ "custom-global-theme": themeConfig });
 }

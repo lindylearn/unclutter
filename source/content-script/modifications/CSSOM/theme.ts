@@ -1,4 +1,4 @@
-import { getDomainUserTheme } from "source/common/storage";
+import { getUserTheme } from "source/common/storage";
 import { createStylesheetLink } from "source/common/stylesheets";
 import {
     activeColorThemeVariable,
@@ -34,7 +34,7 @@ export default class ThemeModifier implements PageModifier {
         this.domain = domain;
 
         // Get saved domain-specific theme
-        const theme = await getDomainUserTheme(domain);
+        const theme = await getUserTheme();
         if (!theme) {
             return;
         }
@@ -137,7 +137,6 @@ export default class ThemeModifier implements PageModifier {
     }
 
     private async enableDarkMode() {
-        console.log("enable");
         // Background color
         const concreteColor = colorThemeToBackgroundColor("dark");
         setCssThemeVariable(backgroundColorThemeVariable, concreteColor, true);
@@ -164,7 +163,6 @@ export default class ThemeModifier implements PageModifier {
     }
 
     private async disableDarkMode() {
-        console.log("disable");
         // Background color
         const concreteColor = colorThemeToBackgroundColor(
             this.activeColorTheme
