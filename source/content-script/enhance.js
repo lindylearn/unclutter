@@ -5,6 +5,7 @@ import BackgroundModifier from "./modifications/background";
 import BodyStyleModifier from "./modifications/bodyStyle";
 import ContentBlockModifier from "./modifications/contentBlock";
 import ResponsiveStyleModifier from "./modifications/CSSOM/responsiveStyle";
+import CSSOMProvider from "./modifications/CSSOM/_provider";
 import TextContainerModifier from "./modifications/DOM/textContainer";
 import OverlayManager from "./modifications/overlay";
 import { enablePageView } from "./pageview/enablePageView";
@@ -43,13 +44,18 @@ export async function togglePageView() {
         const backgroundModifier = new BackgroundModifier();
         const contentBlockModifier = new ContentBlockModifier();
         const bodyStyleModifier = new BodyStyleModifier();
-        const domModifier = new TextContainerModifier();
-        const cssomModifer = new ResponsiveStyleModifier();
+        const textContainerModifier = new TextContainerModifier();
+        const responsiveStyleModifier = new ResponsiveStyleModifier();
         const overlayManager = new OverlayManager(domain);
 
+        // providers
+        const cssomProvider = new CSSOMProvider();
+
+        await cssomProvider.prepare();
+
         const themeName = await initTheme(domain);
-        cssomModifer.parse(themeName);
-        domModifier.parse();
+        await responsiveStyleModifier.parse(cssomProvider);
+        await textContainerModifier.prepare();
 
         // *** Fade-out phase ***
         // Visibly hide noisy elements and meanwhile perform heavy operation
@@ -61,8 +67,8 @@ export async function togglePageView() {
                 domain,
                 backgroundModifier,
                 contentBlockModifier,
-                domModifier,
-                cssomModifer
+                textContainerModifier,
+                responsiveStyleModifier
             ),
             new Promise((r) => setTimeout(r, 300)),
         ]);
@@ -74,8 +80,8 @@ export async function togglePageView() {
             domain,
             contentBlockModifier,
             bodyStyleModifier,
-            domModifier,
-            cssomModifer,
+            textContainerModifier,
+            responsiveStyleModifier,
             overlayManager
         );
 
@@ -86,9 +92,10 @@ export async function togglePageView() {
             await transitionOut(
                 contentBlockModifier,
                 bodyStyleModifier,
-                domModifier,
-                cssomModifer,
-                overlayManager
+                textContainerModifier,
+                responsiveStyleModifier,
+                overlayManager,
+                cssomProvider
             );
 
             if (!isSimulatedClick) {

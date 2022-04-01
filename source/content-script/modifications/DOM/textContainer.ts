@@ -33,7 +33,7 @@ export default class TextContainerModifier implements PageModifier {
     private mainFontSize;
     private exampleMainFontSizeElement;
 
-    parse() {
+    async prepare() {
         let paragraphSelector = globalParagraphSelector;
         let paragraphs = document.body.querySelectorAll(paragraphSelector);
         if (paragraphs.length === 0) {

@@ -3,6 +3,7 @@ import BackgroundModifier from "./modifications/background";
 import BodyStyleModifier from "./modifications/bodyStyle";
 import ContentBlockModifier from "./modifications/contentBlock";
 import ResponsiveStyleModifier from "./modifications/CSSOM/responsiveStyle";
+import CSSOMProvider from "./modifications/CSSOM/_provider";
 import TextContainerModifier from "./modifications/DOM/textContainer";
 import OverlayManager from "./modifications/overlay";
 
@@ -10,14 +11,14 @@ export async function fadeOutNoise(
     domain: string,
     backgroundModifier: BackgroundModifier,
     contentBlockModifier: ContentBlockModifier,
-    domModifier: TextContainerModifier,
-    cssomModifer: ResponsiveStyleModifier
+    textContainerModifier: TextContainerModifier,
+    responsiveStyleModifier: ResponsiveStyleModifier
 ) {
     // do content block first as it shows changes immediately
     await contentBlockModifier.fadeOutNoise();
 
-    await cssomModifer.fadeOutNoise();
-    await domModifier.fadeOutNoise();
+    await responsiveStyleModifier.fadeOutNoise();
+    await textContainerModifier.fadeOutNoise();
 
     await backgroundModifier.fadeOutNoise();
 }
@@ -26,16 +27,16 @@ export async function transitionIn(
     domain,
     contentBlockModifier: ContentBlockModifier,
     bodyStyleModifier: BodyStyleModifier,
-    domModifier: TextContainerModifier,
-    cssomModifer: ResponsiveStyleModifier,
+    textContainerModifier: TextContainerModifier,
+    responsiveStyleModifier: ResponsiveStyleModifier,
     overlayManager: OverlayManager
 ) {
     document.body.style.setProperty("transition", "all 0.2s");
 
     await contentBlockModifier.transitionIn();
 
-    await cssomModifer.transitionIn();
-    await domModifier.transitionIn(); // TODO how to make transition from original position
+    await responsiveStyleModifier.transitionIn();
+    await textContainerModifier.transitionIn(); // TODO how to make transition from original position
 
     await bodyStyleModifier.transitionIn();
 
@@ -47,12 +48,13 @@ export async function transitionIn(
 export async function transitionOut(
     contentBlockModifier: ContentBlockModifier,
     bodyStyleModifier: BodyStyleModifier,
-    domModifier: TextContainerModifier,
-    cssomModifer: ResponsiveStyleModifier,
-    overlayManager: OverlayManager
+    textContainerModifier: TextContainerModifier,
+    responsiveStyleModifier: ResponsiveStyleModifier,
+    overlayManager: OverlayManager,
+    cssomProvider: CSSOMProvider
 ) {
-    await cssomModifer.transitionOut();
-    await domModifier.transitionOut();
+    await responsiveStyleModifier.transitionOut();
+    await textContainerModifier.transitionOut();
 
     await contentBlockModifier.transitionOut();
     await overlayManager.transitionOut();
@@ -63,11 +65,10 @@ export async function transitionOut(
     // fade-in
     // just hide overrides for now
 
-    await cssomModifer.fadeInNoise();
+    await responsiveStyleModifier.fadeInNoise();
     await contentBlockModifier.fadeInNoise();
 
-    // remove proxy stylesheets
-    await cssomModifer.reenableOriginalStylesheets();
+    await cssomProvider.reenableOriginalStylesheets();
 
     // remove rest
     document

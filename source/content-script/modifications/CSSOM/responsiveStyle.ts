@@ -1,144 +1,60 @@
-import browser from "../../../common/polyfill";
-import { createStylesheetText } from "../../../common/stylesheets";
-import { themeName } from "../../../common/theme";
-import { darkModeStyleRuleMap } from "../darkMode";
 import { PageModifier } from "../_interface";
+import CSSOMProvider from "./_provider";
 
 export default class ResponsiveStyleModifier implements PageModifier {
     private oldWidth = window.innerWidth;
     private newWidth = 750;
 
-    private fixedPositionRules = [];
-    private expiredRules = [];
-    private newRules = [];
+    private fixedPositionRules: CSSStyleRule[] = [];
+    private expiredRules: CSSStyleRule[] = [];
+    private newRules: CSSStyleRule[] = [];
 
-    async parse(themeName: themeName) {
-        const stylesheets = [...document.styleSheets];
-        const accessibleStylesheets = await Promise.all(
-            stylesheets.map(async (sheet) => {
-                // Only consider applicable stylesheets
-                // e.g. 'print' at https://www.theguardian.com/world/2022/mar/25/russian-troops-mutiny-commander-ukraine-report-western-officials
-                // TODO also consider responsive styles that would become valid?
+    async parse(cssomProvider: CSSOMProvider) {
+        cssomProvider.stylesheets.map((sheet) => {
+            this.mapAggregatedRule(sheet);
+        });
+    }
 
+    private mapAggregatedRule(aggregationNode: CSSGroupingRule) {
+        for (let rule of aggregationNode.cssRules) {
+            if (isStyleRule(rule)) {
+                const position = rule.style.position;
                 if (
-                    sheet.disabled ||
-                    sheet.ownerNode?.classList.contains(
-                        "lindylearn-document-override"
-                    ) ||
-                    sheet.ownerNode?.classList.contains("darkreader") ||
-                    !window.matchMedia(sheet.media.mediaText).matches
+                    position &&
+                    (position === "fixed" || position === "sticky")
                 ) {
-                    // console.log(
-                    //     `Excluding stylesheet with class ${sheet.ownerNode?.classList} and media condition '${sheet.media.mediaText}'`
-                    // );
-                    return;
+                    this.fixedPositionRules.push(rule);
                 }
+                styleRuleTweaks(rule);
 
-                // Exclude font stylesheets
-                if (sheet.href) {
-                    const url = new URL(sheet.href);
-                    if (
-                        [
-                            "fonts.googleapis.com",
-                            "pro.fontawesome.com",
-                        ].includes(url.hostname)
-                    ) {
-                        return;
-                    }
-                    if (
-                        url.pathname.includes("font") ||
-                        url.pathname.endsWith(".woff2")
-                    ) {
-                        return;
-                    }
-                }
+                // // TODO run later?
+                // if (themeName === "dark") {
+                //     darkModeStyleRuleMap(rule);
+                // }
+            } else if (isSupportsRule(rule)) {
+                // recurse
+                this.mapAggregatedRule(rule);
+            } else if (isMediaRule(rule)) {
+                // recurse
+                this.mapAggregatedRule(rule);
 
-                try {
-                    sheet.cssRules;
-                    return sheet;
-                } catch (err) {
-                    if (!sheet.href) {
-                        // e.g. cannot access CSSOM style rules created by Dark Reader on Firefox
-                        console.log(`Inaccessible stylesheet:`, sheet, err);
-                        return;
-                    }
-
-                    console.log(`Replicating ${sheet.href}...`);
-
-                    const styleId = sheet.href?.split("/").pop().split(".")[0];
-
-                    let cssText = await fetchCssRemote(sheet.href);
-
-                    const baseUrl = sheet.href || window.location.href;
-                    cssText = transformProxyCssText(cssText, baseUrl);
-
-                    if (cssText) {
-                        const element = createStylesheetText(
-                            cssText,
-                            "lindy-stylesheet-proxy"
-                        );
-
-                        if (sheet.ownerNode) {
-                            // In theory this should never be null, but it can happen
-                            // e.g. on https://theconversation.com/how-fast-can-we-stop-earth-from-warming-178295
-                            disableStylesheet(sheet.ownerNode, styleId);
-                        }
-
-                        return element.sheet;
-                    }
-                }
-            })
-        );
-        // TODO listen to new
-        // console.log(accessibleStylesheets);
-
-        const mapAggregatedRule = (aggregationNode) => {
-            for (const rule of aggregationNode.cssRules) {
-                if (rule.type === CSSRule.STYLE_RULE) {
-                    const position = rule.style.position;
-                    if (
-                        position &&
-                        (position === "fixed" || position === "sticky")
-                    ) {
-                        this.fixedPositionRules.push(rule);
-                    }
-                    styleRuleTweaks(rule);
-
-                    // TODO run later?
-                    if (themeName === "dark") {
-                        darkModeStyleRuleMap(rule);
-                    }
-                } else if (rule.type === CSSRule.SUPPORTS_RULE) {
-                    // recurse
-                    mapAggregatedRule(rule);
-                } else if (rule.type === CSSRule.MEDIA_RULE) {
-                    // recurse
-                    mapAggregatedRule(rule);
-
-                    const [appliedBefore, appliesNow] = parseMediaCondition(
-                        rule,
-                        this.oldWidth,
-                        this.newWidth
+                const [appliedBefore, appliesNow] = parseMediaCondition(
+                    rule,
+                    this.oldWidth,
+                    this.newWidth
+                );
+                if (appliedBefore && !appliesNow) {
+                    this.expiredRules.push(
+                        ...[...rule.cssRules].filter((rule) => !!rule.style)
                     );
-                    if (appliedBefore && !appliesNow) {
-                        this.expiredRules.push(
-                            ...[...rule.cssRules].filter((rule) => !!rule.style)
-                        );
-                    }
-                    if (!appliedBefore && appliesNow) {
-                        this.newRules.push(
-                            ...[...rule.cssRules].filter((rule) => !!rule.style)
-                        );
-                    }
+                }
+                if (!appliedBefore && appliesNow) {
+                    this.newRules.push(
+                        ...[...rule.cssRules].filter((rule) => !!rule.style)
+                    );
                 }
             }
-        };
-
-        accessibleStylesheets
-            .filter((sheet) => sheet)
-            .map((sheet) => {
-                mapAggregatedRule(sheet);
-            });
+        }
     }
 
     private animatedRulesToHide = []; // list of obj and previous display style
@@ -201,8 +117,8 @@ export default class ResponsiveStyleModifier implements PageModifier {
         });
     }
 
-    private originalStyleList = [];
-    private addedRules = [];
+    private originalStyleList: object[] = [];
+    private addedRules: CSSStyleRule[] = [];
     async transitionIn() {
         this.expiredRules.map((rule, index) => {
             // actually deleting & reinserting rule is hard -- need to keep track of mutating rule index
@@ -226,8 +142,7 @@ export default class ResponsiveStyleModifier implements PageModifier {
                 rule.parentStyleSheet.cssRules.length
             );
             const newRule = rule.parentStyleSheet.cssRules[newIndex];
-
-            this.addedRules.push(newRule);
+            this.addedRules.push(newRule as CSSStyleRule);
         });
 
         this.fixedPositionRules.map((rule) => {
@@ -273,20 +188,13 @@ export default class ResponsiveStyleModifier implements PageModifier {
             );
         });
     }
-
-    async reenableOriginalStylesheets() {
-        [...document.getElementsByClassName(disabledClassname)].map((elem) => {
-            elem.classList.remove(disabledClassname);
-            elem.disabled = false;
-        });
-
-        document
-            .querySelectorAll(".lindy-stylesheet-proxy")
-            .forEach((e) => e.remove());
-    }
 }
 
-function parseMediaCondition(rule, oldWidth, newWidth) {
+function parseMediaCondition(
+    rule: CSSMediaRule,
+    oldWidth: number,
+    newWidth: number
+) {
     // TODO ideally, iterate the media list
     const condition = rule.media[0];
 
@@ -324,11 +232,15 @@ function unitToPx(unit, value) {
     }
 }
 
-function styleRuleTweaks(rule) {
+function styleRuleTweaks(rule: CSSStyleRule) {
     // performance is important here, as this run on every single CSS declation
     // can take up to 600ms e.g. for https://slack.com/intl/en-gb/blog/collaboration/etiquette-tips-in-slack
-
-    if (!rule.style.width && !rule.style && !rule.height && !rule.maxHeight) {
+    if (
+        !rule.style.width &&
+        !rule.style &&
+        !rule.style.height &&
+        !rule.style.maxHeight
+    ) {
         return;
     }
 
@@ -350,74 +262,12 @@ function styleRuleTweaks(rule) {
     }
 }
 
-const disabledClassname = "lindylearn-disabled-style";
-function disableStylesheet(elem, styleId) {
-    elem.disabled = true;
-    elem.classList.add(disabledClassname);
-    elem.classList.add(styleId);
+function isStyleRule(rule: CSSRule): rule is CSSStyleRule {
+    return rule.type === CSSRule.STYLE_RULE;
 }
-
-// Send an event to the extensions service worker to rewrite a stylesheet, and wait for a response.
-async function fetchCssRemote(url) {
-    const response = await browser.runtime.sendMessage(null, {
-        event: "fetchCss",
-        url,
-    });
-    if (response.status === "success") {
-        return response.cssText;
-    }
-    if (response.status === "error") {
-        console.error(`Error fetching CSS:`, response.err);
-        return null;
-    }
-    console.error(`Error fetching CSS`);
-    return null;
+function isSupportsRule(rule: CSSRule): rule is CSSSupportsRule {
+    return rule.type === CSSRule.SUPPORTS_RULE;
 }
-function transformProxyCssText(cssText, baseUrl) {
-    // Transform css text before old style is replaced to prevent flicker
-
-    // New inline style will have different base ref than imported stylesheets, so replace relative file references
-    // e.g. https://arstechnica.com/science/2022/03/plant-based-nanocrystals-could-be-the-secret-to-preventing-crunchy-ice-cream/
-    cssText = cssText.replace(
-        /url\((('.+?')|(".+?")|([^\)]*?))\)/g,
-        (match) => {
-            try {
-                const relativeUrl = match
-                    .replace(/^url\((.*)\)$/, "$1")
-                    .trim()
-                    .replace(/^"(.*)"$/, "$1")
-                    .replace(/^'(.*)'$/, "$1");
-                const absoluteUrl = new URL(relativeUrl, baseUrl);
-
-                return `url("${absoluteUrl}")`;
-            } catch (err) {
-                console.error(
-                    "Not able to replace relative URL with Absolute URL, skipping",
-                    err
-                );
-                return match;
-            }
-        }
-    );
-
-    // TODO parse imported sheets as well? or get notified through listener?
-    // TODO find example site for import rules
-    // cssText = cssText.replace(
-    //     /@import\s*(url\()?(('.+?')|(".+?")|([^\)]*?))\)? ?(screen)?;?/gi,
-    //     (match) => {
-    //         try {
-    //             console.log(match);
-
-    //             return match;
-    //         } catch (err) {
-    //             console.error(
-    //                 "Not able to replace relative URL with Absolute URL, skipping",
-    //                 err
-    //             );
-    //             return match;
-    //         }
-    //     }
-    // );
-
-    return cssText;
+function isMediaRule(rule: CSSRule): rule is CSSMediaRule {
+    return rule.type === CSSRule.MEDIA_RULE;
 }
