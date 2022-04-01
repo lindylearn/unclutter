@@ -5,6 +5,7 @@ import BackgroundModifier from "./modifications/background";
 import BodyStyleModifier from "./modifications/bodyStyle";
 import ContentBlockModifier from "./modifications/contentBlock";
 import ResponsiveStyleModifier from "./modifications/CSSOM/responsiveStyle";
+import StylePatchesModifier from "./modifications/CSSOM/stylePatches";
 import CSSOMProvider from "./modifications/CSSOM/_provider";
 import TextContainerModifier from "./modifications/DOM/textContainer";
 import OverlayManager from "./modifications/overlay";
@@ -17,21 +18,22 @@ import {
 export default class TransitionManager implements PageModifier {
     private domain = getDomainFrom(new URL(window.location.href));
 
+    private cssomProvider = new CSSOMProvider();
+
     private backgroundModifier = new BackgroundModifier();
     private contentBlockModifier = new ContentBlockModifier();
     private bodyStyleModifier = new BodyStyleModifier();
     private textContainerModifier = new TextContainerModifier();
     private responsiveStyleModifier = new ResponsiveStyleModifier();
     private overlayManager = new OverlayManager(this.domain);
-
-    private cssomProvider = new CSSOMProvider();
+    private stylePatchesModifier = new StylePatchesModifier(this.cssomProvider);
 
     async prepare() {
         const themeName = await initTheme(this.domain);
 
         await this.cssomProvider.prepare();
 
-        await this.responsiveStyleModifier.parse(this.cssomProvider);
+        await this.responsiveStyleModifier.prepare(this.cssomProvider);
         await this.textContainerModifier.prepare();
     }
 
@@ -58,6 +60,10 @@ export default class TransitionManager implements PageModifier {
         setTimeout(() => {
             this.overlayManager.transitionIn();
         }, 300);
+    }
+
+    async afterTransitionIn() {
+        await this.stylePatchesModifier.afterTransitionIn();
     }
 
     async transitionOut() {

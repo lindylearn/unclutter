@@ -6,6 +6,9 @@ export interface PageModifier {
 
     // Shift layout and reduce page width in one go
     transitionIn?: (...args: any[]) => Promise<void>;
+
+    afterTransitionIn?: (...args: any[]) => Promise<void>;
+
     // undo all modifications (including css rewrites and style changes)
     transitionOut?: (...args: any[]) => Promise<void>;
 
@@ -17,6 +20,7 @@ const trackedMethods = new Set([
     "prepare",
     "fadeOutNoise",
     "transitionIn",
+    "afterTransitionIn",
     "transitionOut",
     "fadeInNoise",
 ]);
@@ -38,6 +42,7 @@ export function trackModifierExecution(target: Function) {
 
             const start = performance.now();
             const result = await originalMethod.apply(this, args);
+            await new Promise((r) => setTimeout(r, 0)); // wait for layout changes
             const duration = performance.now() - start;
 
             if (className === "TransitionManager") {

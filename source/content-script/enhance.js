@@ -36,7 +36,7 @@ export async function togglePageView() {
         // don't wait after very long parsing time
         await Promise.all([
             transitions.fadeOutNoise(),
-            new Promise((r) => setTimeout(r, 300)),
+            // new Promise((r) => setTimeout(r, 0)),
         ]);
 
         await transitions.transitionIn();
@@ -54,6 +54,8 @@ export async function togglePageView() {
                 });
             }
         }, true);
+
+        await transitions.afterTransitionIn();
     } else {
         // hack: simulate click to call disable handlers with correct state (also from boot.js)
         isSimulatedClick = true;

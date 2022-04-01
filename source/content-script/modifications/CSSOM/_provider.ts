@@ -173,3 +173,13 @@ function transformProxyCssText(cssText, baseUrl) {
 
     return cssText;
 }
+
+export function isStyleRule(rule: CSSRule): rule is CSSStyleRule {
+    return rule.type === CSSRule.STYLE_RULE;
+}
+export function isSupportsRule(rule: CSSRule): rule is CSSSupportsRule {
+    return rule.type === CSSRule.SUPPORTS_RULE;
+}
+export function isMediaRule(rule: CSSRule): rule is CSSMediaRule {
+    return rule.type === CSSRule.MEDIA_RULE;
+}
