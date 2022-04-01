@@ -103,7 +103,7 @@ export function insertPageSettings(
     );
 
     createStylesheetLink(
-        browser.runtime.getURL("content-script/switch/index.css"),
+        browser.runtime.getURL("content-script/overlay/index.css"),
         "lindy-switch-style"
     );
 

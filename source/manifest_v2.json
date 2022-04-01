@@ -33,9 +33,10 @@
     ],
     "web_accessible_resources": [
         "content-script/pageview/content.css",
+        "content-script/pageview/contentDark.css",
+        "content-script/overlay/index.css",
+        "content-script/overlay/indexDark.css",
         "content-script/pageview/manualContentBlock.css",
-        "content-script/switch/index.html",
-        "content-script/switch/index.js",
         "assets/**"
     ]
 }

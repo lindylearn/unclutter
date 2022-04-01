@@ -1,4 +1,5 @@
 import { getDomainUserTheme } from "source/common/storage";
+import { createStylesheetLink } from "source/common/stylesheets";
 import {
     activeColorThemeVariable,
     backgroundColorThemeVariable,
@@ -10,6 +11,7 @@ import {
 } from "source/common/theme";
 import { HSLA, hslToString, parse, rgbToHSL } from "source/common/util/color";
 import { highlightActiveColorThemeButton } from "source/content-script/overlay/insert";
+import browser from "../../../common/polyfill";
 import { PageModifier, trackModifierExecution } from "../_interface";
 import CSSOMProvider, { isStyleRule } from "./_provider";
 
@@ -62,11 +64,28 @@ export default class ThemeModifier implements PageModifier {
                 true
             );
 
+            createStylesheetLink(
+                browser.runtime.getURL(
+                    "content-script/pageview/contentDark.css"
+                ),
+                "dark-mode-ui-style"
+            );
+            createStylesheetLink(
+                browser.runtime.getURL("content-script/overlay/indexDark.css"),
+                "dark-mode-ui-style"
+            );
+
             // CSS tweaks for dark mode
             await this.enableDarkModeStyleTweaks();
-        } else if (this.activeDarkModeStyleTweaks.length !== 0) {
+        } else {
+            document
+                .querySelectorAll(".dark-mode-ui-style")
+                .forEach((e) => e.remove());
+
             // undo dark mode style tweaks
-            await this.disableDarkModeStyleTweaks();
+            if (this.activeDarkModeStyleTweaks.length !== 0) {
+                await this.disableDarkModeStyleTweaks();
+            }
         }
     }
 
