@@ -67,6 +67,7 @@ export async function togglePageView() {
 async function enhance() {
     const pageViewEnabled =
         document.documentElement.classList.contains("pageview");
+
     if (!pageViewEnabled) {
         togglePageView();
         return;

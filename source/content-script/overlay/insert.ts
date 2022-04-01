@@ -1,6 +1,7 @@
 import { reportEvent } from "../../common/metrics";
 import browser from "../../common/polyfill";
 import {
+    domainUserSetting,
     getDomainUserTheme,
     getUserSettingForDomain,
     setUserSettingsForDomain,
@@ -10,17 +11,21 @@ import {
     overrideClassname,
 } from "../../common/stylesheets";
 import {
-    activeColorThemeVariable,
     applySaveThemeOverride,
     fontSizeThemeVariable,
     getThemeValue,
     pageWidthThemeVariable,
+    themeName,
 } from "../../common/theme";
 import { togglePageView } from "../enhance";
+import ThemeModifier from "../modifications/CSSOM/theme";
 
 // Insert a small UI for the user to control the automatic pageview enablement on the current domain.
 // Creating an iframe for this doesn't work from injected scripts
-export function insertPageSettings(domain) {
+export function insertPageSettings(
+    domain: string,
+    themeModifier: ThemeModifier
+) {
     const githubLink = `https://github.com/lindylearn/unclutter/issues/new?labels=broken-website&title=${encodeURIComponent(
         `Article doesn't show correctly on ${domain}`
     )}&body=${encodeURIComponent(
@@ -103,17 +108,17 @@ export function insertPageSettings(domain) {
 
     _setupDomainToggleState(domain);
     _setupLinkHandlers();
-    _setupThemePopupHandlers(domain);
+    _setupThemePopupHandlers(domain, themeModifier);
 }
 
-function _insertHtml(className, html) {
+function _insertHtml(className: string, html: string) {
     const container = document.createElement("div");
     container.className = `${overrideClassname} ${className}`;
     container.innerHTML = html;
     document.documentElement.appendChild(container);
 }
 
-async function _setupDomainToggleState(currentDomain) {
+async function _setupDomainToggleState(currentDomain: string) {
     const svg = document.getElementById("lindy-domain-switch-icon-container");
     let userSetting = await getUserSettingForDomain(currentDomain);
     svg.innerHTML = _getDomainToggleIcon(userSetting);
@@ -147,7 +152,7 @@ async function _setupDomainToggleState(currentDomain) {
         reportEvent("changeDomainSetting", { newState: userSetting });
     };
 }
-function _nextUserSetting(userSetting) {
+function _nextUserSetting(userSetting: domainUserSetting): domainUserSetting {
     if (userSetting === "allow") {
         return "deny";
     } else if (userSetting === "deny") {
@@ -156,7 +161,10 @@ function _nextUserSetting(userSetting) {
         return "deny";
     }
 }
-function _getDomainToggleTooltip(userSetting, domain) {
+function _getDomainToggleTooltip(
+    userSetting: domainUserSetting,
+    domain: string
+): string {
     if (userSetting === "allow") {
         return `Enabled on ${domain}`;
     } else if (userSetting === "deny") {
@@ -165,7 +173,7 @@ function _getDomainToggleTooltip(userSetting, domain) {
         return `Automatically enabled on ${domain}`;
     }
 }
-function _getDomainToggleIcon(userSetting) {
+function _getDomainToggleIcon(userSetting: domainUserSetting): string {
     if (userSetting === "allow") {
         return `
         <svg class="lindy-ui-icon" id="lindy-domain-switch-icon" viewBox="0 0 512 512">
@@ -186,16 +194,19 @@ function _getDomainToggleIcon(userSetting) {
 
 function _setupLinkHandlers() {
     document.getElementById("lindy-settings-icon").onclick = () =>
-        chrome.runtime.sendMessage({ event: "openOptionsPage" });
+        browser.runtime.sendMessage({ event: "openOptionsPage" });
 
     document.getElementById("lindy-bug-icon").onclick = () =>
         reportEvent("reportBugClick");
 }
 
-async function _setupThemePopupHandlers(domain) {
+async function _setupThemePopupHandlers(
+    domain: string,
+    themeModifier: ThemeModifier
+) {
     // Only report each type of modification once per page
     const reportedEventType = {};
-    function _reportThemeEvent(changedProperty) {
+    function _reportThemeEvent(changedProperty: string) {
         // Use nicer names
         if (changedProperty === fontSizeThemeVariable) {
             changedProperty = "fontSize";
@@ -210,7 +221,7 @@ async function _setupThemePopupHandlers(domain) {
     }
 
     // Setup plus and minus buttons
-    function _changeCssPixelVariable(varName, delta) {
+    function _changeCssPixelVariable(varName: string, delta: number) {
         const currentSize = getThemeValue(varName).replace("px", "");
         const newSizePx = `${parseFloat(currentSize) + delta}px`;
 
@@ -229,12 +240,9 @@ async function _setupThemePopupHandlers(domain) {
         _changeCssPixelVariable(pageWidthThemeVariable, 100);
 
     // Setup theme selection
-    function _setTheme(themeName) {
+    function _setTheme(themeName: themeName) {
         // Update active state
-        highlightActiveColorThemeButton(themeName);
-
-        // Update active theme color
-        applySaveThemeOverride(domain, activeColorThemeVariable, themeName);
+        themeModifier.enableColorTheme(themeName);
 
         _reportThemeEvent("colorTheme");
     }
@@ -251,7 +259,7 @@ async function _setupThemePopupHandlers(domain) {
     }
 }
 
-export function highlightActiveColorThemeButton(themeName) {
+export function highlightActiveColorThemeButton(themeName: themeName) {
     document
         .querySelectorAll(
             `.lindy-theme-button:not(#lindy-${themeName}-theme-button)`
@@ -266,10 +274,10 @@ export function highlightActiveColorThemeButton(themeName) {
 }
 
 // Insert text behind the <body> background in case the site fails to render.
-export function insertPageBrokenText() {
-    const div = document.createElement("div");
-    div.className = `${overrideClassname} lindy-page-broken`;
-    div.innerHTML =
-        ":( Page broken?<br />Please report it <a href='https://github.com/lindylearn/reader-extension/issues/new' target='_blank' rel='noopener noreferrer'>on GitHub</a>.";
-    document.documentElement.appendChild(div);
-}
+// export function insertPageBrokenText() {
+//     const div = document.createElement("div");
+//     div.className = `${overrideClassname} lindy-page-broken`;
+//     div.innerHTML =
+//         ":( Page broken?<br />Please report it <a href='https://github.com/lindylearn/reader-extension/issues/new' target='_blank' rel='noopener noreferrer'>on GitHub</a>.";
+//     document.documentElement.appendChild(div);
+// }

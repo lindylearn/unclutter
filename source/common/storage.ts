@@ -13,7 +13,10 @@ export async function getAllCustomDomainSettings() {
     };
 }
 
-export async function getUserSettingForDomain(domain) {
+export type domainUserSetting = "allow" | "deny" | null;
+export async function getUserSettingForDomain(
+    domain: string
+): Promise<domainUserSetting> {
     const config = await browser.storage.sync.get([
         "domain-allowlist",
         "domain-denylist",

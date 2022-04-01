@@ -1,4 +1,4 @@
-import { initTheme } from "source/common/theme";
+import { themeName } from "source/common/theme";
 import { getDomainFrom } from "source/common/util";
 import { overrideClassname } from "../common/stylesheets";
 import BackgroundModifier from "./modifications/background";
@@ -6,6 +6,7 @@ import BodyStyleModifier from "./modifications/bodyStyle";
 import ContentBlockModifier from "./modifications/contentBlock";
 import ResponsiveStyleModifier from "./modifications/CSSOM/responsiveStyle";
 import StylePatchesModifier from "./modifications/CSSOM/stylePatches";
+import ThemeModifier from "./modifications/CSSOM/theme";
 import CSSOMProvider from "./modifications/CSSOM/_provider";
 import TextContainerModifier from "./modifications/DOM/textContainer";
 import OverlayManager from "./modifications/overlay";
@@ -17,6 +18,7 @@ import {
 @trackModifierExecution
 export default class TransitionManager implements PageModifier {
     private domain = getDomainFrom(new URL(window.location.href));
+    private themeName: themeName;
 
     private cssomProvider = new CSSOMProvider();
 
@@ -25,16 +27,18 @@ export default class TransitionManager implements PageModifier {
     private bodyStyleModifier = new BodyStyleModifier();
     private textContainerModifier = new TextContainerModifier();
     private responsiveStyleModifier = new ResponsiveStyleModifier();
-    private overlayManager = new OverlayManager(this.domain);
     private stylePatchesModifier = new StylePatchesModifier(this.cssomProvider);
+    private themeModifier = new ThemeModifier(this.cssomProvider);
+    private overlayManager = new OverlayManager(
+        this.domain,
+        this.themeModifier
+    );
 
     async prepare() {
-        const themeName = await initTheme(this.domain);
-
         await this.cssomProvider.prepare();
-
         await this.responsiveStyleModifier.prepare(this.cssomProvider);
         await this.textContainerModifier.prepare();
+        await this.themeModifier.prepare(this.domain);
     }
 
     async fadeOutNoise() {
@@ -63,6 +67,7 @@ export default class TransitionManager implements PageModifier {
     }
 
     async afterTransitionIn() {
+        await this.themeModifier.afterTransitionIn(this.themeName);
         await this.stylePatchesModifier.afterTransitionIn();
     }
 

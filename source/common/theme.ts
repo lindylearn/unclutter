@@ -1,33 +1,6 @@
-import { highlightActiveColorThemeButton } from "../content-script/overlay/insert";
-import { getDomainUserTheme, mergeDomainUserTheme } from "./storage";
+import { mergeDomainUserTheme } from "./storage";
 
 export type themeName = "auto" | "white" | "sepia" | "dark";
-
-export async function initTheme(domain: string): Promise<themeName> {
-    // Get saved domain-specific theme
-    const theme = await getDomainUserTheme(domain);
-    if (!theme) {
-        return;
-    }
-
-    // Apply by setting / overwriting CSS variables
-    if (theme.fontSize) {
-        setCssThemeVariable(fontSizeThemeVariable, theme.fontSize, true);
-    }
-    if (theme.pageWidth) {
-        setCssThemeVariable(pageWidthThemeVariable, theme.pageWidth, true);
-    }
-    if (theme.colorTheme) {
-        setCssThemeVariable(activeColorThemeVariable, theme.colorTheme, true);
-
-        const concreteColor = colorThemeToBackgroundColor(theme.colorTheme);
-        setCssThemeVariable(backgroundColorThemeVariable, concreteColor, true);
-
-        highlightActiveColorThemeButton(theme.colorTheme);
-    }
-
-    return theme.colorTheme;
-}
 
 // persisted
 export const fontSizeThemeVariable = "--lindy-active-font-size";

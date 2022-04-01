@@ -1,15 +1,19 @@
 import { insertPageSettings } from "../overlay/insert";
+import ThemeModifier from "./CSSOM/theme";
 import { PageModifier, trackModifierExecution } from "./_interface";
 
 @trackModifierExecution
 export default class OverlayManager implements PageModifier {
-    private domain;
-    constructor(domain) {
+    private domain: string;
+    private themeModifier: ThemeModifier;
+
+    constructor(domain: string, themeModifier: ThemeModifier) {
         this.domain = domain;
+        this.themeModifier = themeModifier;
     }
 
     async transitionIn() {
-        insertPageSettings(this.domain);
+        insertPageSettings(this.domain, this.themeModifier);
     }
 
     async transitionOut() {

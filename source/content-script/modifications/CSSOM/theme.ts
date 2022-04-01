@@ -1,8 +1,77 @@
+import { getDomainUserTheme } from "source/common/storage";
+import {
+    activeColorThemeVariable,
+    backgroundColorThemeVariable,
+    colorThemeToBackgroundColor,
+    fontSizeThemeVariable,
+    pageWidthThemeVariable,
+    setCssThemeVariable,
+    themeName,
+} from "source/common/theme";
 import { HSLA, hslToString, parse, rgbToHSL } from "source/common/util/color";
+import { highlightActiveColorThemeButton } from "source/content-script/overlay/insert";
+import { PageModifier, trackModifierExecution } from "../_interface";
+import CSSOMProvider, { isStyleRule } from "./_provider";
 
-export function initDocument() {}
+@trackModifierExecution
+export default class ThemeModifier implements PageModifier {
+    private cssomProvider: CSSOMProvider;
 
-export function darkModeStyleRuleMap(rule: CSSStyleRule) {
+    constructor(cssomProvider: CSSOMProvider) {
+        this.cssomProvider = cssomProvider;
+    }
+
+    async prepare(domain: string) {
+        // Get saved domain-specific theme
+        const theme = await getDomainUserTheme(domain);
+        if (!theme) {
+            return;
+        }
+        if (theme.fontSize) {
+            setCssThemeVariable(fontSizeThemeVariable, theme.fontSize, true);
+        }
+        if (theme.pageWidth) {
+            setCssThemeVariable(pageWidthThemeVariable, theme.pageWidth, true);
+        }
+
+        if (theme.colorTheme) {
+            this.enableColorTheme(theme.colorTheme);
+        }
+    }
+
+    public enableColorTheme(colorThemeName: themeName) {
+        // Background color
+        const concreteColor = colorThemeToBackgroundColor(colorThemeName);
+        setCssThemeVariable(backgroundColorThemeVariable, concreteColor, true);
+
+        // State for UI switch
+        setCssThemeVariable(activeColorThemeVariable, colorThemeName, true);
+        highlightActiveColorThemeButton(colorThemeName);
+    }
+
+    async afterTransitionIn(themeName: themeName) {
+        if (themeName !== "dark") {
+            return;
+        }
+
+        await this.enableDarkMode();
+    }
+
+    async enableDarkMode() {
+        // patch site stylesheet colors
+        this.cssomProvider.stylesheets.map((sheet) => {
+            for (let rule of sheet.cssRules) {
+                if (isStyleRule(rule)) {
+                    darkModeStyleRuleMap(rule);
+                }
+            }
+        });
+    }
+
+    async disableDarkMode() {}
+}
+
+function darkModeStyleRuleMap(rule: CSSStyleRule) {
     if (rule.style.color) {
         rule.style.setProperty(
             "color",
