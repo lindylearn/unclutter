@@ -1,6 +1,7 @@
 import { insertPageSettings } from "../overlay/insert";
-import { PageModifier } from "./_interface";
+import { PageModifier, trackModifierExecution } from "./_interface";
 
+@trackModifierExecution
 export default class OverlayManager implements PageModifier {
     private domain;
     constructor(domain) {

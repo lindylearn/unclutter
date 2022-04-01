@@ -1,6 +1,7 @@
-import { PageModifier } from "./_interface";
+import { PageModifier, trackModifierExecution } from "./_interface";
 
 // Perform various inline style fixes to overwrite site styles
+@trackModifierExecution
 export default class BodyStyleModifier implements PageModifier {
     private styleObserver: MutationObserver;
 

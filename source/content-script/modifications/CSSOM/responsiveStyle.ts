@@ -1,6 +1,7 @@
-import { PageModifier } from "../_interface";
+import { PageModifier, trackModifierExecution } from "../_interface";
 import CSSOMProvider from "./_provider";
 
+@trackModifierExecution
 export default class ResponsiveStyleModifier implements PageModifier {
     private oldWidth = window.innerWidth;
     private newWidth = 750;

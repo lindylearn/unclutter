@@ -16,5 +16,6 @@
         "allowJs": true,
         "downlevelIteration": true,
         "jsx": "react",
+        "experimentalDecorators": true
     }
 }

@@ -9,7 +9,7 @@ import {
     originalBackgroundThemeVariable,
     setCssThemeVariable,
 } from "../../../common/theme";
-import { PageModifier } from "../_interface";
+import { PageModifier, trackModifierExecution } from "../_interface";
 
 const globalParagraphSelector = "p, font, pre";
 
@@ -22,6 +22,7 @@ This is done so that we can:
  - Remove borders, shadows, and background colors from elements that contain article text.
  - Get the current font size of the main text elements.
 */
+@trackModifierExecution
 export default class TextContainerModifier implements PageModifier {
     // Collect elements that contain text nodes
     private containerSelectors = [];

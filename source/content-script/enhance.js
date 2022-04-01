@@ -1,15 +1,6 @@
-import { initTheme } from "source/common/theme";
 import browser from "../common/polyfill";
-import { getDomainFrom } from "../common/util";
-import BackgroundModifier from "./modifications/background";
-import BodyStyleModifier from "./modifications/bodyStyle";
-import ContentBlockModifier from "./modifications/contentBlock";
-import ResponsiveStyleModifier from "./modifications/CSSOM/responsiveStyle";
-import CSSOMProvider from "./modifications/CSSOM/_provider";
-import TextContainerModifier from "./modifications/DOM/textContainer";
-import OverlayManager from "./modifications/overlay";
 import { enablePageView } from "./pageview/enablePageView";
-import { fadeOutNoise, transitionIn, transitionOut } from "./transitions";
+import TransitionManager from "./transitions";
 
 // complete extension functionality injected into a tab
 
@@ -38,65 +29,22 @@ export async function togglePageView() {
         document.documentElement.classList.contains("pageview");
 
     if (!pageViewEnabled) {
-        const domain = getDomainFrom(new URL(window.location.href));
-
-        // construct modifier classes
-        const backgroundModifier = new BackgroundModifier();
-        const contentBlockModifier = new ContentBlockModifier();
-        const bodyStyleModifier = new BodyStyleModifier();
-        const textContainerModifier = new TextContainerModifier();
-        const responsiveStyleModifier = new ResponsiveStyleModifier();
-        const overlayManager = new OverlayManager(domain);
-
-        // providers
-        const cssomProvider = new CSSOMProvider();
-
-        await cssomProvider.prepare();
-
-        const themeName = await initTheme(domain);
-        await responsiveStyleModifier.parse(cssomProvider);
-        await textContainerModifier.prepare();
-
-        // *** Fade-out phase ***
-        // Visibly hide noisy elements and meanwhile perform heavy operation
+        const transitions = new TransitionManager();
+        await transitions.prepare();
 
         // wait up to 200ms for animation completion
         // don't wait after very long parsing time
         await Promise.all([
-            fadeOutNoise(
-                domain,
-                backgroundModifier,
-                contentBlockModifier,
-                textContainerModifier,
-                responsiveStyleModifier
-            ),
+            transitions.fadeOutNoise(),
             new Promise((r) => setTimeout(r, 300)),
         ]);
 
-        // *** PageView transition phase ***
-        // Shift layout and reduce page width in one go
-
-        await transitionIn(
-            domain,
-            contentBlockModifier,
-            bodyStyleModifier,
-            textContainerModifier,
-            responsiveStyleModifier,
-            overlayManager
-        );
+        await transitions.transitionIn();
 
         isSimulatedClick = false;
         await enablePageView(async () => {
             // when user exists page view
-            // undo all modifications (including css rewrites and style changes)
-            await transitionOut(
-                contentBlockModifier,
-                bodyStyleModifier,
-                textContainerModifier,
-                responsiveStyleModifier,
-                overlayManager,
-                cssomProvider
-            );
+            await transitions.transitionOut();
 
             if (!isSimulatedClick) {
                 // already emitted elsewhere for simulated non-background clicks

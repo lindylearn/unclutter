@@ -1,3 +1,5 @@
+import { initTheme } from "source/common/theme";
+import { getDomainFrom } from "source/common/util";
 import { overrideClassname } from "../common/stylesheets";
 import BackgroundModifier from "./modifications/background";
 import BodyStyleModifier from "./modifications/bodyStyle";
@@ -6,76 +8,83 @@ import ResponsiveStyleModifier from "./modifications/CSSOM/responsiveStyle";
 import CSSOMProvider from "./modifications/CSSOM/_provider";
 import TextContainerModifier from "./modifications/DOM/textContainer";
 import OverlayManager from "./modifications/overlay";
+import {
+    PageModifier,
+    trackModifierExecution,
+} from "./modifications/_interface";
 
-export async function fadeOutNoise(
-    domain: string,
-    backgroundModifier: BackgroundModifier,
-    contentBlockModifier: ContentBlockModifier,
-    textContainerModifier: TextContainerModifier,
-    responsiveStyleModifier: ResponsiveStyleModifier
-) {
-    // do content block first as it shows changes immediately
-    await contentBlockModifier.fadeOutNoise();
+@trackModifierExecution
+export default class TransitionManager implements PageModifier {
+    private domain = getDomainFrom(new URL(window.location.href));
 
-    await responsiveStyleModifier.fadeOutNoise();
-    await textContainerModifier.fadeOutNoise();
+    private backgroundModifier = new BackgroundModifier();
+    private contentBlockModifier = new ContentBlockModifier();
+    private bodyStyleModifier = new BodyStyleModifier();
+    private textContainerModifier = new TextContainerModifier();
+    private responsiveStyleModifier = new ResponsiveStyleModifier();
+    private overlayManager = new OverlayManager(this.domain);
 
-    await backgroundModifier.fadeOutNoise();
-}
+    private cssomProvider = new CSSOMProvider();
 
-export async function transitionIn(
-    domain,
-    contentBlockModifier: ContentBlockModifier,
-    bodyStyleModifier: BodyStyleModifier,
-    textContainerModifier: TextContainerModifier,
-    responsiveStyleModifier: ResponsiveStyleModifier,
-    overlayManager: OverlayManager
-) {
-    document.body.style.setProperty("transition", "all 0.2s");
+    async prepare() {
+        const themeName = await initTheme(this.domain);
 
-    await contentBlockModifier.transitionIn();
+        await this.cssomProvider.prepare();
 
-    await responsiveStyleModifier.transitionIn();
-    await textContainerModifier.transitionIn(); // TODO how to make transition from original position
+        await this.responsiveStyleModifier.parse(this.cssomProvider);
+        await this.textContainerModifier.prepare();
+    }
 
-    await bodyStyleModifier.transitionIn();
+    async fadeOutNoise() {
+        // do content block first as it shows changes immediately
+        await this.contentBlockModifier.fadeOutNoise();
 
-    setTimeout(() => {
-        overlayManager.transitionIn();
-    }, 300);
-}
+        await this.responsiveStyleModifier.fadeOutNoise();
+        await this.textContainerModifier.fadeOutNoise();
 
-export async function transitionOut(
-    contentBlockModifier: ContentBlockModifier,
-    bodyStyleModifier: BodyStyleModifier,
-    textContainerModifier: TextContainerModifier,
-    responsiveStyleModifier: ResponsiveStyleModifier,
-    overlayManager: OverlayManager,
-    cssomProvider: CSSOMProvider
-) {
-    await responsiveStyleModifier.transitionOut();
-    await textContainerModifier.transitionOut();
+        await this.backgroundModifier.fadeOutNoise();
+    }
 
-    await contentBlockModifier.transitionOut();
-    await overlayManager.transitionOut();
+    async transitionIn() {
+        document.body.style.setProperty("transition", "all 0.2s");
 
-    document.documentElement.classList.remove("pageview");
-    await new Promise((r) => setTimeout(r, 400));
+        await this.contentBlockModifier.transitionIn();
 
-    // fade-in
-    // just hide overrides for now
+        await this.responsiveStyleModifier.transitionIn();
+        await this.textContainerModifier.transitionIn(); // TODO how to make transition from original position
 
-    await responsiveStyleModifier.fadeInNoise();
-    await contentBlockModifier.fadeInNoise();
+        await this.bodyStyleModifier.transitionIn();
 
-    await cssomProvider.reenableOriginalStylesheets();
+        setTimeout(() => {
+            this.overlayManager.transitionIn();
+        }, 300);
+    }
 
-    // remove rest
-    document
-        .querySelectorAll(`.${overrideClassname}`)
-        .forEach((e) => e.remove());
+    async transitionOut() {
+        await this.responsiveStyleModifier.transitionOut();
+        await this.textContainerModifier.transitionOut();
 
-    // final cleanup, includes removing animation settings
-    await new Promise((r) => setTimeout(r, 300));
-    await bodyStyleModifier.transitionOut();
+        await this.contentBlockModifier.transitionOut();
+        await this.overlayManager.transitionOut();
+
+        document.documentElement.classList.remove("pageview");
+        await new Promise((r) => setTimeout(r, 400));
+
+        // fade-in
+        // just hide overrides for now
+
+        await this.responsiveStyleModifier.fadeInNoise();
+        await this.contentBlockModifier.fadeInNoise();
+
+        await this.cssomProvider.reenableOriginalStylesheets();
+
+        // remove rest
+        document
+            .querySelectorAll(`.${overrideClassname}`)
+            .forEach((e) => e.remove());
+
+        // final cleanup, includes removing animation settings
+        await new Promise((r) => setTimeout(r, 300));
+        await this.bodyStyleModifier.transitionOut();
+    }
 }

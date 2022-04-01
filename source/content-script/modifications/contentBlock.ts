@@ -3,10 +3,11 @@ import {
     createStylesheetLink,
     createStylesheetText,
 } from "../../common/stylesheets";
-import { PageModifier } from "./_interface";
+import { PageModifier, trackModifierExecution } from "./_interface";
 
 // hide page elements unrelated to the article via custom CSS, to make a page more readable
 // TODO use statically generated CSS?
+@trackModifierExecution
 export default class ContentBlockModifier implements PageModifier {
     private selectors: string[];
     constructor() {

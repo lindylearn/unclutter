@@ -4,8 +4,9 @@ import {
     originalBackgroundThemeVariable,
     setCssThemeVariable,
 } from "../../common/theme";
-import type { PageModifier } from "./_interface";
+import { PageModifier, trackModifierExecution } from "./_interface";
 
+@trackModifierExecution
 export default class BackgroundModifier implements PageModifier {
     constructor() {}
 
