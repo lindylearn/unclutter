@@ -215,7 +215,7 @@
     border: 2.5px solid #9ca3af;
 }
 #lindy-auto-theme-button {
-    background-color: var(--lindy-original-background-color);
+    background-color: var(--lindy-auto-background-color);
     position: relative;
 }
 #lindy-auto-theme-button > svg {

@@ -11,7 +11,6 @@ import {
     overrideClassname,
 } from "../../common/stylesheets";
 import {
-    activeColorThemeVariable,
     applySaveThemeOverride,
     fontSizeThemeVariable,
     getThemeValue,
@@ -242,11 +241,7 @@ async function _setupThemePopupHandlers(
 
     // Setup theme selection
     function _setTheme(themeName: themeName) {
-        // Update active state
-        themeModifier.applyColorTheme(themeName);
-
-        // Save in storage
-        applySaveThemeOverride(domain, activeColorThemeVariable, themeName);
+        themeModifier.changeColorTheme(themeName);
 
         _reportThemeEvent("colorTheme");
     }

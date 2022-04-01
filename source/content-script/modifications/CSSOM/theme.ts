@@ -2,6 +2,8 @@ import { getDomainUserTheme } from "source/common/storage";
 import { createStylesheetLink } from "source/common/stylesheets";
 import {
     activeColorThemeVariable,
+    applySaveThemeOverride,
+    autoBackgroundThemeVariable,
     backgroundColorThemeVariable,
     colorThemeToBackgroundColor,
     fontSizeThemeVariable,
@@ -17,14 +19,20 @@ import CSSOMProvider, { isStyleRule } from "./_provider";
 
 @trackModifierExecution
 export default class ThemeModifier implements PageModifier {
+    private domain: string;
     private cssomProvider: CSSOMProvider;
+
     private activeColorTheme: themeName;
+    private darkModeActive = false; // seperate from theme -- auto theme enables and disable dark mode
 
     constructor(cssomProvider: CSSOMProvider) {
         this.cssomProvider = cssomProvider;
     }
 
+    private systemDarkModeQuery: MediaQueryList;
     async prepare(domain: string) {
+        this.domain = domain;
+
         // Get saved domain-specific theme
         const theme = await getDomainUserTheme(domain);
         if (!theme) {
@@ -41,58 +49,136 @@ export default class ThemeModifier implements PageModifier {
         if (!this.activeColorTheme) {
             this.activeColorTheme = "auto";
         }
+
+        // Listen to system dark mode preference
+        this.systemDarkModeQuery = window.matchMedia(
+            "(prefers-color-scheme: dark)"
+        );
+        this.systemDarkModeQuery.addEventListener(
+            "change",
+            this.onSystemDarkThemeChange.bind(this)
+        );
     }
 
     async afterTransitionIn() {
-        await this.applyColorTheme(this.activeColorTheme);
-    }
-
-    // also called from overlay theme selector
-    async applyColorTheme(colorThemeName: themeName) {
-        // State for UI switch
-        setCssThemeVariable(activeColorThemeVariable, colorThemeName, true);
-        highlightActiveColorThemeButton(colorThemeName);
-
-        // Background color
-        const concreteColor = colorThemeToBackgroundColor(colorThemeName);
-        setCssThemeVariable(backgroundColorThemeVariable, concreteColor, true);
-
-        if (colorThemeName === "dark") {
-            setCssThemeVariable(
-                "--lindy-dark-theme-text-color",
-                "rgb(232, 230, 227)",
-                true
-            );
-
-            createStylesheetLink(
-                browser.runtime.getURL(
-                    "content-script/pageview/contentDark.css"
-                ),
-                "dark-mode-ui-style"
-            );
-            createStylesheetLink(
-                browser.runtime.getURL("content-script/overlay/indexDark.css"),
-                "dark-mode-ui-style"
-            );
-
-            // CSS tweaks for dark mode
-            await this.enableDarkModeStyleTweaks();
-        } else {
-            document
-                .querySelectorAll(".dark-mode-ui-style")
-                .forEach((e) => e.remove());
-
-            // undo dark mode style tweaks
-            if (this.activeDarkModeStyleTweaks.length !== 0) {
-                await this.disableDarkModeStyleTweaks();
-            }
-        }
+        await this.applyActiveColorTheme();
     }
 
     async transitionOut() {
-        if (this.activeColorTheme === "dark") {
+        if (this.darkModeActive) {
+            await this.disableDarkMode();
+        }
+
+        this.systemDarkModeQuery.removeEventListener(
+            "change",
+            this.onSystemDarkThemeChange.bind(this)
+        );
+    }
+
+    private async onSystemDarkThemeChange({
+        matches: isDarkMode,
+    }: MediaQueryList) {
+        await this.applyActiveColorTheme();
+    }
+
+    async changeColorTheme(newColorThemeName: themeName) {
+        // apply theme change
+        this.activeColorTheme = newColorThemeName;
+        this.applyActiveColorTheme();
+
+        // save in storage
+        applySaveThemeOverride(
+            this.domain,
+            activeColorThemeVariable,
+            newColorThemeName
+        );
+    }
+
+    // also called from overlay theme selector
+    private async applyActiveColorTheme() {
+        console.log("apply");
+        // State for UI switch
+        setCssThemeVariable(
+            activeColorThemeVariable,
+            this.activeColorTheme,
+            true
+        );
+        highlightActiveColorThemeButton(this.activeColorTheme);
+
+        await this.updateAutoModeColor();
+
+        const prevDarkModeState = this.darkModeActive;
+        this.darkModeActive = this.activeColorTheme === "dark";
+        if (this.activeColorTheme === "auto") {
+            this.darkModeActive = this.systemDarkModeQuery.matches;
+        }
+
+        // only enable or disable dark mode if there's been a change
+        if (this.darkModeActive && !prevDarkModeState) {
+            await this.enableDarkMode();
+        } else if (!this.darkModeActive && prevDarkModeState) {
+            await this.disableDarkMode();
+        }
+    }
+
+    // Update auto state (shown in theme switcher)
+    private async updateAutoModeColor() {
+        if (this.systemDarkModeQuery.matches) {
+            const darkColor = colorThemeToBackgroundColor("dark");
+            setCssThemeVariable(autoBackgroundThemeVariable, darkColor, true);
+        } else {
+            const originalColor = colorThemeToBackgroundColor("auto");
+            setCssThemeVariable(
+                autoBackgroundThemeVariable,
+                originalColor,
+                true
+            );
+        }
+    }
+
+    private async enableDarkMode() {
+        console.log("enable");
+        // Background color
+        const concreteColor = colorThemeToBackgroundColor("dark");
+        setCssThemeVariable(backgroundColorThemeVariable, concreteColor, true);
+
+        // Text color
+        setCssThemeVariable(
+            "--lindy-dark-theme-text-color",
+            "rgb(232, 230, 227)",
+            true
+        );
+
+        // UI dark style
+        createStylesheetLink(
+            browser.runtime.getURL("content-script/pageview/contentDark.css"),
+            "dark-mode-ui-style"
+        );
+        createStylesheetLink(
+            browser.runtime.getURL("content-script/overlay/indexDark.css"),
+            "dark-mode-ui-style"
+        );
+
+        // CSS tweaks for dark mode
+        await this.enableDarkModeStyleTweaks();
+    }
+
+    private async disableDarkMode() {
+        console.log("disable");
+        // Background color
+        const concreteColor = colorThemeToBackgroundColor(
+            this.activeColorTheme
+        );
+        setCssThemeVariable(backgroundColorThemeVariable, concreteColor, true);
+
+        // undo dark mode style tweaks
+        if (this.activeDarkModeStyleTweaks.length !== 0) {
             await this.disableDarkModeStyleTweaks();
         }
+
+        document
+            .querySelectorAll(".dark-mode-ui-style")
+            .forEach((e) => e.remove());
     }
 
     private activeDarkModeStyleTweaks: [CSSStyleRule, object][] = [];

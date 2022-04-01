@@ -11,6 +11,7 @@ export const activeColorThemeVariable = "--lindy-color-theme";
 export const backgroundColorThemeVariable = "--lindy-background-color";
 export const originalBackgroundThemeVariable =
     "--lindy-original-background-color";
+export const autoBackgroundThemeVariable = "--lindy-auto-background-color";
 
 export function applySaveThemeOverride(domain, varName, value) {
     if (varName === fontSizeThemeVariable) {
@@ -22,8 +23,7 @@ export function applySaveThemeOverride(domain, varName, value) {
 
         mergeDomainUserTheme(domain, { pageWidth: value });
     } else if (varName === activeColorThemeVariable) {
-        const concreteColor = colorThemeToBackgroundColor(value);
-        setCssThemeVariable(backgroundColorThemeVariable, concreteColor, true);
+        // apply handled in ThemeModifier.ts
 
         mergeDomainUserTheme(domain, { colorTheme: value });
     }
