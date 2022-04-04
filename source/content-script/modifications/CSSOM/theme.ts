@@ -8,11 +8,19 @@ import {
     colorThemeToBackgroundColor,
     darkThemeTextColor,
     fontSizeThemeVariable,
+    getThemeValue,
+    originalBackgroundThemeVariable,
     pageWidthThemeVariable,
     setCssThemeVariable,
     themeName,
 } from "source/common/theme";
-import { HSLA, hslToString, parse, rgbToHSL } from "source/common/util/color";
+import {
+    getSRGBLightness,
+    HSLA,
+    hslToString,
+    parse,
+    rgbToHSL,
+} from "source/common/util/color";
 import { highlightActiveColorThemeButton } from "source/content-script/overlay/insert";
 import browser from "../../../common/polyfill";
 import { PageModifier, trackModifierExecution } from "../_interface";
@@ -104,18 +112,43 @@ export default class ThemeModifier implements PageModifier {
             true
         );
         highlightActiveColorThemeButton(this.activeColorTheme);
-
         await this.updateAutoModeColor();
 
+        // Determine if should use dark mode
         const prevDarkModeState = this.darkModeActive;
         this.darkModeActive = this.activeColorTheme === "dark";
         if (this.activeColorTheme === "auto") {
             this.darkModeActive = this.systemDarkModeQuery.matches;
         }
 
+        // Specical processing of original website colors
+        let modifyBackgroundColor = true;
+        const originalBackground = getThemeValue(
+            originalBackgroundThemeVariable
+        );
+        const rgbColor = parse(originalBackground);
+        const brightness = getSRGBLightness(rgbColor.r, rgbColor.g, rgbColor.b);
+        if (brightness > 0.9 && !this.darkModeActive) {
+            // Too light colors conflict with white theme, so set to white
+            setCssThemeVariable(backgroundColorThemeVariable, "white", true);
+            setCssThemeVariable(autoBackgroundThemeVariable, "white", true);
+        } else if (brightness < 0.3) {
+            // Site uses dark mode by default
+
+            if (this.activeColorTheme !== "white") {
+                // Make rest of UI dark
+                this.darkModeActive = true;
+
+                // Use this color instead of the default black
+                modifyBackgroundColor = false;
+            } else {
+                // TODO should apply reverse dark mode tweaks here?
+            }
+        }
+
         // only enable or disable dark mode if there's been a change
         if (this.darkModeActive && !prevDarkModeState) {
-            await this.enableDarkMode();
+            await this.enableDarkMode(modifyBackgroundColor);
         } else if (!this.darkModeActive && prevDarkModeState) {
             await this.disableDarkMode();
         }
@@ -127,7 +160,9 @@ export default class ThemeModifier implements PageModifier {
             const darkColor = colorThemeToBackgroundColor("dark");
             setCssThemeVariable(autoBackgroundThemeVariable, darkColor, true);
         } else {
-            const originalColor = colorThemeToBackgroundColor("auto");
+            const originalColor = getThemeValue(
+                originalBackgroundThemeVariable
+            );
             setCssThemeVariable(
                 autoBackgroundThemeVariable,
                 originalColor,
@@ -136,7 +171,7 @@ export default class ThemeModifier implements PageModifier {
         }
     }
 
-    private async enableDarkMode() {
+    private async enableDarkMode(modifyBackgroundColor = true) {
         // UI dark style
         createStylesheetLink(
             browser.runtime.getURL("content-script/pageview/contentDark.css"),
@@ -148,6 +183,9 @@ export default class ThemeModifier implements PageModifier {
         );
 
         const siteSupportsDarkMode = this.detectSiteDarkMode(true);
+        if (!modifyBackgroundColor) {
+            return;
+        }
         if (siteSupportsDarkMode) {
             this.enabledSiteDarkModeRules.map((mediaRule) => {
                 // parse background color, which we overwrite

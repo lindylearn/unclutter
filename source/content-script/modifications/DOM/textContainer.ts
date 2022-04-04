@@ -1,4 +1,3 @@
-import tinycolor from "tinycolor2";
 import { minFontSizePx } from "../../../common/defaultStorage";
 import { createStylesheetText } from "../../../common/stylesheets";
 import {
@@ -92,7 +91,7 @@ export default class TextContainerModifier implements PageModifier {
                         !activeStyle.backgroundColor.includes("0.") &&
                         !activeStyle.backgroundColor.includes("%")
                     ) {
-                        console.log(activeStyle.backgroundColor, currentElem);
+                        // console.log(activeStyle.backgroundColor, currentElem);
                         this.backgroundColors.push(activeStyle.backgroundColor);
                     }
                 }
@@ -225,12 +224,6 @@ export default class TextContainerModifier implements PageModifier {
         }
 
         // console.log(bodyColor, textBackgroundColors);
-
-        const brightness = tinycolor(pickedColor).getBrightness();
-        if (brightness > 230) {
-            // too light colors conflict with background
-            pickedColor = "white";
-        }
 
         setCssThemeVariable(originalBackgroundThemeVariable, pickedColor, true);
 
