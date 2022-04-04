@@ -6,11 +6,12 @@ export default class BodyStyleModifier implements PageModifier {
     private styleObserver: MutationObserver;
 
     async transitionIn() {
+        this.modifyHtmlStyle();
         this.modifyBodyStyle();
 
         // re-run on <html> inline style changes (e.g. scroll-locks)
         this.styleObserver = new MutationObserver((mutations, observer) => {
-            this.modifyBodyStyle();
+            this.modifyHtmlStyle();
         });
         this.styleObserver.observe(document.documentElement, {
             attributes: true,
@@ -32,30 +33,13 @@ export default class BodyStyleModifier implements PageModifier {
         document.body.style.removeProperty("transition");
     }
 
-    private modifyBodyStyle() {
-        const bodyStyle = window.getComputedStyle(document.body);
-
-        // add miniscule top padding if not already present, to prevent top margin collapse
-        // note that body margin is rewritten into padding in cssTweaks.ts
-        if (["", "0px"].includes(bodyStyle.paddingTop)) {
-            document.body.style.paddingTop = "0.05px";
-        }
-        document.body.style.setProperty("padding-left", "50px", "important");
-        document.body.style.setProperty("padding-right", "50px", "important");
-        document.body.style.setProperty("min-width", "0", "important");
-        document.body.style.setProperty(
-            "max-width",
-            "var(--lindy-pagewidth",
-            "important"
-        );
-
+    private modifyHtmlStyle() {
         // html or body tags may have classes with fixed style applied (which we hide via css rewrite)
         document.documentElement.style.setProperty(
             "display",
             "block",
             "important"
         );
-        document.body.style.setProperty("display", "block", "important");
 
         // set inline styles to overwrite scroll-locks
         document.documentElement.style.setProperty(
@@ -73,6 +57,27 @@ export default class BodyStyleModifier implements PageModifier {
             "auto",
             "important"
         );
+    }
+
+    private modifyBodyStyle() {
+        const bodyStyle = window.getComputedStyle(document.body);
+
+        // add miniscule top padding if not already present, to prevent top margin collapse
+        // note that body margin is rewritten into padding in cssTweaks.ts
+        if (["", "0px"].includes(bodyStyle.paddingTop)) {
+            document.body.style.paddingTop = "0.05px";
+        }
+        document.body.style.setProperty("padding-left", "50px", "important");
+        document.body.style.setProperty("padding-right", "50px", "important");
+        document.body.style.setProperty("min-width", "0", "important");
+        document.body.style.setProperty(
+            "max-width",
+            "var(--lindy-pagewidth)",
+            "important"
+        );
+
+        document.body.style.setProperty("display", "block", "important");
+
         document.body.style.setProperty("height", "auto", "important");
         document.body.style.setProperty("margin", "10px auto", "important");
     }

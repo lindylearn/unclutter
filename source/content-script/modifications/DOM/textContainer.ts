@@ -1,13 +1,10 @@
 import { minFontSizePx } from "../../../common/defaultStorage";
 import { createStylesheetText } from "../../../common/stylesheets";
 import {
-    activeColorThemeVariable,
-    backgroundColorThemeVariable,
     fontSizeThemeVariable,
-    getThemeValue,
-    originalBackgroundThemeVariable,
     setCssThemeVariable,
 } from "../../../common/theme";
+import ThemeModifier from "../CSSOM/theme";
 import { PageModifier, trackModifierExecution } from "../_interface";
 
 const globalParagraphSelector = "p, font, pre";
@@ -23,6 +20,8 @@ This is done so that we can:
 */
 @trackModifierExecution
 export default class TextContainerModifier implements PageModifier {
+    private themeModifier: ThemeModifier;
+
     // Collect elements that contain text nodes
     private containerSelectors = [];
     // Collect overrides for specific container elements (insert as stylesheet for easy unpatching)
@@ -32,6 +31,10 @@ export default class TextContainerModifier implements PageModifier {
 
     private mainFontSize;
     private exampleMainFontSizeElement;
+
+    constructor(themeModifier: ThemeModifier) {
+        this.themeModifier = themeModifier;
+    }
 
     async prepare() {
         let paragraphSelector = globalParagraphSelector;
@@ -213,30 +216,21 @@ export default class TextContainerModifier implements PageModifier {
         // Colors are in reverse-hierarchical order, with ones closest to the text first
         // console.log("Found background colors:", textBackgroundColors);
 
-        // <body> background color was already saved in ${originalBackgroundThemeVariable} in background.js
-        const bodyColor = getThemeValue(originalBackgroundThemeVariable);
-
         // Pick original color from text stack if set, otherwise use body color
-        let pickedColor;
+        let pickedColor: string;
         if (textBackgroundColors.length > 0) {
             pickedColor = textBackgroundColors[0];
         } else {
-            pickedColor = bodyColor;
+            pickedColor = window.getComputedStyle(
+                document.body
+            ).backgroundColor;
+
+            if (pickedColor.includes("rgba(0, 0, 0, 0)")) {
+                pickedColor = "white";
+            }
         }
 
-        // console.log(bodyColor, textBackgroundColors);
-
-        setCssThemeVariable(originalBackgroundThemeVariable, pickedColor, true);
-
-        // Keep showing this background color until theme.ts processed CSS
-        const themeName = getThemeValue(activeColorThemeVariable);
-        if (!themeName || themeName === "auto") {
-            setCssThemeVariable(
-                backgroundColorThemeVariable,
-                pickedColor,
-                true
-            );
-        }
+        this.themeModifier.originalBackgroundColor = pickedColor;
     }
 }
 

@@ -23,12 +23,14 @@ export default class TransitionManager implements PageModifier {
     private backgroundModifier = new BackgroundModifier();
     private contentBlockModifier = new ContentBlockModifier();
     private bodyStyleModifier = new BodyStyleModifier();
-    private textContainerModifier = new TextContainerModifier();
     private responsiveStyleModifier = new ResponsiveStyleModifier();
     private stylePatchesModifier = new StylePatchesModifier(this.cssomProvider);
     private themeModifier = new ThemeModifier(this.cssomProvider);
     private overlayManager = new OverlayManager(
         this.domain,
+        this.themeModifier
+    );
+    private textContainerModifier = new TextContainerModifier(
         this.themeModifier
     );
 
@@ -58,13 +60,11 @@ export default class TransitionManager implements PageModifier {
         await this.textContainerModifier.transitionIn(); // TODO how to make transition from original position
 
         await this.bodyStyleModifier.transitionIn();
-
-        setTimeout(() => {
-            this.overlayManager.transitionIn();
-        }, 300);
     }
 
     async afterTransitionIn() {
+        await this.overlayManager.transitionIn(); // needs to run before themeModifier to set correct auto theme value
+
         await this.themeModifier.afterTransitionIn();
         await this.stylePatchesModifier.afterTransitionIn();
     }

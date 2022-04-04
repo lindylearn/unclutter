@@ -3,6 +3,7 @@ html {
     /* need on html element to access outside body */
     --lindy-pagewidth: 780px;
     /* --lindy-active-font-size set in iterateDOM() */
+    transition: background 0.2s ease-in-out;
 }
 
 html.pageview {
@@ -42,8 +43,7 @@ html.pageview > body {
     width: 100% !important;
     z-index: -100 !important;
     content: "" !important;
-    /* height set and updated via JS */
-    background: var(--lindy-background-color);
+    background: inherit;
 
     border-radius: 10px !important;
 }

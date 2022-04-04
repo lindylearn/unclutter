@@ -1,9 +1,4 @@
 import { overrideClassname } from "../../common/stylesheets";
-import {
-    backgroundColorThemeVariable,
-    originalBackgroundThemeVariable,
-    setCssThemeVariable,
-} from "../../common/theme";
 import { PageModifier, trackModifierExecution } from "./_interface";
 
 @trackModifierExecution
@@ -21,24 +16,6 @@ export default class BackgroundModifier implements PageModifier {
         var background = document.createElement("div");
         background.id = "lindy-body-background";
         background.className = `${overrideClassname} lindy-body-background`;
-
-        // Save original <body> background in theme variable (not modified yet)
-        let bodyBackground = window.getComputedStyle(
-            document.body
-        ).backgroundColor;
-
-        if (bodyBackground.includes("rgba(0, 0, 0, 0)")) {
-            bodyBackground = "white"; // transparent
-        }
-        setCssThemeVariable(backgroundColorThemeVariable, bodyBackground);
-        setCssThemeVariable(originalBackgroundThemeVariable, bodyBackground);
-
-        // Set background color on both <body> and the background element to be more resistant
-        document.body.style.setProperty(
-            "background",
-            `var(${backgroundColorThemeVariable})`,
-            "important"
-        );
 
         // body '100%' may not refer to full height of children (e.g. https://torontolife.com/memoir/the-horrifying-truth-about-my-biological-father/)
         // so also se min-height based on children scollHeight

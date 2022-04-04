@@ -55,7 +55,5 @@ export function colorThemeToBackgroundColor(themeName) {
         return "#212121";
     } else if (themeName === "sepia") {
         return "#F4ECD8"; // firefox sepia
-    } else if (themeName === "auto") {
-        return getThemeValue(originalBackgroundThemeVariable);
     }
 }

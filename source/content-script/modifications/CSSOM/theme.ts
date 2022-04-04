@@ -8,8 +8,6 @@ import {
     colorThemeToBackgroundColor,
     darkThemeTextColor,
     fontSizeThemeVariable,
-    getThemeValue,
-    originalBackgroundThemeVariable,
     pageWidthThemeVariable,
     setCssThemeVariable,
     themeName,
@@ -33,6 +31,8 @@ export default class ThemeModifier implements PageModifier {
 
     private activeColorTheme: themeName;
     private darkModeActive = false; // seperate from theme -- auto theme enables and disable dark mode
+
+    public originalBackgroundColor: string; // set in TextContainerModifier fadeOutNoise phase
 
     constructor(cssomProvider: CSSOMProvider) {
         this.cssomProvider = cssomProvider;
@@ -123,10 +123,7 @@ export default class ThemeModifier implements PageModifier {
 
         // Specical processing of original website colors
         let modifyBackgroundColor = true;
-        const originalBackground = getThemeValue(
-            originalBackgroundThemeVariable
-        );
-        const rgbColor = parse(originalBackground);
+        const rgbColor = parse(this.originalBackgroundColor);
         const brightness = getSRGBLightness(rgbColor.r, rgbColor.g, rgbColor.b);
         if (brightness > 0.9 && !this.darkModeActive) {
             // Too light colors conflict with white theme, so set to white
@@ -160,9 +157,7 @@ export default class ThemeModifier implements PageModifier {
             const darkColor = colorThemeToBackgroundColor("dark");
             setCssThemeVariable(autoBackgroundThemeVariable, darkColor, true);
         } else {
-            const originalColor = getThemeValue(
-                originalBackgroundThemeVariable
-            );
+            const originalColor = this.originalBackgroundColor;
             setCssThemeVariable(
                 autoBackgroundThemeVariable,
                 originalColor,
@@ -236,9 +231,12 @@ export default class ThemeModifier implements PageModifier {
 
     private async disableDarkMode() {
         // Background color
-        const concreteColor = colorThemeToBackgroundColor(
-            this.activeColorTheme
-        );
+        let concreteColor: string;
+        if (this.activeColorTheme === "auto") {
+            concreteColor = this.originalBackgroundColor;
+        } else {
+            concreteColor = colorThemeToBackgroundColor(this.activeColorTheme);
+        }
         setCssThemeVariable(backgroundColorThemeVariable, concreteColor, true);
 
         document.documentElement.style.removeProperty("color");
