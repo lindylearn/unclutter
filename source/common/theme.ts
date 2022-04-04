@@ -9,8 +9,6 @@ export const activeColorThemeVariable = "--lindy-color-theme";
 
 // computed
 export const backgroundColorThemeVariable = "--lindy-background-color";
-export const originalBackgroundThemeVariable =
-    "--lindy-original-background-color";
 export const autoBackgroundThemeVariable = "--lindy-auto-background-color";
 export const darkThemeTextColor = "--lindy-dark-theme-text-color";
 
@@ -38,13 +36,25 @@ export function getThemeValue(varName) {
 }
 
 export function setCssThemeVariable(varName, value, overwrite = false) {
-    const prevValue = getThemeValue(varName);
-    if (prevValue && !overwrite) {
-        // Don't overwrite explicit user theme with config parsed from page
-        return;
+    // To minimize rerenders, set CSS variables only on elements where they're used
+    if (varName === fontSizeThemeVariable) {
+        document.documentElement.style.setProperty(varName, value);
+    } else if (varName === pageWidthThemeVariable) {
+        document.body.style.setProperty("max-width", value, "important");
+    } else if (varName === backgroundColorThemeVariable) {
+        document.body.style.setProperty("background", value, "important");
+    } else if (
+        varName === autoBackgroundThemeVariable ||
+        varName === activeColorThemeVariable
+    ) {
+        document
+            .getElementById("lindy-page-settings-topright")
+            ?.style.setProperty(autoBackgroundThemeVariable, value);
+    } else if (varName === darkThemeTextColor) {
+        document.documentElement.style.setProperty(varName, value);
+    } else {
+        document.documentElement.style.setProperty(varName, value);
     }
-
-    document.documentElement.style.setProperty(varName, value);
 }
 
 export function colorThemeToBackgroundColor(themeName) {
