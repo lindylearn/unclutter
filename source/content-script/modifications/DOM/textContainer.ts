@@ -43,16 +43,9 @@ export default class TextContainerModifier implements PageModifier {
         }
 
         const seenNodes = new Set();
-        const iterateParents = (elem) => {
-            // Select paragraph children
-            if (!seenNodes.has(elem)) {
-                const currentSelector = _getNodeSelector(elem);
-                this.containerSelectors.push(
-                    paragraphSelector
-                        .split(", ")
-                        .map((tag) => `${currentSelector} > ${tag}`)
-                        .join(", ")
-                );
+        const iterateParents = (elem: HTMLElement) => {
+            if (seenNodes.has(elem)) {
+                return;
             }
 
             // Iterate upwards in DOM tree from paragraph node
@@ -65,6 +58,16 @@ export default class TextContainerModifier implements PageModifier {
 
                 const currentSelector = _getNodeSelector(currentElem); // this adds a unique additional classname
                 this.containerSelectors.push(currentSelector);
+
+                if (currentElem === elem) {
+                    // select text containers from first element
+                    this.containerSelectors.push(
+                        paragraphSelector
+                            .split(", ")
+                            .map((tag) => `${currentSelector} > ${tag}`)
+                            .join(", ")
+                    );
+                }
 
                 // Perform other style changes based on applied runtime style and DOM structure
                 const activeStyle = window.getComputedStyle(currentElem);
@@ -84,7 +87,7 @@ export default class TextContainerModifier implements PageModifier {
                             "rgba(0, 0, 0, 0)"
                         )
                     ) {
-                        // console.log(activeStyle.backgroundColor, elem);
+                        console.log(activeStyle.backgroundColor, currentElem);
                         this.backgroundColors.push(activeStyle.backgroundColor);
                     }
                 }
@@ -216,6 +219,8 @@ export default class TextContainerModifier implements PageModifier {
             pickedColor = bodyColor;
         }
 
+        console.log(bodyColor, textBackgroundColors);
+
         const brightness = tinycolor(pickedColor).getBrightness();
         if (brightness > 230) {
             // too light colors conflict with background
@@ -243,6 +248,8 @@ const asideWordBlocklist = [
     "comment",
     "language",
     "banner",
+    "alert",
+    "message",
 ];
 function _isAsideEquivalent(node) {
     return (

@@ -26,7 +26,6 @@ export default class BackgroundModifier implements PageModifier {
         let bodyBackground = window.getComputedStyle(
             document.body
         ).backgroundColor;
-        // console.log("body", bodyBackground);
 
         if (bodyBackground.includes("rgba(0, 0, 0, 0)")) {
             bodyBackground = "white"; // transparent
