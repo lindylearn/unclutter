@@ -41,6 +41,20 @@ export default class TextContainerModifier implements PageModifier {
             paragraphs = document.body.querySelectorAll(paragraphSelector);
         }
 
+        this.containerSelectors.push(
+            // Use class twice for higher specifity
+            `.${lindyTextContainerClass}.${lindyTextContainerClass}`
+        );
+        this.containerSelectors.push(
+            paragraphSelector
+                .split(", ")
+                .map(
+                    (tag) =>
+                        `.${lindyTextContainerClass}.${lindyTextContainerClass} > ${tag}`
+                )
+                .join(", ")
+        );
+
         const seenNodes = new Set();
         const iterateParents = (elem: HTMLElement) => {
             if (seenNodes.has(elem)) {
@@ -55,30 +69,17 @@ export default class TextContainerModifier implements PageModifier {
                 }
                 seenNodes.add(currentElem);
 
-                const currentSelector = _getNodeSelector(currentElem); // this adds a unique additional classname
-                this.containerSelectors.push(currentSelector);
-
-                if (currentElem === elem) {
-                    // select text containers from first element
-                    this.containerSelectors.push(
-                        paragraphSelector
-                            .split(", ")
-                            .map((tag) => `${currentSelector} > ${tag}`)
-                            .join(", ")
-                    );
-                }
+                currentElem.classList.add(lindyTextContainerClass);
 
                 // Perform other style changes based on applied runtime style and DOM structure
-                // TODO only construct unique container class if required?
                 const activeStyle = window.getComputedStyle(currentElem);
-                this.overrideCssDeclarations =
-                    this.overrideCssDeclarations.concat(
-                        _getNodeOverrideStyles(
-                            currentElem,
-                            currentSelector,
-                            activeStyle
-                        )
-                    );
+                const overrideStyles = _getNodeOverrideStyles(
+                    currentElem,
+                    activeStyle
+                );
+                if (overrideStyles) {
+                    this.overrideCssDeclarations.push(overrideStyles);
+                }
 
                 if (!_isAsideEquivalent(currentElem)) {
                     // Remember background colors on text containers
@@ -227,6 +228,7 @@ export default class TextContainerModifier implements PageModifier {
 
         setCssThemeVariable(originalBackgroundThemeVariable, pickedColor, true);
 
+        // Keep showing this background color until theme.ts processed CSS
         const themeName = getThemeValue(activeColorThemeVariable);
         if (!themeName || themeName === "auto") {
             setCssThemeVariable(
@@ -237,6 +239,8 @@ export default class TextContainerModifier implements PageModifier {
         }
     }
 }
+
+const lindyTextContainerClass = "lindy-text-container";
 
 const asideWordBlocklist = [
     "header",
@@ -265,9 +269,11 @@ function _isAsideEquivalent(node) {
 }
 
 // Get a CSS selector for the passed node with a high specifity
-function _getNodeSelector(node) {
+function _getUniqueNodeSelector(node) {
     // Create new unique class
-    const containerId = `container_${Math.random().toString().slice(2)}`;
+    const containerId = `lindy-text-container_${Math.random()
+        .toString()
+        .slice(2)}`;
     node.classList.add(containerId); // will only be applied in next loop
 
     // construct selector in "tag.class[id='id']" format
@@ -288,14 +294,13 @@ function _getSiblingSelector(node) {
         .join("");
 }
 
-function _getNodeOverrideStyles(node, currentSelector, activeStyle) {
+// Perform various tweaks to containers if required
+function _getNodeOverrideStyles(node, activeStyle) {
     const overrideCssDeclarations = [];
     // Remove horizontal flex partitioning
     // e.g. https://www.nationalgeographic.com/science/article/the-controversial-quest-to-make-a-contagious-vaccine
     if (activeStyle.display === "flex" && activeStyle.flexDirection === "row") {
-        overrideCssDeclarations.push(
-            `${currentSelector} { display: block !important; }`
-        );
+        overrideCssDeclarations.push(`display: block !important;`);
         // TODO hide siblings instead
     }
 
@@ -303,13 +308,18 @@ function _getNodeOverrideStyles(node, currentSelector, activeStyle) {
     // e.g. https://www.washingtonpost.com/business/2022/02/27/bp-russia-rosneft-ukraine
     // https://www.trickster.dev/post/decrypting-your-own-https-traffic-with-wireshark/
     if (activeStyle.display === "grid") {
-        overrideCssDeclarations.push(`${currentSelector} {
-                display: block;
-                grid-template-columns: 1fr;
-                grid-template-areas: none;
-                column-gap: 0;
-            }`);
+        overrideCssDeclarations.push(`
+            display: block;
+            grid-template-columns: 1fr;
+            grid-template-areas: none;
+            column-gap: 0;
+        `);
     }
 
-    return overrideCssDeclarations;
+    if (overrideCssDeclarations.length > 0) {
+        const uniqueSelector = _getUniqueNodeSelector(node);
+        return `${uniqueSelector} { ${overrideCssDeclarations.join("\n")} }`;
+    } else {
+        return null;
+    }
 }

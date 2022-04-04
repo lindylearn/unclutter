@@ -44,7 +44,7 @@ export function trackModifierExecution(target: Function) {
             const result = await originalMethod.apply(this, args);
 
             // seems to break animation, only enable to measure layout performance in dev
-            await new Promise((r) => setTimeout(r, 0));
+            // await new Promise((r) => setTimeout(r, 0));
 
             const duration = performance.now() - start;
 
