@@ -1,9 +1,5 @@
-import { minFontSizePx } from "../../../common/defaultStorage";
 import { createStylesheetText } from "../../../common/stylesheets";
-import {
-    fontSizeThemeVariable,
-    setCssThemeVariable,
-} from "../../../common/theme";
+import { fontSizeThemeVariable } from "../../../common/theme";
 import ThemeModifier from "../CSSOM/theme";
 import { PageModifier, trackModifierExecution } from "../_interface";
 
@@ -188,13 +184,6 @@ export default class TextContainerModifier implements PageModifier {
 
     private setTextFontOverride(largestElem) {
         const activeStyle = window.getComputedStyle(largestElem);
-
-        // Set font size to use as CSS variable
-        const activeFontSizePx = Math.max(
-            parseFloat(activeStyle.fontSize),
-            minFontSizePx
-        );
-        setCssThemeVariable(fontSizeThemeVariable, `${activeFontSizePx}px`);
 
         // Convert line-height to relative and specify override, in case it was set as px
         // results in NaN if line-height: normal -- which is fine.
