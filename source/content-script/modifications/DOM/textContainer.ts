@@ -187,6 +187,7 @@ export default class TextContainerModifier implements PageModifier {
             border: none !important;
             box-shadow: none !important;
             transition: margin 0.2s;
+            color: var(--lindy-dark-theme-text-color);
         }`;
     }
 
