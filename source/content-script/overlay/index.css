@@ -40,7 +40,7 @@
     color: #9ca3af !important;
     overflow: visible;
 }
-.lindy-tooltip:hover > .lindy-ui-icon:hover {
+.lindy-tooltip:hover > .lindy-ui-icon {
     color: #4b5563 !important;
     filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.05));
 }
@@ -233,7 +233,7 @@
     background-color: #f4ecd8;
 }
 #lindy-dark-theme-button {
-    background-color: #131516;
+    background-color: #212121;
 }
 
 /* popup arrow */

@@ -1,5 +1,5 @@
 html.pageview.pageview {
-    background-color: #000 !important;
+    background-color: #131516 !important;
 }
 
 .html.pageview.pageview > body {
@@ -13,7 +13,7 @@ html.pageview.pageview {
 
 /* dark mode global tweaks */
 html {
-    scrollbar-color: var(--lindy-dark-theme-text-color) #000 !important; /* only firefox */
+    scrollbar-color: var(--lindy-dark-theme-text-color) #131516 !important; /* only firefox */
 }
 
 /* ::-webkit-scrollbar {
