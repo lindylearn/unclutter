@@ -113,6 +113,14 @@ export default class TextContainerModifier implements PageModifier {
             const fontSize = parseFloat(activeStyle.fontSize);
             if (paragraphFontSizes[fontSize]) {
                 paragraphFontSizes[fontSize] += 1;
+
+                // Save largest element as example (small paragraphs might have header-specific line height)
+                if (
+                    elem.innerText.length >
+                    exampleNodePerFontSize[fontSize].innerText.length
+                ) {
+                    exampleNodePerFontSize[fontSize] = elem;
+                }
             } else {
                 paragraphFontSizes[fontSize] = 1;
                 exampleNodePerFontSize[fontSize] = elem;
@@ -185,15 +193,36 @@ export default class TextContainerModifier implements PageModifier {
     private setTextFontOverride(largestElem) {
         const activeStyle = window.getComputedStyle(largestElem);
 
-        // Convert line-height to relative and specify override, in case it was set as px
-        // results in NaN if line-height: normal -- which is fine.
-        const relativeLineHeight = (
-            parseFloat(activeStyle.lineHeight.replace("px", "")) /
-            parseFloat(activeStyle.fontSize.replace("px", ""))
-        ).toFixed(1);
+        // Measure size of font 'ex' x-height (height of lowercase chars)
+        const measureDiv = document.createElement("div");
+        measureDiv.innerText = "x";
+        measureDiv.style.margin = "0";
+        measureDiv.style.padding = "0";
+        measureDiv.style.fontSize = "20px";
+        measureDiv.style.height = "1ex";
+        measureDiv.style.lineHeight = "0";
+        measureDiv.style.visibility = "hidden";
+
+        largestElem.appendChild(measureDiv);
+        const xHeight = measureDiv.getBoundingClientRect().height;
+        const fontSizeNormalizationScale = 10 / xHeight;
+        measureDiv.remove();
+
+        // Convert line-height to relative and specify override in case it was set as px
+        let relativeLineHeight: string;
+        if (activeStyle.lineHeight.includes("px")) {
+            relativeLineHeight = (
+                parseFloat(activeStyle.lineHeight.replace("px", "")) /
+                parseFloat(activeStyle.fontSize.replace("px", ""))
+            ).toFixed(2);
+        } else {
+            relativeLineHeight = activeStyle.lineHeight;
+        }
 
         const fontSizeStyle = `${globalParagraphSelector} {
-            font-size: var(${fontSizeThemeVariable}) !important;
+            font-size: calc(var(${fontSizeThemeVariable}) * ${fontSizeNormalizationScale.toFixed(
+            2
+        )}) !important;
             line-height: ${relativeLineHeight} !important;
         }`;
 

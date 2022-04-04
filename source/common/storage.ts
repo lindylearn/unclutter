@@ -1,3 +1,4 @@
+import { defaultFontSizePx } from "./defaultStorage";
 import browser from "./polyfill";
 
 export async function getAllCustomDomainSettings() {
@@ -60,7 +61,11 @@ export async function setUserSettingsForDomain(domain, status) {
 
 export async function getUserTheme() {
     const config = await browser.storage.sync.get(["custom-global-theme"]);
-    return config["custom-global-theme"];
+    return (
+        config["custom-global-theme"] || {
+            fontSize: defaultFontSizePx,
+        }
+    );
 }
 export async function mergeUserTheme(partialTheme) {
     const config = await browser.storage.sync.get(["custom-global-theme"]);

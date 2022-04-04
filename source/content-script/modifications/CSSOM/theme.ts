@@ -47,9 +47,6 @@ export default class ThemeModifier implements PageModifier {
         if (!theme) {
             return;
         }
-        if (theme.fontSize) {
-            setCssThemeVariable(fontSizeThemeVariable, theme.fontSize, true);
-        }
         if (theme.pageWidth) {
             setCssThemeVariable(pageWidthThemeVariable, theme.pageWidth, true);
         }
@@ -91,6 +88,11 @@ export default class ThemeModifier implements PageModifier {
     }
 
     async afterTransitionIn() {
+        const theme = await getUserTheme();
+        if (theme.fontSize) {
+            setCssThemeVariable(fontSizeThemeVariable, theme.fontSize, true);
+        }
+
         await this.applyActiveColorTheme();
     }
 

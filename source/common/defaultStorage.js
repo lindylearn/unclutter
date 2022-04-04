@@ -49,4 +49,4 @@ export const defaultExcludedDomains = [
     "angel.co",
 ];
 
-export const minFontSizePx = 16;
+export const defaultFontSizePx = "19px";
