@@ -6,6 +6,7 @@ import {
     autoBackgroundThemeVariable,
     backgroundColorThemeVariable,
     colorThemeToBackgroundColor,
+    darkThemeTextColor,
     fontSizeThemeVariable,
     pageWidthThemeVariable,
     setCssThemeVariable,
@@ -136,17 +137,6 @@ export default class ThemeModifier implements PageModifier {
     }
 
     private async enableDarkMode() {
-        // Background color
-        const concreteColor = colorThemeToBackgroundColor("dark");
-        setCssThemeVariable(backgroundColorThemeVariable, concreteColor, true);
-
-        // Text color
-        setCssThemeVariable(
-            "--lindy-dark-theme-text-color",
-            "rgb(232, 230, 227)",
-            true
-        );
-
         // UI dark style
         createStylesheetLink(
             browser.runtime.getURL("content-script/pageview/contentDark.css"),
@@ -157,8 +147,53 @@ export default class ThemeModifier implements PageModifier {
             "dark-mode-ui-style"
         );
 
-        // CSS tweaks for dark mode
-        await this.enableDarkModeStyleTweaks();
+        const siteSupportsDarkMode = this.detectSiteDarkMode(true);
+        if (siteSupportsDarkMode) {
+            this.enabledSiteDarkModeRules.map((mediaRule) => {
+                // parse background color, which we overwrite
+                let backgroundColor: string;
+                for (const styleRule of mediaRule.cssRules) {
+                    if (!isStyleRule(styleRule)) {
+                        return;
+                    }
+
+                    if (styleRule.style.background) {
+                        backgroundColor = styleRule.style.background;
+                    }
+                }
+
+                if (!backgroundColor) {
+                    // this may not always work (e.g. if css variables are used), so use default fallback
+                    backgroundColor = colorThemeToBackgroundColor("dark");
+                }
+                setCssThemeVariable(
+                    backgroundColorThemeVariable,
+                    backgroundColor,
+                    true
+                );
+                setCssThemeVariable(
+                    autoBackgroundThemeVariable,
+                    backgroundColor,
+                    true
+                );
+            });
+        } else {
+            // manually set root text color (setting it always would override other styles)
+            document.documentElement.style.color = `var(${darkThemeTextColor})`;
+
+            // Background color
+            const concreteColor = colorThemeToBackgroundColor("dark");
+            setCssThemeVariable(
+                backgroundColorThemeVariable,
+                concreteColor,
+                true
+            );
+
+            // Text color
+            setCssThemeVariable(darkThemeTextColor, "rgb(232, 230, 227)", true);
+
+            await this.enableDarkModeStyleTweaks();
+        }
     }
 
     private async disableDarkMode() {
@@ -176,6 +211,49 @@ export default class ThemeModifier implements PageModifier {
         document
             .querySelectorAll(".dark-mode-ui-style")
             .forEach((e) => e.remove());
+    }
+
+    private enabledSiteDarkModeRules: CSSMediaRule[] = [];
+    private detectSiteDarkMode(enableIfFound = false) {
+        let siteSupportsDarkMode = false;
+
+        // iterate only top level for performance
+        // also don't iterate the rules we added
+        this.cssomProvider.stylesheets.map((sheet) => {
+            for (const rule of sheet.cssRules) {
+                if (!isMediaRule(rule)) {
+                    continue;
+                }
+                if (
+                    !rule.media.mediaText.includes("prefers-color-scheme: dark")
+                ) {
+                    continue;
+                }
+
+                siteSupportsDarkMode = true;
+
+                if (enableIfFound) {
+                    // insert rule copy that's always active
+                    const newCssText = `@media screen ${rule.cssText.replace(
+                        /@media[^{]*/,
+                        ""
+                    )}`;
+                    const newIndex = rule.parentStyleSheet.insertRule(
+                        newCssText,
+                        rule.parentStyleSheet.cssRules.length
+                    );
+                    const newRule = rule.parentStyleSheet.cssRules[newIndex];
+                    this.enabledSiteDarkModeRules.push(newRule as CSSMediaRule);
+                }
+            }
+        });
+
+        console.log(
+            "added",
+            siteSupportsDarkMode,
+            this.enabledSiteDarkModeRules
+        );
+        return siteSupportsDarkMode;
     }
 
     private activeDarkModeStyleTweaks: [CSSStyleRule, object][] = [];
@@ -209,6 +287,9 @@ export default class ThemeModifier implements PageModifier {
             for (const [key, value] of Object.entries(originalStyle)) {
                 rule.style.setProperty(key, value);
             }
+        });
+        this.enabledSiteDarkModeRules.map((rule) => {
+            rule.style = {};
         });
     }
 }
@@ -266,7 +347,7 @@ function darkModeStyleRuleMap(rule: CSSStyleRule) {
 
 function changeTextColor(colorString: string, selectorText): string {
     if (colorString === "initial") {
-        return "var(--lindy-dark-theme-text-color)";
+        return `var(${darkThemeTextColor})`;
     }
 
     const hslColor = parseHslColor(colorString);
@@ -280,7 +361,7 @@ function changeTextColor(colorString: string, selectorText): string {
         // standardize most text around this
 
         // l e.g. 0.35 at https://fly.io/blog/a-foolish-consistency/
-        newColor = "var(--lindy-dark-theme-text-color)";
+        newColor = `var(${darkThemeTextColor})`;
     } else {
         // make other colors more visible
 

@@ -68,7 +68,8 @@ export default class CSSOMProvider {
                     if (cssText) {
                         const element = createStylesheetText(
                             cssText,
-                            "lindy-stylesheet-proxy"
+                            "lindy-stylesheet-proxy",
+                            sheet.ownerNode // insert right after original element to keep original importance order
                         );
 
                         if (sheet.ownerNode) {

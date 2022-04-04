@@ -12,8 +12,7 @@ html.pageview.pageview {
 }
 
 /* dark mode global tweaks */
-:root {
-    color: var(--lindy-dark-theme-text-color);
+html {
     scrollbar-color: var(--lindy-dark-theme-text-color) #000 !important; /* only firefox */
 }
 

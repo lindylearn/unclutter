@@ -218,7 +218,7 @@ export default class TextContainerModifier implements PageModifier {
 
         const brightness = tinycolor(pickedColor).getBrightness();
         if (brightness > 230) {
-            // too light colors conflict with white background
+            // too light colors conflict with background
             pickedColor = "white";
         }
 

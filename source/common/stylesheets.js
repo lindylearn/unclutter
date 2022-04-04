@@ -12,14 +12,22 @@ export function createStylesheetLink(url, styleId) {
     return link;
 }
 
-export function createStylesheetText(text, styleId) {
+export function createStylesheetText(text, styleId, insertAfter = null) {
     const style = document.createElement("style");
     style.classList.add(overrideClassname);
     style.classList.add(styleId);
     style.type = "text/css";
     style.rel = "stylesheet";
     style.innerHTML = text;
-    document.head.appendChild(style);
+
+    if (insertAfter) {
+        document.head.insertBefore(
+            style,
+            insertAfter?.nextSibling || insertAfter
+        );
+    } else {
+        document.head.appendChild(style);
+    }
 
     return style;
 }

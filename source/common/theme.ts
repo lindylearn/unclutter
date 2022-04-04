@@ -12,6 +12,7 @@ export const backgroundColorThemeVariable = "--lindy-background-color";
 export const originalBackgroundThemeVariable =
     "--lindy-original-background-color";
 export const autoBackgroundThemeVariable = "--lindy-auto-background-color";
+export const darkThemeTextColor = "--lindy-dark-theme-text-color";
 
 export function applySaveThemeOverride(domain, varName, value) {
     if (varName === fontSizeThemeVariable) {
