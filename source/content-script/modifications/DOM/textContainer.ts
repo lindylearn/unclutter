@@ -70,6 +70,7 @@ export default class TextContainerModifier implements PageModifier {
                 }
 
                 // Perform other style changes based on applied runtime style and DOM structure
+                // TODO only construct unique container class if required?
                 const activeStyle = window.getComputedStyle(currentElem);
                 this.overrideCssDeclarations =
                     this.overrideCssDeclarations.concat(
@@ -83,9 +84,13 @@ export default class TextContainerModifier implements PageModifier {
                 if (!_isAsideEquivalent(currentElem)) {
                     // Remember background colors on text containers
                     if (
+                        // don't take default background color
                         !activeStyle.backgroundColor.includes(
                             "rgba(0, 0, 0, 0)"
-                        )
+                        ) &&
+                        // don't consider transparent colors
+                        !activeStyle.backgroundColor.includes("0.") &&
+                        !activeStyle.backgroundColor.includes("%")
                     ) {
                         console.log(activeStyle.backgroundColor, currentElem);
                         this.backgroundColors.push(activeStyle.backgroundColor);
@@ -219,7 +224,7 @@ export default class TextContainerModifier implements PageModifier {
             pickedColor = bodyColor;
         }
 
-        console.log(bodyColor, textBackgroundColors);
+        // console.log(bodyColor, textBackgroundColors);
 
         const brightness = tinycolor(pickedColor).getBrightness();
         if (brightness > 230) {
