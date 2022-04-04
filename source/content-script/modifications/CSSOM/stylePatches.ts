@@ -10,11 +10,9 @@ export default class StylePatchesModifier implements PageModifier {
     }
 
     async afterTransitionIn() {
-        this.cssomProvider.stylesheets.map((sheet) => {
-            for (let rule of sheet.cssRules) {
-                if (isStyleRule(rule)) {
-                    this.styleRuleTweaks(rule);
-                }
+        this.cssomProvider.iterateRules((rule) => {
+            if (isStyleRule(rule)) {
+                this.styleRuleTweaks(rule);
             }
         });
     }

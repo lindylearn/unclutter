@@ -87,7 +87,20 @@ export default class CSSOMProvider {
         // TODO listen to new
     }
 
-    iterate() {}
+    iterateRules(mapRule: (rule: CSSRule) => void) {
+        function processGroupRule(rule: CSSGroupingRule) {
+            for (let childRule of rule.cssRules) {
+                mapRule(childRule);
+                if ((childRule as CSSGroupingRule).cssRules) {
+                    processGroupRule(childRule as CSSGroupingRule);
+                }
+            }
+        }
+
+        this.stylesheets.map((sheet) =>
+            processGroupRule(sheet as unknown as CSSGroupingRule)
+        );
+    }
 
     async reenableOriginalStylesheets() {
         [...document.getElementsByClassName(disabledClassname)].map((elem) => {

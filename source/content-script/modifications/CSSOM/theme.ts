@@ -15,7 +15,7 @@ import { HSLA, hslToString, parse, rgbToHSL } from "source/common/util/color";
 import { highlightActiveColorThemeButton } from "source/content-script/overlay/insert";
 import browser from "../../../common/polyfill";
 import { PageModifier, trackModifierExecution } from "../_interface";
-import CSSOMProvider, { isStyleRule } from "./_provider";
+import CSSOMProvider, { isMediaRule, isStyleRule } from "./_provider";
 
 @trackModifierExecution
 export default class ThemeModifier implements PageModifier {
@@ -96,7 +96,6 @@ export default class ThemeModifier implements PageModifier {
 
     // also called from overlay theme selector
     private async applyActiveColorTheme() {
-        console.log("apply");
         // State for UI switch
         setCssThemeVariable(
             activeColorThemeVariable,
@@ -182,29 +181,26 @@ export default class ThemeModifier implements PageModifier {
     private activeDarkModeStyleTweaks: [CSSStyleRule, object][] = [];
     private async enableDarkModeStyleTweaks() {
         // patch site stylesheet colors
-        this.cssomProvider.stylesheets.map((sheet) => {
-            for (let rule of sheet.cssRules) {
-                if (!isStyleRule(rule)) {
-                    continue;
-                }
-                if (
-                    !rule.style.color &&
-                    !rule.style.backgroundColor &&
-                    !rule.style.boxShadow
-                ) {
-                    continue;
-                }
-
-                // save properties for restoration later
-                // TODO measure performance of this
-                const obj = {};
-                for (const key of rule.style) {
-                    obj[key] = rule.style.getPropertyValue(key);
-                }
-                this.activeDarkModeStyleTweaks.push([rule, obj]);
-
-                darkModeStyleRuleMap(rule);
+        this.cssomProvider.iterateRules((rule) => {
+            if (!isStyleRule(rule)) {
+                return;
             }
+            if (
+                !rule.style.color &&
+                !rule.style.backgroundColor &&
+                !rule.style.boxShadow
+            ) {
+                return;
+            }
+
+            // save properties for restoration later
+            const obj = {};
+            for (const key of rule.style) {
+                obj[key] = rule.style.getPropertyValue(key);
+            }
+            this.activeDarkModeStyleTweaks.push([rule, obj]);
+
+            darkModeStyleRuleMap(rule);
         });
     }
 
