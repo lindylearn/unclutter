@@ -241,6 +241,8 @@ export default class ThemeModifier implements PageModifier {
         );
         setCssThemeVariable(backgroundColorThemeVariable, concreteColor, true);
 
+        document.documentElement.style.removeProperty("color");
+
         // undo dark mode style tweaks
         if (this.activeDarkModeStyleTweaks.length !== 0) {
             await this.disableDarkModeStyleTweaks();
@@ -286,11 +288,6 @@ export default class ThemeModifier implements PageModifier {
             }
         });
 
-        console.log(
-            "added",
-            siteSupportsDarkMode,
-            this.enabledSiteDarkModeRules
-        );
         return siteSupportsDarkMode;
     }
 
@@ -301,22 +298,25 @@ export default class ThemeModifier implements PageModifier {
             if (!isStyleRule(rule)) {
                 return;
             }
-            if (
-                !rule.style.color &&
-                !rule.style.backgroundColor &&
-                !rule.style.boxShadow
-            ) {
-                return;
-            }
 
-            // save properties for restoration later
-            const obj = {};
-            for (const key of rule.style) {
-                obj[key] = rule.style.getPropertyValue(key);
-            }
-            this.activeDarkModeStyleTweaks.push([rule, obj]);
+            const modifications = darkModeStyleRuleMap(rule);
+            if (modifications) {
+                // save properties for restoration later
+                const obj = {};
+                for (const key of rule.style) {
+                    obj[key] = rule.style.getPropertyValue(key);
+                }
+                this.activeDarkModeStyleTweaks.push([rule, obj]);
 
-            darkModeStyleRuleMap(rule);
+                // apply modifications
+                for (const [key, val] of Object.entries(modifications)) {
+                    rule.style.setProperty(
+                        key,
+                        val,
+                        rule.style.getPropertyPriority(key)
+                    );
+                }
+            }
         });
     }
 
@@ -332,27 +332,24 @@ export default class ThemeModifier implements PageModifier {
     }
 }
 
-function darkModeStyleRuleMap(rule: CSSStyleRule) {
+function darkModeStyleRuleMap(rule: CSSStyleRule): object {
+    const modifications = {};
+
     if (rule.style.color) {
-        rule.style.setProperty(
-            "color",
-            changeTextColor(rule.style.color, rule.selectorText),
-            rule.style.getPropertyPriority("color")
+        modifications["color"] = changeTextColor(
+            rule.style.color,
+            rule.selectorText
         );
     }
     if (rule.style.backgroundColor) {
-        rule.style.setProperty(
-            "background-color",
-            changeBackgroundColor(
-                rule.style.backgroundColor,
-                rule.selectorText
-            ),
-            rule.style.getPropertyPriority("background-color")
+        modifications["background-color"] = changeBackgroundColor(
+            rule.style.backgroundColor,
+            rule.selectorText
         );
     }
 
     if (rule.style.boxShadow) {
-        rule.style.removeProperty("box-shadow");
+        modifications["box-shadow"] = "none";
     }
 
     // TODO parse CSS variables better, e.g. ones set via JS or inline styles
@@ -366,19 +363,21 @@ function darkModeStyleRuleMap(rule: CSSStyleRule) {
 
                 // ideally transform the variables where used
                 if (key.includes("background")) {
-                    rule.style.setProperty(
-                        key,
-                        changeBackgroundColor(value, rule.selectorText)
+                    modifications[key] = changeBackgroundColor(
+                        value,
+                        rule.selectorText
                     );
                 } else {
-                    rule.style.setProperty(
-                        key,
-                        changeTextColor(value, rule.selectorText)
+                    modifications[key] = changeTextColor(
+                        value,
+                        rule.selectorText
                     );
                 }
             }
         }
     }
+
+    return modifications;
 }
 
 // TODO cache
@@ -414,9 +413,7 @@ function changeTextColor(colorString: string, selectorText): string {
     }
 
     // console.log(
-    //     `%c     %c -> %c     %c\t${hslToString(
-    //         parseHslColor(colorString)
-    //     )}\t -> ${newColor} \t${selectorText}`,
+    //     `%c     %c -> %c     %c\t${colorString}\t -> ${newColor} \t${selectorText}`,
     //     `background: ${colorString}`,
     //     `background: inherit`,
     //     `background: ${newColor}`,

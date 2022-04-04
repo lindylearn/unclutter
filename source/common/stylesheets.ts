@@ -12,7 +12,11 @@ export function createStylesheetLink(url, styleId) {
     return link;
 }
 
-export function createStylesheetText(text, styleId, insertAfter = null) {
+export function createStylesheetText(
+    text,
+    styleId,
+    insertAfter: HTMLElement = null
+) {
     const style = document.createElement("style");
     style.classList.add(overrideClassname);
     style.classList.add(styleId);
@@ -21,7 +25,7 @@ export function createStylesheetText(text, styleId, insertAfter = null) {
     style.innerHTML = text;
 
     if (insertAfter) {
-        document.head.insertBefore(
+        insertAfter.parentElement.insertBefore(
             style,
             insertAfter?.nextSibling || insertAfter
         );
