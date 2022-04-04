@@ -246,6 +246,7 @@ const asideWordBlocklist = [
     "banner",
     "alert",
     "message",
+    "nav",
 ];
 function _isAsideEquivalent(node) {
     return (

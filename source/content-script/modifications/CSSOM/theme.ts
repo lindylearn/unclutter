@@ -191,7 +191,9 @@ export default class ThemeModifier implements PageModifier {
         // UI dark style
         createStylesheetLink(
             browser.runtime.getURL("content-script/pageview/contentDark.css"),
-            "dark-mode-ui-style"
+            "dark-mode-ui-style",
+            // insert at beginning of header to not override site dark styles
+            document.head.firstChild as HTMLElement
         );
         createStylesheetLink(
             browser.runtime.getURL("content-script/overlay/indexDark.css"),
