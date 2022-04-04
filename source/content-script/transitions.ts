@@ -54,6 +54,8 @@ export default class TransitionManager implements PageModifier {
     async transitionIn() {
         document.body.style.setProperty("transition", "all 0.2s");
 
+        await this.themeModifier.transitionIn();
+
         await this.contentBlockModifier.transitionIn();
 
         await this.responsiveStyleModifier.transitionIn();

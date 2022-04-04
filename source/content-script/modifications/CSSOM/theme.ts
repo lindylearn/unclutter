@@ -69,6 +69,27 @@ export default class ThemeModifier implements PageModifier {
         );
     }
 
+    async transitionIn() {
+        // basic heuristic whether to enable dark mode, to show earlier
+        const darkModeActive =
+            this.darkModeActive ||
+            this.activeColorTheme === "dark" ||
+            (this.activeColorTheme === "auto" &&
+                this.systemDarkModeQuery.matches);
+        if (darkModeActive) {
+            document.documentElement.style.setProperty(
+                "background",
+                "#131516",
+                "important"
+            );
+            document.body.style.setProperty(
+                "background",
+                colorThemeToBackgroundColor("dark"),
+                "important"
+            );
+        }
+    }
+
     async afterTransitionIn() {
         await this.applyActiveColorTheme();
     }
@@ -240,6 +261,7 @@ export default class ThemeModifier implements PageModifier {
         setCssThemeVariable(backgroundColorThemeVariable, concreteColor, true);
 
         document.documentElement.style.removeProperty("color");
+        document.documentElement.style.removeProperty("background");
 
         // undo dark mode style tweaks
         if (this.activeDarkModeStyleTweaks.length !== 0) {

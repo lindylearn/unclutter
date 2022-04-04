@@ -40,7 +40,7 @@ export function setCssThemeVariable(varName, value, overwrite = false) {
     if (varName === fontSizeThemeVariable) {
         document.documentElement.style.setProperty(varName, value);
     } else if (varName === pageWidthThemeVariable) {
-        document.body.style.setProperty("max-width", value, "important");
+        document.documentElement.style.setProperty(varName, value);
     } else if (varName === backgroundColorThemeVariable) {
         document.body.style.setProperty("background", value, "important");
     } else if (
