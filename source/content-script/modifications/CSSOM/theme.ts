@@ -266,6 +266,7 @@ export default class ThemeModifier implements PageModifier {
 
         document.documentElement.style.removeProperty("color");
         document.documentElement.style.removeProperty("background");
+        document.documentElement.style.removeProperty(darkThemeTextColor);
 
         // undo dark mode style tweaks
         if (this.activeDarkModeStyleTweaks.length !== 0) {
