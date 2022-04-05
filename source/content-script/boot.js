@@ -1,3 +1,7 @@
+import {
+    enableBootUnclutterMessage,
+    getFeatureFlag,
+} from "source/common/featureFlags";
 import { getDomainFrom } from "source/common/util";
 import {
     extensionSupportsUrl,
@@ -23,9 +27,12 @@ async function boot() {
     }
 
     const configuredEnable = await isConfiguredToEnable(domain);
+    const enableUnclutterMessage = await getFeatureFlag(
+        enableBootUnclutterMessage
+    );
     if (configuredEnable) {
         enablePageView();
-    } else {
+    } else if (enableUnclutterMessage) {
         document.addEventListener("DOMContentLoaded", (event) => {
             displayToast("Unclutter this article?", enablePageView);
         });

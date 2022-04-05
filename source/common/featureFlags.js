@@ -12,8 +12,10 @@ export const automaticallyEnabledFeatureFlag = "automatically-enabled";
 export const allowlistDomainOnManualActivationFeatureFlag =
     "allowlist-domain-manual-activation";
 export const collectAnonymousMetricsFeatureFlag = "collect-anonymous-metrics";
+export const enableBootUnclutterMessage = "enable-boot-unclutter-message";
 export const defaultFeatureFlags = {
     [automaticallyEnabledFeatureFlag]: false,
     [allowlistDomainOnManualActivationFeatureFlag]: true,
     [collectAnonymousMetricsFeatureFlag]: true,
+    [enableBootUnclutterMessage]: false,
 };
