@@ -145,7 +145,7 @@ export default class ThemeModifier implements PageModifier {
         }
 
         // Specical processing of original website colors
-        let modifyBackgroundColor = true;
+        let siteUsesDefaultDarkMode = false;
         const rgbColor = parse(this.originalBackgroundColor);
         const brightness = getSRGBLightness(rgbColor.r, rgbColor.g, rgbColor.b);
         if (brightness > 0.9 && !this.darkModeActive) {
@@ -160,7 +160,7 @@ export default class ThemeModifier implements PageModifier {
                 this.darkModeActive = true;
 
                 // Use this color instead of the default black
-                modifyBackgroundColor = false;
+                siteUsesDefaultDarkMode = true;
             } else {
                 // TODO should apply reverse dark mode tweaks here?
             }
@@ -168,7 +168,7 @@ export default class ThemeModifier implements PageModifier {
 
         // only enable or disable dark mode if there's been a change
         if (this.darkModeActive && !prevDarkModeState) {
-            await this.enableDarkMode(modifyBackgroundColor);
+            await this.enableDarkMode(siteUsesDefaultDarkMode);
         } else if (!this.darkModeActive && prevDarkModeState) {
             await this.disableDarkMode();
         }
@@ -189,7 +189,7 @@ export default class ThemeModifier implements PageModifier {
         }
     }
 
-    private async enableDarkMode(modifyBackgroundColor = true) {
+    private async enableDarkMode(siteUsesDefaultDarkMode = false) {
         // UI dark style
         createStylesheetLink(
             browser.runtime.getURL("content-script/pageview/contentDark.css"),
@@ -203,9 +203,11 @@ export default class ThemeModifier implements PageModifier {
         );
 
         const siteSupportsDarkMode = this.detectSiteDarkMode(true);
-        if (!modifyBackgroundColor) {
-            return;
-        }
+        // don't use default dark themes for now, leads to more missed color changes
+        // if (siteUsesDefaultDarkMode) {
+        //     return;
+        // }
+
         if (siteSupportsDarkMode) {
             this.enabledSiteDarkModeRules.map((mediaRule) => {
                 // parse background color, which we overwrite
