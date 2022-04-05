@@ -1,4 +1,16 @@
-import { insertPageSettings } from "../overlay/insert";
+import {
+    allowlistDomainOnManualActivationFeatureFlag,
+    getFeatureFlag,
+} from "source/common/featureFlags";
+import {
+    getUserSettingForDomain,
+    setUserSettingsForDomain,
+} from "source/common/storage";
+import {
+    insertPageSettings,
+    updateDomainState,
+    whiggleDomainState,
+} from "../overlay/insert";
 import ThemeModifier from "./CSSOM/theme";
 import { PageModifier, trackModifierExecution } from "./_interface";
 
@@ -12,8 +24,24 @@ export default class OverlayManager implements PageModifier {
         this.themeModifier = themeModifier;
     }
 
-    async transitionIn() {
+    async afterTransitionIn() {
         insertPageSettings(this.domain, this.themeModifier);
+
+        const domainSetting = await getUserSettingForDomain(this.domain);
+        const allowlistOnActivation = await getFeatureFlag(
+            allowlistDomainOnManualActivationFeatureFlag
+        );
+
+        if (domainSetting === "allow") {
+            whiggleDomainState();
+        } else if (allowlistOnActivation && domainSetting === null) {
+            const newDomainSetting = "allow";
+
+            await setUserSettingsForDomain(this.domain, newDomainSetting);
+            updateDomainState(newDomainSetting, this.domain);
+
+            whiggleDomainState();
+        }
     }
 
     async transitionOut() {

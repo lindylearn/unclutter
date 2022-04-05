@@ -65,7 +65,7 @@ export default class TransitionManager implements PageModifier {
     }
 
     async afterTransitionIn() {
-        await this.overlayManager.transitionIn(); // needs to run before themeModifier to set correct auto theme value
+        await this.overlayManager.afterTransitionIn(); // needs to run before themeModifier to set correct auto theme value
 
         await this.themeModifier.afterTransitionIn();
         await this.stylePatchesModifier.afterTransitionIn();

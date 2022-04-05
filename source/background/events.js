@@ -1,9 +1,7 @@
 import { extensionSupportsUrl } from "../common/articleDetection";
 import {
-    allowlistDomainOnManualActivationFeatureFlag,
     collectAnonymousMetricsFeatureFlag,
     enableBootUnclutterMessage,
-    getFeatureFlag,
     setFeatureFlag,
     showDebugInfo,
 } from "../common/featureFlags";
@@ -13,10 +11,7 @@ import {
     reportSettings,
 } from "../common/metrics";
 import browser from "../common/polyfill";
-import {
-    getUserSettingForDomain,
-    setUserSettingsForDomain,
-} from "../common/storage";
+import { getUserSettingForDomain } from "../common/storage";
 import { getDomainFrom } from "../common/util";
 
 // toggle page view on extension icon click
@@ -31,16 +26,6 @@ import { getDomainFrom } from "../common/util";
 
     const didEnable = await enableInTab(tab.id);
     if (didEnable) {
-        // if enabled, allowlist current domain if user manually actives extension
-        if (
-            await getFeatureFlag(allowlistDomainOnManualActivationFeatureFlag)
-        ) {
-            const currentDomainSetting = await getUserSettingForDomain(domain);
-            if (currentDomainSetting === null) {
-                setUserSettingsForDomain(domain, "allow");
-            }
-        }
-
         reportEnablePageView("manual");
     } else {
         // already active, so disable

@@ -25,6 +25,27 @@
     align-items: flex-end;
     gap: 5px;
 }
+#lindy-domain-switch-icon-container.lindy-domain-switch-wiggle {
+    animation: wiggle 0.5s ease-in-out;
+    animation-delay: 0.4s;
+}
+@keyframes wiggle {
+    0% {
+        transform: rotate(10deg);
+    }
+    25% {
+        transform: rotate(-20deg);
+    }
+    50% {
+        transform: rotate(10deg);
+    }
+    75% {
+        transform: rotate(-10deg);
+    }
+    100% {
+        transform: rotate(0deg);
+    }
+}
 
 .lindy-page-settings-topright > a {
     text-decoration: none !important;
