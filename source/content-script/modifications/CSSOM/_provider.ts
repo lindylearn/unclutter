@@ -14,18 +14,26 @@ export default class CSSOMProvider {
                 // Only consider applicable stylesheets
                 // e.g. 'print' at https://www.theguardian.com/world/2022/mar/25/russian-troops-mutiny-commander-ukraine-report-western-officials
                 // TODO also consider responsive styles that would become valid?
+                const ownerNode = sheet.ownerNode as HTMLElement | null;
 
                 if (
                     sheet.disabled ||
-                    sheet.ownerNode?.classList.contains(
-                        "lindylearn-document-override"
-                    ) ||
-                    sheet.ownerNode?.classList.contains("darkreader") ||
+                    ownerNode?.classList.contains("darkreader") ||
                     !window.matchMedia(sheet.media.mediaText).matches
                 ) {
                     // console.log(
                     //     `Excluding stylesheet with class ${sheet.ownerNode?.classList} and media condition '${sheet.media.mediaText}'`
                     // );
+                    return;
+                }
+
+                // Ignore extension overrides, but re-process stylesheets proxied in boot.js
+                if (
+                    ownerNode?.classList.contains(
+                        "lindylearn-document-override"
+                    ) &&
+                    !ownerNode?.classList.contains("lindy-stylesheet-proxy")
+                ) {
                     return;
                 }
 
@@ -71,13 +79,13 @@ export default class CSSOMProvider {
                         const element = createStylesheetText(
                             cssText,
                             "lindy-stylesheet-proxy",
-                            sheet.ownerNode // insert right after original element to keep original importance order
+                            ownerNode // insert right after original element to keep original importance order
                         );
 
                         if (sheet.ownerNode) {
                             // In theory this should never be null, but it can happen
                             // e.g. on https://theconversation.com/how-fast-can-we-stop-earth-from-warming-178295
-                            disableStylesheet(sheet.ownerNode, styleId);
+                            disableStylesheet(ownerNode, styleId);
                         }
 
                         return element.sheet;

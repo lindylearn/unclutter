@@ -33,7 +33,14 @@ async function boot() {
     if (configuredEnable) {
         enablePageView();
     } else if (enableUnclutterMessage) {
+        let loaded = false;
         window.addEventListener("load", function () {
+            if (loaded) {
+                // Sometimes this triggers multiple times, e.g. on https://www.smithsonianmag.com/science-nature/why-have-female-animals-evolved-such-wild-genitals-180979813/
+                return;
+            }
+            loaded = true;
+
             displayToast("Unclutter this article?", enablePageView);
         });
     }
