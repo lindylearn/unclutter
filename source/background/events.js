@@ -2,6 +2,7 @@ import { extensionSupportsUrl } from "../common/articleDetection";
 import {
     allowlistDomainOnManualActivationFeatureFlag,
     collectAnonymousMetricsFeatureFlag,
+    enableBootUnclutterMessage,
     getFeatureFlag,
     setFeatureFlag,
 } from "../common/featureFlags";
@@ -100,6 +101,7 @@ browser.runtime.onInstalled.addListener(async ({ reason }) => {
     if (isDevelopment) {
         // disable metrics in dev mode
         await setFeatureFlag(collectAnonymousMetricsFeatureFlag, false);
+        await setFeatureFlag(enableBootUnclutterMessage, true);
     }
 
     // report aggregates on enabled extension features

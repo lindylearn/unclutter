@@ -60,25 +60,42 @@ html.pageview > body {
     cursor: pointer;
     overflow: hidden;
 
-    transition: all 0.1s ease-in-out;
-    visibility: hidden;
-    opacity: 0;
-    transform: translate3d(200px, 0, 0);
+    animation: toastTimeout 5s;
+    animation-delay: 0.5s;
+    animation-fill-mode: both;
 }
-
+@keyframes toastTimeout {
+    0% {
+        visibility: hidden;
+        opacity: 0;
+        transform: translate3d(200px, 0, 0);
+    }
+    5% {
+        visibility: visible;
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+    95% {
+        visibility: visible;
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+    100% {
+        visibility: hidden;
+        opacity: 0;
+        transform: translate3d(10px, 0, 0);
+    }
+}
 .lindy-toast:hover {
+    animation-play-state: paused;
     box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1),
         0 8px 10px -6px rgb(0 0 0 / 0.1);
 }
-.lindy-toast-visible {
-    visibility: visible;
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-}
-.lindy-toast-expired {
-    visibility: hidden;
-    opacity: 0;
-    transform: translate3d(10px, 0, 0);
+.lindy-toast.lindy-toast-dismissed {
+    visibility: hidden !important;
+    opacity: 0 !important;
+    transform: translate3d(10px, 0, 0) !important;
+    /* dismiss fadeout transition not working at the moment */
 }
 
 .lindy-toast-content {
@@ -98,7 +115,7 @@ html.pageview > body {
     font-weight: 600;
     color: #1f2937;
     margin: 0 6px;
-    /* padding-top: 5px; */
+    margin-top: -3px;
 }
 
 .lindy-toast-progressbar {
@@ -106,14 +123,15 @@ html.pageview > body {
     height: 3px;
     background-color: #faf3ce;
 }
-.lindy-toast-visible > .lindy-toast-progressbar {
-    animation: progressBar 5s linear;
+.lindy-toast-progressbar {
+    animation: toastProgressBar 5s linear;
+    animation-delay: 0.5s;
     animation-fill-mode: both;
 }
-.lindy-toast-visible:hover > .lindy-toast-progressbar {
+.lindy-toast:hover > .lindy-toast-progressbar {
     animation-play-state: paused;
 }
-@keyframes progressBar {
+@keyframes toastProgressBar {
     0% {
         width: 0;
     }
