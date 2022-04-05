@@ -44,15 +44,6 @@ export default class TextContainerModifier implements PageModifier {
             // Use class twice for higher specifity
             `.${lindyTextContainerClass}.${lindyTextContainerClass}`
         );
-        this.containerSelectors.push(
-            paragraphSelector
-                .split(", ")
-                .map(
-                    (tag) =>
-                        `.${lindyTextContainerClass}.${lindyTextContainerClass} > ${tag}`
-                )
-                .join(", ")
-        );
 
         const seenNodes = new Set();
         const iterateParents = (elem: HTMLElement) => {
@@ -223,7 +214,7 @@ export default class TextContainerModifier implements PageModifier {
             relativeLineHeight = activeStyle.lineHeight;
         }
 
-        const fontSizeStyle = `${globalParagraphSelector} {
+        const fontSizeStyle = `.${lindyTextContainerClass}.${lindyTextContainerClass} {
             font-size: calc(var(${fontSizeThemeVariable}) * ${fontSizeNormalizationScale.toFixed(
             2
         )}) !important;
