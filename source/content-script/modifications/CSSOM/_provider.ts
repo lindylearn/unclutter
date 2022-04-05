@@ -1,6 +1,8 @@
 import { createStylesheetText } from "source/common/stylesheets";
 import browser from "../../../common/polyfill";
+import { trackModifierExecution } from "../_interface";
 
+@trackModifierExecution
 export default class CSSOMProvider {
     public stylesheets: CSSStyleSheet[];
 

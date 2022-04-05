@@ -33,7 +33,7 @@ async function boot() {
     if (configuredEnable) {
         enablePageView();
     } else if (enableUnclutterMessage) {
-        document.addEventListener("DOMContentLoaded", (event) => {
+        window.addEventListener("load", function () {
             displayToast("Unclutter this article?", enablePageView);
         });
     }

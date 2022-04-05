@@ -1,6 +1,12 @@
 import { insertHtml } from "source/common/html";
+import ContentBlockModifier from "../modifications/contentBlock";
+import ResponsiveStyleModifier from "../modifications/CSSOM/responsiveStyle";
+import CSSOMProvider from "../modifications/CSSOM/_provider";
 
-export function displayToast(message: string, onClick: () => void = () => {}) {
+export async function displayToast(
+    message: string,
+    onClick: () => void = () => {}
+) {
     const container = insertHtml(
         "lindy-toast lindy-toast-visible",
         `<div class="lindy-toast-content">
@@ -22,6 +28,24 @@ export function displayToast(message: string, onClick: () => void = () => {}) {
         setTimeout(() => {
             container.remove();
         }, 1000);
+
         onClick();
+    };
+
+    const contentBlockModifier = new ContentBlockModifier();
+    const cssomProvider = new CSSOMProvider();
+    const responsiveStyleModifier = new ResponsiveStyleModifier();
+
+    // run every time an article is potentially an article
+    await cssomProvider.prepare();
+    await responsiveStyleModifier.prepare(cssomProvider);
+
+    container.onmouseenter = () => {
+        contentBlockModifier.fadeOutNoise();
+        responsiveStyleModifier.fadeOutNoise();
+    };
+    container.onmouseleave = () => {
+        contentBlockModifier.fadeInNoise();
+        responsiveStyleModifier.fadeInNoise();
     };
 }
