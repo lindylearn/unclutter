@@ -53,10 +53,12 @@ html.pageview > body {
     top: 10px;
     right: 10px;
     z-index: 9999999999;
-    border-radius: 7px;
+    border-radius: 7px 7px 7px;
     background-color: #edd75b;
-    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1),
+        0 4px 6px -4px rgb(0 0 0 / 0.1);
     cursor: pointer;
+    overflow: hidden;
 
     transition: all 0.1s ease-in-out;
     visibility: hidden;
@@ -65,8 +67,8 @@ html.pageview > body {
 }
 
 .lindy-toast:hover {
-    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1),
-        0 4px 6px -4px rgb(0 0 0 / 0.1);
+    box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1),
+        0 8px 10px -6px rgb(0 0 0 / 0.1);
 }
 .lindy-toast-visible {
     visibility: visible;
@@ -80,13 +82,13 @@ html.pageview > body {
 }
 
 .lindy-toast-content {
-    padding: 5px;
+    padding: 3px;
     padding-bottom: 0;
     display: flex;
-    gap: 5px;
+    align-items: center;
 }
 .lindy-toast-icon {
-    width: 45px;
+    width: 32px;
     color: #1f2937;
 }
 .lindy-toast-message {
@@ -95,19 +97,17 @@ html.pageview > body {
     font-size: 15px;
     font-weight: 600;
     color: #1f2937;
-    padding-top: 5px;
+    margin: 0 6px;
+    /* padding-top: 5px; */
 }
 
 .lindy-toast-progressbar {
     width: 100%;
-    height: 3.5px;
-    background-color: #4b5563;
-    /* margin-bottom: 5px; */
-
-    border-radius: 0 0 0 7px;
+    height: 3px;
+    background-color: #faf3ce;
 }
 .lindy-toast-visible > .lindy-toast-progressbar {
-    animation: progressBar 4s linear;
+    animation: progressBar 5s linear;
     animation-fill-mode: both;
 }
 .lindy-toast-visible:hover > .lindy-toast-progressbar {

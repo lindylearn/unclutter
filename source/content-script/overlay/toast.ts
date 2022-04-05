@@ -17,11 +17,13 @@ export function displayToast(message: string, onClick: () => void = () => {}) {
         <div class="lindy-toast-progressbar"></div>`
     );
 
-    container.classList.add("lindy-toast-visible");
+    setTimeout(() => {
+        container.classList.add("lindy-toast-visible");
+    }, 300);
 
     setTimeout(() => {
         container.classList.add("lindy-toast-expired");
-    }, 4000);
+    }, 5000);
 
     container.onclick = () => {
         container.classList.add("lindy-toast-expired");

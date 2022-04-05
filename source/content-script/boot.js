@@ -1,6 +1,8 @@
 import { getDomainFrom } from "source/common/util";
-import isConfiguredToEnable, {
+import {
     extensionSupportsUrl,
+    isConfiguredToEnable,
+    isDeniedForDomain,
     isNonLeafPage,
 } from "../common/articleDetection";
 import browser from "../common/polyfill";
@@ -12,18 +14,21 @@ async function boot() {
     const url = new URL(window.location.href);
     const domain = getDomainFrom(url);
 
-    // don't do anything for unsupported or likely non-article pages
     if (!extensionSupportsUrl(url) || isNonLeafPage(url)) {
-        console.log("non-leaf");
+        return;
+    }
+    const deniedForDomain = await isDeniedForDomain(domain);
+    if (deniedForDomain) {
         return;
     }
 
     const configuredEnable = await isConfiguredToEnable(domain);
-    console.log("configuredEnable", configuredEnable);
     if (configuredEnable) {
         enablePageView();
     } else {
-        displayToast("Unclutter this article?", enablePageView);
+        document.addEventListener("DOMContentLoaded", (event) => {
+            displayToast("Unclutter this article?", enablePageView);
+        });
     }
 }
 

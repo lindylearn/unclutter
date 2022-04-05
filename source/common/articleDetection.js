@@ -86,21 +86,20 @@ export function isNonLeafPage(url) {
     return false;
 }
 
+export async function isDeniedForDomain(domain) {
+    const domainUserSetting = await getUserSettingForDomain(domain);
+    return (
+        domainUserSetting === "deny" || defaultExcludedDomains.includes(domain)
+    );
+}
+
 // Determine whether to unclutter a specific web page
 // See docs in /docs/article-detection.md
-export default async function isConfiguredToEnable(domain) {
+export async function isConfiguredToEnable(domain) {
     // Follow user settings for domain
     const domainUserSetting = await getUserSettingForDomain(domain);
     if (domainUserSetting === "allow") {
         return true;
-    }
-    if (domainUserSetting === "deny") {
-        return false;
-    }
-
-    // Follow default settings for domain
-    if (defaultExcludedDomains.includes(domain)) {
-        return false;
     }
 
     // Enable if automatic mode active

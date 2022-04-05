@@ -274,6 +274,7 @@ const asideWordBlocklist = [
     "consent",
     "cookies",
     "overlay",
+    "popup",
 ];
 function _isAsideEquivalent(node) {
     return (
