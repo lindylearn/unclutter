@@ -61,7 +61,7 @@ html.pageview > body {
     overflow: hidden;
 
     animation: toastTimeout 5s;
-    animation-delay: 0.5s;
+    animation-delay: 0.75s;
     animation-fill-mode: both;
 }
 @keyframes toastTimeout {
