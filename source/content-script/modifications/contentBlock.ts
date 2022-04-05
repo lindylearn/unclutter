@@ -12,7 +12,8 @@ export default class ContentBlockModifier implements PageModifier {
     private selectors: string[];
     constructor() {
         const classWordSelectors = blockedWords.map(
-            (word) => `*:not(html):not(body):not(article)[class*=${word} i]`
+            (word) =>
+                `*:not(html):not(body):not(article):not(.lindy-text-container)[class*=${word} i]`
         );
         const idSelectors = blockedWords.map((word) => `[id*=${word} i]`);
         const roleSelectors = blockedWords.map((word) => `[role*=${word} i]`);
