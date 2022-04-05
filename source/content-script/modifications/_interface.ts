@@ -25,6 +25,8 @@ const trackedMethods = new Set([
     "fadeInNoise",
 ]);
 export function trackModifierExecution(target: Function) {
+    return;
+
     const className = target.name;
     const descriptors = Object.getOwnPropertyDescriptors(target.prototype);
     for (const [propName, descriptor] of Object.entries(descriptors)) {

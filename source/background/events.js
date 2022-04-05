@@ -5,6 +5,7 @@ import {
     enableBootUnclutterMessage,
     getFeatureFlag,
     setFeatureFlag,
+    showDebugInfo,
 } from "../common/featureFlags";
 import {
     reportDisablePageView,
@@ -102,6 +103,7 @@ browser.runtime.onInstalled.addListener(async ({ reason }) => {
         // disable metrics in dev mode
         await setFeatureFlag(collectAnonymousMetricsFeatureFlag, false);
         await setFeatureFlag(enableBootUnclutterMessage, true);
+        await setFeatureFlag(showDebugInfo, true);
     }
 
     // report aggregates on enabled extension features
