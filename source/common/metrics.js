@@ -14,6 +14,7 @@ export async function reportEvent(name, data = {}, isDev = false) {
         collectAnonymousMetricsFeatureFlag
     );
     if (!metricsEnabled) {
+        // console.log(name, data);
         return;
     }
 
@@ -78,7 +79,7 @@ export async function reportEnablePageView(trigger) {
     pageViewEnableStartTime = new Date();
 }
 
-export async function reportDisablePageView(trigger) {
+export async function reportDisablePageView(trigger, pageHeightPx) {
     let activeSeconds;
     if (pageViewEnableStartTime) {
         activeSeconds = (new Date() - pageViewEnableStartTime) / 1000;
@@ -86,15 +87,15 @@ export async function reportDisablePageView(trigger) {
     reportEvent("disablePageview", {
         trigger,
         enableTrigger: pageViewEnableTrigger,
-        elapsedTime: _bucketSeconds(activeSeconds),
+        elapsedTime: _bucketMetric(secondsBuckets, activeSeconds),
+        pageHeightPx: _bucketMetric(pageHeightPxBuckets, pageHeightPx),
     });
 }
 
-const secondBuckets = [0, 5, 10, 15, 30, 60, 120, 240, 480, 960, 1920, 3840];
-function _bucketSeconds(seconds) {
-    const matchingBuckets = secondBuckets.filter(
-        (breakpoint) => seconds >= breakpoint
-    );
+const secondsBuckets = [0, 5, 10, 15, 30, 60, 120, 240, 480, 960, 1920, 3840];
+const pageHeightPxBuckets = [0, 500, 2000, 10000, 50000, 200000];
+function _bucketMetric(buckets, value) {
+    const matchingBuckets = buckets.filter((breakpoint) => value >= breakpoint);
 
     // return last bucket the numbers falls into
     return matchingBuckets[matchingBuckets.length - 1];

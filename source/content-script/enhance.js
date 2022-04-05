@@ -16,7 +16,16 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
         sendResponse({ pageViewEnabled });
         return true;
     } else if (message.event === "togglePageView") {
-        togglePageView();
+        togglePageView().then((enabledNow) => {
+            if (!enabledNow) {
+                browser.runtime.sendMessage(null, {
+                    event: "disabledPageView",
+                    trigger: "extensionIcon",
+                    pageHeightPx: document.body.clientHeight,
+                });
+            }
+        });
+
         return false;
     }
 });
@@ -25,10 +34,10 @@ let isSimulatedClick = false;
 export async function togglePageView() {
     // manually toggle pageview status in this tab
 
-    const pageViewEnabled =
+    const alreadyEnabled =
         document.documentElement.classList.contains("pageview");
 
-    if (!pageViewEnabled) {
+    if (!alreadyEnabled) {
         const transitions = new TransitionManager();
         await transitions.prepare();
 
@@ -50,6 +59,7 @@ export async function togglePageView() {
                 browser.runtime.sendMessage(null, {
                     event: "disabledPageView",
                     trigger: "backgroundClick",
+                    pageHeightPx: document.body.clientHeight,
                 });
             }
 
@@ -58,10 +68,12 @@ export async function togglePageView() {
         }, true);
 
         await transitions.afterTransitionIn();
+        return true;
     } else {
         // hack: simulate click to call disable handlers with correct state (also from boot.js)
         isSimulatedClick = true;
         document.documentElement.click();
+        return false;
     }
 }
 
@@ -72,34 +84,6 @@ async function enhance() {
 
     if (!pageViewEnabled) {
         togglePageView();
-        return;
     }
-    // use normal enhance workflow for now
-
-    // console.log("enhance page");
-
-    // const domain = getDomainFrom(new URL(window.location.href));
-
-    // const [contentBlockFadeOut, contentBlockHide, contentBlockFadeIn] =
-    //     insertContentBlockStyle();
-
-    // const [fadeOutDom, patchDom] = iterateDOM();
-    // fadeOutDom();
-
-    // initTheme(domain);
-    // insertBackground();
-
-    // pageViewTransition(domain, () => {}, contentBlockHide, patchDom);
-
-    // // attach additional style unpatch functionality on pageview hide
-    // document.documentElement.addEventListener(
-    //     "click",
-    //     (event) => {
-    //         if (event.target.tagName === "HTML") {
-    //             disableStyleChanges();
-    //         }
-    //     },
-    //     true
-    // );
 }
 enhance();

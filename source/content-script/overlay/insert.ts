@@ -137,6 +137,7 @@ async function _setupDomainToggleState(currentDomain: string) {
             browser.runtime.sendMessage(null, {
                 event: "disabledPageView",
                 trigger: "blocklistDomain",
+                pageHeightPx: document.body.clientHeight,
             });
         }
 

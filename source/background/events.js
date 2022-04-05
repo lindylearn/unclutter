@@ -28,13 +28,6 @@ import { getDomainFrom } from "../common/util";
     }
 
     const didEnable = await enableInTab(tab.id);
-    if (!didEnable) {
-        // already active, so disable
-        togglePageViewMessage(tab.id);
-
-        reportDisablePageView("extensionIcon");
-    }
-
     if (didEnable) {
         // if enabled, allowlist current domain if user manually actives extension
         if (
@@ -47,6 +40,9 @@ import { getDomainFrom } from "../common/util";
         }
 
         reportEnablePageView("manual");
+    } else {
+        // already active, so disable
+        togglePageViewMessage(tab.id);
     }
 });
 
@@ -55,7 +51,7 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
     console.log(`Received '${message.event}' message:`, message);
 
     if (message.event === "disabledPageView") {
-        reportDisablePageView(message.trigger);
+        reportDisablePageView(message.trigger, message.pageHeightPx);
     } else if (message.event === "requestEnhance") {
         // event sent from boot.js to inject additional functionality
         // browser apis are only available in scripts injected from background scripts or manifest.json
