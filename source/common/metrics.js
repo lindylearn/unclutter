@@ -59,7 +59,6 @@ export async function reportSettings(version, isNewInstall) {
     const domainSettings = {
         allowlistedCount: lists.allow.length,
         blocklistedCount: lists.deny.length,
-        customThemeCount: Object.keys(lists.themes).length,
     };
 
     reportEvent("reportSettings", {
