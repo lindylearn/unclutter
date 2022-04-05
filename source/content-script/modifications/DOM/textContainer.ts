@@ -266,6 +266,11 @@ const asideWordBlocklist = [
     "alert",
     "message",
     "nav",
+    "menu",
+    "privacy",
+    "consent",
+    "cookies",
+    "overlay",
 ];
 function _isAsideEquivalent(node) {
     return (
@@ -314,7 +319,8 @@ function _getNodeOverrideStyles(node, activeStyle) {
     // Remove horizontal flex partitioning
     // e.g. https://www.nationalgeographic.com/science/article/the-controversial-quest-to-make-a-contagious-vaccine
     if (activeStyle.display === "flex" && activeStyle.flexDirection === "row") {
-        overrideCssDeclarations.push(`display: block !important;`);
+        overrideCssDeclarations.push(`display: block;`);
+        // careful to not overwrite content block, e.g. aside on https://www.quantamagazine.org/father-son-team-solves-geometry-problem-with-infinite-folds-20220404/
         // TODO hide siblings instead
     }
 
