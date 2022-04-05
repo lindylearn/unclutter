@@ -206,7 +206,10 @@ export default class TextContainerModifier implements PageModifier {
 
         largestElem.appendChild(measureDiv);
         const xHeight = measureDiv.getBoundingClientRect().height;
-        const fontSizeNormalizationScale = 10 / xHeight;
+        let fontSizeNormalizationScale = 1;
+        if (xHeight && xHeight !== 0) {
+            fontSizeNormalizationScale = 10 / xHeight;
+        }
         measureDiv.remove();
 
         // Convert line-height to relative and specify override in case it was set as px

@@ -98,7 +98,7 @@ const blockedWords = [
     "video",
     "newslettersignup",
     // "sticky", // https://news.yahoo.com/exclusive-secret-cia-training-program-in-ukraine-helped-kyiv-prepare-for-russian-invasion-090052743.html?guccounter=2
-    "share",
+    // "share", 'no-share' https://www.whichev.net/2022/03/29/theion-sulphur-crystal-batteries-promise-breakthrough-in-energy-density/
 ];
 const blockedClasses = [
     ".ad",
