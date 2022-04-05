@@ -1,3 +1,4 @@
+import { insertHtml } from "source/common/html";
 import { reportEvent } from "../../common/metrics";
 import browser from "../../common/polyfill";
 import {
@@ -6,10 +7,7 @@ import {
     getUserTheme,
     setUserSettingsForDomain,
 } from "../../common/storage";
-import {
-    createStylesheetLink,
-    overrideClassname,
-} from "../../common/stylesheets";
+import { createStylesheetLink } from "../../common/stylesheets";
 import {
     applySaveThemeOverride,
     fontSizeThemeVariable,
@@ -32,7 +30,7 @@ export function insertPageSettings(
         `The following article doesn't appear correctly in Unclutter. Please take a look!\n\n${window.location.href}`
     )}`;
 
-    _insertHtml(
+    insertHtml(
         "lindy-page-settings-topright",
         `<div class="lindy-tooltip lindy-fade" data-title="Unclutter settings">
             <svg class="lindy-ui-icon" id="lindy-settings-icon" viewBox="0 0 512 512">
@@ -94,7 +92,7 @@ export function insertPageSettings(
         </div>`
     );
 
-    _insertHtml(
+    insertHtml(
         "lindy-page-settings-pageadjacent",
         `<div id="lindy-domain-switch-icon-container" class="lindy-tooltip lindy-tooltip-reverse lindy-fade">
             <!-- <svg> inserted in _setupDomainToggleState() below  -->
@@ -109,14 +107,6 @@ export function insertPageSettings(
     _setupDomainToggleState(domain);
     _setupLinkHandlers();
     _setupThemePopupHandlers(domain, themeModifier);
-}
-
-function _insertHtml(className: string, html: string) {
-    const container = document.createElement("div");
-    container.className = `${overrideClassname} ${className}`;
-    container.id = className;
-    container.innerHTML = html;
-    document.documentElement.appendChild(container);
 }
 
 async function _setupDomainToggleState(currentDomain: string) {
@@ -272,12 +262,3 @@ export function highlightActiveColorThemeButton(themeName: themeName) {
         .getElementById(`lindy-${themeName}-theme-button`)
         ?.classList.add("lindy-active-theme");
 }
-
-// Insert text behind the <body> background in case the site fails to render.
-// export function insertPageBrokenText() {
-//     const div = document.createElement("div");
-//     div.className = `${overrideClassname} lindy-page-broken`;
-//     div.innerHTML =
-//         ":( Page broken?<br />Please report it <a href='https://github.com/lindylearn/reader-extension/issues/new' target='_blank' rel='noopener noreferrer'>on GitHub</a>.";
-//     document.documentElement.appendChild(div);
-// }
