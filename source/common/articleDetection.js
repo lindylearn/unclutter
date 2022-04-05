@@ -6,45 +6,39 @@ import {
 import { getUserSettingForDomain } from "./storage";
 import { getDomainFrom } from "./util";
 
-// Determine whether to unclutter a specific web page
-// See docs in /docs/article-detection.md
-export default async function shouldEnableOnURL(urlText) {
-    const url = new URL(urlText);
-    const domain = getDomainFrom(url);
+/*
+TODO: the following urls should be enabled but are not:
+    https://journals.sagepub.com/doi/10.1177/01461672221079104
 
-    if (!extensionSupportsUrl(url)) {
-        return false;
-    }
+    https://words.filippo.io/pay-maintainers/
+    https://www.sledgeworx.io/software-leviathans/
 
-    // Exclude non-leaf pages
-    if (_isNonLeafPage(url)) {
-        return false;
-    }
+TODO: should not be enabled here:
+    https://www.nytimes.com/interactive/2022/03/11/nyregion/nyc-chinatown-signs.html
+    https://www.theatlantic.com/projects/america-in-person/
+*/
 
-    // Follow user settings for domain
-    const domainUserSetting = await getUserSettingForDomain(domain);
-    if (domainUserSetting === "allow") {
-        return true;
-    }
-    if (domainUserSetting === "deny") {
-        return false;
-    }
-
-    // Follow default settings for domain
-    if (defaultExcludedDomains.includes(domain)) {
-        return false;
-    }
-
-    // Enable if automatic mode active
-    const automaticModeEnabled = await getFeatureFlag(
-        automaticallyEnabledFeatureFlag
-    );
-    return automaticModeEnabled;
+// If the extension technically supports this extension
+export function extensionSupportsUrl(url) {
+    const fileExtension = url.pathname.split(".").pop();
+    // Can't easily detect blank html path, so blocklist unsupported instead
+    return ![
+        "pdf",
+        "png",
+        "gif",
+        "jpg",
+        "jpeg",
+        "webp",
+        "mp3",
+        "mp4",
+        "css",
+        "js",
+    ].includes(fileExtension);
 }
 
 // Exclude non-leaf directory pages like bbc.com or bcc.com/news.
 // This uses heurstics and won't always be accurate.
-function _isNonLeafPage(url) {
+export function isNonLeafPage(url) {
     // Very likely not articles
     if (url.pathname === "/") {
         return true;
@@ -92,32 +86,26 @@ function _isNonLeafPage(url) {
     return false;
 }
 
-/*
-TODO: the following urls should be enabled but are not:
-    https://journals.sagepub.com/doi/10.1177/01461672221079104
+// Determine whether to unclutter a specific web page
+// See docs in /docs/article-detection.md
+export default async function isConfiguredToEnable(domain) {
+    // Follow user settings for domain
+    const domainUserSetting = await getUserSettingForDomain(domain);
+    if (domainUserSetting === "allow") {
+        return true;
+    }
+    if (domainUserSetting === "deny") {
+        return false;
+    }
 
-    https://words.filippo.io/pay-maintainers/
-    https://www.sledgeworx.io/software-leviathans/
+    // Follow default settings for domain
+    if (defaultExcludedDomains.includes(domain)) {
+        return false;
+    }
 
-TODO: should not be enabled here:
-    https://www.nytimes.com/interactive/2022/03/11/nyregion/nyc-chinatown-signs.html
-    https://www.theatlantic.com/projects/america-in-person/
-*/
-
-// If the extension technically supports this extension
-export function extensionSupportsUrl(url) {
-    const fileExtension = url.pathname.split(".").pop();
-    // Can't easily detect blank html path, so blocklist unsupported instead
-    return ![
-        "pdf",
-        "png",
-        "gif",
-        "jpg",
-        "jpeg",
-        "webp",
-        "mp3",
-        "mp4",
-        "css",
-        "js",
-    ].includes(fileExtension);
+    // Enable if automatic mode active
+    const automaticModeEnabled = await getFeatureFlag(
+        automaticallyEnabledFeatureFlag
+    );
+    return automaticModeEnabled;
 }
