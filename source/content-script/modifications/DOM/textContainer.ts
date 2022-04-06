@@ -42,21 +42,17 @@ export default class TextContainerModifier implements PageModifier {
         }
 
         // text elements to apply styles to (e.g. font change)
-        this.textParagraphSelectors.push(
+        this.textParagraphSelectors = [
             // Use class twice for higher specifity
-            `.${lindyTextContainerClass}.${lindyTextContainerClass}`
-        );
-        this.textParagraphSelectors.push(
-            ...paragraphTagSelector
-                .split(", ")
-                .concat(["a"])
-                .map((tag) => `.${lindyTextContainerClass} > ${tag}`)
-        );
+            `.${lindyTextContainerClass}.${lindyTextContainerClass}`,
+            `.${lindyTextContainerClass} > *`,
+        ];
 
         // text element container to remove margin from
-        this.containerSelectors.push(
-            `.${lindyTextContainerClass}.${lindyTextContainerClass}`
-        );
+        this.containerSelectors = [
+            `.${lindyTextContainerClass}.${lindyTextContainerClass}`,
+            `.${lindyTextContainerClass} > *`,
+        ];
 
         const seenNodes = new Set();
         const iterateParents = (elem: HTMLElement) => {
