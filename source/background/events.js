@@ -1,7 +1,6 @@
 import { extensionSupportsUrl } from "../common/articleDetection";
 import {
     collectAnonymousMetricsFeatureFlag,
-    enableBootUnclutterMessage,
     setFeatureFlag,
     showDebugInfo,
 } from "../common/featureFlags";
@@ -87,7 +86,6 @@ browser.runtime.onInstalled.addListener(async ({ reason }) => {
     if (isDevelopment) {
         // disable metrics in dev mode
         await setFeatureFlag(collectAnonymousMetricsFeatureFlag, false);
-        await setFeatureFlag(enableBootUnclutterMessage, true);
         await setFeatureFlag(showDebugInfo, true);
     }
 

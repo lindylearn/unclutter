@@ -1,6 +1,10 @@
 import browser from "./polyfill";
 
 export async function getFeatureFlag(key) {
+    if (key in featureFlagOverrides) {
+        return featureFlagOverrides[key];
+    }
+
     const config = await browser.storage.sync.get([key]);
     return config[key] !== undefined ? config[key] : defaultFeatureFlags[key];
 }
@@ -20,4 +24,8 @@ export const defaultFeatureFlags = {
     [collectAnonymousMetricsFeatureFlag]: true,
     [enableBootUnclutterMessage]: true,
     [showDebugInfo]: false,
+};
+
+export const featureFlagOverrides = {
+    [automaticallyEnabledFeatureFlag]: false, // deprecate for now
 };
