@@ -10,25 +10,26 @@ import {
     reportSettings,
 } from "../common/metrics";
 import browser from "../common/polyfill";
-import { getDomainFrom } from "../common/util";
 
 // toggle page view on extension icon click
-(chrome.action || browser.browserAction).onClicked.addListener(async (tab) => {
+(chrome.action || browser.browserAction).onClicked.addListener((tab) => {
     const url = new URL(tab.url);
-    const domain = getDomainFrom(url);
 
     if (!extensionSupportsUrl(url)) {
         // ideally show some error message here
         return;
     }
 
-    const didEnable = await enableInTab(tab.id);
-    if (didEnable) {
-        reportEnablePageView("manual");
-    } else {
-        // already active, so disable
-        togglePageViewMessage(tab.id);
-    }
+    enableInTab(tab.id).then((didEnable) => {
+        if (didEnable) {
+            reportEnablePageView("manual");
+        } else {
+            // already active, so disable
+            togglePageViewMessage(tab.id);
+        }
+    });
+
+    requestOptionalPermissions();
 });
 
 // events from content scripts or popup view
@@ -133,34 +134,44 @@ async function _injectScript(tabId, filePath) {
     }
 }
 
-function installContextMenu() {
+async function _installContextMenu() {
+    console.log("Registering context menu ...");
+
     const menuOptions = {
-        id: "unclutter-link",
-        title: "Open link with Unclutter",
+        title: "Open Link with Unclutter 3",
         contexts: ["link"],
     };
-    try {
-        browser.contextMenus.create(menuOptions);
-    } catch {
-        browser.contextMenus.update(menuOptions.id, menuOptions);
-    }
+    browser.contextMenus.update("unclutter-link", menuOptions);
 
     browser.contextMenus.onClicked.addListener((info, tab) => {
-        switch (info.menuItemId) {
-            case "unclutter-link":
-                browser.tabs.create(
-                    { url: info.linkUrl, active: true },
-                    (tab) => {
-                        // need to wait until loaded, as have no permissions on new tab page
-                        setTimeout(() => {
-                            _injectScript(tab.id, "content-script/enhance.js");
-                        }, 1000);
-                        reportEnablePageView("contextMenu");
-                    }
-                );
-                break;
+        if (info.menuItemId === "unclutter-link") {
+            browser.tabs.create({ url: info.linkUrl, active: true }, (tab) => {
+                // need to wait until loaded, as have no permissions on new tab page
+                setTimeout(() => {
+                    _injectScript(tab.id, "content-script/enhance.js");
+                }, 1000);
+                reportEnablePageView("contextMenu");
+            });
         }
     });
 }
 
-installContextMenu();
+// only run one time after each update
+let requestedOptionalPermissions = false;
+function requestOptionalPermissions() {
+    if (requestedOptionalPermissions) {
+        return;
+    }
+    requestedOptionalPermissions = true;
+
+    console.log("Requesting optional permissions ...");
+
+    // need to request permissions as part of user action, so can't use async functions
+    browser.permissions
+        .request({
+            permissions: ["contextMenus"],
+        })
+        .then(() => {
+            _installContextMenu();
+        });
+}
