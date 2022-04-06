@@ -138,9 +138,11 @@ async function _installContextMenu() {
     console.log("Registering context menu ...");
 
     const menuOptions = {
-        title: "Open Link with Unclutter 3",
+        title: "Open Link with Unclutter",
         contexts: ["link"],
     };
+
+    browser.contextMenus.create({ ...menuOptions, id: "unclutter-link" });
     browser.contextMenus.update("unclutter-link", menuOptions);
 
     browser.contextMenus.onClicked.addListener((info, tab) => {
@@ -167,11 +169,15 @@ function requestOptionalPermissions() {
     console.log("Requesting optional permissions ...");
 
     // need to request permissions as part of user action, so can't use async functions
-    browser.permissions
-        .request({
-            permissions: ["contextMenus"],
-        })
-        .then(() => {
-            _installContextMenu();
-        });
+    try {
+        browser.permissions
+            .request({
+                permissions: ["contextMenus"],
+            })
+            .then(() => {
+                _installContextMenu();
+            });
+    } catch {
+        _installContextMenu();
+    }
 }
