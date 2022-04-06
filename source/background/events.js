@@ -10,7 +10,6 @@ import {
     reportSettings,
 } from "../common/metrics";
 import browser from "../common/polyfill";
-import { getUserSettingForDomain } from "../common/storage";
 import { getDomainFrom } from "../common/util";
 
 // toggle page view on extension icon click
@@ -44,12 +43,7 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
         console.log("boot.js requested injection into tab");
         _injectScript(sender.tab.id, "content-script/enhance.js");
 
-        const domain = getDomainFrom(new URL(sender.tab.url));
-        getUserSettingForDomain(domain).then((userDomainSetting) =>
-            reportEnablePageView(
-                userDomainSetting === "allow" ? "allowlisted" : "automatic"
-            )
-        );
+        reportEnablePageView(message.trigger);
     } else if (message.event === "openOptionsPage") {
         chrome.runtime.openOptionsPage();
     } else if (message.event === "fetchCss") {

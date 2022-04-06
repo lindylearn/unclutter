@@ -31,7 +31,7 @@ async function boot() {
         enableBootUnclutterMessage
     );
     if (configuredEnable) {
-        enablePageView();
+        enablePageView("allowlisted");
     } else if (enableUnclutterMessage) {
         let loaded = false;
         window.addEventListener("load", function () {
@@ -41,15 +41,18 @@ async function boot() {
             }
             loaded = true;
 
-            displayToast("Unclutter this article?", enablePageView);
+            displayToast("Unclutter this article?", () => {
+                enablePageView("message");
+            });
         });
     }
 }
 
-function enablePageView() {
+function enablePageView(trigger) {
     // request injection of additional extension functionality
     browser.runtime.sendMessage(null, {
         event: "requestEnhance",
+        trigger,
     });
 }
 
