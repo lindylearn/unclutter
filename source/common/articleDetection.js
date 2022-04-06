@@ -52,11 +52,15 @@ export function isNonLeafPage(url) {
         https://www.atlasobscura.com/articles/what-is-tomato-soup-cake
         https://www.moderndescartes.com/essays/deep_learning_emr/
     */
-    if (url.pathname.match(/\/(posts|wiki|blog|articles|essays)\//)) {
+    if (
+        url.pathname.match(
+            /\/(post|posts|wiki|blog|article|articles|essays|doi)\//
+        )
+    ) {
         return false;
     }
 
-    // Exlude URLs where the following checks fail]
+    // Exlude URLs where the following checks fail
     const excludedDomains = [
         "paulgraham.com",
         "sive.rs",
@@ -79,11 +83,11 @@ export function isNonLeafPage(url) {
         https://www.msn.com/nl-nl/
     */
     const dashCount = url.pathname.match(/\-/g)?.length || 0;
-    if (dashCount <= 1) {
-        return true;
+    if (dashCount >= 2) {
+        return false;
     }
 
-    return false;
+    return true;
 }
 
 export async function isDeniedForDomain(domain) {

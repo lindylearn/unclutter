@@ -451,9 +451,7 @@ div[data-module-zone="header"] {
     display: none !important;
 }
 
-#cx-what-to-read-next,
-.Box-sc-m4230u-0,
-.Box-sc-m4230u-0 ~ * {
+#cx-what-to-read-next {
     display: none !important;
 }
 
@@ -569,7 +567,6 @@ body.fastcompany {
     opacity: 1 !important;
     visibility: visible !important;
 }
-.wafer-rapid-module,
 .xray-side-rail,
 #HeadlineSection {
     display: none !important;

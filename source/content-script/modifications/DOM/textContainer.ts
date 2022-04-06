@@ -45,13 +45,20 @@ export default class TextContainerModifier implements PageModifier {
         this.textParagraphSelectors = [
             // Use class twice for higher specifity
             `.${lindyTextContainerClass}.${lindyTextContainerClass}`,
-            `.${lindyTextContainerClass} > *`,
+            // exclude h1 tags
+            ...globalParagraphSelector
+                .split(", ")
+                .concat("a")
+                .map((tag) => `.${lindyTextContainerClass} > ${tag}`),
         ];
 
         // text element container to remove margin from
         this.containerSelectors = [
             `.${lindyTextContainerClass}.${lindyTextContainerClass}`,
-            `.${lindyTextContainerClass} > *`,
+            ...globalParagraphSelector
+                .split(", ")
+                .concat("a")
+                .map((tag) => `.${lindyTextContainerClass} > ${tag}`),
         ];
 
         const seenNodes = new Set();
@@ -91,7 +98,7 @@ export default class TextContainerModifier implements PageModifier {
                         !activeStyle.backgroundColor.includes("0.") &&
                         !activeStyle.backgroundColor.includes("%")
                     ) {
-                        console.log(activeStyle.backgroundColor, currentElem);
+                        // console.log(activeStyle.backgroundColor, currentElem);
                         this.backgroundColors.push(activeStyle.backgroundColor);
                     }
                 }
@@ -277,6 +284,7 @@ const asideWordBlocklist = [
     "popup",
     "caption",
     "gallery",
+    "ad",
 ];
 function _isAsideEquivalent(node) {
     return (
@@ -325,7 +333,7 @@ function _getNodeOverrideStyles(node, activeStyle) {
     // Remove horizontal flex partitioning
     // e.g. https://www.nationalgeographic.com/science/article/the-controversial-quest-to-make-a-contagious-vaccine
     if (activeStyle.display === "flex" && activeStyle.flexDirection === "row") {
-        overrideCssDeclarations.push(`display: block;`);
+        overrideCssDeclarations.push(`display: block !important;`);
         // careful to not overwrite content block, e.g. aside on https://www.quantamagazine.org/father-son-team-solves-geometry-problem-with-infinite-folds-20220404/
         // TODO hide siblings instead
     }
@@ -335,10 +343,10 @@ function _getNodeOverrideStyles(node, activeStyle) {
     // https://www.trickster.dev/post/decrypting-your-own-https-traffic-with-wireshark/
     if (activeStyle.display === "grid") {
         overrideCssDeclarations.push(`
-            display: block;
-            grid-template-columns: 1fr;
-            grid-template-areas: none;
-            column-gap: 0;
+            display: block !important;
+            grid-template-columns: 1fr !important;
+            grid-template-areas: none !important;
+            column-gap: 0 !important;
         `);
     }
 
