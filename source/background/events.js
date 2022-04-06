@@ -142,7 +142,11 @@ async function _installContextMenu() {
         contexts: ["link"],
     };
 
-    browser.contextMenus.create({ ...menuOptions, id: "unclutter-link" });
+    try {
+        browser.contextMenus.create({ ...menuOptions, id: "unclutter-link" });
+    } catch {
+        console.log(runtime.lastError);
+    }
     browser.contextMenus.update("unclutter-link", menuOptions);
 
     browser.contextMenus.onClicked.addListener((info, tab) => {
@@ -178,6 +182,8 @@ function requestOptionalPermissions() {
                 _installContextMenu();
             });
     } catch {
-        _installContextMenu();
+        try {
+            _installContextMenu();
+        } catch {}
     }
 }

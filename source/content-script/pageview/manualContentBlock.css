@@ -99,6 +99,9 @@
 #postBody ~ * {
     display: none !important;
 }
+aside.post__sidebar.post__sidebar {
+    display: none !important;
+}
 
 /* https://restofworld.org/2021/lost-in-translation-the-global-streaming-boom-is-creating-a-translator-shortage/ */
 main {
