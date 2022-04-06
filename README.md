@@ -1,8 +1,11 @@
-# Unclutter Browser Extension
+# Unclutter -- Immersive Reading Mode
 
-A browser extension to automatically remove distractions from web articles. Contributions are welcome!
+A browser extension to remove distractions from web articles.
 
-![Alt Text](./media/design-demo.gif)
+[<img src="./media/chrome-badge.png" height="80">](https://chrome.google.com/webstore/detail/unclutter-immersive-readi/ibckhpijbdmdobhhhodkceffdngnglpk)
+[<img src="./media/firefox-badge.png" height="70">](https://addons.mozilla.org/en-GB/firefox/addon/lindylearn/)
+
+![Demo video](./media/design-demo.gif)
 
 ## Features
 
@@ -17,9 +20,7 @@ A browser extension to automatically remove distractions from web articles. Cont
 -   The annotation sidebar stays open, so you always see all your in-progress notes while reading.
 -   In addition to public web annotations, the extension also shows inline quote comments parsed from Hacker News. -->
 
-## Installation
-
-Install the extension from the [Chrome Web Store](https://chrome.google.com/webstore/detail/lindylearn-annotations/ibckhpijbdmdobhhhodkceffdngnglpk) or [Mozilla Add-on Store](https://addons.mozilla.org/en-GB/firefox/addon/lindylearn/).
+.
 
 <!-- ## Contributing
 
