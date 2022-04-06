@@ -20,6 +20,7 @@ export default class TextContainerModifier implements PageModifier {
 
     // Collect elements that contain text nodes
     private containerSelectors = [];
+    private textParagraphSelectors = [];
     // Collect overrides for specific container elements (insert as stylesheet for easy unpatching)
     private overrideCssDeclarations = [];
     // Remember background colors on text containers
@@ -33,15 +34,27 @@ export default class TextContainerModifier implements PageModifier {
     }
 
     async prepare() {
-        let paragraphSelector = globalParagraphSelector;
-        let paragraphs = document.body.querySelectorAll(paragraphSelector);
+        let paragraphTagSelector = globalParagraphSelector;
+        let paragraphs = document.body.querySelectorAll(paragraphTagSelector);
         if (paragraphs.length === 0) {
-            paragraphSelector = "div, span";
-            paragraphs = document.body.querySelectorAll(paragraphSelector);
+            paragraphTagSelector = "div, span";
+            paragraphs = document.body.querySelectorAll(paragraphTagSelector);
         }
 
-        this.containerSelectors.push(
+        // text elements to apply styles to (e.g. font change)
+        this.textParagraphSelectors.push(
             // Use class twice for higher specifity
+            `.${lindyTextContainerClass}.${lindyTextContainerClass}`
+        );
+        this.textParagraphSelectors.push(
+            ...paragraphTagSelector
+                .split(", ")
+                .concat(["a"])
+                .map((tag) => `.${lindyTextContainerClass} > ${tag}`)
+        );
+
+        // text element container to remove margin from
+        this.containerSelectors.push(
             `.${lindyTextContainerClass}.${lindyTextContainerClass}`
         );
 
@@ -213,8 +226,7 @@ export default class TextContainerModifier implements PageModifier {
         } else {
             relativeLineHeight = activeStyle.lineHeight;
         }
-
-        const fontSizeStyle = `.${lindyTextContainerClass}.${lindyTextContainerClass} {
+        const fontSizeStyle = `${this.textParagraphSelectors.join(", ")} {
             font-size: calc(var(${fontSizeThemeVariable}) * ${fontSizeNormalizationScale.toFixed(
             2
         )}) !important;
