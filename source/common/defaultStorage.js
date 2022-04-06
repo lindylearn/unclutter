@@ -47,6 +47,7 @@ export const defaultExcludedDomains = [
     "notion.so",
     "lever.co",
     "angel.co",
+    "archive.org",
 ];
 
 export const defaultFontSizePx = "19px";
