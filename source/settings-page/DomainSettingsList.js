@@ -53,13 +53,15 @@ export default function DomainSettingsList({}) {
 
     return (
         <>
-            <p className="">
-                Override the global settings for specific website domains:
-            </p>
-            <ul className="mx-10 mt-2 mb-5 flex flex-col gap-1">
+            <ul className="mt-1 px-3 py-2 mr-5 flex flex-col items-start gap-1 bg-gray-100 h-48 overflow-y-scroll shadow-inner">
+                {overrideList?.length === 0 && (
+                    <li className="text-gray-600">
+                        There are no automatic domain settings yet!
+                    </li>
+                )}
                 {overrideList?.map(({ domain, status }) => (
                     <li className="flex gap-5 items-center">
-                        <div className="underline w-44">
+                        <div className="underline w-52 flex-shrink">
                             <a
                                 href={`https://${domain}`}
                                 target="_blank"
@@ -74,20 +76,21 @@ export default function DomainSettingsList({}) {
                             onChange={(e) =>
                                 updateDomainStatus(domain, e.target.value)
                             }
-                            className={"p-1 " + _getDomainStatusStyle(status)}
+                            className={
+                                "p-1 rounded-sm " +
+                                _getDomainStatusStyle(status)
+                            }
                         >
                             <option value={null} className="bg-white">
                                 No preference
                             </option>
                             <option value="allow" className="bg-white">
-                                Enable extension
+                                Always unclutter
                             </option>
                             <option value="deny" className="bg-white">
-                                Disable extension
+                                Never unclutter
                             </option>
                         </select>
-
-                        {/* <div className="flex-grow" /> */}
 
                         <svg
                             className="text-gray-400 dark:text-white h-4 cursor-pointer"

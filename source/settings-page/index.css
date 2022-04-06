@@ -4,6 +4,7 @@
 
 html {
     min-width: 550px;
+    max-width: 550px;
     min-height: 100px;
     overflow-x: hidden; /* Required to hide horizontal scroll on Firefox */
     /* color: #1f2937; */
@@ -16,7 +17,8 @@ body {
     /* font-size: medium; */
     /* font-weight: 500; */
     text-align: left;
-    padding: 10px;
+    padding: 0 20px;
+    padding-bottom: 30px;
     margin: 0;
 }
 

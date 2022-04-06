@@ -16,7 +16,7 @@ export const enableBootUnclutterMessage = "enable-boot-unclutter-message";
 export const showDebugInfo = "show-debug-info";
 export const defaultFeatureFlags = {
     [automaticallyEnabledFeatureFlag]: false,
-    [allowlistDomainOnManualActivationFeatureFlag]: true,
+    [allowlistDomainOnManualActivationFeatureFlag]: false,
     [collectAnonymousMetricsFeatureFlag]: true,
     [enableBootUnclutterMessage]: true,
     [showDebugInfo]: false,
