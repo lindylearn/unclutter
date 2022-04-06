@@ -147,9 +147,10 @@ export default class ThemeModifier implements PageModifier {
         let siteUsesDefaultDarkMode = false;
         const rgbColor = parse(this.originalBackgroundColor);
         const brightness = getSRGBLightness(rgbColor.r, rgbColor.g, rgbColor.b);
+        console.log(brightness);
         if (brightness > 0.94 && !this.darkModeActive) {
             // Too light colors conflict with white theme, so set to white
-            this.originalBackgroundColor = "white";
+            // this.originalBackgroundColor = "white";
         } else if (brightness < 0.3) {
             // Site uses dark mode by default
 
@@ -282,9 +283,7 @@ export default class ThemeModifier implements PageModifier {
         document.documentElement.style.removeProperty(darkThemeTextColor);
 
         // undo dark mode style tweaks
-        if (this.activeDarkModeStyleTweaks.length !== 0) {
-            await this.disableDarkModeStyleTweaks();
-        }
+        await this.disableDarkModeStyleTweaks();
 
         document
             .querySelectorAll(".dark-mode-ui-style")
@@ -364,9 +363,14 @@ export default class ThemeModifier implements PageModifier {
                 rule.style.setProperty(key, value);
             }
         });
-        this.enabledSiteDarkModeRules.map((rule) => {
-            rule.style = {};
+        this.activeDarkModeStyleTweaks = [];
+
+        this.enabledSiteDarkModeRules.map((mediaRule) => {
+            for (const styleRule of mediaRule.cssRules) {
+                styleRule.style = {};
+            }
         });
+        this.enabledSiteDarkModeRules = [];
     }
 }
 
