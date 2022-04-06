@@ -135,7 +135,6 @@ export default class ThemeModifier implements PageModifier {
             true
         );
         highlightActiveColorThemeButton(this.activeColorTheme);
-        await this.updateAutoModeColor();
 
         // Determine if should use dark mode
         const prevDarkModeState = this.darkModeActive;
@@ -148,14 +147,16 @@ export default class ThemeModifier implements PageModifier {
         let siteUsesDefaultDarkMode = false;
         const rgbColor = parse(this.originalBackgroundColor);
         const brightness = getSRGBLightness(rgbColor.r, rgbColor.g, rgbColor.b);
-        if (brightness > 0.9 && !this.darkModeActive) {
+        if (brightness > 0.94 && !this.darkModeActive) {
             // Too light colors conflict with white theme, so set to white
-            setCssThemeVariable(backgroundColorThemeVariable, "white", true);
-            setCssThemeVariable(autoBackgroundThemeVariable, "white", true);
+            this.originalBackgroundColor = "white";
         } else if (brightness < 0.3) {
             // Site uses dark mode by default
 
             if (this.activeColorTheme !== "white") {
+                // caution: this is error prone
+                // - but messing with default colors is as well
+
                 // Make rest of UI dark
                 this.darkModeActive = true;
 
@@ -166,12 +167,31 @@ export default class ThemeModifier implements PageModifier {
             }
         }
 
-        // only enable or disable dark mode if there's been a change
+        // enable or disable dark mode if there's been a change
         if (this.darkModeActive && !prevDarkModeState) {
             await this.enableDarkMode(siteUsesDefaultDarkMode);
         } else if (!this.darkModeActive && prevDarkModeState) {
             await this.disableDarkMode();
         }
+
+        // apply other background colors
+        if (!this.darkModeActive) {
+            let concreteColor: string;
+            if (this.activeColorTheme === "auto") {
+                concreteColor = this.originalBackgroundColor;
+            } else {
+                concreteColor = colorThemeToBackgroundColor(
+                    this.activeColorTheme
+                );
+            }
+            setCssThemeVariable(
+                backgroundColorThemeVariable,
+                concreteColor,
+                true
+            );
+        }
+
+        await this.updateAutoModeColor();
     }
 
     // Update auto state (shown in theme switcher)
@@ -180,10 +200,9 @@ export default class ThemeModifier implements PageModifier {
             const darkColor = colorThemeToBackgroundColor("dark");
             setCssThemeVariable(autoBackgroundThemeVariable, darkColor, true);
         } else {
-            const originalColor = this.originalBackgroundColor;
             setCssThemeVariable(
                 autoBackgroundThemeVariable,
-                originalColor,
+                this.originalBackgroundColor,
                 true
             );
         }
@@ -207,7 +226,6 @@ export default class ThemeModifier implements PageModifier {
         // if (siteUsesDefaultDarkMode) {
         //     return;
         // }
-
         if (siteSupportsDarkMode) {
             this.enabledSiteDarkModeRules.map((mediaRule) => {
                 // parse background color, which we overwrite
@@ -231,11 +249,13 @@ export default class ThemeModifier implements PageModifier {
                     backgroundColor,
                     true
                 );
-                setCssThemeVariable(
-                    autoBackgroundThemeVariable,
-                    backgroundColor,
-                    true
-                );
+                if (this.activeColorTheme === "auto") {
+                    setCssThemeVariable(
+                        autoBackgroundThemeVariable,
+                        backgroundColor,
+                        true
+                    );
+                }
             });
         } else {
             // manually set root text color (setting it always would override other styles)
@@ -257,15 +277,6 @@ export default class ThemeModifier implements PageModifier {
     }
 
     private async disableDarkMode() {
-        // Background color
-        let concreteColor: string;
-        if (this.activeColorTheme === "auto") {
-            concreteColor = this.originalBackgroundColor;
-        } else {
-            concreteColor = colorThemeToBackgroundColor(this.activeColorTheme);
-        }
-        setCssThemeVariable(backgroundColorThemeVariable, concreteColor, true);
-
         document.documentElement.style.removeProperty("color");
         document.documentElement.style.removeProperty("background");
         document.documentElement.style.removeProperty(darkThemeTextColor);

@@ -41,13 +41,13 @@
     color: #d1d5db !important;
 }
 .lindy-plusminus.lindy-plusminus > div:hover {
-    background-color: #6b7280;
+    background-color: #616161;
 }
 .lindy-theme-popup.lindy-theme-popup:before {
     border-left: 8px solid var(--background-color);
 }
 .lindy-theme-button.lindy-theme-button {
-    border: none;
+    border: 2.5px solid var(--background-color);
 }
 .lindy-active-theme.lindy-active-theme {
     border: 2.5px solid var(--color-muted);

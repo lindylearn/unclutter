@@ -2,6 +2,7 @@ import {
     allowlistDomainOnManualActivationFeatureFlag,
     automaticallyEnabledFeatureFlag,
     collectAnonymousMetricsFeatureFlag,
+    enableBootUnclutterMessage,
     getFeatureFlag,
 } from "./featureFlags";
 import { getAllCustomDomainSettings } from "./storage";
@@ -51,6 +52,9 @@ export async function reportSettings(version, isNewInstall) {
         ),
         [collectAnonymousMetricsFeatureFlag]: await getFeatureFlag(
             collectAnonymousMetricsFeatureFlag
+        ),
+        [enableBootUnclutterMessage]: await getFeatureFlag(
+            enableBootUnclutterMessage
         ),
     };
 

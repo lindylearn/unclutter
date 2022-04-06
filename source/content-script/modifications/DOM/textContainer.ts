@@ -91,7 +91,7 @@ export default class TextContainerModifier implements PageModifier {
                         !activeStyle.backgroundColor.includes("0.") &&
                         !activeStyle.backgroundColor.includes("%")
                     ) {
-                        // console.log(activeStyle.backgroundColor, currentElem);
+                        console.log(activeStyle.backgroundColor, currentElem);
                         this.backgroundColors.push(activeStyle.backgroundColor);
                     }
                 }
@@ -275,6 +275,8 @@ const asideWordBlocklist = [
     "cookies",
     "overlay",
     "popup",
+    "caption",
+    "gallery",
 ];
 function _isAsideEquivalent(node) {
     return (
