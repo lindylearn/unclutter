@@ -147,9 +147,9 @@ export default class ThemeModifier implements PageModifier {
         let siteUsesDefaultDarkMode = false;
         const rgbColor = parse(this.originalBackgroundColor);
         const brightness = getSRGBLightness(rgbColor.r, rgbColor.g, rgbColor.b);
-        console.log(brightness);
         if (brightness > 0.94 && !this.darkModeActive) {
             // Too light colors conflict with white theme, so set to white
+            // disable for now
             // this.originalBackgroundColor = "white";
         } else if (brightness < 0.3) {
             // Site uses dark mode by default
