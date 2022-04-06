@@ -1,30 +1,25 @@
-# Unclutter -- Immersive Reading Mode
+# Unclutter - Immersive Reading Mode
 
-A browser extension to remove distractions from web articles.
+A browser extension to automatically remove distractions from web articles.
 
 [<img src="./media/chrome-badge.png" height="80">](https://chrome.google.com/webstore/detail/unclutter-immersive-readi/ibckhpijbdmdobhhhodkceffdngnglpk)
-[<img src="./media/firefox-badge.png" height="70">](https://addons.mozilla.org/en-GB/firefox/addon/lindylearn/)
+[<img src="./media/firefox-badge.png" height="65" style="margin-bottom: 6px;">](https://addons.mozilla.org/en-GB/firefox/addon/lindylearn/)
+
+## Demo video
 
 ![Demo video](./media/design-demo.gif)
 
 ## Features
 
 -   Rewrites a website's CSS to use simplified responsive styles even at larger viewports.
--   Removes distracting headers, sidebars, cookie banners, or promotions through global and site-specific style overrides.
--   Allows to theme article text (changing font size, page width, background color) by detecting DOM text content.
--   Automatically actives on visited articles (with both an allowlist and blocklist) by injecting a minimal boot script into browser tabs.
+-   Removes distracting headers, sidebars, cookie banners, or promotion messages through global and site-specific style overrides.
+-   Allows to make text more readable through font size, page width, and color theme settings. This includes a dark mode!
+-   Can automatically activate on certain domains.
 -   More to come :)
 
-<!-- -   Take notes and highlight ideas on articles right in your browser, then synchronize them to your notes app. Uses your existing [hypothes.is](https://web.hypothes.is) account to save annotations.
--   One click for everything: simply selecting text creates a highlight, editing a note updates it, there's a switch to make annotations public or private.
--   The annotation sidebar stays open, so you always see all your in-progress notes while reading.
--   In addition to public web annotations, the extension also shows inline quote comments parsed from Hacker News. -->
+## Contributing
 
-.
-
-<!-- ## Contributing
-
-Please open an issue for anything that seems broken or could work better. -->
+Please open an issue for anything that seems broken or could work better.
 
 <!-- The extension sidebar shows public web annotations and quote comments from Hacker News. If you link your [hypothes.is](https://web.hypothes.is) account it also shows your private annotations and highlights. On many older articles there will be graph of social references to that link over time.
 
