@@ -26,6 +26,10 @@ export default class ContentBlockModifier implements PageModifier {
     }
 
     async fadeOutNoise() {
+        if (document.getElementById("content-block-fadeout")) {
+            return;
+        }
+
         const css = `${this.selectors.join(
             ", "
         )} { visibility: hidden !important; opacity: 0 !important; transition: visibility 0.2s, opacity 0.2s linear; }`;

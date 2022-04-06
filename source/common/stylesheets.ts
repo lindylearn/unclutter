@@ -32,6 +32,7 @@ export function createStylesheetText(
     const style = document.createElement("style");
     style.classList.add(overrideClassname);
     style.classList.add(styleId);
+    style.id = styleId;
     style.innerHTML = text;
 
     if (insertAfter) {

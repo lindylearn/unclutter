@@ -271,6 +271,7 @@ const asideWordBlocklist = [
     "banner",
     "alert",
     "message",
+    "dialog",
     "nav",
     "menu",
     "privacy",
