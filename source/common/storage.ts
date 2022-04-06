@@ -61,20 +61,16 @@ export async function setUserSettingsForDomain(domain, status) {
 
 export async function getUserTheme() {
     const config = await browser.storage.sync.get(["custom-global-theme"]);
-    const theme = config["custom-global-theme"];
+    const theme = config["custom-global-theme"] || {};
 
     if (
-        theme?.fontSize &&
-        isNaN(parseFloat(theme.fontSize.replace("px", "")))
+        !theme.fontSize ||
+        (theme.fontSize && isNaN(parseFloat(theme.fontSize.replace("px", ""))))
     ) {
         theme.fontSize = defaultFontSizePx;
     }
 
-    return (
-        theme || {
-            fontSize: defaultFontSizePx,
-        }
-    );
+    return theme;
 }
 export async function mergeUserTheme(partialTheme) {
     const config = await browser.storage.sync.get(["custom-global-theme"]);

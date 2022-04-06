@@ -41,24 +41,22 @@ export default class TextContainerModifier implements PageModifier {
             paragraphs = document.body.querySelectorAll(paragraphTagSelector);
         }
 
+        const textTagSelectors = globalParagraphSelector
+            .split(", ")
+            .concat("a", "ol")
+            .map((tag) => `.${lindyTextContainerClass} > ${tag}`);
+
         // text elements to apply styles to (e.g. font change)
         this.textParagraphSelectors = [
             // Use class twice for higher specifity
             `.${lindyTextContainerClass}.${lindyTextContainerClass}`,
             // exclude h1 tags
-            ...globalParagraphSelector
-                .split(", ")
-                .concat("a")
-                .map((tag) => `.${lindyTextContainerClass} > ${tag}`),
+            ...textTagSelectors,
         ];
-
         // text element container to remove margin from
         this.containerSelectors = [
             `.${lindyTextContainerClass}.${lindyTextContainerClass}`,
-            ...globalParagraphSelector
-                .split(", ")
-                .concat("a")
-                .map((tag) => `.${lindyTextContainerClass} > ${tag}`),
+            ...textTagSelectors,
         ];
 
         const seenNodes = new Set();
