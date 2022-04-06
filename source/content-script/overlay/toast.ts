@@ -7,8 +7,12 @@ export async function displayToast(
     message: string,
     onClick: () => void = () => {}
 ) {
+    if (document.getElementById("lindy-toast")) {
+        return;
+    }
+
     const container = insertHtml(
-        "lindy-toast lindy-toast-visible",
+        "lindy-toast",
         `<div class="lindy-toast-content">
             <svg class="lindy-toast-icon" viewBox="0 0 512 512">
                 <path fill="currentColor" d="M322.92,363.59a16.27,16.27,0,0,0-10.77-8.46l-.17,0c-23.11-6.31-45.14-9.5-65.49-9.5-44.82,0-72.15,15.56-84.45,24.84a32.81,32.81,0,0,1-19.91,6.68,33.32,33.32,0,0,1-29.87-18.77L46.67,221.94a7.44,7.44,0,0,0-11.58-2.39l-.17.14a16.48,16.48,0,0,0-4,19.61l94.43,195.75a16.25,16.25,0,0,0,26.79,3.69c56.59-63.15,138.33-60.33,168.87-56.83a6.46,6.46,0,0,0,6.5-9.34Z" />
@@ -22,12 +26,11 @@ export async function displayToast(
         </div>
         <div class="lindy-toast-progressbar"></div>`
     );
+    container.classList.add("lindy-toast-visible");
 
     container.onclick = () => {
         container.classList.add("lindy-toast-dismissed");
-        setTimeout(() => {
-            container.remove();
-        }, 1000);
+        setTimeout(removeToast, 1000);
 
         onClick();
     };
@@ -48,4 +51,11 @@ export async function displayToast(
         contentBlockModifier.fadeInNoise();
         responsiveStyleModifier.fadeInNoise();
     };
+}
+export function removeToast() {
+    const container = document.getElementById("lindy-toast");
+    container?.remove();
+
+    // in case this runs before insert() above, set placeholder
+    insertHtml("lindy-toast", "");
 }

@@ -132,3 +132,35 @@ async function _injectScript(tabId, filePath) {
         });
     }
 }
+
+function installContextMenu() {
+    const menuOptions = {
+        id: "unclutter-link",
+        title: "Open link with Unclutter",
+        contexts: ["link"],
+    };
+    try {
+        browser.contextMenus.create(menuOptions);
+    } catch {
+        browser.contextMenus.update(menuOptions.id, menuOptions);
+    }
+
+    browser.contextMenus.onClicked.addListener((info, tab) => {
+        switch (info.menuItemId) {
+            case "unclutter-link":
+                browser.tabs.create(
+                    { url: info.linkUrl, active: true },
+                    (tab) => {
+                        // need to wait until loaded, as have no permissions on new tab page
+                        setTimeout(() => {
+                            _injectScript(tab.id, "content-script/enhance.js");
+                        }, 1000);
+                        reportEnablePageView("contextMenu");
+                    }
+                );
+                break;
+        }
+    });
+}
+
+installContextMenu();

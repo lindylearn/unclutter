@@ -1,4 +1,5 @@
 import browser from "../common/polyfill";
+import { removeToast } from "./overlay/toast";
 import { enablePageView } from "./pageview/enablePageView";
 import TransitionManager from "./transitions";
 
@@ -83,6 +84,7 @@ async function enhance() {
         document.documentElement.classList.contains("pageview");
 
     if (!pageViewEnabled) {
+        removeToast();
         togglePageView();
     }
 }
