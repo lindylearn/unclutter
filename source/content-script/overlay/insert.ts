@@ -155,7 +155,7 @@ function _nextUserSetting(userSetting: domainUserSetting): domainUserSetting {
     } else if (userSetting === "deny") {
         return "allow";
     } else {
-        return "deny";
+        return "allow";
     }
 }
 function _getDomainToggleTooltip(
@@ -167,7 +167,7 @@ function _getDomainToggleTooltip(
     } else if (userSetting === "deny") {
         return `Disabled on ${domain}`;
     } else {
-        return `Automatically enabled on ${domain}`;
+        return `Click to automatically unclutter ${domain}`;
     }
 }
 function _getDomainToggleIcon(userSetting: domainUserSetting): string {
