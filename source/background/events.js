@@ -86,7 +86,7 @@ browser.runtime.onInstalled.addListener(async ({ reason }) => {
 
     // report aggregates on enabled extension features
     // this function should be executed every few days
-    reportSettings(extensionInfo.version, isNewInstall);
+    reportSettings(extensionInfo.version, isNewInstall, isDevelopment);
 });
 
 async function enableInTab(tabId) {

@@ -15,10 +15,26 @@ export async function reportEvent(name, data = {}, isDev = false) {
         collectAnonymousMetricsFeatureFlag
     );
     if (!metricsEnabled) {
-        // console.log(name, data);
+        // only allowed event is on update, containing the new version
+        if (name === "reportSettings") {
+            await sendEvent(
+                "reportSettings",
+                {
+                    version: data.version,
+                    [collectAnonymousMetricsFeatureFlag]:
+                        data[collectAnonymousMetricsFeatureFlag],
+                },
+                isDev
+            );
+        }
+
         return;
     }
 
+    await sendEvent(name, data, isDev);
+}
+
+async function sendEvent(name, data, isDev) {
     try {
         // See https://plausible.io/docs/events-api
         const response = await fetch(`https://plausible.io/api/event`, {
@@ -41,7 +57,7 @@ export async function reportEvent(name, data = {}, isDev = false) {
 }
 
 // Report anonymous aggregates on enabled extension features (if the user allowed it)
-export async function reportSettings(version, isNewInstall) {
+export async function reportSettings(version, isNewInstall, isDev) {
     // true / false state of enabled features
     const featureFlagSettings = {
         [automaticallyEnabledFeatureFlag]: await getFeatureFlag(
@@ -66,12 +82,16 @@ export async function reportSettings(version, isNewInstall) {
         blocklistedCount: lists.deny.length,
     };
 
-    reportEvent("reportSettings", {
-        version,
-        isNewInstall,
-        ...featureFlagSettings,
-        ...domainSettings,
-    });
+    reportEvent(
+        "reportSettings",
+        {
+            version,
+            isNewInstall,
+            ...featureFlagSettings,
+            ...domainSettings,
+        },
+        isDev
+    );
 }
 
 let pageViewEnableTrigger;
