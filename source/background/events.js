@@ -8,6 +8,7 @@ import {
     reportDisablePageView,
     reportEnablePageView,
     reportSettings,
+    startMetrics,
 } from "../common/metrics";
 import browser from "../common/polyfill";
 
@@ -187,3 +188,5 @@ function requestOptionalPermissions() {
         } catch {}
     }
 }
+
+startMetrics();

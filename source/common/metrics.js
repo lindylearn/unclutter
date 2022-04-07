@@ -1,3 +1,4 @@
+import browser from "../common/polyfill";
 import {
     allowlistDomainOnManualActivationFeatureFlag,
     automaticallyEnabledFeatureFlag,
@@ -7,13 +8,30 @@ import {
 } from "./featureFlags";
 import { getAllCustomDomainSettings } from "./storage";
 
+let metricsEnabled = true;
+let distinctId = null;
+export async function startMetrics() {
+    metricsEnabled = await getFeatureFlag(collectAnonymousMetricsFeatureFlag);
+    distinctId = await _getDistinctId();
+}
+
+async function _getDistinctId() {
+    const config = await browser.storage.sync.get(["distinctId"]);
+    if (config["distinctId"]) {
+        return config["distinctId"];
+    }
+
+    const distinctId = crypto.getRandomValues(new Uint32Array(5)).join("");
+    await browser.storage.sync.set({
+        distinctId,
+    });
+    return distinctId;
+}
+
 // Anonymously report usage events (if the user allowed it)
 // See https://github.com/lindylearn/unclutter/blob/main/docs/metrics.md
 export async function reportEvent(name, data = {}, isDev = false) {
     // Check if user allowed metrics reporting
-    const metricsEnabled = await getFeatureFlag(
-        collectAnonymousMetricsFeatureFlag
-    );
     if (!metricsEnabled) {
         // only allowed event is on update, containing the new version
         if (name === "reportSettings") {
@@ -36,24 +54,25 @@ export async function reportEvent(name, data = {}, isDev = false) {
 
 async function sendEvent(name, data, isDev) {
     try {
-        // See https://plausible.io/docs/events-api
-        const response = await fetch(`https://plausible.io/api/event`, {
+        const response = await fetch(`https://app.posthog.com/capture`, {
             method: "POST",
-            headers: {
-                "User-Agent": navigator.userAgent,
-                "Content-Type": "application/json",
-            },
             body: JSON.stringify({
-                domain: "unclutter-extension",
-                url: `app://unclutter-extension/${isDev ? "test" : ""}`,
-                name,
-                props: data,
+                api_key: "phc_BQHO9btvNLVEbFC4ihMIS8deK5T6P4d8EF75Ihvkfaw",
+                distinct_id: distinctId,
+                event: name,
+                properties: {
+                    $useragent: navigator.userAgent,
+                    isDev,
+                    ...data,
+                },
             }),
         });
         if (!response.ok) {
-            console.error(`Error reporting metric:`, response);
+            throw Error(response);
         }
-    } catch {}
+    } catch (err) {
+        console.error(`Error reporting metric:`, err);
+    }
 }
 
 // Report anonymous aggregates on enabled extension features (if the user allowed it)
