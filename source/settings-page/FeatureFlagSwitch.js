@@ -16,14 +16,22 @@ export default function FeatureFlagSwitch({ featureFlagKey, children }) {
         setState(newState);
     }, []);
     async function toggleStateLocalFirst() {
-        setState(!state);
+        const newState = !state;
+        setState(newState);
 
-        if (featureFlagKey === collectAnonymousMetricsFeatureFlag && state) {
+        await reportEventContentScript("changeSetting", {
+            flag: featureFlagKey,
+            state: newState ? "enabled" : "disabled",
+        });
+        if (
+            featureFlagKey === collectAnonymousMetricsFeatureFlag &&
+            !newState
+        ) {
             // report that metrics were disabled before applying new config (after that reportEvent no-nops)
             await reportEventContentScript("disableMetrics");
         }
 
-        setFeatureFlag(featureFlagKey, !state);
+        setFeatureFlag(featureFlagKey, newState);
     }
 
     return (

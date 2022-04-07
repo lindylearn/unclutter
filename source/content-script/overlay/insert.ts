@@ -125,6 +125,7 @@ async function _setupDomainToggleState(currentDomain: string) {
 
         reportEventContentScript("changeDomainSetting", {
             newState: currentUserSetting,
+            trigger: "icon",
         });
     };
 }

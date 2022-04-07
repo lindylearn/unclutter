@@ -1,4 +1,5 @@
 import React from "react";
+import { reportEventContentScript } from "source/content-script/messaging";
 import {
     getAllCustomDomainSettings,
     setUserSettingsForDomain,
@@ -28,6 +29,7 @@ export default function DomainSettingsList({}) {
     }, []);
 
     function updateDomainStatus(domain, newStatus) {
+        // save in storage
         setUserSettingsForDomain(domain, newStatus);
 
         // Patch locally to retain current list order
@@ -39,6 +41,11 @@ export default function DomainSettingsList({}) {
             })
         );
 
+        reportEventContentScript("changeDomainSetting", {
+            newState: newStatus,
+            trigger: "settings-page",
+        });
+
         setOverrideList(updatedList);
     }
     function deleteDomainSettings(domain) {
@@ -47,6 +54,11 @@ export default function DomainSettingsList({}) {
         const updatedList = overrideList.filter(
             ({ domain: innerDomain }) => innerDomain !== domain
         );
+
+        reportEventContentScript("changeDomainSetting", {
+            newState: null,
+            trigger: "settings-page",
+        });
 
         setOverrideList(updatedList);
     }
