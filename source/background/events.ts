@@ -4,16 +4,17 @@ import {
     setFeatureFlag,
     showDebugInfo,
 } from "../common/featureFlags";
-import {
-    reportDisablePageView,
-    reportEnablePageView,
-    reportSettings,
-    startMetrics,
-} from "../common/metrics";
 import browser from "../common/polyfill";
 import { fetchCss } from "./actions";
 import { enableInTab, injectScript, togglePageViewMessage } from "./inject";
 import { requestOptionalPermissions } from "./install";
+import {
+    reportDisablePageView,
+    reportEnablePageView,
+    reportEvent,
+    reportSettings,
+    startMetrics,
+} from "./metrics";
 
 // toggle page view on extension icon click
 (chrome.action || browser.browserAction).onClicked.addListener((tab) => {
@@ -55,6 +56,8 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
     } else if (message.event === "fetchCss") {
         fetchCss(message.url).then(sendResponse);
         return true;
+    } else if (message.event === "reportEvent") {
+        reportEvent(message.name, message.data, message.isDev);
     }
 
     return false;

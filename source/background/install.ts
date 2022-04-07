@@ -1,4 +1,4 @@
-import { reportEnablePageView } from "source/common/metrics";
+import { reportEnablePageView } from "source/background/metrics";
 import browser from "../common/polyfill";
 import { injectScript } from "./inject";
 

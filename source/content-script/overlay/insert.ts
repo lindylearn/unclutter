@@ -1,5 +1,4 @@
 import { insertHtml } from "source/common/html";
-import { reportEvent } from "../../common/metrics";
 import browser from "../../common/polyfill";
 import {
     domainUserSetting,
@@ -16,6 +15,7 @@ import {
     themeName,
 } from "../../common/theme";
 import { togglePageView } from "../enhance";
+import { reportEventContentScript } from "../messaging";
 import ThemeModifier from "../modifications/CSSOM/theme";
 
 // Insert a small UI for the user to control the automatic pageview enablement on the current domain.
@@ -123,7 +123,9 @@ async function _setupDomainToggleState(currentDomain: string) {
         currentUserSetting = _nextUserSetting(currentUserSetting);
         renderActiveUserSetting(currentDomain);
 
-        reportEvent("changeDomainSetting", { newState: currentUserSetting });
+        reportEventContentScript("changeDomainSetting", {
+            newState: currentUserSetting,
+        });
     };
 }
 function renderActiveUserSetting(currentDomain: string) {
@@ -206,7 +208,7 @@ function _setupLinkHandlers() {
         browser.runtime.sendMessage({ event: "openOptionsPage" });
 
     document.getElementById("lindy-bug-icon").onclick = () =>
-        reportEvent("reportBugClick");
+        reportEventContentScript("reportBugClick");
 }
 
 async function _setupThemePopupHandlers(
@@ -224,7 +226,7 @@ async function _setupThemePopupHandlers(
         }
 
         if (!reportedEventType[changedProperty]) {
-            reportEvent("changeTheme", { changedProperty });
+            reportEventContentScript("changeTheme", { changedProperty });
             reportedEventType[changedProperty] = true;
         }
     }

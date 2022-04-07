@@ -1,16 +1,16 @@
 import React from "react";
+import { reportEventContentScript } from "source/content-script/messaging";
 import {
     allowlistDomainOnManualActivationFeatureFlag,
     collectAnonymousMetricsFeatureFlag,
     enableBootUnclutterMessage,
 } from "../common/featureFlags";
-import { reportEvent } from "../common/metrics";
 import DomainSettingsList from "./DomainSettingsList";
 import FeatureFlagSwitch from "./FeatureFlagSwitch";
 
 function OptionsPage({}) {
     React.useEffect(() => {
-        reportEvent("openSettings");
+        reportEventContentScript("openSettings");
     }, []);
 
     return (

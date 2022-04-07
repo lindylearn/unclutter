@@ -1,10 +1,10 @@
 import React from "react";
+import { reportEventContentScript } from "source/content-script/messaging";
 import {
     collectAnonymousMetricsFeatureFlag,
     getFeatureFlag,
     setFeatureFlag,
 } from "../common/featureFlags";
-import { reportEvent } from "../common/metrics";
 
 // there's a weird bundling error on firefox when importing React, {useState}
 // so use React.useState
@@ -20,7 +20,7 @@ export default function FeatureFlagSwitch({ featureFlagKey, children }) {
 
         if (featureFlagKey === collectAnonymousMetricsFeatureFlag && state) {
             // report that metrics were disabled before applying new config (after that reportEvent no-nops)
-            await reportEvent("disableMetrics");
+            await reportEventContentScript("disableMetrics");
         }
 
         setFeatureFlag(featureFlagKey, !state);

@@ -1,36 +1,20 @@
-import browser from "../common/polyfill";
 import {
     allowlistDomainOnManualActivationFeatureFlag,
     automaticallyEnabledFeatureFlag,
     collectAnonymousMetricsFeatureFlag,
     enableBootUnclutterMessage,
     getFeatureFlag,
-} from "./featureFlags";
-import { getAllCustomDomainSettings } from "./storage";
-
-let metricsEnabled = true;
-let distinctId = null;
-export async function startMetrics() {
-    metricsEnabled = await getFeatureFlag(collectAnonymousMetricsFeatureFlag);
-    distinctId = await _getDistinctId();
-}
-
-async function _getDistinctId() {
-    const config = await browser.storage.sync.get(["distinctId"]);
-    if (config["distinctId"]) {
-        return config["distinctId"];
-    }
-
-    const distinctId = crypto.getRandomValues(new Uint32Array(5)).join("");
-    await browser.storage.sync.set({
-        distinctId,
-    });
-    return distinctId;
-}
+} from "../common/featureFlags";
+import browser from "../common/polyfill";
+import { getAllCustomDomainSettings } from "../common/storage";
 
 // Anonymously report usage events (if the user allowed it)
 // See https://github.com/lindylearn/unclutter/blob/main/docs/metrics.md
 export async function reportEvent(name, data = {}, isDev = false) {
+    const metricsEnabled = await getFeatureFlag(
+        collectAnonymousMetricsFeatureFlag
+    );
+
     // Check if user allowed metrics reporting
     if (!metricsEnabled) {
         // only allowed event is on update, containing the new version
@@ -68,7 +52,7 @@ async function sendEvent(name, data, isDev) {
             }),
         });
         if (!response.ok) {
-            throw Error(response);
+            throw Error(JSON.stringify(response));
         }
     } catch (err) {
         console.error(`Error reporting metric:`, err);
@@ -114,7 +98,7 @@ export async function reportSettings(version, isNewInstall, isDev) {
 }
 
 let pageViewEnableTrigger;
-let pageViewEnableStartTime;
+let pageViewEnableStartTime: Date;
 export async function reportEnablePageView(trigger) {
     reportEvent("enablePageview", { trigger });
 
@@ -142,4 +126,22 @@ function _bucketMetric(buckets, value) {
 
     // return last bucket the numbers falls into
     return matchingBuckets[matchingBuckets.length - 1];
+}
+
+let distinctId = null;
+export async function startMetrics() {
+    distinctId = await _getDistinctId();
+}
+
+async function _getDistinctId() {
+    const config = await browser.storage.sync.get(["distinctId"]);
+    if (config["distinctId"]) {
+        return config["distinctId"];
+    }
+
+    const distinctId = crypto.getRandomValues(new Uint32Array(5)).join("");
+    await browser.storage.sync.set({
+        distinctId,
+    });
+    return distinctId;
 }
