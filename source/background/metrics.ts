@@ -40,7 +40,20 @@ export async function reportEvent(name, data = {}) {
 
 async function sendEvent(name, data, isDev) {
     try {
-        const response = await fetch(`https://app.posthog.com/capture`, {
+        await fetch(`https://plausible.io/api/event`, {
+            method: "POST",
+            headers: {
+                "User-Agent": navigator.userAgent,
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                domain: "unclutter-extension",
+                url: `app://unclutter-extension/${isDev ? "test" : ""}`,
+                name,
+                props: data,
+            }),
+        });
+        await fetch(`https://app.posthog.com/capture`, {
             method: "POST",
             body: JSON.stringify({
                 api_key: "phc_BQHO9btvNLVEbFC4ihMIS8deK5T6P4d8EF75Ihvkfaw",
@@ -53,9 +66,6 @@ async function sendEvent(name, data, isDev) {
                 },
             }),
         });
-        if (!response.ok) {
-            throw Error(JSON.stringify(response));
-        }
     } catch (err) {
         console.error(`Error reporting metric:`, err);
     }
