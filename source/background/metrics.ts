@@ -4,16 +4,18 @@ import {
     collectAnonymousMetricsFeatureFlag,
     enableBootUnclutterMessage,
     getFeatureFlag,
+    isDevelopmentFeatureFlag,
 } from "../common/featureFlags";
 import browser from "../common/polyfill";
 import { getAllCustomDomainSettings } from "../common/storage";
 
 // Anonymously report usage events (if the user allowed it)
 // See https://github.com/lindylearn/unclutter/blob/main/docs/metrics.md
-export async function reportEvent(name, data = {}, isDev = false) {
+export async function reportEvent(name, data = {}) {
     const metricsEnabled = await getFeatureFlag(
         collectAnonymousMetricsFeatureFlag
     );
+    const isDev = await getFeatureFlag(isDevelopmentFeatureFlag);
 
     // Check if user allowed metrics reporting
     if (!metricsEnabled) {
@@ -60,7 +62,7 @@ async function sendEvent(name, data, isDev) {
 }
 
 // Report anonymous aggregates on enabled extension features (if the user allowed it)
-export async function reportSettings(version, isNewInstall, isDev) {
+export async function reportSettings(version, isNewInstall) {
     // true / false state of enabled features
     const featureFlagSettings = {
         [automaticallyEnabledFeatureFlag]: await getFeatureFlag(
@@ -85,16 +87,12 @@ export async function reportSettings(version, isNewInstall, isDev) {
         blocklistedCount: lists.deny.length,
     };
 
-    reportEvent(
-        "reportSettings",
-        {
-            version,
-            isNewInstall,
-            ...featureFlagSettings,
-            ...domainSettings,
-        },
-        isDev
-    );
+    reportEvent("reportSettings", {
+        version,
+        isNewInstall,
+        ...featureFlagSettings,
+        ...domainSettings,
+    });
 }
 
 let pageViewEnableTrigger;

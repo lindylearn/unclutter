@@ -1,8 +1,8 @@
 import { extensionSupportsUrl } from "../common/articleDetection";
 import {
     collectAnonymousMetricsFeatureFlag,
+    isDevelopmentFeatureFlag,
     setFeatureFlag,
-    showDebugInfo,
 } from "../common/featureFlags";
 import browser from "../common/polyfill";
 import { fetchCss } from "./actions";
@@ -57,7 +57,7 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
         fetchCss(message.url).then(sendResponse);
         return true;
     } else if (message.event === "reportEvent") {
-        reportEvent(message.name, message.data, message.isDev);
+        reportEvent(message.name, message.data);
     }
 
     return false;
@@ -67,17 +67,17 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
 browser.runtime.onInstalled.addListener(async ({ reason }) => {
     const extensionInfo = await browser.management.getSelf();
     const isNewInstall = reason === "install";
-    const isDevelopment = extensionInfo.installType === "development";
+    const isDev = extensionInfo.installType === "development";
 
-    if (isDevelopment) {
+    if (isDev) {
         // disable metrics in dev mode
         await setFeatureFlag(collectAnonymousMetricsFeatureFlag, false);
-        await setFeatureFlag(showDebugInfo, true);
+        await setFeatureFlag(isDevelopmentFeatureFlag, true);
     }
 
     // report aggregates on enabled extension features
     // this function should be executed every few days
-    reportSettings(extensionInfo.version, isNewInstall, isDevelopment);
+    reportSettings(extensionInfo.version, isNewInstall);
 });
 
 // initialize on every service worker start

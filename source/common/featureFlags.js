@@ -17,13 +17,13 @@ export const allowlistDomainOnManualActivationFeatureFlag =
     "allowlist-domain-manual-activation";
 export const collectAnonymousMetricsFeatureFlag = "collect-anonymous-metrics";
 export const enableBootUnclutterMessage = "enable-boot-unclutter-message";
-export const showDebugInfo = "show-debug-info";
+export const isDevelopmentFeatureFlag = "is-dev";
 export const defaultFeatureFlags = {
     [automaticallyEnabledFeatureFlag]: false,
     [allowlistDomainOnManualActivationFeatureFlag]: false,
     [collectAnonymousMetricsFeatureFlag]: true,
     [enableBootUnclutterMessage]: false, // TODO enable
-    [showDebugInfo]: false,
+    [isDevelopmentFeatureFlag]: false,
 };
 
 export const featureFlagOverrides = {
