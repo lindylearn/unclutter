@@ -47,7 +47,7 @@ const moveVirtualFolder = {
     },
 };
 const esModuleConfig = {
-    input: ["source/settings-page/index.js", "source/background/events.js"],
+    input: ["source/settings-page/index.js", "source/background/events.ts"],
     output: {
         dir: "distribution",
         format: "es",
