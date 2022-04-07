@@ -78,6 +78,10 @@ browser.runtime.onInstalled.addListener(async ({ reason }) => {
     // report aggregates on enabled extension features
     // this function should be executed every few days
     reportSettings(extensionInfo.version, isNewInstall);
+
+    browser.runtime.setUninstallURL(
+        "https://unclutter.lindylearn.io/uninstalled"
+    );
 });
 
 // initialize on every service worker start
