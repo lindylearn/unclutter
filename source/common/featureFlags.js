@@ -22,7 +22,7 @@ export const defaultFeatureFlags = {
     [automaticallyEnabledFeatureFlag]: false,
     [allowlistDomainOnManualActivationFeatureFlag]: false,
     [collectAnonymousMetricsFeatureFlag]: true,
-    [enableBootUnclutterMessage]: false, // TODO enable
+    [enableBootUnclutterMessage]: true, // TODO enable
     [isDevelopmentFeatureFlag]: false,
 };
 
