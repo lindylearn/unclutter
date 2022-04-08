@@ -27,7 +27,7 @@ function OptionsPage({}) {
                 }
             >
                 <FeatureFlagSwitch featureFlagKey={enableBootUnclutterMessage}>
-                    Show a clickable message on web pages{" "}
+                    Show unclutter button on web pages{" "}
                     <a
                         href="https://github.com/lindylearn/unclutter/tree/main/docs/article-detection.md"
                         className="underline"
