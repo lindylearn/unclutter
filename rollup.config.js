@@ -9,7 +9,8 @@ import path from "path";
 import multiInput from "rollup-plugin-multi-input";
 import postcss from "rollup-plugin-postcss";
 import svelte from "rollup-plugin-svelte";
-import autoPreprocess from "svelte-preprocess";
+import sveltePreprocess from "svelte-preprocess";
+import tailwindcss from "tailwindcss";
 
 // bundle content scripts
 const contentScriptConfigs = [
@@ -22,7 +23,14 @@ const contentScriptConfigs = [
         format: "iife", // no way to use es modules, split code by logic instead
     },
     plugins: [
-        svelte({ preprocess: autoPreprocess() }),
+        svelte({
+            preprocess: sveltePreprocess({
+                postcss: {
+                    plugins: [tailwindcss()],
+                },
+            }),
+            emitCss: false, // bundle conponent styles
+        }),
         typescript(),
         nodeResolve({ browser: true }),
         commonjs({ include: /node_modules/ }),

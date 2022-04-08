@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 .lindy-info-topleft {
     position: fixed;
     left: 0;
