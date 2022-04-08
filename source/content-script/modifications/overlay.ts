@@ -57,7 +57,7 @@ export default class OverlayManager implements PageModifier {
 
             const component = new Outline({
                 target: container,
-                props: { outline, currentElement: outline.element },
+                props: { outline, activeOutlineIndex: 0 },
             });
 
             // this should be experimental
@@ -70,10 +70,10 @@ export default class OverlayManager implements PageModifier {
             }
             const flatOutline = flatten(outline);
 
-            function onChangeActiveHeading(activeHeading: OutlineItem) {
+            function onChangeActiveHeading(activeOutlineIndex: number) {
                 // console.log(flatOutline[currentOutlineIndex].title);
 
-                component.$set({ currentElement: activeHeading.element });
+                component.$set({ activeOutlineIndex: activeOutlineIndex });
             }
 
             // current header
@@ -104,12 +104,12 @@ export default class OverlayManager implements PageModifier {
                     currentOutlineIndex -= 1;
                     updateTresholds();
 
-                    onChangeActiveHeading(flatOutline[currentOutlineIndex]);
+                    onChangeActiveHeading(currentOutlineIndex);
                 } else if (window.scrollY >= highTheshold) {
                     currentOutlineIndex += 1;
                     updateTresholds();
 
-                    onChangeActiveHeading(flatOutline[currentOutlineIndex]);
+                    onChangeActiveHeading(currentOutlineIndex);
                 }
             });
         }, 500);
