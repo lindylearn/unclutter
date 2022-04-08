@@ -41,7 +41,7 @@ async function boot() {
             }
             loaded = true;
 
-            displayToast("Click here to unclutter", () => {
+            displayToast("Unclutter article", () => {
                 enablePageView("message");
             });
         });
