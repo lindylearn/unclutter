@@ -26,6 +26,7 @@ export default class ContentBlockModifier implements PageModifier {
     }
 
     async fadeOutNoise() {
+        document.getElementById("content-block-fadein")?.remove();
         if (document.getElementById("content-block-fadeout")) {
             return;
         }
@@ -45,6 +46,8 @@ export default class ContentBlockModifier implements PageModifier {
         // TODO animate to 0 area? height: 0; width: 0; overflow: hidden;
 
         createStylesheetText(css, "content-block-fadein");
+
+        document.getElementById("content-block-fadeout")?.remove();
     }
 
     // need to actually remove in pageview (may override responsive style)
