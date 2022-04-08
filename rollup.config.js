@@ -8,6 +8,8 @@ import glob from "glob";
 import path from "path";
 import multiInput from "rollup-plugin-multi-input";
 import postcss from "rollup-plugin-postcss";
+import svelte from "rollup-plugin-svelte";
+import autoPreprocess from "svelte-preprocess";
 
 // bundle content scripts
 const contentScriptConfigs = [
@@ -20,6 +22,7 @@ const contentScriptConfigs = [
         format: "iife", // no way to use es modules, split code by logic instead
     },
     plugins: [
+        svelte({ preprocess: autoPreprocess() }),
         typescript(),
         nodeResolve({ browser: true }),
         commonjs({ include: /node_modules/ }),
