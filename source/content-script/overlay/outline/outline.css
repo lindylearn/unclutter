@@ -1,0 +1,45 @@
+.lindy-info-topleft {
+    position: fixed;
+    left: 0;
+    top: 0;
+    padding: 20px;
+
+    cursor: auto;
+}
+
+.lindy-outline {
+}
+.lindy-outline-icon {
+    width: 20px;
+    color: #4b5563;
+}
+.lindy-outline-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    font-size: medium;
+    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", Roboto !important;
+    font-weight: 500;
+    font-size: 14px;
+    color: #4b5563;
+}
+.lindy-outline-item {
+}
+.lindy-outline-item > ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    margin-top: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    margin-left: 20px;
+}

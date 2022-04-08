@@ -11,6 +11,8 @@ import {
     updateDomainState,
     whiggleDomainState,
 } from "../overlay/insert";
+import { getOutline } from "../overlay/outline/parse";
+import { renderOutline } from "../overlay/outline/render";
 import ThemeModifier from "./CSSOM/theme";
 import { PageModifier, trackModifierExecution } from "./_interface";
 
@@ -42,6 +44,14 @@ export default class OverlayManager implements PageModifier {
 
             whiggleDomainState();
         }
+
+        // sometimes content block takes time
+        // TODO ensure afterTransitionIn() actually runs later?
+        // https://www.quantamagazine.org/researchers-identify-master-problem-underlying-all-cryptography-20220406/
+        setTimeout(() => {
+            const outline = getOutline();
+            renderOutline(outline);
+        }, 1000);
     }
 
     async transitionOut() {

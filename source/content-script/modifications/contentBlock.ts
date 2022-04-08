@@ -105,8 +105,10 @@ const blockedWords = [
     "advert",
     "video",
     "newslettersignup",
+    "cta", // https://www.lrb.co.uk/the-paper/v33/n19/daniel-soar/it-knows
     // "sticky", // https://news.yahoo.com/exclusive-secret-cia-training-program-in-ukraine-helped-kyiv-prepare-for-russian-invasion-090052743.html?guccounter=2
     // "share", 'no-share' https://www.whichev.net/2022/03/29/theion-sulphur-crystal-batteries-promise-breakthrough-in-energy-density/
+    "morebox", // https://www.cleanenergywire.org/news/germany-boosts-renewables-biggest-energy-policy-reform-decades
 ];
 const blockedClasses = [
     ".ad",
@@ -132,4 +134,6 @@ const blockedClasses = [
     ".header-main", // https://www.statnews.com/2020/09/24/crows-possess-higher-intelligence-long-thought-primarily-human/
     ".top-bar", // https://www.pathsensitive.com/2022/03/abstraction-not-what-you-think-it-is.html
     "[role=complementary]",
+    ".hidden-print",
+    "#related-articles",
 ];

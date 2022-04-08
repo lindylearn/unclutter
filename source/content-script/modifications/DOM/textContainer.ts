@@ -262,7 +262,7 @@ export default class TextContainerModifier implements PageModifier {
 
 const lindyTextContainerClass = "lindy-text-container";
 
-const asideWordBlocklist = [
+export const asideWordBlocklist = [
     "header",
     "footer",
     "aside",
