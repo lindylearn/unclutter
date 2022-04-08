@@ -11,8 +11,9 @@ import {
     updateDomainState,
     whiggleDomainState,
 } from "../overlay/insert";
+import { getElementYOffset } from "../overlay/outline/common";
 import Outline from "../overlay/outline/Outline.svelte";
-import { getOutline } from "../overlay/outline/parse";
+import { getOutline, OutlineItem } from "../overlay/outline/parse";
 import ThemeModifier from "./CSSOM/theme";
 import { PageModifier, trackModifierExecution } from "./_interface";
 
@@ -54,9 +55,62 @@ export default class OverlayManager implements PageModifier {
             const container = document.createElement("div");
             document.documentElement.appendChild(container);
 
-            new Outline({
+            const component = new Outline({
                 target: container,
-                props: { outline },
+                props: { outline, currentElement: outline.element },
+            });
+
+            // this should be experimental
+            // would also need to update URL during scrolling
+            // maybe that's annoying?
+            // scrollToFragmentHeading();
+
+            function flatten(item: OutlineItem): OutlineItem[] {
+                return [item].concat(item.children.flatMap(flatten));
+            }
+            const flatOutline = flatten(outline);
+
+            function onChangeActiveHeading(activeHeading: OutlineItem) {
+                // console.log(flatOutline[currentOutlineIndex].title);
+
+                component.$set({ currentElement: activeHeading.element });
+            }
+
+            // current header
+            // listen to scroll changes, compare to last header
+            // update if changed
+            let currentOutlineIndex = 0;
+            let lowTheshold: number;
+            let highTheshold: number;
+            function updateTresholds() {
+                const margin = 25; // a bit more than the auto scroll margin
+                lowTheshold = getElementYOffset(
+                    flatOutline[currentOutlineIndex].element,
+                    margin
+                );
+                if (currentOutlineIndex + 1 < flatOutline.length) {
+                    highTheshold = getElementYOffset(
+                        flatOutline[currentOutlineIndex + 1].element,
+                        margin
+                    );
+                } else {
+                    highTheshold = Infinity;
+                }
+            }
+            updateTresholds();
+
+            document.addEventListener("scroll", () => {
+                if (currentOutlineIndex > 0 && window.scrollY < lowTheshold) {
+                    currentOutlineIndex -= 1;
+                    updateTresholds();
+
+                    onChangeActiveHeading(flatOutline[currentOutlineIndex]);
+                } else if (window.scrollY >= highTheshold) {
+                    currentOutlineIndex += 1;
+                    updateTresholds();
+
+                    onChangeActiveHeading(flatOutline[currentOutlineIndex]);
+                }
             });
         }, 500);
     }

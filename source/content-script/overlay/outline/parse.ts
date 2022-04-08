@@ -1,4 +1,5 @@
 import { asideWordBlocklist } from "../../modifications/DOM/textContainer";
+import { scrollToElement } from "./common";
 
 export interface OutlineItem {
     title: string;
@@ -24,7 +25,7 @@ const endBlocklist = [
     "related", // https://stackoverflow.blog/2022/04/07/you-should-be-reading-academic-computer-science-papers/
     "comments", // https://www.bennadel.com/blog/4210-you-can-throw-anything-in-javascript-and-other-async-await-considerations.htm
 ];
-export function getOutline(): OutlineItem[] {
+export function getOutline(): OutlineItem {
     const outline: OutlineItem[] = [];
 
     // parse heading from DOM
@@ -79,8 +80,11 @@ export function getOutline(): OutlineItem[] {
     }
 
     if (outline.length === 0) {
-        return [];
+        return null;
     }
+
+    // create ids for linking if not present
+    addHeadingIds(outline);
 
     // Collapse elements
     const collapsedOutline: OutlineItem[] = [outline[0]]; // stack
@@ -99,6 +103,18 @@ export function getOutline(): OutlineItem[] {
         }
     }
 
+    let outlineRoot: OutlineItem;
+    if (collapsedOutline.length === 1) {
+        outlineRoot = collapsedOutline[0];
+    } else {
+        outlineRoot = {
+            level: 0,
+            title: document.title,
+            element: document.body,
+            children: collapsedOutline,
+        };
+    }
+
     function normalizeOutlineItem(
         item: OutlineItem,
         currentLevel: number = 0
@@ -111,11 +127,29 @@ export function getOutline(): OutlineItem[] {
             ),
         };
     }
-    const normalizedOutline = collapsedOutline.map(normalizeOutlineItem);
+    const normalizedOutline = normalizeOutlineItem(outlineRoot);
 
     console.log(normalizedOutline);
 
-    // Normalize levels, remove gaps
-
     return normalizedOutline;
+}
+
+function addHeadingIds(flatOutline: OutlineItem[]) {
+    flatOutline.map(({ element, title }) => {
+        if (!element.id) {
+            // create id for linking
+            element.id = title.replace(/ /g, "-").toLowerCase();
+
+            // TODO strip non-alphanumeric
+        }
+    });
+}
+
+export function scrollToFragmentHeading() {
+    if (!window.location.hash) {
+        // no header linked
+        return;
+    }
+    const element = document.getElementById(window.location.hash?.slice(1));
+    scrollToElement(element);
 }

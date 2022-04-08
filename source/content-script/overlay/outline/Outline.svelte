@@ -3,13 +3,14 @@
     import Heading from "./Heading.svelte";
     import { OutlineItem } from "./parse";
 
-    export let outline: OutlineItem[];
+    export let outline: OutlineItem;
+    export let currentElement: Element;
 </script>
 
 <div id="lindy-info-topleft" class="fixed left-0 top-0 p-3 cursor-auto">
     <div>
         <ul class="m-0 p-0 list-none flex flex-col gap-2">
-            <Heading {...outline[0]} />
+            <Heading {...outline} currentElement={currentElement} />
         </ul>
     </div>
 </div>
