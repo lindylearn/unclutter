@@ -6,16 +6,21 @@
     export let outline: OutlineItem[];
 </script>
 
-<div class="lindy-info-topleft bg-red-400">
-    <div class="lindy-outline">
-        <ul class="lindy-outline-list bg-yellow-50">
+<div id="lindy-info-topleft" class="fixed left-0 top-0 p-3 cursor-auto">
+    <div>
+        <ul class="m-0 p-0 list-none flex flex-col gap-2">
             <Heading {...outline[0]} />
         </ul>
     </div>
 </div>
 
-<style lang="postcss">
+<style global lang="postcss">
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+#lindy-info-topleft {
+    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", Roboto !important;
+}
 </style>

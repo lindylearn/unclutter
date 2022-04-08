@@ -11,8 +11,8 @@ import {
     updateDomainState,
     whiggleDomainState,
 } from "../overlay/insert";
+import Outline from "../overlay/outline/Outline.svelte";
 import { getOutline } from "../overlay/outline/parse";
-import { renderOutline } from "../overlay/outline/render";
 import ThemeModifier from "./CSSOM/theme";
 import { PageModifier, trackModifierExecution } from "./_interface";
 
@@ -50,8 +50,15 @@ export default class OverlayManager implements PageModifier {
         // https://www.quantamagazine.org/researchers-identify-master-problem-underlying-all-cryptography-20220406/
         setTimeout(() => {
             const outline = getOutline();
-            renderOutline(outline);
-        }, 1000);
+
+            const container = document.createElement("div");
+            document.documentElement.appendChild(container);
+
+            new Outline({
+                target: container,
+                props: { outline },
+            });
+        }, 500);
     }
 
     async transitionOut() {
