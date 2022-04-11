@@ -16,7 +16,7 @@ import { scrollToElement } from "./common";
         activateStateClass = ""
     } else if (index === activeOutlineIndex) {
         // active
-        activateStateClass = "font-bold"
+        activateStateClass = "is-active font-bold"
     } else if (index < activeOutlineIndex) {
         // visited
         activateStateClass = "text-gray-400"
@@ -39,7 +39,7 @@ import { scrollToElement } from "./common";
 </script>
 
 <li class="text-gray-600 font-medium">
-    <div class={"text-sm cursor-pointer " + activateStateClass} on:click={focusHeading}>{title}</div>
+    <div class={"heading-text w-fit relative text-sm cursor-pointer " + activateStateClass} on:click={focusHeading}>{title}</div>
     {#if children.length > 0}
         <ul class="m-0 ml-5 p-0 list-none mt-1 flex flex-col gap-1">
             {#each children as child, i}
@@ -49,3 +49,12 @@ import { scrollToElement } from "./common";
     {/if}
 </li>
 
+<style>
+.heading-text {
+    /* some padding for font weight change */
+    padding-right: 1em;
+
+    transition: all 0.1s;
+}
+
+</style>
