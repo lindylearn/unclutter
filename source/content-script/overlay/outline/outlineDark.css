@@ -1,0 +1,11 @@
+#lindy-info-topleft-content {
+    /* --lindy-dark-theme-text-color and background color injected from common/theme.ts */
+
+    color: var(--lindy-dark-theme-text-color) !important;
+}
+.heading-text.is-active {
+}
+
+.heading-text.visited {
+    color: #4b5563 !important;
+}

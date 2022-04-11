@@ -20,6 +20,7 @@ import {
     rgbToHSL,
 } from "source/common/util/color";
 import { highlightActiveColorThemeButton } from "source/content-script/overlay/insert";
+import { getOutlineIframe } from "source/content-script/overlay/outline/common";
 import browser from "../../../common/polyfill";
 import { PageModifier, trackModifierExecution } from "../_interface";
 import CSSOMProvider, { isMediaRule, isStyleRule } from "./_provider";
@@ -221,6 +222,13 @@ export default class ThemeModifier implements PageModifier {
             browser.runtime.getURL("content-script/overlay/indexDark.css"),
             "dark-mode-ui-style"
         );
+        createStylesheetLink(
+            browser.runtime.getURL(
+                "content-script/overlay/outline/outlineDark.css"
+            ),
+            "dark-mode-ui-style",
+            getOutlineIframe()?.head.firstChild as HTMLElement
+        );
 
         const siteSupportsDarkMode = this.detectSiteDarkMode(true);
         // don't use default dark themes for now, leads to more missed color changes
@@ -286,6 +294,10 @@ export default class ThemeModifier implements PageModifier {
         await this.disableDarkModeStyleTweaks();
 
         document
+            .querySelectorAll(".dark-mode-ui-style")
+            .forEach((e) => e.remove());
+
+        getOutlineIframe()
             .querySelectorAll(".dark-mode-ui-style")
             .forEach((e) => e.remove());
     }

@@ -1,4 +1,3 @@
-import { asideWordBlocklist } from "../../modifications/DOM/textContainer";
 import { scrollToElement } from "./common";
 
 export interface OutlineItem {
@@ -29,6 +28,7 @@ const classBlocklist = [
     "latest", // https://reason.com/2022/04/08/the-fbi-decided-not-to-knock-down-a-suspects-front-door-because-it-was-an-affluent-neighborhood
     "recent_post",
     "recent-post",
+    "upperdek", // https://arstechnica.com/tech-policy/2022/04/an-old-music-industry-scheme-revived-for-the-spotify-era/
 ];
 const endBlocklist = [
     "more from", //  https://blog.bradfieldcs.com/you-are-not-google-84912cf44afb
@@ -59,24 +59,24 @@ export function getOutline(): [OutlineItem, number] {
         ) {
             continue;
         }
-        if (
-            asideWordBlocklist
-                .filter((word) => !["header", "ad"].includes(word))
-                .concat(classBlocklist)
-                .some(
-                    (word) =>
-                        node.className.toLowerCase().includes(word) ||
-                        node.id.toLowerCase().includes(word) ||
-                        node.parentElement.className
-                            .toLowerCase()
-                            .includes(word)
-                )
-        ) {
-            continue;
-        }
-        if (endBlocklist.some((word) => text.toLowerCase().includes(word))) {
-            break;
-        }
+        // if (
+        //     asideWordBlocklist
+        //         .filter((word) => !["header", "ad"].includes(word))
+        //         .concat(classBlocklist)
+        //         .some(
+        //             (word) =>
+        //                 node.className.toLowerCase().includes(word) ||
+        //                 node.id.toLowerCase().includes(word) ||
+        //                 node.parentElement.className
+        //                     .toLowerCase()
+        //                     .includes(word)
+        //         )
+        // ) {
+        //     continue;
+        // }
+        // if (endBlocklist.some((word) => text.toLowerCase().includes(word))) {
+        //     break;
+        // }
 
         // Clean heading text
         let cleanText = text.trim().split("\n").pop();

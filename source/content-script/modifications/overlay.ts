@@ -52,6 +52,7 @@ export default class OverlayManager implements PageModifier {
         // sometimes content block takes time
         // TODO ensure afterTransitionIn() actually runs later?
         // https://www.quantamagazine.org/researchers-identify-master-problem-underlying-all-cryptography-20220406/
+        // setTimeout(() => {
         let headingCount: number;
         [this.outline, headingCount] = getOutline();
         if (headingCount < 3) {
@@ -60,6 +61,7 @@ export default class OverlayManager implements PageModifier {
 
         this.insertOutline();
         this.listenToOutlineScroll();
+        // }, 500);
 
         // this should be experimental
         // would also need to update URL during scrolling

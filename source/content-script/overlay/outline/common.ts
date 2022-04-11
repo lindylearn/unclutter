@@ -10,3 +10,11 @@ export function getElementYOffset(element, margin = 15) {
     const position = element.getBoundingClientRect();
     return position.top + window.pageYOffset - margin;
 }
+
+export function getOutlineIframe(): Document | undefined {
+    return (document.getElementById("lindy-info-topleft") as HTMLIFrameElement)
+        ?.contentDocument;
+}
+export function getOutlineContentElement(): HTMLElement | undefined {
+    return getOutlineIframe()?.getElementById("lindy-info-topleft-content");
+}
