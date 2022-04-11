@@ -653,3 +653,11 @@ code {
 .SupportBannerHeader__BannerWrapper-sc-9g9mv2-0 {
     display: none !important;
 }
+
+/* https://knowablemagazine.org/article/health-disease/2021/how-noise-pollution-affects-heart-health */
+.share-icons-box,
+.deep-dive,
+.site-footer,
+.promo-article-dark {
+    display: none !important;
+}

@@ -22,6 +22,9 @@ export default class OverlayManager implements PageModifier {
     private domain: string;
     private themeModifier: ThemeModifier;
 
+    private outline: OutlineItem;
+    private outlineSvelteComponent: Outline;
+
     constructor(domain: string, themeModifier: ThemeModifier) {
         this.domain = domain;
         this.themeModifier = themeModifier;
@@ -50,75 +53,96 @@ export default class OverlayManager implements PageModifier {
         // TODO ensure afterTransitionIn() actually runs later?
         // https://www.quantamagazine.org/researchers-identify-master-problem-underlying-all-cryptography-20220406/
         setTimeout(() => {
-            const outline = getOutline();
-
-            function flatten(item: OutlineItem): OutlineItem[] {
-                return [item].concat(item.children.flatMap(flatten));
+            this.outline = getOutline();
+            if (!this.outline) {
+                return;
             }
-            const flatOutline = flatten(outline);
 
-            const container = document.createElement("div");
-            document.documentElement.appendChild(container);
-
-            const component = new Outline({
-                target: container,
-                props: { outline, activeOutlineIndex: 0 },
-            });
+            this.insertOutline();
 
             // this should be experimental
             // would also need to update URL during scrolling
             // maybe that's annoying?
             // scrollToFragmentHeading();
 
-            function onChangeActiveHeading(activeOutlineIndex: number) {
-                // console.log(flatOutline[currentOutlineIndex].title);
+            this.listenToOutlineScroll();
+        }, 500);
+    }
 
-                component.$set({ activeOutlineIndex: activeOutlineIndex });
-            }
+    private insertOutline() {
+        const container = document.createElement("iframe");
+        container.id = "lindy-info-topleft";
+        // container.style.position = "fixed";
+        // container.style.top = "0";
+        // container.style.left = "0";
+        container.frameBorder = "0";
 
-            // current header
-            // listen to scroll changes, compare to last header
-            // update if changed
-            let currentOutlineIndex = 0;
-            let lowTheshold: number;
-            let highTheshold: number;
-            function updateTresholds() {
-                const margin = 20; // a bit more than the auto scroll margin
-                lowTheshold = getElementYOffset(
-                    flatOutline[currentOutlineIndex].element,
+        document.documentElement.appendChild(container);
+
+        this.outlineSvelteComponent = new Outline({
+            target: container.contentDocument.body,
+            props: { outline: this.outline, activeOutlineIndex: 0 },
+        });
+    }
+
+    private uninstallScrollListener: () => void;
+    private listenToOutlineScroll() {
+        function flatten(item: OutlineItem): OutlineItem[] {
+            return [item].concat(item.children.flatMap(flatten));
+        }
+        const flatOutline = flatten(this.outline);
+
+        // listen to scroll changes, compare to last header
+        let currentOutlineIndex = 0;
+        let lowTheshold: number;
+        let highTheshold: number;
+
+        const updateTresholds = () => {
+            const margin = 20; // a bit more than the auto scroll margin
+            lowTheshold = getElementYOffset(
+                flatOutline[currentOutlineIndex].element,
+                margin
+            );
+            if (currentOutlineIndex + 1 < flatOutline.length) {
+                highTheshold = getElementYOffset(
+                    flatOutline[currentOutlineIndex + 1].element,
                     margin
                 );
-                if (currentOutlineIndex + 1 < flatOutline.length) {
-                    highTheshold = getElementYOffset(
-                        flatOutline[currentOutlineIndex + 1].element,
-                        margin
-                    );
-                } else {
-                    highTheshold = Infinity;
-                }
+            } else {
+                highTheshold = Infinity;
             }
-            updateTresholds();
+        };
+        updateTresholds();
 
-            document.addEventListener("scroll", () => {
-                if (currentOutlineIndex > 0 && window.scrollY < lowTheshold) {
-                    currentOutlineIndex -= 1;
-                    updateTresholds();
-                } else if (window.scrollY >= highTheshold) {
-                    currentOutlineIndex += 1;
-                    updateTresholds();
-                }
+        const scollListener = () => {
+            if (currentOutlineIndex > 0 && window.scrollY < lowTheshold) {
+                currentOutlineIndex -= 1;
+                updateTresholds();
+            } else if (window.scrollY >= highTheshold) {
+                currentOutlineIndex += 1;
+                updateTresholds();
+            }
 
-                const currentHeading = flatOutline[currentOutlineIndex];
-                onChangeActiveHeading(currentHeading.index);
+            const currentHeading = flatOutline[currentOutlineIndex];
+            this.outlineSvelteComponent.$set({
+                activeOutlineIndex: currentHeading.index,
             });
-        }, 500);
+        };
+        document.addEventListener("scroll", scollListener);
+
+        this.uninstallScrollListener = () =>
+            document.removeEventListener("scroll", scollListener);
     }
 
     async transitionOut() {
         document
             .querySelectorAll(
-                ".lindy-page-settings-topright, .lindy-page-settings-pageadjacent"
+                ".lindy-page-settings-topright, .lindy-page-settings-pageadjacent, .lindy-info-topleft"
             )
             .forEach((e) => e.remove());
+
+        if (this.uninstallScrollListener) {
+            this.uninstallScrollListener();
+        }
     }
 }
