@@ -13,7 +13,7 @@ import { scrollToElement } from "./common";
     let activateStateClass = ""
     $: if (children.length !== 0 && activeOutlineIndex > index && activeOutlineIndex <= children[children.length - 1].index) {
         // active parent
-        activateStateClass = ""
+        activateStateClass = "text-gray-400"
     } else if (index === activeOutlineIndex) {
         // active
         activateStateClass = "is-active font-bold"
@@ -38,8 +38,16 @@ import { scrollToElement } from "./common";
     }
 </script>
 
-<li class="text-gray-600 font-medium">
-    <div class={"heading-text w-fit relative text-sm cursor-pointer " + activateStateClass} on:click={focusHeading}>{title}</div>
+<li class="text-gray-600">
+    <div class={"heading-text w-fit relative text-sm cursor-pointer " + activateStateClass} on:click={focusHeading}>
+        <!-- {#if index === -1}
+            
+        {/if} -->
+        <svg class="active-dot hidden w-1.5" viewBox="0 0 320 512">
+            <path fill="currentColor" d="M320 256C320 344.4 248.4 416 160 416C71.63 416 0 344.4 0 256C0 167.6 71.63 96 160 96C248.4 96 320 167.6 320 256z"/>
+        </svg>
+        {title}
+    </div>
     {#if children.length > 0}
         <ul class="m-0 ml-5 p-0 list-none mt-1 flex flex-col gap-1">
             {#each children as child, i}
@@ -54,6 +62,13 @@ import { scrollToElement } from "./common";
     /* some padding for font weight change */
     padding-right: 1em;
 
+    transition: all 0.1s;
+}
+.heading-text.is-active > .active-dot {
+    display: inline-block;
+    position: absolute;
+    right: calc(100% + 4px);
+    top: 25%;
     transition: all 0.1s;
 }
 

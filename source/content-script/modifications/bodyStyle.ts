@@ -79,6 +79,10 @@ export default class BodyStyleModifier implements PageModifier {
         document.body.style.setProperty("display", "block", "important");
 
         document.body.style.setProperty("height", "auto", "important");
-        document.body.style.setProperty("margin", "10px auto", "important");
+        document.body.style.setProperty(
+            "margin",
+            "10px auto 40px auto",
+            "important"
+        );
     }
 }

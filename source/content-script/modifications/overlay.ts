@@ -52,8 +52,9 @@ export default class OverlayManager implements PageModifier {
         // sometimes content block takes time
         // TODO ensure afterTransitionIn() actually runs later?
         // https://www.quantamagazine.org/researchers-identify-master-problem-underlying-all-cryptography-20220406/
-        this.outline = getOutline();
-        if (!this.outline) {
+        let headingCount: number;
+        [this.outline, headingCount] = getOutline();
+        if (headingCount < 3) {
             return;
         }
 

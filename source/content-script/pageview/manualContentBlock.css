@@ -666,3 +666,8 @@ code {
 #most-read-container {
     display: none !important;
 }
+
+/* https://nautil.us/the-power-of-narrative-15975/ */
+.article-similar-interest {
+    display: none !important;
+}

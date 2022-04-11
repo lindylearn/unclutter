@@ -298,6 +298,8 @@
     width: calc((100vw - var(--lindy-pagewidth)) / 2 - 2 * 10px);
     height: 600px;
 
+    width: 350px;
+
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     animation: fadeInOutline 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     animation-delay: 0s;

@@ -15,6 +15,7 @@ const contentBlocklist = [
     "table",
     "advertisement",
     "most read",
+    "newsletter",
 ];
 const classBlocklist = [
     "subtitle", // https://lunduke.substack.com/p/the-computers-used-to-do-3d-animation?s=r
@@ -35,7 +36,7 @@ const endBlocklist = [
     "related", // https://stackoverflow.blog/2022/04/07/you-should-be-reading-academic-computer-science-papers/
     "comments", // https://www.bennadel.com/blog/4210-you-can-throw-anything-in-javascript-and-other-async-await-considerations.htm
 ];
-export function getOutline(): OutlineItem {
+export function getOutline(): [OutlineItem, number] {
     const outline: OutlineItem[] = [];
 
     // parse heading from DOM
@@ -100,7 +101,7 @@ export function getOutline(): OutlineItem {
     }
 
     if (outline.length === 0) {
-        return null;
+        return [null, 0];
     }
 
     // create ids for linking if not present
@@ -166,7 +167,7 @@ export function getOutline(): OutlineItem {
 
     console.log(normalizedOutline);
 
-    return normalizedOutline;
+    return [normalizedOutline, outline.length];
 }
 
 function addHeadingIds(flatOutline: OutlineItem[]) {
