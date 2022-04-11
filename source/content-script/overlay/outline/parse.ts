@@ -1,3 +1,4 @@
+import { asideWordBlocklist } from "source/content-script/modifications/DOM/textContainer";
 import { scrollToElement } from "./common";
 
 export interface OutlineItem {
@@ -36,7 +37,7 @@ const endBlocklist = [
     "related", // https://stackoverflow.blog/2022/04/07/you-should-be-reading-academic-computer-science-papers/
     "comments", // https://www.bennadel.com/blog/4210-you-can-throw-anything-in-javascript-and-other-async-await-considerations.htm
 ];
-export function getOutline(): [OutlineItem, number] {
+export function getOutline(): [OutlineItem[], number] {
     const outline: OutlineItem[] = [];
 
     // parse heading from DOM
@@ -59,24 +60,24 @@ export function getOutline(): [OutlineItem, number] {
         ) {
             continue;
         }
-        // if (
-        //     asideWordBlocklist
-        //         .filter((word) => !["header", "ad"].includes(word))
-        //         .concat(classBlocklist)
-        //         .some(
-        //             (word) =>
-        //                 node.className.toLowerCase().includes(word) ||
-        //                 node.id.toLowerCase().includes(word) ||
-        //                 node.parentElement.className
-        //                     .toLowerCase()
-        //                     .includes(word)
-        //         )
-        // ) {
-        //     continue;
-        // }
-        // if (endBlocklist.some((word) => text.toLowerCase().includes(word))) {
-        //     break;
-        // }
+        if (
+            asideWordBlocklist
+                .filter((word) => !["header", "ad"].includes(word))
+                .concat(classBlocklist)
+                .some(
+                    (word) =>
+                        node.className.toLowerCase().includes(word) ||
+                        node.id.toLowerCase().includes(word) ||
+                        node.parentElement.className
+                            .toLowerCase()
+                            .includes(word)
+                )
+        ) {
+            continue;
+        }
+        if (endBlocklist.some((word) => text.toLowerCase().includes(word))) {
+            break;
+        }
 
         // Clean heading text
         let cleanText = text.trim().split("\n").pop();
@@ -103,9 +104,6 @@ export function getOutline(): [OutlineItem, number] {
     if (outline.length === 0) {
         return [null, 0];
     }
-
-    // create ids for linking if not present
-    // addHeadingIds(outline);
 
     // Collapse elements
     const currentStack: OutlineItem[] = [
@@ -165,9 +163,12 @@ export function getOutline(): [OutlineItem, number] {
     }
     const normalizedOutline = normalizeOutlineItem(outlineRoot);
 
-    console.log(normalizedOutline);
+    // put title on same level as main headings
+    const squashedOutline = [{ ...normalizedOutline, children: [] }].concat(
+        normalizedOutline.children
+    );
 
-    return [normalizedOutline, outline.length];
+    return [squashedOutline, outline.length];
 }
 
 function addHeadingIds(flatOutline: OutlineItem[]) {

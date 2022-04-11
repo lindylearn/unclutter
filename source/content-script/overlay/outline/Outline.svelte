@@ -5,7 +5,7 @@ import { children } from "svelte/internal";
     import Heading from "./Heading.svelte";
     import { OutlineItem } from "./parse";
 
-    export let outline: OutlineItem;
+    export let outline: OutlineItem[];
     export let activeOutlineIndex: number;
 </script>
 
@@ -19,7 +19,7 @@ import { children } from "svelte/internal";
         </div> -->
         <ul class="m-0 p-0 list-none flex flex-col gap-1">
             <!-- <Heading {...outline} activeOutlineIndex={activeOutlineIndex} /> -->
-            {#each outline.children as child, i}
+            {#each outline as child, i}
                 <Heading {...child} activeOutlineIndex={activeOutlineIndex} />
             {/each}
         </ul>

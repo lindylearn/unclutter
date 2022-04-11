@@ -22,7 +22,7 @@ export default class OverlayManager implements PageModifier {
     private domain: string;
     private themeModifier: ThemeModifier;
 
-    private outline: OutlineItem;
+    private outline: OutlineItem[];
     private outlineSvelteComponent: Outline;
 
     constructor(domain: string, themeModifier: ThemeModifier) {
@@ -86,7 +86,7 @@ export default class OverlayManager implements PageModifier {
         function flatten(item: OutlineItem): OutlineItem[] {
             return [item].concat(item.children.flatMap(flatten));
         }
-        const flatOutline = flatten(this.outline);
+        const flatOutline = this.outline.flatMap(flatten);
 
         // listen to scroll changes, compare to last header
         let currentOutlineIndex = 0;
