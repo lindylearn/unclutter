@@ -79,6 +79,7 @@ export function getOutline(): OutlineItem {
 
         // Clean heading text
         let cleanText = text.trim().split("\n").pop();
+        cleanText = cleanText.replace("#", "").replace("[edit]", "");
         while (cleanText.includes("  ")) {
             cleanText = cleanText.replace(/  /g, " ");
         }

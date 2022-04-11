@@ -116,8 +116,8 @@ export default class OverlayManager implements PageModifier {
                 currentOutlineIndex = 0;
                 updateTresholds();
             } else if (
-                window.scrollY + window.innerHeight ===
-                document.documentElement.scrollHeight
+                window.scrollY + window.innerHeight >=
+                document.documentElement.scrollHeight - 20
             ) {
                 // end of document
                 currentOutlineIndex = flatOutline.length - 1;
