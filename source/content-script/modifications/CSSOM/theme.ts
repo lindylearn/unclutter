@@ -49,7 +49,7 @@ export default class ThemeModifier implements PageModifier {
             return;
         }
         if (theme.pageWidth) {
-            setCssThemeVariable(pageWidthThemeVariable, theme.pageWidth, true);
+            setCssThemeVariable(pageWidthThemeVariable, theme.pageWidth);
         }
 
         this.activeColorTheme = theme.colorTheme;
@@ -91,7 +91,7 @@ export default class ThemeModifier implements PageModifier {
     async afterTransitionIn() {
         const theme = await getUserTheme();
         if (theme.fontSize) {
-            setCssThemeVariable(fontSizeThemeVariable, theme.fontSize, true);
+            setCssThemeVariable(fontSizeThemeVariable, theme.fontSize);
         }
 
         await this.applyActiveColorTheme();
@@ -130,11 +130,7 @@ export default class ThemeModifier implements PageModifier {
     // also called from overlay theme selector
     private async applyActiveColorTheme() {
         // State for UI switch
-        setCssThemeVariable(
-            activeColorThemeVariable,
-            this.activeColorTheme,
-            true
-        );
+        setCssThemeVariable(activeColorThemeVariable, this.activeColorTheme);
         highlightActiveColorThemeButton(this.activeColorTheme);
 
         // Determine if should use dark mode
@@ -186,11 +182,7 @@ export default class ThemeModifier implements PageModifier {
                     this.activeColorTheme
                 );
             }
-            setCssThemeVariable(
-                backgroundColorThemeVariable,
-                concreteColor,
-                true
-            );
+            setCssThemeVariable(backgroundColorThemeVariable, concreteColor);
         }
 
         await this.updateAutoModeColor();
@@ -200,12 +192,11 @@ export default class ThemeModifier implements PageModifier {
     private async updateAutoModeColor() {
         if (this.systemDarkModeQuery.matches) {
             const darkColor = colorThemeToBackgroundColor("dark");
-            setCssThemeVariable(autoBackgroundThemeVariable, darkColor, true);
+            setCssThemeVariable(autoBackgroundThemeVariable, darkColor);
         } else {
             setCssThemeVariable(
                 autoBackgroundThemeVariable,
-                this.originalBackgroundColor,
-                true
+                this.originalBackgroundColor
             );
         }
     }
@@ -255,16 +246,18 @@ export default class ThemeModifier implements PageModifier {
                 }
                 setCssThemeVariable(
                     backgroundColorThemeVariable,
-                    backgroundColor,
-                    true
+                    backgroundColor
                 );
                 if (this.activeColorTheme === "auto") {
                     setCssThemeVariable(
                         autoBackgroundThemeVariable,
-                        backgroundColor,
-                        true
+                        backgroundColor
                     );
                 }
+            });
+
+            setCssThemeVariable(darkThemeTextColor, "rgb(232, 230, 227)", {
+                setOnlyUi: true,
             });
         } else {
             // manually set root text color (setting it always would override other styles)
@@ -272,14 +265,10 @@ export default class ThemeModifier implements PageModifier {
 
             // Background color
             const concreteColor = colorThemeToBackgroundColor("dark");
-            setCssThemeVariable(
-                backgroundColorThemeVariable,
-                concreteColor,
-                true
-            );
+            setCssThemeVariable(backgroundColorThemeVariable, concreteColor);
 
             // Text color
-            setCssThemeVariable(darkThemeTextColor, "rgb(232, 230, 227)", true);
+            setCssThemeVariable(darkThemeTextColor, "rgb(232, 230, 227)");
 
             await this.enableDarkModeStyleTweaks();
         }

@@ -15,11 +15,11 @@ export const darkThemeTextColor = "--lindy-dark-theme-text-color";
 
 export function applySaveThemeOverride(domain, varName, value) {
     if (varName === fontSizeThemeVariable) {
-        setCssThemeVariable(varName, value, true);
+        setCssThemeVariable(varName, value);
 
         mergeUserTheme({ fontSize: value });
     } else if (varName === pageWidthThemeVariable) {
-        setCssThemeVariable(varName, value, true);
+        setCssThemeVariable(varName, value);
 
         mergeUserTheme({ pageWidth: value });
     } else if (varName === activeColorThemeVariable) {
@@ -36,7 +36,7 @@ export function getThemeValue(varName) {
         .trim();
 }
 
-export function setCssThemeVariable(varName, value, overwrite = false) {
+export function setCssThemeVariable(varName, value, ...params) {
     // To minimize rerenders, set CSS variables only on elements where they're used
     if (varName === fontSizeThemeVariable) {
         document.documentElement.style.setProperty(varName, value);
@@ -54,7 +54,9 @@ export function setCssThemeVariable(varName, value, overwrite = false) {
             .getElementById("lindy-page-settings-topright")
             ?.style.setProperty(autoBackgroundThemeVariable, value);
     } else if (varName === darkThemeTextColor) {
-        document.documentElement.style.setProperty(varName, value);
+        if (!params["setOnlyUi"]) {
+            document.documentElement.style.setProperty(varName, value);
+        }
 
         getOutlineContentElement()?.style.setProperty(varName, value);
     } else {
