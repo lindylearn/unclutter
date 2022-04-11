@@ -295,6 +295,6 @@
     position: fixed;
     top: 0;
     left: 0;
-    width: 300px;
+    width: calc((100vw - var(--lindy-pagewidth)) / 2 - 2 * 10px);
     height: 600px;
 }

@@ -52,21 +52,17 @@ export default class OverlayManager implements PageModifier {
         // sometimes content block takes time
         // TODO ensure afterTransitionIn() actually runs later?
         // https://www.quantamagazine.org/researchers-identify-master-problem-underlying-all-cryptography-20220406/
-        setTimeout(() => {
-            this.outline = getOutline();
-            if (!this.outline) {
-                return;
-            }
+        this.outline = getOutline();
+        if (!this.outline) {
+            return;
+        }
 
-            this.insertOutline();
+        this.insertOutline();
+        this.listenToOutlineScroll();
 
-            // this should be experimental
-            // would also need to update URL during scrolling
-            // maybe that's annoying?
-            // scrollToFragmentHeading();
-
-            this.listenToOutlineScroll();
-        }, 500);
+        // this should be experimental
+        // would also need to update URL during scrolling
+        // scrollToFragmentHeading();
     }
 
     private insertOutline() {

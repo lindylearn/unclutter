@@ -54,7 +54,7 @@ async function _enableAnimation(activateNow = false) {
     // easeOutExpo from easings.net
     document.body.style.transition = `
         margin 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-        padding 0.2s cubic-bezier(0.16, 1, 0.3, 1s,
+        padding 0.2s cubic-bezier(0.16, 1, 0.3, 1s),
         width  0.2s cubic-bezier(0.16, 1, 0.3, 1),
         max-width  0.2s cubic-bezier(0.16, 1, 0.3, 1)
     `;
