@@ -13,6 +13,7 @@ import { scrollToElement } from "./common";
     let activateStateClass = ""
     $: if (children.length !== 0 && activeOutlineIndex > index && activeOutlineIndex <= children[children.length - 1].index) {
         // active parent
+        // not completely correctly, e.g. on https://blog.adamchalmers.com/making-a-dns-client/
         activateStateClass = "visited"
     } else if (index === activeOutlineIndex) {
         // active

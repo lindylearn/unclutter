@@ -77,7 +77,10 @@ export default class OverlayManager implements PageModifier {
 
         this.outlineSvelteComponent = new Outline({
             target: container.contentDocument.body,
-            props: { outline: this.outline, activeOutlineIndex: 0 },
+            props: {
+                outline: this.outline,
+                activeOutlineIndex: this.outline[0].index,
+            },
         });
     }
 

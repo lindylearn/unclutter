@@ -37,6 +37,20 @@ const endBlocklist = [
     "related", // https://stackoverflow.blog/2022/04/07/you-should-be-reading-academic-computer-science-papers/
     "comments", // https://www.bennadel.com/blog/4210-you-can-throw-anything-in-javascript-and-other-async-await-considerations.htm
 ];
+const monthNames = [
+    "january",
+    "february",
+    "march",
+    "april",
+    "may",
+    "june",
+    "july",
+    "august",
+    "september",
+    "october",
+    "november",
+    "december",
+];
 
 export function getOutline(): [OutlineItem[], number] {
     // List raw DOM nodes and filter to likely headings
@@ -47,7 +61,6 @@ export function getOutline(): [OutlineItem[], number] {
 
     // Construct hierarchy based on heading level
     const collapsedItems = collapseItems(headingItems);
-    console.log(collapsedItems);
 
     // Normalize root
     let outlineRoot: OutlineItem;
@@ -60,12 +73,16 @@ export function getOutline(): [OutlineItem[], number] {
 
         // Check if first child duplicates title
         // e.g. https://blog.adamchalmers.com/making-a-dns-client
-        if (outlineRoot.children?.[0].title === outlineRoot.title) {
-            outlineRoot.children = outlineRoot.children.slice(1);
+        if (outlineRoot.title.includes(outlineRoot.children?.[0].title)) {
+            // check include() and use explicit title if available in case meta title includes more noise
+            outlineRoot.title = outlineRoot.children?.[0].title;
+            outlineRoot.children = outlineRoot.children?.[0].children.concat(
+                outlineRoot.children.slice(1)
+            );
         }
     }
 
-    const normalizedOutline = normalizeItemLevel(outlineRoot);
+    const normalizedOutline = normalizeItemLevel(outlineRoot, 0);
 
     // put title on same level as main headings
     const squashedOutline = [{ ...normalizedOutline, children: [] }].concat(
@@ -94,7 +111,9 @@ function getHeadingItems(): OutlineItem[] {
         // Ignore specific words & css classes
         const text = node.textContent;
         if (
-            contentBlocklist.some((word) => text.toLowerCase().includes(word))
+            contentBlocklist
+                .concat(monthNames)
+                .some((word) => text.toLowerCase().includes(word))
         ) {
             continue;
         }
@@ -177,6 +196,7 @@ function collapseItems(headingItems: OutlineItem[]): OutlineItem[] {
         const completeItem = currentStack.pop();
         currentStack[currentStack.length - 1].children.push(completeItem);
     }
+
     return currentStack;
 }
 
