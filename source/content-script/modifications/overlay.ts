@@ -52,6 +52,11 @@ export default class OverlayManager implements PageModifier {
         setTimeout(() => {
             const outline = getOutline();
 
+            function flatten(item: OutlineItem): OutlineItem[] {
+                return [item].concat(item.children.flatMap(flatten));
+            }
+            const flatOutline = flatten(outline);
+
             const container = document.createElement("div");
             document.documentElement.appendChild(container);
 
@@ -64,11 +69,6 @@ export default class OverlayManager implements PageModifier {
             // would also need to update URL during scrolling
             // maybe that's annoying?
             // scrollToFragmentHeading();
-
-            function flatten(item: OutlineItem): OutlineItem[] {
-                return [item].concat(item.children.flatMap(flatten));
-            }
-            const flatOutline = flatten(outline);
 
             function onChangeActiveHeading(activeOutlineIndex: number) {
                 // console.log(flatOutline[currentOutlineIndex].title);
@@ -83,7 +83,7 @@ export default class OverlayManager implements PageModifier {
             let lowTheshold: number;
             let highTheshold: number;
             function updateTresholds() {
-                const margin = 25; // a bit more than the auto scroll margin
+                const margin = 20; // a bit more than the auto scroll margin
                 lowTheshold = getElementYOffset(
                     flatOutline[currentOutlineIndex].element,
                     margin
@@ -103,14 +103,13 @@ export default class OverlayManager implements PageModifier {
                 if (currentOutlineIndex > 0 && window.scrollY < lowTheshold) {
                     currentOutlineIndex -= 1;
                     updateTresholds();
-
-                    onChangeActiveHeading(currentOutlineIndex);
                 } else if (window.scrollY >= highTheshold) {
                     currentOutlineIndex += 1;
                     updateTresholds();
-
-                    onChangeActiveHeading(currentOutlineIndex);
                 }
+
+                const currentHeading = flatOutline[currentOutlineIndex];
+                onChangeActiveHeading(currentHeading.index);
             });
         }, 500);
     }

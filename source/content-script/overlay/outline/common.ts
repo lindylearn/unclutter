@@ -6,7 +6,7 @@ export function scrollToElement(element: Element) {
     });
 }
 
-export function getElementYOffset(element, margin = 20) {
+export function getElementYOffset(element, margin = 15) {
     const position = element.getBoundingClientRect();
     return position.top + window.pageYOffset - margin;
 }

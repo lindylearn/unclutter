@@ -10,7 +10,7 @@
 <div id="lindy-info-topleft" class="fixed left-0 top-0 p-3 cursor-auto">
     <div>
         <ul class="m-0 p-0 list-none flex flex-col gap-2">
-            <Heading {...outline} outlineIndex={0} activeOutlineIndex={activeOutlineIndex} />
+            <Heading {...outline} activeOutlineIndex={activeOutlineIndex} />
         </ul>
     </div>
 </div>

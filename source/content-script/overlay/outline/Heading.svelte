@@ -3,27 +3,26 @@ import { scrollToElement } from "./common";
 
     import { OutlineItem } from "./parse";
 
+    export let index: number;
     export let title: string;
     export let element: Element;
     export let children: OutlineItem[];
 
-    export let outlineIndex: number;
     export let activeOutlineIndex: number;
 
     let activateStateClass = ""
-    $: if (outlineIndex < activeOutlineIndex) {
-        // visited
-        activateStateClass = "text-gray-500"
-    }
-    $: if (outlineIndex === activeOutlineIndex) {
+    $: if (children.length !== 0 && activeOutlineIndex > index && activeOutlineIndex <= children[children.length - 1].index) {
+        // active parent
+        activateStateClass = ""
+    } else if (index === activeOutlineIndex) {
         // active
         activateStateClass = "font-bold"
-    }
-    $: if (outlineIndex > activeOutlineIndex) {
+    } else if (index < activeOutlineIndex) {
+        // visited
+        activateStateClass = "text-gray-400"
+    } else if (index > activeOutlineIndex) {
         activateStateClass = ""
     }
-
-
 
     function focusHeading() {
         // TODO can remove this here?
@@ -40,12 +39,12 @@ import { scrollToElement } from "./common";
     }
 </script>
 
-<li class="">
-    <div class={"text-sm text-gray-600 font-medium cursor-pointer " + activateStateClass} on:click={focusHeading}>{outlineIndex} {title}</div>
+<li class="text-gray-600 font-medium">
+    <div class={"text-sm cursor-pointer " + activateStateClass} on:click={focusHeading}>{title}</div>
     {#if children.length > 0}
         <ul class="m-0 ml-5 p-0 list-none mt-1 flex flex-col gap-1">
             {#each children as child, i}
-                <svelte:self {...child} outlineIndex={outlineIndex + 1 + i} activeOutlineIndex={activeOutlineIndex} />
+                <svelte:self {...child} activeOutlineIndex={activeOutlineIndex} />
             {/each}
         </ul>
     {/if}
