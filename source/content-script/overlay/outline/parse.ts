@@ -95,12 +95,14 @@ export function getOutline(): [OutlineItem[], number] {
 function getHeadingItems(): OutlineItem[] {
     const outline: OutlineItem[] = [];
 
-    // parse heading from DOM
-    const nodes = document.body.querySelectorAll("h1, h2, h3, h4");
+    // Get all heading elements from DOM in one go to keep serial order
+    const nodes = document.body.querySelectorAll(
+        "h1, h2, h3, h4, .dropcap, .has-dropcap, p[class*=dropcap], strong, b"
+    );
 
     // h4, h5, h6 often used for side content or tagging, so ignore them
-    // https://www.quantamagazine.org/researchers-identify-master-problem-underlying-all-cryptography-20220406/
-    // h4 used at https://www.patriciabriggs.com/articles/silver/silverbullets.shtml
+    // e.g. https://www.quantamagazine.org/researchers-identify-master-problem-underlying-all-cryptography-20220406/
+
     let index = 0;
     for (const node of nodes) {
         // Ignore invisible or removed elements
@@ -108,57 +110,161 @@ function getHeadingItems(): OutlineItem[] {
             continue;
         }
 
-        // Ignore specific words & css classes
-        const text = node.textContent;
-        if (
-            contentBlocklist
-                .concat(monthNames)
-                .some((word) => text.toLowerCase().includes(word))
-        ) {
-            continue;
-        }
-        if (
-            asideWordBlocklist
-                .filter((word) => !["header", "ad"].includes(word))
-                .concat(classBlocklist)
-                .some(
-                    (word) =>
-                        node.className.toLowerCase().includes(word) ||
-                        node.id.toLowerCase().includes(word) ||
-                        node.parentElement.className
-                            .toLowerCase()
-                            .includes(word)
-                )
-        ) {
-            continue;
-        }
-        if (endBlocklist.some((word) => text.toLowerCase().includes(word))) {
-            break;
+        // determine which heading element matched
+        let headingItem: OutlineItem;
+        if (node.tagName.length === 2 && node.tagName[0] == "H") {
+            headingItem = getHeadingNodeItem(node);
+        } else if (node.className.includes("dropcap")) {
+            headingItem = getDropcapNodeItem(node);
+        } else if (node.tagName === "STRONG" || node.tagName === "B") {
+            headingItem = getSoftNodeItem(node);
         }
 
-        // Clean heading text
-        let cleanText = text.trim().split("\n").pop();
-        cleanText = cleanText.replace("#", "").replace("[edit]", "");
-        while (cleanText.includes("  ")) {
-            cleanText = cleanText.replace(/  /g, " ");
-        }
-        if (cleanText === "") {
+        if (!headingItem) {
             continue;
         }
 
-        // Construct hierarchy based on <hX> level
-        const level = parseInt(node.tagName.slice(1));
         outline.push({
+            ...headingItem,
             index,
-            title: cleanText,
-            level,
-            element: node,
-            children: [], // populated below
         });
         index += 1;
     }
 
     return outline;
+}
+
+function getHeadingNodeItem(node: Element): OutlineItem | null {
+    // Ignore specific words & css classes
+    const text = node.textContent;
+    if (
+        contentBlocklist
+            .concat(monthNames)
+            .some((word) => text.toLowerCase().includes(word))
+    ) {
+        return;
+    }
+    if (
+        asideWordBlocklist
+            .filter((word) => !["header", "ad"].includes(word))
+            .concat(classBlocklist)
+            .some(
+                (word) =>
+                    node.className.toLowerCase().includes(word) ||
+                    node.id.toLowerCase().includes(word) ||
+                    node.parentElement.className.toLowerCase().includes(word)
+            )
+    ) {
+        return;
+    }
+    if (endBlocklist.some((word) => text.toLowerCase().includes(word))) {
+        return;
+    }
+    if (node.parentElement.tagName === "A") {
+        // often related link, e.g. https://www.worksinprogress.co/issue/womb-for-improvement/
+        return;
+    }
+
+    // Clean heading text
+    let cleanText = text.trim().split("\n").pop();
+    cleanText = cleanText.replace("#", "").replace("[edit]", "");
+    while (cleanText.includes("  ")) {
+        cleanText = cleanText.replace(/  /g, " ");
+    }
+    if (cleanText === "") {
+        return;
+    }
+
+    // Construct hierarchy based on <hX> level
+    const level = parseInt(node.tagName.slice(1));
+    return {
+        index: null, // populated above
+        title: cleanText,
+        level,
+        element: node,
+        children: [], // populated later
+    };
+}
+
+// Paragraphs that highlight the first letter
+// e.g. https://www.newyorker.com/magazine/2022/04/11/the-unravelling-of-an-expert-on-serial-killers
+function getDropcapNodeItem(node: Element): OutlineItem | null {
+    if (node.textContent.length < 5) {
+        // dropcap class applied to single letter, e.g. https://nautil.us/the-power-of-narrative-15975/
+        node = node.parentNode as Element;
+    }
+
+    return {
+        index: null, // populated abov
+        title: restrictTitleLength(node.textContent),
+        level: 10,
+        element: node,
+        children: [], // populated below
+    };
+}
+
+// <b> or <strong> used as headlines
+// e.g. https://waitbutwhy.com/2014/10/religion-for-the-nonreligious.html
+function getSoftNodeItem(node: Element): OutlineItem | null {
+    if (!node.textContent) {
+        return;
+    }
+
+    // easier to match for true headings than to exclude non-matches here
+    let isHeading = false;
+
+    if (
+        node.parentElement.childNodes.length === 1 &&
+        node.parentElement.tagName === "P"
+    ) {
+        // single child of <p>
+        // e.g. https://www.cadosecurity.com/cado-discovers-denonia-the-first-malware-specifically-targeting-lambda/
+        isHeading = true;
+    } else if (
+        node.parentElement.childNodes.length === 1 &&
+        node.parentElement.parentElement.childNodes.length === 1 &&
+        node.parentElement.parentElement.tagName === "P"
+    ) {
+        // single child of single child of <p>
+        // e.g. https://waitbutwhy.com/2014/10/religion-for-the-nonreligious.html
+        isHeading = true;
+    }
+
+    if (!isHeading) {
+        return;
+    }
+
+    // infer heading level from font size (the larger the lower the level)
+    // e.g. for https://waitbutwhy.com/2014/10/religion-for-the-nonreligious.html
+    const fontSizeLevel =
+        100 -
+        parseInt(window.getComputedStyle(node).fontSize.replace("px", ""));
+    // but keep them within bounds (explicit heading rank higher, dropcaps lower)
+    const level = parseFloat(`8.${fontSizeLevel}`);
+
+    return {
+        index: null, // populated abov
+        title: restrictTitleLength(node.textContent),
+        level,
+        element: node,
+        children: [], // populated below
+    };
+}
+
+function restrictTitleLength(title: string, maxLength: number = 29): string {
+    const words = title.slice(0, maxLength + 10).split(" ");
+
+    let length = 0;
+    const wordsInRange = [];
+    for (const word of words) {
+        if (length + word.length > maxLength) {
+            break;
+        }
+        wordsInRange.push(word);
+        length += word.length;
+    }
+
+    return wordsInRange.join(" ");
 }
 
 function collapseItems(headingItems: OutlineItem[]): OutlineItem[] {
