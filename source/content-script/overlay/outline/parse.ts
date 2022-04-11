@@ -37,7 +37,38 @@ const endBlocklist = [
     "related", // https://stackoverflow.blog/2022/04/07/you-should-be-reading-academic-computer-science-papers/
     "comments", // https://www.bennadel.com/blog/4210-you-can-throw-anything-in-javascript-and-other-async-await-considerations.htm
 ];
+
 export function getOutline(): [OutlineItem[], number] {
+    // List raw DOM nodes and filter to likely headings
+    const headingItems = getHeadingItems();
+    if (headingItems.length === 0) {
+        return [null, 0];
+    }
+
+    // Construct hierarchy based on heading level
+    const collapsedItems = collapseItems(headingItems);
+    console.log(collapsedItems);
+
+    // Normalize root
+    let outlineRoot: OutlineItem;
+    if (collapsedItems[0].children.length === 1) {
+        // only one site headings root, use that directly
+        outlineRoot = collapsedItems[0].children[0];
+    } else {
+        outlineRoot = collapsedItems[0];
+    }
+
+    const normalizedOutline = normalizeItemLevel(outlineRoot);
+
+    // put title on same level as main headings
+    const squashedOutline = [{ ...normalizedOutline, children: [] }].concat(
+        normalizedOutline.children
+    );
+
+    return [squashedOutline, headingItems.length];
+}
+
+function getHeadingItems(): OutlineItem[] {
     const outline: OutlineItem[] = [];
 
     // parse heading from DOM
@@ -101,11 +132,10 @@ export function getOutline(): [OutlineItem[], number] {
         index += 1;
     }
 
-    if (outline.length === 0) {
-        return [null, 0];
-    }
+    return outline;
+}
 
-    // Collapse elements
+function collapseItems(headingItems: OutlineItem[]): OutlineItem[] {
     const currentStack: OutlineItem[] = [
         {
             index: -1,
@@ -115,7 +145,7 @@ export function getOutline(): [OutlineItem[], number] {
             children: [],
         },
     ];
-    for (const item of outline) {
+    for (const item of headingItems) {
         const parentElement = currentStack[currentStack.length - 1];
 
         if (item.level > parentElement.level) {
@@ -140,38 +170,23 @@ export function getOutline(): [OutlineItem[], number] {
         const completeItem = currentStack.pop();
         currentStack[currentStack.length - 1].children.push(completeItem);
     }
-
-    let outlineRoot: OutlineItem;
-    if (currentStack[0].children.length === 1) {
-        // only one site headings root, use that directly
-        outlineRoot = currentStack[0].children[0];
-    } else {
-        outlineRoot = currentStack[0];
-    }
-
-    function normalizeOutlineItem(
-        item: OutlineItem,
-        currentLevel: number = 0
-    ): OutlineItem {
-        return {
-            ...item,
-            level: currentLevel,
-            children: item.children.map((child) =>
-                normalizeOutlineItem(child, currentLevel + 1)
-            ),
-        };
-    }
-    const normalizedOutline = normalizeOutlineItem(outlineRoot);
-
-    // put title on same level as main headings
-    const squashedOutline = [{ ...normalizedOutline, children: [] }].concat(
-        normalizedOutline.children
-    );
-
-    return [squashedOutline, outline.length];
+    return currentStack;
 }
 
-function addHeadingIds(flatOutline: OutlineItem[]) {
+function normalizeItemLevel(
+    item: OutlineItem,
+    currentLevel: number = 0
+): OutlineItem {
+    return {
+        ...item,
+        level: currentLevel,
+        children: item.children.map((child) =>
+            normalizeItemLevel(child, currentLevel + 1)
+        ),
+    };
+}
+
+export function addHeadingIds(flatOutline: OutlineItem[]) {
     flatOutline.map(({ element, title }) => {
         if (!element.id) {
             // create id for linking
