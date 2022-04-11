@@ -71,11 +71,8 @@ export default class OverlayManager implements PageModifier {
     private insertOutline() {
         const container = document.createElement("iframe");
         container.id = "lindy-info-topleft";
-        // container.style.position = "fixed";
-        // container.style.top = "0";
-        // container.style.left = "0";
         container.frameBorder = "0";
-
+        container.scrolling = "no";
         document.documentElement.appendChild(container);
 
         this.outlineSvelteComponent = new Outline({

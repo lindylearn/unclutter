@@ -13,13 +13,13 @@ import { scrollToElement } from "./common";
     let activateStateClass = ""
     $: if (children.length !== 0 && activeOutlineIndex > index && activeOutlineIndex <= children[children.length - 1].index) {
         // active parent
-        activateStateClass = "text-gray-400"
+        activateStateClass = "visited"
     } else if (index === activeOutlineIndex) {
         // active
-        activateStateClass = "is-active font-bold"
+        activateStateClass = "is-active"
     } else if (index < activeOutlineIndex) {
         // visited
-        activateStateClass = "visited text-gray-400"
+        activateStateClass = "visited"
     } else if (index > activeOutlineIndex) {
         activateStateClass = ""
     }
@@ -57,12 +57,17 @@ import { scrollToElement } from "./common";
     {/if}
 </li>
 
-<style>
+<style lang="postcss">
 .heading-text {
-    /* some padding for font weight change */
-    padding-right: 1em;
-
     transition: all 0.1s;
+    padding-right: 1em;
+}
+.is-active {
+    font-weight: 700;
+    padding-right: 0;
+}
+.visited {
+    color: #9ca3af;
 }
 .heading-text.is-active > .active-dot {
     display: inline-block;

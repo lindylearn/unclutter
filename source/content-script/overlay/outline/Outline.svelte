@@ -9,7 +9,7 @@ import { children } from "svelte/internal";
     export let activeOutlineIndex: number;
 </script>
 
-<div id="lindy-info-topleft-content" class="fixed left-0 top-0 px-5 py-3 cursor-auto text-gray-700 bg-white rounded-lg shadow">
+<div id="lindy-info-topleft-content" class="max-w-full px-5 py-3 cursor-auto text-gray-700 bg-white rounded-lg shadow">
     <div>
         <!-- <div class="flex">
             <svg class="w-5" viewBox="0 0 576 512">
