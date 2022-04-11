@@ -80,7 +80,6 @@ export default class TransitionManager implements PageModifier {
         await this.themeModifier.transitionOut();
 
         document.documentElement.classList.remove("pageview");
-        await new Promise((r) => setTimeout(r, 400));
     }
 
     async fadeinNoise() {
@@ -88,14 +87,15 @@ export default class TransitionManager implements PageModifier {
         await this.contentBlockModifier.fadeInNoise();
 
         await this.cssomProvider.reenableOriginalStylesheets();
+    }
 
+    async afterTransitionOut() {
         // remove rest
         document
             .querySelectorAll(`.${overrideClassname}`)
             .forEach((e) => e.remove());
 
         // final cleanup, includes removing animation settings
-        await new Promise((r) => setTimeout(r, 300));
-        await this.bodyStyleModifier.transitionOut();
+        await this.bodyStyleModifier.afterTransitionOut();
     }
 }

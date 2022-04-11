@@ -13,6 +13,8 @@ export interface PageModifier {
     transitionOut?: (...args: any[]) => Promise<void>;
 
     fadeInNoise?: (...args: any[]) => Promise<void>;
+
+    afterTransitionOut?: (...args: any[]) => Promise<void>;
 }
 
 // wrap class

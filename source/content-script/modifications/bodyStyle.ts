@@ -19,7 +19,7 @@ export default class BodyStyleModifier implements PageModifier {
         });
     }
 
-    async transitionOut() {
+    async afterTransitionOut() {
         this.styleObserver.disconnect();
 
         document.body.style.removeProperty("display");

@@ -297,4 +297,27 @@
     left: 0;
     width: calc((100vw - var(--lindy-pagewidth)) / 2 - 2 * 10px);
     height: 600px;
+
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    animation: fadeInOutline 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    animation-delay: 0s;
+    animation-fill-mode: both;
+}
+@keyframes fadeInOutline {
+    from {
+        visibility: hidden;
+        opacity: 0;
+        transform: translate3d(-200px, 0, 0);
+    }
+    to {
+        visibility: visible;
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+#lindy-info-topleft.lindy-overlay-fadeout {
+    visibility: hidden;
+    opacity: 0;
+    transform: translate3d(-200px, 0, 0);
+    animation: none;
 }
