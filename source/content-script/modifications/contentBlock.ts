@@ -138,4 +138,5 @@ const blockedClasses = [
     "[role=complementary]",
     ".hidden-print",
     "#related-articles",
+    ".c-recirc-module", // https://www.theverge.com/23017107/crypto-billion-dollar-bridge-hack-decentralized-finance
 ];
