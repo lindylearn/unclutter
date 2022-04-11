@@ -55,7 +55,14 @@ export function getOutline(): [OutlineItem[], number] {
         // only one site headings root, use that directly
         outlineRoot = collapsedItems[0].children[0];
     } else {
+        // Use manually added root
         outlineRoot = collapsedItems[0];
+
+        // Check if first child duplicates title
+        // e.g. https://blog.adamchalmers.com/making-a-dns-client
+        if (outlineRoot.children?.[0].title === outlineRoot.title) {
+            outlineRoot.children = outlineRoot.children.slice(1);
+        }
     }
 
     const normalizedOutline = normalizeItemLevel(outlineRoot);
