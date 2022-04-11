@@ -115,10 +115,26 @@ export default class OverlayManager implements PageModifier {
         updateTresholds();
 
         const scollListener = () => {
-            if (currentOutlineIndex > 0 && window.scrollY < lowTheshold) {
+            if (window.scrollY === 0) {
+                // start of document
+                currentOutlineIndex = 0;
+                updateTresholds();
+            } else if (
+                window.scrollY + window.innerHeight ===
+                document.documentElement.scrollHeight
+            ) {
+                // end of document
+                currentOutlineIndex = flatOutline.length - 1;
+                updateTresholds();
+            } else if (
+                currentOutlineIndex > 0 &&
+                window.scrollY < lowTheshold
+            ) {
+                // scrolled up
                 currentOutlineIndex -= 1;
                 updateTresholds();
             } else if (window.scrollY >= highTheshold) {
+                // scrolled down
                 currentOutlineIndex += 1;
                 updateTresholds();
             }
