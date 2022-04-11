@@ -661,3 +661,8 @@ code {
 .promo-article-dark {
     display: none !important;
 }
+
+/* https://reason.com/2022/04/08/the-fbi-decided-not-to-knock-down-a-suspects-front-door-because-it-was-an-affluent-neighborhood/#latest */
+#most-read-container {
+    display: none !important;
+}

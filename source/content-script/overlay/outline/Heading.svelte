@@ -26,14 +26,13 @@ import { scrollToElement } from "./common";
 
     function focusHeading() {
         // TODO can remove this here?
-        if (!element.id) {
-            // create id for linking
-            element.id = title.replace(/ /g, "-").toLowerCase()
+        // if (!element.id) {
+        //     // create id for linking
+        //     element.id = title.toLowerCase().split(" ").slice(0, 5).join("-")
 
-            // TODO strip non-alphanumeric
-        }
-
-        history.replaceState(null, null, `#${element.id}`);
+        //     // TODO strip non-alphanumeric
+        // }
+        // history.replaceState(null, null, `#${element.id}`);
 
         scrollToElement(element)
     }

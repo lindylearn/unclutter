@@ -14,6 +14,7 @@ const contentBlocklist = [
     "top stories",
     "table",
     "advertisement",
+    "most read",
 ];
 const classBlocklist = [
     "subtitle", // https://lunduke.substack.com/p/the-computers-used-to-do-3d-animation?s=r
@@ -23,6 +24,10 @@ const classBlocklist = [
     "more", // https://knowablemagazine.org/article/health-disease/2021/how-noise-pollution-affects-heart-health#support-knowable-magazine
     "byline", // https://www.thedailybeast.com/inside-the-bitcoin-2022-conference-in-miami-beach
     "recirc", // https://www.theverge.com/23017107/crypto-billion-dollar-bridge-hack-decentralized-finance
+    "card", // https://www.science.org/doi/10.1126/science.abk1781?cookieSet=1#single-cell-rna-seq-reveals-cell-type%E2%80%93specific
+    "latest", // https://reason.com/2022/04/08/the-fbi-decided-not-to-knock-down-a-suspects-front-door-because-it-was-an-affluent-neighborhood
+    "recent_post",
+    "recent-post",
 ];
 const endBlocklist = [
     "more from", //  https://blog.bradfieldcs.com/you-are-not-google-84912cf44afb
