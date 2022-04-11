@@ -21,6 +21,8 @@ const classBlocklist = [
     "suggested", // https://www.scientificamerican.com/article/birds-make-better-bipedal-bots-than-humans-do/
     "promo", // https://knowablemagazine.org/article/health-disease/2021/how-noise-pollution-affects-heart-health#support-knowable-magazine
     "more", // https://knowablemagazine.org/article/health-disease/2021/how-noise-pollution-affects-heart-health#support-knowable-magazine
+    "byline", // https://www.thedailybeast.com/inside-the-bitcoin-2022-conference-in-miami-beach
+    "link", // https://www.thedailybeast.com/south-dakota-attorney-general-jason-ravnsborg-faces-republican-revolt-on-impeachment-over-killing-joe-boever
 ];
 const endBlocklist = [
     "more from", //  https://blog.bradfieldcs.com/you-are-not-google-84912cf44afb
@@ -96,28 +98,47 @@ export function getOutline(): OutlineItem {
     // addHeadingIds(outline);
 
     // Collapse elements
-    const collapsedOutline: OutlineItem[] = [outline[0]]; // stack
-    for (const item of outline.slice(1)) {
-        const lastItem = collapsedOutline[collapsedOutline.length - 1];
-        if (item.level > lastItem.level) {
-            lastItem.children.push(item);
-        } else {
-            // lastItem is complete now
-            collapsedOutline.push(item);
-        }
-    }
-
-    let outlineRoot: OutlineItem;
-    if (collapsedOutline.length === 1) {
-        outlineRoot = collapsedOutline[0];
-    } else {
-        outlineRoot = {
+    const currentStack: OutlineItem[] = [
+        {
             index: -1,
             level: 0,
             title: document.title,
             element: document.body,
-            children: collapsedOutline,
-        };
+            children: [],
+        },
+    ];
+    for (const item of outline) {
+        const parentElement = currentStack[currentStack.length - 1];
+
+        if (item.level > parentElement.level) {
+            // increased nesting on parent element
+            currentStack.push(item);
+        } else {
+            // stack items with the same or higher nesting level are complete now
+            while (item.level <= currentStack[currentStack.length - 1].level) {
+                const completeItem = currentStack.pop();
+                currentStack[currentStack.length - 1].children.push(
+                    completeItem
+                );
+            }
+            currentStack.push(item);
+        }
+    }
+    while (
+        currentStack.length >= 2 &&
+        currentStack[currentStack.length - 2].level <=
+            currentStack[currentStack.length - 1].level
+    ) {
+        const completeItem = currentStack.pop();
+        currentStack[currentStack.length - 1].children.push(completeItem);
+    }
+
+    let outlineRoot: OutlineItem;
+    if (currentStack[0].children.length === 1) {
+        // only one site headings root, use that directly
+        outlineRoot = currentStack[0].children[0];
+    } else {
+        outlineRoot = currentStack[0];
     }
 
     function normalizeOutlineItem(
