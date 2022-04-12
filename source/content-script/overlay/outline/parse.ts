@@ -166,11 +166,7 @@ function getHeadingNodeItem(node: Element): OutlineItem | null {
     }
 
     // Clean heading text
-    let cleanText = text.trim().split("\n").pop();
-    cleanText = cleanText.replace("#", "").replace("[edit]", "");
-    while (cleanText.includes("  ")) {
-        cleanText = cleanText.replace(/  /g, " ");
-    }
+    const cleanText = cleanTitle(text).replace("#", "").replace("[edit]", "");
     if (cleanText === "") {
         return;
     }
@@ -244,11 +240,25 @@ function getSoftNodeItem(node: Element): OutlineItem | null {
 
     return {
         index: null, // populated abov
-        title: restrictTitleLength(node.textContent),
+        title: restrictTitleLength(cleanTitle(node.textContent)),
         level,
         element: node,
         children: [], // populated below
     };
+}
+
+function cleanTitle(title: string): string {
+    title = title.trim().split("\n").pop();
+
+    while (title.includes("  ")) {
+        title = title.replace(/  /g, " ");
+    }
+
+    if (title.endsWith(":")) {
+        title = title.slice(0, title.length - 1);
+    }
+
+    return title;
 }
 
 function restrictTitleLength(title: string, maxLength: number = 29): string {

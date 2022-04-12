@@ -50,4 +50,4 @@ export const defaultExcludedDomains = [
     "archive.org",
 ];
 
-export const defaultFontSizePx = "19px";
+export const defaultFontSizePx = "18px";

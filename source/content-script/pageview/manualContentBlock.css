@@ -112,6 +112,9 @@ main {
 .pw-post-byline-header {
     display: none !important;
 }
+span > article {
+    display: none !important;
+}
 
 /* https://www.gamesindustry.biz/articles/2022-02-24-studios-call-for-support-in-face-of-russian-invasion-of-ukraine */
 .coverage-promo,
