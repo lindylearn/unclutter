@@ -1,10 +1,10 @@
 module.exports = {
     mode: "jit",
     purge: {
-        content: ["./source/**/*.svelte"],
+        content: ["./source/**/*.svelte", "./source/settings-page/**/*.js"],
     },
     plugins: [],
     corePlugins: {
-        preflight: false,
+        preflight: true,
     },
 };

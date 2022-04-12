@@ -77,7 +77,7 @@ const esModuleConfig = {
         }),
         nodeResolve({ browser: true }),
         commonjs({ include: /node_modules/ }),
-        postcss(),
+        postcss({ plugins: [tailwindcss()] }),
         moveVirtualFolder,
         replace({
             preventAssignment: true,
