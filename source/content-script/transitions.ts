@@ -62,6 +62,7 @@ export default class TransitionManager implements PageModifier {
         await this.textContainerModifier.transitionIn(); // TODO how to make transition from original position
 
         await this.bodyStyleModifier.transitionIn();
+        await this.overlayManager.transitionIn();
     }
 
     async afterTransitionIn() {
@@ -90,6 +91,8 @@ export default class TransitionManager implements PageModifier {
     }
 
     async afterTransitionOut() {
+        await this.overlayManager.afterTransitionOut();
+
         // remove rest
         document
             .querySelectorAll(`.${overrideClassname}`)

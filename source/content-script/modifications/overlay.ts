@@ -31,6 +31,11 @@ export default class OverlayManager implements PageModifier {
         this.themeModifier = themeModifier;
     }
 
+    async transitionIn() {
+        // insert iframe earlier so ThemeModifier can inject theme variables
+        await this.insertIframes();
+    }
+
     async afterTransitionIn() {
         insertPageSettings(this.domain, this.themeModifier);
 
@@ -71,19 +76,23 @@ export default class OverlayManager implements PageModifier {
         this.listenToOutlineScroll();
     }
 
-    private async insertOutline() {
+    private overlayIframe: HTMLIFrameElement;
+    private async insertIframes() {
         const iframe = document.createElement("iframe");
         iframe.id = "lindy-info-topleft";
         iframe.frameBorder = "0";
         iframe.scrolling = "no";
         document.documentElement.appendChild(iframe);
+        this.overlayIframe = iframe;
 
         // Firefox bug: need to wait until iframe initial render to insert elements
         // See https://stackoverflow.com/questions/60814167/firefox-deleted-innerhtml-of-generated-iframe
         await new Promise((r) => setTimeout(r, 0));
+    }
 
+    private async insertOutline() {
         this.outlineSvelteComponent = new Outline({
-            target: iframe.contentDocument.body,
+            target: this.overlayIframe.contentDocument.body,
             props: {
                 outline: this.outline,
                 activeOutlineIndex: this.outline[0].index,
@@ -165,7 +174,7 @@ export default class OverlayManager implements PageModifier {
     async afterTransitionOut() {
         document
             .querySelectorAll(
-                ".lindy-page-settings-topright, .lindy-page-settings-pageadjacent, .lindy-info-topleft"
+                ".lindy-page-settings-topright, .lindy-page-settings-pageadjacent, #lindy-info-topleft"
             )
             .forEach((e) => e.remove());
 

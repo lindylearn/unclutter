@@ -1,4 +1,4 @@
-import { getOutlineContentElement } from "source/content-script/overlay/outline/common";
+import { getOutlineIframe } from "source/content-script/overlay/outline/common";
 import { mergeUserTheme } from "./storage";
 
 export type themeName = "auto" | "white" | "sepia" | "dark";
@@ -45,7 +45,7 @@ export function setCssThemeVariable(varName, value, ...params) {
     } else if (varName === backgroundColorThemeVariable) {
         document.body.style.setProperty("background", value, "important");
 
-        getOutlineContentElement()?.style.setProperty("background", value);
+        getOutlineIframe()?.body.style.setProperty(varName, value);
     } else if (
         varName === autoBackgroundThemeVariable ||
         varName === activeColorThemeVariable
@@ -58,7 +58,7 @@ export function setCssThemeVariable(varName, value, ...params) {
             document.documentElement.style.setProperty(varName, value);
         }
 
-        getOutlineContentElement()?.style.setProperty(varName, value);
+        getOutlineIframe()?.body.style.setProperty(varName, value);
     } else {
         document.documentElement.style.setProperty(varName, value);
     }

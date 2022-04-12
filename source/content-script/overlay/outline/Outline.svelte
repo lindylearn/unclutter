@@ -36,6 +36,7 @@ import { children } from "svelte/internal";
         "Segoe UI", Roboto !important;
     margin: 10px;
     margin-left: 20px;
+    background-color: var(--lindy-background-color);
 }
 
 </style>
