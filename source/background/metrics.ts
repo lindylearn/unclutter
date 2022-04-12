@@ -5,6 +5,7 @@ import {
     enableBootUnclutterMessage,
     getFeatureFlag,
     isDevelopmentFeatureFlag,
+    showOutlineFeatureFlag,
 } from "../common/featureFlags";
 import browser from "../common/polyfill";
 import { getAllCustomDomainSettings } from "../common/storage";
@@ -87,6 +88,7 @@ export async function reportSettings(version, isNewInstall) {
         [enableBootUnclutterMessage]: await getFeatureFlag(
             enableBootUnclutterMessage
         ),
+        [showOutlineFeatureFlag]: await getFeatureFlag(showOutlineFeatureFlag),
     };
 
     // count allowlisted and blocklisted domains

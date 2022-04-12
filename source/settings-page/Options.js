@@ -4,6 +4,7 @@ import {
     allowlistDomainOnManualActivationFeatureFlag,
     collectAnonymousMetricsFeatureFlag,
     enableBootUnclutterMessage,
+    showOutlineFeatureFlag,
 } from "../common/featureFlags";
 import DomainSettingsList from "./DomainSettingsList";
 import FeatureFlagSwitch from "./FeatureFlagSwitch";
@@ -36,6 +37,9 @@ function OptionsPage({}) {
                     >
                         that look like articles
                     </a>
+                </FeatureFlagSwitch>
+                <FeatureFlagSwitch featureFlagKey={showOutlineFeatureFlag}>
+                    Show article outline where available
                 </FeatureFlagSwitch>
             </OptionsGroup>
 
