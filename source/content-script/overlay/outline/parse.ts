@@ -16,6 +16,7 @@ const contentBlocklist = [
     "advertisement",
     "most read",
     "newsletter",
+    "tags",
 ];
 const classBlocklist = [
     "subtitle", // https://lunduke.substack.com/p/the-computers-used-to-do-3d-animation?s=r
@@ -30,6 +31,7 @@ const classBlocklist = [
     "recent_post",
     "recent-post",
     "upperdek", // https://arstechnica.com/tech-policy/2022/04/an-old-music-industry-scheme-revived-for-the-spotify-era/
+    "teaser", // https://www.vulture.com/article/joss-whedon-allegations.html
 ];
 const endBlocklist = [
     "more from", //  https://blog.bradfieldcs.com/you-are-not-google-84912cf44afb
@@ -97,7 +99,7 @@ function getHeadingItems(): OutlineItem[] {
 
     // Get all heading elements from DOM in one go to keep serial order
     const nodes = document.body.querySelectorAll(
-        "h1, h2, h3, h4, .dropcap, .has-dropcap, p[class*=dropcap], strong, b"
+        "h1, h2, h3, h4, .dropcap, .has-dropcap, p[class*=dropcap], p[class*=drop-cap], strong, b"
     );
 
     // h4, h5, h6 often used for side content or tagging, so ignore them
@@ -114,7 +116,10 @@ function getHeadingItems(): OutlineItem[] {
         let headingItem: OutlineItem;
         if (node.tagName.length === 2 && node.tagName[0] == "H") {
             headingItem = getHeadingNodeItem(node);
-        } else if (node.className.includes("dropcap")) {
+        } else if (
+            node.className.includes("dropcap") ||
+            node.className.includes("drop-cap")
+        ) {
             headingItem = getDropcapNodeItem(node);
         } else if (node.tagName === "STRONG" || node.tagName === "B") {
             headingItem = getSoftNodeItem(node);

@@ -89,3 +89,6 @@ function initializeServiceWorker() {
     startMetrics();
 }
 initializeServiceWorker();
+
+// browser.action.setBadgeBackgroundColor({ color: "#edd75b" });
+// browser.action.setBadgeText({ text: "5" });

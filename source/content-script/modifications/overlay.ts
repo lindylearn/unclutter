@@ -10,7 +10,7 @@ import {
 import {
     insertPageSettings,
     updateDomainState,
-    whiggleDomainState,
+    wiggleDomainState,
 } from "../overlay/insert";
 import { getElementYOffset } from "../overlay/outline/common";
 import Outline from "../overlay/outline/Outline.svelte";
@@ -40,14 +40,14 @@ export default class OverlayManager implements PageModifier {
         );
 
         if (domainSetting === "allow") {
-            whiggleDomainState();
+            wiggleDomainState(400);
         } else if (allowlistOnActivation && domainSetting === null) {
             const newDomainSetting = "allow";
 
             await setUserSettingsForDomain(this.domain, newDomainSetting);
             updateDomainState(newDomainSetting, this.domain);
 
-            whiggleDomainState();
+            wiggleDomainState(400);
         }
 
         const showOutline = await getFeatureFlag(showOutlineFeatureFlag);

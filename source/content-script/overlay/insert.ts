@@ -119,6 +119,13 @@ async function _setupDomainToggleState(currentDomain: string) {
         currentUserSetting = _nextUserSetting(currentUserSetting);
         renderActiveUserSetting(currentDomain);
 
+        if (currentUserSetting === "allow") {
+            wiggleDomainState();
+        } else {
+            // ensure wiggle animation does not play
+            svg.classList.remove("lindy-domain-switch-wiggle");
+        }
+
         reportEventContentScript("changeDomainSetting", {
             newState: currentUserSetting,
             trigger: "icon",
@@ -187,10 +194,16 @@ function _getDomainToggleIcon(userSetting: domainUserSetting): string {
         </svg>`;
     }
 }
-export function whiggleDomainState() {
-    document
-        .getElementById("lindy-domain-switch-icon-container")
-        .classList.add("lindy-domain-switch-wiggle");
+export function wiggleDomainState(delayMs: number = 0) {
+    setTimeout(() => {
+        const container = document.getElementById(
+            "lindy-domain-switch-icon-container"
+        );
+
+        // remove class first in case called by automatic activation already
+        container.classList.remove("lindy-domain-switch-wiggle");
+        container.classList.add("lindy-domain-switch-wiggle");
+    }, delayMs);
 }
 export function updateDomainState(
     newUserSetting: domainUserSetting,

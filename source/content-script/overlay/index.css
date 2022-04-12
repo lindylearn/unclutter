@@ -26,8 +26,7 @@
     gap: 5px;
 }
 #lindy-domain-switch-icon-container.lindy-domain-switch-wiggle > svg {
-    animation: wiggle 0.5s ease-in-out;
-    animation-delay: 0.6s;
+    animation: wiggle 0.6s ease-in-out;
 }
 @keyframes wiggle {
     0% {
