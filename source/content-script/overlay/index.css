@@ -295,7 +295,6 @@
     position: fixed;
     top: 0;
     left: 0;
-    width: calc((100vw - var(--lindy-pagewidth)) / 2 - 2 * 10px);
     height: 600px;
 
     width: 350px;
@@ -326,5 +325,11 @@
 @media (max-width: 1200px) {
     #lindy-info-topleft {
         display: none;
+    }
+}
+@media (max-width: 1550px) {
+    #lindy-info-topleft {
+        margin-left: -10px;
+        width: calc((100vw - var(--lindy-pagewidth)) / 2);
     }
 }
