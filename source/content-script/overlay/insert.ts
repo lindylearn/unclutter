@@ -24,11 +24,7 @@ export function insertPageSettings(
     domain: string,
     themeModifier: ThemeModifier
 ) {
-    const githubLink = `https://github.com/lindylearn/unclutter/issues/new?labels=broken-website&title=${encodeURIComponent(
-        `Article doesn't show correctly on ${domain}`
-    )}&body=${encodeURIComponent(
-        `The following article doesn't appear correctly in Unclutter. Please take a look!\n\n${window.location.href}`
-    )}`;
+    const githubLink = `https://github.com/lindylearn/unclutter/issues`;
 
     insertHtml(
         "lindy-page-settings-topright",
