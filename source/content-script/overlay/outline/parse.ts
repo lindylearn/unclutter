@@ -164,6 +164,10 @@ function getHeadingNodeItem(node: Element): OutlineItem | null {
         // often related link, e.g. https://www.worksinprogress.co/issue/womb-for-improvement/
         return;
     }
+    if (text.startsWith("By ")) {
+        // e.g. https://towardsdev.com/hexagonal-architecture-and-domain-driven-design-bc2525dbc05f
+        return;
+    }
 
     // Clean heading text
     const cleanText = cleanTitle(text).replace("#", "").replace("[edit]", "");

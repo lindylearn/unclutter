@@ -156,7 +156,7 @@ export default class OverlayManager implements PageModifier {
     async transitionOut() {
         document
             .getElementById("lindy-info-topleft")
-            .classList.add("lindy-overlay-fadeout");
+            ?.classList.add("lindy-overlay-fadeout");
     }
 
     async afterTransitionOut() {

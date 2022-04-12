@@ -109,7 +109,8 @@ main {
 }
 
 /* https://medium.com/swlh/working-on-dom-nodes-and-its-properties-in-javascript-af3ac77f803 */
-.pw-post-byline-header {
+.pw-post-byline-header,
+.pw-more-medium-articles {
     display: none !important;
 }
 span > article {
