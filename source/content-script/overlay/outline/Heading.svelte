@@ -1,4 +1,6 @@
 <script lang="ts">
+import { reportEventContentScript } from "source/content-script/messaging";
+
 import { scrollToElement } from "./common";
 
     import { OutlineItem } from "./parse";
@@ -36,6 +38,8 @@ import { scrollToElement } from "./common";
         // history.replaceState(null, null, `#${element.id}`);
 
         scrollToElement(element)
+
+        reportEventContentScript("clickOutlineHeading")
     }
 </script>
 
@@ -61,7 +65,7 @@ import { scrollToElement } from "./common";
 <style lang="postcss">
 .heading-text {
     transition: all 0.1s;
-    padding-right: 1em;
+    padding-right: 1.5em;
 }
 .is-active {
     font-weight: 700;
