@@ -68,15 +68,19 @@ export default class OverlayManager implements PageModifier {
         // scrollToFragmentHeading();
     }
 
-    private insertOutline() {
-        const container = document.createElement("iframe");
-        container.id = "lindy-info-topleft";
-        container.frameBorder = "0";
-        container.scrolling = "no";
-        document.documentElement.appendChild(container);
+    private async insertOutline() {
+        const iframe = document.createElement("iframe");
+        iframe.id = "lindy-info-topleft";
+        iframe.frameBorder = "0";
+        iframe.scrolling = "no";
+        document.documentElement.appendChild(iframe);
+
+        // Firefox bug: need to wait until iframe initial render to insert elements
+        // See https://stackoverflow.com/questions/60814167/firefox-deleted-innerhtml-of-generated-iframe
+        await new Promise((r) => setTimeout(r, 0));
 
         this.outlineSvelteComponent = new Outline({
-            target: container.contentDocument.body,
+            target: iframe.contentDocument.body,
             props: {
                 outline: this.outline,
                 activeOutlineIndex: this.outline[0].index,

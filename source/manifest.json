@@ -36,7 +36,6 @@
                 "content-script/pageview/contentDark.css",
                 "content-script/overlay/index.css",
                 "content-script/overlay/indexDark.css",
-                "content-script/overlay/outline/outline.css",
                 "content-script/overlay/outline/outlineDark.css",
                 "content-script/pageview/manualContentBlock.css",
                 "assets/**"
