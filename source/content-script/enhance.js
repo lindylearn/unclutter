@@ -43,10 +43,9 @@ export async function togglePageView() {
         await transitions.prepare();
 
         transitions.fadeOutNoise();
+        // await new Promise((r) => setTimeout(r, 0));
 
         transitions.transitionIn();
-
-        // await new Promise((r) => setTimeout(r, 1000));
 
         isSimulatedClick = false;
         await enablePageView(async () => {
@@ -70,7 +69,7 @@ export async function togglePageView() {
             await transitions.afterTransitionOut();
         }, true);
 
-        await new Promise((r) => setTimeout(r, 200));
+        await new Promise((r) => setTimeout(r, 500));
 
         await transitions.afterTransitionIn();
         return true;

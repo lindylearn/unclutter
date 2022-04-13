@@ -157,7 +157,7 @@ export default class TextContainerModifier implements PageModifier {
         }
     }
 
-    async afterTransitionIn() {
+    afterTransitionIn() {
         // changing text style often seems to break animation, so do after transition
 
         // Removing margin and cleaning up background, shadows etc
