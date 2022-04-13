@@ -5,7 +5,7 @@ export interface PageModifier {
     fadeOutNoise?: (...args: any[]) => void;
 
     // Shift layout and reduce page width in one go
-    transitionIn?: (...args: any[]) => Promise<void>;
+    transitionIn?: (...args: any[]) => void;
 
     afterTransitionIn?: (...args: any[]) => Promise<void>;
 

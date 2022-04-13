@@ -149,7 +149,7 @@ export default class TextContainerModifier implements PageModifier {
         this.processBackgroundColors(this.backgroundColors);
     }
 
-    async transitionIn() {
+    transitionIn() {
         // Adjust font according to theme
         // TODO scale all font sizes?
         if (this.mainFontSize) {

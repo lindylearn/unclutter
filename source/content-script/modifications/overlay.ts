@@ -31,9 +31,9 @@ export default class OverlayManager implements PageModifier {
         this.themeModifier = themeModifier;
     }
 
-    async transitionIn() {
+    transitionIn() {
         // insert iframe earlier so ThemeModifier can inject theme variables
-        await this.insertIframes();
+        this.insertIframes();
     }
 
     async afterTransitionIn() {

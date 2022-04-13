@@ -51,7 +51,7 @@ export default class ContentBlockModifier implements PageModifier {
     }
 
     // need to actually remove in pageview (may override responsive style)
-    async transitionIn() {
+    transitionIn() {
         const css = `${this.selectors.join(
             ", "
         )} { display: none !important; }`;

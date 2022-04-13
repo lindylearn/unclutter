@@ -5,7 +5,7 @@ import { PageModifier, trackModifierExecution } from "./_interface";
 export default class BodyStyleModifier implements PageModifier {
     private styleObserver: MutationObserver;
 
-    async transitionIn() {
+    transitionIn() {
         this.modifyHtmlStyle();
         this.modifyBodyStyle();
 

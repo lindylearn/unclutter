@@ -51,18 +51,15 @@ export default class TransitionManager implements PageModifier {
         this.backgroundModifier.fadeOutNoise();
     }
 
-    async transitionIn() {
-        document.body.style.setProperty("transition", "all 0.2s");
+    transitionIn() {
+        this.themeModifier.transitionIn();
+        this.contentBlockModifier.transitionIn();
+        this.responsiveStyleModifier.transitionIn();
 
-        await this.themeModifier.transitionIn();
+        this.bodyStyleModifier.transitionIn();
+        this.overlayManager.transitionIn();
 
-        await this.contentBlockModifier.transitionIn();
-
-        await this.responsiveStyleModifier.transitionIn();
-        await this.textContainerModifier.transitionIn(); // TODO how to make transition from original position
-
-        await this.bodyStyleModifier.transitionIn();
-        await this.overlayManager.transitionIn();
+        // this.textContainerModifier.transitionIn(); // TODO how to make transition from original position
     }
 
     async afterTransitionIn() {

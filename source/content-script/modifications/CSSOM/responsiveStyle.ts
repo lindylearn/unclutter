@@ -118,7 +118,7 @@ export default class ResponsiveStyleModifier implements PageModifier {
 
     private originalStyleList: object[] = [];
     private addedRules: CSSStyleRule[] = [];
-    async transitionIn() {
+    transitionIn() {
         this.expiredRules.map((rule, index) => {
             // actually deleting & reinserting rule is hard -- need to keep track of mutating rule index
             // so simply remove style properties from rule

@@ -67,7 +67,7 @@ export default class ThemeModifier implements PageModifier {
         );
     }
 
-    async transitionIn() {
+    transitionIn() {
         // basic heuristic whether to enable dark mode, to show earlier
         const darkModeActive =
             this.darkModeActive ||
