@@ -675,3 +675,15 @@ code {
 .article-similar-interest {
     display: none !important;
 }
+
+/* https://kk.org/thetechnium/1000-true-fans/ */
+#categoriescol {
+    display: none !important;
+}
+
+/* https://www.tesla.com/blog/secret-tesla-motors-master-plan-just-between-you-and-me */
+#media_block,
+#second_header,
+.tds-site-header-wrapper {
+    display: none !important;
+}
