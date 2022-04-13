@@ -155,6 +155,10 @@ export default class TextContainerModifier implements PageModifier {
         if (this.mainFontSize) {
             this.setTextFontOverride(this.exampleMainFontSizeElement);
         }
+    }
+
+    async afterTransitionIn() {
+        // changing text style often seems to break animation, so do after transition
 
         // Removing margin and cleaning up background, shadows etc
         createStylesheetText(

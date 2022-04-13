@@ -58,11 +58,12 @@ export default class TransitionManager implements PageModifier {
 
         this.bodyStyleModifier.transitionIn();
         this.overlayManager.transitionIn();
-
-        // this.textContainerModifier.transitionIn(); // TODO how to make transition from original position
+        this.textContainerModifier.transitionIn();
     }
 
     async afterTransitionIn() {
+        await this.textContainerModifier.afterTransitionIn(); // TODO how to make transition from original position
+
         await this.overlayManager.afterTransitionIn(); // needs to run before themeModifier to set correct auto theme value
 
         await this.themeModifier.afterTransitionIn();
