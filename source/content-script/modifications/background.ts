@@ -5,7 +5,7 @@ import { PageModifier, trackModifierExecution } from "./_interface";
 export default class BackgroundModifier implements PageModifier {
     constructor() {}
 
-    async fadeOutNoise() {
+    fadeOutNoise() {
         this.insertBackground();
     }
 

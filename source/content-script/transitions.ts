@@ -41,14 +41,14 @@ export default class TransitionManager implements PageModifier {
         await this.themeModifier.prepare(this.domain);
     }
 
-    async fadeOutNoise() {
+    fadeOutNoise() {
         // do content block first as it shows changes immediately
-        await this.contentBlockModifier.fadeOutNoise();
+        this.contentBlockModifier.fadeOutNoise();
 
-        await this.responsiveStyleModifier.fadeOutNoise();
-        await this.textContainerModifier.fadeOutNoise();
+        this.responsiveStyleModifier.fadeOutNoise();
+        this.textContainerModifier.fadeOutNoise();
 
-        await this.backgroundModifier.fadeOutNoise();
+        this.backgroundModifier.fadeOutNoise();
     }
 
     async transitionIn() {

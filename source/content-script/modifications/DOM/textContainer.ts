@@ -145,7 +145,7 @@ export default class TextContainerModifier implements PageModifier {
             exampleNodePerFontSize[this.mainFontSize];
     }
 
-    async fadeOutNoise() {
+    fadeOutNoise() {
         this.processBackgroundColors(this.backgroundColors);
     }
 

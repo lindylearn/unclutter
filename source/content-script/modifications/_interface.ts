@@ -2,7 +2,7 @@ export interface PageModifier {
     prepare?: (...args: any[]) => Promise<void>;
 
     // Visibly hide noisy elements and meanwhile perform heavy operation
-    fadeOutNoise?: (...args: any[]) => Promise<void>;
+    fadeOutNoise?: (...args: any[]) => void;
 
     // Shift layout and reduce page width in one go
     transitionIn?: (...args: any[]) => Promise<void>;

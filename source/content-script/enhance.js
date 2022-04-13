@@ -42,12 +42,9 @@ export async function togglePageView() {
         const transitions = new TransitionManager();
         await transitions.prepare();
 
-        // wait up to 200ms for animation completion
-        // don't wait after very long parsing time
-        await Promise.all([
-            transitions.fadeOutNoise(),
-            // new Promise((r) => setTimeout(r, 0)),
-        ]);
+        transitions.fadeOutNoise();
+
+        // await transitions.transitionIn();
 
         await transitions.transitionIn();
 

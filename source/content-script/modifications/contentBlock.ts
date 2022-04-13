@@ -25,7 +25,7 @@ export default class ContentBlockModifier implements PageModifier {
             .concat(roleSelectors);
     }
 
-    async fadeOutNoise() {
+    fadeOutNoise() {
         document.getElementById("content-block-fadein")?.remove();
         if (document.getElementById("content-block-fadeout")) {
             return;

@@ -58,7 +58,7 @@ export default class ResponsiveStyleModifier implements PageModifier {
 
     private animatedRulesToHide = []; // list of obj and previous display style
 
-    async fadeOutNoise() {
+    fadeOutNoise() {
         this.fixedPositionRules.map((rule) => {
             // Check which elements were actually visible
             // This does not catch all visible elements, e.g. if another rule overrides opacity
