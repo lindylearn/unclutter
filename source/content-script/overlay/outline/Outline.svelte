@@ -55,7 +55,7 @@
     margin-left: 20px;
     color: #374151;
 }
-#outline {
+#lindy-info-topleft-content > * {
     background-color: var(--lindy-background-color);
 }
 </style>
