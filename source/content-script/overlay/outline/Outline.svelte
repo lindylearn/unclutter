@@ -2,6 +2,7 @@
     // organize-imports-ignore
     import { dismissedFeedbackMessage } from "distribution/common/featureFlags";
     import { getFeatureFlag, setFeatureFlag } from "source/common/featureFlags";
+    import { reportEventContentScript } from "source/content-script/messaging";
     import FeedbackMessage from "./FeedbackMessage.svelte";
     import Heading from "./Heading.svelte";
     import { OutlineItem } from "./parse";
@@ -16,6 +17,7 @@
     function dismissFeedbackMessage() {
         showFeedbackMessage = false;
         setFeatureFlag(dismissedFeedbackMessage, true)
+        reportEventContentScript("dismissedFeedbackRequest")
     }
 </script>
 
