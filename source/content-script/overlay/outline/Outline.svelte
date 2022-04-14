@@ -10,7 +10,7 @@
 </script>
 
 <div id="lindy-info-topleft-content" class="flex flex-col gap-2">
-    <div id="outline" class="max-w-full px-5 py-3 cursor-auto text-gray-700 bg-white rounded-lg shadow">
+    <div id="outline" class="max-w-full px-5 py-3 cursor-auto bg-white rounded-lg shadow">
         <div>
             <!-- <div class="flex">
                 <svg class="w-5" viewBox="0 0 576 512">
@@ -40,7 +40,7 @@
         "Segoe UI", Roboto !important;
     margin: 10px;
     margin-left: 20px;
-
+    color: #374151;
 }
 #outline {
     background-color: var(--lindy-background-color);
