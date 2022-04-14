@@ -1,8 +1,4 @@
 import { defaultExcludedDomains } from "./defaultStorage";
-import {
-    automaticallyEnabledFeatureFlag,
-    getFeatureFlag,
-} from "./featureFlags";
 import { getUserSettingForDomain } from "./storage";
 import { getDomainFrom } from "./util";
 
@@ -117,8 +113,8 @@ export async function isConfiguredToEnable(domain) {
     }
 
     // Enable if automatic mode active
-    const automaticModeEnabled = await getFeatureFlag(
-        automaticallyEnabledFeatureFlag
-    );
-    return automaticModeEnabled;
+    // const automaticModeEnabled = await getFeatureFlag(
+    //     automaticallyEnabledFeatureFlag
+    // );
+    return false;
 }
