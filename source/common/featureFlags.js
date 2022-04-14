@@ -20,6 +20,8 @@ export const enableBootUnclutterMessage = "enable-boot-unclutter-message";
 export const isDevelopmentFeatureFlag = "is-dev";
 export const showOutlineFeatureFlag = "show-outline";
 
+export const dismissedFeedbackMessage = "dismissed-feedback-message";
+
 export const defaultFeatureFlags = {
     [automaticallyEnabledFeatureFlag]: false,
     [allowlistDomainOnManualActivationFeatureFlag]: false,
@@ -27,8 +29,10 @@ export const defaultFeatureFlags = {
     [enableBootUnclutterMessage]: true,
     [isDevelopmentFeatureFlag]: false,
     [showOutlineFeatureFlag]: true,
+
+    [dismissedFeedbackMessage]: false,
 };
 
 export const featureFlagOverrides = {
-    [automaticallyEnabledFeatureFlag]: false, // deprecate for now
+    [automaticallyEnabledFeatureFlag]: false, // deprecated
 };

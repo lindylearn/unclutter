@@ -1,12 +1,22 @@
 <script lang="ts">
-    import FeedbackMessage from "./FeedbackMessage.svelte";
-
     // organize-imports-ignore
+    import { dismissedFeedbackMessage } from "distribution/common/featureFlags";
+    import { getFeatureFlag, setFeatureFlag } from "source/common/featureFlags";
+    import FeedbackMessage from "./FeedbackMessage.svelte";
     import Heading from "./Heading.svelte";
     import { OutlineItem } from "./parse";
 
     export let outline: OutlineItem[];
     export let activeOutlineIndex: number;
+
+    let showFeedbackMessage = false;
+    getFeatureFlag(dismissedFeedbackMessage).then(dismissed => {
+        showFeedbackMessage = !dismissed;
+    });
+    function dismissFeedbackMessage() {
+        showFeedbackMessage = false;
+        setFeatureFlag(dismissedFeedbackMessage, true)
+    }
 </script>
 
 <div id="lindy-info-topleft-content" class="flex flex-col gap-2">
@@ -27,7 +37,10 @@
         </div>
     </div>
 
-    <FeedbackMessage />
+
+    {#if showFeedbackMessage}
+        <FeedbackMessage on:dismissed={dismissFeedbackMessage} />
+    {/if}
 </div>
 
 <style global lang="postcss">
