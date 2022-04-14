@@ -59,6 +59,16 @@ export function isNonLeafPage(url) {
     ) {
         return false;
     }
+    /*
+    Specific directory pages
+        https://www.newyorker.com/magazine/annals-of-medicine
+    */
+    if (
+        url.pathname.match(/\/(magazine)\//) &&
+        !url.pathname.match(/\/([0-9]+)\//)
+    ) {
+        return true;
+    }
 
     // Exlude URLs where the following checks fail
     const excludedDomains = [
