@@ -158,9 +158,14 @@ async function _getDistinctId() {
 
 // roll out some features gradually for testing
 let cachedRemoteFeatureFlags = null;
+let lastFeatureFlagFetch: Date;
 export async function getRemoteFeatureFlags() {
     if (cachedRemoteFeatureFlags !== null) {
-        return cachedRemoteFeatureFlags;
+        const fetchSecondsAgo = (new Date() - lastFeatureFlagFetch) / 1000;
+        // use for 15 minutes
+        if (fetchSecondsAgo < 60 * 15) {
+            return cachedRemoteFeatureFlags;
+        }
     }
 
     try {
@@ -178,6 +183,7 @@ export async function getRemoteFeatureFlags() {
             (obj, flag) => ({ ...obj, [flag]: true }),
             {}
         );
+        lastFeatureFlagFetch = new Date();
 
         return cachedRemoteFeatureFlags;
     } catch (err) {
