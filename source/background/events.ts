@@ -83,7 +83,7 @@ browser.runtime.onInstalled.addListener(async ({ reason }) => {
     // this function should be executed every few days
     reportSettings(extensionInfo.version, isNewInstall);
 
-    if (isNewInstall) {
+    if (isNewInstall && !isDev) {
         browser.tabs.create({
             url: "https://unclutter.lindylearn.io/welcome",
             active: true,

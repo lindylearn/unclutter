@@ -233,6 +233,13 @@ function getSoftNodeItem(node: Element): OutlineItem | null {
         // single child of single child of <p>
         // e.g. https://waitbutwhy.com/2014/10/religion-for-the-nonreligious.html
         isHeading = true;
+    } else if (
+        node.previousElementSibling?.tagName === "BR" &&
+        node.nextElementSibling?.tagName === "BR"
+    ) {
+        // surrounded by <br />
+        // e.g. http://www.paulgraham.com/ds.html
+        isHeading = true;
     }
 
     if (!isHeading) {

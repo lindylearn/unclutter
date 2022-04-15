@@ -294,6 +294,7 @@ function _isAsideEquivalent(node) {
         node.tagName === "FOOTER" ||
         node.tagName === "ASIDE" ||
         node.tagName === "CODE" ||
+        node.tagName === "TD" || // http://www.paulgraham.com/ds.html
         asideWordBlocklist.some(
             (word) =>
                 node.className.toLowerCase().includes(word) ||
