@@ -83,9 +83,16 @@ browser.runtime.onInstalled.addListener(async ({ reason }) => {
     // this function should be executed every few days
     reportSettings(extensionInfo.version, isNewInstall);
 
-    browser.runtime.setUninstallURL(
-        "https://unclutter.lindylearn.io/uninstalled"
-    );
+    if (isNewInstall) {
+        browser.tabs.create({
+            url: "https://unclutter.lindylearn.io/welcome",
+            active: true,
+        });
+
+        browser.runtime.setUninstallURL(
+            "https://unclutter.lindylearn.io/uninstalled"
+        );
+    }
 });
 
 // initialize on every service worker start
