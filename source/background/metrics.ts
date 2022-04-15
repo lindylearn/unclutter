@@ -2,6 +2,7 @@ import {
     allowlistDomainOnManualActivationFeatureFlag,
     automaticallyEnabledFeatureFlag,
     collectAnonymousMetricsFeatureFlag,
+    dismissedFeedbackMessage,
     enableBootUnclutterMessage,
     getFeatureFlag,
     isDevelopmentFeatureFlag,
@@ -20,20 +21,10 @@ export async function reportEvent(name, data = {}) {
 
     // Check if user allowed metrics reporting
     if (!metricsEnabled) {
-        // only allowed event is on update, containing the new version
-        if (name === "reportSettings") {
-            await sendEvent(
-                "reportSettings",
-                {
-                    version: data.version,
-                    [collectAnonymousMetricsFeatureFlag]:
-                        data[collectAnonymousMetricsFeatureFlag],
-                },
-                isDev
-            );
+        // only allowed event is update notification
+        if (name !== "reportSettings") {
+            return;
         }
-
-        return;
     }
 
     await sendEvent(name, data, isDev);
@@ -89,6 +80,9 @@ export async function reportSettings(version, isNewInstall) {
             enableBootUnclutterMessage
         ),
         [showOutlineFeatureFlag]: await getFeatureFlag(showOutlineFeatureFlag),
+        [dismissedFeedbackMessage]: await getFeatureFlag(
+            dismissedFeedbackMessage
+        ),
     };
 
     // count allowlisted and blocklisted domains
@@ -99,11 +93,17 @@ export async function reportSettings(version, isNewInstall) {
         blocklistedCount: lists.deny.length,
     };
 
+    const isDev = await getFeatureFlag(isDevelopmentFeatureFlag);
+
     reportEvent("reportSettings", {
         version,
         isNewInstall,
         ...featureFlagSettings,
         ...domainSettings,
+        $set: {
+            ...featureFlagSettings,
+            isDev,
+        },
     });
 }
 
