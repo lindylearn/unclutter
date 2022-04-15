@@ -155,3 +155,33 @@ async function _getDistinctId() {
     });
     return distinctId;
 }
+
+// roll out some features gradually for testing
+let cachedRemoteFeatureFlags = null;
+export async function getRemoteFeatureFlags() {
+    if (cachedRemoteFeatureFlags !== null) {
+        return cachedRemoteFeatureFlags;
+    }
+
+    try {
+        const response = await fetch(`https://app.posthog.com/decide`, {
+            method: "POST",
+            body: JSON.stringify({
+                api_key: "phc_BQHO9btvNLVEbFC4ihMIS8deK5T6P4d8EF75Ihvkfaw",
+                distinct_id: distinctId,
+            }),
+        });
+
+        const enabledFeatureFlags: string[] = (await response.json())
+            .featureFlags;
+        cachedRemoteFeatureFlags = enabledFeatureFlags.reduce(
+            (obj, flag) => ({ ...obj, [flag]: true }),
+            {}
+        );
+
+        return cachedRemoteFeatureFlags;
+    } catch (err) {
+        console.error(`Error getting remote feature flags:`, err);
+        return {};
+    }
+}

@@ -1,8 +1,8 @@
 import browser from "./polyfill";
 
 export async function getFeatureFlag(key) {
-    if (key in featureFlagOverrides) {
-        return featureFlagOverrides[key];
+    if (key in featureFlagLocalOverrides) {
+        return featureFlagLocalOverrides[key];
     }
 
     const config = await browser.storage.sync.get([key]);
@@ -22,6 +22,9 @@ export const showOutlineFeatureFlag = "show-outline";
 
 export const dismissedFeedbackMessage = "dismissed-feedback-message";
 
+// remote
+export const showFeedbackMessage = "show-feedback-message";
+
 export const defaultFeatureFlags = {
     [automaticallyEnabledFeatureFlag]: false,
     [allowlistDomainOnManualActivationFeatureFlag]: false,
@@ -33,6 +36,6 @@ export const defaultFeatureFlags = {
     [dismissedFeedbackMessage]: false,
 };
 
-export const featureFlagOverrides = {
+const featureFlagLocalOverrides = {
     [automaticallyEnabledFeatureFlag]: false, // deprecated
 };

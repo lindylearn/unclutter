@@ -9,6 +9,7 @@ import { fetchCss } from "./actions";
 import { enableInTab, injectScript, togglePageViewMessage } from "./inject";
 import { requestOptionalPermissions } from "./install";
 import {
+    getRemoteFeatureFlags,
     reportDisablePageView,
     reportEnablePageView,
     reportEvent,
@@ -58,6 +59,9 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
         return true;
     } else if (message.event === "reportEvent") {
         reportEvent(message.name, message.data);
+    } else if (message.event === "getRemoteFeatureFlags") {
+        getRemoteFeatureFlags().then(sendResponse);
+        return true;
     }
 
     return false;

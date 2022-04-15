@@ -1,8 +1,8 @@
 <script lang="ts">
     // organize-imports-ignore
     import { dismissedFeedbackMessage } from "distribution/common/featureFlags";
-    import { getFeatureFlag, setFeatureFlag } from "source/common/featureFlags";
-    import { reportEventContentScript } from "source/content-script/messaging";
+    import { getFeatureFlag, setFeatureFlag, showFeedbackMessage } from "source/common/featureFlags";
+    import { getRemoteFeatureFlag, reportEventContentScript } from "source/content-script/messaging";
     import FeedbackMessage from "./FeedbackMessage.svelte";
     import Heading from "./Heading.svelte";
     import { OutlineItem } from "./parse";
@@ -10,12 +10,17 @@
     export let outline: OutlineItem[];
     export let activeOutlineIndex: number;
 
-    let showFeedbackMessage = false;
+    let displayFeedbackMessage = false;
     getFeatureFlag(dismissedFeedbackMessage).then(dismissed => {
-        showFeedbackMessage = !dismissed;
-    });
+        if (!dismissed) {
+            return getRemoteFeatureFlag(showFeedbackMessage)
+        }
+    }).then(enabled => {
+        displayFeedbackMessage = enabled
+    })
+    
     function dismissFeedbackMessage() {
-        showFeedbackMessage = false;
+        displayFeedbackMessage = false;
         setFeatureFlag(dismissedFeedbackMessage, true)
         reportEventContentScript("dismissedFeedbackRequest")
     }
@@ -40,7 +45,7 @@
     </div>
 
 
-    {#if showFeedbackMessage}
+    {#if displayFeedbackMessage}
         <FeedbackMessage on:dismissed={dismissFeedbackMessage} />
     {/if}
 </div>
