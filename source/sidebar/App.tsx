@@ -11,7 +11,6 @@ import {
 } from "./common/api";
 import AnnotationsList from "./components/AnnotationsList";
 import LoginMessage from "./components/LoginMessage";
-import PageNotesList from "./components/PageNotesList";
 // import PopularityMessage from "./components/PopularityMessage";
 
 export default function App({ url }) {
@@ -92,7 +91,7 @@ export default function App({ url }) {
                 )}
 
                 {/* <AnnotationsInfoMessage annotations={annotations} /> */}
-                {isLoggedIn && (
+                {/* {isLoggedIn && (
                     <PageNotesList
                         url={url}
                         annotations={annotations.filter(
@@ -101,7 +100,7 @@ export default function App({ url }) {
                         createAnnotation={createAnnotation}
                         deleteAnnotation={deleteAnnotation}
                     />
-                )}
+                )} */}
             </div>
             <AnnotationsList
                 url={url}

@@ -149,3 +149,37 @@ html.pageview > body {
     width: calc((100vw - var(--lindy-pagewidth)) / 2 - 50px);
     height: calc(100% - 50px - 50px);
 }
+
+#lindy-annotations-marginbar {
+    position: absolute;
+    top: 0;
+    height: 100%;
+
+    right: 25px;
+
+    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", Roboto !important;
+    color: #374151;
+}
+#lindy-annotations-marginbar > div {
+    position: absolute;
+    right: 0;
+    width: 100%;
+    /* top and height set via JS */
+}
+
+/* lindy-highlight {
+    position: relative;
+}
+lindy-highlight::after {
+    position: absolute;
+    right: -5px;
+    top: 0;
+    height: 100%;
+    width: 1px;
+
+    content: '';
+    display: block;
+
+    border-right: 5px solid;
+} */

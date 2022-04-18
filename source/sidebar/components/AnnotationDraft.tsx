@@ -2,14 +2,13 @@ import debounce from "lodash/debounce";
 import React from "react";
 import { getAnnotationColor } from "../../common/annotations/styling";
 import { createAnnotation, patchAnnotation } from "../common/api";
-import Switch from "./Switch";
 
 function AnnotationDraft({
     url,
     annotation,
     className,
     deleteAnnotation,
-    placeholder = "Optional note",
+    placeholder = "Private note",
     swipeHandlers = {},
 }) {
     const debouncedPatchOrCreate = React.useCallback(
@@ -36,20 +35,22 @@ function AnnotationDraft({
         }
     }
 
+    const color = getAnnotationColor(annotation);
+
     return (
         <div
             className={
-                "annotation py-1 px-1 border-l-4 rounded-r-lg bg-white drop-shadow-sm " +
-                className
+                `annotation py-1 px-1 rounded-md bg-white text-gray-800 shadow-sm` +
+                    className || ""
             }
             style={{
                 top: annotation.offset,
-                borderColor: getAnnotationColor(annotation),
+                boxShadow: `-1.5px 0.5px 2px 0 ${color}`,
             }}
             {...swipeHandlers}
         >
             <textarea
-                className="text-sm md:text-base w-full bg-gray-50 rounded-md py-1 px-2 outline-none"
+                className="text-sm md:text-base w-full bg-gray-50 placeholder-gray-400 rounded-md py-1 px-2 outline-none align-top"
                 placeholder={placeholder}
                 value={changedAnnotation.text}
                 onChange={(e) =>
@@ -59,7 +60,7 @@ function AnnotationDraft({
                     })
                 }
             />
-            <div className="flex gap-2">
+            {/* <div className="flex gap-2">
                 <input
                     className="text-sm md:text-base w-full bg-gray-50 rounded-md py-1 px-2 outline-none"
                     placeholder="Tags"
@@ -81,7 +82,7 @@ function AnnotationDraft({
                         })
                     }
                 />
-            </div>
+            </div> */}
             <div className="top-icon absolute top-2 right-2 text-gray-400 cursor-pointer">
                 {!changedAnnotation.is_draft && (
                     <svg

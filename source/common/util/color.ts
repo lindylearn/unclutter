@@ -222,7 +222,7 @@ function getNumbersFromString(
 const rgbRange = [255, 255, 255, 1];
 const rgbUnits = { "%": 100 };
 
-function parseRGB($rgb: string) {
+export function parseRGB($rgb: string) {
     const [r, g, b, a = 1] = getNumbersFromString($rgb, rgbRange, rgbUnits);
     return { r, g, b, a };
 }

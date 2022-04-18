@@ -220,7 +220,6 @@ function wholeTextNodesInRange(range) {
 export function highlightRange(
   annotationId,
   range,
-  backgroundColor,
   cssClass = "lindy-highlight"
 ) {
   const textNodes = wholeTextNodesInRange(range);
@@ -264,7 +263,6 @@ export function highlightRange(
     const highlightEl = document.createElement("lindy-highlight");
     highlightEl.className = cssClass;
     highlightEl.id = annotationId;
-    highlightEl.style.backgroundColor = backgroundColor;
 
     nodes[0].parentNode.replaceChild(highlightEl, nodes[0]);
     nodes.forEach((node) => highlightEl.appendChild(node));
