@@ -9,6 +9,7 @@ function AnnotationsList({
     deleteAnnotation,
     upvotedAnnotations = {},
     upvoteAnnotation = null,
+    offsetTop = 0,
 }) {
     if (!annotations) {
         return <div></div>;
@@ -41,7 +42,7 @@ function AnnotationsList({
                     key={groupedAnnotations[0].displayOffset}
                     className="absolute w-full"
                     style={{
-                        top: groupedAnnotations[0].displayOffset,
+                        top: groupedAnnotations[0].displayOffset - offsetTop,
                         position: "relative",
                     }}
                 >

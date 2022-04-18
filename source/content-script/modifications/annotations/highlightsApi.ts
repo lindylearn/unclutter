@@ -1,3 +1,4 @@
+import { getNodeOffset } from "source/common/annotations/offset";
 import { getAnnotationColor } from "../../../common/annotations/styling";
 import { anchor as anchorHTML } from "../../../common/annotator/anchoring/html";
 import {
@@ -31,7 +32,7 @@ export async function highlightAnnotations(annotations) {
                 if (!highlightedNodes) {
                     throw Error("includes no highlighted nodes");
                 }
-                const displayOffset = _getNodeOffset(highlightedNodes[0]);
+                const displayOffset = getNodeOffset(highlightedNodes[0]);
 
                 anchoredAnnotations.push({ displayOffset, ...annotation });
             } catch (err) {
@@ -69,18 +70,9 @@ export function getHighlightOffsets() {
         if (offsetById[node.id]) {
             continue;
         }
-        const displayOffset = _getNodeOffset(node);
+        const displayOffset = getNodeOffset(node);
         offsetById[node.id] = displayOffset;
     }
 
     return offsetById;
-}
-
-function _getNodeOffset(node, documentScale = 1, listOffsetTop = 20) {
-    const pageOffset = document.body.offsetTop;
-
-    // getBoundingClientRect() is relative to scrolled viewport
-    const elementOffset = node.getBoundingClientRect().top + window.scrollY;
-    const displayOffset = pageOffset + elementOffset * documentScale;
-    return displayOffset - listOffsetTop;
 }

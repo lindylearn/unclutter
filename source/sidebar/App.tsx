@@ -108,6 +108,7 @@ export default function App({ url }) {
                 annotations={annotations}
                 setAnnotations={setAnnotations}
                 deleteAnnotation={deleteAnnotation}
+                offsetTop={50}
                 // upvotedAnnotations={upvotedAnnotations}
                 // upvoteAnnotation={upvoteAnnotation}
             />
