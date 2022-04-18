@@ -17,14 +17,12 @@ import tailwindcss from "tailwindcss";
 const contentScriptConfigs = [
     "source/content-script/boot.ts",
     "source/content-script/enhance.ts",
-    "source/sidebar/index.tsx",
 ].map((entryPoint) => ({
     input: entryPoint,
     output: {
         file: entryPoint
             .replace("source", "distribution")
-            .replace(".ts", ".js")
-            .replace(".jsx", ".js"),
+            .replace(".ts", ".js"),
         format: "iife", // no way to use es modules, split code by logic instead
     },
     plugins: [
@@ -71,6 +69,7 @@ const esModuleConfig = {
         // input order is important here, as common files might overwrite each other
         "source/settings-page/index.tsx",
         "source/background/events.ts",
+        "source/sidebar/index.tsx",
     ],
     output: {
         dir: "distribution",
