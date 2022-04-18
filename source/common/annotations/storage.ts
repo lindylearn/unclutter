@@ -1,4 +1,3 @@
-import axios from "axios";
 import browser from "../../common/polyfill";
 
 export async function getHypothesisToken() {
@@ -32,15 +31,13 @@ export async function validateSaveToken(token, forceSave = false) {
 
 export async function validateApiToken(apiToken) {
     try {
-        const response = await axios.get(
-            `https://api.hypothes.is/api/profile`,
-            {
-                headers: {
-                    Authorization: `Bearer ${apiToken}`,
-                },
-            }
-        );
-        const fullUserId = response.data.userid; // e.g. acct:remikalir@hypothes.is
+        const response = await fetch(`https://api.hypothes.is/api/profile`, {
+            headers: {
+                Authorization: `Bearer ${apiToken}`,
+            },
+        });
+        const json = await response.json();
+        const fullUserId = json.userid; // e.g. acct:remikalir@hypothes.is
         return fullUserId.match(/([^:]+)@/)[1];
     } catch {
         return null;

@@ -1,4 +1,3 @@
-import axios from "axios";
 import { hypothesisToLindyFormat } from "../../common/annotations/getAnnotations";
 import {
     getHypothesisToken,
@@ -39,50 +38,52 @@ export async function getAnnotations(url) {
 
 // public annotations via lindy api
 async function getLindyAnnotations(url) {
-    const response = await axios.get(`${lindyApiUrl}/annotations`, {
-        ...(await _getConfig()),
-        params: {
-            page_url: url,
-        },
-    });
+    const response = await fetch(
+        `${lindyApiUrl}/annotations?${new URLSearchParams({ page_url: url })}`,
+        await _getConfig()
+    );
+    const json = await response.json();
 
-    return response.data.results.map((a) => ({ ...a, isPublic: true }));
+    return json.results.map((a) => ({ ...a, isPublic: true }));
 }
 
 // private annotations directly from hypothesis
 async function getHypothesisAnnotations(url) {
     const username = await getHypothesisUsername();
-    const response = await axios.get(`${hypothesisApi}/search`, {
-        ...(await _getConfig()),
-        params: {
+    const response = await fetch(
+        `${hypothesisApi}/search?${new URLSearchParams({
             url,
             user: `acct:${username}@hypothes.is`,
-        },
-    });
+        })}`,
+        await _getConfig()
+    );
+    const json = await response.json();
 
-    return response.data.rows
+    return json.rows
         .filter((a) => !a.references || a.references.length === 0)
         .map(hypothesisToLindyFormat);
 }
 
 export async function getPageHistory(url) {
-    const response = await axios.get(
-        `${lindyApiUrl}/annotations/get_page_history`,
-        {
-            params: { page_url: url },
-        },
+    const response = await fetch(
+        `${lindyApiUrl}/annotations/get_page_history?${new URLSearchParams({
+            page_url: url,
+        })}`,
         await _getConfig()
     );
-    return response.data;
+    const json = await response.json();
+
+    return json;
 }
 
 // --- user actions
 
 export async function createAnnotation(pageUrl, localAnnotation) {
     const username = await getHypothesisUsername();
-    const response = await axios.post(
-        `${hypothesisApi}/annotations`,
-        {
+    const response = await fetch(`${hypothesisApi}/annotations`, {
+        ...(await _getConfig()),
+        method: "POST",
+        body: JSON.stringify({
             uri: pageUrl,
             text: localAnnotation.text,
             target: [
@@ -99,77 +100,54 @@ export async function createAnnotation(pageUrl, localAnnotation) {
                         : `acct:${username}@hypothes.is`,
                 ],
             },
-        },
-        await _getConfig()
-    );
-    return response.data;
+        }),
+    });
+    const json = await response.json();
+
+    return json;
 }
 
 export async function deleteAnnotation(annotationId) {
-    await axios.delete(
-        `${hypothesisApi}/annotations/${annotationId}`,
-        await _getConfig()
-    );
+    await fetch(`${hypothesisApi}/annotations/${annotationId}`, {
+        ...(await _getConfig()),
+        method: "DELETE",
+    });
 }
 
 export async function patchAnnotation(annotation) {
     const username = await getHypothesisUsername();
-    const response = await axios.patch(
+    const response = await fetch(
         `${hypothesisApi}/annotations/${annotation.id}`,
         {
-            text: annotation.text,
-            tags: annotation.tags,
-            permissions: {
-                read: [
-                    annotation.isPublic
-                        ? "group:__world__"
-                        : `acct:${username}@hypothes.is`,
-                ],
-            },
-        },
-        await _getConfig()
+            ...(await _getConfig()),
+            method: "PATCH",
+            body: JSON.stringify({
+                text: annotation.text,
+                tags: annotation.tags,
+                permissions: {
+                    read: [
+                        annotation.isPublic
+                            ? "group:__world__"
+                            : `acct:${username}@hypothes.is`,
+                    ],
+                },
+            }),
+        }
     );
-    return response.data;
+    const json = await response.json();
+
+    return json;
 }
 
 export async function upvoteAnnotation(pageUrl, annotationId, isUpvote) {
-    await axios.post(
-        `${lindyApiUrl}/annotations/upvote`,
-        {
+    await fetch(`${lindyApiUrl}/annotations/upvote`, {
+        ...(await _getConfig()),
+        method: "POST",
+        body: JSON.stringify({
             annotation_id: annotationId,
             is_unvote: !isUpvote,
-        },
-        await _getConfig()
-    );
-}
-
-// --- social information annotations
-
-export async function getUserDetails(username) {
-    // end with .json because might contain dots
-    const response = await axios.get(
-        `${lindyApiUrl}/annotators/${username}.json`,
-        await _getConfig()
-    );
-    return response.data;
-}
-
-export async function getDomainDetails(url) {
-    // end with .json because might contain dots
-    const response = await axios.get(
-        `${lindyApiUrl}/domains/${url}.json`,
-        await _getConfig()
-    );
-    return response.data;
-}
-
-export async function getTagDetails(tag) {
-    // end with .json because might contain dots
-    const response = await axios.get(
-        `${lindyApiUrl}/tags/${tag}.json`,
-        await _getConfig()
-    );
-    return response.data;
+        }),
+    });
 }
 
 async function _getConfig() {
