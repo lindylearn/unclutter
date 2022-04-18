@@ -73,8 +73,8 @@ function AnnotationsList({
                                     }
                                     charLimit={
                                         i == groupedAnnotations.length - 1
-                                            ? 300
-                                            : 150
+                                            ? 400
+                                            : 200
                                     }
                                     upvoted={upvotedAnnotations[annotation.id]}
                                     upvoteAnnotation={(isUpvote) =>

@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto !important;
+}
+
 /* page popularity chart */
 .recharts-area {
     transform: translate(0, 30%);
@@ -94,5 +98,9 @@
     visibility: hidden;
 }
 .annotation:hover .top-icon {
+    visibility: visible;
+}
+
+.annotation:hover > .info-bar > .upvote-button {
     visibility: visible;
 }

@@ -155,7 +155,8 @@ html.pageview > body {
     top: 0;
     height: 100%;
 
-    right: 25px;
+    right: 0px;
+    /* right: 25px; */
 
     font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
         "Segoe UI", Roboto !important;

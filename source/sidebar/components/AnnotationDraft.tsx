@@ -40,7 +40,7 @@ function AnnotationDraft({
     return (
         <div
             className={
-                `annotation py-1 px-1 rounded-md bg-white text-gray-800 shadow-sm` +
+                `annotation py-1 px-1 rounded bg-white text-gray-800 shadow-sm` +
                     className || ""
             }
             style={{
@@ -50,7 +50,7 @@ function AnnotationDraft({
             {...swipeHandlers}
         >
             <textarea
-                className="text-sm md:text-base w-full bg-gray-50 placeholder-gray-400 rounded-md py-1 px-2 outline-none align-top"
+                className="text-sm md:text-base w-full bg-gray-50 placeholder-gray-400 rounded py-1 px-2 outline-none align-top"
                 placeholder={placeholder}
                 value={changedAnnotation.text}
                 onChange={(e) =>
