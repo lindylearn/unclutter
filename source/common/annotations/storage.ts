@@ -1,5 +1,5 @@
 import axios from "axios";
-import browser from "webextension-polyfill";
+import browser from "../../common/polyfill";
 
 export async function getHypothesisToken() {
     return (await getUserInfo())["hypothesis-api-token"];

@@ -22,6 +22,12 @@
     margin-left: 24px !important;
 }
 
+/* https://www.theatlantic.com/magazine/archive/2022/05/social-media-democracy-trust-babel/629369/ */
+[class*="ArticleRelatedContentModule"] {
+    display: none !important;
+}
+
+
 /* https://www.worksinprogress.co/issue/the-housing-theory-of-everything/ */
 .site-content {
     padding-top: 0 !important;

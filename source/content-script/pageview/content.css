@@ -139,3 +139,13 @@ html.pageview > body {
         width: 100%;
     }
 }
+
+#lindylearn-annotations-sidebar {
+    position: absolute;
+    top: 50px;
+    left: calc(
+        (100vw - var(--lindy-pagewidth)) / 2 + var(--lindy-pagewidth) - 5px
+    );
+    width: calc((100vw - var(--lindy-pagewidth)) / 2 - 50px);
+    height: calc(100% - 50px - 50px);
+}
