@@ -1,3 +1,4 @@
+import React from "react";
 import AnnotationDraft from "./AnnotationDraft";
 import AnnotationThread from "./AnnotationThread";
 

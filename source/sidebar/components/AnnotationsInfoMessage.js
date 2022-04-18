@@ -1,3 +1,4 @@
+import React from "react";
 import Switch from "./Switch";
 
 export function AnnotationsInfoMessage({ annotations }) {

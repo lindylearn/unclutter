@@ -38,9 +38,9 @@
                 "content-script/overlay/indexDark.css",
                 "content-script/overlay/outline/outlineDark.css",
                 "content-script/pageview/manualContentBlock.css",
-                "content-script/sidebar/index.html",
-                "content-script/sidebar/global.css",
-                "content-script/sidebar/index.js",
+                "sidebar/index.html",
+                "sidebar/global.css",
+                "sidebar/index.js",
                 "assets/**"
             ],
             "matches": ["<all_urls>"]

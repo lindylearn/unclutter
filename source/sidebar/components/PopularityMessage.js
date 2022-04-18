@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Area, AreaChart, ResponsiveContainer, XAxis } from "recharts";
 import { getPageHistory } from "../common/api";
 

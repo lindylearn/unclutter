@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { validateSaveToken } from "../../common/annotations/storage";
 
 export default function LoginMessage({ onLogin }) {

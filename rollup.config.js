@@ -33,9 +33,9 @@ const contentScriptConfigs = [
             }),
             emitCss: false, // bundle conponent styles
         }),
-        typescript(),
         nodeResolve({ browser: true }),
         commonjs({ include: /node_modules/ }),
+        typescript(),
     ],
 }));
 
@@ -60,7 +60,11 @@ const moveVirtualFolder = {
     },
 };
 const esModuleConfig = {
-    input: ["source/settings-page/index.tsx", "source/background/events.ts"],
+    input: [
+        "source/settings-page/index.tsx",
+        "source/background/events.ts",
+        "source/sidebar/index.js",
+    ],
     output: {
         dir: "distribution",
         format: "es",

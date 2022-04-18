@@ -12,7 +12,7 @@ import {
 import AnnotationsList from "./components/AnnotationsList";
 import LoginMessage from "./components/LoginMessage";
 import PageNotesList from "./components/PageNotesList";
-import PopularityMessage from "./components/PopularityMessage";
+// import PopularityMessage from "./components/PopularityMessage";
 
 export default function App({ url }) {
     // fetch state from extension settings
@@ -86,7 +86,7 @@ export default function App({ url }) {
         // x margin to show slight shadow (iframe allows no overflow)
         <div className="mx-2">
             <div className="absolute w-full pr-4 flex flex-col gap-2">
-                <PopularityMessage url={url} />
+                {/* <PopularityMessage url={url} /> */}
                 {isLoggedIn === false && (
                     <LoginMessage onLogin={() => setIsLoggedIn(true)} />
                 )}
