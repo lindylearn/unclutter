@@ -85,7 +85,10 @@ export default class TextContainerModifier implements PageModifier {
                     this.overrideCssDeclarations.push(overrideStyles);
                 }
 
-                if (!_isAsideEquivalent(currentElem)) {
+                if (
+                    !_isAsideEquivalent(currentElem) &&
+                    !_isAsideEquivalent(currentElem.parentElement)
+                ) {
                     // Remember background colors on text containers
                     if (
                         // don't take default background color
@@ -287,6 +290,9 @@ export const asideWordBlocklist = [
     "caption",
     "gallery",
     "ad",
+    "newsletter",
+    "promo",
+    "composer",
 ];
 function _isAsideEquivalent(node) {
     return (
