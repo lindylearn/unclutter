@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import {
     createDraftAnnotation,
     hypothesisToLindyFormat,
-} from "../common/getAnnotations";
-import { getHypothesisUsername } from "../common/storage";
+} from "../common/annotations/getAnnotations";
+import { getHypothesisUsername } from "../common/annotations/storage";
 import {
     createAnnotation as createAnnotationApi,
     deleteAnnotation as deleteAnnotationApi,

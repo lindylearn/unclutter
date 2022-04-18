@@ -1,9 +1,9 @@
 import axios from "axios";
-import { hypothesisToLindyFormat } from "../../common/getAnnotations";
+import { hypothesisToLindyFormat } from "../../common/annotations/getAnnotations";
 import {
     getHypothesisToken,
     getHypothesisUsername,
-} from "../../common/storage";
+} from "../../common/annotations/storage";
 
 // const lindyApiUrl = 'http://127.0.0.1:8000';
 const lindyApiUrl = "https://api2.lindylearn.io";

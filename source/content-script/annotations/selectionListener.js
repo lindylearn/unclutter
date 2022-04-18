@@ -1,5 +1,5 @@
+import { createDraftAnnotation } from "../../common/annotations/getAnnotations";
 import { describe as describeAnnotation } from "../../common/annotator/anchoring/html";
-import { createDraftAnnotation } from "../../common/getAnnotations";
 import { highlightAnnotations } from "./annotationApi";
 
 // send user text selections to the sidebar iframe, in order to create an annotation

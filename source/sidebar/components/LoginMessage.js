@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { validateSaveToken } from "../../common/storage";
+import { validateSaveToken } from "../../common/annotations/storage";
 
 export default function LoginMessage({ onLogin }) {
     const [token, setToken] = useState("");
