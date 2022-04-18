@@ -1,11 +1,7 @@
 module.exports = {
     mode: "jit",
     purge: {
-        content: [
-            "./source/**/*.svelte",
-            "./source/**/*.tsx",
-            "./source/sidebar/**/*.js",
-        ],
+        content: ["./source/**/*.svelte", "./source/**/*.tsx"],
     },
     plugins: [],
     corePlugins: {
