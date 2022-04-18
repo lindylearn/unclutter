@@ -14,12 +14,14 @@ import tailwindcss from "tailwindcss";
 
 // bundle content scripts
 const contentScriptConfigs = [
-    "source/content-script/boot.js",
-    "source/content-script/enhance.js",
+    "source/content-script/boot.ts",
+    "source/content-script/enhance.ts",
 ].map((entryPoint) => ({
     input: entryPoint,
     output: {
-        file: entryPoint.replace("source", "distribution"),
+        file: entryPoint
+            .replace("source", "distribution")
+            .replace(".ts", ".js"),
         format: "iife", // no way to use es modules, split code by logic instead
     },
     plugins: [
@@ -58,7 +60,7 @@ const moveVirtualFolder = {
     },
 };
 const esModuleConfig = {
-    input: ["source/settings-page/index.js", "source/background/events.ts"],
+    input: ["source/settings-page/index.tsx", "source/background/events.ts"],
     output: {
         dir: "distribution",
         format: "es",
@@ -66,7 +68,7 @@ const esModuleConfig = {
         preserveModulesRoot: "source",
     },
     plugins: [
-        typescript(),
+        postcss({ plugins: [tailwindcss()] }),
         babel({ babelHelpers: "bundled", presets: ["@babel/preset-react"] }),
         // multiple bundles would overwrite each other's tree-shaked common imports
         multiInput({
@@ -77,7 +79,7 @@ const esModuleConfig = {
         }),
         nodeResolve({ browser: true }),
         commonjs({ include: /node_modules/ }),
-        postcss({ plugins: [tailwindcss()] }),
+        typescript(),
         moveVirtualFolder,
         replace({
             preventAssignment: true,
@@ -111,7 +113,7 @@ const fileWatcher = (globs) => ({
 });
 const staticFilesConfig = {
     // needs dummy source file
-    input: "source/common/api.js",
+    input: "source/common/api.ts",
     output: {
         file: "distribution/staticFiles",
     },

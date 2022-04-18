@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
-import Options from "./Options";
+import OptionsPage from "./Options";
 
 const domContainer = document.querySelector("#react-root");
-ReactDOM.render(<Options />, domContainer);
+ReactDOM.render(<OptionsPage />, domContainer);
