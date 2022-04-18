@@ -1,4 +1,4 @@
-import browser from "../../common/polyfill";
+import browser from "../../../common/polyfill";
 
 // inject the annotations sidebar HTML elements, but don't show them yet
 export function injectSidebar() {

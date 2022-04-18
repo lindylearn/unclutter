@@ -1,6 +1,6 @@
-import { createDraftAnnotation } from "../../common/annotations/getAnnotations";
-import { describe as describeAnnotation } from "../../common/annotator/anchoring/html";
-import { highlightAnnotations } from "./annotationApi";
+import { createDraftAnnotation } from "../../../common/annotations/getAnnotations";
+import { describe as describeAnnotation } from "../../../common/annotator/anchoring/html";
+import { highlightAnnotations } from "./highlightsApi";
 
 // send user text selections to the sidebar iframe, in order to create an annotation
 let listenerRef;
