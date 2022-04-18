@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
     createDraftAnnotation,
     hypothesisToLindyFormat,
@@ -16,16 +16,16 @@ import PageNotesList from "./components/PageNotesList";
 
 export default function App({ url }) {
     // fetch state from extension settings
-    const [isLoggedIn, setIsLoggedIn] = useState(null);
-    useEffect(async () => {
+    const [isLoggedIn, setIsLoggedIn] = React.useState(null);
+    React.useEffect(async () => {
         const user = await getHypothesisUsername();
         setIsLoggedIn(!!user);
     }, []);
 
     // keep the annotations state here
-    const [annotations, setAnnotations] = useState([]);
+    const [annotations, setAnnotations] = React.useState([]);
     // fetch annotations on load
-    useEffect(async () => {
+    React.useEffect(async () => {
         const annotations = await getAnnotations(url);
         const pageNotes = annotations.filter((a) => !a.quote_html_selector);
         if (pageNotes.length === 0) {

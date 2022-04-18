@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { getAnnotationColor } from "../../common/styling";
+import React from "react";
+import { getAnnotationColor } from "../../common/annotations/styling";
 
 function Annotation({
     annotation,
@@ -15,7 +15,7 @@ function Annotation({
     const textLines = text.slice(0, charLimit).split("\n");
     //.filter((line) => line.trim() != '');
 
-    const [upvoteCount, setLocalUpvoteCount] = useState(
+    const [upvoteCount, setLocalUpvoteCount] = React.useState(
         annotation.upvote_count || 0
     );
     function toggleUpvoteAnnotationLocalFirst() {

@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Area, AreaChart, ResponsiveContainer, XAxis } from "recharts";
 import { getPageHistory } from "../common/api";
 
 export function PopularityMessage({ annotations, url, onClick }) {
-    const [data, setData] = useState(null);
-    useEffect(async () => {
+    const [data, setData] = React.useState(null);
+    React.useEffect(async () => {
         try {
             const newData = await getPageHistory(url);
             if (newData?.length > 0) {

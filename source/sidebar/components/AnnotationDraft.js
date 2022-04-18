@@ -1,6 +1,6 @@
 import debounce from "lodash/debounce";
-import React, { useCallback, useState } from "react";
-import { getAnnotationColor } from "../../common/styling";
+import React from "react";
+import { getAnnotationColor } from "../../common/annotations/styling";
 import { createAnnotation, patchAnnotation } from "../common/api";
 import Switch from "./Switch";
 
@@ -12,12 +12,13 @@ function AnnotationDraft({
     placeholder = "Optional note",
     swipeHandlers = {},
 }) {
-    const debouncedPatchOrCreate = useCallback(
+    const debouncedPatchOrCreate = React.useCallback(
         debounce(apiPatchOrCreate, 5000),
         []
     );
 
-    const [changedAnnotation, setChangedAnnotation] = useState(annotation);
+    const [changedAnnotation, setChangedAnnotation] =
+        React.useState(annotation);
     async function updateAnnotation(newAnnotation) {
         setChangedAnnotation(newAnnotation);
         const remoteAnnotation = await debouncedPatchOrCreate(

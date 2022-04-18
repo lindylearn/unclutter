@@ -1,10 +1,10 @@
+import { getAnnotationColor } from "../../common/annotations/styling";
 import { anchor as anchorHTML } from "../../common/annotator/anchoring/html";
 import {
     highlightRange,
     removeAllHighlights as removeAllHighlightsApi,
     removeHighlights as removeHighlightsApi,
 } from "../../common/annotator/highlighter";
-import { getAnnotationColor } from "../../common/styling";
 
 // highlight text for every passed annotation on the active webpage
 export async function highlightAnnotations(annotations) {
