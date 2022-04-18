@@ -13,15 +13,18 @@ import sveltePreprocess from "svelte-preprocess";
 import tailwindcss from "tailwindcss";
 
 // bundle content scripts
+// sometimes this generates weird dependent ouputs, run build twice to fix.
 const contentScriptConfigs = [
     "source/content-script/boot.ts",
     "source/content-script/enhance.ts",
+    "source/sidebar/index.tsx",
 ].map((entryPoint) => ({
     input: entryPoint,
     output: {
         file: entryPoint
             .replace("source", "distribution")
-            .replace(".ts", ".js"),
+            .replace(".ts", ".js")
+            .replace(".jsx", ".js"),
         format: "iife", // no way to use es modules, split code by logic instead
     },
     plugins: [
@@ -36,6 +39,10 @@ const contentScriptConfigs = [
         nodeResolve({ browser: true }),
         commonjs({ include: /node_modules/ }),
         typescript(),
+        replace({
+            preventAssignment: true,
+            "process.env.NODE_ENV": JSON.stringify("production"),
+        }),
     ],
 }));
 
@@ -63,7 +70,6 @@ const esModuleConfig = {
     input: [
         // input order is important here, as common files might overwrite each other
         "source/settings-page/index.tsx",
-        "source/sidebar/index.tsx",
         "source/background/events.ts",
     ],
     output: {
@@ -73,6 +79,7 @@ const esModuleConfig = {
         preserveModulesRoot: "source",
     },
     plugins: [
+        typescript(),
         postcss({ plugins: [tailwindcss()] }),
         babel({ babelHelpers: "bundled", presets: ["@babel/preset-react"] }),
         // multiple bundles would overwrite each other's tree-shaked common imports
@@ -84,7 +91,6 @@ const esModuleConfig = {
         }),
         nodeResolve({ browser: true }),
         commonjs({ include: /node_modules/ }),
-        typescript(),
         moveVirtualFolder,
         replace({
             preventAssignment: true,

@@ -1,9 +1,7 @@
 import React from "react";
+import { getAllCustomDomainSettings } from "source/common/storage2";
 import { reportEventContentScript } from "source/content-script/messaging";
-import {
-    getAllCustomDomainSettings,
-    setUserSettingsForDomain,
-} from "../common/storage";
+import { setUserSettingsForDomain } from "../common/storage";
 
 export default function DomainSettingsList({}) {
     const [overrideList, setOverrideList] = React.useState(null);
