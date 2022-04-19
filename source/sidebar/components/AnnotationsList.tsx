@@ -40,16 +40,16 @@ function AnnotationsList({
 
     return (
         <div className="relative flex-grow" onClick={onClick}>
-            {groupedAnnotations.map((groupedAnnotations) => (
+            {groupedAnnotations.map((group, groupIndex) => (
                 <div
-                    key={groupedAnnotations[0].displayOffset}
+                    key={group[0].displayOffset}
                     className="absolute w-full"
                     style={{
-                        top: groupedAnnotations[0].displayOffset - offsetTop,
+                        top: group[0].displayOffset - offsetTop,
                         position: "relative",
                     }}
                 >
-                    {groupedAnnotations.slice(0, 5).map((annotation, i) => {
+                    {group.slice(0, 5).map((annotation, i) => {
                         const Component = annotation.is_draft
                             ? AnnotationDraft
                             : AnnotationThread;
@@ -59,7 +59,7 @@ function AnnotationsList({
                                 key={annotation.id}
                                 className={
                                     "annotation-group-item w-full rounded-r " +
-                                    (groupedAnnotations.length > 1
+                                    (group.length > 1
                                         ? "hover:z-10 hover:drop-shadow"
                                         : "")
                                 }
@@ -74,9 +74,7 @@ function AnnotationsList({
                                         deleteAnnotation(annotation)
                                     }
                                     charLimit={
-                                        i == groupedAnnotations.length - 1
-                                            ? 400
-                                            : 200
+                                        i == group.length - 1 ? 400 : 200
                                     }
                                     upvoted={upvotedAnnotations[annotation.id]}
                                     upvoteAnnotation={(isUpvote) =>
@@ -93,11 +91,12 @@ function AnnotationsList({
                                             hoverActive
                                         )
                                     }
+                                    animationIndex={groupIndex}
                                 />
                             </div>
                         );
                     })}
-                    {/* <div>{groupedAnnotations.length - 1} more annotations</div> */}
+                    {/* <div>{group.length - 1 - 5} more annotations</div> */}
                 </div>
             ))}
         </div>

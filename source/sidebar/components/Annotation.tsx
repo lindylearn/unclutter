@@ -8,6 +8,7 @@ function Annotation({
     upvoted,
     upvoteAnnotation,
     onHoverUpdate,
+    animationIndex,
 }) {
     const { text, offset, author, platform, link, reply_count } = annotation;
 
@@ -29,7 +30,11 @@ function Annotation({
                 "annotation p-1 px-2 bg-white text-gray-800 rounded shadow-sm hover:shadow animate-slidein transition-all " +
                 className
             }
-            style={{ top: offset, borderColor: getAnnotationColor(annotation) }}
+            style={{
+                top: offset,
+                borderColor: getAnnotationColor(annotation),
+                // animationDelay: `${animationIndex * 100}ms`,
+            }}
             onMouseEnter={() => onHoverUpdate(true)}
             onMouseLeave={() => onHoverUpdate(false)}
         >
