@@ -5,6 +5,7 @@ import AnnotationThread from "./AnnotationThread";
 function AnnotationsList({
     url,
     annotations,
+    showSocialAnnotations = true,
     onClick = null,
     deleteAnnotation,
     upvotedAnnotations = {},
@@ -16,6 +17,7 @@ function AnnotationsList({
     }
 
     const orderedAnnotations = annotations
+        .filter((a) => showSocialAnnotations || a.isMyAnnotation)
         .filter((a) => a.displayOffset)
         .sort((a, b) => a.displayOffset - b.displayOffset);
 

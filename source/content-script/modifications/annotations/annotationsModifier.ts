@@ -10,7 +10,7 @@ import {
 } from "./selectionListener";
 
 @trackModifierExecution
-export default class AnnotationsManager implements PageModifier {
+export default class AnnotationsModifier implements PageModifier {
     private sidebarIframe: HTMLIFrameElement;
 
     async afterTransitionIn() {
@@ -25,5 +25,15 @@ export default class AnnotationsManager implements PageModifier {
 
         removeSelectionListener();
         removeAnnotationListener();
+    }
+
+    setShowSocialAnnotations(showSocialAnnotations: boolean) {
+        this.sidebarIframe.contentWindow.postMessage(
+            {
+                event: "setShowSocialAnnotations",
+                showSocialAnnotations,
+            },
+            "*"
+        );
     }
 }

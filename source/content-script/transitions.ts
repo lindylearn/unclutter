@@ -1,6 +1,6 @@
 import { getDomainFrom } from "source/common/util";
 import { overrideClassname } from "../common/stylesheets";
-import AnnotationsManager from "./modifications/annotations/annotationsModifier";
+import AnnotationsModifier from "./modifications/annotations/annotationsModifier";
 import BackgroundModifier from "./modifications/background";
 import BodyStyleModifier from "./modifications/bodyStyle";
 import ContentBlockModifier from "./modifications/contentBlock";
@@ -27,14 +27,15 @@ export default class TransitionManager implements PageModifier {
     private responsiveStyleModifier = new ResponsiveStyleModifier();
     private stylePatchesModifier = new StylePatchesModifier(this.cssomProvider);
     private themeModifier = new ThemeModifier(this.cssomProvider);
+    private annotationsModifier = new AnnotationsModifier();
     private overlayManager = new OverlayManager(
         this.domain,
-        this.themeModifier
+        this.themeModifier,
+        this.annotationsModifier
     );
     private textContainerModifier = new TextContainerModifier(
         this.themeModifier
     );
-    private annotationsModifier = new AnnotationsManager();
 
     async prepare() {
         await this.cssomProvider.prepare();

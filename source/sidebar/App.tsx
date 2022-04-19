@@ -22,6 +22,8 @@ export default function App({ url }) {
     }, []);
 
     // keep the annotations state here
+    const [showSocialAnnotations, setShowSocialAnnotations] =
+        React.useState(true);
     const [annotations, setAnnotations] = React.useState([]);
     // fetch annotations on load
     React.useEffect(async () => {
@@ -31,6 +33,7 @@ export default function App({ url }) {
             pageNotes.push(createDraftAnnotation(url));
         }
 
+        // show page notes immediately, others once anchored
         setAnnotations(pageNotes);
         window.top.postMessage(
             { event: "anchorAnnotations", annotations },
@@ -72,12 +75,15 @@ export default function App({ url }) {
         } else if (data.event === "anchoredAnnotations") {
             setAnnotations([...annotations, ...data.annotations]);
         } else if (data.event === "changedDisplayOffset") {
-            const updatedAnnotations = annotations.map((a) => ({
+            let updatedAnnotations = annotations.map((a) => ({
                 ...a,
                 displayOffset:
                     data.offsetById[a.localId] || data.offsetById[a.id],
             }));
+
             setAnnotations(updatedAnnotations);
+        } else if (data.event === "setShowSocialAnnotations") {
+            setShowSocialAnnotations(data.showSocialAnnotations);
         }
     };
 
@@ -105,6 +111,7 @@ export default function App({ url }) {
             <AnnotationsList
                 url={url}
                 annotations={annotations}
+                showSocialAnnotations={showSocialAnnotations}
                 setAnnotations={setAnnotations}
                 deleteAnnotation={deleteAnnotation}
                 offsetTop={50}

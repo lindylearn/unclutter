@@ -16,13 +16,15 @@ import {
 } from "../../common/theme";
 import { togglePageView } from "../enhance";
 import { reportEventContentScript } from "../messaging";
+import AnnotationsModifier from "../modifications/annotations/annotationsModifier";
 import ThemeModifier from "../modifications/CSSOM/theme";
 
 // Insert a small UI for the user to control the automatic pageview enablement on the current domain.
 // Creating an iframe for this doesn't work from injected scripts
 export function insertPageSettings(
     domain: string,
-    themeModifier: ThemeModifier
+    themeModifier: ThemeModifier,
+    annotationsModifer: AnnotationsModifier
 ) {
     const githubLink = `https://github.com/lindylearn/unclutter/issues`;
 
@@ -107,7 +109,7 @@ export function insertPageSettings(
     _setupDomainToggleState(domain);
     _setupLinkHandlers();
     _setupThemePopupHandlers(domain, themeModifier);
-    _setupSocialAnnotationsToggle();
+    _setupSocialAnnotationsToggle(annotationsModifer);
 }
 
 // *** Domain automatic activation toggle ***
@@ -221,7 +223,9 @@ export function updateDomainState(
 
 // *** Social annotations toggle ***
 let socialAnnotationsEnabled = null;
-async function _setupSocialAnnotationsToggle() {
+async function _setupSocialAnnotationsToggle(
+    annotationsModifer: AnnotationsModifier
+) {
     socialAnnotationsEnabled = true; // TODO setting for initial state?
 
     const container = _renderAnnotationsToggle();
@@ -229,6 +233,8 @@ async function _setupSocialAnnotationsToggle() {
     container.onclick = () => {
         socialAnnotationsEnabled = !socialAnnotationsEnabled;
         _renderAnnotationsToggle();
+
+        annotationsModifer.setShowSocialAnnotations(socialAnnotationsEnabled);
 
         // reportEventContentScript("toggleSocialAnnotations", {
         //     newState: currentUserSetting,

@@ -15,6 +15,7 @@ import {
 import { getElementYOffset } from "../overlay/outline/common";
 import Outline from "../overlay/outline/Outline.svelte";
 import { getOutline, OutlineItem } from "../overlay/outline/parse";
+import AnnotationsModifier from "./annotations/annotationsModifier";
 import ThemeModifier from "./CSSOM/theme";
 import { PageModifier, trackModifierExecution } from "./_interface";
 
@@ -22,13 +23,19 @@ import { PageModifier, trackModifierExecution } from "./_interface";
 export default class OverlayManager implements PageModifier {
     private domain: string;
     private themeModifier: ThemeModifier;
+    private annotationsModifer: AnnotationsModifier;
 
     private outline: OutlineItem[];
     private outlineSvelteComponent: Outline;
 
-    constructor(domain: string, themeModifier: ThemeModifier) {
+    constructor(
+        domain: string,
+        themeModifier: ThemeModifier,
+        annotationsModifer: AnnotationsModifier
+    ) {
         this.domain = domain;
         this.themeModifier = themeModifier;
+        this.annotationsModifer = annotationsModifer;
     }
 
     transitionIn() {
@@ -37,7 +44,11 @@ export default class OverlayManager implements PageModifier {
     }
 
     async afterTransitionIn() {
-        insertPageSettings(this.domain, this.themeModifier);
+        insertPageSettings(
+            this.domain,
+            this.themeModifier,
+            this.annotationsModifer
+        );
 
         const domainSetting = await getUserSettingForDomain(this.domain);
         const allowlistOnActivation = await getFeatureFlag(
