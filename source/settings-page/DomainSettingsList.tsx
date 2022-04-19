@@ -63,7 +63,7 @@ export default function DomainSettingsList({}) {
 
     return (
         <>
-            <ul className="mt-1 px-3 py-2 mr-5 flex flex-col items-start gap-1 bg-gray-100 dark:bg-gray-800 h-48 overflow-y-auto shadow-inner">
+            <ul className="mt-1 px-3 py-2 flex flex-col items-start gap-1 bg-gray-100 dark:bg-gray-800 h-48 overflow-y-auto shadow-inner">
                 {overrideList?.length === 0 && (
                     <li className="text-gray-600 dark:text-gray-300">
                         There are no automatic domain settings yet!
@@ -87,8 +87,7 @@ export default function DomainSettingsList({}) {
                                 updateDomainStatus(domain, e.target.value)
                             }
                             className={
-                                "p-1 rounded-sm " +
-                                _getDomainStatusStyle(status)
+                                "p-1 rounded-sm " + getDomainStatusStyle(status)
                             }
                         >
                             <option value={null} className="bg-white">
@@ -119,7 +118,7 @@ export default function DomainSettingsList({}) {
     );
 }
 
-function _getDomainStatusStyle(status) {
+export function getDomainStatusStyle(status) {
     if (status === "allow") {
         return "bg-green-300 dark:bg-green-500";
     } else if (status === "deny") {

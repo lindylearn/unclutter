@@ -1,5 +1,9 @@
 import React from "react";
 import {
+    getFeatureFlag,
+    showSocialAnnotationsDefaultFeatureFlag,
+} from "source/common/featureFlags";
+import {
     createDraftAnnotation,
     hypothesisToLindyFormat,
 } from "../common/annotations/getAnnotations";
@@ -10,7 +14,6 @@ import {
     getAnnotations,
 } from "./common/api";
 import AnnotationsList from "./components/AnnotationsList";
-import LoginMessage from "./components/LoginMessage";
 // import PopularityMessage from "./components/PopularityMessage";
 
 export default function App({ url }) {
@@ -21,9 +24,17 @@ export default function App({ url }) {
         setIsLoggedIn(!!user);
     }, []);
 
-    // keep the annotations state here
+    // state of whether to render social annotations. updated through events from overlay code
     const [showSocialAnnotations, setShowSocialAnnotations] =
         React.useState(true);
+    React.useEffect(async () => {
+        const defaultSocialAnnotationsEnabled = await getFeatureFlag(
+            showSocialAnnotationsDefaultFeatureFlag
+        );
+        setShowSocialAnnotations(defaultSocialAnnotationsEnabled);
+    }, []);
+
+    // keep the annotations state here
     const [annotations, setAnnotations] = React.useState([]);
     // fetch annotations on load
     React.useEffect(async () => {
@@ -97,12 +108,6 @@ export default function App({ url }) {
         // x margin to show slight shadow (iframe allows no overflow)
         <div className="mx-2">
             <div className="absolute w-full pr-4 flex flex-col gap-2">
-                {/* <PopularityMessage url={url} /> */}
-                {isLoggedIn === false && (
-                    <LoginMessage onLogin={() => setIsLoggedIn(true)} />
-                )}
-
-                {/* <AnnotationsInfoMessage annotations={annotations} /> */}
                 {/* {isLoggedIn && (
                     <PageNotesList
                         url={url}
@@ -118,7 +123,6 @@ export default function App({ url }) {
                 url={url}
                 annotations={annotations}
                 showSocialAnnotations={showSocialAnnotations}
-                setAnnotations={setAnnotations}
                 deleteAnnotation={deleteAnnotation}
                 offsetTop={50}
                 onAnnotationHoverUpdate={onAnnotationHoverUpdate}

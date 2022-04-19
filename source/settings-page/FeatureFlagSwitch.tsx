@@ -9,7 +9,11 @@ import {
 // there's a weird bundling error on firefox when importing React, {useState}
 // so use React.useState
 
-export default function FeatureFlagSwitch({ featureFlagKey, children }) {
+export default function FeatureFlagSwitch({
+    featureFlagKey,
+    children,
+    onChange,
+}) {
     const [state, setState] = React.useState(null);
     React.useEffect(async () => {
         const newState = await getFeatureFlag(featureFlagKey);
@@ -32,6 +36,8 @@ export default function FeatureFlagSwitch({ featureFlagKey, children }) {
         }
 
         setFeatureFlag(featureFlagKey, newState);
+
+        onChange(newState);
     }
 
     return (

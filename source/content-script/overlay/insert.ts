@@ -1,3 +1,7 @@
+import {
+    getFeatureFlag,
+    showSocialAnnotationsDefaultFeatureFlag,
+} from "source/common/featureFlags";
 import { insertHtml } from "source/common/html";
 import browser from "../../common/polyfill";
 import {
@@ -226,7 +230,9 @@ let socialAnnotationsEnabled = null;
 async function _setupSocialAnnotationsToggle(
     annotationsModifer: AnnotationsModifier
 ) {
-    socialAnnotationsEnabled = true; // TODO setting for initial state?
+    socialAnnotationsEnabled = await getFeatureFlag(
+        showSocialAnnotationsDefaultFeatureFlag
+    );
 
     const container = _renderAnnotationsToggle();
 

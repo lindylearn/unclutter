@@ -4,15 +4,28 @@ import {
     allowlistDomainOnManualActivationFeatureFlag,
     collectAnonymousMetricsFeatureFlag,
     enableBootUnclutterMessage,
+    getFeatureFlag,
+    hypothesisSyncFeatureFlag,
     showOutlineFeatureFlag,
+    showSocialAnnotationsDefaultFeatureFlag,
 } from "../common/featureFlags";
 import DomainSettingsList from "./DomainSettingsList";
 import FeatureFlagSwitch from "./FeatureFlagSwitch";
+import HypothesisConfig from "./HypothesisConfig";
 
 function OptionsPage({}) {
     React.useEffect(() => {
         reportEventContentScript("openSettings");
     }, []);
+
+    const [hypothesisEnabled, setHypothesisEnabled] = React.useState(null);
+    React.useEffect(async () => {
+        const enabled = await getFeatureFlag(hypothesisSyncFeatureFlag);
+        setHypothesisEnabled(enabled);
+    }, []);
+    function onChangeHypothesisSync(enabled) {
+        setHypothesisEnabled(enabled);
+    }
 
     return (
         <div className="flex flex-col gap-3 dark:text-white">
@@ -27,6 +40,7 @@ function OptionsPage({}) {
                     </svg>
                 }
             >
+                {/* <p>Unclutter any article by clicking the extension icon.</p> */}
                 <FeatureFlagSwitch featureFlagKey={enableBootUnclutterMessage}>
                     Show unclutter button on web pages{" "}
                     <a
@@ -40,6 +54,51 @@ function OptionsPage({}) {
                 </FeatureFlagSwitch>
                 <FeatureFlagSwitch featureFlagKey={showOutlineFeatureFlag}>
                     Show article outline where available
+                </FeatureFlagSwitch>
+            </OptionsGroup>
+
+            <OptionsGroup
+                headerText="Annotations"
+                iconSvg={
+                    <svg className="w-5" viewBox="0 0 576 512">
+                        <path
+                            fill="currentColor"
+                            d="M127.1 248.3C127.1 233 135.2 218.7 147.5 209.6L420.6 8.398C428 2.943 436.1 0 446.2 0C457.6 0 468.5 4.539 476.6 12.62L531.4 67.38C539.5 75.46 543.1 86.42 543.1 97.84C543.1 107 541.1 115.1 535.6 123.4L334.4 396.5C325.3 408.8 310.1 416 295.7 416H223.1L198.6 441.4C186.1 453.9 165.9 453.9 153.4 441.4L102.6 390.6C90.13 378.1 90.13 357.9 102.6 345.4L127.1 320L127.1 248.3zM229 229L314.1 314.1L473.4 99.92L444.1 70.59L229 229zM140.7 473.9L109.7 504.1C105.2 509.5 99.05 512 92.69 512H24C10.75 512 0 501.3 0 488V483.3C0 476.1 2.529 470.8 7.029 466.3L70.06 403.3L140.7 473.9zM552 464C565.3 464 576 474.7 576 488C576 501.3 565.3 512 552 512H224C210.7 512 200 501.3 200 488C200 474.7 210.7 464 224 464H552z"
+                        />
+                    </svg>
+                }
+            >
+                {/* <p>Your text highlights and annotations are saved locally.</p> */}
+                <FeatureFlagSwitch
+                    featureFlagKey={hypothesisSyncFeatureFlag}
+                    onChange={onChangeHypothesisSync}
+                >
+                    Sync my annotations with the open{" "}
+                    <a
+                        href="https://web.hypothes.is"
+                        className="underline"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        Hypothes.is
+                    </a>{" "}
+                    network (
+                    <a
+                        href="https://github.com/lindylearn/unclutter/tree/main/docs/annotations.md"
+                        className="underline"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        why
+                    </a>
+                    )
+                </FeatureFlagSwitch>
+                {hypothesisEnabled && <HypothesisConfig />}
+
+                <FeatureFlagSwitch
+                    featureFlagKey={showSocialAnnotationsDefaultFeatureFlag}
+                >
+                    Show social annotations by default
                 </FeatureFlagSwitch>
             </OptionsGroup>
 
@@ -120,7 +179,7 @@ function OptionsGroup({ headerText, iconSvg, children }) {
                 <div className="w-7">{iconSvg}</div>
                 {headerText}
             </h2>
-            <div className="ml-7 flex flex-col gap-2">{children}</div>
+            <div className="ml-7 mr-5 flex flex-col gap-2">{children}</div>
         </div>
     );
 }
