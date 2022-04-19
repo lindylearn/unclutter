@@ -85,7 +85,11 @@ export function insertPageSettings(
                     </div>
                 </div>
             </div>
-        </div>`
+        </div>
+        <div id="lindy-annotations-toggle-container" class="lindy-tooltip lindy-fade">
+            <!-- <svg> inserted in _setupSocialAnnotationsToggle() below  -->
+        </div>
+    `
     );
 
     insertHtml(
@@ -103,8 +107,10 @@ export function insertPageSettings(
     _setupDomainToggleState(domain);
     _setupLinkHandlers();
     _setupThemePopupHandlers(domain, themeModifier);
+    _setupSocialAnnotationsToggle();
 }
 
+// *** Domain automatic activation toggle ***
 let currentUserSetting = null;
 async function _setupDomainToggleState(currentDomain: string) {
     const svg = document.getElementById("lindy-domain-switch-icon-container");
@@ -213,6 +219,57 @@ export function updateDomainState(
     renderActiveUserSetting(currentDomain);
 }
 
+// *** Social annotations toggle ***
+let socialAnnotationsEnabled = null;
+async function _setupSocialAnnotationsToggle() {
+    socialAnnotationsEnabled = true; // TODO setting for initial state?
+
+    const container = _renderAnnotationsToggle();
+
+    container.onclick = () => {
+        socialAnnotationsEnabled = !socialAnnotationsEnabled;
+        _renderAnnotationsToggle();
+
+        // reportEventContentScript("toggleSocialAnnotations", {
+        //     newState: currentUserSetting,
+        //     trigger: "icon",
+        // });
+    };
+}
+function _renderAnnotationsToggle() {
+    const container = document.getElementById(
+        "lindy-annotations-toggle-container"
+    );
+    container.innerHTML = _getAnnotationsToggleIcon(socialAnnotationsEnabled);
+    container.setAttribute(
+        "data-title",
+        _getAnnotationsToggleTooltip(socialAnnotationsEnabled)
+    );
+
+    return container;
+}
+function _getAnnotationsToggleTooltip(enabled: boolean): string {
+    if (enabled) {
+        return `Click to hide social annotations`;
+    } else {
+        return `Click to show social annotations`;
+    }
+}
+function _getAnnotationsToggleIcon(enabled: boolean): string {
+    if (enabled) {
+        return `
+        <svg class="lindy-ui-icon" id="lindy-annotations-icon" viewBox="0 0 640 512">
+            <path fill="currentColor" d="M256 32C114.6 32 .0272 125.1 .0272 240c0 49.63 21.35 94.98 56.97 130.7c-12.5 50.37-54.27 95.27-54.77 95.77c-2.25 2.25-2.875 5.734-1.5 8.734C1.979 478.2 4.75 480 8 480c66.25 0 115.1-31.76 140.6-51.39C181.2 440.9 217.6 448 256 448c141.4 0 255.1-93.13 255.1-208S397.4 32 256 32z" />
+        </svg>`;
+    } else {
+        return `
+        <svg class="lindy-ui-icon" id="lindy-annotations-icon" viewBox="0 0 640 512" style="overflow: visible; margin-left: -0.5px; margin-right: 0.5px;">
+            <path fill="currentColor" d="M64.03 239.1c0 49.59 21.38 94.1 56.97 130.7c-12.5 50.39-54.31 95.3-54.81 95.8c-2.187 2.297-2.781 5.703-1.5 8.703c1.312 3 4.125 4.797 7.312 4.797c66.31 0 116-31.8 140.6-51.41c32.72 12.31 69.02 19.41 107.4 19.41c37.39 0 72.78-6.663 104.8-18.36L82.93 161.7C70.81 185.9 64.03 212.3 64.03 239.1zM630.8 469.1l-118.1-92.59C551.1 340 576 292.4 576 240c0-114.9-114.6-207.1-255.1-207.1c-67.74 0-129.1 21.55-174.9 56.47L38.81 5.117C28.21-3.154 13.16-1.096 5.115 9.19C-3.072 19.63-1.249 34.72 9.188 42.89l591.1 463.1c10.5 8.203 25.57 6.333 33.7-4.073C643.1 492.4 641.2 477.3 630.8 469.1z" />
+        </svg>`;
+    }
+}
+
+// *** Link icons: settings and bug report ***
 function _setupLinkHandlers() {
     document.getElementById("lindy-settings-icon").onclick = () =>
         browser.runtime.sendMessage({ event: "openOptionsPage" });
@@ -221,6 +278,7 @@ function _setupLinkHandlers() {
         reportEventContentScript("reportBugClick");
 }
 
+// *** Theme popup ***
 async function _setupThemePopupHandlers(
     domain: string,
     themeModifier: ThemeModifier

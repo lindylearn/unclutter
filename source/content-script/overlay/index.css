@@ -332,3 +332,11 @@
         width: calc((100vw - var(--lindy-pagewidth)) / 2 + 5px);
     }
 }
+
+#lindy-annotations-toggle-container {
+    width: 0;
+}
+#lindy-annotations-toggle-container > svg {
+    width: 23px;
+    margin-left: 1px;
+}

@@ -148,6 +148,7 @@ html.pageview > body {
     );
     width: calc((100vw - var(--lindy-pagewidth)) / 2 - 50px);
     height: calc(100% - 50px - 50px);
+    user-select: none;
 }
 
 #lindy-annotations-marginbar {

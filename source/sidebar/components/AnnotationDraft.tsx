@@ -40,12 +40,13 @@ function AnnotationDraft({
     return (
         <div
             className={
-                `annotation py-1 px-1 rounded bg-white text-gray-800 shadow-sm` +
-                    className || ""
+                `annotation py-1 px-1 rounded bg-white text-gray-800 shadow-s ` +
+                (className || "")
             }
             style={{
                 top: annotation.offset,
-                boxShadow: `-1.5px 0.5px 2px 0 ${color}`,
+                // boxShadow: `-1.5px 0.5px 2px 0 ${color}`,
+                borderLeft: `3px solid ${color}`,
             }}
             {...swipeHandlers}
         >
