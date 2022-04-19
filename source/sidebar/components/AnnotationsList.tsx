@@ -86,8 +86,12 @@ function AnnotationsList({
                                             isUpvote
                                         )
                                     }
-                                    onAnnotationHoverUpdate={
-                                        onAnnotationHoverUpdate
+                                    onHoverUpdate={(hoverActive: boolean) =>
+                                        // call hover on top level annotation
+                                        onAnnotationHoverUpdate(
+                                            annotation,
+                                            hoverActive
+                                        )
                                     }
                                 />
                             </div>

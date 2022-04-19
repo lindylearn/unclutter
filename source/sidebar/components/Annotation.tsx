@@ -7,7 +7,7 @@ function Annotation({
     charLimit = 200,
     upvoted,
     upvoteAnnotation,
-    onAnnotationHoverUpdate,
+    onHoverUpdate,
 }) {
     const { text, offset, author, platform, link, reply_count } = annotation;
 
@@ -26,12 +26,12 @@ function Annotation({
     return (
         <div
             className={
-                "annotation py-1 px-2 bg-white rounded shadow-sm hover:shadow text-gray-800 animate-slidein " +
+                "annotation py-1 px-2 bg-white text-gray-800 rounded shadow-sm hover:shadow animate-slidein transition-all " +
                 className
             }
             style={{ top: offset, borderColor: getAnnotationColor(annotation) }}
-            onMouseEnter={() => onAnnotationHoverUpdate(annotation, true)}
-            onMouseLeave={() => onAnnotationHoverUpdate(annotation, false)}
+            onMouseEnter={() => onHoverUpdate(true)}
+            onMouseLeave={() => onHoverUpdate(false)}
         >
             <a
                 className="text-sm leading-normal"

@@ -135,6 +135,7 @@ export function getHighlightOffsets() {
 export function paintHighlight(annotation, color: string) {
     const nodes = getAnnotationNodes(annotation);
     nodes.map((node) => {
+        node.style.transition = "background 0.15s linear";
         node.style.backgroundColor = color;
     });
 }

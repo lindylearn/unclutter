@@ -39,7 +39,7 @@ function AnnotationDraft({
     return (
         <div
             className={
-                `annotation py-1 px-1 rounded bg-white text-gray-800 shadow-s animate-slidein ` +
+                `annotation py-1 px-1 rounded-l-sm rounded-r bg-white text-gray-800 shadow-sm hover:shadow animate-slidein transition-all ` +
                 (className || "")
             }
             style={{
@@ -82,14 +82,12 @@ function AnnotationDraft({
                     }
                 />
             </div> */}
-            <div className="top-icon absolute top-2 right-2 text-gray-400 cursor-pointer">
+            <div
+                className="top-icon absolute top-1 right-1 p-1 text-gray-400 cursor-pointer hover:text-gray-600 hover:scale-110 transition-all"
+                onClick={deleteAnnotation}
+            >
                 {!changedAnnotation.is_draft && (
-                    <svg
-                        onClick={deleteAnnotation}
-                        className="h-3"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 448 512"
-                    >
+                    <svg className="h-3" viewBox="0 0 448 512">
                         <path
                             fill="currentColor"
                             d="M135.2 17.69C140.6 6.848 151.7 0 163.8 0H284.2C296.3 0 307.4 6.848 312.8 17.69L320 32H416C433.7 32 448 46.33 448 64C448 81.67 433.7 96 416 96H32C14.33 96 0 81.67 0 64C0 46.33 14.33 32 32 32H128L135.2 17.69zM394.8 466.1C393.2 492.3 372.3 512 346.9 512H101.1C75.75 512 54.77 492.3 53.19 466.1L31.1 128H416L394.8 466.1z"
