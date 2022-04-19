@@ -94,11 +94,11 @@ html {
     background: linear-gradient(to top, #e5e7eb, rgba(0, 0, 0, 0));
 }
 
-.annotation > .top-icon {
+.annotation > .top-icons {
     visibility: hidden;
     opacity: 0;
 }
-.annotation:hover > .top-icon {
+.annotation:hover > .top-icons {
     visibility: visible;
     opacity: 1;
 }
