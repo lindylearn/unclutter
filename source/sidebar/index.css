@@ -103,6 +103,11 @@ html {
     opacity: 1;
 }
 
+.annotation > .info-bar > .upvote-button {
+    visibility: hidden;
+    opacity: 0;
+}
 .annotation:hover > .info-bar > .upvote-button {
     visibility: visible;
+    opacity: 1;
 }

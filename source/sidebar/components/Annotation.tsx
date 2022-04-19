@@ -26,7 +26,7 @@ function Annotation({
     return (
         <div
             className={
-                "annotation py-1 px-2 bg-white text-gray-800 rounded shadow-sm hover:shadow animate-slidein transition-all " +
+                "annotation p-1 px-2 bg-white text-gray-800 rounded shadow-sm hover:shadow animate-slidein transition-all " +
                 className
             }
             style={{ top: offset, borderColor: getAnnotationColor(annotation) }}
@@ -53,11 +53,11 @@ function Annotation({
                     );
                 })}
             </a>
-            <div className="info-bar text-sm text-gray-400 flex gap-2 justify-between">
-                {/* <div
+            <div className="info-bar text-sm text-gray-400 flex gap-3 justify-between transition-all">
+                <div
                     className={
-                        "upvote-button flex-shrink-0 flex cursor-pointer select-none " +
-                        (upvoted ? "text-black " : "") +
+                        "upvote-button flex-shrink-0 flex cursor-pointer select-none hover:text-gray-600 hover:scale-110 transition-all " +
+                        (upvoted ? "text-gray-800 " : "") +
                         (upvoteCount == 0 ? "invisible " : "") // shown on hover through global CSS
                     }
                     onClick={toggleUpvoteAnnotationLocalFirst}
@@ -94,7 +94,7 @@ function Annotation({
                     </a>
                 ) : (
                     <></>
-                )} */}
+                )}
 
                 <div className="flex-grow" />
                 <a
