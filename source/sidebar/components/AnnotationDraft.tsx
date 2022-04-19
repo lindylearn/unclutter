@@ -9,7 +9,6 @@ function AnnotationDraft({
     className,
     deleteAnnotation,
     placeholder = "Private note",
-    swipeHandlers = {},
 }) {
     const debouncedPatchOrCreate = React.useCallback(
         debounce(apiPatchOrCreate, 5000),
@@ -48,7 +47,6 @@ function AnnotationDraft({
                 // boxShadow: `-1.5px 0.5px 2px 0 ${color}`,
                 borderLeft: `3px solid ${color}`,
             }}
-            {...swipeHandlers}
         >
             <textarea
                 className="text-sm md:text-base w-full bg-gray-50 placeholder-gray-400 rounded py-1 px-2 outline-none align-top"

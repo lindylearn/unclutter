@@ -39,10 +39,7 @@ export async function highlightAnnotations(annotations) {
                 );
 
                 if (annotation.isMyAnnotation) {
-                    highlightedNodes.map((node) => {
-                        node.style.backgroundColor =
-                            getAnnotationColor(annotation);
-                    });
+                    paintHighlight(annotation, getAnnotationColor(annotation));
                 }
 
                 anchoredAnnotations.push({
@@ -56,6 +53,12 @@ export async function highlightAnnotations(annotations) {
         })
     );
 
+    // insertMarginBar(anchoredAnnotations)
+
+    return anchoredAnnotations;
+}
+
+function insertMarginBar(anchoredAnnotations) {
     const container = document.createElement("div");
     container.className = overrideClassname;
     container.id = "lindy-annotations-marginbar";
@@ -63,7 +66,6 @@ export async function highlightAnnotations(annotations) {
 
     const bodyOffset = getNodeOffset(document.body);
     anchoredAnnotations.map((annotation) => {
-        return;
         if (annotation.isMyAnnotation) {
             return;
         }
@@ -90,8 +92,6 @@ export async function highlightAnnotations(annotations) {
 
         container.appendChild(barElement);
     });
-
-    return anchoredAnnotations;
 }
 
 // remove all text highlighting
@@ -99,12 +99,17 @@ export function removeAllHighlights() {
     removeAllHighlightsApi(document.body);
 }
 
+function getAnnotationNodes(annotation): HTMLElement[] {
+    const nodeList = document.querySelectorAll(
+        `lindy-highlight[id="${annotation.localId || annotation.id}"]`
+    );
+    return [...nodeList] as HTMLElement[];
+}
+
 // remove a specific text highlighting
 export function removeHighlight(annotation) {
-    const nodes = document.querySelectorAll(
-        `[id=${annotation.localId || annotation.id}]`
-    );
-    removeHighlightsApi([...nodes]);
+    const nodes = getAnnotationNodes(annotation);
+    removeHighlightsApi(nodes);
 }
 
 // get the Y position of all text highlighlights
@@ -125,4 +130,14 @@ export function getHighlightOffsets() {
     }
 
     return offsetById;
+}
+
+export function paintHighlight(annotation, color: string) {
+    const nodes = getAnnotationNodes(annotation);
+    nodes.map((node) => {
+        node.style.backgroundColor = color;
+    });
+}
+export function unPaintHighlight(annotation) {
+    paintHighlight(annotation, "transparent");
 }

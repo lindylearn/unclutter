@@ -2,8 +2,10 @@ import throttle from "lodash/throttle";
 import {
     getHighlightOffsets,
     highlightAnnotations,
+    paintHighlight,
     removeAllHighlights,
     removeHighlight,
+    unPaintHighlight,
 } from "./highlightsApi";
 
 let listenerRef;
@@ -32,6 +34,14 @@ export function createAnnotationListener(sidebarIframe) {
             );
         } else if (data.event === "removeHighlight") {
             removeHighlight(data.annotation);
+        } else if (data.event === "onAnnotationHoverUpdate") {
+            if (data.hoverActive) {
+                const color =
+                    data.annotation.platform === "hn" ? "#ffb380" : "#f099a1";
+                paintHighlight(data.annotation, color);
+            } else {
+                unPaintHighlight(data.annotation);
+            }
         }
     };
     window.addEventListener("message", onMessage);

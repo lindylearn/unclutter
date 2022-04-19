@@ -11,6 +11,7 @@ function AnnotationsList({
     upvotedAnnotations = {},
     upvoteAnnotation = null,
     offsetTop = 0,
+    onAnnotationHoverUpdate,
 }) {
     if (!annotations) {
         return <div></div>;
@@ -68,7 +69,6 @@ function AnnotationsList({
                                 }}
                             >
                                 <Component
-                                    key={annotation.link}
                                     annotation={annotation}
                                     deleteAnnotation={() =>
                                         deleteAnnotation(annotation)
@@ -85,6 +85,9 @@ function AnnotationsList({
                                             annotation.id,
                                             isUpvote
                                         )
+                                    }
+                                    onAnnotationHoverUpdate={
+                                        onAnnotationHoverUpdate
                                     }
                                 />
                             </div>

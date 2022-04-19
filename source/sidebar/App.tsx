@@ -67,6 +67,12 @@ export default function App({ url }) {
 
         deleteAnnotationApi(annotation.id);
     }
+    function onAnnotationHoverUpdate(annotation, hoverActive: boolean) {
+        window.top.postMessage(
+            { event: "onAnnotationHoverUpdate", annotation, hoverActive },
+            "*"
+        );
+    }
 
     // receive events from the text highlighting content script code
     window.onmessage = async function ({ data }) {
@@ -115,6 +121,7 @@ export default function App({ url }) {
                 setAnnotations={setAnnotations}
                 deleteAnnotation={deleteAnnotation}
                 offsetTop={50}
+                onAnnotationHoverUpdate={onAnnotationHoverUpdate}
                 // upvotedAnnotations={upvotedAnnotations}
                 // upvoteAnnotation={upvoteAnnotation}
             />
