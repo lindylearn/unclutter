@@ -12,8 +12,10 @@ function Annotation({
 }) {
     const { text, offset, author, platform, link, reply_count } = annotation;
 
-    const textLines = text.slice(0, charLimit).split("\n");
-    //.filter((line) => line.trim() != '');
+    const textLines = text
+        .slice(0, charLimit)
+        .split("\n")
+        .filter((line) => line.trim() != "");
 
     const [upvoteCount, setLocalUpvoteCount] = React.useState(
         annotation.upvote_count || 0
