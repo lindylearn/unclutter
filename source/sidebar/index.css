@@ -103,11 +103,13 @@ html {
     opacity: 1;
 }
 
-.annotation > .info-bar > .upvote-button {
+.annotation > .info-bar > .upvote-button, 
+.annotation > .info-bar > .reply-button {
     visibility: hidden;
     opacity: 0;
 }
-.annotation:hover > .info-bar > .upvote-button {
+.annotation:hover > .info-bar > .upvote-button,
+.annotation:hover > .info-bar > .reply-button {
     visibility: visible;
     opacity: 1;
 }
