@@ -27,7 +27,7 @@ function Annotation({
     return (
         <div
             className={
-                "annotation py-1 px-2 bg-white rounded shadow-sm hover:shadow text-gray-800 " +
+                "annotation py-1 px-2 bg-white rounded shadow-sm hover:shadow text-gray-800 animate-slidein " +
                 className
             }
             style={{ top: offset, borderColor: getAnnotationColor(annotation) }}

@@ -40,7 +40,7 @@ function AnnotationDraft({
     return (
         <div
             className={
-                `annotation py-1 px-1 rounded bg-white text-gray-800 shadow-s ` +
+                `annotation py-1 px-1 rounded bg-white text-gray-800 shadow-s animate-slidein ` +
                 (className || "")
             }
             style={{
