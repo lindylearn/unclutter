@@ -71,11 +71,11 @@ export default function HypothesisConfig() {
                     "flex-grow bg-gray-100 dark:bg-gray-800 shadow-inner py-1 px-2 outline-none rounded border-2 " +
                     (tokenValid
                         ? "border-green-300 dark:border-green-500"
-                        : token !== ""
-                        ? ""
-                        : "")
+                        : token === ""
+                        ? "border-red-300 dark:border-red-500"
+                        : "border-white")
                 }
-                placeholder="Personal Hypothes.is API token"
+                placeholder="Hypothes.is API token"
                 spellCheck="false"
                 value={token}
                 onChange={(e) => setToken(e.target.value)}

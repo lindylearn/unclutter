@@ -79,11 +79,15 @@ function OptionsPage({}) {
                     </svg>
                 }
             >
+                <p>
+                    Highlight any article text to create a private annotation
+                    saved in your browser.
+                </p>
                 <FeatureFlagSwitch
                     featureFlagKey={hypothesisSyncFeatureFlag}
                     onChange={onChangeHypothesisSync}
                 >
-                    Sync highlights & annotations with my{" "}
+                    Sync annotations with my{" "}
                     <a
                         href="https://web.hypothes.is"
                         className="underline"
@@ -92,16 +96,7 @@ function OptionsPage({}) {
                     >
                         Hypothes.is
                     </a>{" "}
-                    account (
-                    <a
-                        href="https://github.com/lindylearn/unclutter/tree/main/docs/annotations.md"
-                        className="underline"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        why
-                    </a>
-                    )
+                    account
                 </FeatureFlagSwitch>
                 {hypothesisEnabled && <HypothesisConfig />}
 
