@@ -1,12 +1,8 @@
 import {
-    allowlistDomainOnManualActivationFeatureFlag,
-    automaticallyEnabledFeatureFlag,
     collectAnonymousMetricsFeatureFlag,
-    dismissedFeedbackMessage,
-    enableBootUnclutterMessage,
+    getAllFeatureFlags,
     getFeatureFlag,
     isDevelopmentFeatureFlag,
-    showOutlineFeatureFlag,
 } from "../common/featureFlags";
 import browser from "../common/polyfill";
 import { getAllCustomDomainSettings } from "../common/storage2";
@@ -66,24 +62,7 @@ async function sendEvent(name, data, isDev) {
 // Report anonymous aggregates on enabled extension features (if the user allowed it)
 export async function reportSettings(version, isNewInstall) {
     // true / false state of enabled features
-    const featureFlagSettings = {
-        [automaticallyEnabledFeatureFlag]: await getFeatureFlag(
-            automaticallyEnabledFeatureFlag
-        ),
-        [allowlistDomainOnManualActivationFeatureFlag]: await getFeatureFlag(
-            allowlistDomainOnManualActivationFeatureFlag
-        ),
-        [collectAnonymousMetricsFeatureFlag]: await getFeatureFlag(
-            collectAnonymousMetricsFeatureFlag
-        ),
-        [enableBootUnclutterMessage]: await getFeatureFlag(
-            enableBootUnclutterMessage
-        ),
-        [showOutlineFeatureFlag]: await getFeatureFlag(showOutlineFeatureFlag),
-        [dismissedFeedbackMessage]: await getFeatureFlag(
-            dismissedFeedbackMessage
-        ),
-    };
+    const featureFlagSettings = await getAllFeatureFlags();
 
     // count allowlisted and blocklisted domains
     // do not report the actual domains

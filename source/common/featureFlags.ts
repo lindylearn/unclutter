@@ -15,6 +15,24 @@ export async function setFeatureFlag(key, status) {
     await browser.storage.sync.set({ [key]: status });
 }
 
+export async function getAllFeatureFlags() {
+    const reportedFlags = [
+        automaticallyEnabledFeatureFlag,
+        allowlistDomainOnManualActivationFeatureFlag,
+        collectAnonymousMetricsFeatureFlag,
+        enableBootUnclutterMessage,
+        showOutlineFeatureFlag,
+        hypothesisSyncFeatureFlag,
+        showSocialAnnotationsDefaultFeatureFlag,
+        dismissedFeedbackMessage,
+    ];
+
+    // does not include defaultFeatureFlags
+    const config = await browser.storage.sync.get(reportedFlags);
+
+    return config;
+}
+
 export const automaticallyEnabledFeatureFlag = "automatically-enabled";
 export const allowlistDomainOnManualActivationFeatureFlag =
     "allowlist-domain-manual-activation";
