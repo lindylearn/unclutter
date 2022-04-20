@@ -91,8 +91,8 @@ export default class OverlayManager implements PageModifier {
     private async insertIframes() {
         const iframe = document.createElement("iframe");
         iframe.id = "lindy-info-topleft";
-        iframe.frameBorder = "0";
-        iframe.scrolling = "no";
+        iframe.setAttribute("scrolling", "no");
+        iframe.setAttribute("frameBorder", "0");
         document.documentElement.appendChild(iframe);
         this.overlayIframe = iframe;
 

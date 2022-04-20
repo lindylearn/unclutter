@@ -1,5 +1,6 @@
 import { createDraftAnnotation } from "../../../common/annotations/create";
 import { describe as describeAnnotation } from "../../../common/annotator/anchoring/html";
+import { sendSidebarEvent } from "./annotationsListener";
 import { highlightAnnotations } from "./highlightsApi";
 
 // send user text selections to the sidebar iframe, in order to create an annotation
@@ -7,13 +8,10 @@ let listenerRef;
 export function createSelectionListener(sidebarIframe) {
     const mouseupHandler = () =>
         _createAnnotationFromSelection((annotation) => {
-            sidebarIframe.contentWindow.postMessage(
-                {
-                    event: "createHighlight",
-                    annotation,
-                },
-                "*"
-            );
+            sendSidebarEvent(sidebarIframe, {
+                event: "createHighlight",
+                annotation,
+            });
         });
     document.addEventListener("mouseup", mouseupHandler);
     listenerRef = mouseupHandler;

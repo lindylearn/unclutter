@@ -25,13 +25,10 @@ export function createAnnotationListener(sidebarIframe) {
             const anchoredAnnotations = await highlightAnnotations(
                 data.annotations
             );
-            sidebarIframe.contentWindow.postMessage(
-                {
-                    event: "anchoredAnnotations",
-                    annotations: anchoredAnnotations,
-                },
-                "*"
-            );
+            sendSidebarEvent(sidebarIframe, {
+                event: "anchoredAnnotations",
+                annotations: anchoredAnnotations,
+            });
         } else if (data.event === "removeHighlight") {
             removeHighlight(data.annotation);
         } else if (data.event === "onAnnotationHoverUpdate") {
@@ -56,13 +53,10 @@ export function createAnnotationListener(sidebarIframe) {
 
         console.info(`page resized, recalculating annotation offsets...`);
         const offsetById = getHighlightOffsets();
-        sidebarIframe.contentWindow.postMessage(
-            {
-                event: "changedDisplayOffset",
-                offsetById,
-            },
-            "*"
-        );
+        sendSidebarEvent(sidebarIframe, {
+            event: "changedDisplayOffset",
+            offsetById,
+        });
     });
 }
 
@@ -87,4 +81,11 @@ function _observeHeightChange(document, callback) {
     });
 
     resizeObserver.observe(document.body);
+}
+
+export function sendSidebarEvent(
+    sidebarIframe: HTMLIFrameElement,
+    event: object
+) {
+    sidebarIframe.contentWindow.postMessage(event, "*");
 }

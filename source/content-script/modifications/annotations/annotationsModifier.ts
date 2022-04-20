@@ -2,6 +2,7 @@ import { PageModifier, trackModifierExecution } from "../_interface";
 import {
     createAnnotationListener,
     removeAnnotationListener,
+    sendSidebarEvent,
 } from "./annotationsListener";
 import { injectSidebar, removeSidebar } from "./injectSidebar";
 import {
@@ -13,9 +14,12 @@ import {
 export default class AnnotationsModifier implements PageModifier {
     private sidebarIframe: HTMLIFrameElement;
 
-    async afterTransitionIn() {
+    transitionIn() {
+        // insert iframe earlier so ThemeModifier can inject theme variables
         this.sidebarIframe = injectSidebar();
+    }
 
+    async afterTransitionIn() {
         createSelectionListener(this.sidebarIframe);
         createAnnotationListener(this.sidebarIframe);
     }
@@ -28,12 +32,9 @@ export default class AnnotationsModifier implements PageModifier {
     }
 
     setShowSocialAnnotations(showSocialAnnotations: boolean) {
-        this.sidebarIframe.contentWindow.postMessage(
-            {
-                event: "setShowSocialAnnotations",
-                showSocialAnnotations,
-            },
-            "*"
-        );
+        sendSidebarEvent(this.sidebarIframe, {
+            event: "setShowSocialAnnotations",
+            showSocialAnnotations,
+        });
     }
 }

@@ -1,4 +1,5 @@
 import browser from "../../../common/polyfill";
+import { sendSidebarEvent } from "./annotationsListener";
 
 // inject the annotations sidebar HTML elements, but don't show them yet
 export function injectSidebar() {
@@ -21,4 +22,29 @@ export function removeSidebar() {
         "lindylearn-annotations-sidebar"
     );
     existingSidebar.parentNode.removeChild(existingSidebar);
+}
+
+// can't access iframe as from different origin
+// so send message for dark mode modifications instead
+export function setSidebarCssVariable(key: string, value: string) {
+    const iframe = getSidebarIframe();
+    sendSidebarEvent(iframe, {
+        event: "setCssVarible",
+        key,
+        value,
+    });
+}
+
+export function setSidebarDarkMode(darkModeEnabled: boolean) {
+    const iframe = getSidebarIframe();
+    sendSidebarEvent(iframe, {
+        event: "setDarkMode",
+        darkModeEnabled,
+    });
+}
+
+function getSidebarIframe(): HTMLIFrameElement {
+    return document.getElementById(
+        "lindylearn-annotations-sidebar"
+    ) as HTMLIFrameElement;
 }

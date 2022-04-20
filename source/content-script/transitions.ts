@@ -61,6 +61,7 @@ export default class TransitionManager implements PageModifier {
 
         this.bodyStyleModifier.transitionIn();
         this.overlayManager.transitionIn();
+        this.annotationsModifier.transitionIn();
 
         this.textContainerModifier.transitionIn();
         // running this in transitionIn() breaks the animation, but not running it often results in text glitches
@@ -69,11 +70,10 @@ export default class TransitionManager implements PageModifier {
 
     async afterTransitionIn() {
         await this.overlayManager.afterTransitionIn(); // needs to run before themeModifier to set correct auto theme value
+        this.annotationsModifier.afterTransitionIn();
 
         await this.themeModifier.afterTransitionIn();
         await this.stylePatchesModifier.afterTransitionIn();
-
-        this.annotationsModifier.afterTransitionIn();
     }
 
     async transitionOut() {

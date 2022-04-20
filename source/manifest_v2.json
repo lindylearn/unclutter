@@ -38,6 +38,10 @@
         "content-script/overlay/indexDark.css",
         "content-script/overlay/outline/outlineDark.css",
         "content-script/pageview/manualContentBlock.css",
+        "sidebar/index.html",
+        "sidebar/index.css",
+        "sidebar/dark.css",
+        "sidebar/index.js",
         "assets/**"
     ]
 }

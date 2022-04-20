@@ -39,7 +39,8 @@
                 "content-script/overlay/outline/outlineDark.css",
                 "content-script/pageview/manualContentBlock.css",
                 "sidebar/index.html",
-                "sidebar/global.css",
+                "sidebar/index.css",
+                "sidebar/dark.css",
                 "sidebar/index.js",
                 "assets/**"
             ],

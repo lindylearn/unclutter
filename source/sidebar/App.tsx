@@ -42,8 +42,6 @@ export default function App({ url }) {
         );
     }, [showSocialAnnotations]);
 
-    console.log(annotations);
-
     // sync local annotation updates to hypothesis
     async function createAnnotationHandler(localAnnotation: LindyAnnotation) {
         // show only once reconciled with remote state
@@ -65,23 +63,25 @@ export default function App({ url }) {
     }
 
     // receive events from the text highlighting content script code
-    window.onmessage = async function ({ data }) {
-        if (data.event === "createHighlight") {
-            createAnnotationHandler(data.annotation);
-        } else if (data.event === "anchoredAnnotations") {
-            setAnnotations([...annotations, ...data.annotations]);
-        } else if (data.event === "changedDisplayOffset") {
-            let updatedAnnotations = annotations.map((a) => ({
-                ...a,
-                displayOffset:
-                    data.offsetById[a.localId] || data.offsetById[a.id],
-            }));
+    React.useEffect(() => {
+        window.addEventListener("message", ({ data }) => {
+            if (data.event === "createHighlight") {
+                createAnnotationHandler(data.annotation);
+            } else if (data.event === "anchoredAnnotations") {
+                setAnnotations([...annotations, ...data.annotations]);
+            } else if (data.event === "changedDisplayOffset") {
+                let updatedAnnotations = annotations.map((a) => ({
+                    ...a,
+                    displayOffset:
+                        data.offsetById[a.localId] || data.offsetById[a.id],
+                }));
 
-            setAnnotations(updatedAnnotations);
-        } else if (data.event === "setShowSocialAnnotations") {
-            setShowSocialAnnotations(data.showSocialAnnotations);
-        }
-    };
+                setAnnotations(updatedAnnotations);
+            } else if (data.event === "setShowSocialAnnotations") {
+                setShowSocialAnnotations(data.showSocialAnnotations);
+            }
+        });
+    }, []);
 
     return (
         // x margin to show slight shadow (iframe allows no overflow)
