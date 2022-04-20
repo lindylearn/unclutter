@@ -13,7 +13,7 @@ window.addEventListener("message", ({ data }) => {
             createStylesheetLink(
                 browser.runtime.getURL("sidebar/dark.css"),
                 "dark-mode-ui-style",
-                document?.head.firstChild as HTMLElement
+                document?.head.lastChild as HTMLElement
             );
         } else {
             document

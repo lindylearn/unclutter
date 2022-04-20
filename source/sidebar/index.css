@@ -22,68 +22,8 @@ html {
     z-index: 20;
 }
 
-/* Switch component */
-.switch-input {
-    display: none;
-}
-.switch {
-    display: flex;
-    width: 44px;
-    height: 25px;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 6px;
-    background: #f3f4f6;
-    border-radius: 50px;
-    cursor: pointer;
-    position: relative;
-}
-.switch svg {
-    height: 12px;
-}
-.switch .fa-sun {
-    fill: black;
-    opacity: 1;
-    transition: 0.3s;
-}
-.switch .fa-moon {
-    fill: black;
-    opacity: 0;
-    transition: 0.3s;
-    transform: translateX(22px);
-}
-.switch .ball {
-    position: absolute;
-    display: block;
-    width: 12px;
-    height: 12px;
-    top: calc((100% - 12px) / 2);
-    left: 5px;
-    background: #9ca3af;
-    border-radius: 50%;
-    transition: 0.3s;
-}
-
-.switch-input:checked + .switch .fa-sun {
-    opacity: 0;
-    transform: translateX(-22px);
-}
-.switch-input:checked + .switch .fa-moon {
-    opacity: 1;
-    transform: translateX(0);
-}
-.switch-input:checked + .switch .ball {
-    transform: translateX(22px);
-    background: #f3f4f6;
-}
-.switch-input:checked + .switch {
-    background: #9ca3af;
-}
 
 /* annotation list */
-.annotation-group-item {
-    /* box-shadow: 0 -5px 5px -5px #d1d5db; */
-}
 .annotation-group-item:not(:first-child)::before {
     height: 5px;
     width: 100%;
@@ -112,4 +52,8 @@ html {
 .annotation:hover > .info-bar > .reply-button {
     visibility: visible;
     opacity: 1;
+}
+
+.annotation {
+    background-color: var(--lindy-background-color) !important;
 }

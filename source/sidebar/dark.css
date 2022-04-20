@@ -1,3 +1,27 @@
+/* --lindy-dark-theme-text-color and background color injected from common/theme.ts */
+
+/* use same colors as in source/content-script/overlay/indexDark.css */
+
 .annotation {
-    background-color: var(--lindy-background-color);
+    color: var(--lindy-dark-theme-text-color) !important;
+}
+.annotation > textarea {
+    color: var(--lindy-dark-theme-text-color) !important;
+    background-color: #262626 !important;
+}
+.annotation > textarea::placeholder {
+    color: #757575 !important;
+}
+.annotation > .top-icons, 
+.annotation > .info-bar {
+    color: #616161 !important;
+}
+.annotation > .top-icons > *:hover, 
+.upvote-button:hover,
+.reply-button:hover {
+    color: #bdbdbd !important
+}
+
+.annotation-group-item:not(:first-child)::before {
+    background: linear-gradient(to top, #262626, rgba(0, 0, 0, 0)) !important;
 }

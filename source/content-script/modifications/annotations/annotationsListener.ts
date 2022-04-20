@@ -34,7 +34,9 @@ export function createAnnotationListener(sidebarIframe) {
         } else if (data.event === "onAnnotationHoverUpdate") {
             if (data.hoverActive) {
                 const color =
-                    data.annotation.platform === "hn" ? "#ffb380" : "#f099a1";
+                    data.annotation.platform === "hn"
+                        ? "rgba(255, 102, 0, 0.5)"
+                        : "rgba(189, 28, 43, 0.5)";
                 paintHighlight(data.annotation, color);
             } else {
                 unPaintHighlight(data.annotation);

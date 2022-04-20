@@ -219,7 +219,7 @@ export default class ThemeModifier implements PageModifier {
                 "content-script/overlay/outline/outlineDark.css"
             ),
             "dark-mode-ui-style",
-            getOutlineIframe()?.head.firstChild as HTMLElement
+            getOutlineIframe()?.head.lastChild as HTMLElement
         );
         setSidebarDarkMode(true);
 
