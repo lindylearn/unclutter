@@ -1,5 +1,8 @@
 import React from "react";
-import { reportEventContentScript } from "source/content-script/messaging";
+import {
+    getRemoteFeatureFlag,
+    reportEventContentScript,
+} from "source/content-script/messaging";
 import {
     allowlistDomainOnManualActivationFeatureFlag,
     collectAnonymousMetricsFeatureFlag,
@@ -8,6 +11,7 @@ import {
     hypothesisSyncFeatureFlag,
     showOutlineFeatureFlag,
     showSocialAnnotationsDefaultFeatureFlag,
+    supportSocialAnnotations,
 } from "../common/featureFlags";
 import DomainSettingsList from "./DomainSettingsList";
 import FeatureFlagSwitch from "./FeatureFlagSwitch";
@@ -16,6 +20,13 @@ import HypothesisConfig from "./HypothesisConfig";
 function OptionsPage({}) {
     React.useEffect(() => {
         reportEventContentScript("openSettings");
+    }, []);
+
+    const [socialAnnotationsSupported, setSocialAnnotationsSupported] =
+        React.useState(null);
+    React.useEffect(async () => {
+        const enabled = await getRemoteFeatureFlag(supportSocialAnnotations);
+        setSocialAnnotationsSupported(enabled);
     }, []);
 
     const [hypothesisEnabled, setHypothesisEnabled] = React.useState(null);
@@ -95,11 +106,13 @@ function OptionsPage({}) {
                 </FeatureFlagSwitch>
                 {hypothesisEnabled && <HypothesisConfig />}
 
-                <FeatureFlagSwitch
-                    featureFlagKey={showSocialAnnotationsDefaultFeatureFlag}
-                >
-                    Show social annotations by default
-                </FeatureFlagSwitch>
+                {socialAnnotationsSupported && (
+                    <FeatureFlagSwitch
+                        featureFlagKey={showSocialAnnotationsDefaultFeatureFlag}
+                    >
+                        Show social annotations by default
+                    </FeatureFlagSwitch>
+                )}
             </OptionsGroup>
 
             <OptionsGroup

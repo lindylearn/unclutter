@@ -46,10 +46,10 @@ function Annotation({
                 target="_blank"
                 rel="noreferrer"
             >
-                {textLines.map((item, i) => {
+                {textLines.map((line, i) => {
                     return (
                         <p key={i} className="mb-1">
-                            {item}
+                            {line}
                             {i == textLines.length - 1 &&
                             text.length > charLimit ? (
                                 "..."

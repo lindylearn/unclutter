@@ -1,6 +1,7 @@
 import {
     getFeatureFlag,
     showSocialAnnotationsDefaultFeatureFlag,
+    supportSocialAnnotations,
 } from "source/common/featureFlags";
 import { insertHtml } from "source/common/html";
 import browser from "../../common/polyfill";
@@ -19,7 +20,7 @@ import {
     themeName,
 } from "../../common/theme";
 import { togglePageView } from "../enhance";
-import { reportEventContentScript } from "../messaging";
+import { getRemoteFeatureFlag, reportEventContentScript } from "../messaging";
 import AnnotationsModifier from "../modifications/annotations/annotationsModifier";
 import ThemeModifier from "../modifications/CSSOM/theme";
 
@@ -230,6 +231,11 @@ let socialAnnotationsEnabled = null;
 async function _setupSocialAnnotationsToggle(
     annotationsModifer: AnnotationsModifier
 ) {
+    const supportFeature = await getRemoteFeatureFlag(supportSocialAnnotations);
+    if (!supportFeature) {
+        return;
+    }
+
     socialAnnotationsEnabled = await getFeatureFlag(
         showSocialAnnotationsDefaultFeatureFlag
     );

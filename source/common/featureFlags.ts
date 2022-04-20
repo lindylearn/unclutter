@@ -31,6 +31,7 @@ export const dismissedFeedbackMessage = "dismissed-feedback-message";
 
 // remote
 export const showFeedbackMessage = "show-feedback-message";
+export const supportSocialAnnotations = "support-social-annotations";
 
 export const defaultFeatureFlags = {
     [automaticallyEnabledFeatureFlag]: false,
