@@ -79,12 +79,11 @@ function OptionsPage({}) {
                     </svg>
                 }
             >
-                {/* <p>Your text highlights and annotations are saved locally.</p> */}
                 <FeatureFlagSwitch
                     featureFlagKey={hypothesisSyncFeatureFlag}
                     onChange={onChangeHypothesisSync}
                 >
-                    Sync my annotations with the open{" "}
+                    Sync highlights & annotations with my{" "}
                     <a
                         href="https://web.hypothes.is"
                         className="underline"
@@ -93,7 +92,7 @@ function OptionsPage({}) {
                     >
                         Hypothes.is
                     </a>{" "}
-                    network (
+                    account (
                     <a
                         href="https://github.com/lindylearn/unclutter/tree/main/docs/annotations.md"
                         className="underline"

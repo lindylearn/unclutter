@@ -27,9 +27,9 @@ export default function HypothesisConfig() {
     }, [token]);
 
     return (
-        <div className="flex gap-3 items-center">
-            {/* <p className="mb-1">
-                My personal{" "}
+        <div className="flex gap-2 items-center">
+            <p className="mb-1">
+                Your{" "}
                 <a
                     className="underline"
                     href="https://hypothes.is/account/developer"
@@ -39,17 +39,17 @@ export default function HypothesisConfig() {
                     API token
                 </a>
                 :
-            </p> */}
+            </p>
             <input
                 className={
                     "flex-grow bg-gray-100 dark:bg-gray-800 shadow-inner py-1 px-2 outline-none rounded border-2 " +
                     (tokenValid
                         ? "border-green-300 dark:border-green-500"
                         : token !== ""
-                        ? "border-red-300 dark:border-red-500"
-                        : "border-white")
+                        ? ""
+                        : "")
                 }
-                placeholder="Your personal Hypothes.is API token"
+                placeholder="Personal Hypothes.is API token"
                 spellCheck="false"
                 value={token}
                 onChange={(e) => setToken(e.target.value)}
