@@ -31,7 +31,8 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }
 });
 
-let isSimulatedClick = false;
+const transitions = new TransitionManager();
+let disablePageViewHandlers: () => void;
 export async function togglePageView() {
     // manually toggle pageview status in this tab
 
@@ -39,7 +40,7 @@ export async function togglePageView() {
         document.documentElement.classList.contains("pageview");
 
     if (!alreadyEnabled) {
-        const transitions = new TransitionManager();
+        // enable pageview
         await transitions.prepare();
 
         transitions.fadeOutNoise();
@@ -47,36 +48,25 @@ export async function togglePageView() {
 
         transitions.transitionIn();
 
-        isSimulatedClick = false;
-        await enablePageView(async () => {
-            // when user exists page view
-
-            if (!isSimulatedClick) {
-                // already emitted elsewhere for simulated non-background clicks
-                browser.runtime.sendMessage(null, {
-                    event: "disabledPageView",
-                    trigger: "backgroundClick",
-                    pageHeightPx: document.body.clientHeight,
-                });
-            }
-
-            await transitions.transitionOut();
-            await new Promise((r) => setTimeout(r, 200));
-
-            await transitions.fadeinNoise();
-            await new Promise((r) => setTimeout(r, 200));
-
-            await transitions.afterTransitionOut();
-        }, true);
+        disablePageViewHandlers = await enablePageView(true);
 
         await new Promise((r) => setTimeout(r, 500));
 
         await transitions.afterTransitionIn();
         return true;
     } else {
-        // hack: simulate click to call disable handlers with correct state (also from boot.js)
-        isSimulatedClick = true;
-        document.documentElement.click();
+        // disable page view
+
+        disablePageViewHandlers();
+
+        await transitions.transitionOut();
+        await new Promise((r) => setTimeout(r, 200));
+
+        await transitions.fadeinNoise();
+        await new Promise((r) => setTimeout(r, 200));
+
+        await transitions.afterTransitionOut();
+
         return false;
     }
 }

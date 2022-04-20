@@ -1,8 +1,7 @@
 // Enable the "page view" on a webpage, which restricts the rendered content to a fraction of the browser window.
 export async function enablePageView(
-    disableHook = () => {},
     enableAnimation = false
-) {
+): Promise<() => void> {
     await _enableAnimation(enableAnimation);
 
     // base css is already injected, activate it by adding class
@@ -20,29 +19,18 @@ export async function enablePageView(
         attributeFilter: ["class"],
     });
 
-    // allow exiting pageview by clicking on background surrounding pageview (bare <html>)
-    async function clickListener(event) {
-        if (event.target.tagName === "HTML") {
-            htmlClassObserver.disconnect();
+    // cleanup on pageview disable
+    async function disablePageView() {
+        htmlClassObserver.disconnect();
 
-            // make sure the animation is enabled
-            _enableAnimation(true);
-            await new Promise((r) => setTimeout(r, 0));
+        // make sure the animation is enabled
+        _enableAnimation(true);
+        await new Promise((r) => setTimeout(r, 0));
 
-            // disable page view exiting
-            document.documentElement.onclick = null;
-            // unsubscribe this handler to prevent future duplicate even handling
-            document.documentElement.removeEventListener(
-                "click",
-                clickListener,
-                true
-            );
-
-            // pageview class should be removed in disableHook
-            disableHook();
-        }
+        // pageview class should be removed in disableHook
     }
-    document.documentElement.addEventListener("click", clickListener, true);
+
+    return disablePageView;
 }
 
 async function _enableAnimation(activateNow = false) {

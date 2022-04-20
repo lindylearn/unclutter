@@ -8,7 +8,6 @@ html {
 
 html.pageview {
     background-color: #f1f3f4 !important;
-    cursor: zoom-out;
 }
 
 html.pageview > body {

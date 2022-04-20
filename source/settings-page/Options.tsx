@@ -81,7 +81,7 @@ function OptionsPage({}) {
             >
                 <p>
                     Highlight any article text to create a private annotation
-                    saved in your browser.
+                    saved locally.
                 </p>
                 <FeatureFlagSwitch
                     featureFlagKey={hypothesisSyncFeatureFlag}
