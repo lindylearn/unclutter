@@ -54,7 +54,7 @@ function AnnotationsList({
 
                         return (
                             <div
-                                key={annotation.id}
+                                key={annotation.localId || annotation.id}
                                 className={
                                     "annotation-group-item w-full rounded-r " +
                                     (group.length > 1

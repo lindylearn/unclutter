@@ -8,25 +8,19 @@ import browser from "../../common/polyfill";
 export async function getLocalAnnotations(
     pageUrl: string
 ): Promise<LindyAnnotation[]> {
-    const storage = await _getAnnotationsStorage();
-    if (!storage?.[pageUrl]) {
-        return [];
-    }
+    const storage = await _getPageStorage(pageUrl);
 
-    return Object.values(storage[pageUrl]);
+    return Object.values(storage);
 }
 
 export async function createLocalAnnotation(
     annotation: LindyAnnotation
 ): Promise<LindyAnnotation> {
-    const storage = await _getAnnotationsStorage();
-    if (!storage[annotation.url]) {
-        storage[annotation.url] = {};
-    }
+    const storage = await _getPageStorage(annotation.url);
 
-    storage[annotation.url][annotation.id] = annotation;
+    storage[annotation.id] = annotation;
 
-    await _setAnnotationsStorage(storage);
+    await _setPageStorage(annotation.url, storage);
 
     return annotation;
 }
@@ -34,34 +28,38 @@ export async function createLocalAnnotation(
 export async function updateLocalAnnotation(
     annotation: LindyAnnotation
 ): Promise<void> {
-    const storage = await _getAnnotationsStorage();
+    const storage = await _getPageStorage(annotation.url);
 
-    storage[annotation.url][annotation.id] = annotation;
+    storage[annotation.id] = annotation;
 
-    await _setAnnotationsStorage(storage);
+    await _setPageStorage(annotation.url, storage);
 }
 
 export async function deleteLocalAnnotation(
     annotation: LindyAnnotation
 ): Promise<void> {
-    const storage = await _getAnnotationsStorage();
+    const storage = await _getPageStorage(annotation.url);
 
-    delete storage[annotation.url][annotation.id];
+    delete storage[annotation.id];
 
-    await _setAnnotationsStorage(storage);
+    await _setPageStorage(annotation.url, storage);
 }
 
-async function _getAnnotationsStorage(): Promise<{
-    [pageUrl: string]: { [annotationId: string]: LindyAnnotation };
-}> {
-    const result = await browser.storage.sync.get("local-user-annotations");
-    return result["local-user-annotations"] || {};
+async function _getPageStorage(
+    pageUrl: string
+): Promise<{ [annotationId: string]: LindyAnnotation }> {
+    // save in seperate item per page to not exceed QUOTA_BYTES_PER_ITEM
+    const pageKey = `local-annotations_${pageUrl}`;
+    const result = await browser.storage.sync.get(pageKey);
+    return result?.[pageKey] || {};
 }
 
-async function _setAnnotationsStorage(storage: {
-    [pageUrl: string]: { [annotationId: string]: LindyAnnotation };
-}): Promise<void> {
+async function _setPageStorage(
+    pageUrl: string,
+    pageStorage: { [annotationId: string]: LindyAnnotation }
+): Promise<void> {
+    const pageKey = `local-annotations_${pageUrl}`;
     await browser.storage.sync.set({
-        "local-user-annotations": storage,
+        [pageKey]: pageStorage,
     });
 }
