@@ -17,12 +17,14 @@ import tailwindcss from "tailwindcss";
 const contentScriptConfigs = [
     "source/content-script/boot.ts",
     "source/content-script/enhance.ts",
+    "source/sidebar/index.tsx",
 ].map((entryPoint) => ({
     input: entryPoint,
     output: {
         file: entryPoint
             .replace("source", "distribution")
-            .replace(".ts", ".js"),
+            .replace(".ts", ".js")
+            .replace(".jsx", ".js"),
         format: "iife", // no way to use es modules, split code by logic instead
     },
     plugins: [
@@ -34,6 +36,7 @@ const contentScriptConfigs = [
             }),
             emitCss: false, // bundle conponent styles
         }),
+        postcss({ plugins: [tailwindcss()] }),
         nodeResolve({ browser: true }),
         commonjs({ include: /node_modules/ }),
         typescript(),
@@ -67,9 +70,9 @@ const moveVirtualFolder = {
 const esModuleConfig = {
     input: [
         // input order is important here, as common files might overwrite each other
-        "source/settings-page/index.tsx",
+        // "source/settings-page/index.tsx",
         "source/background/events.ts",
-        "source/sidebar/index.tsx",
+        "source/settings-page/index.tsx",
     ],
     output: {
         dir: "distribution",
@@ -142,5 +145,5 @@ const staticFilesConfig = {
 };
 
 export default contentScriptConfigs
-    .concat(esModuleConfig)
+    .concat([esModuleConfig])
     .concat([staticFilesConfig]);
