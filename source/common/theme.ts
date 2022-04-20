@@ -44,7 +44,9 @@ export function setCssThemeVariable(varName, value, ...params) {
     } else if (varName === pageWidthThemeVariable) {
         document.documentElement.style.setProperty(varName, value);
     } else if (varName === backgroundColorThemeVariable) {
-        document.body.style.setProperty("background", value, "important");
+        if (!params["setOnlyUi"]) {
+            document.body.style.setProperty("background", value, "important");
+        }
 
         getOutlineIframe()?.body.style.setProperty(varName, value);
         setSidebarCssVariable(varName, value);

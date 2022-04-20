@@ -3,10 +3,7 @@ import {
     getFeatureFlag,
     showSocialAnnotationsDefaultFeatureFlag,
 } from "source/common/featureFlags";
-import {
-    createDraftAnnotation,
-    LindyAnnotation,
-} from "../common/annotations/create";
+import { LindyAnnotation } from "../common/annotations/create";
 import {
     createAnnotation,
     deleteAnnotation,
@@ -30,9 +27,9 @@ export default function App({ url }) {
     React.useEffect(async () => {
         const annotations = await getAnnotations(url, showSocialAnnotations);
         const pageNotes = annotations.filter((a) => !a.quote_html_selector);
-        if (pageNotes.length === 0) {
-            pageNotes.push(createDraftAnnotation(url, null));
-        }
+        // if (pageNotes.length === 0) {
+        //     pageNotes.push(createDraftAnnotation(url, null));
+        // }
 
         // show page notes immediately, others once anchored
         setAnnotations(pageNotes);

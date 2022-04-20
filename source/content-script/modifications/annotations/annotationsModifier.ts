@@ -14,12 +14,10 @@ import {
 export default class AnnotationsModifier implements PageModifier {
     private sidebarIframe: HTMLIFrameElement;
 
-    transitionIn() {
-        // insert iframe earlier so ThemeModifier can inject theme variables
+    afterTransitionIn() {
         this.sidebarIframe = injectSidebar();
-    }
 
-    async afterTransitionIn() {
+        // listeners need to be configured before rendering iframe, to anchor annotations (local retrieval is fast)
         createSelectionListener(this.sidebarIframe);
         createAnnotationListener(this.sidebarIframe);
     }

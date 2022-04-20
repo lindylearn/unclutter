@@ -60,17 +60,16 @@ export default class TransitionManager implements PageModifier {
         this.responsiveStyleModifier.transitionIn();
 
         this.bodyStyleModifier.transitionIn();
-        this.overlayManager.transitionIn();
-        this.annotationsModifier.transitionIn();
-
         this.textContainerModifier.transitionIn();
         // running this in transitionIn() breaks the animation, but not running it often results in text glitches
         this.textContainerModifier.afterTransitionIn();
     }
 
     async afterTransitionIn() {
-        await this.overlayManager.afterTransitionIn(); // needs to run before themeModifier to set correct auto theme value
+        // ui needs to be inserted before themeModifier to set correct auto theme value
+        await this.overlayManager.afterTransitionIn();
         this.annotationsModifier.afterTransitionIn();
+        await new Promise((r) => setTimeout(r, 100)); // TODO find another way to set style on iframe once loaded (maybe inline script??)
 
         await this.themeModifier.afterTransitionIn();
         await this.stylePatchesModifier.afterTransitionIn();
