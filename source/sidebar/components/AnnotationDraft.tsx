@@ -1,33 +1,35 @@
 import debounce from "lodash/debounce";
 import React from "react";
 import TextareaAutosize from "react-textarea-autosize";
+import { LindyAnnotation } from "source/common/annotations/create";
 import { getAnnotationColor } from "../../common/annotations/styling";
-import { createAnnotation, patchAnnotation } from "../common/api";
+import { updateAnnotation } from "../common/CRUD";
 
 function AnnotationDraft({
     url,
     annotation,
     className,
     deleteAnnotation,
-    placeholder = "Private note",
+    placeholder = "Private annotation",
 }) {
-    const debouncedPatchOrCreate = React.useCallback(
-        debounce(apiPatchOrCreate, 5000),
+    // keep local state buffer to reduce API calls
+    const debouncedUpdate: (
+        annotation: LindyAnnotation
+    ) => Promise<LindyAnnotation> = React.useCallback(
+        debounce(updateAnnotation, 1000),
         []
     );
 
-    const [changedAnnotation, setChangedAnnotation] =
-        React.useState(annotation);
-    async function updateAnnotation(newAnnotation) {
-        setChangedAnnotation(newAnnotation);
-        const remoteAnnotation = await debouncedPatchOrCreate(
-            url,
-            newAnnotation
-        );
+    const [localAnnotation, setLocalAnnotation] = React.useState(annotation);
+    async function updateAnnotationLocalFirst(newAnnotation: LindyAnnotation) {
+        setLocalAnnotation(newAnnotation);
+
+        const remoteAnnotation = await debouncedUpdate(newAnnotation);
+
         // remoteAnnotation is null if debounced call
-        if (remoteAnnotation && newAnnotation.is_draft) {
-            // patch correct id to update in local state
-            setChangedAnnotation((a) => ({
+        if (remoteAnnotation) {
+            // patch correct id, but keep potentially newer updates
+            setLocalAnnotation((a) => ({
                 ...a,
                 id: remoteAnnotation.id,
                 is_draft: false,
@@ -52,10 +54,10 @@ function AnnotationDraft({
             <TextareaAutosize
                 className="text-sm md:text-base w-full bg-gray-50 placeholder-gray-400 rounded py-1 px-2 outline-none align-top"
                 placeholder={placeholder}
-                value={changedAnnotation.text}
+                value={localAnnotation.text}
                 onChange={(e) =>
-                    updateAnnotation({
-                        ...changedAnnotation,
+                    updateAnnotationLocalFirst({
+                        ...localAnnotation,
                         text: e.target.value,
                     })
                 }
@@ -67,7 +69,7 @@ function AnnotationDraft({
                     placeholder="Tags"
                     value={changedAnnotation.tags.join(", ")}
                     onChange={(e) =>
-                        updateAnnotation({
+                        updateAnnotationHandler({
                             ...changedAnnotation,
                             tags: e.target.value.split(", "),
                         })
@@ -77,7 +79,7 @@ function AnnotationDraft({
                     annotationId={annotation.id}
                     value={changedAnnotation.isPublic}
                     toggleValue={() =>
-                        updateAnnotation({
+                        updateAnnotationHandler({
                             ...changedAnnotation,
                             isPublic: !changedAnnotation.isPublic,
                         })
@@ -113,11 +115,3 @@ function AnnotationDraft({
     );
 }
 export default AnnotationDraft;
-
-async function apiPatchOrCreate(url, annotation) {
-    if (annotation.is_draft) {
-        return await createAnnotation(url, annotation);
-    } else {
-        return await patchAnnotation(annotation);
-    }
-}

@@ -12,8 +12,6 @@ import {
 export async function highlightAnnotations(annotations) {
     const body = document.body;
 
-    console.log(annotations);
-
     const anchoredAnnotations = [];
     await Promise.all(
         annotations.map(async (annotation) => {
@@ -48,7 +46,7 @@ export async function highlightAnnotations(annotations) {
                     displayOffsetEnd,
                 });
             } catch (err) {
-                // console.error(`Could not anchor annotation:`, annotation, err);
+                console.error(`Could not anchor annotation:`, annotation, err);
             }
         })
     );

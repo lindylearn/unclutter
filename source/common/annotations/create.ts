@@ -1,4 +1,4 @@
-export function createDraftAnnotation(url, selector) {
+export function createDraftAnnotation(url, selector): LindyAnnotation {
     const id = `draft_${Math.random().toString(36).slice(-5)}`;
     return {
         id: id,
@@ -16,10 +16,37 @@ export function createDraftAnnotation(url, selector) {
         isPublic: false,
         upvote_count: 0,
         tags: [],
+        created_at: new Date().toISOString(),
+        replies: [],
+        user_upvoted: false,
     };
 }
 
-export function hypothesisToLindyFormat(annotation) {
+export interface LindyAnnotation {
+    id: string;
+    author: { username: string };
+    platform: "h" | "hn" | "ll";
+    link: string;
+    created_at: string;
+    reply_count: number;
+    quote_text: string;
+    text: string;
+    replies: LindyAnnotation[];
+    upvote_count: number;
+    tags: string[];
+    quote_html_selector: object;
+    user_upvoted: boolean;
+    isPublic: boolean;
+
+    // local state
+    is_draft?: boolean; // created highlight but not yet shown in sidebar
+    localId?: string; // local id until synced
+    url?: string;
+    isMyAnnotation?: boolean;
+    displayOffset?: number;
+}
+
+export function hypothesisToLindyFormat(annotation): LindyAnnotation {
     return {
         id: annotation.id,
         author: annotation.user.match(/([^:]+)@/)[1],

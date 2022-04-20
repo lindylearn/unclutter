@@ -5,15 +5,14 @@ import {
 } from "source/common/featureFlags";
 import {
     createDraftAnnotation,
-    hypothesisToLindyFormat,
+    LindyAnnotation,
 } from "../common/annotations/create";
 import {
-    createAnnotation as createAnnotationApi,
-    deleteAnnotation as deleteAnnotationApi,
+    createAnnotation,
+    deleteAnnotation,
     getAnnotations,
-} from "./common/api";
+} from "./common/CRUD";
 import AnnotationsList from "./components/AnnotationsList";
-// import PopularityMessage from "./components/PopularityMessage";
 
 export default function App({ url }) {
     // fetch extension settings
@@ -46,30 +45,17 @@ export default function App({ url }) {
     console.log(annotations);
 
     // sync local annotation updates to hypothesis
-    async function createAnnotation(localAnnotation) {
-        const hypothesisAnnotation = await createAnnotationApi(
-            url,
-            localAnnotation
-        );
-        const annotation = hypothesisToLindyFormat(
-            hypothesisAnnotation,
-            localAnnotation.displayOffset
-        );
-        setAnnotations([
-            ...annotations,
-            {
-                ...annotation,
-                displayOffset: localAnnotation.displayOffset,
-                localId: localAnnotation.localId,
-                isMyAnnotation: true,
-            },
-        ]);
+    async function createAnnotationHandler(localAnnotation: LindyAnnotation) {
+        // show only once reconciled with remote state
+        const remoteAnnotation = await createAnnotation(localAnnotation);
+        setAnnotations([...annotations, remoteAnnotation]);
     }
-    function deleteAnnotation(annotation) {
+    function deleteAnnotationHandler(annotation: LindyAnnotation) {
+        // delete from local state first
         setAnnotations(annotations.filter((a) => a.id != annotation.id));
         window.top.postMessage({ event: "removeHighlight", annotation }, "*");
 
-        deleteAnnotationApi(annotation.id);
+        deleteAnnotation(annotation);
     }
     function onAnnotationHoverUpdate(annotation, hoverActive: boolean) {
         window.top.postMessage(
@@ -81,7 +67,7 @@ export default function App({ url }) {
     // receive events from the text highlighting content script code
     window.onmessage = async function ({ data }) {
         if (data.event === "createHighlight") {
-            createAnnotation(data.annotation);
+            createAnnotationHandler(data.annotation);
         } else if (data.event === "anchoredAnnotations") {
             setAnnotations([...annotations, ...data.annotations]);
         } else if (data.event === "changedDisplayOffset") {
@@ -108,14 +94,14 @@ export default function App({ url }) {
                             (a) => !a.quote_html_selector
                         )}
                         createAnnotation={createAnnotation}
-                        deleteAnnotation={deleteAnnotation}
+                        deleteAnnotation={deleteAnnotationHandler}
                     />
                 )} */}
             </div>
             <AnnotationsList
                 url={url}
                 annotations={annotations}
-                deleteAnnotation={deleteAnnotation}
+                deleteAnnotation={deleteAnnotationHandler}
                 offsetTop={50}
                 onAnnotationHoverUpdate={onAnnotationHoverUpdate}
                 // upvotedAnnotations={upvotedAnnotations}
