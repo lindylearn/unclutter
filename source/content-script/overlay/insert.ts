@@ -248,10 +248,9 @@ async function _setupSocialAnnotationsToggle(
 
         annotationsModifer.setShowSocialAnnotations(socialAnnotationsEnabled);
 
-        // reportEventContentScript("toggleSocialAnnotations", {
-        //     newState: currentUserSetting,
-        //     trigger: "icon",
-        // });
+        reportEventContentScript("toggleSocialAnnotations", {
+            newState: socialAnnotationsEnabled,
+        });
     };
 }
 function _renderAnnotationsToggle() {

@@ -8,6 +8,7 @@ import {
     getFeatureFlag,
     hypothesisSyncFeatureFlag,
 } from "source/common/featureFlags";
+import { reportEventContentScript } from "source/content-script/messaging";
 import {
     createRemoteAnnotation,
     deleteRemoteAnnotation,
@@ -89,11 +90,16 @@ export async function createAnnotation(
         hypothesisSyncFeatureFlag
     );
 
+    let createdAnnotation: LindyAnnotation;
     if (hypothesisSyncEnabled) {
-        return await createRemoteAnnotation(annotation);
+        createdAnnotation = await createRemoteAnnotation(annotation);
     } else {
-        return await createLocalAnnotation(annotation);
+        createdAnnotation = await createLocalAnnotation(annotation);
     }
+
+    reportEventContentScript("createAnnotation", { hypothesisSyncEnabled });
+
+    return createdAnnotation;
 }
 
 export async function updateAnnotation(
