@@ -1,4 +1,8 @@
-import { hypothesisToLindyFormat } from "../../common/annotations/getAnnotations";
+import {
+    getFeatureFlag,
+    hypothesisSyncFeatureFlag,
+} from "source/common/featureFlags";
+import { hypothesisToLindyFormat } from "../../common/annotations/create";
 import {
     getHypothesisToken,
     getHypothesisUsername,
@@ -10,28 +14,59 @@ const hypothesisApi = "https://api.hypothes.is/api";
 
 // --- global fetching
 
-export async function getAnnotations(url) {
-    const [publicAnnotations, userAnnotations] = await Promise.all([
-        getLindyAnnotations(url),
-        getHypothesisAnnotations(url),
-    ]);
+export async function getAnnotations(
+    url: string,
+    showSocialAnnotations: boolean
+) {
+    // *** fetch annotations from configured sources ***
+    let localAnnotations = [];
+    let userRemoteAnnotations = [];
+    let publicAnnotations = [];
+
+    // TODO fetch from local storage
+    const fetchPersonalHypothesis = await getFeatureFlag(
+        hypothesisSyncFeatureFlag
+    );
+    console.log(
+        `Fetching annotations (local, ${
+            fetchPersonalHypothesis ? "remote, " : ""
+        }${showSocialAnnotations ? "public" : ""})`
+    );
+    if (fetchPersonalHypothesis) {
+        userRemoteAnnotations = await getHypothesisAnnotations(url);
+    }
+    if (showSocialAnnotations) {
+        publicAnnotations = await getLindyAnnotations(url);
+    }
+
+    // *** reconcile lists ***
 
     // take from lindy preferrably, otherwise hypothesis
     // -> show replies, upvotes metadata when available, but new annotations immediately
     // edits might take a while to propagate this way
+    let annotations = localAnnotations.concat(publicAnnotations);
+
     const seenIds = new Set(publicAnnotations.map((a) => a.id));
-    let annotations = publicAnnotations;
-    for (const annotation of userAnnotations) {
+    for (const annotation of userRemoteAnnotations) {
         if (!seenIds.has(annotation.id)) {
             annotations.push(annotation);
         }
     }
 
+    // add isMyAnnotation for hypothesis annotations
     const username = await getHypothesisUsername();
-    annotations = annotations.map((a) => ({
-        ...a,
-        isMyAnnotation: a.author === username,
-    }));
+    if (username) {
+        annotations = annotations.map((a) => {
+            if (a.platform === "h") {
+                return {
+                    ...a,
+                    isMyAnnotation: a.author === username,
+                };
+            } else {
+                return a;
+            }
+        });
+    }
 
     return annotations;
 }

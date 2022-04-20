@@ -1,4 +1,4 @@
-import { createDraftAnnotation } from "../../../common/annotations/getAnnotations";
+import { createDraftAnnotation } from "../../../common/annotations/create";
 import { describe as describeAnnotation } from "../../../common/annotator/anchoring/html";
 import { highlightAnnotations } from "./highlightsApi";
 

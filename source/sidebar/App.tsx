@@ -6,8 +6,7 @@ import {
 import {
     createDraftAnnotation,
     hypothesisToLindyFormat,
-} from "../common/annotations/getAnnotations";
-import { getHypothesisUsername } from "../common/annotations/storage";
+} from "../common/annotations/create";
 import {
     createAnnotation as createAnnotationApi,
     deleteAnnotation as deleteAnnotationApi,
@@ -17,16 +16,9 @@ import AnnotationsList from "./components/AnnotationsList";
 // import PopularityMessage from "./components/PopularityMessage";
 
 export default function App({ url }) {
-    // fetch state from extension settings
-    const [isLoggedIn, setIsLoggedIn] = React.useState(null);
-    React.useEffect(async () => {
-        const user = await getHypothesisUsername();
-        setIsLoggedIn(!!user);
-    }, []);
-
-    // state of whether to render social annotations. updated through events from overlay code
+    // fetch extension settings
     const [showSocialAnnotations, setShowSocialAnnotations] =
-        React.useState(true);
+        React.useState(false); // updated through events sent from overlay code
     React.useEffect(async () => {
         const defaultSocialAnnotationsEnabled = await getFeatureFlag(
             showSocialAnnotationsDefaultFeatureFlag
@@ -36,12 +28,11 @@ export default function App({ url }) {
 
     // keep the annotations state here
     const [annotations, setAnnotations] = React.useState([]);
-    // fetch annotations on load
     React.useEffect(async () => {
-        const annotations = await getAnnotations(url);
+        const annotations = await getAnnotations(url, showSocialAnnotations);
         const pageNotes = annotations.filter((a) => !a.quote_html_selector);
         if (pageNotes.length === 0) {
-            pageNotes.push(createDraftAnnotation(url));
+            pageNotes.push(createDraftAnnotation(url, null));
         }
 
         // show page notes immediately, others once anchored
@@ -50,7 +41,9 @@ export default function App({ url }) {
             { event: "anchorAnnotations", annotations },
             "*"
         );
-    }, []);
+    }, [showSocialAnnotations]);
+
+    console.log(annotations);
 
     // sync local annotation updates to hypothesis
     async function createAnnotation(localAnnotation) {
@@ -122,7 +115,6 @@ export default function App({ url }) {
             <AnnotationsList
                 url={url}
                 annotations={annotations}
-                showSocialAnnotations={showSocialAnnotations}
                 deleteAnnotation={deleteAnnotation}
                 offsetTop={50}
                 onAnnotationHoverUpdate={onAnnotationHoverUpdate}
