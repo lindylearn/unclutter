@@ -4,6 +4,11 @@ import {
     validateApiToken,
     validateSaveToken,
 } from "source/common/annotations/storage";
+import { createRemoteAnnotation } from "source/sidebar/common/api";
+import {
+    deleteAllLocalAnnotations,
+    getAllLocalAnnotations,
+} from "source/sidebar/common/local";
 
 export default function HypothesisConfig() {
     const [token, setToken] = React.useState("");
@@ -25,6 +30,27 @@ export default function HypothesisConfig() {
             await validateSaveToken(token, true);
         }
     }, [token]);
+
+    // if this renders, the user has enabled the hypothesis sync
+    // so upload & delete local annotations once token valid
+    // TODO: user may exit settings before uploaded, which will create duplicate annotations
+    React.useEffect(async () => {
+        if (!tokenValid) {
+            return;
+        }
+
+        const localAnnotations = await getAllLocalAnnotations();
+        if (localAnnotations.length === 0) {
+            return;
+        }
+
+        console.log(
+            `Uploading ${localAnnotations.length} local annotations...`
+        );
+        await Promise.all(localAnnotations.map(createRemoteAnnotation));
+
+        await deleteAllLocalAnnotations();
+    }, [tokenValid]);
 
     return (
         <div className="flex gap-2 items-center">

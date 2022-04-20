@@ -45,6 +45,29 @@ export async function deleteLocalAnnotation(
     await _setPageStorage(annotation.url, storage);
 }
 
+export async function getAllLocalAnnotations(): Promise<LindyAnnotation[]> {
+    const allStorage = await browser.storage.sync.get(null);
+
+    const allAnnotations: LindyAnnotation[] = Object.keys(allStorage)
+        .filter((pageKey) => pageKey.startsWith("local-annotations_"))
+        .reduce(
+            (list, pageKey) => [...list, ...Object.values(allStorage[pageKey])],
+            []
+        );
+
+    return allAnnotations;
+}
+
+export async function deleteAllLocalAnnotations(): Promise<void> {
+    const allStorage = await browser.storage.sync.get(null);
+
+    const allKeys = Object.keys(allStorage).filter((pageKey) =>
+        pageKey.startsWith("local-annotations_")
+    );
+
+    await browser.storage.sync.remove(allKeys);
+}
+
 async function _getPageStorage(
     pageUrl: string
 ): Promise<{ [annotationId: string]: LindyAnnotation }> {
