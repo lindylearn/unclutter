@@ -1,7 +1,7 @@
 import { insertHtml } from "source/common/html";
-import ContentBlockModifier from "../modifications/contentBlock";
-import ResponsiveStyleModifier from "../modifications/CSSOM/responsiveStyle";
-import CSSOMProvider from "../modifications/CSSOM/_provider";
+import ContentBlockModifier from "../content-script/modifications/contentBlock";
+import ResponsiveStyleModifier from "../content-script/modifications/CSSOM/responsiveStyle";
+import CSSOMProvider from "../content-script/modifications/CSSOM/_provider";
 
 export async function displayToast(
     message: string,

@@ -11,10 +11,10 @@ import {
     insertPageSettings,
     updateDomainState,
     wiggleDomainState,
-} from "../overlay/insert";
-import { getElementYOffset } from "../overlay/outline/common";
-import Outline from "../overlay/outline/Outline.svelte";
-import { getOutline, OutlineItem } from "../overlay/outline/parse";
+} from "../../overlay/insert";
+import { getElementYOffset } from "../../overlay/outline/common";
+import Outline from "../../overlay/outline/Outline.svelte";
+import { getOutline, OutlineItem } from "../../overlay/outline/parse";
 import AnnotationsModifier from "./annotations/annotationsModifier";
 import ThemeModifier from "./CSSOM/theme";
 import { PageModifier, trackModifierExecution } from "./_interface";

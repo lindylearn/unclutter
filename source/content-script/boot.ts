@@ -10,7 +10,7 @@ import {
     isNonLeafPage,
 } from "../common/articleDetection";
 import browser from "../common/polyfill";
-import { displayToast } from "./overlay/toast";
+import { displayToast } from "../overlay/toast";
 
 // script injected into every tab before dom constructed
 // if configured by the user, initialize the extension funcationality

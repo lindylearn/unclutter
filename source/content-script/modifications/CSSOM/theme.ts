@@ -19,8 +19,8 @@ import {
     parse,
     rgbToHSL,
 } from "source/common/util/color";
-import { highlightActiveColorThemeButton } from "source/content-script/overlay/insert";
-import { getOutlineIframe } from "source/content-script/overlay/outline/common";
+import { highlightActiveColorThemeButton } from "source/overlay/insert";
+import { getOutlineIframe } from "source/overlay/outline/common";
 import browser from "../../../common/polyfill";
 import AnnotationsModifier from "../annotations/annotationsModifier";
 import { PageModifier, trackModifierExecution } from "../_interface";

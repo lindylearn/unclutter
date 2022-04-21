@@ -4,25 +4,28 @@ import {
     supportSocialAnnotations,
 } from "source/common/featureFlags";
 import { insertHtml } from "source/common/html";
-import browser from "../../common/polyfill";
+import browser from "../common/polyfill";
 import {
     domainUserSetting,
     getUserSettingForDomain,
     getUserTheme,
     setUserSettingsForDomain,
-} from "../../common/storage";
-import { createStylesheetLink } from "../../common/stylesheets";
+} from "../common/storage";
+import { createStylesheetLink } from "../common/stylesheets";
 import {
     applySaveThemeOverride,
     fontSizeThemeVariable,
     getThemeValue,
     pageWidthThemeVariable,
     themeName,
-} from "../../common/theme";
-import { togglePageView } from "../enhance";
-import { getRemoteFeatureFlag, reportEventContentScript } from "../messaging";
-import AnnotationsModifier from "../modifications/annotations/annotationsModifier";
-import ThemeModifier from "../modifications/CSSOM/theme";
+} from "../common/theme";
+import { togglePageView } from "../content-script/enhance";
+import {
+    getRemoteFeatureFlag,
+    reportEventContentScript,
+} from "../content-script/messaging";
+import AnnotationsModifier from "../content-script/modifications/annotations/annotationsModifier";
+import ThemeModifier from "../content-script/modifications/CSSOM/theme";
 
 // Insert a small UI for the user to control the automatic pageview enablement on the current domain.
 // Creating an iframe for this doesn't work from injected scripts
