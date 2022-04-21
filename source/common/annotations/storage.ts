@@ -15,18 +15,23 @@ export async function getUserInfo() {
     ]);
 }
 
+// validate token and save if valid
 export async function validateSaveToken(token, forceSave = false) {
     const userName = await validateApiToken(token);
-    if (!userName && !forceSave) {
+    if (userName === null && !forceSave) {
         return false;
     }
 
+    await saveToken(token, userName);
+
+    return userName !== null;
+}
+
+export async function saveToken(token: string, userName: string) {
     await browser.storage.sync.set({
         "hypothesis-api-token": token,
         "hypothesis-username": userName,
     });
-
-    return true;
 }
 
 export async function validateApiToken(apiToken) {

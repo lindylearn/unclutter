@@ -96,7 +96,16 @@ function OptionsPage({}) {
                     >
                         Hypothes.is
                     </a>{" "}
-                    account
+                    account (
+                    <a
+                        href="https://github.com/lindylearn/unclutter/blob/main/docs/annotations.md"
+                        className="underline"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        why
+                    </a>
+                    )
                 </FeatureFlagSwitch>
                 {hypothesisEnabled && <HypothesisConfig />}
 
