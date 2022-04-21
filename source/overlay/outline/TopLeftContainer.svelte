@@ -54,7 +54,7 @@
 #lindy-info-topleft-content > * {
     background-color: var(--lindy-background-color);
 }
-svg {
-    color: #4b5563; ; /* text-gray-600 */
+svg.message-icon {
+    color: #4b5563; /* text-gray-600 */
 }
 </style>

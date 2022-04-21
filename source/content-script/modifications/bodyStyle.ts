@@ -57,6 +57,11 @@ export default class BodyStyleModifier implements PageModifier {
             "auto",
             "important"
         );
+        document.documentElement.style.setProperty(
+            "max-width",
+            "none",
+            "important"
+        );
     }
 
     private modifyBodyStyle() {

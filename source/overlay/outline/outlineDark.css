@@ -3,9 +3,15 @@
 
     color: var(--lindy-dark-theme-text-color) !important;
 }
-.heading-text.is-active {
-}
 
 .heading-text.visited {
     color: #52525b !important;
+}
+
+svg.message-icon, .close-message {
+    color: #e5e7eb !important; /* text-gray-200 */
+}
+
+.close-message:hover {
+    color: white !important;
 }
