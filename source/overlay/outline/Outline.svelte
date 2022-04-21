@@ -8,7 +8,7 @@
 </script>
 
 
-<div id="outline" class="max-w-full px-5 py-3 cursor-auto bg-white rounded-lg shadow">
+<div id="outline" class="max-w-full px-5 py-3 cursor-auto bg-white rounded-lg shadow hover:shadow-md transition-all">
     <div>
         <ul class="m-0 p-0 list-none flex flex-col gap-1">
             {#each outline as child, i}

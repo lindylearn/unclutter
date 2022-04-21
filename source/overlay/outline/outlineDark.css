@@ -8,10 +8,13 @@
     color: #52525b !important;
 }
 
-svg.message-icon, .close-message {
+svg.message-icon {
     color: #e5e7eb !important; /* text-gray-200 */
 }
 
+.close-message {
+    color: #9ca3af !important; /* text-gray-400 */
+}
 .close-message:hover {
     color: white !important;
 }
