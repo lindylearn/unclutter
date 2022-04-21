@@ -40,7 +40,7 @@ function AnnotationsList({
         <div className="relative flex-grow" onClick={onClick}>
             {groupedAnnotations.map((group, groupIndex) => (
                 <div
-                    key={group[0].displayOffset}
+                    key={group[0].localId || group[0].id}
                     className="absolute w-full"
                     style={{
                         top: group[0].displayOffset - offsetTop,
