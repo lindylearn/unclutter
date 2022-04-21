@@ -6,6 +6,7 @@
     import FeedbackMessage from "./FeedbackMessage.svelte";
     import Outline from "./Outline.svelte";
     import { OutlineItem } from "./parse";
+    import UpdateMessage from "./UpdateMessage.svelte";
 
     export let outline: OutlineItem[];
     export let activeOutlineIndex: number;
@@ -24,8 +25,6 @@
         setFeatureFlag(dismissedFeedbackMessage, true)
         reportEventContentScript("dismissedFeedbackRequest")
     }
-
-    console.log("render")
 </script>
 
 <div id="lindy-info-topleft-content" class="flex flex-col gap-2">
@@ -33,6 +32,7 @@
         <Outline outline={outline} activeOutlineIndex={activeOutlineIndex} />
     {/if}
     
+    <UpdateMessage />
 
     {#if displayFeedbackMessage}
         <FeedbackMessage on:dismissed={dismissFeedbackMessage} />
@@ -49,9 +49,12 @@
         "Segoe UI", Roboto !important;
     margin: 10px;
     margin-left: 20px;
-    color: #374151;
+    color: #374151; /* text-gray-700 */
 }
 #lindy-info-topleft-content > * {
     background-color: var(--lindy-background-color);
+}
+svg {
+    color: #4b5563; ; /* text-gray-600 */
 }
 </style>
