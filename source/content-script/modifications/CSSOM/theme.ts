@@ -220,13 +220,11 @@ export default class ThemeModifier implements PageModifier {
             document.head.firstChild as HTMLElement
         );
         createStylesheetLink(
-            browser.runtime.getURL("content-script/overlay/indexDark.css"),
+            browser.runtime.getURL("overlay/indexDark.css"),
             "dark-mode-ui-style"
         );
         createStylesheetLink(
-            browser.runtime.getURL(
-                "content-script/overlay/outline/outlineDark.css"
-            ),
+            browser.runtime.getURL("overlay/outline/outlineDark.css"),
             "dark-mode-ui-style",
             getOutlineIframe()?.head.lastChild as HTMLElement
         );

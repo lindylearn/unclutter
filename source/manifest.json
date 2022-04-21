@@ -34,9 +34,9 @@
             "resources": [
                 "content-script/pageview/content.css",
                 "content-script/pageview/contentDark.css",
-                "content-script/overlay/index.css",
-                "content-script/overlay/indexDark.css",
-                "content-script/overlay/outline/outlineDark.css",
+                "overlay/index.css",
+                "overlay/indexDark.css",
+                "overlay/outline/outlineDark.css",
                 "content-script/pageview/manualContentBlock.css",
                 "sidebar/index.html",
                 "sidebar/index.css",
