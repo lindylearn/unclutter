@@ -8,9 +8,9 @@ interface VersionMessage {
 
 export async function getVersionMessagesToShow(): Promise<VersionMessage[]> {
     // show messsage for every version since user installed the extension
-    const initialVersion = await getInitialInstallVersion();
+    const initialVersion = getMainVersion(await getInitialInstallVersion());
     const newMessages: VersionMessage[] = updateMessages.filter(
-        ({ version }) => version > initialVersion
+        ({ version }) => getMainVersion(version) >= initialVersion
     );
 
     // but hide messages the user has dismissed
@@ -49,4 +49,9 @@ export async function saveDismissedVersionMessage(version: string) {
     await browser.storage.sync.set({
         "dismissed-version-messages": dismissedVersions,
     });
+}
+
+function getMainVersion(version: string) {
+    // drop bugfix release number
+    return version.split(".").slice(0, 2).join(".");
 }
