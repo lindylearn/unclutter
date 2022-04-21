@@ -42,6 +42,7 @@
         "sidebar/index.css",
         "sidebar/dark.css",
         "sidebar/index.js",
+        "sidebar/messaging.js",
         "assets/**"
     ]
 }

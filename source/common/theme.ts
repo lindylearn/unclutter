@@ -1,4 +1,3 @@
-import { setSidebarCssVariable } from "source/content-script/modifications/annotations/injectSidebar";
 import { getOutlineIframe } from "source/content-script/overlay/outline/common";
 import { mergeUserTheme } from "./storage";
 
@@ -49,7 +48,7 @@ export function setCssThemeVariable(varName, value, ...params) {
         }
 
         getOutlineIframe()?.body.style.setProperty(varName, value);
-        setSidebarCssVariable(varName, value);
+        // set on annotation sidebar via modifier method
     } else if (
         varName === autoBackgroundThemeVariable ||
         varName === activeColorThemeVariable
@@ -63,7 +62,7 @@ export function setCssThemeVariable(varName, value, ...params) {
         }
 
         getOutlineIframe()?.body.style.setProperty(varName, value);
-        setSidebarCssVariable(varName, value);
+        // set on annotation sidebar via modifier method
     } else {
         document.documentElement.style.setProperty(varName, value);
     }

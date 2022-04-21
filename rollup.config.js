@@ -18,6 +18,7 @@ const contentScriptConfigs = [
     "source/content-script/boot.ts",
     "source/content-script/enhance.ts",
     "source/sidebar/index.tsx",
+    "source/sidebar/messaging.ts",
 ].map((entryPoint) => ({
     input: entryPoint,
     output: {

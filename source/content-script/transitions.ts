@@ -26,8 +26,11 @@ export default class TransitionManager implements PageModifier {
     private bodyStyleModifier = new BodyStyleModifier();
     private responsiveStyleModifier = new ResponsiveStyleModifier();
     private stylePatchesModifier = new StylePatchesModifier(this.cssomProvider);
-    private themeModifier = new ThemeModifier(this.cssomProvider);
     private annotationsModifier = new AnnotationsModifier();
+    private themeModifier = new ThemeModifier(
+        this.cssomProvider,
+        this.annotationsModifier
+    );
     private overlayManager = new OverlayManager(
         this.domain,
         this.themeModifier,
@@ -69,7 +72,6 @@ export default class TransitionManager implements PageModifier {
         // ui needs to be inserted before themeModifier to set correct auto theme value
         await this.overlayManager.afterTransitionIn();
         this.annotationsModifier.afterTransitionIn();
-        await new Promise((r) => setTimeout(r, 100)); // TODO find another way to set style on iframe once loaded (maybe inline script??)
 
         await this.themeModifier.afterTransitionIn();
         await this.stylePatchesModifier.afterTransitionIn();

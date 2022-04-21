@@ -22,7 +22,7 @@ import {
 import { highlightActiveColorThemeButton } from "source/content-script/overlay/insert";
 import { getOutlineIframe } from "source/content-script/overlay/outline/common";
 import browser from "../../../common/polyfill";
-import { setSidebarDarkMode } from "../annotations/injectSidebar";
+import AnnotationsModifier from "../annotations/annotationsModifier";
 import { PageModifier, trackModifierExecution } from "../_interface";
 import CSSOMProvider, { isMediaRule, isStyleRule } from "./_provider";
 
@@ -30,14 +30,19 @@ import CSSOMProvider, { isMediaRule, isStyleRule } from "./_provider";
 export default class ThemeModifier implements PageModifier {
     private domain: string;
     private cssomProvider: CSSOMProvider;
+    private annotationsModifer: AnnotationsModifier;
 
     private activeColorTheme: themeName;
     private darkModeActive = false; // seperate from theme -- auto theme enables and disable dark mode
 
     public originalBackgroundColor: string; // set in TextContainerModifier fadeOutNoise phase
 
-    constructor(cssomProvider: CSSOMProvider) {
+    constructor(
+        cssomProvider: CSSOMProvider,
+        annotationsModifer: AnnotationsModifier
+    ) {
         this.cssomProvider = cssomProvider;
+        this.annotationsModifer = annotationsModifer;
     }
 
     private systemDarkModeQuery: MediaQueryList;
@@ -184,6 +189,10 @@ export default class ThemeModifier implements PageModifier {
                 );
             }
             setCssThemeVariable(backgroundColorThemeVariable, concreteColor);
+            this.annotationsModifer.setSidebarCssVariable(
+                backgroundColorThemeVariable,
+                concreteColor
+            );
         }
 
         await this.updateAutoModeColor();
@@ -221,7 +230,7 @@ export default class ThemeModifier implements PageModifier {
             "dark-mode-ui-style",
             getOutlineIframe()?.head.lastChild as HTMLElement
         );
-        setSidebarDarkMode(true);
+        this.annotationsModifer.setSidebarDarkMode(true);
 
         const siteSupportsDarkMode = this.detectSiteDarkMode(true);
         // don't use default dark themes for now, leads to more missed color changes
@@ -229,9 +238,9 @@ export default class ThemeModifier implements PageModifier {
         //     return;
         // }
         if (siteSupportsDarkMode) {
+            // parse background color, which we overwrite
+            let backgroundColor: string;
             this.enabledSiteDarkModeRules.map((mediaRule) => {
-                // parse background color, which we overwrite
-                let backgroundColor: string;
                 for (const styleRule of mediaRule.cssRules) {
                     if (!isStyleRule(styleRule)) {
                         return;
@@ -241,26 +250,25 @@ export default class ThemeModifier implements PageModifier {
                         backgroundColor = styleRule.style.background;
                     }
                 }
+            });
 
-                if (!backgroundColor) {
-                    // this may not always work (e.g. if css variables are used), so use default fallback
-                    backgroundColor = colorThemeToBackgroundColor("dark");
-                }
+            if (!backgroundColor) {
+                // this may not always work (e.g. if css variables are used), so use default fallback
+                backgroundColor = colorThemeToBackgroundColor("dark");
+            }
+
+            setCssThemeVariable(backgroundColorThemeVariable, backgroundColor);
+            this.annotationsModifer.setSidebarCssVariable(
+                backgroundColorThemeVariable,
+                backgroundColor
+            );
+
+            if (this.activeColorTheme === "auto") {
                 setCssThemeVariable(
-                    backgroundColorThemeVariable,
+                    autoBackgroundThemeVariable,
                     backgroundColor
                 );
-                if (this.activeColorTheme === "auto") {
-                    setCssThemeVariable(
-                        autoBackgroundThemeVariable,
-                        backgroundColor
-                    );
-                }
-            });
-
-            setCssThemeVariable(darkThemeTextColor, "rgb(232, 230, 227)", {
-                setOnlyUi: true,
-            });
+            }
         } else {
             // manually set root text color (setting it always would override other styles)
             document.documentElement.style.color = `var(${darkThemeTextColor})`;
@@ -268,12 +276,23 @@ export default class ThemeModifier implements PageModifier {
             // Background color
             const concreteColor = colorThemeToBackgroundColor("dark");
             setCssThemeVariable(backgroundColorThemeVariable, concreteColor);
-
-            // Text color
-            setCssThemeVariable(darkThemeTextColor, "rgb(232, 230, 227)");
+            this.annotationsModifer.setSidebarCssVariable(
+                backgroundColorThemeVariable,
+                concreteColor
+            );
 
             await this.enableDarkModeStyleTweaks();
         }
+
+        // always dark text color for ui elements
+        const darkTextColor = "rgb(232, 230, 227)";
+        setCssThemeVariable(darkThemeTextColor, darkTextColor, {
+            setOnlyUi: true,
+        });
+        this.annotationsModifer.setSidebarCssVariable(
+            darkThemeTextColor,
+            darkTextColor
+        );
     }
 
     private async disableDarkMode() {
@@ -292,7 +311,7 @@ export default class ThemeModifier implements PageModifier {
             ?.querySelectorAll(".dark-mode-ui-style")
             .forEach((e) => e.remove());
 
-        setSidebarDarkMode(false);
+        this.annotationsModifer.setSidebarDarkMode(false);
     }
 
     private enabledSiteDarkModeRules: CSSMediaRule[] = [];
