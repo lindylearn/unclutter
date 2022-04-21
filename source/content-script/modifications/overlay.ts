@@ -77,11 +77,15 @@ export default class OverlayManager implements PageModifier {
     }
 
     private enableOutline() {
+        let outline: OutlineItem[];
         let headingCount: number;
-        [this.outline, headingCount] = getOutline();
+        [outline, headingCount] = getOutline();
         if (headingCount < 3) {
+            // ignore small outlines (not useful)
             return;
         }
+
+        this.outline = outline;
 
         this.listenToOutlineScroll();
     }
