@@ -7,7 +7,7 @@
     import Outline from "./Outline.svelte";
     import { OutlineItem } from "./parse";
     import UpdateMessage from "./UpdateMessage.svelte";
-    import { getVersionMessagesToShow } from "./updateMessages";
+    import { getVersionMessagesToShow, saveDismissedVersionMessage } from "./updateMessages";
 
     export let outline: OutlineItem[];
     export let activeOutlineIndex: number;
@@ -20,7 +20,6 @@
     }).then(enabled => {
         displayFeedbackMessage = enabled
     })
-    
     function dismissFeedbackMessage() {
         displayFeedbackMessage = false;
         setFeatureFlag(dismissedFeedbackMessage, true)
@@ -31,6 +30,11 @@
     getVersionMessagesToShow().then(messages => {
         updateMessages = messages
     })
+    function dismissUpdateMessage(dismissedVersion: string) {
+        updateMessages = updateMessages.filter(({ version }) => version !== dismissedVersion)
+        saveDismissedVersionMessage(dismissedVersion)
+        reportEventContentScript("dismissedUpdateMessage", { version: dismissedVersion })
+    }
 
 </script>
 
@@ -40,7 +44,7 @@
     {/if}
     
     {#each updateMessages as { version, updateMessage }}
-        <UpdateMessage version={version} updateMessage={updateMessage} />
+        <UpdateMessage version={version} updateMessage={updateMessage} on:dismissed={() => dismissUpdateMessage(version)} />
     {/each}
 
     {#if displayFeedbackMessage}
