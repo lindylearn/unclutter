@@ -5,9 +5,10 @@ import {
     setFeatureFlag,
 } from "../common/featureFlags";
 import browser from "../common/polyfill";
+import { saveInitialInstallVersionIfMissing } from "../overlay/outline/updateMessages";
 import { fetchCss } from "./actions";
 import { enableInTab, injectScript, togglePageViewMessage } from "./inject";
-import { requestOptionalPermissions } from "./install";
+import { onNewInstall, requestOptionalPermissions } from "./install";
 import {
     getRemoteFeatureFlags,
     reportDisablePageView,
@@ -84,15 +85,10 @@ browser.runtime.onInstalled.addListener(async ({ reason }) => {
     reportSettings(extensionInfo.version, isNewInstall);
 
     if (isNewInstall && !isDev) {
-        browser.tabs.create({
-            url: "https://unclutter.lindylearn.io/welcome",
-            active: true,
-        });
-
-        browser.runtime.setUninstallURL(
-            "https://unclutter.lindylearn.io/uninstalled"
-        );
+        onNewInstall(extensionInfo.version);
     }
+
+    saveInitialInstallVersionIfMissing(extensionInfo.version);
 });
 
 // initialize on every service worker start

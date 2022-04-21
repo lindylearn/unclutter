@@ -7,7 +7,7 @@
     import Outline from "./Outline.svelte";
     import { OutlineItem } from "./parse";
     import UpdateMessage from "./UpdateMessage.svelte";
-    import updateMessages from "../../versions.json"
+    import { getVersionMessagesToShow } from "./updateMessages";
 
     export let outline: OutlineItem[];
     export let activeOutlineIndex: number;
@@ -26,6 +26,11 @@
         setFeatureFlag(dismissedFeedbackMessage, true)
         reportEventContentScript("dismissedFeedbackRequest")
     }
+
+    let updateMessages = []
+    getVersionMessagesToShow().then(messages => {
+        updateMessages = messages
+    })
 
 </script>
 

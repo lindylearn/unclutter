@@ -2,6 +2,17 @@ import browser from "../common/polyfill";
 import { injectScript } from "./inject";
 import { reportEnablePageView } from "./metrics";
 
+export function onNewInstall(version: string) {
+    browser.tabs.create({
+        url: "https://unclutter.lindylearn.io/welcome",
+        active: true,
+    });
+
+    browser.runtime.setUninstallURL(
+        "https://unclutter.lindylearn.io/uninstalled"
+    );
+}
+
 // only run one time after each update
 let requestedOptionalPermissions = false;
 export function requestOptionalPermissions() {

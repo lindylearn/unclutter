@@ -1,6 +1,14 @@
 [
     {
+        "version": "0.11.0",
+        "updateMessage": "test"
+    },
+    {
         "version": "0.12.0",
         "updateMessage": "Highlight text to create annotations & sync with Hypothes.is."
+    },
+    {
+        "version": "0.12.1",
+        "updateMessage": "test future"
     }
 ]
