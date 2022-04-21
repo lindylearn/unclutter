@@ -1,9 +1,5 @@
 import React from "react";
 import {
-    getRemoteFeatureFlag,
-    reportEventContentScript,
-} from "source/content-script/messaging";
-import {
     allowlistDomainOnManualActivationFeatureFlag,
     collectAnonymousMetricsFeatureFlag,
     enableBootUnclutterMessage,
@@ -13,6 +9,10 @@ import {
     showSocialAnnotationsDefaultFeatureFlag,
     supportSocialAnnotations,
 } from "../common/featureFlags";
+import {
+    getRemoteFeatureFlag,
+    reportEventContentScript,
+} from "../content-script/messaging";
 import DomainSettingsList from "./DomainSettingsList";
 import FeatureFlagSwitch from "./FeatureFlagSwitch";
 import HypothesisConfig from "./HypothesisConfig";

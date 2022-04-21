@@ -1,9 +1,9 @@
 import React from "react";
+import { LindyAnnotation } from "../common/annotations/create";
 import {
     getFeatureFlag,
     showSocialAnnotationsDefaultFeatureFlag,
-} from "source/common/featureFlags";
-import { LindyAnnotation } from "../common/annotations/create";
+} from "../common/featureFlags";
 import {
     createAnnotation,
     deleteAnnotation,

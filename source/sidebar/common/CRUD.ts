@@ -2,13 +2,13 @@
  * Wrapper over local and remote annotation storage, using the one configured by the user.
  */
 
-import { LindyAnnotation } from "source/common/annotations/create";
-import { getHypothesisUsername } from "source/common/annotations/storage";
+import { LindyAnnotation } from "../../common/annotations/create";
+import { getHypothesisUsername } from "../../common/annotations/storage";
 import {
     getFeatureFlag,
     hypothesisSyncFeatureFlag,
-} from "source/common/featureFlags";
-import { reportEventContentScript } from "source/content-script/messaging";
+} from "../../common/featureFlags";
+import { reportEventContentScript } from "../../content-script/messaging";
 import {
     createRemoteAnnotation,
     deleteRemoteAnnotation,

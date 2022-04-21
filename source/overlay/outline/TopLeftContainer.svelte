@@ -1,8 +1,8 @@
 <script lang="ts">
     // organize-imports-ignore
-    import { dismissedFeedbackMessage } from "distribution/common/featureFlags";
-    import { getFeatureFlag, setFeatureFlag, showFeedbackMessage } from "source/common/featureFlags";
-    import { getRemoteFeatureFlag, reportEventContentScript } from "source/content-script/messaging";
+    import { dismissedFeedbackMessage } from "../../common/featureFlags";
+    import { getFeatureFlag, setFeatureFlag, showFeedbackMessage } from "../../common/featureFlags";
+    import { getRemoteFeatureFlag, reportEventContentScript } from "../../content-script/messaging";
     import FeedbackMessage from "./FeedbackMessage.svelte";
     import Outline from "./Outline.svelte";
     import { OutlineItem } from "./parse";

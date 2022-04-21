@@ -1,5 +1,5 @@
-import { getDomainFrom } from "source/common/util";
 import { overrideClassname } from "../common/stylesheets";
+import { getDomainFrom } from "../common/util";
 import AnnotationsModifier from "./modifications/annotations/annotationsModifier";
 import BackgroundModifier from "./modifications/background";
 import BodyStyleModifier from "./modifications/bodyStyle";

@@ -3,12 +3,12 @@ import {
     getHypothesisToken,
     validateApiToken,
     validateSaveToken,
-} from "source/common/annotations/storage";
-import { createRemoteAnnotation } from "source/sidebar/common/api";
+} from "../common/annotations/storage";
+import { createRemoteAnnotation } from "../sidebar/common/api";
 import {
     deleteAllLocalAnnotations,
     getAllLocalAnnotations,
-} from "source/sidebar/common/local";
+} from "../sidebar/common/local";
 
 export default function HypothesisConfig() {
     const [token, setToken] = React.useState("");

@@ -1,4 +1,4 @@
-import { insertHtml } from "source/common/html";
+import { insertHtml } from "../common/html";
 import ContentBlockModifier from "../content-script/modifications/contentBlock";
 import ResponsiveStyleModifier from "../content-script/modifications/CSSOM/responsiveStyle";
 import CSSOMProvider from "../content-script/modifications/CSSOM/_provider";

@@ -1,8 +1,6 @@
 <script lang="ts">
-import { reportEventContentScript } from "source/content-script/messaging";
-
-import { scrollToElement } from "./common";
-
+    import { reportEventContentScript } from "../../content-script/messaging";
+    import { scrollToElement } from "./common";
     import { OutlineItem } from "./parse";
 
     export let index: number;

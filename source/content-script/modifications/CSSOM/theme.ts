@@ -1,5 +1,6 @@
-import { getUserTheme } from "source/common/storage";
-import { createStylesheetLink } from "source/common/stylesheets";
+import browser from "../../../common/polyfill";
+import { getUserTheme } from "../../../common/storage";
+import { createStylesheetLink } from "../../../common/stylesheets";
 import {
     activeColorThemeVariable,
     applySaveThemeOverride,
@@ -11,17 +12,16 @@ import {
     pageWidthThemeVariable,
     setCssThemeVariable,
     themeName,
-} from "source/common/theme";
+} from "../../../common/theme";
 import {
     getSRGBLightness,
     HSLA,
     hslToString,
     parse,
     rgbToHSL,
-} from "source/common/util/color";
-import { highlightActiveColorThemeButton } from "source/overlay/insert";
-import { getOutlineIframe } from "source/overlay/outline/common";
-import browser from "../../../common/polyfill";
+} from "../../../common/util/color";
+import { highlightActiveColorThemeButton } from "../../../overlay/insert";
+import { getOutlineIframe } from "../../../overlay/outline/common";
 import AnnotationsModifier from "../annotations/annotationsModifier";
 import { PageModifier, trackModifierExecution } from "../_interface";
 import CSSOMProvider, { isMediaRule, isStyleRule } from "./_provider";

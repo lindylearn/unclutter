@@ -1,7 +1,7 @@
 import debounce from "lodash/debounce";
 import React from "react";
 import TextareaAutosize from "react-textarea-autosize";
-import { LindyAnnotation } from "source/common/annotations/create";
+import { LindyAnnotation } from "../../common/annotations/create";
 import { getAnnotationColor } from "../../common/annotations/styling";
 import { updateAnnotation } from "../common/CRUD";
 

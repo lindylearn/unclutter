@@ -2,8 +2,8 @@ import {
     getFeatureFlag,
     showSocialAnnotationsDefaultFeatureFlag,
     supportSocialAnnotations,
-} from "source/common/featureFlags";
-import { insertHtml } from "source/common/html";
+} from "../common/featureFlags";
+import { insertHtml } from "../common/html";
 import browser from "../common/polyfill";
 import {
     domainUserSetting,

@@ -1,15 +1,15 @@
 import {
-    enableBootUnclutterMessage,
-    getFeatureFlag,
-} from "source/common/featureFlags";
-import { getDomainFrom } from "source/common/util";
-import {
     extensionSupportsUrl,
     isConfiguredToEnable,
     isDeniedForDomain,
     isNonLeafPage,
 } from "../common/articleDetection";
+import {
+    enableBootUnclutterMessage,
+    getFeatureFlag,
+} from "../common/featureFlags";
 import browser from "../common/polyfill";
+import { getDomainFrom } from "../common/util";
 import { displayToast } from "../overlay/toast";
 
 // script injected into every tab before dom constructed

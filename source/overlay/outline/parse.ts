@@ -1,4 +1,4 @@
-import { asideWordBlocklist } from "source/content-script/modifications/DOM/textContainer";
+import { asideWordBlocklist } from "../../content-script/modifications/DOM/textContainer";
 import { scrollToElement } from "./common";
 
 export interface OutlineItem {

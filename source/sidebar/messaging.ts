@@ -1,5 +1,5 @@
-import { createStylesheetLink } from "source/common/stylesheets";
 import browser from "../common/polyfill";
+import { createStylesheetLink } from "../common/stylesheets";
 
 window.addEventListener("message", ({ data }) => {
     if (data.event === "setCssVariable") {

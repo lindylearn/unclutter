@@ -13,7 +13,7 @@ import sveltePreprocess from "svelte-preprocess";
 import tailwindcss from "tailwindcss";
 
 // bundle content scripts
-// sometimes this generates weird dependent ouputs, run build twice to fix.
+// absolute path imports (starting with "source/") seems to break this.
 const contentScriptConfigs = [
     "source/content-script/boot.ts",
     "source/content-script/enhance.ts",

@@ -1,10 +1,10 @@
 import React from "react";
-import { reportEventContentScript } from "source/content-script/messaging";
 import {
     collectAnonymousMetricsFeatureFlag,
     getFeatureFlag,
     setFeatureFlag,
 } from "../common/featureFlags";
+import { reportEventContentScript } from "../content-script/messaging";
 
 // there's a weird bundling error on firefox when importing React, {useState}
 // so use React.useState

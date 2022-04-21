@@ -2,11 +2,11 @@ import {
     allowlistDomainOnManualActivationFeatureFlag,
     getFeatureFlag,
     showOutlineFeatureFlag,
-} from "source/common/featureFlags";
+} from "../../common/featureFlags";
 import {
     getUserSettingForDomain,
     setUserSettingsForDomain,
-} from "source/common/storage";
+} from "../../common/storage";
 import {
     insertPageSettings,
     updateDomainState,

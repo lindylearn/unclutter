@@ -1,12 +1,12 @@
-import { getNodeOffset } from "source/common/annotations/offset";
-import { getAnnotationColor } from "source/common/annotations/styling";
-import { overrideClassname } from "source/common/stylesheets";
+import { getNodeOffset } from "../../../common/annotations/offset";
+import { getAnnotationColor } from "../../../common/annotations/styling";
 import { anchor as anchorHTML } from "../../../common/annotator/anchoring/html";
 import {
     highlightRange,
     removeAllHighlights as removeAllHighlightsApi,
     removeHighlights as removeHighlightsApi,
 } from "../../../common/annotator/highlighter";
+import { overrideClassname } from "../../../common/stylesheets";
 
 // highlight text for every passed annotation on the active webpage
 export async function highlightAnnotations(annotations) {

@@ -1,6 +1,6 @@
-import { reportEnablePageView } from "source/background/metrics";
 import browser from "../common/polyfill";
 import { injectScript } from "./inject";
+import { reportEnablePageView } from "./metrics";
 
 // only run one time after each update
 let requestedOptionalPermissions = false;

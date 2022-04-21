@@ -1,5 +1,5 @@
-import { createStylesheetText } from "source/common/stylesheets";
 import browser from "../../../common/polyfill";
+import { createStylesheetText } from "../../../common/stylesheets";
 import { trackModifierExecution } from "../_interface";
 
 @trackModifierExecution
