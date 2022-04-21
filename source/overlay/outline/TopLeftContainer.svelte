@@ -7,6 +7,7 @@
     import Outline from "./Outline.svelte";
     import { OutlineItem } from "./parse";
     import UpdateMessage from "./UpdateMessage.svelte";
+    import updateMessages from "../../versions.json"
 
     export let outline: OutlineItem[];
     export let activeOutlineIndex: number;
@@ -25,14 +26,17 @@
         setFeatureFlag(dismissedFeedbackMessage, true)
         reportEventContentScript("dismissedFeedbackRequest")
     }
+
 </script>
 
-<div id="lindy-info-topleft-content" class="flex flex-col gap-2">
+<div id="lindy-info-topleft-content" class="flex flex-col gap-1.5">
     {#if outline}
         <Outline outline={outline} activeOutlineIndex={activeOutlineIndex} />
     {/if}
     
-    <UpdateMessage />
+    {#each updateMessages as { version, updateMessage }}
+        <UpdateMessage version={version} updateMessage={updateMessage} />
+    {/each}
 
     {#if displayFeedbackMessage}
         <FeedbackMessage on:dismissed={dismissFeedbackMessage} />
@@ -56,5 +60,13 @@
 }
 svg.message-icon {
     color: #4b5563; /* text-gray-600 */
+}
+a > .close-message {
+    visibility: hidden;
+    opacity: 0;
+}
+a:hover > .close-message {
+    visibility: visible;
+    opacity: 1;
 }
 </style>
