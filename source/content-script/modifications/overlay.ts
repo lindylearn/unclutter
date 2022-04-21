@@ -13,8 +13,8 @@ import {
     wiggleDomainState,
 } from "../../overlay/insert";
 import { getElementYOffset } from "../../overlay/outline/common";
-import Outline from "../../overlay/outline/Outline.svelte";
 import { getOutline, OutlineItem } from "../../overlay/outline/parse";
+import TopLeftContainer from "../../overlay/outline/TopLeftContainer.svelte";
 import AnnotationsModifier from "./annotations/annotationsModifier";
 import ThemeModifier from "./CSSOM/theme";
 import { PageModifier, trackModifierExecution } from "./_interface";
@@ -26,7 +26,7 @@ export default class OverlayManager implements PageModifier {
     private annotationsModifer: AnnotationsModifier;
 
     private outline: OutlineItem[];
-    private outlineSvelteComponent: Outline;
+    private topleftSvelteComponent: TopLeftContainer;
 
     constructor(
         domain: string,
@@ -68,6 +68,9 @@ export default class OverlayManager implements PageModifier {
             this.enableOutline();
         }
 
+        // wait for outline parsing, but render regardless
+        this.renderTopLeftContainer();
+
         // this should be experimental
         // would also need to update URL during scrolling
         // scrollToFragmentHeading();
@@ -80,30 +83,29 @@ export default class OverlayManager implements PageModifier {
             return;
         }
 
-        this.insertOutline();
         this.listenToOutlineScroll();
     }
 
-    private overlayIframe: HTMLIFrameElement;
+    private topleftIframe: HTMLIFrameElement;
     private async insertIframes() {
         const iframe = document.createElement("iframe");
         iframe.id = "lindy-info-topleft";
         iframe.setAttribute("scrolling", "no");
         iframe.setAttribute("frameBorder", "0");
         document.documentElement.appendChild(iframe);
-        this.overlayIframe = iframe;
+        this.topleftIframe = iframe;
 
         // Firefox bug: need to wait until iframe initial render to insert elements
         // See https://stackoverflow.com/questions/60814167/firefox-deleted-innerhtml-of-generated-iframe
         await new Promise((r) => setTimeout(r, 0));
     }
 
-    private async insertOutline() {
-        this.outlineSvelteComponent = new Outline({
-            target: this.overlayIframe.contentDocument.body,
+    private async renderTopLeftContainer() {
+        this.topleftSvelteComponent = new TopLeftContainer({
+            target: this.topleftIframe.contentDocument.body,
             props: {
-                outline: this.outline,
-                activeOutlineIndex: this.outline[0].index,
+                outline: this.outline, // null at first
+                activeOutlineIndex: this.outline?.[0].index,
             },
         });
     }
@@ -163,7 +165,7 @@ export default class OverlayManager implements PageModifier {
             }
 
             const currentHeading = flatOutline[currentOutlineIndex];
-            this.outlineSvelteComponent.$set({
+            this.topleftSvelteComponent?.$set({
                 activeOutlineIndex: currentHeading.index,
             });
         };

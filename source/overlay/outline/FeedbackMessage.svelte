@@ -19,7 +19,7 @@
         </svg>
     
         <span class="text-sm">
-            How is Unclutter working for you? I'd love to get your feedback on what to improve!
+            How is Unclutter working for you? Let me know what to improve!
         </span>
     </div>
 
