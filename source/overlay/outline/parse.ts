@@ -129,6 +129,11 @@ function getHeadingItems(): OutlineItem[] {
             continue;
         }
 
+        // exclude numbers, e.g. https://www.henricodolfing.com/2019/06/project-failure-case-study-knight-capital.html
+        if (headingItem.title.length < 5) {
+            continue;
+        }
+
         outline.push({
             ...headingItem,
             index,
