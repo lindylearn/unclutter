@@ -21,7 +21,7 @@
     <svg
         height={radius * 2}
         width={radius * 2}
-        class=""
+        class="progress-circle"
     >
         <defs>
             <linearGradient id="myGradient" gradientTransform="">
@@ -36,6 +36,7 @@
             </linearGradient>
         </defs>
         <circle
+            class="placeholder"
             stroke="#f3f4f6"
             fill="white"
             stroke-width={ stroke }

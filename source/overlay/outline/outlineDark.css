@@ -4,7 +4,8 @@
     color: var(--lindy-dark-theme-text-color) !important;
 }
 
-.heading-text.visited {
+.heading-text.visited > .title, 
+.reading-time {
     color: #52525b !important;
 }
 
@@ -17,4 +18,12 @@ svg.message-icon {
 }
 .close-message:hover {
     color: white !important;
+}
+
+.spacer-line {
+    border-color: #404040 !important; /* text-neutral-700 */
+}
+.progress-circle > .placeholder {
+    fill: transparent;
+    stroke: #404040 !important; /* text-neutral-700 */
 }
