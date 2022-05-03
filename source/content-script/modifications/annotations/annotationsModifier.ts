@@ -1,3 +1,4 @@
+import { LindyAnnotation } from "../../../common/annotations/create";
 import { PageModifier, trackModifierExecution } from "../_interface";
 import {
     createAnnotationListener,
@@ -28,8 +29,14 @@ export default class AnnotationsModifier implements PageModifier {
         });
 
         // listeners need to be configured before rendering iframe to anchor annotations (local retrieval is fast)
-        createSelectionListener(this.sidebarIframe);
-        createAnnotationListener(this.sidebarIframe);
+        createSelectionListener(
+            this.sidebarIframe,
+            this.onAnnotationUpdate.bind(this)
+        );
+        createAnnotationListener(
+            this.sidebarIframe,
+            this.onAnnotationUpdate.bind(this)
+        );
     }
 
     async transitionOut() {
@@ -70,5 +77,21 @@ export default class AnnotationsModifier implements PageModifier {
         });
     }
 
-    private onAnnotationUpdate() {}
+    public annotationListeners: AnnotationListener[] = [];
+
+    // private fn passed to selection listener (added) and annotations side events listener (anchored, removed)
+    private onAnnotationUpdate(
+        action: "set" | "add" | "remove",
+        annotations: LindyAnnotation[]
+    ) {
+        // console.log(action, annotations);
+        this.annotationListeners.map((listener) =>
+            listener(action, annotations)
+        );
+    }
 }
+
+export type AnnotationListener = (
+    action: "set" | "add" | "remove",
+    annotation: LindyAnnotation[]
+) => void;

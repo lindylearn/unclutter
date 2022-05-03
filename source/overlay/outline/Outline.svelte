@@ -7,6 +7,9 @@
 
     export let outline: OutlineItem[];
     export let activeOutlineIndex: number;
+    export let totalAnnotationCount: number
+
+    const goalAnnotationCount = 6;
 </script>
 
 
@@ -17,7 +20,10 @@
                 {outline[0].title}
             </div>
             <div class="-mr-1">
-                <ProgressCircle progress={60} caption={'2'} />
+                <ProgressCircle 
+                    progressPercentage={Math.max(1, (totalAnnotationCount || 0) / goalAnnotationCount)} 
+                    caption={`${totalAnnotationCount || 0}`} 
+                />
             </div>
         </div>
 

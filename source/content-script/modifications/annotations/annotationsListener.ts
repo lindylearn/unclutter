@@ -1,4 +1,5 @@
 import throttle from "lodash/throttle";
+import { AnnotationListener } from "./annotationsModifier";
 import {
     getHighlightOffsets,
     highlightAnnotations,
@@ -9,7 +10,10 @@ import {
 } from "./highlightsApi";
 
 let listenerRef;
-export function createAnnotationListener(sidebarIframe) {
+export function createAnnotationListener(
+    sidebarIframe: HTMLIFrameElement,
+    onAnnotationUpdate: AnnotationListener
+) {
     // highlight new sent annotations, and send back display offsets
     const onMessage = async function ({ data }) {
         if (!sidebarIframe.contentWindow) {
@@ -29,8 +33,10 @@ export function createAnnotationListener(sidebarIframe) {
                 event: "anchoredAnnotations",
                 annotations: anchoredAnnotations,
             });
+            onAnnotationUpdate("set", anchoredAnnotations);
         } else if (data.event === "removeHighlight") {
             removeHighlight(data.annotation);
+            onAnnotationUpdate("remove", [data.annotation]);
         } else if (data.event === "onAnnotationHoverUpdate") {
             if (data.hoverActive) {
                 const color =
@@ -59,6 +65,8 @@ export function createAnnotationListener(sidebarIframe) {
             event: "changedDisplayOffset",
             offsetById,
         });
+        // don't call onAnnotationUpdate() as it's only used for outline grouping for now
+        // page resizing should keep relative position to headings intact
     });
 }
 

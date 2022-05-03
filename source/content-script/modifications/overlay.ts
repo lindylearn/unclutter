@@ -1,3 +1,4 @@
+import { LindyAnnotation } from "../../common/annotations/create";
 import {
     allowlistDomainOnManualActivationFeatureFlag,
     getFeatureFlag,
@@ -36,6 +37,10 @@ export default class OverlayManager implements PageModifier {
         this.domain = domain;
         this.themeModifier = themeModifier;
         this.annotationsModifer = annotationsModifer;
+
+        this.annotationsModifer.annotationListeners.push(
+            this.onAnnotationUpdate.bind(this)
+        );
     }
 
     async afterTransitionIn() {
@@ -201,5 +206,24 @@ export default class OverlayManager implements PageModifier {
         if (this.uninstallScrollListener) {
             this.uninstallScrollListener();
         }
+    }
+
+    // listen to annotation updates and attribute to outline heading
+    private totalAnnotationCount = 0;
+    private onAnnotationUpdate(
+        action: "set" | "add" | "remove",
+        annotations: LindyAnnotation[]
+    ) {
+        if (action === "set") {
+            this.totalAnnotationCount = annotations.length;
+        } else if (action === "add") {
+            this.totalAnnotationCount += annotations.length;
+        } else if (action === "remove") {
+            this.totalAnnotationCount -= annotations.length;
+        }
+
+        this.topleftSvelteComponent?.$set({
+            totalAnnotationCount: this.totalAnnotationCount,
+        });
     }
 }

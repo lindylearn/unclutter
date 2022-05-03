@@ -12,6 +12,7 @@
 
     export let outline: OutlineItem[];
     export let activeOutlineIndex: number;
+    export let totalAnnotationCount: number
 
     let displayFeedbackMessage = false;
     getFeatureFlag(dismissedFeedbackMessage).then(dismissed => {
@@ -43,7 +44,7 @@
     <!-- <ProgressMessage/> -->
 
     {#if outline}
-        <Outline outline={outline} activeOutlineIndex={activeOutlineIndex} />
+        <Outline outline={outline} activeOutlineIndex={activeOutlineIndex} totalAnnotationCount={totalAnnotationCount}/>
     {/if}
     
     {#each updateMessages as { version, updateMessage }}

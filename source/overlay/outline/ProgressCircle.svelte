@@ -4,7 +4,7 @@
 
     // adapted from https://css-tricks.com/building-progress-ring-quickly/
 
-    export let progress: number;
+    export let progressPercentage: number;
     export let caption: string;
 
     const radius = 20;
@@ -14,7 +14,7 @@
     const circumference = normalizedRadius * 2 * Math.PI;
 
     let strokeDashoffset: number;
-    $: strokeDashoffset = circumference - progress / 100 * circumference;
+    $: strokeDashoffset = circumference - progressPercentage * circumference;
 </script>
 
 <div class="relative font-header hover:drop-shadow-md">
