@@ -37,7 +37,7 @@
       </foreignObject>
     </svg>
 
-    <div class="absolute font-semibold select-none" style="top: 20%; left: 38%;">
+    <div class="absolute font-semibold select-none w-full text-center" style="top: 20%; left: 0;">
         {caption}
     </div>
 </div>

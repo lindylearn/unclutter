@@ -51,7 +51,7 @@
         <div class="title">{title}</div>
 
         {#if index !== -1 && annotationCount}
-            <div class="px-1 rounded font-header" style={`background-color: ${getRandomColor(title)};`}>{annotationCount}</div>
+            <div class="px-1 rounded font-header text-center" style={`min-width: 1.3em; padding: 0 0.4em; background-color: ${getRandomColor(title)};`}>{annotationCount}</div>
             <!-- <svg class="w-5 p-1" style={`color: ${getRandomColor(title)};`} viewBox="0 0 448 512">
                 <path fill="currentColor" d="M320 480l128-128h-128V480zM400 31.1h-352c-26.51 0-48 21.49-48 48v352C0 458.5 21.49 480 48 480H288l.0039-128c0-17.67 14.33-32 32-32H448v-240C448 53.49 426.5 31.1 400 31.1z" />
             </svg> -->
