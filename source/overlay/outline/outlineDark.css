@@ -24,6 +24,5 @@ svg.message-icon {
     border-color: #404040 !important; /* text-neutral-700 */
 }
 .progress-circle > .placeholder {
-    fill: transparent;
     stroke: #404040 !important; /* text-neutral-700 */
 }

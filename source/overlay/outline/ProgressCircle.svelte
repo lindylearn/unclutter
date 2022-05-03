@@ -11,7 +11,7 @@
     $: strokeDashoffset = 288.5 - 288.5 * progressPercentage;
 </script>
 
-<div class="relative font-header hover:drop-shadow-md">
+<div class="relative font-header hover:drop-shadow-md cursor-pointer">
     <svg
         viewBox="0 0 100 100"
         class="progress-circle w-10"
@@ -28,7 +28,7 @@
       </defs>
       
       <path 
-        class="placeholder" 
+        class="placeholder"
         d="M 50 96 a 46 46 0 0 1 0 -92 46 46 0 0 1 0 92" 
       />
 
@@ -73,6 +73,7 @@
 
   .placeholder {
     stroke: #f3f4f6;
+    fill: var(--lindy-background-color);
     stroke-width: 6;
     transform-origin: 50px 50px;
   }
