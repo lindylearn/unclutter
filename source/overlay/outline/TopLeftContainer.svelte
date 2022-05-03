@@ -39,8 +39,8 @@
 
 </script>
 
-<div id="lindy-info-topleft-content" class="flex flex-col gap-1.5">
-    <ProgressMessage/>
+<div id="lindy-info-topleft-content" class="flex flex-col gap-1.5 font-paragraph">
+    <!-- <ProgressMessage/> -->
 
     {#if outline}
         <Outline outline={outline} activeOutlineIndex={activeOutlineIndex} />
@@ -61,8 +61,6 @@
 @tailwind utilities;
 
 #lindy-info-topleft-content {
-    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-        "Segoe UI", Roboto !important;
     margin: 10px;
     margin-left: 20px;
     color: #374151; /* text-gray-700 */

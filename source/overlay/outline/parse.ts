@@ -35,6 +35,7 @@ const classBlocklist = [
 ];
 const endBlocklist = [
     "more from", //  https://blog.bradfieldcs.com/you-are-not-google-84912cf44afb
+    "read next", // https://www.propublica.org/article/filing-taxes-could-be-free-simple-hr-block-intuit-lobbying-against-it
     "subscribe", // https://axie.substack.com/p/funding
     "related", // https://stackoverflow.blog/2022/04/07/you-should-be-reading-academic-computer-science-papers/
     "comments", // https://www.bennadel.com/blog/4210-you-can-throw-anything-in-javascript-and-other-async-await-considerations.htm
@@ -170,8 +171,11 @@ function getHeadingNodeItem(node: Element): OutlineItem | null {
     if (endBlocklist.some((word) => text.toLowerCase().includes(word))) {
         return;
     }
-    if (node.parentElement.tagName === "A") {
-        // often related link, e.g. https://www.worksinprogress.co/issue/womb-for-improvement/
+    if (
+        node.parentElement.tagName === "A" ||
+        node.firstElementChild?.tagName === "A"
+    ) {
+        // often related link, e.g. https://www.worksinprogress.co/issue/womb-for-improvement/, https://www.propublica.org/article/filing-taxes-could-be-free-simple-hr-block-intuit-lobbying-against-it
         return;
     }
     if (text.startsWith("By ")) {

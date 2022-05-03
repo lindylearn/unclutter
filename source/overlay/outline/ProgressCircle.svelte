@@ -17,10 +17,11 @@
     $: strokeDashoffset = circumference - progress / 100 * circumference;
 </script>
 
-<div class="relative">
+<div class="relative font-header hover:drop-shadow-md">
     <svg
         height={radius * 2}
         width={radius * 2}
+        class=""
     >
         <defs>
             <linearGradient id="myGradient" gradientTransform="">
@@ -36,7 +37,7 @@
         </defs>
         <circle
             stroke="#f3f4f6"
-            fill="transparent"
+            fill="white"
             stroke-width={ stroke }
             r={ normalizedRadius }
             cx={ radius }
@@ -54,7 +55,7 @@
         />
     </svg>
 
-    <div class="absolute font-semibold" style="top: 15%; left: 37%;">
+    <div class="absolute font-semibold select-none" style="top: 15%; left: 37%;">
         {caption}
     </div>
 </div>

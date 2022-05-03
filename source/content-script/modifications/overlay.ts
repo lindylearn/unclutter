@@ -99,6 +99,12 @@ export default class OverlayManager implements PageModifier {
         document.documentElement.appendChild(iframe);
         this.topleftIframe = iframe;
 
+        const fontLink = iframe.contentDocument.createElement("link");
+        fontLink.rel = "stylesheet";
+        fontLink.href =
+            "https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;600;700&family=Poppins:wght@400;600;700&display=swap";
+        iframe.contentDocument.head.appendChild(fontLink);
+
         // Firefox bug: need to wait until iframe initial render to insert elements
         // See https://stackoverflow.com/questions/60814167/firefox-deleted-innerhtml-of-generated-iframe
         await new Promise((r) => setTimeout(r, 0));
