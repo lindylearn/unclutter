@@ -42,7 +42,7 @@
 </script>
 
 <li class="heading">
-    <div class={"heading-text relative text-sm cursor-pointer flex w-full gap-2 justify-between " + activateStateClass} on:click={focusHeading}>
+    <div class={"heading-text relative text-sm cursor-pointer flex w-full gap-2 justify-between items-start " + activateStateClass} on:click={focusHeading}>
         <svg class="absolute active-dot hidden" style="width: 6px;" viewBox="0 0 320 512">
             <path fill="currentColor" d="M320 256C320 344.4 248.4 416 160 416C71.63 416 0 344.4 0 256C0 167.6 71.63 96 160 96C248.4 96 320 167.6 320 256z"/>
         </svg>

@@ -21,7 +21,7 @@
             </div>
             <div class="-mr-1">
                 <ProgressCircle 
-                    progressPercentage={Math.max(1, (totalAnnotationCount || 0) / goalAnnotationCount)} 
+                    progressPercentage={Math.min(1.0, (totalAnnotationCount || 0) / goalAnnotationCount)} 
                     caption={`${totalAnnotationCount || 0}`} 
                 />
             </div>

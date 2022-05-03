@@ -17,6 +17,7 @@ const contentBlocklist = [
     "most read",
     "newsletter",
     "tags",
+    "subscribe", // https://guzey.com/theses-on-sleep/
 ];
 const classBlocklist = [
     "subtitle", // https://lunduke.substack.com/p/the-computers-used-to-do-3d-animation?s=r
@@ -130,6 +131,36 @@ function getHeadingItems(): OutlineItem[] {
             continue;
         }
 
+        // blocklist non-headers
+        if (
+            contentBlocklist
+                .concat(monthNames)
+                .some((word) => headingItem.title.toLowerCase().includes(word))
+        ) {
+            continue;
+        }
+        if (
+            asideWordBlocklist
+                .filter((word) => !["header", "ad"].includes(word))
+                .concat(classBlocklist)
+                .some(
+                    (word) =>
+                        node.className.toLowerCase().includes(word) ||
+                        node.id.toLowerCase().includes(word) ||
+                        node.parentElement.className
+                            .toLowerCase()
+                            .includes(word)
+                )
+        ) {
+            continue;
+        }
+        if (
+            endBlocklist.some((word) =>
+                headingItem.title.toLowerCase().includes(word)
+            )
+        ) {
+            break;
+        }
         // exclude numbers, e.g. https://www.henricodolfing.com/2019/06/project-failure-case-study-knight-capital.html
         if (headingItem.title.length < 5) {
             continue;
@@ -148,29 +179,6 @@ function getHeadingItems(): OutlineItem[] {
 function getHeadingNodeItem(node: Element): OutlineItem | null {
     // Ignore specific words & css classes
     const text = node.textContent;
-    if (
-        contentBlocklist
-            .concat(monthNames)
-            .some((word) => text.toLowerCase().includes(word))
-    ) {
-        return;
-    }
-    if (
-        asideWordBlocklist
-            .filter((word) => !["header", "ad"].includes(word))
-            .concat(classBlocklist)
-            .some(
-                (word) =>
-                    node.className.toLowerCase().includes(word) ||
-                    node.id.toLowerCase().includes(word) ||
-                    node.parentElement.className.toLowerCase().includes(word)
-            )
-    ) {
-        return;
-    }
-    if (endBlocklist.some((word) => text.toLowerCase().includes(word))) {
-        return;
-    }
     if (
         node.parentElement.tagName === "A" ||
         node.firstElementChild?.tagName === "A"
@@ -193,7 +201,7 @@ function getHeadingNodeItem(node: Element): OutlineItem | null {
     const level = parseInt(node.tagName.slice(1));
     return {
         index: null, // populated above
-        title: cleanText,
+        title: restrictTitleLength(cleanText),
         level,
         element: node,
         children: [], // populated later
