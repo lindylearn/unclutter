@@ -7,7 +7,7 @@
     export let progress: number;
     export let caption: string;
 
-    const radius = 18;
+    const radius = 20;
     const stroke = 4;
     
     const normalizedRadius = radius - stroke;
@@ -55,7 +55,7 @@
         />
     </svg>
 
-    <div class="absolute font-semibold select-none" style="top: 15%; left: 37%;">
+    <div class="absolute font-semibold select-none" style="top: 20%; left: 38%;">
         {caption}
     </div>
 </div>
