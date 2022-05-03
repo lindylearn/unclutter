@@ -56,11 +56,11 @@ const monthNames = [
     "december",
 ];
 
-export function getOutline(): [OutlineItem[], number] {
+export function getOutline(): OutlineItem[] {
     // List raw DOM nodes and filter to likely headings
     const headingItems = getHeadingItems();
     if (headingItems.length === 0) {
-        return [null, 0];
+        return [createRootItem()];
     }
 
     // Construct hierarchy based on heading level
@@ -93,7 +93,7 @@ export function getOutline(): [OutlineItem[], number] {
         normalizedOutline.children
     );
 
-    return [squashedOutline, headingItems.length];
+    return squashedOutline;
 }
 
 function getHeadingItems(): OutlineItem[] {
@@ -311,15 +311,7 @@ function restrictTitleLength(title: string, maxLength: number = 29): string {
 }
 
 function collapseItems(headingItems: OutlineItem[]): OutlineItem[] {
-    const currentStack: OutlineItem[] = [
-        {
-            index: -1,
-            level: 0,
-            title: document.title,
-            element: document.body,
-            children: [],
-        },
-    ];
+    const currentStack: OutlineItem[] = [createRootItem()];
     for (const item of headingItems) {
         const parentElement = currentStack[currentStack.length - 1];
 
@@ -347,6 +339,15 @@ function collapseItems(headingItems: OutlineItem[]): OutlineItem[] {
     }
 
     return currentStack;
+}
+function createRootItem(): OutlineItem {
+    return {
+        index: -1,
+        level: 0,
+        title: document.title,
+        element: document.body,
+        children: [],
+    };
 }
 
 function normalizeItemLevel(

@@ -82,15 +82,7 @@ export default class OverlayManager implements PageModifier {
     }
 
     private enableOutline() {
-        let outline: OutlineItem[];
-        let headingCount: number;
-        [outline, headingCount] = getOutline();
-        if (headingCount < 3) {
-            // ignore small outlines (not useful)
-            return;
-        }
-
-        this.outline = outline;
+        this.outline = getOutline();
 
         this.listenToOutlineScroll();
     }
@@ -221,7 +213,6 @@ export default class OverlayManager implements PageModifier {
         const outlineIndexes = annotations.map((a) =>
             this.getOutlineIndexForAnnotation(a)
         );
-        console.log(annotations, outlineIndexes);
 
         if (action === "set") {
             this.totalAnnotationCount = annotations.length;

@@ -43,9 +43,7 @@
 <div id="lindy-info-topleft-content" class="flex flex-col gap-1.5 font-paragraph">
     <!-- <ProgressMessage/> -->
 
-    {#if outline}
-        <Outline outline={outline} activeOutlineIndex={activeOutlineIndex} totalAnnotationCount={totalAnnotationCount}/>
-    {/if}
+    <Outline outline={outline} activeOutlineIndex={activeOutlineIndex} totalAnnotationCount={totalAnnotationCount}/>
     
     {#each updateMessages as { version, updateMessage }}
         <UpdateMessage version={version} updateMessage={updateMessage} on:dismissed={() => dismissUpdateMessage(version)} />

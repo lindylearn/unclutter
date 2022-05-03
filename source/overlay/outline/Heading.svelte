@@ -8,7 +8,7 @@
     export let title: string;
     export let element: Element;
     export let children: OutlineItem[];
-    export let annotationCount: number;
+    export let annotationCount: number | undefined;
 
     export let activeOutlineIndex: number;
 

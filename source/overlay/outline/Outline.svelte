@@ -17,7 +17,7 @@
     <div>
         <div class="flex items-center justify-between">
             <div class="text-base font-header font-semibold cursor-pointer" on:click={() => scrollToElement(outline[0].element)}>
-                {outline[0].title}
+                {outline[0]?.title}
             </div>
             <div class="-mr-1">
                 <ProgressCircle 
@@ -27,9 +27,12 @@
             </div>
         </div>
 
-        <div class="mt-1 mb-2">
+        <div class="mt-1">
             <div class="text-sm text-gray-400">20 min left</div>
-            <div class="border-b-2 border-gray-100 -mx-5 "></div>
+
+            {#if outline.length > 1}
+                <div class="border-b-2 border-gray-100 -mx-5 mb-2"></div>
+            {/if}
         </div>
 
         <ul class="m-0 p-0 pr-2 list-none flex flex-col gap-1">
