@@ -69,4 +69,6 @@ export default class AnnotationsModifier implements PageModifier {
             darkModeEnabled,
         });
     }
+
+    private onAnnotationUpdate() {}
 }

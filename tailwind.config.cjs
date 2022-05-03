@@ -11,9 +11,10 @@ module.exports = {
                 slidein: "slidein 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
             },
         },
-        // fontFamily: {
-        //     display: ["Poppins", "sans-serif"],
-        // },
+        fontFamily: {
+            header: ["Poppins", "sans-serif"],
+            paragraph: ["Work Sans", "sans-serif"],
+        },
     },
     mode: "jit",
     purge: {

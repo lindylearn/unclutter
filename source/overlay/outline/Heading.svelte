@@ -67,7 +67,7 @@
     /* padding-right: 1.5em; */
 }
 .is-active > .title {
-    font-weight: 700;
+    font-weight: 600;
     /* padding-right: 0; */
 }
 .visited > .title {

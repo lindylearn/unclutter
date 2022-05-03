@@ -9,17 +9,23 @@
 </script>
 
 
-<div id="outline" class="max-w-full pl-7 pr-6 py-4 cursor-auto bg-white rounded-lg shadow hover:shadow-md transition-all relative">
+<div id="outline" class="max-w-full px-4 py-3 cursor-auto bg-white rounded-lg shadow hover:shadow-md transition-all relative">
     <div>
-        <ul class="m-0 p-0 list-none flex flex-col gap-1">
-            {#each outline as child, i}
+        <div>
+            <div class="text-sm font-header font-semibold cursor-pointer pr-8">
+                {outline[0].title}
+            </div>
+            <div class="absolute top-3 right-3">
+                <ProgressCircle progress={60} caption={'2'} />
+            </div>
+        </div>
+        <div class="border-b-2 decoration-gray-200 -mx-4 my-2"></div>
+
+        <ul class="m-0 p-0 pl-4 list-none flex flex-col gap-1">
+            {#each outline.slice(1) as child, i}
                 <Heading {...child} activeOutlineIndex={activeOutlineIndex} />
             {/each}
         </ul>
-    </div>
-
-    <div class="absolute top-3 right-3">
-        <ProgressCircle progress={60} caption={'2'} />
     </div>
 </div>
 
