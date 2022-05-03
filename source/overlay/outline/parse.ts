@@ -93,6 +93,8 @@ export function getOutline(): OutlineItem[] {
         normalizedOutline.children
     );
 
+    console.log(squashedOutline);
+
     return squashedOutline;
 }
 
@@ -117,7 +119,7 @@ function getHeadingItems(): OutlineItem[] {
         // determine which heading element matched
         let headingItem: OutlineItem;
         if (node.tagName.length === 2 && node.tagName[0] == "H") {
-            headingItem = getHeadingNodeItem(node);
+            headingItem = getHeadingNodeItem(node, index);
         } else if (
             node.className.includes("dropcap") ||
             node.className.includes("drop-cap")
@@ -176,7 +178,10 @@ function getHeadingItems(): OutlineItem[] {
     return outline;
 }
 
-function getHeadingNodeItem(node: Element): OutlineItem | null {
+function getHeadingNodeItem(
+    node: Element,
+    headingIndex: number
+): OutlineItem | null {
     // Ignore specific words & css classes
     const text = node.textContent;
     if (
@@ -192,16 +197,21 @@ function getHeadingNodeItem(node: Element): OutlineItem | null {
     }
 
     // Clean heading text
-    const cleanText = cleanTitle(text).replace("#", "").replace("[edit]", "");
+    let cleanText = cleanTitle(text).replace("#", "").replace("[edit]", "");
     if (cleanText === "") {
         return;
+    }
+
+    if (headingIndex !== 0) {
+        // don't restrict title heading length (after cleanup)
+        cleanText = restrictTitleLength(cleanText);
     }
 
     // Construct hierarchy based on <hX> level
     const level = parseInt(node.tagName.slice(1));
     return {
         index: null, // populated above
-        title: restrictTitleLength(cleanText),
+        title: cleanText,
         level,
         element: node,
         children: [], // populated later
