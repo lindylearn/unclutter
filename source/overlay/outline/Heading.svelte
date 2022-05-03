@@ -2,11 +2,13 @@
     import { reportEventContentScript } from "../../content-script/messaging";
     import { scrollToElement } from "./common";
     import { OutlineItem } from "./parse";
+    import { getRandomColor } from "../../common/annotations/styling";
 
     export let index: number;
     export let title: string;
     export let element: Element;
     export let children: OutlineItem[];
+    export let annotationCount: number;
 
     export let activeOutlineIndex: number;
 
@@ -48,8 +50,8 @@
         </svg>
         <div class="title">{title}</div>
 
-        {#if index !== -1}
-            <div class="px-1 rounded font-header" style="background-color: rgba(0, 230, 118, 0.3);">2</div>
+        {#if index !== -1 && annotationCount}
+            <div class="px-1 rounded font-header" style={`background-color: ${getRandomColor(title)};`}>{annotationCount}</div>
         {/if}
     </div>
     {#if children.length > 0}

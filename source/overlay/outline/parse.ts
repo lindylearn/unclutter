@@ -7,12 +7,12 @@ export interface OutlineItem {
     level: number;
     element: Element;
     children: OutlineItem[];
+    annotationCount?: number;
 }
 
 const contentBlocklist = [
     "responses", // https://blog.bradfieldcs.com/you-are-not-google-84912cf44afb
     "top stories",
-    "table",
     "advertisement",
     "most read",
     "newsletter",

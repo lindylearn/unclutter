@@ -214,16 +214,59 @@ export default class OverlayManager implements PageModifier {
         action: "set" | "add" | "remove",
         annotations: LindyAnnotation[]
     ) {
+        if (!this.outline || this.outline.length === 0) {
+            return;
+        }
+
+        const outlineIndexes = annotations.map((a) =>
+            this.getOutlineIndexForAnnotation(a)
+        );
+        console.log(annotations, outlineIndexes);
+
         if (action === "set") {
             this.totalAnnotationCount = annotations.length;
+
+            this.outline.map(
+                (_, index) => (this.outline[index].annotationCount = 0)
+            );
+            outlineIndexes.map(
+                (index) => (this.outline[index].annotationCount += 1)
+            );
         } else if (action === "add") {
             this.totalAnnotationCount += annotations.length;
+            outlineIndexes.map(
+                (index) => (this.outline[index].annotationCount += 1)
+            );
         } else if (action === "remove") {
             this.totalAnnotationCount -= annotations.length;
+            outlineIndexes.map(
+                (index) => (this.outline[index].annotationCount -= 1)
+            );
         }
 
         this.topleftSvelteComponent?.$set({
             totalAnnotationCount: this.totalAnnotationCount,
+            outline: this.outline,
         });
+    }
+    private getOutlineIndexForAnnotation(annotation: LindyAnnotation): number {
+        if (!this.outline) {
+            return null;
+        }
+
+        // TODO cache outline offsets?
+
+        let lastIndex: number = 0;
+        while (lastIndex + 1 < this.outline.length) {
+            const item = this.outline[lastIndex + 1];
+            const startOffset = getElementYOffset(item.element);
+            if (annotation.displayOffset < startOffset) {
+                break;
+            }
+
+            lastIndex += 1;
+        }
+
+        return lastIndex;
     }
 }

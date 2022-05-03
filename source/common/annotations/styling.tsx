@@ -21,7 +21,11 @@ export const colors = [
 ];
 
 export function getAnnotationColor(annotation) {
-    return drawFromArray(annotation.quote_text, colors);
+    return getRandomColor(annotation.quote_text);
+}
+
+export function getRandomColor(seed: string) {
+    return drawFromArray(seed, colors);
 }
 
 function randomInRange(seed, min, max) {
