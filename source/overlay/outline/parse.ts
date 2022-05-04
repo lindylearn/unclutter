@@ -93,8 +93,6 @@ export function getOutline(): OutlineItem[] {
         normalizedOutline.children
     );
 
-    console.log(squashedOutline);
-
     return squashedOutline;
 }
 
