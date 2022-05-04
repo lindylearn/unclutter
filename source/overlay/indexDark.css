@@ -1,54 +1,37 @@
 .lindy-page-settings-topright,
 .lindy-page-settings-pageadjacent {
-    --background-color: #424242;
+    --background-color: rgb(33, 33, 33);
     --text-color: #bdbdbd;
-    --color-muted: #616161;
+    --color-muted: #525252;
 }
 
-.lindy-ui-icon.lindy-ui-icon {
-    color: var(--background-color) !important;
-}
 
 .lindy-tooltip.lindy-tooltip:hover > .lindy-ui-icon,
 .lindy-theme-popup-container.lindy-theme-popup-container:hover
     > .lindy-ui-icon {
-    color: var(--text-color) !important;
     filter: none;
 }
 
 .lindy-tooltip.lindy-tooltip:before {
-    background: var(--background-color);
-    color: var(--text-color);
     filter: none;
-    /* font-weight: 500; */
-}
-.lindy-tooltip.lindy-tooltip:after {
-    border-left: 6px solid var(--background-color);
 }
 
 .lindy-theme-popup.lindy-theme-popup {
-    background-color: var(--background-color);
-    color: var(--text-color);
     filter: none;
 }
-.lindy-theme-popup-row-spacer.lindy-theme-popup-row-spacer {
-    border-top: 2px solid var(--color-muted);
-}
-.lindy-plusminus.lindy-plusminus > div > svg {
-    color: var(--text-color) !important;
-}
+
 .lindy-plusminus.lindy-plusminus > div:hover > svg {
     color: #d1d5db !important;
 }
 .lindy-plusminus.lindy-plusminus > div:hover {
-    background-color: #616161;
+    background-color: #262626;
 }
-.lindy-theme-popup.lindy-theme-popup:before {
-    border-left: 8px solid var(--background-color);
+.lindy-theme-popup-row-spacer {
+    border-top: 2px solid #262626;
 }
-.lindy-theme-button.lindy-theme-button {
-    border: 2.5px solid var(--background-color);
+.lindy-theme-button {
+    border: 2.5px solid #525252;
 }
-.lindy-active-theme.lindy-active-theme {
-    border: 2.5px solid var(--color-muted);
+.lindy-active-theme {
+    border: 2.5px solid var(--text-color);
 }

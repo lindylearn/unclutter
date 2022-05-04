@@ -50,7 +50,4 @@ async function _createAnnotationFromSelection(callback) {
 
     // notify sidebar and upload logic
     callback(annotation);
-
-    // remove user selection
-    selection.empty();
 }

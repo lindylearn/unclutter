@@ -1,6 +1,6 @@
 import seedrandom from "seedrandom";
 
-// material UI colors 400 from https://materialui.co/colors/, with 30% opacity
+// material UI colors A400 from https://materialui.co/colors/, with 30% opacity
 export const colors = [
     "rgba(255, 23, 68, 0.3)",
     "rgba(245, 0, 87, 0.3)",

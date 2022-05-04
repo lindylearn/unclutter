@@ -1,14 +1,21 @@
+.lindy-page-settings-topright,
+.lindy-page-settings-pageadjacent {
+    --background-color: white;
+    --text-color: #374151;
+    --color-muted: #9ca3af;
+}
+
 .lindy-page-settings-topright {
     position: fixed !important;
     top: 0;
     right: 0;
     z-index: 300;
-    padding: 10px;
+    padding: 9px;
 
     display: flex;
     flex-direction: column;
     /* align-items: flex-end; */
-    gap: 5px;
+    gap: 3px;
 }
 
 .lindy-page-settings-pageadjacent {
@@ -57,11 +64,17 @@
     padding: 3px;
     cursor: pointer;
     box-sizing: content-box !important;
-    color: #9ca3af !important;
+    color: var(--color-muted) !important;
     overflow: visible;
 }
-.lindy-tooltip:hover > .lindy-ui-icon {
-    color: #4b5563 !important;
+svg.lindy-ui-icon > path {
+    fill: currentColor;
+    stroke: currentColor;
+    stroke-width: 15px;
+}
+.lindy-tooltip:hover > .lindy-ui-icon, 
+.lindy-theme-popup-container:hover > .lindy-ui-icon {
+    color: var(--text-color) !important;
     filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.05));
 }
 
@@ -81,24 +94,23 @@
     /* box */
     top: 1px;
     right: calc(100% + 6px);
-    padding: 5px 7px;
+    padding: 6px 8px;
 
     display: block;
     content: attr(data-title);
-    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-        "Segoe UI", Roboto !important;
-    font-size: 12px;
-    font-weight: 600;
+    font-size: 13px;
 
-    background: white;
+    background: var(--background-color);
+    color: var(--text-color);
     border-radius: 5px;
-    color: #4b5563;
     white-space: nowrap;
     filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.05));
+
+    font-family: Poppins, sans-serif;
 }
 .lindy-tooltip:after {
     /* arrow */
-    top: 7px;
+    top: 8px;
     right: calc(100% - 0px);
     height: 0;
     width: 0;
@@ -106,7 +118,7 @@
 
     border-top: 6px solid transparent;
     border-bottom: 6px solid transparent;
-    border-left: 6px solid white;
+    border-left: 6px solid var(--background-color);
 }
 
 .lindy-tooltip.lindy-fade:after,
@@ -129,7 +141,7 @@
     white-space: pre-wrap !important;
     /* word-break: break-all; */
     width: max-content;
-    max-width: 200px;
+    max-width: 300px;
 }
 .lindy-tooltip-reverse:after {
     transform: translate3d(-10px, 0, 0) scaleX(-1) !important;
@@ -154,7 +166,7 @@
     width: 130px;
     z-index: 300;
 
-    background-color: white;
+    background-color: var(--background-color);
     color: #9ca3af;
     border-radius: 5px;
     box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
@@ -169,10 +181,6 @@
     visibility: visible;
     opacity: 1;
     transform: translate3d(0, 0, 0);
-}
-.lindy-theme-popup-container:hover > .lindy-ui-icon {
-    color: #4b5563 !important;
-    filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.05));
 }
 
 /* row with plus and minus buttons */
@@ -239,7 +247,7 @@
     box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
 }
 .lindy-active-theme {
-    border: 2.5px solid #9ca3af;
+    border: 2.5px solid var(--color-muted);
 }
 #lindy-auto-theme-button {
     background: var(--lindy-auto-background-color);
@@ -251,7 +259,6 @@
     left: 6px;
 
     width: 14px;
-    color: #9ca3af;
 }
 #lindy-white-theme-button {
     background-color: white;
@@ -275,7 +282,7 @@
 
     border-top: 8px solid transparent;
     border-bottom: 8px solid transparent;
-    border-left: 8px solid white;
+    border-left: 8px solid var(--background-color);
 }
 /* spacer under arrow to avoid breaking hover state */
 .lindy-theme-popup-container:hover:before {
