@@ -70,7 +70,10 @@
 svg.lindy-ui-icon > path {
     fill: currentColor;
     stroke: currentColor;
-    stroke-width: 15px;
+    stroke-width: 10px;
+}
+svg.lindy-ui-icon#lindy-theme-icon > path {
+    stroke-width: 20px;
 }
 .lindy-tooltip:hover > .lindy-ui-icon, 
 .lindy-theme-popup-container:hover > .lindy-ui-icon {
@@ -336,10 +339,7 @@ svg.lindy-ui-icon > path {
     }
 }
 
-#lindy-annotations-toggle-container {
-    width: 0;
-}
-#lindy-annotations-toggle-container > svg {
-    width: 23px;
-    margin-left: 1px;
+#lindy-crowd-toggle-container > svg {
+    width: 22px;
+    margin-left: -1px;
 }
