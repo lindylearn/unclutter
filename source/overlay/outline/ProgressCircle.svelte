@@ -56,7 +56,17 @@
     width: 100%;
     height: 100%;
     border-radius: 50%;
-    background: conic-gradient(from 270deg, #ff4800 10%, #dfd902 35%, #20dc68, #0092f4, #da54d8 72% 75%, #ff4800 95%);
+    background: conic-gradient(
+      rgba(255, 23, 68, 0.5),
+      rgba(213, 0, 249, 0.5),
+      rgba(61, 90, 254, 0.5),
+      rgba(0, 176, 255, 0.5),
+      rgba(29, 233, 182, 0.5),
+      rgba(118, 255, 3, 0.5),
+      rgba(255, 234, 0, 0.5),
+      rgba(255, 145, 0, 0.5),
+      rgba(255, 23, 68, 0.5)
+    );
   }
 
   .logoPath {
