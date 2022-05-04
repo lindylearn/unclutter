@@ -14,7 +14,11 @@ import {
     wiggleDomainState,
 } from "../../overlay/insert";
 import { getElementYOffset } from "../../overlay/outline/common";
-import { getOutline, OutlineItem } from "../../overlay/outline/parse";
+import {
+    createRootItem,
+    getOutline,
+    OutlineItem,
+} from "../../overlay/outline/parse";
 import TopLeftContainer from "../../overlay/outline/TopLeftContainer.svelte";
 import AnnotationsModifier from "./annotations/annotationsModifier";
 import ThemeModifier from "./CSSOM/theme";
@@ -84,6 +88,10 @@ export default class OverlayManager implements PageModifier {
 
     private enableOutline() {
         this.outline = getOutline();
+        if (this.outline.length < 3) {
+            // Use just article title, as outline likely not useful or invalid
+            this.outline = [createRootItem()];
+        }
 
         function flatten(item: OutlineItem): OutlineItem[] {
             return [item].concat(item.children.flatMap(flatten));

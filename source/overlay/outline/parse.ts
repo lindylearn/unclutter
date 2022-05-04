@@ -301,6 +301,8 @@ function cleanTitle(title: string): string {
         title = title.slice(0, title.length - 1);
     }
 
+    title = title.split("|")[0].trim();
+
     return title;
 }
 
@@ -350,11 +352,11 @@ function collapseItems(headingItems: OutlineItem[]): OutlineItem[] {
 
     return currentStack;
 }
-function createRootItem(): OutlineItem {
+export function createRootItem(): OutlineItem {
     return {
         index: -1,
         level: 0,
-        title: document.title,
+        title: cleanTitle(document.title),
         element: document.body,
         children: [],
     };
