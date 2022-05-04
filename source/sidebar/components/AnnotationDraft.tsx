@@ -28,7 +28,7 @@ function AnnotationDraft({
 
         // remoteAnnotation is null if debounced call
         if (remoteAnnotation) {
-            // patch correct id, but keep potentially newer updates
+            // patch correct id, but keep potentially newer local updates
             setLocalAnnotation((a) => ({
                 ...a,
                 id: remoteAnnotation.id,
@@ -62,6 +62,7 @@ function AnnotationDraft({
                     })
                 }
                 minRows={2}
+                autoFocus={annotation.focused}
             />
             {/* <div className="flex gap-2">
                 <input

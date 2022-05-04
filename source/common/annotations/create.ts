@@ -44,6 +44,8 @@ export interface LindyAnnotation {
     url?: string;
     isMyAnnotation?: boolean;
     displayOffset?: number;
+
+    focused?: boolean; // should only be set for one annotation
 }
 
 export function hypothesisToLindyFormat(annotation): LindyAnnotation {

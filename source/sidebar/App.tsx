@@ -45,7 +45,11 @@ export default function App({ url }) {
     async function createAnnotationHandler(localAnnotation: LindyAnnotation) {
         // show only once reconciled with remote state
         const remoteAnnotation = await createAnnotation(localAnnotation);
-        setAnnotations([...annotations, remoteAnnotation]);
+
+        setAnnotations([
+            ...annotations.map((a) => ({ ...a, focused: false })),
+            { ...remoteAnnotation, focused: true },
+        ]);
     }
     function deleteAnnotationHandler(annotation: LindyAnnotation) {
         // delete from local state first
