@@ -51,7 +51,7 @@ export async function deleteLocalAnnotation(
 }
 
 export async function getAllLocalAnnotations(): Promise<LindyAnnotation[]> {
-    const allStorage = await browser.storage.sync.get(null);
+    const allStorage = await browser.storage.local.get(null);
 
     const allAnnotations: LindyAnnotation[] = Object.keys(allStorage)
         .filter((pageKey) => pageKey.startsWith("local-annotations_"))
@@ -64,22 +64,24 @@ export async function getAllLocalAnnotations(): Promise<LindyAnnotation[]> {
     return allAnnotations;
 }
 
-export async function deleteAllLocalAnnotations(): Promise<void> {
-    const allStorage = await browser.storage.sync.get(null);
+export async function deleteAllLocalAnnotations(
+    storageArea: "local" | "sync" = "local"
+): Promise<void> {
+    const allStorage = await browser.storage[storageArea].get(null);
 
     const allKeys = Object.keys(allStorage).filter((pageKey) =>
         pageKey.startsWith("local-annotations_")
     );
 
-    await browser.storage.sync.remove(allKeys);
+    await browser.storage[storageArea].remove(allKeys);
 }
 
 async function _getPageStorage(
     pageUrl: string
 ): Promise<{ [annotationId: string]: PickledAnnotation }> {
-    // save in seperate item per page to not exceed QUOTA_BYTES_PER_ITEM
+    // save in seperate item per page to reduce serialization overhead
     const pageKey = `local-annotations_${pageUrl}`;
-    const result = await browser.storage.sync.get(pageKey);
+    const result = await browser.storage.local.get(pageKey);
     return result?.[pageKey] || {};
 }
 
@@ -88,7 +90,26 @@ async function _setPageStorage(
     pageStorage: { [annotationId: string]: PickledAnnotation }
 ): Promise<void> {
     const pageKey = `local-annotations_${pageUrl}`;
-    await browser.storage.sync.set({
+    await browser.storage.local.set({
         [pageKey]: pageStorage,
     });
+}
+
+// migrate annotations saved in browser.storage.sync to browser.storage.local, as the former has very low storage quotas
+export async function migrateAnnotationStorage() {
+    const localStorage = await browser.storage.local.get(null);
+    if (Object.keys(localStorage).length !== 0) {
+        // already migrated, or sync == local storage
+        return;
+    }
+
+    const allStorage = await browser.storage.sync.get(null);
+    const annotationStorage = Object.entries(allStorage)
+        .filter(([pageKey, _]) => pageKey.startsWith("local-annotations_"))
+        .reduce((obj, [key, val]) => ({ ...obj, [key]: val }), {});
+
+    console.log("migrating sync annotations:", annotationStorage);
+
+    await browser.storage.local.set(annotationStorage);
+    await deleteAllLocalAnnotations("sync");
 }

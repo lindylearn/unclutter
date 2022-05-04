@@ -6,6 +6,7 @@ import {
 } from "../common/featureFlags";
 import browser from "../common/polyfill";
 import { saveInitialInstallVersionIfMissing } from "../overlay/outline/updateMessages";
+import { migrateAnnotationStorage } from "../sidebar/common/local";
 import { fetchCss } from "./actions";
 import { enableInTab, injectScript, togglePageViewMessage } from "./inject";
 import { onNewInstall, requestOptionalPermissions } from "./install";
@@ -89,6 +90,7 @@ browser.runtime.onInstalled.addListener(async ({ reason }) => {
     }
 
     saveInitialInstallVersionIfMissing(extensionInfo.version);
+    await migrateAnnotationStorage();
 });
 
 // initialize on every service worker start
