@@ -1,6 +1,7 @@
 import { LindyAnnotation } from "../../common/annotations/create";
 import {
     allowlistDomainOnManualActivationFeatureFlag,
+    enableAnnotationsFeatureFlag,
     getFeatureFlag,
     showOutlineFeatureFlag,
 } from "../../common/featureFlags";
@@ -54,7 +55,8 @@ export default class OverlayManager implements PageModifier {
         insertPageSettings(
             this.domain,
             this.themeModifier,
-            this.annotationsModifer
+            this.annotationsModifer,
+            this
         );
 
         const domainSetting = await getUserSettingForDomain(this.domain);
@@ -84,6 +86,12 @@ export default class OverlayManager implements PageModifier {
         // this should be experimental
         // would also need to update URL during scrolling
         // scrollToFragmentHeading();
+    }
+
+    setEnableAnnotations(enableAnnotations: boolean) {
+        this.topleftSvelteComponent?.$set({
+            annotationsEnabled: enableAnnotations,
+        });
     }
 
     private enableOutline() {
@@ -122,11 +130,16 @@ export default class OverlayManager implements PageModifier {
     }
 
     private async renderTopLeftContainer() {
+        const annotationsEnabled = await getFeatureFlag(
+            enableAnnotationsFeatureFlag
+        );
+
         this.topleftSvelteComponent = new TopLeftContainer({
             target: this.topleftIframe.contentDocument.body,
             props: {
                 outline: this.outline, // null at first
                 activeOutlineIndex: this.outline?.[0].index,
+                annotationsEnabled,
             },
         });
     }

@@ -12,6 +12,7 @@
 
     export let outline: OutlineItem[];
     export let activeOutlineIndex: number;
+    export let annotationsEnabled: boolean;
     export let totalAnnotationCount: number = 0;
 
     let displayFeedbackMessage = false;
@@ -43,7 +44,7 @@
 <div id="lindy-info-topleft-content" class="flex flex-col gap-1.5 font-paragraph">
     <!-- <ProgressMessage/> -->
 
-    <Outline outline={outline} activeOutlineIndex={activeOutlineIndex} totalAnnotationCount={totalAnnotationCount}/>
+    <Outline outline={outline} activeOutlineIndex={activeOutlineIndex} annotationsEnabled={annotationsEnabled} totalAnnotationCount={totalAnnotationCount} />
     
     {#each updateMessages as { version, updateMessage }}
         <UpdateMessage version={version} updateMessage={updateMessage} on:dismissed={() => dismissUpdateMessage(version)} />

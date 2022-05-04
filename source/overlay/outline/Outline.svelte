@@ -7,6 +7,7 @@
 
     export let outline: OutlineItem[];
     export let activeOutlineIndex: number;
+    export let annotationsEnabled: boolean;
     export let totalAnnotationCount: number
 </script>
 
@@ -17,11 +18,13 @@
             <div class="text-base font-header font-semibold cursor-pointer" on:click={() => scrollToElement(outline[0].element)}>
                 {outline[0]?.title}
             </div>
-            <div class="-mr-1">
-                <ProgressCircle 
-                    totalAnnotationCount={totalAnnotationCount} 
-                />
-            </div>
+            {#if annotationsEnabled}
+                <div class="-mr-1">
+                    <ProgressCircle 
+                        totalAnnotationCount={totalAnnotationCount} 
+                    />
+                </div>
+            {/if}
         </div>
 
         <div class="mt-1">
@@ -34,7 +37,7 @@
 
         <ul class="m-0 p-0 pr-2 list-none flex flex-col gap-1">
             {#each outline.slice(1) as child, i}
-                <Heading {...child} activeOutlineIndex={activeOutlineIndex} />
+                <Heading {...child} activeOutlineIndex={activeOutlineIndex} annotationsEnabled={annotationsEnabled} />
             {/each}
         </ul>
     </div>

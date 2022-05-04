@@ -41,6 +41,7 @@ export const enableBootUnclutterMessage = "enable-boot-unclutter-message";
 export const isDevelopmentFeatureFlag = "is-dev";
 export const showOutlineFeatureFlag = "show-outline";
 
+export const enableAnnotationsFeatureFlag = "annotations-enabled";
 export const hypothesisSyncFeatureFlag = "hypothesis-sync";
 export const showSocialAnnotationsDefaultFeatureFlag =
     "social-annotations-default-enabled";

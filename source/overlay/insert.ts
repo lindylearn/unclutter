@@ -1,5 +1,7 @@
 import {
+    enableAnnotationsFeatureFlag,
     getFeatureFlag,
+    setFeatureFlag,
     showSocialAnnotationsDefaultFeatureFlag,
     supportSocialAnnotations,
 } from "../common/featureFlags";
@@ -26,13 +28,15 @@ import {
 } from "../content-script/messaging";
 import AnnotationsModifier from "../content-script/modifications/annotations/annotationsModifier";
 import ThemeModifier from "../content-script/modifications/CSSOM/theme";
+import OverlayManager from "../content-script/modifications/overlay";
 
 // Insert a small UI for the user to control the automatic pageview enablement on the current domain.
 // Creating an iframe for this doesn't work from injected scripts
 export function insertPageSettings(
     domain: string,
     themeModifier: ThemeModifier,
-    annotationsModifer: AnnotationsModifier
+    annotationsModifer: AnnotationsModifier,
+    overlayModifier: OverlayManager
 ) {
     const githubLink = `https://github.com/lindylearn/unclutter/issues`;
 
@@ -120,7 +124,7 @@ export function insertPageSettings(
     _setupDomainToggleState(domain);
     _setupLinkHandlers();
     _setupThemePopupHandlers(domain, themeModifier);
-    _setupAnnotationsToggle(annotationsModifer);
+    _setupAnnotationsToggle(annotationsModifer, overlayModifier);
     _setupSocialToggle(annotationsModifer);
 
     const fontLink = document.createElement("link");
@@ -242,11 +246,10 @@ export function updateDomainState(
 // *** Annotations toggle ***
 let annotationsEnabled = null;
 async function _setupAnnotationsToggle(
-    annotationsModifer: AnnotationsModifier
+    annotationsModifer: AnnotationsModifier,
+    overlayModifier: OverlayManager
 ) {
-    annotationsEnabled = await getFeatureFlag(
-        showSocialAnnotationsDefaultFeatureFlag
-    );
+    annotationsEnabled = await getFeatureFlag(enableAnnotationsFeatureFlag);
 
     const container = _renderAnnotationsToggle();
 
@@ -254,7 +257,9 @@ async function _setupAnnotationsToggle(
         annotationsEnabled = !annotationsEnabled;
         _renderAnnotationsToggle();
 
-        // annotationsModifer.setShowSocialAnnotations(socialAnnotationsEnabled);
+        annotationsModifer.setEnableAnnotations(annotationsEnabled);
+        overlayModifier.setEnableAnnotations(annotationsEnabled);
+        setFeatureFlag(enableAnnotationsFeatureFlag, annotationsEnabled);
 
         reportEventContentScript("toggleAnnotations", {
             newState: annotationsEnabled,

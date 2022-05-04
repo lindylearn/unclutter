@@ -1,4 +1,8 @@
 import { LindyAnnotation } from "../../../common/annotations/create";
+import {
+    enableAnnotationsFeatureFlag,
+    getFeatureFlag,
+} from "../../../common/featureFlags";
 import { PageModifier, trackModifierExecution } from "../_interface";
 import {
     createAnnotationListener,
@@ -20,7 +24,28 @@ export default class AnnotationsModifier implements PageModifier {
     private sidebarIframe: HTMLIFrameElement;
     private sidebarLoaded: boolean = false;
 
-    afterTransitionIn() {
+    async afterTransitionIn() {
+        const annotationsEnabled = await getFeatureFlag(
+            enableAnnotationsFeatureFlag
+        );
+        if (annotationsEnabled) {
+            this.enableAnnotations();
+        }
+    }
+
+    async transitionOut() {
+        this.disableAnnotations();
+    }
+
+    setEnableAnnotations(enableAnnotations: boolean) {
+        if (enableAnnotations) {
+            this.enableAnnotations();
+        } else {
+            this.disableAnnotations();
+        }
+    }
+
+    private enableAnnotations() {
         this.sidebarIframe = injectSidebar();
         window.addEventListener("message", ({ data }) => {
             if (data.event === "sidebarIframeLoaded") {
@@ -39,7 +64,7 @@ export default class AnnotationsModifier implements PageModifier {
         );
     }
 
-    async transitionOut() {
+    private disableAnnotations() {
         removeSidebar();
 
         removeSelectionListener();
@@ -53,12 +78,16 @@ export default class AnnotationsModifier implements PageModifier {
         });
     }
 
-    // can't access iframe as from different origin, so send message instead
     async setSidebarCssVariable(key: string, value: string) {
+        if (!this.sidebarIframe) {
+            return;
+        }
+
         if (!this.sidebarLoaded) {
             await waitUntilIframeLoaded(this.sidebarIframe);
         }
 
+        // can't access iframe as from different origin, so send message instead
         sendSidebarEvent(this.sidebarIframe, {
             event: "setCssVariable",
             key,
@@ -67,6 +96,10 @@ export default class AnnotationsModifier implements PageModifier {
     }
 
     async setSidebarDarkMode(darkModeEnabled: boolean) {
+        if (!this.sidebarIframe) {
+            return;
+        }
+
         if (!this.sidebarLoaded) {
             await waitUntilIframeLoaded(this.sidebarIframe);
         }

@@ -306,6 +306,7 @@ svg.lindy-ui-icon#lindy-theme-icon > path {
     left: 0;
     /* margin inside iframe to render shadow */
     height: calc(100vh - 10px);
+    user-select: none;
 
     width: 400px;
     max-width: calc((100vw - var(--lindy-pagewidth)) / 2 - 5px);
