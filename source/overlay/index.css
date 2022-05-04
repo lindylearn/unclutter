@@ -15,7 +15,7 @@
     display: flex;
     flex-direction: column;
     /* align-items: flex-end; */
-    gap: 3px;
+    gap: 5px;
 }
 
 .lindy-page-settings-pageadjacent {
@@ -339,7 +339,10 @@ svg.lindy-ui-icon#lindy-theme-icon > path {
     }
 }
 
-#lindy-crowd-toggle-container > svg {
+#lindy-crowd-icon {
     width: 22px;
+}
+#lindy-annotations-icon {
+    width: 23px;
     margin-left: -1px;
 }

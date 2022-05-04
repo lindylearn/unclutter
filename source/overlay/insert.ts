@@ -43,7 +43,7 @@ export function insertPageSettings(
                 <path fill="currentColor" d="M160 256C160 202.1 202.1 160 256 160C309 160 352 202.1 352 256C352 309 309 352 256 352C202.1 352 160 309 160 256zM256 208C229.5 208 208 229.5 208 256C208 282.5 229.5 304 256 304C282.5 304 304 282.5 304 256C304 229.5 282.5 208 256 208zM293.1 .0003C315.3 .0003 334.6 15.19 339.8 36.74L347.6 69.21C356.1 73.36 364.2 78.07 371.9 83.28L404 73.83C425.3 67.56 448.1 76.67 459.2 95.87L496.3 160.1C507.3 179.3 503.8 203.6 487.8 218.9L463.5 241.1C463.8 246.6 464 251.3 464 256C464 260.7 463.8 265.4 463.5 270L487.8 293.1C503.8 308.4 507.3 332.7 496.3 351.9L459.2 416.1C448.1 435.3 425.3 444.4 404 438.2L371.9 428.7C364.2 433.9 356.1 438.6 347.6 442.8L339.8 475.3C334.6 496.8 315.3 512 293.1 512H218.9C196.7 512 177.4 496.8 172.2 475.3L164.4 442.8C155.9 438.6 147.8 433.9 140.1 428.7L107.1 438.2C86.73 444.4 63.94 435.3 52.85 416.1L15.75 351.9C4.66 332.7 8.168 308.4 24.23 293.1L48.47 270C48.16 265.4 48 260.7 48 255.1C48 251.3 48.16 246.6 48.47 241.1L24.23 218.9C8.167 203.6 4.66 179.3 15.75 160.1L52.85 95.87C63.94 76.67 86.73 67.56 107.1 73.83L140.1 83.28C147.8 78.07 155.9 73.36 164.4 69.21L172.2 36.74C177.4 15.18 196.7 0 218.9 0L293.1 .0003zM205.5 103.6L194.3 108.3C181.6 113.6 169.8 120.5 159.1 128.7L149.4 136.1L94.42 119.9L57.31 184.1L98.81 223.6L97.28 235.6C96.44 242.3 96 249.1 96 256C96 262.9 96.44 269.7 97.28 276.4L98.81 288.4L57.32 327.9L94.42 392.1L149.4 375.9L159.1 383.3C169.8 391.5 181.6 398.4 194.3 403.7L205.5 408.4L218.9 464H293.1L306.5 408.4L317.7 403.7C330.4 398.4 342.2 391.5 352.9 383.3L362.6 375.9L417.6 392.1L454.7 327.9L413.2 288.4L414.7 276.4C415.6 269.7 416 262.9 416 256C416 249.1 415.6 242.3 414.7 235.6L413.2 223.6L454.7 184.1L417.6 119.9L362.6 136.1L352.9 128.7C342.2 120.5 330.4 113.6 317.7 108.3L306.5 103.6L293.1 48H218.9L205.5 103.6z" />
             </svg>
         </div>
-        <a href="${githubLink}" target="_blank" rel="noopener noreferrer" class="lindy-tooltip lindy-fade" data-title="Report bug">
+        <a href="${githubLink}" target="_blank" rel="noopener noreferrer" class="lindy-tooltip lindy-fade" data-title="Report bug" style="display: none;">
             <svg class="lindy-ui-icon" id="lindy-bug-icon" viewBox="0 0 512 512">
                 <path fill="currentColor" d="M352 96V99.56C352 115.3 339.3 128 323.6 128H188.4C172.7 128 160 115.3 160 99.56V96C160 42.98 202.1 0 256 0C309 0 352 42.98 352 96zM39.03 103C48.4 93.66 63.6 93.66 72.97 103L145.4 175.5C161.3 165.7 179.1 160 200 160H312C332 160 350.7 165.7 366.6 175.5L439 103C448.4 93.66 463.6 93.66 472.1 103C482.3 112.4 482.3 127.6 472.1 136.1L400.5 209.4C410.3 225.3 416 243.1 416 264H488C501.3 264 512 274.7 512 288C512 301.3 501.3 312 488 312H416V320C416 347.2 409.2 372.8 397.2 395.3L472.1 471C482.3 480.4 482.3 495.6 472.1 504.1C463.6 514.3 448.4 514.3 439 504.1L368.2 434.1C339.3 462.5 299.7 480 256 480C212.3 480 172.7 462.5 143.8 434.1L72.97 504.1C63.6 514.3 48.4 514.3 39.03 504.1C29.66 495.6 29.66 480.4 39.03 471L114.8 395.3C102.8 372.8 96 347.2 96 320V312H24C10.75 312 0 301.3 0 288C0 274.7 10.75 264 24 264H96C96 243.1 101.7 225.3 111.5 209.4L39.03 136.1C29.66 127.6 29.66 112.4 39.03 103V103zM144 320C144 373.6 181.7 418.4 232 429.4V280C232 266.7 242.7 256 256 256C269.3 256 280 266.7 280 280V429.4C330.3 418.4 368 373.6 368 320V264C368 233.1 342.9 208 312 208H200C169.1 208 144 233.1 144 264V320z" />
             </svg>
@@ -120,6 +120,7 @@ export function insertPageSettings(
     _setupDomainToggleState(domain);
     _setupLinkHandlers();
     _setupThemePopupHandlers(domain, themeModifier);
+    _setupAnnotationsToggle(annotationsModifer);
     _setupSocialToggle(annotationsModifer);
 
     const fontLink = document.createElement("link");
@@ -238,6 +239,61 @@ export function updateDomainState(
     renderActiveUserSetting(currentDomain);
 }
 
+// *** Annotations toggle ***
+let annotationsEnabled = null;
+async function _setupAnnotationsToggle(
+    annotationsModifer: AnnotationsModifier
+) {
+    annotationsEnabled = await getFeatureFlag(
+        showSocialAnnotationsDefaultFeatureFlag
+    );
+
+    const container = _renderAnnotationsToggle();
+
+    container.onclick = () => {
+        annotationsEnabled = !annotationsEnabled;
+        _renderAnnotationsToggle();
+
+        // annotationsModifer.setShowSocialAnnotations(socialAnnotationsEnabled);
+
+        reportEventContentScript("toggleAnnotations", {
+            newState: annotationsEnabled,
+        });
+    };
+}
+function _renderAnnotationsToggle() {
+    const container = document.getElementById(
+        "lindy-annotations-toggle-container"
+    );
+    container.innerHTML = _getAnnotationsToggleIcon(annotationsEnabled);
+    container.setAttribute(
+        "data-title",
+        _getAnnotationsToggleTooltip(annotationsEnabled)
+    );
+
+    return container;
+}
+function _getAnnotationsToggleTooltip(enabled: boolean): string {
+    if (enabled) {
+        return `Click to disable annotations`;
+    } else {
+        return `Click to enable annotations`;
+    }
+}
+function _getAnnotationsToggleIcon(enabled: boolean): string {
+    if (enabled) {
+        return `
+        <svg class="lindy-ui-icon" id="lindy-annotations-icon" viewBox="0 0 640 512" style="overflow: visible; margin-left: 1.5px; margin-right: -2.5px;">
+            <path fill="currentColor" d="M320 62.06L362.7 19.32C387.7-5.678 428.3-5.678 453.3 19.32L492.7 58.75C517.7 83.74 517.7 124.3 492.7 149.3L229.5 412.5C181.5 460.5 120.3 493.2 53.7 506.5L28.71 511.5C20.84 513.1 12.7 510.6 7.03 504.1C1.356 499.3-1.107 491.2 .4662 483.3L5.465 458.3C18.78 391.7 51.52 330.5 99.54 282.5L286.1 96L272.1 82.91C263.6 73.54 248.4 73.54 239 82.91L136.1 184.1C127.6 194.3 112.4 194.3 103 184.1C93.66 175.6 93.66 160.4 103 151L205.1 48.97C233.2 20.85 278.8 20.85 306.9 48.97L320 62.06zM320 129.9L133.5 316.5C94.71 355.2 67.52 403.1 54.85 457.2C108 444.5 156.8 417.3 195.5 378.5L382.1 192L320 129.9z" />
+        </svg>`;
+    } else {
+        return `
+        <svg class="lindy-ui-icon" id="lindy-annotations-icon" viewBox="0 0 640 512">
+            <path fill="currentColor" d="M192.5 125.6L269.1 48.97C297.2 20.85 342.8 20.85 370.9 48.97L384 62.06L426.7 19.32C451.7-5.677 492.3-5.677 517.3 19.32L556.7 58.75C581.7 83.74 581.7 124.3 556.7 149.3L409.9 296L630.8 469.1C641.2 477.3 643.1 492.4 634.9 502.8C626.7 513.2 611.6 515.1 601.2 506.9L9.196 42.89C-1.236 34.71-3.065 19.63 5.112 9.196C13.29-1.236 28.37-3.065 38.81 5.112L192.5 125.6zM230.5 155.4L264.2 181.8L350.1 96L336.1 82.91C327.6 73.54 312.4 73.54 303 82.91L230.5 155.4zM302.3 211.6L371.9 266.2L446.1 192L384 129.9L302.3 211.6zM118.8 457.2C172 444.5 220.8 417.3 259.5 378.5L303.2 334.9L341.2 364.8L293.5 412.5C245.5 460.5 184.3 493.2 117.7 506.5L92.71 511.5C84.84 513.1 76.7 510.6 71.03 504.1C65.35 499.3 62.89 491.2 64.46 483.3L69.46 458.3C82.78 391.7 115.5 330.5 163.5 282.5L195.8 250.3L233.8 280.2L197.5 316.5C158.7 355.2 131.5 403.1 118.8 457.2H118.8z" />
+        </svg>`;
+    }
+}
+
 // *** Social annotations toggle ***
 let socialAnnotationsEnabled = null;
 async function _setupSocialToggle(annotationsModifer: AnnotationsModifier) {
@@ -245,6 +301,7 @@ async function _setupSocialToggle(annotationsModifer: AnnotationsModifier) {
     if (!supportFeature) {
         return;
     }
+    return;
 
     socialAnnotationsEnabled = await getFeatureFlag(
         showSocialAnnotationsDefaultFeatureFlag
@@ -275,20 +332,20 @@ function _renderSocialToggle() {
 }
 function _getSocialToggleTooltip(enabled: boolean): string {
     if (enabled) {
-        return `Click to hide social annotations`;
+        return `Click to hide social comments`;
     } else {
-        return `Click to show social annotations`;
+        return `Click to show social comments`;
     }
 }
 function _getSocialToggleIcon(enabled: boolean): string {
     if (enabled) {
         return `
-        <svg class="lindy-ui-icon" id="lindy-annotations-icon" viewBox="0 0 640 512">
+        <svg class="lindy-ui-icon" id="lindy-crowd-icon" viewBox="0 0 640 512" style="margin-left: -1px;">
             <path fill="currentColor" d="M319.9 320c57.41 0 103.1-46.56 103.1-104c0-57.44-46.54-104-103.1-104c-57.41 0-103.1 46.56-103.1 104C215.9 273.4 262.5 320 319.9 320zM319.9 160c30.85 0 55.96 25.12 55.96 56S350.7 272 319.9 272S263.9 246.9 263.9 216S289 160 319.9 160zM512 160c44.18 0 80-35.82 80-80S556.2 0 512 0c-44.18 0-80 35.82-80 80S467.8 160 512 160zM369.9 352H270.1C191.6 352 128 411.7 128 485.3C128 500.1 140.7 512 156.4 512h327.2C499.3 512 512 500.1 512 485.3C512 411.7 448.4 352 369.9 352zM178.1 464c10.47-36.76 47.36-64 91.14-64H369.9c43.77 0 80.66 27.24 91.14 64H178.1zM551.9 192h-61.84c-12.8 0-24.88 3.037-35.86 8.24C454.8 205.5 455.8 210.6 455.8 216c0 33.71-12.78 64.21-33.16 88h199.7C632.1 304 640 295.6 640 285.3C640 233.8 600.6 192 551.9 192zM183.9 216c0-5.449 .9824-10.63 1.609-15.91C174.6 194.1 162.6 192 149.9 192H88.08C39.44 192 0 233.8 0 285.3C0 295.6 7.887 304 17.62 304h199.5C196.7 280.2 183.9 249.7 183.9 216zM128 160c44.18 0 80-35.82 80-80S172.2 0 128 0C83.82 0 48 35.82 48 80S83.82 160 128 160z" />
         </svg>`;
     } else {
         return `
-        <svg class="lindy-ui-icon" id="lindy-annotations-icon" viewBox="0 0 640 512">
+        <svg class="lindy-ui-icon" id="lindy-crowd-icon" viewBox="0 0 640 512" style="margin-left: -1px;">
             <path fill="currentColor" d="M178.1 464c10.47-36.76 47.36-64 91.14-64H369.9c6.83 0 13.4 .873 19.82 2.133L325.7 352H270.1C191.6 352 128 411.7 128 485.3C128 500.1 140.7 512 156.4 512h327.2c11.62 0 21.54-6.587 25.95-15.96L468.6 464H178.1zM396.6 285.5C413.4 267.2 423.8 242.9 423.8 216c0-57.44-46.54-104-103.1-104c-35.93 0-67.07 18.53-85.59 46.3L193.1 126.1C202.4 113.1 208 97.24 208 80C208 35.82 172.2 0 128 0C103.8 0 82.52 10.97 67.96 27.95L38.81 5.109C34.41 1.672 29.19 0 24.03 0C16.91 0 9.846 3.156 5.127 9.188C-3.061 19.62-1.248 34.72 9.189 42.89l591.1 463.1c10.5 8.203 25.56 6.328 33.69-4.078c8.188-10.44 6.375-25.53-4.062-33.7L396.6 285.5zM358.9 255.1L271.8 187.7C281.6 171.2 299.3 160 319.9 160c30.85 0 55.96 25.12 55.96 56C375.8 231.7 369.3 245.8 358.9 255.1zM512 160c44.18 0 80-35.82 80-80S556.2 0 512 0c-44.18 0-80 35.82-80 80S467.8 160 512 160zM490.1 192c-12.8 0-24.88 3.037-35.86 8.24C454.8 205.5 455.8 210.6 455.8 216c0 33.71-12.78 64.21-33.16 88h199.7C632.1 304 640 295.6 640 285.3C640 233.8 600.6 192 551.9 192H490.1zM186.1 243.2L121.6 192H88.08C39.44 192 0 233.8 0 285.3C0 295.6 7.887 304 17.62 304h199.5C202.4 286.8 191.8 266.1 186.1 243.2z" />
         </svg>`;
     }
