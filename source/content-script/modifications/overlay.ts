@@ -113,7 +113,7 @@ export default class OverlayManager implements PageModifier {
         const fontLink = iframe.contentDocument.createElement("link");
         fontLink.rel = "stylesheet";
         fontLink.href =
-            "https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;600;700&family=Poppins:wght@400;600;700&display=swap";
+            "https://fonts.googleapis.com/css2?family=Work+Sans:wght@400&family=Poppins:wght@600&display=swap";
         iframe.contentDocument.head.appendChild(fontLink);
 
         // Firefox bug: nseed to wait until iframe initial render to insert elements

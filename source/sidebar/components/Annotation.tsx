@@ -60,10 +60,10 @@ function Annotation({
                     );
                 })}
             </a>
-            <div className="info-bar text-sm text-gray-400 flex gap-3 justify-between transition-all">
+            <div className="info-bar text-sm font-header text-gray-400 flex gap-3 justify-between transition-all">
                 <div
                     className={
-                        "upvote-button flex-shrink-0 flex cursor-pointer select-none hover:text-gray-600 hover:scale-110 transition-all " +
+                        "upvote-button flex-shrink-0 flex cursor-pointer select-none hover:text-gray-700 hover:scale-110 transition-all " +
                         (upvoted ? "text-gray-800 " : "") +
                         (upvoteCount == 0 ? "invisible " : "") // shown on hover through global CSS
                     }
@@ -82,7 +82,7 @@ function Annotation({
                 </div>
 
                 <a
-                    className="reply-button invisible select-none hover:text-gray-600 hover:scale-110 transition-all"
+                    className="reply-button invisible select-none hover:text-gray-700 hover:scale-110 transition-all"
                     href={link}
                     target="_blank"
                     rel="noreferrer"

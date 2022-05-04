@@ -48,7 +48,7 @@ function AnnotationDraft({
             style={{
                 top: annotation.offset,
                 // boxShadow: `-1.5px 0.5px 2px 0 ${color}`,
-                borderLeft: `3px solid ${color}`,
+                borderLeft: `4px solid ${color}`,
             }}
         >
             <TextareaAutosize
