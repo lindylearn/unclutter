@@ -27,6 +27,7 @@ export default class OverlayManager implements PageModifier {
     private annotationsModifer: AnnotationsModifier;
 
     private outline: OutlineItem[];
+    private flatOutline: OutlineItem[];
     private topleftSvelteComponent: TopLeftContainer;
 
     constructor(
@@ -84,6 +85,11 @@ export default class OverlayManager implements PageModifier {
     private enableOutline() {
         this.outline = getOutline();
 
+        function flatten(item: OutlineItem): OutlineItem[] {
+            return [item].concat(item.children.flatMap(flatten));
+        }
+        this.flatOutline = this.outline.flatMap(flatten);
+
         this.listenToOutlineScroll();
     }
 
@@ -102,7 +108,7 @@ export default class OverlayManager implements PageModifier {
             "https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;600;700&family=Poppins:wght@400;600;700&display=swap";
         iframe.contentDocument.head.appendChild(fontLink);
 
-        // Firefox bug: need to wait until iframe initial render to insert elements
+        // Firefox bug: nseed to wait until iframe initial render to insert elements
         // See https://stackoverflow.com/questions/60814167/firefox-deleted-innerhtml-of-generated-iframe
         await new Promise((r) => setTimeout(r, 0));
     }
@@ -119,11 +125,6 @@ export default class OverlayManager implements PageModifier {
 
     private uninstallScrollListener: () => void;
     private listenToOutlineScroll() {
-        function flatten(item: OutlineItem): OutlineItem[] {
-            return [item].concat(item.children.flatMap(flatten));
-        }
-        const flatOutline = this.outline.flatMap(flatten);
-
         // listen to scroll changes, compare to last header
         let currentOutlineIndex = 0;
         let lowTheshold: number;
@@ -132,12 +133,12 @@ export default class OverlayManager implements PageModifier {
         const updateTresholds = () => {
             const margin = 20; // a bit more than the auto scroll margin
             lowTheshold = getElementYOffset(
-                flatOutline[currentOutlineIndex].element,
+                this.flatOutline[currentOutlineIndex].element,
                 margin
             );
-            if (currentOutlineIndex + 1 < flatOutline.length) {
+            if (currentOutlineIndex + 1 < this.flatOutline.length) {
                 highTheshold = getElementYOffset(
-                    flatOutline[currentOutlineIndex + 1].element,
+                    this.flatOutline[currentOutlineIndex + 1].element,
                     margin
                 );
             } else {
@@ -156,7 +157,7 @@ export default class OverlayManager implements PageModifier {
                 document.documentElement.scrollHeight - 20
             ) {
                 // end of document
-                currentOutlineIndex = flatOutline.length - 1;
+                currentOutlineIndex = this.flatOutline.length - 1;
                 updateTresholds();
             } else if (
                 currentOutlineIndex > 0 &&
@@ -171,7 +172,7 @@ export default class OverlayManager implements PageModifier {
                 updateTresholds();
             }
 
-            const currentHeading = flatOutline[currentOutlineIndex];
+            const currentHeading = this.flatOutline[currentOutlineIndex];
             this.topleftSvelteComponent?.$set({
                 activeOutlineIndex: currentHeading.index,
             });
@@ -206,7 +207,7 @@ export default class OverlayManager implements PageModifier {
         action: "set" | "add" | "remove",
         annotations: LindyAnnotation[]
     ) {
-        if (!this.outline || this.outline.length === 0) {
+        if (!this.flatOutline || this.flatOutline.length === 0) {
             return;
         }
 
@@ -217,21 +218,21 @@ export default class OverlayManager implements PageModifier {
         if (action === "set") {
             this.totalAnnotationCount = annotations.length;
 
-            this.outline.map(
-                (_, index) => (this.outline[index].annotationCount = 0)
+            this.flatOutline.map(
+                (_, index) => (this.flatOutline[index].annotationCount = 0)
             );
             outlineIndexes.map(
-                (index) => (this.outline[index].annotationCount += 1)
+                (index) => (this.flatOutline[index].annotationCount += 1)
             );
         } else if (action === "add") {
             this.totalAnnotationCount += annotations.length;
             outlineIndexes.map(
-                (index) => (this.outline[index].annotationCount += 1)
+                (index) => (this.flatOutline[index].annotationCount += 1)
             );
         } else if (action === "remove") {
             this.totalAnnotationCount -= annotations.length;
             outlineIndexes.map(
-                (index) => (this.outline[index].annotationCount -= 1)
+                (index) => (this.flatOutline[index].annotationCount -= 1)
             );
         }
 
@@ -241,15 +242,15 @@ export default class OverlayManager implements PageModifier {
         });
     }
     private getOutlineIndexForAnnotation(annotation: LindyAnnotation): number {
-        if (!this.outline) {
+        if (!this.flatOutline) {
             return null;
         }
 
         // TODO cache outline offsets?
 
         let lastIndex: number = 0;
-        while (lastIndex + 1 < this.outline.length) {
-            const item = this.outline[lastIndex + 1];
+        while (lastIndex + 1 < this.flatOutline.length) {
+            const item = this.flatOutline[lastIndex + 1];
             const startOffset = getElementYOffset(item.element);
             if (annotation.displayOffset < startOffset) {
                 break;

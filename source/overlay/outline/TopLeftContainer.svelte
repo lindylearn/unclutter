@@ -12,7 +12,7 @@
 
     export let outline: OutlineItem[];
     export let activeOutlineIndex: number;
-    export let totalAnnotationCount: number
+    export let totalAnnotationCount: number = 0;
 
     let displayFeedbackMessage = false;
     getFeatureFlag(dismissedFeedbackMessage).then(dismissed => {
