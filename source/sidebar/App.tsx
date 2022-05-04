@@ -83,7 +83,7 @@ export default function App({ url }) {
 
     return (
         // x margin to show slight shadow (iframe allows no overflow)
-        <div className="font-paragraph mx-2">
+        <div className="font-paragraph text-gray-700 mx-2">
             <div className="absolute w-full pr-4 flex flex-col gap-2">
                 {/* {isLoggedIn && (
                     <PageNotesList
