@@ -301,9 +301,11 @@ svg.lindy-ui-icon > path {
     position: fixed;
     top: 0;
     left: 0;
+    /* margin inside iframe to render shadow */
     height: calc(100vh - 10px);
 
     width: 400px;
+    max-width: calc((100vw - var(--lindy-pagewidth)) / 2 - 5px);
 
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     animation: fadeInOutline 0.2s cubic-bezier(0.16, 1, 0.3, 1);
@@ -331,12 +333,6 @@ svg.lindy-ui-icon > path {
 @media (max-width: 1200px) {
     #lindy-info-topleft {
         display: none;
-    }
-}
-@media (max-width: 1550px) {
-    #lindy-info-topleft {
-        margin-left: -10px;
-        width: calc((100vw - var(--lindy-pagewidth)) / 2 + 5px);
     }
 }
 

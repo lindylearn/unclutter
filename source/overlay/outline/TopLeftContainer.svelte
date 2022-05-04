@@ -61,7 +61,6 @@
 
 #lindy-info-topleft-content {
     margin: 10px;
-    margin-left: 20px;
     color: #374151; /* text-gray-700 */
 }
 #lindy-info-topleft-content > * {
