@@ -1,22 +1,34 @@
-export function createDraftAnnotation(url, selector): LindyAnnotation {
-    const id = `draft_${Math.random().toString(36).slice(-5)}`;
+export function createDraftAnnotation(
+    url: string,
+    selector: object
+): LindyAnnotation {
+    return createAnnotation(url, selector, {});
+}
+
+function createAnnotation(
+    url: string,
+    selector: object,
+    partial: Partial<LindyAnnotation> = {}
+): LindyAnnotation {
+    const id = partial.id || `draft_${Math.random().toString(36).slice(-5)}`;
     return {
         id: id,
         localId: id,
         url,
         quote_text: selector?.[2]?.exact || "_",
-        text: "",
-        author: { username: "" },
+        text: partial.text || "",
+        author: partial.author || { username: "" },
         quote_html_selector: selector,
-        platform: "ll",
+        platform: partial.platform || "ll",
         link: id,
-        reply_count: null,
-        is_draft: true,
+        reply_count: partial.reply_count || null,
+
+        is_draft: partial.is_draft || true,
         isMyAnnotation: true,
         isPublic: false,
         upvote_count: 0,
-        tags: [],
-        created_at: new Date().toISOString(),
+        tags: partial.tags || [],
+        created_at: partial.created_at || new Date().toISOString(),
         replies: [],
         user_upvoted: false,
     };
@@ -67,4 +79,38 @@ export function hypothesisToLindyFormat(annotation): LindyAnnotation {
         user_upvoted: false,
         isPublic: annotation.permissions.read[0] === "__world__",
     };
+}
+
+export interface PickledAnnotation {
+    url: string;
+    id: string;
+    created_at: string;
+    quote_text: string;
+    text: string;
+    tags: string[];
+    quote_html_selector: object;
+}
+
+// strip locally saved annotation from unneccessary state, to reduce used storage
+export function pickleLocalAnnotation(
+    annotation: LindyAnnotation
+): PickledAnnotation {
+    return {
+        url: annotation.url,
+        id: annotation.id,
+        created_at: annotation.created_at,
+        quote_text: annotation.quote_text,
+        text: annotation.text,
+        tags: annotation.tags,
+        quote_html_selector: annotation.quote_html_selector,
+    };
+}
+export function unpickleLocalAnnotation(
+    annotation: PickledAnnotation
+): LindyAnnotation {
+    return createAnnotation(
+        annotation.url,
+        annotation.quote_html_selector,
+        annotation
+    );
 }

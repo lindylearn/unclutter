@@ -80,7 +80,7 @@ export async function getAnnotations(
         });
     }
 
-    return annotations.map((a) => ({ ...a, focused: false }));
+    return annotations;
 }
 
 export async function createAnnotation(

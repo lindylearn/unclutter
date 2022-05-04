@@ -1,4 +1,9 @@
-import { LindyAnnotation } from "../../common/annotations/create";
+import {
+    LindyAnnotation,
+    PickledAnnotation,
+    pickleLocalAnnotation,
+    unpickleLocalAnnotation,
+} from "../../common/annotations/create";
 import browser from "../../common/polyfill";
 
 /**
@@ -10,7 +15,7 @@ export async function getLocalAnnotations(
 ): Promise<LindyAnnotation[]> {
     const storage = await _getPageStorage(pageUrl);
 
-    return Object.values(storage);
+    return Object.values(storage).map(unpickleLocalAnnotation);
 }
 
 export async function createLocalAnnotation(
@@ -18,7 +23,7 @@ export async function createLocalAnnotation(
 ): Promise<LindyAnnotation> {
     const storage = await _getPageStorage(annotation.url);
 
-    storage[annotation.id] = annotation;
+    storage[annotation.id] = pickleLocalAnnotation(annotation);
 
     await _setPageStorage(annotation.url, storage);
 
@@ -30,7 +35,7 @@ export async function updateLocalAnnotation(
 ): Promise<void> {
     const storage = await _getPageStorage(annotation.url);
 
-    storage[annotation.id] = annotation;
+    storage[annotation.id] = pickleLocalAnnotation(annotation);
 
     await _setPageStorage(annotation.url, storage);
 }
@@ -53,7 +58,8 @@ export async function getAllLocalAnnotations(): Promise<LindyAnnotation[]> {
         .reduce(
             (list, pageKey) => [...list, ...Object.values(allStorage[pageKey])],
             []
-        );
+        )
+        .map(unpickleLocalAnnotation);
 
     return allAnnotations;
 }
@@ -70,7 +76,7 @@ export async function deleteAllLocalAnnotations(): Promise<void> {
 
 async function _getPageStorage(
     pageUrl: string
-): Promise<{ [annotationId: string]: LindyAnnotation }> {
+): Promise<{ [annotationId: string]: PickledAnnotation }> {
     // save in seperate item per page to not exceed QUOTA_BYTES_PER_ITEM
     const pageKey = `local-annotations_${pageUrl}`;
     const result = await browser.storage.sync.get(pageKey);
@@ -79,7 +85,7 @@ async function _getPageStorage(
 
 async function _setPageStorage(
     pageUrl: string,
-    pageStorage: { [annotationId: string]: LindyAnnotation }
+    pageStorage: { [annotationId: string]: PickledAnnotation }
 ): Promise<void> {
     const pageKey = `local-annotations_${pageUrl}`;
     await browser.storage.sync.set({
