@@ -62,10 +62,19 @@ export default class AnnotationsModifier implements PageModifier {
             this.sidebarIframe,
             this.onAnnotationUpdate.bind(this)
         );
+
+        // set theme variables if those are already configured
+        if (this.darkModeEnabled !== null) {
+            this.setSidebarDarkMode(this.darkModeEnabled);
+        }
+        Object.entries(this.cssVariables).map(([key, value]) =>
+            this.setSidebarCssVariable(key, value)
+        );
     }
 
     private disableAnnotations() {
         removeSidebar();
+        this.sidebarLoaded = false;
 
         removeSelectionListener();
         removeAnnotationListener();
@@ -78,11 +87,13 @@ export default class AnnotationsModifier implements PageModifier {
         });
     }
 
+    private cssVariables: { [key: string]: string } = {};
     async setSidebarCssVariable(key: string, value: string) {
+        this.cssVariables[key] = value;
+
         if (!this.sidebarIframe) {
             return;
         }
-
         if (!this.sidebarLoaded) {
             await waitUntilIframeLoaded(this.sidebarIframe);
         }
@@ -95,11 +106,13 @@ export default class AnnotationsModifier implements PageModifier {
         });
     }
 
+    private darkModeEnabled: boolean = null;
     async setSidebarDarkMode(darkModeEnabled: boolean) {
+        this.darkModeEnabled = darkModeEnabled;
+
         if (!this.sidebarIframe) {
             return;
         }
-
         if (!this.sidebarLoaded) {
             await waitUntilIframeLoaded(this.sidebarIframe);
         }
