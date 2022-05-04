@@ -2,16 +2,14 @@
     import { reportEventContentScript } from 'source/content-script/messaging';
     import { createEventDispatcher } from 'svelte';
 
-    // adapted from https://css-tricks.com/building-progress-ring-quickly/
-
-    export let progressPercentage: number;
-    export let caption: string;
+    export let totalAnnotationCount: number;
+    const goalAnnotationCount = 6;
 
     let strokeDashoffset: number;
-    $: strokeDashoffset = 288.5 - 288.5 * progressPercentage;
+    $: strokeDashoffset = 288.5 - 288.5 * (Math.min(1.0, (totalAnnotationCount || 0) / goalAnnotationCount));
 </script>
 
-<div class="relative font-header hover:drop-shadow-md cursor-pointer">
+<div class="relative font-header hover:drop-shadow-md cursor-pointer lindy-tooltip lindy-fade" data-title={`Created ${totalAnnotationCount} article annotation${totalAnnotationCount !== 1 ? "s" : ""}`}>
     <svg
         viewBox="0 0 100 100"
         class="progress-circle w-10"
@@ -38,7 +36,7 @@
     </svg>
 
     <div class="absolute font-semibold select-none w-full text-center" style="top: 20%; left: 0;">
-        {caption}
+        {`${totalAnnotationCount || 0}`}
     </div>
 </div>
 

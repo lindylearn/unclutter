@@ -3,6 +3,9 @@
 
     color: var(--lindy-dark-theme-text-color) !important;
 }
+.lindy-tooltip {
+    --text-color: var(--lindy-dark-theme-text-color) !important;
+}
 
 .heading-text.visited > .title, 
 .reading-time {
