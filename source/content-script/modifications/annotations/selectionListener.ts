@@ -99,7 +99,11 @@ function _expandRangeToWordBoundary(
     if (direction === "forwards") {
         let wordEnd = range.endOffset; // exclusive
         const nodeValue = range.endContainer.nodeValue;
-        while (wordEnd < nodeValue.length && nodeValue[wordEnd].trim()) {
+        while (
+            wordEnd < nodeValue.length &&
+            nodeValue[wordEnd].trim() &&
+            nodeValue[wordEnd] !== "—"
+        ) {
             wordEnd += 1;
         }
 
@@ -111,9 +115,11 @@ function _expandRangeToWordBoundary(
         range.setEnd(range.endContainer, wordEnd);
     } else if (direction === "backwards") {
         let wordStart = range.startOffset;
+        const nodeValue = range.endContainer.nodeValue;
         while (
             wordStart - 1 >= 0 &&
-            range.startContainer.nodeValue[wordStart - 1].trim()
+            nodeValue[wordStart - 1].trim() &&
+            nodeValue[wordStart - 1] !== "—"
         ) {
             wordStart -= 1;
         }
