@@ -306,7 +306,6 @@ async function _setupSocialToggle(annotationsModifer: AnnotationsModifier) {
     if (!supportFeature) {
         return;
     }
-    return;
 
     socialAnnotationsEnabled = await getFeatureFlag(
         showSocialAnnotationsDefaultFeatureFlag

@@ -35,7 +35,7 @@
             {/if}
         </div>
 
-        <ul class="m-0 p-0 pr-2 list-none flex flex-col gap-1">
+        <ul class="m-0 p-0 list-none flex flex-col gap-1">
             {#each outline.slice(1) as child, i}
                 <Heading {...child} activeOutlineIndex={activeOutlineIndex} annotationsEnabled={annotationsEnabled} />
             {/each}

@@ -232,30 +232,31 @@ export default class OverlayManager implements PageModifier {
             return;
         }
 
-        const outlineIndexes = annotations.map((a) =>
-            this.getOutlineIndexForAnnotation(a)
-        );
-
         if (action === "set") {
-            this.totalAnnotationCount = annotations.length;
-
-            this.flatOutline.map(
-                (_, index) => (this.flatOutline[index].annotationCount = 0)
-            );
-            outlineIndexes.map(
-                (index) => (this.flatOutline[index].annotationCount += 1)
-            );
-        } else if (action === "add") {
-            this.totalAnnotationCount += annotations.length;
-            outlineIndexes.map(
-                (index) => (this.flatOutline[index].annotationCount += 1)
-            );
-        } else if (action === "remove") {
-            this.totalAnnotationCount -= annotations.length;
-            outlineIndexes.map(
-                (index) => (this.flatOutline[index].annotationCount -= 1)
-            );
+            // reset state
+            this.totalAnnotationCount = 0;
+            this.flatOutline.map((_, index) => {
+                this.flatOutline[index].myAnnotationCount = 0;
+                this.flatOutline[index].hasSocialAnnotations = false;
+            });
         }
+
+        annotations.map((annotation) => {
+            const outlineIndex = this.getOutlineIndexForAnnotation(annotation);
+
+            if (!annotation.isMyAnnotation) {
+                this.flatOutline[outlineIndex].hasSocialAnnotations = true;
+                return;
+            }
+
+            this.totalAnnotationCount += 1;
+
+            if (action === "set" || action === "add") {
+                this.flatOutline[outlineIndex].myAnnotationCount += 1;
+            } else if (action === "remove") {
+                this.flatOutline[outlineIndex].myAnnotationCount -= 1;
+            }
+        });
 
         this.topleftSvelteComponent?.$set({
             totalAnnotationCount: this.totalAnnotationCount,
