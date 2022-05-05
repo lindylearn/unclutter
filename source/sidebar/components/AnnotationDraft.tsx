@@ -10,7 +10,7 @@ function AnnotationDraft({
     annotation,
     className,
     deleteAnnotation,
-    placeholder = "Private annotation",
+    placeholder = "Private note",
 }) {
     // debounce to reduce API calls
     const debouncedUpdateApi: (
