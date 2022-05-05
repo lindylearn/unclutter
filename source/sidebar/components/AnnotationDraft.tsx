@@ -10,7 +10,7 @@ function AnnotationDraft({
     annotation,
     className,
     deleteAnnotation,
-    placeholder = "Private note",
+    placeholder = "Private annotation",
 }) {
     // keep local state buffer to reduce API calls
     const debouncedUpdate: (

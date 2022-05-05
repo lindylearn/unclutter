@@ -31,7 +31,7 @@
             <!-- <div class="reading-time text-sm text-gray-400">20 min left</div> -->
 
             {#if outline.length > 1}
-                <div class="spacer-line border-b-2 border-gray-100 -mx-5 mb-2"></div>
+                <div class="spacer-line border-b-2 border-gray-100 -mx-5 mb-2 mt-3"></div>
             {/if}
         </div>
 

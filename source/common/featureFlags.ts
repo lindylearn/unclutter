@@ -59,6 +59,7 @@ export const defaultFeatureFlags = {
     [enableBootUnclutterMessage]: true,
     [isDevelopmentFeatureFlag]: false,
     [showOutlineFeatureFlag]: true,
+    [enableAnnotationsFeatureFlag]: true,
 
     [dismissedFeedbackMessage]: false,
 };
