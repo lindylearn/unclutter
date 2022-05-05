@@ -19,7 +19,7 @@
         </svg>
     
         <span class="text-sm">
-            New feature: {updateMessage}
+            {updateMessage}
         </span>
     </div>
 

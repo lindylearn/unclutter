@@ -1,6 +1,10 @@
 [
     {
         "version": "0.12.0",
-        "updateMessage": "Select any text to create annotations & sync with Hypothes.is."
+        "updateMessage": "New feature: Select any text to create annotations & sync them with Hypothes.is."
+    },
+    {
+        "version": "0.13.0",
+        "updateMessage": "Update: Annotations work better and turn up on the page outline. Redesigned article UI."
     }
 ]
