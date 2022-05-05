@@ -97,7 +97,7 @@ svg.lindy-ui-icon#lindy-theme-icon > path {
     /* box */
     top: 0px;
     right: calc(100% + 6px);
-    padding: 4px 8px;
+    padding: 6px 8px;
 
     display: block;
     content: attr(data-title);
