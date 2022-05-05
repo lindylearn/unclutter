@@ -2,7 +2,7 @@ export function createDraftAnnotation(
     url: string,
     selector: object
 ): LindyAnnotation {
-    return createAnnotation(url, selector, {});
+    return createAnnotation(url, selector, { id: null, localId: generateId() });
 }
 
 function createAnnotation(
@@ -10,20 +10,18 @@ function createAnnotation(
     selector: object,
     partial: Partial<LindyAnnotation> = {}
 ): LindyAnnotation {
-    const id = partial.id || Math.random().toString(36).slice(-10);
     return {
-        id: id,
-        localId: id,
+        id: partial.id,
+        localId: partial.localId || partial.id,
         url,
         quote_text: selector?.[2]?.exact || "_",
         text: partial.text || "",
         author: partial.author || { username: "" },
         quote_html_selector: selector,
         platform: partial.platform || "ll",
-        link: id,
+        link: partial.id,
         reply_count: partial.reply_count || null,
 
-        is_draft: partial.is_draft || true,
         isMyAnnotation: true,
         isPublic: false,
         upvote_count: 0,
@@ -32,6 +30,10 @@ function createAnnotation(
         replies: [],
         user_upvoted: false,
     };
+}
+
+function generateId(): string {
+    return Math.random().toString(36).slice(-10);
 }
 
 export interface LindyAnnotation {
@@ -51,7 +53,6 @@ export interface LindyAnnotation {
     isPublic: boolean;
 
     // local state
-    is_draft?: boolean; // created highlight but not yet shown in sidebar
     localId?: string; // immutable local annotation id (stays the same through remote synchronization)
     url?: string;
     isMyAnnotation?: boolean;

@@ -3,7 +3,7 @@ import React from "react";
 import TextareaAutosize from "react-textarea-autosize";
 import { LindyAnnotation } from "../../common/annotations/create";
 import { getAnnotationColor } from "../../common/annotations/styling";
-import { updateAnnotation } from "../common/CRUD";
+import { updateAnnotation as updateAnnotationApi } from "../common/CRUD";
 
 function AnnotationDraft({
     url,
@@ -12,32 +12,43 @@ function AnnotationDraft({
     deleteAnnotation,
     placeholder = "Private annotation",
 }) {
-    // keep local state buffer to reduce API calls
-    const debouncedUpdate: (
+    // debounce to reduce API calls
+    const debouncedUpdateApi: (
         annotation: LindyAnnotation
     ) => Promise<LindyAnnotation> = React.useCallback(
-        debounce(updateAnnotation, 1000),
+        debounce(updateAnnotationApi, 1000), // debounce so newest call eventually runs
         []
     );
 
+    // keep local state
     const [localAnnotation, setLocalAnnotation] = React.useState(annotation);
+    // patch correct id once annotation remotely created
+    React.useEffect(async () => {
+        if (!localAnnotation.id && annotation.id) {
+            const newAnnotation = { ...localAnnotation, id: annotation.id };
+            setLocalAnnotation(newAnnotation);
+
+            // synchronize potential local edits
+            await debouncedUpdateApi(newAnnotation);
+        }
+    }, [annotation.id]);
+
     async function updateAnnotationLocalFirst(newAnnotation: LindyAnnotation) {
         setLocalAnnotation(newAnnotation);
 
-        const remoteAnnotation = await debouncedUpdate(newAnnotation);
-
-        // remoteAnnotation is null if debounced call
-        if (remoteAnnotation) {
-            // patch correct id, but keep potentially newer local updates
-            setLocalAnnotation((a) => ({
-                ...a,
-                id: remoteAnnotation.id,
-                is_draft: false,
-            }));
+        if (!newAnnotation.id) {
+            // synchronized once remotely created above
+            return;
         }
+
+        // call with newAnnotation as localAnnotation takes once loop iteration to update
+        await debouncedUpdateApi(newAnnotation);
     }
 
     const color = getAnnotationColor(annotation);
+
+    console.log("annotation", annotation);
+    console.log("localAnnotation", localAnnotation);
 
     return (
         <div
