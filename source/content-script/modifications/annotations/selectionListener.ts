@@ -5,12 +5,60 @@ import { AnnotationListener } from "./annotationsModifier";
 import { highlightAnnotations } from "./highlightsApi";
 
 // send user text selections to the sidebar iframe, in order to create an annotation
-let listenerRef;
+const listeners: [string, () => void][] = [];
 export function createSelectionListener(
     sidebarIframe: HTMLIFrameElement,
     onAnnotationUpdate: AnnotationListener
 ) {
-    const mouseupHandler = () =>
+    // reset state on new user selection
+    let processedStart = false;
+    function onselectstart() {
+        processedStart = false;
+    }
+    listeners.push(["selectstart", onselectstart]);
+
+    // when selection changed, adjust start location to nearest word
+    // can't seem to do this in onselectstart
+    function onselectionchange() {
+        const selection = document.getSelection();
+        if (!selection.toString()) {
+            return;
+        }
+
+        if (!processedStart) {
+            processedStart = true;
+
+            const range = selection.getRangeAt(0);
+            const selectionBackwards = _isSelectionBackwards(selection);
+            if (!selectionBackwards) {
+                // expanding end does not seem to work for backwards ranges initially
+                _expandRangeToWordBoundary(
+                    range,
+                    selectionBackwards ? "forwards" : "backwards"
+                );
+            }
+        }
+    }
+    listeners.push(["selectionchange", onselectionchange]);
+
+    // when selection done, expand to nearest word and highlight
+    function onmouseup() {
+        const selection = document.getSelection();
+        if (!selection.toString()) {
+            return;
+        }
+
+        const range = selection.getRangeAt(0);
+        const selectionBackwards = _isSelectionBackwards(selection);
+        _expandRangeToWordBoundary(
+            range,
+            selectionBackwards ? "backwards" : "forwards"
+        );
+        if (selectionBackwards) {
+            // also adjust end since we couldn't on selection start (see above)
+            _expandRangeToWordBoundary(range, "forwards");
+        }
+
         _createAnnotationFromSelection((annotation) => {
             sendSidebarEvent(sidebarIframe, {
                 event: "createHighlight",
@@ -18,12 +66,59 @@ export function createSelectionListener(
             });
             onAnnotationUpdate("add", [annotation]);
         });
-    document.addEventListener("mouseup", mouseupHandler);
-    listenerRef = mouseupHandler;
+    }
+    listeners.push(["mouseup", onmouseup]);
+
+    // register listeners
+    listeners.map(([event, handler]) =>
+        document.addEventListener(event, handler)
+    );
 }
 
 export function removeSelectionListener() {
-    document.removeEventListener("mouseup", listenerRef);
+    listeners.map(([event, handler]) =>
+        document.removeEventListener(event, handler)
+    );
+}
+
+function _isSelectionBackwards(sel: Selection) {
+    // https://stackoverflow.com/a/60235039
+    const tempRange = document.createRange();
+    tempRange.setStart(sel.anchorNode, sel.anchorOffset);
+    tempRange.setEnd(sel.focusNode, sel.focusOffset);
+
+    const backwards = tempRange.collapsed;
+    tempRange.detach();
+    return backwards;
+}
+
+function _expandRangeToWordBoundary(
+    range: Range,
+    direction: "forwards" | "backwards"
+) {
+    if (direction === "forwards") {
+        let wordEnd = range.endOffset; // exclusive
+        while (
+            wordEnd < range.endContainer.nodeValue.length &&
+            range.endContainer.nodeValue[wordEnd].trim()
+        ) {
+            // TODO ignore trailing ','
+            wordEnd += 1;
+        }
+        range.setEnd(range.endContainer, wordEnd);
+    } else if (direction === "backwards") {
+        let wordStart = range.startOffset;
+        while (
+            wordStart - 1 >= 0 &&
+            range.startContainer.nodeValue[wordStart - 1].trim()
+        ) {
+            wordStart -= 1;
+        }
+
+        range.setStart(range.startContainer, wordStart);
+    }
+
+    return range;
 }
 
 async function _createAnnotationFromSelection(callback) {
