@@ -19,7 +19,7 @@
         </svg>
     
         <span class="text-sm">
-            {updateMessage}
+            {navigator.platform.indexOf('Mac') != -1 ? updateMessage.replace("Alt+C", "⌥+C") : updateMessage}
         </span>
     </div>
 

@@ -92,6 +92,7 @@ browser.runtime.onInstalled.addListener(async ({ reason }) => {
     saveInitialInstallVersionIfMissing(extensionInfo.version);
     await migrateAnnotationStorage();
 
+    // show opt shortcut icon on mac
     browser.runtime.getPlatformInfo().then(({ os }) =>
         (chrome.action || browser.browserAction).setTitle({
             title: "Unclutter Current Article (⌥+C)",
