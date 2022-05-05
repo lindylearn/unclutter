@@ -13,7 +13,7 @@ export default function PageNotesList({
             {annotations.map((a) => (
                 <PageNote
                     url={url}
-                    key={a.id}
+                    key={a.localId}
                     annotation={a}
                     createAnnotation={createAnnotation}
                     deleteAnnotation={() => deleteAnnotation(a)}

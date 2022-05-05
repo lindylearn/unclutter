@@ -39,21 +39,28 @@ export default function App({ url }) {
         );
     }, [showSocialAnnotations]);
 
-    // console.log(annotations);
-
     // sync local annotation updates to hypothesis
     async function createAnnotationHandler(localAnnotation: LindyAnnotation) {
-        // show only once reconciled with remote state
-        const remoteAnnotation = await createAnnotation(localAnnotation);
-
+        // show state with localId immediately
+        localAnnotation = { ...localAnnotation, focused: true };
         setAnnotations([
             ...annotations.map((a) => ({ ...a, focused: false })),
-            { ...remoteAnnotation, focused: true },
+            localAnnotation,
+        ]);
+
+        // show only once reconciled with remote state
+        const remoteAnnotation = await createAnnotation(localAnnotation);
+        setAnnotations([
+            ...annotations.filter((a) => a.localId !== localAnnotation.localId),
+            remoteAnnotation,
         ]);
     }
+
     function deleteAnnotationHandler(annotation: LindyAnnotation) {
         // delete from local state first
-        setAnnotations(annotations.filter((a) => a.id != annotation.id));
+        setAnnotations(
+            annotations.filter((a) => a.localId != annotation.localId)
+        );
         window.top.postMessage({ event: "removeHighlight", annotation }, "*");
 
         deleteAnnotation(annotation);
@@ -75,8 +82,7 @@ export default function App({ url }) {
         } else if (data.event === "changedDisplayOffset") {
             let updatedAnnotations = annotations.map((a) => ({
                 ...a,
-                displayOffset:
-                    data.offsetById[a.localId] || data.offsetById[a.id],
+                displayOffset: data.offsetById[a.localId],
             }));
 
             setAnnotations(updatedAnnotations);

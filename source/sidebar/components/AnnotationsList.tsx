@@ -1,5 +1,4 @@
 import React from "react";
-import AnnotationDraft from "./AnnotationDraft";
 import AnnotationThread from "./AnnotationThread";
 
 function AnnotationsList({
@@ -40,7 +39,7 @@ function AnnotationsList({
         <div className="relative flex-grow" onClick={onClick}>
             {groupedAnnotations.map((group, groupIndex) => (
                 <div
-                    key={group[0].localId || group[0].id}
+                    key={group[0].localId}
                     className="absolute w-full"
                     style={{
                         top: group[0].displayOffset - offsetTop,
@@ -48,13 +47,9 @@ function AnnotationsList({
                     }}
                 >
                     {group.slice(0, 5).map((annotation, i) => {
-                        const Component = annotation.is_draft
-                            ? AnnotationDraft
-                            : AnnotationThread;
-
                         return (
                             <div
-                                key={annotation.localId || annotation.id}
+                                key={annotation.localId}
                                 className={
                                     "annotation-group-item w-full rounded-r " +
                                     (group.length > 1
@@ -66,7 +61,7 @@ function AnnotationsList({
                                     top: `${i * 40}px`,
                                 }}
                             >
-                                <Component
+                                <AnnotationThread
                                     annotation={annotation}
                                     deleteAnnotation={() =>
                                         deleteAnnotation(annotation)

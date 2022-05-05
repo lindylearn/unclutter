@@ -10,7 +10,7 @@ function createAnnotation(
     selector: object,
     partial: Partial<LindyAnnotation> = {}
 ): LindyAnnotation {
-    const id = partial.id || `draft_${Math.random().toString(36).slice(-5)}`;
+    const id = partial.id || Math.random().toString(36).slice(-10);
     return {
         id: id,
         localId: id,
@@ -52,7 +52,7 @@ export interface LindyAnnotation {
 
     // local state
     is_draft?: boolean; // created highlight but not yet shown in sidebar
-    localId?: string; // local id until synced
+    localId?: string; // immutable local annotation id (stays the same through remote synchronization)
     url?: string;
     isMyAnnotation?: boolean;
     displayOffset?: number;
@@ -63,6 +63,7 @@ export interface LindyAnnotation {
 export function hypothesisToLindyFormat(annotation): LindyAnnotation {
     return {
         id: annotation.id,
+        localId: annotation.id, // base comparisons on immutable localId
         author: annotation.user.match(/([^:]+)@/)[1],
         platform: "h",
         link: `https://hypothes.is/a/${annotation.id}`,

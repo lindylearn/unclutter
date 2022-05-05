@@ -25,7 +25,10 @@ export async function highlightAnnotations(annotations) {
                     return;
                 }
 
-                const highlightedNodes = highlightRange(annotation.id, range);
+                const highlightedNodes = highlightRange(
+                    annotation.localId,
+                    range
+                );
                 if (!highlightedNodes) {
                     throw Error("includes no highlighted nodes");
                 }
@@ -99,7 +102,7 @@ export function removeAllHighlights() {
 
 function getAnnotationNodes(annotation): HTMLElement[] {
     const nodeList = document.querySelectorAll(
-        `lindy-highlight[id="${annotation.localId || annotation.id}"]`
+        `lindy-highlight[id="${annotation.localId}"]`
     );
     return [...nodeList] as HTMLElement[];
 }
