@@ -9,6 +9,7 @@ import {
     showSocialAnnotationsDefaultFeatureFlag,
     supportSocialAnnotations,
 } from "../common/featureFlags";
+import browser, { getBrowserType } from "../common/polyfill";
 import {
     getRemoteFeatureFlag,
     reportEventContentScript,
@@ -38,6 +39,11 @@ function OptionsPage({}) {
         setHypothesisEnabled(enabled);
     }
 
+    const keyboardShortcutsUrl =
+        getBrowserType() === "chromium"
+            ? "chrome://extensions/shortcuts"
+            : "https://support.mozilla.org/en-US/kb/manage-extension-shortcuts-firefox";
+
     return (
         <div className="flex flex-col gap-3 dark:text-white">
             <OptionsGroup
@@ -51,7 +57,28 @@ function OptionsPage({}) {
                     </svg>
                 }
             >
-                {/* <p>Unclutter any article by clicking the extension icon.</p> */}
+                <p>
+                    Unclutter articles by clicking the extension icon or
+                    pressing{" "}
+                    <div className="inline-block px-1 py-0.5 bg-gray-100 dark:bg-gray-800 shadow-inner text-gray-600 dark:text-gray-300">
+                        Alt+C
+                    </div>{" "}
+                    (
+                    <a
+                        href={keyboardShortcutsUrl}
+                        className="underline"
+                        onClick={(e) => {
+                            // cannot open chrome:// urls via <a> link
+                            browser.tabs.create({
+                                url: keyboardShortcutsUrl,
+                            });
+                            e.preventDefault();
+                        }}
+                    >
+                        customize
+                    </a>
+                    ).
+                </p>
                 <FeatureFlagSwitch featureFlagKey={enableBootUnclutterMessage}>
                     Show unclutter button on web pages{" "}
                     <a
