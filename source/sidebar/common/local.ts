@@ -21,6 +21,9 @@ export async function getLocalAnnotations(
 export async function createLocalAnnotation(
     annotation: LindyAnnotation
 ): Promise<LindyAnnotation> {
+    // Use existing id
+    annotation.id = annotation.localId;
+
     const storage = await _getPageStorage(annotation.url);
 
     storage[annotation.id] = pickleLocalAnnotation(annotation);
