@@ -47,9 +47,6 @@ function AnnotationDraft({
 
     const color = getAnnotationColor(annotation);
 
-    console.log("annotation", annotation);
-    console.log("localAnnotation", localAnnotation);
-
     return (
         <div
             className={

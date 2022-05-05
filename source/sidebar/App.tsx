@@ -39,8 +39,6 @@ export default function App({ url }) {
         );
     }, [showSocialAnnotations]);
 
-    console.log(annotations);
-
     // sync local annotation updates to hypothesis
     async function createAnnotationHandler(localAnnotation: LindyAnnotation) {
         // show state with localId immediately
