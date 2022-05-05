@@ -67,7 +67,7 @@
 #lindy-info-topleft-content > * {
     background-color: var(--lindy-background-color);
 }
-svg.lmessage-icon > path {
+svg.icon > path {
     fill: currentColor;
     stroke: currentColor;
     stroke-width: 10px;
