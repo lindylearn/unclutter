@@ -98,13 +98,16 @@ function _expandRangeToWordBoundary(
 ) {
     if (direction === "forwards") {
         let wordEnd = range.endOffset; // exclusive
-        while (
-            wordEnd < range.endContainer.nodeValue.length &&
-            range.endContainer.nodeValue[wordEnd].trim()
-        ) {
-            // TODO ignore trailing ','
+        const nodeValue = range.endContainer.nodeValue;
+        while (wordEnd < nodeValue.length && nodeValue[wordEnd].trim()) {
             wordEnd += 1;
         }
+
+        // strip some punctuation
+        if (",:".includes(nodeValue[wordEnd - 1])) {
+            wordEnd -= 1;
+        }
+
         range.setEnd(range.endContainer, wordEnd);
     } else if (direction === "backwards") {
         let wordStart = range.startOffset;
