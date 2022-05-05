@@ -39,6 +39,12 @@ function OptionsPage({}) {
         setHypothesisEnabled(enabled);
     }
 
+    // to get actual the shortcut we'd need to use a custom command other than '_execute_action'
+    const [keyboardShortcut, setKeyboardShortcut] = React.useState("");
+    browser.runtime
+        .getPlatformInfo()
+        .then(({ os }) => setKeyboardShortcut(os === "mac" ? "⌥+C" : "Alt+C"));
+
     const keyboardShortcutsUrl =
         getBrowserType() === "chromium"
             ? "chrome://extensions/shortcuts"
@@ -61,7 +67,7 @@ function OptionsPage({}) {
                     Unclutter articles by clicking the extension icon or
                     pressing{" "}
                     <div className="inline-block px-1 py-0.5 bg-gray-100 dark:bg-gray-800 shadow-inner text-gray-600 dark:text-gray-300">
-                        Alt+C
+                        {keyboardShortcut}
                     </div>{" "}
                     (
                     <a

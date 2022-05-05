@@ -91,6 +91,12 @@ browser.runtime.onInstalled.addListener(async ({ reason }) => {
 
     saveInitialInstallVersionIfMissing(extensionInfo.version);
     await migrateAnnotationStorage();
+
+    browser.runtime.getPlatformInfo().then(({ os }) =>
+        (chrome.action || browser.browserAction).setTitle({
+            title: "Unclutter Current Article (⌥+C)",
+        })
+    );
 });
 
 // initialize on every service worker start
