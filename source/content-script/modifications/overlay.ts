@@ -249,11 +249,11 @@ export default class OverlayManager implements PageModifier {
                 return;
             }
 
-            this.totalAnnotationCount += 1;
-
             if (action === "set" || action === "add") {
+                this.totalAnnotationCount += 1;
                 this.flatOutline[outlineIndex].myAnnotationCount += 1;
             } else if (action === "remove") {
+                this.totalAnnotationCount -= 1;
                 this.flatOutline[outlineIndex].myAnnotationCount -= 1;
             }
         });
