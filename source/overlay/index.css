@@ -95,9 +95,9 @@ svg.lindy-ui-icon#lindy-theme-icon > path {
 }
 .lindy-tooltip:before {
     /* box */
-    top: 1px;
+    top: 0px;
     right: calc(100% + 6px);
-    padding: 6px 8px;
+    padding: 4px 8px;
 
     display: block;
     content: attr(data-title);
@@ -110,10 +110,11 @@ svg.lindy-ui-icon#lindy-theme-icon > path {
     filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.05));
 
     font-family: Poppins, sans-serif;
+    font-weight: 600;
 }
 .lindy-tooltip:after {
     /* arrow */
-    top: 8px;
+    top: 7px;
     right: calc(100% - 0px);
     height: 0;
     width: 0;
@@ -345,5 +346,6 @@ svg.lindy-ui-icon#lindy-theme-icon > path {
 }
 #lindy-annotations-icon {
     width: 23px;
+    margin: 2px 0;
     margin-left: -1px;
 }

@@ -130,7 +130,7 @@ export function insertPageSettings(
     const fontLink = document.createElement("link");
     fontLink.rel = "stylesheet";
     fontLink.href =
-        "https://fonts.googleapis.com/css2?family=Poppins:wght@400&display=swap";
+        "https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap";
     document.head.appendChild(fontLink);
 }
 

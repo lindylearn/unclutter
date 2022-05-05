@@ -67,8 +67,10 @@
 #lindy-info-topleft-content > * {
     background-color: var(--lindy-background-color);
 }
-svg.message-icon {
-    color: #4b5563; /* text-gray-600 */
+svg.lmessage-icon > path {
+    fill: currentColor;
+    stroke: currentColor;
+    stroke-width: 10px;
 }
 a > .close-message {
     visibility: hidden;
