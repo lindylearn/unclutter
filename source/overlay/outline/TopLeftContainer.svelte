@@ -113,6 +113,7 @@ a:hover > .close-message {
     filter: drop-shadow(0 1px 2px rgb(0 0 0 / 0.1)) drop-shadow(0 1px 1px rgb(0 0 0 / 0.06));
 
     font-family: Poppins, sans-serif;
+    line-height: 1;
 }
 .lindy-tooltip:after {
     /* arrow */

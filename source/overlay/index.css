@@ -15,6 +15,7 @@
     display: flex;
     flex-direction: column;
     /* align-items: flex-end; */
+    line-height: 1;
     gap: 5px;
 }
 
@@ -145,7 +146,7 @@ svg.lindy-ui-icon#lindy-theme-icon > path {
     white-space: pre-wrap !important;
     /* word-break: break-all; */
     width: max-content;
-    max-width: 300px;
+    max-width: 250px;
 }
 .lindy-tooltip-reverse:after {
     transform: translate3d(-10px, 0, 0) scaleX(-1) !important;
@@ -347,5 +348,8 @@ svg.lindy-ui-icon#lindy-theme-icon > path {
 #lindy-annotations-icon {
     width: 23px;
     margin: 2px 0;
+    margin-left: -1px;
+}
+#lindy-annotations-toggle-container {
     margin-left: -1px;
 }
