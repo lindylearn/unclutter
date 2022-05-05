@@ -35,6 +35,7 @@ export async function getHypothesisAnnotations(url) {
         `${hypothesisApi}/search?${new URLSearchParams({
             url,
             user: `acct:${username}@hypothes.is`,
+            limit: "50",
         })}`,
         await _getConfig()
     );
