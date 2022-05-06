@@ -1,7 +1,7 @@
 {
     "name": "Unclutter - Immersive Reading Mode",
-    "version": "0.13.2",
-    "description": "Remove distractions from web articles, automatically.",
+    "version": "0.13.3",
+    "description": "Remove distractions from articles, but keep their original design.",
     "homepage_url": "https://github.com/lindylearn/unclutter",
     "manifest_version": 3,
     "action": {
