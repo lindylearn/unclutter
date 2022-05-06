@@ -6,9 +6,5 @@
     {
         "version": "0.13.0",
         "updateMessage": "Update: Annotations work better and turn up on the page outline. Redesigned article UI."
-    },
-    {
-        "version": "0.14.0",
-        "updateMessage": "New features: Page outline shows the article reading time. Alt+C to toggle the extension."
     }
 ]
