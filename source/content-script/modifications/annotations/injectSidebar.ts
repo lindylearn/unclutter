@@ -20,7 +20,7 @@ export function removeSidebar() {
     const existingSidebar = document.getElementById(
         "lindylearn-annotations-sidebar"
     );
-    existingSidebar.parentNode.removeChild(existingSidebar);
+    existingSidebar?.parentNode.removeChild(existingSidebar);
 }
 
 export async function waitUntilIframeLoaded(

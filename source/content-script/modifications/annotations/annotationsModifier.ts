@@ -73,7 +73,9 @@ export default class AnnotationsModifier implements PageModifier {
     }
 
     private disableAnnotations() {
-        removeSidebar();
+        if (this.sidebarIframe) {
+            removeSidebar();
+        }
         this.sidebarLoaded = false;
 
         removeSelectionListener();
