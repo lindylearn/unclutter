@@ -46,14 +46,14 @@
 </script>
 
 <li class="heading">
-    <div class={"heading-text relative text-sm cursor-pointer flex w-full gap-2 " + activateStateClass} on:click={focusHeading}>
+    <div class={"heading-text relative text-sm cursor-pointer flex w-full gap-2 items-start " + activateStateClass} on:click={focusHeading}>
         <svg class="absolute active-dot hidden" style="width: 6px;" viewBox="0 0 320 512">
             <path fill="currentColor" d="M320 256C320 344.4 248.4 416 160 416C71.63 416 0 344.4 0 256C0 167.6 71.63 96 160 96C248.4 96 320 167.6 320 256z"/>
         </svg>
         <div class="title flex-grow">{title}</div>
 
         {#if annotationsEnabled && index !== -1 && myAnnotationCount}
-            <div class="px-1 rounded font-header text-center" style={`min-width: 1.3em; padding: 0 0.4em; background-color: ${getRandomColor(title)};`}>{myAnnotationCount}</div>
+            <div class="px-1 rounded font-header text-center" style={`min-width: 1.4em; padding: 0 0.4em; background-color: ${getRandomColor(title)};`}>{myAnnotationCount}</div>
         {/if}
         {#if hasSocialAnnotations}
             <svg class="icon w-4" viewBox="0 0 640 512">

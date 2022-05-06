@@ -30,7 +30,7 @@
         </div>
 
         <div class="">
-            <div class="reading-time text-sm text-gray-400">
+            <div class="reading-time text-sm text-gray-400 tabular-nums">
                 {#if readingTimeLeft !== null}
                     {readingTimeLeft} min left
                 {/if}
