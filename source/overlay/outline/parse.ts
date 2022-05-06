@@ -61,31 +61,48 @@ export function getOutline(): OutlineItem[] {
     // List raw DOM nodes and filter to likely headings
     const headingItems = getHeadingItems();
     if (headingItems.length === 0) {
-        return [createRootItem()];
+        return [];
     }
 
     // Construct hierarchy based on heading level
     const collapsedItems = collapseItems(headingItems);
 
-    // Normalize root
+    // Deduplicate root element
     let outlineRoot: OutlineItem;
     if (collapsedItems[0].children.length === 1) {
-        // only one site headings root, use that directly
+        // site uses heading nesting correctly, so use its main heading as root
         outlineRoot = collapsedItems[0].children[0];
+
+        // but set special heading properties
+        outlineRoot.element = document.body;
+        outlineRoot.index = -1;
     } else {
-        // Use manually added root
+        // more children -> use the root element we added
         outlineRoot = collapsedItems[0];
 
-        // Check if first child duplicates title
+        // remove site heading element if present
         // e.g. https://blog.adamchalmers.com/making-a-dns-client
         if (outlineRoot.title.includes(outlineRoot.children?.[0].title)) {
-            // check include() and use explicit title if available in case meta title includes more noise
+            // use this title in case meta title includes SEO noise
             outlineRoot.title = outlineRoot.children?.[0].title;
+            // remove element
             outlineRoot.children = outlineRoot.children?.[0].children.concat(
                 outlineRoot.children.slice(1)
             );
         }
     }
+
+    // insert placeholder "introduction" item
+    outlineRoot.children = [
+        {
+            index: 0,
+            level: 1,
+            title: "Introduction",
+            element: document.body,
+            children: [],
+        },
+        ...outlineRoot.children,
+    ];
 
     const normalizedOutline = normalizeItemLevel(outlineRoot, 0);
 

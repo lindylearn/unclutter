@@ -83,7 +83,7 @@ function OptionsPage({}) {
                     >
                         customize
                     </a>
-                    ).
+                    )
                 </p>
                 <FeatureFlagSwitch featureFlagKey={enableBootUnclutterMessage}>
                     Show unclutter button on web pages{" "}
