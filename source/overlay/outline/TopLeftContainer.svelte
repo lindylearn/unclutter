@@ -14,6 +14,7 @@
     export let activeOutlineIndex: number;
     export let annotationsEnabled: boolean;
     export let totalAnnotationCount: number = 0;
+    export let readingTimeLeft: number = null;
 
     let displayFeedbackMessage = false;
     getFeatureFlag(dismissedFeedbackMessage).then(dismissed => {
@@ -44,7 +45,13 @@
 <div id="lindy-info-topleft-content" class="flex flex-col gap-1.5 font-paragraph">
     <!-- <ProgressMessage/> -->
 
-    <Outline outline={outline} activeOutlineIndex={activeOutlineIndex} annotationsEnabled={annotationsEnabled} totalAnnotationCount={totalAnnotationCount} />
+    <Outline 
+        outline={outline} 
+        activeOutlineIndex={activeOutlineIndex} 
+        annotationsEnabled={annotationsEnabled} 
+        totalAnnotationCount={totalAnnotationCount} 
+        readingTimeLeft={readingTimeLeft} 
+    />
     
     {#each updateMessages as { version, updateMessage }}
         <UpdateMessage version={version} updateMessage={updateMessage} on:dismissed={() => dismissUpdateMessage(version)} />

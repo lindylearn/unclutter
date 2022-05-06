@@ -283,4 +283,10 @@ export default class OverlayManager implements PageModifier {
 
         return lastIndex;
     }
+
+    updateReadingTimeLeft(minutes: number) {
+        this.topleftSvelteComponent?.$set({
+            readingTimeLeft: minutes,
+        });
+    }
 }

@@ -8,6 +8,7 @@ import ResponsiveStyleModifier from "./modifications/CSSOM/responsiveStyle";
 import StylePatchesModifier from "./modifications/CSSOM/stylePatches";
 import ThemeModifier from "./modifications/CSSOM/theme";
 import CSSOMProvider from "./modifications/CSSOM/_provider";
+import ReadingTimeModifier from "./modifications/DOM/readingTime";
 import TextContainerModifier from "./modifications/DOM/textContainer";
 import OverlayManager from "./modifications/overlay";
 import {
@@ -39,6 +40,7 @@ export default class TransitionManager implements PageModifier {
     private textContainerModifier = new TextContainerModifier(
         this.themeModifier
     );
+    private readingTimeModifier = new ReadingTimeModifier(this.overlayManager);
 
     async prepare() {
         await this.cssomProvider.prepare();
@@ -75,6 +77,7 @@ export default class TransitionManager implements PageModifier {
 
         await this.themeModifier.afterTransitionIn();
         await this.stylePatchesModifier.afterTransitionIn();
+        await this.readingTimeModifier.afterTransitionIn();
     }
 
     async transitionOut() {
