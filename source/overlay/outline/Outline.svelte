@@ -31,7 +31,7 @@
 
         <div class="">
             <div class="reading-time text-sm text-gray-400">
-                {#if readingTimeLeft}
+                {#if readingTimeLeft !== null}
                     {readingTimeLeft} min left
                 {/if}
             </div>
