@@ -32,7 +32,7 @@
         <div class="">
             <div class="reading-time text-sm text-gray-400 tabular-nums">
                 {#if readingTimeLeft !== null}
-                    {readingTimeLeft} min left
+                    <span class="reading-time-count" style={`--num: ${readingTimeLeft}`}></span> min left
                 {/if}
             </div>
 
@@ -51,5 +51,19 @@
 
 
 <style lang="postcss">
+    /* define --num as integer, required for the counter transition */
+    /* this does not work in firefox, but the value change still works */
+    @property --num {
+        syntax: '<integer>';
+        initial-value: 0;
+        inherits: false;
+    }
 
+    .reading-time-count {
+        transition: --num 0.2s ease-in-out;
+        counter-reset: num var(--num);
+    }
+    .reading-time-count::after {
+        content: counter(num);
+    }
 </style>
