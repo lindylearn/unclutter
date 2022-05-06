@@ -1,3 +1,4 @@
+import throttle from "lodash/throttle";
 import OverlayManager from "../overlay";
 import { PageModifier, trackModifierExecution } from "../_interface";
 
@@ -23,12 +24,15 @@ export default class ReadingTimeModifier implements PageModifier {
         this.totalReadingTime = Math.round(wordCount / this.wpm);
         this.overlayManager.updateReadingTimeLeft(this.totalReadingTime);
 
-        document.addEventListener("scroll", this.scollListener.bind(this));
+        // Don't re-render outline on every scroll update (might trigger <100ms)
+        // throttle instead of debounce to update during continous scrolls
+        const scrollListenerThrottled = throttle(
+            this.scollListener.bind(this),
+            200
+        );
+        document.addEventListener("scroll", scrollListenerThrottled);
         this.uninstallScrollListener = () =>
-            document.removeEventListener(
-                "scroll",
-                this.scollListener.bind(this)
-            );
+            document.removeEventListener("scroll", scrollListenerThrottled);
     }
 
     // todo throttle?
