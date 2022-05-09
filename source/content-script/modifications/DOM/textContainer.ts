@@ -293,6 +293,7 @@ export const asideWordBlocklist = [
     "newsletter",
     "promo",
     "composer",
+    "callout",
 ];
 function _isAsideEquivalent(node) {
     return (

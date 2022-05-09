@@ -30,14 +30,15 @@
         </div>
 
         <div class="">
-            <div class="reading-time text-sm text-gray-400 tabular-nums">
-                {#if readingTimeLeft !== null}
+            {#if readingTimeLeft !== null}
+                <div class="reading-time text-sm text-gray-400 tabular-nums mt-1">
                     <span class="reading-time-count" style={`--num: ${readingTimeLeft}`}></span> min left
-                {/if}
-            </div>
+                </div>
+            {/if}
+
 
             {#if outline.length > 1}
-                <div class="spacer-line border-b-2 border-gray-100 -mx-5 mb-2 mt-3"></div>
+                <div class="spacer-line border-b-2 border-gray-100 -mx-5 mb-2 mt-1"></div>
             {/if}
         </div>
 

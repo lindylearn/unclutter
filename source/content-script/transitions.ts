@@ -77,7 +77,7 @@ export default class TransitionManager implements PageModifier {
 
         await this.themeModifier.afterTransitionIn();
         await this.stylePatchesModifier.afterTransitionIn();
-        // await this.readingTimeModifier.afterTransitionIn();
+        await this.readingTimeModifier.afterTransitionIn();
     }
 
     async transitionOut() {
