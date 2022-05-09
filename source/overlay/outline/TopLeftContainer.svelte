@@ -79,14 +79,14 @@ svg.icon > path {
     stroke: currentColor;
     stroke-width: 10px;
 }
-a > .close-message {
+/* a > .close-message {
     visibility: hidden;
     opacity: 0;
 }
 a:hover > .close-message {
     visibility: visible;
     opacity: 1;
-}
+} */
 
 /* setup tooltips (adapted from overlay css) */
 .lindy-tooltip {
