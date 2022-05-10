@@ -53,3 +53,9 @@
 .annotation {
     background-color: var(--lindy-background-color) !important;
 }
+
+svg.icon > path {
+    fill: currentColor;
+    stroke: currentColor;
+    stroke-width: 10px;
+}
