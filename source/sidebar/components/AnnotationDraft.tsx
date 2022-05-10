@@ -10,7 +10,7 @@ function AnnotationDraft({
     annotation,
     className,
     deleteHideAnnotation,
-    placeholder = "Private note",
+    hypothesisSyncEnabled,
 }) {
     // debounce to reduce API calls
     const debouncedUpdateApi: (
@@ -61,7 +61,9 @@ function AnnotationDraft({
         >
             <TextareaAutosize
                 className="text-sm md:text-base w-full bg-gray-50 placeholder-gray-400 rounded py-1 px-2 outline-none align-top"
-                placeholder={placeholder}
+                placeholder={
+                    localAnnotation.isPublic ? "Public note" : "Private note"
+                }
                 value={localAnnotation.text}
                 onChange={(e) =>
                     updateAnnotationLocalFirst({
@@ -72,29 +74,6 @@ function AnnotationDraft({
                 minRows={2}
                 autoFocus={annotation.focused}
             />
-            {/* <div className="flex gap-2">
-                <input
-                    className="text-sm md:text-base w-full bg-gray-50 rounded-md py-1 px-2 outline-none"
-                    placeholder="Tags"
-                    value={changedAnnotation.tags.join(", ")}
-                    onChange={(e) =>
-                        updateAnnotationHandler({
-                            ...changedAnnotation,
-                            tags: e.target.value.split(", "),
-                        })
-                    }
-                />
-                <Switch
-                    annotationId={annotation.id}
-                    value={changedAnnotation.isPublic}
-                    toggleValue={() =>
-                        updateAnnotationHandler({
-                            ...changedAnnotation,
-                            isPublic: !changedAnnotation.isPublic,
-                        })
-                    }
-                />
-            </div> */}
             <div className="top-icons absolute top-1.5 right-1.5 p-1 flex gap-3 text-gray-400 transition-all">
                 <div
                     className="cursor-pointer hover:text-gray-600 hover:scale-110"
@@ -108,16 +87,27 @@ function AnnotationDraft({
                     </svg>
                 </div>
 
-                {/* <div
-                    className="cursor-pointer hover:text-gray-600 hover:scale-110"
-                >
-                    <svg className="h-3" viewBox="0 0 512 512">
-                        <path
-                            fill="currentColor"
-                            d="M352 256C352 278.2 350.8 299.6 348.7 320H163.3C161.2 299.6 159.1 278.2 159.1 256C159.1 233.8 161.2 212.4 163.3 192H348.7C350.8 212.4 352 233.8 352 256zM503.9 192C509.2 212.5 512 233.9 512 256C512 278.1 509.2 299.5 503.9 320H380.8C382.9 299.4 384 277.1 384 256C384 234 382.9 212.6 380.8 192H503.9zM493.4 160H376.7C366.7 96.14 346.9 42.62 321.4 8.442C399.8 29.09 463.4 85.94 493.4 160zM344.3 160H167.7C173.8 123.6 183.2 91.38 194.7 65.35C205.2 41.74 216.9 24.61 228.2 13.81C239.4 3.178 248.7 0 256 0C263.3 0 272.6 3.178 283.8 13.81C295.1 24.61 306.8 41.74 317.3 65.35C328.8 91.38 338.2 123.6 344.3 160H344.3zM18.61 160C48.59 85.94 112.2 29.09 190.6 8.442C165.1 42.62 145.3 96.14 135.3 160H18.61zM131.2 192C129.1 212.6 127.1 234 127.1 256C127.1 277.1 129.1 299.4 131.2 320H8.065C2.8 299.5 0 278.1 0 256C0 233.9 2.8 212.5 8.065 192H131.2zM194.7 446.6C183.2 420.6 173.8 388.4 167.7 352H344.3C338.2 388.4 328.8 420.6 317.3 446.6C306.8 470.3 295.1 487.4 283.8 498.2C272.6 508.8 263.3 512 255.1 512C248.7 512 239.4 508.8 228.2 498.2C216.9 487.4 205.2 470.3 194.7 446.6H194.7zM190.6 503.6C112.2 482.9 48.59 426.1 18.61 352H135.3C145.3 415.9 165.1 469.4 190.6 503.6V503.6zM321.4 503.6C346.9 469.4 366.7 415.9 376.7 352H493.4C463.4 426.1 399.8 482.9 321.4 503.6V503.6z"
-                        />
-                    </svg>
-                </div> */}
+                {hypothesisSyncEnabled && (
+                    <div
+                        className={
+                            "cursor-pointer hover:text-gray-600 hover:scale-110 " +
+                            (localAnnotation.isPublic ? "visible" : "")
+                        }
+                        onClick={() =>
+                            updateAnnotationLocalFirst({
+                                ...localAnnotation,
+                                isPublic: !localAnnotation.isPublic,
+                            })
+                        }
+                    >
+                        <svg className="h-3.5" viewBox="0 0 512 512">
+                            <path
+                                fill="currentColor"
+                                d="M256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256C0 114.6 114.6 0 256 0zM256 464C263.4 464 282.1 456.8 303.6 415.6C312.4 397.9 319.1 376.4 325.6 352H186.4C192 376.4 199.6 397.9 208.4 415.6C229 456.8 248.6 464 256 464zM178.5 304H333.5C335.1 288.7 336 272.6 336 256C336 239.4 335.1 223.3 333.5 208H178.5C176.9 223.3 176 239.4 176 256C176 272.6 176.9 288.7 178.5 304V304zM325.6 160C319.1 135.6 312.4 114.1 303.6 96.45C282.1 55.22 263.4 48 256 48C248.6 48 229 55.22 208.4 96.45C199.6 114.1 192 135.6 186.4 160H325.6zM381.8 208C383.2 223.5 384 239.6 384 256C384 272.4 383.2 288.5 381.8 304H458.4C462.1 288.6 464 272.5 464 256C464 239.5 462.1 223.4 458.4 208H381.8zM342.1 66.61C356.2 92.26 367.4 124.1 374.7 160H440.6C419.2 118.9 384.4 85.88 342.1 66.61zM169.9 66.61C127.6 85.88 92.84 118.9 71.43 160H137.3C144.6 124.1 155.8 92.26 169.9 66.61V66.61zM48 256C48 272.5 49.93 288.6 53.57 304H130.2C128.8 288.5 128 272.4 128 256C128 239.6 128.8 223.5 130.2 208H53.57C49.93 223.4 48 239.5 48 256zM440.6 352H374.7C367.4 387.9 356.2 419.7 342.1 445.4C384.4 426.1 419.2 393.1 440.6 352zM137.3 352H71.43C92.84 393.1 127.6 426.1 169.9 445.4C155.8 419.7 144.6 387.9 137.3 352V352z"
+                            />
+                        </svg>
+                    </div>
+                )}
             </div>
         </div>
     );

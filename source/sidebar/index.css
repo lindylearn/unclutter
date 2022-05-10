@@ -30,11 +30,11 @@
     background: linear-gradient(to top, #e5e7eb, rgba(0, 0, 0, 0));
 }
 
-.annotation > .top-icons {
+.annotation > .top-icons > div:not(.visible) {
     visibility: hidden;
     opacity: 0;
 }
-.annotation:hover > .top-icons {
+.annotation:hover > .top-icons > div {
     visibility: visible;
     opacity: 1;
 }

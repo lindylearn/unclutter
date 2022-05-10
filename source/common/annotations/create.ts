@@ -80,7 +80,7 @@ export function hypothesisToLindyFormat(annotation): LindyAnnotation {
         tags: annotation.tags,
         quote_html_selector: annotation.target[0].selector,
         user_upvoted: false,
-        isPublic: annotation.permissions.read[0] === "__world__",
+        isPublic: annotation.permissions.read[0] === "group:__world__",
     };
 }
 

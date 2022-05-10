@@ -10,6 +10,7 @@ function AnnotationsList({
     upvoteAnnotation = null,
     offsetTop = 0,
     onAnnotationHoverUpdate,
+    hypothesisSyncEnabled,
 }) {
     if (!annotations) {
         return <div></div>;
@@ -83,6 +84,9 @@ function AnnotationsList({
                                         )
                                     }
                                     animationIndex={groupIndex}
+                                    hypothesisSyncEnabled={
+                                        hypothesisSyncEnabled
+                                    }
                                 />
                             </div>
                         );

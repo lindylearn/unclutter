@@ -2,6 +2,7 @@ import React from "react";
 import { LindyAnnotation } from "../common/annotations/create";
 import {
     getFeatureFlag,
+    hypothesisSyncFeatureFlag,
     showSocialAnnotationsDefaultFeatureFlag,
     supportSocialAnnotations,
 } from "../common/featureFlags";
@@ -16,6 +17,15 @@ import AnnotationsList from "./components/AnnotationsList";
 
 export default function App({ url }) {
     // fetch extension settings
+    const [hypothesisSyncEnabled, setHypothesisSyncEnabled] =
+        React.useState(false);
+    React.useEffect(async () => {
+        const hypothesisSyncEnabled = await getFeatureFlag(
+            hypothesisSyncFeatureFlag
+        );
+        setHypothesisSyncEnabled(hypothesisSyncEnabled);
+    }, []);
+
     const [showSocialAnnotations, setShowSocialAnnotations] =
         React.useState(false); // updated through events sent from overlay code
     React.useEffect(async () => {
@@ -160,6 +170,7 @@ export default function App({ url }) {
                 deleteHideAnnotation={deleteHideAnnotationHandler}
                 offsetTop={50}
                 onAnnotationHoverUpdate={onAnnotationHoverUpdate}
+                hypothesisSyncEnabled={hypothesisSyncEnabled}
                 // upvotedAnnotations={upvotedAnnotations}
                 // upvoteAnnotation={upvoteAnnotation}
             />
