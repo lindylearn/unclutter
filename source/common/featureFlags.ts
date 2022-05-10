@@ -60,6 +60,7 @@ export const defaultFeatureFlags = {
     [isDevelopmentFeatureFlag]: false,
     [showOutlineFeatureFlag]: true,
     [enableAnnotationsFeatureFlag]: true,
+    [showSocialAnnotationsDefaultFeatureFlag]: true,
 
     [dismissedFeedbackMessage]: false,
 };

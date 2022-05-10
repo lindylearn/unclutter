@@ -3,7 +3,9 @@ import { LindyAnnotation } from "../common/annotations/create";
 import {
     getFeatureFlag,
     showSocialAnnotationsDefaultFeatureFlag,
+    supportSocialAnnotations,
 } from "../common/featureFlags";
+import { getRemoteFeatureFlag } from "../content-script/messaging";
 import {
     createAnnotation,
     deleteAnnotation,
@@ -16,6 +18,13 @@ export default function App({ url }) {
     const [showSocialAnnotations, setShowSocialAnnotations] =
         React.useState(false); // updated through events sent from overlay code
     React.useEffect(async () => {
+        const supportSocialFeature = await getRemoteFeatureFlag(
+            supportSocialAnnotations
+        );
+        if (!supportSocialFeature) {
+            return;
+        }
+
         const defaultSocialAnnotationsEnabled = await getFeatureFlag(
             showSocialAnnotationsDefaultFeatureFlag
         );
