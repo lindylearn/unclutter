@@ -11,7 +11,7 @@ import {
  * Methods for accessing the remote annotations state (hypothesis and lindy APIs).
  */
 
-// const lindyApiUrl = 'http://127.0.0.1:8000';
+// const lindyApiUrl = "http://127.0.0.1:8000";
 const lindyApiUrl = "https://api2.lindylearn.io";
 const hypothesisApi = "https://api.hypothes.is/api";
 
@@ -140,9 +140,29 @@ export async function upvoteRemoteAnnotation(pageUrl, annotationId, isUpvote) {
     await fetch(`${lindyApiUrl}/annotations/upvote`, {
         ...(await _getConfig()),
         method: "POST",
+        headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+        },
         body: JSON.stringify({
             annotation_id: annotationId,
             is_unvote: !isUpvote,
+        }),
+    });
+}
+
+export async function hideRemoteAnnotation(
+    annotation: LindyAnnotation
+): Promise<void> {
+    await fetch(`${lindyApiUrl}/annotations/hide`, {
+        ...(await _getConfig()),
+        method: "POST",
+        headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            annotation_id: annotation.id,
         }),
     });
 }

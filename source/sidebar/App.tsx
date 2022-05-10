@@ -6,6 +6,7 @@ import {
     supportSocialAnnotations,
 } from "../common/featureFlags";
 import { getRemoteFeatureFlag } from "../content-script/messaging";
+import { hideRemoteAnnotation } from "./common/api";
 import {
     createAnnotation,
     deleteAnnotation,
@@ -106,11 +107,11 @@ export default function App({ url }) {
             }
         }
 
+        // delete or hide remotely (detect if is reply there)
         if (annotation.isMyAnnotation) {
             deleteAnnotation(annotation);
         } else {
-            // TODO save hide
-            console.log(annotation);
+            hideRemoteAnnotation(annotation);
         }
     }
     function onAnnotationHoverUpdate(annotation, hoverActive: boolean) {

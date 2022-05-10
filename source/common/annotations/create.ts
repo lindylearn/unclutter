@@ -51,6 +51,7 @@ export interface LindyAnnotation {
     quote_html_selector: object;
     user_upvoted: boolean;
     isPublic: boolean;
+    reply_to?: string;
 
     // local state
     localId?: string; // immutable local annotation id (stays the same through remote synchronization)
