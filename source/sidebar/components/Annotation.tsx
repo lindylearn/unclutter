@@ -61,7 +61,7 @@ function Annotation({
                 })}
             </a>
             <div className="info-bar text-sm font-header text-gray-400 flex gap-3 justify-between transition-all">
-                <div
+                {/* <div
                     className={
                         "upvote-button flex-shrink-0 flex cursor-pointer select-none hover:text-gray-700 hover:scale-110 transition-all " +
                         (upvoted ? "text-gray-800 " : "") +
@@ -79,9 +79,9 @@ function Annotation({
                         ></path>
                     </svg>
                     <span>{upvoteCount}</span>
-                </div>
+                </div> */}
 
-                <a
+                {/* <a
                     className="reply-button invisible select-none hover:text-gray-700 hover:scale-110 transition-all"
                     href={link}
                     target="_blank"
@@ -98,7 +98,7 @@ function Annotation({
                         ></path>
                     </svg>
                     <span>reply</span>
-                </a>
+                </a> */}
 
                 <div className="flex-grow" />
                 <a
