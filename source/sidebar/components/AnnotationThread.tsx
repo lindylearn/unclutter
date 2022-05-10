@@ -11,7 +11,12 @@ function AnnotationThread(props) {
 
     return (
         <div className="">
-            <Component {...props} />
+            <Component
+                {...props}
+                deleteHideAnnotation={() =>
+                    props.deleteHideAnnotation(props.annotation)
+                }
+            />
             {replyLevel < 1 && (
                 <div className="ml-5">
                     {props.annotation.replies?.map((reply) => (

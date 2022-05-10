@@ -65,14 +65,23 @@ export default function App({ url }) {
         ]);
     }
 
-    function deleteAnnotationHandler(annotation: LindyAnnotation) {
+    function deleteHideAnnotationHandler(annotation: LindyAnnotation) {
         // delete from local state first
         setAnnotations(
             annotations.filter((a) => a.localId != annotation.localId)
         );
-        window.top.postMessage({ event: "removeHighlight", annotation }, "*");
+        if (annotation.quote_text) {
+            window.top.postMessage(
+                { event: "removeHighlight", annotation },
+                "*"
+            );
+        }
 
-        deleteAnnotation(annotation);
+        if (annotation.isMyAnnotation) {
+            deleteAnnotation(annotation);
+        } else {
+            // TODO save hide
+        }
     }
     function onAnnotationHoverUpdate(annotation, hoverActive: boolean) {
         window.top.postMessage(
@@ -111,14 +120,13 @@ export default function App({ url }) {
                             (a) => !a.quote_html_selector
                         )}
                         createAnnotation={createAnnotation}
-                        deleteAnnotation={deleteAnnotationHandler}
                     />
                 )} */}
             </div>
             <AnnotationsList
                 url={url}
                 annotations={annotations}
-                deleteAnnotation={deleteAnnotationHandler}
+                deleteHideAnnotation={deleteHideAnnotationHandler}
                 offsetTop={50}
                 onAnnotationHoverUpdate={onAnnotationHoverUpdate}
                 // upvotedAnnotations={upvotedAnnotations}

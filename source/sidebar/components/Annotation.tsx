@@ -8,6 +8,7 @@ function Annotation({
     upvoted,
     upvoteAnnotation,
     onHoverUpdate,
+    deleteHideAnnotation,
     animationIndex,
 }) {
     const { text, offset, author, platform, link, reply_count } = annotation;
@@ -64,7 +65,7 @@ function Annotation({
             <div className="top-icons absolute top-1.5 right-1.5 p-1 flex gap-3 text-gray-400 transition-all">
                 <div
                     className="cursor-pointer hover:text-gray-600 hover:scale-110"
-                    // onClick={deleteAnnotation}
+                    onClick={deleteHideAnnotation}
                 >
                     <svg className="icon h-3.5" viewBox="0 0 640 512">
                         <path

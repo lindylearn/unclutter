@@ -5,7 +5,7 @@ function AnnotationsList({
     url,
     annotations,
     onClick = null,
-    deleteAnnotation,
+    deleteHideAnnotation,
     upvotedAnnotations = {},
     upvoteAnnotation = null,
     offsetTop = 0,
@@ -63,9 +63,7 @@ function AnnotationsList({
                             >
                                 <AnnotationThread
                                     annotation={annotation}
-                                    deleteAnnotation={() =>
-                                        deleteAnnotation(annotation)
-                                    }
+                                    deleteHideAnnotation={deleteHideAnnotation}
                                     charLimit={
                                         i == group.length - 1 ? 400 : 200
                                     }

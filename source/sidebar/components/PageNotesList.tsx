@@ -6,7 +6,7 @@ export default function PageNotesList({
     url,
     annotations,
     createAnnotation,
-    deleteAnnotation,
+    deleteHideAnnotation,
 }) {
     return (
         <div className="flex flex-col gap-1">
@@ -16,7 +16,7 @@ export default function PageNotesList({
                     key={a.localId}
                     annotation={a}
                     createAnnotation={createAnnotation}
-                    deleteAnnotation={() => deleteAnnotation(a)}
+                    deleteHideAnnotation={() => deleteHideAnnotation(a)}
                 />
             ))}
         </div>
@@ -27,7 +27,7 @@ export function PageNote({
     url,
     annotation,
     createAnnotation,
-    deleteAnnotation,
+    deleteHideAnnotation,
 }) {
     const Component = annotation.isMyAnnotation ? AnnotationDraft : Annotation;
 
@@ -37,7 +37,7 @@ export function PageNote({
             annotation={annotation}
             className="border-l-0 rounded"
             createAnnotation={createAnnotation}
-            deleteAnnotation={deleteAnnotation}
+            deleteHideAnnotation={deleteHideAnnotation}
             placeholder="Page note"
         />
     );

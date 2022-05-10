@@ -9,7 +9,7 @@ function AnnotationDraft({
     url,
     annotation,
     className,
-    deleteAnnotation,
+    deleteHideAnnotation,
     placeholder = "Private note",
 }) {
     // debounce to reduce API calls
@@ -98,7 +98,7 @@ function AnnotationDraft({
             <div className="top-icons absolute top-1.5 right-1.5 p-1 flex gap-3 text-gray-400 transition-all">
                 <div
                     className="cursor-pointer hover:text-gray-600 hover:scale-110"
-                    onClick={deleteAnnotation}
+                    onClick={deleteHideAnnotation}
                 >
                     <svg className="icon h-3.5" viewBox="0 0 448 512">
                         <path
@@ -110,7 +110,6 @@ function AnnotationDraft({
 
                 {/* <div
                     className="cursor-pointer hover:text-gray-600 hover:scale-110"
-                    // onClick={deleteAnnotation}
                 >
                     <svg className="h-3" viewBox="0 0 512 512">
                         <path
