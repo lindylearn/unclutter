@@ -26,7 +26,7 @@ import {
 export async function getAnnotations(
     url: string,
     showSocialAnnotations: boolean
-) {
+): Promise<LindyAnnotation[]> {
     // *** fetch annotations from configured sources ***
     let localAnnotations = [];
     let userRemoteAnnotations = [];

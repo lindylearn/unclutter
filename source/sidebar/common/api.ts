@@ -18,18 +18,22 @@ const hypothesisApi = "https://api.hypothes.is/api";
 // --- global fetching
 
 // public annotations via lindy api
-export async function getLindyAnnotations(url) {
+export async function getLindyAnnotations(
+    url: string
+): Promise<LindyAnnotation[]> {
     const response = await fetch(
         `${lindyApiUrl}/annotations?${new URLSearchParams({ page_url: url })}`,
         await _getConfig()
     );
     const json = await response.json();
 
-    return json.results.map((a) => ({ ...a, isPublic: true }));
+    return json.results.map((a) => ({ ...a, isPublic: true, localId: a.id }));
 }
 
 // private annotations directly from hypothesis
-export async function getHypothesisAnnotations(url) {
+export async function getHypothesisAnnotations(
+    url: string
+): Promise<LindyAnnotation[]> {
     const username = await getHypothesisUsername();
     const response = await fetch(
         `${hypothesisApi}/search?${new URLSearchParams({
