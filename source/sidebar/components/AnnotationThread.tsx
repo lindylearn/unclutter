@@ -1,4 +1,5 @@
 import React from "react";
+import { LindyAnnotation } from "../../common/annotations/create";
 import Annotation from "./Annotation";
 import AnnotationDraft from "./AnnotationDraft";
 
@@ -14,7 +15,7 @@ function AnnotationThread(props) {
             <Component
                 {...props}
                 deleteHideAnnotation={() =>
-                    props.deleteHideAnnotation(props.annotation)
+                    props.deleteHideAnnotation(props.annotation, null)
                 }
             />
             {replyLevel < 1 && (
@@ -26,6 +27,15 @@ function AnnotationThread(props) {
                             annotation={reply}
                             className="mt-1 rounded border-l-0"
                             replyLevel={replyLevel + 1}
+                            deleteHideAnnotation={
+                                replyLevel === 0
+                                    ? (nestedAnnotation: LindyAnnotation) =>
+                                          props.deleteHideAnnotation(
+                                              nestedAnnotation,
+                                              props.annotation
+                                          )
+                                    : props.deleteHideAnnotation
+                            }
                         />
                     ))}
                 </div>

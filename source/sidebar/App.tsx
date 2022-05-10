@@ -65,22 +65,52 @@ export default function App({ url }) {
         ]);
     }
 
-    function deleteHideAnnotationHandler(annotation: LindyAnnotation) {
+    function deleteHideAnnotationHandler(
+        annotation: LindyAnnotation,
+        threadStart?: LindyAnnotation
+    ) {
         // delete from local state first
-        setAnnotations(
-            annotations.filter((a) => a.localId != annotation.localId)
-        );
-        if (annotation.quote_text) {
-            window.top.postMessage(
-                { event: "removeHighlight", annotation },
-                "*"
+        if (threadStart) {
+            // remove just this reply
+
+            // dfs as there may be arbitrary nesting
+            function removeReplyDfs(current: LindyAnnotation) {
+                console.log(current);
+                if (current.replies.some((a) => a.id === annotation.id)) {
+                    // found reply, modify reference
+                    current.replies = current.replies.filter(
+                        (a) => a.id !== annotation.id
+                    );
+                    return;
+                }
+
+                current.replies.map(removeReplyDfs);
+            }
+            removeReplyDfs(threadStart);
+
+            setAnnotations(
+                annotations.filter((a) =>
+                    a.id === threadStart.id ? threadStart : a
+                )
             );
+        } else {
+            // is root, so remove entire thread
+            setAnnotations(
+                annotations.filter((a) => a.localId !== annotation.localId)
+            );
+            if (annotation.quote_text) {
+                window.top.postMessage(
+                    { event: "removeHighlight", annotation },
+                    "*"
+                );
+            }
         }
 
         if (annotation.isMyAnnotation) {
             deleteAnnotation(annotation);
         } else {
             // TODO save hide
+            console.log(annotation);
         }
     }
     function onAnnotationHoverUpdate(annotation, hoverActive: boolean) {
