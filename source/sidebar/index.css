@@ -18,18 +18,6 @@
     z-index: 20;
 }
 
-
-/* annotation list */
-.annotation-group-item:not(:first-child)::before {
-    height: 5px;
-    width: 100%;
-    display: block;
-    content: "";
-    position: relative;
-
-    background: linear-gradient(to top, #e5e7eb, rgba(0, 0, 0, 0));
-}
-
 .annotation > .top-icons > div:not(.visible) {
     visibility: hidden;
     opacity: 0;

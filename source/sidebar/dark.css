@@ -22,10 +22,6 @@
     color: #bdbdbd !important
 }
 
-.annotation-group-item:not(:first-child)::before {
-    background: linear-gradient(to top, #262626, rgba(0, 0, 0, 0)) !important;
-}
-
 .lindy-tooltip {
     --text-color: var(--lindy-dark-theme-text-color) !important;
 }

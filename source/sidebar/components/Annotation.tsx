@@ -53,11 +53,11 @@ function Annotation({
                 target="_blank"
                 rel="noreferrer"
             >
-                {textLines.map((line) => (
-                    <>
+                {textLines.map((line, i) => (
+                    <React.Fragment key={i}>
                         {line}
                         <br />
-                    </>
+                    </React.Fragment>
                 ))}
             </a>
 

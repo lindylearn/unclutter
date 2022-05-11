@@ -18,7 +18,7 @@ function AnnotationsList({
         return <div></div>;
     }
 
-    const orderedAnnotations = annotations
+    const orderedAnnotations: LindyAnnotation[] = annotations
         .filter((a) => a.displayOffset)
         .sort((a, b) => a.displayOffset - b.displayOffset);
 
@@ -41,8 +41,11 @@ function AnnotationsList({
     }
 
     // take best comment from each group
-    groupedAnnotations = groupedAnnotations.map((groupList) =>
-        groupList
+    groupedAnnotations = groupedAnnotations.map((groupList) => {
+        // show all personal annotations, but filter social comments
+        const myAnnotations = groupList.filter((a) => a.isMyAnnotation);
+        const bestSocialComments = groupList
+            .filter((a) => !a.isMyAnnotation)
             .sort((a, b) => {
                 // prefer more replies
                 if (b.reply_count !== a.reply_count) {
@@ -52,8 +55,13 @@ function AnnotationsList({
                 // prefer longer comments
                 return b.text.length - a.text.length;
             })
-            .slice(0, 1)
-    );
+            .slice(0, 1);
+
+        // Order by appearance
+        return bestSocialComments
+            .concat(myAnnotations)
+            .sort((a, b) => a.displayOffset - b.displayOffset);
+    });
 
     return (
         <div className="relative flex-grow" onClick={onClick}>
@@ -92,26 +100,16 @@ function AnnotationGroup({
 }) {
     return (
         <div
-            className="absolute w-full"
+            className="absolute w-full flex flex-col gap-1"
             style={{
                 top: group[0].displayOffset - offsetTop,
-                position: "relative",
             }}
         >
             {group.map((annotation, annotationIndex) => {
                 return (
                     <div
                         key={annotation.localId}
-                        className={
-                            "annotation-group-item w-full rounded-r " +
-                            (group.length > 1
-                                ? "hover:z-10 hover:drop-shadow"
-                                : "")
-                        }
-                        style={{
-                            position: "absolute",
-                            top: `${annotationIndex * 40}px`,
-                        }}
+                        className="annotation-group-item"
                     >
                         <AnnotationThread
                             annotation={annotation}
