@@ -17,8 +17,9 @@ function AnnotationThread(props) {
                 deleteHideAnnotation={() =>
                     props.deleteHideAnnotation(props.annotation, null)
                 }
+                showReplyCount={replyLevel >= 2}
             />
-            {replyLevel < 1 && (
+            {replyLevel < 2 && (
                 <div className="ml-5">
                     {props.annotation.replies?.map((reply) => (
                         <AnnotationThread
