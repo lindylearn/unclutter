@@ -4,7 +4,7 @@ import { getAnnotationColor } from "../../common/annotations/styling";
 function Annotation({
     annotation,
     className,
-    charLimit = 200,
+    heightLimitPx = 200,
     upvoted,
     upvoteAnnotation,
     onHoverUpdate,
@@ -12,14 +12,10 @@ function Annotation({
     showReplyCount,
     hypothesisSyncEnabled,
     createReply,
-    animationIndex,
 }) {
     const { text, offset, author, platform, link, reply_count } = annotation;
 
-    const textLines = text
-        .slice(0, charLimit)
-        .split("\n")
-        .filter((line) => line.trim() != "");
+    const textLines = text.split("\n").filter((line) => line.trim() != "");
 
     const [upvoteCount, setLocalUpvoteCount] = React.useState(
         annotation.upvote_count || 0
@@ -39,30 +35,29 @@ function Annotation({
             style={{
                 top: offset,
                 borderColor: getAnnotationColor(annotation),
-                // animationDelay: `${animationIndex * 100}ms`,
             }}
             onMouseEnter={() => onHoverUpdate(true)}
             onMouseLeave={() => onHoverUpdate(false)}
         >
             <a
-                className="text-sm leading-normal"
+                className="text-sm leading-snug"
+                style={{
+                    display: "-webkit-box",
+                    WebkitLineClamp: 5,
+                    WebkitBoxOrient: "vertical",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                }}
                 href={link}
                 target="_blank"
                 rel="noreferrer"
             >
-                {textLines.map((line, i) => {
-                    return (
-                        <p key={i} className="mb-1">
-                            {line}
-                            {i == textLines.length - 1 &&
-                            text.length > charLimit ? (
-                                "..."
-                            ) : (
-                                <br className="" />
-                            )}
-                        </p>
-                    );
-                })}
+                {textLines.map((line) => (
+                    <>
+                        {line}
+                        <br />
+                    </>
+                ))}
             </a>
 
             <div className="top-icons absolute top-1 right-1 p-1 flex gap-3 text-gray-400 transition-all">
