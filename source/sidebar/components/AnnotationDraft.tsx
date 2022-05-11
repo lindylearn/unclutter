@@ -72,7 +72,7 @@ function AnnotationDraft({
             }}
         >
             <TextareaAutosize
-                className="text-sm md:text-base w-full bg-gray-50 placeholder-gray-400 rounded py-1 pl-2 pr-6 outline-none align-top"
+                className="text-sm md:text-base w-full bg-gray-50 placeholder-gray-400 placeholder:select-none rounded py-1 pl-2 pr-6 outline-none align-top"
                 placeholder={
                     (localAnnotation.isPublic ? "Public " : "Private ") +
                     (isReply ? "reply" : "note")

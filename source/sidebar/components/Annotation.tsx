@@ -41,7 +41,7 @@ function Annotation({
             onMouseLeave={() => onHoverUpdate(false)}
         >
             <a
-                className="annotation-text text-sm mr-3"
+                className="annotation-text text-sm select-none mr-3"
                 style={{
                     display: "-webkit-box",
                     WebkitLineClamp: 5,

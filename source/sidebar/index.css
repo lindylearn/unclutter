@@ -18,6 +18,10 @@
     z-index: 20;
 }
 
+.annotation {
+    background-color: var(--lindy-background-color) !important;
+}
+
 .annotation > .top-icons > div:not(.visible) {
     visibility: hidden;
     opacity: 0;
@@ -36,10 +40,6 @@
 .annotation:hover > .info-bar > .reply-button {
     visibility: visible;
     opacity: 1;
-}
-
-.annotation {
-    background-color: var(--lindy-background-color) !important;
 }
 
 svg.icon > path {

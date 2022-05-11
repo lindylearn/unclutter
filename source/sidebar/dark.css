@@ -16,7 +16,8 @@
 .annotation > .info-bar {
     color: #616161 !important;
 }
-.annotation > .top-icons > *:hover, 
+.top-icons > *:hover,
+.info-bar > *:hover,
 .upvote-button:hover,
 .reply-button:hover {
     color: #bdbdbd !important
