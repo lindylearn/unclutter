@@ -13,6 +13,8 @@ import svelte from "rollup-plugin-svelte";
 import sveltePreprocess from "svelte-preprocess";
 import tailwindcss from "tailwindcss";
 
+const isProduction = !process.env.ROLLUP_WATCH;
+
 // bundle content scripts
 // absolute path imports (starting with "source/") seems to break this.
 const contentScriptConfigs = [
@@ -44,7 +46,9 @@ const contentScriptConfigs = [
         typescript(),
         replace({
             preventAssignment: true,
-            "process.env.NODE_ENV": JSON.stringify("production"),
+            "process.env.NODE_ENV": JSON.stringify(
+                isProduction ? "production" : "development"
+            ),
         }),
         json(),
     ],
@@ -99,7 +103,9 @@ const esModuleConfig = {
         moveVirtualFolder,
         replace({
             preventAssignment: true,
-            "process.env.NODE_ENV": JSON.stringify("production"),
+            "process.env.NODE_ENV": JSON.stringify(
+                isProduction ? "production" : "development"
+            ),
         }),
         json(),
     ],
