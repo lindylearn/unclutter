@@ -20,11 +20,13 @@ export default function App({ url }) {
     // fetch extension settings
     const [hypothesisSyncEnabled, setHypothesisSyncEnabled] =
         React.useState(false);
-    React.useEffect(async () => {
-        const hypothesisSyncEnabled = await getFeatureFlag(
-            hypothesisSyncFeatureFlag
-        );
-        setHypothesisSyncEnabled(hypothesisSyncEnabled);
+    React.useEffect(() => {
+        (async function () {
+            const hypothesisSyncEnabled = await getFeatureFlag(
+                hypothesisSyncFeatureFlag
+            );
+            setHypothesisSyncEnabled(hypothesisSyncEnabled);
+        })();
     }, []);
 
     // state updated through events sent from overlay code below
@@ -32,42 +34,46 @@ export default function App({ url }) {
         React.useState(false);
     const [showSocialAnnotations, setShowSocialAnnotations] =
         React.useState(false);
-    React.useEffect(async () => {
-        const enabled = await getFeatureFlag(enableAnnotationsFeatureFlag);
-        setPersonalAnnotationsEnabled(enabled);
+    React.useEffect(() => {
+        (async function () {
+            const enabled = await getFeatureFlag(enableAnnotationsFeatureFlag);
+            setPersonalAnnotationsEnabled(enabled);
 
-        const supportSocialFeature = await getRemoteFeatureFlag(
-            supportSocialAnnotations
-        );
-        if (!supportSocialFeature) {
-            setShowSocialAnnotations(false);
-        } else {
-            const defaultSocialAnnotationsEnabled = await getFeatureFlag(
-                showSocialAnnotationsDefaultFeatureFlag
+            const supportSocialFeature = await getRemoteFeatureFlag(
+                supportSocialAnnotations
             );
-            setShowSocialAnnotations(defaultSocialAnnotationsEnabled);
-        }
+            if (!supportSocialFeature) {
+                setShowSocialAnnotations(false);
+            } else {
+                const defaultSocialAnnotationsEnabled = await getFeatureFlag(
+                    showSocialAnnotationsDefaultFeatureFlag
+                );
+                setShowSocialAnnotations(defaultSocialAnnotationsEnabled);
+            }
+        })();
     }, []);
 
     // keep the annotations state here
     const [annotations, setAnnotations] = React.useState([]);
-    React.useEffect(async () => {
-        const annotations = await getAnnotations(
-            url,
-            personalAnnotationsEnabled,
-            showSocialAnnotations
-        );
-        const pageNotes = annotations.filter((a) => !a.quote_html_selector);
-        // if (pageNotes.length === 0) {
-        //     pageNotes.push(createDraftAnnotation(url, null));
-        // }
+    React.useEffect(() => {
+        (async function () {
+            const annotations = await getAnnotations(
+                url,
+                personalAnnotationsEnabled,
+                showSocialAnnotations
+            );
+            const pageNotes = annotations.filter((a) => !a.quote_html_selector);
+            // if (pageNotes.length === 0) {
+            //     pageNotes.push(createDraftAnnotation(url, null));
+            // }
 
-        // show page notes immediately, others once anchored
-        setAnnotations(pageNotes);
-        window.top.postMessage(
-            { event: "anchorAnnotations", annotations },
-            "*"
-        );
+            // show page notes immediately, others once anchored
+            setAnnotations(pageNotes);
+            window.top.postMessage(
+                { event: "anchorAnnotations", annotations },
+                "*"
+            );
+        })();
     }, [personalAnnotationsEnabled, showSocialAnnotations]);
 
     // sync local annotation updates to hypothesis

@@ -23,13 +23,13 @@ function AnnotationDraft({
     // keep local state
     const [localAnnotation, setLocalAnnotation] = React.useState(annotation);
     // patch correct id once annotation remotely created
-    React.useEffect(async () => {
+    React.useEffect(() => {
         if (!localAnnotation.id && annotation.id) {
             const newAnnotation = { ...localAnnotation, id: annotation.id };
             setLocalAnnotation(newAnnotation);
 
             // synchronize potential local edits
-            await debouncedUpdateApi(newAnnotation);
+            debouncedUpdateApi(newAnnotation);
         }
     }, [annotation.id]);
 

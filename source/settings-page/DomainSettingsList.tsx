@@ -5,25 +5,27 @@ import { reportEventContentScript } from "../content-script/messaging";
 
 export default function DomainSettingsList({}) {
     const [overrideList, setOverrideList] = React.useState(null);
-    React.useEffect(async () => {
-        const customSettings = await getAllCustomDomainSettings();
+    React.useEffect(() => {
+        (async function () {
+            const customSettings = await getAllCustomDomainSettings();
 
-        const allowedDomains = customSettings.allow.map((domain) => ({
-            domain,
-            status: "allow",
-        }));
-        const blockedDomains = customSettings.deny.map((domain) => ({
-            domain,
-            status: "deny",
-        }));
-
-        const completeList = allowedDomains
-            .concat(blockedDomains)
-            .map((obj) => ({
-                ...obj,
+            const allowedDomains = customSettings.allow.map((domain) => ({
+                domain,
+                status: "allow",
+            }));
+            const blockedDomains = customSettings.deny.map((domain) => ({
+                domain,
+                status: "deny",
             }));
 
-        setOverrideList(completeList);
+            const completeList = allowedDomains
+                .concat(blockedDomains)
+                .map((obj) => ({
+                    ...obj,
+                }));
+
+            setOverrideList(completeList);
+        })();
     }, []);
 
     function updateDomainStatus(domain, newStatus) {

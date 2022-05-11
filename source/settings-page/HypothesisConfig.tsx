@@ -11,40 +11,46 @@ import {
 
 export default function HypothesisConfig() {
     const [token, setToken] = React.useState("");
-    React.useEffect(async () => {
-        const existingToken = await getHypothesisToken();
-        setToken(existingToken);
+    React.useEffect(() => {
+        (async function () {
+            const existingToken = await getHypothesisToken();
+            setToken(existingToken);
+        })();
     }, []);
 
     const [tokenValid, setTokenValid] = React.useState("");
-    React.useEffect(async () => {
-        if (token === "") {
-            return;
-        }
+    React.useEffect(() => {
+        (async function () {
+            if (token === "") {
+                return;
+            }
 
-        const tokenValid = await validateSaveToken(token, true);
-        setTokenValid(tokenValid);
+            const tokenValid = await validateSaveToken(token, true);
+            setTokenValid(tokenValid);
+        })();
     }, [token]);
 
     // if this renders, the user has enabled the hypothesis sync
     // so upload & delete local annotations once token valid
     // TODO: user may exit settings before uploaded, which will create duplicate annotations
-    React.useEffect(async () => {
-        if (!tokenValid) {
-            return;
-        }
+    React.useEffect(() => {
+        (async function () {
+            if (!tokenValid) {
+                return;
+            }
 
-        const localAnnotations = await getAllLocalAnnotations();
-        if (localAnnotations.length === 0) {
-            return;
-        }
+            const localAnnotations = await getAllLocalAnnotations();
+            if (localAnnotations.length === 0) {
+                return;
+            }
 
-        console.log(
-            `Uploading ${localAnnotations.length} local annotations...`
-        );
-        await Promise.all(localAnnotations.map(createRemoteAnnotation));
+            console.log(
+                `Uploading ${localAnnotations.length} local annotations...`
+            );
+            await Promise.all(localAnnotations.map(createRemoteAnnotation));
 
-        await deleteAllLocalAnnotations();
+            await deleteAllLocalAnnotations();
+        })();
     }, [tokenValid]);
 
     return (

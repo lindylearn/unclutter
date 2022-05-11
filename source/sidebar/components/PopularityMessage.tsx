@@ -4,13 +4,15 @@ import { getPageHistory } from "../common/api";
 
 export function PopularityMessage({ annotations, url, onClick }) {
     const [data, setData] = React.useState(null);
-    React.useEffect(async () => {
-        try {
-            const newData = await getPageHistory(url);
-            if (newData?.length > 0) {
-                setData(newData);
-            }
-        } catch {}
+    React.useEffect(() => {
+        (async function () {
+            try {
+                const newData = await getPageHistory(url);
+                if (newData?.length > 0) {
+                    setData(newData);
+                }
+            } catch {}
+        })();
     }, []);
 
     if (data == null) {

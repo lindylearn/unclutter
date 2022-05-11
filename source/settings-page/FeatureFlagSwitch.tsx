@@ -15,9 +15,11 @@ export default function FeatureFlagSwitch({
     onChange,
 }) {
     const [state, setState] = React.useState(null);
-    React.useEffect(async () => {
-        const newState = await getFeatureFlag(featureFlagKey);
-        setState(newState);
+    React.useEffect(() => {
+        (async function () {
+            const newState = await getFeatureFlag(featureFlagKey);
+            setState(newState);
+        })();
     }, []);
     async function toggleStateLocalFirst() {
         const newState = !state;

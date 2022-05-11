@@ -25,15 +25,21 @@ function OptionsPage({}) {
 
     const [socialAnnotationsSupported, setSocialAnnotationsSupported] =
         React.useState(null);
-    React.useEffect(async () => {
-        const enabled = await getRemoteFeatureFlag(supportSocialAnnotations);
-        setSocialAnnotationsSupported(enabled);
+    React.useEffect(() => {
+        (async function () {
+            const enabled = await getRemoteFeatureFlag(
+                supportSocialAnnotations
+            );
+            setSocialAnnotationsSupported(enabled);
+        })();
     }, []);
 
     const [hypothesisEnabled, setHypothesisEnabled] = React.useState(null);
-    React.useEffect(async () => {
-        const enabled = await getFeatureFlag(hypothesisSyncFeatureFlag);
-        setHypothesisEnabled(enabled);
+    React.useEffect(() => {
+        (async function () {
+            const enabled = await getFeatureFlag(hypothesisSyncFeatureFlag);
+            setHypothesisEnabled(enabled);
+        })();
     }, []);
     function onChangeHypothesisSync(enabled) {
         setHypothesisEnabled(enabled);
