@@ -25,16 +25,45 @@ export default class AnnotationsModifier implements PageModifier {
     private sidebarLoaded: boolean = false;
 
     async afterTransitionIn() {
+        // always enable sidebar
+        this.sidebarIframe = injectSidebar();
+        window.addEventListener("message", ({ data }) => {
+            if (data.event === "sidebarIframeLoaded") {
+                this.sidebarLoaded = true;
+            }
+        });
+
+        // alwasys created anchor listener to handle social comments
+        createAnnotationListener(
+            this.sidebarIframe,
+            this.onAnnotationUpdate.bind(this)
+        );
+
+        // annotations may be toggled independently
         const annotationsEnabled = await getFeatureFlag(
             enableAnnotationsFeatureFlag
         );
         if (annotationsEnabled) {
             this.enableAnnotations();
         }
+
+        // set theme variables if those are already configured
+        if (this.darkModeEnabled !== null) {
+            this.setSidebarDarkMode(this.darkModeEnabled);
+        }
+        Object.entries(this.cssVariables).map(([key, value]) =>
+            this.setSidebarCssVariable(key, value)
+        );
     }
 
     async transitionOut() {
         this.disableAnnotations();
+        removeAnnotationListener();
+
+        if (this.sidebarIframe) {
+            removeSidebar();
+        }
+        this.sidebarLoaded = false;
     }
 
     setEnableAnnotations(enableAnnotations: boolean) {
@@ -46,40 +75,18 @@ export default class AnnotationsModifier implements PageModifier {
     }
 
     private enableAnnotations() {
-        this.sidebarIframe = injectSidebar();
-        window.addEventListener("message", ({ data }) => {
-            if (data.event === "sidebarIframeLoaded") {
-                this.sidebarLoaded = true;
-            }
-        });
+        // listeners need to be configured before rendering iframe to anchor annotations?
 
-        // listeners need to be configured before rendering iframe to anchor annotations (local retrieval is fast)
+        // selection is only user interface for annotations
         createSelectionListener(
             this.sidebarIframe,
             this.onAnnotationUpdate.bind(this)
         );
-        createAnnotationListener(
-            this.sidebarIframe,
-            this.onAnnotationUpdate.bind(this)
-        );
-
-        // set theme variables if those are already configured
-        if (this.darkModeEnabled !== null) {
-            this.setSidebarDarkMode(this.darkModeEnabled);
-        }
-        Object.entries(this.cssVariables).map(([key, value]) =>
-            this.setSidebarCssVariable(key, value)
-        );
     }
 
     private disableAnnotations() {
-        if (this.sidebarIframe) {
-            removeSidebar();
-        }
-        this.sidebarLoaded = false;
-
+        // keeps showing personal annotations if social enabled, which should be fine.
         removeSelectionListener();
-        removeAnnotationListener();
     }
 
     setShowSocialAnnotations(showSocialAnnotations: boolean) {
