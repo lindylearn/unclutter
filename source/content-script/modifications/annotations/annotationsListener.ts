@@ -97,5 +97,5 @@ export function sendSidebarEvent(
     sidebarIframe: HTMLIFrameElement,
     event: object
 ) {
-    sidebarIframe.contentWindow.postMessage(event, "*");
+    sidebarIframe.contentWindow?.postMessage(event, "*");
 }

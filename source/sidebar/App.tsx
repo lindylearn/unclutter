@@ -36,20 +36,23 @@ export default function App({ url }) {
         React.useState(false);
     React.useEffect(() => {
         (async function () {
-            const enabled = await getFeatureFlag(enableAnnotationsFeatureFlag);
-            setPersonalAnnotationsEnabled(enabled);
+            const personalAnnotationsEnabled = await getFeatureFlag(
+                enableAnnotationsFeatureFlag
+            );
 
+            let showSocialAnnotations = false;
             const supportSocialFeature = await getRemoteFeatureFlag(
                 supportSocialAnnotations
             );
-            if (!supportSocialFeature) {
-                setShowSocialAnnotations(false);
-            } else {
-                const defaultSocialAnnotationsEnabled = await getFeatureFlag(
+            if (supportSocialFeature) {
+                showSocialAnnotations = await getFeatureFlag(
                     showSocialAnnotationsDefaultFeatureFlag
                 );
-                setShowSocialAnnotations(defaultSocialAnnotationsEnabled);
             }
+
+            // batch state updates
+            setPersonalAnnotationsEnabled(personalAnnotationsEnabled);
+            setShowSocialAnnotations(showSocialAnnotations);
         })();
     }, []);
 
