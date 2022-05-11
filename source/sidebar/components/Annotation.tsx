@@ -62,7 +62,7 @@ function Annotation({
                 })}
             </a>
 
-            <div className="top-icons absolute top-1.5 right-1.5 p-1 flex gap-3 text-gray-400 transition-all">
+            <div className="top-icons absolute top-1 right-1 p-1 flex gap-3 text-gray-400 transition-all">
                 <div
                     className="cursor-pointer hover:text-gray-600 hover:scale-110"
                     onClick={deleteHideAnnotation}

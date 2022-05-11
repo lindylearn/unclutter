@@ -9,6 +9,7 @@ import {
     removeAnnotationListener,
     sendSidebarEvent,
 } from "./annotationsListener";
+import { removeAllHighlights } from "./highlightsApi";
 import {
     injectSidebar,
     removeSidebar,
@@ -91,6 +92,7 @@ export default class AnnotationsModifier implements PageModifier {
 
     private disableAnnotations() {
         removeSelectionListener();
+        removeAllHighlights(); // social annotations get re-anchored through below event
 
         sendSidebarEvent(this.sidebarIframe, {
             event: "setEnablePersonalAnnotations",
