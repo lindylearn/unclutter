@@ -61,7 +61,7 @@ export interface LindyAnnotation {
 
     // local state
     localId?: string; // immutable local annotation id (stays the same through remote synchronization)
-    url?: string;
+    url: string;
     isMyAnnotation?: boolean;
     displayOffset?: number;
 
@@ -71,6 +71,7 @@ export interface LindyAnnotation {
 export function hypothesisToLindyFormat(annotation): LindyAnnotation {
     return {
         id: annotation.id,
+        url: annotation.uri,
         localId: annotation.id, // base comparisons on immutable localId
         author: annotation.user.match(/([^:]+)@/)[1],
         platform: "h",

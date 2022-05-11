@@ -27,7 +27,16 @@ export async function getLindyAnnotations(
     );
     const json = await response.json();
 
-    return json.results.map((a) => ({ ...a, isPublic: true, localId: a.id }));
+    function mapFormat(annotation: LindyAnnotation): LindyAnnotation {
+        return {
+            ...annotation,
+            isPublic: true,
+            localId: annotation.id,
+            url,
+            replies: annotation.replies.map(mapFormat),
+        };
+    }
+    return json.results.map(mapFormat);
 }
 
 // private annotations directly from hypothesis
@@ -77,7 +86,11 @@ export async function createRemoteAnnotation(
             target: [
                 {
                     source: localAnnotation.url,
-                    selector: localAnnotation.quote_html_selector,
+                    ...(localAnnotation.quote_html_selector
+                        ? {
+                              selector: localAnnotation.quote_html_selector,
+                          }
+                        : {}),
                 },
             ],
             tags: localAnnotation.tags,
@@ -88,6 +101,9 @@ export async function createRemoteAnnotation(
                         : `acct:${username}@hypothes.is`,
                 ],
             },
+            references: localAnnotation.reply_to
+                ? [localAnnotation.reply_to]
+                : [],
         }),
     });
     const json = await response.json();

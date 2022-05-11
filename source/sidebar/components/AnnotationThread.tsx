@@ -27,7 +27,7 @@ function AnnotationThread(props) {
                 <div className="ml-5">
                     {props.annotation.replies?.map((reply) => (
                         <AnnotationThread
-                            key={reply.id}
+                            key={reply.localId}
                             {...props}
                             annotation={reply}
                             className="mt-1 rounded border-l-0"

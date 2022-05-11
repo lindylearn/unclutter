@@ -11,7 +11,7 @@ import {
     supportSocialAnnotations,
 } from "../common/featureFlags";
 import { getRemoteFeatureFlag } from "../content-script/messaging";
-import { hideRemoteAnnotation } from "./common/api";
+import { createRemoteAnnotation, hideRemoteAnnotation } from "./common/api";
 import {
     createAnnotation,
     deleteAnnotation,
@@ -114,7 +114,23 @@ export default function App({ url }) {
             current.replies.map(addReplyDfs);
         }
         addReplyDfs(threadStart);
+        setAnnotations(
+            annotations.filter((a) =>
+                a.id === threadStart.id ? threadStart : a
+            )
+        );
 
+        const remoteAnnotation = await createRemoteAnnotation(reply);
+
+        function updateIdDfs(current: LindyAnnotation) {
+            if (current.localId === remoteAnnotation.localId) {
+                current.id = remoteAnnotation.id;
+                return;
+            }
+
+            current.replies.map(updateIdDfs);
+        }
+        updateIdDfs(threadStart);
         setAnnotations(
             annotations.filter((a) =>
                 a.id === threadStart.id ? threadStart : a
