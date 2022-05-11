@@ -3,6 +3,8 @@ import { LindyAnnotation } from "../../common/annotations/create";
 import Annotation from "./Annotation";
 import AnnotationDraft from "./AnnotationDraft";
 
+const maxReplyNesting = 2;
+
 function AnnotationThread(props) {
     const replyLevel = props.replyLevel || 0;
 
@@ -20,10 +22,13 @@ function AnnotationThread(props) {
                 createReply={() =>
                     props.createReply(props.annotation, props.annotation)
                 }
-                showReplyCount={replyLevel >= 2}
+                showReplyCount={
+                    replyLevel >= maxReplyNesting ||
+                    props.annotation.replies?.length === 0
+                }
                 isReply={replyLevel !== 0}
             />
-            {replyLevel < 2 && (
+            {replyLevel < maxReplyNesting && (
                 <div className="ml-5">
                     {props.annotation.replies?.map((reply) => (
                         <AnnotationThread

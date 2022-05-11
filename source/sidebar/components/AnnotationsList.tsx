@@ -1,4 +1,5 @@
 import React from "react";
+import { LindyAnnotation } from "../../common/annotations/create";
 import AnnotationThread from "./AnnotationThread";
 
 function AnnotationsList({
@@ -21,10 +22,12 @@ function AnnotationsList({
         .filter((a) => a.displayOffset)
         .sort((a, b) => a.displayOffset - b.displayOffset);
 
-    const groupedAnnotations = [];
+    // group annotations that are close together
+    const groupMarginMax = 100;
+    let groupedAnnotations: LindyAnnotation[][] = [];
     let lastOffset = -Infinity;
     for (const annotation of orderedAnnotations) {
-        if (annotation.displayOffset < lastOffset + 100) {
+        if (annotation.displayOffset < lastOffset + groupMarginMax) {
             // conflict, append to last group
             groupedAnnotations[groupedAnnotations.length - 1] = [
                 ...groupedAnnotations[groupedAnnotations.length - 1],
@@ -37,6 +40,19 @@ function AnnotationsList({
         lastOffset = annotation.displayOffset;
     }
 
+    // take best comment from each group
+    groupedAnnotations = groupedAnnotations.map((groupList) =>
+        groupList.sort((a, b) => {
+            // prefer more replies
+            if (b.reply_count !== a.reply_count) {
+                return b.reply_count - a.reply_count;
+            }
+
+            // prefer longer comments
+            return b.text.length - a.text.length;
+        })
+    );
+
     return (
         <div className="relative flex-grow" onClick={onClick}>
             {groupedAnnotations.map((group, groupIndex) => (
@@ -48,7 +64,7 @@ function AnnotationsList({
                         position: "relative",
                     }}
                 >
-                    {group.slice(0, 5).map((annotation, i) => {
+                    {group.slice(0, 1).map((annotation, i) => {
                         return (
                             <div
                                 key={annotation.localId}
@@ -66,17 +82,15 @@ function AnnotationsList({
                                 <AnnotationThread
                                     annotation={annotation}
                                     deleteHideAnnotation={deleteHideAnnotation}
-                                    charLimit={
-                                        i == group.length - 1 ? 400 : 200
-                                    }
+                                    charLimit={200}
                                     upvoted={upvotedAnnotations[annotation.id]}
-                                    upvoteAnnotation={(isUpvote) =>
-                                        upvoteAnnotation(
-                                            url,
-                                            annotation.id,
-                                            isUpvote
-                                        )
-                                    }
+                                    // upvoteAnnotation={(isUpvote) =>
+                                    //     upvoteAnnotation(
+                                    //         url,
+                                    //         annotation.id,
+                                    //         isUpvote
+                                    //     )
+                                    // }
                                     onHoverUpdate={(hoverActive: boolean) =>
                                         // call hover on top level annotation
                                         onAnnotationHoverUpdate(
