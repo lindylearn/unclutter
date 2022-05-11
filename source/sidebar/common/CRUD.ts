@@ -18,6 +18,7 @@ import {
 import {
     createLocalAnnotation,
     deleteLocalAnnotation,
+    getHiddenAnnotations,
     getLocalAnnotations,
     updateLocalAnnotation,
 } from "./local";
@@ -83,6 +84,17 @@ export async function getAnnotations(
         current.replies.map(populateRepliesDfs);
     }
     annotations.map(populateRepliesDfs);
+
+    // remove annotations hidden by the user (saved locally)
+    const hiddenAnnotations = await getHiddenAnnotations();
+    function hideAnnotationsDfs(current: LindyAnnotation) {
+        current.replies = current.replies.filter(
+            (r) => !hiddenAnnotations[r.id]
+        );
+        current.replies.map(hideAnnotationsDfs);
+    }
+    annotations = annotations.filter((a) => !hiddenAnnotations[a.id]);
+    annotations.map(hideAnnotationsDfs);
 
     if (!personalAnnotationsEnabled) {
         // filter out top-level annotations by user (which would be highlighted in the text)

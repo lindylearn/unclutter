@@ -11,12 +11,13 @@ import {
     supportSocialAnnotations,
 } from "../common/featureFlags";
 import { getRemoteFeatureFlag } from "../content-script/messaging";
-import { createRemoteAnnotation, hideRemoteAnnotation } from "./common/api";
+import { createRemoteAnnotation } from "./common/api";
 import {
     createAnnotation,
     deleteAnnotation,
     getAnnotations,
 } from "./common/CRUD";
+import { hideAnnotationLocally } from "./common/local";
 import AnnotationsList from "./components/AnnotationsList";
 
 export default function App({ url }) {
@@ -182,7 +183,10 @@ export default function App({ url }) {
         if (annotation.isMyAnnotation) {
             deleteAnnotation(annotation);
         } else {
-            hideRemoteAnnotation(annotation);
+            hideAnnotationLocally(annotation);
+
+            // TODO add to moderation queue
+            // hideRemoteAnnotation(annotation);
         }
     }
     function onAnnotationHoverUpdate(annotation, hoverActive: boolean) {
