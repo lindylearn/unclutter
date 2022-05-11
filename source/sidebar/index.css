@@ -59,3 +59,62 @@ svg.icon > path {
     stroke: currentColor;
     stroke-width: 10px;
 }
+
+
+/* setup tooltips (adapted from overlay css) */
+.lindy-tooltip {
+    position: relative;
+
+    --background-color: var(--lindy-background-color);
+    --text-color: #374151; /* text-gray-700 */;
+}
+.lindy-tooltip:before,
+.lindy-tooltip:after {
+    position: absolute;
+    display: block;
+    pointer-events: none;
+
+    opacity: 0;
+}
+.lindy-tooltip:before {
+    /* box */
+    top: -6px;
+    right: calc(100% + 9px);
+    padding: 6px 8px;
+
+    display: block;
+    content: attr(data-title);
+    font-size: 13px;
+
+    background: var(--background-color);
+    color: var(--text-color);
+    border-radius: 5px;
+    white-space: nowrap;
+    filter: drop-shadow(0 1px 2px rgb(0 0 0 / 0.1)) drop-shadow(0 1px 1px rgb(0 0 0 / 0.06));
+
+    font-family: Poppins, sans-serif;
+    line-height: 1;
+    font-weight: 600;
+}
+.lindy-tooltip:after {
+    /* arrow */
+    top: 0px;
+    right: calc(100% + 3px);
+    height: 0;
+    width: 0;
+    content: "";
+
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    border-left: 6px solid var(--background-color);
+}
+.lindy-tooltip.lindy-fade:after,
+.lindy-tooltip.lindy-fade:before {
+    transform: translate3d(10px, 0, 0);
+    transition: all 0.15s ease-in-out;
+}
+.lindy-tooltip.lindy-fade:hover:after,
+.lindy-tooltip.lindy-fade:hover:before {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+}

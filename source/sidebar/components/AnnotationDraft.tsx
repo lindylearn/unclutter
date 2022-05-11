@@ -79,8 +79,9 @@ function AnnotationDraft({
             />
             <div className="top-icons absolute top-1.5 right-1.5 p-1 flex gap-3 text-gray-400 transition-all">
                 <div
-                    className="cursor-pointer hover:text-gray-600 hover:scale-110"
+                    className="cursor-pointer hover:text-gray-600 hover:drop-shadow-md lindy-tooltip lindy-fade"
                     onClick={deleteHideAnnotation}
+                    data-title="Delete annotation"
                 >
                     <svg className="icon h-3.5" viewBox="0 0 448 512">
                         <path
@@ -93,7 +94,7 @@ function AnnotationDraft({
                 {hypothesisSyncEnabled && (
                     <div
                         className={
-                            "cursor-pointer hover:text-gray-600 hover:scale-110 " +
+                            "cursor-pointer hover:text-gray-600 hover:drop-shadow-md lindy-tooltip lindy-fade " +
                             (localAnnotation.isPublic ? "visible" : "")
                         }
                         onClick={() =>
@@ -101,6 +102,11 @@ function AnnotationDraft({
                                 ...localAnnotation,
                                 isPublic: !localAnnotation.isPublic,
                             })
+                        }
+                        data-title={
+                            localAnnotation.isPublic
+                                ? "Set annotation private"
+                                : "Set annotation public"
                         }
                     >
                         <svg className="h-3.5" viewBox="0 0 512 512">

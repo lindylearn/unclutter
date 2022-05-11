@@ -105,7 +105,7 @@ a:hover > .close-message {
 }
 .lindy-tooltip:before {
     /* box */
-    top: 4px;
+    top: 6px;
     right: calc(100% + 9px);
     padding: 6px 8px;
 
