@@ -61,10 +61,11 @@ export function createAnnotationListener(
         }
 
         console.info(`page resized, recalculating annotation offsets...`);
-        const offsetById = getHighlightOffsets();
+        const [offsetById, offsetEndById] = getHighlightOffsets();
         sendSidebarEvent(sidebarIframe, {
             event: "changedDisplayOffset",
             offsetById,
+            offsetEndById,
         });
         // don't call onAnnotationUpdate() as it's only used for outline grouping for now
         // page resizing should keep relative position to headings intact

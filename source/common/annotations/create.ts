@@ -64,6 +64,7 @@ export interface LindyAnnotation {
     url: string;
     isMyAnnotation?: boolean;
     displayOffset?: number;
+    displayOffsetEnd?: number;
 
     focused?: boolean; // should only be set for one annotation
 }

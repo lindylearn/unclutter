@@ -150,7 +150,11 @@ async function _createAnnotationFromSelection(callback) {
         annotationSelector
     );
     const offsets = await highlightAnnotations([annotation]);
-    annotation = { ...annotation, displayOffset: offsets[0].displayOffset };
+    annotation = {
+        ...annotation,
+        displayOffset: offsets[0].displayOffset,
+        displayOffsetEnd: offsets[0].displayOffsetEnd,
+    };
 
     // notify sidebar and upload logic
     callback(annotation);

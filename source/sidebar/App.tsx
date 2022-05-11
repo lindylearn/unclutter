@@ -207,6 +207,7 @@ export default function App({ url }) {
             let updatedAnnotations = annotations.map((a) => ({
                 ...a,
                 displayOffset: data.offsetById[a.localId],
+                displayOffsetEnd: data.offsetEndById[a.localId],
             }));
 
             setAnnotations(updatedAnnotations);

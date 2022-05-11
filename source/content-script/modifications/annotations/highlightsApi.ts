@@ -122,15 +122,16 @@ export function getHighlightOffsets() {
     // highlight may include multiple nodes across html tags
     // so iterate nodes in sequence and only take the first offset
     const offsetById = {};
+    const offsetEndById = {};
     for (const node of highlightNodes) {
         if (offsetById[node.id]) {
             continue;
         }
-        const displayOffset = getNodeOffset(node);
-        offsetById[node.id] = displayOffset;
+        offsetById[node.id] = getNodeOffset(node);
+        offsetEndById[node.id] = getNodeOffset(node, "bottom");
     }
 
-    return offsetById;
+    return [offsetById, offsetEndById];
 }
 
 export function paintHighlight(annotation, color: string) {
