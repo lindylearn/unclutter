@@ -1,8 +1,10 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import App from "./App";
 import "./index.css";
 
-const urlParams = new URLSearchParams(document.location.search);
 const domContainer = document.querySelector("#react-root");
-ReactDOM.render(<App {...Object.fromEntries(urlParams)} />, domContainer);
+const root = createRoot(domContainer!);
+
+const urlParams = new URLSearchParams(document.location.search);
+root.render(<App {...Object.fromEntries(urlParams)} />);
