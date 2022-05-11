@@ -65,7 +65,7 @@ function Annotation({
                 <div
                     className="cursor-pointer hover:text-gray-600 hover:drop-shadow lindy-tooltip lindy-fade transition-all"
                     onClick={deleteHideAnnotation}
-                    data-title="Hide"
+                    data-title="Hide comment"
                 >
                     <svg className="icon h-3.5" viewBox="0 0 640 512">
                         <path

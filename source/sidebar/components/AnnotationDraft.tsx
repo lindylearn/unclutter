@@ -33,7 +33,6 @@ function AnnotationDraft({
             debouncedUpdateApi(newAnnotation);
         }
     }, [annotation.id]);
-
     async function updateAnnotationLocalFirst(newAnnotation: LindyAnnotation) {
         setLocalAnnotation(newAnnotation);
 
@@ -44,6 +43,17 @@ function AnnotationDraft({
 
         // call with newAnnotation as localAnnotation takes once loop iteration to update
         await debouncedUpdateApi(newAnnotation);
+    }
+
+    const [showDeleteConfirmation, setShowDeleteConfirmation] =
+        React.useState(false);
+    function deleteWithConfirmStep() {
+        if (!showDeleteConfirmation) {
+            setShowDeleteConfirmation(true);
+            return;
+        }
+
+        deleteHideAnnotation();
     }
 
     const color = getAnnotationColor(annotation);
@@ -77,11 +87,19 @@ function AnnotationDraft({
                 minRows={2}
                 autoFocus={annotation.focused}
             />
-            <div className="top-icons absolute top-1 right-1 p-1 flex gap-2 text-gray-400">
+            <div className="top-icons absolute top-1.5 right-1.5 p-1 flex gap-2 text-gray-400">
                 <div
                     className="cursor-pointer hover:text-gray-600 hover:drop-shadow-md lindy-tooltip lindy-fade transition-all"
-                    onClick={deleteHideAnnotation}
-                    data-title="Delete"
+                    onClick={deleteWithConfirmStep}
+                    data-title={
+                        showDeleteConfirmation
+                            ? "Click again to confirm"
+                            : "Delete annotation"
+                    }
+                    onMouseLeave={() =>
+                        // timout to fade-out tooltip first
+                        setTimeout(() => setShowDeleteConfirmation(false), 200)
+                    }
                 >
                     <svg className="icon h-3.5" viewBox="0 0 448 512">
                         <path
