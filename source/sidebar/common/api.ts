@@ -110,10 +110,10 @@ export async function createRemoteAnnotation(
     const json = await response.json();
 
     return {
-        ...hypothesisToLindyFormat(json),
+        ...hypothesisToLindyFormat(json, username),
         displayOffset: localAnnotation.displayOffset,
+        displayOffsetEnd: localAnnotation.displayOffsetEnd,
         localId: localAnnotation.localId,
-        isMyAnnotation: true,
     };
 }
 
