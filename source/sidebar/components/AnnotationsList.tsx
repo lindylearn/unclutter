@@ -59,6 +59,7 @@ function AnnotationsList({
         <div className="relative flex-grow" onClick={onClick}>
             {groupedAnnotations.map((group, groupIndex) => (
                 <AnnotationGroup
+                    key={group[0].localId}
                     group={group}
                     nextGroup={
                         groupIndex < groupedAnnotations.length - 1 &&
@@ -91,7 +92,6 @@ function AnnotationGroup({
 }) {
     return (
         <div
-            key={group[0].localId}
             className="absolute w-full"
             style={{
                 top: group[0].displayOffset - offsetTop,
@@ -116,7 +116,11 @@ function AnnotationGroup({
                         <AnnotationThread
                             annotation={annotation}
                             deleteHideAnnotation={deleteHideAnnotation}
-                            heightLimitPx={0}
+                            heightLimitPx={
+                                nextGroup &&
+                                nextGroup[0].displayOffset -
+                                    group[0].displayOffset
+                            }
                             upvoted={upvotedAnnotations[annotation.id]}
                             // upvoteAnnotation={(isUpvote) =>
                             //     upvoteAnnotation(

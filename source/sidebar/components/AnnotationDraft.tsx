@@ -77,9 +77,9 @@ function AnnotationDraft({
                 minRows={2}
                 autoFocus={annotation.focused}
             />
-            <div className="top-icons absolute top-1.5 right-1.5 p-1 flex gap-3 text-gray-400 transition-all">
+            <div className="top-icons absolute top-1.5 right-1.5 p-1 flex gap-3 text-gray-400">
                 <div
-                    className="cursor-pointer hover:text-gray-600 hover:drop-shadow-md lindy-tooltip lindy-fade"
+                    className="cursor-pointer hover:text-gray-600 hover:drop-shadow-md lindy-tooltip lindy-fade transition-all"
                     onClick={deleteHideAnnotation}
                     data-title="Delete"
                 >
@@ -94,7 +94,7 @@ function AnnotationDraft({
                 {hypothesisSyncEnabled && (
                     <div
                         className={
-                            "cursor-pointer hover:text-gray-600 hover:drop-shadow-md lindy-tooltip lindy-fade " +
+                            "cursor-pointer hover:text-gray-600 hover:drop-shadow-md lindy-tooltip lindy-fade transition-all " +
                             (localAnnotation.isPublic ? "visible" : "")
                         }
                         onClick={() =>

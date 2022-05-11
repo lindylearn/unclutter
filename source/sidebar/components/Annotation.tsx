@@ -35,6 +35,7 @@ function Annotation({
             style={{
                 top: offset,
                 borderColor: getAnnotationColor(annotation),
+                maxHeight: heightLimitPx - 5,
             }}
             onMouseEnter={() => onHoverUpdate(true)}
             onMouseLeave={() => onHoverUpdate(false)}
@@ -60,9 +61,9 @@ function Annotation({
                 ))}
             </a>
 
-            <div className="top-icons absolute top-1 right-1 p-1 flex gap-3 text-gray-400 transition-all">
+            <div className="top-icons absolute top-1 right-1 p-1 flex gap-3 text-gray-400">
                 <div
-                    className="cursor-pointer hover:text-gray-600 hover:drop-shadow lindy-tooltip lindy-fade"
+                    className="cursor-pointer hover:text-gray-600 hover:drop-shadow lindy-tooltip lindy-fade transition-all"
                     onClick={deleteHideAnnotation}
                     data-title="Hide"
                 >
@@ -98,7 +99,7 @@ function Annotation({
 
                 {showReplyCount && annotation.reply_count !== 0 && (
                     <a
-                        className="select-none hover:text-gray-700 hover:scale-110 hover:pl-0.5 transition-all cursor-pointer"
+                        className="select-none hover:text-gray-700 transition-all cursor-pointer"
                         href={link}
                         target="_blank"
                         rel="noreferrer"
