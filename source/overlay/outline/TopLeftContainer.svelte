@@ -117,7 +117,7 @@ a:hover > .close-message {
     color: var(--text-color);
     border-radius: 5px;
     white-space: nowrap;
-    filter: drop-shadow(0 1px 2px rgb(0 0 0 / 0.1)) drop-shadow(0 1px 1px rgb(0 0 0 / 0.06));
+    /* filter: drop-shadow(0 1px 2px rgb(0 0 0 / 0.1)) drop-shadow(0 1px 1px rgb(0 0 0 / 0.06)); */
 
     font-family: Poppins, sans-serif;
     line-height: 1;

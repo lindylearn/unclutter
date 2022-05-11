@@ -81,7 +81,7 @@ function AnnotationDraft({
                 <div
                     className="cursor-pointer hover:text-gray-600 hover:drop-shadow-md lindy-tooltip lindy-fade"
                     onClick={deleteHideAnnotation}
-                    data-title="Delete annotation"
+                    data-title="Delete"
                 >
                     <svg className="icon h-3.5" viewBox="0 0 448 512">
                         <path
@@ -105,8 +105,8 @@ function AnnotationDraft({
                         }
                         data-title={
                             localAnnotation.isPublic
-                                ? "Set annotation private"
-                                : "Set annotation public"
+                                ? "Set private"
+                                : "Set public"
                         }
                     >
                         <svg className="h-3.5" viewBox="0 0 512 512">

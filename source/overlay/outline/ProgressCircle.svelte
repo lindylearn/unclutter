@@ -9,7 +9,7 @@
     $: strokeDashoffset = 288.5 - 288.5 * (Math.min(1.0, (totalAnnotationCount || 0) / goalAnnotationCount));
 </script>
 
-<div class="relative font-header hover:drop-shadow-md cursor-pointer lindy-tooltip lindy-fade" data-title={`Created ${totalAnnotationCount} article annotation${totalAnnotationCount !== 1 ? "s" : ""}`}>
+<div class="relative font-header hover:drop-shadow cursor-pointer lindy-tooltip lindy-fade" data-title={`Created ${totalAnnotationCount} article annotation${totalAnnotationCount !== 1 ? "s" : ""}`}>
     <svg
         viewBox="0 0 100 100"
         class="progress-circle w-10"
