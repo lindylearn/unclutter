@@ -30,24 +30,23 @@ export default function App({ url }) {
     // state updated through events sent from overlay code below
     const [personalAnnotationsEnabled, setPersonalAnnotationsEnabled] =
         React.useState(false);
-    React.useEffect(async () => {
-        const enabled = await getFeatureFlag(enableAnnotationsFeatureFlag);
-        setHypothesisSyncEnabled(enabled);
-    }, []);
     const [showSocialAnnotations, setShowSocialAnnotations] =
         React.useState(false);
     React.useEffect(async () => {
+        const enabled = await getFeatureFlag(enableAnnotationsFeatureFlag);
+        setPersonalAnnotationsEnabled(enabled);
+
         const supportSocialFeature = await getRemoteFeatureFlag(
             supportSocialAnnotations
         );
         if (!supportSocialFeature) {
-            return;
+            setShowSocialAnnotations(false);
+        } else {
+            const defaultSocialAnnotationsEnabled = await getFeatureFlag(
+                showSocialAnnotationsDefaultFeatureFlag
+            );
+            setShowSocialAnnotations(defaultSocialAnnotationsEnabled);
         }
-
-        const defaultSocialAnnotationsEnabled = await getFeatureFlag(
-            showSocialAnnotationsDefaultFeatureFlag
-        );
-        setShowSocialAnnotations(defaultSocialAnnotationsEnabled);
     }, []);
 
     // keep the annotations state here
