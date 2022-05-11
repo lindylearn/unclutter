@@ -58,60 +58,83 @@ function AnnotationsList({
     return (
         <div className="relative flex-grow" onClick={onClick}>
             {groupedAnnotations.map((group, groupIndex) => (
-                <div
-                    key={group[0].localId}
-                    className="absolute w-full"
-                    style={{
-                        top: group[0].displayOffset - offsetTop,
-                        position: "relative",
-                    }}
-                >
-                    {group.map((annotation, i) => {
-                        return (
-                            <div
-                                key={annotation.localId}
-                                className={
-                                    "annotation-group-item w-full rounded-r " +
-                                    (group.length > 1
-                                        ? "hover:z-10 hover:drop-shadow"
-                                        : "")
-                                }
-                                style={{
-                                    position: "absolute",
-                                    top: `${i * 40}px`,
-                                }}
-                            >
-                                <AnnotationThread
-                                    annotation={annotation}
-                                    deleteHideAnnotation={deleteHideAnnotation}
-                                    heightLimitPx={100}
-                                    upvoted={upvotedAnnotations[annotation.id]}
-                                    // upvoteAnnotation={(isUpvote) =>
-                                    //     upvoteAnnotation(
-                                    //         url,
-                                    //         annotation.id,
-                                    //         isUpvote
-                                    //     )
-                                    // }
-                                    onHoverUpdate={(hoverActive: boolean) =>
-                                        // call hover on top level annotation
-                                        onAnnotationHoverUpdate(
-                                            annotation,
-                                            hoverActive
-                                        )
-                                    }
-                                    hypothesisSyncEnabled={
-                                        hypothesisSyncEnabled
-                                    }
-                                    createReply={createReply}
-                                />
-                            </div>
-                        );
-                    })}
-                    {/* <div>{group.length - 1 - 5} more annotations</div> */}
-                </div>
+                <AnnotationGroup
+                    group={group}
+                    nextGroup={
+                        groupIndex < groupedAnnotations.length - 1 &&
+                        groupedAnnotations[groupIndex + 1]
+                    }
+                    deleteHideAnnotation={deleteHideAnnotation}
+                    offsetTop={50}
+                    onAnnotationHoverUpdate={onAnnotationHoverUpdate}
+                    hypothesisSyncEnabled={hypothesisSyncEnabled}
+                    createReply={createReply}
+                    // upvotedAnnotations={upvotedAnnotations}
+                    // upvoteAnnotation={upvoteAnnotation}
+                />
             ))}
         </div>
     );
 }
 export default AnnotationsList;
+
+function AnnotationGroup({
+    group,
+    nextGroup,
+    deleteHideAnnotation,
+    upvotedAnnotations = {},
+    upvoteAnnotation = null,
+    offsetTop = 0,
+    onAnnotationHoverUpdate,
+    hypothesisSyncEnabled,
+    createReply,
+}) {
+    return (
+        <div
+            key={group[0].localId}
+            className="absolute w-full"
+            style={{
+                top: group[0].displayOffset - offsetTop,
+                position: "relative",
+            }}
+        >
+            {group.map((annotation, annotationIndex) => {
+                return (
+                    <div
+                        key={annotation.localId}
+                        className={
+                            "annotation-group-item w-full rounded-r " +
+                            (group.length > 1
+                                ? "hover:z-10 hover:drop-shadow"
+                                : "")
+                        }
+                        style={{
+                            position: "absolute",
+                            top: `${annotationIndex * 40}px`,
+                        }}
+                    >
+                        <AnnotationThread
+                            annotation={annotation}
+                            deleteHideAnnotation={deleteHideAnnotation}
+                            heightLimitPx={0}
+                            upvoted={upvotedAnnotations[annotation.id]}
+                            // upvoteAnnotation={(isUpvote) =>
+                            //     upvoteAnnotation(
+                            //         url,
+                            //         annotation.id,
+                            //         isUpvote
+                            //     )
+                            // }
+                            onHoverUpdate={(hoverActive: boolean) =>
+                                // call hover on top level annotation
+                                onAnnotationHoverUpdate(annotation, hoverActive)
+                            }
+                            hypothesisSyncEnabled={hypothesisSyncEnabled}
+                            createReply={createReply}
+                        />
+                    </div>
+                );
+            })}
+        </div>
+    );
+}
