@@ -23,11 +23,11 @@ function AnnotationsList({
         .sort((a, b) => a.displayOffset - b.displayOffset);
 
     // group annotations that are close together
-    const groupMarginMax = 100;
+    const groupMargin = 100;
     let groupedAnnotations: LindyAnnotation[][] = [];
     let lastOffset = -Infinity;
     for (const annotation of orderedAnnotations) {
-        if (annotation.displayOffset < lastOffset + groupMarginMax) {
+        if (annotation.displayOffset < lastOffset + groupMargin) {
             // conflict, append to last group
             groupedAnnotations[groupedAnnotations.length - 1] = [
                 ...groupedAnnotations[groupedAnnotations.length - 1],
@@ -37,20 +37,22 @@ function AnnotationsList({
             // no conflict, start new group
             groupedAnnotations.push([annotation]);
         }
-        lastOffset = annotation.displayOffset;
+        lastOffset = annotation.displayOffsetEnd;
     }
 
     // take best comment from each group
     groupedAnnotations = groupedAnnotations.map((groupList) =>
-        groupList.sort((a, b) => {
-            // prefer more replies
-            if (b.reply_count !== a.reply_count) {
-                return b.reply_count - a.reply_count;
-            }
+        groupList
+            .sort((a, b) => {
+                // prefer more replies
+                if (b.reply_count !== a.reply_count) {
+                    return b.reply_count - a.reply_count;
+                }
 
-            // prefer longer comments
-            return b.text.length - a.text.length;
-        })
+                // prefer longer comments
+                return b.text.length - a.text.length;
+            })
+            .slice(0, 1)
     );
 
     return (
@@ -64,7 +66,7 @@ function AnnotationsList({
                         position: "relative",
                     }}
                 >
-                    {group.slice(0, 1).map((annotation, i) => {
+                    {group.map((annotation, i) => {
                         return (
                             <div
                                 key={annotation.localId}
@@ -82,7 +84,7 @@ function AnnotationsList({
                                 <AnnotationThread
                                     annotation={annotation}
                                     deleteHideAnnotation={deleteHideAnnotation}
-                                    charLimit={200}
+                                    heightLimitPx={100}
                                     upvoted={upvotedAnnotations[annotation.id]}
                                     // upvoteAnnotation={(isUpvote) =>
                                     //     upvoteAnnotation(
@@ -98,7 +100,6 @@ function AnnotationsList({
                                             hoverActive
                                         )
                                     }
-                                    animationIndex={groupIndex}
                                     hypothesisSyncEnabled={
                                         hypothesisSyncEnabled
                                     }
