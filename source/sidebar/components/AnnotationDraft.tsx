@@ -58,11 +58,11 @@ function AnnotationDraft({
             style={{
                 top: annotation.offset,
                 // boxShadow: `-1.5px 0.5px 2px 0 ${color}`,
-                borderLeft: !isReply ? `4px solid ${color}` : "",
+                borderLeft: !isReply ? `5px solid ${color}` : "",
             }}
         >
             <TextareaAutosize
-                className="text-sm md:text-base w-full bg-gray-50 placeholder-gray-400 rounded py-1 px-2 outline-none align-top leading-snug"
+                className="text-sm md:text-base w-full bg-gray-50 placeholder-gray-400 rounded py-1 pl-2 pr-6 outline-none align-top"
                 placeholder={
                     (localAnnotation.isPublic ? "Public " : "Private ") +
                     (isReply ? "reply" : "note")
@@ -77,7 +77,7 @@ function AnnotationDraft({
                 minRows={2}
                 autoFocus={annotation.focused}
             />
-            <div className="top-icons absolute top-1.5 right-1.5 p-1 flex gap-3 text-gray-400">
+            <div className="top-icons absolute top-1 right-1 p-1 flex gap-2 text-gray-400">
                 <div
                     className="cursor-pointer hover:text-gray-600 hover:drop-shadow-md lindy-tooltip lindy-fade transition-all"
                     onClick={deleteHideAnnotation}
@@ -95,7 +95,9 @@ function AnnotationDraft({
                     <div
                         className={
                             "cursor-pointer hover:text-gray-600 hover:drop-shadow-md lindy-tooltip lindy-fade transition-all " +
-                            (localAnnotation.isPublic ? "visible" : "")
+                            (localAnnotation.isPublic
+                                ? "visible text-gray-600"
+                                : "")
                         }
                         onClick={() =>
                             updateAnnotationLocalFirst({

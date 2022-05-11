@@ -29,7 +29,7 @@ function Annotation({
     return (
         <div
             className={
-                "annotation p-1 px-2 bg-white text-gray-800 rounded shadow-sm hover:shadow animate-slidein transition-all relative " +
+                "annotation px-2.5 py-1.5 bg-white text-gray-800 rounded shadow-sm hover:shadow animate-slidein transition-all relative " +
                 className
             }
             style={{
@@ -41,7 +41,7 @@ function Annotation({
             onMouseLeave={() => onHoverUpdate(false)}
         >
             <a
-                className="text-sm leading-snug"
+                className="annotation-text text-sm mr-3"
                 style={{
                     display: "-webkit-box",
                     WebkitLineClamp: 5,
@@ -76,7 +76,9 @@ function Annotation({
                 </div>
             </div>
 
-            <div className="info-bar text-sm text-gray-400 flex gap-3 justify-between transition-all">
+            {/* <div className="spacer-line border-b-2 border-gray-100 -mx-3 my-1"></div> */}
+
+            <div className="info-bar mt-0.5 text-sm text-gray-400 flex gap-3 justify-between items-end transition-all">
                 {/* <div
                     className={
                         "upvote-button flex-shrink-0 flex cursor-pointer select-none hover:text-gray-700 hover:scale-110 transition-all " +
@@ -99,7 +101,7 @@ function Annotation({
 
                 {showReplyCount && annotation.reply_count !== 0 && (
                     <a
-                        className="select-none hover:text-gray-700 transition-all cursor-pointer"
+                        className="select-none hover:text-gray-700 hover:drop-shadow-sm transition-all cursor-pointer"
                         href={link}
                         target="_blank"
                         rel="noreferrer"
@@ -144,6 +146,7 @@ function Annotation({
 
                 <div className="flex-grow" />
                 <a
+                    className="hover:text-gray-700 hover:drop-shadow-sm"
                     href={
                         platform === "h"
                             ? `https://annotations.lindylearn.io/@${
@@ -155,7 +158,6 @@ function Annotation({
                     }
                     target="_blank"
                     rel="noreferrer"
-                    className=""
                 >
                     {author.username || author}
                     {platform == "h" && (
