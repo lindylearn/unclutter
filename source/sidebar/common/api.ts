@@ -27,6 +27,7 @@ export async function getLindyAnnotations(
     );
     const json = await response.json();
 
+    const username = await getHypothesisUsername();
     function mapFormat(annotation: LindyAnnotation): LindyAnnotation {
         return {
             ...annotation,
@@ -34,6 +35,7 @@ export async function getLindyAnnotations(
             localId: annotation.id,
             url,
             replies: annotation.replies.map(mapFormat),
+            isMyAnnotation: annotation.author === username,
         };
     }
     return json.results.map(mapFormat);
@@ -54,9 +56,8 @@ export async function getHypothesisAnnotations(
     );
     const json = await response.json();
 
-    return json.rows
-        .filter((a) => !a.references || a.references.length === 0)
-        .map(hypothesisToLindyFormat);
+    // this includes replies at the top level
+    return json.rows.map((a) => hypothesisToLindyFormat(a, username));
 }
 
 export async function getPageHistory(url) {

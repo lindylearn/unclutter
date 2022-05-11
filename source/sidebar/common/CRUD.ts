@@ -3,7 +3,6 @@
  */
 
 import { LindyAnnotation } from "../../common/annotations/create";
-import { getHypothesisUsername } from "../../common/annotations/storage";
 import {
     getFeatureFlag,
     hypothesisSyncFeatureFlag,
@@ -29,9 +28,9 @@ export async function getAnnotations(
     showSocialAnnotations: boolean
 ): Promise<LindyAnnotation[]> {
     // *** fetch annotations from configured sources ***
-    let localAnnotations = [];
-    let userRemoteAnnotations = [];
-    let publicAnnotations = [];
+    let localAnnotations: LindyAnnotation[] = [];
+    let userRemoteAnnotations: LindyAnnotation[] = [];
+    let publicAnnotations: LindyAnnotation[] = [];
 
     const hypothesisSyncEnabled = await getFeatureFlag(
         hypothesisSyncFeatureFlag
@@ -60,33 +59,33 @@ export async function getAnnotations(
     // *** reconcile lists ***
 
     // take from lindy preferrably, otherwise hypothesis
-    // -> show replies, upvotes metadata when available, but new annotations immediately
-    // edits might take a while to propagate this way
+    // -> show replies, upvotes metadata when available, but new & private annotations immediately
     let annotations = localAnnotations.concat(publicAnnotations);
-
+    let hypothesisReplies: LindyAnnotation[] = [];
     const seenIds = new Set(publicAnnotations.map((a) => a.id));
     for (const annotation of userRemoteAnnotations) {
-        if (!seenIds.has(annotation.id)) {
+        if (annotation.reply_to) {
+            hypothesisReplies.push(annotation);
+        } else if (!seenIds.has(annotation.id)) {
             annotations.push(annotation);
         }
     }
 
-    // add isMyAnnotation for hypothesis annotations
-    const username = await getHypothesisUsername();
-    if (username) {
-        annotations = annotations.map((a) => {
-            if (a.platform === "h") {
-                return {
-                    ...a,
-                    isMyAnnotation: a.author === username,
-                };
-            } else {
-                return a;
-            }
-        });
+    // populate replies from hypothesis (might be private or not yet propagated)
+    function populateRepliesDfs(current: LindyAnnotation) {
+        hypothesisReplies
+            .filter((a) => a.reply_to === current.id)
+            .filter((a) => !current.replies.some((r) => r.id === a.id))
+            .map((reply) => {
+                current.replies.push(reply);
+            });
+
+        current.replies.map(populateRepliesDfs);
     }
+    annotations.map(populateRepliesDfs);
+
     if (!personalAnnotationsEnabled) {
-        // filter out annotation by users (which would be highlighted in the text)
+        // filter out top-level annotations by user (which would be highlighted in the text)
         annotations = annotations.filter((a) => !a.isMyAnnotation);
     }
 

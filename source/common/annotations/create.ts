@@ -68,12 +68,17 @@ export interface LindyAnnotation {
     focused?: boolean; // should only be set for one annotation
 }
 
-export function hypothesisToLindyFormat(annotation): LindyAnnotation {
+export function hypothesisToLindyFormat(
+    annotation: any,
+    currentUsername: string
+): LindyAnnotation {
+    const author = annotation.user.match(/([^:]+)@/)[1];
     return {
         id: annotation.id,
         url: annotation.uri,
         localId: annotation.id, // base comparisons on immutable localId
-        author: annotation.user.match(/([^:]+)@/)[1],
+        author,
+        isMyAnnotation: author === currentUsername,
         platform: "h",
         link: `https://hypothes.is/a/${annotation.id}`,
         created_at: annotation.created,
@@ -88,6 +93,7 @@ export function hypothesisToLindyFormat(annotation): LindyAnnotation {
         quote_html_selector: annotation.target[0].selector,
         user_upvoted: false,
         isPublic: annotation.permissions.read[0] === "group:__world__",
+        reply_to: annotation.references?.[0],
     };
 }
 
