@@ -11,6 +11,7 @@ function AnnotationsList({
     offsetTop = 0,
     onAnnotationHoverUpdate,
     hypothesisSyncEnabled,
+    createReply,
 }) {
     if (!annotations) {
         return <div></div>;
@@ -87,6 +88,7 @@ function AnnotationsList({
                                     hypothesisSyncEnabled={
                                         hypothesisSyncEnabled
                                     }
+                                    createReply={createReply}
                                 />
                             </div>
                         );

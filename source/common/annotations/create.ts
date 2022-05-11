@@ -1,8 +1,13 @@
 export function createDraftAnnotation(
     url: string,
-    selector: object
+    selector: object,
+    reply_to: string = null
 ): LindyAnnotation {
-    return createAnnotation(url, selector, { id: null, localId: generateId() });
+    return createAnnotation(url, selector, {
+        id: null,
+        localId: generateId(),
+        reply_to,
+    });
 }
 
 function createAnnotation(
@@ -29,6 +34,7 @@ function createAnnotation(
         created_at: partial.created_at || new Date().toISOString(),
         replies: [],
         user_upvoted: false,
+        reply_to: partial.reply_to || null,
     };
 }
 

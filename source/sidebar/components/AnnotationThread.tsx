@@ -17,7 +17,11 @@ function AnnotationThread(props) {
                 deleteHideAnnotation={() =>
                     props.deleteHideAnnotation(props.annotation, null)
                 }
+                createReply={() =>
+                    props.createReply(props.annotation, props.annotation)
+                }
                 showReplyCount={replyLevel >= 2}
+                isReply={replyLevel !== 0}
             />
             {replyLevel < 2 && (
                 <div className="ml-5">
@@ -36,6 +40,15 @@ function AnnotationThread(props) {
                                               props.annotation
                                           )
                                     : props.deleteHideAnnotation
+                            }
+                            createReply={
+                                replyLevel === 0
+                                    ? (nestedAnnotation: LindyAnnotation) =>
+                                          props.createReply(
+                                              nestedAnnotation,
+                                              props.annotation
+                                          )
+                                    : props.createReply
                             }
                         />
                     ))}

@@ -11,6 +11,7 @@ function AnnotationDraft({
     className,
     deleteHideAnnotation,
     hypothesisSyncEnabled,
+    isReply = false,
 }) {
     // debounce to reduce API calls
     const debouncedUpdateApi: (
@@ -50,19 +51,21 @@ function AnnotationDraft({
     return (
         <div
             className={
-                `annotation p-1 pl-1.5 rounded-l-sm rounded-r bg-white text-gray-800 shadow-sm hover:shadow animate-slidein transition-all ` +
+                `annotation p-1 pl-1.5 rounded-l-sm rounded-r bg-white text-gray-800 shadow-sm hover:shadow animate-slidein transition-all relative ` +
+                (isReply ? "rounded-l pl-1 " : "") +
                 (className || "")
             }
             style={{
                 top: annotation.offset,
                 // boxShadow: `-1.5px 0.5px 2px 0 ${color}`,
-                borderLeft: `4px solid ${color}`,
+                borderLeft: !isReply ? `4px solid ${color}` : "",
             }}
         >
             <TextareaAutosize
                 className="text-sm md:text-base w-full bg-gray-50 placeholder-gray-400 rounded py-1 px-2 outline-none align-top"
                 placeholder={
-                    localAnnotation.isPublic ? "Public note" : "Private note"
+                    (localAnnotation.isPublic ? "Public " : "Private ") +
+                    (isReply ? "reply" : "note")
                 }
                 value={localAnnotation.text}
                 onChange={(e) =>

@@ -1,5 +1,8 @@
 import React from "react";
-import { LindyAnnotation } from "../common/annotations/create";
+import {
+    createDraftAnnotation,
+    LindyAnnotation,
+} from "../common/annotations/create";
 import {
     enableAnnotationsFeatureFlag,
     getFeatureFlag,
@@ -88,12 +91,35 @@ export default function App({ url }) {
             localAnnotation,
         ]);
 
-        // show only once reconciled with remote state
+        // update remotely, then replace local state
         const remoteAnnotation = await createAnnotation(localAnnotation);
         setAnnotations([
             ...annotations.filter((a) => a.localId !== localAnnotation.localId),
             remoteAnnotation,
         ]);
+    }
+    async function createReply(
+        parent: LindyAnnotation,
+        threadStart: LindyAnnotation
+    ) {
+        const reply = createDraftAnnotation(parent.url, null, parent.id);
+
+        // dfs as there may be arbitrary nesting
+        function addReplyDfs(current: LindyAnnotation) {
+            if (current.id === parent.id) {
+                current.replies.push(reply);
+                return;
+            }
+
+            current.replies.map(addReplyDfs);
+        }
+        addReplyDfs(threadStart);
+
+        setAnnotations(
+            annotations.filter((a) =>
+                a.id === threadStart.id ? threadStart : a
+            )
+        );
     }
 
     function deleteHideAnnotationHandler(
@@ -106,7 +132,6 @@ export default function App({ url }) {
 
             // dfs as there may be arbitrary nesting
             function removeReplyDfs(current: LindyAnnotation) {
-                console.log(current);
                 if (current.replies.some((a) => a.id === annotation.id)) {
                     // found reply, modify reference
                     current.replies = current.replies.filter(
@@ -193,6 +218,7 @@ export default function App({ url }) {
                 offsetTop={50}
                 onAnnotationHoverUpdate={onAnnotationHoverUpdate}
                 hypothesisSyncEnabled={hypothesisSyncEnabled}
+                createReply={createReply}
                 // upvotedAnnotations={upvotedAnnotations}
                 // upvoteAnnotation={upvoteAnnotation}
             />
