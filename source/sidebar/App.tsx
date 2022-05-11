@@ -1,6 +1,7 @@
 import React from "react";
 import { LindyAnnotation } from "../common/annotations/create";
 import {
+    enableAnnotationsFeatureFlag,
     getFeatureFlag,
     hypothesisSyncFeatureFlag,
     showSocialAnnotationsDefaultFeatureFlag,
@@ -26,8 +27,15 @@ export default function App({ url }) {
         setHypothesisSyncEnabled(hypothesisSyncEnabled);
     }, []);
 
+    // state updated through events sent from overlay code below
+    const [personalAnnotationsEnabled, setPersonalAnnotationsEnabled] =
+        React.useState(false);
+    React.useEffect(async () => {
+        const enabled = await getFeatureFlag(enableAnnotationsFeatureFlag);
+        setHypothesisSyncEnabled(enabled);
+    }, []);
     const [showSocialAnnotations, setShowSocialAnnotations] =
-        React.useState(false); // updated through events sent from overlay code
+        React.useState(false);
     React.useEffect(async () => {
         const supportSocialFeature = await getRemoteFeatureFlag(
             supportSocialAnnotations
@@ -45,7 +53,11 @@ export default function App({ url }) {
     // keep the annotations state here
     const [annotations, setAnnotations] = React.useState([]);
     React.useEffect(async () => {
-        const annotations = await getAnnotations(url, showSocialAnnotations);
+        const annotations = await getAnnotations(
+            url,
+            personalAnnotationsEnabled,
+            showSocialAnnotations
+        );
         const pageNotes = annotations.filter((a) => !a.quote_html_selector);
         // if (pageNotes.length === 0) {
         //     pageNotes.push(createDraftAnnotation(url, null));
@@ -57,7 +69,7 @@ export default function App({ url }) {
             { event: "anchorAnnotations", annotations },
             "*"
         );
-    }, [showSocialAnnotations]);
+    }, [personalAnnotationsEnabled, showSocialAnnotations]);
 
     // sync local annotation updates to hypothesis
     async function createAnnotationHandler(localAnnotation: LindyAnnotation) {
@@ -147,6 +159,8 @@ export default function App({ url }) {
             setAnnotations(updatedAnnotations);
         } else if (data.event === "setShowSocialAnnotations") {
             setShowSocialAnnotations(data.showSocialAnnotations);
+        } else if (data.event === "setEnablePersonalAnnotations") {
+            setPersonalAnnotationsEnabled(data.enablePersonalAnnotations);
         }
     };
 

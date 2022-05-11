@@ -82,11 +82,20 @@ export default class AnnotationsModifier implements PageModifier {
             this.sidebarIframe,
             this.onAnnotationUpdate.bind(this)
         );
+
+        sendSidebarEvent(this.sidebarIframe, {
+            event: "setEnablePersonalAnnotations",
+            enablePersonalAnnotations: true,
+        });
     }
 
     private disableAnnotations() {
-        // keeps showing personal annotations if social enabled, which should be fine.
         removeSelectionListener();
+
+        sendSidebarEvent(this.sidebarIframe, {
+            event: "setEnablePersonalAnnotations",
+            enablePersonalAnnotations: false,
+        });
     }
 
     setShowSocialAnnotations(showSocialAnnotations: boolean) {

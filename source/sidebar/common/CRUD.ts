@@ -25,6 +25,7 @@ import {
 
 export async function getAnnotations(
     url: string,
+    personalAnnotationsEnabled: boolean,
     showSocialAnnotations: boolean
 ): Promise<LindyAnnotation[]> {
     // *** fetch annotations from configured sources ***
@@ -32,21 +33,26 @@ export async function getAnnotations(
     let userRemoteAnnotations = [];
     let publicAnnotations = [];
 
-    // TODO fetch from local storage
     const hypothesisSyncEnabled = await getFeatureFlag(
         hypothesisSyncFeatureFlag
     );
-    console.log(
-        `Fetching annotations (local, ${
-            hypothesisSyncEnabled ? "remote, " : ""
-        }${showSocialAnnotations ? "public" : ""})`
-    );
-    if (hypothesisSyncEnabled) {
-        userRemoteAnnotations = await getHypothesisAnnotations(url);
-    } else {
-        localAnnotations = await getLocalAnnotations(url);
-    }
 
+    console.log(
+        `Fetching annotations (${
+            personalAnnotationsEnabled
+                ? hypothesisSyncEnabled
+                    ? "hypothesis, "
+                    : "local, "
+                : ""
+        }${showSocialAnnotations ? "lindy" : ""})`
+    );
+    if (personalAnnotationsEnabled) {
+        if (hypothesisSyncEnabled) {
+            userRemoteAnnotations = await getHypothesisAnnotations(url);
+        } else {
+            localAnnotations = await getLocalAnnotations(url);
+        }
+    }
     if (showSocialAnnotations) {
         publicAnnotations = await getLindyAnnotations(url);
     }
@@ -78,6 +84,10 @@ export async function getAnnotations(
                 return a;
             }
         });
+    }
+    if (!personalAnnotationsEnabled) {
+        // filter out annotation by users (which would be highlighted in the text)
+        annotations = annotations.filter((a) => !a.isMyAnnotation);
     }
 
     return annotations;
