@@ -26,6 +26,7 @@ export function createAnnotationListener(
                 `anchoring ${data.annotations.length} annotations on page...`
             );
 
+            removeAllHighlights(); // anchor only called with all active annotations, so can remove & re-paint
             const anchoredAnnotations = await highlightAnnotations(
                 data.annotations
             );
