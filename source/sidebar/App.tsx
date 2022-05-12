@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useReducer } from "react";
 import {
     createDraftAnnotation,
     LindyAnnotation,
@@ -15,6 +15,41 @@ import { useAnnotationSettings, useFeatureFlag } from "./common/hooks";
 import { hideAnnotationLocally } from "./common/local";
 import AnnotationsList from "./components/AnnotationsList";
 
+interface AnnotationMutation {
+    action: "set" | "add" | "remove" | "update";
+    annotation?: LindyAnnotation;
+    annotations?: LindyAnnotation[];
+}
+
+function annotationReducer(
+    annotations: LindyAnnotation[],
+    mutation: AnnotationMutation
+): LindyAnnotation[] {
+    console.log(mutation);
+
+    switch (mutation.action) {
+        case "set":
+            return mutation.annotations;
+        case "add":
+            return [
+                ...annotations.map((a) => ({ ...a, focused: false })),
+                ,
+                mutation.annotation,
+            ];
+        case "remove":
+            return annotations.filter(
+                (a) => a.localId !== mutation.annotation.localId
+            );
+        case "update":
+            return [
+                ...annotations.filter(
+                    (a) => a.localId !== mutation.annotation.localId
+                ),
+                mutation.annotation,
+            ];
+    }
+}
+
 export default function App({ url }) {
     // extension settings
     const hypothesisSyncEnabled = useFeatureFlag(hypothesisSyncFeatureFlag);
@@ -28,7 +63,8 @@ export default function App({ url }) {
     } = useAnnotationSettings();
 
     // keep the annotations state here
-    const [annotations, setAnnotations] = React.useState([]);
+    const [annotations, mutateAnnotations] = useReducer(annotationReducer, []);
+
     React.useEffect(() => {
         (async function () {
             const annotations = await getAnnotations(
@@ -37,17 +73,19 @@ export default function App({ url }) {
                 showSocialAnnotations
             );
             if (annotations.length === 0) {
-                setAnnotations([]);
+                // skip anchoring
+                mutateAnnotations({ action: "set", annotations: [] });
                 return;
             }
 
-            const pageNotes = annotations.filter((a) => !a.quote_html_selector);
+            // TODO re-enable page notes
+            // const pageNotes = annotations.filter((a) => !a.quote_html_selector);
             // if (pageNotes.length === 0) {
             //     pageNotes.push(createDraftAnnotation(url, null));
             // }
-
             // show page notes immediately, others once anchored
-            setAnnotations(pageNotes);
+            // mutateAnnotations({ action: "set", annotations: pageNotes });
+
             window.top.postMessage(
                 { event: "anchorAnnotations", annotations },
                 "*"
@@ -59,17 +97,11 @@ export default function App({ url }) {
     async function createAnnotationHandler(localAnnotation: LindyAnnotation) {
         // show state with localId immediately
         localAnnotation = { ...localAnnotation, focused: true };
-        setAnnotations([
-            ...annotations.map((a) => ({ ...a, focused: false })),
-            localAnnotation,
-        ]);
+        mutateAnnotations({ action: "add", annotation: localAnnotation });
 
         // update remotely, then replace local state
         const remoteAnnotation = await createAnnotation(localAnnotation);
-        setAnnotations([
-            ...annotations.filter((a) => a.localId !== localAnnotation.localId),
-            remoteAnnotation,
-        ]);
+        mutateAnnotations({ action: "update", annotation: remoteAnnotation });
     }
 
     async function createReply(
@@ -89,11 +121,7 @@ export default function App({ url }) {
             current.replies.map(addReplyDfs);
         }
         addReplyDfs(threadStart);
-        setAnnotations(
-            annotations.filter((a) =>
-                a.id === threadStart.id ? threadStart : a
-            )
-        );
+        mutateAnnotations({ action: "update", annotation: threadStart });
 
         const remoteAnnotation = await createRemoteAnnotation(reply);
 
@@ -106,11 +134,7 @@ export default function App({ url }) {
             current.replies.map(updateIdDfs);
         }
         updateIdDfs(threadStart);
-        setAnnotations(
-            annotations.filter((a) =>
-                a.id === threadStart.id ? threadStart : a
-            )
-        );
+        mutateAnnotations({ action: "update", annotation: threadStart });
     }
 
     function deleteHideAnnotationHandler(
@@ -135,16 +159,10 @@ export default function App({ url }) {
             }
             removeReplyDfs(threadStart);
 
-            setAnnotations(
-                annotations.filter((a) =>
-                    a.id === threadStart.id ? threadStart : a
-                )
-            );
+            mutateAnnotations({ action: "update", annotation: threadStart });
         } else {
             // is root, so remove entire thread
-            setAnnotations(
-                annotations.filter((a) => a.localId !== annotation.localId)
-            );
+            mutateAnnotations({ action: "remove", annotation: annotation });
             if (annotation.quote_text) {
                 window.top.postMessage(
                     { event: "removeHighlight", annotation },
@@ -163,7 +181,10 @@ export default function App({ url }) {
             // hideRemoteAnnotation(annotation);
         }
     }
-    function onAnnotationHoverUpdate(annotation, hoverActive: boolean) {
+    function onAnnotationHoverUpdate(
+        annotation: LindyAnnotation,
+        hoverActive: boolean
+    ) {
         window.top.postMessage(
             { event: "onAnnotationHoverUpdate", annotation, hoverActive },
             "*"
@@ -176,15 +197,17 @@ export default function App({ url }) {
         if (data.event === "createHighlight") {
             createAnnotationHandler(data.annotation);
         } else if (data.event === "anchoredAnnotations") {
-            setAnnotations([...annotations, ...data.annotations]);
+            mutateAnnotations({ action: "set", annotations: data.annotations });
         } else if (data.event === "changedDisplayOffset") {
             let updatedAnnotations = annotations.map((a) => ({
                 ...a,
                 displayOffset: data.offsetById[a.localId],
                 displayOffsetEnd: data.offsetEndById[a.localId],
             }));
-
-            setAnnotations(updatedAnnotations);
+            mutateAnnotations({
+                action: "set",
+                annotations: updatedAnnotations,
+            });
         } else if (data.event === "setShowSocialAnnotations") {
             setShowSocialAnnotations(data.showSocialAnnotations);
         } else if (data.event === "setEnablePersonalAnnotations") {

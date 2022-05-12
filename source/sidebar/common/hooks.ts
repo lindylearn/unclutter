@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import {
     enableAnnotationsFeatureFlag,
     getFeatureFlag,
@@ -7,9 +7,9 @@ import {
 } from "../../common/featureFlags";
 import { getRemoteFeatureFlag } from "../../content-script/messaging";
 
-export function useFeatureFlag(featureFlag: string) {
-    const [enabled, setEnabled] = React.useState(false);
-    React.useEffect(() => {
+export function useFeatureFlag(featureFlag: string): boolean {
+    const [enabled, setEnabled] = useState(false);
+    useEffect(() => {
         (async function () {
             const enabled = await getFeatureFlag(featureFlag);
             setEnabled(enabled);
@@ -21,10 +21,9 @@ export function useFeatureFlag(featureFlag: string) {
 
 export function useAnnotationSettings() {
     const [personalAnnotationsEnabled, setPersonalAnnotationsEnabled] =
-        React.useState(false);
-    const [showSocialAnnotations, setShowSocialAnnotations] =
-        React.useState(false);
-    React.useEffect(() => {
+        useState(false);
+    const [showSocialAnnotations, setShowSocialAnnotations] = useState(false);
+    useEffect(() => {
         (async function () {
             const personalAnnotationsEnabled = await getFeatureFlag(
                 enableAnnotationsFeatureFlag
