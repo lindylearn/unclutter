@@ -71,6 +71,7 @@ export default function App({ url }) {
             remoteAnnotation,
         ]);
     }
+
     async function createReply(
         parent: LindyAnnotation,
         threadStart: LindyAnnotation
@@ -208,8 +209,6 @@ export default function App({ url }) {
                 onAnnotationHoverUpdate={onAnnotationHoverUpdate}
                 hypothesisSyncEnabled={hypothesisSyncEnabled}
                 createReply={createReply}
-                // upvotedAnnotations={upvotedAnnotations}
-                // upvoteAnnotation={upvoteAnnotation}
             />
         </div>
     );

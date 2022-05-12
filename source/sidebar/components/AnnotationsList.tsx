@@ -1,12 +1,12 @@
 import React from "react";
 import AnnotationThread from "./AnnotationThread";
 
+const sidebarOoffsetTopPx = 50;
+
 function AnnotationsList({
     groupedAnnotations,
     onClick = null,
     deleteHideAnnotation,
-    upvotedAnnotations = {},
-    upvoteAnnotation = null,
     onAnnotationHoverUpdate,
     hypothesisSyncEnabled,
     createReply,
@@ -22,12 +22,9 @@ function AnnotationsList({
                         groupedAnnotations[groupIndex + 1]
                     }
                     deleteHideAnnotation={deleteHideAnnotation}
-                    offsetTop={50}
                     onAnnotationHoverUpdate={onAnnotationHoverUpdate}
                     hypothesisSyncEnabled={hypothesisSyncEnabled}
                     createReply={createReply}
-                    // upvotedAnnotations={upvotedAnnotations}
-                    // upvoteAnnotation={upvoteAnnotation}
                 />
             ))}
         </div>
@@ -39,9 +36,6 @@ function AnnotationGroup({
     group,
     nextGroup,
     deleteHideAnnotation,
-    upvotedAnnotations = {},
-    upvoteAnnotation = null,
-    offsetTop = 0,
     onAnnotationHoverUpdate,
     hypothesisSyncEnabled,
     createReply,
@@ -50,10 +44,10 @@ function AnnotationGroup({
         <div
             className="absolute w-full flex flex-col gap-1"
             style={{
-                top: group[0].displayOffset - offsetTop,
+                top: group[0].displayOffset - sidebarOoffsetTopPx,
             }}
         >
-            {group.map((annotation, annotationIndex) => {
+            {group.map((annotation) => {
                 return (
                     <div
                         key={annotation.localId}
@@ -68,14 +62,6 @@ function AnnotationGroup({
                                     group[0].displayOffset -
                                     4
                             }
-                            upvoted={upvotedAnnotations[annotation.id]}
-                            // upvoteAnnotation={(isUpvote) =>
-                            //     upvoteAnnotation(
-                            //         url,
-                            //         annotation.id,
-                            //         isUpvote
-                            //     )
-                            // }
                             onHoverUpdate={(hoverActive: boolean) =>
                                 // call hover on top level annotation
                                 onAnnotationHoverUpdate(annotation, hoverActive)
