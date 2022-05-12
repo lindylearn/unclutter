@@ -124,10 +124,12 @@ export function getHighlightOffsets() {
     const offsetById = {};
     const offsetEndById = {};
     for (const node of highlightNodes) {
-        if (offsetById[node.id]) {
-            continue;
+        // use first node for start offset
+        if (!offsetById[node.id]) {
+            offsetById[node.id] = getNodeOffset(node);
         }
-        offsetById[node.id] = getNodeOffset(node);
+
+        // use last node for end offset
         offsetEndById[node.id] = getNodeOffset(node, "bottom");
     }
 
