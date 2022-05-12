@@ -1,4 +1,5 @@
 import seedrandom from "seedrandom";
+import { LindyAnnotation } from "./create";
 
 // material UI colors A400 from https://materialui.co/colors/, with 30% opacity
 export const colors = [
@@ -20,7 +21,7 @@ export const colors = [
     "rgba(255, 61, 0, 0.3)",
 ];
 
-export function getAnnotationColor(annotation) {
+export function getAnnotationColor(annotation: LindyAnnotation): string {
     return getRandomColor(annotation.quote_text);
 }
 

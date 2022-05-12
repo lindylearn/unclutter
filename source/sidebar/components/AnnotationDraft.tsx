@@ -29,6 +29,7 @@ function AnnotationDraft({
     isReply = false,
     heightLimitPx,
     updateAnnotation,
+    onHoverUpdate,
 }: AnnotationDraftProps) {
     // debounce to reduce API calls
     // debounce instead of throttle so that newest call eventually runs
@@ -91,6 +92,8 @@ function AnnotationDraft({
                 borderLeft: !isReply ? `5px solid ${color}` : "",
                 maxHeight: heightLimitPx,
             }}
+            onMouseEnter={() => onHoverUpdate(true)}
+            onMouseLeave={() => onHoverUpdate(false)}
         >
             <TextareaAutosize
                 className="text-sm md:text-base w-full bg-gray-50 select-none placeholder-gray-400 placeholder:select-none rounded py-1 pl-2 pr-6 outline-none align-top"
@@ -108,6 +111,8 @@ function AnnotationDraft({
                 minRows={2}
                 maxRows={5}
                 autoFocus={annotation.focused}
+                onFocus={() => onHoverUpdate(true)}
+                onBlur={() => onHoverUpdate(false)}
             />
             <div className="top-icons absolute top-1.5 right-1.5 p-1 flex gap-2 text-gray-400">
                 <div
