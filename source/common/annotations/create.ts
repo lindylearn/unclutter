@@ -25,7 +25,7 @@ function createAnnotation(
         quote_html_selector: selector,
         platform: partial.platform || "ll",
         link: partial.id,
-        reply_count: partial.reply_count || null,
+        reply_count: partial.reply_count || 0,
 
         isMyAnnotation: true,
         isPublic: false,

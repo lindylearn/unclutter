@@ -109,6 +109,7 @@ export default function App({ url }) {
         function addReplyDfs(current: LindyAnnotation) {
             if (current.id === parent.id) {
                 current.replies.push(reply);
+                current.reply_count += 1;
                 return;
             }
 
