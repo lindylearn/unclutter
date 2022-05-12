@@ -2,6 +2,8 @@ import React from "react";
 import { LindyAnnotation } from "../../common/annotations/create";
 import AnnotationThread from "./AnnotationThread";
 
+const groupMargin = 150; // should be larger than rendered annotation height
+
 function AnnotationsList({
     url,
     annotations,
@@ -23,7 +25,7 @@ function AnnotationsList({
         .sort((a, b) => a.displayOffset - b.displayOffset);
 
     // group annotations that are close together
-    const groupMargin = 100;
+
     let groupedAnnotations: LindyAnnotation[][] = [];
     let lastOffset = -Infinity;
     for (const annotation of orderedAnnotations) {
@@ -117,7 +119,8 @@ function AnnotationGroup({
                             heightLimitPx={
                                 nextGroup &&
                                 nextGroup[0].displayOffset -
-                                    group[0].displayOffset
+                                    group[0].displayOffset -
+                                    4
                             }
                             upvoted={upvotedAnnotations[annotation.id]}
                             // upvoteAnnotation={(isUpvote) =>

@@ -3,7 +3,7 @@ import { LindyAnnotation } from "../../common/annotations/create";
 import Annotation from "./Annotation";
 import AnnotationDraft from "./AnnotationDraft";
 
-const maxReplyNesting = 2;
+const maxReplyNesting = 1;
 
 function AnnotationThread(props) {
     const replyLevel = props.replyLevel || 0;
@@ -12,8 +12,14 @@ function AnnotationThread(props) {
         ? AnnotationDraft
         : Annotation;
 
+    const spaceForReplies = props.heightLimitPx - 140;
+    const showReplies =
+        props.annotation.reply_count > 0 &&
+        replyLevel < maxReplyNesting &&
+        spaceForReplies >= props.annotation.reply_count * 100;
+
     return (
-        <div className="">
+        <>
             <Component
                 {...props}
                 deleteHideAnnotation={() =>
@@ -22,14 +28,11 @@ function AnnotationThread(props) {
                 createReply={() =>
                     props.createReply(props.annotation, props.annotation)
                 }
-                showReplyCount={
-                    replyLevel >= maxReplyNesting ||
-                    props.annotation.replies?.length === 0
-                }
+                showingReplies={showReplies}
                 isReply={replyLevel !== 0}
             />
-            {replyLevel < maxReplyNesting && (
-                <div className="ml-5">
+            {showReplies && (
+                <div className="annotation-reply ml-5">
                     {props.annotation.replies?.map((reply) => (
                         <AnnotationThread
                             key={reply.localId}
@@ -59,7 +62,7 @@ function AnnotationThread(props) {
                     ))}
                 </div>
             )}
-        </div>
+        </>
     );
 }
 export default AnnotationThread;

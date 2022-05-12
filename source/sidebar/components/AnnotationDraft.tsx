@@ -12,6 +12,7 @@ function AnnotationDraft({
     deleteHideAnnotation,
     hypothesisSyncEnabled,
     isReply = false,
+    heightLimitPx,
 }) {
     // debounce to reduce API calls
     const debouncedUpdateApi: (
@@ -69,6 +70,7 @@ function AnnotationDraft({
                 top: annotation.offset,
                 // boxShadow: `-1.5px 0.5px 2px 0 ${color}`,
                 borderLeft: !isReply ? `5px solid ${color}` : "",
+                maxHeight: heightLimitPx,
             }}
         >
             <TextareaAutosize
@@ -85,6 +87,7 @@ function AnnotationDraft({
                     })
                 }
                 minRows={2}
+                maxRows={5}
                 autoFocus={annotation.focused}
             />
             <div className="top-icons absolute top-1.5 right-1.5 p-1 flex gap-2 text-gray-400">
@@ -112,9 +115,9 @@ function AnnotationDraft({
                 {hypothesisSyncEnabled && (
                     <div
                         className={
-                            "cursor-pointer hover:text-gray-600 hover:drop-shadow-md lindy-tooltip lindy-fade transition-all " +
+                            "public-toggle cursor-pointer hover:text-gray-600 hover:drop-shadow-md lindy-tooltip lindy-fade transition-all " +
                             (localAnnotation.isPublic
-                                ? "visible text-gray-600"
+                                ? "is-public visible text-gray-600"
                                 : "")
                         }
                         onClick={() =>

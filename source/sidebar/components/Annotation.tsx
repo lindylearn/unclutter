@@ -9,8 +9,9 @@ function Annotation({
     upvoteAnnotation,
     onHoverUpdate,
     deleteHideAnnotation,
-    showReplyCount,
+    showingReplies,
     hypothesisSyncEnabled,
+    isReply,
     createReply,
 }) {
     const { text, offset, author, platform, link, reply_count } = annotation;
@@ -35,7 +36,7 @@ function Annotation({
             style={{
                 top: offset,
                 borderColor: getAnnotationColor(annotation),
-                maxHeight: heightLimitPx - 5,
+                maxHeight: heightLimitPx,
             }}
             onMouseEnter={() => onHoverUpdate(true)}
             onMouseLeave={() => onHoverUpdate(false)}
@@ -44,7 +45,7 @@ function Annotation({
                 className="annotation-text text-sm select-none mr-3"
                 style={{
                     display: "-webkit-box",
-                    WebkitLineClamp: 5,
+                    WebkitLineClamp: isReply ? 3 : 5,
                     WebkitBoxOrient: "vertical",
                     overflow: "hidden",
                     textOverflow: "ellipsis",
@@ -99,7 +100,7 @@ function Annotation({
                     <span>{upvoteCount}</span>
                 </div> */}
 
-                {showReplyCount && annotation.reply_count !== 0 && (
+                {!showingReplies && annotation.reply_count !== 0 && (
                     <a
                         className="select-none hover:text-gray-700 hover:drop-shadow-sm transition-all cursor-pointer"
                         href={link}
@@ -123,7 +124,7 @@ function Annotation({
                     </a>
                 )}
 
-                {!showReplyCount &&
+                {(showingReplies || annotation.reply_count === 0) &&
                     annotation.platform === "h" &&
                     hypothesisSyncEnabled && (
                         <a
@@ -146,7 +147,7 @@ function Annotation({
 
                 <div className="flex-grow" />
                 <a
-                    className="hover:text-gray-700 hover:drop-shadow-sm"
+                    className="hover:text-gray-700 hover:drop-shadow-sm select-none"
                     href={
                         platform === "h"
                             ? `https://annotations.lindylearn.io/@${

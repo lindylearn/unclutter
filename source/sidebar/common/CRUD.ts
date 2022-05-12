@@ -79,6 +79,11 @@ export async function getAnnotations(
             .filter((a) => !current.replies.some((r) => r.id === a.id))
             .map((reply) => {
                 current.replies.push(reply);
+                if (!current.reply_count) {
+                    current.reply_count = 1;
+                } else {
+                    current.reply_count += 1;
+                }
             });
 
         current.replies.map(populateRepliesDfs);
@@ -97,8 +102,11 @@ export async function getAnnotations(
     annotations.map(hideAnnotationsDfs);
 
     if (!personalAnnotationsEnabled) {
-        // filter out top-level annotations by user (which would be highlighted in the text)
-        annotations = annotations.filter((a) => !a.isMyAnnotation);
+        // mark social annotations by the user immutable
+        annotations = annotations.map((a) => {
+            a.isMyAnnotation = false;
+            return a;
+        });
     }
 
     return annotations;

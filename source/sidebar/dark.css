@@ -19,7 +19,8 @@
 .top-icons > *:hover,
 .info-bar > *:hover,
 .upvote-button:hover,
-.reply-button:hover {
+.reply-button:hover,
+.public-toggle.is-public {
     color: #bdbdbd !important
 }
 

@@ -94,7 +94,7 @@ export function hypothesisToLindyFormat(
         quote_html_selector: annotation.target[0].selector,
         user_upvoted: false,
         isPublic: annotation.permissions.read[0] === "group:__world__",
-        reply_to: annotation.references?.[0],
+        reply_to: annotation.references?.[annotation.references.length - 1],
     };
 }
 
