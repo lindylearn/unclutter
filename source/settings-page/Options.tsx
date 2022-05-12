@@ -108,57 +108,7 @@ function OptionsPage({}) {
             </OptionsGroup>
 
             <OptionsGroup
-                headerText="Annotations"
-                iconSvg={
-                    <svg className="w-5" viewBox="0 0 576 512">
-                        <path
-                            fill="currentColor"
-                            d="M127.1 248.3C127.1 233 135.2 218.7 147.5 209.6L420.6 8.398C428 2.943 436.1 0 446.2 0C457.6 0 468.5 4.539 476.6 12.62L531.4 67.38C539.5 75.46 543.1 86.42 543.1 97.84C543.1 107 541.1 115.1 535.6 123.4L334.4 396.5C325.3 408.8 310.1 416 295.7 416H223.1L198.6 441.4C186.1 453.9 165.9 453.9 153.4 441.4L102.6 390.6C90.13 378.1 90.13 357.9 102.6 345.4L127.1 320L127.1 248.3zM229 229L314.1 314.1L473.4 99.92L444.1 70.59L229 229zM140.7 473.9L109.7 504.1C105.2 509.5 99.05 512 92.69 512H24C10.75 512 0 501.3 0 488V483.3C0 476.1 2.529 470.8 7.029 466.3L70.06 403.3L140.7 473.9zM552 464C565.3 464 576 474.7 576 488C576 501.3 565.3 512 552 512H224C210.7 512 200 501.3 200 488C200 474.7 210.7 464 224 464H552z"
-                        />
-                    </svg>
-                }
-            >
-                <p>
-                    Highlight any article text to create a private annotation
-                    saved in your browser.
-                </p>
-                <FeatureFlagSwitch
-                    featureFlagKey={hypothesisSyncFeatureFlag}
-                    onChange={onChangeHypothesisSync}
-                >
-                    Sync annotations with my{" "}
-                    <a
-                        href="https://web.hypothes.is"
-                        className="underline"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        Hypothes.is
-                    </a>{" "}
-                    account (
-                    <a
-                        href="https://github.com/lindylearn/unclutter/blob/main/docs/annotations.md"
-                        className="underline"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        why
-                    </a>
-                    )
-                </FeatureFlagSwitch>
-                {hypothesisEnabled && <HypothesisConfig />}
-
-                {socialAnnotationsSupported && (
-                    <FeatureFlagSwitch
-                        featureFlagKey={showSocialAnnotationsDefaultFeatureFlag}
-                    >
-                        Show social annotations by default
-                    </FeatureFlagSwitch>
-                )}
-            </OptionsGroup>
-
-            <OptionsGroup
-                headerText="Automatic activation"
+                headerText="Automatic Activation"
                 iconSvg={
                     <svg className="w-5 ml-0.5" viewBox="0 0 512 512">
                         <path
@@ -182,6 +132,82 @@ function OptionsPage({}) {
                 </FeatureFlagSwitch>
                 <DomainSettingsList />
             </OptionsGroup>
+
+            <OptionsGroup
+                headerText="Annotations"
+                iconSvg={
+                    <svg className="w-5" viewBox="0 0 576 512">
+                        <path
+                            fill="currentColor"
+                            d="M127.1 248.3C127.1 233 135.2 218.7 147.5 209.6L420.6 8.398C428 2.943 436.1 0 446.2 0C457.6 0 468.5 4.539 476.6 12.62L531.4 67.38C539.5 75.46 543.1 86.42 543.1 97.84C543.1 107 541.1 115.1 535.6 123.4L334.4 396.5C325.3 408.8 310.1 416 295.7 416H223.1L198.6 441.4C186.1 453.9 165.9 453.9 153.4 441.4L102.6 390.6C90.13 378.1 90.13 357.9 102.6 345.4L127.1 320L127.1 248.3zM229 229L314.1 314.1L473.4 99.92L444.1 70.59L229 229zM140.7 473.9L109.7 504.1C105.2 509.5 99.05 512 92.69 512H24C10.75 512 0 501.3 0 488V483.3C0 476.1 2.529 470.8 7.029 466.3L70.06 403.3L140.7 473.9zM552 464C565.3 464 576 474.7 576 488C576 501.3 565.3 512 552 512H224C210.7 512 200 501.3 200 488C200 474.7 210.7 464 224 464H552z"
+                        />
+                    </svg>
+                }
+            >
+                <p>
+                    Highlight any article text to create a private annotation
+                    saved in your browser.
+                </p>
+                <FeatureFlagSwitch
+                    featureFlagKey={hypothesisSyncFeatureFlag}
+                    onChange={onChangeHypothesisSync}
+                >
+                    Sync private annotations with my{" "}
+                    <a
+                        href="https://web.hypothes.is"
+                        className="underline"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        Hypothes.is
+                    </a>{" "}
+                    account (
+                    <a
+                        href="https://github.com/lindylearn/unclutter/blob/main/docs/annotations.md"
+                        className="underline"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        why
+                    </a>
+                    )
+                </FeatureFlagSwitch>
+                {hypothesisEnabled && <HypothesisConfig />}
+            </OptionsGroup>
+
+            {socialAnnotationsSupported && (
+                <OptionsGroup
+                    headerText="Social Comments"
+                    iconSvg={
+                        <svg className="w-5" viewBox="0 0 640 512">
+                            <path
+                                fill="currentColor"
+                                d="M319.9 320c57.41 0 103.1-46.56 103.1-104c0-57.44-46.54-104-103.1-104c-57.41 0-103.1 46.56-103.1 104C215.9 273.4 262.5 320 319.9 320zM319.9 160c30.85 0 55.96 25.12 55.96 56S350.7 272 319.9 272S263.9 246.9 263.9 216S289 160 319.9 160zM512 160c44.18 0 80-35.82 80-80S556.2 0 512 0c-44.18 0-80 35.82-80 80S467.8 160 512 160zM369.9 352H270.1C191.6 352 128 411.7 128 485.3C128 500.1 140.7 512 156.4 512h327.2C499.3 512 512 500.1 512 485.3C512 411.7 448.4 352 369.9 352zM178.1 464c10.47-36.76 47.36-64 91.14-64H369.9c43.77 0 80.66 27.24 91.14 64H178.1zM551.9 192h-61.84c-12.8 0-24.88 3.037-35.86 8.24C454.8 205.5 455.8 210.6 455.8 216c0 33.71-12.78 64.21-33.16 88h199.7C632.1 304 640 295.6 640 285.3C640 233.8 600.6 192 551.9 192zM183.9 216c0-5.449 .9824-10.63 1.609-15.91C174.6 194.1 162.6 192 149.9 192H88.08C39.44 192 0 233.8 0 285.3C0 295.6 7.887 304 17.62 304h199.5C196.7 280.2 183.9 249.7 183.9 216zM128 160c44.18 0 80-35.82 80-80S172.2 0 128 0C83.82 0 48 35.82 48 80S83.82 160 128 160z"
+                            />
+                        </svg>
+                    }
+                >
+                    <p>
+                        Click the "people" icon to show inline social comments
+                        from Hacker News and Hypothes.is. (
+                        <a
+                            href="https://github.com/lindylearn/unclutter/blob/main/docs/social-comments.md"
+                            className="underline"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            how this works
+                        </a>
+                        )
+                    </p>
+                    <FeatureFlagSwitch
+                        featureFlagKey={showSocialAnnotationsDefaultFeatureFlag}
+                    >
+                        Show number of comments for the current page under the
+                        extension icon
+                    </FeatureFlagSwitch>
+                </OptionsGroup>
+            )}
 
             <OptionsGroup
                 headerText="Other"
