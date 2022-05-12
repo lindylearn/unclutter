@@ -28,6 +28,12 @@ export async function getAnnotations(
     personalAnnotationsEnabled: boolean,
     showSocialAnnotations: boolean
 ): Promise<LindyAnnotation[]> {
+    if (!personalAnnotationsEnabled && !showSocialAnnotations) {
+        return [];
+    }
+
+    const start = performance.now();
+
     // *** fetch annotations from configured sources ***
     let localAnnotations: LindyAnnotation[] = [];
     let userRemoteAnnotations: LindyAnnotation[] = [];
@@ -37,15 +43,6 @@ export async function getAnnotations(
         hypothesisSyncFeatureFlag
     );
 
-    console.log(
-        `Fetching annotations (${
-            personalAnnotationsEnabled
-                ? hypothesisSyncEnabled
-                    ? "hypothesis, "
-                    : "local, "
-                : ""
-        }${showSocialAnnotations ? "lindy" : ""})`
-    );
     if (personalAnnotationsEnabled) {
         if (hypothesisSyncEnabled) {
             userRemoteAnnotations = await getHypothesisAnnotations(url);
@@ -104,6 +101,17 @@ export async function getAnnotations(
             return a;
         });
     }
+
+    const duration = performance.now() - start;
+    console.log(
+        `Fetched annotations (${
+            personalAnnotationsEnabled
+                ? hypothesisSyncEnabled
+                    ? "hypothesis, "
+                    : "local, "
+                : ""
+        }${showSocialAnnotations ? "lindy" : ""}) in ${Math.round(duration)}ms`
+    );
 
     return annotations;
 }

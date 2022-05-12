@@ -69,6 +69,11 @@ export default function App({ url }) {
                 personalAnnotationsEnabled,
                 showSocialAnnotations
             );
+            if (annotations.length === 0) {
+                setAnnotations([]);
+                return;
+            }
+
             const pageNotes = annotations.filter((a) => !a.quote_html_selector);
             // if (pageNotes.length === 0) {
             //     pageNotes.push(createDraftAnnotation(url, null));

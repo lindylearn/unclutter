@@ -22,9 +22,7 @@ export function createAnnotationListener(
         }
 
         if (data.event == "anchorAnnotations") {
-            console.info(
-                `anchoring ${data.annotations.length} annotations on page...`
-            );
+            const start = performance.now();
 
             removeAllHighlights(); // anchor only called with all active annotations, so can remove & re-paint
             const anchoredAnnotations = await highlightAnnotations(
@@ -35,6 +33,13 @@ export function createAnnotationListener(
                 annotations: anchoredAnnotations,
             });
             onAnnotationUpdate("set", anchoredAnnotations);
+
+            const duration = performance.now() - start;
+            console.info(
+                `anchored ${
+                    data.annotations.length
+                } annotations on page in ${Math.round(duration)}ms`
+            );
         } else if (data.event === "removeHighlight") {
             removeHighlight(data.annotation);
             onAnnotationUpdate("remove", [data.annotation]);
