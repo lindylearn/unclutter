@@ -305,8 +305,8 @@ function replaceWith(node, replacements) {
  *
  * @param {HTMLElement} root
  */
-export function removeAllHighlights(root, cssClass = "lindy-highlight") {
-  const highlights = Array.from(root.querySelectorAll(cssClass));
+export function removeAllHighlights(root) {
+  const highlights = Array.from(root.querySelectorAll("lindy-highlight"));
   removeHighlights(/** @type {HighlightElement[]} */ (highlights));
 }
 

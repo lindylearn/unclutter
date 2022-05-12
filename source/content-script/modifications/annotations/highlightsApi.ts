@@ -28,7 +28,8 @@ export async function highlightAnnotations(annotations: LindyAnnotation[]) {
 
                 const highlightedNodes = highlightRange(
                     annotation.localId,
-                    range
+                    range,
+                    "lindy-highlight"
                 );
                 if (!highlightedNodes) {
                     throw Error("includes no highlighted nodes");
@@ -42,6 +43,15 @@ export async function highlightAnnotations(annotations: LindyAnnotation[]) {
 
                 if (annotation.isMyAnnotation) {
                     paintHighlight(annotation, getAnnotationColor(annotation));
+                } else {
+                    const anchorNode =
+                        highlightedNodes[highlightedNodes.length - 1];
+                    anchorNode.classList.add("lindy-crowd-highlight");
+                    anchorNode.classList.add(
+                        annotation.platform === "hn"
+                            ? "lindy-hn-platform"
+                            : "lindy-h-platform"
+                    );
                 }
 
                 anchoredAnnotations.push({
@@ -121,7 +131,7 @@ export function removeHighlight(annotation) {
 export function getHighlightOffsets() {
     const body = document.body;
 
-    const highlightNodes = [...body.querySelectorAll(".lindy-highlight")];
+    const highlightNodes = [...body.querySelectorAll("lindy-highlight")];
 
     // highlight may include multiple nodes across html tags
     // so iterate nodes in sequence and only take the first offset

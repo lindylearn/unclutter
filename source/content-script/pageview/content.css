@@ -169,6 +169,25 @@ html.pageview > body {
     /* top and height set via JS */
 }
 
+.lindy-crowd-highlight:after {
+    position: relative;
+    top: -0.3em;
+    left: 0.1em;
+
+    content: '';
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.05));
+}
+.lindy-crowd-highlight.lindy-hn-platform:after {
+    background: rgba(255, 102, 0, 0.7);
+}
+.lindy-crowd-highlight.lindy-h-platform:after {
+    background: rgba(189, 28, 43, 0.7)
+}
+
 @media (max-width: 1200px) {
     #lindy-info-topleft {
         display: none;
