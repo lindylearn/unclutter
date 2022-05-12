@@ -129,7 +129,10 @@ function Annotation({
                     hypothesisSyncEnabled && (
                         <a
                             className="reply-button invisible select-none hover:text-gray-700 hover:scale-110 hover:pl-0.5 transition-all cursor-pointer"
-                            onClick={createReply}
+                            onClick={showingReplies ? createReply : undefined}
+                            href={!showingReplies ? link : undefined}
+                            target="_blank"
+                            rel="noreferrer"
                         >
                             <svg
                                 className="inline-block align-baseline rotate-180 w-3 mr-1"
@@ -147,7 +150,7 @@ function Annotation({
 
                 <div className="flex-grow" />
                 <a
-                    className="hover:text-gray-700 hover:drop-shadow-sm select-none"
+                    className="hover:text-gray-700 hover:drop-shadow-sm select-none flex-shrink-0"
                     href={
                         platform === "h"
                             ? `https://annotations.lindylearn.io/@${

@@ -14,7 +14,6 @@ function AnnotationThread(props) {
 
     const spaceForReplies = props.heightLimitPx - 140;
     const showReplies =
-        props.annotation.reply_count > 0 &&
         replyLevel < maxReplyNesting &&
         spaceForReplies >= props.annotation.reply_count * 100;
 
@@ -31,7 +30,7 @@ function AnnotationThread(props) {
                 showingReplies={showReplies}
                 isReply={replyLevel !== 0}
             />
-            {showReplies && (
+            {showReplies && props.annotation.reply_count > 0 && (
                 <div className="annotation-reply ml-5">
                     {props.annotation.replies?.map((reply) => (
                         <AnnotationThread
