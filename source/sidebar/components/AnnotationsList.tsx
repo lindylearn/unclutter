@@ -6,13 +6,15 @@ const sidebarOoffsetTopPx = 50;
 
 interface AnnotationsListProps {
     groupedAnnotations: LindyAnnotation[][];
-    onClick?: () => void;
-    deleteHideAnnotation: (annotation: LindyAnnotation) => void;
+    hypothesisSyncEnabled: boolean;
+    deleteHideAnnotation: (
+        annotation: LindyAnnotation,
+        threadStart: LindyAnnotation
+    ) => void;
     onAnnotationHoverUpdate: (
         annotation: LindyAnnotation,
         hoverActive: boolean
     ) => void;
-    hypothesisSyncEnabled: boolean;
     createReply: (
         parent: LindyAnnotation,
         threadStart: LindyAnnotation
@@ -21,14 +23,13 @@ interface AnnotationsListProps {
 
 function AnnotationsList({
     groupedAnnotations,
-    onClick = null,
     deleteHideAnnotation,
     onAnnotationHoverUpdate,
     hypothesisSyncEnabled,
     createReply,
 }: AnnotationsListProps) {
     return (
-        <div className="relative flex-grow" onClick={onClick}>
+        <div className="relative flex-grow">
             {groupedAnnotations.map((group, groupIndex) => (
                 <AnnotationGroup
                     key={group[0].localId}
@@ -48,14 +49,32 @@ function AnnotationsList({
 }
 export default AnnotationsList;
 
+interface AnnotationGroupProps {
+    group: LindyAnnotation[];
+    nextGroup?: LindyAnnotation[];
+    hypothesisSyncEnabled: boolean;
+    deleteHideAnnotation: (
+        annotation: LindyAnnotation,
+        threadStart: LindyAnnotation
+    ) => void;
+    onAnnotationHoverUpdate: (
+        annotation: LindyAnnotation,
+        hoverActive: boolean
+    ) => void;
+    createReply: (
+        parent: LindyAnnotation,
+        threadStart: LindyAnnotation
+    ) => void;
+}
+
 function AnnotationGroup({
     group,
     nextGroup,
+    hypothesisSyncEnabled,
     deleteHideAnnotation,
     onAnnotationHoverUpdate,
-    hypothesisSyncEnabled,
     createReply,
-}) {
+}: AnnotationGroupProps) {
     return (
         <div
             className="absolute w-full flex flex-col gap-1"

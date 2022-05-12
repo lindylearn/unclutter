@@ -1,31 +1,43 @@
 import React from "react";
+import { LindyAnnotation } from "../../common/annotations/create";
 import { getAnnotationColor } from "../../common/annotations/styling";
+
+interface AnnotationProps {
+    annotation: LindyAnnotation;
+    className?: string;
+    heightLimitPx: number;
+    showingReplies: boolean;
+    isReply: boolean;
+
+    hypothesisSyncEnabled: boolean;
+    deleteHide: () => void;
+    onHoverUpdate: (hoverActive: boolean) => void;
+    createReply: () => void;
+}
 
 function Annotation({
     annotation,
     className,
     heightLimitPx = 200,
-    upvoted,
-    upvoteAnnotation,
-    onHoverUpdate,
-    deleteHideAnnotation,
     showingReplies,
     hypothesisSyncEnabled,
     isReply,
     createReply,
-}) {
-    const { text, offset, author, platform, link, reply_count } = annotation;
+    onHoverUpdate,
+    deleteHide,
+}: AnnotationProps) {
+    const { text, author, platform, link, reply_count } = annotation;
 
     const textLines = text.split("\n").filter((line) => line.trim() != "");
 
     const [upvoteCount, setLocalUpvoteCount] = React.useState(
         annotation.upvote_count || 0
     );
-    function toggleUpvoteAnnotationLocalFirst() {
-        const newCount = upvoteCount + (upvoted ? -1 : 1);
-        upvoteAnnotation(!upvoted);
-        setLocalUpvoteCount(newCount);
-    }
+    // function toggleUpvoteAnnotationLocalFirst() {
+    //     const newCount = upvoteCount + (upvoted ? -1 : 1);
+    //     upvoteAnnotation(!upvoted);
+    //     setLocalUpvoteCount(newCount);
+    // }
 
     return (
         <div
@@ -34,7 +46,6 @@ function Annotation({
                 className
             }
             style={{
-                top: offset,
                 borderColor: getAnnotationColor(annotation),
                 maxHeight: heightLimitPx,
             }}
@@ -65,7 +76,7 @@ function Annotation({
             <div className="top-icons absolute top-1 right-1 p-1 flex gap-3 text-gray-400">
                 <div
                     className="cursor-pointer hover:text-gray-600 hover:drop-shadow lindy-tooltip lindy-fade transition-all"
-                    onClick={deleteHideAnnotation}
+                    onClick={deleteHide}
                     data-title="Hide comment"
                 >
                     <svg className="icon h-3.5" viewBox="0 0 640 512">
@@ -163,19 +174,21 @@ function Annotation({
                     target="_blank"
                     rel="noreferrer"
                 >
-                    {author.username || author}
-                    {platform == "h" && (
-                        <img
-                            src="../assets/icons/hypothesis.svg"
-                            className="inline-block w-3 ml-1"
-                        />
-                    )}
-                    {platform == "hn" && (
-                        <img
-                            src="../assets/icons/yc.svg"
-                            className="inline-block w-3 ml-1 mb-0.5"
-                        />
-                    )}
+                    <>
+                        {author.username || author}
+                        {platform == "h" && (
+                            <img
+                                src="../assets/icons/hypothesis.svg"
+                                className="inline-block w-3 ml-1"
+                            />
+                        )}
+                        {platform == "hn" && (
+                            <img
+                                src="../assets/icons/yc.svg"
+                                className="inline-block w-3 ml-1 mb-0.5"
+                            />
+                        )}
+                    </>
                 </a>
             </div>
         </div>

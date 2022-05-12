@@ -1,3 +1,4 @@
+import { LindyAnnotation } from "../../../common/annotations/create";
 import { getNodeOffset } from "../../../common/annotations/offset";
 import { getAnnotationColor } from "../../../common/annotations/styling";
 import { anchor as anchorHTML } from "../../../common/annotator/anchoring/html";
@@ -9,7 +10,7 @@ import {
 import { overrideClassname } from "../../../common/stylesheets";
 
 // highlight text for every passed annotation on the active webpage
-export async function highlightAnnotations(annotations) {
+export async function highlightAnnotations(annotations: LindyAnnotation[]) {
     const body = document.body;
 
     const anchoredAnnotations = [];
@@ -18,7 +19,7 @@ export async function highlightAnnotations(annotations) {
             try {
                 const range = await anchorHTML(
                     body,
-                    annotation.quote_html_selector
+                    annotation.quote_html_selector as any[]
                 );
                 if (!range) {
                     // e.g. selection removed?
@@ -49,7 +50,10 @@ export async function highlightAnnotations(annotations) {
                     displayOffsetEnd,
                 });
             } catch (err) {
-                console.error(`Could not anchor annotation:`, annotation, err);
+                console.error(
+                    `Could not anchor annotation with id`,
+                    annotation.id
+                );
             }
         })
     );

@@ -52,9 +52,9 @@ export default function App({ url }) {
         <div className="font-paragraph text-gray-700 mx-2">
             <AnnotationsList
                 groupedAnnotations={groupedAnnotations}
+                hypothesisSyncEnabled={hypothesisSyncEnabled}
                 deleteHideAnnotation={deleteHideAnnotation}
                 onAnnotationHoverUpdate={onAnnotationHoverUpdate}
-                hypothesisSyncEnabled={hypothesisSyncEnabled}
                 createReply={createReply}
             />
         </div>

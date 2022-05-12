@@ -5,7 +5,26 @@ import AnnotationDraft from "./AnnotationDraft";
 
 const maxReplyNesting = 1;
 
-function AnnotationThread(props) {
+interface AnnotationThreadProps {
+    url: string;
+    annotation: LindyAnnotation;
+    heightLimitPx: number;
+
+    hypothesisSyncEnabled: boolean;
+    deleteHideAnnotation: (
+        annotation: LindyAnnotation,
+        threadStart: LindyAnnotation
+    ) => void;
+    onHoverUpdate: (hoverActive: boolean) => void;
+    createReply: (
+        parent: LindyAnnotation,
+        threadStart: LindyAnnotation
+    ) => void;
+
+    replyLevel?: number;
+}
+
+function AnnotationThread(props: AnnotationThreadProps) {
     const replyLevel = props.replyLevel || 0;
 
     const Component = props.annotation.isMyAnnotation
@@ -21,7 +40,7 @@ function AnnotationThread(props) {
         <>
             <Component
                 {...props}
-                deleteHideAnnotation={() =>
+                deleteHide={() =>
                     props.deleteHideAnnotation(props.annotation, null)
                 }
                 createReply={() =>
@@ -37,7 +56,6 @@ function AnnotationThread(props) {
                             key={reply.localId}
                             {...props}
                             annotation={reply}
-                            className="mt-1 rounded border-l-0"
                             replyLevel={replyLevel + 1}
                             deleteHideAnnotation={
                                 replyLevel === 0

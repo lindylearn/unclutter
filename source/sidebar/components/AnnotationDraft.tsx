@@ -5,15 +5,29 @@ import { LindyAnnotation } from "../../common/annotations/create";
 import { getAnnotationColor } from "../../common/annotations/styling";
 import { updateAnnotation as updateAnnotationApi } from "../common/CRUD";
 
+interface AnnotationDraftProps {
+    url: string;
+    annotation: LindyAnnotation;
+    className?: string;
+    heightLimitPx: number;
+    showingReplies: boolean;
+    isReply: boolean;
+
+    hypothesisSyncEnabled: boolean;
+    deleteHide: () => void;
+    onHoverUpdate: (hoverActive: boolean) => void;
+    createReply: () => void;
+}
+
 function AnnotationDraft({
     url,
     annotation,
     className,
-    deleteHideAnnotation,
+    deleteHide,
     hypothesisSyncEnabled,
     isReply = false,
     heightLimitPx,
-}) {
+}: AnnotationDraftProps) {
     // debounce to reduce API calls
     const debouncedUpdateApi: (
         annotation: LindyAnnotation
@@ -54,7 +68,7 @@ function AnnotationDraft({
             return;
         }
 
-        deleteHideAnnotation();
+        deleteHide();
     }
 
     const color = getAnnotationColor(annotation);
@@ -67,7 +81,6 @@ function AnnotationDraft({
                 (className || "")
             }
             style={{
-                top: annotation.offset,
                 // boxShadow: `-1.5px 0.5px 2px 0 ${color}`,
                 borderLeft: !isReply ? `5px solid ${color}` : "",
                 maxHeight: heightLimitPx,

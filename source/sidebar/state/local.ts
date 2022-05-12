@@ -15,7 +15,7 @@ export function annotationReducer(
     annotations: LindyAnnotation[],
     mutation: AnnotationMutation
 ): LindyAnnotation[] {
-    console.log(mutation);
+    // console.log(mutation);
 
     switch (mutation.action) {
         case "set":
