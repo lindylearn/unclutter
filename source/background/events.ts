@@ -1,3 +1,4 @@
+import { Runtime, Tabs } from "webextension-polyfill";
 import { extensionSupportsUrl } from "../common/articleDetection";
 import {
     collectAnonymousMetricsFeatureFlag,
@@ -18,6 +19,9 @@ import {
     reportSettings,
     startMetrics,
 } from "./metrics";
+import { TabStateManager } from "./tabs";
+
+const tabsManager = new TabStateManager();
 
 // toggle page view on extension icon click
 (chrome.action || browser.browserAction).onClicked.addListener((tab) => {
@@ -42,32 +46,38 @@ import {
 });
 
 // handle events from content scripts
-browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    console.log(`Received '${message.event}' message:`, message);
+browser.runtime.onMessage.addListener(
+    (message: any, sender: Runtime.MessageSender, sendResponse: () => void) => {
+        console.log(`Received '${message.event}' message:`, message);
 
-    if (message.event === "disabledPageView") {
-        reportDisablePageView(message.trigger, message.pageHeightPx);
-    } else if (message.event === "requestEnhance") {
-        // event sent from boot.js to inject additional functionality
-        // browser apis are only available in scripts injected from background scripts or manifest.json
-        console.log("boot.js requested injection into tab");
-        injectScript(sender.tab.id, "content-script/enhance.js");
+        if (message.event === "disabledPageView") {
+            reportDisablePageView(message.trigger, message.pageHeightPx);
+        } else if (message.event === "requestEnhance") {
+            // event sent from boot.js to inject additional functionality
+            // browser apis are only available in scripts injected from background scripts or manifest.json
+            console.log("boot.js requested injection into tab");
+            injectScript(sender.tab.id, "content-script/enhance.js");
 
-        reportEnablePageView(message.trigger);
-    } else if (message.event === "openOptionsPage") {
-        browser.runtime.openOptionsPage();
-    } else if (message.event === "fetchCss") {
-        fetchCss(message.url).then(sendResponse);
-        return true;
-    } else if (message.event === "reportEvent") {
-        reportEvent(message.name, message.data);
-    } else if (message.event === "getRemoteFeatureFlags") {
-        getRemoteFeatureFlags().then(sendResponse);
-        return true;
+            reportEnablePageView(message.trigger);
+        } else if (message.event === "openOptionsPage") {
+            browser.runtime.openOptionsPage();
+        } else if (message.event === "fetchCss") {
+            fetchCss(message.url).then(sendResponse);
+            return true;
+        } else if (message.event === "reportEvent") {
+            reportEvent(message.name, message.data);
+        } else if (message.event === "getRemoteFeatureFlags") {
+            getRemoteFeatureFlags().then(sendResponse);
+            return true;
+        } else if (message.event === "showAnnotationsCount") {
+            // trigger from boot.js because we don't have tabs permissions
+
+            tabsManager.tabIsLikelyArticle(sender.tab.id, sender.url);
+        }
+
+        return false;
     }
-
-    return false;
-});
+);
 
 // run on install, extension update, or browser update
 browser.runtime.onInstalled.addListener(async ({ reason }) => {
@@ -100,11 +110,16 @@ browser.runtime.onInstalled.addListener(async ({ reason }) => {
     );
 });
 
+// track tab changes to update extension icon badge
+browser.tabs.onActivated.addListener((info: Tabs.OnActivatedActiveInfoType) =>
+    tabsManager.onChangeActiveTab(info.tabId)
+);
+browser.tabs.onRemoved.addListener((tabId: number) =>
+    tabsManager.onCloseTab(tabId)
+);
+
 // initialize on every service worker start
 function initializeServiceWorker() {
     startMetrics();
 }
 initializeServiceWorker();
-
-// browser.action.setBadgeBackgroundColor({ color: "#edd75b" });
-// browser.action.setBadgeText({ text: "5" });

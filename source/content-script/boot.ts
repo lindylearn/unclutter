@@ -46,6 +46,11 @@ async function boot() {
             });
         });
     }
+
+    // configured to enable or showing toast message on this url -> also show annotation count
+    browser.runtime.sendMessage(null, {
+        event: "showAnnotationsCount",
+    });
 }
 
 function enablePageView(trigger) {
