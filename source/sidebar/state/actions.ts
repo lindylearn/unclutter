@@ -51,11 +51,17 @@ export function useAnnotationModifiers(
         deleteHideAnnotationFactory(mutateAnnotations),
         []
     );
+    const updateAnnotation = useCallback(
+        (annotation: LindyAnnotation) =>
+            mutateAnnotations({ action: "update", annotation }),
+        []
+    );
 
     return {
         createReply,
         deleteHideAnnotation,
         onAnnotationHoverUpdate,
+        updateAnnotation,
     };
 }
 

@@ -19,14 +19,16 @@ interface AnnotationsListProps {
         parent: LindyAnnotation,
         threadStart: LindyAnnotation
     ) => void;
+    updateAnnotation: (annotation: LindyAnnotation) => void;
 }
 
 function AnnotationsList({
     groupedAnnotations,
+    hypothesisSyncEnabled,
     deleteHideAnnotation,
     onAnnotationHoverUpdate,
-    hypothesisSyncEnabled,
     createReply,
+    updateAnnotation,
 }: AnnotationsListProps) {
     return (
         <div className="relative flex-grow">
@@ -42,6 +44,7 @@ function AnnotationsList({
                     onAnnotationHoverUpdate={onAnnotationHoverUpdate}
                     hypothesisSyncEnabled={hypothesisSyncEnabled}
                     createReply={createReply}
+                    updateAnnotation={updateAnnotation}
                 />
             ))}
         </div>
@@ -65,6 +68,7 @@ interface AnnotationGroupProps {
         parent: LindyAnnotation,
         threadStart: LindyAnnotation
     ) => void;
+    updateAnnotation: (annotation: LindyAnnotation) => void;
 }
 
 function AnnotationGroup({
@@ -74,6 +78,7 @@ function AnnotationGroup({
     deleteHideAnnotation,
     onAnnotationHoverUpdate,
     createReply,
+    updateAnnotation,
 }: AnnotationGroupProps) {
     return (
         <div
@@ -103,6 +108,7 @@ function AnnotationGroup({
                             }
                             hypothesisSyncEnabled={hypothesisSyncEnabled}
                             createReply={createReply}
+                            updateAnnotation={updateAnnotation}
                         />
                     </div>
                 );

@@ -28,8 +28,12 @@ export default function App({ url }) {
     );
 
     // handlers to modify remote & local state
-    const { createReply, deleteHideAnnotation, onAnnotationHoverUpdate } =
-        useAnnotationModifiers(mutateAnnotations);
+    const {
+        createReply,
+        deleteHideAnnotation,
+        onAnnotationHoverUpdate,
+        updateAnnotation,
+    } = useAnnotationModifiers(mutateAnnotations);
 
     // receive events from the text highlighting content script code
     useMemo(() => {
@@ -56,6 +60,7 @@ export default function App({ url }) {
                 deleteHideAnnotation={deleteHideAnnotation}
                 onAnnotationHoverUpdate={onAnnotationHoverUpdate}
                 createReply={createReply}
+                updateAnnotation={updateAnnotation}
             />
         </div>
     );

@@ -1,5 +1,5 @@
 import debounce from "lodash/debounce";
-import React from "react";
+import React, { useCallback } from "react";
 import TextareaAutosize from "react-textarea-autosize";
 import { LindyAnnotation } from "../../common/annotations/create";
 import { getAnnotationColor } from "../../common/annotations/styling";
@@ -17,6 +17,7 @@ interface AnnotationDraftProps {
     deleteHide: () => void;
     onHoverUpdate: (hoverActive: boolean) => void;
     createReply: () => void;
+    updateAnnotation: (annotation: LindyAnnotation) => void;
 }
 
 function AnnotationDraft({
@@ -27,12 +28,17 @@ function AnnotationDraft({
     hypothesisSyncEnabled,
     isReply = false,
     heightLimitPx,
+    updateAnnotation,
 }: AnnotationDraftProps) {
     // debounce to reduce API calls
+    // debounce instead of throttle so that newest call eventually runs
     const debouncedUpdateApi: (
         annotation: LindyAnnotation
-    ) => Promise<LindyAnnotation> = React.useCallback(
-        debounce(updateAnnotationApi, 1000), // debounce so newest call eventually runs
+    ) => Promise<LindyAnnotation> = useCallback(
+        debounce((a) => {
+            updateAnnotation(a); // update app root state
+            updateAnnotationApi(a);
+        }, 1000),
         []
     );
 
@@ -87,7 +93,7 @@ function AnnotationDraft({
             }}
         >
             <TextareaAutosize
-                className="text-sm md:text-base w-full bg-gray-50 placeholder-gray-400 placeholder:select-none rounded py-1 pl-2 pr-6 outline-none align-top"
+                className="text-sm md:text-base w-full bg-gray-50 select-none placeholder-gray-400 placeholder:select-none rounded py-1 pl-2 pr-6 outline-none align-top"
                 placeholder={
                     (localAnnotation.isPublic ? "Public " : "Private ") +
                     (isReply ? "reply" : "note")

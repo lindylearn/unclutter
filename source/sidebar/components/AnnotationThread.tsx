@@ -20,6 +20,7 @@ interface AnnotationThreadProps {
         parent: LindyAnnotation,
         threadStart: LindyAnnotation
     ) => void;
+    updateAnnotation: (annotation: LindyAnnotation) => void;
 
     replyLevel?: number;
 }
