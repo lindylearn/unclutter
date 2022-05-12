@@ -3,14 +3,7 @@ import {
     createDraftAnnotation,
     LindyAnnotation,
 } from "../common/annotations/create";
-import {
-    enableAnnotationsFeatureFlag,
-    getFeatureFlag,
-    hypothesisSyncFeatureFlag,
-    showSocialAnnotationsDefaultFeatureFlag,
-    supportSocialAnnotations,
-} from "../common/featureFlags";
-import { getRemoteFeatureFlag } from "../content-script/messaging";
+import { hypothesisSyncFeatureFlag } from "../common/featureFlags";
 import { createRemoteAnnotation } from "./common/api";
 import {
     createAnnotation,
@@ -18,48 +11,21 @@ import {
     getAnnotations,
 } from "./common/CRUD";
 import { groupAnnotations } from "./common/grouping";
+import { useAnnotationSettings, useFeatureFlag } from "./common/hooks";
 import { hideAnnotationLocally } from "./common/local";
 import AnnotationsList from "./components/AnnotationsList";
 
 export default function App({ url }) {
-    // fetch extension settings
-    const [hypothesisSyncEnabled, setHypothesisSyncEnabled] =
-        React.useState(false);
-    React.useEffect(() => {
-        (async function () {
-            const hypothesisSyncEnabled = await getFeatureFlag(
-                hypothesisSyncFeatureFlag
-            );
-            setHypothesisSyncEnabled(hypothesisSyncEnabled);
-        })();
-    }, []);
+    // extension settings
+    const hypothesisSyncEnabled = useFeatureFlag(hypothesisSyncFeatureFlag);
 
-    // state updated through events sent from overlay code below
-    const [personalAnnotationsEnabled, setPersonalAnnotationsEnabled] =
-        React.useState(false);
-    const [showSocialAnnotations, setShowSocialAnnotations] =
-        React.useState(false);
-    React.useEffect(() => {
-        (async function () {
-            const personalAnnotationsEnabled = await getFeatureFlag(
-                enableAnnotationsFeatureFlag
-            );
-
-            let showSocialAnnotations = false;
-            const supportSocialFeature = await getRemoteFeatureFlag(
-                supportSocialAnnotations
-            );
-            if (supportSocialFeature) {
-                showSocialAnnotations = await getFeatureFlag(
-                    showSocialAnnotationsDefaultFeatureFlag
-                );
-            }
-
-            // batch state updates
-            setPersonalAnnotationsEnabled(personalAnnotationsEnabled);
-            setShowSocialAnnotations(showSocialAnnotations);
-        })();
-    }, []);
+    // annotation settings (updated through events below)
+    const {
+        personalAnnotationsEnabled,
+        setPersonalAnnotationsEnabled,
+        showSocialAnnotations,
+        setShowSocialAnnotations,
+    } = useAnnotationSettings();
 
     // keep the annotations state here
     const [annotations, setAnnotations] = React.useState([]);
