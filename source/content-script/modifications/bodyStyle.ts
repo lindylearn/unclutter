@@ -4,6 +4,7 @@ import { PageModifier, trackModifierExecution } from "./_interface";
 @trackModifierExecution
 export default class BodyStyleModifier implements PageModifier {
     private styleObserver: MutationObserver;
+    private removeResponsiveStyleListener: () => void;
 
     transitionIn() {
         this.modifyHtmlStyle();
@@ -17,10 +18,22 @@ export default class BodyStyleModifier implements PageModifier {
             attributes: true,
             attributeFilter: ["style"],
         });
+
+        // watch for screen size changes
+        const mediaQueryList = window.matchMedia("(max-width: 1200px)");
+        const matchMediaListener = ({ matches }) => {
+            this.applyResponsiveStyle(matches);
+        };
+        matchMediaListener(mediaQueryList);
+
+        mediaQueryList.addEventListener("change", matchMediaListener);
+        this.removeResponsiveStyleListener = () =>
+            mediaQueryList.removeEventListener("change", matchMediaListener);
     }
 
     async afterTransitionOut() {
         this.styleObserver.disconnect();
+        this.removeResponsiveStyleListener();
 
         document.body.style.removeProperty("display");
         document.body.style.removeProperty("width");
@@ -84,10 +97,21 @@ export default class BodyStyleModifier implements PageModifier {
         document.body.style.setProperty("display", "block", "important");
 
         document.body.style.setProperty("height", "auto", "important");
-        document.body.style.setProperty(
-            "margin",
-            "10px auto 40px auto",
-            "important"
-        );
+    }
+
+    private applyResponsiveStyle(isMobile: boolean) {
+        if (isMobile) {
+            document.body.style.setProperty(
+                "margin",
+                "10px auto 40px 20px",
+                "important"
+            );
+        } else {
+            document.body.style.setProperty(
+                "margin",
+                "10px auto 40px auto",
+                "important"
+            );
+        }
     }
 }

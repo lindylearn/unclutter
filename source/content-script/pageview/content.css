@@ -169,18 +169,19 @@ html.pageview > body {
     /* top and height set via JS */
 }
 
-/* lindy-highlight {
-    position: relative;
+@media (max-width: 1200px) {
+    #lindy-info-topleft {
+        display: none;
+    }
+
+    html.pageview > body {
+        margin-left: 20px !important; /* also set via inline styles */
+    } 
+    #lindylearn-annotations-sidebar {
+        left: calc(var(--lindy-pagewidth) + 20px + 5px);
+        width: calc(100vw - (var(--lindy-pagewidth) + 20px + 5px) - 50px);
+    }
+    .lindy-page-settings-pageadjacent {
+        left: calc(var(--lindy-pagewidth) + 20px + 0px) !important;
+    }
 }
-lindy-highlight::after {
-    position: absolute;
-    right: -5px;
-    top: 0;
-    height: 100%;
-    width: 1px;
-
-    content: '';
-    display: block;
-
-    border-right: 5px solid;
-} */

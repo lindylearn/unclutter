@@ -336,11 +336,6 @@ svg.lindy-ui-icon#lindy-theme-icon > path {
     transform: translate3d(-200px, 0, 0);
     animation: none;
 }
-@media (max-width: 1200px) {
-    #lindy-info-topleft {
-        display: none;
-    }
-}
 
 #lindy-crowd-icon {
     width: 22px;
