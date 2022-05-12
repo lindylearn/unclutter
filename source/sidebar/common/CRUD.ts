@@ -11,8 +11,8 @@ import { reportEventContentScript } from "../../content-script/messaging";
 import {
     createRemoteAnnotation,
     deleteRemoteAnnotation,
-    getHypothesisAnnotations,
     getLindyAnnotations,
+    getPersonalHypothesisAnnotations,
     updateRemoteAnnotation,
 } from "./api";
 import {
@@ -32,36 +32,25 @@ export async function getAnnotations(
         return [];
     }
 
-    const start = performance.now();
-
-    // *** fetch annotations from configured sources ***
-    let localAnnotations: LindyAnnotation[] = [];
-    let userRemoteAnnotations: LindyAnnotation[] = [];
-    let publicAnnotations: LindyAnnotation[] = [];
-
     const hypothesisSyncEnabled = await getFeatureFlag(
         hypothesisSyncFeatureFlag
     );
 
-    if (personalAnnotationsEnabled) {
-        if (hypothesisSyncEnabled) {
-            userRemoteAnnotations = await getHypothesisAnnotations(url);
-        } else {
-            localAnnotations = await getLocalAnnotations(url);
-        }
-    }
-    if (showSocialAnnotations) {
-        publicAnnotations = await getLindyAnnotations(url);
-    }
+    const start = performance.now();
 
-    // *** reconcile lists ***
+    // fetch annotations from configured sources
+    const [personalAnnotations, publicAnnotations] = await Promise.all([
+        personalAnnotationsEnabled
+            ? getPersonalAnnotations(url, hypothesisSyncEnabled)
+            : [],
+        showSocialAnnotations ? getLindyAnnotations(url) : [],
+    ]);
 
-    // take from lindy preferrably, otherwise hypothesis
-    // -> show replies, upvotes metadata when available, but new & private annotations immediately
-    let annotations = localAnnotations.concat(publicAnnotations);
+    // take from public lindy API preferrably (to get metadata)
+    let annotations = publicAnnotations;
     let hypothesisReplies: LindyAnnotation[] = [];
     const seenIds = new Set(publicAnnotations.map((a) => a.id));
-    for (const annotation of userRemoteAnnotations) {
+    for (const annotation of personalAnnotations) {
         if (annotation.reply_to) {
             hypothesisReplies.push(annotation);
         } else if (!seenIds.has(annotation.id)) {
@@ -83,7 +72,7 @@ export async function getAnnotations(
     }
     annotations.map(populateRepliesDfs);
 
-    // remove annotations hidden by the user (saved locally)
+    // remove annotations hidden by the user
     const hiddenAnnotations = await getHiddenAnnotations();
     function hideAnnotationsDfs(current: LindyAnnotation) {
         current.replies = current.replies.filter(
@@ -95,7 +84,7 @@ export async function getAnnotations(
     annotations.map(hideAnnotationsDfs);
 
     if (!personalAnnotationsEnabled) {
-        // mark social annotations by the user immutable
+        // mark top-level annotations by the user immutable
         annotations = annotations.map((a) => {
             a.isMyAnnotation = false;
             return a;
@@ -114,6 +103,17 @@ export async function getAnnotations(
     );
 
     return annotations;
+}
+
+async function getPersonalAnnotations(
+    url: string,
+    hypothesisSyncEnabled: boolean
+): Promise<LindyAnnotation[]> {
+    if (hypothesisSyncEnabled) {
+        return await getPersonalHypothesisAnnotations(url);
+    } else {
+        return await getLocalAnnotations(url);
+    }
 }
 
 export async function createAnnotation(

@@ -1,7 +1,23 @@
 import React from "react";
+import { LindyAnnotation } from "../../common/annotations/create";
 import AnnotationThread from "./AnnotationThread";
 
 const sidebarOoffsetTopPx = 50;
+
+interface AnnotationsListProps {
+    groupedAnnotations: LindyAnnotation[][];
+    onClick?: () => void;
+    deleteHideAnnotation: (annotation: LindyAnnotation) => void;
+    onAnnotationHoverUpdate: (
+        annotation: LindyAnnotation,
+        hoverActive: boolean
+    ) => void;
+    hypothesisSyncEnabled: boolean;
+    createReply: (
+        parent: LindyAnnotation,
+        threadStart: LindyAnnotation
+    ) => void;
+}
 
 function AnnotationsList({
     groupedAnnotations,
@@ -10,7 +26,7 @@ function AnnotationsList({
     onAnnotationHoverUpdate,
     hypothesisSyncEnabled,
     createReply,
-}) {
+}: AnnotationsListProps) {
     return (
         <div className="relative flex-grow" onClick={onClick}>
             {groupedAnnotations.map((group, groupIndex) => (

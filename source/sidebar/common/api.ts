@@ -22,7 +22,7 @@ export async function getLindyAnnotations(
     url: string
 ): Promise<LindyAnnotation[]> {
     const response = await fetch(
-        `${lindyApiUrl}/annotations?${new URLSearchParams({ page_url: url })}`,
+        `${lindyApiUrl}/annotations/?${new URLSearchParams({ page_url: url })}`,
         await _getConfig()
     );
     const json = await response.json();
@@ -42,7 +42,7 @@ export async function getLindyAnnotations(
 }
 
 // private annotations directly from hypothesis
-export async function getHypothesisAnnotations(
+export async function getPersonalHypothesisAnnotations(
     url: string
 ): Promise<LindyAnnotation[]> {
     const username = await getHypothesisUsername();
