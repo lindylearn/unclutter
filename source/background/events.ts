@@ -73,6 +73,8 @@ browser.runtime.onMessage.addListener(
             // trigger from boot.js because we don't have tabs permissions
 
             tabsManager.tabIsLikelyArticle(sender.tab.id, sender.url);
+        } else if (message.event === "hideAnnotationsCount") {
+            tabsManager.hideAnnotationCount(sender.tab.id);
         }
 
         return false;

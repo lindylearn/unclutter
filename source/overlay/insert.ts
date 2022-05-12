@@ -319,6 +319,16 @@ async function _setupSocialToggle(annotationsModifer: AnnotationsModifier) {
 
         annotationsModifer.setShowSocialAnnotations(socialAnnotationsEnabled);
 
+        if (socialAnnotationsEnabled) {
+            browser.runtime.sendMessage(null, {
+                event: "showAnnotationsCount",
+            });
+        } else {
+            browser.runtime.sendMessage(null, {
+                event: "hideAnnotationsCount",
+            });
+        }
+
         reportEventContentScript("toggleSocialAnnotations", {
             newState: socialAnnotationsEnabled,
         });
