@@ -29,6 +29,7 @@ import {
 import AnnotationsModifier from "../content-script/modifications/annotations/annotationsModifier";
 import ThemeModifier from "../content-script/modifications/CSSOM/theme";
 import OverlayManager from "../content-script/modifications/overlay";
+import { getLindyAnnotations } from "../sidebar/common/api";
 
 // Insert a small UI for the user to control the automatic pageview enablement on the current domain.
 // Creating an iframe for this doesn't work from injected scripts
@@ -103,8 +104,11 @@ export function insertPageSettings(
         <div id="lindy-annotations-toggle-container" class="lindy-tooltip lindy-fade">
             <!-- <svg> inserted in _setupAnnotationsToggle() below  -->
         </div>
-        <div id="lindy-crowd-toggle-container" class="lindy-tooltip lindy-fade">
-            <!-- <svg> inserted in _setupSocialToggle() below  -->
+        <div id="lindy-crowd-toggle-container">
+            <div id="lindy-crowd-toggle-content" class="lindy-tooltip lindy-fade">
+                <!-- <svg> inserted in _setupSocialToggle() below  -->
+            </div>
+            <div id="lindy-crowd-count-label"></div>
         </div>
     `
     );
@@ -333,9 +337,19 @@ async function _setupSocialToggle(annotationsModifer: AnnotationsModifier) {
             newState: socialAnnotationsEnabled,
         });
     };
+
+    const url = window.location.href; // TODO replace with url argument and static count check
+    const label = document.getElementById("lindy-crowd-count-label");
+    getLindyAnnotations(url).then((annotations) => {
+        const count = annotations.length;
+        if (count) {
+            label.innerText = count.toString();
+            label.style.display = "block";
+        }
+    });
 }
 function _renderSocialToggle() {
-    const container = document.getElementById("lindy-crowd-toggle-container");
+    const container = document.getElementById("lindy-crowd-toggle-content");
     container.innerHTML = _getSocialToggleIcon(socialAnnotationsEnabled);
     container.setAttribute(
         "data-title",
