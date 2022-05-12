@@ -4,19 +4,12 @@ import {
     supportSocialAnnotations,
 } from "../common/featureFlags";
 import browser from "../common/polyfill";
-import { getRemoteFeatureFlag } from "../content-script/messaging";
 import { getLindyAnnotations } from "../sidebar/common/api";
+import { getRemoteFeatureFlags } from "./metrics";
 
 export class TabStateManager {
     // store annotation counts per tab id, and update the badge text on active tab changes
     private annotationCounts: { [tabId: string]: number } = {};
-    private featureEnabled = false;
-
-    constructor() {
-        getRemoteFeatureFlag(supportSocialAnnotations).then(
-            (enabled) => (this.featureEnabled = enabled)
-        );
-    }
 
     onChangeActiveTab(tabId: number) {
         this.renderBadgeCount(tabId);
@@ -43,11 +36,13 @@ export class TabStateManager {
     }
 
     private async renderBadgeCount(tabId: number) {
-        if (!this.featureEnabled) {
+        // check settings every time in case user changed it
+        const featureEnabled = (await getRemoteFeatureFlags())?.[
+            supportSocialAnnotations
+        ];
+        if (!featureEnabled) {
             return;
         }
-
-        // check setting every time in case user changed it
         const showAnnotationCount = await getFeatureFlag(
             showSocialAnnotationsDefaultFeatureFlag
         );
