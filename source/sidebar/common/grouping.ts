@@ -7,6 +7,7 @@ export function groupAnnotations(annotations: LindyAnnotation[]) {
     if (annotations.length === 0) {
         return [];
     }
+    const start = performance.now();
 
     const orderedAnnotations: LindyAnnotation[] = annotations
         .filter((a) => a.displayOffset)
@@ -51,6 +52,9 @@ export function groupAnnotations(annotations: LindyAnnotation[]) {
             .concat(myAnnotations)
             .sort((a, b) => a.displayOffset - b.displayOffset);
     });
+
+    const duration = performance.now() - start;
+    console.log(`Grouped annotations in ${Math.round(duration)}ms`);
 
     return groupedAnnotations;
 }
