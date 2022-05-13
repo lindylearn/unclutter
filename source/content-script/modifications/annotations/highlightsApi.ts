@@ -8,9 +8,13 @@ import {
     removeHighlights as removeHighlightsApi,
 } from "../../../common/annotator/highlighter";
 import { overrideClassname } from "../../../common/stylesheets";
+import { sendSidebarEvent } from "./annotationsListener";
 
 // highlight text for every passed annotation on the active webpage
-export async function highlightAnnotations(annotations: LindyAnnotation[]) {
+export async function highlightAnnotations(
+    annotations: LindyAnnotation[],
+    sidebarIframe: HTMLIFrameElement
+) {
     const body = document.body;
 
     const anchoredAnnotations = [];
@@ -43,6 +47,15 @@ export async function highlightAnnotations(annotations: LindyAnnotation[]) {
 
                 if (annotation.isMyAnnotation) {
                     paintHighlight(annotation, getAnnotationColor(annotation));
+
+                    highlightedNodes.map((node) => {
+                        // hover color change not easy (hover ends between text lines)
+                        node.onclick = () =>
+                            sendSidebarEvent(sidebarIframe, {
+                                event: "focusAnnotation",
+                                id: annotation.id,
+                            });
+                    });
                 }
 
                 anchoredAnnotations.push({

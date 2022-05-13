@@ -1,4 +1,7 @@
-import { createDraftAnnotation } from "../../../common/annotations/create";
+import {
+    createDraftAnnotation,
+    LindyAnnotation,
+} from "../../../common/annotations/create";
 import { describe as describeAnnotation } from "../../../common/annotator/anchoring/html";
 import { sendSidebarEvent } from "./annotationsListener";
 import { AnnotationListener } from "./annotationsModifier";
@@ -65,7 +68,7 @@ export function createSelectionListener(
                 annotation,
             });
             onAnnotationUpdate("add", [annotation]);
-        });
+        }, sidebarIframe);
     }
     listeners.push(["mouseup", onmouseup]);
 
@@ -130,7 +133,10 @@ function _expandRangeToWordBoundary(
     return range;
 }
 
-async function _createAnnotationFromSelection(callback) {
+async function _createAnnotationFromSelection(
+    callback: (newAnnotation: LindyAnnotation) => void,
+    sidebarIframe: HTMLIFrameElement
+) {
     // get mouse selection
     const selection = document.getSelection();
     if (!selection || !selection.toString().trim()) {
@@ -149,7 +155,7 @@ async function _createAnnotationFromSelection(callback) {
         window.location.href,
         annotationSelector
     );
-    const offsets = await highlightAnnotations([annotation]);
+    const offsets = await highlightAnnotations([annotation], sidebarIframe);
     annotation = {
         ...annotation,
         displayOffset: offsets[0].displayOffset,

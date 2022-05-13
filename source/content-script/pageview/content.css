@@ -171,6 +171,7 @@ html.pageview > body {
 
 .lindy-highlight {
     transition: all 0.15s linear;
+    cursor: pointer;
 }
 .lindy-crowd-highlight:after {
     position: relative;

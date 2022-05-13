@@ -28,7 +28,8 @@ export function createAnnotationListener(
 
             removeAllHighlights(); // anchor only called with all active annotations, so can remove & re-paint
             const anchoredAnnotations = await highlightAnnotations(
-                data.annotations
+                data.annotations,
+                sidebarIframe
             );
             sendSidebarEvent(sidebarIframe, {
                 event: "anchoredAnnotations",

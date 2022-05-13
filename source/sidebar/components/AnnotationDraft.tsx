@@ -1,5 +1,5 @@
 import debounce from "lodash/debounce";
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import TextareaAutosize from "react-textarea-autosize";
 import { LindyAnnotation } from "../../common/annotations/create";
 import { getAnnotationColor } from "../../common/annotations/styling";
@@ -31,6 +31,13 @@ function AnnotationDraft({
     updateAnnotation,
     onHoverUpdate,
 }: AnnotationDraftProps) {
+    const inputRef = useRef<HTMLTextAreaElement>();
+    useEffect(() => {
+        if (annotation.focused) {
+            inputRef.current?.focus();
+        }
+    }, [inputRef, annotation.focused]);
+
     // debounce to reduce API calls
     // debounce instead of throttle so that newest call eventually runs
     const debouncedUpdateApi: (
@@ -46,7 +53,7 @@ function AnnotationDraft({
     // keep local state
     const [localAnnotation, setLocalAnnotation] = React.useState(annotation);
     // patch correct id once annotation remotely created
-    React.useEffect(() => {
+    useEffect(() => {
         if (!localAnnotation.id && annotation.id) {
             const newAnnotation = { ...localAnnotation, id: annotation.id };
             setLocalAnnotation(newAnnotation);
@@ -67,8 +74,7 @@ function AnnotationDraft({
         await debouncedUpdateApi(newAnnotation);
     }
 
-    const [showDeleteConfirmation, setShowDeleteConfirmation] =
-        React.useState(false);
+    const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
     function deleteWithConfirmStep() {
         if (!showDeleteConfirmation) {
             setShowDeleteConfirmation(true);
@@ -110,7 +116,7 @@ function AnnotationDraft({
                 }
                 minRows={2}
                 maxRows={5}
-                autoFocus={annotation.focused}
+                ref={inputRef}
                 onFocus={() => onHoverUpdate(true)}
                 onBlur={() => onHoverUpdate(false)}
             />
