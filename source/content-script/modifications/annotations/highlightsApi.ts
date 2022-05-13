@@ -43,18 +43,31 @@ export async function highlightAnnotations(
 
                 // always set color
                 let annotationColor: string;
+                let darkerAnnotationColor: string;
                 if (annotation.isMyAnnotation) {
                     annotationColor = getAnnotationColor(annotation);
+                    darkerAnnotationColor = annotationColor.replace(
+                        "0.3",
+                        "0.5"
+                    );
                 } else {
                     annotationColor =
                         annotation.platform === "hn"
                             ? "rgba(255, 102, 0, 0.5)"
                             : "rgba(189, 28, 43, 0.5)";
+                    darkerAnnotationColor = annotationColor.replace(
+                        "0.5",
+                        "0.8"
+                    );
                 }
                 highlightedNodes.map((node) => {
                     node.style.setProperty(
                         "--annotation-color",
                         annotationColor
+                    );
+                    node.style.setProperty(
+                        "--darker-annotation-color",
+                        darkerAnnotationColor
                     );
                 });
 
@@ -177,31 +190,14 @@ export function hoverUpdateHighlight(
 ) {
     const nodes = getAnnotationNodes(annotation);
 
-    if (annotation.isMyAnnotation) {
-        // darken color
-        const defaultColor = getAnnotationColor(annotation);
-        const darkenedColor = defaultColor.replace("0.3", "0.5");
-
-        if (hoverActive) {
-            nodes.map((node) => {
-                node.style.setProperty("--annotation-color", darkenedColor);
-            });
-        } else {
-            nodes.map((node) => {
-                node.style.setProperty("--annotation-color", defaultColor);
-            });
-        }
+    if (hoverActive) {
+        nodes.map((node) => {
+            node.classList.add("lindy-hover");
+        });
     } else {
-        // create highlight
-        if (hoverActive) {
-            nodes.map((node) => {
-                node.classList.add("lindy-hover");
-            });
-        } else {
-            nodes.map((node) => {
-                node.classList.remove("lindy-hover");
-            });
-        }
+        nodes.map((node) => {
+            node.classList.remove("lindy-hover");
+        });
     }
 }
 
