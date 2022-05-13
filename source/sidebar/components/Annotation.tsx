@@ -72,12 +72,19 @@ function Annotation({
                         }
                     />
                 )}
-                {textLines.map((line, i) => (
-                    <React.Fragment key={i}>
-                        {line}
-                        <br />
-                    </React.Fragment>
-                ))}
+                {textLines.flatMap((line) =>
+                    line
+                        .split("<a>")
+                        .map((part) =>
+                            part ===
+                            "https://www.epsilontheory.com/gell-mann-amnesia/" ? (
+                                <AbbreviatedLink href={part} />
+                            ) : (
+                                part
+                            )
+                        )
+                        .concat([<br />])
+                )}
             </a>
 
             <div className="top-icons absolute top-1 right-1 p-1 flex gap-3 text-gray-400">
@@ -202,3 +209,20 @@ function Annotation({
     );
 }
 export default Annotation;
+
+function AbbreviatedLink({ href }) {
+    return (
+        <a
+            className="text-blue-400 hover:underline"
+            href={href}
+            target="_blank"
+            rel="noreferrer"
+        >
+            {getDomain(href)}/...
+        </a>
+    );
+}
+
+export function getDomain(url: string) {
+    return url.match(/:\/\/(?:www\.)?(.[^/]+)/)[1];
+}
