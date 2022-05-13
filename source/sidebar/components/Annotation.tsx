@@ -74,15 +74,23 @@ function Annotation({
                 )}
                 {textLines.flatMap((line) =>
                     line
-                        .split("<a>")
-                        .map((part) =>
-                            part ===
-                            "https://www.epsilontheory.com/gell-mann-amnesia/" ? (
-                                <AbbreviatedLink href={part} />
-                            ) : (
-                                part
-                            )
-                        )
+                        .split(/<a>|<code>/)
+                        .map((token) => {
+                            if (token.startsWith("http")) {
+                                return <AbbreviatedLink href={token} />;
+                            }
+                            if (token.startsWith("  ")) {
+                                return (
+                                    <>
+                                        <code className="bg-gray-100 text-sm">
+                                            {token}
+                                        </code>
+                                        <br />
+                                    </>
+                                );
+                            }
+                            return token;
+                        })
                         .concat([<br />])
                 )}
             </a>
