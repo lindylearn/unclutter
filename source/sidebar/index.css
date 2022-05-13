@@ -106,3 +106,19 @@ svg.icon > path {
     opacity: 1;
     transform: translate3d(0, 0, 0);
 }
+
+.crowd-annotation-dot {
+    /* keep in sync with .lindy-crowd-highlight:after style in pageview/content.css */
+    content: '';
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.05));
+}
+.crowd-annotation-dot.hn {
+    background: rgba(255, 102, 0, 0.8);
+}
+.crowd-annotation-dot.h {
+    background: rgba(189, 28, 43, 0.8)
+}

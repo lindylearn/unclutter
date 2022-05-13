@@ -9,13 +9,13 @@ export function groupAnnotations(annotations: LindyAnnotation[]) {
     }
 
     const orderedAnnotations: LindyAnnotation[] = annotations
-        .filter((a) => a.displayOffset)
-        .sort((a, b) => a.displayOffset - b.displayOffset);
+        .filter((a) => a.displayOffsetEnd)
+        .sort((a, b) => a.displayOffsetEnd - b.displayOffsetEnd);
 
     let groupedAnnotations: LindyAnnotation[][] = [];
     let lastOffset = -Infinity;
     for (const annotation of orderedAnnotations) {
-        if (annotation.displayOffset < lastOffset + groupTrailingMargin) {
+        if (annotation.displayOffsetEnd < lastOffset + groupTrailingMargin) {
             // conflict, append to last group
             groupedAnnotations[groupedAnnotations.length - 1] = [
                 ...groupedAnnotations[groupedAnnotations.length - 1],
@@ -49,7 +49,7 @@ export function groupAnnotations(annotations: LindyAnnotation[]) {
         // Order by appearance
         return bestSocialComments
             .concat(myAnnotations)
-            .sort((a, b) => a.displayOffset - b.displayOffset);
+            .sort((a, b) => a.displayOffsetEnd - b.displayOffsetEnd);
     });
 
     const displayCount = groupedAnnotations.reduce(

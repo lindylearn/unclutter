@@ -51,7 +51,7 @@ function AnnotationThread(props: AnnotationThreadProps) {
                 isReply={replyLevel !== 0}
             />
             {showReplies && props.annotation.reply_count > 0 && (
-                <div className="annotation-reply ml-5">
+                <div className="annotation-reply ml-5 mt-1">
                     {props.annotation.replies?.map((reply) => (
                         <AnnotationThread
                             key={reply.localId}

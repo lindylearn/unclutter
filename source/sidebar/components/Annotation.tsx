@@ -65,6 +65,13 @@ function Annotation({
                 target="_blank"
                 rel="noreferrer"
             >
+                {!isReply && (
+                    <div
+                        className={
+                            "crowd-annotation-dot mr-1.5 " + annotation.platform
+                        }
+                    />
+                )}
                 {textLines.map((line, i) => (
                     <React.Fragment key={i}>
                         {line}

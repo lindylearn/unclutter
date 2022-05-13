@@ -2,7 +2,7 @@ import React from "react";
 import { LindyAnnotation } from "../../common/annotations/create";
 import AnnotationThread from "./AnnotationThread";
 
-const sidebarOoffsetTopPx = 50;
+const sidebarOffsetTopPx = 50;
 
 interface AnnotationsListProps {
     groupedAnnotations: LindyAnnotation[][];
@@ -84,7 +84,7 @@ function AnnotationGroup({
         <div
             className="absolute w-full flex flex-col gap-1"
             style={{
-                top: group[0].displayOffset - sidebarOoffsetTopPx,
+                top: group[0].displayOffsetEnd - sidebarOffsetTopPx - 25,
             }}
         >
             {group.map((annotation) => {
