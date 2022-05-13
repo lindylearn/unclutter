@@ -125,7 +125,7 @@ function getHeadingItems(): OutlineItem[] {
     // h4, h5, h6 often used for side content or tagging, so ignore them
     // e.g. https://www.quantamagazine.org/researchers-identify-master-problem-underlying-all-cryptography-20220406/
 
-    let index = 0;
+    let index = 1;
     for (const node of nodes) {
         // Ignore invisible or removed elements
         if (node.offsetHeight === 0) {
