@@ -43,15 +43,6 @@ export async function highlightAnnotations(annotations: LindyAnnotation[]) {
 
                 if (annotation.isMyAnnotation) {
                     paintHighlight(annotation, getAnnotationColor(annotation));
-                } else {
-                    const anchorNode =
-                        highlightedNodes[highlightedNodes.length - 1];
-                    anchorNode.classList.add("lindy-crowd-highlight");
-                    anchorNode.classList.add(
-                        annotation.platform === "hn"
-                            ? "lindy-hn-platform"
-                            : "lindy-h-platform"
-                    );
                 }
 
                 anchoredAnnotations.push({
@@ -150,13 +141,22 @@ export function getHighlightOffsets() {
     return [offsetById, offsetEndById];
 }
 
-export function paintHighlight(annotation, color: string) {
+export function paintHighlight(annotation: LindyAnnotation, color: string) {
     const nodes = getAnnotationNodes(annotation);
     nodes.map((node) => {
-        node.style.transition = "background 0.15s linear";
         node.style.backgroundColor = color;
     });
 }
-export function unPaintHighlight(annotation) {
+export function unPaintHighlight(annotation: LindyAnnotation) {
     paintHighlight(annotation, "transparent");
+}
+
+export function addHighlightDot(annotation: LindyAnnotation) {
+    const nodes = getAnnotationNodes(annotation);
+    const anchorNode = nodes[nodes.length - 1];
+
+    anchorNode.classList.add("lindy-crowd-highlight");
+    anchorNode.classList.add(
+        annotation.platform === "hn" ? "lindy-hn-platform" : "lindy-h-platform"
+    );
 }

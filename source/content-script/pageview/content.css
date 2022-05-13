@@ -169,6 +169,9 @@ html.pageview > body {
     /* top and height set via JS */
 }
 
+.lindy-highlight {
+    transition: all 0.15s linear;
+}
 .lindy-crowd-highlight:after {
     position: relative;
     top: -0.3em;
@@ -180,12 +183,27 @@ html.pageview > body {
     height: 10px;
     border-radius: 50%;
     filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.05));
+
+    cursor: pointer;
+    animation: fadeInDot 0.15s linear;
+}
+@keyframes fadeInDot {
+    from {
+        opacity: 0;
+        width: 0px;
+        height: 0px;
+    }
+    to {
+        opacity: 1;
+        width: 10px;
+        height: 10px;
+    }
 }
 .lindy-crowd-highlight.lindy-hn-platform:after {
-    background: rgba(255, 102, 0, 0.7);
+    background: rgba(255, 102, 0, 0.8);
 }
 .lindy-crowd-highlight.lindy-h-platform:after {
-    background: rgba(189, 28, 43, 0.7)
+    background: rgba(189, 28, 43, 0.8)
 }
 
 @media (max-width: 1200px) {

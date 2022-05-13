@@ -70,6 +70,15 @@ export default function App({ url }) {
         } else {
             // display only in second pass
             setGroupedAnnotations(groupedAnnotations);
+            window.top.postMessage(
+                {
+                    event: "showHighlightDotsFor",
+                    annotations: displayedAnnotations.filter(
+                        (a) => !a.isMyAnnotation
+                    ),
+                },
+                "*"
+            );
         }
     }, [annotations]);
 

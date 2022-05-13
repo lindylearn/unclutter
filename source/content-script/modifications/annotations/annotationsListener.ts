@@ -2,6 +2,7 @@ import throttle from "lodash/throttle";
 import { getAnnotationColor } from "../../../common/annotations/styling";
 import { AnnotationListener } from "./annotationsModifier";
 import {
+    addHighlightDot,
     getHighlightOffsets,
     highlightAnnotations,
     paintHighlight,
@@ -68,6 +69,8 @@ export function createAnnotationListener(
                     unPaintHighlight(data.annotation);
                 }
             }
+        } else if (data.event === "showHighlightDotsFor") {
+            data.annotations.map(addHighlightDot);
         }
     };
     window.addEventListener("message", onMessage);
