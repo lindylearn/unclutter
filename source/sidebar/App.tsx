@@ -48,7 +48,29 @@ export default function App({ url }) {
     const [groupedAnnotations, setGroupedAnnotations] = React.useState([]);
     React.useEffect(() => {
         const groupedAnnotations = groupAnnotations(annotations);
-        setGroupedAnnotations(groupedAnnotations);
+        const displayedAnnotations = groupedAnnotations.flatMap(
+            (group) => group
+        );
+
+        if (displayedAnnotations.length !== annotations.length) {
+            // hidden some annotations during grouping, remove them for cleaner UI
+            const displayedAnnotationsSet = new Set(displayedAnnotations);
+            const droppedAnnotations = annotations.filter(
+                (a) => !displayedAnnotationsSet.has(a)
+            );
+
+            mutateAnnotations({
+                action: "set",
+                annotations: displayedAnnotations,
+            });
+            window.top.postMessage(
+                { event: "removeHighlights", annotations: droppedAnnotations },
+                "*"
+            );
+        } else {
+            // display only in second pass
+            setGroupedAnnotations(groupedAnnotations);
+        }
     }, [annotations]);
 
     return (

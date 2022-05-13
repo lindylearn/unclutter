@@ -3,7 +3,9 @@ import { LindyAnnotation } from "../../common/annotations/create";
 const groupTrailingMargin = 100; // should be larger than rendered annotation height
 
 // group annotations that appear closely together, to display them with correct margins
-export function groupAnnotations(annotations: LindyAnnotation[]) {
+export function groupAnnotations(
+    annotations: LindyAnnotation[]
+): LindyAnnotation[][] {
     if (annotations.length === 0) {
         return [];
     }

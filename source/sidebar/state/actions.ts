@@ -133,7 +133,7 @@ function deleteHideAnnotationFactory(
             mutateAnnotations({ action: "remove", annotation: annotation });
             if (annotation.quote_text) {
                 window.top.postMessage(
-                    { event: "removeHighlight", annotation },
+                    { event: "removeHighlights", annotations: [annotation] },
                     "*"
                 );
             }

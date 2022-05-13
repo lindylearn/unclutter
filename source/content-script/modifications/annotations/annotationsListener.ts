@@ -41,9 +41,10 @@ export function createAnnotationListener(
                     data.annotations.length
                 } annotations on page in ${Math.round(duration)}ms`
             );
-        } else if (data.event === "removeHighlight") {
-            removeHighlight(data.annotation);
-            onAnnotationUpdate("remove", [data.annotation]);
+        } else if (data.event === "removeHighlights") {
+            data.annotations.map(removeHighlight);
+
+            onAnnotationUpdate("remove", data.annotations);
         } else if (data.event === "onAnnotationHoverUpdate") {
             if (data.annotation.isMyAnnotation) {
                 // darken highlight
