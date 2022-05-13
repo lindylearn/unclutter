@@ -84,7 +84,7 @@ function AnnotationGroup({
         <div
             className="absolute w-full flex flex-col gap-1"
             style={{
-                top: group[0].displayOffset - sidebarOffsetTopPx,
+                top: group[0].displayOffsetEnd - sidebarOffsetTopPx - 25,
             }}
         >
             {group.map((annotation) => {
