@@ -170,10 +170,18 @@ html.pageview > body {
 }
 
 .lindy-highlight {
-    transition: all 0.15s linear;
     cursor: pointer;
+    background-color: var(--annotation-color);
+    transition: all 0.2s linear;
 }
-.lindy-crowd-highlight:after {
+
+.lindy-crowd-highlight {
+    transition: all 0.2s linear;
+}
+.lindy-crowd-highlight.lindy-hover {
+    background-color: var(--annotation-color);
+}
+.lindy-crowd-highlight.lindy-dot-visible:after {
     position: relative;
     top: -0.3em;
     left: 0.1em;
@@ -184,9 +192,10 @@ html.pageview > body {
     height: 10px;
     border-radius: 50%;
     filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.05));
+    background-color: var(--annotation-color);
 
     cursor: pointer;
-    animation: fadeInDot 0.15s linear;
+    animation: fadeInDot 0.2s linear;
 }
 @keyframes fadeInDot {
     from {
@@ -199,12 +208,6 @@ html.pageview > body {
         width: 10px;
         height: 10px;
     }
-}
-.lindy-crowd-highlight.lindy-hn-platform:after {
-    background: rgba(255, 102, 0, 0.8);
-}
-.lindy-crowd-highlight.lindy-h-platform:after {
-    background: rgba(189, 28, 43, 0.8)
 }
 
 @media (max-width: 1200px) {

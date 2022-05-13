@@ -1,14 +1,12 @@
 import throttle from "lodash/throttle";
-import { getAnnotationColor } from "../../../common/annotations/styling";
 import { AnnotationListener } from "./annotationsModifier";
 import {
     addHighlightDot,
     getHighlightOffsets,
     highlightAnnotations,
-    paintHighlight,
+    hoverUpdateHighlight,
     removeAllHighlights,
     removeHighlight,
-    unPaintHighlight,
 } from "./highlightsApi";
 
 let listenerRef;
@@ -48,28 +46,7 @@ export function createAnnotationListener(
 
             onAnnotationUpdate("remove", data.annotations);
         } else if (data.event === "onAnnotationHoverUpdate") {
-            if (data.annotation.isMyAnnotation) {
-                // darken highlight
-                const defaultColor = getAnnotationColor(data.annotation);
-                const darkenedColor = defaultColor.replace("0.3", "0.5");
-
-                if (data.hoverActive) {
-                    paintHighlight(data.annotation, darkenedColor);
-                } else {
-                    paintHighlight(data.annotation, defaultColor);
-                }
-            } else {
-                // create highlight
-                if (data.hoverActive) {
-                    const color =
-                        data.annotation.platform === "hn"
-                            ? "rgba(255, 102, 0, 0.5)"
-                            : "rgba(189, 28, 43, 0.5)";
-                    paintHighlight(data.annotation, color);
-                } else {
-                    unPaintHighlight(data.annotation);
-                }
-            }
+            hoverUpdateHighlight(data.annotation, data.hoverActive);
         } else if (data.event === "showHighlightDotsFor") {
             data.annotations.map(addHighlightDot);
         }

@@ -33,11 +33,30 @@ export async function highlightAnnotations(
                 const highlightedNodes = highlightRange(
                     annotation.localId,
                     range,
-                    "lindy-highlight"
+                    annotation.isMyAnnotation
+                        ? "lindy-highlight"
+                        : "lindy-crowd-highlight"
                 );
                 if (!highlightedNodes) {
                     throw Error("includes no highlighted nodes");
                 }
+
+                // always set color
+                let annotationColor: string;
+                if (annotation.isMyAnnotation) {
+                    annotationColor = getAnnotationColor(annotation);
+                } else {
+                    annotationColor =
+                        annotation.platform === "hn"
+                            ? "rgba(255, 102, 0, 0.5)"
+                            : "rgba(189, 28, 43, 0.5)";
+                }
+                highlightedNodes.map((node) => {
+                    node.style.setProperty(
+                        "--annotation-color",
+                        annotationColor
+                    );
+                });
 
                 const displayOffset = getNodeOffset(highlightedNodes[0]);
                 const displayOffsetEnd = getNodeOffset(
@@ -46,15 +65,13 @@ export async function highlightAnnotations(
                 );
 
                 if (annotation.isMyAnnotation) {
-                    paintHighlight(annotation, getAnnotationColor(annotation));
-
                     highlightedNodes.map((node) => {
-                        // hover color change not easy (hover ends between text lines)
                         node.onclick = () =>
                             sendSidebarEvent(sidebarIframe, {
                                 event: "focusAnnotation",
                                 id: annotation.id,
                             });
+                        // hover color change not easy (hover ends between text lines)
                     });
                 }
 
@@ -154,22 +171,43 @@ export function getHighlightOffsets() {
     return [offsetById, offsetEndById];
 }
 
-export function paintHighlight(annotation: LindyAnnotation, color: string) {
+export function hoverUpdateHighlight(
+    annotation: LindyAnnotation,
+    hoverActive: boolean
+) {
     const nodes = getAnnotationNodes(annotation);
-    nodes.map((node) => {
-        node.style.backgroundColor = color;
-    });
-}
-export function unPaintHighlight(annotation: LindyAnnotation) {
-    paintHighlight(annotation, "transparent");
+
+    if (annotation.isMyAnnotation) {
+        // darken color
+        const defaultColor = getAnnotationColor(annotation);
+        const darkenedColor = defaultColor.replace("0.3", "0.5");
+
+        if (hoverActive) {
+            nodes.map((node) => {
+                node.style.setProperty("--annotation-color", darkenedColor);
+            });
+        } else {
+            nodes.map((node) => {
+                node.style.setProperty("--annotation-color", defaultColor);
+            });
+        }
+    } else {
+        // create highlight
+        if (hoverActive) {
+            nodes.map((node) => {
+                node.classList.add("lindy-hover");
+            });
+        } else {
+            nodes.map((node) => {
+                node.classList.remove("lindy-hover");
+            });
+        }
+    }
 }
 
 export function addHighlightDot(annotation: LindyAnnotation) {
     const nodes = getAnnotationNodes(annotation);
     const anchorNode = nodes[nodes.length - 1];
 
-    anchorNode.classList.add("lindy-crowd-highlight");
-    anchorNode.classList.add(
-        annotation.platform === "hn" ? "lindy-hn-platform" : "lindy-h-platform"
-    );
+    anchorNode.classList.add("lindy-dot-visible");
 }
