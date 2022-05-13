@@ -103,7 +103,7 @@ function OptionsPage({}) {
                     </a>
                 </FeatureFlagSwitch>
                 <FeatureFlagSwitch featureFlagKey={showOutlineFeatureFlag}>
-                    Show article outline where available
+                    Show interactive article outline where available
                 </FeatureFlagSwitch>
             </OptionsGroup>
 
