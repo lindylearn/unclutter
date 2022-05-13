@@ -1,6 +1,6 @@
 import { LindyAnnotation } from "../../common/annotations/create";
 
-const groupTrailingMargin = 100; // should be larger than rendered annotation height
+const groupTrailingMargin = 150; // should be larger than rendered annotation height
 
 // group annotations that appear closely together, to display them with correct margins
 export function groupAnnotations(
@@ -11,13 +11,13 @@ export function groupAnnotations(
     }
 
     const orderedAnnotations: LindyAnnotation[] = annotations
-        .filter((a) => a.displayOffsetEnd)
-        .sort((a, b) => a.displayOffsetEnd - b.displayOffsetEnd);
+        .filter((a) => a.displayOffset)
+        .sort((a, b) => a.displayOffset - b.displayOffset);
 
     let groupedAnnotations: LindyAnnotation[][] = [];
     let lastOffset = -Infinity;
     for (const annotation of orderedAnnotations) {
-        if (annotation.displayOffsetEnd < lastOffset + groupTrailingMargin) {
+        if (annotation.displayOffset < lastOffset + groupTrailingMargin) {
             // conflict, append to last group
             groupedAnnotations[groupedAnnotations.length - 1] = [
                 ...groupedAnnotations[groupedAnnotations.length - 1],
@@ -27,7 +27,7 @@ export function groupAnnotations(
             // no conflict, start new group
             groupedAnnotations.push([annotation]);
         }
-        lastOffset = annotation.displayOffsetEnd;
+        lastOffset = annotation.displayOffset;
     }
 
     groupedAnnotations = groupedAnnotations.map((groupList) => {
@@ -51,7 +51,7 @@ export function groupAnnotations(
         // Order by appearance
         return bestSocialComments
             .concat(myAnnotations)
-            .sort((a, b) => a.displayOffsetEnd - b.displayOffsetEnd);
+            .sort((a, b) => a.displayOffset - b.displayOffset);
     });
 
     const displayCount = groupedAnnotations.reduce(
