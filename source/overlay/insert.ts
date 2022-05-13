@@ -129,7 +129,7 @@ export function insertPageSettings(
     _setupLinkHandlers();
     _setupThemePopupHandlers(domain, themeModifier);
     _setupAnnotationsToggle(annotationsModifer, overlayModifier);
-    _setupSocialToggle(annotationsModifer);
+    _setupSocialToggle(annotationsModifer, overlayModifier);
 
     const fontLink = document.createElement("link");
     fontLink.rel = "stylesheet";
@@ -305,7 +305,10 @@ function _getAnnotationsToggleIcon(enabled: boolean): string {
 
 // *** Social annotations toggle ***
 let socialAnnotationsEnabled = null;
-async function _setupSocialToggle(annotationsModifer: AnnotationsModifier) {
+async function _setupSocialToggle(
+    annotationsModifer: AnnotationsModifier,
+    overlayModifier: OverlayManager
+) {
     const supportFeature = await getRemoteFeatureFlag(supportSocialAnnotations);
     if (!supportFeature) {
         return;
@@ -322,6 +325,9 @@ async function _setupSocialToggle(annotationsModifer: AnnotationsModifier) {
         _renderSocialToggle();
 
         annotationsModifer.setShowSocialAnnotations(socialAnnotationsEnabled);
+        if (!socialAnnotationsEnabled) {
+            overlayModifier.disableSocialAnnotations();
+        }
 
         if (socialAnnotationsEnabled) {
             browser.runtime.sendMessage(null, {

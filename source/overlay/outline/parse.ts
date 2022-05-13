@@ -8,7 +8,7 @@ export interface OutlineItem {
     element: Element;
     children: OutlineItem[];
     myAnnotationCount?: number;
-    hasSocialAnnotations?: boolean;
+    socialCommentsCount?: number;
 }
 
 const contentBlocklist = [

@@ -237,7 +237,7 @@ export default class OverlayManager implements PageModifier {
             this.totalAnnotationCount = 0;
             this.flatOutline.map((_, index) => {
                 this.flatOutline[index].myAnnotationCount = 0;
-                this.flatOutline[index].hasSocialAnnotations = false;
+                this.flatOutline[index].socialCommentsCount = 0;
             });
         }
 
@@ -245,16 +245,19 @@ export default class OverlayManager implements PageModifier {
             const outlineIndex = this.getOutlineIndexForAnnotation(annotation);
 
             if (!annotation.isMyAnnotation) {
-                this.flatOutline[outlineIndex].hasSocialAnnotations = true;
-                return;
-            }
-
-            if (action === "set" || action === "add") {
-                this.totalAnnotationCount += 1;
-                this.flatOutline[outlineIndex].myAnnotationCount += 1;
-            } else if (action === "remove") {
-                this.totalAnnotationCount -= 1;
-                this.flatOutline[outlineIndex].myAnnotationCount -= 1;
+                if (action === "set" || action === "add") {
+                    this.flatOutline[outlineIndex].socialCommentsCount += 1;
+                } else if (action === "remove") {
+                    this.flatOutline[outlineIndex].socialCommentsCount -= 1;
+                }
+            } else {
+                if (action === "set" || action === "add") {
+                    this.totalAnnotationCount += 1;
+                    this.flatOutline[outlineIndex].myAnnotationCount += 1;
+                } else if (action === "remove") {
+                    this.totalAnnotationCount -= 1;
+                    this.flatOutline[outlineIndex].myAnnotationCount -= 1;
+                }
             }
         });
 
@@ -263,6 +266,17 @@ export default class OverlayManager implements PageModifier {
             outline: this.outline,
         });
     }
+
+    disableSocialAnnotations() {
+        this.flatOutline.map((_, index) => {
+            this.flatOutline[index].socialCommentsCount = 0;
+        });
+        this.topleftSvelteComponent?.$set({
+            totalAnnotationCount: this.totalAnnotationCount,
+            outline: this.outline,
+        });
+    }
+
     private getOutlineIndexForAnnotation(annotation: LindyAnnotation): number {
         if (!this.flatOutline) {
             return null;

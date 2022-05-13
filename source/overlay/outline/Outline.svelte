@@ -48,7 +48,7 @@
                     {...child} 
                     activeOutlineIndex={activeOutlineIndex} 
                     annotationsEnabled={annotationsEnabled}
-                    socialAnnotationsEnabled={outline.slice(1).some(h => h.hasSocialAnnotations)}
+                    socialAnnotationsEnabled={outline.slice(1).some(h => h.socialCommentsCount)}
                 />
             {/each}
         </ul>
