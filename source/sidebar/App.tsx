@@ -70,6 +70,8 @@ export default function App({ url }) {
         } else {
             // display only in second pass
             setGroupedAnnotations(groupedAnnotations);
+
+            // TODO only show dots on first render?
             window.top.postMessage(
                 {
                     event: "showHighlightDotsFor",

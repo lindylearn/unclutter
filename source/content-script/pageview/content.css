@@ -181,7 +181,7 @@ html.pageview > body {
 .lindy-crowd-highlight.lindy-hover {
     background-color: var(--annotation-color);
 }
-.lindy-crowd-highlight.lindy-dot-visible:after {
+.lindy-highlight-dot {
     position: relative;
     top: -0.3em;
     left: 0.1em;
@@ -195,7 +195,7 @@ html.pageview > body {
     background-color: var(--annotation-color);
 
     cursor: pointer;
-    animation: fadeInDot 0.2s linear;
+    animation: fadeInDot 0.15s linear;
 }
 @keyframes fadeInDot {
     from {

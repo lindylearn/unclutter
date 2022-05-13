@@ -205,9 +205,31 @@ export function hoverUpdateHighlight(
     }
 }
 
-export function addHighlightDot(annotation: LindyAnnotation) {
+export function addHighlightDot(
+    annotation: LindyAnnotation,
+    sidebarIframe: HTMLIFrameElement
+) {
     const nodes = getAnnotationNodes(annotation);
     const anchorNode = nodes[nodes.length - 1];
 
-    anchorNode.classList.add("lindy-dot-visible");
+    if (anchorNode.getElementsByClassName("lindy-highlight-dot").length !== 0) {
+        return;
+    }
+
+    const dotNode = document.createElement("lindy-dot");
+    dotNode.classList.add("lindy-highlight-dot");
+    anchorNode.insertBefore(dotNode, null);
+
+    dotNode.onmouseenter = () => {
+        hoverUpdateHighlight(annotation, true);
+    };
+    dotNode.onmouseleave = () => {
+        hoverUpdateHighlight(annotation, false);
+    };
+    dotNode.onclick = () => {
+        sendSidebarEvent(sidebarIframe, {
+            event: "focusAnnotation",
+            id: annotation.id,
+        });
+    };
 }

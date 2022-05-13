@@ -48,7 +48,7 @@ export function createAnnotationListener(
         } else if (data.event === "onAnnotationHoverUpdate") {
             hoverUpdateHighlight(data.annotation, data.hoverActive);
         } else if (data.event === "showHighlightDotsFor") {
-            data.annotations.map(addHighlightDot);
+            data.annotations.map((a) => addHighlightDot(a, sidebarIframe));
         }
     };
     window.addEventListener("message", onMessage);
