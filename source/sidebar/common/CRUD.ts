@@ -117,7 +117,8 @@ async function getPersonalAnnotations(
 }
 
 export async function createAnnotation(
-    annotation: LindyAnnotation
+    annotation: LindyAnnotation,
+    page_title: string
 ): Promise<LindyAnnotation> {
     const hypothesisSyncEnabled = await getFeatureFlag(
         hypothesisSyncFeatureFlag
@@ -125,7 +126,10 @@ export async function createAnnotation(
 
     let createdAnnotation: LindyAnnotation;
     if (hypothesisSyncEnabled) {
-        createdAnnotation = await createRemoteAnnotation(annotation);
+        createdAnnotation = await createRemoteAnnotation(
+            annotation,
+            page_title
+        );
     } else {
         createdAnnotation = await createLocalAnnotation(annotation);
     }

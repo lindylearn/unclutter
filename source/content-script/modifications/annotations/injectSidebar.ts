@@ -5,6 +5,7 @@ export function injectSidebar() {
     // the sidebar is running in a separate iframe to isolate personal information
     const iframeUrl = new URL(browser.runtime.getURL("/sidebar/index.html"));
     iframeUrl.searchParams.append("url", window.location.href);
+    iframeUrl.searchParams.append("title", document.title);
 
     const sidebarIframe = document.createElement("iframe");
     sidebarIframe.src = iframeUrl.toString();

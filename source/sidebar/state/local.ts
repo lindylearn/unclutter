@@ -60,7 +60,8 @@ export function annotationReducer(
 export function handleWindowEventFactory(
     mutateAnnotations: React.Dispatch<AnnotationMutation>,
     setShowSocialAnnotations: (enabled: boolean) => void,
-    setPersonalAnnotationsEnabled: (enabled: boolean) => void
+    setPersonalAnnotationsEnabled: (enabled: boolean) => void,
+    page_title: string
 ) {
     return async function ({ data }) {
         if (data.event === "createHighlight") {
@@ -68,7 +69,10 @@ export function handleWindowEventFactory(
             mutateAnnotations({ action: "add", annotation: data.annotation });
 
             // update remotely, then replace local state
-            const remoteAnnotation = await createAnnotation(data.annotation);
+            const remoteAnnotation = await createAnnotation(
+                data.annotation,
+                page_title
+            );
             mutateAnnotations({
                 action: "update",
                 annotation: remoteAnnotation,

@@ -75,7 +75,8 @@ export async function getPageHistory(url) {
 // --- user actions
 
 export async function createRemoteAnnotation(
-    localAnnotation: LindyAnnotation
+    localAnnotation: LindyAnnotation,
+    page_title: string
 ): Promise<LindyAnnotation> {
     const username = await getHypothesisUsername();
     const response = await fetch(`${hypothesisApi}/annotations`, {
@@ -94,6 +95,9 @@ export async function createRemoteAnnotation(
                         : {}),
                 },
             ],
+            document: {
+                title: [page_title],
+            },
             tags: localAnnotation.tags,
             permissions: {
                 read: [

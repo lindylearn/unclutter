@@ -6,7 +6,7 @@ import AnnotationsList from "./components/AnnotationsList";
 import { useAnnotationModifiers, useFetchAnnotations } from "./state/actions";
 import { annotationReducer, handleWindowEventFactory } from "./state/local";
 
-export default function App({ url }) {
+export default function App({ url, title }) {
     // extension settings
     const hypothesisSyncEnabled = useFeatureFlag(hypothesisSyncFeatureFlag);
 
@@ -40,7 +40,8 @@ export default function App({ url }) {
         window.onmessage = handleWindowEventFactory(
             mutateAnnotations,
             setShowSocialAnnotations,
-            setPersonalAnnotationsEnabled
+            setPersonalAnnotationsEnabled,
+            title
         );
     }, []);
 
