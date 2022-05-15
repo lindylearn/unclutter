@@ -72,7 +72,7 @@ function Annotation({
                         }
                     />
                 )}
-                {textLines.flatMap((line) =>
+                {textLines.flatMap((line, lineIndex) =>
                     line
                         .split(/<a>|<code>/)
                         .map((token) => {
@@ -91,7 +91,7 @@ function Annotation({
                             }
                             return token;
                         })
-                        .concat([<br />])
+                        .concat([<br key={lineIndex} />])
                 )}
             </a>
 
