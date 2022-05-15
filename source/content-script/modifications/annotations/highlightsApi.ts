@@ -145,6 +145,10 @@ function insertMarginBar(anchoredAnnotations) {
 
 // remove all text highlighting
 export function removeAllHighlights() {
+    [...document.querySelectorAll(".lindy-highlight-dot")].map((node) =>
+        node.remove()
+    );
+
     removeAllHighlightsApi(document.body);
 }
 
@@ -157,6 +161,12 @@ function getAnnotationNodes(annotation): HTMLElement[] {
 
 // remove a specific text highlighting
 export function removeHighlight(annotation) {
+    document
+        .querySelector(
+            `lindy-highlight[id="${annotation.localId}"] > .lindy-highlight-dot`
+        )
+        ?.remove();
+
     const nodes = getAnnotationNodes(annotation);
     removeHighlightsApi(nodes);
 }
