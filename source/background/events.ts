@@ -9,6 +9,7 @@ import browser from "../common/polyfill";
 import { saveInitialInstallVersionIfMissing } from "../overlay/outline/updateMessages";
 import { migrateAnnotationStorage } from "../sidebar/common/local";
 import { fetchCss } from "./actions";
+import { loadAnnotationCountsToMemory } from "./annotationCounts";
 import { enableInTab, injectScript, togglePageViewMessage } from "./inject";
 import { onNewInstall, requestOptionalPermissions } from "./install";
 import {
@@ -125,5 +126,6 @@ browser.tabs.onRemoved.addListener((tabId: number) =>
 // initialize on every service worker start
 function initializeServiceWorker() {
     startMetrics();
+    loadAnnotationCountsToMemory();
 }
 initializeServiceWorker();

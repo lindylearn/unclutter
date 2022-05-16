@@ -4,7 +4,7 @@ import {
     supportSocialAnnotations,
 } from "../common/featureFlags";
 import browser from "../common/polyfill";
-import { getLindyAnnotations } from "../sidebar/common/api";
+import { getSocialCommentsCount } from "./annotationCounts";
 import { getRemoteFeatureFlags } from "./metrics";
 
 export class TabStateManager {
@@ -31,9 +31,7 @@ export class TabStateManager {
         }
 
         if (!this.annotationCounts[tabId]) {
-            console.log("fetch annotations for tab");
-            const annotations = await getLindyAnnotations(url);
-            this.annotationCounts[tabId] = annotations.length;
+            this.annotationCounts[tabId] = await getSocialCommentsCount(url);
         }
 
         this.renderBadgeCount(tabId);

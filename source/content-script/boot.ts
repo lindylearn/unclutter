@@ -18,11 +18,22 @@ async function boot() {
     const url = new URL(window.location.href);
     const domain = getDomainFrom(url);
 
-    if (!extensionSupportsUrl(url) || isNonLeafPage(url)) {
+    // hard denylists
+    if (!extensionSupportsUrl(url)) {
         return;
     }
     const deniedForDomain = await isDeniedForDomain(domain);
     if (deniedForDomain) {
+        return;
+    }
+
+    // check local url map for article matches (will trigger enhance.ts injection if succeeds)
+    browser.runtime.sendMessage(null, {
+        event: "showAnnotationsCount",
+    });
+
+    // heuristic check
+    if (isNonLeafPage(url)) {
         return;
     }
 
@@ -46,11 +57,6 @@ async function boot() {
             });
         });
     }
-
-    // configured to enable or showing toast message on this url -> also show annotation count
-    browser.runtime.sendMessage(null, {
-        event: "showAnnotationsCount",
-    });
 }
 
 function enablePageView(trigger) {
