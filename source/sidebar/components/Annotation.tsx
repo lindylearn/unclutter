@@ -18,7 +18,7 @@ interface AnnotationProps {
 function Annotation({
     annotation,
     className,
-    heightLimitPx = 200,
+    heightLimitPx,
     showingReplies,
     hypothesisSyncEnabled,
     isReply,
@@ -58,7 +58,12 @@ function Annotation({
                 className="annotation-text text-sm select-none mr-3"
                 style={{
                     display: "-webkit-box",
-                    WebkitLineClamp: isReply ? 3 : 5,
+                    // restrict text height by whole lines
+                    // assumes 20px font size and py-1.5 padding
+                    WebkitLineClamp: Math.min(
+                        Math.floor((heightLimitPx - 6 * 2 - 20) / 20),
+                        isReply ? 3 : 5
+                    ),
                     WebkitBoxOrient: "vertical",
                     overflow: "hidden",
                     textOverflow: "ellipsis",
