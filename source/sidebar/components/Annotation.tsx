@@ -39,6 +39,8 @@ function Annotation({
     //     setLocalUpvoteCount(newCount);
     // }
 
+    // const relativeTime = formatRelativeTime(parseDate(annotation.created_at));
+
     return (
         <div
             className={
@@ -151,8 +153,10 @@ function Annotation({
                             ></path>
                         </svg>
                         <span>
-                            {annotation.reply_count}{" "}
-                            {annotation.reply_count === 1 ? "reply" : "replies"}
+                            {annotation.reply_count}
+                            {annotation.reply_count === 1
+                                ? " reply"
+                                : " replies"}
                         </span>
                     </a>
                 )}
@@ -180,6 +184,8 @@ function Annotation({
                             <span>reply</span>
                         </a>
                     )}
+
+                {/* <div>{relativeTime}</div> */}
 
                 <div className="flex-grow" />
                 <a
@@ -233,4 +239,15 @@ function AbbreviatedLink({ href }) {
 
 export function getDomain(url: string) {
     return url.match(/:\/\/(?:www\.)?(.[^/]+)/)[1];
+}
+
+export function parseDate(timestamp) {
+    // Safari has issues with some formats
+    // See https://stackoverflow.com/questions/6427204/date-parsing-in-javascript-is-different-between-safari-and-chrome
+    return new Date(
+        timestamp
+            .replace(/-/g, "/")
+            .replace(/[a-z]+/gi, " ")
+            .replace(".000", "")
+    );
 }

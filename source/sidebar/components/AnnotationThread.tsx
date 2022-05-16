@@ -34,6 +34,7 @@ function AnnotationThread(props: AnnotationThreadProps) {
 
     const spaceForReplies = props.heightLimitPx - 140;
     const showReplies =
+        props.annotation.platform === "h" &&
         replyLevel < maxReplyNesting &&
         spaceForReplies >= props.annotation.reply_count * 100;
 
