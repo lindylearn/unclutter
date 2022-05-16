@@ -39,13 +39,6 @@ export class TabStateManager {
         this.renderBadgeCount(tabId);
     }
 
-    // disable annotation count until re-enabled on this tab
-    // correlates with disable / enable of social annotations, to make correlation more obvious
-    hideAnnotationCount(tabId: number) {
-        delete this.annotationCounts[tabId];
-        this.renderBadgeCount(tabId);
-    }
-
     private async renderBadgeCount(tabId: number) {
         const annotationCount = this.annotationCounts[tabId];
         const badgeText = annotationCount ? annotationCount.toString() : "";

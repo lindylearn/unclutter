@@ -336,10 +336,6 @@ async function _setupSocialToggle(
             browser.runtime.sendMessage(null, {
                 event: "showAnnotationsCount",
             });
-        } else {
-            browser.runtime.sendMessage(null, {
-                event: "hideAnnotationsCount",
-            });
         }
 
         reportEventContentScript("toggleSocialAnnotations", {
