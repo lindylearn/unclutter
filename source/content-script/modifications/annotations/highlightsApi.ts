@@ -82,7 +82,7 @@ export async function highlightAnnotations(
                         node.onclick = () =>
                             sendSidebarEvent(sidebarIframe, {
                                 event: "focusAnnotation",
-                                id: annotation.id,
+                                localId: annotation.localId,
                             });
                         // hover color change not easy (hover ends between text lines)
                     });
@@ -228,6 +228,11 @@ export function addHighlightDot(
 
     dotNode.onmouseenter = () => {
         hoverUpdateHighlight(annotation, true);
+
+        sendSidebarEvent(sidebarIframe, {
+            event: "focusAnnotation",
+            localId: annotation.localId,
+        });
     };
     dotNode.onmouseleave = () => {
         hoverUpdateHighlight(annotation, false);
@@ -235,7 +240,7 @@ export function addHighlightDot(
     dotNode.onclick = () => {
         sendSidebarEvent(sidebarIframe, {
             event: "focusAnnotation",
-            id: annotation.id,
+            localId: annotation.localId,
         });
     };
 }

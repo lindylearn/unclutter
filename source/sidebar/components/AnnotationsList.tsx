@@ -7,6 +7,7 @@ const sidebarOffsetTopPx = 50;
 interface AnnotationsListProps {
     groupedAnnotations: LindyAnnotation[][];
     hypothesisSyncEnabled: boolean;
+    showAllSocialAnnotations: boolean;
     deleteHideAnnotation: (
         annotation: LindyAnnotation,
         threadStart: LindyAnnotation
@@ -25,6 +26,7 @@ interface AnnotationsListProps {
 function AnnotationsList({
     groupedAnnotations,
     hypothesisSyncEnabled,
+    showAllSocialAnnotations,
     deleteHideAnnotation,
     onAnnotationHoverUpdate,
     createReply,
@@ -43,6 +45,7 @@ function AnnotationsList({
                     deleteHideAnnotation={deleteHideAnnotation}
                     onAnnotationHoverUpdate={onAnnotationHoverUpdate}
                     hypothesisSyncEnabled={hypothesisSyncEnabled}
+                    showAllSocialAnnotations={showAllSocialAnnotations}
                     createReply={createReply}
                     updateAnnotation={updateAnnotation}
                 />
@@ -56,6 +59,7 @@ interface AnnotationGroupProps {
     group: LindyAnnotation[];
     nextGroup?: LindyAnnotation[];
     hypothesisSyncEnabled: boolean;
+    showAllSocialAnnotations: boolean;
     deleteHideAnnotation: (
         annotation: LindyAnnotation,
         threadStart: LindyAnnotation
@@ -75,6 +79,7 @@ function AnnotationGroup({
     group,
     nextGroup,
     hypothesisSyncEnabled,
+    showAllSocialAnnotations,
     deleteHideAnnotation,
     onAnnotationHoverUpdate,
     createReply,
@@ -88,7 +93,12 @@ function AnnotationGroup({
             }}
         >
             {group
-                .filter((a) => !a.hidden)
+                .filter(
+                    (a) =>
+                        a.isMyAnnotation ||
+                        showAllSocialAnnotations ||
+                        a.focused
+                )
                 .map((annotation) => {
                     return (
                         <div

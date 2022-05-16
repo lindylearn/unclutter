@@ -57,6 +57,10 @@ export function useAnnotationModifiers(
             mutateAnnotations({ action: "update", annotation }),
         []
     );
+    const onAnnotationHoverUpdate = useCallback(
+        onAnnotationHoverUpdateFactory(mutateAnnotations),
+        []
+    );
 
     return {
         createReply,
@@ -88,7 +92,7 @@ function createReplyFactory(
         addReplyDfs(threadStart);
         mutateAnnotations({ action: "update", annotation: threadStart });
 
-        const remoteAnnotation = await createRemoteAnnotation(reply);
+        const remoteAnnotation = await createRemoteAnnotation(reply, null);
 
         function updateIdDfs(current: LindyAnnotation) {
             if (current.localId === remoteAnnotation.localId) {
@@ -152,12 +156,22 @@ function deleteHideAnnotationFactory(
     };
 }
 
-function onAnnotationHoverUpdate(
-    annotation: LindyAnnotation,
-    hoverActive: boolean
+function onAnnotationHoverUpdateFactory(
+    mutateAnnotations: React.Dispatch<AnnotationMutation>
 ) {
-    window.top.postMessage(
-        { event: "onAnnotationHoverUpdate", annotation, hoverActive },
-        "*"
-    );
+    return function onAnnotationHoverUpdate(
+        annotation: LindyAnnotation,
+        hoverActive: boolean
+    ) {
+        window.top.postMessage(
+            { event: "onAnnotationHoverUpdate", annotation, hoverActive },
+            "*"
+        );
+
+        // TODO handle focus state properly after leaving without causing too many rerenders
+        // if (annotation.focused && !hoverActive) {
+        //     console.log("unfocus");
+        //     mutateAnnotations({ action: "focusAnnotation", annotation: null });
+        // }
+    };
 }
