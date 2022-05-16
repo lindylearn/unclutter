@@ -192,18 +192,17 @@ function Annotation({
                     className="hover:text-gray-700 hover:drop-shadow-sm select-none flex-shrink-0"
                     href={
                         platform === "h"
-                            ? `https://annotations.lindylearn.io/@${
-                                  author.username || author
-                              }`
-                            : `https://news.ycombinator.com/user?id=${
-                                  author.username || author
-                              }`
+                            ? `https://annotations.lindylearn.io/@${author}`
+                            : `https://news.ycombinator.com/user?id=${author.replace(
+                                  "_hn",
+                                  ""
+                              )}`
                     }
                     target="_blank"
                     rel="noreferrer"
                 >
                     <>
-                        {author.username || author}
+                        {author.replace("_hn", "")}
                         {platform == "h" && (
                             <img
                                 src="../assets/icons/hypothesis.svg"

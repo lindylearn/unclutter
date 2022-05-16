@@ -21,7 +21,7 @@ function createAnnotation(
         url,
         quote_text: selector?.[2]?.exact || "_",
         text: partial.text || "",
-        author: partial.author || { username: "" },
+        author: partial.author || "",
         quote_html_selector: selector,
         platform: partial.platform || "ll",
         link: partial.id,
@@ -44,7 +44,7 @@ function generateId(): string {
 
 export interface LindyAnnotation {
     id: string;
-    author: { username: string };
+    author: string;
     platform: "h" | "hn" | "ll";
     link: string;
     created_at: string;
@@ -73,7 +73,7 @@ export function hypothesisToLindyFormat(
     annotation: any,
     currentUsername: string
 ): LindyAnnotation {
-    const author = annotation.user.match(/([^:]+)@/)[1];
+    const author: string = annotation.user.match(/([^:]+)@/)[1];
     return {
         id: annotation.id,
         url: annotation.uri,
