@@ -1,6 +1,6 @@
 import {
+    enableSocialCountsFeatureFlag,
     getFeatureFlag,
-    showSocialAnnotationsDefaultFeatureFlag,
     supportSocialAnnotations,
 } from "../common/featureFlags";
 import browser from "../common/polyfill";
@@ -26,8 +26,6 @@ export class TabStateManager {
 
     // sent from boot.js if url passes denylist check
     async tabIsLikelyArticle(tabId: number, url: string) {
-        console.log(1);
-
         if (!(await this.isCountEnabled())) {
             return;
         }
@@ -65,7 +63,7 @@ export class TabStateManager {
             return false;
         }
         const showAnnotationCount = await getFeatureFlag(
-            showSocialAnnotationsDefaultFeatureFlag
+            enableSocialCountsFeatureFlag
         );
         return showAnnotationCount;
     }

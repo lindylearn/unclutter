@@ -23,7 +23,9 @@ export async function getAllFeatureFlags() {
         enableBootUnclutterMessage,
         showOutlineFeatureFlag,
         hypothesisSyncFeatureFlag,
-        showSocialAnnotationsDefaultFeatureFlag,
+        enableSocialCountsFeatureFlag,
+        enableAnnotationsFeatureFlag,
+        enableSocialCommentsFeatureFlag,
         dismissedFeedbackMessage,
     ];
 
@@ -40,10 +42,13 @@ export const collectAnonymousMetricsFeatureFlag = "collect-anonymous-metrics";
 export const enableBootUnclutterMessage = "enable-boot-unclutter-message";
 export const isDevelopmentFeatureFlag = "is-dev";
 export const showOutlineFeatureFlag = "show-outline";
-
-export const enableAnnotationsFeatureFlag = "annotations-enabled";
 export const hypothesisSyncFeatureFlag = "hypothesis-sync";
-export const showSocialAnnotationsDefaultFeatureFlag =
+export const enableSocialCountsFeatureFlag =
+    "social-annotations-counts-enabled";
+
+// sticky user setting
+export const enableAnnotationsFeatureFlag = "annotations-enabled";
+export const enableSocialCommentsFeatureFlag =
     "social-annotations-default-enabled";
 
 export const dismissedFeedbackMessage = "dismissed-feedback-message";
@@ -59,8 +64,10 @@ export const defaultFeatureFlags = {
     [enableBootUnclutterMessage]: true,
     [isDevelopmentFeatureFlag]: false,
     [showOutlineFeatureFlag]: true,
-    [enableAnnotationsFeatureFlag]: true,
-    [showSocialAnnotationsDefaultFeatureFlag]: true,
+    [enableSocialCountsFeatureFlag]: true,
+
+    [enableAnnotationsFeatureFlag]: false,
+    [enableSocialCommentsFeatureFlag]: false,
 
     [dismissedFeedbackMessage]: false,
 };

@@ -1,8 +1,8 @@
 import {
     enableAnnotationsFeatureFlag,
+    enableSocialCommentsFeatureFlag,
     getFeatureFlag,
     setFeatureFlag,
-    showSocialAnnotationsDefaultFeatureFlag,
     supportSocialAnnotations,
 } from "../common/featureFlags";
 import { insertHtml } from "../common/html";
@@ -313,9 +313,8 @@ async function _setupSocialToggle(
     if (!supportFeature) {
         return;
     }
-
     socialAnnotationsEnabled = await getFeatureFlag(
-        showSocialAnnotationsDefaultFeatureFlag
+        enableSocialCommentsFeatureFlag
     );
 
     const container = _renderSocialToggle();
@@ -325,6 +324,10 @@ async function _setupSocialToggle(
         _renderSocialToggle();
 
         annotationsModifer.setShowSocialAnnotations(socialAnnotationsEnabled);
+        setFeatureFlag(
+            enableSocialCommentsFeatureFlag,
+            socialAnnotationsEnabled
+        );
         if (!socialAnnotationsEnabled) {
             overlayModifier.disableSocialAnnotations();
         }

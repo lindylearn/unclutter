@@ -3,10 +3,10 @@ import {
     allowlistDomainOnManualActivationFeatureFlag,
     collectAnonymousMetricsFeatureFlag,
     enableBootUnclutterMessage,
+    enableSocialCountsFeatureFlag,
     getFeatureFlag,
     hypothesisSyncFeatureFlag,
     showOutlineFeatureFlag,
-    showSocialAnnotationsDefaultFeatureFlag,
     supportSocialAnnotations,
 } from "../common/featureFlags";
 import browser, { getBrowserType } from "../common/polyfill";
@@ -201,10 +201,9 @@ function OptionsPage({}) {
                         )
                     </p>
                     <FeatureFlagSwitch
-                        featureFlagKey={showSocialAnnotationsDefaultFeatureFlag}
+                        featureFlagKey={enableSocialCountsFeatureFlag}
                     >
-                        Show number of comments for the current page under the
-                        extension icon
+                        Show number of social comments under the extension icon
                     </FeatureFlagSwitch>
                 </OptionsGroup>
             )}

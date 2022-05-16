@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import {
     enableAnnotationsFeatureFlag,
+    enableSocialCommentsFeatureFlag,
     getFeatureFlag,
-    showSocialAnnotationsDefaultFeatureFlag,
     supportSocialAnnotations,
 } from "../../common/featureFlags";
 import { getRemoteFeatureFlag } from "../../content-script/messaging";
@@ -35,7 +35,7 @@ export function useAnnotationSettings() {
             );
             if (supportSocialFeature) {
                 showSocialAnnotations = await getFeatureFlag(
-                    showSocialAnnotationsDefaultFeatureFlag
+                    enableSocialCommentsFeatureFlag
                 );
             }
 
