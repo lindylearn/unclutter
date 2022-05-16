@@ -9,6 +9,7 @@ import { getRemoteFeatureFlags } from "./metrics";
 
 export class TabStateManager {
     // store annotation counts per tab id, and update the badge text on active tab changes
+    // this avoids having to check the large counts map every time
     private annotationCounts: { [tabId: string]: number } = {};
 
     async onChangeActiveTab(tabId: number) {
@@ -24,17 +25,18 @@ export class TabStateManager {
         delete this.annotationCounts[tabId];
     }
 
-    // sent from boot.js if url passes denylist check
-    async tabIsLikelyArticle(tabId: number, url: string) {
-        if (!(await this.isCountEnabled())) {
-            return;
-        }
-
-        if (!this.annotationCounts[tabId]) {
+    // check annotation counts for this url (locally, without a remote request)
+    // show count in extension badge if enabled, and return if we found annotations
+    async checkIsArticle(tabId: number, url: string): Promise<boolean> {
+        if (this.annotationCounts[tabId] === undefined) {
             this.annotationCounts[tabId] = await getSocialCommentsCount(url);
         }
 
-        this.renderBadgeCount(tabId);
+        if (await this.isCountEnabled()) {
+            this.renderBadgeCount(tabId);
+        }
+
+        return !!this.annotationCounts[tabId];
     }
 
     private async renderBadgeCount(tabId: number) {

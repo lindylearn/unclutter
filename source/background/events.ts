@@ -43,7 +43,7 @@ const tabsManager = new TabStateManager();
             }
         });
 
-        tabsManager.tabIsLikelyArticle(tab.id, tab.url);
+        tabsManager.checkIsArticle(tab.id, tab.url);
 
         // can only request permissions from user action
         requestOptionalPermissions();
@@ -74,10 +74,13 @@ browser.runtime.onMessage.addListener(
         } else if (message.event === "getRemoteFeatureFlags") {
             getRemoteFeatureFlags().then(sendResponse);
             return true;
-        } else if (message.event === "showAnnotationsCount") {
+        } else if (message.event === "checkLocalAnnotationCount") {
             // trigger from boot.js because we don't have tabs permissions
 
-            tabsManager.tabIsLikelyArticle(sender.tab.id, sender.url);
+            tabsManager
+                .checkIsArticle(sender.tab.id, sender.url)
+                .then(sendResponse);
+            return true;
         }
 
         return false;

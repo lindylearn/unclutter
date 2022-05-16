@@ -27,16 +27,25 @@ async function boot() {
         return;
     }
 
-    // check local url map for article matches (will trigger enhance.ts injection if succeeds)
-    browser.runtime.sendMessage(null, {
-        event: "showAnnotationsCount",
-    });
+    let triggeredIsLikelyArticle = false;
 
     // heuristic check
-    if (isNonLeafPage(url)) {
-        return;
+    if (!isNonLeafPage(url)) {
+        isLikelyArticle(domain);
+        triggeredIsLikelyArticle = true;
     }
 
+    // check local url map for article annotation count matches
+    const foundCount = await browser.runtime.sendMessage(null, {
+        event: "checkLocalAnnotationCount",
+    });
+    if (foundCount && !triggeredIsLikelyArticle) {
+        console.log("Found annotations count, assuming this is an article");
+        isLikelyArticle(domain);
+    }
+}
+
+async function isLikelyArticle(domain: string) {
     const configuredEnable = await isConfiguredToEnable(domain);
     const enableUnclutterMessage = await getFeatureFlag(
         enableBootUnclutterMessage
@@ -44,19 +53,20 @@ async function boot() {
     if (configuredEnable) {
         enablePageView("allowlisted");
     } else if (enableUnclutterMessage) {
-        let loaded = false;
-        window.addEventListener("load", function () {
-            if (loaded) {
-                // Sometimes this triggers multiple times, e.g. on https://www.smithsonianmag.com/science-nature/why-have-female-animals-evolved-such-wild-genitals-180979813/
-                return;
-            }
-            loaded = true;
-
-            displayToast("Unclutter article", () => {
-                enablePageView("message");
-            });
-        });
+        showUnclutterMessage();
     }
+}
+
+async function showUnclutterMessage() {
+    if (document.readyState !== "complete") {
+        await new Promise((resolve) =>
+            window.addEventListener("load", resolve)
+        );
+    }
+
+    displayToast("Unclutter article", () => {
+        enablePageView("message");
+    });
 }
 
 function enablePageView(trigger) {
