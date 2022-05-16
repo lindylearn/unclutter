@@ -1,4 +1,5 @@
-import React, { useMemo, useReducer } from "react";
+import React, { useEffect, useMemo, useReducer, useState } from "react";
+import { LindyAnnotation } from "../common/annotations/create";
 import { hypothesisSyncFeatureFlag } from "../common/featureFlags";
 import { groupAnnotations } from "./common/grouping";
 import { useAnnotationSettings, useFeatureFlag } from "./common/hooks";
@@ -48,7 +49,9 @@ export default function App({ url, title }) {
     }, []);
 
     // group and filter annotations by their position on the page
-    const [groupedAnnotations, setGroupedAnnotations] = React.useState([]);
+    const [groupedAnnotations, setGroupedAnnotations] = useState<
+        LindyAnnotation[][]
+    >([]);
     React.useEffect(() => {
         const groupedAnnotations = groupAnnotations(annotations);
         const displayedAnnotations = groupedAnnotations.flatMap(
@@ -87,11 +90,29 @@ export default function App({ url, title }) {
         }
     }, [annotations]);
 
+    // hide social annotations after grouping to not layout shift
+    // TODO: potentially this causes weird grouping for personal annotations?
+    const [filteredGroupedAnnotations, setFilteredGroupedAnnotations] =
+        useState<LindyAnnotation[][]>([]);
+    useEffect(() => {
+        if (!showAllSocialAnnotations) {
+            const filteredGroupedAnnotations = groupedAnnotations.map((group) =>
+                group.map((a) => ({
+                    ...a,
+                    hidden: !a.isMyAnnotation,
+                }))
+            );
+            setFilteredGroupedAnnotations(filteredGroupedAnnotations);
+        } else {
+            setFilteredGroupedAnnotations(groupedAnnotations);
+        }
+    }, [groupedAnnotations, showAllSocialAnnotations]);
+
     return (
         // x margin to show slight shadow (iframe allows no overflow)
         <div className="font-paragraph text-gray-700 mx-2">
             <AnnotationsList
-                groupedAnnotations={groupedAnnotations}
+                groupedAnnotations={filteredGroupedAnnotations}
                 hypothesisSyncEnabled={hypothesisSyncEnabled}
                 deleteHideAnnotation={deleteHideAnnotation}
                 onAnnotationHoverUpdate={onAnnotationHoverUpdate}

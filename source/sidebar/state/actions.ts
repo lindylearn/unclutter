@@ -41,7 +41,7 @@ export function useFetchAnnotations(
                 "*"
             );
         })();
-    }, [personalAnnotationsEnabled, showAllSocialAnnotations]);
+    }, [personalAnnotationsEnabled, enableSocialAnnotations]);
 }
 
 export function useAnnotationModifiers(

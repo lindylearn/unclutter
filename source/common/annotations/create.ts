@@ -66,6 +66,7 @@ export interface LindyAnnotation {
     displayOffset?: number;
     displayOffsetEnd?: number;
 
+    hidden?: boolean;
     focused?: boolean; // should only be set for one annotation
 }
 

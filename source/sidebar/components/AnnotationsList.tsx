@@ -87,33 +87,38 @@ function AnnotationGroup({
                 top: group[0].displayOffsetEnd - sidebarOffsetTopPx - 25,
             }}
         >
-            {group.map((annotation) => {
-                return (
-                    <div
-                        key={annotation.localId}
-                        className="annotation-group-item"
-                    >
-                        <AnnotationThread
-                            annotation={annotation}
-                            deleteHideAnnotation={deleteHideAnnotation}
-                            heightLimitPx={
-                                (nextGroup?.[0]?.displayOffsetEnd ||
-                                    document.documentElement.scrollHeight +
-                                        sidebarOffsetTopPx) -
-                                group[0].displayOffsetEnd -
-                                4
-                            }
-                            onHoverUpdate={(hoverActive: boolean) =>
-                                // call hover on top level annotation
-                                onAnnotationHoverUpdate(annotation, hoverActive)
-                            }
-                            hypothesisSyncEnabled={hypothesisSyncEnabled}
-                            createReply={createReply}
-                            updateAnnotation={updateAnnotation}
-                        />
-                    </div>
-                );
-            })}
+            {group
+                .filter((a) => !a.hidden)
+                .map((annotation) => {
+                    return (
+                        <div
+                            key={annotation.localId}
+                            className="annotation-group-item"
+                        >
+                            <AnnotationThread
+                                annotation={annotation}
+                                deleteHideAnnotation={deleteHideAnnotation}
+                                heightLimitPx={
+                                    (nextGroup?.[0]?.displayOffsetEnd ||
+                                        document.documentElement.scrollHeight +
+                                            sidebarOffsetTopPx) -
+                                    group[0].displayOffsetEnd -
+                                    4
+                                }
+                                onHoverUpdate={(hoverActive: boolean) =>
+                                    // call hover on top level annotation
+                                    onAnnotationHoverUpdate(
+                                        annotation,
+                                        hoverActive
+                                    )
+                                }
+                                hypothesisSyncEnabled={hypothesisSyncEnabled}
+                                createReply={createReply}
+                                updateAnnotation={updateAnnotation}
+                            />
+                        </div>
+                    );
+                })}
         </div>
     );
 }
