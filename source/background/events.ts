@@ -24,26 +24,30 @@ import { TabStateManager } from "./tabs";
 const tabsManager = new TabStateManager();
 
 // toggle page view on extension icon click
-(chrome.action || browser.browserAction).onClicked.addListener((tab) => {
-    const url = new URL(tab.url);
+(chrome.action || browser.browserAction).onClicked.addListener(
+    (tab: Tabs.Tab) => {
+        const url = new URL(tab.url);
 
-    if (!extensionSupportsUrl(url)) {
-        // ideally show some error message here
-        return;
-    }
-
-    enableInTab(tab.id).then((didEnable) => {
-        if (didEnable) {
-            reportEnablePageView("manual");
-        } else {
-            // already active, so disable
-            togglePageViewMessage(tab.id);
+        if (!extensionSupportsUrl(url)) {
+            // ideally show some error message here
+            return;
         }
-    });
 
-    // can only request permissions from user action
-    requestOptionalPermissions();
-});
+        enableInTab(tab.id).then((didEnable) => {
+            if (didEnable) {
+                reportEnablePageView("manual");
+            } else {
+                // already active, so disable
+                togglePageViewMessage(tab.id);
+            }
+        });
+
+        tabsManager.tabIsLikelyArticle(tab.id, tab.url);
+
+        // can only request permissions from user action
+        requestOptionalPermissions();
+    }
+);
 
 // handle events from content scripts
 browser.runtime.onMessage.addListener(

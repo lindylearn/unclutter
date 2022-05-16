@@ -11,7 +11,11 @@ export class TabStateManager {
     // store annotation counts per tab id, and update the badge text on active tab changes
     private annotationCounts: { [tabId: string]: number } = {};
 
-    onChangeActiveTab(tabId: number) {
+    async onChangeActiveTab(tabId: number) {
+        if (!(await this.isCountEnabled())) {
+            return;
+        }
+
         this.renderBadgeCount(tabId);
     }
 
@@ -22,8 +26,17 @@ export class TabStateManager {
 
     // sent from boot.js if url passes denylist check
     async tabIsLikelyArticle(tabId: number, url: string) {
-        const annotations = await getLindyAnnotations(url);
-        this.annotationCounts[tabId] = annotations.length;
+        console.log(1);
+
+        if (!(await this.isCountEnabled())) {
+            return;
+        }
+
+        if (!this.annotationCounts[tabId]) {
+            console.log("fetch annotations for tab");
+            const annotations = await getLindyAnnotations(url);
+            this.annotationCounts[tabId] = annotations.length;
+        }
 
         this.renderBadgeCount(tabId);
     }
@@ -36,24 +49,24 @@ export class TabStateManager {
     }
 
     private async renderBadgeCount(tabId: number) {
-        // check settings every time in case user changed it
-        const featureEnabled = (await getRemoteFeatureFlags())?.[
-            supportSocialAnnotations
-        ];
-        if (!featureEnabled) {
-            return;
-        }
-        const showAnnotationCount = await getFeatureFlag(
-            showSocialAnnotationsDefaultFeatureFlag
-        );
-        if (!showAnnotationCount) {
-            return;
-        }
-
         const annotationCount = this.annotationCounts[tabId];
         const badgeText = annotationCount ? annotationCount.toString() : "";
 
         browser.action.setBadgeBackgroundColor({ color: "#6b7280" });
         browser.action.setBadgeText({ text: badgeText });
+    }
+
+    // check settings every time in case user changed it
+    private async isCountEnabled(): Promise<boolean> {
+        const featureEnabled = (await getRemoteFeatureFlags())?.[
+            supportSocialAnnotations
+        ];
+        if (!featureEnabled) {
+            return false;
+        }
+        const showAnnotationCount = await getFeatureFlag(
+            showSocialAnnotationsDefaultFeatureFlag
+        );
+        return showAnnotationCount;
     }
 }
