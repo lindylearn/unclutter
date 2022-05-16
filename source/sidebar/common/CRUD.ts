@@ -26,9 +26,9 @@ import {
 export async function getAnnotations(
     url: string,
     personalAnnotationsEnabled: boolean,
-    showSocialAnnotations: boolean
+    enableSocialAnnotations: boolean
 ): Promise<LindyAnnotation[]> {
-    if (!personalAnnotationsEnabled && !showSocialAnnotations) {
+    if (!personalAnnotationsEnabled && !enableSocialAnnotations) {
         return [];
     }
 
@@ -43,7 +43,7 @@ export async function getAnnotations(
         personalAnnotationsEnabled
             ? getPersonalAnnotations(url, hypothesisSyncEnabled)
             : [],
-        showSocialAnnotations ? getLindyAnnotations(url) : [],
+        enableSocialAnnotations ? getLindyAnnotations(url) : [],
     ]);
 
     // take from public lindy API preferrably (to get metadata)
@@ -99,7 +99,9 @@ export async function getAnnotations(
                     ? "hypothesis, "
                     : "local, "
                 : ""
-        }${showSocialAnnotations ? "lindy" : ""}) in ${Math.round(duration)}ms`
+        }${enableSocialAnnotations ? "lindy" : ""}) in ${Math.round(
+            duration
+        )}ms`
     );
 
     return annotations;

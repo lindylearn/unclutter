@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import {
     enableAnnotationsFeatureFlag,
-    enableSocialCommentsFeatureFlag,
+    enableSocialDotsFeatureFlag,
     getFeatureFlag,
+    showAllSocialCommentsFeatureFlag,
     supportSocialAnnotations,
 } from "../../common/featureFlags";
 import { getRemoteFeatureFlag } from "../../content-script/messaging";
@@ -22,33 +23,36 @@ export function useFeatureFlag(featureFlag: string): boolean {
 export function useAnnotationSettings() {
     const [personalAnnotationsEnabled, setPersonalAnnotationsEnabled] =
         useState(false);
-    const [showSocialAnnotations, setShowSocialAnnotations] = useState(false);
+    const [enableSocialAnnotations, setEnableSocialAnnotations] =
+        useState(false);
+    const [showAllSocialAnnotations, setShowAllSocialAnnotations] =
+        useState(false);
     useEffect(() => {
         (async function () {
             const personalAnnotationsEnabled = await getFeatureFlag(
                 enableAnnotationsFeatureFlag
             );
+            setPersonalAnnotationsEnabled(personalAnnotationsEnabled);
 
-            let showSocialAnnotations = false;
             const supportSocialFeature = await getRemoteFeatureFlag(
                 supportSocialAnnotations
             );
             if (supportSocialFeature) {
-                showSocialAnnotations = await getFeatureFlag(
-                    enableSocialCommentsFeatureFlag
-                );
+                if (await getFeatureFlag(showAllSocialCommentsFeatureFlag)) {
+                    setEnableSocialAnnotations(true);
+                    setShowAllSocialAnnotations(true);
+                } else if (await getFeatureFlag(enableSocialDotsFeatureFlag)) {
+                    setEnableSocialAnnotations(true);
+                }
             }
-
-            // batch state updates
-            setPersonalAnnotationsEnabled(personalAnnotationsEnabled);
-            setShowSocialAnnotations(showSocialAnnotations);
         })();
     }, []);
 
     return {
         personalAnnotationsEnabled,
         setPersonalAnnotationsEnabled,
-        showSocialAnnotations,
-        setShowSocialAnnotations,
+        enableSocialAnnotations,
+        showAllSocialAnnotations,
+        setShowAllSocialAnnotations,
     };
 }

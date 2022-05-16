@@ -11,7 +11,8 @@ import { AnnotationMutation } from "./local";
 export function useFetchAnnotations(
     url: string,
     personalAnnotationsEnabled: boolean,
-    showSocialAnnotations: boolean,
+    enableSocialAnnotations: boolean,
+    showAllSocialAnnotations: boolean,
     mutateAnnotations: React.Dispatch<AnnotationMutation>
 ) {
     useEffect(() => {
@@ -19,7 +20,7 @@ export function useFetchAnnotations(
             const annotations = await getAnnotations(
                 url,
                 personalAnnotationsEnabled,
-                showSocialAnnotations
+                enableSocialAnnotations
             );
             if (annotations.length === 0) {
                 // skip anchoring
@@ -40,7 +41,7 @@ export function useFetchAnnotations(
                 "*"
             );
         })();
-    }, [personalAnnotationsEnabled, showSocialAnnotations]);
+    }, [personalAnnotationsEnabled, showAllSocialAnnotations]);
 }
 
 export function useAnnotationModifiers(

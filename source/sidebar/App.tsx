@@ -14,8 +14,9 @@ export default function App({ url, title }) {
     const {
         personalAnnotationsEnabled,
         setPersonalAnnotationsEnabled,
-        showSocialAnnotations,
-        setShowSocialAnnotations,
+        enableSocialAnnotations,
+        showAllSocialAnnotations,
+        setShowAllSocialAnnotations,
     } = useAnnotationSettings();
 
     // keep local annotations state
@@ -23,7 +24,8 @@ export default function App({ url, title }) {
     useFetchAnnotations(
         url,
         personalAnnotationsEnabled,
-        showSocialAnnotations,
+        enableSocialAnnotations,
+        showAllSocialAnnotations,
         mutateAnnotations
     );
 
@@ -39,7 +41,7 @@ export default function App({ url, title }) {
     useMemo(() => {
         window.onmessage = handleWindowEventFactory(
             mutateAnnotations,
-            setShowSocialAnnotations,
+            setShowAllSocialAnnotations,
             setPersonalAnnotationsEnabled,
             title
         );
