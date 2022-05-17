@@ -48,7 +48,14 @@ function Annotation({
     useEffect(() => {
         if (annotation.focused) {
             const onClick = (e) => {
-                if (ref.current && !ref.current.contains(e.target)) {
+                const clickTarget: HTMLElement = e.target;
+
+                // ignore actions performed on other annotations (e.g. deletes)
+                if (clickTarget.classList.contains("icon")) {
+                    return;
+                }
+
+                if (ref.current && !ref.current.contains(clickTarget)) {
                     unfocusAnnotation(annotation);
                 }
             };
