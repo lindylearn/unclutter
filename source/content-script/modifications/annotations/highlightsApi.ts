@@ -11,7 +11,7 @@ import { overrideClassname } from "../../../common/stylesheets";
 import { sendSidebarEvent } from "./annotationsListener";
 
 // highlight text for every passed annotation on the active webpage
-export async function highlightAnnotations(
+export async function anchorAnnotations(
     annotations: LindyAnnotation[],
     sidebarIframe: HTMLIFrameElement
 ) {
@@ -37,39 +37,14 @@ export async function highlightAnnotations(
                         ? "lindy-highlight"
                         : "lindy-crowd-highlight"
                 );
-                if (!highlightedNodes) {
-                    throw Error("includes no highlighted nodes");
+                if (highlightedNodes.length === 0) {
+                    throw Error("Includes no highlighted nodes");
                 }
 
-                // always set color
-                let annotationColor: string;
-                let darkerAnnotationColor: string;
+                // show personal annotations immediately (since their annotation messages show up fast as well)
                 if (annotation.isMyAnnotation) {
-                    annotationColor = getAnnotationColor(annotation);
-                    darkerAnnotationColor = annotationColor.replace(
-                        "0.3",
-                        "0.5"
-                    );
-                } else {
-                    annotationColor =
-                        annotation.platform === "hn"
-                            ? "rgba(255, 102, 0, 0.5)"
-                            : "rgba(189, 28, 43, 0.5)";
-                    darkerAnnotationColor = annotationColor.replace(
-                        "0.5",
-                        "0.8"
-                    );
+                    paintHighlight(annotation, sidebarIframe, highlightedNodes);
                 }
-                highlightedNodes.map((node) => {
-                    node.style.setProperty(
-                        "--annotation-color",
-                        annotationColor
-                    );
-                    node.style.setProperty(
-                        "--darker-annotation-color",
-                        darkerAnnotationColor
-                    );
-                });
 
                 // get position on page
                 const displayOffset = getNodeOffset(highlightedNodes[0]);
@@ -77,50 +52,6 @@ export async function highlightAnnotations(
                     highlightedNodes[highlightedNodes.length - 1],
                     "bottom"
                 );
-
-                // handle onclick (a highlight may comprise multiple text nodes)
-                highlightedNodes.map((node) => {
-                    node.onclick = () => {
-                        hoverUpdateHighlight(annotation, true);
-
-                        sendSidebarEvent(sidebarIframe, {
-                            event: "focusAnnotation",
-                            localId: annotation.localId,
-                        });
-
-                        // unfocus on next click (clicks inside annotations sidebar are handled there)
-                        const onNextClick = () => {
-                            hoverUpdateHighlight(annotation, false);
-                            sendSidebarEvent(sidebarIframe, {
-                                event: "focusAnnotation",
-                                localId: null,
-                            });
-
-                            document.removeEventListener(
-                                "click",
-                                onNextClick,
-                                true
-                            );
-                        };
-                        document.addEventListener("click", onNextClick, true);
-                    };
-
-                    // node.onmouseenter = () => {
-                    //     hoverUpdateHighlight(annotation, true);
-
-                    //     sendSidebarEvent(sidebarIframe, {
-                    //         event: "focusAnnotation",
-                    //         localId: annotation.localId,
-                    //     });
-                    // };
-                    // node.onmouseleave = () => {
-                    //     hoverUpdateHighlight(annotation, false);
-                    //     sendSidebarEvent(sidebarIframe, {
-                    //         event: "focusAnnotation",
-                    //         localId: null,
-                    //     });
-                    // };
-                });
 
                 anchoredAnnotations.push({
                     ...annotation,
@@ -130,7 +61,8 @@ export async function highlightAnnotations(
             } catch (err) {
                 console.error(
                     `Could not anchor annotation with id`,
-                    annotation.id
+                    annotation.id,
+                    err
                 );
             }
         })
@@ -139,6 +71,77 @@ export async function highlightAnnotations(
     // insertMarginBar(anchoredAnnotations, sidebarIframe);
 
     return anchoredAnnotations;
+}
+
+export function paintHighlight(
+    annotation: LindyAnnotation,
+    sidebarIframe: HTMLIFrameElement,
+    highlightedNodes?: HTMLElement[]
+) {
+    if (!highlightedNodes) {
+        highlightedNodes = getAnnotationNodes(annotation);
+    }
+
+    // set color variables
+    let annotationColor: string;
+    let darkerAnnotationColor: string;
+    if (annotation.isMyAnnotation) {
+        annotationColor = getAnnotationColor(annotation);
+        darkerAnnotationColor = annotationColor.replace("0.3", "0.5");
+    } else {
+        annotationColor =
+            annotation.platform === "hn"
+                ? "rgba(255, 102, 0, 0.5)"
+                : "rgba(189, 28, 43, 0.5)";
+        darkerAnnotationColor = annotationColor.replace("0.5", "0.8");
+    }
+    highlightedNodes.map((node) => {
+        node.style.setProperty("--annotation-color", annotationColor);
+        node.style.setProperty(
+            "--darker-annotation-color",
+            darkerAnnotationColor
+        );
+    });
+
+    // handle onclick
+    highlightedNodes.map((node) => {
+        node.onclick = () => {
+            hoverUpdateHighlight(annotation, true);
+
+            sendSidebarEvent(sidebarIframe, {
+                event: "focusAnnotation",
+                localId: annotation.localId,
+            });
+
+            // unfocus on next click (clicks inside annotations sidebar are handled there)
+            const onNextClick = () => {
+                hoverUpdateHighlight(annotation, false);
+                sendSidebarEvent(sidebarIframe, {
+                    event: "focusAnnotation",
+                    localId: null,
+                });
+
+                document.removeEventListener("click", onNextClick, true);
+            };
+            document.addEventListener("click", onNextClick, true);
+        };
+
+        // node.onmouseenter = () => {
+        //     hoverUpdateHighlight(annotation, true);
+
+        //     sendSidebarEvent(sidebarIframe, {
+        //         event: "focusAnnotation",
+        //         localId: annotation.localId,
+        //     });
+        // };
+        // node.onmouseleave = () => {
+        //     hoverUpdateHighlight(annotation, false);
+        //     sendSidebarEvent(sidebarIframe, {
+        //         event: "focusAnnotation",
+        //         localId: null,
+        //     });
+        // };
+    });
 }
 
 function insertMarginBar(
@@ -198,6 +201,7 @@ export function removeAllHighlights() {
     removeAllHighlightsApi(document.body);
 }
 
+// a highlight may comprise multiple text nodes
 function getAnnotationNodes(annotation): HTMLElement[] {
     const nodeList = document.querySelectorAll(
         `lindy-highlight[id="${annotation.localId}"]`

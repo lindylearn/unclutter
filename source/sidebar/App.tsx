@@ -64,6 +64,14 @@ export default function App({ url, title }) {
             const droppedAnnotations = annotations.filter(
                 (a) => !displayedAnnotationsSet.has(a)
             );
+            if (droppedAnnotations.length === 0) {
+                // removed annotation, no need for another grouping loop
+                return;
+            }
+
+            console.log(
+                `Removing ${droppedAnnotations.length} overlapping annotations`
+            );
 
             mutateAnnotations({
                 action: "set",
@@ -73,10 +81,17 @@ export default function App({ url, title }) {
                 { event: "removeHighlights", annotations: droppedAnnotations },
                 "*"
             );
-        } else {
-            // display only in second pass
-            setGroupedAnnotations(groupedAnnotations);
+            window.top.postMessage(
+                { event: "paintHighlights", annotations: displayedAnnotations },
+                "*"
+            );
+
+            // annotation mutation will trigger effect again
+            return;
         }
+
+        // display only in second pass
+        setGroupedAnnotations(groupedAnnotations);
     }, [annotations]);
 
     return (

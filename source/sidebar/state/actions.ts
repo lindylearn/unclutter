@@ -39,6 +39,7 @@ export function useFetchAnnotations(
             // show page notes immediately, others once anchored
             // mutateAnnotations({ action: "set", annotations: pageNotes });
 
+            // local state is set in handleWindowEventFactory() once anchored on page
             window.top.postMessage(
                 { event: "anchorAnnotations", annotations },
                 "*"

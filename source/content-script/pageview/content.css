@@ -192,6 +192,7 @@ html.pageview > body {
 .lindy-crowd-highlight {
     transition: background-color 0.15s linear, text-decoration 0.15s linear;
 
+    --annotation-color: transparent;
     text-decoration: underline solid var(--annotation-color) 0.15em;
     text-underline-offset: 0.05em;
     text-decoration-skip-ink: none;

@@ -2,9 +2,10 @@ import throttle from "lodash/throttle";
 import { AnnotationListener } from "./annotationsModifier";
 import {
     addHighlightDot,
+    anchorAnnotations,
     getHighlightOffsets,
-    highlightAnnotations,
     hoverUpdateHighlight,
+    paintHighlight,
     removeAllHighlights,
     removeHighlight,
 } from "./highlightsApi";
@@ -24,16 +25,12 @@ export function createAnnotationListener(
         if (data.event == "anchorAnnotations") {
             const start = performance.now();
 
-            removeAllHighlights(); // anchor only called with all active annotations, so can remove & re-paint
-            const anchoredAnnotations = await highlightAnnotations(
+            // anchor only called with all complete annotations
+            removeAllHighlights();
+            const anchoredAnnotations = await anchorAnnotations(
                 data.annotations,
                 sidebarIframe
             );
-            sendSidebarEvent(sidebarIframe, {
-                event: "anchoredAnnotations",
-                annotations: anchoredAnnotations,
-            });
-            onAnnotationUpdate("set", anchoredAnnotations);
 
             const duration = performance.now() - start;
             console.info(
@@ -41,6 +38,19 @@ export function createAnnotationListener(
                     data.annotations.length
                 } annotations on page in ${Math.round(duration)}ms`
             );
+
+            // send response
+            sendSidebarEvent(sidebarIframe, {
+                event: "anchoredAnnotations",
+                annotations: anchoredAnnotations,
+            });
+        } else if (data.event === "paintHighlights") {
+            // personal annotations already painted during anchoring
+            data.annotations
+                .filter((a) => !a.isMyAnnotation)
+                .map((a) => paintHighlight(a, sidebarIframe));
+
+            onAnnotationUpdate("set", data.annotations);
         } else if (data.event === "removeHighlights") {
             data.annotations.map(removeHighlight);
 
