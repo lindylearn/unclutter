@@ -12,7 +12,6 @@ export function useFetchAnnotations(
     url: string,
     personalAnnotationsEnabled: boolean,
     enableSocialAnnotations: boolean,
-    showAllSocialAnnotations: boolean,
     mutateAnnotations: React.Dispatch<AnnotationMutation>
 ) {
     useEffect(() => {
@@ -22,11 +21,6 @@ export function useFetchAnnotations(
                 personalAnnotationsEnabled,
                 enableSocialAnnotations
             );
-            if (annotations.length === 0) {
-                // skip anchoring
-                mutateAnnotations({ action: "set", annotations: [] });
-                return;
-            }
 
             // TODO re-enable page notes
             // const pageNotes = annotations.filter((a) => !a.quote_html_selector);

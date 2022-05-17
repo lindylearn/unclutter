@@ -1,8 +1,8 @@
 import {
     enableAnnotationsFeatureFlag,
+    enableSocialCommentsFeatureFlag,
     getFeatureFlag,
     setFeatureFlag,
-    showAllSocialCommentsFeatureFlag,
     supportSocialAnnotations,
 } from "../common/featureFlags";
 import { insertHtml } from "../common/html";
@@ -314,7 +314,7 @@ async function _setupSocialToggle(
         return;
     }
     socialAnnotationsEnabled = await getFeatureFlag(
-        showAllSocialCommentsFeatureFlag
+        enableSocialCommentsFeatureFlag
     );
 
     const container = _renderSocialToggle();
@@ -325,7 +325,7 @@ async function _setupSocialToggle(
 
         annotationsModifer.setShowSocialAnnotations(socialAnnotationsEnabled);
         setFeatureFlag(
-            showAllSocialCommentsFeatureFlag,
+            enableSocialCommentsFeatureFlag,
             socialAnnotationsEnabled
         );
         if (!socialAnnotationsEnabled) {

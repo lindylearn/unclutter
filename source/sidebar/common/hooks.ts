@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import {
     enableAnnotationsFeatureFlag,
-    enableSocialDotsFeatureFlag,
+    enableSocialCommentsFeatureFlag,
     getFeatureFlag,
-    showAllSocialCommentsFeatureFlag,
     supportSocialAnnotations,
 } from "../../common/featureFlags";
 import { getRemoteFeatureFlag } from "../../content-script/messaging";
@@ -38,10 +37,7 @@ export function useAnnotationSettings() {
                 supportSocialAnnotations
             );
             if (supportSocialFeature) {
-                if (await getFeatureFlag(showAllSocialCommentsFeatureFlag)) {
-                    setEnableSocialAnnotations(true);
-                    setShowAllSocialAnnotations(true);
-                } else if (await getFeatureFlag(enableSocialDotsFeatureFlag)) {
+                if (await getFeatureFlag(enableSocialCommentsFeatureFlag)) {
                     setEnableSocialAnnotations(true);
                 }
             }
@@ -54,5 +50,6 @@ export function useAnnotationSettings() {
         enableSocialAnnotations,
         showAllSocialAnnotations,
         setShowAllSocialAnnotations,
+        setEnableSocialAnnotations,
     };
 }

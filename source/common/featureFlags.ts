@@ -24,9 +24,8 @@ export async function getAllFeatureFlags() {
         showOutlineFeatureFlag,
         hypothesisSyncFeatureFlag,
         enableSocialCountsFeatureFlag,
-        enableSocialDotsFeatureFlag,
         enableAnnotationsFeatureFlag,
-        showAllSocialCommentsFeatureFlag,
+        enableSocialCommentsFeatureFlag,
         dismissedFeedbackMessage,
     ];
 
@@ -46,11 +45,10 @@ export const showOutlineFeatureFlag = "show-outline";
 export const hypothesisSyncFeatureFlag = "hypothesis-sync";
 export const enableSocialCountsFeatureFlag =
     "social-annotations-counts-enabled";
-export const enableSocialDotsFeatureFlag = "social-annotations-dots-enabled";
 
 // sticky user setting
 export const enableAnnotationsFeatureFlag = "annotations-enabled";
-export const showAllSocialCommentsFeatureFlag = "social-annotations-show-all";
+export const enableSocialCommentsFeatureFlag = "social-annotations-enabled";
 
 export const dismissedFeedbackMessage = "dismissed-feedback-message";
 
@@ -66,10 +64,9 @@ export const defaultFeatureFlags = {
     [isDevelopmentFeatureFlag]: false,
     [showOutlineFeatureFlag]: true,
     [enableSocialCountsFeatureFlag]: true,
-    [enableSocialDotsFeatureFlag]: true,
 
     [enableAnnotationsFeatureFlag]: false,
-    [showAllSocialCommentsFeatureFlag]: false,
+    [enableSocialCommentsFeatureFlag]: false,
 
     [dismissedFeedbackMessage]: false,
 };

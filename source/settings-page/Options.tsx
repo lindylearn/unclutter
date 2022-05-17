@@ -4,7 +4,6 @@ import {
     collectAnonymousMetricsFeatureFlag,
     enableBootUnclutterMessage,
     enableSocialCountsFeatureFlag,
-    enableSocialDotsFeatureFlag,
     getFeatureFlag,
     hypothesisSyncFeatureFlag,
     showOutlineFeatureFlag,
@@ -201,12 +200,6 @@ function OptionsPage({}) {
                         </a>
                         )
                     </p>
-                    <FeatureFlagSwitch
-                        featureFlagKey={enableSocialDotsFeatureFlag}
-                    >
-                        Show a "dot" for each social comment inside the article
-                        text
-                    </FeatureFlagSwitch>
                     <FeatureFlagSwitch
                         featureFlagKey={enableSocialCountsFeatureFlag}
                     >

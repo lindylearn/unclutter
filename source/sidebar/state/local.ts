@@ -59,7 +59,7 @@ export function annotationReducer(
 
 export function handleWindowEventFactory(
     mutateAnnotations: React.Dispatch<AnnotationMutation>,
-    setShowSocialAnnotations: (enabled: boolean) => void,
+    setEnableSocialAnnotations: (enabled: boolean) => void,
     setPersonalAnnotationsEnabled: (enabled: boolean) => void,
     page_title: string
 ) {
@@ -86,7 +86,7 @@ export function handleWindowEventFactory(
                 offsetEndById: data.offsetEndById,
             });
         } else if (data.event === "setShowSocialAnnotations") {
-            setShowSocialAnnotations(data.showSocialAnnotations);
+            setEnableSocialAnnotations(data.showSocialAnnotations);
         } else if (data.event === "setEnablePersonalAnnotations") {
             setPersonalAnnotationsEnabled(data.enablePersonalAnnotations);
         } else if (data.event === "focusAnnotation") {
