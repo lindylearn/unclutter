@@ -155,8 +155,7 @@ html.pageview > body {
     top: 0;
     height: 100%;
 
-    right: 5px;
-    /* right: 25px; */
+    right: 15px;
 
     font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
         "Segoe UI", Roboto !important;
@@ -165,8 +164,20 @@ html.pageview > body {
 #lindy-annotations-marginbar > div {
     position: absolute;
     right: 0;
-    width: 100%;
     /* top and height set via JS */
+}
+.lindy-marginbar-dot {
+    content: '';
+    display: block;
+    width: 10px;
+    height: 10px;
+    /* border-radius: 5px; */
+    border-radius: 50%;
+    filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.05));
+    background-color: var(--darker-annotation-color);
+
+    cursor: pointer;
+    animation: fadeInDot 0.15s linear;
 }
 
 .lindy-highlight {
