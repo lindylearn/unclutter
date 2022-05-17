@@ -27,7 +27,8 @@ export function useFetchAnnotations(
             );
 
             annotations = annotations.filter(
-                (a) => a.quote_text.length < maxSocialQuoteLength
+                (a) =>
+                    !a.quote_text || a.quote_text.length < maxSocialQuoteLength
             );
 
             // TODO re-enable page notes
