@@ -5,7 +5,7 @@ import { getAnnotationColor } from "../../common/annotations/styling";
 interface AnnotationProps {
     annotation: LindyAnnotation;
     className?: string;
-    heightLimitPx: number;
+    heightLimitPx?: number;
     showingReplies: boolean;
     isReply: boolean;
 
@@ -61,7 +61,9 @@ function Annotation({
                     // restrict text height by whole lines
                     // assumes 20px font size and py-1.5 padding
                     WebkitLineClamp: Math.min(
-                        Math.floor((heightLimitPx - 6 * 2 - 20) / 20),
+                        heightLimitPx
+                            ? Math.floor((heightLimitPx - 6 * 2 - 20) / 20)
+                            : Infinity,
                         isReply ? 3 : 5
                     ),
                     WebkitBoxOrient: "vertical",

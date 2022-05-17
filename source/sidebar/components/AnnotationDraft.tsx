@@ -9,7 +9,7 @@ interface AnnotationDraftProps {
     url: string;
     annotation: LindyAnnotation;
     className?: string;
-    heightLimitPx: number;
+    heightLimitPx?: number;
     showingReplies: boolean;
     isReply: boolean;
 

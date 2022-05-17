@@ -111,7 +111,7 @@ export async function highlightAnnotations(
         })
     );
 
-    insertMarginBar(anchoredAnnotations, sidebarIframe);
+    // insertMarginBar(anchoredAnnotations, sidebarIframe);
 
     return anchoredAnnotations;
 }

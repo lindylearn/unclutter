@@ -108,13 +108,13 @@ function AnnotationGroup({
                             <AnnotationThread
                                 annotation={annotation}
                                 deleteHideAnnotation={deleteHideAnnotation}
-                                heightLimitPx={
-                                    (nextGroup?.[0]?.displayOffsetEnd ||
-                                        document.documentElement.scrollHeight +
-                                            sidebarOffsetTopPx) -
-                                    group[0].displayOffsetEnd -
-                                    4
-                                }
+                                // heightLimitPx={
+                                //     (nextGroup?.[0]?.displayOffset ||
+                                //         document.documentElement.scrollHeight +
+                                //             sidebarOffsetTopPx) -
+                                //     group[0].displayOffset -
+                                //     4 // margin
+                                // }
                                 onHoverUpdate={(hoverActive: boolean) =>
                                     // call hover on top level annotation
                                     onAnnotationHoverUpdate(

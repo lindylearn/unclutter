@@ -8,7 +8,7 @@ const maxReplyNesting = 1;
 interface AnnotationThreadProps {
     url: string;
     annotation: LindyAnnotation;
-    heightLimitPx: number;
+    heightLimitPx?: number;
 
     hypothesisSyncEnabled: boolean;
     deleteHideAnnotation: (
@@ -32,11 +32,12 @@ function AnnotationThread(props: AnnotationThreadProps) {
         ? AnnotationDraft
         : Annotation;
 
-    const spaceForReplies = props.heightLimitPx - 140;
-    const showReplies =
-        props.annotation.platform === "h" &&
-        replyLevel < maxReplyNesting &&
-        spaceForReplies >= props.annotation.reply_count * 100;
+    const showReplies = false;
+    // const spaceForReplies = props.heightLimitPx - 140;
+    // const showReplies =
+    //     props.annotation.platform === "h" &&
+    //     replyLevel < maxReplyNesting &&
+    //     spaceForReplies >= props.annotation.reply_count * 100;
 
     return (
         <>
