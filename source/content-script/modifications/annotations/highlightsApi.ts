@@ -41,11 +41,6 @@ export async function anchorAnnotations(
                     throw Error("Includes no highlighted nodes");
                 }
 
-                // show personal annotations immediately (since their annotation messages show up fast as well)
-                if (annotation.isMyAnnotation) {
-                    paintHighlight(annotation, sidebarIframe, highlightedNodes);
-                }
-
                 // get position on page
                 const displayOffset = getNodeOffset(highlightedNodes[0]);
                 const displayOffsetEnd = getNodeOffset(

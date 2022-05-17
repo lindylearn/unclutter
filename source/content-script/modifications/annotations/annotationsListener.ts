@@ -45,10 +45,7 @@ export function createAnnotationListener(
                 annotations: anchoredAnnotations,
             });
         } else if (data.event === "paintHighlights") {
-            // personal annotations already painted during anchoring
-            data.annotations
-                .filter((a) => !a.isMyAnnotation)
-                .map((a) => paintHighlight(a, sidebarIframe));
+            data.annotations.map((a) => paintHighlight(a, sidebarIframe));
 
             onAnnotationUpdate("set", data.annotations);
         } else if (data.event === "removeHighlights") {

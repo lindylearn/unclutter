@@ -5,7 +5,7 @@ import {
 import { describe as describeAnnotation } from "../../../common/annotator/anchoring/html";
 import { sendSidebarEvent } from "./annotationsListener";
 import { AnnotationListener } from "./annotationsModifier";
-import { anchorAnnotations } from "./highlightsApi";
+import { anchorAnnotations, paintHighlight } from "./highlightsApi";
 
 // send user text selections to the sidebar iframe, in order to create an annotation
 const listeners: [string, () => void][] = [];
@@ -156,6 +156,7 @@ async function _createAnnotationFromSelection(
         annotationSelector
     );
     const offsets = await anchorAnnotations([annotation], sidebarIframe);
+    paintHighlight(annotation, sidebarIframe);
     annotation = {
         ...annotation,
         displayOffset: offsets[0].displayOffset,
