@@ -84,7 +84,9 @@ function Annotation({
                         .split(/<a>|<code>/)
                         .map((token) => {
                             if (token.startsWith("http")) {
-                                return <AbbreviatedLink href={token} />;
+                                return (
+                                    <AbbreviatedLink key={token} href={token} />
+                                );
                             }
                             if (token.startsWith("  ")) {
                                 return (

@@ -77,16 +77,25 @@ export async function highlightAnnotations(
                     "bottom"
                 );
 
-                if (annotation.isMyAnnotation) {
-                    highlightedNodes.map((node) => {
-                        node.onclick = () =>
-                            sendSidebarEvent(sidebarIframe, {
-                                event: "focusAnnotation",
-                                localId: annotation.localId,
-                            });
-                        // hover color change not easy (hover ends between text lines)
-                    });
-                }
+                highlightedNodes.map((node) => {
+                    node.onclick = () =>
+                        sendSidebarEvent(sidebarIframe, {
+                            event: "focusAnnotation",
+                            localId: annotation.localId,
+                        });
+
+                    node.onmouseenter = () => {
+                        hoverUpdateHighlight(annotation, true);
+
+                        sendSidebarEvent(sidebarIframe, {
+                            event: "focusAnnotation",
+                            localId: annotation.localId,
+                        });
+                    };
+                    node.onmouseleave = () => {
+                        hoverUpdateHighlight(annotation, false);
+                    };
+                });
 
                 anchoredAnnotations.push({
                     ...annotation,

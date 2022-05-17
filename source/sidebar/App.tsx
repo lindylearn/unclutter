@@ -76,17 +76,6 @@ export default function App({ url, title }) {
         } else {
             // display only in second pass
             setGroupedAnnotations(groupedAnnotations);
-
-            // TODO only show dots on first render?
-            window.top.postMessage(
-                {
-                    event: "showHighlightDotsFor",
-                    annotations: displayedAnnotations.filter(
-                        (a) => !a.isMyAnnotation
-                    ),
-                },
-                "*"
-            );
         }
     }, [annotations]);
 
