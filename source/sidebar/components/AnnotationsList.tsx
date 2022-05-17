@@ -97,44 +97,34 @@ function AnnotationGroup({
                 top: group[0].displayOffset - sidebarOffsetTopPx,
             }}
         >
-            {group
-                .filter(
-                    (a) =>
-                        a.isMyAnnotation ||
-                        showAllSocialAnnotations ||
-                        a.focused
-                )
-                .map((annotation) => {
-                    return (
-                        <div
-                            key={annotation.localId}
-                            className="annotation-group-item"
-                        >
-                            <AnnotationThread
-                                annotation={annotation}
-                                deleteHideAnnotation={deleteHideAnnotation}
-                                // heightLimitPx={
-                                //     (nextGroup?.[0]?.displayOffset ||
-                                //         document.documentElement.scrollHeight +
-                                //             sidebarOffsetTopPx) -
-                                //     group[0].displayOffset -
-                                //     4 // margin
-                                // }
-                                onHoverUpdate={(hoverActive: boolean) =>
-                                    // call hover on top level annotation
-                                    onAnnotationHoverUpdate(
-                                        annotation,
-                                        hoverActive
-                                    )
-                                }
-                                unfocusAnnotation={unfocusAnnotation}
-                                hypothesisSyncEnabled={hypothesisSyncEnabled}
-                                createReply={createReply}
-                                updateAnnotation={updateAnnotation}
-                            />
-                        </div>
-                    );
-                })}
+            {group.map((annotation) => {
+                return (
+                    <div
+                        key={annotation.localId}
+                        className="annotation-group-item"
+                    >
+                        <AnnotationThread
+                            annotation={annotation}
+                            deleteHideAnnotation={deleteHideAnnotation}
+                            // heightLimitPx={
+                            //     (nextGroup?.[0]?.displayOffset ||
+                            //         document.documentElement.scrollHeight +
+                            //             sidebarOffsetTopPx) -
+                            //     group[0].displayOffset -
+                            //     4 // margin
+                            // }
+                            onHoverUpdate={(hoverActive: boolean) =>
+                                // call hover on top level annotation
+                                onAnnotationHoverUpdate(annotation, hoverActive)
+                            }
+                            unfocusAnnotation={unfocusAnnotation}
+                            hypothesisSyncEnabled={hypothesisSyncEnabled}
+                            createReply={createReply}
+                            updateAnnotation={updateAnnotation}
+                        />
+                    </div>
+                );
+            })}
         </div>
     );
 }

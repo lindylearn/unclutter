@@ -48,49 +48,17 @@ export default function App({ url, title }) {
         );
     }, []);
 
-    // group and filter annotations by their position on the page
+    // group and filter annotations on every local state change (e.g. added, focused)
     const [groupedAnnotations, setGroupedAnnotations] = useState<
         LindyAnnotation[][]
     >([]);
     React.useEffect(() => {
-        const groupedAnnotations = groupAnnotations(annotations);
-        const displayedAnnotations = groupedAnnotations.flatMap(
-            (group) => group
+        const visibleAnnotations = annotations.filter(
+            (a) => a.isMyAnnotation || showAllSocialAnnotations || a.focused
         );
 
-        if (displayedAnnotations.length !== annotations.length) {
-            // hidden some annotations during grouping, remove them for cleaner UI
-            const displayedAnnotationsSet = new Set(displayedAnnotations);
-            const droppedAnnotations = annotations.filter(
-                (a) => !displayedAnnotationsSet.has(a)
-            );
-            if (droppedAnnotations.length === 0) {
-                // removed annotation, no need for another grouping loop
-                return;
-            }
-
-            console.log(
-                `Removing ${droppedAnnotations.length} overlapping annotations`
-            );
-
-            mutateAnnotations({
-                action: "set",
-                annotations: displayedAnnotations,
-            });
-            window.top.postMessage(
-                { event: "removeHighlights", annotations: droppedAnnotations },
-                "*"
-            );
-            window.top.postMessage(
-                { event: "paintHighlights", annotations: displayedAnnotations },
-                "*"
-            );
-
-            // annotation mutation will trigger effect again
-            return;
-        }
-
-        // display only in second pass
+        // use large grouping margin to display every annotation properly
+        const groupedAnnotations = groupAnnotations(visibleAnnotations, 150);
         setGroupedAnnotations(groupedAnnotations);
     }, [annotations]);
 

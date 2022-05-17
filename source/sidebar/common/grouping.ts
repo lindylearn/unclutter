@@ -1,10 +1,9 @@
 import { LindyAnnotation } from "../../common/annotations/create";
 
-const groupTrailingMargin = 10;
-
 // group annotations that appear closely together, to display them with correct margins
 export function groupAnnotations(
-    annotations: LindyAnnotation[]
+    annotations: LindyAnnotation[],
+    groupTrailingMargin: number
 ): LindyAnnotation[][] {
     if (annotations.length === 0) {
         return [];
@@ -53,14 +52,6 @@ export function groupAnnotations(
             .concat(myAnnotations)
             .sort((a, b) => a.displayOffset - b.displayOffset);
     });
-
-    const displayCount = groupedAnnotations.reduce(
-        (count, list) => count + list.length,
-        0
-    );
-    console.log(
-        `Showing ${displayCount} of ${orderedAnnotations.length} annotations`
-    );
 
     return groupedAnnotations;
 }

@@ -121,7 +121,7 @@ function _expandRangeToWordBoundary(
         const nodeValue = range.endContainer.nodeValue;
         while (
             wordStart - 1 >= 0 &&
-            nodeValue[wordStart - 1].trim() &&
+            nodeValue[wordStart - 1]?.trim() &&
             nodeValue[wordStart - 1] !== "—"
         ) {
             wordStart -= 1;

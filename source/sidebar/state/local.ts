@@ -1,5 +1,6 @@
 import { LindyAnnotation } from "../../common/annotations/create";
 import { createAnnotation } from "../common/CRUD";
+import { groupAnnotations } from "../common/grouping";
 
 export interface AnnotationMutation {
     action:
@@ -78,7 +79,36 @@ export function handleWindowEventFactory(
                 annotation: remoteAnnotation,
             });
         } else if (data.event === "anchoredAnnotations") {
-            mutateAnnotations({ action: "set", annotations: data.annotations });
+            // now group annotations to filter out overlaps
+            // use small margin to just detect overlaps in quotes
+            const groupedAnnotations = groupAnnotations(data.annotations, 10);
+
+            const displayedAnnotations = groupedAnnotations.flatMap(
+                (group) => group
+            );
+            const displayedAnnotationsSet = new Set(displayedAnnotations);
+            const droppedAnnotations = data.annotations.filter(
+                (a) => !displayedAnnotationsSet.has(a)
+            );
+
+            // remove overlapping annotations
+            console.log(
+                `Ignoring ${droppedAnnotations.length} overlapping annotations`
+            );
+            window.top.postMessage(
+                { event: "removeHighlights", annotations: droppedAnnotations },
+                "*"
+            );
+
+            // display selected annotations
+            window.top.postMessage(
+                { event: "paintHighlights", annotations: displayedAnnotations },
+                "*"
+            );
+            mutateAnnotations({
+                action: "set",
+                annotations: displayedAnnotations,
+            });
         } else if (data.event === "changedDisplayOffset") {
             mutateAnnotations({
                 action: "changeDisplayOffsets",

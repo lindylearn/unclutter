@@ -61,8 +61,7 @@ export async function anchorAnnotations(
             } catch (err) {
                 console.error(
                     `Could not anchor annotation with id`,
-                    annotation.id,
-                    err
+                    annotation.id
                 );
             }
         })
