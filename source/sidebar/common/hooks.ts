@@ -31,16 +31,20 @@ export function useAnnotationSettings() {
             const personalAnnotationsEnabled = await getFeatureFlag(
                 enableAnnotationsFeatureFlag
             );
-            setPersonalAnnotationsEnabled(personalAnnotationsEnabled);
 
+            let enableSocialAnnotations = false;
             const supportSocialFeature = await getRemoteFeatureFlag(
                 supportSocialAnnotations
             );
             if (supportSocialFeature) {
                 if (await getFeatureFlag(enableSocialCommentsFeatureFlag)) {
-                    setEnableSocialAnnotations(true);
+                    enableSocialAnnotations = true;
                 }
             }
+
+            // batch changes
+            setPersonalAnnotationsEnabled(personalAnnotationsEnabled);
+            setEnableSocialAnnotations(enableSocialAnnotations);
         })();
     }, []);
 
