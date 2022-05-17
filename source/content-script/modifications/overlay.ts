@@ -5,6 +5,7 @@ import {
     getFeatureFlag,
     showOutlineFeatureFlag,
 } from "../../common/featureFlags";
+import browser from "../../common/polyfill";
 import {
     getUserSettingForDomain,
     setUserSettingsForDomain,
@@ -12,6 +13,7 @@ import {
 import {
     insertPageSettings,
     updateDomainState,
+    updateSocialCommentsCount,
     wiggleDomainState,
 } from "../../overlay/insert";
 import { getElementYOffset } from "../../overlay/outline/common";
@@ -224,6 +226,7 @@ export default class OverlayManager implements PageModifier {
 
     // listen to annotation updates and attribute to outline heading
     private totalAnnotationCount = 0;
+    private totalSocialCommentsCount = 0;
     private onAnnotationUpdate(
         action: "set" | "add" | "remove",
         annotations: LindyAnnotation[]
@@ -235,6 +238,7 @@ export default class OverlayManager implements PageModifier {
         if (action === "set") {
             // reset state
             this.totalAnnotationCount = 0;
+            this.totalSocialCommentsCount = 0;
             this.flatOutline.map((_, index) => {
                 this.flatOutline[index].myAnnotationCount = 0;
                 this.flatOutline[index].socialCommentsCount = 0;
@@ -246,8 +250,10 @@ export default class OverlayManager implements PageModifier {
 
             if (!annotation.isMyAnnotation) {
                 if (action === "set" || action === "add") {
+                    this.totalSocialCommentsCount += 1;
                     this.flatOutline[outlineIndex].socialCommentsCount += 1;
                 } else if (action === "remove") {
+                    this.totalSocialCommentsCount -= 1;
                     this.flatOutline[outlineIndex].socialCommentsCount -= 1;
                 }
             } else {
@@ -264,6 +270,11 @@ export default class OverlayManager implements PageModifier {
         this.topleftSvelteComponent?.$set({
             totalAnnotationCount: this.totalAnnotationCount,
             outline: this.outline,
+        });
+        updateSocialCommentsCount(this.totalSocialCommentsCount);
+        browser.runtime.sendMessage(null, {
+            event: "setSocialAnnotationsCount",
+            count: this.totalSocialCommentsCount,
         });
     }
 

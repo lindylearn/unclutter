@@ -39,6 +39,19 @@ export class TabStateManager {
         return !!this.annotationCounts[tabId];
     }
 
+    // update from content script, how many annotations actually displayed
+    async setSocialAnnotationsCount(tabId: number, count: number) {
+        if (this.annotationCounts[tabId] === count) {
+            return;
+        }
+
+        this.annotationCounts[tabId] = count;
+
+        if (await this.isCountEnabled()) {
+            this.renderBadgeCount(tabId);
+        }
+    }
+
     private async renderBadgeCount(tabId: number) {
         const annotationCount = this.annotationCounts[tabId];
         const badgeText = annotationCount ? annotationCount.toString() : "";
