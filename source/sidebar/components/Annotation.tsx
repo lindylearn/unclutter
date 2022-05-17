@@ -72,13 +72,13 @@ function Annotation({
                 target="_blank"
                 rel="noreferrer"
             >
-                {!isReply && (
+                {/* {!isReply && (
                     <div
                         className={
                             "crowd-annotation-dot mr-1.5 " + annotation.platform
                         }
                     />
-                )}
+                )} */}
                 {textLines.flatMap((line, lineIndex) =>
                     line
                         .split(/<a>|<code>/)
