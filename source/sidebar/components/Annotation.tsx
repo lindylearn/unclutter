@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { LindyAnnotation } from "../../common/annotations/create";
 import { getAnnotationColor } from "../../common/annotations/styling";
 
@@ -12,6 +12,7 @@ interface AnnotationProps {
     hypothesisSyncEnabled: boolean;
     deleteHide: () => void;
     onHoverUpdate: (hoverActive: boolean) => void;
+    unfocusAnnotation: (annotation: LindyAnnotation) => void;
     createReply: () => void;
 }
 
@@ -24,6 +25,7 @@ function Annotation({
     isReply,
     createReply,
     onHoverUpdate,
+    unfocusAnnotation,
     deleteHide,
 }: AnnotationProps) {
     const { text, author, platform, link, reply_count } = annotation;
@@ -41,6 +43,23 @@ function Annotation({
 
     // const relativeTime = formatRelativeTime(parseDate(annotation.created_at));
 
+    // if annotation focused, detect clicks to unfocus it
+    const ref = useRef<HTMLDivElement>();
+    useEffect(() => {
+        if (annotation.focused) {
+            const onClick = (e) => {
+                if (ref.current && !ref.current.contains(e.target)) {
+                    unfocusAnnotation(annotation);
+                }
+            };
+
+            document.addEventListener("click", onClick, true);
+            return () => {
+                document.removeEventListener("click", onClick, true);
+            };
+        }
+    }, [annotation.focused]);
+
     return (
         <div
             className={
@@ -53,6 +72,7 @@ function Annotation({
             }}
             onMouseEnter={() => onHoverUpdate(true)}
             onMouseLeave={() => onHoverUpdate(false)}
+            ref={ref}
         >
             <a
                 className="annotation-text text-sm select-none mr-3"
@@ -110,7 +130,7 @@ function Annotation({
                 <div
                     className="cursor-pointer hover:text-gray-600 hover:drop-shadow lindy-tooltip lindy-fade transition-all"
                     onClick={deleteHide}
-                    data-title="Hide comment"
+                    data-title="Remove comment"
                 >
                     <svg className="icon h-3.5" viewBox="0 0 640 512">
                         <path

@@ -16,6 +16,7 @@ interface AnnotationThreadProps {
         threadStart: LindyAnnotation
     ) => void;
     onHoverUpdate: (hoverActive: boolean) => void;
+    unfocusAnnotation: (annotation: LindyAnnotation) => void;
     createReply: (
         parent: LindyAnnotation,
         threadStart: LindyAnnotation

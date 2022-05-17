@@ -63,11 +63,16 @@ export function useAnnotationModifiers(
         onAnnotationHoverUpdateFactory(mutateAnnotations),
         []
     );
+    const unfocusAnnotation = useCallback(
+        unfocusAnnotationFactory(mutateAnnotations),
+        []
+    );
 
     return {
         createReply,
         deleteHideAnnotation,
         onAnnotationHoverUpdate,
+        unfocusAnnotation,
         updateAnnotation,
     };
 }
@@ -169,11 +174,26 @@ function onAnnotationHoverUpdateFactory(
             { event: "onAnnotationHoverUpdate", annotation, hoverActive },
             "*"
         );
+    };
+}
 
-        // TODO handle focus state properly after leaving without causing too many rerenders
-        // if (annotation.focused && !hoverActive) {
-        //     console.log("unfocus");
-        //     mutateAnnotations({ action: "focusAnnotation", annotation: null });
-        // }
+// unfocus used for hiding social annotations
+function unfocusAnnotationFactory(
+    mutateAnnotations: React.Dispatch<AnnotationMutation>
+) {
+    return function unfocusAnnotation(annotation: LindyAnnotation) {
+        mutateAnnotations({
+            action: "focusAnnotation",
+            annotation: { localId: null } as LindyAnnotation,
+        });
+        // using hover state as highlighting
+        window.top.postMessage(
+            {
+                event: "onAnnotationHoverUpdate",
+                annotation,
+                hoverActive: false,
+            },
+            "*"
+        );
     };
 }

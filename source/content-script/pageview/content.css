@@ -190,17 +190,18 @@ html.pageview > body {
 }
 
 .lindy-crowd-highlight {
-    transition: all 0.15s linear;
+    transition: background-color 0.15s linear, text-decoration 0.15s linear;
 
     text-decoration: underline solid var(--annotation-color) 0.15em;
     text-underline-offset: 0.05em;
     text-decoration-skip-ink: none;
-    /* text-underline-offset: */
+    cursor: pointer;
 }
 .lindy-crowd-highlight.lindy-hover {
     background-color: var(--annotation-color);
     text-decoration-color: transparent;
 }
+
 .lindy-highlight-dot {
     position: relative;
     top: -0.3em;

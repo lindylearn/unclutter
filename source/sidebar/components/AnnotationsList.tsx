@@ -16,6 +16,7 @@ interface AnnotationsListProps {
         annotation: LindyAnnotation,
         hoverActive: boolean
     ) => void;
+    unfocusAnnotation: (annotation: LindyAnnotation) => void;
     createReply: (
         parent: LindyAnnotation,
         threadStart: LindyAnnotation
@@ -29,6 +30,7 @@ function AnnotationsList({
     showAllSocialAnnotations,
     deleteHideAnnotation,
     onAnnotationHoverUpdate,
+    unfocusAnnotation,
     createReply,
     updateAnnotation,
 }: AnnotationsListProps) {
@@ -44,6 +46,7 @@ function AnnotationsList({
                     }
                     deleteHideAnnotation={deleteHideAnnotation}
                     onAnnotationHoverUpdate={onAnnotationHoverUpdate}
+                    unfocusAnnotation={unfocusAnnotation}
                     hypothesisSyncEnabled={hypothesisSyncEnabled}
                     showAllSocialAnnotations={showAllSocialAnnotations}
                     createReply={createReply}
@@ -68,6 +71,7 @@ interface AnnotationGroupProps {
         annotation: LindyAnnotation,
         hoverActive: boolean
     ) => void;
+    unfocusAnnotation: (annotation: LindyAnnotation) => void;
     createReply: (
         parent: LindyAnnotation,
         threadStart: LindyAnnotation
@@ -82,6 +86,7 @@ function AnnotationGroup({
     showAllSocialAnnotations,
     deleteHideAnnotation,
     onAnnotationHoverUpdate,
+    unfocusAnnotation,
     createReply,
     updateAnnotation,
 }: AnnotationGroupProps) {
@@ -122,6 +127,7 @@ function AnnotationGroup({
                                         hoverActive
                                     )
                                 }
+                                unfocusAnnotation={unfocusAnnotation}
                                 hypothesisSyncEnabled={hypothesisSyncEnabled}
                                 createReply={createReply}
                                 updateAnnotation={updateAnnotation}

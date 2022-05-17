@@ -92,7 +92,7 @@ export function handleWindowEventFactory(
         } else if (data.event === "focusAnnotation") {
             mutateAnnotations({
                 action: "focusAnnotation",
-                annotation: { localId: data.localId } as LindyAnnotation,
+                annotation: { localId: data?.localId } as LindyAnnotation,
             });
         }
     };

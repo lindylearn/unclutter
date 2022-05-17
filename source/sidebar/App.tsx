@@ -34,6 +34,7 @@ export default function App({ url, title }) {
         createReply,
         deleteHideAnnotation,
         onAnnotationHoverUpdate,
+        unfocusAnnotation,
         updateAnnotation,
     } = useAnnotationModifiers(mutateAnnotations);
 
@@ -87,6 +88,7 @@ export default function App({ url, title }) {
                 showAllSocialAnnotations={showAllSocialAnnotations}
                 deleteHideAnnotation={deleteHideAnnotation}
                 onAnnotationHoverUpdate={onAnnotationHoverUpdate}
+                unfocusAnnotation={unfocusAnnotation}
                 createReply={createReply}
                 updateAnnotation={updateAnnotation}
             />

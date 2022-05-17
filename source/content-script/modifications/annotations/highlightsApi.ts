@@ -48,7 +48,7 @@ export async function highlightAnnotations(
                     annotationColor = getAnnotationColor(annotation);
                     darkerAnnotationColor = annotationColor.replace(
                         "0.3",
-                        "0.5"
+                        "0.6"
                     );
                 } else {
                     annotationColor =
@@ -71,30 +71,55 @@ export async function highlightAnnotations(
                     );
                 });
 
+                // get position on page
                 const displayOffset = getNodeOffset(highlightedNodes[0]);
                 const displayOffsetEnd = getNodeOffset(
                     highlightedNodes[highlightedNodes.length - 1],
                     "bottom"
                 );
 
+                // handle onclick (a highlight may comprise multiple text nodes)
                 highlightedNodes.map((node) => {
-                    node.onclick = () =>
-                        sendSidebarEvent(sidebarIframe, {
-                            event: "focusAnnotation",
-                            localId: annotation.localId,
-                        });
-
-                    node.onmouseenter = () => {
+                    node.onclick = () => {
                         hoverUpdateHighlight(annotation, true);
 
                         sendSidebarEvent(sidebarIframe, {
                             event: "focusAnnotation",
                             localId: annotation.localId,
                         });
+
+                        // unfocus on next click (clicks inside annotations sidebar are handled there)
+                        const onNextClick = () => {
+                            hoverUpdateHighlight(annotation, false);
+                            sendSidebarEvent(sidebarIframe, {
+                                event: "focusAnnotation",
+                                localId: null,
+                            });
+
+                            document.removeEventListener(
+                                "click",
+                                onNextClick,
+                                true
+                            );
+                        };
+                        document.addEventListener("click", onNextClick, true);
                     };
-                    node.onmouseleave = () => {
-                        hoverUpdateHighlight(annotation, false);
-                    };
+
+                    // node.onmouseenter = () => {
+                    //     hoverUpdateHighlight(annotation, true);
+
+                    //     sendSidebarEvent(sidebarIframe, {
+                    //         event: "focusAnnotation",
+                    //         localId: annotation.localId,
+                    //     });
+                    // };
+                    // node.onmouseleave = () => {
+                    //     hoverUpdateHighlight(annotation, false);
+                    //     sendSidebarEvent(sidebarIframe, {
+                    //         event: "focusAnnotation",
+                    //         localId: null,
+                    //     });
+                    // };
                 });
 
                 anchoredAnnotations.push({
