@@ -118,6 +118,7 @@ export async function createRemoteAnnotation(
         displayOffset: localAnnotation.displayOffset,
         displayOffsetEnd: localAnnotation.displayOffsetEnd,
         localId: localAnnotation.localId,
+        focused: localAnnotation.focused,
     };
 }
 

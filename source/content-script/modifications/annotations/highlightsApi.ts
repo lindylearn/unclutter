@@ -48,7 +48,7 @@ export async function highlightAnnotations(
                     annotationColor = getAnnotationColor(annotation);
                     darkerAnnotationColor = annotationColor.replace(
                         "0.3",
-                        "0.6"
+                        "0.5"
                     );
                 } else {
                     annotationColor =

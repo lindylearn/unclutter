@@ -70,8 +70,9 @@ function Annotation({
                 borderColor: getAnnotationColor(annotation),
                 maxHeight: heightLimitPx,
             }}
-            onMouseEnter={() => onHoverUpdate(true)}
-            onMouseLeave={() => onHoverUpdate(false)}
+            // not using hover states for actual hover on social annotations
+            // onMouseEnter={() => onHoverUpdate(true)}
+            // onMouseLeave={() => onHoverUpdate(false)}
             ref={ref}
         >
             <a

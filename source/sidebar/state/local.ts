@@ -52,7 +52,7 @@ export function annotationReducer(
         case "focusAnnotation":
             return annotations.map((a) => ({
                 ...a,
-                focused: a.localId === mutation.annotation?.localId,
+                focused: a.localId === mutation.annotation?.localId, // null to unfocus
             }));
     }
 }
