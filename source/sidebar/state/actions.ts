@@ -31,9 +31,7 @@ export function useFetchAnnotations(
                     !a.quote_text || a.quote_text.length < maxSocialQuoteLength
             );
 
-            if (annotations.length === 0) {
-                return;
-            }
+            // send anchor event even for empty list in order to remove annotations later
 
             // TODO re-enable page notes
             // const pageNotes = annotations.filter((a) => !a.quote_html_selector);

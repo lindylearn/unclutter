@@ -79,6 +79,15 @@ export function handleWindowEventFactory(
                 annotation: remoteAnnotation,
             });
         } else if (data.event === "anchoredAnnotations") {
+            if (data.annotations.length === 0) {
+                // shortcut
+                mutateAnnotations({
+                    action: "set",
+                    annotations: [],
+                });
+                return;
+            }
+
             // now group annotations to filter out overlaps
             // use small margin to just detect overlaps in quotes
             const groupedAnnotations = groupAnnotations(data.annotations, 10);
