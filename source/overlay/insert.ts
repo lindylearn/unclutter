@@ -304,6 +304,7 @@ function _getAnnotationsToggleIcon(enabled: boolean): string {
 
 // *** Social annotations toggle ***
 let socialAnnotationsEnabled = null;
+let socialCommentCount = null;
 async function _setupSocialToggle(
     annotationsModifer: AnnotationsModifier,
     overlayModifier: OverlayManager
@@ -352,16 +353,23 @@ function _renderSocialToggle() {
     container.innerHTML = _getSocialToggleIcon(socialAnnotationsEnabled);
     container.setAttribute(
         "data-title",
-        _getSocialToggleTooltip(socialAnnotationsEnabled)
+        _getSocialToggleTooltip(socialAnnotationsEnabled, socialCommentCount)
     );
 
     return container;
 }
-function _getSocialToggleTooltip(enabled: boolean): string {
+function _getSocialToggleTooltip(
+    enabled: boolean,
+    socialCommentCount: number
+): string {
     if (enabled) {
-        return `Click to hide social comments`;
+        return `Click to hide ${
+            socialCommentCount ? socialCommentCount + " " : ""
+        }social comments`;
     } else {
-        return `Click to show social comments`;
+        return `Click to show ${
+            socialCommentCount ? socialCommentCount + " " : ""
+        }social comments`;
     }
 }
 function _getSocialToggleIcon(enabled: boolean): string {
@@ -379,6 +387,8 @@ function _getSocialToggleIcon(enabled: boolean): string {
 }
 // called from overlay modifier on fetch & update
 export function updateSocialCommentsCount(count: number) {
+    socialCommentCount = count;
+
     const label = document.getElementById("lindy-crowd-count-label");
     if (count) {
         label.innerText = count.toString();
@@ -387,6 +397,8 @@ export function updateSocialCommentsCount(count: number) {
         label.innerText = "";
         label.style.display = "none";
     }
+
+    _renderSocialToggle(count);
 }
 
 // *** Link icons: settings and bug report ***
