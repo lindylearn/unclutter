@@ -126,16 +126,22 @@ svg.icon > path {
 
 .annotation-list-item-enter {
     opacity: 0;
+    transform: translate(150px);
 }
 .annotation-list-item-enter-active {
     opacity: 1;
-    transition: opacity 500ms ease-in;
+    transform: translate(0);
+
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1); /* easeOutExpo */
 }
 .annotation-list-item-exit {
     opacity: 1;
+    transform: translate(0);
 }
 .annotation-list-item-exit-active {
     opacity: 0;
-    transition: opacity 500ms ease-in;
+    transform: translate(50px);
+
+    transition: all 0.1s cubic-bezier(0.32, 0, 0.67, 0); /* easeInCubic */
 }
   

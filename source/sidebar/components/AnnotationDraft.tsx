@@ -89,7 +89,7 @@ function AnnotationDraft({
     return (
         <div
             className={
-                `annotation p-1 pl-1.5 rounded-l-sm rounded-r bg-white text-gray-800 shadow-sm hover:shadow animate-slidein transition-all relative ` +
+                `annotation p-1 pl-1.5 rounded-l-sm rounded-r bg-white text-gray-800 shadow-sm hover:shadow transition-all relative ` +
                 (isReply ? "rounded-l pl-1 " : "") +
                 (className || "")
             }

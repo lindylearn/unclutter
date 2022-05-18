@@ -56,7 +56,7 @@ function AnnotationsList({
                     return (
                         <CSSTransition
                             key={annotation.localId}
-                            timeout={500}
+                            timeout={500} // must be larger than animation duration
                             classNames="annotation-list-item"
                         >
                             <div
