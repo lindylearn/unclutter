@@ -1,3 +1,4 @@
+import debounce from "lodash/debounce";
 import React, { useLayoutEffect, useRef, useState } from "react";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import { LindyAnnotation } from "../../common/annotations/create";
@@ -39,11 +40,43 @@ function AnnotationsList({
 }: AnnotationsListProps) {
     const itemsRef = useRef({}); // annotation localId -> ref of rendered annotation node
 
-    const [x, setX] = useState(0);
+    const [_, rerender] = useState(0); // state to force re-renders
+    const [resizeObserver, setResizeObserver] = useState(null);
     useLayoutEffect(() => {
+        // called whenever visible annotations change, after up-to-date refs are available
+
+        if (groupedAnnotations.length === 0) {
+            return;
+        }
+
+        // observe textarea resize events to trigger re-renders
+        let observer = resizeObserver;
+        if (!resizeObserver) {
+            let initialCall = true; // ignore insert call
+            const handleResize = () => {
+                if (initialCall) {
+                    initialCall = false;
+                    return;
+                }
+                console.log("Annotation draft resized, triggering rerender");
+                rerender(Math.random());
+            };
+
+            observer = new ResizeObserver(debounce(handleResize, 100));
+            setResizeObserver(observer);
+        }
+        // calling observe multiple times on same node is fine
+        groupedAnnotations
+            .flatMap((group) => group)
+            .filter((a) => a.isMyAnnotation)
+            .map((a) => {
+                const ref = itemsRef.current[a.localId];
+                observer.observe(ref);
+            });
+
         // every time the displayed annotations change, trigger a second pass render (before first is completed)
         // this allows grouped annotations to access the rendered height of their siblings
-        setX(x + 1);
+        rerender(Math.random());
     }, [groupedAnnotations]);
 
     return (
@@ -102,9 +135,16 @@ function AnnotationsList({
                                 style={{
                                     top: groupTopOffset + innerGroupOffset,
                                 }}
-                                ref={(el) =>
-                                    (itemsRef.current[annotation.localId] = el)
-                                }
+                                ref={(el) => {
+                                    if (el) {
+                                        itemsRef.current[annotation.localId] =
+                                            el;
+                                    } else {
+                                        delete itemsRef.current[
+                                            annotation.localId
+                                        ];
+                                    }
+                                }}
                             >
                                 <AnnotationThread
                                     annotation={annotation}
