@@ -122,3 +122,20 @@ svg.icon > path {
 .crowd-annotation-dot.h {
     background: rgba(189, 28, 43, 0.8)
 }
+
+
+.annotation-list-item-enter {
+    opacity: 0;
+}
+.annotation-list-item-enter-active {
+    opacity: 1;
+    transition: opacity 500ms ease-in;
+}
+.annotation-list-item-exit {
+    opacity: 1;
+}
+.annotation-list-item-exit-active {
+    opacity: 0;
+    transition: opacity 500ms ease-in;
+}
+  
