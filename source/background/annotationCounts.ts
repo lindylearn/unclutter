@@ -1,8 +1,7 @@
 import md5 from "md5";
 
-// The extension fetches static text records from this remote file to display
-// the number of shown social comments per (hashed) URL the user visits.
-// Fetching this static file once instead of on every tab navigation preserves user privacy.
+// The extension fetches this remote configuration text record once to display the number
+// of shown social comments per (hashed) URL the user visits.
 // lindylearn.io is the official publisher domain for this browser extension.
 const staticFileUrl = "https://s3.lindylearn.io/unclutter-url-counts-v1.csv";
 
@@ -10,7 +9,7 @@ const staticFileUrl = "https://s3.lindylearn.io/unclutter-url-counts-v1.csv";
 const annotationCounts = {};
 export async function loadAnnotationCountsToMemory() {
     try {
-        const response = await fetch(staticFileUrl, { mode: "same-origin" });
+        const response = await fetch(staticFileUrl);
         const text = await response.text();
 
         let start = performance.now();
