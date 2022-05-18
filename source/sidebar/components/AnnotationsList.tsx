@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useLayoutEffect, useRef, useState } from "react";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import { LindyAnnotation } from "../../common/annotations/create";
 import AnnotationThread from "./AnnotationThread";
@@ -25,6 +25,8 @@ interface AnnotationsListProps {
     updateAnnotation: (annotation: LindyAnnotation) => void;
 }
 
+const annotationMarginPx = 4;
+
 function AnnotationsList({
     groupedAnnotations,
     hypothesisSyncEnabled,
@@ -35,24 +37,59 @@ function AnnotationsList({
     createReply,
     updateAnnotation,
 }: AnnotationsListProps) {
+    const itemsRef = useRef({}); // annotation localId -> ref of rendered annotation node
+
+    const [x, setX] = useState(0);
+    useLayoutEffect(() => {
+        // every time the displayed annotations change, trigger a second pass render (before first is completed)
+        // this allows grouped annotations to access the rendered height of their siblings
+        setX(x + 1);
+    }, [groupedAnnotations]);
+
     return (
-        <TransitionGroup className="annotation-list relative flex-grow">
+        <TransitionGroup className="annotation-list relative">
             {/* render annotations in flat list to animate fade-out and regroups */}
             {groupedAnnotations.flatMap((group, groupIndex) => {
-                const nextGroup =
-                    groupIndex < groupedAnnotations.length - 1 &&
-                    groupedAnnotations[groupIndex + 1];
+                // const nextGroup =
+                //     groupIndex < groupedAnnotations.length - 1 &&
+                //     groupedAnnotations[groupIndex + 1];
+                // const groupHeightLimitPx =
+                //     (nextGroup?.[0]?.displayOffset ||
+                //         document.documentElement.scrollHeight +
+                //             sidebarOffsetTopPx) -
+                //     group[0].displayOffset -
+                //     annotationMarginPx;
 
                 const groupTopOffset =
                     group[0].displayOffset - sidebarOffsetTopPx;
-                const groupHeightLimitPx =
-                    (nextGroup?.[0]?.displayOffset ||
-                        document.documentElement.scrollHeight +
-                            sidebarOffsetTopPx) -
-                    group[0].displayOffset -
-                    4; // margin;
 
                 return group.map((annotation, i) => {
+                    // items are in flat list, so must track previous group items for correct absolute position
+                    const prevSiblingsRefs = group
+                        .slice(0, i)
+                        .map((a) => itemsRef.current?.[a.localId]);
+
+                    // get absolute offset after the group start
+                    let innerGroupOffset: number;
+                    if (i === 0) {
+                        // first item in group (most common case)
+                        innerGroupOffset = 0;
+                    } else if (prevSiblingsRefs.some((a) => !a)) {
+                        // first pass render: not all siblings have rendered yet
+                        // for now, assume default height (for draft empty comments)
+                        innerGroupOffset = 60 * i;
+                    } else {
+                        // second pass render: know heights of previous siblings
+                        // sum them up to get correct offset inside group
+                        innerGroupOffset = prevSiblingsRefs
+                            .map((ref) => ref.clientHeight)
+                            .reduce(
+                                (sum, height) =>
+                                    sum + height + annotationMarginPx,
+                                0
+                            );
+                    }
+
                     return (
                         <CSSTransition
                             key={annotation.localId}
@@ -61,17 +98,20 @@ function AnnotationsList({
                         >
                             <div
                                 key={annotation.localId}
-                                className="absolute"
+                                className="annotation-list-item absolute w-full"
                                 style={{
-                                    top: groupTopOffset + 60 * i,
+                                    top: groupTopOffset + innerGroupOffset,
                                 }}
+                                ref={(el) =>
+                                    (itemsRef.current[annotation.localId] = el)
+                                }
                             >
                                 <AnnotationThread
                                     annotation={annotation}
                                     deleteHideAnnotation={deleteHideAnnotation}
-                                    heightLimitPx={
-                                        groupHeightLimitPx / group.length
-                                    } // give each item equal share -- always avoids overflows
+                                    // heightLimitPx={
+                                    //     groupHeightLimitPx / group.length
+                                    // } // give each item equal share -- always avoids overflows
                                     onHoverUpdate={(hoverActive: boolean) =>
                                         // call hover on top level annotation
                                         onAnnotationHoverUpdate(

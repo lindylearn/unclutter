@@ -183,7 +183,7 @@ html.pageview > body {
 .lindy-highlight {
     cursor: pointer;
     background-color: var(--annotation-color);
-    transition: all 0.15s linear;
+    transition: background-color 0.15s linear;
 }
 .lindy-highlight.lindy-hover {
     background-color: var(--darker-annotation-color);
