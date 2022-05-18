@@ -25,30 +25,28 @@ import { TabStateManager } from "./tabs";
 const tabsManager = new TabStateManager();
 
 // toggle page view on extension icon click
-(chrome.action || browser.browserAction).onClicked.addListener(
-    (tab: Tabs.Tab) => {
-        const url = new URL(tab.url);
+browser.action.onClicked.addListener((tab: Tabs.Tab) => {
+    const url = new URL(tab.url);
 
-        if (!extensionSupportsUrl(url)) {
-            // ideally show some error message here
-            return;
-        }
-
-        enableInTab(tab.id).then((didEnable) => {
-            if (didEnable) {
-                reportEnablePageView("manual");
-            } else {
-                // already active, so disable
-                togglePageViewMessage(tab.id);
-            }
-        });
-
-        tabsManager.checkIsArticle(tab.id, tab.url);
-
-        // can only request permissions from user action
-        requestOptionalPermissions();
+    if (!extensionSupportsUrl(url)) {
+        // ideally show some error message here
+        return;
     }
-);
+
+    enableInTab(tab.id).then((didEnable) => {
+        if (didEnable) {
+            reportEnablePageView("manual");
+        } else {
+            // already active, so disable
+            togglePageViewMessage(tab.id);
+        }
+    });
+
+    tabsManager.checkIsArticle(tab.id, tab.url);
+
+    // can only request permissions from user action
+    requestOptionalPermissions();
+});
 
 // handle events from content scripts
 browser.runtime.onMessage.addListener(
@@ -119,7 +117,7 @@ browser.runtime.onInstalled.addListener(async ({ reason }) => {
 
     // show opt shortcut icon on mac
     browser.runtime.getPlatformInfo().then(({ os }) =>
-        (chrome.action || browser.browserAction).setTitle({
+        browser.action.setTitle({
             title: "Unclutter Current Article (⌥+C)",
         })
     );
