@@ -1,5 +1,4 @@
 import md5 from "md5";
-import browser from "../common/polyfill";
 
 // Lookup the number of known annotations for a given url
 // This data is bundled with the extension as .csv to avoid web requests on every page navigation
@@ -8,14 +7,13 @@ const annotationCounts = {};
 export async function loadAnnotationCountsToMemory() {
     const start = performance.now();
 
-    const staticFile = browser.runtime.getURL(
-        "assets/staticAnnotationCounts.csv"
-    );
+    const staticFile =
+        "https://unclutter-counts-url-map.s3.us-east-2.amazonaws.com/counts_v1.csv";
     const response = await fetch(staticFile, { mode: "same-origin" });
     const text = await response.text();
 
     // TODO read text line by line for performance
-    const lines = text.split("\n");
+    const lines = text.split("\r\n");
     lines.map((line) => {
         const [hash, count] = line.split(",");
         annotationCounts[hash] = count;
@@ -39,24 +37,26 @@ export async function getSocialCommentsCount(
 // NOTE: Keep in sync with backend WebpageConstuctor.normalize_url()
 function normalizeUrl(url: string) {
     // remove protocol
-    url = url.toLowerCase().replace("www.", "");
-    // .replace(".html", "")
-    // .replace(".htm", "");
+    url = url
+        .toLowerCase()
+        .replace("www.", "")
+        .replace(".html", "")
+        .replace(".htm", "");
 
     // remove url params
     // NOTE: be careful here -- e.g. substack adds ?s=r
     const url_obj = new URL(url);
-    // for (const [param, _] of url_obj.searchParams.entries()) {
-    //     if (param.includes("id")) {
-    //         continue;
-    //     }
-    //     if (["p", "q", "t", "e"].includes(param)) {
-    //         continue;
-    //     }
-    //     delete url_obj.searchParams[param];
-    // }
+    for (const [param, _] of url_obj.searchParams.entries()) {
+        if (param.includes("id")) {
+            continue;
+        }
+        if (["p", "q", "t", "e"].includes(param)) {
+            continue;
+        }
+        delete url_obj.searchParams[param];
+    }
 
-    // url_obj.pathname = trimRight(url_obj.pathname, "/");
+    url_obj.pathname = trimRight(url_obj.pathname, "/");
 
     // convert back to string
     url = url_obj.toString().replace("https://", "").replace("http://", "");
