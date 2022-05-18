@@ -1,28 +1,33 @@
 import md5 from "md5";
 
-// Lookup the number of known annotations for a given url
-// This data is bundled with the extension as .csv to avoid web requests on every page navigation
-// Load it to memory when the extension background service worker starts for faster lookup
+// The extension fetches static text records from this remote file to display
+// the number of shown social comments per (hashed) URL the user visits.
+// Fetching this static file once instead of on every tab navigation preserves user privacy.
+// lindylearn.io is the official publisher domain for this browser extension.
+const staticFileUrl = "https://s3.lindylearn.io/unclutter-url-counts-v1.csv";
+
+// Load the URL counts map to memory for faster lookup
 const annotationCounts = {};
 export async function loadAnnotationCountsToMemory() {
-    const start = performance.now();
+    try {
+        const response = await fetch(staticFileUrl, { mode: "same-origin" });
+        const text = await response.text();
 
-    const staticFile =
-        "https://unclutter-counts-url-map.s3.us-east-2.amazonaws.com/counts_v1.csv";
-    const response = await fetch(staticFile, { mode: "same-origin" });
-    const text = await response.text();
+        let start = performance.now();
 
-    // TODO read text line by line for performance
-    const lines = text.split("\r\n");
-    lines.map((line) => {
-        const [hash, count] = line.split(",");
-        annotationCounts[hash] = count;
-    });
+        const lines = text.split("\r\n");
+        lines.map((line) => {
+            const [hash, count] = line.split(",");
+            annotationCounts[hash] = count;
+        });
 
-    const duration = performance.now() - start;
-    console.log(
-        `Loaded ${lines.length} annotation counts to memory in ${duration}ms`
-    );
+        let duration = Math.round(performance.now() - start);
+        console.log(
+            `Loaded ${lines.length} annotation counts to memory in ${duration}ms`
+        );
+    } catch (err) {
+        console.error(`Failed to load URL counts:`, err);
+    }
 }
 
 export async function getSocialCommentsCount(
