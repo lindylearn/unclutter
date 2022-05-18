@@ -39,6 +39,18 @@ export class TabStateManager {
         return !!this.annotationCounts[tabId];
     }
 
+    async getSocialAnnotationsCount(
+        tabId: number,
+        url: string
+    ): Promise<number> {
+        // use cached value if present -- is more accurate as updated by anchoring
+        if (this.annotationCounts[tabId]) {
+            return this.annotationCounts[tabId];
+        }
+
+        return await getSocialCommentsCount(url);
+    }
+
     // update from content script, how many annotations actually displayed
     async setSocialAnnotationsCount(tabId: number, count: number) {
         if (this.annotationCounts[tabId] === count) {

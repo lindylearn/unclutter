@@ -342,7 +342,10 @@ async function _setupSocialToggle(
         });
     };
 
-    // social comments count set in updateSocialCommentsCount() below
+    // always show annotation count, even if disabled social highlights
+    browser.runtime
+        .sendMessage({ event: "getSocialAnnotationsCount" })
+        .then(updateSocialCommentsCount);
 }
 function _renderSocialToggle() {
     const container = document.getElementById("lindy-crowd-toggle-content");

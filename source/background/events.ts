@@ -81,6 +81,11 @@ browser.runtime.onMessage.addListener(
                 .checkIsArticle(sender.tab.id, sender.url)
                 .then(sendResponse);
             return true;
+        } else if (message.event === "getSocialAnnotationsCount") {
+            tabsManager
+                .getSocialAnnotationsCount(sender.tab.id, sender.url)
+                .then(sendResponse);
+            return true;
         } else if (message.event === "setSocialAnnotationsCount") {
             tabsManager.setSocialAnnotationsCount(sender.tab.id, message.count);
         }

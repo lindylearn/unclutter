@@ -2,6 +2,7 @@ import { LindyAnnotation } from "../../common/annotations/create";
 import {
     allowlistDomainOnManualActivationFeatureFlag,
     enableAnnotationsFeatureFlag,
+    enableSocialCommentsFeatureFlag,
     getFeatureFlag,
     showOutlineFeatureFlag,
 } from "../../common/featureFlags";
@@ -227,11 +228,20 @@ export default class OverlayManager implements PageModifier {
     // listen to annotation updates and attribute to outline heading
     private totalAnnotationCount = 0;
     private totalSocialCommentsCount = 0;
-    private onAnnotationUpdate(
+    private async onAnnotationUpdate(
         action: "set" | "add" | "remove",
         annotations: LindyAnnotation[]
     ) {
         if (!this.flatOutline || this.flatOutline.length === 0) {
+            return;
+        }
+
+        if (
+            action === "remove" &&
+            this.totalAnnotationCount === 0 &&
+            this.totalSocialCommentsCount === 0
+        ) {
+            // removing overlapping annotations before displaying them -- ignore this
             return;
         }
 
@@ -271,6 +281,17 @@ export default class OverlayManager implements PageModifier {
             totalAnnotationCount: this.totalAnnotationCount,
             outline: this.outline,
         });
+
+        if (this.totalSocialCommentsCount === 0) {
+            const socialAnnotationsEnabled = await getFeatureFlag(
+                enableSocialCommentsFeatureFlag
+            );
+            if (!socialAnnotationsEnabled) {
+                // expected to find 0 displayed social annotations
+                // don't update counts, we might still want to show them
+                return;
+            }
+        }
         updateSocialCommentsCount(this.totalSocialCommentsCount);
         browser.runtime.sendMessage(null, {
             event: "setSocialAnnotationsCount",
