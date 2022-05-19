@@ -237,14 +237,26 @@ function getHeadingNodeItem(
 // Paragraphs that highlight the first letter
 // e.g. https://www.newyorker.com/magazine/2022/04/11/the-unravelling-of-an-expert-on-serial-killers
 function getDropcapNodeItem(node: Element): OutlineItem | null {
-    if (node.textContent.length < 5) {
+    let text = node.innerText; // only visible text
+
+    if (node.getAttribute("aria-hidden") === "true") {
+        // duplicate styling node -- dropcap will be present somewhere else
+        // e.g. https://www.theverge.com/2017/5/22/15673712/anker-battery-charger-amazon-empire-steven-yang-interview
+        return;
+    }
+    if (text.length < 10) {
         // dropcap class applied to single letter, e.g. https://nautil.us/the-power-of-narrative-15975/
-        node = node.parentNode as Element;
+        return getDropcapNodeItem(node.parentNode as Element);
+    }
+
+    if (text[1].trim() === "") {
+        // drop displayed space, e.g. on https://www.theverge.com/2017/5/22/15673712/anker-battery-charger-amazon-empire-steven-yang-interview
+        text = text[0] + text.slice(2);
     }
 
     return {
         index: null, // populated abov
-        title: restrictTitleLength(node.textContent),
+        title: restrictTitleLength(text),
         level: 10,
         element: node,
         children: [], // populated below
