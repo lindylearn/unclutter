@@ -6,5 +6,9 @@
     {
         "version": "0.13.0",
         "updateMessage": "Update: Annotations work better and turn up on the page outline. Redesigned article UI."
+    },
+    {
+        "version": "0.14.0",
+        "updateMessage": "New feature: Showing social highlights from Hacker News and Hypothes.is."
     }
 ]
