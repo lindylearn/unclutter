@@ -6,7 +6,6 @@
     import FeedbackMessage from "./FeedbackMessage.svelte";
     import Outline from "./Outline.svelte";
     import { OutlineItem } from "./parse";
-    import ProgressMessage from "./ProgressMessage.svelte";
     import UpdateMessage from "./UpdateMessage.svelte";
     import { getVersionMessagesToShow, saveDismissedVersionMessage } from "./updateMessages";
 
@@ -43,8 +42,6 @@
 </script>
 
 <div id="lindy-info-topleft-content" class="flex flex-col gap-1.5 font-paragraph">
-    <!-- <ProgressMessage/> -->
-
     <Outline 
         outline={outline} 
         activeOutlineIndex={activeOutlineIndex} 

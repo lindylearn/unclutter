@@ -283,9 +283,9 @@ function _renderAnnotationsToggle() {
 }
 function _getAnnotationsToggleTooltip(enabled: boolean): string {
     if (enabled) {
-        return `Click to disable annotations`;
+        return `Click to disable private notes`;
     } else {
-        return `Click to enable annotations`;
+        return `Click to enable private notes`;
     }
 }
 function _getAnnotationsToggleIcon(enabled: boolean): string {
@@ -365,11 +365,11 @@ function _getSocialToggleTooltip(
     if (enabled) {
         return `Click to hide ${
             socialCommentCount ? socialCommentCount + " " : ""
-        }social comments`;
+        }social highlights`;
     } else {
         return `Click to show ${
             socialCommentCount ? socialCommentCount + " " : ""
-        }social comments`;
+        }social highlights`;
     }
 }
 function _getSocialToggleIcon(enabled: boolean): string {

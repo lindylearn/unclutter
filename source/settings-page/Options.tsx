@@ -134,7 +134,7 @@ function OptionsPage({}) {
             </OptionsGroup>
 
             <OptionsGroup
-                headerText="Annotations"
+                headerText="Private Notes"
                 iconSvg={
                     <svg className="w-5" viewBox="0 0 512 512">
                         <path
@@ -145,14 +145,15 @@ function OptionsPage({}) {
                 }
             >
                 <p>
-                    Highlight any article text to create a private annotation
-                    saved in your browser.
+                    Highlight any article text to create a private note saved in
+                    your browser. Toggle the feature via the toolbar in the top
+                    right of the article view.
                 </p>
                 <FeatureFlagSwitch
                     featureFlagKey={hypothesisSyncFeatureFlag}
                     onChange={onChangeHypothesisSync}
                 >
-                    Sync private annotations with my{" "}
+                    Sync notes with my{" "}
                     <a
                         href="https://web.hypothes.is"
                         className="underline"
@@ -177,7 +178,7 @@ function OptionsPage({}) {
 
             {socialAnnotationsSupported && (
                 <OptionsGroup
-                    headerText="Social Comments"
+                    headerText="Social Highlights"
                     iconSvg={
                         <svg className="w-5" viewBox="0 0 640 512">
                             <path
@@ -188,22 +189,24 @@ function OptionsPage({}) {
                     }
                 >
                     <p>
-                        Click the "people" icon to show inline social comments
-                        from Hacker News and Hypothes.is (
+                        Click the underlined text on 24.795 supported articles
+                        to show related conversations from Hacker News and
+                        Hypothes.is (
                         <a
-                            href="https://github.com/lindylearn/unclutter/blob/main/docs/social-comments.md"
+                            href="https://github.com/lindylearn/unclutter/blob/main/docs/social-highlights.md"
                             className="underline"
                             target="_blank"
                             rel="noopener noreferrer"
                         >
-                            how this works
+                            here's how this works
                         </a>
                         )
                     </p>
                     <FeatureFlagSwitch
                         featureFlagKey={enableSocialCountsFeatureFlag}
                     >
-                        Show number of social comments under the extension icon
+                        Show the number of social highlights on the extension
+                        icon
                     </FeatureFlagSwitch>
                 </OptionsGroup>
             )}
@@ -235,14 +238,14 @@ function OptionsPage({}) {
                 <FeatureFlagSwitch
                     featureFlagKey={collectAnonymousMetricsFeatureFlag}
                 >
-                    Collect{" "}
+                    Collect anonymous{" "}
                     <a
                         href="https://github.com/lindylearn/unclutter/tree/main/docs/metrics.md"
                         className="underline"
                         target="_blank"
                         rel="noopener noreferrer"
                     >
-                        anonymous statistics
+                        usage statistics
                     </a>{" "}
                     to make the extension better
                 </FeatureFlagSwitch>
