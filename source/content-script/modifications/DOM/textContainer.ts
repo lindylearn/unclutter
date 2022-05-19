@@ -1,6 +1,5 @@
 import { createStylesheetText } from "../../../common/stylesheets";
 import { fontSizeThemeVariable } from "../../../common/theme";
-import ThemeModifier from "../CSSOM/theme";
 import { PageModifier, trackModifierExecution } from "../_interface";
 
 const globalParagraphSelector = "p, font, pre";
@@ -16,8 +15,6 @@ This is done so that we can:
 */
 @trackModifierExecution
 export default class TextContainerModifier implements PageModifier {
-    private themeModifier: ThemeModifier;
-
     // Collect elements that contain text nodes
     private containerSelectors = [];
     private textParagraphSelectors = [];
@@ -29,9 +26,7 @@ export default class TextContainerModifier implements PageModifier {
     private mainFontSize;
     private exampleMainFontSizeElement;
 
-    constructor(themeModifier: ThemeModifier) {
-        this.themeModifier = themeModifier;
-    }
+    constructor() {}
 
     async prepare() {
         let paragraphTagSelector = globalParagraphSelector;
@@ -75,10 +70,10 @@ export default class TextContainerModifier implements PageModifier {
                 }
 
                 if (_isAsideEquivalent(currentElem)) {
-                    console.log(
-                        `Found aside equivalent text container:`,
-                        currentElem
-                    );
+                    // console.log(
+                    //     `Found aside equivalent text container:`,
+                    //     currentElem
+                    // );
 
                     // remove entire current stack
                     currentStack = [];
@@ -216,8 +211,23 @@ export default class TextContainerModifier implements PageModifier {
             border: none !important;
             box-shadow: none !important;
             transition: margin 0.2s;
+        }`;
+    }
+
+    // set text color variable only when dark mode enabled, otherwise overwrites color (even if css var not set)
+    public setTextDarkModeVariable(darkModeEnabled: boolean) {
+        if (!darkModeEnabled) {
+            document
+                .querySelectorAll(".lindy-dark-mode-text")
+                .forEach((e) => e.remove());
+            return;
+        }
+
+        const matchedTextSelector = this.containerSelectors.join(", ");
+        const css = `${matchedTextSelector} {
             color: var(--lindy-dark-theme-text-color);
         }`;
+        createStylesheetText(css, "lindy-dark-mode-text");
     }
 
     private setTextFontOverride(largestElem) {
@@ -262,6 +272,7 @@ export default class TextContainerModifier implements PageModifier {
         createStylesheetText(fontSizeStyle, "lindy-font-size");
     }
 
+    public originalBackgroundColor: string;
     private processBackgroundColors(textBackgroundColors) {
         // Colors are in reverse-hierarchical order, with ones closest to the text first
         // console.log("Found background colors:", textBackgroundColors);
@@ -280,7 +291,7 @@ export default class TextContainerModifier implements PageModifier {
             }
         }
 
-        this.themeModifier.originalBackgroundColor = pickedColor;
+        this.originalBackgroundColor = pickedColor;
     }
 }
 

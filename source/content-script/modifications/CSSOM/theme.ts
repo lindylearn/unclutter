@@ -23,6 +23,7 @@ import {
 import { highlightActiveColorThemeButton } from "../../../overlay/insert";
 import { getOutlineIframe } from "../../../overlay/outline/common";
 import AnnotationsModifier from "../annotations/annotationsModifier";
+import TextContainerModifier from "../DOM/textContainer";
 import { PageModifier, trackModifierExecution } from "../_interface";
 import CSSOMProvider, { isMediaRule, isStyleRule } from "./_provider";
 
@@ -31,18 +32,19 @@ export default class ThemeModifier implements PageModifier {
     private domain: string;
     private cssomProvider: CSSOMProvider;
     private annotationsModifer: AnnotationsModifier;
+    private textContainerModifier: TextContainerModifier;
 
     private activeColorTheme: themeName;
     private darkModeActive = false; // seperate from theme -- auto theme enables and disable dark mode
 
-    public originalBackgroundColor: string; // set in TextContainerModifier fadeOutNoise phase
-
     constructor(
         cssomProvider: CSSOMProvider,
-        annotationsModifer: AnnotationsModifier
+        annotationsModifer: AnnotationsModifier,
+        textContainerModifier: TextContainerModifier
     ) {
         this.cssomProvider = cssomProvider;
         this.annotationsModifer = annotationsModifer;
+        this.textContainerModifier = textContainerModifier;
     }
 
     private systemDarkModeQuery: MediaQueryList;
@@ -148,7 +150,9 @@ export default class ThemeModifier implements PageModifier {
 
         // Specical processing of original website colors
         let siteUsesDefaultDarkMode = false;
-        const rgbColor = parse(this.originalBackgroundColor);
+        const rgbColor = parse(
+            this.textContainerModifier.originalBackgroundColor
+        );
         const brightness = getSRGBLightness(rgbColor.r, rgbColor.g, rgbColor.b);
         if (brightness > 0.94 && !this.darkModeActive) {
             // Too light colors conflict with white theme, so set to white
@@ -182,7 +186,8 @@ export default class ThemeModifier implements PageModifier {
         if (!this.darkModeActive) {
             let concreteColor: string;
             if (this.activeColorTheme === "auto") {
-                concreteColor = this.originalBackgroundColor;
+                concreteColor =
+                    this.textContainerModifier.originalBackgroundColor;
             } else {
                 concreteColor = colorThemeToBackgroundColor(
                     this.activeColorTheme
@@ -206,7 +211,7 @@ export default class ThemeModifier implements PageModifier {
         } else {
             setCssThemeVariable(
                 autoBackgroundThemeVariable,
-                this.originalBackgroundColor
+                this.textContainerModifier.originalBackgroundColor
             );
         }
     }
@@ -268,8 +273,8 @@ export default class ThemeModifier implements PageModifier {
                 );
             }
         } else {
-            // manually set root text color (setting it always would override other styles)
-            document.documentElement.style.color = `var(${darkThemeTextColor})`;
+            // set root text color now (setting it always would override other styles)
+            this.textContainerModifier.setTextDarkModeVariable(true);
 
             // Background color
             const concreteColor = colorThemeToBackgroundColor("dark");
@@ -297,6 +302,7 @@ export default class ThemeModifier implements PageModifier {
         document.documentElement.style.removeProperty("color");
         document.documentElement.style.removeProperty("background");
         document.documentElement.style.removeProperty(darkThemeTextColor);
+        this.textContainerModifier.setTextDarkModeVariable(false);
 
         // undo dark mode style tweaks
         await this.disableDarkModeStyleTweaks();

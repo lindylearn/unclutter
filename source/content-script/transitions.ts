@@ -28,18 +28,18 @@ export default class TransitionManager implements PageModifier {
     private responsiveStyleModifier = new ResponsiveStyleModifier();
     private stylePatchesModifier = new StylePatchesModifier(this.cssomProvider);
     private annotationsModifier = new AnnotationsModifier();
+    private textContainerModifier = new TextContainerModifier();
     private themeModifier = new ThemeModifier(
         this.cssomProvider,
-        this.annotationsModifier
+        this.annotationsModifier,
+        this.textContainerModifier
     );
     private overlayManager = new OverlayManager(
         this.domain,
         this.themeModifier,
         this.annotationsModifier
     );
-    private textContainerModifier = new TextContainerModifier(
-        this.themeModifier
-    );
+
     private readingTimeModifier = new ReadingTimeModifier(this.overlayManager);
 
     async prepare() {
