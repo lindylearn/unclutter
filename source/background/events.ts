@@ -34,24 +34,31 @@ browser.action.onClicked.addListener((tab: Tabs.Tab) => {
     }
 
     enableInTab(tab.id).then((didEnable) => {
-        if (didEnable) {
-            reportEnablePageView("manual");
-        } else {
+        if (!didEnable) {
             // already active, so disable
             togglePageViewMessage(tab.id);
+            return;
+        }
+
+        tabsManager.checkIsArticle(tab.id, tab.url);
+        if (didEnable) {
+            tabsManager
+                .getSocialAnnotationsCount(tab.id, tab.url)
+                .then((socialCommentsCount) =>
+                    reportEnablePageView("manual", socialCommentsCount)
+                );
         }
     });
 
-    tabsManager.checkIsArticle(tab.id, tab.url);
-
-    // can only request permissions from user action
+    // can only request permissions from user action, use this opportunity
+    // can't make callback a promise for this to work
     requestOptionalPermissions();
 });
 
 // handle events from content scripts
 browser.runtime.onMessage.addListener(
     (message: any, sender: Runtime.MessageSender, sendResponse: () => void) => {
-        console.log(`Received '${message.event}' message:`, message);
+        // console.log(`Received '${message.event}' message:`, message);
 
         if (message.event === "disabledPageView") {
             reportDisablePageView(message.trigger, message.pageHeightPx);
@@ -61,7 +68,11 @@ browser.runtime.onMessage.addListener(
             console.log("boot.js requested injection into tab");
             injectScript(sender.tab.id, "content-script/enhance.js");
 
-            reportEnablePageView(message.trigger);
+            tabsManager
+                .getSocialAnnotationsCount(sender.tab.id, sender.url)
+                .then((socialCommentsCount) =>
+                    reportEnablePageView(message.trigger, socialCommentsCount)
+                );
         } else if (message.event === "openOptionsPage") {
             browser.runtime.openOptionsPage();
         } else if (message.event === "fetchCss") {

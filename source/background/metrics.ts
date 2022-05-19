@@ -10,16 +10,19 @@ import { getAllCustomDomainSettings } from "../common/storage2";
 
 // Anonymously report usage events (if the user allowed it)
 // See https://github.com/lindylearn/unclutter/blob/main/docs/metrics.md
-export async function reportEvent(name, data = {}) {
+export async function reportEvent(name: string, data = {}) {
     const metricsEnabled = await getFeatureFlag(
         collectAnonymousMetricsFeatureFlag
     );
     const isDev = await getFeatureFlag(isDevelopmentFeatureFlag);
+    if (isDev) {
+        console.log(`Metric ${name}:`, data);
+    }
 
     // Check if user allowed metrics reporting
     if (!metricsEnabled) {
         // only allowed events are update notification and disable event
-        if (["reportSettings", "disableMetrics"].includes(name)) {
+        if (!["reportSettings", "disableMetrics"].includes(name)) {
             return;
         }
     }
@@ -89,8 +92,11 @@ export async function reportSettings(version, isNewInstall) {
 
 let pageViewEnableTrigger;
 let pageViewEnableStartTime: Date;
-export async function reportEnablePageView(trigger) {
-    reportEvent("enablePageview", { trigger });
+export async function reportEnablePageView(
+    trigger: string,
+    socialCommentsCount?: number
+) {
+    reportEvent("enablePageview", { trigger, socialCommentsCount });
 
     pageViewEnableTrigger = trigger;
     pageViewEnableStartTime = new Date();
