@@ -104,7 +104,7 @@ export function paintHighlight(
 
             sendSidebarEvent(sidebarIframe, {
                 event: "focusAnnotation",
-                localId: annotation.localId,
+                annotation,
             });
 
             // unfocus on next click (clicks inside annotations sidebar are handled there)
@@ -112,29 +112,13 @@ export function paintHighlight(
                 hoverUpdateHighlight(annotation, false);
                 sendSidebarEvent(sidebarIframe, {
                     event: "focusAnnotation",
-                    localId: null,
+                    annotation: null,
                 });
 
                 document.removeEventListener("click", onNextClick, true);
             };
             document.addEventListener("click", onNextClick, true);
         };
-
-        // node.onmouseenter = () => {
-        //     hoverUpdateHighlight(annotation, true);
-
-        //     sendSidebarEvent(sidebarIframe, {
-        //         event: "focusAnnotation",
-        //         localId: annotation.localId,
-        //     });
-        // };
-        // node.onmouseleave = () => {
-        //     hoverUpdateHighlight(annotation, false);
-        //     sendSidebarEvent(sidebarIframe, {
-        //         event: "focusAnnotation",
-        //         localId: null,
-        //     });
-        // };
     });
 }
 

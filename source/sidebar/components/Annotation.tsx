@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { LindyAnnotation } from "../../common/annotations/create";
 import { getAnnotationColor } from "../../common/annotations/styling";
+import { reportEventContentScript } from "../../content-script/messaging";
 
 interface AnnotationProps {
     annotation: LindyAnnotation;
@@ -101,6 +102,7 @@ function Annotation({
                 href={link}
                 target="_blank"
                 rel="noreferrer"
+                onClick={() => onExpand(annotation)}
             >
                 {/* {!isReply && (
                     <div
@@ -203,7 +205,11 @@ function Annotation({
                     hypothesisSyncEnabled && (
                         <a
                             className="reply-button invisible select-none hover:text-gray-700 hover:scale-110 hover:pl-0.5 transition-all cursor-pointer"
-                            onClick={showingReplies ? createReply : undefined}
+                            onClick={
+                                showingReplies
+                                    ? createReply
+                                    : () => onExpand(annotation)
+                            }
                             href={!showingReplies ? link : undefined}
                             target="_blank"
                             rel="noreferrer"
@@ -237,6 +243,7 @@ function Annotation({
                     }
                     target="_blank"
                     rel="noreferrer"
+                    onClick={() => onExpand(annotation)}
                 >
                     <>
                         {author.replace("_hn", "")}
@@ -286,4 +293,11 @@ export function parseDate(timestamp) {
             .replace(/[a-z]+/gi, " ")
             .replace(".000", "")
     );
+}
+
+function onExpand(annotation: LindyAnnotation) {
+    reportEventContentScript("expandSocialHighlight", {
+        platform: annotation.platform,
+        reply_count: annotation.reply_count,
+    });
 }

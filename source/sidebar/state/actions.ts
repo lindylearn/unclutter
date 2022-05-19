@@ -3,6 +3,7 @@ import {
     createDraftAnnotation,
     LindyAnnotation,
 } from "../../common/annotations/create";
+import { reportEventContentScript } from "../../content-script/messaging";
 import { createRemoteAnnotation } from "../common/api";
 import { deleteAnnotation, getAnnotations } from "../common/CRUD";
 import { hideAnnotationLocally } from "../common/local";
@@ -163,6 +164,11 @@ function deleteHideAnnotationFactory(
 
             // TODO add to moderation queue
             // hideRemoteAnnotation(annotation);
+
+            reportEventContentScript("hideSocialAnnotation", {
+                id: annotation.id,
+                platform: annotation.platform,
+            });
         }
     };
 }

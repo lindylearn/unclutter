@@ -1,4 +1,5 @@
 import { LindyAnnotation } from "../../common/annotations/create";
+import { reportEventContentScript } from "../../content-script/messaging";
 import { createAnnotation } from "../common/CRUD";
 import { groupAnnotations } from "../common/grouping";
 
@@ -53,7 +54,7 @@ export function annotationReducer(
         case "focusAnnotation":
             return annotations.map((a) => ({
                 ...a,
-                focused: a.localId === mutation.annotation?.localId, // null to unfocus
+                focused: a.localId === mutation?.annotation?.localId, // null to unfocus
             }));
     }
 }
@@ -131,8 +132,14 @@ export function handleWindowEventFactory(
         } else if (data.event === "focusAnnotation") {
             mutateAnnotations({
                 action: "focusAnnotation",
-                annotation: { localId: data?.localId } as LindyAnnotation,
+                annotation: data.annotation as LindyAnnotation,
             });
+
+            if (data.annotation && !data.annotation.isMyAnnotation) {
+                reportEventContentScript("clickSocialHighlight", {
+                    platform: data.annotation.platform,
+                });
+            }
         }
     };
 }

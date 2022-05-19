@@ -164,6 +164,8 @@ export async function deleteAnnotation(
         hypothesisSyncFeatureFlag
     );
 
+    reportEventContentScript("deleteAnnotation", { hypothesisSyncEnabled });
+
     if (hypothesisSyncEnabled) {
         return await deleteRemoteAnnotation(annotation);
     } else {
