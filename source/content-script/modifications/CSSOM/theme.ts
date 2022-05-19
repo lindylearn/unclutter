@@ -150,29 +150,28 @@ export default class ThemeModifier implements PageModifier {
 
         // Specical processing of original website colors
         let siteUsesDefaultDarkMode = false;
+        // Disable default site dark mode detection for now
+        // The user likely doesn't expect the auto-change
+
         const rgbColor = parse(
             this.textContainerModifier.originalBackgroundColor
         );
         const brightness = getSRGBLightness(rgbColor.r, rgbColor.g, rgbColor.b);
         if (brightness > 0.94 && !this.darkModeActive) {
             // Too light colors conflict with white theme, so set to white
-            // disable for now
-            // this.originalBackgroundColor = "white";
+            this.textContainerModifier.originalBackgroundColor = "white";
         } else if (brightness < 0.3) {
             // Site uses dark mode by default
+            // OR we picked a differently-colored banner as background
 
-            if (this.activeColorTheme !== "white") {
-                // caution: this is error prone
-                // - but messing with default colors is as well
+            // need to do something, otherwise rest of ui doesn't work with parsed original background color
+            // e.g. https://joeblu.com/blog/2022_05_okrs/
 
-                // Make rest of UI dark
-                this.darkModeActive = true;
+            // Make rest of UI dark
+            this.darkModeActive = true;
 
-                // Use this color instead of the default black
-                siteUsesDefaultDarkMode = true;
-            } else {
-                // TODO should apply reverse dark mode tweaks here?
-            }
+            // caution: this is error prone
+            siteUsesDefaultDarkMode = true;
         }
 
         // enable or disable dark mode if there's been a change
@@ -236,11 +235,19 @@ export default class ThemeModifier implements PageModifier {
         this.annotationsModifer.setSidebarDarkMode(true);
 
         const siteSupportsDarkMode = this.detectSiteDarkMode(true);
-        // don't use default dark themes for now, leads to more missed color changes
-        // if (siteUsesDefaultDarkMode) {
-        //     return;
-        // }
-        if (siteSupportsDarkMode) {
+        if (siteUsesDefaultDarkMode) {
+            // TODO is this too error prone?
+
+            // use default background elsewhere
+            setCssThemeVariable(
+                backgroundColorThemeVariable,
+                this.textContainerModifier.originalBackgroundColor
+            );
+            this.annotationsModifer.setSidebarCssVariable(
+                backgroundColorThemeVariable,
+                this.textContainerModifier.originalBackgroundColor
+            );
+        } else if (siteSupportsDarkMode) {
             // parse background color, which we overwrite
             let backgroundColor: string;
             this.enabledSiteDarkModeRules.map((mediaRule) => {
