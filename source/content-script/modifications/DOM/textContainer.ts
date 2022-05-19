@@ -24,8 +24,8 @@ export default class TextContainerModifier implements PageModifier {
     // Remember background colors on text containers
     private backgroundColors = [];
 
-    private mainFontSize;
-    private exampleMainFontSizeElement;
+    private mainFontSize: number;
+    private exampleMainFontSizeElement: HTMLElement;
 
     constructor() {}
 
@@ -39,7 +39,7 @@ export default class TextContainerModifier implements PageModifier {
 
         const textTagSelectors = globalParagraphSelector
             .split(", ")
-            .concat("a", "ol")
+            .concat("a", "ol", "blockquote") // also apply to these, but don't parse style from them
             .map((tag) => `.${lindyTextContainerClass} > ${tag}`);
 
         // text elements to apply styles to (e.g. font change)
@@ -114,16 +114,16 @@ export default class TextContainerModifier implements PageModifier {
                         !activeStyle.backgroundColor.includes("0.") &&
                         !activeStyle.backgroundColor.includes("%")
                     ) {
-                        // console.log(activeStyle.backgroundColor, elem);
+                        console.log(activeStyle.backgroundColor, elem);
                         this.backgroundColors.push(activeStyle.backgroundColor);
                     }
                 }
             }
         };
 
-        const paragraphFontSizes = {};
-        const exampleNodePerFontSize = {};
-        paragraphs.forEach((elem) => {
+        const paragraphFontSizes: { [size: number]: number } = {};
+        const exampleNodePerFontSize: { [size: number]: HTMLElement } = {};
+        paragraphs.forEach((elem: HTMLElement) => {
             // Ignore invisible nodes
             // Note: iterateDOM is called before content block, so may not catch all hidden nodes (e.g. in footer)
             if (elem.offsetHeight === 0) {
@@ -319,13 +319,14 @@ export const asideWordBlocklist = [
     "popup",
     "caption",
     "gallery",
-    "ad",
+    // "ad", may easily occur in auto-generated ids
     "newsletter",
     "promo",
     "composer",
     "callout",
+    "call-to-action", // https://future.a16z.com/the-future-of-search-is-boutique/
 ];
-function _isAsideEquivalent(node) {
+function _isAsideEquivalent(node: HTMLElement) {
     return (
         node.tagName === "HEADER" ||
         node.tagName === "FOOTER" ||
@@ -339,8 +340,23 @@ function _isAsideEquivalent(node) {
                     node.className.toLowerCase().includes(word) ||
                     node.id.toLowerCase().includes(word)
             ) ||
-        node.hasAttribute("data-language")
+        node.hasAttribute("data-language") ||
+        isSupportBanner(node)
     );
+}
+
+// be very careful here to not match valid text nodes
+function isSupportBanner(node: HTMLElement): boolean {
+    const firstChild = node.firstChild as HTMLElement;
+    if (!firstChild || !firstChild.tagName?.startsWith("H")) {
+        // short circuit
+        return false;
+    }
+
+    // e.g. https://psyche.co/guides/how-to-have-a-life-full-of-wonder-and-learning-about-the-world
+    if (node.textContent?.startsWith("Support")) {
+        return true;
+    }
 }
 
 // Get a CSS selector for the passed node with a high specifity

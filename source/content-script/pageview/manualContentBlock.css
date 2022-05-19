@@ -698,3 +698,13 @@ code {
 .obar, .widget_twitter_timeline, .sidebar > ul {
     display: none !important;
 }
+
+/* https://dereksmart.com/2015/07/interstellar-citizens/ */
+#masthead, .parallax-window, .parallax-mirror {
+    display: none !important;
+}
+
+/* https://psyche.co/guides/how-to-have-a-life-full-of-wonder-and-learning-about-the-world */
+.styled__Container-sc-103nbgy-0.styled__Container-sc-103nbgy-0 {
+    display: none !important;
+}

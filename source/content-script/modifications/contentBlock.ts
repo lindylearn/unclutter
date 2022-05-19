@@ -78,6 +78,7 @@ const blockedTags = ["footer", "aside", "nav", "gpt-ad"];
 export const blockedWords = [
     "masthead",
     // "banner",
+    "headerwrapper", // https://psyche.co/guides/how-to-have-a-life-full-of-wonder-and-learning-about-the-world
     "menu",
     // "aside", https://www.sec.gov/news/press-release/2022-55
     // "nav",
@@ -115,6 +116,7 @@ export const blockedWords = [
     "readnext", // https://blog.gregbrockman.com/its-time-to-become-an-ml-engineer
     "similar", // https://nautil.us/the-power-of-narrative-15975/
     "next-article", // https://boingboing.net/2022/05/18/expert-on-the-shortcomings-of-mass-transit-in-cyberpunk-2077s-night-city.html
+    "thumbnail", // https://psyche.co/guides/how-to-have-a-life-full-of-wonder-and-learning-about-the-world
 ];
 const blockedClasses = [
     ".ad",
@@ -144,4 +146,5 @@ const blockedClasses = [
     "#related-articles",
     ".c-recirc-module", // https://www.theverge.com/23017107/crypto-billion-dollar-bridge-hack-decentralized-finance
     "#latest-news", // https://www.science.org/doi/10.1126/science.abk1781?cookieSet=1#latest-news
+    ".call-to-action", // https://future.a16z.com/the-future-of-search-is-boutique/
 ];
