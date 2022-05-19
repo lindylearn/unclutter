@@ -18,8 +18,8 @@ export async function reportEvent(name, data = {}) {
 
     // Check if user allowed metrics reporting
     if (!metricsEnabled) {
-        // only allowed event is update notification
-        if (name !== "reportSettings") {
+        // only allowed events are update notification and disable event
+        if (["reportSettings", "disableMetrics"].includes(name)) {
             return;
         }
     }

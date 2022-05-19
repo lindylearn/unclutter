@@ -45,15 +45,18 @@ export default function FeatureFlagSwitch({
     return (
         <div className="flex">
             <p className="mr-2">{children}</p>
-            <div class="switch">
+            <div className="switch">
                 <input
                     type="checkbox"
                     id={featureFlagKey}
-                    class="switch__input"
+                    className="switch__input"
                     checked={state}
                     onChange={toggleStateLocalFirst}
                 />
-                <label for={featureFlagKey} class="switch__label"></label>
+                <label
+                    htmlFor={featureFlagKey}
+                    className="switch__label"
+                ></label>
             </div>
         </div>
     );
