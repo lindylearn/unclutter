@@ -59,36 +59,55 @@ export default class TextContainerModifier implements PageModifier {
             ...textTagSelectors,
         ];
 
-        const seenNodes = new Set();
+        const validatedNodes: Set<HTMLElement> = new Set();
         const iterateParents = (elem: HTMLElement) => {
-            if (seenNodes.has(elem)) {
+            if (validatedNodes.has(elem)) {
                 return;
             }
 
             // Iterate upwards in DOM tree from paragraph node
             let currentElem = elem;
+            let currentStack: HTMLElement[] = [];
             while (currentElem !== document.body) {
-                if (seenNodes.has(currentElem)) {
+                // don't go into parents if validated they're ok
+                if (validatedNodes.has(currentElem)) {
                     break;
                 }
-                seenNodes.add(currentElem);
 
-                currentElem.classList.add(lindyTextContainerClass);
+                if (_isAsideEquivalent(currentElem)) {
+                    console.log(
+                        `Found aside equivalent text container:`,
+                        currentElem
+                    );
 
-                // Perform other style changes based on applied runtime style and DOM structure
-                const activeStyle = window.getComputedStyle(currentElem);
-                const overrideStyles = _getNodeOverrideStyles(
-                    currentElem,
-                    activeStyle
-                );
-                if (overrideStyles) {
-                    this.overrideCssDeclarations.push(overrideStyles);
+                    // remove entire current stack
+                    currentStack = [];
+                    break;
                 }
 
-                if (
-                    !_isAsideEquivalent(currentElem) &&
-                    !_isAsideEquivalent(currentElem.parentElement)
-                ) {
+                // we processed this node, even if we may not end up taking it
+                validatedNodes.add(currentElem);
+
+                // iterate upwards
+                currentStack.push(currentElem);
+                currentElem = currentElem.parentElement;
+            }
+
+            // perform modifications if is valid text element stack
+            if (currentStack.length !== 0) {
+                for (const elem of currentStack) {
+                    elem.classList.add(lindyTextContainerClass);
+
+                    // Perform other style changes based on applied runtime style and DOM structure
+                    const activeStyle = window.getComputedStyle(elem);
+                    const overrideStyles = _getNodeOverrideStyles(
+                        elem,
+                        activeStyle
+                    );
+                    if (overrideStyles) {
+                        this.overrideCssDeclarations.push(overrideStyles);
+                    }
+
                     // Remember background colors on text containers
                     if (
                         // don't take default background color
@@ -99,12 +118,10 @@ export default class TextContainerModifier implements PageModifier {
                         !activeStyle.backgroundColor.includes("0.") &&
                         !activeStyle.backgroundColor.includes("%")
                     ) {
-                        // console.log(activeStyle.backgroundColor, currentElem);
+                        // console.log(activeStyle.backgroundColor, elem);
                         this.backgroundColors.push(activeStyle.backgroundColor);
                     }
                 }
-
-                currentElem = currentElem.parentElement;
             }
         };
 
