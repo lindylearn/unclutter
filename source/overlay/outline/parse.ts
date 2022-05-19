@@ -68,30 +68,33 @@ export function getOutline(): OutlineItem[] {
     // Construct hierarchy based on heading level
     const collapsedItems = collapseItems(filteredHeadings);
 
-    // Deduplicate root element
-    let outlineRoot: OutlineItem;
-    if (collapsedItems[0].children.length === 1) {
-        // site uses heading nesting correctly, so use its main heading as root
-        outlineRoot = collapsedItems[0].children[0];
+    // drop duplicated headings, collapse hierarchy
+    let outlineRoot: OutlineItem = collapsedItems[0];
+    let didChange = true;
+    while (didChange) {
+        didChange = false;
 
-        // but set special heading properties
-        outlineRoot.element = document.body;
-        outlineRoot.index = -1;
-    } else {
-        // more children -> use the root element we added
-        outlineRoot = collapsedItems[0];
+        // collapse until there are multiple children
+        // e.g. https://www.npr.org/templates/story/story.php?storyId=129551459&t=1652963492929 uses two levels
+        if (outlineRoot.children.length === 1) {
+            outlineRoot = outlineRoot.children[0];
+            didChange = true;
+        }
 
-        // remove site heading element if present
-        // e.g. https://blog.adamchalmers.com/making-a-dns-client
-        if (outlineRoot.title.includes(outlineRoot.children?.[0].title)) {
-            // use this title in case meta title includes SEO noise
-            outlineRoot.title = outlineRoot.children?.[0].title;
-            // remove element
+        // drop headings similar to the title
+        while (outlineRoot.title.includes(outlineRoot.children?.[0].title)) {
+            // prepend children of removed element
             outlineRoot.children = outlineRoot.children?.[0].children.concat(
                 outlineRoot.children.slice(1)
             );
+
+            didChange = true;
         }
     }
+
+    // set special heading properties
+    outlineRoot.element = document.body;
+    outlineRoot.index = -1;
 
     // insert placeholder "introduction" item
     outlineRoot.children = [
