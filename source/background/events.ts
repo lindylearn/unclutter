@@ -2,6 +2,7 @@ import { Runtime, Tabs } from "webextension-polyfill";
 import { extensionSupportsUrl } from "../common/articleDetection";
 import {
     collectAnonymousMetricsFeatureFlag,
+    getFeatureFlag,
     isDevelopmentFeatureFlag,
     setFeatureFlag,
 } from "../common/featureFlags";
@@ -143,7 +144,12 @@ browser.tabs.onRemoved.addListener((tabId: number) =>
 );
 
 // initialize on every service worker start
-function initializeServiceWorker() {
+async function initializeServiceWorker() {
+    const isDev = await getFeatureFlag(isDevelopmentFeatureFlag);
+    if (isDev) {
+        return;
+    }
+
     startMetrics();
     loadAnnotationCountsToMemory();
 }
