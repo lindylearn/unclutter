@@ -75,7 +75,7 @@ export default class ContentBlockModifier implements PageModifier {
 }
 
 const blockedTags = ["footer", "aside", "nav", "gpt-ad"];
-const blockedWords = [
+export const blockedWords = [
     "masthead",
     // "banner",
     "menu",
@@ -114,6 +114,7 @@ const blockedWords = [
     "recommended", // https://reason.com/2022/04/08/the-fbi-decided-not-to-knock-down-a-suspects-front-door-because-it-was-an-affluent-neighborhood/
     "readnext", // https://blog.gregbrockman.com/its-time-to-become-an-ml-engineer
     "similar", // https://nautil.us/the-power-of-narrative-15975/
+    "next-article", // https://boingboing.net/2022/05/18/expert-on-the-shortcomings-of-mass-transit-in-cyberpunk-2077s-night-city.html
 ];
 const blockedClasses = [
     ".ad",

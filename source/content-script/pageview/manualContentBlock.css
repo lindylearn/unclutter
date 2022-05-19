@@ -693,3 +693,8 @@ code {
 .tds-site-header-wrapper {
     display: none !important;
 }
+
+/* https://steveblank.com/2022/05/17/artificial-intelligence-and-machine-learning-explained/ */
+.obar, .widget_twitter_timeline, .sidebar > ul {
+    display: none !important;
+}

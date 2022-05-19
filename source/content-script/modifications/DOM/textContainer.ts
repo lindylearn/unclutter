@@ -1,5 +1,6 @@
 import { createStylesheetText } from "../../../common/stylesheets";
 import { fontSizeThemeVariable } from "../../../common/theme";
+import { blockedWords } from "../contentBlock";
 import { PageModifier, trackModifierExecution } from "../_interface";
 
 const globalParagraphSelector = "p, font, pre";
@@ -297,6 +298,7 @@ export default class TextContainerModifier implements PageModifier {
 
 const lindyTextContainerClass = "lindy-text-container";
 
+// more strict than blockedWords
 export const asideWordBlocklist = [
     "header",
     "footer",
@@ -330,11 +332,13 @@ function _isAsideEquivalent(node) {
         node.tagName === "ASIDE" ||
         node.tagName === "CODE" ||
         node.tagName === "TD" || // http://www.paulgraham.com/ds.html
-        asideWordBlocklist.some(
-            (word) =>
-                node.className.toLowerCase().includes(word) ||
-                node.id.toLowerCase().includes(word)
-        ) ||
+        asideWordBlocklist
+            .concat(blockedWords)
+            .some(
+                (word) =>
+                    node.className.toLowerCase().includes(word) ||
+                    node.id.toLowerCase().includes(word)
+            ) ||
         node.hasAttribute("data-language")
     );
 }

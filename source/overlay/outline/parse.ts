@@ -82,7 +82,7 @@ export function getOutline(): OutlineItem[] {
         }
 
         // drop headings similar to the title
-        while (outlineRoot.title.includes(outlineRoot.children?.[0].title)) {
+        while (outlineRoot.title.includes(outlineRoot.children?.[0]?.title)) {
             // prepend children of removed element
             outlineRoot.children = outlineRoot.children?.[0].children.concat(
                 outlineRoot.children.slice(1)
