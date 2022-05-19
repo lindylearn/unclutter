@@ -1,19 +1,14 @@
 # Annotations Sync
 
-Unclutter supports highlighting and annotating articles, so you can read more deeply and remember the things you read in a lightweight way.
+Unclutter supports the highlighting and annotating of articles so that you that you can easily remember the things you read.
 
-By default, all your annotations are saved in your browser storage and not accessible to anyone else. But you can also synchronize your annotations with a private [Hypothes.is](https://web.hypothes.is) account, which has the following benefits:
+By default, all of your "private notes" are saved in your local browser storage and appear every time you open an article. If you want to access your notes on different devices, organize, or import them into note-taking apps, you can configure a synchronization with [Hypothes.is](https://web.hypothes.is).
 
--   Annotate articles in different places, yet see your notes everywhere. For example, use the [official Hypothesis browser extension](https://chrome.google.com/webstore/detail/hypothesis-web-pdf-annota/bjfhmglciegochdpefhhlphglcehbmek) to annotate PDFs, Unclutter to annotate long reads, and the [via.hypothes.is](https://via.hypothes.is) website to create notes from your mobile phone.
--   Organize and search across your annotations on your [hypothes.is profile](https://hypothes.is/users/peterhagen) or using [Lindy Annotations](http://annotations.lindylearn.io/).
--   Import annotations into note-taking tools like Roam, Obisidian, Notion, etc.
--   You can set some of your annotations to public to spark a conversation with others, and can reply to other's annotations.
-
-Hypothes.is is a non-profit company not related to LindyLearn. I just think they're cool and perfect to synchronize annotations across different places.
+If you configure the Hypothes.is synchronization, you can also make any of your article notes publicly visible by clicking the "globe" icon. Other users can then reply to your idea just like you can reply to theirs.
 
 ## Setup
 
 1. [Create a free Hypothes.is account](https://hypothes.is/signup?utm_source=lindylearn.io) if you don't already have one.
 2. [Generate your API token](https://hypothes.is/account/developer) and enter it in the Unclutter extensions settings.
-3. From now on, annotations will be stored using Hypothes.is rather than your browser storage. All existing local annotations will be uploaded automatically.
-4. That's it!
+3. From now on, notes will be stored on Hypothes.is rather than in your browser storage. All existing local annotations will be uploaded automatically.
+4. You can now browse and search across your annotations on your [hypothes.is profile](https://hypothes.is/users/peterhagen), or using [Lindy Annotations](http://annotations.lindylearn.io/) (this only works for public annotations).
