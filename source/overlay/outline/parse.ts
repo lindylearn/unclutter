@@ -60,12 +60,13 @@ const monthNames = [
 export function getOutline(): OutlineItem[] {
     // List raw DOM nodes and filter to likely headings
     const headingItems = getHeadingItems();
-    if (headingItems.length === 0) {
+    const filteredHeadings = headingItems; // filterWithDisplayOffsets(headingItems);
+    if (filteredHeadings.length === 0) {
         return [];
     }
 
     // Construct hierarchy based on heading level
-    const collapsedItems = collapseItems(headingItems);
+    const collapsedItems = collapseItems(filteredHeadings);
 
     // Deduplicate root element
     let outlineRoot: OutlineItem;
@@ -149,6 +150,14 @@ function getHeadingItems(): OutlineItem[] {
             continue;
         }
 
+        if (
+            node.parentElement.tagName === "A" ||
+            node.firstElementChild?.tagName === "A"
+        ) {
+            // often related link, e.g. https://www.worksinprogress.co/issue/womb-for-improvement/, https://www.propublica.org/article/filing-taxes-could-be-free-simple-hr-block-intuit-lobbying-against-it
+            continue;
+        }
+
         // blocklist non-headers
         if (
             contentBlocklist
@@ -200,13 +209,6 @@ function getHeadingNodeItem(
 ): OutlineItem | null {
     // Ignore specific words & css classes
     const text = node.textContent;
-    if (
-        node.parentElement.tagName === "A" ||
-        node.firstElementChild?.tagName === "A"
-    ) {
-        // often related link, e.g. https://www.worksinprogress.co/issue/womb-for-improvement/, https://www.propublica.org/article/filing-taxes-could-be-free-simple-hr-block-intuit-lobbying-against-it
-        return;
-    }
     if (text.startsWith("By ")) {
         // e.g. https://towardsdev.com/hexagonal-architecture-and-domain-driven-design-bc2525dbc05f
         return;
@@ -402,6 +404,28 @@ function normalizeItemLevel(
         ),
     };
 }
+
+// const outlineItemMargin = 20; // min allowed space between headings (remove duplication)
+// const outlineTrailingMargin = 100; // drop headings in last page section (often related articles)
+// function filterWithDisplayOffsets(flatOutline: OutlineItem[]): OutlineItem[] {
+//     let lastOffset = 0;
+//     let documentHeight = document.documentElement.scrollHeight;
+//     const filteredOutline = [];
+//     for (const item of flatOutline) {
+//         const offset = getElementYOffset(item.element);
+//         // if (lastOffset + outlineItemMargin)
+
+//         if (offset >= documentHeight - outlineTrailingMargin) {
+//             break;
+//         }
+
+//         filteredOutline.push(item);
+
+//         console.log(offset);
+//     }
+
+//     return filteredOutline;
+// }
 
 export function addHeadingIds(flatOutline: OutlineItem[]) {
     flatOutline.map(({ element, title }) => {

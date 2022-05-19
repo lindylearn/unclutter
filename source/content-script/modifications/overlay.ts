@@ -99,7 +99,8 @@ export default class OverlayManager implements PageModifier {
 
     private enableOutline() {
         this.outline = getOutline();
-        if (this.outline.length < 3) {
+        if (this.outline.length <= 3) {
+            // note that 'Introduction' heading always exists
             // Use just article title, as outline likely not useful or invalid
             this.outline = [createRootItem()];
         }
