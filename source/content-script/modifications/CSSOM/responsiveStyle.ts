@@ -103,7 +103,9 @@ export default class ResponsiveStyleModifier implements PageModifier {
                     rule.cssText,
                     rule.parentStyleSheet.cssRules.length
                 );
-                const newRule = rule.parentStyleSheet.cssRules[newIndex];
+                const newRule = rule.parentStyleSheet.cssRules[
+                    newIndex
+                ] as CSSStyleRule;
 
                 // Revert style change on original rule
                 rule.style.setProperty("display", "none");
@@ -127,7 +129,9 @@ export default class ResponsiveStyleModifier implements PageModifier {
             rule.style.setProperty("max-height", "0", "important");
             rule.style.setProperty("overflow", "hidden", "important");
         });
+    }
 
+    enableResponsiveStyles() {
         // disable desktop-only styles
         this.expiredRules.map((rule, index) => {
             // actually deleting & reinserting rule is hard -- need to keep track of mutating rule index
@@ -142,7 +146,7 @@ export default class ResponsiveStyleModifier implements PageModifier {
             this.originalStyleList.push(obj);
 
             // this works, even if it should be read-only in theory
-            rule.style = {};
+            rule.style = { transition: "all 0.2s linear" };
         });
 
         // enable mobile styles
@@ -151,8 +155,13 @@ export default class ResponsiveStyleModifier implements PageModifier {
                 rule.cssText,
                 rule.parentStyleSheet.cssRules.length
             );
-            const newRule = rule.parentStyleSheet.cssRules[newIndex];
-            this.addedRules.push(newRule as CSSStyleRule);
+            const newRule = rule.parentStyleSheet.cssRules[
+                newIndex
+            ] as CSSStyleRule;
+
+            newRule.style.setProperty("transition", "all 0.2s linear");
+
+            this.addedRules.push(newRule);
         });
     }
 

@@ -1,5 +1,5 @@
 // Enable the "page view" on a webpage, which restricts the rendered content to a fraction of the browser window.
-export async function enablePageView(): Promise<() => void> {
+export function enablePageView(): () => void {
     // base css is already injected, activate it by adding class
     // add to <html> element since <body> not contructed yet
     document.documentElement.classList.add("pageview");

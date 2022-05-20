@@ -63,20 +63,23 @@ export default class TransitionManager implements PageModifier {
         // parse text background colors and insert durable body background
         this.textContainerModifier.fadeOutNoise();
         this.backgroundModifier.fadeOutNoise();
+
+        // set html background dark if dark mode enabled
+        this.themeModifier.transitionIn();
     }
 
+    // pageview width change is triggered just before calling this
     transitionIn() {
-        // check if enable dark mode
-        this.themeModifier.transitionIn();
-
         // remove faded-out elements
         this.contentBlockModifier.transitionIn();
-
-        // enable mobile style (shifts layout)
         this.responsiveStyleModifier.transitionIn();
 
+        // enable site mobile styles
+        // this shifts layout and is often not animation-friendly
+        this.responsiveStyleModifier.enableResponsiveStyles();
+
         // adjust font size
-        this.textContainerModifier.transitionIn(); // TODO animate?
+        this.textContainerModifier.transitionIn();
     }
 
     async afterTransitionIn() {
