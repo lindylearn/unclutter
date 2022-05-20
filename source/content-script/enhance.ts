@@ -44,13 +44,13 @@ export async function togglePageView() {
         await transitions.prepare();
 
         transitions.fadeOutNoise();
-        // await new Promise((r) => setTimeout(r, 0));
+        await new Promise((r) => setTimeout(r, 300));
+
+        disablePageViewHandlers = await enablePageView();
 
         transitions.transitionIn();
 
-        disablePageViewHandlers = await enablePageView(true);
-
-        await new Promise((r) => setTimeout(r, 500));
+        await new Promise((r) => setTimeout(r, 1000));
 
         await transitions.afterTransitionIn();
         return true;

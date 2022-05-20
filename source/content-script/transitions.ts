@@ -53,8 +53,7 @@ export default class TransitionManager implements PageModifier {
     }
 
     fadeOutNoise() {
-        // do content block first as it shows changes immediately
-        this.contentBlockModifier.fadeOutNoise();
+        this.contentBlockModifier.fadeOutNoise(); // shows custom site changes immediately
 
         this.responsiveStyleModifier.fadeOutNoise();
         this.textContainerModifier.fadeOutNoise();
@@ -63,24 +62,34 @@ export default class TransitionManager implements PageModifier {
     }
 
     transitionIn() {
-        this.themeModifier.transitionIn();
+        this.themeModifier.transitionIn(); // check if enable dark mode
+
+        // block faded-out elements (this shifts layout)
         this.contentBlockModifier.transitionIn();
         this.responsiveStyleModifier.transitionIn();
 
-        this.bodyStyleModifier.transitionIn();
-        this.textContainerModifier.transitionIn();
-        // running this in transitionIn() breaks the animation, but not running it often results in text glitches
-        this.textContainerModifier.afterTransitionIn();
+        this.textContainerModifier.transitionIn(); // adjust font size
     }
 
     async afterTransitionIn() {
-        // ui needs to be inserted before themeModifier to set correct auto theme value
-        await this.overlayManager.afterTransitionIn();
-        this.annotationsModifier.afterTransitionIn();
+        // running this in transitionIn() breaks the animation, but not running it often results in text glitches
+        this.textContainerModifier.afterTransitionIn(); // adjust text containers
 
+        // show UI
+        // needs to be run before themeModifier to set correct auto theme value
+        await this.overlayManager.afterTransitionIn();
+
+        // apply color theme - potentially expensive
         await this.themeModifier.afterTransitionIn();
+
+        // patch inline styles to overcome stubborn sites
+        // this immediately applies the pageview style
+        this.bodyStyleModifier.transitionIn();
         await this.stylePatchesModifier.afterTransitionIn();
-        await this.readingTimeModifier.afterTransitionIn();
+
+        // UI enhancements, can show up later
+        this.annotationsModifier.afterTransitionIn(); // annotations fetch may take another 500ms
+        this.readingTimeModifier.afterTransitionIn();
     }
 
     async transitionOut() {
