@@ -63,8 +63,8 @@
     padding: 30px !important;
     grid-template-rows: repeat(1, max-content) !important;
 }
-.regular-article-layout__main__1tzD8 {
-    margin: 0 !important;
+[class*="article-body__element__"] {
+    margin: 1em !important;
 }
 .article-header__heading__15OpQ {
     margin-bottom: 0 !important;
@@ -723,5 +723,10 @@ div.bubble-element.bubble-element {
     width: auto !important;
 }
 div.bubble-element.CustomElement.bubble-r-container {
+    display: none !important;
+}
+
+/* https://www.theatlantic.com/ideas/archive/2022/03/putin-russian-political-deterioration/626966/ */
+.vwo-modal-wrapper, .vwo-modal__mask {
     display: none !important;
 }

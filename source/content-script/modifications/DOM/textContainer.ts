@@ -112,7 +112,7 @@ export default class TextContainerModifier implements PageModifier {
                         !activeStyle.backgroundColor.includes("%")
                     ) {
                         // Remember background colors on text containers
-                        // console.log(activeStyle.backgroundColor, elem);
+                        console.log(activeStyle.backgroundColor, elem);
                         this.backgroundColors.push(activeStyle.backgroundColor);
                     }
 
@@ -213,6 +213,7 @@ export default class TextContainerModifier implements PageModifier {
             width: 100% !important;
             min-width: 0 !important;
             max-width: calc(var(--lindy-pagewidth) - 2 * 40px) !important;
+            max-height: none !important;
             margin-left: auto !important;
             margin-right: auto !important;
             padding-left: 0 !important;
@@ -310,16 +311,13 @@ const lindyTextContainerClass = "lindy-text-container";
 // classes to exclude text changes from
 // more strict than blockedWords (which does not apply to text containers)
 export const asideWordBlocklist = [
-    "header",
     "footer",
     "aside",
-    // "sidebar", // e.g. https://www.backblaze.com/blog/cloud-storage-durability/
     "comment",
     "language",
     "banner",
     "alert",
     "message",
-    // "dialog", // e.g. https://www.military.com/history/how-naked-skydive-inspired-way-keep-pilots-oriented-flight.html
     "nav",
     "menu",
     "privacy",
@@ -329,11 +327,11 @@ export const asideWordBlocklist = [
     "popup",
     "caption",
     "gallery",
-    // "ad", may easily occur in auto-generated ids
-    "newsletter",
+    // "newsletter", // used by substack
     "promo",
     "composer",
     "callout",
+    "related-articles", // https://blog.google/threat-analysis-group/protecting-android-users-from-0-day-attacks/
 ];
 
 function _isAsideEquivalent(node: HTMLElement) {
@@ -357,6 +355,10 @@ function _isAsideEquivalent(node: HTMLElement) {
 const backgroundWordBlockList = [
     "lede", // https://cockpit-project.org/
     "frontpage", // https://cockpit-project.org/
+    "details", // https://www.gamesindustry.biz/articles/2022-05-20-games-account-for-32-percent-of-tencents-usd2-13-billion-q1-revenues
+    "header",
+    "sidebar",
+    "dialog",
 ];
 
 // be very careful here to not match valid text nodes

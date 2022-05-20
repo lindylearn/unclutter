@@ -157,7 +157,8 @@ export default class ThemeModifier implements PageModifier {
             this.textContainerModifier.originalBackgroundColor
         );
         const brightness = getSRGBLightness(rgbColor.r, rgbColor.g, rgbColor.b);
-        if (brightness > 0.94 && !this.darkModeActive) {
+        // console.log(brightness);
+        if (brightness > 0.96 && !this.darkModeActive) {
             // Too light colors conflict with white theme, so set to white
             this.textContainerModifier.originalBackgroundColor = "white";
         } else if (brightness < 0.1) {
