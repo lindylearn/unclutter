@@ -10,6 +10,7 @@ import { PageModifier, trackModifierExecution } from "./_interface";
 @trackModifierExecution
 export default class ContentBlockModifier implements PageModifier {
     private selectors: string[];
+
     constructor() {
         const classWordSelectors = blockedWords.map(
             (word) =>
@@ -23,6 +24,18 @@ export default class ContentBlockModifier implements PageModifier {
             .concat(classWordSelectors)
             .concat(idSelectors)
             .concat(roleSelectors);
+
+        // add selectors to fixed elements that use inline styles (other fixed elements are removed via CSSOM modifier)
+        // note that this may not overwrite some styles that use !important
+        const inlineStyleFixedElements = [
+            ...document.querySelectorAll("[style*='fixed']"),
+            ...document.querySelectorAll("[style*='sticky']"),
+        ] as HTMLElement[];
+
+        inlineStyleFixedElements.map((node) => {
+            node.classList.add("lindy-block-inline-fixed");
+        });
+        this.selectors.push(".lindy-block-inline-fixed");
     }
 
     fadeOutNoise() {
@@ -76,6 +89,7 @@ export default class ContentBlockModifier implements PageModifier {
 
 const blockedTags = ["footer", "aside", "nav", "gpt-ad"];
 export const blockedWords = [
+    "gpt-ad", // https://www.embedded.com/code-morphing-with-crusoe/
     "masthead",
     // "banner",
     // "headerwrapper", // https://pitchfork.com/news/vangelis-oscar-winning-composer-dies-at-79/
@@ -116,8 +130,8 @@ export const blockedWords = [
     "recirc", // https://time.com/6176214/proton-ceo-andy-yen-profile/
     "similar", // https://nautil.us/the-power-of-narrative-15975/
     "next-article", // https://boingboing.net/2022/05/18/expert-on-the-shortcomings-of-mass-transit-in-cyberpunk-2077s-night-city.html
-    "thumbnail", // https://psyche.co/guides/how-to-have-a-life-full-of-wonder-and-learning-about-the-world
     "below", // https://www.thecity.nyc/2022/2/24/22949795/new-york-rolling-out-noise-law-listening-tech-for-souped-up-speedsters
+    "latest-posts", // https://www.embedded.com/code-morphing-with-crusoe/
 ];
 export const blockedClasses = [
     ".ad",
@@ -152,4 +166,6 @@ export const blockedClasses = [
     ".call-to-action", // https://future.a16z.com/the-future-of-search-is-boutique/
     ".sidebar", // allow e.g. 'with-sidebar' on https://time.com/6176214/proton-ceo-andy-yen-profile/
     ".ntv-moap", // https://time.com/6176214/proton-ceo-andy-yen-profile/
+    ".primis-ad-wrap", // https://appleinsider.com/articles/22/04/06/iphone-airpods-apple-watch-all-dominate-the-teen-technology-market
+    ".leadinModal", // https://www.fugue.co/blog/2015-11-11-guide-to-emacs.html
 ];

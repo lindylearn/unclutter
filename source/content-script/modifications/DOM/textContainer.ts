@@ -312,7 +312,7 @@ export const asideWordBlocklist = [
     "header",
     "footer",
     "aside",
-    "sidebar",
+    // "sidebar", // e.g. https://www.backblaze.com/blog/cloud-storage-durability/
     "comment",
     "language",
     "banner",
