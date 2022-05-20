@@ -34,11 +34,7 @@ export function preparePageviewAnimation() {
     // set animation style inline to have out transition
     // adding padding seems to not work
     // use easeOutExpo
-    document.body.style.transition = `
-        margin 1s cubic-bezier(0.87, 0, 0.13, 1),
-        width  1s cubic-bezier(0.87, 0, 0.13, 1),
-        max-width  1s cubic-bezier(0.87, 0, 0.13, 1)
-    `;
+    document.body.style.transition = `all 1s cubic-bezier(0.87, 0, 0.13, 1)`;
 
     // set start properties for animation immediately
     // document.body.style.margin = "0";

@@ -212,7 +212,7 @@ export default class TextContainerModifier implements PageModifier {
             position: static !important;
             width: 100% !important;
             min-width: 0 !important;
-            max-width: calc(var(--lindy-pagewidth) - 2 * 40px) !important;
+            max-width: calc(var(--lindy-pagewidth) - 2 * 50px) !important;
             max-height: none !important;
             margin-left: auto !important;
             margin-right: auto !important;
@@ -322,7 +322,6 @@ export const asideWordBlocklist = [
     "privacy",
     "consent",
     "cookies",
-    "overlay",
     "widget",
     "popup",
     "caption",
@@ -359,6 +358,8 @@ const backgroundWordBlockList = [
     "header",
     "sidebar",
     "dialog",
+    "call-to-action", // https://future.a16z.com/the-future-of-search-is-boutique/
+    "overlay",
 ];
 
 // be very careful here to not match valid text nodes

@@ -84,6 +84,11 @@ export default class TransitionManager implements PageModifier {
 
         // adjust text containers
         this.textContainerModifier.afterTransitionIn();
+
+        // patch inline styles to overcome stubborn sites
+        // this immediately applies the pageview style
+        this.bodyStyleModifier.transitionIn();
+        this.stylePatchesModifier.afterTransitionIn();
     }
 
     async afterTransitionIn() {
@@ -93,11 +98,6 @@ export default class TransitionManager implements PageModifier {
 
         // apply color theme - potentially expensive
         await this.themeModifier.afterTransitionIn();
-
-        // patch inline styles to overcome stubborn sites
-        // this immediately applies the pageview style
-        this.bodyStyleModifier.transitionIn();
-        await this.stylePatchesModifier.afterTransitionIn();
 
         // UI enhancements, can show up later
         this.annotationsModifier.afterTransitionIn(); // annotations fetch may take another 500ms

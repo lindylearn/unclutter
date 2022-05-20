@@ -94,12 +94,48 @@ export default class ThemeModifier implements PageModifier {
                 "important"
             );
         }
+        this.processBackgroundColor();
+        setCssThemeVariable(
+            backgroundColorThemeVariable,
+            this.textContainerModifier.originalBackgroundColor
+        );
 
         // prepare configured text size for later
         const theme = await getUserTheme();
         if (theme.fontSize) {
             setCssThemeVariable(fontSizeThemeVariable, theme.fontSize);
         }
+    }
+
+    private siteUsesDefaultDarkMode: boolean;
+    private processBackgroundColor() {
+        const rgbColor = parse(
+            this.textContainerModifier.originalBackgroundColor
+        );
+        const brightness = getSRGBLightness(rgbColor.r, rgbColor.g, rgbColor.b);
+        // console.log(brightness);
+
+        if (brightness >= 0.94 && !this.darkModeActive) {
+            // Too light colors conflict with white theme, so set to white
+            this.textContainerModifier.originalBackgroundColor = "white";
+        } else if (brightness < 0.1) {
+            // Uses dark mode by default, but too dark so use default background color
+            // e.g. https://wale.id.au/posts/iviewed-your-api-keys/
+            this.siteUsesDefaultDarkMode = true;
+            this.textContainerModifier.originalBackgroundColor =
+                colorThemeToBackgroundColor("dark");
+        } else if (brightness < 0.3) {
+            // Site uses dark mode by default
+            // OR we picked a differently-colored banner as background
+
+            // need to do something, otherwise rest of ui doesn't work with parsed original background color
+            // e.g. https://joeblu.com/blog/2022_05_okrs/
+
+            // caution: this is error prone
+            this.siteUsesDefaultDarkMode = true;
+        }
+
+        // this.siteUsesDefaultDarkMode read in applyActiveColorTheme() below
     }
 
     async afterTransitionIn() {
@@ -149,42 +185,14 @@ export default class ThemeModifier implements PageModifier {
             this.darkModeActive = this.systemDarkModeQuery.matches;
         }
 
-        // Specical processing of original website colors
-        let siteUsesDefaultDarkMode = false;
-        // Disable default site dark mode detection for now
-        // The user likely doesn't expect the auto-change
-
-        const rgbColor = parse(
-            this.textContainerModifier.originalBackgroundColor
-        );
-        const brightness = getSRGBLightness(rgbColor.r, rgbColor.g, rgbColor.b);
-        // console.log(brightness);
-        if (brightness > 0.96 && !this.darkModeActive) {
-            // Too light colors conflict with white theme, so set to white
-            this.textContainerModifier.originalBackgroundColor = "white";
-        } else if (brightness < 0.1) {
-            // Uses dark mode by default, but too dark so use default background color
-            // e.g. https://wale.id.au/posts/iviewed-your-api-keys/
+        if (this.siteUsesDefaultDarkMode) {
+            // turn ui dark
             this.darkModeActive = true;
-            this.textContainerModifier.originalBackgroundColor =
-                colorThemeToBackgroundColor("dark");
-        } else if (brightness < 0.3) {
-            // Site uses dark mode by default
-            // OR we picked a differently-colored banner as background
-
-            // need to do something, otherwise rest of ui doesn't work with parsed original background color
-            // e.g. https://joeblu.com/blog/2022_05_okrs/
-
-            // Make rest of UI dark
-            this.darkModeActive = true;
-
-            // caution: this is error prone
-            siteUsesDefaultDarkMode = true;
         }
 
         // enable or disable dark mode if there's been a change
         if (this.darkModeActive && !prevDarkModeState) {
-            await this.enableDarkMode(siteUsesDefaultDarkMode);
+            await this.enableDarkMode();
         } else if (!this.darkModeActive && prevDarkModeState) {
             await this.disableDarkMode();
         }
@@ -223,7 +231,7 @@ export default class ThemeModifier implements PageModifier {
         }
     }
 
-    private async enableDarkMode(siteUsesDefaultDarkMode = false) {
+    private async enableDarkMode() {
         // UI dark style
         createStylesheetLink(
             browser.runtime.getURL("content-script/pageview/contentDark.css"),
@@ -243,7 +251,7 @@ export default class ThemeModifier implements PageModifier {
         this.annotationsModifer.setSidebarDarkMode(true);
 
         const siteSupportsDarkMode = this.detectSiteDarkMode(true);
-        if (siteUsesDefaultDarkMode) {
+        if (this.siteUsesDefaultDarkMode) {
             // TODO is this too error prone?
 
             // use default background elsewhere
