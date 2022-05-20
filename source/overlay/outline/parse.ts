@@ -241,17 +241,25 @@ function getHeadingNodeItem(
 
 // Paragraphs that highlight the first letter
 // e.g. https://www.newyorker.com/magazine/2022/04/11/the-unravelling-of-an-expert-on-serial-killers
-function getDropcapNodeItem(node: Element): OutlineItem | null {
-    let text = node.innerText; // only visible text
+function getDropcapNodeItem(
+    node: Element,
+    recursion: number = 0
+): OutlineItem | null {
+    let text = node.textContent; // only visible text
 
-    if (node.getAttribute("aria-hidden") === "true") {
+    if (node?.getAttribute("aria-hidden") === "true") {
         // duplicate styling node -- dropcap will be present somewhere else
         // e.g. https://www.theverge.com/2017/5/22/15673712/anker-battery-charger-amazon-empire-steven-yang-interview
         return;
     }
     if (text.length < 10) {
         // dropcap class applied to single letter, e.g. https://nautil.us/the-power-of-narrative-15975/
-        return getDropcapNodeItem(node.parentNode as Element);
+
+        if (recursion > 1) {
+            return;
+        }
+
+        return getDropcapNodeItem(node.parentNode as Element, recursion + 1);
     }
 
     if (text[1].trim() === "") {

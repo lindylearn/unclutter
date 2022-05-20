@@ -1,6 +1,6 @@
 import { createStylesheetText } from "../../../common/stylesheets";
 import { fontSizeThemeVariable } from "../../../common/theme";
-import { blockedWords } from "../contentBlock";
+import { blockedClasses, blockedWords } from "../contentBlock";
 import { PageModifier, trackModifierExecution } from "../_interface";
 
 const globalParagraphSelector = "p, font, pre";
@@ -324,15 +324,15 @@ export const asideWordBlocklist = [
     "promo",
     "composer",
     "callout",
-    "call-to-action", // https://future.a16z.com/the-future-of-search-is-boutique/
 ];
+
 function _isAsideEquivalent(node: HTMLElement) {
     return (
         node.tagName === "HEADER" ||
         node.tagName === "FOOTER" ||
         node.tagName === "ASIDE" ||
         node.tagName === "CODE" ||
-        node.tagName === "TD" || // http://www.paulgraham.com/ds.html
+        blockedClasses.includes(node.className) ||
         asideWordBlocklist
             .concat(blockedWords)
             .some(

@@ -708,3 +708,16 @@ code {
 .styled__Container-sc-103nbgy-0.styled__Container-sc-103nbgy-0 {
     display: none !important;
 }
+
+/* https://tratt.net/laurie/blog/2022/using_a_proper_camera_as_a_webcam.html */
+#article-other-blogs {
+    display: none !important;
+}
+
+/* https://nicheless.blog/post/theory */
+div.bubble-element.bubble-element {
+    width: auto !important;
+}
+div.bubble-element.CustomElement.bubble-r-container {
+    display: none !important;
+}

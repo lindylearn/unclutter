@@ -9,7 +9,7 @@ export function injectSidebar() {
 
     const sidebarIframe = document.createElement("iframe");
     sidebarIframe.src = iframeUrl.toString();
-    sidebarIframe.id = "lindylearn-annotations-sidebar";
+    sidebarIframe.id = "lindy-annotations-bar";
     sidebarIframe.setAttribute("scrolling", "no");
     sidebarIframe.setAttribute("frameBorder", "0");
 
@@ -18,9 +18,7 @@ export function injectSidebar() {
 }
 
 export function removeSidebar() {
-    const existingSidebar = document.getElementById(
-        "lindylearn-annotations-sidebar"
-    );
+    const existingSidebar = document.getElementById("lindy-annotations-bar");
     existingSidebar?.parentNode.removeChild(existingSidebar);
 }
 
@@ -32,6 +30,6 @@ export async function waitUntilIframeLoaded(
 
 function getSidebarIframe(): HTMLIFrameElement {
     return document.getElementById(
-        "lindylearn-annotations-sidebar"
+        "lindy-annotations-bar"
     ) as HTMLIFrameElement;
 }
