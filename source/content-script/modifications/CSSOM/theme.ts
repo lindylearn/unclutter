@@ -75,7 +75,7 @@ export default class ThemeModifier implements PageModifier {
         );
     }
 
-    transitionIn() {
+    async transitionIn() {
         // basic heuristic whether to enable dark mode, to show it earlier
         const darkModeActive =
             this.darkModeActive ||
@@ -94,14 +94,15 @@ export default class ThemeModifier implements PageModifier {
                 "important"
             );
         }
-    }
 
-    async afterTransitionIn() {
+        // prepare configured text size for later
         const theme = await getUserTheme();
         if (theme.fontSize) {
             setCssThemeVariable(fontSizeThemeVariable, theme.fontSize);
         }
+    }
 
+    async afterTransitionIn() {
         await this.applyActiveColorTheme();
     }
 

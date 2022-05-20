@@ -64,7 +64,8 @@ export default class TransitionManager implements PageModifier {
         this.textContainerModifier.fadeOutNoise();
         this.backgroundModifier.fadeOutNoise();
 
-        // set html background dark if dark mode enabled
+        // prepare upcoming transition:
+        // set background dark if dark mode enabled, configure font size variable
         this.themeModifier.transitionIn();
     }
 
@@ -80,12 +81,12 @@ export default class TransitionManager implements PageModifier {
 
         // adjust font size
         this.textContainerModifier.transitionIn();
+
+        // adjust text containers
+        this.textContainerModifier.afterTransitionIn();
     }
 
     async afterTransitionIn() {
-        // running this in transitionIn() breaks the animation, but not running it often results in text glitches
-        this.textContainerModifier.afterTransitionIn(); // adjust text containers
-
         // show UI
         // needs to be run before themeModifier to set correct auto theme value
         await this.overlayManager.afterTransitionIn();
