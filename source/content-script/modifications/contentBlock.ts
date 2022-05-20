@@ -87,7 +87,13 @@ export default class ContentBlockModifier implements PageModifier {
     }
 }
 
-const blockedTags = ["footer", "aside", "nav", "gpt-ad"];
+const blockedTags = [
+    "footer",
+    "aside",
+    "nav",
+    "gpt-ad",
+    "iframe:not(.lindy-allowed-iframe)",
+];
 export const blockedWords = [
     "gpt-ad", // https://www.embedded.com/code-morphing-with-crusoe/
     "masthead",
