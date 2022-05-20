@@ -1,9 +1,5 @@
 // Enable the "page view" on a webpage, which restricts the rendered content to a fraction of the browser window.
-export async function enablePageView(
-    enableAnimation = false
-): Promise<() => void> {
-    await _enableAnimation(enableAnimation);
-
+export async function enablePageView(): Promise<() => void> {
     // base css is already injected, activate it by adding class
     // add to <html> element since <body> not contructed yet
     document.documentElement.classList.add("pageview");
@@ -23,37 +19,32 @@ export async function enablePageView(
     async function disablePageView() {
         htmlClassObserver.disconnect();
 
-        // make sure the animation is enabled
-        _enableAnimation(true);
-        await new Promise((r) => setTimeout(r, 0));
-
         // pageview class should be removed in disableHook
     }
 
     return disablePageView;
 }
 
-async function _enableAnimation(activateNow = false) {
+// should be called at least ~100ms before enabling pageview, otherwise seems not to trigger sometimes
+export function preparePageviewAnimation() {
     if (!document.body) {
         return;
     }
 
     // set animation style inline to have out transition
-    // easeOutExpo from easings.net
+    // adding padding seems to not work
+    // use easeOutExpo
     document.body.style.transition = `
-        margin 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-        padding 0.2s cubic-bezier(0.16, 1, 0.3, 1s),
-        width  0.2s cubic-bezier(0.16, 1, 0.3, 1),
-        max-width  0.2s cubic-bezier(0.16, 1, 0.3, 1)
+        margin 1s cubic-bezier(0.87, 0, 0.13, 1),
+        width  1s cubic-bezier(0.87, 0, 0.13, 1),
+        max-width  1s cubic-bezier(0.87, 0, 0.13, 1)
     `;
 
-    if (activateNow) {
-        // set start properties for animation immediately
-        // document.body.style.margin = "0";
-        document.body.style.width = "100%";
-        document.body.style.maxWidth = "100%";
+    // set start properties for animation immediately
+    // document.body.style.margin = "0";
+    document.body.style.width = "100%";
+    document.body.style.maxWidth = "100%";
 
-        // wait until next execution loop so animation works
-        await new Promise((r) => setTimeout(r, 0));
-    }
+    // wait until next execution loop so animation works
+    // await new Promise((r) => setTimeout(r, 0));
 }

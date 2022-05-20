@@ -15,6 +15,7 @@ import {
     PageModifier,
     trackModifierExecution,
 } from "./modifications/_interface";
+import { preparePageviewAnimation } from "./pageview/enablePageView";
 
 @trackModifierExecution
 export default class TransitionManager implements PageModifier {
@@ -43,6 +44,8 @@ export default class TransitionManager implements PageModifier {
     private readingTimeModifier = new ReadingTimeModifier(this.overlayManager);
 
     async prepare() {
+        preparePageviewAnimation();
+
         await this.cssomProvider.prepare();
         await this.responsiveStyleModifier.prepare(this.cssomProvider);
         await this.textContainerModifier.prepare();
