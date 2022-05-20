@@ -221,7 +221,7 @@ export default class TextContainerModifier implements PageModifier {
             background: none !important;
             border: none !important;
             box-shadow: none !important;
-            transition: margin 0.2s;
+            transition: all 0.2s linear;
         }`;
     }
 
@@ -277,6 +277,7 @@ export default class TextContainerModifier implements PageModifier {
             2
         )}) !important;
             line-height: ${relativeLineHeight} !important;
+            transition: all 0.2s linear;
         }`;
 
         // setCssThemeVariable("--lindy-original-font-size", activeStyle.fontSize);

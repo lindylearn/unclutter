@@ -59,6 +59,7 @@ export default class ResponsiveStyleModifier implements PageModifier {
     private animatedRulesToHide = []; // list of obj and previous display style
 
     fadeOutNoise() {
+        // fade-out fixed elements
         this.fixedPositionRules.map((rule) => {
             // Check which elements were actually visible
             // This does not catch all visible elements, e.g. if another rule overrides opacity
@@ -77,28 +78,25 @@ export default class ResponsiveStyleModifier implements PageModifier {
                 ]);
             }
 
-            // Hide every static element as it could popup up later
+            // Hide every static element as it could still popup up later
             rule.style.removeProperty("display");
             rule.style.setProperty("opacity", "0", "important");
             rule.style.setProperty("visibility", "hidden", "important");
-            rule.style.setProperty(
-                "transition",
-                "visibility 0.3s, opacity 0.3s linear"
-            );
+            rule.style.setProperty("transition", "all 0.3s linear");
         });
 
         // TODO fade-out expiredRules?
 
+        // fade-out elements hidden at mobile viewport
         this.newRules.map((rule) => {
             if (rule.style.getPropertyValue("display") === "none") {
                 // Modify old style to get updated cssText
                 rule.style.removeProperty("display");
                 rule.style.setProperty("opacity", "0", "important");
                 rule.style.setProperty("visibility", "hidden", "important");
-                rule.style.setProperty(
-                    "transition",
-                    "visibility 0.3s, opacity 0.3s linear"
-                );
+                rule.style.setProperty("transition", "all 0.3s linear");
+                rule.style.setProperty("background-color", "green");
+                rule.style.setProperty("max-height", "500px");
 
                 // Insert new rule for the fade-out
                 const newIndex = rule.parentStyleSheet.insertRule(
@@ -107,7 +105,7 @@ export default class ResponsiveStyleModifier implements PageModifier {
                 );
                 const newRule = rule.parentStyleSheet.cssRules[newIndex];
 
-                // Revert old style changes
+                // Revert style change on original rule
                 rule.style.setProperty("display", "none");
 
                 // Handle fade-in
@@ -119,6 +117,18 @@ export default class ResponsiveStyleModifier implements PageModifier {
     private originalStyleList: object[] = [];
     private addedRules: CSSStyleRule[] = [];
     transitionIn() {
+        // completely remove fade-out elements (shifts layout)
+        this.fixedPositionRules.map((rule) => {
+            rule.style.setProperty("display", "none", "important");
+        });
+        this.animatedRulesToHide.map(([rule, display]) => {
+            // rule.style.setProperty("display", "none", "important");
+            rule.style.setProperty("min-height", "0", "important");
+            rule.style.setProperty("max-height", "0", "important");
+            rule.style.setProperty("overflow", "hidden", "important");
+        });
+
+        // disable desktop-only styles
         this.expiredRules.map((rule, index) => {
             // actually deleting & reinserting rule is hard -- need to keep track of mutating rule index
             // so simply remove style properties from rule
@@ -135,6 +145,7 @@ export default class ResponsiveStyleModifier implements PageModifier {
             rule.style = {};
         });
 
+        // enable mobile styles
         this.newRules.map((rule) => {
             const newIndex = rule.parentStyleSheet.insertRule(
                 rule.cssText,
@@ -142,13 +153,6 @@ export default class ResponsiveStyleModifier implements PageModifier {
             );
             const newRule = rule.parentStyleSheet.cssRules[newIndex];
             this.addedRules.push(newRule as CSSStyleRule);
-        });
-
-        this.fixedPositionRules.map((rule) => {
-            rule.style.setProperty("display", "none", "important");
-        });
-        this.animatedRulesToHide.map(([rule, display]) => {
-            rule.style.setProperty("display", "none", "important");
         });
     }
 

@@ -46,28 +46,17 @@ export default class ContentBlockModifier implements PageModifier {
 
         const css = `${this.selectors.join(
             ", "
-        )} { visibility: hidden !important; opacity: 0 !important; transition: visibility 0.3s, opacity 0.3s linear; }`;
+        )} { visibility: hidden !important; opacity: 0 !important; transition: all 0.3s linear; background-color: red; max-height: 500px; }`;
         // TODO animate to 0 area? height: 0; width: 0; overflow: hidden;
 
         createStylesheetText(css, "content-block-fadeout");
-    }
-
-    async fadeInNoise() {
-        const css = `${this.selectors.join(
-            ", "
-        )} { visibility: visible !important; opacity: 1 !important; transition: visibility 0.3s, opacity 0.3s linear; }`;
-        // TODO animate to 0 area? height: 0; width: 0; overflow: hidden;
-
-        createStylesheetText(css, "content-block-fadein");
-
-        document.getElementById("content-block-fadeout")?.remove();
     }
 
     // need to actually remove in pageview (may override responsive style)
     transitionIn() {
         const css = `${this.selectors.join(
             ", "
-        )} { display: none !important; }`;
+        )} { min-height: 0 !important; max-height: 0 !important; overflow: hidden !important; }`;
         createStylesheetText(css, "content-block-hide");
 
         createStylesheetLink(
@@ -76,6 +65,17 @@ export default class ContentBlockModifier implements PageModifier {
             ),
             "content-block-custom-sites"
         );
+    }
+
+    async fadeInNoise() {
+        const css = `${this.selectors.join(
+            ", "
+        )} { visibility: visible !important; opacity: 1 !important; transition: all 0.3s linear; }`;
+        // TODO animate to 0 area? height: 0; width: 0; overflow: hidden;
+
+        createStylesheetText(css, "content-block-fadein");
+
+        document.getElementById("content-block-fadeout")?.remove();
     }
 
     async transitionOut() {

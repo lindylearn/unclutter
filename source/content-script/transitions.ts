@@ -55,14 +55,13 @@ export default class TransitionManager implements PageModifier {
     }
 
     fadeOutNoise() {
-        // shows custom site changes immediately
-        this.contentBlockModifier.fadeOutNoise();
-
         // fade noisy elements to white
+        // shows some custom site changes immediately
+        this.contentBlockModifier.fadeOutNoise();
         this.responsiveStyleModifier.fadeOutNoise();
-        this.textContainerModifier.fadeOutNoise();
 
-        // insert modifiable body background element
+        // parse text background colors and insert durable body background
+        this.textContainerModifier.fadeOutNoise();
         this.backgroundModifier.fadeOutNoise();
     }
 
@@ -70,12 +69,14 @@ export default class TransitionManager implements PageModifier {
         // check if enable dark mode
         this.themeModifier.transitionIn();
 
-        // block faded-out elements (this shifts layout)
+        // remove faded-out elements
         this.contentBlockModifier.transitionIn();
+
+        // enable mobile style (shifts layout)
         this.responsiveStyleModifier.transitionIn();
 
         // adjust font size
-        this.textContainerModifier.transitionIn();
+        this.textContainerModifier.transitionIn(); // TODO animate?
     }
 
     async afterTransitionIn() {
