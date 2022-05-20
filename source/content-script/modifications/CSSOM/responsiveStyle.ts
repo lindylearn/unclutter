@@ -95,7 +95,11 @@ export default class ResponsiveStyleModifier implements PageModifier {
                 rule.style.setProperty("opacity", "0", "important");
                 rule.style.setProperty("visibility", "hidden", "important");
                 rule.style.setProperty("transition", "all 0.3s linear");
-                rule.style.setProperty("background-color", "green");
+                rule.style.setProperty(
+                    "background-color",
+                    "green",
+                    "important"
+                );
                 rule.style.setProperty("max-height", "500px");
 
                 // Insert new rule for the fade-out

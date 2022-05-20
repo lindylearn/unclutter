@@ -46,7 +46,7 @@ export default class ContentBlockModifier implements PageModifier {
 
         const css = `${this.selectors.join(
             ", "
-        )} { visibility: hidden !important; opacity: 0 !important; transition: all 0.3s linear; background-color: red; max-height: 500px; }`;
+        )} { visibility: hidden !important; opacity: 0 !important; transition: all 0.3s linear; background-color: red !important; max-height: 500px; max-width: 100vw; }`;
         // TODO animate to 0 area? height: 0; width: 0; overflow: hidden;
 
         createStylesheetText(css, "content-block-fadeout");
@@ -56,7 +56,7 @@ export default class ContentBlockModifier implements PageModifier {
     transitionIn() {
         const css = `${this.selectors.join(
             ", "
-        )} { min-height: 0 !important; max-height: 0 !important; overflow: hidden !important; }`;
+        )} { min-height: 0 !important; max-height: 0 !important; min-width: 0 !important; max-width: 0 !important; overflow: hidden !important; }`;
         createStylesheetText(css, "content-block-hide");
 
         createStylesheetLink(
@@ -179,6 +179,7 @@ export const blockedClasses = [
     "#latest-news", // https://www.science.org/doi/10.1126/science.abk1781?cookieSet=1#latest-news
     ".call-to-action", // https://future.a16z.com/the-future-of-search-is-boutique/
     ".sidebar", // allow e.g. 'with-sidebar' on https://time.com/6176214/proton-ceo-andy-yen-profile/
+    "#sidebar", // https://www.overcomingbias.com/2008/02/my-favorite-lia.html
     ".page__sidebar", // https://www.military.com/history/how-naked-skydive-inspired-way-keep-pilots-oriented-flight.html
     ".ntv-moap", // https://time.com/6176214/proton-ceo-andy-yen-profile/
     ".primis-ad-wrap", // https://appleinsider.com/articles/22/04/06/iphone-airpods-apple-watch-all-dominate-the-teen-technology-market

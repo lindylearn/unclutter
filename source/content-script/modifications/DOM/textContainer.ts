@@ -323,6 +323,7 @@ export const asideWordBlocklist = [
     "consent",
     "cookies",
     "overlay",
+    "widget",
     "popup",
     "caption",
     "gallery",
