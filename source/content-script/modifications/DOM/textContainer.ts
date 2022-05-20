@@ -309,12 +309,10 @@ export default class TextContainerModifier implements PageModifier {
 const lindyTextContainerClass = "lindy-text-container";
 
 // classes to exclude text changes from
-// more strict than blockedWords (which does not apply to text containers)
+// should be less strict than contentBlock.ts (which does not apply to text containers)
 export const asideWordBlocklist = [
     "footer",
     "aside",
-    "comment",
-    "language",
     "banner",
     "alert",
     "message",
@@ -331,7 +329,7 @@ export const asideWordBlocklist = [
     "promo",
     "composer",
     "callout",
-    "related-articles", // https://blog.google/threat-analysis-group/protecting-android-users-from-0-day-attacks/
+    "related", // https://blog.google/threat-analysis-group/protecting-android-users-from-0-day-attacks/
 ];
 
 function _isAsideEquivalent(node: HTMLElement) {

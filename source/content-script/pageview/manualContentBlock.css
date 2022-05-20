@@ -730,3 +730,13 @@ div.bubble-element.CustomElement.bubble-r-container {
 .vwo-modal-wrapper, .vwo-modal__mask {
     display: none !important;
 }
+
+/* https://www.nytimes.com/2022/05/19/us/princeton-professor-joshua-katz.html */
+.css-mcm29f.css-mcm29f {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+.css-gx5sib {
+    display: none !important;
+}
