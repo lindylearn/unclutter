@@ -521,6 +521,10 @@ article.article-container.article--post {
 .bc-secondary {
     display: none !important;
 }
+/* https://www.washingtonpost.com/local/route-29-batman-is-killed-after-his-car-breaks-down-along-a-maryland-highway/2015/08/17/13f0e9b2-44e3-11e5-8ab4-c73967a143d3_story.html */
+article[itemprop='articleBody'] > .grey-bg {
+    display: none !important;
+}
 
 /* https://www.forbes.com/sites/sergeiklebnikov/2022/03/17/buffett-buys-more-occidental-shares-heres-how-his-top-holdings-have-fared-in-this-years-brutal-market/?sh=4b23e9595fc9 */
 .right-rail,

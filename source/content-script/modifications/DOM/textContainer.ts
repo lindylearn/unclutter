@@ -1,6 +1,6 @@
 import { createStylesheetText } from "../../../common/stylesheets";
 import { fontSizeThemeVariable } from "../../../common/theme";
-import { blockedClasses, blockedWords } from "../contentBlock";
+import { blockedClasses } from "../contentBlock";
 import { PageModifier, trackModifierExecution } from "../_interface";
 
 const globalParagraphSelector = "p, font, pre";
@@ -71,10 +71,10 @@ export default class TextContainerModifier implements PageModifier {
                 }
 
                 if (_isAsideEquivalent(currentElem)) {
-                    // console.log(
-                    //     `Found aside equivalent text container:`,
-                    //     currentElem
-                    // );
+                    console.log(
+                        `Found aside equivalent text container:`,
+                        currentElem
+                    );
 
                     // remove entire current stack
                     currentStack = [];
@@ -209,6 +209,7 @@ export default class TextContainerModifier implements PageModifier {
         // Remove margin from matched paragraphs and all their parent DOM nodes
         const matchedTextSelector = containerSelectors.join(", ");
         return `${matchedTextSelector} {
+            position: static !important;
             width: 100% !important;
             min-width: 0 !important;
             max-width: calc(var(--lindy-pagewidth) - 2 * 40px) !important;
@@ -307,7 +308,7 @@ export default class TextContainerModifier implements PageModifier {
 const lindyTextContainerClass = "lindy-text-container";
 
 // classes to exclude text changes from
-// more strict than blockedWords
+// more strict than blockedWords (which does not apply to text containers)
 export const asideWordBlocklist = [
     "header",
     "footer",
@@ -318,7 +319,7 @@ export const asideWordBlocklist = [
     "banner",
     "alert",
     "message",
-    "dialog",
+    // "dialog", // e.g. https://www.military.com/history/how-naked-skydive-inspired-way-keep-pilots-oriented-flight.html
     "nav",
     "menu",
     "privacy",
@@ -342,13 +343,11 @@ function _isAsideEquivalent(node: HTMLElement) {
         node.tagName === "ASIDE" ||
         node.tagName === "CODE" ||
         blockedClasses.includes(node.className) ||
-        asideWordBlocklist
-            .concat(blockedWords)
-            .some(
-                (word) =>
-                    node.className.toLowerCase().includes(word) ||
-                    node.id.toLowerCase().includes(word)
-            ) ||
+        asideWordBlocklist.some(
+            (word) =>
+                node.className.toLowerCase().includes(word) ||
+                node.id.toLowerCase().includes(word)
+        ) ||
         node.hasAttribute("data-language") ||
         isSupportBanner(node)
     );
@@ -361,17 +360,27 @@ const backgroundWordBlockList = [
 ];
 
 // be very careful here to not match valid text nodes
+const supportBannerTextStart = [
+    "Support", // https://psyche.co/guides/how-to-have-a-life-full-of-wonder-and-learning-about-the-world
+    "Don't Miss", // https://www.military.com/history/how-naked-skydive-inspired-way-keep-pilots-oriented-flight.html
+];
 function isSupportBanner(node: HTMLElement): boolean {
-    const firstChild = node.firstChild as HTMLElement;
+    const firstChild = node.firstElementChild as HTMLElement;
+
     if (!firstChild || !firstChild.tagName?.startsWith("H")) {
         // short circuit
         return false;
     }
 
-    // e.g. https://psyche.co/guides/how-to-have-a-life-full-of-wonder-and-learning-about-the-world
-    if (node.textContent?.startsWith("Support")) {
+    const text = node.textContent.trim();
+    if (
+        text &&
+        supportBannerTextStart.some((start) => text.startsWith(start))
+    ) {
         return true;
     }
+
+    return false;
 }
 
 // Get a CSS selector for the passed node with a high specifity

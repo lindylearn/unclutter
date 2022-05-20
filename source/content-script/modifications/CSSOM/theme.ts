@@ -160,6 +160,12 @@ export default class ThemeModifier implements PageModifier {
         if (brightness > 0.94 && !this.darkModeActive) {
             // Too light colors conflict with white theme, so set to white
             this.textContainerModifier.originalBackgroundColor = "white";
+        } else if (brightness < 0.1) {
+            // Uses dark mode by default, but too dark so use default background color
+            // e.g. https://wale.id.au/posts/iviewed-your-api-keys/
+            this.darkModeActive = true;
+            this.textContainerModifier.originalBackgroundColor =
+                colorThemeToBackgroundColor("dark");
         } else if (brightness < 0.3) {
             // Site uses dark mode by default
             // OR we picked a differently-colored banner as background

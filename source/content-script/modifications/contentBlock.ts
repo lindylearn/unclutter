@@ -92,6 +92,7 @@ export const blockedWords = [
     "gpt-ad", // https://www.embedded.com/code-morphing-with-crusoe/
     "masthead",
     // "banner",
+    "marketing", // https://www.nature.com/articles/s41598-018-38461-y
     // "headerwrapper", // https://pitchfork.com/news/vangelis-oscar-winning-composer-dies-at-79/
     "menu",
     // "aside", https://www.sec.gov/news/press-release/2022-55
@@ -114,6 +115,7 @@ export const blockedWords = [
     // "cookie",
     "consent",
     "cleanslate",
+    "metered", // https://www.military.com/history/how-naked-skydive-inspired-way-keep-pilots-oriented-flight.html
     "smartfeed",
     "adslot",
     "advert",
@@ -165,7 +167,9 @@ export const blockedClasses = [
     "#latest-news", // https://www.science.org/doi/10.1126/science.abk1781?cookieSet=1#latest-news
     ".call-to-action", // https://future.a16z.com/the-future-of-search-is-boutique/
     ".sidebar", // allow e.g. 'with-sidebar' on https://time.com/6176214/proton-ceo-andy-yen-profile/
+    ".page__sidebar", // https://www.military.com/history/how-naked-skydive-inspired-way-keep-pilots-oriented-flight.html
     ".ntv-moap", // https://time.com/6176214/proton-ceo-andy-yen-profile/
     ".primis-ad-wrap", // https://appleinsider.com/articles/22/04/06/iphone-airpods-apple-watch-all-dominate-the-teen-technology-market
     ".leadinModal", // https://www.fugue.co/blog/2015-11-11-guide-to-emacs.html
+    ".metered-gating-container", // https://www.military.com/history/how-naked-skydive-inspired-way-keep-pilots-oriented-flight.html
 ];
