@@ -83,7 +83,7 @@ export default class ResponsiveStyleModifier implements PageModifier {
             rule.style.setProperty("visibility", "hidden", "important");
             rule.style.setProperty(
                 "transition",
-                "visibility 0.2s, opacity 0.2s linear"
+                "visibility 0.3s, opacity 0.3s linear"
             );
         });
 
@@ -97,7 +97,7 @@ export default class ResponsiveStyleModifier implements PageModifier {
                 rule.style.setProperty("visibility", "hidden", "important");
                 rule.style.setProperty(
                     "transition",
-                    "visibility 0.2s, opacity 0.2s linear"
+                    "visibility 0.3s, opacity 0.3s linear"
                 );
 
                 // Insert new rule for the fade-out
@@ -183,7 +183,7 @@ export default class ResponsiveStyleModifier implements PageModifier {
             rule.style.removeProperty("visibility", "visible");
             rule.style.setProperty(
                 "transition",
-                "visibility 0.2s, opacity 0.2s linear"
+                "visibility 0.3s, opacity 0.3s linear"
             );
         });
     }

@@ -46,7 +46,7 @@ export default class ContentBlockModifier implements PageModifier {
 
         const css = `${this.selectors.join(
             ", "
-        )} { visibility: hidden !important; opacity: 0 !important; transition: visibility 0.2s, opacity 0.2s linear; }`;
+        )} { visibility: hidden !important; opacity: 0 !important; transition: visibility 0.3s, opacity 0.3s linear; }`;
         // TODO animate to 0 area? height: 0; width: 0; overflow: hidden;
 
         createStylesheetText(css, "content-block-fadeout");
@@ -55,7 +55,7 @@ export default class ContentBlockModifier implements PageModifier {
     async fadeInNoise() {
         const css = `${this.selectors.join(
             ", "
-        )} { visibility: visible !important; opacity: 1 !important; transition: visibility 0.2s, opacity 0.2s linear; }`;
+        )} { visibility: visible !important; opacity: 1 !important; transition: visibility 0.3s, opacity 0.3s linear; }`;
         // TODO animate to 0 area? height: 0; width: 0; overflow: hidden;
 
         createStylesheetText(css, "content-block-fadein");
@@ -96,6 +96,7 @@ const blockedTags = [
 ];
 export const blockedWords = [
     "gpt-ad", // https://www.embedded.com/code-morphing-with-crusoe/
+    "-ad", // https://kotaku.com/old-world-is-teaching-strategy-games-some-new-tricks-1842871705
     "masthead",
     // "banner",
     "marketing", // https://www.nature.com/articles/s41598-018-38461-y
@@ -104,7 +105,7 @@ export const blockedWords = [
     // "aside", https://www.sec.gov/news/press-release/2022-55
     // "nav",
     "footer",
-    "comments",
+    "comment",
     "related",
     "recommendation",
     "social",
@@ -143,6 +144,7 @@ export const blockedWords = [
     "below", // https://www.thecity.nyc/2022/2/24/22949795/new-york-rolling-out-noise-law-listening-tech-for-souped-up-speedsters
     "latest-posts", // https://www.embedded.com/code-morphing-with-crusoe/
     "carousel", // https://psyche.co/films/a-gym-built-of-soviet-era-scraps-is-a-creative-community-hub
+    "js_reading-list", // https://kotaku.com/old-world-is-teaching-strategy-games-some-new-tricks-1842871705
 ];
 export const blockedClasses = [
     ".ad",
@@ -182,4 +184,5 @@ export const blockedClasses = [
     ".primis-ad-wrap", // https://appleinsider.com/articles/22/04/06/iphone-airpods-apple-watch-all-dominate-the-teen-technology-market
     ".leadinModal", // https://www.fugue.co/blog/2015-11-11-guide-to-emacs.html
     ".metered-gating-container", // https://www.military.com/history/how-naked-skydive-inspired-way-keep-pilots-oriented-flight.html
+    "#gateway-content", // https://www.nytimes.com/2022/05/19/us/princeton-professor-joshua-katz.html
 ];
