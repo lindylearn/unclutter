@@ -23,13 +23,15 @@ export default class TransitionManager implements PageModifier {
 
     private cssomProvider = new CSSOMProvider();
 
-    private backgroundModifier = new BackgroundModifier();
     private contentBlockModifier = new ContentBlockModifier();
     private bodyStyleModifier = new BodyStyleModifier();
     private responsiveStyleModifier = new ResponsiveStyleModifier();
     private stylePatchesModifier = new StylePatchesModifier(this.cssomProvider);
     private annotationsModifier = new AnnotationsModifier();
     private textContainerModifier = new TextContainerModifier();
+    private backgroundModifier = new BackgroundModifier(
+        this.textContainerModifier
+    );
     private themeModifier = new ThemeModifier(
         this.cssomProvider,
         this.annotationsModifier,
@@ -53,22 +55,27 @@ export default class TransitionManager implements PageModifier {
     }
 
     fadeOutNoise() {
-        this.contentBlockModifier.fadeOutNoise(); // shows custom site changes immediately
+        // shows custom site changes immediately
+        this.contentBlockModifier.fadeOutNoise();
 
+        // fade noisy elements to white
         this.responsiveStyleModifier.fadeOutNoise();
         this.textContainerModifier.fadeOutNoise();
 
+        // insert modifiable body background element
         this.backgroundModifier.fadeOutNoise();
     }
 
     transitionIn() {
-        this.themeModifier.transitionIn(); // check if enable dark mode
+        // check if enable dark mode
+        this.themeModifier.transitionIn();
 
         // block faded-out elements (this shifts layout)
         this.contentBlockModifier.transitionIn();
         this.responsiveStyleModifier.transitionIn();
 
-        this.textContainerModifier.transitionIn(); // adjust font size
+        // adjust font size
+        this.textContainerModifier.transitionIn();
     }
 
     async afterTransitionIn() {

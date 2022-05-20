@@ -740,3 +740,10 @@ div.bubble-element.CustomElement.bubble-r-container {
 .css-gx5sib {
     display: none !important;
 }
+
+/* https://www.space.com/nasa-boeing-hail-starliner-launch-success-despite-glitch */
+source.block-image-ads.block-image-ads.block-image-ads.block-image-ads.block-image-ads.block-image-ads {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
