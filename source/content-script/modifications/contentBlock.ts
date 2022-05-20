@@ -78,7 +78,7 @@ const blockedTags = ["footer", "aside", "nav", "gpt-ad"];
 export const blockedWords = [
     "masthead",
     // "banner",
-    "headerwrapper", // https://psyche.co/guides/how-to-have-a-life-full-of-wonder-and-learning-about-the-world
+    // "headerwrapper", // https://pitchfork.com/news/vangelis-oscar-winning-composer-dies-at-79/
     "menu",
     // "aside", https://www.sec.gov/news/press-release/2022-55
     // "nav",
@@ -117,12 +117,15 @@ export const blockedWords = [
     "similar", // https://nautil.us/the-power-of-narrative-15975/
     "next-article", // https://boingboing.net/2022/05/18/expert-on-the-shortcomings-of-mass-transit-in-cyberpunk-2077s-night-city.html
     "thumbnail", // https://psyche.co/guides/how-to-have-a-life-full-of-wonder-and-learning-about-the-world
+    "below", // https://www.thecity.nyc/2022/2/24/22949795/new-york-rolling-out-noise-law-listening-tech-for-souped-up-speedsters
 ];
 export const blockedClasses = [
     ".ad",
     ".ad-stickyhero",
+    ".RTEHashTagLabAdModule",
     ".main-nav",
     ".global-header",
+    ".Page-header",
     ".secondary-nav",
     ".email",
     ".movable-ad",

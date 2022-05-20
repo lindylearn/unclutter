@@ -92,20 +92,17 @@ export default class TextContainerModifier implements PageModifier {
             // perform modifications if is valid text element stack
             if (currentStack.length !== 0) {
                 for (const elem of currentStack) {
-                    elem.classList.add(lindyTextContainerClass);
-
                     // Perform other style changes based on applied runtime style and DOM structure
                     const activeStyle = window.getComputedStyle(elem);
-                    const overrideStyles = _getNodeOverrideStyles(
-                        elem,
-                        activeStyle
-                    );
-                    if (overrideStyles) {
-                        this.overrideCssDeclarations.push(overrideStyles);
-                    }
 
-                    // Remember background colors on text containers
+                    // note: may not catch bacbkground url(), e.g. on https://www.bunniestudios.com/blog/?p=6375
+                    // maybe some color is fine?
+
                     if (
+                        // exlude some classes from background changes but not text adjustments
+                        !backgroundWordBlockList.some((word) =>
+                            elem.className.toLowerCase().includes(word)
+                        ) &&
                         // don't take default background color
                         !activeStyle.backgroundColor.includes(
                             "rgba(0, 0, 0, 0)"
@@ -114,8 +111,19 @@ export default class TextContainerModifier implements PageModifier {
                         !activeStyle.backgroundColor.includes("0.") &&
                         !activeStyle.backgroundColor.includes("%")
                     ) {
-                        console.log(activeStyle.backgroundColor, elem);
+                        // Remember background colors on text containers
+                        // console.log(activeStyle.backgroundColor, elem);
                         this.backgroundColors.push(activeStyle.backgroundColor);
+                    }
+
+                    // enable text changes only after getting background color
+                    elem.classList.add(lindyTextContainerClass);
+                    const overrideStyles = _getNodeOverrideStyles(
+                        elem,
+                        activeStyle
+                    );
+                    if (overrideStyles) {
+                        this.overrideCssDeclarations.push(overrideStyles);
                     }
                 }
             }
@@ -298,6 +306,7 @@ export default class TextContainerModifier implements PageModifier {
 
 const lindyTextContainerClass = "lindy-text-container";
 
+// classes to exclude text changes from
 // more strict than blockedWords
 export const asideWordBlocklist = [
     "header",
@@ -344,6 +353,12 @@ function _isAsideEquivalent(node: HTMLElement) {
         isSupportBanner(node)
     );
 }
+
+// these are just excluded from changing their backgrund color
+const backgroundWordBlockList = [
+    "lede", // https://cockpit-project.org/
+    "frontpage", // https://cockpit-project.org/
+];
 
 // be very careful here to not match valid text nodes
 function isSupportBanner(node: HTMLElement): boolean {
@@ -406,6 +421,20 @@ function _getNodeOverrideStyles(node, activeStyle) {
             grid-template-areas: none !important;
             column-gap: 0 !important;
         `);
+    }
+
+    if (node.tagName === "TD") {
+        // hide sidebar siblings, e.g. on https://www.thespacereview.com/article/4384/1
+
+        const siblings: HTMLElement[] = [
+            ...node.parentElement.childNodes,
+        ].filter((child) => child !== node);
+
+        siblings.map((sibling) => {
+            if (sibling.style) {
+                sibling.style.display = "none";
+            }
+        });
     }
 
     if (overrideCssDeclarations.length > 0) {
