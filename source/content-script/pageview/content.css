@@ -10,7 +10,7 @@ html.pageview {
     background-color: #f1f3f4 !important;
 }
 
-html.pageview > body {
+html.pageview.pageview > body {
     /* animation properties are set inline */
     position: relative !important;
 

@@ -97,7 +97,7 @@ export default class ResponsiveStyleModifier implements PageModifier {
                 rule.style.setProperty("transition", "all 0.3s linear");
                 rule.style.setProperty(
                     "background-color",
-                    "green",
+                    "#d1d5db",
                     "important"
                 );
                 rule.style.setProperty("max-height", "500px");

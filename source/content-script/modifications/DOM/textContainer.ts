@@ -65,7 +65,7 @@ export default class TextContainerModifier implements PageModifier {
             // Iterate upwards in DOM tree from paragraph node
             let currentElem = elem;
             let currentStack: HTMLElement[] = [];
-            while (currentElem !== document.body) {
+            while (currentElem !== document.documentElement) {
                 // don't go into parents if validated they're ok
                 if (validatedNodes.has(currentElem)) {
                     break;

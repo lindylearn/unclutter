@@ -46,7 +46,7 @@ export default class ContentBlockModifier implements PageModifier {
 
         const css = `${this.selectors.join(
             ", "
-        )} { visibility: hidden !important; opacity: 0 !important; transition: all 0.3s linear; background-color: red !important; max-height: 500px; max-width: 100vw; }`;
+        )} { visibility: hidden !important; opacity: 0 !important; transition: all 0.3s linear; background-color: #d1d5db !important; max-height: 500px; max-width: 100vw; }`;
         // TODO animate to 0 area? height: 0; width: 0; overflow: hidden;
 
         createStylesheetText(css, "content-block-fadeout");
