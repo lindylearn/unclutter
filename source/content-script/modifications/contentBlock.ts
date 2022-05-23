@@ -27,19 +27,21 @@ export default class ContentBlockModifier implements PageModifier {
 
         // add selectors to fixed elements that use inline styles (other fixed elements are removed via CSSOM modifier)
         // note that this may not overwrite some styles that use !important
-        const inlineStyleFixedElements = [
-            ...document.querySelectorAll("[style*='fixed']"),
-            ...document.querySelectorAll("[style*='sticky']"),
-        ] as HTMLElement[];
+        // const inlineStyleFixedElements = [
+        //     ...document.querySelectorAll("[style*='fixed']"),
+        //     ...document.querySelectorAll("[style*='sticky']"),
+        // ] as HTMLElement[];
 
-        inlineStyleFixedElements.map((node) => {
-            if (node === document.documentElement || node === document.body) {
-                return;
-            }
+        // inlineStyleFixedElements.map((node) => {
+        //     if (node === document.documentElement || node === document.body) {
+        //         return;
+        //     }
 
-            node.classList.add("lindy-block-inline-fixed");
-        });
-        this.selectors.push(".lindy-block-inline-fixed");
+        //     // this causes reflow
+        //     node.classList.add("lindy-block-inline-fixed");
+        // });
+        this.selectors.push("*:not(html):not(body)[style*='fixed']");
+        this.selectors.push("*:not(html):not(body)[style*='sticky']");
     }
 
     fadeOutNoise() {

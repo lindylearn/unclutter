@@ -20,8 +20,22 @@ export default class TextContainerModifier implements PageModifier {
     private containerSelectors = [];
     private textParagraphSelectors = [];
     // Collect overrides for specific container elements (insert as stylesheet for easy unpatching)
-    private overrideCssDeclarations = [];
-    private beforeAnimationDeclarations = [];
+    private overrideCssDeclarations = [
+        // hide sidebar siblings, e.g. on https://www.thespacereview.com/article/4384/1
+        `.lindy-text-container > td:not(.lindy-text-container) { 
+            display: none !important;
+        }`,
+        // Remove horizontal flex partitioning, e.g. https://www.nationalgeographic.com/science/article/the-controversial-quest-to-make-a-contagious-vaccine
+        `.lindy-text-remove-horizontal-flex { display: block !important; }`,
+        // Remove grids, e.g. https://www.washingtonpost.com/business/2022/02/27/bp-russia-rosneft-ukraine or https://www.trickster.dev/post/decrypting-your-own-https-traffic-with-wireshark/
+        `.lindy-text-remove-grid { 
+            display: block !important;
+            grid-template-columns: 1fr !important;
+            grid-template-areas: none !important;
+            column-gap: 0 !important;
+        }`,
+    ];
+
     // Remember background colors on text containers
     private backgroundColors = [];
 
@@ -55,6 +69,9 @@ export default class TextContainerModifier implements PageModifier {
             `.${lindyTextContainerClass}.${lindyTextContainerClass}`,
             ...textTagSelectors,
         ];
+
+        // add all classes at once to prevent multiple reflows
+        const batchedNodeClassAdditions: [HTMLElement, string][] = [];
 
         const validatedNodes: Set<HTMLElement> = new Set();
         const iterateParents = (elem: HTMLElement) => {
@@ -93,10 +110,9 @@ export default class TextContainerModifier implements PageModifier {
             // perform modifications if is valid text element stack
             if (currentStack.length !== 0) {
                 for (const elem of currentStack) {
-                    // Perform other style changes based on applied runtime style and DOM structure
                     const activeStyle = window.getComputedStyle(elem);
 
-                    // note: may not catch bacbkground url(), e.g. on https://www.bunniestudios.com/blog/?p=6375
+                    // note: may not catch background url(), e.g. on https://www.bunniestudios.com/blog/?p=6375
                     // maybe some color is fine?
 
                     if (
@@ -117,15 +133,14 @@ export default class TextContainerModifier implements PageModifier {
                         this.backgroundColors.push(activeStyle.backgroundColor);
                     }
 
-                    // enable text changes only after getting background color
-                    elem.classList.add(lindyTextContainerClass);
-                    const overrideStyles = this._getNodeOverrideStyles(
+                    batchedNodeClassAdditions.push([
                         elem,
-                        activeStyle
+                        lindyTextContainerClass,
+                    ]);
+                    this._getNodeOverrideClasses(elem, activeStyle).map(
+                        (className) =>
+                            batchedNodeClassAdditions.push([elem, className])
                     );
-                    if (overrideStyles) {
-                        this.overrideCssDeclarations.push(overrideStyles);
-                    }
                 }
             }
         };
@@ -158,11 +173,12 @@ export default class TextContainerModifier implements PageModifier {
 
             iterateParents(elem.parentElement);
 
-            // prepare animation overrides e.g. for theatlantic.com
-            this._getNodeOverrideStyles(elem, activeStyle);
+            // apply override classes (but not text container) e.g. for text elements on theatlantic.com
+            this._getNodeOverrideClasses(elem, activeStyle).map((className) =>
+                batchedNodeClassAdditions.push([elem, className])
+            );
         });
 
-        // console.log(`Found font sizes: `, paragraphFontSizes);
         // Just use the most common font size for now
         // Note that the actual font size might be changed by responsive styles
         this.mainFontSize = Object.keys(paragraphFontSizes).reduce(
@@ -171,6 +187,11 @@ export default class TextContainerModifier implements PageModifier {
         );
         this.exampleMainFontSizeElement =
             exampleNodePerFontSize[this.mainFontSize];
+
+        // batch className changes to only do one reflow
+        batchedNodeClassAdditions.map(([node, className]) => {
+            node.classList.add(className);
+        });
     }
 
     fadeOutNoise() {
@@ -220,11 +241,33 @@ export default class TextContainerModifier implements PageModifier {
             document.head.firstChild as HTMLElement // don't override site styles if present
         );
 
-        createStylesheetText(
-            this.beforeAnimationDeclarations.join("\n"),
-            "lindy-text-chain-animation-prepare"
-            // should override site styles
-        );
+        // TODO optimize this?
+        document
+            .querySelectorAll(`.${lindyTextContainerClass}`)
+            .forEach((node: HTMLElement) => {
+                const activeStyle = window.getComputedStyle(node);
+
+                if (activeStyle.marginLeft !== "0px") {
+                    // activeStyle.marginLeft returns concrete values for "auto"
+                    // use this to set explicit values so that the animation works
+
+                    node.style.setProperty(
+                        "margin-left",
+                        activeStyle.marginLeft
+                    );
+
+                    // const uniqueNodeSelector = _getUniqueNodeSelector(node);
+                    // this.beforeAnimationDeclarations.push(`${uniqueNodeSelector} {
+                    //     margin-left: ${activeStyle.marginLeft};
+                    // }`);
+                }
+            });
+
+        // createStylesheetText(
+        //     this.beforeAnimationDeclarations.join("\n"),
+        //     "lindy-text-chain-animation-prepare"
+        //     // should override site styles
+        // );
     }
 
     private getTextElementChainOverrideStyle(containerSelectors) {
@@ -329,64 +372,25 @@ export default class TextContainerModifier implements PageModifier {
     }
 
     // Perform various tweaks to containers if required
-    private _getNodeOverrideStyles(node, activeStyle) {
-        // apply modifications as stylesheets for more control and performance
+    private _getNodeOverrideClasses(
+        node: HTMLElement,
+        activeStyle: CSSStyleDeclaration
+    ): string[] {
+        // batch creation of unique node selectors if required
+        const classes = [];
 
-        const overrideCssDeclarations = [];
-        // Remove horizontal flex partitioning
-        // e.g. https://www.nationalgeographic.com/science/article/the-controversial-quest-to-make-a-contagious-vaccine
         if (
             activeStyle.display === "flex" &&
             activeStyle.flexDirection === "row"
         ) {
-            const uniqueNodeSelector = _getUniqueNodeSelector(node);
-            overrideCssDeclarations.push(
-                `${uniqueNodeSelector} { display: block !important; }`
-            );
-
-            // careful to not overwrite content block, e.g. aside on https://www.quantamagazine.org/father-son-team-solves-geometry-problem-with-infinite-folds-20220404/
-            // TODO hide siblings instead?
+            classes.push("lindy-text-remove-horizontal-flex");
         }
 
-        // Remove grids
-        // e.g. https://www.washingtonpost.com/business/2022/02/27/bp-russia-rosneft-ukraine
-        // https://www.trickster.dev/post/decrypting-your-own-https-traffic-with-wireshark/
         if (activeStyle.display === "grid") {
-            const uniqueNodeSelector = _getUniqueNodeSelector(node);
-            overrideCssDeclarations.push(`${uniqueNodeSelector} { 
-                display: block !important;
-                grid-template-columns: 1fr !important;
-                grid-template-areas: none !important;
-                column-gap: 0 !important;
-            }`);
+            classes.push("lindy-text-remove-grid");
         }
 
-        if (node.tagName === "TD") {
-            // hide sidebar siblings, e.g. on https://www.thespacereview.com/article/4384/1
-
-            const uniqueParentSelector = _getUniqueNodeSelector(
-                node.parentElement
-            );
-            overrideCssDeclarations.push(`${uniqueParentSelector} > td:not(.lindy-text-container) { 
-                display: none !important;
-            }`);
-        }
-
-        if (activeStyle.marginLeft !== "0px") {
-            // activeStyle.marginLeft returns concrete values for "auto"
-            // use this to set explicit values so that the animation works
-
-            const uniqueNodeSelector = _getUniqueNodeSelector(node);
-            this.beforeAnimationDeclarations.push(`${uniqueNodeSelector} {
-                margin-left: ${activeStyle.marginLeft};
-            }`);
-        }
-
-        if (overrideCssDeclarations.length > 0) {
-            return overrideCssDeclarations.join("\n");
-        } else {
-            return null;
-        }
+        return classes;
     }
 }
 
