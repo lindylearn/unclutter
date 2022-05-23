@@ -311,11 +311,12 @@ export default class TextContainerModifier implements PageModifier {
         measureDiv.style.visibility = "hidden";
         measureDiv.style.contain = "strict";
 
-        this.exampleMainFontSizeElement.style.contain = "strict";
+        this.exampleMainFontSizeElement.style.contain = "layout style paint";
         this.exampleMainFontSizeElement.appendChild(measureDiv);
 
         const xHeight = measureDiv.getBoundingClientRect().height;
         measureDiv.remove();
+        this.exampleMainFontSizeElement.style.removeProperty("contain");
 
         this.fontSizeNormalizationScale = 1;
         if (xHeight && xHeight !== 0) {
@@ -423,7 +424,7 @@ export const asideWordBlocklist = [
 ];
 
 function _isAsideEquivalent(node: HTMLElement) {
-    if (node === document.body) {
+    if (node === document.body || node.tagName === "ARTICLE") {
         return false;
     }
 
