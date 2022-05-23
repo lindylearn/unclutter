@@ -1,7 +1,4 @@
 import { insertHtml } from "../common/html";
-import ContentBlockModifier from "../content-script/modifications/contentBlock";
-import ResponsiveStyleModifier from "../content-script/modifications/CSSOM/responsiveStyle";
-import CSSOMProvider from "../content-script/modifications/CSSOM/_provider";
 
 export async function displayToast(
     message: string,
@@ -35,22 +32,23 @@ export async function displayToast(
         onClick();
     };
 
-    const contentBlockModifier = new ContentBlockModifier();
-    const cssomProvider = new CSSOMProvider();
-    const responsiveStyleModifier = new ResponsiveStyleModifier();
+    // hiding noise on hover disabled for performance.
+    // const contentBlockModifier = new ContentBlockModifier();
+    // const cssomProvider = new CSSOMProvider();
+    // const responsiveStyleModifier = new ResponsiveStyleModifier();
 
-    // run every time an article is potentially an article
-    await cssomProvider.prepare();
-    await responsiveStyleModifier.prepare(cssomProvider);
+    // // run every time an article is potentially an article
+    // await cssomProvider.prepare();
+    // await responsiveStyleModifier.prepare(cssomProvider);
 
-    container.onmouseenter = () => {
-        contentBlockModifier.fadeOutNoise();
-        responsiveStyleModifier.fadeOutNoise();
-    };
-    container.onmouseleave = () => {
-        contentBlockModifier.fadeInNoise();
-        responsiveStyleModifier.fadeInNoise();
-    };
+    // container.onmouseenter = () => {
+    //     contentBlockModifier.fadeOutNoise();
+    //     responsiveStyleModifier.fadeOutNoise();
+    // };
+    // container.onmouseleave = () => {
+    //     contentBlockModifier.fadeInNoise();
+    //     responsiveStyleModifier.fadeInNoise();
+    // };
 }
 export function removeToast() {
     const container = document.getElementById("lindy-toast");
