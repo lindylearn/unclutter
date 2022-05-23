@@ -61,21 +61,24 @@ export default class TransitionManager implements PageModifier {
         ]);
     }
 
+    // visually fade out noisy elements
     fadeOutNoise() {
-        // fade noisy elements to white
-        // shows some custom site changes immediately
+        // inserts new stylesheets which trigger ~50ms reflow
         this.contentBlockModifier.fadeOutNoise();
         this.responsiveStyleModifier.fadeOutNoise();
+    }
 
-        // parse text background colors and insert durable body background
+    // prepare upcoming transition
+    duringFadeOut() {
+        // order is important -- should only trigger one reflow for background insert & text baseline styles
+
+        // parse text background colors, insert background
         this.textContainerModifier.fadeOutNoise();
         this.backgroundModifier.fadeOutNoise();
-
-        // prepare upcoming transition:
         // set background dark if dark mode enabled, configure font size variable
         this.themeModifier.transitionIn();
 
-        // insert baseline styles to animate text movement
+        // insert baseline styles to animate text movement (don't read DOM here)
         this.textContainerModifier.prepareAnimation();
     }
 

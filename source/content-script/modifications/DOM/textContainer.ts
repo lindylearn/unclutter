@@ -35,6 +35,7 @@ export default class TextContainerModifier implements PageModifier {
             column-gap: 0 !important;
         }`,
     ];
+    private nodeOriginalLeftMargin: [HTMLElement, string][] = [];
 
     // Remember background colors on text containers
     private backgroundColors = [];
@@ -141,6 +142,7 @@ export default class TextContainerModifier implements PageModifier {
                         (className) =>
                             batchedNodeClassAdditions.push([elem, className])
                     );
+                    this._prepareBeforeAnimationPatches(elem, activeStyle);
                 }
             }
         };
@@ -177,6 +179,7 @@ export default class TextContainerModifier implements PageModifier {
             this._getNodeOverrideClasses(elem, activeStyle).map((className) =>
                 batchedNodeClassAdditions.push([elem, className])
             );
+            this._prepareBeforeAnimationPatches(elem, activeStyle);
         });
 
         // Just use the most common font size for now
@@ -231,6 +234,10 @@ export default class TextContainerModifier implements PageModifier {
     }
 
     prepareAnimation() {
+        this.nodeOriginalLeftMargin.map(([node, margin]) => {
+            node.style.setProperty("margin-left", margin);
+        });
+
         // set text-container max-width fallback (animation needs numeric value)
         // this should be as close to the actual width as possible (smaller causes shift, larger causes large text expansion)
         createStylesheetText(
@@ -240,28 +247,6 @@ export default class TextContainerModifier implements PageModifier {
             "lindy-text-chain-maxwidth-falback",
             document.head.firstChild as HTMLElement // don't override site styles if present
         );
-
-        // TODO optimize this?
-        document
-            .querySelectorAll(`.${lindyTextContainerClass}`)
-            .forEach((node: HTMLElement) => {
-                const activeStyle = window.getComputedStyle(node);
-
-                if (activeStyle.marginLeft !== "0px") {
-                    // activeStyle.marginLeft returns concrete values for "auto"
-                    // use this to set explicit values so that the animation works
-
-                    node.style.setProperty(
-                        "margin-left",
-                        activeStyle.marginLeft
-                    );
-
-                    // const uniqueNodeSelector = _getUniqueNodeSelector(node);
-                    // this.beforeAnimationDeclarations.push(`${uniqueNodeSelector} {
-                    //     margin-left: ${activeStyle.marginLeft};
-                    // }`);
-                }
-            });
 
         // createStylesheetText(
         //     this.beforeAnimationDeclarations.join("\n"),
@@ -371,7 +356,7 @@ export default class TextContainerModifier implements PageModifier {
         this.originalBackgroundColor = pickedColor;
     }
 
-    // Perform various tweaks to containers if required
+    // Get classes from overrideCssDeclarations to apply to a certain node
     private _getNodeOverrideClasses(
         node: HTMLElement,
         activeStyle: CSSStyleDeclaration
@@ -391,6 +376,20 @@ export default class TextContainerModifier implements PageModifier {
         }
 
         return classes;
+    }
+
+    // prepare changes to apply before animating the pageview entry
+    // reading this later would trigger another reflow
+    private _prepareBeforeAnimationPatches(
+        node: HTMLElement,
+        activeStyle: CSSStyleDeclaration
+    ) {
+        if (activeStyle.marginLeft !== "0px") {
+            // activeStyle.marginLeft returns concrete values for "auto"
+            // use this to set explicit values so that the animation works
+
+            this.nodeOriginalLeftMargin.push([node, activeStyle.marginLeft]);
+        }
     }
 }
 

@@ -1,8 +1,4 @@
 import { overrideClassname } from "../../common/stylesheets";
-import {
-    backgroundColorThemeVariable,
-    setCssThemeVariable,
-} from "../../common/theme";
 import TextContainerModifier from "./DOM/textContainer";
 import { PageModifier, trackModifierExecution } from "./_interface";
 
@@ -42,13 +38,6 @@ export default class BackgroundModifier implements PageModifier {
         [...document.body.children].map((node) => observer.observe(node));
 
         document.body.appendChild(background);
-
-        // set background color now to avoid transparency
-        // modified later by theme modififier
-        setCssThemeVariable(
-            backgroundColorThemeVariable,
-            this.textContainerModifier.originalBackgroundColor
-        );
     }
 
     private updateBackgroundHeight() {

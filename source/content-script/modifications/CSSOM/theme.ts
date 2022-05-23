@@ -75,7 +75,7 @@ export default class ThemeModifier implements PageModifier {
         );
     }
 
-    async transitionIn() {
+    transitionIn() {
         // basic heuristic whether to enable dark mode, to show it earlier
         const darkModeActive =
             this.darkModeActive ||
@@ -103,11 +103,12 @@ export default class ThemeModifier implements PageModifier {
             this.textContainerModifier.originalBackgroundColor
         );
 
-        // prepare configured text size for later
-        const theme = await getUserTheme();
-        if (theme.fontSize) {
-            setCssThemeVariable(fontSizeThemeVariable, theme.fontSize);
-        }
+        // prepare configured text size for later (not used yet)
+        getUserTheme().then((theme) => {
+            if (theme.fontSize) {
+                setCssThemeVariable(fontSizeThemeVariable, theme.fontSize);
+            }
+        });
     }
 
     private siteUsesDefaultDarkMode: boolean = false;
