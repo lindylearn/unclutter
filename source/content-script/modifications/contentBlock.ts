@@ -33,6 +33,10 @@ export default class ContentBlockModifier implements PageModifier {
         ] as HTMLElement[];
 
         inlineStyleFixedElements.map((node) => {
+            if (node === document.documentElement || node === document.body) {
+                return;
+            }
+
             node.classList.add("lindy-block-inline-fixed");
         });
         this.selectors.push(".lindy-block-inline-fixed");
