@@ -48,10 +48,20 @@ export default class TransitionManager implements PageModifier {
     async prepare() {
         preparePageviewAnimation();
 
-        await this.cssomProvider.prepare();
-        await this.responsiveStyleModifier.prepare(this.cssomProvider);
-        await this.textContainerModifier.prepare();
-        await this.themeModifier.prepare(this.domain);
+        // fetching CSS may take some time, so run other things in parallel
+        await Promise.all([
+            // handle CSS
+            (async () => {
+                // fetch CSS stylesheets if required
+                await this.cssomProvider.prepare();
+                // iterate CSS stylesheets
+                await this.responsiveStyleModifier.prepare(this.cssomProvider);
+            })(),
+            // iterate DOM
+            this.textContainerModifier.prepare(),
+            // get active theme state
+            this.themeModifier.prepare(this.domain),
+        ]);
     }
 
     fadeOutNoise() {
