@@ -67,6 +67,9 @@ export default class TransitionManager implements PageModifier {
         // prepare upcoming transition:
         // set background dark if dark mode enabled, configure font size variable
         this.themeModifier.transitionIn();
+
+        // insert baseline styles to animate text movement
+        this.textContainerModifier.prepareAnimation();
     }
 
     // pageview width change is triggered just before calling this

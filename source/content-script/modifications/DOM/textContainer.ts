@@ -21,6 +21,7 @@ export default class TextContainerModifier implements PageModifier {
     private textParagraphSelectors = [];
     // Collect overrides for specific container elements (insert as stylesheet for easy unpatching)
     private overrideCssDeclarations = [];
+    private beforeAnimationDeclarations = [];
     // Remember background colors on text containers
     private backgroundColors = [];
 
@@ -118,7 +119,7 @@ export default class TextContainerModifier implements PageModifier {
 
                     // enable text changes only after getting background color
                     elem.classList.add(lindyTextContainerClass);
-                    const overrideStyles = _getNodeOverrideStyles(
+                    const overrideStyles = this._getNodeOverrideStyles(
                         elem,
                         activeStyle
                     );
@@ -205,6 +206,24 @@ export default class TextContainerModifier implements PageModifier {
             .forEach((e) => e.remove());
     }
 
+    prepareAnimation() {
+        // set text-container max-width fallback (animation needs numeric value)
+        // this should be as close to the actual width as possible (smaller causes shift, larger causes large text expansion)
+        createStylesheetText(
+            `.${lindyTextContainerClass} {
+                max-width: 1000px;
+            }`,
+            "lindy-text-chain-maxwidth-falback",
+            document.head.firstChild as HTMLElement // don't override site styles if present
+        );
+
+        createStylesheetText(
+            this.beforeAnimationDeclarations.join("\n"),
+            "lindy-text-chain-animation-prepare"
+            // should override site styles
+        );
+    }
+
     private getTextElementChainOverrideStyle(containerSelectors) {
         // Remove margin from matched paragraphs and all their parent DOM nodes
         const matchedTextSelector = containerSelectors.join(", ");
@@ -214,14 +233,14 @@ export default class TextContainerModifier implements PageModifier {
             min-width: 0 !important;
             max-width: calc(var(--lindy-pagewidth) - 2 * 50px) !important;
             max-height: none !important;
-            margin-left: auto !important;
-            margin-right: auto !important;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
             padding-left: 0 !important;
             padding-right: 0 !important;
             background: none !important;
             border: none !important;
             box-shadow: none !important;
-            transition: all 0.2s linear;
+            transition: all 1s cubic-bezier(0.87, 0, 0.13, 1);
         }`;
     }
 
@@ -304,6 +323,67 @@ export default class TextContainerModifier implements PageModifier {
         }
 
         this.originalBackgroundColor = pickedColor;
+    }
+
+    // Perform various tweaks to containers if required
+    private _getNodeOverrideStyles(node, activeStyle) {
+        // apply modifications as stylesheets for more control and performance
+
+        const overrideCssDeclarations = [];
+        // Remove horizontal flex partitioning
+        // e.g. https://www.nationalgeographic.com/science/article/the-controversial-quest-to-make-a-contagious-vaccine
+        if (
+            activeStyle.display === "flex" &&
+            activeStyle.flexDirection === "row"
+        ) {
+            const uniqueNodeSelector = _getUniqueNodeSelector(node);
+            overrideCssDeclarations.push(
+                `${uniqueNodeSelector} { display: block !important; }`
+            );
+
+            // careful to not overwrite content block, e.g. aside on https://www.quantamagazine.org/father-son-team-solves-geometry-problem-with-infinite-folds-20220404/
+            // TODO hide siblings instead?
+        }
+
+        // Remove grids
+        // e.g. https://www.washingtonpost.com/business/2022/02/27/bp-russia-rosneft-ukraine
+        // https://www.trickster.dev/post/decrypting-your-own-https-traffic-with-wireshark/
+        if (activeStyle.display === "grid") {
+            const uniqueNodeSelector = _getUniqueNodeSelector(node);
+            overrideCssDeclarations.push(`${uniqueNodeSelector} { 
+                display: block !important;
+                grid-template-columns: 1fr !important;
+                grid-template-areas: none !important;
+                column-gap: 0 !important;
+            }`);
+        }
+
+        if (node.tagName === "TD") {
+            // hide sidebar siblings, e.g. on https://www.thespacereview.com/article/4384/1
+
+            const uniqueParentSelector = _getUniqueNodeSelector(
+                node.parentElement
+            );
+            overrideCssDeclarations.push(`${uniqueParentSelector} > td:not(.lindy-text-container) { 
+                display: none !important;
+            }`);
+        }
+
+        if (activeStyle.marginLeft !== "0px") {
+            // activeStyle.marginLeft returns concrete values for "auto"
+            // use this to set explicit values so that the animation works
+
+            const uniqueNodeSelector = _getUniqueNodeSelector(node);
+            this.beforeAnimationDeclarations.push(`${uniqueNodeSelector} {
+                margin-left: ${activeStyle.marginLeft};
+            }`);
+        }
+
+        if (overrideCssDeclarations.length > 0) {
+            return overrideCssDeclarations.join("\n");
+        } else {
+            return null;
+        }
     }
 }
 
@@ -410,49 +490,4 @@ function _getSiblingSelector(node) {
         .filter((classname) => /^-?[_a-zA-Z]+[_a-zA-Z0-9-]*$/.test(classname))
         .map((className) => `.${className}`)
         .join("");
-}
-
-// Perform various tweaks to containers if required
-function _getNodeOverrideStyles(node, activeStyle) {
-    const overrideCssDeclarations = [];
-    // Remove horizontal flex partitioning
-    // e.g. https://www.nationalgeographic.com/science/article/the-controversial-quest-to-make-a-contagious-vaccine
-    if (activeStyle.display === "flex" && activeStyle.flexDirection === "row") {
-        overrideCssDeclarations.push(`display: block !important;`);
-        // careful to not overwrite content block, e.g. aside on https://www.quantamagazine.org/father-son-team-solves-geometry-problem-with-infinite-folds-20220404/
-        // TODO hide siblings instead
-    }
-
-    // Remove grids
-    // e.g. https://www.washingtonpost.com/business/2022/02/27/bp-russia-rosneft-ukraine
-    // https://www.trickster.dev/post/decrypting-your-own-https-traffic-with-wireshark/
-    if (activeStyle.display === "grid") {
-        overrideCssDeclarations.push(`
-            display: block !important;
-            grid-template-columns: 1fr !important;
-            grid-template-areas: none !important;
-            column-gap: 0 !important;
-        `);
-    }
-
-    if (node.tagName === "TD") {
-        // hide sidebar siblings, e.g. on https://www.thespacereview.com/article/4384/1
-
-        const siblings: HTMLElement[] = [
-            ...node.parentElement.childNodes,
-        ].filter((child) => child !== node);
-
-        siblings.map((sibling) => {
-            if (sibling.style) {
-                sibling.style.display = "none";
-            }
-        });
-    }
-
-    if (overrideCssDeclarations.length > 0) {
-        const uniqueSelector = _getUniqueNodeSelector(node);
-        return `${uniqueSelector} { ${overrideCssDeclarations.join("\n")} }`;
-    } else {
-        return null;
-    }
 }
