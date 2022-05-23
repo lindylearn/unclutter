@@ -157,6 +157,9 @@ export default class TextContainerModifier implements PageModifier {
             }
 
             iterateParents(elem.parentElement);
+
+            // prepare animation overrides e.g. for theatlantic.com
+            this._getNodeOverrideStyles(elem, activeStyle);
         });
 
         // console.log(`Found font sizes: `, paragraphFontSizes);
@@ -211,7 +214,7 @@ export default class TextContainerModifier implements PageModifier {
         // this should be as close to the actual width as possible (smaller causes shift, larger causes large text expansion)
         createStylesheetText(
             `.${lindyTextContainerClass} {
-                max-width: 1000px;
+                max-width: 1600px;
             }`,
             "lindy-text-chain-maxwidth-falback",
             document.head.firstChild as HTMLElement // don't override site styles if present

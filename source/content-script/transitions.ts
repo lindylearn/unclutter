@@ -92,6 +92,8 @@ export default class TransitionManager implements PageModifier {
         // this immediately applies the pageview style
         this.bodyStyleModifier.transitionIn();
         this.stylePatchesModifier.afterTransitionIn();
+
+        // to look nice, all layout shifts should be done in this phase
     }
 
     async afterTransitionIn() {
