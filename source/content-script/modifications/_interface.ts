@@ -26,7 +26,11 @@ const trackedMethods = new Set([
     "transitionOut",
     "fadeInNoise",
 ]);
+
 export function trackModifierExecution(target: Function) {
+    // TODO disable in prod
+    // return
+
     const className = target.name;
     const descriptors = Object.getOwnPropertyDescriptors(target.prototype);
     for (const [propName, descriptor] of Object.entries(descriptors)) {
@@ -45,8 +49,7 @@ export function trackModifierExecution(target: Function) {
             const start = performance.now();
             const result = await originalMethod.apply(this, args);
 
-            // seems to break animation, only enable to measure layout performance in dev
-            // await new Promise((r) => setTimeout(r, 0));
+            await new Promise((r) => setTimeout(r, 0));
 
             const duration = performance.now() - start;
 

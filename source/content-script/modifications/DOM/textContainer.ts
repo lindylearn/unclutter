@@ -72,10 +72,10 @@ export default class TextContainerModifier implements PageModifier {
                 }
 
                 if (_isAsideEquivalent(currentElem)) {
-                    console.log(
-                        `Found aside equivalent text container:`,
-                        currentElem
-                    );
+                    // console.log(
+                    //     `Found aside equivalent text container:`,
+                    //     currentElem
+                    // );
 
                     // remove entire current stack
                     currentStack = [];
@@ -113,7 +113,7 @@ export default class TextContainerModifier implements PageModifier {
                         !activeStyle.backgroundColor.includes("%")
                     ) {
                         // Remember background colors on text containers
-                        console.log(activeStyle.backgroundColor, elem);
+                        // console.log(activeStyle.backgroundColor, elem);
                         this.backgroundColors.push(activeStyle.backgroundColor);
                     }
 
@@ -414,9 +414,14 @@ export const asideWordBlocklist = [
     "composer",
     "callout",
     "related", // https://blog.google/threat-analysis-group/protecting-android-users-from-0-day-attacks/
+    "comment", // https://slatestarcodex.com/2014/09/30/i-can-tolerate-anything-except-the-outgroup/
 ];
 
 function _isAsideEquivalent(node: HTMLElement) {
+    if (node === document.body) {
+        return false;
+    }
+
     return (
         node.tagName === "HEADER" ||
         node.tagName === "FOOTER" ||
