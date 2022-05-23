@@ -1,5 +1,5 @@
 import browser from "../../../common/polyfill";
-import { getUserTheme } from "../../../common/storage";
+import { getUserTheme, UserTheme } from "../../../common/storage";
 import { createStylesheetLink } from "../../../common/stylesheets";
 import {
     activeColorThemeVariable,
@@ -34,6 +34,7 @@ export default class ThemeModifier implements PageModifier {
     private annotationsModifer: AnnotationsModifier;
     private textContainerModifier: TextContainerModifier;
 
+    private theme: UserTheme;
     private activeColorTheme: themeName;
     private darkModeActive = false; // seperate from theme -- auto theme enables and disable dark mode
 
@@ -52,15 +53,15 @@ export default class ThemeModifier implements PageModifier {
         this.domain = domain;
 
         // Get saved domain-specific theme
-        const theme = await getUserTheme();
-        if (!theme) {
+        this.theme = await getUserTheme();
+        if (!this.theme) {
             return;
         }
-        if (theme.pageWidth) {
-            setCssThemeVariable(pageWidthThemeVariable, theme.pageWidth);
+        if (this.theme.pageWidth) {
+            setCssThemeVariable(pageWidthThemeVariable, this.theme.pageWidth);
         }
 
-        this.activeColorTheme = theme.colorTheme;
+        this.activeColorTheme = this.theme.colorTheme;
         if (!this.activeColorTheme) {
             this.activeColorTheme = "auto";
         }
@@ -75,7 +76,7 @@ export default class ThemeModifier implements PageModifier {
         );
     }
 
-    transitionIn() {
+    async transitionIn() {
         // basic heuristic whether to enable dark mode, to show it earlier
         const darkModeActive =
             this.darkModeActive ||
@@ -103,12 +104,9 @@ export default class ThemeModifier implements PageModifier {
             this.textContainerModifier.originalBackgroundColor
         );
 
-        // prepare configured text size for later (not used yet)
-        getUserTheme().then((theme) => {
-            if (theme.fontSize) {
-                setCssThemeVariable(fontSizeThemeVariable, theme.fontSize);
-            }
-        });
+        if (this.theme.fontSize) {
+            setCssThemeVariable(fontSizeThemeVariable, this.theme.fontSize);
+        }
     }
 
     private siteUsesDefaultDarkMode: boolean = false;

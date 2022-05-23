@@ -1,5 +1,6 @@
 import { defaultFontSizePx } from "./defaultStorage";
 import browser from "./polyfill";
+import { themeName } from "./theme";
 
 export type domainUserSetting = "allow" | "deny" | null;
 export async function getUserSettingForDomain(
@@ -48,7 +49,13 @@ export async function setUserSettingsForDomain(domain, status) {
     });
 }
 
-export async function getUserTheme() {
+export interface UserTheme {
+    fontSize: number;
+    pageWidth: string;
+    colorTheme: themeName;
+}
+
+export async function getUserTheme(): Promise<UserTheme> {
     const config = await browser.storage.sync.get(["custom-global-theme"]);
     const theme = config["custom-global-theme"] || {};
 
@@ -61,7 +68,7 @@ export async function getUserTheme() {
 
     return theme;
 }
-export async function mergeUserTheme(partialTheme) {
+export async function mergeUserTheme(partialTheme: UserTheme): Promise<void> {
     const config = await browser.storage.sync.get(["custom-global-theme"]);
     const themeConfig = {
         ...(config["custom-global-theme"] || {}),
