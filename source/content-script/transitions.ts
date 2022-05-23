@@ -92,6 +92,9 @@ export default class TransitionManager implements PageModifier {
     }
 
     async afterTransitionIn() {
+        // use quicker animation for dark mode or user theme changes from now on
+        document.body.style.transition = `all 0.4s cubic-bezier(0.87, 0, 0.13, 1)`;
+
         // show UI
         // needs to be run before themeModifier to set correct auto theme value
         await this.overlayManager.afterTransitionIn();

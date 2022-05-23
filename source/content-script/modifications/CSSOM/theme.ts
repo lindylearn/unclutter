@@ -94,6 +94,9 @@ export default class ThemeModifier implements PageModifier {
                 "important"
             );
         }
+
+        // look at background color and modify if necessary
+        // do now to avoid visible changes later
         this.processBackgroundColor();
         setCssThemeVariable(
             backgroundColorThemeVariable,
@@ -107,7 +110,7 @@ export default class ThemeModifier implements PageModifier {
         }
     }
 
-    private siteUsesDefaultDarkMode: boolean;
+    private siteUsesDefaultDarkMode: boolean = false;
     private processBackgroundColor() {
         const rgbColor = parse(
             this.textContainerModifier.originalBackgroundColor
@@ -264,7 +267,7 @@ export default class ThemeModifier implements PageModifier {
                 this.textContainerModifier.originalBackgroundColor
             );
         } else if (siteSupportsDarkMode) {
-            // parse background color, which we overwrite
+            // parse background color from site dark mode styles
             let backgroundColor: string;
             this.enabledSiteDarkModeRules.map((mediaRule) => {
                 for (const styleRule of mediaRule.cssRules) {
@@ -277,6 +280,8 @@ export default class ThemeModifier implements PageModifier {
                     }
                 }
             });
+
+            // TODO handle opacity
 
             if (!backgroundColor) {
                 // this may not always work (e.g. if css variables are used), so use default fallback
