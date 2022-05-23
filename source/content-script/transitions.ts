@@ -15,7 +15,6 @@ import {
     PageModifier,
     trackModifierExecution,
 } from "./modifications/_interface";
-import { preparePageviewAnimation } from "./pageview/enablePageView";
 
 @trackModifierExecution
 export default class TransitionManager implements PageModifier {
@@ -46,8 +45,6 @@ export default class TransitionManager implements PageModifier {
     private readingTimeModifier = new ReadingTimeModifier(this.overlayManager);
 
     async prepare() {
-        preparePageviewAnimation();
-
         // fetching CSS may take some time, so run other things in parallel
         await Promise.all([
             // handle CSS
@@ -123,6 +120,8 @@ export default class TransitionManager implements PageModifier {
     }
 
     async transitionOut() {
+        // TODO enable animation inline? preparePageviewAnimation()
+
         await this.annotationsModifier.transitionOut();
 
         await this.responsiveStyleModifier.transitionOut();

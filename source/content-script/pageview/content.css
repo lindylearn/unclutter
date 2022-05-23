@@ -6,6 +6,12 @@ html {
     transition: background 0.2s ease-in-out;
 }
 
+body {
+    width: 100%;
+    max-width: 100%;
+    transition: all 1s cubic-bezier(0.87, 0, 0.13, 1);
+}
+
 html.pageview {
     background-color: #f1f3f4 !important;
 }
@@ -50,6 +56,7 @@ html.pageview.pageview > body {
 
 .lindy-toast {
     position: fixed;
+    contain: strict;
     top: 10px;
     right: 10px;
     z-index: 9999999999;
