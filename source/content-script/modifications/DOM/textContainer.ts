@@ -201,14 +201,6 @@ export default class TextContainerModifier implements PageModifier {
         this.processBackgroundColors(this.backgroundColors);
     }
 
-    transitionIn() {
-        // Adjust font according to theme
-        // TODO scale all font sizes?
-        if (this.mainFontSize) {
-            this.setTextFontOverride(this.exampleMainFontSizeElement);
-        }
-    }
-
     afterTransitionIn() {
         // changing text style often seems to break animation, so do after transition
 
@@ -271,7 +263,7 @@ export default class TextContainerModifier implements PageModifier {
             background: none !important;
             border: none !important;
             box-shadow: none !important;
-            transition: all 1s cubic-bezier(0.87, 0, 0.13, 1);
+            transition: all 0.6s cubic-bezier(0.87, 0, 0.13, 1);
         }`;
     }
 
@@ -291,10 +283,24 @@ export default class TextContainerModifier implements PageModifier {
         createStylesheetText(css, "lindy-dark-mode-text");
     }
 
-    private setTextFontOverride(largestElem) {
-        const activeStyle = window.getComputedStyle(largestElem);
+    private relativeLineHeight: string;
+    private fontSizeNormalizationScale: number;
+    measureFontProperties() {
+        const activeStyle = window.getComputedStyle(
+            this.exampleMainFontSizeElement
+        );
 
-        // Measure size of font 'ex' x-height (height of lowercase chars)
+        // Convert line-height to relative and specify override in case it was set as px
+        if (activeStyle.lineHeight.includes("px")) {
+            this.relativeLineHeight = (
+                parseFloat(activeStyle.lineHeight.replace("px", "")) /
+                parseFloat(activeStyle.fontSize.replace("px", ""))
+            ).toFixed(2);
+        } else {
+            this.relativeLineHeight = activeStyle.lineHeight;
+        }
+
+        // Measure size of font x-height (height of lowercase chars)
         const measureDiv = document.createElement("div");
         measureDiv.innerText = "x";
         measureDiv.style.margin = "0";
@@ -303,31 +309,27 @@ export default class TextContainerModifier implements PageModifier {
         measureDiv.style.height = "1ex";
         measureDiv.style.lineHeight = "0";
         measureDiv.style.visibility = "hidden";
+        measureDiv.style.contain = "strict";
 
-        largestElem.appendChild(measureDiv);
+        this.exampleMainFontSizeElement.style.contain = "strict";
+        this.exampleMainFontSizeElement.appendChild(measureDiv);
+
         const xHeight = measureDiv.getBoundingClientRect().height;
-        let fontSizeNormalizationScale = 1;
-        if (xHeight && xHeight !== 0) {
-            fontSizeNormalizationScale = 10 / xHeight;
-        }
         measureDiv.remove();
 
-        // Convert line-height to relative and specify override in case it was set as px
-        let relativeLineHeight: string;
-        if (activeStyle.lineHeight.includes("px")) {
-            relativeLineHeight = (
-                parseFloat(activeStyle.lineHeight.replace("px", "")) /
-                parseFloat(activeStyle.fontSize.replace("px", ""))
-            ).toFixed(2);
-        } else {
-            relativeLineHeight = activeStyle.lineHeight;
+        this.fontSizeNormalizationScale = 1;
+        if (xHeight && xHeight !== 0) {
+            this.fontSizeNormalizationScale = 10 / xHeight;
         }
+    }
+
+    // Adjust main font according to theme
+    setTextFontOverride() {
         const fontSizeStyle = `${this.textParagraphSelectors.join(", ")} {
-            font-size: calc(var(${fontSizeThemeVariable}) * ${fontSizeNormalizationScale.toFixed(
+            font-size: calc(var(${fontSizeThemeVariable}) * ${this.fontSizeNormalizationScale.toFixed(
             2
         )}) !important;
-            line-height: ${relativeLineHeight} !important;
-            transition: all 0.2s linear;
+            line-height: ${this.relativeLineHeight} !important;
         }`;
 
         // setCssThemeVariable("--lindy-original-font-size", activeStyle.fontSize);

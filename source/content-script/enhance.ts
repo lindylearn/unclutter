@@ -47,15 +47,12 @@ export async function togglePageView() {
         await new Promise((r) => setTimeout(r, 50));
 
         transitions.duringFadeOut();
-
-        await new Promise((r) => setTimeout(r, 100));
+        await new Promise((r) => setTimeout(r, 200));
 
         disablePageViewHandlers = enablePageView();
-        return;
-
         transitions.transitionIn();
 
-        await new Promise((r) => setTimeout(r, 1000));
+        await new Promise((r) => setTimeout(r, 600));
 
         await transitions.afterTransitionIn();
         return true;

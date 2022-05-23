@@ -1,14 +1,9 @@
 import { overrideClassname } from "../../common/stylesheets";
-import TextContainerModifier from "./DOM/textContainer";
 import { PageModifier, trackModifierExecution } from "./_interface";
 
 @trackModifierExecution
 export default class BackgroundModifier implements PageModifier {
-    private textContainerModifier: TextContainerModifier;
-
-    constructor(textContainerModifier: TextContainerModifier) {
-        this.textContainerModifier = textContainerModifier;
-    }
+    constructor() {}
 
     fadeOutNoise() {
         this.insertBackground();
@@ -31,13 +26,15 @@ export default class BackgroundModifier implements PageModifier {
             "important"
         );
 
+        document.body.appendChild(background);
+    }
+
+    observeHeightChanges() {
         // observe children height changes
         const observer = new ResizeObserver(() => {
             this.updateBackgroundHeight();
         });
         [...document.body.children].map((node) => observer.observe(node));
-
-        document.body.appendChild(background);
     }
 
     private updateBackgroundHeight() {

@@ -20,17 +20,14 @@ import {
 export default class TransitionManager implements PageModifier {
     private domain = getDomainFrom(new URL(window.location.href));
 
-    private cssomProvider = new CSSOMProvider();
-
-    private contentBlockModifier = new ContentBlockModifier();
     private bodyStyleModifier = new BodyStyleModifier();
+    private cssomProvider = new CSSOMProvider();
+    private contentBlockModifier = new ContentBlockModifier();
     private responsiveStyleModifier = new ResponsiveStyleModifier();
     private stylePatchesModifier = new StylePatchesModifier(this.cssomProvider);
     private annotationsModifier = new AnnotationsModifier();
     private textContainerModifier = new TextContainerModifier();
-    private backgroundModifier = new BackgroundModifier(
-        this.textContainerModifier
-    );
+    private backgroundModifier = new BackgroundModifier();
     private themeModifier = new ThemeModifier(
         this.cssomProvider,
         this.annotationsModifier,
@@ -72,6 +69,9 @@ export default class TransitionManager implements PageModifier {
     duringFadeOut() {
         // order is important -- should only trigger one reflow for background insert & text baseline styles
 
+        // measure style properties for later
+        this.textContainerModifier.measureFontProperties();
+
         // parse text background colors, insert background
         this.textContainerModifier.fadeOutNoise();
         this.backgroundModifier.fadeOutNoise();
@@ -82,24 +82,24 @@ export default class TransitionManager implements PageModifier {
         this.textContainerModifier.prepareAnimation();
     }
 
-    // pageview width change is triggered just before calling this
+    // pageview width change was triggered just before calling this
     transitionIn() {
-        // remove faded-out elements
+        // remove faded-out elements (animate height, width -> 0)
         this.contentBlockModifier.transitionIn();
         this.responsiveStyleModifier.transitionIn();
 
         // enable site mobile styles
-        // this shifts layout and is often not animation-friendly
+        // this may shift layout in various ways
         this.responsiveStyleModifier.enableResponsiveStyles();
 
-        // adjust font size
-        this.textContainerModifier.transitionIn();
-
-        // adjust text containers
+        // apply text container style
         this.textContainerModifier.afterTransitionIn();
 
+        // adjust font size
+        this.textContainerModifier.setTextFontOverride();
+
         // patch inline styles to overcome stubborn sites
-        // this immediately applies the pageview style
+        // modifies DOM & CSSOM
         this.bodyStyleModifier.transitionIn();
         this.stylePatchesModifier.afterTransitionIn();
 
@@ -108,7 +108,7 @@ export default class TransitionManager implements PageModifier {
 
     async afterTransitionIn() {
         // use quicker animation for dark mode or user theme changes from now on
-        document.body.style.transition = `all 0.4s cubic-bezier(0.87, 0, 0.13, 1)`;
+        document.body.style.transition = `all 0.2s cubic-bezier(0.87, 0, 0.13, 1)`;
 
         // show UI
         // needs to be run before themeModifier to set correct auto theme value
@@ -116,6 +116,9 @@ export default class TransitionManager implements PageModifier {
 
         // apply color theme - potentially expensive
         await this.themeModifier.afterTransitionIn();
+
+        // adjust background element height only after animations done
+        this.backgroundModifier.observeHeightChanges();
 
         // UI enhancements, can show up later
         this.annotationsModifier.afterTransitionIn(); // annotations fetch may take another 500ms

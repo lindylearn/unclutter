@@ -7,9 +7,9 @@ html {
 }
 
 body {
+    /* start properties for transition */
     width: 100%;
     max-width: 100%;
-    transition: all 1s cubic-bezier(0.87, 0, 0.13, 1);
 }
 
 html.pageview {
@@ -40,6 +40,8 @@ html.pageview.pageview > body {
 
     /* caution: using filter: drop-shadow() here causes rendering lag */
     box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1) !important;
+
+    transition: all 0.6s cubic-bezier(0.87, 0, 0.13, 1) !important;
 }
 
 .lindy-body-background {

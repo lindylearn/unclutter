@@ -6,9 +6,18 @@ export default class BodyStyleModifier implements PageModifier {
     private styleObserver: MutationObserver;
     private removeResponsiveStyleListener: () => void;
 
+    private bodyStyleProperties: any;
+
+    constructor() {
+        // save before modifications & avoid forced reflow later
+        // save only accessed properties
+        const activeStyles = window.getComputedStyle(document.body);
+        this.bodyStyleProperties = { paddingTop: activeStyles.paddingTop };
+    }
+
     transitionIn() {
-        this.modifyHtmlStyle();
         this.modifyBodyStyle();
+        this.modifyHtmlStyle();
 
         // re-run on <html> inline style changes (e.g. scroll-locks)
         this.styleObserver = new MutationObserver((mutations, observer) => {
@@ -78,11 +87,9 @@ export default class BodyStyleModifier implements PageModifier {
     }
 
     private modifyBodyStyle() {
-        const bodyStyle = window.getComputedStyle(document.body);
-
         // add miniscule top padding if not already present, to prevent top margin collapse
         // note that body margin is rewritten into padding in cssTweaks.ts
-        if (["", "0px"].includes(bodyStyle.paddingTop)) {
+        if (["", "0px"].includes(this.bodyStyleProperties.paddingTop)) {
             document.body.style.paddingTop = "0.05px";
         }
         document.body.style.setProperty("padding-left", "50px", "important");
