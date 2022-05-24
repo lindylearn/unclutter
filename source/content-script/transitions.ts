@@ -102,7 +102,9 @@ export default class TransitionManager implements PageModifier {
         // patch inline styles to overcome stubborn sites
         // modifies DOM & CSSOM
         this.bodyStyleModifier.transitionIn();
-        // this.stylePatchesModifier.afterTransitionIn();
+
+        // TODO move this elsewhere if takes too much performance?
+        this.stylePatchesModifier.afterTransitionIn();
 
         // to look nice, all layout shifts should be done in this phase
     }

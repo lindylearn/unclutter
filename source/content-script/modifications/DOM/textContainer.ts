@@ -26,7 +26,7 @@ export default class TextContainerModifier implements PageModifier {
             display: none !important;
         }`,
         // Remove horizontal flex partitioning, e.g. https://www.nationalgeographic.com/science/article/the-controversial-quest-to-make-a-contagious-vaccine
-        `.lindy-text-remove-horizontal-flex { display: block !important; }`,
+        `.lindy-text-remove-horizontal-flex > div:not(.lindy-text-container) { display: none !important; }`,
         // Remove grids, e.g. https://www.washingtonpost.com/business/2022/02/27/bp-russia-rosneft-ukraine or https://www.trickster.dev/post/decrypting-your-own-https-traffic-with-wireshark/
         `.lindy-text-remove-grid { 
             display: block !important;
@@ -229,26 +229,21 @@ export default class TextContainerModifier implements PageModifier {
     prepareAnimation() {
         // should leave text in same place as before, but positioned animation-friendly using left margins
 
+        this.nodeBeforeAnimationStyle.map(
+            ([node, { marginLeft, maxWidth }]) => {
+                if (marginLeft) {
+                    node.style.setProperty("margin-left", marginLeft);
+                }
+                if (maxWidth) {
+                    node.style.setProperty("max-width", maxWidth);
+                }
+            }
+        );
+
         // Display fixes with visible layout shift (e.g. removing horizontal partitioning)
         createStylesheetText(
             this.overrideCssDeclarations.join("\n"),
             "lindy-text-node-overrides"
-        );
-
-        this.nodeBeforeAnimationStyle.map(
-            ([node, { marginLeft, maxWidth }]) => {
-                node.style.setProperty("margin-left", marginLeft);
-            }
-        );
-
-        // set text-container max-width fallback (animation needs numeric value)
-        // this should be as close to the actual width as possible (smaller causes shift, larger causes large text expansion)
-        createStylesheetText(
-            `.${lindyTextContainerClass} {
-                max-width: 1600px;
-            }`,
-            "lindy-text-chain-maxwidth-fallback",
-            document.head.firstChild as HTMLElement // don't override site styles if present
         );
     }
 
@@ -256,7 +251,7 @@ export default class TextContainerModifier implements PageModifier {
         // Remove margin from matched paragraphs and all their parent DOM nodes
         const matchedTextSelector = containerSelectors.join(", ");
         return `${matchedTextSelector} {
-            position: static !important;
+            position: relative !important;
             width: 100% !important;
             min-width: 0 !important;
             max-width: calc(var(--lindy-pagewidth) - 2 * 50px) !important;
@@ -392,13 +387,15 @@ export default class TextContainerModifier implements PageModifier {
         node: HTMLElement,
         activeStyle: CSSStyleDeclaration
     ) {
+        const beforeAnimationProperties: any = {};
+
+        const nodeBox = node.getBoundingClientRect();
+        const parentBox = node.parentElement.getBoundingClientRect();
+        const parentStyle = window.getComputedStyle(node.parentElement);
+
         // activeStyle.marginLeft returns concrete values for "auto" -- use this to make margin animation work
-
         // use x offset to parent instead of margin to handle grid & flex layouts which we remove with #lindy-text-node-override
-        const leftOffset =
-            node.getBoundingClientRect().left -
-            node.parentElement.getBoundingClientRect().left;
-
+        const leftOffset = nodeBox.left - parentBox.left;
         if (leftOffset !== 0) {
             const parentPadding = parseFloat(
                 window
@@ -406,11 +403,24 @@ export default class TextContainerModifier implements PageModifier {
                     .paddingLeft.replace("px", "")
             );
 
+            beforeAnimationProperties.marginLeft = `${
+                leftOffset - parentPadding
+            }px`;
+        }
+
+        // flex and grid layouts are removed via _getNodeOverrideClasses() above, so set max-width on children to retain width without siblings
+        if (
+            (parentStyle.display === "flex" &&
+                parentStyle.flexDirection === "row") ||
+            parentStyle.display === "grid"
+        ) {
+            beforeAnimationProperties.maxWidth = `${nodeBox.width}px`;
+        }
+
+        if (Object.keys(beforeAnimationProperties).length > 0) {
             this.nodeBeforeAnimationStyle.push([
                 node,
-                {
-                    marginLeft: `${leftOffset - parentPadding}px`,
-                },
+                beforeAnimationProperties,
             ]);
         }
     }
@@ -424,7 +434,7 @@ export const asideWordBlocklist = [
     "footer",
     "aside",
     "banner",
-    "alert",
+    // "alert", // https://www.cnbc.com/2022/05/23/new-york-city-removes-the-last-payphone-from-service.html
     "message",
     "nav",
     "menu",
