@@ -1,6 +1,6 @@
 import { createStylesheetText } from "../../../common/stylesheets";
 import { fontSizeThemeVariable } from "../../../common/theme";
-import { blockedClasses } from "../contentBlock";
+import { blockedSpecificSelectors } from "../contentBlock";
 import { PageModifier, trackModifierExecution } from "../_interface";
 
 const globalParagraphSelector = "p, font, pre";
@@ -433,7 +433,7 @@ function _isAsideEquivalent(node: HTMLElement) {
         node.tagName === "FOOTER" ||
         node.tagName === "ASIDE" ||
         node.tagName === "CODE" ||
-        blockedClasses.includes(node.className) ||
+        blockedSpecificSelectors.includes(node.className) ||
         asideWordBlocklist.some(
             (word) =>
                 node.className.toLowerCase().includes(word) ||

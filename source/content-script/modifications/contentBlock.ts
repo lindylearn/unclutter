@@ -12,36 +12,21 @@ export default class ContentBlockModifier implements PageModifier {
     private selectors: string[];
 
     constructor() {
-        const classWordSelectors = blockedWords.map(
-            (word) =>
-                `*:not(html):not(body):not(article):not(.lindy-text-container)[class*=${word} i]`
-        );
-        const idSelectors = blockedWords.map((word) => `[id*=${word} i]`);
-        const roleSelectors = blockedWords.map((word) => `[role*=${word} i]`);
+        const wordSelectors = blockedWords
+            .flatMap((word) => [
+                // block noise by className
+                `[class*=${word} i]`,
+                `[id*=${word} i]`,
+                `[role*=${word} i]`,
+                // fixed inline styles
+                `[style*='fixed']`,
+                `[style*='sticky']`,
+            ])
+            .map((selector) => `${excludeValidElements}${selector}`);
 
         this.selectors = blockedTags
-            .concat(blockedClasses)
-            .concat(classWordSelectors)
-            .concat(idSelectors)
-            .concat(roleSelectors);
-
-        // add selectors to fixed elements that use inline styles (other fixed elements are removed via CSSOM modifier)
-        // note that this may not overwrite some styles that use !important
-        // const inlineStyleFixedElements = [
-        //     ...document.querySelectorAll("[style*='fixed']"),
-        //     ...document.querySelectorAll("[style*='sticky']"),
-        // ] as HTMLElement[];
-
-        // inlineStyleFixedElements.map((node) => {
-        //     if (node === document.documentElement || node === document.body) {
-        //         return;
-        //     }
-
-        //     // this causes reflow
-        //     node.classList.add("lindy-block-inline-fixed");
-        // });
-        this.selectors.push("*:not(html):not(body)[style*='fixed']");
-        this.selectors.push("*:not(html):not(body)[style*='sticky']");
+            .concat(blockedSpecificSelectors)
+            .concat(wordSelectors);
     }
 
     fadeOutNoise() {
@@ -52,7 +37,7 @@ export default class ContentBlockModifier implements PageModifier {
 
         const css = `${this.selectors.join(
             ", "
-        )} { visibility: hidden !important; opacity: 0 !important; transition: all 0.3s linear; background-color: #d1d5db !important; max-height: 500px; max-width: 100vw; }`;
+        )} { visibility: hidden !important; opacity: 0 !important; transition: all 0.3s linear; background-color: #d1d5db !important; }`;
         // TODO animate to 0 area? height: 0; width: 0; overflow: hidden;
 
         createStylesheetText(css, "content-block-fadeout");
@@ -60,9 +45,11 @@ export default class ContentBlockModifier implements PageModifier {
 
     // need to actually remove in pageview (may override responsive style)
     transitionIn() {
+        // completely hide blocked elements to reduce their render cost
+        // e.g. this improves performance significantly on https://sherylcanter.com/wordpress/2010/01/a-science-based-technique-for-seasoning-cast-iron/
         const css = `${this.selectors.join(
             ", "
-        )} { min-height: 0 !important; max-height: 0 !important; min-width: 0 !important; max-width: 0 !important; overflow: hidden !important; }`;
+        )} { display: none !important; }`;
         createStylesheetText(css, "content-block-hide");
 
         createStylesheetLink(
@@ -92,6 +79,9 @@ export default class ContentBlockModifier implements PageModifier {
             .forEach((e) => e.remove());
     }
 }
+
+const excludeValidElements =
+    "*:not(html):not(body):not(article):not(.lindy-text-container)";
 
 const blockedTags = [
     "footer",
@@ -152,7 +142,7 @@ export const blockedWords = [
     "carousel", // https://psyche.co/films/a-gym-built-of-soviet-era-scraps-is-a-creative-community-hub
     "js_reading-list", // https://kotaku.com/old-world-is-teaching-strategy-games-some-new-tricks-1842871705
 ];
-export const blockedClasses = [
+export const blockedSpecificSelectors = [
     ".ad",
     ".Ad", // https://www.buzzfeednews.com/article/richardnieva/worldcoin-crypto-eyeball-scanning-orb-problems
     ".ad-stickyhero",
@@ -184,7 +174,7 @@ export const blockedClasses = [
     ".c-recirc-module", // https://www.theverge.com/23017107/crypto-billion-dollar-bridge-hack-decentralized-finance
     "#latest-news", // https://www.science.org/doi/10.1126/science.abk1781?cookieSet=1#latest-news
     ".call-to-action", // https://future.a16z.com/the-future-of-search-is-boutique/
-    ".sidebar", // allow e.g. 'with-sidebar' on https://time.com/6176214/proton-ceo-andy-yen-profile/
+    "*:not(body).sidebar", // allow e.g. 'with-sidebar' on https://time.com/6176214/proton-ceo-andy-yen-profile/
     "#sidebar", // https://www.overcomingbias.com/2008/02/my-favorite-lia.html
     ".page__sidebar", // https://www.military.com/history/how-naked-skydive-inspired-way-keep-pilots-oriented-flight.html
     ".ntv-moap", // https://time.com/6176214/proton-ceo-andy-yen-profile/

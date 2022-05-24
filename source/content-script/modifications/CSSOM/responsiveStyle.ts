@@ -100,7 +100,6 @@ export default class ResponsiveStyleModifier implements PageModifier {
                     "#d1d5db",
                     "important"
                 );
-                rule.style.setProperty("max-height", "500px");
 
                 // Insert new rule for the fade-out
                 const newIndex = rule.parentStyleSheet.insertRule(
@@ -128,10 +127,7 @@ export default class ResponsiveStyleModifier implements PageModifier {
             rule.style.setProperty("display", "none", "important");
         });
         this.animatedRulesToHide.map(([rule, display]) => {
-            // rule.style.setProperty("display", "none", "important");
-            rule.style.setProperty("min-height", "0", "important");
-            rule.style.setProperty("max-height", "0", "important");
-            rule.style.setProperty("overflow", "hidden", "important");
+            rule.style.setProperty("display", "none", "important");
         });
     }
 
