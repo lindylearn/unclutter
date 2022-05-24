@@ -122,19 +122,18 @@ export default class OverlayManager implements PageModifier {
         iframe.style.zIndex = "300";
 
         this.topleftIframe = iframe;
-
-        // Firefox bug: need to wait until iframe initial render to insert elements
-        // See https://stackoverflow.com/questions/60814167/firefox-deleted-innerhtml-of-generated-iframe
-        // setTimeout(() => {
-        //     const fontLink = iframe.contentDocument.createElement("link");
-        //     fontLink.rel = "stylesheet";
-        //     fontLink.href =
-        //         "https://fonts.googleapis.com/css2?family=Work+Sans:wght@400&family=Poppins:wght@600&display=swap";
-        //     iframe.contentDocument.head.appendChild(fontLink);
-        // }, 0);
     }
 
     private async renderTopLeftContainer() {
+        // Firefox bug: need to wait until iframe initial render to insert elements
+        // See https://stackoverflow.com/questions/60814167/firefox-deleted-innerhtml-of-generated-iframe
+        const fontLink =
+            this.topleftIframe.contentDocument.createElement("link");
+        fontLink.rel = "stylesheet";
+        fontLink.href =
+            "https://fonts.googleapis.com/css2?family=Work+Sans:wght@400&family=Poppins:wght@600&display=swap";
+        this.topleftIframe.contentDocument.head.appendChild(fontLink);
+
         const annotationsEnabled = await getFeatureFlag(
             enableAnnotationsFeatureFlag
         );

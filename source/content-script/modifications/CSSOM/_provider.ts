@@ -66,7 +66,7 @@ export default class CSSOMProvider {
                         return;
                     }
 
-                    // console.log(`Replicating ${sheet.href}...`);
+                    console.log(`Proxying ${sheet.href}...`);
 
                     const styleId = sheet.href?.split("/").pop().split(".")[0];
 

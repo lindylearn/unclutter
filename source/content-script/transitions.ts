@@ -114,6 +114,8 @@ export default class TransitionManager implements PageModifier {
         // apply color theme - potentially expensive
         await this.themeModifier.afterTransitionIn();
 
+        await new Promise((r) => setTimeout(r, 0));
+
         // adjust background element height only after animations done
         this.backgroundModifier.observeHeightChanges();
 
