@@ -53,8 +53,17 @@ export default class OverlayManager implements PageModifier {
     }
 
     async afterTransitionIn() {
-        this.insertIframes();
+        // get outline before DOM modifications
+        const showOutline = await getFeatureFlag(showOutlineFeatureFlag);
+        if (showOutline) {
+            this.enableOutline();
+        }
 
+        // note: this triggers a reflow before can access iframe below
+        this.createTopLeftIframe();
+        document.documentElement.appendChild(this.topleftIframe);
+
+        // page settings
         insertPageSettings(
             this.domain,
             this.themeModifier,
@@ -66,7 +75,6 @@ export default class OverlayManager implements PageModifier {
         const allowlistOnActivation = await getFeatureFlag(
             allowlistDomainOnManualActivationFeatureFlag
         );
-
         if (domainSetting === "allow") {
             wiggleDomainState(400);
         } else if (allowlistOnActivation && domainSetting === null) {
@@ -78,17 +86,7 @@ export default class OverlayManager implements PageModifier {
             wiggleDomainState(400);
         }
 
-        const showOutline = await getFeatureFlag(showOutlineFeatureFlag);
-        if (showOutline) {
-            this.enableOutline();
-        }
-
-        // wait for outline parsing, but render regardless
-        this.renderTopLeftContainer();
-
-        // this should be experimental
-        // would also need to update URL during scrolling
-        // scrollToFragmentHeading();
+        await this.renderTopLeftContainer();
     }
 
     setEnableAnnotations(enableAnnotations: boolean) {
@@ -114,24 +112,26 @@ export default class OverlayManager implements PageModifier {
     }
 
     private topleftIframe: HTMLIFrameElement;
-    private async insertIframes() {
+    private createTopLeftIframe() {
         const iframe = document.createElement("iframe");
         iframe.classList.add("lindy-allowed-iframe");
         iframe.id = "lindy-info-topleft";
         iframe.setAttribute("scrolling", "no");
         iframe.setAttribute("frameBorder", "0");
-        document.documentElement.appendChild(iframe);
+        iframe.style.contain = "strict";
+        iframe.style.zIndex = "300";
+
         this.topleftIframe = iframe;
 
-        // Firefox bug: nseed to wait until iframe initial render to insert elements
+        // Firefox bug: need to wait until iframe initial render to insert elements
         // See https://stackoverflow.com/questions/60814167/firefox-deleted-innerhtml-of-generated-iframe
-        await new Promise((r) => setTimeout(r, 0));
-
-        const fontLink = iframe.contentDocument.createElement("link");
-        fontLink.rel = "stylesheet";
-        fontLink.href =
-            "https://fonts.googleapis.com/css2?family=Work+Sans:wght@400&family=Poppins:wght@600&display=swap";
-        iframe.contentDocument.head.appendChild(fontLink);
+        // setTimeout(() => {
+        //     const fontLink = iframe.contentDocument.createElement("link");
+        //     fontLink.rel = "stylesheet";
+        //     fontLink.href =
+        //         "https://fonts.googleapis.com/css2?family=Work+Sans:wght@400&family=Poppins:wght@600&display=swap";
+        //     iframe.contentDocument.head.appendChild(fontLink);
+        // }, 0);
     }
 
     private async renderTopLeftContainer() {

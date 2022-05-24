@@ -30,6 +30,8 @@ import AnnotationsModifier from "../content-script/modifications/annotations/ann
 import ThemeModifier from "../content-script/modifications/CSSOM/theme";
 import OverlayManager from "../content-script/modifications/overlay";
 
+const githubLink = `https://github.com/lindylearn/unclutter/issues`;
+
 // Insert a small UI for the user to control the automatic pageview enablement on the current domain.
 // Creating an iframe for this doesn't work from injected scripts
 export function insertPageSettings(
@@ -38,7 +40,10 @@ export function insertPageSettings(
     annotationsModifer: AnnotationsModifier,
     overlayModifier: OverlayManager
 ) {
-    const githubLink = `https://github.com/lindylearn/unclutter/issues`;
+    createStylesheetLink(
+        browser.runtime.getURL("overlay/index.css"),
+        "lindy-switch-style"
+    );
 
     insertHtml(
         "lindy-page-settings-topright",
@@ -119,10 +124,7 @@ export function insertPageSettings(
         </div>`
     );
 
-    createStylesheetLink(
-        browser.runtime.getURL("overlay/index.css"),
-        "lindy-switch-style"
-    );
+    // the getElementById() cause repeated reflows here -- maybe batch
 
     _setupDomainToggleState(domain);
     _setupLinkHandlers();
