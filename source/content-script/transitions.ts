@@ -78,7 +78,8 @@ export default class TransitionManager implements PageModifier {
         // set background dark if dark mode enabled, configure font size variable
         this.themeModifier.transitionIn();
 
-        // insert baseline styles to animate text movement (don't read DOM here)
+        // keep text in same position but use animatable leftMargin everywhere
+        // needs to be applied before transitionIn()
         this.textContainerModifier.prepareAnimation();
     }
 
@@ -101,7 +102,7 @@ export default class TransitionManager implements PageModifier {
         // patch inline styles to overcome stubborn sites
         // modifies DOM & CSSOM
         this.bodyStyleModifier.transitionIn();
-        this.stylePatchesModifier.afterTransitionIn();
+        // this.stylePatchesModifier.afterTransitionIn();
 
         // to look nice, all layout shifts should be done in this phase
     }

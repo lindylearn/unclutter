@@ -34,8 +34,15 @@ export default class TextContainerModifier implements PageModifier {
             grid-template-areas: none !important;
             column-gap: 0 !important;
         }`,
+        // TODO add classes to siblings to improve selector performance
+        // `.lindy-text-remove-grid > *:not(.lindy-text-container) {
+        //     display: none !important;
+        // }`,
     ];
-    private nodeOriginalLeftMargin: [HTMLElement, string][] = [];
+    private nodeBeforeAnimationStyle: [
+        HTMLElement,
+        { marginLeft?: string; maxWidth?: string }
+    ][] = [];
 
     // Remember background colors on text containers
     private backgroundColors = [];
@@ -209,12 +216,6 @@ export default class TextContainerModifier implements PageModifier {
             this.getTextElementChainOverrideStyle(this.containerSelectors),
             "lindy-text-chain-override"
         );
-
-        // Display fixes with visible layout shift (e.g. removing horizontal partitioning)
-        createStylesheetText(
-            this.overrideCssDeclarations.join("\n"),
-            "lindy-node-overrides"
-        );
     }
 
     async transitionOut() {
@@ -226,9 +227,19 @@ export default class TextContainerModifier implements PageModifier {
     }
 
     prepareAnimation() {
-        this.nodeOriginalLeftMargin.map(([node, margin]) => {
-            node.style.setProperty("margin-left", margin);
-        });
+        // should leave text in same place as before, but positioned animation-friendly using left margins
+
+        // Display fixes with visible layout shift (e.g. removing horizontal partitioning)
+        createStylesheetText(
+            this.overrideCssDeclarations.join("\n"),
+            "lindy-text-node-overrides"
+        );
+
+        this.nodeBeforeAnimationStyle.map(
+            ([node, { marginLeft, maxWidth }]) => {
+                node.style.setProperty("margin-left", marginLeft);
+            }
+        );
 
         // set text-container max-width fallback (animation needs numeric value)
         // this should be as close to the actual width as possible (smaller causes shift, larger causes large text expansion)
@@ -236,15 +247,9 @@ export default class TextContainerModifier implements PageModifier {
             `.${lindyTextContainerClass} {
                 max-width: 1600px;
             }`,
-            "lindy-text-chain-maxwidth-falback",
+            "lindy-text-chain-maxwidth-fallback",
             document.head.firstChild as HTMLElement // don't override site styles if present
         );
-
-        // createStylesheetText(
-        //     this.beforeAnimationDeclarations.join("\n"),
-        //     "lindy-text-chain-animation-prepare"
-        //     // should override site styles
-        // );
     }
 
     private getTextElementChainOverrideStyle(containerSelectors) {
@@ -263,7 +268,7 @@ export default class TextContainerModifier implements PageModifier {
             background: none !important;
             border: none !important;
             box-shadow: none !important;
-            transition: all 0.6s cubic-bezier(0.87, 0, 0.13, 1);
+            transition: margin-left 0.6s cubic-bezier(0.87, 0, 0.13, 1);
         }`;
     }
 
@@ -387,11 +392,26 @@ export default class TextContainerModifier implements PageModifier {
         node: HTMLElement,
         activeStyle: CSSStyleDeclaration
     ) {
-        if (activeStyle.marginLeft !== "0px") {
-            // activeStyle.marginLeft returns concrete values for "auto"
-            // use this to set explicit values so that the animation works
+        // activeStyle.marginLeft returns concrete values for "auto" -- use this to make margin animation work
 
-            this.nodeOriginalLeftMargin.push([node, activeStyle.marginLeft]);
+        // use x offset to parent instead of margin to handle grid & flex layouts which we remove with #lindy-text-node-override
+        const leftOffset =
+            node.getBoundingClientRect().left -
+            node.parentElement.getBoundingClientRect().left;
+
+        if (leftOffset !== 0) {
+            const parentPadding = parseFloat(
+                window
+                    .getComputedStyle(node.parentElement)
+                    .paddingLeft.replace("px", "")
+            );
+
+            this.nodeBeforeAnimationStyle.push([
+                node,
+                {
+                    marginLeft: `${leftOffset - parentPadding}px`,
+                },
+            ]);
         }
     }
 }
@@ -421,6 +441,7 @@ export const asideWordBlocklist = [
     "callout",
     "related", // https://blog.google/threat-analysis-group/protecting-android-users-from-0-day-attacks/
     "comment", // https://slatestarcodex.com/2014/09/30/i-can-tolerate-anything-except-the-outgroup/
+    "signup", // https://www.theverge.com/2022/5/24/23137797/logitech-mx-master-3s-mechanical-mini-mouse-keyboard-price-release-date-features
 ];
 
 function _isAsideEquivalent(node: HTMLElement) {
