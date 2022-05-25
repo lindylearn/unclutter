@@ -16,30 +16,15 @@ This is done so that we can:
 */
 @trackModifierExecution
 export default class TextContainerModifier implements PageModifier {
-    // Collect elements that contain text nodes
-    private containerSelectors = [];
-    private textParagraphSelectors = [];
-    // Collect overrides for specific container elements (insert as stylesheet for easy unpatching)
-    private overrideCssDeclarations = [
-        // hide sidebar siblings, e.g. on https://www.thespacereview.com/article/4384/1
-        `.lindy-text-container > td:not(.lindy-text-container) { 
-            display: none !important;
-        }`,
-        // Remove horizontal flex partitioning, e.g. https://www.nationalgeographic.com/science/article/the-controversial-quest-to-make-a-contagious-vaccine, https://hbr.org/2018/07/research-the-average-age-of-a-successful-startup-founder-is-45
-        `.lindy-text-remove-horizontal-flex { display: block !important; }`,
-        `.lindy-text-remove-horizontal-flex > div:not(.lindy-text-container) { display: none !important; }`,
-        // Remove grids, e.g. https://www.washingtonpost.com/business/2022/02/27/bp-russia-rosneft-ukraine or https://www.trickster.dev/post/decrypting-your-own-https-traffic-with-wireshark/
-        `.lindy-text-remove-grid { 
-            display: block !important;
-            grid-template-columns: 1fr !important;
-            grid-template-areas: none !important;
-            column-gap: 0 !important;
-        }`,
-        // TODO add classes to siblings to improve selector performance
-        // `.lindy-text-remove-grid > *:not(.lindy-text-container) {
-        //     display: none !important;
-        // }`,
-    ];
+    // chain of elements that contain the main article text
+    private bodyContainerSelector = [
+        // Use class twice for higher specifity
+        `.${lindyTextContainerClass}.${lindyTextContainerClass}`,
+        // also select paragraph children
+        `.${lindyTextContainerClass} > :is(${globalParagraphSelector}, a, ol, blockquote)`,
+    ].join(",");
+
+    // style tweaks to apply just before the pageview animation (populated via _prepareBeforeAnimationPatches())
     private nodeBeforeAnimationStyle: [
         HTMLElement,
         { marginLeft?: string; maxWidth?: string }
@@ -48,40 +33,24 @@ export default class TextContainerModifier implements PageModifier {
     // Remember background colors on text containers
     private backgroundColors = [];
 
+    // Text paragraph samples
     private mainFontSize: number;
     private exampleMainFontSizeElement: HTMLElement;
 
-    constructor() {}
-
+    // Iterate DOM to apply text container classes and populate the state above
     async prepare() {
-        let paragraphTagSelector = globalParagraphSelector;
-        let paragraphs = document.body.querySelectorAll(paragraphTagSelector);
+        let paragraphs = document.body.querySelectorAll(
+            globalParagraphSelector
+        );
         if (paragraphs.length === 0) {
-            paragraphTagSelector = "div, span";
-            paragraphs = document.body.querySelectorAll(paragraphTagSelector);
+            // use divs as fallback
+            paragraphs = document.body.querySelectorAll("div, span");
         }
-
-        const textTagSelectors = globalParagraphSelector
-            .split(", ")
-            .concat("a", "ol", "blockquote") // also apply to these, but don't parse style from them
-            .map((tag) => `.${lindyTextContainerClass} > ${tag}`);
-
-        // text elements to apply styles to (e.g. font change)
-        this.textParagraphSelectors = [
-            // Use class twice for higher specifity
-            `.${lindyTextContainerClass}.${lindyTextContainerClass}`,
-            // exclude h1 tags
-            ...textTagSelectors,
-        ];
-        // text element container to remove margin from
-        this.containerSelectors = [
-            `.${lindyTextContainerClass}.${lindyTextContainerClass}`,
-            ...textTagSelectors,
-        ];
 
         // add all classes at once to prevent multiple reflows
         const batchedNodeClassAdditions: [HTMLElement, string][] = [];
 
+        // map paragraphs nodes and iterate their parent nodes
         const validatedNodes: Set<HTMLElement> = new Set();
         const iterateParents = (elem: HTMLElement) => {
             if (validatedNodes.has(elem)) {
@@ -214,7 +183,7 @@ export default class TextContainerModifier implements PageModifier {
 
         // Removing margin and cleaning up background, shadows etc
         createStylesheetText(
-            this.getTextElementChainOverrideStyle(this.containerSelectors),
+            this.getTextElementChainOverrideStyle(),
             "lindy-text-chain-override"
         );
     }
@@ -249,10 +218,9 @@ export default class TextContainerModifier implements PageModifier {
         );
     }
 
-    private getTextElementChainOverrideStyle(containerSelectors) {
+    private getTextElementChainOverrideStyle() {
         // Remove margin from matched paragraphs and all their parent DOM nodes
-        const matchedTextSelector = containerSelectors.join(", ");
-        return `${matchedTextSelector} {
+        return `${this.bodyContainerSelector} {
             position: relative !important;
             width: 100% !important;
             min-width: 0 !important;
@@ -278,8 +246,7 @@ export default class TextContainerModifier implements PageModifier {
             return;
         }
 
-        const matchedTextSelector = this.containerSelectors.join(", ");
-        const css = `${matchedTextSelector} {
+        const css = `${this.bodyContainerSelector} {
             color: var(--lindy-dark-theme-text-color);
         }`;
         createStylesheetText(css, "lindy-dark-mode-text");
@@ -328,7 +295,7 @@ export default class TextContainerModifier implements PageModifier {
 
     // Adjust main font according to theme
     setTextFontOverride() {
-        const fontSizeStyle = `${this.textParagraphSelectors.join(", ")} {
+        const fontSizeStyle = `${this.bodyContainerSelector} {
             font-size: calc(var(${fontSizeThemeVariable}) * ${this.fontSizeNormalizationScale.toFixed(
             2
         )}) !important;
@@ -360,6 +327,28 @@ export default class TextContainerModifier implements PageModifier {
 
         this.originalBackgroundColor = pickedColor;
     }
+
+    // Collect overrides for specific container elements (insert as stylesheet for easy unpatching)
+    private overrideCssDeclarations = [
+        // hide sidebar siblings, e.g. on https://www.thespacereview.com/article/4384/1
+        `.lindy-text-container > td:not(.lindy-text-container) { 
+                display: none !important;
+            }`,
+        // Remove horizontal flex partitioning, e.g. https://www.nationalgeographic.com/science/article/the-controversial-quest-to-make-a-contagious-vaccine, https://hbr.org/2018/07/research-the-average-age-of-a-successful-startup-founder-is-45
+        `.lindy-text-remove-horizontal-flex { display: block !important; }`,
+        `.lindy-text-remove-horizontal-flex > div:not(.lindy-text-container) { display: none !important; }`,
+        // Remove grids, e.g. https://www.washingtonpost.com/business/2022/02/27/bp-russia-rosneft-ukraine or https://www.trickster.dev/post/decrypting-your-own-https-traffic-with-wireshark/
+        `.lindy-text-remove-grid { 
+                display: block !important;
+                grid-template-columns: 1fr !important;
+                grid-template-areas: none !important;
+                column-gap: 0 !important;
+            }`,
+        // TODO add classes to siblings to improve selector performance
+        // `.lindy-text-remove-grid > *:not(.lindy-text-container) {
+        //     display: none !important;
+        // }`,
+    ];
 
     // Get classes from overrideCssDeclarations to apply to a certain node
     private _getNodeOverrideClasses(
