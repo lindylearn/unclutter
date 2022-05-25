@@ -22,7 +22,7 @@
         activateStateClass = "visited"
     } else if (index === activeOutlineIndex) {
         // active
-        activateStateClass = "is-active font-header"
+        activateStateClass = "is-active"
     } else if (index < activeOutlineIndex) {
         // visited
         activateStateClass = "visited"
@@ -47,11 +47,14 @@
 </script>
 
 <li class="heading">
-    <div class={"heading-text relative text-sm cursor-pointer flex w-full gap-2 items-start " + activateStateClass} on:click={focusHeading}>
+    <div class={"heading-text relative text-sm cursor-pointer flex w-full gap-2 items-start transition-all " + activateStateClass} on:click={focusHeading}>
         <svg class="absolute active-dot hidden" style="width: 6px;" viewBox="0 0 320 512">
             <path fill="currentColor" d="M320 256C320 344.4 248.4 416 160 416C71.63 416 0 344.4 0 256C0 167.6 71.63 96 160 96C248.4 96 320 167.6 320 256z"/>
         </svg>
-        <div class="title flex-grow">{title}</div>
+        <div class="title flex-grow relative">
+            <div class="default-title">{title}</div>
+            <div class="active-title absolute top-0 left-0 font-header">{title}</div>
+        </div>
 
         {#if annotationsEnabled && index !== -1 && myAnnotationCount}
             <div class="px-1 rounded font-header text-center" style={`min-width: 1.4em; padding: 0 0.4em; background-color: ${getRandomColor(title)};`}>{myAnnotationCount}</div>
@@ -93,6 +96,28 @@
     right: calc(100% + 5px);
     top: 25%;
     transition: all 0.1s;
+}
+
+/* animate font-family change with 2 text elements */
+.default-title {
+    opacity: 1;
+    visibility: visible;
+    transition: all 0.05s;
+    letter-spacing: 0px;
+}
+.active-title {
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.05s;
+}
+.is-active .default-title {
+    opacity: 0;
+    visibility: hidden;
+    letter-spacing: 0.2px;
+}
+.is-active .active-title {
+    opacity: 1;
+    visibility: visible;
 }
 
 </style>

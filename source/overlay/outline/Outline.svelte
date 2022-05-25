@@ -14,7 +14,7 @@
 </script>
 
 
-<div id="outline" class="max-w-full px-5 py-4 cursor-auto bg-white rounded-lg shadow hover:shadow-md transition-all relative">
+<div id="outline" class="max-w-full px-5 py-4 cursor-auto bg-white rounded-lg shadow transition-all relative">
     <div>
         <div class="flex items-center justify-between">
             <div class="text-base font-header font-semibold cursor-pointer" on:click={() => scrollToElement(outline[0].element)}>
