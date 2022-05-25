@@ -365,13 +365,9 @@ function _getSocialToggleTooltip(
     socialCommentCount: number
 ): string {
     if (enabled) {
-        return `Click to hide ${
-            socialCommentCount ? socialCommentCount + " " : ""
-        }social highlights`;
+        return `Click to hide ${socialCommentCount || 0} social highlights`;
     } else {
-        return `Click to show ${
-            socialCommentCount ? socialCommentCount + " " : ""
-        }social highlights`;
+        return `Click to show ${socialCommentCount || 0} social highlights`;
     }
 }
 function _getSocialToggleIcon(enabled: boolean): string {
