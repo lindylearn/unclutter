@@ -141,6 +141,7 @@ export const blockedWords = [
     "latest-posts", // https://www.embedded.com/code-morphing-with-crusoe/
     "carousel", // https://psyche.co/films/a-gym-built-of-soviet-era-scraps-is-a-creative-community-hub
     "js_reading-list", // https://kotaku.com/old-world-is-teaching-strategy-games-some-new-tricks-1842871705
+    "breaking", // https://edition.cnn.com/2022/05/23/europe/ukraine-russian-soldier-war-crimes-trial-intl/index.html
 ];
 export const blockedSpecificSelectors = [
     ".ad",

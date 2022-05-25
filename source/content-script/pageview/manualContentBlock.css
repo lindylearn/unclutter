@@ -91,9 +91,7 @@
 .article-body__element__OOj6H {
     margin: 20px 0 !important;
 }
-#fusion-app {
-    margin: 0 -15px !important;
-}
+
 
 /* https://www.quantamagazine.org/in-new-experiment-astronomers-see-no-sign-of-cosmic-dawn-20220228/ */
 .cookie-not-accepted {
@@ -740,7 +738,8 @@ div.bubble-element.CustomElement.bubble-r-container {
 }
 
 /* https://www.space.com/nasa-boeing-hail-starliner-launch-success-despite-glitch */
-source.block-image-ads.block-image-ads.block-image-ads.block-image-ads.block-image-ads.block-image-ads {
+/* https://www.tomsguide.com/opinion/google-pixel-6a-might-be-the-most-exciting-phone-of-2022-heres-why */
+.block-image-ads.block-image-ads.block-image-ads.block-image-ads.block-image-ads.block-image-ads {
     display: block !important;
     opacity: 1 !important;
     visibility: visible !important;

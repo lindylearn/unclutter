@@ -25,7 +25,8 @@ export default class TextContainerModifier implements PageModifier {
         `.lindy-text-container > td:not(.lindy-text-container) { 
             display: none !important;
         }`,
-        // Remove horizontal flex partitioning, e.g. https://www.nationalgeographic.com/science/article/the-controversial-quest-to-make-a-contagious-vaccine
+        // Remove horizontal flex partitioning, e.g. https://www.nationalgeographic.com/science/article/the-controversial-quest-to-make-a-contagious-vaccine, https://hbr.org/2018/07/research-the-average-age-of-a-successful-startup-founder-is-45
+        `.lindy-text-remove-horizontal-flex { display: block !important; }`,
         `.lindy-text-remove-horizontal-flex > div:not(.lindy-text-container) { display: none !important; }`,
         // Remove grids, e.g. https://www.washingtonpost.com/business/2022/02/27/bp-russia-rosneft-ukraine or https://www.trickster.dev/post/decrypting-your-own-https-traffic-with-wireshark/
         `.lindy-text-remove-grid { 
@@ -235,6 +236,7 @@ export default class TextContainerModifier implements PageModifier {
                     node.style.setProperty("margin-left", marginLeft);
                 }
                 if (maxWidth) {
+                    // node.style.setProperty("width", "100%");
                     node.style.setProperty("max-width", maxWidth);
                 }
             }

@@ -29,7 +29,7 @@ const trackedMethods = new Set([
 
 export function trackModifierExecution(target: Function) {
     // TODO disable in prod
-    // return
+    return;
 
     const className = target.name;
     const descriptors = Object.getOwnPropertyDescriptors(target.prototype);
