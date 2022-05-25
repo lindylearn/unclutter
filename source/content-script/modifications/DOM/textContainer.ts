@@ -4,6 +4,7 @@ import { blockedSpecificSelectors } from "../contentBlock";
 import { PageModifier, trackModifierExecution } from "../_interface";
 
 const globalParagraphSelector = "p, font, pre";
+const globalHeadingSelector = "header, h1, h2, h3, h4, picture, img, figure";
 
 /*
 Find and iterate upon text elements and their parent containers in the article DOM.
@@ -16,12 +17,15 @@ This is done so that we can:
 */
 @trackModifierExecution
 export default class TextContainerModifier implements PageModifier {
-    // chain of elements that contain the main article text
+    // Only text elements, e.g. to apply font changes
+    private textElementSelector = `.${lindyTextContainerClass} > :is(${globalParagraphSelector}, a, ol, blockquote)`;
+
+    // Chain of elements that contain the main article text, to remove margins from
     private bodyContainerSelector = [
         // Use class twice for higher specifity
         `.${lindyTextContainerClass}.${lindyTextContainerClass}`,
         // also select paragraph children
-        `.${lindyTextContainerClass} > :is(${globalParagraphSelector}, a, ol, blockquote)`,
+        this.textElementSelector,
     ].join(",");
 
     // style tweaks to apply just before the pageview animation (populated via _prepareBeforeAnimationPatches())
@@ -39,90 +43,15 @@ export default class TextContainerModifier implements PageModifier {
 
     // Iterate DOM to apply text container classes and populate the state above
     async prepare() {
+        // query paragraphs and iterate upward
         let paragraphs = document.body.querySelectorAll(
             globalParagraphSelector
         );
         if (paragraphs.length === 0) {
             // use divs as fallback
+            // TODO change textElementSelector now?
             paragraphs = document.body.querySelectorAll("div, span");
         }
-
-        // add all classes at once to prevent multiple reflows
-        const batchedNodeClassAdditions: [HTMLElement, string][] = [];
-
-        // map paragraphs nodes and iterate their parent nodes
-        const validatedNodes: Set<HTMLElement> = new Set();
-        const iterateParents = (elem: HTMLElement) => {
-            if (validatedNodes.has(elem)) {
-                return;
-            }
-
-            // Iterate upwards in DOM tree from paragraph node
-            let currentElem = elem;
-            let currentStack: HTMLElement[] = [];
-            while (currentElem !== document.documentElement) {
-                // don't go into parents if validated they're ok
-                if (validatedNodes.has(currentElem)) {
-                    break;
-                }
-
-                if (_isAsideEquivalent(currentElem)) {
-                    // console.log(
-                    //     `Found aside equivalent text container:`,
-                    //     currentElem
-                    // );
-
-                    // remove entire current stack
-                    currentStack = [];
-                    break;
-                }
-
-                // we processed this node, even if we may not end up taking it
-                validatedNodes.add(currentElem);
-
-                // iterate upwards
-                currentStack.push(currentElem);
-                currentElem = currentElem.parentElement;
-            }
-
-            // perform modifications if is valid text element stack
-            if (currentStack.length !== 0) {
-                for (const elem of currentStack) {
-                    const activeStyle = window.getComputedStyle(elem);
-
-                    // note: may not catch background url(), e.g. on https://www.bunniestudios.com/blog/?p=6375
-                    // maybe some color is fine?
-
-                    if (
-                        // exlude some classes from background changes but not text adjustments
-                        !backgroundWordBlockList.some((word) =>
-                            elem.className.toLowerCase().includes(word)
-                        ) &&
-                        // don't take default background color
-                        !activeStyle.backgroundColor.includes(
-                            "rgba(0, 0, 0, 0)"
-                        ) &&
-                        // don't consider transparent colors
-                        !activeStyle.backgroundColor.includes("0.") &&
-                        !activeStyle.backgroundColor.includes("%")
-                    ) {
-                        // Remember background colors on text containers
-                        // console.log(activeStyle.backgroundColor, elem);
-                        this.backgroundColors.push(activeStyle.backgroundColor);
-                    }
-
-                    batchedNodeClassAdditions.push([
-                        elem,
-                        lindyTextContainerClass,
-                    ]);
-                    this._getNodeOverrideClasses(elem, activeStyle).map(
-                        (className) =>
-                            batchedNodeClassAdditions.push([elem, className])
-                    );
-                    this._prepareBeforeAnimationPatches(elem, activeStyle);
-                }
-            }
-        };
 
         const paragraphFontSizes: { [size: number]: number } = {};
         const exampleNodePerFontSize: { [size: number]: HTMLElement } = {};
@@ -133,6 +62,7 @@ export default class TextContainerModifier implements PageModifier {
                 return;
             }
 
+            // parse text element font size
             const activeStyle = window.getComputedStyle(elem);
             const fontSize = parseFloat(activeStyle.fontSize);
             if (paragraphFontSizes[fontSize]) {
@@ -150,11 +80,12 @@ export default class TextContainerModifier implements PageModifier {
                 exampleNodePerFontSize[fontSize] = elem;
             }
 
-            iterateParents(elem.parentElement);
+            // iterate parents
+            this.prepareIterateParents(elem.parentElement);
 
             // apply override classes (but not text container) e.g. for text elements on theatlantic.com
             this._getNodeOverrideClasses(elem, activeStyle).map((className) =>
-                batchedNodeClassAdditions.push([elem, className])
+                this.batchedNodeClassAdditions.push([elem, className])
             );
             this._prepareBeforeAnimationPatches(elem, activeStyle);
         });
@@ -169,10 +100,84 @@ export default class TextContainerModifier implements PageModifier {
             exampleNodePerFontSize[this.mainFontSize];
 
         // batch className changes to only do one reflow
-        batchedNodeClassAdditions.map(([node, className]) => {
+        this.batchedNodeClassAdditions.map(([node, className]) => {
             node.classList.add(className);
         });
     }
+
+    // map paragraphs nodes and iterate their parent nodes
+    private validatedNodes: Set<HTMLElement> = new Set();
+    // add all classes at once to prevent multiple reflows
+    private batchedNodeClassAdditions: [HTMLElement, string][] = [];
+    private prepareIterateParents = (elem: HTMLElement) => {
+        if (this.validatedNodes.has(elem)) {
+            return;
+        }
+
+        // Iterate upwards in DOM tree from paragraph node
+        let currentElem = elem;
+        let currentStack: HTMLElement[] = [];
+        while (currentElem !== document.documentElement) {
+            // don't go into parents if validated they're ok
+            if (this.validatedNodes.has(currentElem)) {
+                break;
+            }
+
+            if (_isAsideEquivalent(currentElem)) {
+                // console.log(
+                //     `Found aside equivalent text container:`,
+                //     currentElem
+                // );
+
+                // remove entire current stack
+                currentStack = [];
+                break;
+            }
+
+            // we processed this node, even if we may not end up taking it
+            this.validatedNodes.add(currentElem);
+
+            // iterate upwards
+            currentStack.push(currentElem);
+            currentElem = currentElem.parentElement;
+        }
+
+        // perform modifications if is valid text element stack
+        if (currentStack.length !== 0) {
+            for (const elem of currentStack) {
+                const activeStyle = window.getComputedStyle(elem);
+
+                // note: may not catch background url(), e.g. on https://www.bunniestudios.com/blog/?p=6375
+                // maybe some color is fine?
+
+                if (
+                    // exlude some classes from background changes but not text adjustments
+                    !backgroundWordBlockList.some((word) =>
+                        elem.className.toLowerCase().includes(word)
+                    ) &&
+                    // don't take default background color
+                    !activeStyle.backgroundColor.includes("rgba(0, 0, 0, 0)") &&
+                    // don't consider transparent colors
+                    !activeStyle.backgroundColor.includes("0.") &&
+                    !activeStyle.backgroundColor.includes("%")
+                ) {
+                    // Remember background colors on text containers
+                    // console.log(activeStyle.backgroundColor, elem);
+                    this.backgroundColors.push(activeStyle.backgroundColor);
+                }
+
+                this.batchedNodeClassAdditions.push([
+                    elem,
+                    lindyTextContainerClass,
+                ]);
+                this._getNodeOverrideClasses(elem, activeStyle).map(
+                    (className) =>
+                        this.batchedNodeClassAdditions.push([elem, className])
+                );
+                this._prepareBeforeAnimationPatches(elem, activeStyle);
+            }
+        }
+    };
 
     fadeOutNoise() {
         this.processBackgroundColors(this.backgroundColors);
@@ -295,10 +300,11 @@ export default class TextContainerModifier implements PageModifier {
 
     // Adjust main font according to theme
     setTextFontOverride() {
-        const fontSizeStyle = `${this.bodyContainerSelector} {
-            font-size: calc(var(${fontSizeThemeVariable}) * ${this.fontSizeNormalizationScale.toFixed(
+        const fontSize = `calc(var(${fontSizeThemeVariable}) * ${this.fontSizeNormalizationScale.toFixed(
             2
-        )}) !important;
+        )})`;
+        const fontSizeStyle = `${this.textElementSelector} {
+            font-size: ${fontSize} !important;
             line-height: ${this.relativeLineHeight} !important;
         }`;
 
