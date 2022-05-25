@@ -117,15 +117,15 @@ export default class TransitionManager implements PageModifier {
         // apply color theme - potentially expensive
         this.themeModifier.afterTransitionIn();
 
+        // force render
         await new Promise((r) => setTimeout(r, 0));
-        return;
-
-        // adjust background element height only after animations done
-        this.backgroundModifier.observeHeightChanges();
 
         // UI enhancements, can show up later
         this.annotationsModifier.afterTransitionIn(); // annotations fetch may take another 500ms
         this.readingTimeModifier.afterTransitionIn();
+
+        // adjust background element height only after animations done
+        this.backgroundModifier.observeHeightChanges();
     }
 
     async transitionOut() {
