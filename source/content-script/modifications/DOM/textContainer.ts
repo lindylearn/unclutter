@@ -3,8 +3,10 @@ import { fontSizeThemeVariable } from "../../../common/theme";
 import { blockedSpecificSelectors } from "../contentBlock";
 import { PageModifier, trackModifierExecution } from "../_interface";
 
-const globalParagraphSelector = "p, font, pre";
-const globalHeadingSelector = "header, h1, h2, h3, h4, picture, img, figure";
+const globalTextElementSelector = "p, font, pre";
+const globalHeadingSelector = "header, h1, h2, h3, h4, picture, figure";
+
+const headingTags = globalHeadingSelector.split(", ");
 
 /*
 Find and iterate upon text elements and their parent containers in the article DOM.
@@ -18,14 +20,14 @@ This is done so that we can:
 @trackModifierExecution
 export default class TextContainerModifier implements PageModifier {
     // Only text elements, e.g. to apply font changes
-    private textElementSelector = `.${lindyTextContainerClass} > :is(${globalParagraphSelector}, a, ol, blockquote)`;
+    private textElementSelector = `.${lindyTextContainerClass} > :is(${globalTextElementSelector}, a, ol, blockquote)`;
 
     // Chain of elements that contain the main article text, to remove margins from
     private bodyContainerSelector = [
         // Use class twice for higher specifity
         `.${lindyTextContainerClass}.${lindyTextContainerClass}`,
         // also select paragraph children
-        this.textElementSelector,
+        `.${lindyTextContainerClass} > *`,
     ].join(",");
 
     // style tweaks to apply just before the pageview animation (populated via _prepareBeforeAnimationPatches())
@@ -43,41 +45,38 @@ export default class TextContainerModifier implements PageModifier {
 
     // Iterate DOM to apply text container classes and populate the state above
     async prepare() {
-        // query paragraphs and iterate upward
-        let paragraphs = document.body.querySelectorAll(
-            globalParagraphSelector
-        );
-        if (paragraphs.length === 0) {
-            // use divs as fallback
-            // TODO change textElementSelector now?
-            paragraphs = document.body.querySelectorAll("div, span");
-        }
-
+        // Process text or heading elements and iterate upwards
         const paragraphFontSizes: { [size: number]: number } = {};
         const exampleNodePerFontSize: { [size: number]: HTMLElement } = {};
-        paragraphs.forEach((elem: HTMLElement) => {
+        const processElement = (
+            elem: HTMLElement,
+            isTextElement: boolean = false
+        ) => {
             // Ignore invisible nodes
             // Note: iterateDOM is called before content block, so may not catch all hidden nodes (e.g. in footer)
             if (elem.offsetHeight === 0) {
                 return;
             }
 
-            // parse text element font size
             const activeStyle = window.getComputedStyle(elem);
-            const fontSize = parseFloat(activeStyle.fontSize);
-            if (paragraphFontSizes[fontSize]) {
-                paragraphFontSizes[fontSize] += 1;
 
-                // Save largest element as example (small paragraphs might have header-specific line height)
-                if (
-                    elem.innerText.length >
-                    exampleNodePerFontSize[fontSize].innerText.length
-                ) {
+            if (isTextElement) {
+                // parse text element font size
+                const fontSize = parseFloat(activeStyle.fontSize);
+                if (paragraphFontSizes[fontSize]) {
+                    paragraphFontSizes[fontSize] += 1;
+
+                    // Save largest element as example (small paragraphs might have header-specific line height)
+                    if (
+                        elem.innerText.length >
+                        exampleNodePerFontSize[fontSize].innerText.length
+                    ) {
+                        exampleNodePerFontSize[fontSize] = elem;
+                    }
+                } else {
+                    paragraphFontSizes[fontSize] = 1;
                     exampleNodePerFontSize[fontSize] = elem;
                 }
-            } else {
-                paragraphFontSizes[fontSize] = 1;
-                exampleNodePerFontSize[fontSize] = elem;
             }
 
             // iterate parents
@@ -88,7 +87,27 @@ export default class TextContainerModifier implements PageModifier {
                 this.batchedNodeClassAdditions.push([elem, className])
             );
             this._prepareBeforeAnimationPatches(elem, activeStyle);
+        };
+
+        // Apply to text nodes
+        let textElements = document.body.querySelectorAll(
+            globalTextElementSelector
+        );
+        if (textElements.length === 0) {
+            // use divs as fallback
+            // TODO change textElementSelector now?
+            textElements = document.body.querySelectorAll("div, span");
+        }
+        textElements.forEach((elem: HTMLElement) => {
+            processElement(elem, true);
         });
+
+        // Apply to heading nodes
+        document.body
+            .querySelectorAll(globalHeadingSelector)
+            .forEach((elem: HTMLElement) => {
+                processElement(elem, false);
+            });
 
         // Just use the most common font size for now
         // Note that the actual font size might be changed by responsive styles
@@ -116,7 +135,7 @@ export default class TextContainerModifier implements PageModifier {
 
         // Iterate upwards in DOM tree from paragraph node
         let currentElem = elem;
-        let currentStack: HTMLElement[] = [];
+        let currentStack: [HTMLElement, boolean][] = [];
         while (currentElem !== document.documentElement) {
             // don't go into parents if validated they're ok
             if (this.validatedNodes.has(currentElem)) {
@@ -124,46 +143,53 @@ export default class TextContainerModifier implements PageModifier {
             }
 
             if (_isAsideEquivalent(currentElem)) {
-                // console.log(
-                //     `Found aside equivalent text container:`,
-                //     currentElem
-                // );
-
                 // remove entire current stack
+                // console.log(`Found aside container:`, currentElem);
                 currentStack = [];
                 break;
+            }
+
+            const isHeading = headingTags.includes(
+                currentElem.tagName.toLowerCase()
+            );
+            if (isHeading) {
+                // mark current stack elements as heading (parents might not be)
+                console.log(`Found heading container:`, currentElem);
+                currentStack = currentStack.map(([elem, _]) => [elem, true]);
             }
 
             // we processed this node, even if we may not end up taking it
             this.validatedNodes.add(currentElem);
 
             // iterate upwards
-            currentStack.push(currentElem);
+            currentStack.push([currentElem, isHeading]);
             currentElem = currentElem.parentElement;
         }
 
         // perform modifications if is valid text element stack
         if (currentStack.length !== 0) {
-            for (const elem of currentStack) {
+            for (const [elem, isHeading] of currentStack) {
                 const activeStyle = window.getComputedStyle(elem);
 
-                // note: may not catch background url(), e.g. on https://www.bunniestudios.com/blog/?p=6375
-                // maybe some color is fine?
-
-                if (
-                    // exlude some classes from background changes but not text adjustments
-                    !backgroundWordBlockList.some((word) =>
-                        elem.className.toLowerCase().includes(word)
-                    ) &&
-                    // don't take default background color
-                    !activeStyle.backgroundColor.includes("rgba(0, 0, 0, 0)") &&
-                    // don't consider transparent colors
-                    !activeStyle.backgroundColor.includes("0.") &&
-                    !activeStyle.backgroundColor.includes("%")
-                ) {
-                    // Remember background colors on text containers
-                    // console.log(activeStyle.backgroundColor, elem);
-                    this.backgroundColors.push(activeStyle.backgroundColor);
+                if (!isHeading) {
+                    // parse background color
+                    if (
+                        // exlude some classes from background changes but not text adjustments
+                        !backgroundWordBlockList.some((word) =>
+                            elem.className.toLowerCase().includes(word)
+                        ) &&
+                        // don't take default background color
+                        !activeStyle.backgroundColor.includes(
+                            "rgba(0, 0, 0, 0)"
+                        ) &&
+                        // don't consider transparent colors
+                        !activeStyle.backgroundColor.includes("0.") &&
+                        !activeStyle.backgroundColor.includes("%")
+                    ) {
+                        // Remember background colors on text containers
+                        console.log(activeStyle.backgroundColor, elem);
+                        this.backgroundColors.push(activeStyle.backgroundColor);
+                    }
                 }
 
                 this.batchedNodeClassAdditions.push([
@@ -226,7 +252,6 @@ export default class TextContainerModifier implements PageModifier {
     private getTextElementChainOverrideStyle() {
         // Remove margin from matched paragraphs and all their parent DOM nodes
         return `${this.bodyContainerSelector} {
-            position: relative !important;
             width: 100% !important;
             min-width: 0 !important;
             max-width: calc(var(--lindy-pagewidth) - 2 * 50px) !important;
@@ -304,6 +329,7 @@ export default class TextContainerModifier implements PageModifier {
             2
         )})`;
         const fontSizeStyle = `${this.textElementSelector} {
+            position: static !important;
             font-size: ${fontSize} !important;
             line-height: ${this.relativeLineHeight} !important;
         }`;
@@ -449,6 +475,7 @@ export const asideWordBlocklist = [
     "related", // https://blog.google/threat-analysis-group/protecting-android-users-from-0-day-attacks/
     "comment", // https://slatestarcodex.com/2014/09/30/i-can-tolerate-anything-except-the-outgroup/
     "signup", // https://www.theverge.com/2022/5/24/23137797/logitech-mx-master-3s-mechanical-mini-mouse-keyboard-price-release-date-features
+    "masthead",
 ];
 
 function _isAsideEquivalent(node: HTMLElement) {
@@ -457,7 +484,6 @@ function _isAsideEquivalent(node: HTMLElement) {
     }
 
     return (
-        node.tagName === "HEADER" ||
         node.tagName === "FOOTER" ||
         node.tagName === "ASIDE" ||
         node.tagName === "CODE" ||
