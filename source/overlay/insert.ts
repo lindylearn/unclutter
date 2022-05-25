@@ -57,11 +57,11 @@ export function insertPageSettings(
                 <path fill="currentColor" d="M352 96V99.56C352 115.3 339.3 128 323.6 128H188.4C172.7 128 160 115.3 160 99.56V96C160 42.98 202.1 0 256 0C309 0 352 42.98 352 96zM39.03 103C48.4 93.66 63.6 93.66 72.97 103L145.4 175.5C161.3 165.7 179.1 160 200 160H312C332 160 350.7 165.7 366.6 175.5L439 103C448.4 93.66 463.6 93.66 472.1 103C482.3 112.4 482.3 127.6 472.1 136.1L400.5 209.4C410.3 225.3 416 243.1 416 264H488C501.3 264 512 274.7 512 288C512 301.3 501.3 312 488 312H416V320C416 347.2 409.2 372.8 397.2 395.3L472.1 471C482.3 480.4 482.3 495.6 472.1 504.1C463.6 514.3 448.4 514.3 439 504.1L368.2 434.1C339.3 462.5 299.7 480 256 480C212.3 480 172.7 462.5 143.8 434.1L72.97 504.1C63.6 514.3 48.4 514.3 39.03 504.1C29.66 495.6 29.66 480.4 39.03 471L114.8 395.3C102.8 372.8 96 347.2 96 320V312H24C10.75 312 0 301.3 0 288C0 274.7 10.75 264 24 264H96C96 243.1 101.7 225.3 111.5 209.4L39.03 136.1C29.66 127.6 29.66 112.4 39.03 103V103zM144 320C144 373.6 181.7 418.4 232 429.4V280C232 266.7 242.7 256 256 256C269.3 256 280 266.7 280 280V429.4C330.3 418.4 368 373.6 368 320V264C368 233.1 342.9 208 312 208H200C169.1 208 144 233.1 144 264V320z" />
             </svg>
         </a>
-        <div class="lindy-theme-popup-container" data-title="Article theme">
+        <div class="lindy-theme-container" data-title="Article theme">
             <svg class="lindy-ui-icon" id="lindy-theme-icon" viewBox="0 0 640 512">
                 <path fill="currentColor" d="M198.4 47.47c-7.094-18.62-37.78-18.62-44.88 0l-152 400c-4.703 12.41 1.516 26.25 13.91 30.97c12.44 4.75 26.28-1.531 30.97-13.91L83.12 368h185.8l36.68 96.53C309.2 474.1 318.3 480 328 480c2.844 0 5.719-.5 8.531-1.562c12.39-4.719 18.61-18.56 13.91-30.97L198.4 47.47zM101.4 320L176 123.6L250.6 320H101.4zM616 160c-13.25 0-24 10.75-24 24v4.889c-21.99-17.79-49.58-28.88-80-28.88c-70.58 0-128 57.41-128 128l.0007 63.93c0 70.59 57.42 128.1 127.1 128.1c30.42 0 58.01-11.11 79.1-28.9V456c0 13.25 10.75 24 24 24S640 469.3 640 456v-272C640 170.8 629.3 160 616 160zM592 352c0 44.13-35.89 80-80 80s-80-35.88-80-80V288c0-44.13 35.89-80 80-80s80 35.88 80 80V352z" />
             </svg>
-            <div class="lindy-theme-popup" id="lindy-theme-popup">
+            <div class="lindy-theme-ui" id="lindy-theme-ui">
                 <div class="lindy-plusminus">
                     <div id="lindy-fontsize-decrease">
                         <svg class="lindy-ui-icon" viewBox="0 0 448 512">
@@ -74,7 +74,7 @@ export function insertPageSettings(
                         </svg>
                     </div>
                 </div>
-                <div class="lindy-theme-popup-row-spacer"></div>
+                <div class="lindy-theme-ui-row-spacer"></div>
                 <div class="lindy-plusminus">
                     <div id="lindy-pagewidth-decrease">
                         <svg class="lindy-ui-icon" viewBox="0 0 512 512" style="transform: rotate(45deg);">
@@ -87,7 +87,7 @@ export function insertPageSettings(
                         </svg>
                     </div>
                 </div>
-                <div class="lindy-theme-popup-row-spacer"></div>
+                <div class="lindy-theme-ui-row-spacer"></div>
                 <div class="lindy-theme-row">
                     <div>
                         <div class="lindy-theme-button lindy-active-theme" id="lindy-auto-theme-button">

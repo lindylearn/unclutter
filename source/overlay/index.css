@@ -79,7 +79,7 @@ svg.lindy-ui-icon#lindy-theme-icon > path {
     stroke-width: 20px;
 }
 .lindy-tooltp:hover > .lindy-ui-icon, 
-.lindy-theme-popup-container:hover > .lindy-ui-icon {
+.lindy-theme-container:hover > .lindy-ui-icon {
     color: var(--text-color) !important;
     filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.05));
 }
@@ -161,12 +161,12 @@ svg.lindy-ui-icon#lindy-theme-icon > path {
     transform: translate3d(0, 0, 0) scaleX(-1) !important;
 }
 
-.lindy-theme-popup-container {
+.lindy-theme-container {
     position: relative;
 }
 
 /* popup box */
-.lindy-theme-popup {
+.lindy-theme-ui {
     position: absolute;
     top: -5px;
     right: calc(100% + 10px);
@@ -184,7 +184,7 @@ svg.lindy-ui-icon#lindy-theme-icon > path {
     transform: translate3d(10px, 0, 0);
     transition: transform 0.15s ease-in, opacity 0.15s ease-in;
 }
-.lindy-theme-popup-container:hover > .lindy-theme-popup {
+.lindy-theme-container:hover > .lindy-theme-ui {
     visibility: visible;
     opacity: 1;
     transform: translate3d(0, 0, 0);
@@ -194,7 +194,7 @@ svg.lindy-ui-icon#lindy-theme-icon > path {
 .lindy-plusminus {
     display: flex;
 }
-.lindy-theme-popup-row-spacer {
+.lindy-theme-ui-row-spacer {
     border-top: 2px solid #f3f4f6;
 }
 
@@ -278,7 +278,7 @@ svg.lindy-ui-icon#lindy-theme-icon > path {
 }
 
 /* popup arrow */
-.lindy-theme-popup:before {
+.lindy-theme-ui:before {
     /* arrow */
     position: absolute;
     top: 10px;
@@ -292,7 +292,7 @@ svg.lindy-ui-icon#lindy-theme-icon > path {
     border-left: 8px solid var(--background-color);
 }
 /* spacer under arrow to avoid breaking hover state */
-.lindy-theme-popup-container:hover:before {
+.lindy-theme-container:hover:before {
     position: absolute;
     top: 0;
     right: 0;

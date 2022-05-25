@@ -7,7 +7,7 @@
 
 
 .lindy-tooltp.lindy-tooltp:hover > .lindy-ui-icon,
-.lindy-theme-popup-container.lindy-theme-popup-container:hover
+.lindy-theme-container.lindy-theme-container:hover
     > .lindy-ui-icon {
     filter: none;
 }
@@ -16,7 +16,7 @@
     filter: none;
 }
 
-.lindy-theme-popup.lindy-theme-popup {
+.lindy-theme-ui.lindy-theme-ui {
     filter: none;
 }
 
@@ -26,7 +26,7 @@
 .lindy-plusminus.lindy-plusminus > div:hover {
     background-color: #262626;
 }
-.lindy-theme-popup-row-spacer {
+.lindy-theme-ui-row-spacer {
     border-top: 2px solid #262626;
 }
 .lindy-theme-button {
