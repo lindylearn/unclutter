@@ -94,7 +94,7 @@ const blockedTags = [
 // match aside containers to block
 // be careful here
 export const asideWordBlocklist = [
-    "footer",
+    // "footer", https://www.undrr.org/publication/global-assessment-report-disaster-risk-reduction-2022
     "aside",
     "banner",
     // "alert", // https://www.cnbc.com/2022/05/23/new-york-city-removes-the-last-payphone-from-service.html
@@ -113,12 +113,10 @@ export const asideWordBlocklist = [
     "composer",
     "callout",
     "related", // https://blog.google/threat-analysis-group/protecting-android-users-from-0-day-attacks/
-    "comment", // https://slatestarcodex.com/2014/09/30/i-can-tolerate-anything-except-the-outgroup/
     "signup", // https://www.theverge.com/2022/5/24/23137797/logitech-mx-master-3s-mechanical-mini-mouse-keyboard-price-release-date-features
     "masthead",
     "below", // https://www.rockpapershotgun.com/the-lord-of-the-rings-gollum-preview-may-miss-a-precious-opportunity
     "cta", // https://www.lrb.co.uk/the-paper/v33/n19/daniel-soar/it-knows
-    // "sticky", // https://news.yahoo.com/exclusive-secret-cia-training-program-in-ukraine-helped-kyiv-prepare-for-russian-invasion-090052743.html?guccounter=2
     // "share", 'no-share' https://www.whichev.net/2022/03/29/theion-sulphur-crystal-batteries-promise-breakthrough-in-energy-density/
     "share-icons", // https://knowablemagazine.org/article/health-disease/2021/how-noise-pollution-affects-heart-health#research-challenges
     "share-bar", // https://www.buzzfeednews.com/article/richardnieva/worldcoin-crypto-eyeball-scanning-orb-problems
@@ -136,6 +134,8 @@ export const asideWordBlocklist = [
     "trending", // https://www.tomsguide.com/opinion/google-pixel-6a-might-be-the-most-exciting-phone-of-2022-heres-why
     "featured", // https://edition.cnn.com/2022/05/24/tech/cher-scarlett-facial-recognition-trauma/index.html
     "tease", // https://deadline.com/2022/05/fbi-season-finale-pulled-cbs-1235031812/
+    "tooltip", // https://www.businessinsider.com/soros-urges-europe-heavy-taxes-on-russian-natural-gas-putin-2022-5?international=true&r=US&IR=T
+    "contribute", // https://www.themoscowtimes.com/2022/05/25/russian-lawmakers-to-consider-scrapping-upper-age-limit-for-military-service-a77787
 ];
 
 // words just blocked, but considered if matched text container
@@ -176,6 +176,8 @@ export const blockedWords = [
     "signup", // https://www.eff.org/deeplinks/2022/03/campaign-shut-down-crucial-documentary-tool-youtube-dl-continues-and-so-does-fight
     "newslettersignup",
     "more", // https://www.cleanenergywire.org/news/germany-boosts-renewables-biggest-energy-policy-reform-decades
+    // "sticky", // https://news.yahoo.com/exclusive-secret-cia-training-program-in-ukraine-helped-kyiv-prepare-for-russian-invasion-090052743.html?guccounter=2
+    "comment", // https://slatestarcodex.com/2014/09/30/i-can-tolerate-anything-except-the-outgroup/
 ];
 export const blockedSpecificSelectors = [
     ".ad",
@@ -226,4 +228,6 @@ export const blockedSpecificSelectors = [
     ".FITT_Article_TwoColumnSidebar", // https://abcnews.go.com/US/victims-parents-oxford-school-shooting-victims-sue-school/story?id=84933834
     ".penci-header-wrap", // https://londonlovesbusiness.com/russian-sailors-stage-mutiny-and-refuse-to-carry-out-combat-duties-as-they-perceive-each-trip-to-the-sea-as-a-one-way-ticket/
     "#pmc-core-header", // https://deadline.com/2022/05/fbi-season-finale-pulled-cbs-1235031812/
+    ".header-placeholder", // https://apnews.com/article/russia-ukraine-janet-yellen-government-and-politics-20dbb506790dddc6f019fa7fdf265514
+    ".sdc-site-layout-sticky-region", // https://news.sky.com/story/cosmetic-surgery-adverts-targeting-teenagers-banned-12620879
 ];

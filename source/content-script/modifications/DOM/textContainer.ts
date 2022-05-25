@@ -27,7 +27,7 @@ export default class TextContainerModifier implements PageModifier {
         // Use class twice for higher specifity
         `.${lindyContainerClass}.${lindyContainerClass}`,
         // also select paragraph children
-        `.${lindyContainerClass} > *`,
+        `.${lindyContainerClass} > :is(${globalTextElementSelector}, ${globalHeadingSelector})`,
     ].join(",");
 
     // style tweaks to apply just before the pageview animation (populated via _prepareBeforeAnimationPatches())
@@ -144,7 +144,7 @@ export default class TextContainerModifier implements PageModifier {
 
             if (_isAsideEquivalent(currentElem)) {
                 // remove entire current stack
-                // console.log(`Found aside container:`, currentElem);
+                console.log(`Found aside container:`, currentElem);
                 currentStack = [];
                 break;
             }
@@ -281,7 +281,7 @@ export default class TextContainerModifier implements PageModifier {
                 box-shadow: none !important;
                 transition: margin-left 0.6s cubic-bezier(0.87, 0, 0.13, 1);
             }
-            .${lindyHeadingContainerClass}, .${lindyContainerClass} > ${globalHeadingSelector} {
+            .${lindyHeadingContainerClass}, .${lindyContainerClass}:first-child:is(${globalHeadingSelector}) {
                 margin-top: 0 !important;
                 padding-top: 0 !important;
                 height: auto !important;
@@ -351,6 +351,7 @@ export default class TextContainerModifier implements PageModifier {
             2
         )})`;
         const fontSizeStyle = `${this.textElementSelector} {
+            position: relative;
             font-size: ${fontSize} !important;
             line-height: ${this.relativeLineHeight} !important;
         }`;
@@ -474,7 +475,7 @@ export const lindyContainerClass = "lindy-container";
 export const lindyTextContainerClass = "lindy-text-container";
 export const lindyHeadingContainerClass = "lindy-heading-container";
 
-const headingWordlist = ["head", "title"];
+const headingWordlist = ["heading", "title"];
 
 function _isAsideEquivalent(node: HTMLElement) {
     if (node === document.body || node.tagName === "ARTICLE") {

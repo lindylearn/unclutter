@@ -589,6 +589,7 @@ body.fastcompany {
     display: block !important;
     opacity: 1 !important;
     visibility: visible !important;
+    background: white !important;
 }
 .xray-side-rail,
 #HeadlineSection {
@@ -771,4 +772,22 @@ div.bubble-element.CustomElement.bubble-r-container {
 /* https://deadline.com/2022/05/fbi-season-finale-pulled-cbs-1235031812/ */
 [class~="u-hidden@desktop-max"] {
     display: none !important;
+}
+
+/* https://www.vice.com/en/article/bvnwg4/indonesia-lgbtq-rights-crackdown */
+.article__embed-component, .vice-card {
+    display: none !important;
+}
+.inbody-article {
+    display: none !important;
+}
+
+/* https://www.lesswrong.com/posts/tscc3e5eujrsEeFN4/well-kept-gardens-die-by-pacifism */
+.PostsPagePostHeader-headerVote, .PostsPagePostFooter-voteBottom {
+    display: none !important;
+}
+
+/* https://www.euronews.com/green/2022/05/25/brussels-grows-fruits-and-vegetables-on-top-of-a-supermarket */
+.swiper-wrapper--article {
+    left: 0 !important
 }
