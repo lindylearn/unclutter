@@ -223,9 +223,7 @@ export default class OverlayManager implements PageModifier {
         document
             .getElementById("lindy-info-topleft")
             ?.classList.add("lindy-overlay-fadeout");
-    }
 
-    async afterTransitionOut() {
         document
             .querySelectorAll(
                 ".lindy-page-settings-topright, .lindy-page-settings-pageadjacent, #lindy-info-topleft"

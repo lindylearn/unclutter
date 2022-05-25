@@ -172,7 +172,7 @@ export default class ResponsiveStyleModifier implements PageModifier {
         });
     }
 
-    async transitionOut() {
+    transitionOut() {
         this.expiredRules.map((rule, index) => {
             for (const [key, value] of Object.entries(
                 this.originalStyleList[index]
@@ -197,7 +197,7 @@ export default class ResponsiveStyleModifier implements PageModifier {
         });
     }
 
-    async fadeInNoise() {
+    fadeInNoise() {
         this.animatedRulesToHide.map(([rule, display]) => {
             rule.style.removeProperty("opacity", "1");
             rule.style.removeProperty("visibility", "visible");

@@ -15,6 +15,7 @@ import {
     PageModifier,
     trackModifierExecution,
 } from "./modifications/_interface";
+import { preparePageviewAnimation } from "./pageview/enablePageView";
 
 @trackModifierExecution
 export default class TransitionManager implements PageModifier {
@@ -129,29 +130,40 @@ export default class TransitionManager implements PageModifier {
     }
 
     async transitionOut() {
-        // TODO enable animation inline? preparePageviewAnimation()
+        // incoming animation set via pageview class, need inline styles for outgoing animation
+        preparePageviewAnimation();
+        // setup transition for changing text margin
+        this.textContainerModifier.prepareTransitionOut();
 
-        await this.annotationsModifier.transitionOut();
+        // remove UI
+        this.annotationsModifier.transitionOut();
+        this.overlayManager.transitionOut();
 
-        await this.responsiveStyleModifier.transitionOut();
-        await this.textContainerModifier.transitionOut();
-
-        await this.contentBlockModifier.transitionOut();
-        await this.overlayManager.transitionOut();
+        // disable dark mode
         this.themeModifier.transitionOut();
 
+        await new Promise((r) => setTimeout(r, 0));
+
+        this.bodyStyleModifier.transitionOut();
         document.documentElement.classList.remove("pageview");
+
+        this.textContainerModifier.transitionOut();
+
+        // restore original layout
+        this.responsiveStyleModifier.transitionOut();
+        this.contentBlockModifier.transitionOut();
     }
 
-    async fadeinNoise() {
-        await this.responsiveStyleModifier.fadeInNoise();
-        await this.contentBlockModifier.fadeInNoise();
+    fadeinNoise() {
+        this.textContainerModifier.afterTransitionOut();
 
-        await this.cssomProvider.reenableOriginalStylesheets();
+        // restore noisy elements
+        this.contentBlockModifier.fadeInNoise();
+        this.responsiveStyleModifier.fadeInNoise();
     }
 
-    async afterTransitionOut() {
-        await this.overlayManager.afterTransitionOut();
+    afterTransitionOut() {
+        this.cssomProvider.reenableOriginalStylesheets();
 
         // remove rest
         document
@@ -159,6 +171,6 @@ export default class TransitionManager implements PageModifier {
             .forEach((e) => e.remove());
 
         // final cleanup, includes removing animation settings
-        await this.bodyStyleModifier.afterTransitionOut();
+        this.bodyStyleModifier.afterTransitionOut();
     }
 }

@@ -7,14 +7,14 @@ export interface PageModifier {
     // Shift layout and reduce page width in one go
     transitionIn?: (...args: any[]) => void;
 
-    afterTransitionIn?: (...args: any[]) => Promise<void>;
+    afterTransitionIn?: (...args: any[]) => void;
 
     // undo all modifications (including css rewrites and style changes)
-    transitionOut?: (...args: any[]) => Promise<void>;
+    transitionOut?: (...args: any[]) => void;
 
-    fadeInNoise?: (...args: any[]) => Promise<void>;
+    fadeInNoise?: (...args: any[]) => void;
 
-    afterTransitionOut?: (...args: any[]) => Promise<void>;
+    afterTransitionOut?: (...args: any[]) => void;
 }
 
 // wrap class

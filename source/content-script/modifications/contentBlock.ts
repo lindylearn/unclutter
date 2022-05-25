@@ -62,18 +62,16 @@ export default class ContentBlockModifier implements PageModifier {
         );
     }
 
-    async fadeInNoise() {
+    fadeInNoise() {
         const css = `${this.selectors.join(
             ", "
         )} { visibility: visible !important; opacity: 1 !important; transition: all 0.3s linear; }`;
-        // TODO animate to 0 area? height: 0; width: 0; overflow: hidden;
-
         createStylesheetText(css, "content-block-fadein");
 
         document.getElementById("content-block-fadeout")?.remove();
     }
 
-    async transitionOut() {
+    transitionOut() {
         document
             .querySelectorAll(
                 ".content-block-hide, .content-block-custom-sites"

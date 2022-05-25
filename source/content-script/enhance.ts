@@ -59,15 +59,16 @@ export async function togglePageView() {
     } else {
         // disable page view
 
+        // unobserve pageview class removal
         disablePageViewHandlers();
 
-        await transitions.transitionOut();
+        transitions.transitionOut();
+        await new Promise((r) => setTimeout(r, 700));
+
+        transitions.fadeinNoise();
         await new Promise((r) => setTimeout(r, 200));
 
-        await transitions.fadeinNoise();
-        await new Promise((r) => setTimeout(r, 200));
-
-        await transitions.afterTransitionOut();
+        transitions.afterTransitionOut();
 
         return false;
     }

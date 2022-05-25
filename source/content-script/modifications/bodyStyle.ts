@@ -40,17 +40,23 @@ export default class BodyStyleModifier implements PageModifier {
             mediaQueryList.removeEventListener("change", matchMediaListener);
     }
 
-    async afterTransitionOut() {
+    transitionOut() {
         this.styleObserver.disconnect();
         this.removeResponsiveStyleListener();
 
-        document.body.style.removeProperty("display");
+        // can't reference the variables here for some reason
+        document.body.classList.remove("lindy-container");
+        document.body.classList.remove("lindy-text-container");
+    }
+
+    afterTransitionOut() {
         document.body.style.removeProperty("width");
-        document.body.style.removeProperty("min-width");
         document.body.style.removeProperty("max-width");
-        document.body.style.removeProperty("height");
         document.body.style.removeProperty("margin");
         document.body.style.removeProperty("padding");
+        document.body.style.removeProperty("display");
+        document.body.style.removeProperty("min-width");
+        document.body.style.removeProperty("height");
         document.body.style.removeProperty("background");
         document.body.style.removeProperty("transition");
     }

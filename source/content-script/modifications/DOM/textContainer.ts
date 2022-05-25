@@ -233,11 +233,26 @@ export default class TextContainerModifier implements PageModifier {
         );
     }
 
-    async transitionOut() {
+    prepareTransitionOut() {
+        this.nodeBeforeAnimationStyle.map(
+            ([node, { marginLeft, maxWidth }]) => {
+                node.style.setProperty(
+                    "transition",
+                    "margin-left 0.6s cubic-bezier(0.87, 0, 0.13, 1)"
+                );
+            }
+        );
+    }
+
+    transitionOut() {
         document
-            .querySelectorAll(
-                ".lindy-font-size, .lindy-text-chain-override, .lindy-node-overrides"
-            )
+            .querySelectorAll(".lindy-text-chain-override")
+            .forEach((e) => e.remove());
+    }
+
+    afterTransitionOut() {
+        document
+            .querySelectorAll(".lindy-font-size, .lindy-node-overrides")
             .forEach((e) => e.remove());
     }
 
@@ -281,7 +296,7 @@ export default class TextContainerModifier implements PageModifier {
                 box-shadow: none !important;
                 transition: margin-left 0.6s cubic-bezier(0.87, 0, 0.13, 1);
             }
-            .${lindyHeadingContainerClass}, .${lindyContainerClass}:first-child:is(.${lindyContainerClass}) {
+            .${lindyHeadingContainerClass}, .${lindyContainerClass}:first-child {
                 margin-top: 0 !important;
                 padding-top: 0 !important;
                 height: auto !important;
