@@ -3,6 +3,7 @@ import {
     createStylesheetLink,
     createStylesheetText,
 } from "../../common/stylesheets";
+import { lindyContainerClass } from "./DOM/textContainer";
 import { PageModifier, trackModifierExecution } from "./_interface";
 
 // hide page elements unrelated to the article via custom CSS, to make a page more readable
@@ -80,8 +81,7 @@ export default class ContentBlockModifier implements PageModifier {
     }
 }
 
-const excludeValidElements =
-    "*:not(html):not(body):not(article):not(.lindy-text-container)";
+const excludeValidElements = `*:not(html):not(body):not(article):not(.${lindyContainerClass})`;
 
 const blockedTags = [
     "footer",
@@ -142,6 +142,7 @@ export const blockedWords = [
     "carousel", // https://psyche.co/films/a-gym-built-of-soviet-era-scraps-is-a-creative-community-hub
     "js_reading-list", // https://kotaku.com/old-world-is-teaching-strategy-games-some-new-tricks-1842871705
     "breaking", // https://edition.cnn.com/2022/05/23/europe/ukraine-russian-soldier-war-crimes-trial-intl/index.html
+    "trending", // https://www.tomsguide.com/opinion/google-pixel-6a-might-be-the-most-exciting-phone-of-2022-heres-why
 ];
 export const blockedSpecificSelectors = [
     ".ad",
@@ -183,4 +184,6 @@ export const blockedSpecificSelectors = [
     ".leadinModal", // https://www.fugue.co/blog/2015-11-11-guide-to-emacs.html
     ".metered-gating-container", // https://www.military.com/history/how-naked-skydive-inspired-way-keep-pilots-oriented-flight.html
     "#gateway-content", // https://www.nytimes.com/2022/05/19/us/princeton-professor-joshua-katz.html
+    "#topbar", // https://blog.samaltman.com/how-to-be-successful
+    ".site-header",
 ];

@@ -20,14 +20,14 @@ This is done so that we can:
 @trackModifierExecution
 export default class TextContainerModifier implements PageModifier {
     // Only text elements, e.g. to apply font changes
-    private textElementSelector = `.${lindyTextContainerClass} > :is(${globalTextElementSelector}, a, ol, blockquote)`;
+    private textElementSelector = `.${lindyContainerClass} > :is(${globalTextElementSelector}, a, ol, blockquote)`;
 
     // Chain of elements that contain the main article text, to remove margins from
     private bodyContainerSelector = [
         // Use class twice for higher specifity
-        `.${lindyTextContainerClass}.${lindyTextContainerClass}`,
+        `.${lindyContainerClass}.${lindyContainerClass}`,
         // also select paragraph children
-        `.${lindyTextContainerClass} > *`,
+        `.${lindyContainerClass} > *`,
     ].join(",");
 
     // style tweaks to apply just before the pageview animation (populated via _prepareBeforeAnimationPatches())
@@ -194,8 +194,15 @@ export default class TextContainerModifier implements PageModifier {
 
                 this.batchedNodeClassAdditions.push([
                     elem,
-                    lindyTextContainerClass,
+                    lindyContainerClass,
                 ]);
+                if (isHeading) {
+                    this.batchedNodeClassAdditions.push([
+                        elem,
+                        lindyHeadingContainerClass,
+                    ]);
+                }
+
                 this._getNodeOverrideClasses(elem, activeStyle).map(
                     (className) =>
                         this.batchedNodeClassAdditions.push([elem, className])
@@ -251,20 +258,27 @@ export default class TextContainerModifier implements PageModifier {
 
     private getTextElementChainOverrideStyle() {
         // Remove margin from matched paragraphs and all their parent DOM nodes
-        return `${this.bodyContainerSelector} {
-            width: 100% !important;
-            min-width: 0 !important;
-            max-width: calc(var(--lindy-pagewidth) - 2 * 50px) !important;
-            max-height: none !important;
-            margin-left: 0 !important;
-            margin-right: 0 !important;
-            padding-left: 0 !important;
-            padding-right: 0 !important;
-            background: none !important;
-            border: none !important;
-            box-shadow: none !important;
-            transition: margin-left 0.6s cubic-bezier(0.87, 0, 0.13, 1);
-        }`;
+        return `
+            ${this.bodyContainerSelector} {
+                width: 100% !important;
+                min-width: 0 !important;
+                max-width: calc(var(--lindy-pagewidth) - 2 * 50px) !important;
+                max-height: none !important;
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+                background: none !important;
+                border: none !important;
+                box-shadow: none !important;
+                transition: margin-left 0.6s cubic-bezier(0.87, 0, 0.13, 1);
+            }
+            .${lindyHeadingContainerClass}, .${lindyContainerClass} > ${globalHeadingSelector} {
+                margin-top: 0 !important;
+                padding-top: 0 !important;
+                height: auto !important;
+            }
+        `;
     }
 
     // set text color variable only when dark mode enabled, otherwise overwrites color (even if css var not set)
@@ -329,7 +343,6 @@ export default class TextContainerModifier implements PageModifier {
             2
         )})`;
         const fontSizeStyle = `${this.textElementSelector} {
-            position: static !important;
             font-size: ${fontSize} !important;
             line-height: ${this.relativeLineHeight} !important;
         }`;
@@ -363,12 +376,12 @@ export default class TextContainerModifier implements PageModifier {
     // Collect overrides for specific container elements (insert as stylesheet for easy unpatching)
     private overrideCssDeclarations = [
         // hide sidebar siblings, e.g. on https://www.thespacereview.com/article/4384/1
-        `.lindy-text-container > td:not(.lindy-text-container) { 
+        `.lindy-container > td:not(.lindy-container) { 
                 display: none !important;
             }`,
         // Remove horizontal flex partitioning, e.g. https://www.nationalgeographic.com/science/article/the-controversial-quest-to-make-a-contagious-vaccine, https://hbr.org/2018/07/research-the-average-age-of-a-successful-startup-founder-is-45
         `.lindy-text-remove-horizontal-flex { display: block !important; }`,
-        `.lindy-text-remove-horizontal-flex > div:not(.lindy-text-container) { display: none !important; }`,
+        `.lindy-text-remove-horizontal-flex > div:not(.lindy-container) { display: none !important; }`,
         // Remove grids, e.g. https://www.washingtonpost.com/business/2022/02/27/bp-russia-rosneft-ukraine or https://www.trickster.dev/post/decrypting-your-own-https-traffic-with-wireshark/
         `.lindy-text-remove-grid { 
                 display: block !important;
@@ -377,7 +390,7 @@ export default class TextContainerModifier implements PageModifier {
                 column-gap: 0 !important;
             }`,
         // TODO add classes to siblings to improve selector performance
-        // `.lindy-text-remove-grid > *:not(.lindy-text-container) {
+        // `.lindy-text-remove-grid > *:not(.lindy-container) {
         //     display: none !important;
         // }`,
     ];
@@ -449,7 +462,8 @@ export default class TextContainerModifier implements PageModifier {
     }
 }
 
-const lindyTextContainerClass = "lindy-text-container";
+export const lindyContainerClass = "lindy-container";
+export const lindyHeadingContainerClass = "lindy-heading-container";
 
 // classes to exclude text changes from
 // should be less strict than contentBlock.ts (which does not apply to text containers)
@@ -514,6 +528,7 @@ const backgroundWordBlockList = [
 const supportBannerTextStart = [
     "Support", // https://psyche.co/guides/how-to-have-a-life-full-of-wonder-and-learning-about-the-world
     "Don't Miss", // https://www.military.com/history/how-naked-skydive-inspired-way-keep-pilots-oriented-flight.html
+    "Skip to content", // https://databricks.com/blog/2022/05/19/day-in-the-life-of-a-customer-success-engineer.html
 ];
 function isSupportBanner(node: HTMLElement): boolean {
     const firstChild = node.firstElementChild as HTMLElement;
@@ -537,9 +552,7 @@ function isSupportBanner(node: HTMLElement): boolean {
 // Get a CSS selector for the passed node with a high specifity
 function _getUniqueNodeSelector(node) {
     // Create new unique class
-    const containerId = `lindy-text-container_${Math.random()
-        .toString()
-        .slice(2)}`;
+    const containerId = `lindy-container_${Math.random().toString().slice(2)}`;
     node.classList.add(containerId); // will only be applied in next loop
 
     // construct selector in "tag.class[id='id']" format

@@ -11,8 +11,8 @@ export default class BodyStyleModifier implements PageModifier {
     constructor() {
         // save before modifications & avoid forced reflow later
         // save only accessed properties
-        const activeStyles = window.getComputedStyle(document.body);
-        this.bodyStyleProperties = { paddingTop: activeStyles.paddingTop };
+        // const activeStyles = window.getComputedStyle(document.body);
+        // this.bodyStyleProperties = { paddingTop: activeStyles.paddingTop };
     }
 
     transitionIn() {
@@ -89,9 +89,10 @@ export default class BodyStyleModifier implements PageModifier {
     private modifyBodyStyle() {
         // add miniscule top padding if not already present, to prevent top margin collapse
         // note that body margin is rewritten into padding in cssTweaks.ts
-        if (["", "0px"].includes(this.bodyStyleProperties.paddingTop)) {
-            document.body.style.paddingTop = "0.05px";
-        }
+        // if (["", "0px"].includes(this.bodyStyleProperties.paddingTop)) {
+        //     document.body.style.paddingTop = "0.05px";
+        // }
+        document.body.style.setProperty("padding-top", "20px", "important");
         document.body.style.setProperty("padding-left", "50px", "important");
         document.body.style.setProperty("padding-right", "50px", "important");
         document.body.style.setProperty("min-width", "0", "important");

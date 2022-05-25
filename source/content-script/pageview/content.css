@@ -33,6 +33,7 @@ html.pageview.pageview > body {
     overflow-y: hidden !important;
 
     /* margins are also set inline in body.js for higher specifity */
+    padding-top: 30px !important;
     padding-left: 50px !important;
     padding-right: 50px !important;
 
