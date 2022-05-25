@@ -6,13 +6,13 @@
 }
 
 
-.lindy-tooltip.lindy-tooltip:hover > .lindy-ui-icon,
+.lindy-tooltp.lindy-tooltp:hover > .lindy-ui-icon,
 .lindy-theme-popup-container.lindy-theme-popup-container:hover
     > .lindy-ui-icon {
     filter: none;
 }
 
-.lindy-tooltip.lindy-tooltip:before {
+.lindy-tooltp.lindy-tooltp:before {
     filter: none;
 }
 

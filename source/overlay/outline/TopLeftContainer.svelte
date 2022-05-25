@@ -86,21 +86,21 @@ a:hover > .close-message {
 } */
 
 /* setup tooltips (adapted from overlay css) */
-.lindy-tooltip {
+.lindy-tooltp {
     position: relative;
 
     --background-color: var(--lindy-background-color);
     --text-color: #374151; /* text-gray-700 */;
 }
-.lindy-tooltip:before,
-.lindy-tooltip:after {
+.lindy-tooltp:before,
+.lindy-tooltp:after {
     position: absolute;
     display: block;
     pointer-events: none;
 
     opacity: 0;
 }
-.lindy-tooltip:before {
+.lindy-tooltp:before {
     /* box */
     top: 6px;
     right: calc(100% + 9px);
@@ -119,7 +119,7 @@ a:hover > .close-message {
     font-family: Poppins, sans-serif;
     line-height: 1;
 }
-.lindy-tooltip:after {
+.lindy-tooltp:after {
     /* arrow */
     top: 13px;
     right: calc(100% + 3px);
@@ -131,13 +131,13 @@ a:hover > .close-message {
     border-bottom: 6px solid transparent;
     border-left: 6px solid var(--background-color);
 }
-.lindy-tooltip.lindy-fade:after,
-.lindy-tooltip.lindy-fade:before {
+.lindy-tooltp.lindy-fade:after,
+.lindy-tooltp.lindy-fade:before {
     transform: translate3d(10px, 0, 0);
     transition: all 0.15s ease-in-out;
 }
-.lindy-tooltip.lindy-fade:hover:after,
-.lindy-tooltip.lindy-fade:hover:before {
+.lindy-tooltp.lindy-fade:hover:after,
+.lindy-tooltp.lindy-fade:hover:before {
     opacity: 1;
     transform: translate3d(0, 0, 0);
 }

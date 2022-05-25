@@ -78,25 +78,25 @@ svg.lindy-ui-icon > path {
 svg.lindy-ui-icon#lindy-theme-icon > path {
     stroke-width: 20px;
 }
-.lindy-tooltip:hover > .lindy-ui-icon, 
+.lindy-tooltp:hover > .lindy-ui-icon, 
 .lindy-theme-popup-container:hover > .lindy-ui-icon {
     color: var(--text-color) !important;
     filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.05));
 }
 
 /* setup tooltips */
-.lindy-tooltip {
+.lindy-tooltp {
     position: relative;
 }
-.lindy-tooltip:before,
-.lindy-tooltip:after {
+.lindy-tooltp:before,
+.lindy-tooltp:after {
     position: absolute;
     display: block;
     pointer-events: none;
 
     opacity: 0;
 }
-.lindy-tooltip:before {
+.lindy-tooltp:before {
     /* box */
     top: 0px;
     right: calc(100% + 6px);
@@ -115,7 +115,7 @@ svg.lindy-ui-icon#lindy-theme-icon > path {
     font-family: Poppins, sans-serif;
     font-weight: 600;
 }
-.lindy-tooltip:after {
+.lindy-tooltp:after {
     /* arrow */
     top: 7px;
     right: calc(100% - 0px);
@@ -128,18 +128,18 @@ svg.lindy-ui-icon#lindy-theme-icon > path {
     border-left: 6px solid var(--background-color);
 }
 
-.lindy-tooltip.lindy-fade:after,
-.lindy-tooltip.lindy-fade:before {
+.lindy-tooltp.lindy-fade:after,
+.lindy-tooltp.lindy-fade:before {
     transform: translate3d(10px, 0, 0);
     transition: all 0.15s ease-in-out;
 }
-.lindy-tooltip.lindy-fade:hover:after,
-.lindy-tooltip.lindy-fade:hover:before {
+.lindy-tooltp.lindy-fade:hover:after,
+.lindy-tooltp.lindy-fade:hover:before {
     opacity: 1;
     transform: translate3d(0, 0, 0);
 }
 
-.lindy-tooltip-reverse:before {
+.lindy-tooltp-reverse:before {
     right: unset;
     left: calc(100% + 4px);
     transform: translate3d(-10px, 0, 0) !important;
@@ -150,14 +150,14 @@ svg.lindy-ui-icon#lindy-theme-icon > path {
     width: max-content;
     max-width: 250px;
 }
-.lindy-tooltip-reverse:after {
+.lindy-tooltp-reverse:after {
     transform: translate3d(-10px, 0, 0) scaleX(-1) !important;
     right: -4px;
 }
-.lindy-tooltip-reverse.lindy-fade:hover:before {
+.lindy-tooltp-reverse.lindy-fade:hover:before {
     transform: translate3d(0, 0, 0) !important;
 }
-.lindy-tooltip-reverse.lindy-fade:hover:after {
+.lindy-tooltp-reverse.lindy-fade:hover:after {
     transform: translate3d(0, 0, 0) scaleX(-1) !important;
 }
 

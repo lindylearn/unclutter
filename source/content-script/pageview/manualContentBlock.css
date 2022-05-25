@@ -791,3 +791,11 @@ div.bubble-element.CustomElement.bubble-r-container {
 .swiper-wrapper--article {
     left: 0 !important
 }
+
+/* https://www.marketwatch.com/story/if-youre-ready-to-buy-china-tech-stocks-again-these-five-may-be-the-best-path-to-outperformance-11647881900?mod=home-page */
+.article__masthead.article__masthead.article__masthead {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    background: white !important;
+}

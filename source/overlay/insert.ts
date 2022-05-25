@@ -47,12 +47,12 @@ export function insertPageSettings(
 
     insertHtml(
         "lindy-page-settings-topright",
-        `<div class="lindy-tooltip lindy-fade" data-title="Unclutter settings">
+        `<div class="lindy-tooltp lindy-fade" data-title="Unclutter settings">
             <svg class="lindy-ui-icon" id="lindy-settings-icon" viewBox="0 0 512 512">
                 <path fill="currentColor" d="M160 256C160 202.1 202.1 160 256 160C309 160 352 202.1 352 256C352 309 309 352 256 352C202.1 352 160 309 160 256zM256 208C229.5 208 208 229.5 208 256C208 282.5 229.5 304 256 304C282.5 304 304 282.5 304 256C304 229.5 282.5 208 256 208zM293.1 .0003C315.3 .0003 334.6 15.19 339.8 36.74L347.6 69.21C356.1 73.36 364.2 78.07 371.9 83.28L404 73.83C425.3 67.56 448.1 76.67 459.2 95.87L496.3 160.1C507.3 179.3 503.8 203.6 487.8 218.9L463.5 241.1C463.8 246.6 464 251.3 464 256C464 260.7 463.8 265.4 463.5 270L487.8 293.1C503.8 308.4 507.3 332.7 496.3 351.9L459.2 416.1C448.1 435.3 425.3 444.4 404 438.2L371.9 428.7C364.2 433.9 356.1 438.6 347.6 442.8L339.8 475.3C334.6 496.8 315.3 512 293.1 512H218.9C196.7 512 177.4 496.8 172.2 475.3L164.4 442.8C155.9 438.6 147.8 433.9 140.1 428.7L107.1 438.2C86.73 444.4 63.94 435.3 52.85 416.1L15.75 351.9C4.66 332.7 8.168 308.4 24.23 293.1L48.47 270C48.16 265.4 48 260.7 48 255.1C48 251.3 48.16 246.6 48.47 241.1L24.23 218.9C8.167 203.6 4.66 179.3 15.75 160.1L52.85 95.87C63.94 76.67 86.73 67.56 107.1 73.83L140.1 83.28C147.8 78.07 155.9 73.36 164.4 69.21L172.2 36.74C177.4 15.18 196.7 0 218.9 0L293.1 .0003zM205.5 103.6L194.3 108.3C181.6 113.6 169.8 120.5 159.1 128.7L149.4 136.1L94.42 119.9L57.31 184.1L98.81 223.6L97.28 235.6C96.44 242.3 96 249.1 96 256C96 262.9 96.44 269.7 97.28 276.4L98.81 288.4L57.32 327.9L94.42 392.1L149.4 375.9L159.1 383.3C169.8 391.5 181.6 398.4 194.3 403.7L205.5 408.4L218.9 464H293.1L306.5 408.4L317.7 403.7C330.4 398.4 342.2 391.5 352.9 383.3L362.6 375.9L417.6 392.1L454.7 327.9L413.2 288.4L414.7 276.4C415.6 269.7 416 262.9 416 256C416 249.1 415.6 242.3 414.7 235.6L413.2 223.6L454.7 184.1L417.6 119.9L362.6 136.1L352.9 128.7C342.2 120.5 330.4 113.6 317.7 108.3L306.5 103.6L293.1 48H218.9L205.5 103.6z" />
             </svg>
         </div>
-        <a href="${githubLink}" target="_blank" rel="noopener noreferrer" class="lindy-tooltip lindy-fade" data-title="Report bug" style="display: none;">
+        <a href="${githubLink}" target="_blank" rel="noopener noreferrer" class="lindy-tooltp lindy-fade" data-title="Report bug" style="display: none;">
             <svg class="lindy-ui-icon" id="lindy-bug-icon" viewBox="0 0 512 512">
                 <path fill="currentColor" d="M352 96V99.56C352 115.3 339.3 128 323.6 128H188.4C172.7 128 160 115.3 160 99.56V96C160 42.98 202.1 0 256 0C309 0 352 42.98 352 96zM39.03 103C48.4 93.66 63.6 93.66 72.97 103L145.4 175.5C161.3 165.7 179.1 160 200 160H312C332 160 350.7 165.7 366.6 175.5L439 103C448.4 93.66 463.6 93.66 472.1 103C482.3 112.4 482.3 127.6 472.1 136.1L400.5 209.4C410.3 225.3 416 243.1 416 264H488C501.3 264 512 274.7 512 288C512 301.3 501.3 312 488 312H416V320C416 347.2 409.2 372.8 397.2 395.3L472.1 471C482.3 480.4 482.3 495.6 472.1 504.1C463.6 514.3 448.4 514.3 439 504.1L368.2 434.1C339.3 462.5 299.7 480 256 480C212.3 480 172.7 462.5 143.8 434.1L72.97 504.1C63.6 514.3 48.4 514.3 39.03 504.1C29.66 495.6 29.66 480.4 39.03 471L114.8 395.3C102.8 372.8 96 347.2 96 320V312H24C10.75 312 0 301.3 0 288C0 274.7 10.75 264 24 264H96C96 243.1 101.7 225.3 111.5 209.4L39.03 136.1C29.66 127.6 29.66 112.4 39.03 103V103zM144 320C144 373.6 181.7 418.4 232 429.4V280C232 266.7 242.7 256 256 256C269.3 256 280 266.7 280 280V429.4C330.3 418.4 368 373.6 368 320V264C368 233.1 342.9 208 312 208H200C169.1 208 144 233.1 144 264V320z" />
             </svg>
@@ -105,11 +105,11 @@ export function insertPageSettings(
                 </div>
             </div>
         </div>
-        <div id="lindy-annotations-toggle-container" class="lindy-tooltip lindy-fade">
+        <div id="lindy-annotations-toggle-container" class="lindy-tooltp lindy-fade">
             <!-- <svg> inserted in _setupAnnotationsToggle() below  -->
         </div>
         <div id="lindy-crowd-toggle-container">
-            <div id="lindy-crowd-toggle-content" class="lindy-tooltip lindy-fade">
+            <div id="lindy-crowd-toggle-content" class="lindy-tooltp lindy-fade">
                 <!-- <svg> inserted in _setupSocialToggle() below  -->
             </div>
             <div id="lindy-crowd-count-label"></div>
@@ -119,7 +119,7 @@ export function insertPageSettings(
 
     insertHtml(
         "lindy-page-settings-pageadjacent",
-        `<div id="lindy-domain-switch-icon-container" class="lindy-tooltip lindy-tooltip-reverse lindy-fade">
+        `<div id="lindy-domain-switch-icon-container" class="lindy-tooltp lindy-tooltp-reverse lindy-fade">
             <!-- <svg> inserted in _setupDomainToggleState() below  -->
         </div>`
     );

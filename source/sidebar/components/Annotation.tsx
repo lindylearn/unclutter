@@ -138,7 +138,7 @@ function Annotation({
 
             <div className="top-icons absolute top-1 right-1 p-1 flex gap-3 text-gray-400">
                 <div
-                    className="cursor-pointer hover:text-gray-600 hover:drop-shadow lindy-tooltip lindy-fade transition-all"
+                    className="cursor-pointer hover:text-gray-600 hover:drop-shadow lindy-tooltp lindy-fade transition-all"
                     onClick={deleteHide}
                     data-title="Remove comment"
                 >

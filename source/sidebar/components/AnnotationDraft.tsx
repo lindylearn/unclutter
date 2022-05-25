@@ -122,7 +122,7 @@ function AnnotationDraft({
             />
             <div className="top-icons absolute top-1.5 right-1.5 p-1 flex gap-2 text-gray-400">
                 <div
-                    className="cursor-pointer hover:text-gray-600 hover:drop-shadow-md lindy-tooltip lindy-fade transition-all"
+                    className="cursor-pointer hover:text-gray-600 hover:drop-shadow-md lindy-tooltp lindy-fade transition-all"
                     onClick={deleteWithConfirmStep}
                     data-title={
                         showDeleteConfirmation
@@ -145,7 +145,7 @@ function AnnotationDraft({
                 {hypothesisSyncEnabled && (
                     <div
                         className={
-                            "public-toggle cursor-pointer hover:text-gray-600 hover:drop-shadow-md lindy-tooltip lindy-fade transition-all " +
+                            "public-toggle cursor-pointer hover:text-gray-600 hover:drop-shadow-md lindy-tooltp lindy-fade transition-all " +
                             (localAnnotation.isPublic
                                 ? "is-public visible text-gray-600"
                                 : "")
