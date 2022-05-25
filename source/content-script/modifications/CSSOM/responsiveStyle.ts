@@ -82,7 +82,11 @@ export default class ResponsiveStyleModifier implements PageModifier {
             rule.style.removeProperty("display");
             rule.style.setProperty("opacity", "0", "important");
             rule.style.setProperty("visibility", "hidden", "important");
-            rule.style.setProperty("transition", "all 0.3s linear");
+            rule.style.setProperty(
+                "transition",
+                "opacity 0.3s linear, visibility 0.3s linear"
+            );
+            rule.style.setProperty("background-color", "#d1d5db", "important");
         });
 
         // TODO fade-out expiredRules?
@@ -94,7 +98,10 @@ export default class ResponsiveStyleModifier implements PageModifier {
                 rule.style.removeProperty("display");
                 rule.style.setProperty("opacity", "0", "important");
                 rule.style.setProperty("visibility", "hidden", "important");
-                rule.style.setProperty("transition", "all 0.3s linear");
+                rule.style.setProperty(
+                    "transition",
+                    "opacity 0.3s linear, visibility 0.3s linear"
+                );
                 rule.style.setProperty(
                     "background-color",
                     "#d1d5db",

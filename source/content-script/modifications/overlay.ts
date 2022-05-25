@@ -133,6 +133,8 @@ export default class OverlayManager implements PageModifier {
         iframe.setAttribute("frameBorder", "0");
         iframe.style.contain = "strict";
         iframe.style.zIndex = "300";
+        iframe.style.maxWidth =
+            "calc((100vw - var(--lindy-pagewidth)) / 2 - 5px)"; /* set via inline styles to prevent initial transition */
 
         this.topleftIframe = iframe;
     }

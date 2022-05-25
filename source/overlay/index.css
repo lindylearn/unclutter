@@ -331,7 +331,7 @@ svg.lindy-ui-icon#lindy-theme-icon > path {
     z-index: 300;
 
     width: 400px;
-    max-width: calc((100vw - var(--lindy-pagewidth)) / 2 - 5px);
+    max-width: calc((100vw - var(--lindy-pagewidth)) / 2 - 5px); /* also set via inline styles to prevent initial transition */
 
     transition: max-width 0.6s cubic-bezier(0.87, 0, 0.13, 1);
     animation: fadeInOutline 0.3s cubic-bezier(0.16, 1, 0.3, 1);

@@ -281,7 +281,7 @@ export default class TextContainerModifier implements PageModifier {
                 box-shadow: none !important;
                 transition: margin-left 0.6s cubic-bezier(0.87, 0, 0.13, 1);
             }
-            .${lindyHeadingContainerClass}, .${lindyContainerClass}:first-child:is(${globalHeadingSelector}) {
+            .${lindyHeadingContainerClass}, .${lindyContainerClass}:first-child:is(.${lindyContainerClass}) {
                 margin-top: 0 !important;
                 padding-top: 0 !important;
                 height: auto !important;
