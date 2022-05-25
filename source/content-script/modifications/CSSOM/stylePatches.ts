@@ -24,7 +24,8 @@ export default class StylePatchesModifier implements PageModifier {
             !rule.style.width &&
             !rule.style &&
             !rule.style.height &&
-            !rule.style.maxHeight
+            !rule.style.maxHeight &&
+            !rule.style.margin
         ) {
             return;
         }
@@ -44,6 +45,9 @@ export default class StylePatchesModifier implements PageModifier {
         ) {
             rule.style.setProperty("height", "100%");
             rule.style.setProperty("min-height", "100%");
+        }
+        if (rule.style.getPropertyValue("margin")?.includes("vw")) {
+            rule.style.setProperty("margin", "0");
         }
     }
 }

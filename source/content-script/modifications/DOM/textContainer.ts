@@ -1,6 +1,6 @@
 import { createStylesheetText } from "../../../common/stylesheets";
 import { fontSizeThemeVariable } from "../../../common/theme";
-import { blockedSpecificSelectors } from "../contentBlock";
+import { asideWordBlocklist, blockedSpecificSelectors } from "../contentBlock";
 import { PageModifier, trackModifierExecution } from "../_interface";
 
 const globalTextElementSelector = "p, font, pre";
@@ -20,7 +20,7 @@ This is done so that we can:
 @trackModifierExecution
 export default class TextContainerModifier implements PageModifier {
     // Only text elements, e.g. to apply font changes
-    private textElementSelector = `.${lindyContainerClass} > :is(${globalTextElementSelector}, a, ol, blockquote)`;
+    private textElementSelector = `.${lindyTextContainerClass}, .${lindyTextContainerClass} > :is(${globalTextElementSelector}, a, ol, blockquote)`;
 
     // Chain of elements that contain the main article text, to remove margins from
     private bodyContainerSelector = [
@@ -149,12 +149,14 @@ export default class TextContainerModifier implements PageModifier {
                 break;
             }
 
-            const isHeading = headingTags.includes(
-                currentElem.tagName.toLowerCase()
-            );
+            const isHeading =
+                headingTags.includes(currentElem.tagName.toLowerCase()) ||
+                headingWordlist.some((word) =>
+                    currentElem.className.toLowerCase().includes(word)
+                );
             if (isHeading) {
                 // mark current stack elements as heading (parents might not be)
-                console.log(`Found heading container:`, currentElem);
+                // console.log(`Found heading container:`, currentElem);
                 currentStack = currentStack.map(([elem, _]) => [elem, true]);
             }
 
@@ -200,6 +202,11 @@ export default class TextContainerModifier implements PageModifier {
                     this.batchedNodeClassAdditions.push([
                         elem,
                         lindyHeadingContainerClass,
+                    ]);
+                } else {
+                    this.batchedNodeClassAdditions.push([
+                        elem,
+                        lindyTextContainerClass,
                     ]);
                 }
 
@@ -262,6 +269,7 @@ export default class TextContainerModifier implements PageModifier {
             ${this.bodyContainerSelector} {
                 width: 100% !important;
                 min-width: 0 !important;
+                min-height: 0 !important;
                 max-width: calc(var(--lindy-pagewidth) - 2 * 50px) !important;
                 max-height: none !important;
                 margin-left: 0 !important;
@@ -463,34 +471,10 @@ export default class TextContainerModifier implements PageModifier {
 }
 
 export const lindyContainerClass = "lindy-container";
+export const lindyTextContainerClass = "lindy-text-container";
 export const lindyHeadingContainerClass = "lindy-heading-container";
 
-// classes to exclude text changes from
-// should be less strict than contentBlock.ts (which does not apply to text containers)
-export const asideWordBlocklist = [
-    "footer",
-    "aside",
-    "banner",
-    // "alert", // https://www.cnbc.com/2022/05/23/new-york-city-removes-the-last-payphone-from-service.html
-    "message",
-    "nav",
-    "menu",
-    "privacy",
-    "consent",
-    "cookies",
-    "widget",
-    "popup",
-    "caption",
-    "gallery",
-    // "newsletter", // used by substack
-    "promo",
-    "composer",
-    "callout",
-    "related", // https://blog.google/threat-analysis-group/protecting-android-users-from-0-day-attacks/
-    "comment", // https://slatestarcodex.com/2014/09/30/i-can-tolerate-anything-except-the-outgroup/
-    "signup", // https://www.theverge.com/2022/5/24/23137797/logitech-mx-master-3s-mechanical-mini-mouse-keyboard-price-release-date-features
-    "masthead",
-];
+const headingWordlist = ["head", "title"];
 
 function _isAsideEquivalent(node: HTMLElement) {
     if (node === document.body || node.tagName === "ARTICLE") {

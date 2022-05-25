@@ -148,8 +148,7 @@ span > article {
 }
 
 /* https://slatestarcodex.com/2014/07/30/meditations-on-moloch/ */
-.left-sidebar,
-.widget-area {
+.left-sidebar {
     display: none !important;
 }
 #pjgm-wrap {
@@ -398,6 +397,10 @@ html.flexbox.flexboxlegacy > body {
 .zn-body-text ~ * {
     display: none !important;
 }
+/* https://edition.cnn.com/2022/05/24/tech/cher-scarlett-facial-recognition-trauma/index.html */
+.owl-carousel {
+    display: none !important;
+}
 
 /* https://www.independent.co.uk/news/world/europe/mcdonalds-russia-fast-food-trademark-b2037987.html */
 .sc-jcZdLI {
@@ -461,9 +464,14 @@ div[data-module-zone="ribbon"],
 div[data-module-zone="header"] {
     display: none !important;
 }
-
 #cx-what-to-read-next {
     display: none !important;
+}
+.sp-message-open {
+    display: block !important;
+    position: static !important;
+    opacity: 1 !important;
+    visibility: visible !important;
 }
 
 /* https://www.aljazeera.com/news/2022/3/18/personal-ties-that-bind-how-xi-putin-relationship-has-evolved */
@@ -743,4 +751,24 @@ div.bubble-element.CustomElement.bubble-r-container {
     display: block !important;
     opacity: 1 !important;
     visibility: visible !important;
+}
+
+/* https://9to5google.com/2022/05/24/xbox-cloud-gaming-players/ */
+.site-header-placeholder {
+    display: none !important;
+}
+
+/* https://www.archaeology.org/issues/468-2205/letter-from/10504-california-s-coastal-homelands */
+.joomla-header {
+    display: none !important;
+}
+
+/* https://www.rockpapershotgun.com/the-lord-of-the-rings-gollum-preview-may-miss-a-precious-opportunity */
+.avatar {
+    position: static !important;
+}
+
+/* https://deadline.com/2022/05/fbi-season-finale-pulled-cbs-1235031812/ */
+[class~="u-hidden@desktop-max"] {
+    display: none !important;
 }

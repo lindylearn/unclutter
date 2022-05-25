@@ -85,7 +85,7 @@ export default class TransitionManager implements PageModifier {
 
     // pageview width change was triggered just before calling this
     transitionIn() {
-        // remove faded-out elements (animate height, width -> 0)
+        // remove faded-out elements
         this.contentBlockModifier.transitionIn();
         this.responsiveStyleModifier.transitionIn();
 

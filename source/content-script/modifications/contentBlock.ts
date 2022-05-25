@@ -3,7 +3,7 @@ import {
     createStylesheetLink,
     createStylesheetText,
 } from "../../common/stylesheets";
-import { lindyContainerClass } from "./DOM/textContainer";
+import { lindyTextContainerClass } from "./DOM/textContainer";
 import { PageModifier, trackModifierExecution } from "./_interface";
 
 // hide page elements unrelated to the article via custom CSS, to make a page more readable
@@ -14,6 +14,7 @@ export default class ContentBlockModifier implements PageModifier {
 
     constructor() {
         const wordSelectors = blockedWords
+            .concat(asideWordBlocklist)
             .flatMap((word) => [
                 // block noise by className
                 `[class*=${word} i]`,
@@ -81,7 +82,7 @@ export default class ContentBlockModifier implements PageModifier {
     }
 }
 
-const excludeValidElements = `*:not(html):not(body):not(article):not(.${lindyContainerClass})`;
+const excludeValidElements = `*:not(html):not(body):not(article):not(.${lindyTextContainerClass})`;
 
 const blockedTags = [
     "footer",
@@ -90,9 +91,58 @@ const blockedTags = [
     "gpt-ad",
     "iframe:not(.lindy-allowed-iframe)",
 ];
+// match aside containers to block
+// be careful here
+export const asideWordBlocklist = [
+    "footer",
+    "aside",
+    "banner",
+    // "alert", // https://www.cnbc.com/2022/05/23/new-york-city-removes-the-last-payphone-from-service.html
+    "message",
+    "nav",
+    "menu",
+    "privacy",
+    "consent",
+    "cookies",
+    // "widget", https://www.androidcentral.com/phones/nothing-phone-1-design-interview
+    "popup",
+    "caption",
+    "gallery",
+    // "newsletter", // used by substack
+    "promo",
+    "composer",
+    "callout",
+    "related", // https://blog.google/threat-analysis-group/protecting-android-users-from-0-day-attacks/
+    "comment", // https://slatestarcodex.com/2014/09/30/i-can-tolerate-anything-except-the-outgroup/
+    "signup", // https://www.theverge.com/2022/5/24/23137797/logitech-mx-master-3s-mechanical-mini-mouse-keyboard-price-release-date-features
+    "masthead",
+    "below", // https://www.rockpapershotgun.com/the-lord-of-the-rings-gollum-preview-may-miss-a-precious-opportunity
+    "cta", // https://www.lrb.co.uk/the-paper/v33/n19/daniel-soar/it-knows
+    // "sticky", // https://news.yahoo.com/exclusive-secret-cia-training-program-in-ukraine-helped-kyiv-prepare-for-russian-invasion-090052743.html?guccounter=2
+    // "share", 'no-share' https://www.whichev.net/2022/03/29/theion-sulphur-crystal-batteries-promise-breakthrough-in-energy-density/
+    "share-icons", // https://knowablemagazine.org/article/health-disease/2021/how-noise-pollution-affects-heart-health#research-challenges
+    "share-bar", // https://www.buzzfeednews.com/article/richardnieva/worldcoin-crypto-eyeball-scanning-orb-problems
+    "donate", // https://knowablemagazine.org/article/health-disease/2021/how-noise-pollution-affects-heart-health#research-challenges
+    "recommended", // https://reason.com/2022/04/08/the-fbi-decided-not-to-knock-down-a-suspects-front-door-because-it-was-an-affluent-neighborhood/
+    "readnext", // https://blog.gregbrockman.com/its-time-to-become-an-ml-engineer
+    "watch-next", // https://www.popularmechanics.com/space/moon-mars/a40059188/japan-artemis-partnership/
+    "recirc", // https://time.com/6176214/proton-ceo-andy-yen-profile/
+    "similar", // https://nautil.us/the-power-of-narrative-15975/
+    "next-article", // https://boingboing.net/2022/05/18/expert-on-the-shortcomings-of-mass-transit-in-cyberpunk-2077s-night-city.html
+    "below", // https://www.thecity.nyc/2022/2/24/22949795/new-york-rolling-out-noise-law-listening-tech-for-souped-up-speedsters
+    "latest-posts", // https://www.embedded.com/code-morphing-with-crusoe/
+    "carousel", // https://psyche.co/films/a-gym-built-of-soviet-era-scraps-is-a-creative-community-hub
+    "js_reading-list", // https://kotaku.com/old-world-is-teaching-strategy-games-some-new-tricks-1842871705
+    "trending", // https://www.tomsguide.com/opinion/google-pixel-6a-might-be-the-most-exciting-phone-of-2022-heres-why
+    "featured", // https://edition.cnn.com/2022/05/24/tech/cher-scarlett-facial-recognition-trauma/index.html
+    "tease", // https://deadline.com/2022/05/fbi-season-finale-pulled-cbs-1235031812/
+];
+
+// words just blocked, but considered if matched text container
 export const blockedWords = [
     "gpt-ad", // https://www.embedded.com/code-morphing-with-crusoe/
     "-ad", // https://kotaku.com/old-world-is-teaching-strategy-games-some-new-tricks-1842871705
+    "commercial", // https://www.rockpapershotgun.com/the-lord-of-the-rings-gollum-preview-may-miss-a-precious-opportunity
     "masthead",
     // "banner",
     "marketing", // https://www.nature.com/articles/s41598-018-38461-y
@@ -125,24 +175,7 @@ export const blockedWords = [
     "video",
     "signup", // https://www.eff.org/deeplinks/2022/03/campaign-shut-down-crucial-documentary-tool-youtube-dl-continues-and-so-does-fight
     "newslettersignup",
-    "cta", // https://www.lrb.co.uk/the-paper/v33/n19/daniel-soar/it-knows
-    // "sticky", // https://news.yahoo.com/exclusive-secret-cia-training-program-in-ukraine-helped-kyiv-prepare-for-russian-invasion-090052743.html?guccounter=2
-    // "share", 'no-share' https://www.whichev.net/2022/03/29/theion-sulphur-crystal-batteries-promise-breakthrough-in-energy-density/
-    "share-icons", // https://knowablemagazine.org/article/health-disease/2021/how-noise-pollution-affects-heart-health#research-challenges
-    "share-bar", // https://www.buzzfeednews.com/article/richardnieva/worldcoin-crypto-eyeball-scanning-orb-problems
     "more", // https://www.cleanenergywire.org/news/germany-boosts-renewables-biggest-energy-policy-reform-decades
-    "donate", // https://knowablemagazine.org/article/health-disease/2021/how-noise-pollution-affects-heart-health#research-challenges
-    "recommended", // https://reason.com/2022/04/08/the-fbi-decided-not-to-knock-down-a-suspects-front-door-because-it-was-an-affluent-neighborhood/
-    "readnext", // https://blog.gregbrockman.com/its-time-to-become-an-ml-engineer
-    "recirc", // https://time.com/6176214/proton-ceo-andy-yen-profile/
-    "similar", // https://nautil.us/the-power-of-narrative-15975/
-    "next-article", // https://boingboing.net/2022/05/18/expert-on-the-shortcomings-of-mass-transit-in-cyberpunk-2077s-night-city.html
-    "below", // https://www.thecity.nyc/2022/2/24/22949795/new-york-rolling-out-noise-law-listening-tech-for-souped-up-speedsters
-    "latest-posts", // https://www.embedded.com/code-morphing-with-crusoe/
-    "carousel", // https://psyche.co/films/a-gym-built-of-soviet-era-scraps-is-a-creative-community-hub
-    "js_reading-list", // https://kotaku.com/old-world-is-teaching-strategy-games-some-new-tricks-1842871705
-    "breaking", // https://edition.cnn.com/2022/05/23/europe/ukraine-russian-soldier-war-crimes-trial-intl/index.html
-    "trending", // https://www.tomsguide.com/opinion/google-pixel-6a-might-be-the-most-exciting-phone-of-2022-heres-why
 ];
 export const blockedSpecificSelectors = [
     ".ad",
@@ -186,4 +219,11 @@ export const blockedSpecificSelectors = [
     "#gateway-content", // https://www.nytimes.com/2022/05/19/us/princeton-professor-joshua-katz.html
     "#topbar", // https://blog.samaltman.com/how-to-be-successful
     ".site-header",
+    ".link-embed", // https://www.forbes.com/sites/davidphelan/2022/05/24/airpods-pro-2-leak-teases-stunning-innovation-with-a-sting-in-the-tail/?sh=38870a304e88
+    ".disclaimer", // https://www.rockpapershotgun.com/the-lord-of-the-rings-gollum-preview-may-miss-a-precious-opportunity
+    ".top-pathing", // https://www.popularmechanics.com/space/moon-mars/a40059188/japan-artemis-partnership/
+    ".embed-editorial-links", // https://www.popularmechanics.com/space/moon-mars/a40059188/japan-artemis-partnership/
+    ".FITT_Article_TwoColumnSidebar", // https://abcnews.go.com/US/victims-parents-oxford-school-shooting-victims-sue-school/story?id=84933834
+    ".penci-header-wrap", // https://londonlovesbusiness.com/russian-sailors-stage-mutiny-and-refuse-to-carry-out-combat-duties-as-they-perceive-each-trip-to-the-sea-as-a-one-way-ticket/
+    "#pmc-core-header", // https://deadline.com/2022/05/fbi-season-finale-pulled-cbs-1235031812/
 ];
