@@ -35,6 +35,22 @@
     align-items: flex-end;
     gap: 5px;
 }
+
+.lindy-page-settings-topright, .lindy-page-settings-pageadjacent {
+    animation: fadeInIcons 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    animation-fill-mode: both;
+}
+@keyframes fadeInIcons {
+    from {
+        visibility: hidden;
+        opacity: 0;
+    }
+    to {
+        visibility: visible;
+        opacity: 1;
+    }
+}
+
 #lindy-domain-switch-icon-container.lindy-domain-switch-wiggle > svg {
     animation: wiggle 0.6s ease-in-out;
 }
@@ -317,9 +333,8 @@ svg.lindy-ui-icon#lindy-theme-icon > path {
     width: 400px;
     max-width: calc((100vw - var(--lindy-pagewidth)) / 2 - 5px);
 
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    animation: fadeInOutline 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    animation-delay: 0s;
+    transition: max-width 0.6s cubic-bezier(0.87, 0, 0.13, 1);
+    animation: fadeInOutline 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     animation-fill-mode: both;
 }
 @keyframes fadeInOutline {
