@@ -140,13 +140,13 @@ export default class ThemeModifier implements PageModifier {
         // this.siteUsesDefaultDarkMode read in applyActiveColorTheme() below
     }
 
-    async afterTransitionIn() {
-        await this.applyActiveColorTheme();
+    afterTransitionIn() {
+        this.applyActiveColorTheme();
     }
 
-    async transitionOut() {
+    transitionOut() {
         if (this.darkModeActive) {
-            await this.disableDarkMode();
+            this.disableDarkMode();
         }
 
         this.systemDarkModeQuery.removeEventListener(
@@ -155,10 +155,8 @@ export default class ThemeModifier implements PageModifier {
         );
     }
 
-    private async onSystemDarkThemeChange({
-        matches: isDarkMode,
-    }: MediaQueryList) {
-        await this.applyActiveColorTheme();
+    private onSystemDarkThemeChange({ matches: isDarkMode }: MediaQueryList) {
+        this.applyActiveColorTheme();
     }
 
     async changeColorTheme(newColorThemeName: themeName) {
@@ -175,7 +173,7 @@ export default class ThemeModifier implements PageModifier {
     }
 
     // also called from overlay theme selector
-    private async applyActiveColorTheme() {
+    private applyActiveColorTheme() {
         // State for UI switch
         setCssThemeVariable(activeColorThemeVariable, this.activeColorTheme);
         highlightActiveColorThemeButton(this.activeColorTheme);
@@ -194,9 +192,9 @@ export default class ThemeModifier implements PageModifier {
 
         // enable or disable dark mode if there's been a change
         if (this.darkModeActive && !prevDarkModeState) {
-            await this.enableDarkMode();
+            this.enableDarkMode();
         } else if (!this.darkModeActive && prevDarkModeState) {
-            await this.disableDarkMode();
+            this.disableDarkMode();
         }
 
         // apply other background colors
@@ -217,11 +215,11 @@ export default class ThemeModifier implements PageModifier {
             );
         }
 
-        await this.updateAutoModeColor();
+        this.updateAutoModeColor();
     }
 
     // Update auto state (shown in theme switcher)
-    private async updateAutoModeColor() {
+    private updateAutoModeColor() {
         if (this.systemDarkModeQuery.matches) {
             const darkColor = colorThemeToBackgroundColor("dark");
             setCssThemeVariable(autoBackgroundThemeVariable, darkColor);
@@ -233,7 +231,7 @@ export default class ThemeModifier implements PageModifier {
         }
     }
 
-    private async enableDarkMode() {
+    private enableDarkMode() {
         // UI dark style
         createStylesheetLink(
             browser.runtime.getURL("content-script/pageview/contentDark.css"),
@@ -311,7 +309,7 @@ export default class ThemeModifier implements PageModifier {
                 concreteColor
             );
 
-            await this.enableDarkModeStyleTweaks();
+            this.enableDarkModeStyleTweaks();
         }
 
         // always dark text color for ui elements
@@ -325,14 +323,14 @@ export default class ThemeModifier implements PageModifier {
         );
     }
 
-    private async disableDarkMode() {
+    private disableDarkMode() {
         document.documentElement.style.removeProperty("color");
         document.documentElement.style.removeProperty("background");
         document.documentElement.style.removeProperty(darkThemeTextColor);
         this.textContainerModifier.setTextDarkModeVariable(false);
 
         // undo dark mode style tweaks
-        await this.disableDarkModeStyleTweaks();
+        this.disableDarkModeStyleTweaks();
 
         document
             .querySelectorAll(".dark-mode-ui-style")
@@ -384,7 +382,7 @@ export default class ThemeModifier implements PageModifier {
     }
 
     private activeDarkModeStyleTweaks: [CSSStyleRule, object][] = [];
-    private async enableDarkModeStyleTweaks() {
+    private enableDarkModeStyleTweaks() {
         // patch site stylesheet colors
         this.cssomProvider.iterateRules((rule) => {
             if (!isStyleRule(rule)) {
@@ -412,7 +410,7 @@ export default class ThemeModifier implements PageModifier {
         });
     }
 
-    private async disableDarkModeStyleTweaks() {
+    private disableDarkModeStyleTweaks() {
         this.activeDarkModeStyleTweaks.map(([rule, originalStyle]) => {
             for (const [key, value] of Object.entries(originalStyle)) {
                 rule.style.setProperty(key, value);

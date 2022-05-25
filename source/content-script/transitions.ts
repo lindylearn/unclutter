@@ -112,12 +112,13 @@ export default class TransitionManager implements PageModifier {
     async afterTransitionIn() {
         // show UI
         // needs to be run before themeModifier to set correct auto theme value
-        await this.overlayManager.afterTransitionIn();
+        this.overlayManager.afterTransitionIn();
 
         // apply color theme - potentially expensive
-        await this.themeModifier.afterTransitionIn();
+        this.themeModifier.afterTransitionIn();
 
         await new Promise((r) => setTimeout(r, 0));
+        return;
 
         // adjust background element height only after animations done
         this.backgroundModifier.observeHeightChanges();
@@ -137,7 +138,7 @@ export default class TransitionManager implements PageModifier {
 
         await this.contentBlockModifier.transitionOut();
         await this.overlayManager.transitionOut();
-        await this.themeModifier.transitionOut();
+        this.themeModifier.transitionOut();
 
         document.documentElement.classList.remove("pageview");
     }

@@ -8,6 +8,7 @@ import {
 } from "../../common/featureFlags";
 import browser from "../../common/polyfill";
 import {
+    domainUserSetting,
     getUserSettingForDomain,
     setUserSettingsForDomain,
 } from "../../common/storage";
@@ -38,6 +39,11 @@ export default class OverlayManager implements PageModifier {
     private flatOutline: OutlineItem[];
     private topleftSvelteComponent: TopLeftContainer;
 
+    private showOutline: boolean;
+    private domainSetting: domainUserSetting;
+    private allowlistOnActivation: boolean;
+    private annotationsEnabled: boolean;
+
     constructor(
         domain: string,
         themeModifier: ThemeModifier,
@@ -50,12 +56,23 @@ export default class OverlayManager implements PageModifier {
         this.annotationsModifer.annotationListeners.push(
             this.onAnnotationUpdate.bind(this)
         );
+
+        // fetch users settings to run code synchronously later
+        (async () => {
+            this.showOutline = await getFeatureFlag(showOutlineFeatureFlag);
+            this.domainSetting = await getUserSettingForDomain(this.domain);
+            this.allowlistOnActivation = await getFeatureFlag(
+                allowlistDomainOnManualActivationFeatureFlag
+            );
+            this.annotationsEnabled = await getFeatureFlag(
+                enableAnnotationsFeatureFlag
+            );
+        })();
     }
 
-    async afterTransitionIn() {
+    afterTransitionIn() {
         // get outline before DOM modifications
-        const showOutline = await getFeatureFlag(showOutlineFeatureFlag);
-        if (showOutline) {
+        if (this.showOutline) {
             this.enableOutline();
         }
 
@@ -71,22 +88,18 @@ export default class OverlayManager implements PageModifier {
             this
         );
 
-        const domainSetting = await getUserSettingForDomain(this.domain);
-        const allowlistOnActivation = await getFeatureFlag(
-            allowlistDomainOnManualActivationFeatureFlag
-        );
-        if (domainSetting === "allow") {
+        if (this.domainSetting === "allow") {
             wiggleDomainState(400);
-        } else if (allowlistOnActivation && domainSetting === null) {
+        } else if (this.allowlistOnActivation && this.domainSetting === null) {
             const newDomainSetting = "allow";
 
-            await setUserSettingsForDomain(this.domain, newDomainSetting);
+            setUserSettingsForDomain(this.domain, newDomainSetting); // async
             updateDomainState(newDomainSetting, this.domain);
 
             wiggleDomainState(400);
         }
 
-        await this.renderTopLeftContainer();
+        this.renderTopLeftContainer();
     }
 
     setEnableAnnotations(enableAnnotations: boolean) {
@@ -124,7 +137,7 @@ export default class OverlayManager implements PageModifier {
         this.topleftIframe = iframe;
     }
 
-    private async renderTopLeftContainer() {
+    private renderTopLeftContainer() {
         // Firefox bug: need to wait until iframe initial render to insert elements
         // See https://stackoverflow.com/questions/60814167/firefox-deleted-innerhtml-of-generated-iframe
         const fontLink =
@@ -134,16 +147,12 @@ export default class OverlayManager implements PageModifier {
             "https://fonts.googleapis.com/css2?family=Work+Sans:wght@400&family=Poppins:wght@600&display=swap";
         this.topleftIframe.contentDocument.head.appendChild(fontLink);
 
-        const annotationsEnabled = await getFeatureFlag(
-            enableAnnotationsFeatureFlag
-        );
-
         this.topleftSvelteComponent = new TopLeftContainer({
             target: this.topleftIframe.contentDocument.body,
             props: {
                 outline: this.outline, // null at first
                 activeOutlineIndex: this.outline?.[0].index,
-                annotationsEnabled,
+                annotationsEnabled: this.annotationsEnabled,
             },
         });
     }
