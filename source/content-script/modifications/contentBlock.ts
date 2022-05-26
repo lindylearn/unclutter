@@ -132,6 +132,7 @@ export const asideWordBlocklist = [
     "contribute", // https://www.themoscowtimes.com/2022/05/25/russian-lawmakers-to-consider-scrapping-upper-age-limit-for-military-service-a77787
     "byline", // https://www.inkandswitch.com/local-first/
     "comment", // https://slatestarcodex.com/2014/09/30/i-can-tolerate-anything-except-the-outgroup/
+    "spotlight", // https://www.gamesindustry.biz/articles/2022-05-24-us-labour-board-says-activision-blizzard-illegally-threatened-staff
 ];
 
 // words just blocked, but considered if matched text container

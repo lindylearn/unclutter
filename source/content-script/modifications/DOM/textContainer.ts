@@ -144,7 +144,7 @@ export default class TextContainerModifier implements PageModifier {
 
             if (_isAsideEquivalent(currentElem)) {
                 // remove entire current stack
-                console.log(`Found aside container:`, currentElem);
+                // console.log(`Found aside container:`, currentElem);
                 currentStack = [];
                 break;
             }
@@ -220,7 +220,7 @@ export default class TextContainerModifier implements PageModifier {
     };
 
     fadeOutNoise() {
-        this.processBackgroundColors(this.backgroundColors);
+        this.processBackgroundColors();
     }
 
     afterTransitionIn() {
@@ -376,25 +376,13 @@ export default class TextContainerModifier implements PageModifier {
     }
 
     public originalBackgroundColor: string;
-    private processBackgroundColors(textBackgroundColors) {
-        // Colors are in reverse-hierarchical order, with ones closest to the text first
-        // console.log("Found background colors:", textBackgroundColors);
-
-        // Pick original color from text stack if set, otherwise use body color
-        let pickedColor: string;
-        if (textBackgroundColors.length > 0) {
-            pickedColor = textBackgroundColors[0];
-        } else {
-            pickedColor = window.getComputedStyle(
-                document.body
-            ).backgroundColor;
-
-            if (pickedColor.includes("rgba(0, 0, 0, 0)")) {
-                pickedColor = "white";
-            }
+    private processBackgroundColors() {
+        if (
+            this.backgroundColors.length > 0 &&
+            this.backgroundColors[0] !== "rgba(0, 0, 0, 0)"
+        ) {
+            this.originalBackgroundColor = this.backgroundColors[0];
         }
-
-        this.originalBackgroundColor = pickedColor;
     }
 
     // Collect overrides for specific container elements (insert as stylesheet for easy unpatching)
@@ -532,7 +520,6 @@ const backgroundWordBlockList = [
 const supportBannerTextStart = [
     "Support", // https://psyche.co/guides/how-to-have-a-life-full-of-wonder-and-learning-about-the-world
     "Don't Miss", // https://www.military.com/history/how-naked-skydive-inspired-way-keep-pilots-oriented-flight.html
-    "Skip to content", // https://databricks.com/blog/2022/05/19/day-in-the-life-of-a-customer-success-engineer.html
 ];
 function isSupportBanner(node: HTMLElement): boolean {
     const firstChild = node.firstElementChild as HTMLElement;

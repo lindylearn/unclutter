@@ -6,13 +6,25 @@ export default class BodyStyleModifier implements PageModifier {
     private styleObserver: MutationObserver;
     private removeResponsiveStyleListener: () => void;
 
+    originalBackgroundColor: string;
     private bodyStyleProperties: any;
 
-    constructor() {
-        // save before modifications & avoid forced reflow later
-        // save only accessed properties
-        // const activeStyles = window.getComputedStyle(document.body);
-        // this.bodyStyleProperties = { paddingTop: activeStyles.paddingTop };
+    constructor() {}
+
+    prepare() {
+        // save before modifications state
+        const activeHtmlStyles = window.getComputedStyle(
+            document.documentElement
+        );
+        const activeBodyStyles = window.getComputedStyle(document.body);
+
+        if (activeHtmlStyles.backgroundColor !== "rgba(0, 0, 0, 0)") {
+            this.originalBackgroundColor = activeHtmlStyles.backgroundColor;
+        } else if (activeBodyStyles.backgroundColor !== "rgba(0, 0, 0, 0)") {
+            this.originalBackgroundColor = activeBodyStyles.backgroundColor;
+        }
+
+        this.bodyStyleProperties = {};
     }
 
     transitionIn() {
@@ -98,6 +110,7 @@ export default class BodyStyleModifier implements PageModifier {
         // if (["", "0px"].includes(this.bodyStyleProperties.paddingTop)) {
         //     document.body.style.paddingTop = "0.05px";
         // }
+
         document.body.style.setProperty("padding-top", "20px", "important");
         document.body.style.setProperty("padding-left", "50px", "important");
         document.body.style.setProperty("padding-right", "50px", "important");

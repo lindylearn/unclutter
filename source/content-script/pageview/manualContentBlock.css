@@ -128,6 +128,9 @@ span > article {
 .header-container {
     display: none !important;
 }
+.document-container[data-article-id] {
+    display: none !important;
+}
 
 /* https://gizmodo.com/barbed-wire-fences-were-an-early-diy-telephone-network-1493157700 */
 .bxm4mm-6,
@@ -807,4 +810,12 @@ div.bubble-element.CustomElement.bubble-r-container {
 /* https://lepiter.io/feenk/developers-spend-most-of-their-time-figuri-9q25taswlbzjc5rsufndeu0py/ */
 body > div:first-child:not(.lindy-container) {
     display: none;
+}
+
+/* https://www.lremes.com/posts/goldman-sachs/ */
+.gatsby-image-wrapper [data-main-image] {
+    transform: none !important;
+    transition: none !important;
+    opacity: 1 !important;
+    will-change: unset !important;
 }

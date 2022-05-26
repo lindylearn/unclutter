@@ -32,7 +32,8 @@ export default class TransitionManager implements PageModifier {
     private themeModifier = new ThemeModifier(
         this.cssomProvider,
         this.annotationsModifier,
-        this.textContainerModifier
+        this.textContainerModifier,
+        this.bodyStyleModifier
     );
     private overlayManager = new OverlayManager(
         this.domain,
@@ -43,6 +44,9 @@ export default class TransitionManager implements PageModifier {
     private readingTimeModifier = new ReadingTimeModifier(this.overlayManager);
 
     async prepare() {
+        // save original styles before changes
+        this.bodyStyleModifier.prepare();
+
         // fetching CSS may take some time, so run other things in parallel
         await Promise.all([
             // handle CSS

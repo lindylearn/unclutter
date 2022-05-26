@@ -23,6 +23,7 @@ import {
 import { highlightActiveColorThemeButton } from "../../../overlay/insert";
 import { getOutlineIframe } from "../../../overlay/outline/common";
 import AnnotationsModifier from "../annotations/annotationsModifier";
+import BodyStyleModifier from "../bodyStyle";
 import TextContainerModifier from "../DOM/textContainer";
 import { PageModifier, trackModifierExecution } from "../_interface";
 import CSSOMProvider, { isMediaRule, isStyleRule } from "./_provider";
@@ -33,6 +34,7 @@ export default class ThemeModifier implements PageModifier {
     private cssomProvider: CSSOMProvider;
     private annotationsModifer: AnnotationsModifier;
     private textContainerModifier: TextContainerModifier;
+    private bodyStyleModifier: BodyStyleModifier;
 
     private theme: UserTheme;
     private activeColorTheme: themeName;
@@ -41,11 +43,13 @@ export default class ThemeModifier implements PageModifier {
     constructor(
         cssomProvider: CSSOMProvider,
         annotationsModifer: AnnotationsModifier,
-        textContainerModifier: TextContainerModifier
+        textContainerModifier: TextContainerModifier,
+        bodyStyleModifier: BodyStyleModifier
     ) {
         this.cssomProvider = cssomProvider;
         this.annotationsModifer = annotationsModifer;
         this.textContainerModifier = textContainerModifier;
+        this.bodyStyleModifier = bodyStyleModifier;
     }
 
     private systemDarkModeQuery: MediaQueryList;
@@ -99,33 +103,33 @@ export default class ThemeModifier implements PageModifier {
         // look at background color and modify if necessary
         // do now to avoid visible changes later
         this.processBackgroundColor();
-        setCssThemeVariable(
-            backgroundColorThemeVariable,
-            this.textContainerModifier.originalBackgroundColor
-        );
+        setCssThemeVariable(backgroundColorThemeVariable, this.backgroundColor);
 
         if (this.theme.fontSize) {
             setCssThemeVariable(fontSizeThemeVariable, this.theme.fontSize);
         }
     }
 
+    private backgroundColor: string;
     private siteUsesDefaultDarkMode: boolean = false;
     private processBackgroundColor() {
-        const rgbColor = parse(
-            this.textContainerModifier.originalBackgroundColor
-        );
+        this.backgroundColor =
+            this.textContainerModifier.originalBackgroundColor ||
+            this.bodyStyleModifier.originalBackgroundColor ||
+            "white";
+
+        const rgbColor = parse(this.backgroundColor);
         const brightness = getSRGBLightness(rgbColor.r, rgbColor.g, rgbColor.b);
-        // console.log(brightness);
+        console.log(this.backgroundColor, brightness);
 
         if (brightness >= 0.94 && !this.darkModeActive) {
             // Too light colors conflict with white theme, so set to white
-            this.textContainerModifier.originalBackgroundColor = "white";
+            // this.backgroundColor = "white";
         } else if (brightness < 0.1) {
             // Uses dark mode by default, but too dark so use default background color
             // e.g. https://wale.id.au/posts/iviewed-your-api-keys/
             this.siteUsesDefaultDarkMode = true;
-            this.textContainerModifier.originalBackgroundColor =
-                colorThemeToBackgroundColor("dark");
+            this.backgroundColor = colorThemeToBackgroundColor("dark");
         } else if (brightness < 0.3) {
             // Site uses dark mode by default
             // OR we picked a differently-colored banner as background
@@ -201,8 +205,7 @@ export default class ThemeModifier implements PageModifier {
         if (!this.darkModeActive) {
             let concreteColor: string;
             if (this.activeColorTheme === "auto") {
-                concreteColor =
-                    this.textContainerModifier.originalBackgroundColor;
+                concreteColor = this.backgroundColor;
             } else {
                 concreteColor = colorThemeToBackgroundColor(
                     this.activeColorTheme
@@ -226,7 +229,7 @@ export default class ThemeModifier implements PageModifier {
         } else {
             setCssThemeVariable(
                 autoBackgroundThemeVariable,
-                this.textContainerModifier.originalBackgroundColor
+                this.backgroundColor
             );
         }
     }
@@ -257,11 +260,11 @@ export default class ThemeModifier implements PageModifier {
             // use default background elsewhere
             setCssThemeVariable(
                 backgroundColorThemeVariable,
-                this.textContainerModifier.originalBackgroundColor
+                this.backgroundColor
             );
             this.annotationsModifer.setSidebarCssVariable(
                 backgroundColorThemeVariable,
-                this.textContainerModifier.originalBackgroundColor
+                this.backgroundColor
             );
         } else if (siteSupportsDarkMode) {
             // parse background color from site dark mode styles
