@@ -258,11 +258,11 @@ export default class ThemeModifier implements PageModifier {
         );
         this.annotationsModifer.setSidebarDarkMode(true);
 
-        const siteSupportsDarkMode = this.detectSiteDarkMode(true);
-        // console.log("siteSupportsDarkMode", siteSupportsDarkMode);
-        if (this.siteUsesDefaultDarkMode) {
-            // TODO is this too error prone?
+        // enable site dark mode styles if present, but always run our css tweaks too
+        this.detectSiteDarkMode(true);
+        const siteSupportsDarkMode = false;
 
+        if (this.siteUsesDefaultDarkMode) {
             // use default background elsewhere
             setCssThemeVariable(
                 backgroundColorThemeVariable,
