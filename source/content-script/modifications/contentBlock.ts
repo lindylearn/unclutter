@@ -94,7 +94,6 @@ const blockedTags = [
 export const asideWordBlocklist = [
     // "footer", https://www.undrr.org/publication/global-assessment-report-disaster-risk-reduction-2022
     "aside",
-    "banner",
     // "alert", // https://www.cnbc.com/2022/05/23/new-york-city-removes-the-last-payphone-from-service.html
     "message",
     "nav",
@@ -129,11 +128,10 @@ export const asideWordBlocklist = [
     "latest-posts", // https://www.embedded.com/code-morphing-with-crusoe/
     "carousel", // https://psyche.co/films/a-gym-built-of-soviet-era-scraps-is-a-creative-community-hub
     "js_reading-list", // https://kotaku.com/old-world-is-teaching-strategy-games-some-new-tricks-1842871705
-    "trending", // https://www.tomsguide.com/opinion/google-pixel-6a-might-be-the-most-exciting-phone-of-2022-heres-why
-    "featured", // https://edition.cnn.com/2022/05/24/tech/cher-scarlett-facial-recognition-trauma/index.html
     "tease", // https://deadline.com/2022/05/fbi-season-finale-pulled-cbs-1235031812/
     "tooltip", // https://www.businessinsider.com/soros-urges-europe-heavy-taxes-on-russian-natural-gas-putin-2022-5?international=true&r=US&IR=T
     "contribute", // https://www.themoscowtimes.com/2022/05/25/russian-lawmakers-to-consider-scrapping-upper-age-limit-for-military-service-a77787
+    "byline", // https://www.inkandswitch.com/local-first/
 ];
 
 // words just blocked, but considered if matched text container
@@ -176,6 +174,9 @@ export const blockedWords = [
     "more", // https://www.cleanenergywire.org/news/germany-boosts-renewables-biggest-energy-policy-reform-decades
     // "sticky", // https://news.yahoo.com/exclusive-secret-cia-training-program-in-ukraine-helped-kyiv-prepare-for-russian-invasion-090052743.html?guccounter=2
     "comment", // https://slatestarcodex.com/2014/09/30/i-can-tolerate-anything-except-the-outgroup/
+    "banner", // https://nautil.us/why-people-feel-like-victims-9728/
+    "trending", // https://www.tomsguide.com/opinion/google-pixel-6a-might-be-the-most-exciting-phone-of-2022-heres-why
+    "featured", // https://edition.cnn.com/2022/05/24/tech/cher-scarlett-facial-recognition-trauma/index.html
 ];
 export const blockedSpecificSelectors = [
     ".ad",

@@ -501,6 +501,7 @@ function _isAsideEquivalent(node: HTMLElement) {
         node.tagName === "FOOTER" ||
         node.tagName === "ASIDE" ||
         node.tagName === "CODE" ||
+        node.tagName === "NAV" ||
         blockedSpecificSelectors.includes(node.className) ||
         asideWordBlocklist.some(
             (word) =>

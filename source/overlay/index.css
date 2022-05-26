@@ -6,6 +6,7 @@
 }
 
 .lindy-page-settings-topright {
+    all: revert;
     position: fixed !important;
     top: 0;
     right: 0;
@@ -21,6 +22,7 @@
 }
 
 .lindy-page-settings-pageadjacent {
+    all: revert;
     position: absolute !important;
     top: 7px;
     left: calc(
@@ -34,6 +36,9 @@
     flex-direction: column;
     align-items: flex-end;
     gap: 5px;
+}
+.lindy-page-settings-topright > * {
+    all: revert;
 }
 
 .lindy-page-settings-topright, .lindy-page-settings-pageadjacent {
@@ -183,6 +188,7 @@ svg.lindy-ui-icon#lindy-theme-icon > path {
 
 /* popup box */
 .lindy-theme-ui {
+    all: revert;
     position: absolute;
     top: -5px;
     right: calc(100% + 10px);
@@ -209,6 +215,9 @@ svg.lindy-ui-icon#lindy-theme-icon > path {
 /* row with plus and minus buttons */
 .lindy-plusminus {
     display: flex;
+}
+.lindy-plusminus > div {
+    all: revert;
 }
 .lindy-theme-ui-row-spacer {
     border-top: 2px solid #f3f4f6;
@@ -321,6 +330,7 @@ svg.lindy-ui-icon#lindy-theme-icon > path {
 }
 
 #lindy-info-topleft {
+    all: initial;
     position: fixed;
     top: 0;
     left: 0;
@@ -372,6 +382,7 @@ svg.lindy-ui-icon#lindy-theme-icon > path {
     position: relative;
 }
 #lindy-crowd-count-label {
+    all: revert;
     position: absolute;
     top: 68%;
     left: 56%;
