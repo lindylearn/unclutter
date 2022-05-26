@@ -20,7 +20,7 @@ This is done so that we can:
 @trackModifierExecution
 export default class TextContainerModifier implements PageModifier {
     // Only text elements, e.g. to apply font changes
-    private textElementSelector = `.${lindyTextContainerClass}, .${lindyTextContainerClass} > :is(${globalTextElementSelector}, a, ol, blockquote)`;
+    private textElementSelector = `.${lindyTextContainerClass}, .${lindyTextContainerClass} > :is(${globalTextElementSelector}, a, ol)`;
 
     // Chain of elements that contain the main article text, to remove margins from
     private bodyContainerSelector = [
@@ -366,7 +366,7 @@ export default class TextContainerModifier implements PageModifier {
             2
         )})`;
         const fontSizeStyle = `${this.textElementSelector} {
-            position: static;
+            position: relative;
             font-size: ${fontSize} !important;
             line-height: ${this.relativeLineHeight} !important;
         }`;
@@ -502,6 +502,9 @@ function _isAsideEquivalent(node: HTMLElement) {
         node.tagName === "ASIDE" ||
         node.tagName === "CODE" ||
         node.tagName === "NAV" ||
+        // leave quotes as is, e.g. https://stratechery.com/2022/why-netflix-should-sell-ads/
+        node.tagName === "BLOCKQUOTE" ||
+        node.tagName === "CODE" ||
         blockedSpecificSelectors.includes(node.className) ||
         asideWordBlocklist.some(
             (word) =>

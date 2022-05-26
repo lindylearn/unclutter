@@ -96,7 +96,7 @@ export const asideWordBlocklist = [
     "aside",
     // "alert", // https://www.cnbc.com/2022/05/23/new-york-city-removes-the-last-payphone-from-service.html
     "message",
-    "nav",
+    // "-nav", // https://fly.io/blog/a-foolish-consistency/
     "menu",
     "privacy",
     "consent",
@@ -113,7 +113,6 @@ export const asideWordBlocklist = [
     "signup", // https://www.theverge.com/2022/5/24/23137797/logitech-mx-master-3s-mechanical-mini-mouse-keyboard-price-release-date-features
     "masthead",
     "below", // https://www.rockpapershotgun.com/the-lord-of-the-rings-gollum-preview-may-miss-a-precious-opportunity
-    "cta", // https://www.lrb.co.uk/the-paper/v33/n19/daniel-soar/it-knows
     // "share", 'no-share' https://www.whichev.net/2022/03/29/theion-sulphur-crystal-batteries-promise-breakthrough-in-energy-density/
     "share-icons", // https://knowablemagazine.org/article/health-disease/2021/how-noise-pollution-affects-heart-health#research-challenges
     "share-bar", // https://www.buzzfeednews.com/article/richardnieva/worldcoin-crypto-eyeball-scanning-orb-problems
@@ -132,6 +131,7 @@ export const asideWordBlocklist = [
     "tooltip", // https://www.businessinsider.com/soros-urges-europe-heavy-taxes-on-russian-natural-gas-putin-2022-5?international=true&r=US&IR=T
     "contribute", // https://www.themoscowtimes.com/2022/05/25/russian-lawmakers-to-consider-scrapping-upper-age-limit-for-military-service-a77787
     "byline", // https://www.inkandswitch.com/local-first/
+    "comment", // https://slatestarcodex.com/2014/09/30/i-can-tolerate-anything-except-the-outgroup/
 ];
 
 // words just blocked, but considered if matched text container
@@ -147,7 +147,6 @@ export const blockedWords = [
     // "aside", https://www.sec.gov/news/press-release/2022-55
     // "nav",
     "footer",
-    "comment",
     "related",
     "recommendation",
     "social",
@@ -173,10 +172,12 @@ export const blockedWords = [
     "newslettersignup",
     "more", // https://www.cleanenergywire.org/news/germany-boosts-renewables-biggest-energy-policy-reform-decades
     // "sticky", // https://news.yahoo.com/exclusive-secret-cia-training-program-in-ukraine-helped-kyiv-prepare-for-russian-invasion-090052743.html?guccounter=2
-    "comment", // https://slatestarcodex.com/2014/09/30/i-can-tolerate-anything-except-the-outgroup/
     "banner", // https://nautil.us/why-people-feel-like-victims-9728/
     "trending", // https://www.tomsguide.com/opinion/google-pixel-6a-might-be-the-most-exciting-phone-of-2022-heres-why
     "featured", // https://edition.cnn.com/2022/05/24/tech/cher-scarlett-facial-recognition-trauma/index.html
+    "-cta", // https://www.lrb.co.uk/the-paper/v33/n19/daniel-soar/it-knows
+    "hidden", // https://www.atlasobscura.com/articles/women-hair-wigs-south-korea
+    "feedback", // https://www.atlasobscura.com/articles/women-hair-wigs-south-korea
 ];
 export const blockedSpecificSelectors = [
     ".ad",
@@ -229,4 +230,5 @@ export const blockedSpecificSelectors = [
     "#pmc-core-header", // https://deadline.com/2022/05/fbi-season-finale-pulled-cbs-1235031812/
     ".header-placeholder", // https://apnews.com/article/russia-ukraine-janet-yellen-government-and-politics-20dbb506790dddc6f019fa7fdf265514
     ".sdc-site-layout-sticky-region", // https://news.sky.com/story/cosmetic-surgery-adverts-targeting-teenagers-banned-12620879
+    ".skipToContent", // https://www.fugue.co/blog/2015-11-11-guide-to-emacs.html
 ];

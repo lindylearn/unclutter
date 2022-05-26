@@ -499,7 +499,8 @@ article.article-container.article--post {
 
 /* https://aeon.co/essays/against-han-or-why-koreans-are-not-defined-by-sadness */
 .NewsletterPopup__NewsletterPopupWrapper-sc-1giz7ld-1,
-.article__MaxWidthContainer-sc-br4ey4-0 ~ div {
+.article__MaxWidthContainer-sc-br4ey4-0 ~ div,
+.styled__Container-sc-k4zh5d-1 {
     display: none !important;
 }
 .article__Main-sc-br4ey4-5 {
@@ -801,4 +802,9 @@ div.bubble-element.CustomElement.bubble-r-container {
     opacity: 1 !important;
     visibility: visible !important;
     background: white !important;
+}
+
+/* https://lepiter.io/feenk/developers-spend-most-of-their-time-figuri-9q25taswlbzjc5rsufndeu0py/ */
+body > div:first-child:not(.lindy-container) {
+    display: none;
 }

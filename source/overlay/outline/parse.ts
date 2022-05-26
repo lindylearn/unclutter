@@ -342,7 +342,7 @@ function cleanTitle(title: string): string {
         title = title.slice(0, title.length - 1);
     }
 
-    title = title.split("|")[0].split("-")[0].split("–")[0].trim();
+    title = title.split("|")[0].split(" - ")[0].split("–")[0].trim();
 
     return title;
 }

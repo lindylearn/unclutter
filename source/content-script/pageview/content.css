@@ -13,7 +13,7 @@ body {
 }
 
 html.pageview {
-    background-color: #f1f3f4 !important;
+    background: #f1f3f4 !important;
 }
 
 html.pageview.pageview > body {
