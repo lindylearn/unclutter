@@ -140,6 +140,7 @@ export const blockedWords = [
     "gpt-ad", // https://www.embedded.com/code-morphing-with-crusoe/
     "-ad", // https://kotaku.com/old-world-is-teaching-strategy-games-some-new-tricks-1842871705
     "commercial", // https://www.rockpapershotgun.com/the-lord-of-the-rings-gollum-preview-may-miss-a-precious-opportunity
+    "empire", // https://www.popsci.com/science/terahertz-waves-future-technologies/
     "masthead",
     // "banner",
     "marketing", // https://www.nature.com/articles/s41598-018-38461-y
@@ -183,6 +184,8 @@ export const blockedWords = [
 export const blockedSpecificSelectors = [
     ".ad",
     ".Ad", // https://www.buzzfeednews.com/article/richardnieva/worldcoin-crypto-eyeball-scanning-orb-problems
+    ".ad-wrapper", // https://www.smithsonianmag.com/science-nature/why-have-female-animals-evolved-such-wild-genitals-180979813/
+    ".ad-slot", // https://www.smithsonianmag.com/science-nature/why-have-female-animals-evolved-such-wild-genitals-180979813/
     ".ad-stickyhero",
     ".RTEHashTagLabAdModule",
     ".main-nav",
@@ -233,4 +236,5 @@ export const blockedSpecificSelectors = [
     ".sdc-site-layout-sticky-region", // https://news.sky.com/story/cosmetic-surgery-adverts-targeting-teenagers-banned-12620879
     ".skipToContent", // https://www.fugue.co/blog/2015-11-11-guide-to-emacs.html
     "header-cover", // https://kenkantzer.com/learnings-from-5-years-of-tech-startup-code-audits/
+    ".teads-inread", // https://www.cnbc.com/2022/04/05/elon-musk-to-join-twitters-board-of-directors.html
 ];

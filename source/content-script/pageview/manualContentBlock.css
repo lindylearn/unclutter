@@ -819,3 +819,8 @@ body > div:first-child:not(.lindy-container) {
     opacity: 1 !important;
     will-change: unset !important;
 }
+
+/* https://www.cnbc.com/2022/04/05/elon-musk-to-join-twitters-board-of-directors.html */
+.InlineImage-imagePlaceholder {
+    padding-bottom: 0 !important;
+}
