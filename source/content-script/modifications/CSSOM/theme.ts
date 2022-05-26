@@ -131,7 +131,7 @@ export default class ThemeModifier implements PageModifier {
             this.textContainerModifier.mainTextColor
         );
 
-        if (backgroundBrightness < 0.6) {
+        if (backgroundBrightness < 0.6 && !this.darkModeActive) {
             if (textBrightness > 0.5) {
                 // Site uses dark mode by default
                 this.siteUsesDefaultDarkMode = true;
@@ -259,6 +259,7 @@ export default class ThemeModifier implements PageModifier {
         this.annotationsModifer.setSidebarDarkMode(true);
 
         const siteSupportsDarkMode = this.detectSiteDarkMode(true);
+        // console.log("siteSupportsDarkMode", siteSupportsDarkMode);
         if (this.siteUsesDefaultDarkMode) {
             // TODO is this too error prone?
 
@@ -352,8 +353,13 @@ export default class ThemeModifier implements PageModifier {
     }
 
     private enabledSiteDarkModeRules: CSSMediaRule[] = [];
-    private detectSiteDarkMode(enableIfFound = false) {
+    private detectSiteDarkMode(enableIfFound = false): boolean {
         let siteSupportsDarkMode = false;
+
+        if (this.domain === "theatlantic.com") {
+            // their dark styles do not work for some reason
+            return false;
+        }
 
         // iterate only top level for performance
         // also don't iterate the rules we added
@@ -363,7 +369,10 @@ export default class ThemeModifier implements PageModifier {
                     continue;
                 }
                 if (
-                    !rule.media.mediaText.includes("prefers-color-scheme: dark")
+                    !rule.media.mediaText.includes(
+                        "prefers-color-scheme: dark"
+                    ) ||
+                    rule.media.mediaText.includes("prefers-color-scheme: light")
                 ) {
                     continue;
                 }

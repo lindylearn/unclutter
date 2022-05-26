@@ -385,7 +385,6 @@ export default class TextContainerModifier implements PageModifier {
 
     public originalBackgroundColor: string;
     private processBackgroundColors() {
-        console.log(this.backgroundColors);
         if (
             this.backgroundColors.length > 0 &&
             this.backgroundColors[0] !== "rgba(0, 0, 0, 0)"
