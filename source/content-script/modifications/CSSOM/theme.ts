@@ -14,7 +14,7 @@ import {
     themeName,
 } from "../../../common/theme";
 import {
-    getSRGBLightness,
+    getBrightness,
     HSLA,
     hslToString,
     parse,
@@ -113,32 +113,37 @@ export default class ThemeModifier implements PageModifier {
     private backgroundColor: string;
     private siteUsesDefaultDarkMode: boolean = false;
     private processBackgroundColor() {
+        // use detected site color to keep personality
         this.backgroundColor =
             this.textContainerModifier.originalBackgroundColor ||
             this.bodyStyleModifier.originalBackgroundColor ||
             "white";
 
-        const rgbColor = parse(this.backgroundColor);
-        const brightness = getSRGBLightness(rgbColor.r, rgbColor.g, rgbColor.b);
-        console.log(this.backgroundColor, brightness);
+        // TODO test color distance to background color (brightness alone doesn't look nice)
+        // but only known case is https://arstechnica.com/science/2022/05/rocket-report-starliner-soars-into-orbit-about-those-raptor-ruds-in-texas/
+        if (this.backgroundColor === "rgb(240, 241, 242)") {
+            this.backgroundColor = "white";
+        }
 
-        if (brightness >= 0.94 && !this.darkModeActive) {
-            // Too light colors conflict with white theme, so set to white
-            // this.backgroundColor = "white";
-        } else if (brightness < 0.1) {
-            // Uses dark mode by default, but too dark so use default background color
-            // e.g. https://wale.id.au/posts/iviewed-your-api-keys/
-            this.siteUsesDefaultDarkMode = true;
-            this.backgroundColor = colorThemeToBackgroundColor("dark");
-        } else if (brightness < 0.3) {
-            // Site uses dark mode by default
-            // OR we picked a differently-colored banner as background
+        // test if dark mode enabled
+        const backgroundBrightness = getBrightness(this.backgroundColor);
+        const textBrightness = getBrightness(
+            this.textContainerModifier.mainTextColor
+        );
 
-            // need to do something, otherwise rest of ui doesn't work with parsed original background color
-            // e.g. https://joeblu.com/blog/2022_05_okrs/
+        if (backgroundBrightness < 0.6) {
+            if (textBrightness > 0.5) {
+                // Site uses dark mode by default
+                this.siteUsesDefaultDarkMode = true;
 
-            // caution: this is error prone
-            this.siteUsesDefaultDarkMode = true;
+                if (backgroundBrightness < 0.1) {
+                    // so dark that it conflicts with the html background, e.g. https://wale.id.au/posts/iviewed-your-api-keys/
+                    this.backgroundColor = colorThemeToBackgroundColor("dark");
+                }
+            } else {
+                // we likely picked the wrong background color
+                this.backgroundColor = "white";
+            }
         }
 
         // this.siteUsesDefaultDarkMode read in applyActiveColorTheme() below

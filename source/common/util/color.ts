@@ -577,6 +577,11 @@ const systemColors: Map<string, number> = new Map(
 );
 
 // https://en.wikipedia.org/wiki/Relative_luminance
-export function getSRGBLightness(r: number, g: number, b: number) {
+export function getSRGBLightness(r: number, g: number, b: number): number {
     return (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+}
+
+export function getBrightness(color: string): number {
+    const rgbColor = parse(color);
+    return getSRGBLightness(rgbColor.r, rgbColor.g, rgbColor.b);
 }

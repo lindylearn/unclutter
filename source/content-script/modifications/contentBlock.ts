@@ -232,4 +232,5 @@ export const blockedSpecificSelectors = [
     ".header-placeholder", // https://apnews.com/article/russia-ukraine-janet-yellen-government-and-politics-20dbb506790dddc6f019fa7fdf265514
     ".sdc-site-layout-sticky-region", // https://news.sky.com/story/cosmetic-surgery-adverts-targeting-teenagers-banned-12620879
     ".skipToContent", // https://www.fugue.co/blog/2015-11-11-guide-to-emacs.html
+    "header-cover", // https://kenkantzer.com/learnings-from-5-years-of-tech-startup-code-audits/
 ];

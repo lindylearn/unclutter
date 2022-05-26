@@ -41,6 +41,7 @@ export default class TextContainerModifier implements PageModifier {
 
     // Text paragraph samples
     private mainFontSize: number;
+    public mainTextColor: string;
     private exampleMainFontSizeElement: HTMLElement;
 
     // Iterate DOM to apply text container classes and populate the state above
@@ -117,6 +118,9 @@ export default class TextContainerModifier implements PageModifier {
         );
         this.exampleMainFontSizeElement =
             exampleNodePerFontSize[this.mainFontSize];
+        this.mainTextColor = window.getComputedStyle(
+            this.exampleMainFontSizeElement
+        ).color;
 
         // batch className changes to only do one reflow
         this.batchedNodeClassAdditions.map(([node, className]) => {
@@ -177,8 +181,10 @@ export default class TextContainerModifier implements PageModifier {
                     // parse background color
                     if (
                         // exlude some classes from background changes but not text adjustments
-                        !backgroundWordBlockList.some((word) =>
-                            elem.className.toLowerCase().includes(word)
+                        !backgroundWordBlockList.some(
+                            (word) =>
+                                elem.className.toLowerCase().includes(word) ||
+                                elem.id.toLowerCase().includes(word)
                         ) &&
                         // don't take default background color
                         !activeStyle.backgroundColor.includes(
@@ -186,10 +192,11 @@ export default class TextContainerModifier implements PageModifier {
                         ) &&
                         // don't consider transparent colors
                         !activeStyle.backgroundColor.includes("0.") &&
-                        !activeStyle.backgroundColor.includes("%")
+                        !activeStyle.backgroundColor.includes("%") &&
+                        activeStyle.position !== "fixed"
                     ) {
                         // Remember background colors on text containers
-                        console.log(activeStyle.backgroundColor, elem);
+                        // console.log(activeStyle.backgroundColor, elem);
                         this.backgroundColors.push(activeStyle.backgroundColor);
                     }
                 }
@@ -294,6 +301,7 @@ export default class TextContainerModifier implements PageModifier {
                 background: none !important;
                 border: none !important;
                 box-shadow: none !important;
+                z-index: 1 !important;
                 transition: margin-left 0.6s cubic-bezier(0.87, 0, 0.13, 1);
             }
             .${lindyHeadingContainerClass}, .${lindyContainerClass}:first-child {
@@ -377,6 +385,7 @@ export default class TextContainerModifier implements PageModifier {
 
     public originalBackgroundColor: string;
     private processBackgroundColors() {
+        console.log(this.backgroundColors);
         if (
             this.backgroundColors.length > 0 &&
             this.backgroundColors[0] !== "rgba(0, 0, 0, 0)"
@@ -514,6 +523,7 @@ const backgroundWordBlockList = [
     "dialog",
     "call-to-action", // https://future.a16z.com/the-future-of-search-is-boutique/
     "overlay",
+    "alert",
 ];
 
 // be very careful here to not match valid text nodes

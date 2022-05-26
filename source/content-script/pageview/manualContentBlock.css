@@ -117,7 +117,7 @@ main {
 .pw-more-medium-articles {
     display: none !important;
 }
-span > article {
+span > article:not(.lindy-container) {
     display: none !important;
 }
 

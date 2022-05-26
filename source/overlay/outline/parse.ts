@@ -41,6 +41,7 @@ const endBlocklist = [
     "subscribe", // https://axie.substack.com/p/funding
     "related", // https://stackoverflow.blog/2022/04/07/you-should-be-reading-academic-computer-science-papers/
     "comments", // https://www.bennadel.com/blog/4210-you-can-throw-anything-in-javascript-and-other-async-await-considerations.htm
+    "share this", // https://arstechnica.com/science/2022/05/rocket-report-starliner-soars-into-orbit-about-those-raptor-ruds-in-texas/
 ];
 const monthNames = [
     "january",
