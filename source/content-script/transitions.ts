@@ -112,6 +112,9 @@ export default class TransitionManager implements PageModifier {
         this.stylePatchesModifier.afterTransitionIn();
 
         // to look nice, all layout shifts should be done in this phase
+
+        // insert iframe and wait until font loaded
+        this.overlayManager.createTopLeftIframe();
     }
 
     async afterTransitionIn() {
@@ -121,8 +124,6 @@ export default class TransitionManager implements PageModifier {
 
         // apply color theme - potentially expensive
         this.themeModifier.afterTransitionIn();
-
-        // force render
         await new Promise((r) => setTimeout(r, 0));
 
         // UI enhancements, can show up later

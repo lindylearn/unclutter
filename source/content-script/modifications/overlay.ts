@@ -70,15 +70,31 @@ export default class OverlayManager implements PageModifier {
         })();
     }
 
+    private topleftIframe: HTMLIFrameElement;
+    createTopLeftIframe() {
+        const iframe = document.createElement("iframe");
+        iframe.classList.add("lindy-allowed-iframe");
+        iframe.id = "lindy-info-topleft";
+        iframe.setAttribute("scrolling", "no");
+        iframe.setAttribute("frameBorder", "0");
+        iframe.style.contain = "strict";
+        iframe.style.zIndex = "300";
+        iframe.style.maxWidth =
+            "calc((100vw - var(--lindy-pagewidth)) / 2 - 5px)"; /* set via inline styles to prevent initial transition */
+
+        this.topleftIframe = iframe;
+        document.documentElement.appendChild(this.topleftIframe);
+
+        setTimeout(() => {
+            this.insertFontTopLeft();
+        }, 0);
+    }
+
     afterTransitionIn() {
         // get outline before DOM modifications
         if (this.showOutline) {
             this.enableOutline();
         }
-
-        // note: this triggers a reflow before can access iframe below
-        this.createTopLeftIframe();
-        document.documentElement.appendChild(this.topleftIframe);
 
         // page settings
         insertPageSettings(
@@ -132,22 +148,7 @@ export default class OverlayManager implements PageModifier {
         this.listenToOutlineScroll();
     }
 
-    private topleftIframe: HTMLIFrameElement;
-    private createTopLeftIframe() {
-        const iframe = document.createElement("iframe");
-        iframe.classList.add("lindy-allowed-iframe");
-        iframe.id = "lindy-info-topleft";
-        iframe.setAttribute("scrolling", "no");
-        iframe.setAttribute("frameBorder", "0");
-        iframe.style.contain = "strict";
-        iframe.style.zIndex = "300";
-        iframe.style.maxWidth =
-            "calc((100vw - var(--lindy-pagewidth)) / 2 - 5px)"; /* set via inline styles to prevent initial transition */
-
-        this.topleftIframe = iframe;
-    }
-
-    private renderTopLeftContainer() {
+    insertFontTopLeft() {
         // Firefox bug: need to wait until iframe initial render to insert elements
         // See https://stackoverflow.com/questions/60814167/firefox-deleted-innerhtml-of-generated-iframe
         const fontLink =
@@ -156,7 +157,9 @@ export default class OverlayManager implements PageModifier {
         fontLink.href =
             "https://fonts.googleapis.com/css2?family=Work+Sans:wght@400&family=Poppins:wght@600&display=swap";
         this.topleftIframe.contentDocument.head.appendChild(fontLink);
+    }
 
+    renderTopLeftContainer() {
         this.topleftSvelteComponent = new TopLeftContainer({
             target: this.topleftIframe.contentDocument.body,
             props: {
