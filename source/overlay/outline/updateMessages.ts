@@ -9,15 +9,15 @@ interface VersionMessage {
 export async function getVersionMessagesToShow(): Promise<VersionMessage[]> {
     // show messsage for every version since user installed the extension
     const initialVersion = getMainVersion(await getInitialInstallVersion());
-    const newMessages: VersionMessage[] = updateMessages.filter(
-        ({ version }) => getMainVersion(version) >= initialVersion
-    );
+    const newMessages: VersionMessage[] = updateMessages
+        .filter(({ version }) => getMainVersion(version) >= initialVersion)
+        .reverse();
 
     // but hide messages the user has dismissed
     const dismissedVersions = await getDismissedVersionMessages();
-    const messagesToShow = newMessages.filter(
-        ({ version }) => !dismissedVersions.includes(version)
-    );
+    const messagesToShow = newMessages
+        .filter(({ version }) => !dismissedVersions.includes(version))
+        .slice(0, 3);
 
     return messagesToShow;
 }

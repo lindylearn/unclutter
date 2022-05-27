@@ -36,7 +36,7 @@
     function dismissUpdateMessage(dismissedVersion: string) {
         updateMessages = updateMessages.filter(({ version }) => version !== dismissedVersion)
         saveDismissedVersionMessage(dismissedVersion)
-        reportEventContentScript("dismissedUpdateMessage", { version: dismissedVersion })
+        // event emitted in component
     }
 
 </script>
