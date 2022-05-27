@@ -189,7 +189,7 @@ function OptionsPage({}) {
                     }
                 >
                     <p>
-                        Click the underlined text on 24.795 supported articles
+                        Click the underlined text on 55.688 supported articles
                         to show related conversations from Hacker News and
                         Hypothes.is (
                         <a
