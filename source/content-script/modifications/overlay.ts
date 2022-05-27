@@ -154,8 +154,7 @@ export default class OverlayManager implements PageModifier {
         const fontLink =
             this.topleftIframe.contentDocument.createElement("link");
         fontLink.rel = "stylesheet";
-        fontLink.href =
-            "https://fonts.googleapis.com/css2?family=Work+Sans:wght@400&family=Poppins:wght@600&display=swap";
+        fontLink.href = browser.runtime.getURL("assets/fonts/fontface.css");
         this.topleftIframe.contentDocument.head.appendChild(fontLink);
     }
 
