@@ -86,7 +86,6 @@ browser.runtime.onMessage.addListener(
             return true;
         } else if (message.event === "checkLocalAnnotationCount") {
             // trigger from boot.js because we don't have tabs permissions
-
             tabsManager
                 .checkIsArticle(sender.tab.id, sender.url)
                 .then(sendResponse);
@@ -138,6 +137,14 @@ browser.runtime.onInstalled.addListener(async ({ reason }) => {
 // track tab changes to update extension icon badge
 browser.tabs.onActivated.addListener((info: Tabs.OnActivatedActiveInfoType) =>
     tabsManager.onChangeActiveTab(info.tabId)
+);
+browser.tabs.onUpdated.addListener(
+    (tabId: number, change: Tabs.OnUpdatedChangeInfoType) => {
+        if (change.url) {
+            // clear state for old url, checkLocalAnnotationCount will be sent for likely articles again
+            tabsManager.onCloseTab(tabId);
+        }
+    }
 );
 browser.tabs.onRemoved.addListener((tabId: number) =>
     tabsManager.onCloseTab(tabId)
