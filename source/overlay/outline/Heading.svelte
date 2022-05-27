@@ -51,7 +51,7 @@
         <svg class="absolute active-dot hidden" style="width: 6px;" viewBox="0 0 320 512">
             <path fill="currentColor" d="M320 256C320 344.4 248.4 416 160 416C71.63 416 0 344.4 0 256C0 167.6 71.63 96 160 96C248.4 96 320 167.6 320 256z"/>
         </svg>
-        <div class="title flex-grow relative">
+        <div class="title flex-grow relative whitespace-nowrap overflow-hidden">
             <div class="default-title">{title}</div>
             <div class="active-title absolute top-0 left-0 font-header">{title}</div>
         </div>

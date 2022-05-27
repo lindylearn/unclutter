@@ -247,7 +247,7 @@ html.pageview.pageview > body {
 
 @media (max-width: 1200px) {
     #lindy-info-topleft {
-        display: none;
+        display: none !important;
     }
 
     html.pageview > body {
