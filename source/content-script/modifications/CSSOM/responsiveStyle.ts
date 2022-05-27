@@ -86,7 +86,7 @@ export default class ResponsiveStyleModifier implements PageModifier {
                 "transition",
                 "opacity 0.3s linear, visibility 0.3s linear"
             );
-            rule.style.setProperty("background-color", "#d1d5db", "important");
+            rule.style.setProperty("background-color", "#e5e7eb", "important");
         });
 
         // TODO fade-out expiredRules?
@@ -104,7 +104,7 @@ export default class ResponsiveStyleModifier implements PageModifier {
                 );
                 rule.style.setProperty(
                     "background-color",
-                    "#d1d5db",
+                    "#e5e7eb",
                     "important"
                 );
 

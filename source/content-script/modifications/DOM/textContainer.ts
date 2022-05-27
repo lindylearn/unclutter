@@ -148,7 +148,21 @@ export default class TextContainerModifier implements PageModifier {
 
             if (_isAsideEquivalent(currentElem)) {
                 // remove entire current stack
-                // console.log(`Found aside container:`, currentElem);
+                // console.log(
+                //     `Found aside container:`,
+                //     currentElem,
+                //     asideWordBlocklist.filter(
+                //         (word) =>
+                //             currentElem.className
+                //                 .toLowerCase()
+                //                 .includes(word) ||
+                //             currentElem.id.toLowerCase().includes(word)
+                //     ),
+                //     blockedSpecificSelectors.includes(currentElem.className),
+                //     isSupportBanner(currentElem),
+                //     currentElem.hasAttribute("data-language"),
+                //     currentElem.tagName
+                // );
                 currentStack = [];
                 break;
             }
@@ -507,8 +521,8 @@ function _isAsideEquivalent(node: HTMLElement) {
                 node.className.toLowerCase().includes(word) ||
                 node.id.toLowerCase().includes(word)
         ) ||
-        node.hasAttribute("data-language") ||
-        isSupportBanner(node)
+        node.hasAttribute("data-language")
+        // isSupportBanner(node) // false positive on https://www.eurogamer.net/dead-space-creators-the-callisto-protocol-has-ditched-ties-with-pubg-universe
     );
 }
 

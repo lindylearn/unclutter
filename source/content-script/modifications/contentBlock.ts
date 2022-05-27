@@ -3,7 +3,7 @@ import {
     createStylesheetLink,
     createStylesheetText,
 } from "../../common/stylesheets";
-import { lindyTextContainerClass } from "./DOM/textContainer";
+import { lindyContainerClass } from "./DOM/textContainer";
 import { PageModifier, trackModifierExecution } from "./_interface";
 
 // hide page elements unrelated to the article via custom CSS, to make a page more readable
@@ -39,7 +39,7 @@ export default class ContentBlockModifier implements PageModifier {
 
         const css = `${this.selectors.join(
             ", "
-        )} { visibility: hidden !important; opacity: 0 !important; transition: opacity 0.3s linear, visibility 0.3s linear; background-color: #d1d5db !important; }`;
+        )} { visibility: hidden !important; opacity: 0 !important; transition: opacity 0.3s linear, visibility 0.3s linear; background-color: #e5e7eb !important; }`;
         // TODO animate to 0 area? height: 0; width: 0; overflow: hidden;
 
         createStylesheetText(css, "content-block-fadeout");
@@ -80,7 +80,7 @@ export default class ContentBlockModifier implements PageModifier {
     }
 }
 
-const excludeValidElements = `*:not(html):not(body):not(article):not(.${lindyTextContainerClass})`;
+const excludeValidElements = `*:not(html):not(body):not(article):not(.${lindyContainerClass})`;
 
 const blockedTags = [
     "footer",
