@@ -10,7 +10,7 @@ export default class CSSOMProvider {
         const allStylesheets = [...document.styleSheets];
 
         const accessibleStylesheets = await Promise.all(
-            allStylesheets.map(async (sheet) => {
+            allStylesheets.map(async (sheet, sheetIndex) => {
                 // Only consider applicable stylesheets
                 // e.g. 'print' at https://www.theguardian.com/world/2022/mar/25/russian-troops-mutiny-commander-ukraine-report-western-officials
                 // TODO also consider responsive styles that would become valid?
@@ -85,7 +85,7 @@ export default class CSSOMProvider {
                         if (sheet.ownerNode) {
                             // In theory this should never be null, but it can happen
                             // e.g. on https://theconversation.com/how-fast-can-we-stop-earth-from-warming-178295
-                            disableStylesheet(ownerNode, styleId);
+                            disableStylesheet(ownerNode, sheetIndex);
                         }
 
                         return element.sheet;
