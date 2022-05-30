@@ -7,6 +7,7 @@ import {
 } from "../common/featureFlags";
 import browser from "../common/polyfill";
 import { getAllCustomDomainSettings } from "../common/storage2";
+import { getInitialInstallVersion } from "../overlay/outline/updateMessages";
 
 // Anonymously report usage events (if the user allowed it)
 // See https://github.com/lindylearn/unclutter/blob/main/docs/metrics.md
@@ -86,6 +87,7 @@ export async function reportSettings(version, isNewInstall) {
         $set: {
             ...featureFlagSettings,
             isDev,
+            initialInstallVersion: await getInitialInstallVersion(),
         },
     });
 }
