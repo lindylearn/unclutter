@@ -106,13 +106,11 @@ export const asideWordBlocklist = [
     "caption",
     "gallery",
     // "newsletter", // used by substack
-    "promo",
     "composer",
     "callout",
     "related", // https://blog.google/threat-analysis-group/protecting-android-users-from-0-day-attacks/
     "signup", // https://www.theverge.com/2022/5/24/23137797/logitech-mx-master-3s-mechanical-mini-mouse-keyboard-price-release-date-features
     "masthead",
-    "below", // https://www.rockpapershotgun.com/the-lord-of-the-rings-gollum-preview-may-miss-a-precious-opportunity
     // "share", 'no-share' https://www.whichev.net/2022/03/29/theion-sulphur-crystal-batteries-promise-breakthrough-in-energy-density/
     "share-icons", // https://knowablemagazine.org/article/health-disease/2021/how-noise-pollution-affects-heart-health#research-challenges
     "share-bar", // https://www.buzzfeednews.com/article/richardnieva/worldcoin-crypto-eyeball-scanning-orb-problems
@@ -123,7 +121,6 @@ export const asideWordBlocklist = [
     "recirc", // https://time.com/6176214/proton-ceo-andy-yen-profile/
     "similar", // https://nautil.us/the-power-of-narrative-15975/
     "next-article", // https://boingboing.net/2022/05/18/expert-on-the-shortcomings-of-mass-transit-in-cyberpunk-2077s-night-city.html
-    "below", // https://www.thecity.nyc/2022/2/24/22949795/new-york-rolling-out-noise-law-listening-tech-for-souped-up-speedsters
     "latest-posts", // https://www.embedded.com/code-morphing-with-crusoe/
     "carousel", // https://psyche.co/films/a-gym-built-of-soviet-era-scraps-is-a-creative-community-hub
     "js_reading-list", // https://kotaku.com/old-world-is-teaching-strategy-games-some-new-tricks-1842871705
@@ -180,6 +177,8 @@ export const blockedWords = [
     "-cta", // https://www.lrb.co.uk/the-paper/v33/n19/daniel-soar/it-knows
     "hidden", // https://www.atlasobscura.com/articles/women-hair-wigs-south-korea
     "feedback", // https://www.atlasobscura.com/articles/women-hair-wigs-south-korea
+    "below", // https://www.rockpapershotgun.com/the-lord-of-the-rings-gollum-preview-may-miss-a-precious-opportunity
+    "promo", // https://www.cbsnews.com/news/memorial-day-weekend-travel-flight-cancellations/
 ];
 export const blockedSpecificSelectors = [
     ".ad",
