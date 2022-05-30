@@ -92,7 +92,7 @@ function OptionsPage({}) {
                     )
                 </p>
                 <FeatureFlagSwitch featureFlagKey={enableBootUnclutterMessage}>
-                    Show unclutter button on web pages{" "}
+                    Show unclutter reminder on web pages{" "}
                     <a
                         href="https://github.com/lindylearn/unclutter/tree/main/docs/article-detection.md"
                         className="underline"

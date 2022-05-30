@@ -60,7 +60,7 @@ export const defaultFeatureFlags = {
     [automaticallyEnabledFeatureFlag]: false,
     [allowlistDomainOnManualActivationFeatureFlag]: false,
     [collectAnonymousMetricsFeatureFlag]: true,
-    [enableBootUnclutterMessage]: true,
+    [enableBootUnclutterMessage]: false,
     [isDevelopmentFeatureFlag]: false,
     [showOutlineFeatureFlag]: true,
     [enableSocialCountsFeatureFlag]: true,
