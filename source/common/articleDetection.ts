@@ -112,9 +112,5 @@ export async function isConfiguredToEnable(domain) {
         return true;
     }
 
-    // Enable if automatic mode active
-    // const automaticModeEnabled = await getFeatureFlag(
-    //     automaticallyEnabledFeatureFlag
-    // );
     return false;
 }

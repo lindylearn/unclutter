@@ -17,7 +17,6 @@ export async function setFeatureFlag(key, status) {
 
 export async function getAllFeatureFlags() {
     const reportedFlags = [
-        automaticallyEnabledFeatureFlag,
         allowlistDomainOnManualActivationFeatureFlag,
         collectAnonymousMetricsFeatureFlag,
         enableBootUnclutterMessage,
@@ -34,7 +33,6 @@ export async function getAllFeatureFlags() {
     return config;
 }
 
-export const automaticallyEnabledFeatureFlag = "automatically-enabled";
 export const allowlistDomainOnManualActivationFeatureFlag =
     "allowlist-domain-manual-activation";
 export const collectAnonymousMetricsFeatureFlag = "collect-anonymous-metrics";
@@ -55,7 +53,6 @@ export const showFeedbackMessage = "show-feedback-message";
 export const supportSocialAnnotations = "support-social-annotations";
 
 export const defaultFeatureFlags = {
-    [automaticallyEnabledFeatureFlag]: false,
     [allowlistDomainOnManualActivationFeatureFlag]: false,
     [collectAnonymousMetricsFeatureFlag]: true,
     [enableBootUnclutterMessage]: false,
@@ -68,6 +65,4 @@ export const defaultFeatureFlags = {
     [dismissedFeedbackMessage]: false,
 };
 
-const featureFlagLocalOverrides = {
-    [automaticallyEnabledFeatureFlag]: false, // deprecated
-};
+const featureFlagLocalOverrides = {};

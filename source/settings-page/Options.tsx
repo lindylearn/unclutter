@@ -184,8 +184,8 @@ function OptionsPage({}) {
                     }
                 >
                     <p>
-                        Click the underlined text on 55.688 supported articles
-                        to show related conversations from Hacker News and
+                        Click the underlined text on 55688 supported articles to
+                        show related conversations from Hacker News and
                         Hypothes.is (
                         <a
                             href="https://github.com/lindylearn/unclutter/blob/main/docs/social-highlights.md"
