@@ -127,7 +127,6 @@ export const asideWordBlocklist = [
     "tease", // https://deadline.com/2022/05/fbi-season-finale-pulled-cbs-1235031812/
     "tooltip", // https://www.businessinsider.com/soros-urges-europe-heavy-taxes-on-russian-natural-gas-putin-2022-5?international=true&r=US&IR=T
     "contribute", // https://www.themoscowtimes.com/2022/05/25/russian-lawmakers-to-consider-scrapping-upper-age-limit-for-military-service-a77787
-    "byline", // https://www.inkandswitch.com/local-first/
     "comment", // https://slatestarcodex.com/2014/09/30/i-can-tolerate-anything-except-the-outgroup/
     "spotlight", // https://www.gamesindustry.biz/articles/2022-05-24-us-labour-board-says-activision-blizzard-illegally-threatened-staff
 ];
@@ -236,4 +235,5 @@ export const blockedSpecificSelectors = [
     ".skipToContent", // https://www.fugue.co/blog/2015-11-11-guide-to-emacs.html
     "header-cover", // https://kenkantzer.com/learnings-from-5-years-of-tech-startup-code-audits/
     ".teads-inread", // https://www.cnbc.com/2022/04/05/elon-musk-to-join-twitters-board-of-directors.html
+    ".byline", // https://www.inkandswitch.com/local-first/
 ];

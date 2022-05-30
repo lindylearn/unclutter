@@ -4,7 +4,6 @@ import {
     enableAnnotationsFeatureFlag,
     enableSocialCommentsFeatureFlag,
     getFeatureFlag,
-    showOutlineFeatureFlag,
 } from "../../common/featureFlags";
 import browser from "../../common/polyfill";
 import {
@@ -39,7 +38,6 @@ export default class OverlayManager implements PageModifier {
     private flatOutline: OutlineItem[];
     private topleftSvelteComponent: TopLeftContainer;
 
-    private showOutline: boolean;
     private domainSetting: domainUserSetting;
     private allowlistOnActivation: boolean;
     private annotationsEnabled: boolean;
@@ -59,7 +57,6 @@ export default class OverlayManager implements PageModifier {
 
         // fetch users settings to run code synchronously later
         (async () => {
-            this.showOutline = await getFeatureFlag(showOutlineFeatureFlag);
             this.domainSetting = await getUserSettingForDomain(this.domain);
             this.allowlistOnActivation = await getFeatureFlag(
                 allowlistDomainOnManualActivationFeatureFlag
@@ -92,9 +89,7 @@ export default class OverlayManager implements PageModifier {
 
     afterTransitionIn() {
         // get outline before DOM modifications
-        if (this.showOutline) {
-            this.enableOutline();
-        }
+        this.enableOutline();
 
         // page settings
         insertPageSettings(

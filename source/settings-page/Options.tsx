@@ -5,7 +5,6 @@ import {
     enableSocialCountsFeatureFlag,
     getFeatureFlag,
     hypothesisSyncFeatureFlag,
-    showOutlineFeatureFlag,
     supportSocialAnnotations,
 } from "../common/featureFlags";
 import browser, { getBrowserType } from "../common/polyfill";
@@ -100,9 +99,6 @@ function OptionsPage({}) {
                     >
                         that look like articles
                     </a>
-                </FeatureFlagSwitch>
-                <FeatureFlagSwitch featureFlagKey={showOutlineFeatureFlag}>
-                    Show interactive article outline where available
                 </FeatureFlagSwitch>
             </OptionsGroup>
 
