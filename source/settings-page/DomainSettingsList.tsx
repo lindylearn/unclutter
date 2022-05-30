@@ -65,10 +65,10 @@ export default function DomainSettingsList({}) {
 
     return (
         <>
-            <ul className="mt-1 px-3 py-2 flex flex-col items-start gap-1 bg-gray-100 dark:bg-gray-800 h-40 overflow-y-auto shadow-inner">
+            <ul className="mt-1 px-3 py-2 flex flex-col items-start gap-1 bg-gray-100 dark:bg-gray-800 h-32 overflow-y-auto shadow-inner">
                 {overrideList?.length === 0 && (
                     <li className="text-gray-600 dark:text-gray-300">
-                        There are no automatic domain settings yet!
+                        There are no automatic activation settings yet!
                     </li>
                 )}
                 {overrideList?.map(({ domain, status }) => (

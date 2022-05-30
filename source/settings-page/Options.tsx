@@ -114,8 +114,8 @@ function OptionsPage({}) {
                 }
             >
                 <p className="">
-                    To automatically unclutter pages on a certain domain, click
-                    the "bolt" icon next to each article.
+                    Click the "bolt" icon next to each article to automatically
+                    unclutter all pages on a certain domain.
                 </p>
 
                 <FeatureFlagSwitch
@@ -123,7 +123,7 @@ function OptionsPage({}) {
                         allowlistDomainOnManualActivationFeatureFlag
                     }
                 >
-                    Always add the current domain when you unclutter a page
+                    Enable automatic activation for pages you unclutter manually
                 </FeatureFlagSwitch>
                 <DomainSettingsList />
             </OptionsGroup>
@@ -148,7 +148,7 @@ function OptionsPage({}) {
                     featureFlagKey={hypothesisSyncFeatureFlag}
                     onChange={onChangeHypothesisSync}
                 >
-                    Sync notes with my{" "}
+                    Back-up notes to my{" "}
                     <a
                         href="https://web.hypothes.is"
                         className="underline"
@@ -164,7 +164,7 @@ function OptionsPage({}) {
                         target="_blank"
                         rel="noopener noreferrer"
                     >
-                        why
+                        more info
                     </a>
                     )
                 </FeatureFlagSwitch>
@@ -193,15 +193,15 @@ function OptionsPage({}) {
                             target="_blank"
                             rel="noopener noreferrer"
                         >
-                            here's how this works
+                            how this works
                         </a>
                         )
                     </p>
                     <FeatureFlagSwitch
                         featureFlagKey={enableSocialCountsFeatureFlag}
                     >
-                        Show the number of social highlights on the extension
-                        icon
+                        Show number of available social highlights on the
+                        extension icon
                     </FeatureFlagSwitch>
                 </OptionsGroup>
             )}
@@ -240,10 +240,10 @@ function OptionsGroup({ headerText, iconSvg, children }) {
     return (
         <div>
             <h2 className="text-lg font-semibold mb-1 flex items-center">
-                <div className="w-7">{iconSvg}</div>
+                <div className="w-7 mr-1">{iconSvg}</div>
                 {headerText}
             </h2>
-            <div className="ml-7 mr-5 flex flex-col gap-2">{children}</div>
+            <div className="ml-8 mr-5 flex flex-col gap-2">{children}</div>
         </div>
     );
 }
