@@ -20,14 +20,6 @@ export async function reportEvent(name: string, data = {}) {
     //     console.log(`Metric ${name}:`, data);
     // }
 
-    // Check if user allowed metrics reporting
-    if (!metricsEnabled) {
-        // only allowed events are update notification and disable event
-        if (!["reportSettings", "disableMetrics"].includes(name)) {
-            return;
-        }
-    }
-
     await sendEvent(name, data, isDev);
 }
 

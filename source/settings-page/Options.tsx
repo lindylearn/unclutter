@@ -1,7 +1,6 @@
 import React from "react";
 import {
     allowlistDomainOnManualActivationFeatureFlag,
-    collectAnonymousMetricsFeatureFlag,
     enableBootUnclutterMessage,
     enableSocialCountsFeatureFlag,
     getFeatureFlag,
@@ -235,20 +234,6 @@ function OptionsPage({}) {
                     </a>
                     .
                 </div>
-                <FeatureFlagSwitch
-                    featureFlagKey={collectAnonymousMetricsFeatureFlag}
-                >
-                    Collect anonymous{" "}
-                    <a
-                        href="https://github.com/lindylearn/unclutter/tree/main/docs/metrics.md"
-                        className="underline"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        usage statistics
-                    </a>{" "}
-                    to make the extension better
-                </FeatureFlagSwitch>
             </OptionsGroup>
         </div>
     );
