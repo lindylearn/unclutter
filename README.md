@@ -2,12 +2,14 @@
 
 A browser extension to automatically remove distractions from web articles.
 
+![intro](https://user-images.githubusercontent.com/23430759/171190664-b9927344-8ce5-4a78-9516-7bc638a3c425.gif)
+
+## Installation
+
+Try out the extension from the Chrome or Firefox extension stores:
+
 [<img src="./media/chrome-badge.png" height="80">](https://chrome.google.com/webstore/detail/unclutter-immersive-readi/ibckhpijbdmdobhhhodkceffdngnglpk)
 [<img src="./media/firefox-badge.png" height="65" style="margin-bottom: 6px;">](https://addons.mozilla.org/en-GB/firefox/addon/lindylearn/)
-
-## Demo video
-
-![Demo video](./media/intro.mov)
 
 ## Features
 
