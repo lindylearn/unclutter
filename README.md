@@ -8,8 +8,8 @@ A browser extension to remove distractions from web articles.
 
 Try out the extension from the Chrome or Firefox extension store:
 
-[<img src="./media/chrome-badge.png" height="80">](https://chrome.google.com/webstore/detail/unclutter-immersive-readi/ibckhpijbdmdobhhhodkceffdngnglpk)
-[<img src="./media/firefox-badge.png" height="65" style="margin-bottom: 6px;">](https://addons.mozilla.org/en-GB/firefox/addon/lindylearn/)
+[<img src="./media/chrome-badge.png" height="60">](https://chrome.google.com/webstore/detail/unclutter-immersive-readi/ibckhpijbdmdobhhhodkceffdngnglpk)
+[<img src="./media/firefox-badge.png" height="45" style="margin-bottom: 6px;">](https://addons.mozilla.org/en-GB/firefox/addon/lindylearn/)
 
 ## Features
 
@@ -38,7 +38,7 @@ Fore more details refer to (incomplete) docs files in [/docs](docs).
 
 The main way you can help is to [report](https://github.com/lindylearn/unclutter/issues) bugs, broken articles pages, UI inconsistencies, or ideas on how to improve the extension.
 
-If you want something to be fixed faster (like a CSS bug), it may help to do it yourself. Please let me know if the docs pages and inline comments are not sufficient (which is likely).
+If you want something to be fixed faster (like a CSS bug), it may help to do it yourself. Please let me know if the docs pages and inline comments are not sufficient.
 
 ## Development
 
@@ -54,6 +54,6 @@ For hot reloading during development, run `yarn watch` and `npx web-ext run` in 
 
 ## Licence
 
-The extension code is released under the [Simplified BSD License](https://choosealicense.com/licenses/bsd-2-clause/), which excludes any liability for bugs you find. The project is part of the [LindyLearn](http://lindylearn.io/) suite of tools.
+The extension code is released under the [Simplified BSD License](https://choosealicense.com/licenses/bsd-2-clause/), which excludes any liability for bugs you find. The project is part of the [LindyLearn](http://lindylearn.io/) suite of tools, and will remain open-source.
 
-The private notes and social highlights feature uses code from the annotator subcomponent of [hypothesis/client](https://github.com/hypothesis/client) to anchor text on webpages. See [LICENCE](https://github.com/lindylearn/annotations/blob/main/LICENCE) for the legal boilerplate.
+The private notes and social highlights feature uses code from the annotator subcomponent of [hypothesis/client](https://github.com/hypothesis/client) to anchor text fragments. See [LICENCE](https://github.com/lindylearn/annotations/blob/main/LICENCE) for the legal boilerplate.
