@@ -133,6 +133,12 @@ export default class TransitionManager implements PageModifier {
 
         // adjust background element height only after animations done
         this.backgroundModifier.observeHeightChanges();
+
+        document.body.style.setProperty(
+            "transition",
+            "all 0.2s ease-in-out",
+            "important"
+        );
     }
 
     async transitionOut() {

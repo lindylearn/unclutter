@@ -53,6 +53,7 @@ html.pageview.pageview > body {
     z-index: -100 !important;
     content: "" !important;
     background: inherit;
+    transition: background 0.5s cubic-bezier(0.87, 0, 0.13, 1);
 
     border-radius: 10px !important;
 }
