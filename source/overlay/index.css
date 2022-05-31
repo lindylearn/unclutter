@@ -28,7 +28,7 @@
     left: calc(
         (100vw - var(--lindy-pagewidth)) / 2 + var(--lindy-pagewidth) - 5px
     );
-    z-index: 300;
+    z-index: 100;
     padding: 10px;
     contain: layout style;
 
@@ -36,6 +36,8 @@
     flex-direction: column;
     align-items: flex-end;
     gap: 5px;
+
+    transition: left 0.2s ease-in-out;
 }
 .lindy-page-settings-topright > * {
     all: revert;
@@ -193,7 +195,6 @@ svg.lindy-ui-icon#lindy-theme-icon > path {
     top: -5px;
     right: calc(100% + 10px);
     width: 130px;
-    z-index: 300;
 
     background-color: var(--background-color);
     color: #9ca3af;
