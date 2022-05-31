@@ -226,7 +226,7 @@ function getHeadingNodeItem(
 
     if (headingIndex !== 0) {
         // don't restrict title heading length (after cleanup)
-        cleanText = restrictTitleLength(cleanText);
+        cleanText = restrictTitleLength(cleanText, 100);
     }
 
     // Construct hierarchy based on <hX> level

@@ -826,3 +826,8 @@ body > div:first-child:not(.lindy-container) {
 .InlineImage-imagePlaceholder {
     padding-bottom: 0 !important;
 }
+
+/* https://www.theguardian.com/lifeandstyle/2014/jul/19/change-your-life-sit-down-and-think */
+.dcr-3jlghf, .dcr-chmysj {
+    font-size: calc(var(--lindy-active-font-size) * 0.94) !important;
+}
