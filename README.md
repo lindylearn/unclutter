@@ -7,7 +7,7 @@ A browser extension to automatically remove distractions from web articles.
 
 ## Demo video
 
-![Demo video](./media/intro.webm)
+![Demo video](./media/intro.mov)
 
 ## Features
 
