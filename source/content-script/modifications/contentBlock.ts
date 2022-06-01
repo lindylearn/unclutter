@@ -87,7 +87,7 @@ const blockedTags = [
     "aside",
     "nav",
     "gpt-ad",
-    "iframe:not(.lindy-allowed-iframe)",
+    // "iframe:not(.lindy-allowed-iframe)",
 ];
 // match aside containers to block
 // be careful here
