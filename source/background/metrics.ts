@@ -3,7 +3,6 @@ import {
     getAllFeatureFlags,
     getFeatureFlag,
     isDevelopmentFeatureFlag,
-    supportSocialAnnotations,
 } from "../common/featureFlags";
 import browser from "../common/polyfill";
 import { getAllCustomDomainSettings } from "../common/storage2";
@@ -146,11 +145,6 @@ export async function getRemoteFeatureFlags() {
         if (fetchSecondsAgo < 60 * 15) {
             return cachedRemoteFeatureFlags;
         }
-    }
-
-    const isDev = await getFeatureFlag(isDevelopmentFeatureFlag);
-    if (isDev) {
-        return { [supportSocialAnnotations]: true };
     }
 
     try {

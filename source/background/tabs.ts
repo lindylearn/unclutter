@@ -1,11 +1,9 @@
 import {
     enableSocialCountsFeatureFlag,
     getFeatureFlag,
-    supportSocialAnnotations,
 } from "../common/featureFlags";
 import browser from "../common/polyfill";
 import { getSocialCommentsCount } from "./annotationCounts";
-import { getRemoteFeatureFlags } from "./metrics";
 
 export class TabStateManager {
     // store annotation counts per tab id, and update the badge text on active tab changes
@@ -74,12 +72,6 @@ export class TabStateManager {
 
     // check settings every time in case user changed it
     private async isCountEnabled(): Promise<boolean> {
-        const featureEnabled = (await getRemoteFeatureFlags())?.[
-            supportSocialAnnotations
-        ];
-        if (!featureEnabled) {
-            return false;
-        }
         const showAnnotationCount = await getFeatureFlag(
             enableSocialCountsFeatureFlag
         );

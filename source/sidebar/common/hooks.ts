@@ -3,9 +3,7 @@ import {
     enableAnnotationsFeatureFlag,
     enableSocialCommentsFeatureFlag,
     getFeatureFlag,
-    supportSocialAnnotations,
 } from "../../common/featureFlags";
-import { getRemoteFeatureFlag } from "../../content-script/messaging";
 
 export function useFeatureFlag(featureFlag: string): boolean {
     const [enabled, setEnabled] = useState(false);
@@ -32,15 +30,9 @@ export function useAnnotationSettings() {
                 enableAnnotationsFeatureFlag
             );
 
-            let enableSocialAnnotations = false;
-            const supportSocialFeature = await getRemoteFeatureFlag(
-                supportSocialAnnotations
+            const enableSocialAnnotations = await getFeatureFlag(
+                enableSocialCommentsFeatureFlag
             );
-            if (supportSocialFeature) {
-                if (await getFeatureFlag(enableSocialCommentsFeatureFlag)) {
-                    enableSocialAnnotations = true;
-                }
-            }
 
             // batch changes
             setPersonalAnnotationsEnabled(personalAnnotationsEnabled);

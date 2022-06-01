@@ -3,7 +3,6 @@ import {
     enableSocialCommentsFeatureFlag,
     getFeatureFlag,
     setFeatureFlag,
-    supportSocialAnnotations,
 } from "../common/featureFlags";
 import { insertHtml } from "../common/html";
 import browser from "../common/polyfill";
@@ -22,10 +21,7 @@ import {
     themeName,
 } from "../common/theme";
 import { togglePageView } from "../content-script/enhance";
-import {
-    getRemoteFeatureFlag,
-    reportEventContentScript,
-} from "../content-script/messaging";
+import { reportEventContentScript } from "../content-script/messaging";
 import AnnotationsModifier from "../content-script/modifications/annotations/annotationsModifier";
 import ThemeModifier from "../content-script/modifications/CSSOM/theme";
 import OverlayManager from "../content-script/modifications/overlay";
@@ -310,10 +306,6 @@ async function _setupSocialToggle(
     annotationsModifer: AnnotationsModifier,
     overlayModifier: OverlayManager
 ) {
-    const supportFeature = await getRemoteFeatureFlag(supportSocialAnnotations);
-    if (!supportFeature) {
-        return;
-    }
     socialAnnotationsEnabled = await getFeatureFlag(
         enableSocialCommentsFeatureFlag
     );
