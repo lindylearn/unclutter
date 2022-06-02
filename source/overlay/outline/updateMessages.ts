@@ -10,7 +10,7 @@ export async function getVersionMessagesToShow(): Promise<VersionMessage[]> {
     // show messsage for every version since user installed the extension
     const initialVersion = getMainVersion(await getInitialInstallVersion());
     const newMessages: VersionMessage[] = updateMessages
-        .filter(({ version }) => getMainVersion(version) >= initialVersion)
+        .filter(({ version }) => getMainVersion(version) > initialVersion)
         .reverse();
 
     // but hide messages the user has dismissed
