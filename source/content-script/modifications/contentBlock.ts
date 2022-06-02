@@ -184,6 +184,7 @@ export const blockedSpecificSelectors = [
     ".Ad", // https://www.buzzfeednews.com/article/richardnieva/worldcoin-crypto-eyeball-scanning-orb-problems
     ".ad-wrapper", // https://www.smithsonianmag.com/science-nature/why-have-female-animals-evolved-such-wild-genitals-180979813/
     ".ad-slot", // https://www.smithsonianmag.com/science-nature/why-have-female-animals-evolved-such-wild-genitals-180979813/
+    ".ad-container", // https://www.zeit.de/sport/2018-03/doping-east-germany-research-harald-freyberger-english/komplettansicht
     ".ad-stickyhero",
     ".RTEHashTagLabAdModule",
     ".main-nav",
