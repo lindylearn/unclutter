@@ -125,9 +125,9 @@ function OptionsPage({}) {
                 }
             >
                 <p>
-                    Highlight any article text to create a private note saved in
-                    your browser. Toggle the feature via the toolbar in the top
-                    right of the article view.
+                    Highlight any text to create a private note saved in your
+                    browser. Toggle the feature via the toolbar in the top right
+                    of the article view.
                 </p>
                 <FeatureFlagSwitch
                     featureFlagKey={hypothesisSyncFeatureFlag}
@@ -168,9 +168,26 @@ function OptionsPage({}) {
                 }
             >
                 <p>
-                    Click the underlined text on 55688 supported articles to
-                    show related conversations from Hacker News and Hypothes.is
-                    (
+                    Click the underlined text on 55,688 supported articles to
+                    show related conversations from{" "}
+                    <a
+                        href="https://news.ycombinator.com"
+                        className="underline"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        Hacker News
+                    </a>{" "}
+                    and{" "}
+                    <a
+                        href="https://web.hypothes.is"
+                        className="underline"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        Hypothes.is
+                    </a>
+                    . (
                     <a
                         href="https://github.com/lindylearn/unclutter/blob/main/docs/social-highlights.md"
                         className="underline"

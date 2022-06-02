@@ -43,6 +43,10 @@ async function boot() {
         console.log("Found annotations count, assuming this is an article");
         isLikelyArticle(domain);
     }
+
+    if (domain === "unclutter.lindylearn.io") {
+        listenForTutorialPageEvents();
+    }
 }
 
 async function isLikelyArticle(domain: string) {
@@ -74,6 +78,15 @@ function enablePageView(trigger) {
     browser.runtime.sendMessage(null, {
         event: "requestEnhance",
         trigger,
+    });
+}
+
+// handle events from unclutter.lindylearn.io/welcome
+function listenForTutorialPageEvents() {
+    window.addEventListener("message", function (event) {
+        if (event.data.type === "openUnclutterOptionsPage") {
+            browser.runtime.sendMessage({ event: "openOptionsPage" });
+        }
     });
 }
 
