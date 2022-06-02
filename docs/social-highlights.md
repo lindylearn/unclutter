@@ -14,6 +14,6 @@ The shown social highlights also include web annotations from [Hypothes.is](http
 
 ## Privacy
 
-When you open Unclutter on an article with social highlights enabled, there's an API request to the Unclutter backend to fetch these highlights. These requests are not logged.
+Social highlights are fetched from the backend using the SHA256 hash of the normalized article URL, so I do not see which articles you read.
 
-The number of social highlights for an URL you're visiting also appears on the Unclutter extension icon (which can be turned off in the settings). **This works without any network request:** Every time Unclutter updates, it downloads the latest list of supported articles and then uses it locally to show the social highlight count ([here's the code](https://github.com/lindylearn/unclutter/blob/main/source/background/annotationCounts.ts)).
+The number of social highlights for an URL you're visiting also appears on the Unclutter extension icon (which can be turned off in the settings). **This works without any network requests:** Every time Unclutter updates, it downloads the latest list of supported articles and then uses it locally to show the social highlight count ([here's the code](https://github.com/lindylearn/unclutter/blob/main/source/background/annotationCounts.ts)).
