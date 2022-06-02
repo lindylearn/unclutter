@@ -6,6 +6,7 @@ import {
     getHypothesisToken,
     getHypothesisUsername,
 } from "../../common/annotations/storage";
+import { getUrlHash } from "../../common/url";
 
 /**
  * Methods for accessing the remote annotations state (hypothesis and lindy APIs).
@@ -21,8 +22,13 @@ const hypothesisApi = "https://api.hypothes.is/api";
 export async function getLindyAnnotations(
     url: string
 ): Promise<LindyAnnotation[]> {
+    // query API with hash of normalized url to not leak visited articles
+    const url_hash = getUrlHash(url);
+
     const response = await fetch(
-        `${lindyApiUrl}/annotations/?${new URLSearchParams({ page_url: url })}`,
+        `${lindyApiUrl}/annotations/?${new URLSearchParams({
+            page_hash: url_hash,
+        })}`,
         await _getConfig()
     );
     const json = await response.json();
