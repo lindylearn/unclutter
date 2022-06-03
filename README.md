@@ -2,7 +2,7 @@
 
 A new kind of reader mode to remove distractions from web articles.
 
-![intro](https://user-images.githubusercontent.com/23430759/171190664-b9927344-8ce5-4a78-9516-7bc638a3c425.gif)
+![intro](./media/intro.gif)
 
 ## Installation
 
@@ -67,6 +67,6 @@ For hot reloading during development, run `yarn watch` and `npx web-ext run` in 
 
 ## Licence
 
-This code is released under the [Simplified BSD License](https://choosealicense.com/licenses/bsd-2-clause/), which just excludes liability for bugs. The project is part of the [LindyLearn](http://lindylearn.io/) suite of free tools and will stay open-source.
+This code is released under the [Simplified BSD License](https://choosealicense.com/licenses/bsd-2-clause/), which excludes liability for bugs. The project is part of the [LindyLearn](http://lindylearn.io/) suite of free tools and will stay open-source.
 
 The private notes and social highlights feature uses code from the annotator subcomponent of [hypothesis/client](https://github.com/hypothesis/client) to anchor text fragments. See [LICENCE](https://github.com/lindylearn/annotations/blob/main/LICENCE) for the legal boilerplate.
