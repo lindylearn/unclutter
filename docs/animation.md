@@ -8,5 +8,5 @@ This works by carefully ordering the fade-out of noisy elements, parsing of webs
 
 Admittedly, it doesn't always as nice as the above video depending on how much JS and CSS a website runs, and on your system load. Please let me know if you find some particularly bad examples.
 
-| 🐛     **Is this feature not working as expected or could be better? Just [open a short issue](https://github.com/lindylearn/unclutter/issues/new) for it!** |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 🐛     **Is this not working as expected or could be better? Please [open an issue](https://github.com/lindylearn/unclutter/issues/new) for it!** |
+| ------------------------------------------------------------------------------------------------------------------------------------------------- |

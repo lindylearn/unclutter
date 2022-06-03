@@ -15,5 +15,5 @@ In addition to keeping the original website styles, Unclutter also supports many
 
 For a short intro to how it works technically, see [README.md](https://github.com/lindylearn/unclutter#how-this-works).
 
-| 🐛     **Is this not working as expected or could be better? Just [open a short issue](https://github.com/lindylearn/unclutter/issues/new) for it!** |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 🐛     **Is this not working as expected or could be better? Please [open an issue](https://github.com/lindylearn/unclutter/issues/new) for it!** |
+| ------------------------------------------------------------------------------------------------------------------------------------------------- |

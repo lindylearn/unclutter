@@ -1,8 +1,6 @@
-# Anonymous metrics collection
+# Usage metrics
 
-By default this extension collects some anonymous usage metrics, in order to understand how people use it. These metrics notably do not include any identifying information or any data about the sites and domains you visit.
-
-This is a first draft, please raise an issue here if you have a problem with any of this!
+Unclutter collects anonymous usage metrics in order to understand how it's used. These metrics notably do not include any identifying information or any data about the websites you visit.
 
 ## Goal
 

@@ -21,7 +21,7 @@ The main difference between Unclutter and other "reader modes" is that it keeps 
 
 Unclutter also supports:
 
--   Theme settings including a [dynamic dark mode](https://github.com/lindylearn/unclutter/blob/main/docs/dark-mode.md).
+-   Theme settings including a [dynamic dark mode](https://github.com/lindylearn/unclutter/blob/main/docs/theme.md).
 -   [Automatically activating](https://github.com/lindylearn/unclutter/blob/main/docs/article-detection.md) the extension on a per-domain basis.
 -   An interactive [page outline](https://github.com/lindylearn/unclutter/blob/main/docs/outline.md) to navigate long articles.
 -   Showing [social highlights](https://github.com/lindylearn/unclutter/blob/main/docs/social-highlights.md) from Hacker News and Hypothes.is.
@@ -38,14 +38,7 @@ To tie these (and many more) page modifications together, they each hook into 8 
 
 Beyond this core functionality there are embedded React iframes to power the [social highlights & private notes features](source/sidebar/App.tsx) and the [extension settings page](source/settings-page/Options.tsx), Svelte components for the [UI controls](source/overlay) including the page outline, and [background event handling code](source/background/events.ts) to inject scripts into visited pages and handle events.
 
-For documentation on individual features, see [docs](https://github.com/lindylearn/unclutter/blob/main/docs):
-
--   [annotations.md](https://github.com/lindylearn/unclutter/blob/main/docs/annotations.md)
--   [article-detection.md](https://github.com/lindylearn/unclutter/blob/main/docs/article-detection.md)
--   [dark-mode.md](https://github.com/lindylearn/unclutter/blob/main/docs/annotations.md)
--   [outline.md](https://github.com/lindylearn/unclutter/blob/main/docs/outline.md)
--   [reading-time.md](https://github.com/lindylearn/unclutter/blob/main/docs/reading-time.md)
--   [social-highlights.md](https://github.com/lindylearn/unclutter/blob/main/docs/social-highlights.md)
+For documentation on individual features see the [docs pages](https://github.com/lindylearn/unclutter/blob/main/docs).
 
 ## Contributing
 
