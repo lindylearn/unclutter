@@ -10,5 +10,5 @@ The number of [social highlights](https://github.com/lindylearn/unclutter/blob/m
 
 See [parse.ts](https://github.com/lindylearn/unclutter/blob/main/source/overlay/outline/parse.ts) for the parsing code and [Outline.svelte](https://github.com/lindylearn/unclutter/blob/main/source/overlay/outline/Outline.svelte) for the UI.
 
-| 🐛     **Is this feature this not working as expected or could be better? Just [open a short issue](https://github.com/lindylearn/unclutter/issues/new) for it!** |
-| ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 🐛     **Is this feature not working as expected or could be better? Just [open a short issue](https://github.com/lindylearn/unclutter/issues/new) for it!** |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------ |

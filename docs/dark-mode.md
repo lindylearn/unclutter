@@ -8,5 +8,5 @@ This works by parsing the CSS styling of websites and replacing found background
 
 See [theme.ts](https://github.com/lindylearn/unclutter/blob/main/source/content-script/modifications/CSSOM/theme.ts) for the code.
 
-| 🐛     **Is this feature this not working as expected or could be better? Just [open a short issue](https://github.com/lindylearn/unclutter/issues/new) for it!** |
-| ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 🐛     **Is this feature not working as expected or could be better? Just [open a short issue](https://github.com/lindylearn/unclutter/issues/new) for it!** |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
