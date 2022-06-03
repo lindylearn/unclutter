@@ -1,24 +1,14 @@
-# Usage metrics
+# Privacy
 
-Unclutter collects anonymous usage metrics in order to understand how it's used. These metrics notably do not include any identifying information or any data about the websites you visit.
+The Unclutter browser extension is provided for free, without any sign-up or opportunity to enter personal information. All data (the extension settings and private notes) stays in your browser.
 
-## Goal
+The optional [social highlights](./social-highlights.md) feature send a network request to fetch the highlights for articles you activate the extension on. This network request contains only the SHA256 hash of the normalized page UR (removing query parameters) with no user identification, which makes it near impossible to see which articles you read.
 
-The goal of collecting usage metrics is to understand how the extension is used and how to make it better. Hopefully it answers the following questions:
+The number of social highlights on the Unclutter extension icon works without network requests by periodically downloading a [static CSV](./social-highlights.md#privacy) and checking it locally.
 
--   How many people who download the extension actually use it? This correllates with my motivation to improve it further.
--   Is the [automatic mode](https://github.com/lindylearn/unclutter/blob/main/docs/article-detection.md) working as expected? How many people choose to activate it versus configuring a custom list of domains?
--   Are features like the font size adjustment or custom color scheme worth spending more time on?
+If you enable the [Hypothes.is sync](./annotations.md.md) feature, your private notes will be uploaded to their service and subject to their [privacy policy](https://web.hypothes.is/privacy/).
 
-## Collected data
+Unclutter does collect usage metrics in order to understand how it is used (or not used). These metrics notably do not include any data about the websites or domains you visit. To verify this, [search](https://github.com/lindylearn/unclutter/search?q=reportEvent) for code references of `reportEvent()` in this code base or where you downloaded the extension.
 
-All metrics are reported to the privacy-friendly [plausible.io](https://plausible.io/) reporting tool, containing no identifying information other than your browser user agent string. The events never contain any data about the pages or domains you visit.
-
-The following events are logged:
-
--   How often the extension is activated and deactivated on articles, and what triggered the activation (manual icon click, allowlisted domain, or automatic mode).
--   How many domains you configured the extension to activate or never activate on, and how often this is changed. The domains itself are never logged.
--   How many custom themes are configured.
--   Whether settings like automatic mode or the metrics collection are enabled.
-
-To verify this, [search for all references](https://github.com/lindylearn/unclutter/search?q=reportEvent) of `reportEvent()` in this code base or where you downloaded the extension. The released code is bundled in a way to be as readable as possible.
+| 🐛     **Any concern with this? Please [open an issue](https://github.com/lindylearn/unclutter/issues/new) for it!** |
+| -------------------------------------------------------------------------------------------------------------------- |

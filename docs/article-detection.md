@@ -1,34 +1,30 @@
-# Automatically detecting and uncluttering articles
+# Automatic activation
 
-The goal of the automatic mode is to unclutter articles you've not provided explicit settings for. It's meant to be a sensible default that works for most people.
+You can configure Unclutter to automatically activate on certain domains by clicking the "flash" icon next to each article:
 
-You can always explicitly disable or enable Unclutter on specific domains.
+![](../source/../media/clips/automatic.gif)
 
-## Challenges
+This avoids having to click the extension icon each time you're on a certain blog. In the settings you can also configure this automatic activation to be created each time you click the extension icon -- this saves the click on the "flash" icon.
 
--   Activating the extension on non-articles is annoying (even if less so than for most reader modes).
--   For performance, the code that decides whether a web page is an article does not have access to the DOM, only to the page URL.
--   Not every web page on a domain is an article, even if some of them are. The extension should detect and not activate on "non-leaf" pages like bbc.com/news without excessive user configuration.
+## Unclutter reminder
 
-## Automatically detecting articles
+Another related feature shows a timed button in the top right of all article pages you visit. This is also meant to make it easier to activate Unclutter, but you'll have to manually activate it in the extension settings.
 
-The current logic to automatically detect articles in the absence of an overriding website-specific setting is as follows:
-
--   Never activate the extension on the domains listed in ([common/defaultStorage.js](https://github.com/lindylearn/unclutter/blob/main/source/common/defaultStorage.js)).
--   Otherwise activate the extension if the current page passes the "non-leaf" check below.
+![](../source/../media/clips/reminder.png)
 
 ## Detecting non-leaf pages
 
-Unclutter does not activate on pages that are likely directories rather than articles. This applies to both domains explicitly enabled by the user and pages that pass the automatic article detection above. It uses the following heuristics to detect non-leaf directory pages:
+Both the automatic activation and the unclutter reminder only apply to article pages, and not your bank website.
 
--   Never activate on URLs at the root of a domain (`/`).
--   Never activate on URL paths that end with `.pdf`.
+To detect article pages, Unclutter uses the following heuristics:
+
+-   Exclude popular social non-article websites.
+-   Never activate on URLs at the root of a domain (`/`), or on paths that end with `.pdf`.
 -   Never activate on URLs that contain fewer than 2 dashes (`-`).
     -   Motivation: most articles contain their title in the URLs, whereas directory pages do not.
-    -   This check does not apply to URLs that contain `/posts/`, `/wiki/`, `/blog/`, or `/articles/`.
-
-## Status
+    -   However, this check does not apply to URLs that contain `/posts/`, `/wiki/`, `/blog/`, or `/articles/`.
 
 See the implementation and URL examples in [common/articleDetection.js](https://github.com/lindylearn/unclutter/blob/main/source/common/articleDetection.js).
 
-These checks are work in progress. Please create an issue if you found bugs or want to contribute!
+| 🐛     **Is this not working as expected or could be better? Please [open an issue](https://github.com/lindylearn/unclutter/issues/new) for it!** |
+| ------------------------------------------------------------------------------------------------------------------------------------------------- |
