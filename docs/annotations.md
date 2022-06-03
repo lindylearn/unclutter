@@ -2,6 +2,8 @@
 
 Unclutter supports the highlighting and annotating of articles so that you that you can easily remember the things you read.
 
+![](../source/../media/clips/annotations.gif)
+
 By default, all of your "private notes" are saved in your local browser storage and appear every time you open an article. If you want to access your notes on different devices, organize, or import them into note-taking apps, you can configure a synchronization with [Hypothes.is](https://web.hypothes.is).
 
 If you configure the Hypothes.is synchronization, you can also make any of your article notes publicly visible by clicking the "globe" icon. Other users can then reply to your idea just like you can reply to theirs.

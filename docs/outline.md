@@ -2,6 +2,8 @@
 
 Unclutter tries to parse chapters from articles and lists them in the page outline to the left. The goal is to make navigating long pages easier.
 
+![](../source/../media/clips/outline.gif)
+
 The outline considers both explicit and implicit headings (["dropcap" sections](https://www.newyorker.com/magazine/2018/11/12/why-doctors-hate-their-computers) that start with captial letters), and fades-out the sections you already scrolled by. Click on any heading to jump to it. The outline just shows the article title if there are no detected headings for a page.
 
 See [reading time](https://github.com/lindylearn/unclutter/blob/main/docs/reading-time.md) for the time displayed beneath the outline title.

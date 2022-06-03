@@ -2,6 +2,8 @@
 
 If you enable the feature, Unclutter shows related social conversations for 24.795+ articles directly next to the quote they mention. Just click on any text that's underlined in orange or red to see the conversation about it.
 
+![](../source/../media/clips/social.gif)
+
 For example, try it on http://www.paulgraham.com/vb.html
 
 ## How this works
