@@ -1,27 +1,33 @@
 # Unclutter - Immersive Reading Mode
 
-A browser extension to remove distractions from web articles.
+A new kind of reader mode to remove distractions from web articles.
 
 ![intro](https://user-images.githubusercontent.com/23430759/171190664-b9927344-8ce5-4a78-9516-7bc638a3c425.gif)
 
 ## Installation
 
-Try out the extension from the Chrome or Firefox extension store:
+Try out the browser extension from the Chrome or Firefox extension stores ([or build it yourself](https://github.com/lindylearn/unclutter#development)):
 
-[<img src="./media/chrome-badge.png" height="60">](https://chrome.google.com/webstore/detail/unclutter-immersive-readi/ibckhpijbdmdobhhhodkceffdngnglpk)
-[<img src="./media/firefox-badge.png" height="45" style="margin-bottom: 6px;">](https://addons.mozilla.org/en-GB/firefox/addon/lindylearn/)
+[<img src="./media/chrome-badge.png" height="70">](https://chrome.google.com/webstore/detail/unclutter-immersive-readi/ibckhpijbdmdobhhhodkceffdngnglpk)
+[<img src="./media/firefox-badge.png" height="55">](https://addons.mozilla.org/en-GB/firefox/addon/lindylearn/)
 
 ## Features
 
--   Remove distractions like ads, cookie banners & popups.
--   Customize font size and color theme across all websites.
--   Quickly navigate between chapters.
--   Find memorable quotes discussed on Hacker News.
--   Save highlights by simply selecting text.
+The main difference between Unclutter and other "reader modes" is that it keeps the original style of websites intact ([see more here](docs/comparison.md)):
+
+| Firefox reader mode                           | Unclutter                                       |
+| --------------------------------------------- | ----------------------------------------------- |
+| ![](source/../media/comparison/firefox/4.png) | ![](source/../media/comparison/unclutter/4.png) |
+
+Unclutter also supports:
+
+-   Theme settings including a [dynamic dark mode](https://github.com/lindylearn/unclutter/blob/main/docs/dark-mode.md).
+-   [Automatically activating](https://github.com/lindylearn/unclutter/blob/main/docs/article-detection.md) the extension on a per-domain basis.
+-   An interactive [page outline](https://github.com/lindylearn/unclutter/blob/main/docs/outline.md) to navigate long articles.
+-   Showing [social highlights](https://github.com/lindylearn/unclutter/blob/main/docs/social-highlights.md) from Hacker News and Hypothes.is.
+-   Taking [private notes](https://github.com/lindylearn/unclutter/blob/main/docs/annotations.md) by simply selecting text.
 
 ## How this works
-
-Unlike every other "reader mode", this extension modifies the HTML of article pages instead of replacing it. This improves readability without making all pages look the same, but creates additional challenges since everyone uses CSS differently.
 
 The main "trick" is to use a website's responsive style to hide non-essential page elements for us (by [parsing & applying these rules in the CSSOM](source/content-script/modifications/CSSOM/responsiveStyle.ts)).
 For other annoyances there are [global](source/content-script/modifications/contentBlock.ts) and [site-specific](source/content-script/pageview/manualContentBlock.css) blocklists based on CSS class naming.
@@ -30,15 +36,22 @@ To standardize margins, background colors, and font-sizes, the extension also [a
 
 To tie these (and many more) page modifications together, they each hook into 8 lifecycle phases coordinated from [transitions.ts](source/content-script/transitions.ts). The major concern here is performance -- minimizing reflows while performing changes stepwise so that they look nice when animated.
 
-Beyond this core functionality there are embedded React apps to power the [annotations / highlights feature](source/sidebar/App.tsx) and [extension settings page](source/settings-page/Options.tsx), Svelte components for the [lightweight UI controls](source/overlay) including the page outline, and [background event handling code](source/background/events.ts) to inject scripts into visited pages and tie other things together.
+Beyond this core functionality there are embedded React iframes to power the [social highlights & private notes features](source/sidebar/App.tsx) and the [extension settings page](source/settings-page/Options.tsx), Svelte components for the [UI controls](source/overlay) including the page outline, and [background event handling code](source/background/events.ts) to inject scripts into visited pages and handle events.
 
-Fore more details refer to (incomplete) docs files in [/docs](docs).
+For documentation on individual features, see [docs](https://github.com/lindylearn/unclutter/blob/main/docs):
+
+-   [annotations.md](https://github.com/lindylearn/unclutter/blob/main/docs/annotations.md)
+-   [article-detection.md](https://github.com/lindylearn/unclutter/blob/main/docs/article-detection.md)
+-   [dark-mode.md](https://github.com/lindylearn/unclutter/blob/main/docs/annotations.md)
+-   [outline.md](https://github.com/lindylearn/unclutter/blob/main/docs/outline.md)
+-   [reading-time.md](https://github.com/lindylearn/unclutter/blob/main/docs/reading-time.md)
+-   [social-highlights.md](https://github.com/lindylearn/unclutter/blob/main/docs/social-highlights.md)
 
 ## Contributing
 
-The main way you can help is to [report](https://github.com/lindylearn/unclutter/issues) bugs, broken articles pages, UI inconsistencies, or ideas on how to improve the extension.
+The main way you can help is to report bugs, broken articles pages, UI inconsistencies, or ideas on how to improve the extension by creating an [issue](https://github.com/lindylearn/unclutter/issues).
 
-If you want something to be fixed faster (like a CSS bug), it may help to do it yourself. Please let me know if the docs pages and inline comments are not sufficient.
+If you want something to be fixed faster (like a CSS bug), it may help to do it yourself. Please let me know if the docs pages and inline comments are not sufficient. Thank you in advance!
 
 ## Development
 
@@ -54,6 +67,6 @@ For hot reloading during development, run `yarn watch` and `npx web-ext run` in 
 
 ## Licence
 
-The extension code is released under the [Simplified BSD License](https://choosealicense.com/licenses/bsd-2-clause/), which excludes any liability for bugs you find. The project is part of the [LindyLearn](http://lindylearn.io/) suite of tools, and will remain open-source.
+This code is released under the [Simplified BSD License](https://choosealicense.com/licenses/bsd-2-clause/), which just excludes liability for bugs. The project is part of the [LindyLearn](http://lindylearn.io/) suite of free tools and will stay open-source.
 
 The private notes and social highlights feature uses code from the annotator subcomponent of [hypothesis/client](https://github.com/hypothesis/client) to anchor text fragments. See [LICENCE](https://github.com/lindylearn/annotations/blob/main/LICENCE) for the legal boilerplate.
