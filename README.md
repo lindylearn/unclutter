@@ -2,7 +2,7 @@
 
 A new kind of reader mode to remove distractions from web articles.
 
-![intro](./media/intro.gif)
+![intro](./media/intro2.gif)
 
 ## Installation
 
