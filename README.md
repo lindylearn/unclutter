@@ -38,7 +38,7 @@ To tie these (and many more) page modifications together, they each hook into 8 
 
 Beyond this core functionality there are embedded React iframes to power the [social highlights & private notes features](source/sidebar/App.tsx) and the [extension settings page](source/settings-page/Options.tsx), Svelte components for the [UI controls](source/overlay) including the page outline, and [background event handling code](source/background/events.ts) to inject scripts into visited pages and handle events.
 
-For documentation on individual features see the [docs pages](https://github.com/lindylearn/unclutter/blob/main/docs).
+**For documentation on individual features see the [docs pages](https://github.com/lindylearn/unclutter/blob/main/docs).**
 
 ## Contributing
 
