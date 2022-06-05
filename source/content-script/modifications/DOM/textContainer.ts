@@ -62,7 +62,7 @@ export default class TextContainerModifier implements PageModifier {
 
             const enableBionicReading = await getFeatureFlag(enableBionicReadingFeatureFlag);
             if (enableBionicReading) {
-                elem.innerText = prepareText(elem.innerText)
+                elem.innerHTML = prepareText(elem.innerText)
             }
 
             const activeStyle = window.getComputedStyle(elem);
