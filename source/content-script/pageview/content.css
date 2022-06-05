@@ -233,6 +233,10 @@ html.pageview.pageview > body {
     cursor: pointer;
     animation: fadeInDot 0.15s linear;
 }
+
+.lindy-bionic-reading-bold {
+    font-weight: 'bold';
+}
 @keyframes fadeInDot {
     from {
         opacity: 0;

@@ -598,7 +598,7 @@ function prepareText(text: string) {
         const slicePoint = Math.round(word.length / 2)
         const firstPart = word.slice(0, slicePoint)
         const secondPart = word.slice(slicePoint)
-        const html = `<b>${firstPart}</b>${secondPart}`
+        const html = `<p class="lindy-bionic-reading-bold">${firstPart}</p>${secondPart}`
         return html
     })
 }
