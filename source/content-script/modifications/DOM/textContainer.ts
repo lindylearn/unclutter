@@ -3,7 +3,7 @@ import { fontSizeThemeVariable } from "../../../common/theme";
 import { asideWordBlocklist, blockedSpecificSelectors } from "../contentBlock";
 import { PageModifier, trackModifierExecution } from "../_interface";
 
-const globalTextElementSelector = "p, font, pre";
+export const globalTextElementSelector = "p, font, pre";
 const globalHeadingSelector = "header, h1, h2, h3, h4, picture, figure";
 
 const headingTags = globalHeadingSelector.split(", ");
