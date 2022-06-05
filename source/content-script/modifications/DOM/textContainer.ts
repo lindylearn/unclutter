@@ -2,6 +2,7 @@ import { createStylesheetText } from "../../../common/stylesheets";
 import { fontSizeThemeVariable } from "../../../common/theme";
 import { asideWordBlocklist, blockedSpecificSelectors } from "../contentBlock";
 import { PageModifier, trackModifierExecution } from "../_interface";
+import { enableBionicReadingFeatureFlag, getFeatureFlag } from "../../../common/featureFlags"
 
 const globalTextElementSelector = "p, font, pre";
 const globalHeadingSelector = "header, h1, h2, h3, h4, picture, figure";
@@ -49,7 +50,7 @@ export default class TextContainerModifier implements PageModifier {
         // Process text or heading elements and iterate upwards
         const paragraphFontSizes: { [size: number]: number } = {};
         const exampleNodePerFontSize: { [size: number]: HTMLElement } = {};
-        const processElement = (
+        const processElement = async (
             elem: HTMLElement,
             isTextElement: boolean = false
         ) => {
@@ -57,6 +58,11 @@ export default class TextContainerModifier implements PageModifier {
             // Note: iterateDOM is called before content block, so may not catch all hidden nodes (e.g. in footer)
             if (elem.offsetHeight === 0) {
                 return;
+            }
+
+            const enableBionicReading = await getFeatureFlag(enableBionicReadingFeatureFlag);
+            if (enableBionicReading) {
+                elem.innerText = prepareText(elem.innerText)
             }
 
             const activeStyle = window.getComputedStyle(elem);
@@ -585,4 +591,14 @@ function _getSiblingSelector(node) {
         .filter((classname) => /^-?[_a-zA-Z]+[_a-zA-Z0-9-]*$/.test(classname))
         .map((className) => `.${className}`)
         .join("");
+}
+
+function prepareText(text: string) {
+    return text.replace(/\p{L}+/gu, (word) => {
+        const slicePoint = Math.round(word.length / 2)
+        const firstPart = word.slice(0, slicePoint)
+        const secondPart = word.slice(slicePoint)
+        const html = `<b>${firstPart}</b>${secondPart}`
+        return html
+    })
 }

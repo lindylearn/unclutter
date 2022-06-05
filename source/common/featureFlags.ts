@@ -19,6 +19,7 @@ export async function getAllFeatureFlags() {
     const reportedFlags = [
         allowlistDomainOnManualActivationFeatureFlag,
         collectAnonymousMetricsFeatureFlag,
+        enableBionicReadingFeatureFlag,
         enableBootUnclutterMessage,
         hypothesisSyncFeatureFlag,
         enableSocialCountsFeatureFlag,
@@ -36,6 +37,7 @@ export async function getAllFeatureFlags() {
 export const allowlistDomainOnManualActivationFeatureFlag =
     "allowlist-domain-manual-activation";
 export const collectAnonymousMetricsFeatureFlag = "collect-anonymous-metrics";
+export const enableBionicReadingFeatureFlag = "bionic-reading-enabled"
 export const enableBootUnclutterMessage = "enable-boot-unclutter-message";
 export const isDevelopmentFeatureFlag = "is-dev";
 export const hypothesisSyncFeatureFlag = "hypothesis-sync";
@@ -54,6 +56,7 @@ export const showFeedbackMessage = "show-feedback-message";
 export const defaultFeatureFlags = {
     [allowlistDomainOnManualActivationFeatureFlag]: false,
     [collectAnonymousMetricsFeatureFlag]: true,
+    [enableBionicReadingFeatureFlag]: false,
     [enableBootUnclutterMessage]: false,
     [isDevelopmentFeatureFlag]: false,
     [enableSocialCountsFeatureFlag]: true,
