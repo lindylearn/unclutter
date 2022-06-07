@@ -141,7 +141,7 @@ export default class TransitionManager implements PageModifier {
 
         document.body.style.setProperty(
             "transition",
-            "all 0.2s ease-in-out",
+            "all 0.2s cubic-bezier(0.33, 1, 0.68, 1)",
             "important"
         );
     }

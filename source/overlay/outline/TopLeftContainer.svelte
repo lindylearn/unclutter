@@ -67,7 +67,7 @@
 #lindy-info-topleft-content {
     margin: 10px;
     color: #374151; /* text-gray-700 */
-    transition: width 0.4s cubic-bezier(0.33, 1, 0.68, 1); /* same as #lindy-info-topleft outside */
+    transition: width 0.2s cubic-bezier(0.33, 1, 0.68, 1); /* same as #lindy-info-topleft outside */
 }
 #lindy-info-topleft-content > * {
     background-color: var(--lindy-background-color);

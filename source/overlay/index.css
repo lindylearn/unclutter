@@ -346,8 +346,8 @@ svg.lindy-ui-icon#lindy-theme-icon > path {
     width: 400px;
     max-width: calc((100vw - var(--lindy-pagewidth)) / 2 - 5px); /* also set via inline styles to prevent initial transition */
 
-    transition: max-width 0.4s cubic-bezier(0.33, 1, 0.68, 1);
-    animation: fadeInOutline 0.4s cubic-bezier(0.33, 1, 0.68, 1);
+    transition: max-width 0.2s cubic-bezier(0.33, 1, 0.68, 1);
+    animation: fadeInOutline 0.2s cubic-bezier(0.33, 1, 0.68, 1);
     animation-fill-mode: both;
 }
 @keyframes fadeInOutline {
