@@ -103,7 +103,7 @@ export const asideWordBlocklist = [
     "cookies",
     // "widget", https://www.androidcentral.com/phones/nothing-phone-1-design-interview
     "popup",
-    "caption",
+    // "caption", // https://scripter.co/zero-html-validation-errors/#ensure-that-all-images-have-captions-or-alt-attributes
     "gallery",
     // "newsletter", // used by substack
     "composer",

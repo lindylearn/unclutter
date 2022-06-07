@@ -154,12 +154,19 @@ function getHeadingItems(): OutlineItem[] {
             continue;
         }
 
-        if (
-            node.parentElement.tagName === "A" ||
-            node.firstElementChild?.tagName === "A"
-        ) {
+        const linkElem = (
+            node.parentElement.tagName === "A"
+                ? node.parentElement
+                : node.firstElementChild
+        ) as HTMLAnchorElement | null;
+        if (linkElem?.tagName === "A") {
             // often related link, e.g. https://www.worksinprogress.co/issue/womb-for-improvement/, https://www.propublica.org/article/filing-taxes-could-be-free-simple-hr-block-intuit-lobbying-against-it
-            continue;
+
+            if (linkElem.getAttribute("href").startsWith("#")) {
+                // allow page-internal links, e.g. https://scripter.co/zero-html-validation-errors/#validation-ignores
+            } else {
+                continue;
+            }
         }
 
         // blocklist non-headers
