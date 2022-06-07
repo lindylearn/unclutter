@@ -86,14 +86,16 @@ export default class TransitionManager implements PageModifier {
         // keep text in same position but use animatable leftMargin everywhere
         // needs to be applied before transitionIn()
         this.textContainerModifier.prepareAnimation();
+
+        // below steps where originally in transitionIn()
+
+        // remove faded-out elements
+        this.contentBlockModifier.transitionIn();
+        this.responsiveStyleModifier.transitionIn();
     }
 
     // pageview width change was triggered just before calling this
     transitionIn() {
-        // remove faded-out elements
-        this.contentBlockModifier.transitionIn();
-        this.responsiveStyleModifier.transitionIn();
-
         // enable site mobile styles
         // this may shift layout in various ways
         this.responsiveStyleModifier.enableResponsiveStyles();
