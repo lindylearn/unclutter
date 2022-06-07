@@ -188,7 +188,7 @@ export default class OverlayManager implements PageModifier {
         };
         updateTresholds();
 
-        const scollListener = () => {
+        const handleScroll = (skipRender = false) => {
             if (window.scrollY === 0) {
                 // start of document
                 currentOutlineIndex = 0;
@@ -207,21 +207,30 @@ export default class OverlayManager implements PageModifier {
                 // scrolled up
                 currentOutlineIndex -= 1;
                 updateTresholds();
+
+                // check if jumped multiple sections
+                handleScroll(true);
             } else if (window.scrollY >= highTheshold) {
                 // scrolled down
                 currentOutlineIndex += 1;
                 updateTresholds();
+
+                // check if jumped multiple sections
+                handleScroll(true);
             }
 
-            const currentHeading = this.flatOutline[currentOutlineIndex];
-            this.topleftSvelteComponent?.$set({
-                activeOutlineIndex: currentHeading.index,
-            });
+            if (!skipRender) {
+                const currentHeading = this.flatOutline[currentOutlineIndex];
+                this.topleftSvelteComponent?.$set({
+                    activeOutlineIndex: currentHeading.index,
+                });
+            }
         };
-        document.addEventListener("scroll", scollListener);
 
+        const scrollListener = () => handleScroll();
+        document.addEventListener("scroll", scrollListener);
         this.uninstallScrollListener = () =>
-            document.removeEventListener("scroll", scollListener);
+            document.removeEventListener("scroll", scrollListener);
     }
 
     async transitionOut() {
