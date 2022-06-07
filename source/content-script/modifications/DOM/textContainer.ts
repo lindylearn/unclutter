@@ -289,6 +289,9 @@ export default class TextContainerModifier implements PageModifier {
                     // node.style.setProperty("width", "100%");
                     node.style.setProperty("max-width", maxWidth);
                 }
+
+                // e.g. xkcd.com
+                node.style.setProperty("left", "0");
             }
         );
 

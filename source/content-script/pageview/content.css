@@ -33,11 +33,11 @@ html.pageview.pageview > body {
     overflow-y: hidden !important;
 
     /* margins are also set inline in body.js for higher specifity */
-    padding-top: 30px !important;
-    padding-left: 50px !important;
-    padding-right: 50px !important;
+    padding: 30px 50px !important;
 
     cursor: auto;
+    left: 0 !important;
+    top: 0 !important;
 
     /* caution: using filter: drop-shadow() here causes rendering lag */
     box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1) !important;

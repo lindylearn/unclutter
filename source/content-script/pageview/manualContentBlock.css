@@ -831,3 +831,16 @@ body > div:first-child:not(.lindy-container) {
 .dcr-3jlghf, .dcr-chmysj {
     font-size: calc(var(--lindy-active-font-size) * 0.94) !important;
 }
+
+/* https://xkcd.com/ */
+#middleContainer {
+    left: 0 !important;
+    margin: 0 !important;
+    width: auto !important;
+}
+#topContainer, #bottom {
+    display: none !important;
+}
+img {
+    max-width: 100%;
+}

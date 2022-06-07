@@ -111,9 +111,7 @@ export default class BodyStyleModifier implements PageModifier {
         //     document.body.style.paddingTop = "0.05px";
         // }
 
-        document.body.style.setProperty("padding-top", "20px", "important");
-        document.body.style.setProperty("padding-left", "50px", "important");
-        document.body.style.setProperty("padding-right", "50px", "important");
+        document.body.style.setProperty("padding", "30px 50px", "important");
         document.body.style.setProperty("min-width", "0", "important");
         document.body.style.setProperty(
             "max-width",

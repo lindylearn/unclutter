@@ -72,6 +72,7 @@ export function isNonLeafPage(url) {
         "sive.rs",
         "fs.blog",
         "danluu.com",
+        "xkcd.com",
     ];
     if (excludedDomains.includes(getDomainFrom(url))) {
         return false;
