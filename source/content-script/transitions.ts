@@ -61,6 +61,9 @@ export default class TransitionManager implements PageModifier {
             // get active theme state
             this.themeModifier.prepare(this.domain),
         ]);
+
+        // can't set animation start properties in content.css, as that breaks some sites (e.g. xkcd.com)
+        preparePageviewAnimation();
     }
 
     // visually fade out noisy elements

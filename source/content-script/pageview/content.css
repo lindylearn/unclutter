@@ -6,12 +6,6 @@ html {
     transition: background 0.2s ease-in-out;
 }
 
-body {
-    /* start properties for transition */
-    width: 100%;
-    max-width: 100%;
-}
-
 html.pageview {
     background: #f1f3f4 !important;
 }
