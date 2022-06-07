@@ -67,14 +67,16 @@
 #lindy-info-topleft-content {
     margin: 10px;
     color: #374151; /* text-gray-700 */
-        transition: width 0.4s cubic-bezier(0.33, 1, 0.68, 1); /* same as #lindy-info-topleft outside */
-    visibility: hidden;
-    opacity: 0;
+    transition: width 0.4s cubic-bezier(0.33, 1, 0.68, 1); /* same as #lindy-info-topleft outside */
 }
-a:hover > .close-message {
-    visibility: visible;
-    opacity: 1;
-} */
+#lindy-info-topleft-content > * {
+    background-color: var(--lindy-background-color);
+}
+svg.icon > path {
+    fill: currentColor;
+    stroke: currentColor;
+    stroke-width: 10px;
+}
 
 /* setup tooltips (adapted from overlay css) */
 .lindy-tooltp {
