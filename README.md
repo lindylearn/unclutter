@@ -8,8 +8,8 @@ A new kind of reader mode to remove distractions from web articles.
 
 Try out the browser extension from the Chrome or Firefox extension stores ([or build it yourself](https://github.com/lindylearn/unclutter#development)):
 
-[<img src="./media/chrome-badge.png" height="70">](https://chrome.google.com/webstore/detail/unclutter-immersive-readi/ibckhpijbdmdobhhhodkceffdngnglpk)
-[<img src="./media/firefox-badge.png" height="55">](https://addons.mozilla.org/en-GB/firefox/addon/lindylearn/)
+[<img src="./media/chrome-badge.png" height="70">](https://chrome.google.com/webstore/detail/ibckhpijbdmdobhhhodkceffdngnglpk)
+[<img src="./media/firefox-badge.png" height="55">](https://addons.mozilla.org/en-GB/firefox/addon/lindylearn)
 
 ## Features
 
