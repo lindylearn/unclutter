@@ -74,6 +74,8 @@ html.pageview.pageview > body {
     animation: toastTimeout 5s;
     animation-delay: 0.5s;
     animation-fill-mode: both;
+
+    visibility: visible !important;
 }
 @keyframes toastTimeout {
     0% {
