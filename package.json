@@ -31,14 +31,15 @@
         "@types/webextension-polyfill": "^0.8.3",
         "autoprefixer": "^10.4.2",
         "buffer": "^6.0.3",
+        "node-fetch": "^3.2.5",
         "npm-run-all": "^4.1.5",
-        "patch-package": "^6.4.7",
         "path-browserify": "^1.0.1",
         "postcss": "^8.4.12",
         "postinstall-postinstall": "^2.1.0",
         "prettier-plugin-organize-imports": "^2.3.4",
         "prettier-plugin-svelte": "^2.6.0",
         "process": "^0.11.10",
+        "puppeteer": "^14.3.0",
         "querystring-es3": "^0.2.1",
         "rollup": "^2.70.1",
         "rollup-plugin-multi-input": "^1.3.1",
@@ -49,6 +50,7 @@
         "svelte-check": "^2.5.0",
         "svelte-preprocess": "^4.10.5",
         "tailwindcss": "^3.0.23",
+        "ts-node": "^10.8.1",
         "typescript": "^4.6.3",
         "url": "^0.11.0",
         "xo": "^0.44.0"
@@ -59,7 +61,7 @@
         "install-v3-manifest": "cp source/manifest.json distribution/manifest.json",
         "install-v2-manifest": "cp source/manifest_v2.json distribution/manifest.json",
         "package": "yarn build && npx web-ext build -o -n extension_manifest-v3.zip --ignore-files '!node_modules' '!node_modules/**' && yarn install-v2-manifest && npx web-ext build -o -n extension_manifest-v2.zip --ignore-files '!node_modules' '!node_modules/**' && yarn install-v3-manifest",
-        "postinstall": "patch-package"
+        "test": "npx ts-node-esm test/main.ts"
     },
     "browserslist": "last 1 version",
     "xo": {
