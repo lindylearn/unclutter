@@ -259,7 +259,7 @@ export default class TextContainerModifier implements PageModifier {
             ([node, { marginLeft, maxWidth }]) => {
                 node.style.setProperty(
                     "transition",
-                    "margin-left 0.6s cubic-bezier(0.87, 0, 0.13, 1)"
+                    "margin-left 0.4s cubic-bezier(0.33, 1, 0.68, 1)"
                 );
             }
         );
@@ -316,7 +316,7 @@ export default class TextContainerModifier implements PageModifier {
                 border: none !important;
                 box-shadow: none !important;
                 z-index: 1 !important;
-                transition: margin-left 0.6s cubic-bezier(0.87, 0, 0.13, 1);
+                transition: margin-left 0.4s cubic-bezier(0.33, 1, 0.68, 1);
             }
             .${lindyHeadingContainerClass}, .${lindyContainerClass}:first-child {
                 margin-top: 0 !important;

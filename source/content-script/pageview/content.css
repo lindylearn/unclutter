@@ -42,7 +42,7 @@ html.pageview.pageview > body {
     /* caution: using filter: drop-shadow() here causes rendering lag */
     box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1) !important;
 
-    transition: all 0.6s cubic-bezier(0.87, 0, 0.13, 1) !important;
+    transition: all 0.4s cubic-bezier(0.33, 1, 0.68, 1) !important;
 }
 
 .lindy-body-background {
@@ -53,7 +53,7 @@ html.pageview.pageview > body {
     z-index: -100 !important;
     content: "" !important;
     background: inherit;
-    transition: background 0.5s cubic-bezier(0.87, 0, 0.13, 1);
+    transition: background 0.4s cubic-bezier(0.33, 1, 0.68, 1);
 
     border-radius: 10px !important;
 }
