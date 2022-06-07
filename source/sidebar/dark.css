@@ -2,6 +2,10 @@
 
 /* use same colors as in source/overlay/indexDark.css */
 
+body {
+    background-color: #131516 !important;
+}
+
 .annotation {
     color: var(--lindy-dark-theme-text-color) !important;
 }
