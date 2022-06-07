@@ -129,6 +129,7 @@ export const asideWordBlocklist = [
     "contribute", // https://www.themoscowtimes.com/2022/05/25/russian-lawmakers-to-consider-scrapping-upper-age-limit-for-military-service-a77787
     "comment", // https://slatestarcodex.com/2014/09/30/i-can-tolerate-anything-except-the-outgroup/
     "spotlight", // https://www.gamesindustry.biz/articles/2022-05-24-us-labour-board-says-activision-blizzard-illegally-threatened-staff
+    "banner", // https://www.econlib.org/archives/2016/09/the_math_myth.html
 ];
 
 // words just blocked, but considered if matched text container
@@ -138,7 +139,6 @@ export const blockedWords = [
     "commercial", // https://www.rockpapershotgun.com/the-lord-of-the-rings-gollum-preview-may-miss-a-precious-opportunity
     "empire", // https://www.popsci.com/science/terahertz-waves-future-technologies/
     "masthead",
-    // "banner",
     "marketing", // https://www.nature.com/articles/s41598-018-38461-y
     // "headerwrapper", // https://pitchfork.com/news/vangelis-oscar-winning-composer-dies-at-79/
     "menu", // issues on https://www.sidnlabs.nl/en/news-and-blogs/a-lock-with-many-keys-spoofing-dnssec-signed-domains-in-8-8-8-8
