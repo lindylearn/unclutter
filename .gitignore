@@ -5,6 +5,7 @@ web-ext-artifacts
 .DS_Store
 code.zip
 test-artifacts
-/test-results/
-/playwright-report/
-/playwright/.cache/
+test-results
+playwright-report
+playwright/.cache
+tests/*.spec.ts-snapshots

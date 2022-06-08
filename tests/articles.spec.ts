@@ -1,4 +1,4 @@
-import { chromium, firefox, test as base } from "@playwright/test";
+import { chromium, expect, firefox, test as base } from "@playwright/test";
 import path from "path";
 import type { BrowserContext } from "playwright-core";
 
@@ -7,7 +7,6 @@ const extensionPath = path.resolve("./distribution");
 type WorkerContextFixture = {
     globalContext: BrowserContext;
     unclutterExtension: any;
-    // unclutterActiveTab: async () => void;
 };
 
 const test = base.extend<{}, WorkerContextFixture>({
@@ -91,8 +90,15 @@ test.describe("Article uncluttering", () => {
             await unclutterExtension.unclutterActiveTab();
             await new Promise((r) => setTimeout(r, 1500));
 
-            await page.locator("body").screenshot({
-                path: `test-artifacts/${encodeURIComponent(url)}.png`,
+            const body = await page.$("body");
+            const bodyPos = await body.boundingBox();
+            await expect(page).toHaveScreenshot({
+                clip: {
+                    x: bodyPos.x - 10,
+                    y: bodyPos.y - 10,
+                    width: bodyPos.width + 15 + 10,
+                    height: 1500,
+                },
             });
 
             await new Promise((r) => setTimeout(r, 5000));
