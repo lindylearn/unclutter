@@ -1,4 +1,6 @@
 {
+    "name": "unclutter",
+    "private": true,
     "dependencies": {
         "approx-string-match": "^2.0.0",
         "crypto-js": "^4.1.1",
