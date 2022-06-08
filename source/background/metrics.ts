@@ -15,9 +15,10 @@ export async function reportEvent(name: string, data = {}) {
         collectAnonymousMetricsFeatureFlag
     );
     const isDev = await getFeatureFlag(isDevelopmentFeatureFlag);
-    // if (isDev) {
-    //     console.log(`Metric ${name}:`, data);
-    // }
+    if (isDev) {
+        console.log(`Metric ${name}:`, data);
+        return;
+    }
 
     await sendEvent(name, data, isDev);
 }
