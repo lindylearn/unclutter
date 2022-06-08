@@ -6,7 +6,11 @@ IMAGE=gcr.io/${PROJECT}/puppeteer-serverless
 env_vars="ENV=production,"
 # env_vars="${env_vars}GH_APP_IDENTIFIER=${GH_APP_IDENTIFIER},"
 
-cp -r ../../../distribution ./extension
+rm -r ./extension && cp -r ../../../distribution ./extension
+
+# patch manifest to always inject enhance.js (puppeteer doesn't seem to allow service worker communication inside docker)
+tmp=$(mktemp) && jq '.content_scripts[0].js[0] = "content-script/enhance.js" | .content_scripts[0].run_at = "document_idle"' ./extension/manifest.json > "$tmp" && mv "$tmp" test.json
+
 gcloud builds submit --tag $IMAGE --project=$PROJECT --gcs-log-dir=gs://${PROJECT}_cloudbuild/logs && \
 gcloud run deploy puppeteer-serverless \
   --image $IMAGE \

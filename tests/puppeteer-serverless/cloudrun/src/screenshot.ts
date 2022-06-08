@@ -9,22 +9,17 @@ export async function captureUrl(
     console.log(`Capturing ${url}...`);
 
     const page = await browser.newPage();
-    await page.goto(url, {
-        waitUntil: "domcontentloaded",
-    });
+    try {
+        await page.goto(url, {
+            waitUntil: "domcontentloaded",
+            timeout: 10000,
+        });
+    } catch {}
 
     console.log("page loaded");
 
-    // await extWorker.evaluate(() => {
-    //     // @ts-ignore
-    //     chrome.tabs.query({ active: true }, (tabs) => {
-    //         // @ts-ignore
-    //         chrome.action.onClicked.dispatch(tabs[0]);
-    //     });
-    // });
-
     console.log("before wait");
-    await new Promise((r) => setTimeout(r, 1500));
+    await new Promise((r) => setTimeout(r, 2000));
 
     console.log("uncluttered");
 

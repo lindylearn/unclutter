@@ -1,5 +1,5 @@
 import { Storage } from "@google-cloud/storage";
-import { existsSync, promises as fs } from "fs";
+import { existsSync, promises as fs, rmSync } from "fs";
 
 const bucketName = "unclutter-screenshots-serverless";
 export const localScreenshotsPath = "./screenshots";
@@ -8,7 +8,7 @@ const storage = new Storage(); // use default service account
 
 export async function prepare() {
     if (existsSync(localScreenshotsPath)) {
-        fs.rmdir(localScreenshotsPath);
+        rmSync(localScreenshotsPath, { recursive: true, force: true });
     }
     await fs.mkdir(localScreenshotsPath, { recursive: true });
 }

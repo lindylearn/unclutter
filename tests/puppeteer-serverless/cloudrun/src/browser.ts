@@ -20,11 +20,17 @@ export async function startBrowser(): Promise<
             "--no-first-run",
             "--no-sandbox",
             "--no-zygote",
-            "--single-process", // <- this one doesn't works in Windows
+            "--single-process",
+
+            "--proxy-server='direct://'",
+            "--proxy-bypass-list=*",
+            "--deterministic-fetch",
 
             `--disable-extensions-except=${extensionPath}`,
             `--load-extension=${extensionPath}`,
             `--disable-site-isolation-trials`, // to ignore some chromium errors
+            "--user-agent=PuppeteerAgent",
+            "--enable-features=NetworkService",
         ],
         dumpio: true,
     });
