@@ -6,9 +6,14 @@ export async function captureUrl(
     extWorker: puppeteer.WebWorker,
     url: string
 ) {
-    console.log(`Capturing ${url}...`);
+    console.log(`Capturing ${url} ...`);
 
     const page = await browser.newPage();
+    page.on("console", (message) => {
+        console.log(`Console: ${message.text()}`);
+    });
+    page.on("pageerror", ({ message }) => console.log(`Error: ${message}`));
+
     try {
         await page.goto(url, {
             waitUntil: "domcontentloaded",
@@ -16,12 +21,7 @@ export async function captureUrl(
         });
     } catch {}
 
-    console.log("page loaded");
-
-    console.log("before wait");
     await new Promise((r) => setTimeout(r, 2000));
-
-    console.log("uncluttered");
 
     const body = await page.$("body");
     const bodyPos = await body!.boundingBox();
