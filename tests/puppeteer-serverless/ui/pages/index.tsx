@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import ClipLoader from "react-spinners/ClipLoader";
-import { getHnTopLinks, triggerScreenshots } from "../common/api";
+import { triggerScreenshots } from "../common/api";
+import hnLinks from "../urls/hn.json";
 
 const gcsToken = "";
 const bucketName = "unclutter-screenshots-serverless";
@@ -55,7 +56,7 @@ function Home() {
         setChangedScreenshots([]);
 
         // trigger new screenshots
-        const urls = await getHnTopLinks(countRef.current.value);
+        const urls = hnLinks.slice(0, countRef.current.value);
         await triggerScreenshots(urls, 3);
 
         setIsTriggering(false);
