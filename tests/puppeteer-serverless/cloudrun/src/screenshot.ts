@@ -31,7 +31,7 @@ export async function captureUrl(
             x: bodyPos!.x - 10,
             y: bodyPos!.y - 10,
             width: bodyPos!.width + 20 + 10,
-            height: 1500,
+            height: 1100,
         },
     });
 

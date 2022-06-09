@@ -39,7 +39,7 @@ function Home() {
 
         // delete previous state
         await Promise.all(
-            currentScreenshots.concat(changedScreenshots).map(async (file) => {
+            changedScreenshots.map(async (file) => {
                 await fetch(
                     `https://storage.googleapis.com/storage/v1/b/${bucketName}/o/${encodeURIComponent(
                         file.name
