@@ -1,6 +1,7 @@
 import React from "react";
 import {
     allowlistDomainOnManualActivationFeatureFlag,
+    enableBionicReadingFeatureFlag,
     enableBootUnclutterMessage,
     enableSocialCountsFeatureFlag,
     getFeatureFlag,
@@ -230,6 +231,20 @@ function OptionsPage({}) {
                     </a>
                     .
                 </div>
+                <FeatureFlagSwitch
+                    featureFlagKey={enableBionicReadingFeatureFlag}
+                >
+                    Enable{" "}
+                    <a
+                        href="https://bionic-reading.com/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="underline"
+                    >
+                        bionic reading
+                    </a>
+                    .
+                </FeatureFlagSwitch>
             </OptionsGroup>
         </div>
     );
