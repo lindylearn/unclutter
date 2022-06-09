@@ -3,6 +3,7 @@ import express from "express";
 import { startBrowser } from "./browser.js";
 import { compareUrlImages } from "./compare.js";
 import {
+    downloadExtensionCode,
     downloadPreviousUrlScreenshot,
     prepare,
     uploadResults,
@@ -15,6 +16,8 @@ app.use(cors());
 
 app.post("/screenshot", async (req, res, next) => {
     try {
+        await downloadExtensionCode();
+
         const urls: string[] = req.body;
 
         await prepare();
@@ -38,7 +41,6 @@ app.post("/screenshot", async (req, res, next) => {
     }
 });
 
-// @ts-ignore
 const port = parseInt(process.env.PORT) || 8080;
 app.listen(port, () => {
     console.log(`App listening on port ${port}`);

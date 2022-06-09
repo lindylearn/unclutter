@@ -35,3 +35,5 @@ yarn-error.log*
 *.tsbuildinfo
 
 urls/*.json
+extension
+extension.zip

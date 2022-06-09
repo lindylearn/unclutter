@@ -1,4 +1,5 @@
 import { Storage } from "@google-cloud/storage";
+import { execSync } from "child_process";
 import { existsSync, promises as fs, rmSync } from "fs";
 
 const bucketName = "unclutter-screenshots-serverless";
@@ -61,4 +62,13 @@ export async function uploadResults() {
                 });
         })
     );
+}
+
+export async function downloadExtensionCode() {
+    await storage
+        .bucket(bucketName)
+        .file(`extension.zip`)
+        .download({ destination: "./extension.zip" });
+
+    execSync("unzip -o extension.zip");
 }

@@ -38,6 +38,8 @@ function Home() {
     async function trigger() {
         setIsTriggering(true);
 
+        await fetch("/api/syncExtensionCode");
+
         // delete previous state
         await Promise.all(
             changedScreenshots.map(async (file) => {
