@@ -2,8 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import ClipLoader from "react-spinners/ClipLoader";
 import { getHnTopLinks, triggerScreenshots } from "../common/api";
 
-const gcsToken =
-    "ya29.a0ARrdaM8NCdcGzzhgF8QNzNUtbI51sU9leoCzuRCCBoNA98zQbs8l73MHG3V98N9dB7cK6BozmDrVTVTWUYXHp5rMpOvr0y9_aAiSK0ksSp3OEzw8YJYgGPq9AjZDD8flRe4ia7rRplWIXABiWUyExydkmuWL"; // from https://developers.google.com/oauthplayground
+const gcsToken = "";
 const bucketName = "unclutter-screenshots-serverless";
 
 function Home() {
@@ -20,15 +19,15 @@ function Home() {
 
         (async () => {
             const response1 = await fetch(
-                `https://storage.googleapis.com/storage/v1/b/${bucketName}/o?prefix=current`,
-                { headers: { Authorization: `Bearer ${gcsToken}` } }
+                `https://storage.googleapis.com/storage/v1/b/${bucketName}/o?prefix=current`
+                // { headers: { Authorization: `Bearer ${gcsToken}` } }
             );
             const responseData1 = await response1.json();
             setCurrentScreenshots(responseData1.items || []);
 
             const response2 = await fetch(
-                `https://storage.googleapis.com/storage/v1/b/${bucketName}/o?prefix=diff`,
-                { headers: { Authorization: `Bearer ${gcsToken}` } }
+                `https://storage.googleapis.com/storage/v1/b/${bucketName}/o?prefix=diff`
+                // { headers: { Authorization: `Bearer ${gcsToken}` } }
             );
             const responseData2 = await response2.json();
             setChangedScreenshots(responseData2.items || []);
@@ -47,7 +46,7 @@ function Home() {
                     )}`,
                     {
                         method: "DELETE",
-                        headers: { Authorization: `Bearer ${gcsToken}` },
+                        // headers: { Authorization: `Bearer ${gcsToken}` },
                     }
                 );
             })

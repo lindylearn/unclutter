@@ -13,7 +13,9 @@ export async function getHnTopLinks(limit = 30): Promise<string[]> {
         })
     );
 
-    return itemDetails.map((detail) => detail.url).filter((url) => url);
+    return itemDetails
+        .map((detail) => detail.url)
+        .filter((url) => url && new URL(url).pathname !== "/");
 }
 
 export async function triggerScreenshots(urls: string[], urlsPerWorker = 5) {
