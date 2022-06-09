@@ -1,3 +1,4 @@
+import cors from "cors";
 import express from "express";
 import { startBrowser } from "./browser.js";
 import { prepare, uploadResults } from "./results.js";
@@ -5,6 +6,7 @@ import { captureUrl } from "./screenshot.js";
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 app.post("/screenshot", async (req, res, next) => {
     try {
