@@ -182,19 +182,27 @@ export default class TextContainerModifier implements PageModifier {
         }
 
         // perform modifications if is valid text element stack
+        let matchedMainContentFraction = false; // parents will contain main text if child does -> avoid checking innerText
         if (currentStack.length !== 0) {
             for (const [elem, isHeading] of currentStack) {
                 const activeStyle = window.getComputedStyle(elem);
 
-                const contentLength = elem.innerText.length;
-                const pageContentFraction =
-                    contentLength / this.bodyContentLength;
-                // console.log(pageContentFraction, elem);
+                if (!matchedMainContentFraction) {
+                    const contentLength = elem.innerText.length;
+                    const pageContentFraction =
+                        contentLength / this.bodyContentLength;
+                    // console.log(pageContentFraction, elem);
 
-                if (
-                    !isHeading &&
-                    pageContentFraction > mainContentFractionThreshold
-                ) {
+                    if (pageContentFraction > mainContentFractionThreshold) {
+                        matchedMainContentFraction = true;
+                        this.batchedNodeClassAdditions.push([
+                            elem,
+                            lindyFirstMainContainerClass,
+                        ]);
+                    }
+                }
+
+                if (!isHeading && matchedMainContentFraction) {
                     // parse background color
                     if (
                         // exlude some classes from background changes but not text adjustments
@@ -228,7 +236,7 @@ export default class TextContainerModifier implements PageModifier {
                         lindyHeadingContainerClass,
                     ]);
                 }
-                if (pageContentFraction > mainContentFractionThreshold) {
+                if (matchedMainContentFraction) {
                     this.batchedNodeClassAdditions.push([
                         elem,
                         lindyMainContainerClass,
@@ -345,7 +353,8 @@ export default class TextContainerModifier implements PageModifier {
                 border: 1px green solid !important;
             }
 
-            .${lindyMainContainerClass} ~ :not(.${lindyMainContainerClass}) {
+            /* block non-container siblings of main containers, but don't apply to first main container to not block images etc */
+            .${lindyMainContainerClass}:not(.${lindyFirstMainContainerClass}) > :not(.${lindyContainerClass}) {
                 display: none !important;
             }
             .${lindyMainContainerClass}.${lindyMainContainerClass} {
@@ -531,6 +540,7 @@ export default class TextContainerModifier implements PageModifier {
 export const lindyContainerClass = "lindy-container";
 export const lindyHeadingContainerClass = "lindy-heading-container";
 export const lindyMainContainerClass = "lindy-main-container";
+export const lindyFirstMainContainerClass = "lindy-first-main-container";
 
 const headingWordlist = ["heading", "title"];
 
