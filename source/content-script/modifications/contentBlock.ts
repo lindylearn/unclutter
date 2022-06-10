@@ -3,7 +3,7 @@ import {
     createStylesheetLink,
     createStylesheetText,
 } from "../../common/stylesheets";
-import { lindyContainerClass } from "./DOM/textContainer";
+import { lindyMainContainerClass } from "./DOM/textContainer";
 import { PageModifier, trackModifierExecution } from "./_interface";
 
 // hide page elements unrelated to the article via custom CSS, to make a page more readable
@@ -14,7 +14,6 @@ export default class ContentBlockModifier implements PageModifier {
 
     constructor() {
         const wordSelectors = blockedWords
-            .concat(asideWordBlocklist)
             .flatMap((word) => [
                 // block noise by className
                 `[class*=${word} i]`,
@@ -80,161 +79,139 @@ export default class ContentBlockModifier implements PageModifier {
     }
 }
 
-const excludeValidElements = `*:not(html):not(body):not(article):not(.${lindyContainerClass})`;
+const excludeValidElements = `*:not(html):not(body):not(article):not(.${lindyMainContainerClass})`;
 
-const blockedTags = [
-    "footer",
-    "aside",
-    "nav",
-    "gpt-ad",
-    // "iframe:not(.lindy-allowed-iframe)",
-];
-// match aside containers to block
-// be careful here
-export const asideWordBlocklist = [
-    // "footer", https://www.undrr.org/publication/global-assessment-report-disaster-risk-reduction-2022
-    "aside",
-    // "alert", // https://www.cnbc.com/2022/05/23/new-york-city-removes-the-last-payphone-from-service.html
-    "message",
-    // "-nav", // https://fly.io/blog/a-foolish-consistency/
-    "menu",
-    "privacy",
-    "consent",
-    "cookies",
-    // "widget", https://www.androidcentral.com/phones/nothing-phone-1-design-interview
-    "popup",
-    // "caption", // https://scripter.co/zero-html-validation-errors/#ensure-that-all-images-have-captions-or-alt-attributes
-    "gallery",
-    // "newsletter", // used by substack
-    "composer",
-    "callout",
-    "related", // https://blog.google/threat-analysis-group/protecting-android-users-from-0-day-attacks/
-    "signup", // https://www.theverge.com/2022/5/24/23137797/logitech-mx-master-3s-mechanical-mini-mouse-keyboard-price-release-date-features
+const blockedTags = ["footer", "aside", "nav", "gpt-ad"];
+
+// words just blocked, but considered if matched text container
+export const blockedWords = [
+    // ads
+    "adslot",
+    "advert",
+    "adsense", // https://thebarentsobserver.com/en/life-and-public/2022/06/census-results-show-galloping-population-drain-russias-north
+    "commercial", // https://www.rockpapershotgun.com/the-lord-of-the-rings-gollum-preview-may-miss-a-precious-opportunity
+    "empire", // https://www.popsci.com/science/terahertz-waves-future-technologies/
+    "google",
+
+    // headers & footers
     "masthead",
-    // "share", 'no-share' https://www.whichev.net/2022/03/29/theion-sulphur-crystal-batteries-promise-breakthrough-in-energy-density/
-    "share-icons", // https://knowablemagazine.org/article/health-disease/2021/how-noise-pollution-affects-heart-health#research-challenges
-    "share-bar", // https://www.buzzfeednews.com/article/richardnieva/worldcoin-crypto-eyeball-scanning-orb-problems
+    // "headerwrapper", // https://pitchfork.com/news/vangelis-oscar-winning-composer-dies-at-79/
+    // "menu", // issues on https://www.sidnlabs.nl/en/news-and-blogs/a-lock-with-many-keys-spoofing-dnssec-signed-domains-in-8-8-8-8
+    // "nav",
+    "announcement",
+    // "footer", https://www.undrr.org/publication/global-assessment-report-disaster-risk-reduction-2022
+
+    // newsletter signups
+    "marketing", // https://www.nature.com/articles/s41598-018-38461-y
+    "sponsored",
+    "signup", // https://www.eff.org/deeplinks/2022/03/campaign-shut-down-crucial-documentary-tool-youtube-dl-continues-and-so-does-fight
+    "newslettersignup",
+    "login",
+    "subscribe",
+    "promo", // https://www.cbsnews.com/news/memorial-day-weekend-travel-flight-cancellations/
+    "-cta", // https://www.lrb.co.uk/the-paper/v33/n19/daniel-soar/it-knows
+    "registration",
+    "metered", // https://www.military.com/history/how-naked-skydive-inspired-way-keep-pilots-oriented-flight.html
+    // "promo",
     "donate", // https://knowablemagazine.org/article/health-disease/2021/how-noise-pollution-affects-heart-health#research-challenges
-    "recommended", // https://reason.com/2022/04/08/the-fbi-decided-not-to-knock-down-a-suspects-front-door-because-it-was-an-affluent-neighborhood/
+    // "newsletter", // used by substack
+    "contribute", // https://www.themoscowtimes.com/2022/05/25/russian-lawmakers-to-consider-scrapping-upper-age-limit-for-military-service-a77787
+    "tease", // https://deadline.com/2022/05/fbi-season-finale-pulled-cbs-1235031812/
+
+    // banners
+    "banner", // https://nautil.us/why-people-feel-like-victims-9728/
+    // "alert", // https://www.cnbc.com/2022/05/23/new-york-city-removes-the-last-payphone-from-service.html
+    "modal", // https://www.fugue.co/blog/2015-11-11-guide-to-emacs.html
+    // "overlay",
+    // "sticky", // https://news.yahoo.com/exclusive-secret-cia-training-program-in-ukraine-helped-kyiv-prepare-for-russian-invasion-090052743.html?guccounter=2
+    // "aside", https://www.sec.gov/news/press-release/2022-55
+    "popup",
+    "callout",
+    "aside",
+    "message",
+    // "widget", https://www.androidcentral.com/phones/nothing-phone-1-design-interview
+    "spotlight", // https://www.gamesindustry.biz/articles/2022-05-24-us-labour-board-says-activision-blizzard-illegally-threatened-staff
+    "sidebar", // allow e.g. 'with-sidebar' on https://time.com/6176214/proton-ceo-andy-yen-profile/
+
+    // related articles
+    "related",
+    "recommend", // https://reason.com/2022/04/08/the-fbi-decided-not-to-knock-down-a-suspects-front-door-because-it-was-an-affluent-neighborhood/
+    "popular",
+    "smartfeed",
+    "more", // https://www.cleanenergywire.org/news/germany-boosts-renewables-biggest-energy-policy-reform-decades
+    "trending", // https://www.tomsguide.com/opinion/google-pixel-6a-might-be-the-most-exciting-phone-of-2022-heres-why
+    "featured", // https://edition.cnn.com/2022/05/24/tech/cher-scarlett-facial-recognition-trauma/index.html
+    "below", // https://www.rockpapershotgun.com/the-lord-of-the-rings-gollum-preview-may-miss-a-precious-opportunity
+    "feedback", // https://www.atlasobscura.com/articles/women-hair-wigs-south-korea
     "readnext", // https://blog.gregbrockman.com/its-time-to-become-an-ml-engineer
-    "watch-next", // https://www.popularmechanics.com/space/moon-mars/a40059188/japan-artemis-partnership/
+    "read-next", // https://www.popularmechanics.com/space/moon-mars/a40059188/japan-artemis-partnership/
     "recirc", // https://time.com/6176214/proton-ceo-andy-yen-profile/
     "similar", // https://nautil.us/the-power-of-narrative-15975/
     "next-article", // https://boingboing.net/2022/05/18/expert-on-the-shortcomings-of-mass-transit-in-cyberpunk-2077s-night-city.html
     "latest-posts", // https://www.embedded.com/code-morphing-with-crusoe/
-    "carousel", // https://psyche.co/films/a-gym-built-of-soviet-era-scraps-is-a-creative-community-hub
     "js_reading-list", // https://kotaku.com/old-world-is-teaching-strategy-games-some-new-tricks-1842871705
-    "tease", // https://deadline.com/2022/05/fbi-season-finale-pulled-cbs-1235031812/
-    "tooltip", // https://www.businessinsider.com/soros-urges-europe-heavy-taxes-on-russian-natural-gas-putin-2022-5?international=true&r=US&IR=T
-    "contribute", // https://www.themoscowtimes.com/2022/05/25/russian-lawmakers-to-consider-scrapping-upper-age-limit-for-military-service-a77787
-    "comment", // https://slatestarcodex.com/2014/09/30/i-can-tolerate-anything-except-the-outgroup/
-    "spotlight", // https://www.gamesindustry.biz/articles/2022-05-24-us-labour-board-says-activision-blizzard-illegally-threatened-staff
-    "banner", // https://www.econlib.org/archives/2016/09/the_math_myth.html
-];
+    "links", // https://www.popularmechanics.com/space/moon-mars/a40059188/japan-artemis-partnership/
+    "latest", // https://www.science.org/doi/10.1126/science.abk1781?cookieSet=1#latest-news
 
-// words just blocked, but considered if matched text container
-export const blockedWords = [
-    "gpt-ad", // https://www.embedded.com/code-morphing-with-crusoe/
-    "-ad", // https://kotaku.com/old-world-is-teaching-strategy-games-some-new-tricks-1842871705
-    "commercial", // https://www.rockpapershotgun.com/the-lord-of-the-rings-gollum-preview-may-miss-a-precious-opportunity
-    "empire", // https://www.popsci.com/science/terahertz-waves-future-technologies/
-    "masthead",
-    "marketing", // https://www.nature.com/articles/s41598-018-38461-y
-    // "headerwrapper", // https://pitchfork.com/news/vangelis-oscar-winning-composer-dies-at-79/
-    "menu", // issues on https://www.sidnlabs.nl/en/news-and-blogs/a-lock-with-many-keys-spoofing-dnssec-signed-domains-in-8-8-8-8
-    // "aside", https://www.sec.gov/news/press-release/2022-55
-    // "nav",
-    "footer",
-    "related",
-    "recommendation",
-    "social",
-    "popular",
-    // "promo",
-    "sponsored",
-    // "overlay",
-    "login",
-    "registration",
-    "subscribe",
-    // "modal",
-    "announcement",
-    "alert",
-    // "cookie",
+    // cookies
+    "cookie",
     "consent",
-    "cleanslate",
-    "metered", // https://www.military.com/history/how-naked-skydive-inspired-way-keep-pilots-oriented-flight.html
-    "smartfeed",
-    "adslot",
-    "advert",
-    "video",
-    "signup", // https://www.eff.org/deeplinks/2022/03/campaign-shut-down-crucial-documentary-tool-youtube-dl-continues-and-so-does-fight
-    "newslettersignup",
-    "more", // https://www.cleanenergywire.org/news/germany-boosts-renewables-biggest-energy-policy-reform-decades
-    // "sticky", // https://news.yahoo.com/exclusive-secret-cia-training-program-in-ukraine-helped-kyiv-prepare-for-russian-invasion-090052743.html?guccounter=2
-    "banner", // https://nautil.us/why-people-feel-like-victims-9728/
-    "trending", // https://www.tomsguide.com/opinion/google-pixel-6a-might-be-the-most-exciting-phone-of-2022-heres-why
-    "featured", // https://edition.cnn.com/2022/05/24/tech/cher-scarlett-facial-recognition-trauma/index.html
-    "-cta", // https://www.lrb.co.uk/the-paper/v33/n19/daniel-soar/it-knows
-    "hidden", // https://www.atlasobscura.com/articles/women-hair-wigs-south-korea
-    "feedback", // https://www.atlasobscura.com/articles/women-hair-wigs-south-korea
-    "below", // https://www.rockpapershotgun.com/the-lord-of-the-rings-gollum-preview-may-miss-a-precious-opportunity
-    "promo", // https://www.cbsnews.com/news/memorial-day-weekend-travel-flight-cancellations/
+    "privacy",
+    "consent",
+    "disclaimer", // https://www.rockpapershotgun.com/the-lord-of-the-rings-gollum-preview-may-miss-a-precious-opportunity
+
+    // noisy elements
+    "social",
+    "download", // https://www.globalwitness.org/en/campaigns/digital-threats/ethiopia-hate-speech/
+    "disqus", // also may include ads, e.g. https://david-codes.hatanian.com/2019/06/09/aws-costs-every-programmer-should-now.html
+    // "video",
+    // "share", 'no-share' https://www.whichev.net/2022/03/29/theion-sulphur-crystal-batteries-promise-breakthrough-in-energy-density/
+    "share-bar", // https://www.buzzfeednews.com/article/richardnieva/worldcoin-crypto-eyeball-scanning-orb-problems
+    "share-icons", // https://knowablemagazine.org/article/health-disease/2021/how-noise-pollution-affects-heart-health#research-challenges
+    "composer",
+    "comment", // https://slatestarcodex.com/2014/09/30/i-can-tolerate-anything-except-the-outgroup/
 ];
 export const blockedSpecificSelectors = [
+    // ads (be careful as 'ad' may appear in other words)
     ".ad",
     ".Ad", // https://www.buzzfeednews.com/article/richardnieva/worldcoin-crypto-eyeball-scanning-orb-problems
-    ".ad-wrapper", // https://www.smithsonianmag.com/science-nature/why-have-female-animals-evolved-such-wild-genitals-180979813/
-    ".ad-slot", // https://www.smithsonianmag.com/science-nature/why-have-female-animals-evolved-such-wild-genitals-180979813/
-    ".ad-container", // https://www.zeit.de/sport/2018-03/doping-east-germany-research-harald-freyberger-english/komplettansicht
-    ".ad-stickyhero",
+    "[class^='ad-' i]", // https://www.smithsonianmag.com/science-nature/why-have-female-animals-evolved-such-wild-genitals-180979813/
+    "[class$='-ad' i]", // https://kotaku.com/old-world-is-teaching-strategy-games-some-new-tricks-1842871705
+    "[class*='-ad-' i]", // https://appleinsider.com/articles/22/04/06/iphone-airpods-apple-watch-all-dominate-the-teen-technology-market
     ".RTEHashTagLabAdModule",
-    ".main-nav",
+
+    "[class$='-nav' i]", // https://fly.io/blog/a-foolish-consistency/
+
+    // header
     ".global-header",
     ".Page-header",
-    ".secondary-nav",
-    ".email",
-    ".movable-ad",
-    ".no-ad-layout",
-    ".adsbygoogle",
-    ".google-auto-placed",
-    ".breaker-ad",
-    ".pbs__player",
-    ".dotcom-ad",
-    ".subnav-ad-layout",
-    "#marquee-ad",
-    ".ad-unit",
-    ".GlobalNav",
-    "#bannerandheader",
     ".site-header",
-    "#site_banner",
     ".header-main", // https://www.statnews.com/2020/09/24/crows-possess-higher-intelligence-long-thought-primarily-human/
-    ".top-bar", // https://www.pathsensitive.com/2022/03/abstraction-not-what-you-think-it-is.html
-    "[role=complementary]",
-    ".hidden-print",
-    "#related-articles",
-    ".c-recirc-module", // https://www.theverge.com/23017107/crypto-billion-dollar-bridge-hack-decentralized-finance
-    "#latest-news", // https://www.science.org/doi/10.1126/science.abk1781?cookieSet=1#latest-news
-    ".call-to-action", // https://future.a16z.com/the-future-of-search-is-boutique/
-    "*:not(body).sidebar", // allow e.g. 'with-sidebar' on https://time.com/6176214/proton-ceo-andy-yen-profile/
-    "#sidebar", // https://www.overcomingbias.com/2008/02/my-favorite-lia.html
-    ".page__sidebar", // https://www.military.com/history/how-naked-skydive-inspired-way-keep-pilots-oriented-flight.html
-    ".ntv-moap", // https://time.com/6176214/proton-ceo-andy-yen-profile/
-    ".primis-ad-wrap", // https://appleinsider.com/articles/22/04/06/iphone-airpods-apple-watch-all-dominate-the-teen-technology-market
-    ".leadinModal", // https://www.fugue.co/blog/2015-11-11-guide-to-emacs.html
-    ".metered-gating-container", // https://www.military.com/history/how-naked-skydive-inspired-way-keep-pilots-oriented-flight.html
-    "#gateway-content", // https://www.nytimes.com/2022/05/19/us/princeton-professor-joshua-katz.html
-    "#topbar", // https://blog.samaltman.com/how-to-be-successful
     ".site-header",
-    ".link-embed", // https://www.forbes.com/sites/davidphelan/2022/05/24/airpods-pro-2-leak-teases-stunning-innovation-with-a-sting-in-the-tail/?sh=38870a304e88
-    ".disclaimer", // https://www.rockpapershotgun.com/the-lord-of-the-rings-gollum-preview-may-miss-a-precious-opportunity
-    ".top-pathing", // https://www.popularmechanics.com/space/moon-mars/a40059188/japan-artemis-partnership/
-    ".embed-editorial-links", // https://www.popularmechanics.com/space/moon-mars/a40059188/japan-artemis-partnership/
-    ".FITT_Article_TwoColumnSidebar", // https://abcnews.go.com/US/victims-parents-oxford-school-shooting-victims-sue-school/story?id=84933834
     ".penci-header-wrap", // https://londonlovesbusiness.com/russian-sailors-stage-mutiny-and-refuse-to-carry-out-combat-duties-as-they-perceive-each-trip-to-the-sea-as-a-one-way-ticket/
     "#pmc-core-header", // https://deadline.com/2022/05/fbi-season-finale-pulled-cbs-1235031812/
     ".header-placeholder", // https://apnews.com/article/russia-ukraine-janet-yellen-government-and-politics-20dbb506790dddc6f019fa7fdf265514
-    ".sdc-site-layout-sticky-region", // https://news.sky.com/story/cosmetic-surgery-adverts-targeting-teenagers-banned-12620879
-    ".skipToContent", // https://www.fugue.co/blog/2015-11-11-guide-to-emacs.html
     "header-cover", // https://kenkantzer.com/learnings-from-5-years-of-tech-startup-code-audits/
-    ".teads-inread", // https://www.cnbc.com/2022/04/05/elon-musk-to-join-twitters-board-of-directors.html
     ".byline", // https://www.inkandswitch.com/local-first/
+    ".top-bar", // https://www.pathsensitive.com/2022/03/abstraction-not-what-you-think-it-is.html
+    ".top-pathing", // https://www.popularmechanics.com/space/moon-mars/a40059188/japan-artemis-partnership/
+    "#topbar", // https://blog.samaltman.com/how-to-be-successful
+    ".skipToContent", // https://www.fugue.co/blog/2015-11-11-guide-to-emacs.html
+
+    ".email",
+
+    ".pbs__player",
+    ".GlobalNav",
+
+    "[role=complementary]",
+    ".hidden-print",
+    ".call-to-action", // https://future.a16z.com/the-future-of-search-is-boutique/
+
+    ".link-embed", // https://www.forbes.com/sites/davidphelan/2022/05/24/airpods-pro-2-leak-teases-stunning-innovation-with-a-sting-in-the-tail/?sh=38870a304e88
+
+    ".ntv-moap", // https://time.com/6176214/proton-ceo-andy-yen-profile/
+    ".metered-gating-container", // https://www.military.com/history/how-naked-skydive-inspired-way-keep-pilots-oriented-flight.html
+    "#gateway-content", // https://www.nytimes.com/2022/05/19/us/princeton-professor-joshua-katz.html
+    ".sdc-site-layout-sticky-region", // https://news.sky.com/story/cosmetic-surgery-adverts-targeting-teenagers-banned-12620879
+    ".teads-inread", // https://www.cnbc.com/2022/04/05/elon-musk-to-join-twitters-board-of-directors.html
 ];

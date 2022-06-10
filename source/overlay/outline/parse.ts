@@ -1,4 +1,3 @@
-import { asideWordBlocklist } from "../../content-script/modifications/contentBlock";
 import { scrollToElement } from "./common";
 
 export interface OutlineItem {
@@ -177,21 +176,21 @@ function getHeadingItems(): OutlineItem[] {
         ) {
             continue;
         }
-        if (
-            asideWordBlocklist
-                .filter((word) => !["header", "ad"].includes(word))
-                .concat(classBlocklist)
-                .some(
-                    (word) =>
-                        node.className.toLowerCase().includes(word) ||
-                        node.id.toLowerCase().includes(word) ||
-                        node.parentElement.className
-                            .toLowerCase()
-                            .includes(word)
-                )
-        ) {
-            continue;
-        }
+        // if (
+        //     asideWordBlocklist
+        //         .filter((word) => !["header", "ad"].includes(word))
+        //         .concat(classBlocklist)
+        //         .some(
+        //             (word) =>
+        //                 node.className.toLowerCase().includes(word) ||
+        //                 node.id.toLowerCase().includes(word) ||
+        //                 node.parentElement.className
+        //                     .toLowerCase()
+        //                     .includes(word)
+        //         )
+        // ) {
+        //     continue;
+        // }
         if (
             endBlocklist.some((word) =>
                 headingItem.title.toLowerCase().includes(word)
