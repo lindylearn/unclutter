@@ -6,9 +6,10 @@ import {
     localScreenshotsPath,
     previousScreenshotsPath,
 } from "./results.js";
+import { getUrlFilename } from "./screenshot.js";
 
 export async function compareUrlImages(url: string) {
-    const fileName = `${encodeURIComponent(url)}.png`;
+    const fileName = getUrlFilename(url);
 
     const img1 = PNG.sync.read(
         fs.readFileSync(`${localScreenshotsPath}/${fileName}`)

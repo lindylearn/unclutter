@@ -26,7 +26,7 @@ export async function captureUrl(
     const body = await page.$("body");
     const bodyPos = await body!.boundingBox();
     await page.screenshot({
-        path: `${localScreenshotsPath}/${encodeURIComponent(url)}.png`,
+        path: `${localScreenshotsPath}/${getUrlFilename(url)}`,
         clip: {
             x: bodyPos!.x - 10,
             y: bodyPos!.y - 10,
@@ -36,4 +36,9 @@ export async function captureUrl(
     });
 
     await page.close();
+}
+
+export function getUrlFilename(url: string) {
+    const urlObj = new URL(url);
+    return `${encodeURIComponent(`${urlObj.origin}${urlObj.pathname}`)}.png`;
 }

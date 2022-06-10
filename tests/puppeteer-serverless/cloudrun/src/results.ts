@@ -1,6 +1,7 @@
 import { Storage } from "@google-cloud/storage";
 import { execSync } from "child_process";
 import { existsSync, promises as fs, rmSync } from "fs";
+import { getUrlFilename } from "./screenshot.js";
 
 const bucketName = "unclutter-screenshots-serverless";
 export const localScreenshotsPath = "./screenshots/new";
@@ -25,15 +26,15 @@ export async function downloadPreviousUrlScreenshot(
     url: string,
     prefix: string
 ) {
+    const fileName = getUrlFilename(url);
+
     const file = storage
         .bucket(bucketName)
-        .file(`${prefix}/current/${encodeURIComponent(url)}.png`);
+        .file(`${prefix}/current/${fileName}`);
 
     try {
         await file.download({
-            destination: `${previousScreenshotsPath}/${encodeURIComponent(
-                url
-            )}.png`,
+            destination: `${previousScreenshotsPath}/${fileName}`,
         });
         return true;
     } catch (err) {

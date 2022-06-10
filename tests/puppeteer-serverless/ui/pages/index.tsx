@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import ClipLoader from "react-spinners/ClipLoader";
 import { triggerScreenshots } from "../common/api";
-import hnLinks from "../urls/hn.json";
+import redditLinks from "../urls/reddit.json";
 
 const gcsToken = "";
 const bucketName = "unclutter-screenshots-serverless";
@@ -59,7 +59,7 @@ function Home() {
         setChangedScreenshots([]);
 
         // trigger new screenshots
-        const urls = hnLinks.slice(0, countRef.current.value);
+        const urls = redditLinks.slice(0, countRef.current.value);
         await triggerScreenshots(urls, prefixRef.current.value, 10);
 
         setIsTriggering(false);
@@ -122,7 +122,7 @@ function Home() {
 }
 
 function Screenshot({ name }) {
-    const fileName = name.split("/")[1].split(".png")[0];
+    const fileName = name.split("/")[2].split(".png")[0];
     const url = decodeURIComponent(fileName);
 
     return (
