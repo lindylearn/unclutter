@@ -81,7 +81,7 @@ export default class ContentBlockModifier implements PageModifier {
 
 const excludeValidElements = `*:not(html):not(body):not(article):not(.${lindyMainContainerClass})`;
 
-const blockedTags = ["footer", "aside", "nav", "gpt-ad"];
+const blockedTags = ["footer", "aside", "nav", "gpt-ad", "video"];
 
 // words just blocked, but considered if matched text container
 export const blockedWords = [
@@ -112,26 +112,27 @@ export const blockedWords = [
     "-cta", // https://www.lrb.co.uk/the-paper/v33/n19/daniel-soar/it-knows
     "registration",
     "metered", // https://www.military.com/history/how-naked-skydive-inspired-way-keep-pilots-oriented-flight.html
-    // "promo",
+    "promo",
     "donate", // https://knowablemagazine.org/article/health-disease/2021/how-noise-pollution-affects-heart-health#research-challenges
-    // "newsletter", // used by substack
+    "newsletter", // used by substack
     "contribute", // https://www.themoscowtimes.com/2022/05/25/russian-lawmakers-to-consider-scrapping-upper-age-limit-for-military-service-a77787
     "tease", // https://deadline.com/2022/05/fbi-season-finale-pulled-cbs-1235031812/
 
     // banners
     "banner", // https://nautil.us/why-people-feel-like-victims-9728/
-    // "alert", // https://www.cnbc.com/2022/05/23/new-york-city-removes-the-last-payphone-from-service.html
+    "alert",
     "modal", // https://www.fugue.co/blog/2015-11-11-guide-to-emacs.html
-    // "overlay",
+    "overlay",
     // "sticky", // https://news.yahoo.com/exclusive-secret-cia-training-program-in-ukraine-helped-kyiv-prepare-for-russian-invasion-090052743.html?guccounter=2
-    // "aside", https://www.sec.gov/news/press-release/2022-55
+    "aside",
     "popup",
     "callout",
     "aside",
     "message",
-    // "widget", https://www.androidcentral.com/phones/nothing-phone-1-design-interview
+    "widget", // https://www.androidcentral.com/phones/nothing-phone-1-design-interview
     "spotlight", // https://www.gamesindustry.biz/articles/2022-05-24-us-labour-board-says-activision-blizzard-illegally-threatened-staff
     "sidebar", // allow e.g. 'with-sidebar' on https://time.com/6176214/proton-ceo-andy-yen-profile/
+    "right", // https://en.yna.co.kr/view/AEN20220610002651315
 
     // related articles
     "related",
@@ -152,6 +153,7 @@ export const blockedWords = [
     "js_reading-list", // https://kotaku.com/old-world-is-teaching-strategy-games-some-new-tricks-1842871705
     "links", // https://www.popularmechanics.com/space/moon-mars/a40059188/japan-artemis-partnership/
     "latest", // https://www.science.org/doi/10.1126/science.abk1781?cookieSet=1#latest-news
+    "readmore", // fade-out https://news.yahoo.com/us-general-says-elon-musks-210039217.html?guccounter=1
 
     // cookies
     "cookie",
@@ -164,21 +166,22 @@ export const blockedWords = [
     "social",
     "download", // https://www.globalwitness.org/en/campaigns/digital-threats/ethiopia-hate-speech/
     "disqus", // also may include ads, e.g. https://david-codes.hatanian.com/2019/06/09/aws-costs-every-programmer-should-now.html
-    // "video",
-    // "share", 'no-share' https://www.whichev.net/2022/03/29/theion-sulphur-crystal-batteries-promise-breakthrough-in-energy-density/
-    "share-bar", // https://www.buzzfeednews.com/article/richardnieva/worldcoin-crypto-eyeball-scanning-orb-problems
-    "share-icons", // https://knowablemagazine.org/article/health-disease/2021/how-noise-pollution-affects-heart-health#research-challenges
+    "video",
+    "share",
     "composer",
     "comment", // https://slatestarcodex.com/2014/09/30/i-can-tolerate-anything-except-the-outgroup/
 ];
 export const blockedSpecificSelectors = [
     // ads (be careful as 'ad' may appear in other words)
     ".ad",
-    ".Ad", // https://www.buzzfeednews.com/article/richardnieva/worldcoin-crypto-eyeball-scanning-orb-problems
-    "[class^='ad-' i]", // https://www.smithsonianmag.com/science-nature/why-have-female-animals-evolved-such-wild-genitals-180979813/
-    "[class$='-ad' i]", // https://kotaku.com/old-world-is-teaching-strategy-games-some-new-tricks-1842871705
-    "[class*='-ad-' i]", // https://appleinsider.com/articles/22/04/06/iphone-airpods-apple-watch-all-dominate-the-teen-technology-market
+    ".Ad",
+    "[class^='ad-']",
+    "[class*=' ad-']",
+    "[class$='-ad']",
+    "[class*='-ad ']",
+    "[class*='-ad-']",
     ".RTEHashTagLabAdModule",
+    "[class*='LDRB']", // https://news.yahoo.com/us-general-says-elon-musks-210039217.html?guccounter=1
 
     "[class$='-nav' i]", // https://fly.io/blog/a-foolish-consistency/
 
@@ -202,6 +205,7 @@ export const blockedSpecificSelectors = [
 
     ".pbs__player",
     ".GlobalNav",
+    ".navbar", // https://phys.org/news/2022-06-antarctic-glaciers-ice-fastest-years.html
 
     "[role=complementary]",
     ".hidden-print",
@@ -214,4 +218,6 @@ export const blockedSpecificSelectors = [
     "#gateway-content", // https://www.nytimes.com/2022/05/19/us/princeton-professor-joshua-katz.html
     ".sdc-site-layout-sticky-region", // https://news.sky.com/story/cosmetic-surgery-adverts-targeting-teenagers-banned-12620879
     ".teads-inread", // https://www.cnbc.com/2022/04/05/elon-musk-to-join-twitters-board-of-directors.html
+    "#module-moreStories", // https://news.yahoo.com/us-general-says-elon-musks-210039217.html?guccounter=1
+    ".caas-readmore-collapse",
 ];
