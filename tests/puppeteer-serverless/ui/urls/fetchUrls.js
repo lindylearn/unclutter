@@ -33,8 +33,45 @@ async function getHnTopLinks(limit = 30) {
         );
 }
 
+async function getRedditTopLinks(subreddit, limit = 30) {
+    let urls = [];
+    let nextToken = null;
+    while (urls.length < limit) {
+        console.log("request");
+        const topResponse = await (
+            await fetch(
+                `https://www.reddit.com/r/${subreddit}/top/.json?limit=100&after=${nextToken}&count=${urls.length}`
+            )
+        ).json();
+
+        const newUrls = topResponse.data.children.map(
+            (details) => details.data.url
+        );
+        urls = urls.concat(newUrls);
+
+        nextToken = topResponse.data.after;
+    }
+
+    return urls
+        .filter(
+            (url) =>
+                url &&
+                new URL(url).pathname !== "/" &&
+                !excludedDomains.includes(new URL(url).host)
+        )
+        .slice(0, limit);
+}
+
 async function main() {
-    const urls = await getHnTopLinks(1000);
-    await fs.writeFile("./urls/hn.json", JSON.stringify(urls));
+    // const urls = await getHnTopLinks(1000);
+    // await fs.writeFile("./urls/hn.json", JSON.stringify(urls));
+
+    // repeats after 250 results;, so use multiple subreddits
+    let urls = [
+        ...(await getRedditTopLinks("worldnews", 300)),
+        ...(await getRedditTopLinks("news", 300)),
+    ];
+    urls = [...new Set(urls)];
+    await fs.writeFile("./urls/reddit.json", JSON.stringify(urls));
 }
 main();
