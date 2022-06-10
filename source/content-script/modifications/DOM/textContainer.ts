@@ -46,50 +46,6 @@ export default class TextContainerModifier implements PageModifier {
 
     // Iterate DOM to apply text container classes and populate the state above
     async prepare() {
-        // Process text or heading elements and iterate upwards
-        const paragraphFontSizes: { [size: number]: number } = {};
-        const exampleNodePerFontSize: { [size: number]: HTMLElement } = {};
-        const processElement = (
-            elem: HTMLElement,
-            isTextElement: boolean = false
-        ) => {
-            // Ignore invisible nodes
-            // Note: iterateDOM is called before content block, so may not catch all hidden nodes (e.g. in footer)
-            if (elem.offsetHeight === 0) {
-                return;
-            }
-
-            const activeStyle = window.getComputedStyle(elem);
-
-            if (isTextElement) {
-                // parse text element font size
-                const fontSize = parseFloat(activeStyle.fontSize);
-                if (paragraphFontSizes[fontSize]) {
-                    paragraphFontSizes[fontSize] += 1;
-
-                    // Save largest element as example (small paragraphs might have header-specific line height)
-                    if (
-                        elem.innerText.length >
-                        exampleNodePerFontSize[fontSize].innerText.length
-                    ) {
-                        exampleNodePerFontSize[fontSize] = elem;
-                    }
-                } else {
-                    paragraphFontSizes[fontSize] = 1;
-                    exampleNodePerFontSize[fontSize] = elem;
-                }
-            }
-
-            // iterate parents
-            this.prepareIterateParents(elem.parentElement);
-
-            // apply override classes (but not text container) e.g. for text elements on theatlantic.com
-            this._getNodeOverrideClasses(elem, activeStyle).map((className) =>
-                this.batchedNodeClassAdditions.push([elem, className])
-            );
-            this._prepareBeforeAnimationPatches(elem, activeStyle);
-        };
-
         // Apply to text nodes
         let textElements = document.body.querySelectorAll(
             globalTextElementSelector
@@ -100,7 +56,7 @@ export default class TextContainerModifier implements PageModifier {
             textElements = document.body.querySelectorAll("div, span");
         }
         textElements.forEach((elem: HTMLElement) => {
-            processElement(elem, true);
+            this.processElement(elem, true);
         });
 
         // Apply to heading nodes
@@ -112,12 +68,13 @@ export default class TextContainerModifier implements PageModifier {
 
         // Just use the most common font size for now
         // Note that the actual font size might be changed by responsive styles
-        this.mainFontSize = Object.keys(paragraphFontSizes).reduce(
-            (a, b) => (paragraphFontSizes[a] > paragraphFontSizes[b] ? a : b),
+        this.mainFontSize = Object.keys(this.paragraphFontSizes).reduce(
+            (a, b) =>
+                this.paragraphFontSizes[a] > this.paragraphFontSizes[b] ? a : b,
             0
         );
         this.exampleMainFontSizeElement =
-            exampleNodePerFontSize[this.mainFontSize];
+            this.exampleNodePerFontSize[this.mainFontSize];
         this.mainTextColor = window.getComputedStyle(
             this.exampleMainFontSizeElement
         ).color;
@@ -127,6 +84,47 @@ export default class TextContainerModifier implements PageModifier {
             node.classList.add(className);
         });
     }
+
+    // Process text or heading elements and iterate upwards
+    private paragraphFontSizes: { [size: number]: number } = {};
+    private exampleNodePerFontSize: { [size: number]: HTMLElement } = {};
+    processElement = (elem: HTMLElement, isTextElement: boolean = false) => {
+        // Ignore invisible nodes
+        // Note: iterateDOM is called before content block, so may not catch all hidden nodes (e.g. in footer)
+        if (elem.offsetHeight === 0) {
+            return;
+        }
+
+        const activeStyle = window.getComputedStyle(elem);
+
+        if (isTextElement) {
+            // parse text element font size
+            const fontSize = parseFloat(activeStyle.fontSize);
+            if (this.paragraphFontSizes[fontSize]) {
+                this.paragraphFontSizes[fontSize] += 1;
+
+                // Save largest element as example (small paragraphs might have header-specific line height)
+                if (
+                    elem.innerText.length >
+                    this.exampleNodePerFontSize[fontSize].innerText.length
+                ) {
+                    this.exampleNodePerFontSize[fontSize] = elem;
+                }
+            } else {
+                this.paragraphFontSizes[fontSize] = 1;
+                this.exampleNodePerFontSize[fontSize] = elem;
+            }
+        }
+
+        // iterate parents
+        this.prepareIterateParents(elem.parentElement);
+
+        // apply override classes (but not text container) e.g. for text elements on theatlantic.com
+        this._getNodeOverrideClasses(elem, activeStyle).map((className) =>
+            this.batchedNodeClassAdditions.push([elem, className])
+        );
+        this._prepareBeforeAnimationPatches(elem, activeStyle);
+    };
 
     // map paragraphs nodes and iterate their parent nodes
     private validatedNodes: Set<HTMLElement> = new Set();
