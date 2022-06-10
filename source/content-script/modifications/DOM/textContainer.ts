@@ -19,16 +19,16 @@ This is done so that we can:
 */
 @trackModifierExecution
 export default class TextContainerModifier implements PageModifier {
-    // Only text elements, e.g. to apply font changes
-    private textElementSelector = `.${lindyTextContainerClass}, .${lindyTextContainerClass} > :is(${globalTextElementSelector}, a, ol)`;
-
     // Chain of elements that contain the main article text, to remove margins from
     private bodyContainerSelector = [
         // Use class twice for higher specifity
         `.${lindyContainerClass}.${lindyContainerClass}`,
         // also select paragraph children
-        `.${lindyContainerClass} > :is(${globalTextElementSelector}, ${globalHeadingSelector})`,
+        `.${lindyContainerClass} > :is(${globalTextElementSelector})`,
     ].join(",");
+
+    // Only text elements, e.g. to apply font changes
+    private textElementSelector = `.${lindyTextContainerClass}, .${lindyTextContainerClass} > :is(${globalTextElementSelector}, a, ol)`;
 
     // style tweaks to apply just before the pageview animation (populated via _prepareBeforeAnimationPatches())
     private nodeBeforeAnimationStyle: [
@@ -60,11 +60,11 @@ export default class TextContainerModifier implements PageModifier {
         });
 
         // Apply to heading nodes
-        document.body
-            .querySelectorAll(globalHeadingSelector)
-            .forEach((elem: HTMLElement) => {
-                processElement(elem, false);
-            });
+        // document.body
+        //     .querySelectorAll(globalHeadingSelector)
+        //     .forEach((elem: HTMLElement) => {
+        //         processElement(elem, false);
+        //     });
 
         // Just use the most common font size for now
         // Note that the actual font size might be changed by responsive styles
@@ -88,7 +88,10 @@ export default class TextContainerModifier implements PageModifier {
     // Process text or heading elements and iterate upwards
     private paragraphFontSizes: { [size: number]: number } = {};
     private exampleNodePerFontSize: { [size: number]: HTMLElement } = {};
-    processElement = (elem: HTMLElement, isTextElement: boolean = false) => {
+    private processElement = (
+        elem: HTMLElement,
+        isTextElement: boolean = false
+    ) => {
         // Ignore invisible nodes
         // Note: iterateDOM is called before content block, so may not catch all hidden nodes (e.g. in footer)
         if (elem.offsetHeight === 0) {
@@ -144,15 +147,15 @@ export default class TextContainerModifier implements PageModifier {
                 break;
             }
 
-            if (_isAsideEquivalent(currentElem)) {
-                // remove entire current stack
-                // console.log(
-                //     `Found aside container:`,
-                //     currentElem
-                // );
-                currentStack = [];
-                break;
-            }
+            // if (_isAsideEquivalent(currentElem)) {
+            //     // remove entire current stack
+            //     // console.log(
+            //     //     `Found aside container:`,
+            //     //     currentElem
+            //     // );
+            //     currentStack = [];
+            //     break;
+            // }
 
             const isHeading =
                 headingTags.includes(currentElem.tagName.toLowerCase()) ||
