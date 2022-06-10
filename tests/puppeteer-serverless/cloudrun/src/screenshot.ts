@@ -40,5 +40,7 @@ export async function captureUrl(
 
 export function getUrlFilename(url: string) {
     const urlObj = new URL(url);
-    return `${encodeURIComponent(`${urlObj.origin}${urlObj.pathname}`)}.png`;
+    const urlString = `${urlObj.origin}${urlObj.pathname}`.slice(0, 150);
+
+    return `${encodeURIComponent(urlString)}.png`;
 }

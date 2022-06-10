@@ -28,7 +28,7 @@ function Home() {
             setCurrentScreenshots(responseData1.items || []);
 
             const response2 = await fetch(
-                `https://storage.googleapis.com/storage/v1/b/${bucketName}/o?prefix=${prefixRef.current.value}/current`
+                `https://storage.googleapis.com/storage/v1/b/${bucketName}/o?prefix=${prefixRef.current.value}/diff`
                 // { headers: { Authorization: `Bearer ${gcsToken}` } }
             );
             const responseData2 = await response2.json();
@@ -64,6 +64,12 @@ function Home() {
 
         setIsTriggering(false);
     }
+    function fetchResults() {
+        setIsTriggering(true);
+        setTimeout(() => {
+            setIsTriggering(false);
+        }, 100);
+    }
 
     return (
         <div className="">
@@ -89,6 +95,12 @@ function Home() {
                         onClick={trigger}
                     >
                         Trigger
+                    </button>
+                    <button
+                        className="bg-yellow-400 rounded text-lg px-1 shadow hover:shadow-md transition-all"
+                        onClick={fetchResults}
+                    >
+                        Fetch
                     </button>
                     <ClipLoader loading={isTriggering} size={20} />
                 </div>
