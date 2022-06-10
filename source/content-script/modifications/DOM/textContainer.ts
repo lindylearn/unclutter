@@ -323,10 +323,11 @@ export default class TextContainerModifier implements PageModifier {
                 min-height: 0 !important;
                 max-width: calc(var(--lindy-pagewidth) - 2 * 50px) !important;
                 max-height: none !important;
-                margin-left: 1px !important;
+                margin-left: 0 !important;
                 margin-right: 0 !important;
                 padding-left: 0 !important;
                 padding-right: 0 !important;
+                border: none !important;
                 background: none !important;
                 box-shadow: none !important;
                 z-index: 1 !important;
@@ -336,21 +337,6 @@ export default class TextContainerModifier implements PageModifier {
                 margin-top: 0 !important;
                 padding-top: 0 !important;
                 height: auto !important;
-            }
-            .${lindyContainerClass}.${lindyContainerClass} {
-                border: 1px gray solid !important;
-            }
-            .${lindyMainContainerClass}.${lindyMainContainerClass} {
-                border: 1px purple solid !important;
-            }
-            .${lindyContainerClass} > :is(${globalTextElementSelector}) {
-                border: 1px red solid !important;
-            }
-            .${lindyHeadingContainerClass}.${lindyHeadingContainerClass} {
-                border: 1px yellow solid !important;
-            }
-            .${lindyContainerClass} > :is(${globalHeadingSelector}) {
-                border: 1px green solid !important;
             }
 
             /* block non-container siblings of main containers, but don't apply to first main container to not block images etc */
