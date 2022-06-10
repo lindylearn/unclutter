@@ -58,7 +58,6 @@ export default class BodyStyleModifier implements PageModifier {
 
         // can't reference the variables here for some reason
         document.body.classList.remove("lindy-container");
-        document.body.classList.remove("lindy-text-container");
     }
 
     afterTransitionOut() {

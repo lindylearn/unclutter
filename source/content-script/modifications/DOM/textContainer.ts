@@ -1,12 +1,14 @@
 import { createStylesheetText } from "../../../common/stylesheets";
 import { fontSizeThemeVariable } from "../../../common/theme";
-import { asideWordBlocklist, blockedSpecificSelectors } from "../contentBlock";
 import { PageModifier, trackModifierExecution } from "../_interface";
 
 const globalTextElementSelector = "p, font, pre";
 const globalHeadingSelector = "header, h1, h2, h3, h4";
 
 const headingTags = globalHeadingSelector.split(", ");
+
+const mainContentFractionThreshold = 0.4;
+// 0.47 on https://www.whichev.net/2022/03/29/theion-sulphur-crystal-batteries-promise-breakthrough-in-energy-density/
 
 /*
 Find and iterate upon text elements and their parent containers in the article DOM.
@@ -28,7 +30,7 @@ export default class TextContainerModifier implements PageModifier {
     ].join(",");
 
     // Only text elements, e.g. to apply font changes
-    private textElementSelector = `.${lindyTextContainerClass}, .${lindyTextContainerClass} > :is(${globalTextElementSelector}, a, ol)`;
+    private textElementSelector = `.${lindyContainerClass}, .${lindyContainerClass} > :is(${globalTextElementSelector}, a, ol, ul)`;
 
     // style tweaks to apply just before the pageview animation (populated via _prepareBeforeAnimationPatches())
     private nodeBeforeAnimationStyle: [
@@ -45,7 +47,10 @@ export default class TextContainerModifier implements PageModifier {
     private exampleMainFontSizeElement: HTMLElement;
 
     // Iterate DOM to apply text container classes and populate the state above
+    private bodyContentLength: number;
     async prepare() {
+        this.bodyContentLength = document.body.innerText.length;
+
         // Apply to text nodes
         let textElements = document.body.querySelectorAll(
             globalTextElementSelector
@@ -181,7 +186,15 @@ export default class TextContainerModifier implements PageModifier {
             for (const [elem, isHeading] of currentStack) {
                 const activeStyle = window.getComputedStyle(elem);
 
-                if (!isHeading) {
+                const contentLength = elem.innerText.length;
+                const pageContentFraction =
+                    contentLength / this.bodyContentLength;
+                // console.log(pageContentFraction, elem);
+
+                if (
+                    !isHeading &&
+                    pageContentFraction > mainContentFractionThreshold
+                ) {
                     // parse background color
                     if (
                         // exlude some classes from background changes but not text adjustments
@@ -214,10 +227,11 @@ export default class TextContainerModifier implements PageModifier {
                         elem,
                         lindyHeadingContainerClass,
                     ]);
-                } else {
+                }
+                if (pageContentFraction > mainContentFractionThreshold) {
                     this.batchedNodeClassAdditions.push([
                         elem,
-                        lindyTextContainerClass,
+                        lindyMainContainerClass,
                     ]);
                 }
 
@@ -315,8 +329,14 @@ export default class TextContainerModifier implements PageModifier {
                 padding-top: 0 !important;
                 height: auto !important;
             }
-            .${lindyTextContainerClass}.${lindyTextContainerClass} {
+            .${lindyContainerClass}.${lindyContainerClass} {
                 border: 1px gray solid !important;
+            }
+            .${lindyMainContainerClass}.${lindyMainContainerClass} {
+                border: 1px purple solid !important;
+            }
+            .${lindyContainerClass} > :is(${globalTextElementSelector}) {
+                border: 1px red solid !important;
             }
             .${lindyHeadingContainerClass}.${lindyHeadingContainerClass} {
                 border: 1px yellow solid !important;
@@ -324,8 +344,16 @@ export default class TextContainerModifier implements PageModifier {
             .${lindyContainerClass} > :is(${globalHeadingSelector}) {
                 border: 1px green solid !important;
             }
-            .${lindyContainerClass} > :is(${globalTextElementSelector}) {
-                border: 1px red solid !important;
+
+            .${lindyMainContainerClass} ~ :not(.${lindyMainContainerClass}) {
+                display: none !important;
+            }
+            .${lindyMainContainerClass}.${lindyMainContainerClass} {
+                margin-top: 0 !important;
+                margin-bottom: 0 !important;
+                padding-top: 0 !important;
+                padding-bottom: 0 !important;
+                top: 0 !important;
             }
         `;
     }
@@ -501,34 +529,34 @@ export default class TextContainerModifier implements PageModifier {
 }
 
 export const lindyContainerClass = "lindy-container";
-export const lindyTextContainerClass = "lindy-text-container";
 export const lindyHeadingContainerClass = "lindy-heading-container";
+export const lindyMainContainerClass = "lindy-main-container";
 
 const headingWordlist = ["heading", "title"];
 
-function _isAsideEquivalent(node: HTMLElement) {
-    if (node === document.body || node.tagName === "ARTICLE") {
-        return false;
-    }
+// function _isAsideEquivalent(node: HTMLElement) {
+//     if (node === document.body || node.tagName === "ARTICLE") {
+//         return false;
+//     }
 
-    return (
-        node.tagName === "FOOTER" ||
-        node.tagName === "ASIDE" ||
-        node.tagName === "CODE" ||
-        node.tagName === "NAV" ||
-        // leave quotes as is, e.g. https://stratechery.com/2022/why-netflix-should-sell-ads/
-        node.tagName === "BLOCKQUOTE" ||
-        node.tagName === "CODE" ||
-        blockedSpecificSelectors.includes(node.className) ||
-        asideWordBlocklist.some(
-            (word) =>
-                node.className.toLowerCase().includes(word) ||
-                node.id.toLowerCase().includes(word)
-        ) ||
-        node.hasAttribute("data-language")
-        // isSupportBanner(node) // false positive on https://www.eurogamer.net/dead-space-creators-the-callisto-protocol-has-ditched-ties-with-pubg-universe
-    );
-}
+//     return (
+//         node.tagName === "FOOTER" ||
+//         node.tagName === "ASIDE" ||
+//         node.tagName === "CODE" ||
+//         node.tagName === "NAV" ||
+//         // leave quotes as is, e.g. https://stratechery.com/2022/why-netflix-should-sell-ads/
+//         node.tagName === "BLOCKQUOTE" ||
+//         node.tagName === "CODE" ||
+//         blockedSpecificSelectors.includes(node.className) ||
+//         asideWordBlocklist.some(
+//             (word) =>
+//                 node.className.toLowerCase().includes(word) ||
+//                 node.id.toLowerCase().includes(word)
+//         ) ||
+//         node.hasAttribute("data-language")
+//         // isSupportBanner(node) // false positive on https://www.eurogamer.net/dead-space-creators-the-callisto-protocol-has-ditched-ties-with-pubg-universe
+//     );
+// }
 
 // these are just excluded from changing their backgrund color
 const backgroundWordBlockList = [
