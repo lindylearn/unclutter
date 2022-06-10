@@ -3,7 +3,10 @@ import {
     createStylesheetLink,
     createStylesheetText,
 } from "../../common/stylesheets";
-import { lindyMainContainerClass } from "./DOM/textContainer";
+import TextContainerModifier, {
+    lindyContainerClass,
+    lindyMainContainerClass,
+} from "./DOM/textContainer";
 import { PageModifier, trackModifierExecution } from "./_interface";
 
 // hide page elements unrelated to the article via custom CSS, to make a page more readable
@@ -12,7 +15,20 @@ import { PageModifier, trackModifierExecution } from "./_interface";
 export default class ContentBlockModifier implements PageModifier {
     private selectors: string[];
 
-    constructor() {
+    private textContainerModifier: TextContainerModifier;
+
+    constructor(textContainerModifier: TextContainerModifier) {
+        this.textContainerModifier = textContainerModifier;
+    }
+
+    prepare() {
+        // 'shareable' class on <p> on https://www.undrr.org/publication/global-assessment-report-disaster-risk-reduction-2022
+        let excludeValidElements = `:not(.${lindyMainContainerClass})`;
+        if (!this.textContainerModifier.foundMainContentElement) {
+            // be less strict if no main text found with reasonable certainty
+            excludeValidElements = `:not(.${lindyContainerClass})`;
+        }
+
         const wordSelectors = blockedWords
             .flatMap((word) => [
                 // block noise by className
@@ -79,9 +95,6 @@ export default class ContentBlockModifier implements PageModifier {
     }
 }
 
-// 'shareable' class on <p> on https://www.undrr.org/publication/global-assessment-report-disaster-risk-reduction-2022
-const excludeValidElements = `:not(.${lindyMainContainerClass})`;
-
 const blockedTags = ["footer", "aside", "nav", "gpt-ad", "video"];
 
 // words just blocked, but considered if matched text container
@@ -93,6 +106,7 @@ export const blockedWords = [
     "commercial", // https://www.rockpapershotgun.com/the-lord-of-the-rings-gollum-preview-may-miss-a-precious-opportunity
     "empire", // https://www.popsci.com/science/terahertz-waves-future-technologies/
     "google",
+    "dianomi", // https://www.wsj.com/articles/google-doc-sharing-work-collaboration-11654612774
 
     // headers & footers
     "masthead",
@@ -135,6 +149,7 @@ export const blockedWords = [
     "spotlight", // https://www.gamesindustry.biz/articles/2022-05-24-us-labour-board-says-activision-blizzard-illegally-threatened-staff
     "sidebar", // allow e.g. 'with-sidebar' on https://time.com/6176214/proton-ceo-andy-yen-profile/
     "right", // https://en.yna.co.kr/view/AEN20220610002651315
+    "floating", // https://www.zdnet.com/article/opera-brave-vivaldi-to-ignore-chromes-anti-ad-blocker-changes-despite-shared-codebase/
 
     // related articles
     "related",
@@ -185,6 +200,7 @@ export const blockedSpecificSelectors = [
     "[class*='-ads ']",
     "[class*='-ad-']",
     ".RTEHashTagLabAdModule",
+    ".c-adDisplay_container", // https://www.zdnet.com/article/opera-brave-vivaldi-to-ignore-chromes-anti-ad-blocker-changes-despite-shared-codebase/
     "[class*='LDRB']", // https://news.yahoo.com/us-general-says-elon-musks-210039217.html?guccounter=1
 
     "[class$='-nav' i]", // https://fly.io/blog/a-foolish-consistency/
@@ -223,5 +239,6 @@ export const blockedSpecificSelectors = [
     ".sdc-site-layout-sticky-region", // https://news.sky.com/story/cosmetic-surgery-adverts-targeting-teenagers-banned-12620879
     ".teads-inread", // https://www.cnbc.com/2022/04/05/elon-musk-to-join-twitters-board-of-directors.html
     "#module-moreStories", // https://news.yahoo.com/us-general-says-elon-musks-210039217.html?guccounter=1
-    ".caas-readmore-collapse",
+    ".c-shortcodePinbox", // https://www.zdnet.com/article/opera-brave-vivaldi-to-ignore-chromes-anti-ad-blocker-changes-despite-shared-codebase/
+    "[aria-label=Latest]", // https://yle.fi/news/3-12484032
 ];

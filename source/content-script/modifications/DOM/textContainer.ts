@@ -2,8 +2,14 @@ import { createStylesheetText } from "../../../common/stylesheets";
 import { fontSizeThemeVariable } from "../../../common/theme";
 import { PageModifier, trackModifierExecution } from "../_interface";
 
+export const lindyContainerClass = "lindy-container";
+export const lindyHeadingContainerClass = "lindy-heading-container";
+export const lindyMainContainerClass = "lindy-main-container";
+export const lindyFirstMainContainerClass = "lindy-first-main-container";
+
 const globalTextElementSelector = "p, font, pre";
 const globalHeadingSelector = "header, h1, h2, h3, h4";
+const headingClassWordlist = ["heading", "title"];
 
 const headingTags = globalHeadingSelector.split(", ");
 
@@ -47,6 +53,7 @@ export default class TextContainerModifier implements PageModifier {
     private exampleMainFontSizeElement: HTMLElement;
 
     // Iterate DOM to apply text container classes and populate the state above
+    public foundMainContentElement = false;
     private bodyContentLength: number;
     async prepare() {
         this.bodyContentLength = document.body.innerText.length;
@@ -152,19 +159,18 @@ export default class TextContainerModifier implements PageModifier {
                 break;
             }
 
-            // if (_isAsideEquivalent(currentElem)) {
-            //     // remove entire current stack
-            //     // console.log(
-            //     //     `Found aside container:`,
-            //     //     currentElem
-            //     // );
-            //     currentStack = [];
-            //     break;
-            // }
+            if (this.shouldExcludeAsTextContainer(currentElem)) {
+                // remove entire current stack
+                currentStack = [];
+                break;
+            }
+
+            // make node processed only if valid, to also abort future stacks to it
+            this.validatedNodes.add(currentElem);
 
             const isHeading =
                 headingTags.includes(currentElem.tagName.toLowerCase()) ||
-                headingWordlist.some((word) =>
+                headingClassWordlist.some((word) =>
                     currentElem.className.toLowerCase().includes(word)
                 );
             if (isHeading) {
@@ -172,9 +178,6 @@ export default class TextContainerModifier implements PageModifier {
                 // console.log(`Found heading container:`, currentElem);
                 currentStack = currentStack.map(([elem, _]) => [elem, true]);
             }
-
-            // we processed this node, even if we may not end up taking it
-            this.validatedNodes.add(currentElem);
 
             // iterate upwards
             currentStack.push([currentElem, isHeading]);
@@ -191,10 +194,17 @@ export default class TextContainerModifier implements PageModifier {
                     const contentLength = elem.innerText.length;
                     const pageContentFraction =
                         contentLength / this.bodyContentLength;
-                    // console.log(pageContentFraction, elem);
 
-                    if (pageContentFraction > mainContentFractionThreshold) {
+                    // if (pageContentFraction > 0.2) {
+                    //     console.log(pageContentFraction, elem);
+                    // }
+
+                    if (
+                        pageContentFraction > mainContentFractionThreshold &&
+                        elem !== document.body // don't assign to only <body>
+                    ) {
                         matchedMainContentFraction = true;
+                        this.foundMainContentElement = true;
                         this.batchedNodeClassAdditions.push([
                             elem,
                             lindyFirstMainContainerClass,
@@ -205,12 +215,6 @@ export default class TextContainerModifier implements PageModifier {
                 if (!isHeading && matchedMainContentFraction) {
                     // parse background color
                     if (
-                        // exlude some classes from background changes but not text adjustments
-                        !backgroundWordBlockList.some(
-                            (word) =>
-                                elem.className.toLowerCase().includes(word) ||
-                                elem.id.toLowerCase().includes(word)
-                        ) &&
                         // don't take default background color
                         !activeStyle.backgroundColor.includes(
                             "rgba(0, 0, 0, 0)"
@@ -521,96 +525,22 @@ export default class TextContainerModifier implements PageModifier {
             ]);
         }
     }
-}
 
-export const lindyContainerClass = "lindy-container";
-export const lindyHeadingContainerClass = "lindy-heading-container";
-export const lindyMainContainerClass = "lindy-main-container";
-export const lindyFirstMainContainerClass = "lindy-first-main-container";
+    // very carefully exclude elements as text containers
+    // used to avoid incorrect main container selection for small articles
+    // this doesn't mean these elements will be removed, but they might
+    private shouldExcludeAsTextContainer(node: HTMLElement) {
+        if (["UL", "OL"].includes(node.tagName)) {
+            const contentLength = node.innerText.length;
+            const pageContentFraction = contentLength / this.bodyContentLength;
 
-const headingWordlist = ["heading", "title"];
+            // abort for very large <ul> related articles section, e.g on https://ca.finance.yahoo.com/news/mining-ukraine-ports-may-months-162909326.html?guccounter=1
+            // but allow small lists in the text
+            if (pageContentFraction > 0.1) {
+                return true;
+            }
+        }
 
-// function _isAsideEquivalent(node: HTMLElement) {
-//     if (node === document.body || node.tagName === "ARTICLE") {
-//         return false;
-//     }
-
-//     return (
-//         node.tagName === "FOOTER" ||
-//         node.tagName === "ASIDE" ||
-//         node.tagName === "CODE" ||
-//         node.tagName === "NAV" ||
-//         // leave quotes as is, e.g. https://stratechery.com/2022/why-netflix-should-sell-ads/
-//         node.tagName === "BLOCKQUOTE" ||
-//         node.tagName === "CODE" ||
-//         blockedSpecificSelectors.includes(node.className) ||
-//         asideWordBlocklist.some(
-//             (word) =>
-//                 node.className.toLowerCase().includes(word) ||
-//                 node.id.toLowerCase().includes(word)
-//         ) ||
-//         node.hasAttribute("data-language")
-//         // isSupportBanner(node) // false positive on https://www.eurogamer.net/dead-space-creators-the-callisto-protocol-has-ditched-ties-with-pubg-universe
-//     );
-// }
-
-// these are just excluded from changing their backgrund color
-const backgroundWordBlockList = [
-    "lede", // https://cockpit-project.org/
-    "frontpage", // https://cockpit-project.org/
-    "details", // https://www.gamesindustry.biz/articles/2022-05-20-games-account-for-32-percent-of-tencents-usd2-13-billion-q1-revenues
-    "header",
-    "sidebar",
-    "dialog",
-    "call-to-action", // https://future.a16z.com/the-future-of-search-is-boutique/
-    "overlay",
-    "alert",
-];
-
-// be very careful here to not match valid text nodes
-const supportBannerTextStart = [
-    "Support", // https://psyche.co/guides/how-to-have-a-life-full-of-wonder-and-learning-about-the-world
-    "Don't Miss", // https://www.military.com/history/how-naked-skydive-inspired-way-keep-pilots-oriented-flight.html
-];
-function isSupportBanner(node: HTMLElement): boolean {
-    const firstChild = node.firstElementChild as HTMLElement;
-
-    if (!firstChild || !firstChild.tagName?.startsWith("H")) {
-        // short circuit
         return false;
     }
-
-    const text = node.textContent.trim();
-    if (
-        text &&
-        supportBannerTextStart.some((start) => text.startsWith(start))
-    ) {
-        return true;
-    }
-
-    return false;
-}
-
-// Get a CSS selector for the passed node with a high specifity
-function _getUniqueNodeSelector(node) {
-    // Create new unique class
-    const containerId = `lindy-container_${Math.random().toString().slice(2)}`;
-    node.classList.add(containerId); // will only be applied in next loop
-
-    // construct selector in "tag.class[id='id']" format
-    const classNames = [containerId].map((className) => `.${className}`);
-    const completeSelector = `${node.tagName.toLowerCase()}${classNames.join(
-        ""
-    )}${node.id ? `[id='${node.id}']` : ""}`;
-    return completeSelector;
-}
-
-// Get a CSS selector that uses all classes of this element
-// Used to select sibling text containers that use the same style
-function _getSiblingSelector(node) {
-    // only allow valid CSS classnames, e.g. not starting with number
-    return [...node.classList]
-        .filter((classname) => /^-?[_a-zA-Z]+[_a-zA-Z0-9-]*$/.test(classname))
-        .map((className) => `.${className}`)
-        .join("");
 }

@@ -23,11 +23,13 @@ export default class TransitionManager implements PageModifier {
 
     private bodyStyleModifier = new BodyStyleModifier();
     private cssomProvider = new CSSOMProvider();
-    private contentBlockModifier = new ContentBlockModifier();
     private responsiveStyleModifier = new ResponsiveStyleModifier();
     private stylePatchesModifier = new StylePatchesModifier(this.cssomProvider);
     private annotationsModifier = new AnnotationsModifier();
     private textContainerModifier = new TextContainerModifier();
+    private contentBlockModifier = new ContentBlockModifier(
+        this.textContainerModifier
+    );
     private backgroundModifier = new BackgroundModifier();
     private themeModifier = new ThemeModifier(
         this.cssomProvider,
@@ -61,6 +63,9 @@ export default class TransitionManager implements PageModifier {
             // get active theme state
             this.themeModifier.prepare(this.domain),
         ]);
+
+        // configure selectors
+        this.contentBlockModifier.prepare();
 
         // can't set animation start properties in content.css, as that breaks some sites (e.g. xkcd.com)
         preparePageviewAnimation();

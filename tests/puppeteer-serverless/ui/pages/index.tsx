@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import ClipLoader from "react-spinners/ClipLoader";
 import { triggerScreenshots } from "../common/api";
+import hnLinks from "../urls/hn.json";
 import redditLinks from "../urls/reddit.json";
 
 const gcsToken = "";
@@ -43,7 +44,7 @@ function Home() {
 
         // delete previous state
         await Promise.all(
-            changedScreenshots.map(async (file) => {
+            currentScreenshots.concat(changedScreenshots).map(async (file) => {
                 await fetch(
                     `https://storage.googleapis.com/storage/v1/b/${bucketName}/o/${encodeURIComponent(
                         file.name
@@ -59,7 +60,9 @@ function Home() {
         setChangedScreenshots([]);
 
         // trigger new screenshots
-        const urls = redditLinks.slice(0, countRef.current.value);
+        hnLinks;
+        redditLinks;
+        const urls = hnLinks.slice(0, countRef.current.value);
         await triggerScreenshots(urls, prefixRef.current.value, 10);
 
         setIsTriggering(false);
