@@ -489,7 +489,6 @@ div[data-module-zone="header"] {
 
 /* https://techcrunch.com/2022/03/18/porsche-is-turning-its-mid-engine-718-roadster-into-an-ev-by-2025/ */
 .feature-island__posts ~ *,
-.article-container ~ *,
 .newsletter-signup-block {
     display: none !important;
 }
@@ -771,10 +770,8 @@ div.bubble-element.CustomElement.bubble-r-container {
     display: none !important;
 }
 
-/* https://www.rockpapershotgun.com/the-lord-of-the-rings-gollum-preview-may-miss-a-precious-opportunity */
-.avatar {
-    position: static !important;
-}
+/*  */
+
 
 /* https://deadline.com/2022/05/fbi-season-finale-pulled-cbs-1235031812/ */
 [class~="u-hidden@desktop-max"] {
@@ -820,11 +817,6 @@ body > div:first-child:not(.lindy-container) {
     transition: none !important;
     opacity: 1 !important;
     will-change: unset !important;
-}
-
-/* https://www.cnbc.com/2022/04/05/elon-musk-to-join-twitters-board-of-directors.html */
-.InlineImage-imagePlaceholder {
-    padding-bottom: 0 !important;
 }
 
 /* https://www.theguardian.com/lifeandstyle/2014/jul/19/change-your-life-sit-down-and-think */

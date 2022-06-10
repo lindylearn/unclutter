@@ -79,7 +79,8 @@ export default class ContentBlockModifier implements PageModifier {
     }
 }
 
-const excludeValidElements = `*:not(html):not(body):not(article):not(.${lindyMainContainerClass})`;
+// 'shareable' class on <p> on https://www.undrr.org/publication/global-assessment-report-disaster-risk-reduction-2022
+const excludeValidElements = `:not(.${lindyMainContainerClass})`;
 
 const blockedTags = ["footer", "aside", "nav", "gpt-ad", "video"];
 
@@ -99,7 +100,8 @@ export const blockedWords = [
     // "menu", // issues on https://www.sidnlabs.nl/en/news-and-blogs/a-lock-with-many-keys-spoofing-dnssec-signed-domains-in-8-8-8-8
     // "nav",
     "announcement",
-    // "footer", https://www.undrr.org/publication/global-assessment-report-disaster-risk-reduction-2022
+    "footer",
+    "leaderboard", // https://www.bbc.com/news/uk-england-london-61747092
 
     // newsletter signups
     "marketing", // https://www.nature.com/articles/s41598-018-38461-y
@@ -179,6 +181,8 @@ export const blockedSpecificSelectors = [
     "[class*=' ad-']",
     "[class$='-ad']",
     "[class*='-ad ']",
+    "[class$='-ads']",
+    "[class*='-ads ']",
     "[class*='-ad-']",
     ".RTEHashTagLabAdModule",
     "[class*='LDRB']", // https://news.yahoo.com/us-general-says-elon-musks-210039217.html?guccounter=1
