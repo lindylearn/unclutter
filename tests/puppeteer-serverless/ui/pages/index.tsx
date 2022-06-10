@@ -8,6 +8,7 @@ const bucketName = "unclutter-screenshots-serverless";
 
 function Home() {
     const countRef = useRef();
+    const prefixRef = useRef();
 
     const [isTriggering, setIsTriggering] = useState(false);
     const [currentScreenshots, setCurrentScreenshots] = useState([]);
@@ -20,14 +21,14 @@ function Home() {
 
         (async () => {
             const response1 = await fetch(
-                `https://storage.googleapis.com/storage/v1/b/${bucketName}/o?prefix=current`
+                `https://storage.googleapis.com/storage/v1/b/${bucketName}/o?prefix=${prefixRef.current.value}/current`
                 // { headers: { Authorization: `Bearer ${gcsToken}` } }
             );
             const responseData1 = await response1.json();
             setCurrentScreenshots(responseData1.items || []);
 
             const response2 = await fetch(
-                `https://storage.googleapis.com/storage/v1/b/${bucketName}/o?prefix=diff`
+                `https://storage.googleapis.com/storage/v1/b/${bucketName}/o?prefix=${prefixRef.current.value}/current`
                 // { headers: { Authorization: `Bearer ${gcsToken}` } }
             );
             const responseData2 = await response2.json();
@@ -59,7 +60,7 @@ function Home() {
 
         // trigger new screenshots
         const urls = hnLinks.slice(0, countRef.current.value);
-        await triggerScreenshots(urls, 3);
+        await triggerScreenshots(urls, prefixRef.current.value, 10);
 
         setIsTriggering(false);
     }
@@ -73,9 +74,16 @@ function Home() {
                 <div className="flex gap-2 items-center">
                     <input
                         className="w-20 px-1 py-0.5 shadow rounded"
+                        defaultValue={""}
+                        placeholder="prefix"
+                        ref={prefixRef}
+                    />
+                    <input
+                        className="w-20 px-1 py-0.5 shadow rounded"
                         defaultValue={20}
                         ref={countRef}
                     />
+
                     <button
                         className="bg-yellow-400 rounded text-lg px-1 shadow hover:shadow-md transition-all"
                         onClick={trigger}
@@ -93,7 +101,7 @@ function Home() {
                     </div>
                     <div className="flex flex-wrap gap-5">
                         {changedScreenshots.map((file) => (
-                            <Screenshot key={file.name} {...file} />
+                            <Screenshot key={file.md5Hash} {...file} />
                         ))}
                     </div>
                 </div>
@@ -104,7 +112,7 @@ function Home() {
                     </div>
                     <div className="flex flex-wrap gap-5">
                         {currentScreenshots.map((file) => (
-                            <Screenshot key={file.name} {...file} />
+                            <Screenshot key={file.md5Hash} {...file} />
                         ))}
                     </div>
                 </div>

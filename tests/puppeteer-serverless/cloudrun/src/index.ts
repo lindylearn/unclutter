@@ -15,6 +15,8 @@ app.use(express.json());
 app.use(cors());
 
 app.post("/screenshot", async (req, res, next) => {
+    const prefix = req.query.prefix as string;
+
     try {
         await downloadExtensionCode();
 
@@ -26,14 +28,17 @@ app.post("/screenshot", async (req, res, next) => {
         for (const url of urls) {
             await captureUrl(browser, extWorker, url);
 
-            const hasPrevScreenshot = await downloadPreviousUrlScreenshot(url);
+            const hasPrevScreenshot = await downloadPreviousUrlScreenshot(
+                url,
+                prefix
+            );
             if (hasPrevScreenshot) {
                 await compareUrlImages(url);
             }
         }
 
         await browser.close();
-        await uploadResults();
+        await uploadResults(prefix);
 
         res.send("ok");
     } catch (err) {

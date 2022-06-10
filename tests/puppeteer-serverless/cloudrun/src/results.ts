@@ -21,10 +21,13 @@ async function createEmptyDir(path: string) {
     await fs.mkdir(path, { recursive: true });
 }
 
-export async function downloadPreviousUrlScreenshot(url: string) {
+export async function downloadPreviousUrlScreenshot(
+    url: string,
+    prefix: string
+) {
     const file = storage
         .bucket(bucketName)
-        .file(`current/${encodeURIComponent(url)}.png`);
+        .file(`${prefix}/current/${encodeURIComponent(url)}.png`);
 
     try {
         await file.download({
@@ -38,7 +41,7 @@ export async function downloadPreviousUrlScreenshot(url: string) {
     }
 }
 
-export async function uploadResults() {
+export async function uploadResults(prefix: string) {
     console.log("Uploading screenshots");
 
     const currentFiles = await fs.readdir(localScreenshotsPath);
@@ -47,7 +50,7 @@ export async function uploadResults() {
             await storage
                 .bucket(bucketName)
                 .upload(`${localScreenshotsPath}/${file}`, {
-                    destination: `current/${file}`,
+                    destination: `${prefix}/current/${file}`,
                 });
         })
     );
@@ -58,7 +61,7 @@ export async function uploadResults() {
             await storage
                 .bucket(bucketName)
                 .upload(`${diffScreenshotsPath}/${file}`, {
-                    destination: `diff/${file}`,
+                    destination: `${prefix}/diff/${file}`,
                 });
         })
     );

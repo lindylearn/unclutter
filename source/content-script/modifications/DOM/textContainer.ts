@@ -4,7 +4,7 @@ import { asideWordBlocklist, blockedSpecificSelectors } from "../contentBlock";
 import { PageModifier, trackModifierExecution } from "../_interface";
 
 const globalTextElementSelector = "p, font, pre";
-const globalHeadingSelector = "header, h1, h2, h3, h4, picture, figure";
+const globalHeadingSelector = "header, h1, h2, h3, h4";
 
 const headingTags = globalHeadingSelector.split(", ");
 
@@ -150,18 +150,7 @@ export default class TextContainerModifier implements PageModifier {
                 // remove entire current stack
                 // console.log(
                 //     `Found aside container:`,
-                //     currentElem,
-                //     asideWordBlocklist.filter(
-                //         (word) =>
-                //             currentElem.className
-                //                 .toLowerCase()
-                //                 .includes(word) ||
-                //             currentElem.id.toLowerCase().includes(word)
-                //     ),
-                //     blockedSpecificSelectors.includes(currentElem.className),
-                //     isSupportBanner(currentElem),
-                //     currentElem.hasAttribute("data-language"),
-                //     currentElem.tagName
+                //     currentElem
                 // );
                 currentStack = [];
                 break;
@@ -311,12 +300,11 @@ export default class TextContainerModifier implements PageModifier {
                 min-height: 0 !important;
                 max-width: calc(var(--lindy-pagewidth) - 2 * 50px) !important;
                 max-height: none !important;
-                margin-left: 0 !important;
+                margin-left: 1px !important;
                 margin-right: 0 !important;
                 padding-left: 0 !important;
                 padding-right: 0 !important;
                 background: none !important;
-                border: none !important;
                 box-shadow: none !important;
                 z-index: 1 !important;
                 transition: margin-left 0.4s cubic-bezier(0.33, 1, 0.68, 1);
@@ -325,6 +313,18 @@ export default class TextContainerModifier implements PageModifier {
                 margin-top: 0 !important;
                 padding-top: 0 !important;
                 height: auto !important;
+            }
+            .${lindyTextContainerClass}.${lindyTextContainerClass} {
+                border: 1px gray solid !important;
+            }
+            .${lindyHeadingContainerClass}.${lindyHeadingContainerClass} {
+                border: 1px yellow solid !important;
+            }
+            .${lindyContainerClass} > :is(${globalHeadingSelector}) {
+                border: 1px green solid !important;
+            }
+            .${lindyContainerClass} > :is(${globalTextElementSelector}) {
+                border: 1px red solid !important;
             }
         `;
     }

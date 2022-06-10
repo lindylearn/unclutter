@@ -9,7 +9,7 @@ async function main() {
 
     await captureUrl(browser, extWorker, url);
 
-    const hasPrevScreenshot = await downloadPreviousUrlScreenshot(url);
+    const hasPrevScreenshot = await downloadPreviousUrlScreenshot(url, "");
     if (hasPrevScreenshot) {
         await compareUrlImages(url);
     }
