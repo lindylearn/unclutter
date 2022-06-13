@@ -1,21 +1,18 @@
 import { createStylesheetText } from "../../../common/stylesheets";
 import { fontSizeThemeVariable } from "../../../common/theme";
+import { cleanTitle } from "../../../overlay/outline/parse";
 import { PageModifier, trackModifierExecution } from "../_interface";
 
-export const lindyContainerClass = "lindy-container";
+export const lindyContainerClass = "lindy-text-container";
 export const lindyHeadingContainerClass = "lindy-heading-container";
-export const lindyMainContainerClass = "lindy-main-container";
+
+export const lindyMainContentContainerClass = "lindy-main-text-container";
+export const lindyMainHeaderContainerClass = "lindy-main-header-container";
 export const lindyFirstMainContainerClass = "lindy-first-main-container";
 
 const globalTextElementSelector = "p, font, pre";
 const globalHeadingSelector = "header, h1, h2, h3, h4";
-const headingClassWordlist = [
-    "heading",
-    "title",
-    "byline",
-    "article-details",
-    "nav",
-];
+const headingClassWordlist = ["heading", "title", "article-details"]; // be careful here
 
 const headingTags = globalHeadingSelector.split(", ");
 
@@ -143,22 +140,23 @@ export default class TextContainerModifier implements PageModifier {
         }
 
         // iterate parents
-        this.prepareIterateParents(elem.parentElement, isHeading);
+        if (isHeading) {
+            // apply modifications to heading elements themselves to prevent them being hidden
+            this.prepareIterateParents(elem, isHeading);
+        } else {
+            this.prepareIterateParents(elem.parentElement, isHeading);
+        }
 
         this._prepareBeforeAnimationPatches(elem, activeStyle);
-        // make sure headings & their children are not hidden
-        if (isHeading) {
-            this.batchedNodeClassAdditions.push([
-                elem,
-                lindyHeadingContainerClass,
-            ]);
-        }
     };
 
     private validatedNodes: Set<HTMLElement> = new Set(); // nodes processed in the current phase of prepareIterateParents()
     private handledNodes: Set<HTMLElement> = new Set(); // nodes that we applied classes to already (across prepareIterateParents() phases)
     // add all classes at once to prevent multiple reflows
     private batchedNodeClassAdditions: [HTMLElement, string][] = [];
+    private cleanPageTitle = cleanTitle(document.title)
+        .slice(0, 30)
+        .toLowerCase();
 
     // map paragraphs nodes and iterate their parent nodes
     private prepareIterateParents = (
@@ -217,21 +215,39 @@ export default class TextContainerModifier implements PageModifier {
                 const activeStyle = window.getComputedStyle(elem);
 
                 // check if element is main text
-                if (!matchedMainContentFraction && !isHeadingStack) {
-                    const contentLength = elem.innerText.length;
-                    const pageContentFraction =
-                        contentLength / this.bodyContentLength;
+                if (!matchedMainContentFraction) {
+                    if (isHeadingStack) {
+                        // for headings...
+                        const pos = elem.getBoundingClientRect(); // PERF?
+                        const isOnFirstPage =
+                            pos.top + window.scrollY < window.innerHeight;
 
-                    if (
-                        pageContentFraction > mainContentFractionThreshold &&
-                        elem !== document.body // don't assign to only <body>
-                    ) {
+                        matchedMainContentFraction =
+                            isOnFirstPage &&
+                            elem.innerText
+                                .toLowerCase()
+                                .includes(this.cleanPageTitle);
+                    } else {
+                        // for text containers, consider the fraction of the page text
+                        const contentLength = elem.innerText.length;
+                        const pageContentFraction =
+                            contentLength / this.bodyContentLength;
+
+                        matchedMainContentFraction =
+                            pageContentFraction > mainContentFractionThreshold;
+                    }
+
+                    if (matchedMainContentFraction) {
                         matchedMainContentFraction = true;
-                        this.foundMainContentElement = true;
-                        this.batchedNodeClassAdditions.push([
-                            elem,
-                            lindyFirstMainContainerClass,
-                        ]);
+                        if (elem !== document.body) {
+                            this.batchedNodeClassAdditions.push([
+                                elem,
+                                lindyFirstMainContainerClass,
+                            ]);
+                        }
+                        if (!isHeadingStack) {
+                            this.foundMainContentElement = true;
+                        }
                     }
                 }
 
@@ -254,13 +270,17 @@ export default class TextContainerModifier implements PageModifier {
                 }
 
                 // save classes to add
-                this.handledNodes.add(elem);
-
                 if (isHeadingStack) {
                     this.batchedNodeClassAdditions.push([
                         elem,
                         lindyHeadingContainerClass,
                     ]);
+                    if (matchedMainContentFraction) {
+                        this.batchedNodeClassAdditions.push([
+                            elem,
+                            lindyMainHeaderContainerClass,
+                        ]);
+                    }
                 } else {
                     this.batchedNodeClassAdditions.push([
                         elem,
@@ -269,7 +289,7 @@ export default class TextContainerModifier implements PageModifier {
                     if (matchedMainContentFraction) {
                         this.batchedNodeClassAdditions.push([
                             elem,
-                            lindyMainContainerClass,
+                            lindyMainContentContainerClass,
                         ]);
                     }
                     // apply override classes (but not text container) e.g. for text elements on theatlantic.com
@@ -283,6 +303,8 @@ export default class TextContainerModifier implements PageModifier {
                 }
 
                 this._prepareBeforeAnimationPatches(elem, activeStyle);
+
+                this.handledNodes.add(elem);
             }
         }
     };
@@ -370,8 +392,8 @@ export default class TextContainerModifier implements PageModifier {
                 transition: margin-left 0.4s cubic-bezier(0.33, 1, 0.68, 1);
             }
             /* clean up headings */
-            .${lindyHeadingContainerClass}:not(body), .${lindyHeadingContainerClass} > * {
-                border: solid 1px green !important;
+            .${lindyHeadingContainerClass}.${lindyHeadingContainerClass}.${lindyHeadingContainerClass}:not(body), .${lindyHeadingContainerClass} > * {
+                border: solid 1px none !important;
                 color: black !important;
 
                 position: relative !important;
@@ -380,21 +402,25 @@ export default class TextContainerModifier implements PageModifier {
                 padding-top: 0 !important;
                 padding-left: 0 !important;
                 height: auto !important;
+                transform: none !important;
+            }
+            .${lindyHeadingContainerClass}.${lindyHeadingContainerClass}.${lindyHeadingContainerClass}.${lindyMainHeaderContainerClass} {
+                border: solid 1px purple !important;
             }
             .${lindyHeadingContainerClass}:before, .${lindyHeadingContainerClass}:after {
                 display: none !important;
             }
-
+            
             .${lindyContainerClass} > :is(${globalTextElementSelector}) {
-                border: solid 1px red !important;
+                
             }
 
             /* block non-container siblings of main containers, but don't apply to first main container to not block images etc */
-            .${lindyMainContainerClass}:not(.${lindyFirstMainContainerClass}) > :not(.${lindyMainContainerClass}, .${lindyHeadingContainerClass}) {
+            .${lindyMainContentContainerClass}:not(.${lindyFirstMainContainerClass}) > :not(.${lindyContainerClass}, .${lindyHeadingContainerClass}) {
                 display: none !important;
             }
             /* more strict cleanup for contains of the main page text */
-            .${lindyMainContainerClass}.${lindyMainContainerClass}:not(body) {
+            .${lindyMainContentContainerClass}.${lindyMainContentContainerClass}:not(body) {
                 position: relative !important;
                 margin-top: 0 !important;
                 margin-bottom: 0 !important;
@@ -414,7 +440,7 @@ export default class TextContainerModifier implements PageModifier {
             return;
         }
 
-        const css = `${this.bodyContainerSelector}, .${lindyHeadingContainerClass}.${lindyHeadingContainerClass}, .${lindyHeadingContainerClass} > * {
+        const css = `${this.bodyContainerSelector}, .${lindyHeadingContainerClass}.${lindyHeadingContainerClass}.${lindyHeadingContainerClass}.${lindyHeadingContainerClass}, .${lindyHeadingContainerClass} > * {
             color: var(--lindy-dark-theme-text-color) !important;
         }`;
         createStylesheetText(css, "lindy-dark-mode-text");
@@ -489,12 +515,12 @@ export default class TextContainerModifier implements PageModifier {
     // Collect overrides for specific container elements (insert as stylesheet for easy unpatching)
     private overrideCssDeclarations = [
         // hide sidebar siblings, e.g. on https://www.thespacereview.com/article/4384/1
-        `.lindy-container > td:not(.lindy-container) { 
+        `.${lindyContainerClass} > td:not(.${lindyContainerClass}) { 
                 display: none !important;
             }`,
         // Remove horizontal flex partitioning, e.g. https://www.nationalgeographic.com/science/article/the-controversial-quest-to-make-a-contagious-vaccine, https://hbr.org/2018/07/research-the-average-age-of-a-successful-startup-founder-is-45
         `.lindy-text-remove-horizontal-flex { display: block !important; }`,
-        `.lindy-text-remove-horizontal-flex > div:not(.lindy-container) { display: none !important; }`,
+        `.lindy-text-remove-horizontal-flex > div:not(.${lindyContainerClass}) { display: none !important; }`,
         // Remove grids, e.g. https://www.washingtonpost.com/business/2022/02/27/bp-russia-rosneft-ukraine or https://www.trickster.dev/post/decrypting-your-own-https-traffic-with-wireshark/
         `.lindy-text-remove-grid { 
                 display: block !important;
@@ -503,7 +529,7 @@ export default class TextContainerModifier implements PageModifier {
                 column-gap: 0 !important;
             }`,
         // TODO add classes to siblings to improve selector performance
-        // `.lindy-text-remove-grid > *:not(.lindy-container) {
+        // `.lindy-text-remove-grid > *:not(.${lindyContainerClass}) {
         //     display: none !important;
         // }`,
     ];
@@ -578,6 +604,9 @@ export default class TextContainerModifier implements PageModifier {
     // used to avoid incorrect main container selection for small articles
     // this doesn't mean these elements will be removed, but they might
     private shouldExcludeAsTextContainer(node: HTMLElement) {
+        return false;
+
+        // causes issues on https://news.illinois.edu/view/6367/913924091
         if (["UL", "OL"].includes(node.tagName)) {
             const contentLength = node.innerText.length;
             const pageContentFraction = contentLength / this.bodyContentLength;

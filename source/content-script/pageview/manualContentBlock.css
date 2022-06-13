@@ -117,7 +117,7 @@ main {
 .pw-more-medium-articles {
     display: none !important;
 }
-span > article:not(.lindy-container) {
+span > article:not(.lindy-text-container) {
     display: none !important;
 }
 
@@ -805,7 +805,7 @@ div.bubble-element.CustomElement.bubble-r-container {
 }
 
 /* https://lepiter.io/feenk/developers-spend-most-of-their-time-figuri-9q25taswlbzjc5rsufndeu0py/ */
-body > div:first-child:not(.lindy-container) {
+body > div:first-child:not(.lindy-text-container) {
     /* be careful about false matches */
     margin: 0 !important;
     padding: 0 !important;

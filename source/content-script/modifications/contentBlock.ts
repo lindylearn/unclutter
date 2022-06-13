@@ -6,7 +6,8 @@ import {
 import TextContainerModifier, {
     lindyContainerClass,
     lindyHeadingContainerClass,
-    lindyMainContainerClass,
+    lindyMainContentContainerClass,
+    lindyMainHeaderContainerClass,
 } from "./DOM/textContainer";
 import { PageModifier, trackModifierExecution } from "./_interface";
 
@@ -25,7 +26,7 @@ export default class ContentBlockModifier implements PageModifier {
     prepare() {
         // 'shareable' class on <p> on https://www.undrr.org/publication/global-assessment-report-disaster-risk-reduction-2022
         // <svg> e.g. on https://garymarcus.substack.com/p/what-does-it-mean-when-an-ai-fails?s=r
-        let excludeValidElements = `:not(.${lindyMainContainerClass}, .${lindyHeadingContainerClass}, svg)`;
+        let excludeValidElements = `:not(.${lindyMainContentContainerClass}, .${lindyMainHeaderContainerClass}, svg)`;
         if (!this.textContainerModifier.foundMainContentElement) {
             // be less strict if no main text found with reasonable certainty
             excludeValidElements = `:not(.${lindyContainerClass}), .${lindyHeadingContainerClass}, svg`;
@@ -41,11 +42,10 @@ export default class ContentBlockModifier implements PageModifier {
                 `[style*='fixed']`,
                 `[style*='sticky']`,
             ])
-            .map((selector) => `${excludeValidElements}${selector}`);
-
-        this.selectors = blockedTags
             .concat(blockedSpecificSelectors)
-            .concat(wordSelectors);
+            .map((selector) => `${selector}${excludeValidElements}`);
+
+        this.selectors = blockedTags.concat(wordSelectors);
     }
 
     fadeOutNoise() {
@@ -136,7 +136,10 @@ export const blockedWords = [
     "donate", // https://knowablemagazine.org/article/health-disease/2021/how-noise-pollution-affects-heart-health#research-challenges
     "newsletter", // used by substack
     "contribute", // https://www.themoscowtimes.com/2022/05/25/russian-lawmakers-to-consider-scrapping-upper-age-limit-for-military-service-a77787
+    "support", // https://scroll.in/article/1024765/when-jawaharlal-nehru-read-lolita-to-decide-whether-an-obscene-book-should-be-allowed-in-india
     "tease", // https://deadline.com/2022/05/fbi-season-finale-pulled-cbs-1235031812/
+    "account", // https://www.zigpoll.com/blog/being-a-solopreneur-part-one
+    "member", // https://spectrum.ieee.org/commodore-64
 
     // banners
     "banner", // https://nautil.us/why-people-feel-like-victims-9728/
@@ -153,6 +156,7 @@ export const blockedWords = [
     "sidebar", // allow e.g. 'with-sidebar' on https://time.com/6176214/proton-ceo-andy-yen-profile/
     "floating", // https://www.zdnet.com/article/opera-brave-vivaldi-to-ignore-chromes-anti-ad-blocker-changes-despite-shared-codebase/
     "breaking", // https://www.cbsnews.com/boston/news/simone-biles-aly-raisman-gymnasts-larry-nassar-fbi-lawsuit/
+    "recent", // https://thehustle.co/06062022-social-audio/
 
     // related articles
     "related",
@@ -250,6 +254,7 @@ export const blockedSpecificSelectors = [
     "#module-moreStories", // https://news.yahoo.com/us-general-says-elon-musks-210039217.html?guccounter=1
     ".c-shortcodePinbox", // https://www.zdnet.com/article/opera-brave-vivaldi-to-ignore-chromes-anti-ad-blocker-changes-despite-shared-codebase/
     "[aria-label=Latest]", // https://yle.fi/news/3-12484032
+    "#sSS_Feature_Post_0_0_21_0_0_1_5_2", // https://spectrum.ieee.org/commodore-64
 
     // term of contents (Unclutter shows its own outline)
     ".toc",

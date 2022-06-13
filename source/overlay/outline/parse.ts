@@ -338,7 +338,7 @@ function getSoftNodeItem(node: Element): OutlineItem | null {
     };
 }
 
-function cleanTitle(title: string): string {
+export function cleanTitle(title: string): string {
     title = title.trim().split("\n").pop();
 
     while (title.includes("  ")) {
