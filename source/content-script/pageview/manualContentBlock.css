@@ -836,3 +836,8 @@ body > div:first-child:not(.lindy-text-container) {
 img {
     max-width: 100%;
 }
+
+/* http://lists.squeakfoundation.org/pipermail/squeak-dev/2022-June/220899.html */
+pre {
+    white-space: pre-wrap;
+}

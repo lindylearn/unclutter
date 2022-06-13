@@ -217,6 +217,7 @@ export const blockedSpecificSelectors = [
     ".adplaceholder",
     ".c-adDisplay_container", // https://www.zdnet.com/article/opera-brave-vivaldi-to-ignore-chromes-anti-ad-blocker-changes-despite-shared-codebase/
     "[class*='LDRB']", // https://news.yahoo.com/us-general-says-elon-musks-210039217.html?guccounter=1
+    "[data-google-query-id]", // https://www.romania-insider.com/unidentified-plane-ro-airspace-jun-2022
 
     "[class$='-nav' i]", // https://fly.io/blog/a-foolish-consistency/
 
@@ -258,6 +259,8 @@ export const blockedSpecificSelectors = [
     ".c-shortcodePinbox", // https://www.zdnet.com/article/opera-brave-vivaldi-to-ignore-chromes-anti-ad-blocker-changes-despite-shared-codebase/
     "[aria-label=Latest]", // https://yle.fi/news/3-12484032
     "#sSS_Feature_Post_0_0_21_0_0_1_5_2", // https://spectrum.ieee.org/commodore-64
+    ".wafer-rapid-module", // https://news.yahoo.com/thailand-legalizes-growing-consumption-marijuana-135808124.html
+    ".js-skip-to-content", // https://github.com/H4ckd4ddy/bypass-sentry-safe
 
     // term of contents (Unclutter shows its own outline)
     ".toc",

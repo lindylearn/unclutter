@@ -122,7 +122,7 @@ export default class TextContainerModifier implements PageModifier {
             return;
         }
         // exclude small text nodes
-        if (!isHeading && elem.innerText.length < 50) {
+        if (!isHeading && elem.innerText.length < 60) {
             return;
         }
 
@@ -150,9 +150,9 @@ export default class TextContainerModifier implements PageModifier {
         // iterate parents
         if (isHeading) {
             // apply modifications to heading elements themselves to prevent them being hidden
-            this.prepareIterateParents(elem, true);
+            this.prepareIterateParents(elem, true, activeStyle);
         } else {
-            this.prepareIterateParents(elem.parentElement, false);
+            this.prepareIterateParents(elem.parentElement, false, activeStyle);
         }
 
         this._prepareBeforeAnimationPatches(elem, activeStyle);
@@ -170,7 +170,8 @@ export default class TextContainerModifier implements PageModifier {
     // map paragraphs nodes and iterate their parent nodes
     private prepareIterateParents = (
         elem: HTMLElement,
-        isHeadingStack: boolean
+        isHeadingStack: boolean,
+        activeStyle: CSSStyleDeclaration
     ) => {
         if (this.validatedNodes.has(elem)) {
             return;
@@ -243,6 +244,7 @@ export default class TextContainerModifier implements PageModifier {
 
             isMainStack =
                 isOnFirstPage &&
+                !elem.className.includes("blog") &&
                 (elem.tagName === "H1" ||
                     elem.innerText.toLowerCase().includes(this.cleanPageTitle));
             if (isMainStack) {
@@ -406,7 +408,9 @@ export default class TextContainerModifier implements PageModifier {
         // Remove margin from matched paragraphs and all their parent DOM nodes
         return `
             /* clean up all page text containers */
-            ${this.bodyContainerSelector}, .${lindyHeadingContainerClass} {
+            ${
+                this.bodyContainerSelector
+            }, .${lindyHeadingContainerClass}.${lindyHeadingContainerClass}.${lindyHeadingContainerClass} {
                 width: 100% !important;
                 min-width: 0 !important;
                 min-height: 0 !important;
