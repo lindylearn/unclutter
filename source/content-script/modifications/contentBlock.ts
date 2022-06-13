@@ -5,6 +5,7 @@ import {
 } from "../../common/stylesheets";
 import TextContainerModifier, {
     lindyContainerClass,
+    lindyHeadingContainerClass,
     lindyMainContainerClass,
 } from "./DOM/textContainer";
 import { PageModifier, trackModifierExecution } from "./_interface";
@@ -23,10 +24,11 @@ export default class ContentBlockModifier implements PageModifier {
 
     prepare() {
         // 'shareable' class on <p> on https://www.undrr.org/publication/global-assessment-report-disaster-risk-reduction-2022
-        let excludeValidElements = `:not(.${lindyMainContainerClass})`;
+        // <svg> e.g. on https://garymarcus.substack.com/p/what-does-it-mean-when-an-ai-fails?s=r
+        let excludeValidElements = `:not(.${lindyMainContainerClass}, .${lindyHeadingContainerClass}, svg)`;
         if (!this.textContainerModifier.foundMainContentElement) {
             // be less strict if no main text found with reasonable certainty
-            excludeValidElements = `:not(.${lindyContainerClass})`;
+            excludeValidElements = `:not(.${lindyContainerClass}), .${lindyHeadingContainerClass}, svg`;
         }
 
         const wordSelectors = blockedWords
@@ -111,11 +113,13 @@ export const blockedWords = [
     // headers & footers
     "masthead",
     // "headerwrapper", // https://pitchfork.com/news/vangelis-oscar-winning-composer-dies-at-79/
-    // "menu", // issues on https://www.sidnlabs.nl/en/news-and-blogs/a-lock-with-many-keys-spoofing-dnssec-signed-domains-in-8-8-8-8
+    "menu",
     // "nav",
     "announcement",
     "footer",
     "leaderboard", // https://www.bbc.com/news/uk-england-london-61747092
+    "topbar", // https://annehelen.substack.com/p/is-everything-an-mlm?s=r
+    "logo", // https://torrentfreak.com/iptv-pirate-must-pay-963k-or-88-month-prison-sentence-becomes-168-220607/
 
     // newsletter signups
     "marketing", // https://www.nature.com/articles/s41598-018-38461-y
@@ -145,11 +149,10 @@ export const blockedWords = [
     "callout",
     "aside",
     "message",
-    "widget", // https://www.androidcentral.com/phones/nothing-phone-1-design-interview
     "spotlight", // https://www.gamesindustry.biz/articles/2022-05-24-us-labour-board-says-activision-blizzard-illegally-threatened-staff
     "sidebar", // allow e.g. 'with-sidebar' on https://time.com/6176214/proton-ceo-andy-yen-profile/
-    "right", // https://en.yna.co.kr/view/AEN20220610002651315
     "floating", // https://www.zdnet.com/article/opera-brave-vivaldi-to-ignore-chromes-anti-ad-blocker-changes-despite-shared-codebase/
+    "breaking", // https://www.cbsnews.com/boston/news/simone-biles-aly-raisman-gymnasts-larry-nassar-fbi-lawsuit/
 
     // related articles
     "related",
@@ -171,6 +174,9 @@ export const blockedWords = [
     "links", // https://www.popularmechanics.com/space/moon-mars/a40059188/japan-artemis-partnership/
     "latest", // https://www.science.org/doi/10.1126/science.abk1781?cookieSet=1#latest-news
     "readmore", // fade-out https://news.yahoo.com/us-general-says-elon-musks-210039217.html?guccounter=1
+    "feed", // https://9to5mac.com/2022/06/08/qualcomm-will-beat-m2/
+    "mostRead", // https://english.alarabiya.net/News/world/2022/06/09/Berlin-driver-s-confused-statements-under-investigation
+    "archive", // https://www.centauri-dreams.org/2022/06/07/solar-sailing-the-beauties-of-diffraction/
 
     // cookies
     "cookie",
@@ -181,12 +187,15 @@ export const blockedWords = [
 
     // noisy elements
     "social",
+    "follow", // https://english.alarabiya.net/News/world/2022/06/09/Berlin-driver-s-confused-statements-under-investigation
     "download", // https://www.globalwitness.org/en/campaigns/digital-threats/ethiopia-hate-speech/
     "disqus", // also may include ads, e.g. https://david-codes.hatanian.com/2019/06/09/aws-costs-every-programmer-should-now.html
     "video",
     "share",
+    "sharing", // https://theaviationgeekclub.com/sr-71-pilot-explains-how-he-survived-to-his-blackbird-disintegration-at-a-speed-of-mach-3-2/
     "composer",
     "comment", // https://slatestarcodex.com/2014/09/30/i-can-tolerate-anything-except-the-outgroup/
+    "print", // catch all .hidden-print and .print-remove ?
 ];
 export const blockedSpecificSelectors = [
     // ads (be careful as 'ad' may appear in other words)
@@ -219,8 +228,8 @@ export const blockedSpecificSelectors = [
     ".byline", // https://www.inkandswitch.com/local-first/
     ".top-bar", // https://www.pathsensitive.com/2022/03/abstraction-not-what-you-think-it-is.html
     ".top-pathing", // https://www.popularmechanics.com/space/moon-mars/a40059188/japan-artemis-partnership/
-    "#topbar", // https://blog.samaltman.com/how-to-be-successful
     ".skipToContent", // https://www.fugue.co/blog/2015-11-11-guide-to-emacs.html
+    ".header__bars", // https://torrentfreak.com/iptv-pirate-must-pay-963k-or-88-month-prison-sentence-becomes-168-220607/
 
     ".email",
 
@@ -229,7 +238,6 @@ export const blockedSpecificSelectors = [
     ".navbar", // https://phys.org/news/2022-06-antarctic-glaciers-ice-fastest-years.html
 
     "[role=complementary]",
-    ".hidden-print",
     ".call-to-action", // https://future.a16z.com/the-future-of-search-is-boutique/
 
     ".link-embed", // https://www.forbes.com/sites/davidphelan/2022/05/24/airpods-pro-2-leak-teases-stunning-innovation-with-a-sting-in-the-tail/?sh=38870a304e88

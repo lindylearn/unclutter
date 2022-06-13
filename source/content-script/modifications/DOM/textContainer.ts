@@ -9,7 +9,13 @@ export const lindyFirstMainContainerClass = "lindy-first-main-container";
 
 const globalTextElementSelector = "p, font, pre";
 const globalHeadingSelector = "header, h1, h2, h3, h4";
-const headingClassWordlist = ["heading", "title"];
+const headingClassWordlist = [
+    "heading",
+    "title",
+    "byline",
+    "article-details",
+    "nav",
+];
 
 const headingTags = globalHeadingSelector.split(", ");
 
@@ -35,7 +41,7 @@ export default class TextContainerModifier implements PageModifier {
         // Use class twice for higher specifity
         `.${lindyContainerClass}.${lindyContainerClass}`,
         // also select paragraph children
-        `.${lindyContainerClass} > :is(${globalTextElementSelector})`,
+        `.${lindyContainerClass} > :is(${globalTextElementSelector}, ${globalHeadingSelector})`,
     ].join(",");
 
     // Only text elements, e.g. to apply font changes
@@ -75,15 +81,16 @@ export default class TextContainerModifier implements PageModifier {
             textElements = document.body.querySelectorAll("div, span");
         }
         textElements.forEach((elem: HTMLElement) => {
-            this.processElement(elem, true);
+            this.processElement(elem, false);
         });
 
         // Apply to heading nodes
-        // document.body
-        //     .querySelectorAll(globalHeadingSelector)
-        //     .forEach((elem: HTMLElement) => {
-        //         processElement(elem, false);
-        //     });
+        this.validatedNodes = new Set(); // reset phase-internal state
+        document.body
+            .querySelectorAll(globalHeadingSelector)
+            .forEach((elem: HTMLElement) => {
+                this.processElement(elem, true);
+            });
 
         // Just use the most common font size for now
         // Note that the actual font size might be changed by responsive styles
@@ -107,10 +114,7 @@ export default class TextContainerModifier implements PageModifier {
     // Process text or heading elements and iterate upwards
     private paragraphFontSizes: { [size: number]: number } = {};
     private exampleNodePerFontSize: { [size: number]: HTMLElement } = {};
-    private processElement = (
-        elem: HTMLElement,
-        isTextElement: boolean = false
-    ) => {
+    private processElement = (elem: HTMLElement, isHeading: boolean) => {
         // Ignore invisible nodes
         // Note: iterateDOM is called before content block, so may not catch all hidden nodes (e.g. in footer)
         if (elem.offsetHeight === 0) {
@@ -119,7 +123,7 @@ export default class TextContainerModifier implements PageModifier {
 
         const activeStyle = window.getComputedStyle(elem);
 
-        if (isTextElement) {
+        if (!isHeading) {
             // parse text element font size
             const fontSize = parseFloat(activeStyle.fontSize);
             if (this.paragraphFontSizes[fontSize]) {
@@ -139,30 +143,43 @@ export default class TextContainerModifier implements PageModifier {
         }
 
         // iterate parents
-        this.prepareIterateParents(elem.parentElement);
+        this.prepareIterateParents(elem.parentElement, isHeading);
 
-        // apply override classes (but not text container) e.g. for text elements on theatlantic.com
-        this._getNodeOverrideClasses(elem, activeStyle).map((className) =>
-            this.batchedNodeClassAdditions.push([elem, className])
-        );
         this._prepareBeforeAnimationPatches(elem, activeStyle);
+        // make sure headings & their children are not hidden
+        if (isHeading) {
+            this.batchedNodeClassAdditions.push([
+                elem,
+                lindyHeadingContainerClass,
+            ]);
+        }
     };
 
-    // map paragraphs nodes and iterate their parent nodes
-    private validatedNodes: Set<HTMLElement> = new Set();
+    private validatedNodes: Set<HTMLElement> = new Set(); // nodes processed in the current phase of prepareIterateParents()
+    private handledNodes: Set<HTMLElement> = new Set(); // nodes that we applied classes to already (across prepareIterateParents() phases)
     // add all classes at once to prevent multiple reflows
     private batchedNodeClassAdditions: [HTMLElement, string][] = [];
-    private prepareIterateParents = (elem: HTMLElement) => {
+
+    // map paragraphs nodes and iterate their parent nodes
+    private prepareIterateParents = (
+        elem: HTMLElement,
+        isHeadingStack: boolean
+    ) => {
         if (this.validatedNodes.has(elem)) {
             return;
         }
 
+        // calls for headings happen after text elements -> mark entire stack as heading
+
         // Iterate upwards in DOM tree from paragraph node
         let currentElem = elem;
-        let currentStack: [HTMLElement, boolean][] = [];
+        let currentStack: HTMLElement[] = [];
         while (currentElem !== document.documentElement) {
             // don't go into parents if validated they're ok
-            if (this.validatedNodes.has(currentElem)) {
+            if (
+                this.validatedNodes.has(currentElem) ||
+                this.handledNodes.has(currentElem)
+            ) {
                 break;
             }
 
@@ -172,39 +189,38 @@ export default class TextContainerModifier implements PageModifier {
                 break;
             }
 
-            // make node processed only if valid, to also abort future stacks to it
+            // make node as processed only if valid text container to also abort future stacks
             this.validatedNodes.add(currentElem);
 
-            const isHeading =
-                headingTags.includes(currentElem.tagName.toLowerCase()) ||
-                headingClassWordlist.some((word) =>
-                    currentElem.className.toLowerCase().includes(word)
-                );
-            if (isHeading) {
-                // mark current stack elements as heading (parents might not be)
-                // console.log(`Found heading container:`, currentElem);
-                currentStack = currentStack.map(([elem, _]) => [elem, true]);
+            // handle text elements that are part of headings
+            if (!isHeadingStack) {
+                const isHeadingEquivalent =
+                    headingTags.includes(currentElem.tagName.toLowerCase()) ||
+                    headingClassWordlist.some((word) =>
+                        currentElem.className.toLowerCase().includes(word)
+                    );
+                if (isHeadingEquivalent) {
+                    currentStack = [];
+                    break;
+                }
             }
 
             // iterate upwards
-            currentStack.push([currentElem, isHeading]);
+            currentStack.push(currentElem);
             currentElem = currentElem.parentElement;
         }
 
         // perform modifications if is valid text element stack
-        let matchedMainContentFraction = false; // parents will contain main text if child does -> avoid checking innerText
+        let matchedMainContentFraction = false; // parents will contain main text if child does -> avoid checking innerText again
         if (currentStack.length !== 0) {
-            for (const [elem, isHeading] of currentStack) {
+            for (const elem of currentStack) {
                 const activeStyle = window.getComputedStyle(elem);
 
-                if (!matchedMainContentFraction) {
+                // check if element is main text
+                if (!matchedMainContentFraction && !isHeadingStack) {
                     const contentLength = elem.innerText.length;
                     const pageContentFraction =
                         contentLength / this.bodyContentLength;
-
-                    // if (pageContentFraction > 0.2) {
-                    //     console.log(pageContentFraction, elem);
-                    // }
 
                     if (
                         pageContentFraction > mainContentFractionThreshold &&
@@ -219,8 +235,8 @@ export default class TextContainerModifier implements PageModifier {
                     }
                 }
 
-                if (!isHeading && matchedMainContentFraction) {
-                    // parse background color
+                // parse background color from main text element stacks
+                if (matchedMainContentFraction && !isHeadingStack) {
                     if (
                         // don't take default background color
                         !activeStyle.backgroundColor.includes(
@@ -237,27 +253,35 @@ export default class TextContainerModifier implements PageModifier {
                     }
                 }
 
-                this.batchedNodeClassAdditions.push([
-                    elem,
-                    lindyContainerClass,
-                ]);
-                if (isHeading) {
+                // save classes to add
+                this.handledNodes.add(elem);
+
+                if (isHeadingStack) {
                     this.batchedNodeClassAdditions.push([
                         elem,
                         lindyHeadingContainerClass,
                     ]);
-                }
-                if (matchedMainContentFraction) {
+                } else {
                     this.batchedNodeClassAdditions.push([
                         elem,
-                        lindyMainContainerClass,
+                        lindyContainerClass,
                     ]);
+                    if (matchedMainContentFraction) {
+                        this.batchedNodeClassAdditions.push([
+                            elem,
+                            lindyMainContainerClass,
+                        ]);
+                    }
+                    // apply override classes (but not text container) e.g. for text elements on theatlantic.com
+                    this._getNodeOverrideClasses(elem, activeStyle).map(
+                        (className) =>
+                            this.batchedNodeClassAdditions.push([
+                                elem,
+                                className,
+                            ])
+                    );
                 }
 
-                this._getNodeOverrideClasses(elem, activeStyle).map(
-                    (className) =>
-                        this.batchedNodeClassAdditions.push([elem, className])
-                );
                 this._prepareBeforeAnimationPatches(elem, activeStyle);
             }
         }
@@ -329,7 +353,7 @@ export default class TextContainerModifier implements PageModifier {
         // Remove margin from matched paragraphs and all their parent DOM nodes
         return `
             /* clean up all page text containers */
-            ${this.bodyContainerSelector} {
+            ${this.bodyContainerSelector}, .${lindyHeadingContainerClass} {
                 width: 100% !important;
                 min-width: 0 !important;
                 min-height: 0 !important;
@@ -346,18 +370,31 @@ export default class TextContainerModifier implements PageModifier {
                 transition: margin-left 0.4s cubic-bezier(0.33, 1, 0.68, 1);
             }
             /* clean up headings */
-            .${lindyHeadingContainerClass}, .${lindyContainerClass}:first-child {
+            .${lindyHeadingContainerClass}:not(body), .${lindyHeadingContainerClass} > * {
+                border: solid 1px green !important;
+                color: black !important;
+
+                position: relative !important;
                 margin-top: 0 !important;
+                margin-left: 0 !important;
                 padding-top: 0 !important;
+                padding-left: 0 !important;
                 height: auto !important;
+            }
+            .${lindyHeadingContainerClass}:before, .${lindyHeadingContainerClass}:after {
+                display: none !important;
+            }
+
+            .${lindyContainerClass} > :is(${globalTextElementSelector}) {
+                border: solid 1px red !important;
             }
 
             /* block non-container siblings of main containers, but don't apply to first main container to not block images etc */
-            .${lindyMainContainerClass}:not(.${lindyFirstMainContainerClass}) > :not(.${lindyContainerClass}) {
+            .${lindyMainContainerClass}:not(.${lindyFirstMainContainerClass}) > :not(.${lindyMainContainerClass}, .${lindyHeadingContainerClass}) {
                 display: none !important;
             }
             /* more strict cleanup for contains of the main page text */
-            .${lindyMainContainerClass}.${lindyMainContainerClass}.${lindyMainContainerClass} {
+            .${lindyMainContainerClass}.${lindyMainContainerClass}:not(body) {
                 position: relative !important;
                 margin-top: 0 !important;
                 margin-bottom: 0 !important;
@@ -377,8 +414,8 @@ export default class TextContainerModifier implements PageModifier {
             return;
         }
 
-        const css = `${this.bodyContainerSelector} {
-            color: var(--lindy-dark-theme-text-color);
+        const css = `${this.bodyContainerSelector}, .${lindyHeadingContainerClass}.${lindyHeadingContainerClass}, .${lindyHeadingContainerClass} > * {
+            color: var(--lindy-dark-theme-text-color) !important;
         }`;
         createStylesheetText(css, "lindy-dark-mode-text");
     }

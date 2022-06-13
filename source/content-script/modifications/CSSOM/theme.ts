@@ -262,6 +262,10 @@ export default class ThemeModifier implements PageModifier {
         this.detectSiteDarkMode(true);
         const siteSupportsDarkMode = false;
 
+        // set our text color even if using site style (need for headings)
+        // (setting the variable always would override other text container styles)
+        this.textContainerModifier.setTextDarkModeVariable(true);
+
         if (this.siteUsesDefaultDarkMode) {
             // use default background elsewhere
             setCssThemeVariable(
@@ -307,9 +311,6 @@ export default class ThemeModifier implements PageModifier {
                 );
             }
         } else {
-            // set root text color now (setting it always would override other styles)
-            this.textContainerModifier.setTextDarkModeVariable(true);
-
             // Background color
             const concreteColor = colorThemeToBackgroundColor("dark");
             setCssThemeVariable(backgroundColorThemeVariable, concreteColor);
