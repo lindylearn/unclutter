@@ -259,88 +259,80 @@ export default class TextContainerModifier implements PageModifier {
         }
 
         // perform modifications on valid text element stack
-        if (currentStack.length !== 0) {
-            for (const elem of currentStack) {
-                const activeStyle = window.getComputedStyle(elem);
+        for (const elem of currentStack) {
+            const activeStyle = window.getComputedStyle(elem);
 
-                // check if element is main text or header
-                if (!isMainStack && !isHeadingStack) {
-                    // for text containers, consider the fraction of the page text
-                    const pageContentFraction =
-                        elem.innerText.length / this.bodyContentLength;
+            // check if element is main text or header
+            if (!isMainStack && !isHeadingStack && elem !== document.body) {
+                // for text containers, consider the fraction of the page text
+                const pageContentFraction =
+                    elem.innerText.length / this.bodyContentLength;
 
-                    isMainStack =
-                        pageContentFraction > mainContentFractionThreshold;
-
-                    if (isMainStack) {
-                        if (elem !== document.body) {
-                            this.batchedNodeClassAdditions.push([
-                                elem,
-                                lindyFirstMainContainerClass,
-                            ]);
-                        }
-                        this.foundMainContentElement = true;
-                    }
-                }
-
-                // parse background color from main text element stacks
-                if (isMainStack && !isHeadingStack) {
-                    if (
-                        // don't take default background color
-                        !activeStyle.backgroundColor.includes(
-                            "rgba(0, 0, 0, 0)"
-                        ) &&
-                        // don't consider transparent colors
-                        !activeStyle.backgroundColor.includes("0.") &&
-                        !activeStyle.backgroundColor.includes("%") &&
-                        activeStyle.position !== "fixed"
-                    ) {
-                        // Remember background colors on text containers
-                        // console.log(activeStyle.backgroundColor, elem);
-                        this.backgroundColors.push(activeStyle.backgroundColor);
-                    }
-                }
-
-                // save classes to add
-                if (isHeadingStack) {
-                    this.batchedNodeClassAdditions.push([
-                        elem,
-                        lindyHeadingContainerClass,
-                    ]);
-                    if (isMainStack) {
-                        this.batchedNodeClassAdditions.push([
-                            elem,
-                            lindyMainHeaderContainerClass,
-                        ]);
-                    }
-                } else {
-                    this.batchedNodeClassAdditions.push([
-                        elem,
-                        lindyContainerClass,
-                    ]);
-                    if (isMainStack) {
-                        this.batchedNodeClassAdditions.push([
-                            elem,
-                            lindyMainContentContainerClass,
-                        ]);
-                    }
-                    // apply override classes (but not text container) e.g. for text elements on theatlantic.com
-                    this._getNodeOverrideClasses(elem, activeStyle).map(
-                        (className) =>
-                            this.batchedNodeClassAdditions.push([
-                                elem,
-                                className,
-                            ])
-                    );
-                }
+                isMainStack =
+                    pageContentFraction > mainContentFractionThreshold;
 
                 if (isMainStack) {
-                    // skip processing in next iteration phase (respect main text elems when checking headers)
-                    this.mainStackElements.add(elem);
-                }
+                    this.batchedNodeClassAdditions.push([
+                        elem,
+                        lindyFirstMainContainerClass,
+                    ]);
 
-                this._prepareBeforeAnimationPatches(elem, activeStyle);
+                    this.foundMainContentElement = true;
+                }
             }
+
+            // parse background color from main text element stacks
+            if (isMainStack && !isHeadingStack) {
+                if (
+                    // don't take default background color
+                    !activeStyle.backgroundColor.includes("rgba(0, 0, 0, 0)") &&
+                    // don't consider transparent colors
+                    !activeStyle.backgroundColor.includes("0.") &&
+                    !activeStyle.backgroundColor.includes("%") &&
+                    activeStyle.position !== "fixed"
+                ) {
+                    // Remember background colors on text containers
+                    // console.log(activeStyle.backgroundColor, elem);
+                    this.backgroundColors.push(activeStyle.backgroundColor);
+                }
+            }
+
+            // save classes to add
+            if (isHeadingStack) {
+                this.batchedNodeClassAdditions.push([
+                    elem,
+                    lindyHeadingContainerClass,
+                ]);
+                if (isMainStack && elem !== document.body) {
+                    this.batchedNodeClassAdditions.push([
+                        elem,
+                        lindyMainHeaderContainerClass,
+                    ]);
+                }
+            } else {
+                this.batchedNodeClassAdditions.push([
+                    elem,
+                    lindyContainerClass,
+                ]);
+                if (isMainStack) {
+                    this.batchedNodeClassAdditions.push([
+                        elem,
+                        lindyMainContentContainerClass,
+                    ]);
+                }
+                // apply override classes (but not text container) e.g. for text elements on theatlantic.com
+                this._getNodeOverrideClasses(elem, activeStyle).map(
+                    (className) =>
+                        this.batchedNodeClassAdditions.push([elem, className])
+                );
+            }
+
+            if (isMainStack) {
+                // skip processing in next iteration phase (respect main text elems when checking headers)
+                this.mainStackElements.add(elem);
+            }
+
+            this._prepareBeforeAnimationPatches(elem, activeStyle);
         }
     };
 
