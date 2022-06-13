@@ -200,6 +200,7 @@ export const blockedSpecificSelectors = [
     "[class*='-ads ']",
     "[class*='-ad-']",
     ".RTEHashTagLabAdModule",
+    ".adplaceholder",
     ".c-adDisplay_container", // https://www.zdnet.com/article/opera-brave-vivaldi-to-ignore-chromes-anti-ad-blocker-changes-despite-shared-codebase/
     "[class*='LDRB']", // https://news.yahoo.com/us-general-says-elon-musks-210039217.html?guccounter=1
 
@@ -241,4 +242,8 @@ export const blockedSpecificSelectors = [
     "#module-moreStories", // https://news.yahoo.com/us-general-says-elon-musks-210039217.html?guccounter=1
     ".c-shortcodePinbox", // https://www.zdnet.com/article/opera-brave-vivaldi-to-ignore-chromes-anti-ad-blocker-changes-despite-shared-codebase/
     "[aria-label=Latest]", // https://yle.fi/news/3-12484032
+
+    // term of contents (Unclutter shows its own outline)
+    ".toc",
+    "#toc",
 ];

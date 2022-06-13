@@ -13,8 +13,11 @@ const headingClassWordlist = ["heading", "title"];
 
 const headingTags = globalHeadingSelector.split(", ");
 
-const mainContentFractionThreshold = 0.4;
-// 0.47 on https://www.whichev.net/2022/03/29/theion-sulphur-crystal-batteries-promise-breakthrough-in-energy-density/
+// DOM elements that contain more than this fraction of the entire page text will never be removed
+// by the ContentBlockModifier, and their style will be cleaned up more strictly.
+const mainContentFractionThreshold = 0.4; // 0.47 on https://www.whichev.net/2022/03/29/theion-sulphur-crystal-batteries-promise-breakthrough-in-energy-density/
+// Skip the main text detection if the page contains less than these number of chars
+const mainContentMinLength = 500; // 205 on https://huggingface.co/spaces/loubnabnl/code-generation-models
 
 /*
 Find and iterate upon text elements and their parent containers in the article DOM.
@@ -57,6 +60,10 @@ export default class TextContainerModifier implements PageModifier {
     private bodyContentLength: number;
     async prepare() {
         this.bodyContentLength = document.body.innerText.length;
+        if (this.bodyContentLength < mainContentMinLength) {
+            // set large number so all fractions are small -> foundMainContentElement stays false
+            this.bodyContentLength = 1000000;
+        }
 
         // Apply to text nodes
         let textElements = document.body.querySelectorAll(
@@ -321,6 +328,7 @@ export default class TextContainerModifier implements PageModifier {
     private getTextElementChainOverrideStyle() {
         // Remove margin from matched paragraphs and all their parent DOM nodes
         return `
+            /* clean up all page text containers */
             ${this.bodyContainerSelector} {
                 width: 100% !important;
                 min-width: 0 !important;
@@ -337,6 +345,7 @@ export default class TextContainerModifier implements PageModifier {
                 z-index: 1 !important;
                 transition: margin-left 0.4s cubic-bezier(0.33, 1, 0.68, 1);
             }
+            /* clean up headings */
             .${lindyHeadingContainerClass}, .${lindyContainerClass}:first-child {
                 margin-top: 0 !important;
                 padding-top: 0 !important;
@@ -347,7 +356,9 @@ export default class TextContainerModifier implements PageModifier {
             .${lindyMainContainerClass}:not(.${lindyFirstMainContainerClass}) > :not(.${lindyContainerClass}) {
                 display: none !important;
             }
-            .${lindyMainContainerClass}.${lindyMainContainerClass} {
+            /* more strict cleanup for contains of the main page text */
+            .${lindyMainContainerClass}.${lindyMainContainerClass}.${lindyMainContainerClass} {
+                position: relative !important;
                 margin-top: 0 !important;
                 margin-bottom: 0 !important;
                 padding-top: 0 !important;
@@ -419,7 +430,7 @@ export default class TextContainerModifier implements PageModifier {
             2
         )})`;
         const fontSizeStyle = `${this.textElementSelector} {
-            position: relative;
+            position: relative !important;
             font-size: ${fontSize} !important;
             line-height: ${this.relativeLineHeight} !important;
         }`;
