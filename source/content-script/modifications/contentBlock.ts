@@ -120,6 +120,7 @@ export const blockedWords = [
     "leaderboard", // https://www.bbc.com/news/uk-england-london-61747092
     "topbar", // https://annehelen.substack.com/p/is-everything-an-mlm?s=r
     "logo", // https://torrentfreak.com/iptv-pirate-must-pay-963k-or-88-month-prison-sentence-becomes-168-220607/
+    "breadcrumb", // https://www.mei.edu/blog/monday-briefing-under-brutal-pressure-israels-coalition-verge-crumbling
 
     // newsletter signups
     "marketing", // https://www.nature.com/articles/s41598-018-38461-y
@@ -201,6 +202,7 @@ export const blockedWords = [
     "composer",
     "comment", // https://slatestarcodex.com/2014/09/30/i-can-tolerate-anything-except-the-outgroup/
     "print", // catch all .hidden-print and .print-remove ?
+    "skip", // https://www.fugue.co/blog/2015-11-11-guide-to-emacs.html
 ];
 export const blockedSpecificSelectors = [
     // ads (be careful as 'ad' may appear in other words)
@@ -213,11 +215,19 @@ export const blockedSpecificSelectors = [
     "[class$='-ads']",
     "[class*='-ads ']",
     "[class*='-ad-']",
+    "[id^='ad-']",
+    "[id*=' ad-']",
+    "[id$='-ad']",
+    "[id*='-ad ']",
+    "[id$='-ads']",
+    "[id*='-ads ']",
+    "[id*='-ad-']",
     ".RTEHashTagLabAdModule",
     ".adplaceholder",
     ".c-adDisplay_container", // https://www.zdnet.com/article/opera-brave-vivaldi-to-ignore-chromes-anti-ad-blocker-changes-despite-shared-codebase/
     "[class*='LDRB']", // https://news.yahoo.com/us-general-says-elon-musks-210039217.html?guccounter=1
     "[data-google-query-id]", // https://www.romania-insider.com/unidentified-plane-ro-airspace-jun-2022
+    "#ad_before_header",
 
     "[class$='-nav' i]", // https://fly.io/blog/a-foolish-consistency/
 
@@ -234,7 +244,6 @@ export const blockedSpecificSelectors = [
     ".byline", // https://www.inkandswitch.com/local-first/
     ".top-bar", // https://www.pathsensitive.com/2022/03/abstraction-not-what-you-think-it-is.html
     ".top-pathing", // https://www.popularmechanics.com/space/moon-mars/a40059188/japan-artemis-partnership/
-    ".skipToContent", // https://www.fugue.co/blog/2015-11-11-guide-to-emacs.html
     ".header__bars", // https://torrentfreak.com/iptv-pirate-must-pay-963k-or-88-month-prison-sentence-becomes-168-220607/
     ".blog-header", // https://dx.tips/the-end-of-localhost
     "#headerArea", // https://blogs.microsoft.com/on-the-issues/2022/06/08/microsoft-announces-four-new-employee-workforce-initiatives/
@@ -260,7 +269,8 @@ export const blockedSpecificSelectors = [
     "[aria-label=Latest]", // https://yle.fi/news/3-12484032
     "#sSS_Feature_Post_0_0_21_0_0_1_5_2", // https://spectrum.ieee.org/commodore-64
     ".wafer-rapid-module", // https://news.yahoo.com/thailand-legalizes-growing-consumption-marijuana-135808124.html
-    ".js-skip-to-content", // https://github.com/H4ckd4ddy/bypass-sentry-safe
+    ".sdc-article-author", // https://news.sky.com/story/russia-made-79-4bn-in-first-100-days-of-ukraine-war-by-selling-oil-and-gas-to-the-world-12632810
+    "#news_ticker", // https://www.sentinelassam.com/international/serbia-germany-disagree-over-imposing-sanctions-on-russia-596536
 
     // term of contents (Unclutter shows its own outline)
     ".toc",

@@ -102,9 +102,11 @@ export default class TextContainerModifier implements PageModifier {
         );
         this.exampleMainFontSizeElement =
             this.exampleNodePerFontSize[this.mainFontSize];
-        this.mainTextColor = window.getComputedStyle(
-            this.exampleMainFontSizeElement
-        ).color;
+        if (this.exampleMainFontSizeElement) {
+            this.mainTextColor = window.getComputedStyle(
+                this.exampleMainFontSizeElement
+            ).color;
+        }
 
         // batch className changes to only do one reflow
         this.batchedNodeClassAdditions.map(([node, className]) => {
@@ -446,9 +448,13 @@ export default class TextContainerModifier implements PageModifier {
             .${lindyHeadingContainerClass}:before, .${lindyHeadingContainerClass}:after {
                 display: none !important;
             }
+            .${lindyMainHeaderContainerClass} {
+                margin-bottom: 0 !important;
+                padding-bottom: 0 !important;
+            }
 
             /* block non-container siblings of main containers, but don't apply to first main container to not block images etc */
-            .${lindyMainContentContainerClass}:not(.${lindyFirstMainContainerClass}) > :not(.${lindyMainContentContainerClass}, .${
+            :is(.${lindyMainContentContainerClass}, .${lindyMainHeaderContainerClass}):not(.${lindyFirstMainContainerClass}) > :not(.${lindyMainContentContainerClass}, .${
             this.foundMainHeadingElement
                 ? lindyMainHeaderContainerClass
                 : lindyHeadingContainerClass
@@ -484,8 +490,12 @@ export default class TextContainerModifier implements PageModifier {
     }
 
     private relativeLineHeight: string;
-    private fontSizeNormalizationScale: number;
+    private fontSizeNormalizationScale: number = 1;
     measureFontProperties() {
+        if (!this.exampleMainFontSizeElement) {
+            return;
+        }
+
         const activeStyle = window.getComputedStyle(
             this.exampleMainFontSizeElement
         );
