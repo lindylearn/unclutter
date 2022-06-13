@@ -191,17 +191,19 @@ export default class TextContainerModifier implements PageModifier {
             this.validatedNodes.add(currentElem);
 
             // handle text elements that are part of headings
-            if (!isHeadingStack) {
-                const isHeadingEquivalent =
-                    headingTags.includes(currentElem.tagName.toLowerCase()) ||
-                    headingClassWordlist.some((word) =>
-                        currentElem.className.toLowerCase().includes(word)
-                    );
-                if (isHeadingEquivalent) {
-                    currentStack = [];
-                    break;
-                }
-            }
+            // can't rely on sensible naming, e.g. 'subtitle' on https://mars.nasa.gov/mars2020/mission/status/384/perseverance-has-a-pet-rock/
+            // if (!isHeadingStack) {
+            //     const isHeadingEquivalent =
+            //         headingTags.includes(currentElem.tagName.toLowerCase()) ||
+            //         headingClassWordlist.some((word) =>
+            //             currentElem.className.toLowerCase().includes(word)
+            //         );
+            //     if (isHeadingEquivalent) {
+            //         console.log(currentElem);
+            //         currentStack = [];
+            //         break;
+            //     }
+            // }
 
             // iterate upwards
             currentStack.push(currentElem);
@@ -393,7 +395,6 @@ export default class TextContainerModifier implements PageModifier {
             }
             /* clean up headings */
             .${lindyHeadingContainerClass}.${lindyHeadingContainerClass}.${lindyHeadingContainerClass}:not(body), .${lindyHeadingContainerClass} > * {
-                border: solid 1px none !important;
                 color: black !important;
 
                 position: relative !important;
@@ -411,16 +412,13 @@ export default class TextContainerModifier implements PageModifier {
                 display: none !important;
             }
             
-            .${lindyContainerClass} > :is(${globalTextElementSelector}) {
-                
-            }
-
             /* block non-container siblings of main containers, but don't apply to first main container to not block images etc */
-            .${lindyMainContentContainerClass}:not(.${lindyFirstMainContainerClass}) > :not(.${lindyContainerClass}, .${lindyHeadingContainerClass}) {
+            .${lindyMainContentContainerClass}:not(.${lindyFirstMainContainerClass}) > :not(.${lindyMainContentContainerClass}, .${lindyHeadingContainerClass}) {
                 display: none !important;
             }
             /* more strict cleanup for contains of the main page text */
             .${lindyMainContentContainerClass}.${lindyMainContentContainerClass}:not(body) {
+                border: solid 1px red !important;
                 position: relative !important;
                 margin-top: 0 !important;
                 margin-bottom: 0 !important;

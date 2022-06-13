@@ -29,7 +29,7 @@ export default class ContentBlockModifier implements PageModifier {
         let excludeValidElements = `:not(.${lindyMainContentContainerClass}, .${lindyMainHeaderContainerClass}, svg)`;
         if (!this.textContainerModifier.foundMainContentElement) {
             // be less strict if no main text found with reasonable certainty
-            excludeValidElements = `:not(.${lindyContainerClass}), .${lindyHeadingContainerClass}, svg`;
+            excludeValidElements = `:not(.${lindyContainerClass}, .${lindyHeadingContainerClass}, svg)`;
         }
 
         const wordSelectors = blockedWords
