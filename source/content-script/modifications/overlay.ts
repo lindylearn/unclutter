@@ -240,7 +240,7 @@ export default class OverlayManager implements PageModifier {
 
         document
             .querySelectorAll(
-                ".lindy-page-settings-topright, .lindy-page-settings-pageadjacent, #lindy-info-topleft"
+                ".lindy-page-settings-toprght, .lindy-page-settings-pageadjacent, #lindy-info-topleft"
             )
             .forEach((e) => e.remove());
 

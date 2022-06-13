@@ -57,7 +57,7 @@ export function setCssThemeVariable(varName, value, ...params) {
         varName === activeColorThemeVariable
     ) {
         document
-            .getElementById("lindy-page-settings-topright")
+            .getElementById("lindy-page-settings-toprght")
             ?.style.setProperty(autoBackgroundThemeVariable, value);
     } else if (varName === darkThemeTextColor) {
         if (!params["setOnlyUi"]) {
