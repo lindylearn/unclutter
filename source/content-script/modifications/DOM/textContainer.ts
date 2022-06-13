@@ -190,11 +190,16 @@ export default class TextContainerModifier implements PageModifier {
                 break;
             }
 
+            // TODO re-add big related content detection
             if (
                 !isHeadingStack &&
                 this.shouldExcludeAsTextContainer(currentElem)
             ) {
                 // remove entire current stack
+                return;
+            }
+
+            if (["FIGURE", "PICTURE"].includes(currentElem.tagName)) {
                 return;
             }
 
