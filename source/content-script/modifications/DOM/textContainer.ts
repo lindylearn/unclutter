@@ -88,6 +88,9 @@ export default class TextContainerModifier implements PageModifier {
             .forEach((elem: HTMLElement) => {
                 this.processElement(elem, true);
             });
+        this.headingParagraphNodes.forEach((elem: HTMLElement) => {
+            this.processElement(elem, true);
+        });
 
         // Just use the most common font size for now
         // Note that the actual font size might be changed by responsive styles
@@ -151,9 +154,10 @@ export default class TextContainerModifier implements PageModifier {
     };
 
     private validatedNodes: Set<HTMLElement> = new Set(); // nodes processed in the current phase of prepareIterateParents()
-    private handledNodes: Set<HTMLElement> = new Set(); // nodes that we applied classes to already (across prepareIterateParents() phases)
+    private mainStackElements: Set<HTMLElement> = new Set(); // nodes that have the main text or header container class applied
     // add all classes at once to prevent multiple reflows
     private batchedNodeClassAdditions: [HTMLElement, string][] = [];
+    private headingParagraphNodes: HTMLElement[] = [];
     private cleanPageTitle = cleanTitle(document.title)
         .slice(0, 30)
         .toLowerCase();
@@ -173,10 +177,10 @@ export default class TextContainerModifier implements PageModifier {
         let currentElem = elem;
         let currentStack: HTMLElement[] = [];
         while (currentElem !== document.documentElement) {
-            // don't go into parents if validated they're ok
+            // don't go into parents if already validated them, or if they are part of an already processed main content stack
             if (
                 this.validatedNodes.has(currentElem) ||
-                this.handledNodes.has(currentElem)
+                this.mainStackElements.has(currentElem)
             ) {
                 break;
             }
@@ -192,18 +196,19 @@ export default class TextContainerModifier implements PageModifier {
 
             // handle text elements that are part of headings
             // can't rely on sensible naming, e.g. 'subtitle' on https://mars.nasa.gov/mars2020/mission/status/384/perseverance-has-a-pet-rock/
-            // if (!isHeadingStack) {
-            //     const isHeadingEquivalent =
-            //         headingTags.includes(currentElem.tagName.toLowerCase()) ||
-            //         headingClassWordlist.some((word) =>
-            //             currentElem.className.toLowerCase().includes(word)
-            //         );
-            //     if (isHeadingEquivalent) {
-            //         console.log(currentElem);
-            //         currentStack = [];
-            //         break;
-            //     }
-            // }
+            if (!isHeadingStack) {
+                if (
+                    headingTags.includes(currentElem.tagName.toLowerCase()) ||
+                    headingClassWordlist.some((word) =>
+                        currentElem.className.toLowerCase().includes(word)
+                    )
+                ) {
+                    // handle heading nodes later, after all text containers are assigned
+                    this.headingParagraphNodes.push(elem);
+                    currentStack = [];
+                    break;
+                }
+            }
 
             // iterate upwards
             currentStack.push(currentElem);
@@ -211,36 +216,38 @@ export default class TextContainerModifier implements PageModifier {
         }
 
         // perform modifications if is valid text element stack
-        let matchedMainContentFraction = false; // parents will contain main text if child does -> avoid checking innerText again
+        let isMainStack = false; // parents will contain main text if child does -> avoid checking innerText again
         if (currentStack.length !== 0) {
             for (const elem of currentStack) {
                 const activeStyle = window.getComputedStyle(elem);
 
-                // check if element is main text
-                if (!matchedMainContentFraction) {
+                // check if element is main text or header
+                if (!isMainStack) {
                     if (isHeadingStack) {
-                        // for headings...
-                        const pos = elem.getBoundingClientRect(); // PERF?
+                        // for headings check tagName, content & if on first page
+                        // this should exclude heading elements that are part of "related articles" sections
+                        const pos = elem.getBoundingClientRect(); // TODO measure performance
                         const isOnFirstPage =
                             pos.top + window.scrollY < window.innerHeight;
 
-                        matchedMainContentFraction =
+                        isMainStack =
                             isOnFirstPage &&
-                            elem.innerText
-                                .toLowerCase()
-                                .includes(this.cleanPageTitle);
+                            (elem.tagName === "H1" ||
+                                elem.innerText
+                                    .toLowerCase()
+                                    .includes(this.cleanPageTitle));
                     } else {
                         // for text containers, consider the fraction of the page text
                         const contentLength = elem.innerText.length;
                         const pageContentFraction =
                             contentLength / this.bodyContentLength;
 
-                        matchedMainContentFraction =
+                        isMainStack =
                             pageContentFraction > mainContentFractionThreshold;
                     }
 
-                    if (matchedMainContentFraction) {
-                        matchedMainContentFraction = true;
+                    if (isMainStack) {
+                        isMainStack = true;
                         if (elem !== document.body) {
                             this.batchedNodeClassAdditions.push([
                                 elem,
@@ -254,7 +261,7 @@ export default class TextContainerModifier implements PageModifier {
                 }
 
                 // parse background color from main text element stacks
-                if (matchedMainContentFraction && !isHeadingStack) {
+                if (isMainStack && !isHeadingStack) {
                     if (
                         // don't take default background color
                         !activeStyle.backgroundColor.includes(
@@ -277,7 +284,7 @@ export default class TextContainerModifier implements PageModifier {
                         elem,
                         lindyHeadingContainerClass,
                     ]);
-                    if (matchedMainContentFraction) {
+                    if (isMainStack) {
                         this.batchedNodeClassAdditions.push([
                             elem,
                             lindyMainHeaderContainerClass,
@@ -288,7 +295,7 @@ export default class TextContainerModifier implements PageModifier {
                         elem,
                         lindyContainerClass,
                     ]);
-                    if (matchedMainContentFraction) {
+                    if (isMainStack) {
                         this.batchedNodeClassAdditions.push([
                             elem,
                             lindyMainContentContainerClass,
@@ -304,9 +311,12 @@ export default class TextContainerModifier implements PageModifier {
                     );
                 }
 
-                this._prepareBeforeAnimationPatches(elem, activeStyle);
+                if (isMainStack) {
+                    // skip processing in next iteration phase (respect main text elems when checking headers)
+                    this.mainStackElements.add(elem);
+                }
 
-                this.handledNodes.add(elem);
+                this._prepareBeforeAnimationPatches(elem, activeStyle);
             }
         }
     };
