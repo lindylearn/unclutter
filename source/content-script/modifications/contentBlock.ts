@@ -140,6 +140,7 @@ export const blockedWords = [
     "tease", // https://deadline.com/2022/05/fbi-season-finale-pulled-cbs-1235031812/
     "account", // https://www.zigpoll.com/blog/being-a-solopreneur-part-one
     "member", // https://spectrum.ieee.org/commodore-64
+    "subscription", // https://dx.tips/the-end-of-localhost
 
     // banners
     "banner", // https://nautil.us/why-people-feel-like-victims-9728/
@@ -234,6 +235,8 @@ export const blockedSpecificSelectors = [
     ".top-pathing", // https://www.popularmechanics.com/space/moon-mars/a40059188/japan-artemis-partnership/
     ".skipToContent", // https://www.fugue.co/blog/2015-11-11-guide-to-emacs.html
     ".header__bars", // https://torrentfreak.com/iptv-pirate-must-pay-963k-or-88-month-prison-sentence-becomes-168-220607/
+    ".blog-header", // https://dx.tips/the-end-of-localhost
+    "#headerArea", // https://blogs.microsoft.com/on-the-issues/2022/06/08/microsoft-announces-four-new-employee-workforce-initiatives/
 
     ".email",
 

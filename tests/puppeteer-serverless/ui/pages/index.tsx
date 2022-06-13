@@ -62,7 +62,7 @@ function Home() {
         // trigger new screenshots
         hnLinks;
         redditLinks;
-        const urls = hnLinks.slice(0, countRef.current.value);
+        const urls = redditLinks.slice(0, countRef.current.value);
         await triggerScreenshots(urls, prefixRef.current.value, 10);
 
         setIsTriggering(false);

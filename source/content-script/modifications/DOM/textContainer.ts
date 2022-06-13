@@ -11,7 +11,7 @@ export const lindyMainHeaderContainerClass = "lindy-main-header-container";
 export const lindyFirstMainContainerClass = "lindy-first-main-container";
 
 const globalTextElementSelector = "p, font, pre";
-const globalHeadingSelector = "header, h1, h2, h3, h4";
+const globalHeadingSelector = "h1, h2, h3, h4, header";
 const headingClassWordlist = ["heading", "title", "article-details"]; // be careful here
 
 const headingTags = globalHeadingSelector.split(", ");
@@ -60,6 +60,7 @@ export default class TextContainerModifier implements PageModifier {
 
     // Iterate DOM to apply text container classes and populate the state above
     public foundMainContentElement = false;
+    public foundMainHeadingElement = false;
     private bodyContentLength: number;
     async prepare() {
         this.bodyContentLength = document.body.innerText.length;
@@ -120,6 +121,10 @@ export default class TextContainerModifier implements PageModifier {
         if (elem.offsetHeight === 0) {
             return;
         }
+        // exclude small text nodes
+        if (!isHeading && elem.innerText.length < 50) {
+            return;
+        }
 
         const activeStyle = window.getComputedStyle(elem);
 
@@ -145,9 +150,9 @@ export default class TextContainerModifier implements PageModifier {
         // iterate parents
         if (isHeading) {
             // apply modifications to heading elements themselves to prevent them being hidden
-            this.prepareIterateParents(elem, isHeading);
+            this.prepareIterateParents(elem, true);
         } else {
-            this.prepareIterateParents(elem.parentElement, isHeading);
+            this.prepareIterateParents(elem.parentElement, false);
         }
 
         this._prepareBeforeAnimationPatches(elem, activeStyle);
@@ -171,24 +176,26 @@ export default class TextContainerModifier implements PageModifier {
             return;
         }
 
-        // calls for headings happen after text elements -> mark entire stack as heading
+        // calls for headings happen after text elements -> mark entire stack as heading later
 
         // Iterate upwards in DOM tree from paragraph node
         let currentElem = elem;
         let currentStack: HTMLElement[] = [];
         while (currentElem !== document.documentElement) {
-            // don't go into parents if already validated them, or if they are part of an already processed main content stack
             if (
-                this.validatedNodes.has(currentElem) ||
-                this.mainStackElements.has(currentElem)
+                this.mainStackElements.has(currentElem) ||
+                // don't go into parents if already validated them (only for text containers since their mainStack state doesn't change)
+                (!isHeadingStack && this.validatedNodes.has(currentElem))
             ) {
                 break;
             }
 
-            if (this.shouldExcludeAsTextContainer(currentElem)) {
+            if (
+                !isHeadingStack &&
+                this.shouldExcludeAsTextContainer(currentElem)
+            ) {
                 // remove entire current stack
-                currentStack = [];
-                break;
+                return;
             }
 
             // make node as processed only if valid text container to also abort future stacks
@@ -203,10 +210,16 @@ export default class TextContainerModifier implements PageModifier {
                         currentElem.className.toLowerCase().includes(word)
                     )
                 ) {
-                    // handle heading nodes later, after all text containers are assigned
-                    this.headingParagraphNodes.push(elem);
-                    currentStack = [];
-                    break;
+                    // double check to exclude matches on main text containers
+                    // e.g. on https://pharmaphorum.com/views-and-analysis/how-celebrity-investor-mark-cuban-is-tackling-out-of-control-drug-prices/
+                    const pageContentFraction =
+                        elem.innerText.length / this.bodyContentLength;
+
+                    if (!(pageContentFraction > mainContentFractionThreshold)) {
+                        // handle heading nodes later, after all text containers are assigned
+                        this.headingParagraphNodes.push(elem);
+                        return;
+                    }
                 }
             }
 
@@ -215,48 +228,49 @@ export default class TextContainerModifier implements PageModifier {
             currentElem = currentElem.parentElement;
         }
 
-        // perform modifications if is valid text element stack
-        let isMainStack = false; // parents will contain main text if child does -> avoid checking innerText again
+        // main stack determined based on leaf elements for headings, based on intermediate parent size for text elements
+        let isMainStack = false;
+        if (isHeadingStack && currentStack.length > 0) {
+            // for headings check tagName, content & if on first page
+            // this should exclude heading elements that are part of "related articles" sections
+            const pos = elem.getBoundingClientRect(); // TODO measure performance
+            const isOnFirstPage = pos.top + window.scrollY < window.innerHeight;
+
+            isMainStack =
+                isOnFirstPage &&
+                (elem.tagName === "H1" ||
+                    elem.innerText.toLowerCase().includes(this.cleanPageTitle));
+            if (isMainStack) {
+                this.foundMainHeadingElement = true;
+                this.batchedNodeClassAdditions.push([
+                    elem,
+                    lindyFirstMainContainerClass,
+                ]);
+            }
+        }
+
+        // perform modifications on valid text element stack
         if (currentStack.length !== 0) {
             for (const elem of currentStack) {
                 const activeStyle = window.getComputedStyle(elem);
 
                 // check if element is main text or header
-                if (!isMainStack) {
-                    if (isHeadingStack) {
-                        // for headings check tagName, content & if on first page
-                        // this should exclude heading elements that are part of "related articles" sections
-                        const pos = elem.getBoundingClientRect(); // TODO measure performance
-                        const isOnFirstPage =
-                            pos.top + window.scrollY < window.innerHeight;
+                if (!isMainStack && !isHeadingStack) {
+                    // for text containers, consider the fraction of the page text
+                    const pageContentFraction =
+                        elem.innerText.length / this.bodyContentLength;
 
-                        isMainStack =
-                            isOnFirstPage &&
-                            (elem.tagName === "H1" ||
-                                elem.innerText
-                                    .toLowerCase()
-                                    .includes(this.cleanPageTitle));
-                    } else {
-                        // for text containers, consider the fraction of the page text
-                        const contentLength = elem.innerText.length;
-                        const pageContentFraction =
-                            contentLength / this.bodyContentLength;
-
-                        isMainStack =
-                            pageContentFraction > mainContentFractionThreshold;
-                    }
+                    isMainStack =
+                        pageContentFraction > mainContentFractionThreshold;
 
                     if (isMainStack) {
-                        isMainStack = true;
                         if (elem !== document.body) {
                             this.batchedNodeClassAdditions.push([
                                 elem,
                                 lindyFirstMainContainerClass,
                             ]);
                         }
-                        if (!isHeadingStack) {
-                            this.foundMainContentElement = true;
-                        }
+                        this.foundMainContentElement = true;
                     }
                 }
 
@@ -410,8 +424,10 @@ export default class TextContainerModifier implements PageModifier {
                 position: relative !important;
                 margin-top: 0 !important;
                 margin-left: 0 !important;
+                margin-right: 0 !important;
                 padding-top: 0 !important;
                 padding-left: 0 !important;
+                padding-right: 0 !important;
                 height: auto !important;
                 transform: none !important;
             }
@@ -421,14 +437,18 @@ export default class TextContainerModifier implements PageModifier {
             .${lindyHeadingContainerClass}:before, .${lindyHeadingContainerClass}:after {
                 display: none !important;
             }
-            
+
             /* block non-container siblings of main containers, but don't apply to first main container to not block images etc */
-            .${lindyMainContentContainerClass}:not(.${lindyFirstMainContainerClass}) > :not(.${lindyMainContentContainerClass}, .${lindyHeadingContainerClass}) {
+            .${lindyMainContentContainerClass}:not(.${lindyFirstMainContainerClass}) > :not(.${lindyMainContentContainerClass}, .${
+            this.foundMainHeadingElement
+                ? lindyMainHeaderContainerClass
+                : lindyHeadingContainerClass
+        }) {
                 display: none !important;
             }
             /* more strict cleanup for contains of the main page text */
             .${lindyMainContentContainerClass}.${lindyMainContentContainerClass}:not(body) {
-                border: solid 1px red !important;
+                border: solid 1px none !important;
                 position: relative !important;
                 margin-top: 0 !important;
                 margin-bottom: 0 !important;
@@ -526,9 +546,6 @@ export default class TextContainerModifier implements PageModifier {
         `.${lindyContainerClass} > td:not(.${lindyContainerClass}) { 
                 display: none !important;
             }`,
-        // Remove horizontal flex partitioning, e.g. https://www.nationalgeographic.com/science/article/the-controversial-quest-to-make-a-contagious-vaccine, https://hbr.org/2018/07/research-the-average-age-of-a-successful-startup-founder-is-45
-        `.lindy-text-remove-horizontal-flex { display: block !important; }`,
-        `.lindy-text-remove-horizontal-flex > div:not(.${lindyContainerClass}) { display: none !important; }`,
         // Remove grids, e.g. https://www.washingtonpost.com/business/2022/02/27/bp-russia-rosneft-ukraine or https://www.trickster.dev/post/decrypting-your-own-https-traffic-with-wireshark/
         `.lindy-text-remove-grid { 
                 display: block !important;
@@ -549,13 +566,6 @@ export default class TextContainerModifier implements PageModifier {
     ): string[] {
         // batch creation of unique node selectors if required
         const classes = [];
-
-        if (
-            activeStyle.display === "flex" &&
-            activeStyle.flexDirection === "row"
-        ) {
-            classes.push("lindy-text-remove-horizontal-flex");
-        }
 
         if (activeStyle.display === "grid") {
             classes.push("lindy-text-remove-grid");
