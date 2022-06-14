@@ -35,16 +35,7 @@ This is done so that we can:
 */
 @trackModifierExecution
 export default class TextContainerModifier implements PageModifier {
-    // Chain of elements that contain the main article text, to remove margins from
-    private bodyContainerSelector = [
-        // Use class twice for higher specifity
-        `.${lindyContainerClass}.${lindyContainerClass}`,
-        // also select paragraph children
-        `.${lindyContainerClass} > :is(${globalTextElementSelector}, ${globalHeadingSelector})`,
-    ].join(",");
-
-    // Only text elements, e.g. to apply font changes
-    private textElementSelector = `.${lindyContainerClass}, .${lindyContainerClass} > :is(${globalTextElementSelector}, a, ol, ul)`;
+    private usedTextElementSelector: string = globalTextElementSelector; // may get updated if page uses different html elements
 
     // style tweaks to apply just before the pageview animation (populated via _prepareBeforeAnimationPatches())
     private nodeBeforeAnimationStyle: [
@@ -57,7 +48,7 @@ export default class TextContainerModifier implements PageModifier {
 
     // Text paragraph samples
     private mainFontSize: number;
-    public mainTextColor: string;
+    public mainTextColor: string = "black";
     private exampleMainFontSizeElement: HTMLElement;
 
     // Iterate DOM to apply text container classes and populate the state above
@@ -72,17 +63,27 @@ export default class TextContainerModifier implements PageModifier {
         }
 
         // Apply to text nodes
-        let textElements = document.body.querySelectorAll(
-            globalTextElementSelector
-        );
-        if (textElements.length === 0) {
-            // use divs as fallback
-            // TODO change textElementSelector now?
-            textElements = document.body.querySelectorAll("div, span");
+        let validTextNodeCount = 0;
+        document.body
+            .querySelectorAll(globalTextElementSelector)
+            .forEach((elem: HTMLElement) => {
+                if (this.processElement(elem, "text")) {
+                    validTextNodeCount += 1;
+                }
+            });
+
+        // try with div fallback selector (more performance intensive)
+        if (validTextNodeCount < 5) {
+            // e.g. using div as text containers on https://www.apple.com/newsroom/2022/06/apple-unveils-all-new-macbook-air-supercharged-by-the-new-m2-chip/
+            console.log("Using div as text elem selector");
+
+            document.body
+                .querySelectorAll("div")
+                .forEach((elem: HTMLElement) => {
+                    this.processElement(elem, "text");
+                });
+            this.usedTextElementSelector = `${globalTextElementSelector}, div`;
         }
-        textElements.forEach((elem: HTMLElement) => {
-            this.processElement(elem, "text");
-        });
 
         // Apply to heading nodes
         this.validatedNodes = new Set(); // reset phase-internal state
@@ -127,22 +128,32 @@ export default class TextContainerModifier implements PageModifier {
     // Process text or heading elements and iterate upwards
     private paragraphFontSizes: { [size: number]: number } = {};
     private exampleNodePerFontSize: { [size: number]: HTMLElement } = {};
-    private processElement = (
+    private processElement(
         elem: HTMLElement,
         elementType: "text" | "header" | "image"
-    ) => {
+    ): boolean {
         // Ignore invisible nodes
         // Note: iterateDOM is called before content block, so may not catch all hidden nodes (e.g. in footer)
         if (elem.offsetHeight === 0) {
-            return;
+            return false;
         }
 
         const activeStyle = window.getComputedStyle(elem);
 
         if (elementType === "text") {
+            let textContentLength: number;
+            if (elem.tagName === "DIV") {
+                // use only direct node text to start iteration at leaf nodes
+                textContentLength = [...elem.childNodes]
+                    .filter((node) => node.nodeType === Node.TEXT_NODE)
+                    .map((node) => node.nodeValue)
+                    .join("").length;
+            } else {
+                textContentLength = elem.innerText.length;
+            }
             // exclude small text nodes
-            if (elem.innerText.length < 60) {
-                return;
+            if (textContentLength < 50) {
+                return false;
             }
 
             // parse text element font size
@@ -164,19 +175,21 @@ export default class TextContainerModifier implements PageModifier {
         }
 
         // iterate parents
-        if (elementType === "header" || elementType === "image") {
-            // apply modifications to heading elements themselves to prevent them being hidden
-            this.prepareIterateParents(elem, elementType, activeStyle);
-        } else {
-            this.prepareIterateParents(
-                elem.parentElement,
-                elementType,
-                activeStyle
-            );
+        const iterationStart =
+            elementType === "header" || elementType === "image"
+                ? elem
+                : elem.parentElement;
+        const hasValidTextChain = this.prepareIterateParents(
+            iterationStart,
+            elementType
+        );
+
+        if (hasValidTextChain) {
+            this._prepareBeforeAnimationPatches(elem, activeStyle);
         }
 
-        this._prepareBeforeAnimationPatches(elem, activeStyle);
-    };
+        return hasValidTextChain;
+    }
 
     private validatedNodes: Set<HTMLElement> = new Set(); // nodes processed in the current phase of prepareIterateParents()
     private mainStackElements: Set<HTMLElement> = new Set(); // nodes that have the main text or header container class applied
@@ -188,15 +201,10 @@ export default class TextContainerModifier implements PageModifier {
         .toLowerCase();
 
     // map paragraphs nodes and iterate their parent nodes
-    private prepareIterateParents = (
+    private prepareIterateParents(
         elem: HTMLElement,
-        stackType: "text" | "header" | "image",
-        activeStyle: CSSStyleDeclaration
-    ) => {
-        if (this.validatedNodes.has(elem)) {
-            return;
-        }
-
+        stackType: "text" | "header" | "image"
+    ): boolean {
         // calls for headings happen after text elements -> mark entire stack as heading later
 
         // Iterate upwards in DOM tree from paragraph node
@@ -208,6 +216,7 @@ export default class TextContainerModifier implements PageModifier {
                 // don't go into parents if already validated them (only for text containers since their mainStack state doesn't change for parents)
                 (stackType === "text" && this.validatedNodes.has(currentElem))
             ) {
+                // process stack until now
                 break;
             }
 
@@ -216,7 +225,7 @@ export default class TextContainerModifier implements PageModifier {
                 this.shouldExcludeAsTextContainer(currentElem)
             ) {
                 // remove entire current stack
-                return;
+                return false;
             }
 
             // exclude image captions
@@ -224,7 +233,7 @@ export default class TextContainerModifier implements PageModifier {
                 stackType !== "image" &&
                 ["FIGURE", "PICTURE"].includes(currentElem.tagName)
             ) {
-                return;
+                return false;
             }
 
             // handle text elements that are part of headings
@@ -243,7 +252,7 @@ export default class TextContainerModifier implements PageModifier {
                     if (!(pageContentFraction > mainContentFractionThreshold)) {
                         // handle heading nodes later, after all text containers are assigned
                         this.headingParagraphNodes.push(elem);
-                        return;
+                        return false;
                     }
                 }
             }
@@ -289,7 +298,7 @@ export default class TextContainerModifier implements PageModifier {
                 // e.g. just below fold on https://spectrum.ieee.org/commodore-64
                 const isOnFirstPage = top < window.innerHeight * 2;
                 if (!isOnFirstPage || pos.height < 300) {
-                    return;
+                    return false;
                 }
             }
         }
@@ -380,7 +389,9 @@ export default class TextContainerModifier implements PageModifier {
                 this.mainStackElements.add(elem);
             }
         }
-    };
+
+        return true;
+    }
 
     fadeOutNoise() {
         this.processBackgroundColors();
@@ -448,9 +459,11 @@ export default class TextContainerModifier implements PageModifier {
         // Remove margin from matched paragraphs and all their parent DOM nodes
         return `
             /* clean up all page text containers */
-            ${
-                this.bodyContainerSelector
-            }, .${lindyHeadingContainerClass}.${lindyHeadingContainerClass}.${lindyHeadingContainerClass} {
+            .${lindyContainerClass}.${lindyContainerClass}, 
+            .${lindyContainerClass} > :is(${
+            this.usedTextElementSelector
+        }, ${globalHeadingSelector}), 
+            .${lindyHeadingContainerClass}.${lindyHeadingContainerClass}.${lindyHeadingContainerClass} {
                 width: 100% !important;
                 min-width: 0 !important;
                 min-height: 0 !important;
@@ -467,7 +480,8 @@ export default class TextContainerModifier implements PageModifier {
                 transition: margin-left 0.4s cubic-bezier(0.33, 1, 0.68, 1);
             }
             /* clean up headings */
-            .${lindyHeadingContainerClass}.${lindyHeadingContainerClass}.${lindyHeadingContainerClass}:not(body), .${lindyHeadingContainerClass} > * {
+            .${lindyHeadingContainerClass}.${lindyHeadingContainerClass}.${lindyHeadingContainerClass}:not(body), 
+            .${lindyHeadingContainerClass} > * {
                 color: black !important;
 
                 position: relative !important;
@@ -479,7 +493,8 @@ export default class TextContainerModifier implements PageModifier {
                 height: auto !important;
                 transform: none !important;
             }
-            .${lindyHeadingContainerClass}:before, .${lindyHeadingContainerClass}:after {
+            .${lindyHeadingContainerClass}:before, 
+            .${lindyHeadingContainerClass}:after {
                 display: none !important;
             }
             .${lindyMainHeaderContainerClass}.${lindyMainHeaderContainerClass} {
@@ -497,12 +512,13 @@ export default class TextContainerModifier implements PageModifier {
             }
 
             /* block non-container siblings of main containers, but don't apply to first main container to not block images etc */
-            .${lindyMainContentContainerClass}:not(.${lindyFirstMainContainerClass}) > :not(.${lindyMainContentContainerClass}, .${lindyImageContainerClass},
-                 .${
-                     this.foundMainHeadingElement
-                         ? lindyMainHeaderContainerClass
-                         : lindyHeadingContainerClass
-                 }) {
+            .${lindyMainContentContainerClass}:not(.${lindyFirstMainContainerClass}) > :not(.${lindyMainContentContainerClass}, 
+            .${lindyImageContainerClass}, 
+            .${
+                this.foundMainHeadingElement
+                    ? lindyMainHeaderContainerClass
+                    : lindyHeadingContainerClass
+            }) {
                 display: none !important;
             }
             /* more strict cleanup for contains of the main page text */
@@ -526,9 +542,13 @@ export default class TextContainerModifier implements PageModifier {
             return;
         }
 
-        const css = `${this.bodyContainerSelector}, .${lindyHeadingContainerClass}.${lindyHeadingContainerClass}.${lindyHeadingContainerClass}.${lindyHeadingContainerClass}, .${lindyHeadingContainerClass} > * {
-            color: var(--lindy-dark-theme-text-color) !important;
-        }`;
+        const css = `
+            .${lindyContainerClass}.${lindyContainerClass}, 
+            .${lindyContainerClass} > :is(${this.usedTextElementSelector}, .${globalHeadingSelector}),
+            .${lindyHeadingContainerClass}.${lindyHeadingContainerClass}.${lindyHeadingContainerClass}.${lindyHeadingContainerClass}, 
+            .${lindyHeadingContainerClass} > * {
+                color: var(--lindy-dark-theme-text-color) !important;
+            }`;
         createStylesheetText(css, "lindy-dark-mode-text");
     }
 
@@ -582,7 +602,7 @@ export default class TextContainerModifier implements PageModifier {
         const fontSize = `calc(var(${fontSizeThemeVariable}) * ${this.fontSizeNormalizationScale.toFixed(
             2
         )})`;
-        const fontSizeStyle = `${this.textElementSelector} {
+        const fontSizeStyle = `.${lindyContainerClass}, .${lindyContainerClass} > :is(${this.usedTextElementSelector}, a, ol, ul) {
             position: relative !important;
             font-size: ${fontSize} !important;
             line-height: ${this.relativeLineHeight} !important;
@@ -697,7 +717,9 @@ export default class TextContainerModifier implements PageModifier {
         if (
             [
                 "module-moreStories", // https://news.yahoo.com/thailand-legalizes-growing-consumption-marijuana-135808124.html
-            ].includes(node.id)
+                "comments", // https://leslefts.blogspot.com/2013/11/the-great-medieval-water-myth.html
+            ].includes(node.id) ||
+            node.getAttribute("aria-hidden") === "true"
         ) {
             return true;
         }

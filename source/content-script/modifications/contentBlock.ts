@@ -115,7 +115,7 @@ export const blockedWords = [
     "masthead",
     // "headerwrapper", // https://pitchfork.com/news/vangelis-oscar-winning-composer-dies-at-79/
     "menu",
-    // "nav",
+    "nav", // https://hothardware.com/news/how-flesh-penetrating-sound-waves-could-3d-print-implants
     "announcement",
     "footer",
     "leaderboard", // https://www.bbc.com/news/uk-england-london-61747092
@@ -200,7 +200,7 @@ export const blockedWords = [
     "download", // https://www.globalwitness.org/en/campaigns/digital-threats/ethiopia-hate-speech/
     "disqus", // also may include ads, e.g. https://david-codes.hatanian.com/2019/06/09/aws-costs-every-programmer-should-now.html
     "video",
-    "share", // blocks images e.g. on https://spectrum.ieee.org/commodore-64
+    // "share", // blocks images e.g. on https://spectrum.ieee.org/commodore-64
     "sharing", // https://theaviationgeekclub.com/sr-71-pilot-explains-how-he-survived-to-his-blackbird-disintegration-at-a-speed-of-mach-3-2/
     "composer",
     "comment", // https://slatestarcodex.com/2014/09/30/i-can-tolerate-anything-except-the-outgroup/
