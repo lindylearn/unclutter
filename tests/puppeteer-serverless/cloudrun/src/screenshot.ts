@@ -17,14 +17,18 @@ export async function captureUrl(
     try {
         await page.goto(url, {
             waitUntil: "domcontentloaded",
-            timeout: 10000,
+            timeout: 5000,
         });
     } catch {}
 
-    await new Promise((r) => setTimeout(r, 2000));
+    await new Promise((r) => setTimeout(r, 2500));
 
     const body = await page.$("body");
-    const bodyPos = await body!.boundingBox();
+    if (!body) {
+        console.error(`Error: no body tag on ${url}`);
+        return;
+    }
+    const bodyPos = await body.boundingBox();
     await page.screenshot({
         path: `${localScreenshotsPath}/${getUrlFilename(url)}`,
         clip: {

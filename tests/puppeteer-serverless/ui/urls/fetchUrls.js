@@ -63,15 +63,19 @@ async function getRedditTopLinks(subreddit, limit = 30) {
 }
 
 async function main() {
-    const urls = await getHnTopLinks(1000);
+    let urls = await getHnTopLinks(1000);
     await fs.writeFile("./urls/hn.json", JSON.stringify(urls));
 
-    // repeats after 250 results;, so use multiple subreddits
-    // let urls = [
-    //     ...(await getRedditTopLinks("worldnews", 300)),
-    //     ...(await getRedditTopLinks("news", 300)),
-    // ];
-    // urls = [...new Set(urls)];
-    // await fs.writeFile("./urls/reddit.json", JSON.stringify(urls));
+    // repeats after 250 results, so use multiple subreddits
+    urls = [
+        ...(await getRedditTopLinks("worldnews", 300)),
+        ...(await getRedditTopLinks("news", 300)),
+        ...(await getRedditTopLinks("UpliftingNews", 300)),
+        ...(await getRedditTopLinks("science", 300)),
+        ...(await getRedditTopLinks("space", 300)),
+        ...(await getRedditTopLinks("politics", 300)),
+    ];
+    urls = [...new Set(urls)];
+    await fs.writeFile("./urls/reddit.json", JSON.stringify(urls));
 }
 main();

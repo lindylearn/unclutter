@@ -18,7 +18,7 @@ gcloud run deploy puppeteer-serverless \
   --allow-unauthenticated \
   --region=us-west1 \
   --timeout=300 \
-  --memory 1G
+  --memory 2G
 
 # gcloud run services update puppeteer-serverless --concurrency 1 --cpu 2 \
 #   --platform managed \

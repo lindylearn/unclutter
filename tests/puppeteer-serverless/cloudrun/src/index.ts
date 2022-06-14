@@ -1,13 +1,7 @@
 import cors from "cors";
 import express from "express";
 import { startBrowser } from "./browser.js";
-import { compareUrlImages } from "./compare.js";
-import {
-    downloadExtensionCode,
-    downloadPreviousUrlScreenshot,
-    prepare,
-    uploadResults,
-} from "./results.js";
+import { downloadExtensionCode, prepare, uploadResults } from "./results.js";
 import { captureUrl } from "./screenshot.js";
 
 const app = express();
@@ -26,18 +20,24 @@ app.post("/screenshot", async (req, res, next) => {
         const [browser, extWorker] = await startBrowser();
 
         for (const url of urls) {
-            await captureUrl(browser, extWorker, url);
+            try {
+                await captureUrl(browser, extWorker, url);
 
-            const hasPrevScreenshot = await downloadPreviousUrlScreenshot(
-                url,
-                prefix
-            );
-            if (hasPrevScreenshot) {
-                await compareUrlImages(url);
+                // const hasPrevScreenshot = await downloadPreviousUrlScreenshot(
+                //     url,
+                //     prefix
+                // );
+                // if (hasPrevScreenshot) {
+                //     await compareUrlImages(url);
+                // }
+            } catch (err) {
+                console.error(err);
             }
         }
 
-        await browser.close();
+        try {
+            await browser.close();
+        } catch (err) {}
         await uploadResults(prefix);
 
         res.send("ok");

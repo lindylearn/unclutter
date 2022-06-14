@@ -60,10 +60,17 @@ function Home() {
         setChangedScreenshots([]);
 
         // trigger new screenshots
-        hnLinks;
-        redditLinks;
-        const urls = hnLinks.slice(0, countRef.current.value);
-        await triggerScreenshots(urls, prefixRef.current.value, 10);
+        let urls;
+        if (prefixRef.current.value === "hn") {
+            urls = hnLinks;
+        } else if (prefixRef.current.value === "reddit") {
+            urls = redditLinks;
+        }
+        await triggerScreenshots(
+            urls.slice(0, countRef.current.value),
+            prefixRef.current.value,
+            10
+        );
 
         setIsTriggering(false);
     }
