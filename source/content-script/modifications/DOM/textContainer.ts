@@ -79,7 +79,7 @@ export default class TextContainerModifier implements PageModifier {
             textElements = document.body.querySelectorAll("div, span");
         }
         textElements.forEach((elem: HTMLElement) => {
-            this.processElement(elem, false);
+            this.processElement(elem, "text");
         });
 
         // Apply to heading nodes
@@ -87,10 +87,10 @@ export default class TextContainerModifier implements PageModifier {
         document.body
             .querySelectorAll(globalHeadingSelector)
             .forEach((elem: HTMLElement) => {
-                this.processElement(elem, true);
+                this.processElement(elem, "header");
             });
         this.headingParagraphNodes.forEach((elem: HTMLElement) => {
-            this.processElement(elem, true);
+            this.processElement(elem, "header");
         });
 
         // Just use the most common font size for now
@@ -117,20 +117,24 @@ export default class TextContainerModifier implements PageModifier {
     // Process text or heading elements and iterate upwards
     private paragraphFontSizes: { [size: number]: number } = {};
     private exampleNodePerFontSize: { [size: number]: HTMLElement } = {};
-    private processElement = (elem: HTMLElement, isHeading: boolean) => {
+    private processElement = (
+        elem: HTMLElement,
+        elementType: "text" | "header" | "image"
+    ) => {
         // Ignore invisible nodes
         // Note: iterateDOM is called before content block, so may not catch all hidden nodes (e.g. in footer)
         if (elem.offsetHeight === 0) {
             return;
         }
-        // exclude small text nodes
-        if (!isHeading && elem.innerText.length < 60) {
-            return;
-        }
 
         const activeStyle = window.getComputedStyle(elem);
 
-        if (!isHeading) {
+        if (elementType === "text") {
+            // exclude small text nodes
+            if (elem.innerText.length < 60) {
+                return;
+            }
+
             // parse text element font size
             const fontSize = parseFloat(activeStyle.fontSize);
             if (this.paragraphFontSizes[fontSize]) {
@@ -150,11 +154,15 @@ export default class TextContainerModifier implements PageModifier {
         }
 
         // iterate parents
-        if (isHeading) {
+        if (elementType === "header") {
             // apply modifications to heading elements themselves to prevent them being hidden
-            this.prepareIterateParents(elem, true, activeStyle);
+            this.prepareIterateParents(elem, elementType, activeStyle);
         } else {
-            this.prepareIterateParents(elem.parentElement, false, activeStyle);
+            this.prepareIterateParents(
+                elem.parentElement,
+                elementType,
+                activeStyle
+            );
         }
 
         this._prepareBeforeAnimationPatches(elem, activeStyle);
@@ -172,7 +180,7 @@ export default class TextContainerModifier implements PageModifier {
     // map paragraphs nodes and iterate their parent nodes
     private prepareIterateParents = (
         elem: HTMLElement,
-        isHeadingStack: boolean,
+        stackType: "text" | "header" | "image",
         activeStyle: CSSStyleDeclaration
     ) => {
         if (this.validatedNodes.has(elem)) {
@@ -187,20 +195,20 @@ export default class TextContainerModifier implements PageModifier {
         while (currentElem !== document.documentElement) {
             if (
                 this.mainStackElements.has(currentElem) ||
-                // don't go into parents if already validated them (only for text containers since their mainStack state doesn't change)
-                (!isHeadingStack && this.validatedNodes.has(currentElem))
+                // don't go into parents if already validated them (only for text containers since their mainStack state doesn't change for parents)
+                (stackType === "text" && this.validatedNodes.has(currentElem))
             ) {
                 break;
             }
 
             // TODO re-add big related content detection
-            if (
-                !isHeadingStack &&
-                this.shouldExcludeAsTextContainer(currentElem)
-            ) {
-                // remove entire current stack
-                return;
-            }
+            // if (
+            //     !isHeadingStack &&
+            //     this.shouldExcludeAsTextContainer(currentElem)
+            // ) {
+            //     // remove entire current stack
+            //     return;
+            // }
 
             if (["FIGURE", "PICTURE"].includes(currentElem.tagName)) {
                 return;
@@ -210,8 +218,7 @@ export default class TextContainerModifier implements PageModifier {
             this.validatedNodes.add(currentElem);
 
             // handle text elements that are part of headings
-            // can't rely on sensible naming, e.g. 'subtitle' on https://mars.nasa.gov/mars2020/mission/status/384/perseverance-has-a-pet-rock/
-            if (!isHeadingStack) {
+            if (stackType === "text") {
                 if (
                     headingTags.includes(currentElem.tagName.toLowerCase()) ||
                     headingClassWordlist.some((word) =>
@@ -238,7 +245,7 @@ export default class TextContainerModifier implements PageModifier {
 
         // main stack determined based on leaf elements for headings, based on intermediate parent size for text elements
         let isMainStack = false;
-        if (isHeadingStack && currentStack.length > 0) {
+        if (stackType === "header" && currentStack.length > 0) {
             // for headings check tagName, content & if on first page
             // this should exclude heading elements that are part of "related articles" sections
             const pos = elem.getBoundingClientRect(); // TODO measure performance
@@ -265,7 +272,11 @@ export default class TextContainerModifier implements PageModifier {
             const activeStyle = window.getComputedStyle(elem);
 
             // check if element is main text or header
-            if (!isMainStack && !isHeadingStack && elem !== document.body) {
+            if (
+                !isMainStack &&
+                stackType === "text" &&
+                elem !== document.body
+            ) {
                 // for text containers, consider the fraction of the page text
                 const pageContentFraction =
                     elem.innerText.length / this.bodyContentLength;
@@ -284,7 +295,7 @@ export default class TextContainerModifier implements PageModifier {
             }
 
             // parse background color from main text element stacks
-            if (isMainStack && !isHeadingStack) {
+            if (isMainStack && stackType === "text") {
                 if (
                     // don't take default background color
                     !activeStyle.backgroundColor.includes("rgba(0, 0, 0, 0)") &&
@@ -300,7 +311,7 @@ export default class TextContainerModifier implements PageModifier {
             }
 
             // save classes to add
-            if (isHeadingStack) {
+            if (stackType === "header") {
                 this.batchedNodeClassAdditions.push([
                     elem,
                     lindyHeadingContainerClass,
@@ -311,7 +322,7 @@ export default class TextContainerModifier implements PageModifier {
                         lindyMainHeaderContainerClass,
                     ]);
                 }
-            } else {
+            } else if (stackType === "text") {
                 this.batchedNodeClassAdditions.push([
                     elem,
                     lindyContainerClass,
