@@ -203,6 +203,8 @@ export const blockedWords = [
     "comment", // https://slatestarcodex.com/2014/09/30/i-can-tolerate-anything-except-the-outgroup/
     "print", // catch all .hidden-print and .print-remove ?
     "skip", // https://www.fugue.co/blog/2015-11-11-guide-to-emacs.html
+    "sr-only", // https://arxiv.org/abs/2206.02871
+    "extra", // https://arxiv.org/abs/2206.02871
 ];
 export const blockedSpecificSelectors = [
     // ads (be careful as 'ad' may appear in other words)

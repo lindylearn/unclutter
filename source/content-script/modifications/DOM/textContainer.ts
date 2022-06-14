@@ -242,7 +242,9 @@ export default class TextContainerModifier implements PageModifier {
             // for headings check tagName, content & if on first page
             // this should exclude heading elements that are part of "related articles" sections
             const pos = elem.getBoundingClientRect(); // TODO measure performance
-            const isOnFirstPage = pos.top + window.scrollY < window.innerHeight;
+            const top = pos.top + window.scrollY;
+            const isOnFirstPage = top < window.innerHeight && top >= 0;
+            // hidden above page e.g. for https://www.city-journal.org/san-francisco-recalls-da-chesa-boudin
 
             isMainStack =
                 isOnFirstPage &&
@@ -320,12 +322,11 @@ export default class TextContainerModifier implements PageModifier {
                         lindyMainContentContainerClass,
                     ]);
                 }
-                // apply override classes (but not text container) e.g. for text elements on theatlantic.com
-                this._getNodeOverrideClasses(elem, activeStyle).map(
-                    (className) =>
-                        this.batchedNodeClassAdditions.push([elem, className])
-                );
             }
+            // apply override classes (but not text container) e.g. for text elements on theatlantic.com
+            this._getNodeOverrideClasses(elem, activeStyle).map((className) =>
+                this.batchedNodeClassAdditions.push([elem, className])
+            );
 
             if (isMainStack) {
                 // skip processing in next iteration phase (respect main text elems when checking headers)
@@ -425,17 +426,15 @@ export default class TextContainerModifier implements PageModifier {
                 color: black !important;
 
                 position: relative !important;
-                margin-top: 0 !important;
                 margin-left: 0 !important;
                 margin-right: 0 !important;
-                padding-top: 0 !important;
                 padding-left: 0 !important;
                 padding-right: 0 !important;
                 height: auto !important;
                 transform: none !important;
             }
             .${lindyHeadingContainerClass}.${lindyHeadingContainerClass}.${lindyHeadingContainerClass}.${lindyMainHeaderContainerClass} {
-                border: solid 1px purple !important;
+                border: solid 1px none !important;
             }
             .${lindyHeadingContainerClass}:before, .${lindyHeadingContainerClass}:after {
                 display: none !important;
@@ -446,7 +445,7 @@ export default class TextContainerModifier implements PageModifier {
             }
 
             /* block non-container siblings of main containers, but don't apply to first main container to not block images etc */
-            :is(.${lindyMainContentContainerClass}, .${lindyMainHeaderContainerClass}):not(.${lindyFirstMainContainerClass}) > :not(.${lindyMainContentContainerClass}, .${
+            :is(.${lindyMainContentContainerClass}):not(.${lindyFirstMainContainerClass}) > :not(.${lindyMainContentContainerClass}, .${
             this.foundMainHeadingElement
                 ? lindyMainHeaderContainerClass
                 : lindyHeadingContainerClass
