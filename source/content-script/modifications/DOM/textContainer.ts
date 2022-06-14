@@ -13,7 +13,7 @@ export const lindyFirstMainContainerClass = "lindy-first-main-container";
 
 const globalTextElementSelector = "p, font, pre";
 const globalHeadingSelector = "h1, h2, h3, h4, header";
-const headingClassWordlist = ["heading", "title", "article-details"]; // be careful here
+const headingClassWordlist = ["header", "heading", "title", "article-details"]; // be careful here
 const globalImageSelector = "img, picture, figure";
 
 const headingTags = globalHeadingSelector.split(", ");
@@ -281,8 +281,9 @@ export default class TextContainerModifier implements PageModifier {
                 // base main stack state on leaf element
                 isMainStack =
                     isOnFirstPage &&
-                    !elem.className.includes("blog") &&
-                    (elem.tagName === "H1" ||
+                    (elem.firstElementChild?.tagName !== "A" ||
+                        elem.firstElementChild.href === window.location.href) &&
+                    ((elem.tagName === "H1" && elem.innerText.length >= 20) ||
                         elem.innerText
                             .toLowerCase()
                             .includes(this.cleanPageTitle));
@@ -306,6 +307,14 @@ export default class TextContainerModifier implements PageModifier {
         // perform modifications on valid text element stack
         for (const elem of currentStack) {
             const activeStyle = window.getComputedStyle(elem);
+
+            // abort based on activeStyle (leaves children behind, but better than nothing)
+            if (
+                activeStyle.visibility === "hidden" ||
+                activeStyle.opacity === "0"
+            ) {
+                return false;
+            }
 
             // check if element is main text or header
             if (
@@ -377,9 +386,13 @@ export default class TextContainerModifier implements PageModifier {
             }
 
             // apply override classes (but not text container) e.g. for text elements on theatlantic.com
-            this._getNodeOverrideClasses(elem, activeStyle, stackType).map(
-                (className) =>
-                    this.batchedNodeClassAdditions.push([elem, className])
+            this._getNodeOverrideClasses(
+                elem,
+                activeStyle,
+                stackType,
+                isMainStack
+            ).map((className) =>
+                this.batchedNodeClassAdditions.push([elem, className])
             );
             this._prepareBeforeAnimationPatches(elem, activeStyle);
 
@@ -483,6 +496,8 @@ export default class TextContainerModifier implements PageModifier {
             .${lindyHeadingContainerClass}.${lindyHeadingContainerClass}.${lindyHeadingContainerClass}:not(body), 
             .${lindyHeadingContainerClass} > * {
                 color: black !important;
+                -webkit-text-fill-color: unset !important;
+                text-shadow: none !important;
 
                 position: relative !important;
                 top: 0 !important;
@@ -492,14 +507,17 @@ export default class TextContainerModifier implements PageModifier {
                 padding-right: 0 !important;
                 height: auto !important;
                 transform: none !important;
+                float: none !important;
             }
             .${lindyHeadingContainerClass}:before, 
             .${lindyHeadingContainerClass}:after {
                 display: none !important;
             }
-            .${lindyMainHeaderContainerClass}.${lindyMainHeaderContainerClass} {
-                margin: 0 !important;
-                padding: 0 !important;
+            .${lindyHeadingContainerClass}:first-child, .${lindyMainHeaderContainerClass} {
+                margin-top: 0 !important;
+                padding-top: 0 !important;
+                margin-bottom: 10px !important;
+                padding-bottom: 10px !important;
             }
             .${lindyHeadingContainerClass} a {
                 color: black !important;
@@ -507,10 +525,15 @@ export default class TextContainerModifier implements PageModifier {
             }
 
             .${lindyImageContainerClass} {
-                margin: 0 !important;
+                margin-left: 0 !important;
+                margin-right: 0 !important;
                 /* y padding often used to make space for images, e.g. on theintercept or variety.com */
                 padding-left: 0 !important;
                 padding-right: 0 !important;
+
+                transform: none !important;
+                top: 0 !important;
+                left: 0 !important;
             }
 
             /* block non-container siblings of main containers, but don't apply to first main container to not block images etc */
@@ -632,17 +655,20 @@ export default class TextContainerModifier implements PageModifier {
     private overrideCssDeclarations = [
         // hide sidebar siblings, e.g. on https://www.thespacereview.com/article/4384/1
         `.${lindyContainerClass} > td:not(.${lindyContainerClass}) { 
-                display: none !important;
-            }`,
+            display: none !important;
+        }`,
         // Remove horizontal flex partitioning, e.g. https://www.nationalgeographic.com/science/article/the-controversial-quest-to-make-a-contagious-vaccine
         `.lindy-text-remove-horizontal-flex { display: block !important; }`,
         // Remove grids, e.g. https://www.washingtonpost.com/business/2022/02/27/bp-russia-rosneft-ukraine or https://www.trickster.dev/post/decrypting-your-own-https-traffic-with-wireshark/
         `.lindy-text-remove-grid { 
-                display: block !important;
-                grid-template-columns: 1fr !important;
-                grid-template-areas: none !important;
-                column-gap: 0 !important;
-            }`,
+            display: block !important;
+            grid-template-columns: 1fr !important;
+            grid-template-areas: none !important;
+            column-gap: 0 !important;
+        }`,
+        `.lindy-header-font-size-max {
+            font-size: 40px !important;
+        }`,
         // TODO add classes to siblings to improve selector performance
         // `.lindy-text-remove-grid > *:not(.${lindyContainerClass}) {
         //     display: none !important;
@@ -653,17 +679,24 @@ export default class TextContainerModifier implements PageModifier {
     private _getNodeOverrideClasses(
         node: HTMLElement,
         activeStyle: CSSStyleDeclaration,
-        stackType: "text" | "header" | "image"
+        stackType: "text" | "header" | "image",
+        isMainStack: boolean
     ): string[] {
         // batch creation of unique node selectors if required
         const classes = [];
 
         if (
-            stackType === "text" &&
+            (stackType === "text" || (stackType === "header" && isMainStack)) &&
             activeStyle.display === "flex" &&
             activeStyle.flexDirection === "row"
         ) {
             classes.push("lindy-text-remove-horizontal-flex");
+        }
+
+        if (stackType === "header" && activeStyle.fontSize > "40px") {
+            // put maximum on header font size
+            // e.g. WP template uses 6em on https://blog.relyabilit.ie/the-curse-of-systems-thinkers/
+            classes.push("lindy-header-font-size-max");
         }
 
         if (activeStyle.display === "grid") {

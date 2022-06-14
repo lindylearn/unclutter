@@ -167,7 +167,7 @@ export const blockedWords = [
     "recommend", // https://reason.com/2022/04/08/the-fbi-decided-not-to-knock-down-a-suspects-front-door-because-it-was-an-affluent-neighborhood/
     "popular",
     "smartfeed",
-    "more", // https://www.cleanenergywire.org/news/germany-boosts-renewables-biggest-energy-policy-reform-decades
+    // "more", // issue on http://www.antipope.org/charlie/blog-static/2013/12/why-i-want-bitcoin-to-die-in-a.html
     "trending", // https://www.tomsguide.com/opinion/google-pixel-6a-might-be-the-most-exciting-phone-of-2022-heres-why
     "featured", // https://edition.cnn.com/2022/05/24/tech/cher-scarlett-facial-recognition-trauma/index.html
     "below", // https://www.rockpapershotgun.com/the-lord-of-the-rings-gollum-preview-may-miss-a-precious-opportunity
@@ -201,6 +201,7 @@ export const blockedWords = [
     "disqus", // also may include ads, e.g. https://david-codes.hatanian.com/2019/06/09/aws-costs-every-programmer-should-now.html
     "video",
     // "share", // blocks images e.g. on https://spectrum.ieee.org/commodore-64
+    "share-section", // https://brighterworld.mcmaster.ca/articles/going-all-the-way-scientists-prove-inhaled-vaccines-offer-better-protection-than-nasal-sprays/
     "sharing", // https://theaviationgeekclub.com/sr-71-pilot-explains-how-he-survived-to-his-blackbird-disintegration-at-a-speed-of-mach-3-2/
     "composer",
     "comment", // https://slatestarcodex.com/2014/09/30/i-can-tolerate-anything-except-the-outgroup/
@@ -209,6 +210,7 @@ export const blockedWords = [
     "sr-only", // https://arxiv.org/abs/2206.02871
     "extra", // https://arxiv.org/abs/2206.02871
     "contacts", // https://www.europarl.europa.eu/news/en/press-room/20220613IPR32838/eu-covid-certificate-meps-and-council-agree-to-extend-rules-for-another-year
+    "home", // https://blog.cryptographyengineering.com/2022/06/09/in-defense-of-cryptocurrency/
 ];
 export const blockedSpecificSelectors = [
     // ads (be careful as 'ad' may appear in other words)
@@ -239,6 +241,7 @@ export const blockedSpecificSelectors = [
     "[class$='-nav' i]", // https://fly.io/blog/a-foolish-consistency/
 
     // header
+    `header:not(.${lindyMainHeaderContainerClass})`, // https://www.abc.net.au/news/2022-06-14/xi-jinping-expands-china-military-influence-abroad/101152154
     ".global-header",
     ".Page-header",
     ".site-header",
@@ -281,6 +284,7 @@ export const blockedSpecificSelectors = [
     ".wafer-rapid-module", // https://news.yahoo.com/thailand-legalizes-growing-consumption-marijuana-135808124.html
     ".sdc-article-author", // https://news.sky.com/story/russia-made-79-4bn-in-first-100-days-of-ukraine-war-by-selling-oil-and-gas-to-the-world-12632810
     "#news_ticker", // https://www.sentinelassam.com/international/serbia-germany-disagree-over-imposing-sanctions-on-russia-596536
+    ".social", // https://thehill.com/news/administration/3522080-trump-releases-12-page-response-to-jan-6-hearing/
 
     // term of contents (Unclutter shows its own outline)
     ".toc",

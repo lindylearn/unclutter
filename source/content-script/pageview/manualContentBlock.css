@@ -613,7 +613,7 @@ body[link="000099"] {
 
 
 /* https://tonsky.me/blog/disenchantment/ */
-figure {
+.lindy-main-text-container > figure {
     width: 100% !important;
     margin-left: auto !important;
     margin-right: auto !important;
