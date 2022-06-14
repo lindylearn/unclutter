@@ -186,6 +186,7 @@ export const blockedWords = [
     "mostRead", // https://english.alarabiya.net/News/world/2022/06/09/Berlin-driver-s-confused-statements-under-investigation
     "archive", // https://www.centauri-dreams.org/2022/06/07/solar-sailing-the-beauties-of-diffraction/
     "favorites", // https://fortune.com/2022/06/12/if-you-thought-the-tech-rout-was-bad-spare-a-dime-for-retailers/
+    "social-icon", // https://devblogs.microsoft.com/oldnewthing/20220608-00/?p=106727
 
     // cookies
     "cookie",

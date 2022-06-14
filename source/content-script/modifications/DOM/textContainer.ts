@@ -211,14 +211,13 @@ export default class TextContainerModifier implements PageModifier {
                 break;
             }
 
-            // TODO re-add big related content detection
-            // if (
-            //     !isHeadingStack &&
-            //     this.shouldExcludeAsTextContainer(currentElem)
-            // ) {
-            //     // remove entire current stack
-            //     return;
-            // }
+            if (
+                stackType === "text" &&
+                this.shouldExcludeAsTextContainer(currentElem)
+            ) {
+                // remove entire current stack
+                return;
+            }
 
             // exclude image captions
             if (
@@ -494,7 +493,7 @@ export default class TextContainerModifier implements PageModifier {
 
             .${lindyImageContainerClass} {
                 margin: 0 !important;
-                padding: 0 !important;
+                padding: 0; /* careful with cnbc.com image padding */
             }
 
             /* block non-container siblings of main containers, but don't apply to first main container to not block images etc */
@@ -692,22 +691,15 @@ export default class TextContainerModifier implements PageModifier {
         }
     }
 
-    // very carefully exclude elements as text containers
-    // used to avoid incorrect main container selection for small articles
+    // very carefully exclude elements as text containers to avoid incorrect main container selection for small articles
     // this doesn't mean these elements will be removed, but they might
     private shouldExcludeAsTextContainer(node: HTMLElement) {
-        return false;
-
-        // causes issues on https://news.illinois.edu/view/6367/913924091
-        if (["UL", "OL"].includes(node.tagName)) {
-            const contentLength = node.innerText.length;
-            const pageContentFraction = contentLength / this.bodyContentLength;
-
-            // abort for very large <ul> related articles section, e.g on https://ca.finance.yahoo.com/news/mining-ukraine-ports-may-months-162909326.html?guccounter=1
-            // but allow small lists in the text
-            if (pageContentFraction > 0.1) {
-                return true;
-            }
+        if (
+            [
+                "module-moreStories", // https://news.yahoo.com/thailand-legalizes-growing-consumption-marijuana-135808124.html
+            ].includes(node.id)
+        ) {
+            return true;
         }
 
         return false;
