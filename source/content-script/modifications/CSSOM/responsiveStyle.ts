@@ -44,12 +44,16 @@ export default class ResponsiveStyleModifier implements PageModifier {
                 );
                 if (appliedBefore && !appliesNow) {
                     this.expiredRules.push(
-                        ...[...rule.cssRules].filter((rule) => !!rule.style)
+                        ...[...rule.cssRules].filter(
+                            (rule) => isStyleRule(rule) && !!rule.style
+                        )
                     );
                 }
                 if (!appliedBefore && appliesNow) {
                     this.newRules.push(
-                        ...[...rule.cssRules].filter((rule) => !!rule.style)
+                        ...[...rule.cssRules].filter(
+                            (rule) => isStyleRule(rule) && !!rule.style
+                        )
                     );
                 }
             }
