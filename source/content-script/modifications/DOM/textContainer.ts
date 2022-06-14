@@ -5,6 +5,7 @@ import { PageModifier, trackModifierExecution } from "../_interface";
 
 export const lindyContainerClass = "lindy-text-container";
 export const lindyHeadingContainerClass = "lindy-heading-container";
+export const lindyImageContainerClass = "lindy-image-container";
 
 export const lindyMainContentContainerClass = "lindy-main-text-container";
 export const lindyMainHeaderContainerClass = "lindy-main-header-container";
@@ -13,6 +14,7 @@ export const lindyFirstMainContainerClass = "lindy-first-main-container";
 const globalTextElementSelector = "p, font, pre";
 const globalHeadingSelector = "h1, h2, h3, h4, header";
 const headingClassWordlist = ["heading", "title", "article-details"]; // be careful here
+const globalImageSelector = "img, picture, figure";
 
 const headingTags = globalHeadingSelector.split(", ");
 
@@ -93,6 +95,14 @@ export default class TextContainerModifier implements PageModifier {
             this.processElement(elem, "header");
         });
 
+        // search images
+        this.validatedNodes = new Set();
+        document.body
+            .querySelectorAll(globalImageSelector)
+            .forEach((elem: HTMLElement) => {
+                this.processElement(elem, "image");
+            });
+
         // Just use the most common font size for now
         // Note that the actual font size might be changed by responsive styles
         this.mainFontSize = Object.keys(this.paragraphFontSizes).reduce(
@@ -154,7 +164,7 @@ export default class TextContainerModifier implements PageModifier {
         }
 
         // iterate parents
-        if (elementType === "header") {
+        if (elementType === "header" || elementType === "image") {
             // apply modifications to heading elements themselves to prevent them being hidden
             this.prepareIterateParents(elem, elementType, activeStyle);
         } else {
@@ -210,7 +220,11 @@ export default class TextContainerModifier implements PageModifier {
             //     return;
             // }
 
-            if (["FIGURE", "PICTURE"].includes(currentElem.tagName)) {
+            // exclude image captions
+            if (
+                stackType !== "image" &&
+                ["FIGURE", "PICTURE"].includes(currentElem.tagName)
+            ) {
                 return;
             }
 
@@ -243,27 +257,44 @@ export default class TextContainerModifier implements PageModifier {
             currentElem = currentElem.parentElement;
         }
 
-        // main stack determined based on leaf elements for headings, based on intermediate parent size for text elements
-        let isMainStack = false;
-        if (stackType === "header" && currentStack.length > 0) {
+        let isMainStack = false; // main stack determined based on leaf elements for headings, based on intermediate parent size for text elements
+
+        // check element position
+        if (
+            (stackType === "header" || stackType === "image") &&
+            currentStack.length > 0
+        ) {
             // for headings check tagName, content & if on first page
             // this should exclude heading elements that are part of "related articles" sections
             const pos = elem.getBoundingClientRect(); // TODO measure performance
             const top = pos.top + window.scrollY;
-            const isOnFirstPage = top < window.innerHeight && top >= 0;
-            // hidden above page e.g. for https://www.city-journal.org/san-francisco-recalls-da-chesa-boudin
 
-            isMainStack =
-                isOnFirstPage &&
-                !elem.className.includes("blog") &&
-                (elem.tagName === "H1" ||
-                    elem.innerText.toLowerCase().includes(this.cleanPageTitle));
-            if (isMainStack) {
-                this.foundMainHeadingElement = true;
-                this.batchedNodeClassAdditions.push([
-                    elem,
-                    lindyFirstMainContainerClass,
-                ]);
+            if (stackType === "header") {
+                const isOnFirstPage = top < window.innerHeight && top >= 0;
+                // hidden above page e.g. for https://www.city-journal.org/san-francisco-recalls-da-chesa-boudin
+
+                // base main stack state on leaf element
+                isMainStack =
+                    isOnFirstPage &&
+                    !elem.className.includes("blog") &&
+                    (elem.tagName === "H1" ||
+                        elem.innerText
+                            .toLowerCase()
+                            .includes(this.cleanPageTitle));
+                if (isMainStack) {
+                    this.foundMainHeadingElement = true;
+                    this.batchedNodeClassAdditions.push([
+                        elem,
+                        lindyFirstMainContainerClass,
+                    ]);
+                }
+            } else if (stackType === "image") {
+                // protect large images at start of article
+                // e.g. just below fold on https://spectrum.ieee.org/commodore-64
+                const isOnFirstPage = top < window.innerHeight * 2;
+                if (!isOnFirstPage || pos.height < 300) {
+                    return;
+                }
             }
         }
 
@@ -273,8 +304,8 @@ export default class TextContainerModifier implements PageModifier {
 
             // check if element is main text or header
             if (
-                !isMainStack &&
                 stackType === "text" &&
+                !isMainStack &&
                 elem !== document.body
             ) {
                 // for text containers, consider the fraction of the page text
@@ -333,18 +364,23 @@ export default class TextContainerModifier implements PageModifier {
                         lindyMainContentContainerClass,
                     ]);
                 }
+            } else if (stackType === "image") {
+                this.batchedNodeClassAdditions.push([
+                    elem,
+                    lindyImageContainerClass,
+                ]);
             }
+
             // apply override classes (but not text container) e.g. for text elements on theatlantic.com
             this._getNodeOverrideClasses(elem, activeStyle).map((className) =>
                 this.batchedNodeClassAdditions.push([elem, className])
             );
+            this._prepareBeforeAnimationPatches(elem, activeStyle);
 
             if (isMainStack) {
                 // skip processing in next iteration phase (respect main text elems when checking headers)
                 this.mainStackElements.add(elem);
             }
-
-            this._prepareBeforeAnimationPatches(elem, activeStyle);
         }
     };
 
@@ -437,15 +473,13 @@ export default class TextContainerModifier implements PageModifier {
                 color: black !important;
 
                 position: relative !important;
+                top: 0 !important;
                 margin-left: 0 !important;
                 margin-right: 0 !important;
                 padding-left: 0 !important;
                 padding-right: 0 !important;
                 height: auto !important;
                 transform: none !important;
-            }
-            .${lindyHeadingContainerClass}.${lindyHeadingContainerClass}.${lindyHeadingContainerClass}.${lindyMainHeaderContainerClass} {
-                border: solid 1px none !important;
             }
             .${lindyHeadingContainerClass}:before, .${lindyHeadingContainerClass}:after {
                 display: none !important;
@@ -458,12 +492,18 @@ export default class TextContainerModifier implements PageModifier {
                 color: black !important;
             }
 
+            .${lindyImageContainerClass} {
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
             /* block non-container siblings of main containers, but don't apply to first main container to not block images etc */
-            .${lindyMainContentContainerClass}:not(.${lindyFirstMainContainerClass}) > :not(.${lindyMainContentContainerClass}, .${
-            this.foundMainHeadingElement
-                ? lindyMainHeaderContainerClass
-                : lindyHeadingContainerClass
-        }) {
+            .${lindyMainContentContainerClass}:not(.${lindyFirstMainContainerClass}) > :not(.${lindyMainContentContainerClass}, .${lindyImageContainerClass},
+                 .${
+                     this.foundMainHeadingElement
+                         ? lindyMainHeaderContainerClass
+                         : lindyHeadingContainerClass
+                 }) {
                 display: none !important;
             }
             /* more strict cleanup for contains of the main page text */
