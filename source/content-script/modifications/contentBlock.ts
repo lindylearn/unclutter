@@ -119,7 +119,6 @@ export const blockedWords = [
     "footer",
     "leaderboard", // https://www.bbc.com/news/uk-england-london-61747092
     "topbar", // https://annehelen.substack.com/p/is-everything-an-mlm?s=r
-    "logo", // https://torrentfreak.com/iptv-pirate-must-pay-963k-or-88-month-prison-sentence-becomes-168-220607/
     "breadcrumb", // https://www.mei.edu/blog/monday-briefing-under-brutal-pressure-israels-coalition-verge-crumbling
 
     // newsletter signups
@@ -142,6 +141,7 @@ export const blockedWords = [
     "account", // https://www.zigpoll.com/blog/being-a-solopreneur-part-one
     "member", // https://spectrum.ieee.org/commodore-64
     "subscription", // https://dx.tips/the-end-of-localhost
+    "plea", // https://fortune.com/2022/06/12/if-you-thought-the-tech-rout-was-bad-spare-a-dime-for-retailers/
 
     // banners
     "banner", // https://nautil.us/why-people-feel-like-victims-9728/
@@ -159,6 +159,7 @@ export const blockedWords = [
     "floating", // https://www.zdnet.com/article/opera-brave-vivaldi-to-ignore-chromes-anti-ad-blocker-changes-despite-shared-codebase/
     "breaking", // https://www.cbsnews.com/boston/news/simone-biles-aly-raisman-gymnasts-larry-nassar-fbi-lawsuit/
     "recent", // https://thehustle.co/06062022-social-audio/
+    "notification", // https://garymarcus.substack.com/p/nonsense-on-stilts?s=r
 
     // related articles
     "related",
@@ -183,6 +184,7 @@ export const blockedWords = [
     "feed", // https://9to5mac.com/2022/06/08/qualcomm-will-beat-m2/
     "mostRead", // https://english.alarabiya.net/News/world/2022/06/09/Berlin-driver-s-confused-statements-under-investigation
     "archive", // https://www.centauri-dreams.org/2022/06/07/solar-sailing-the-beauties-of-diffraction/
+    "favorites", // https://fortune.com/2022/06/12/if-you-thought-the-tech-rout-was-bad-spare-a-dime-for-retailers/
 
     // cookies
     "cookie",

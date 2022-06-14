@@ -439,13 +439,16 @@ export default class TextContainerModifier implements PageModifier {
             .${lindyHeadingContainerClass}:before, .${lindyHeadingContainerClass}:after {
                 display: none !important;
             }
-            .${lindyMainHeaderContainerClass} {
-                margin-bottom: 0 !important;
-                padding-bottom: 0 !important;
+            .${lindyMainHeaderContainerClass}.${lindyMainHeaderContainerClass} {
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            .${lindyHeadingContainerClass} a {
+                color: black !important;
             }
 
             /* block non-container siblings of main containers, but don't apply to first main container to not block images etc */
-            :is(.${lindyMainContentContainerClass}):not(.${lindyFirstMainContainerClass}) > :not(.${lindyMainContentContainerClass}, .${
+            .${lindyMainContentContainerClass}:not(.${lindyFirstMainContainerClass}) > :not(.${lindyMainContentContainerClass}, .${
             this.foundMainHeadingElement
                 ? lindyMainHeaderContainerClass
                 : lindyHeadingContainerClass

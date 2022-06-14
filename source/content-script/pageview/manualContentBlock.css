@@ -544,9 +544,6 @@ article[itemprop='articleBody'] > .grey-bg {
 .cnx-in-desktop {
     display: none !important;
 }
-article ~ article {
-    display: none !important;
-}
 .main-content--desktop-article {
     background-color: white !important;
 }
