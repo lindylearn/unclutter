@@ -489,6 +489,7 @@ export default class TextContainerModifier implements PageModifier {
             }
             .${lindyHeadingContainerClass} a {
                 color: black !important;
+                background: none !important;
             }
 
             .${lindyImageContainerClass} {

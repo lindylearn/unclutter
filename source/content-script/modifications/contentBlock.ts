@@ -233,6 +233,7 @@ export const blockedSpecificSelectors = [
     "[class*='LDRB']", // https://news.yahoo.com/us-general-says-elon-musks-210039217.html?guccounter=1
     "[data-google-query-id]", // https://www.romania-insider.com/unidentified-plane-ro-airspace-jun-2022
     "#ad_before_header",
+    ".billboard-container", // https://www.dailymail.co.uk/tvshowbiz/article-10913383/Hugh-Jackman-tests-positive-COVID-19-just-one-day-Tony-Awards.html
 
     "[class$='-nav' i]", // https://fly.io/blog/a-foolish-consistency/
 
@@ -252,6 +253,7 @@ export const blockedSpecificSelectors = [
     ".header__bars", // https://torrentfreak.com/iptv-pirate-must-pay-963k-or-88-month-prison-sentence-becomes-168-220607/
     ".blog-header", // https://dx.tips/the-end-of-localhost
     "#headerArea", // https://blogs.microsoft.com/on-the-issues/2022/06/08/microsoft-announces-four-new-employee-workforce-initiatives/
+    ".page-header", // https://www.dailymail.co.uk/tvshowbiz/article-10913383/Hugh-Jackman-tests-positive-COVID-19-just-one-day-Tony-Awards.html
 
     ".email",
 
