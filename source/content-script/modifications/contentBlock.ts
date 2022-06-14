@@ -6,6 +6,7 @@ import {
 import TextContainerModifier, {
     lindyContainerClass,
     lindyHeadingContainerClass,
+    lindyImageContainerClass,
     lindyMainContentContainerClass,
     lindyMainHeaderContainerClass,
 } from "./DOM/textContainer";
@@ -26,10 +27,10 @@ export default class ContentBlockModifier implements PageModifier {
     prepare() {
         // 'shareable' class on <p> on https://www.undrr.org/publication/global-assessment-report-disaster-risk-reduction-2022
         // <svg> e.g. on https://garymarcus.substack.com/p/what-does-it-mean-when-an-ai-fails?s=r
-        let excludeValidElements = `:not(.${lindyMainContentContainerClass}, .${lindyMainHeaderContainerClass}, svg)`;
+        let excludeValidElements = `:not(.${lindyMainContentContainerClass}, .${lindyMainHeaderContainerClass}, .${lindyImageContainerClass}, svg)`;
         if (!this.textContainerModifier.foundMainContentElement) {
             // be less strict if no main text found with reasonable certainty
-            excludeValidElements = `:not(.${lindyContainerClass}, .${lindyHeadingContainerClass}, svg)`;
+            excludeValidElements = `:not(.${lindyContainerClass}, .${lindyHeadingContainerClass}, .${lindyImageContainerClass}, svg)`;
         }
 
         const wordSelectors = blockedWords
@@ -194,12 +195,11 @@ export const blockedWords = [
     "disclaimer", // https://www.rockpapershotgun.com/the-lord-of-the-rings-gollum-preview-may-miss-a-precious-opportunity
 
     // noisy elements
-    "social",
     "follow", // https://english.alarabiya.net/News/world/2022/06/09/Berlin-driver-s-confused-statements-under-investigation
     "download", // https://www.globalwitness.org/en/campaigns/digital-threats/ethiopia-hate-speech/
     "disqus", // also may include ads, e.g. https://david-codes.hatanian.com/2019/06/09/aws-costs-every-programmer-should-now.html
     "video",
-    "share",
+    "share", // blocks images e.g. on https://spectrum.ieee.org/commodore-64
     "sharing", // https://theaviationgeekclub.com/sr-71-pilot-explains-how-he-survived-to-his-blackbird-disintegration-at-a-speed-of-mach-3-2/
     "composer",
     "comment", // https://slatestarcodex.com/2014/09/30/i-can-tolerate-anything-except-the-outgroup/
@@ -207,6 +207,7 @@ export const blockedWords = [
     "skip", // https://www.fugue.co/blog/2015-11-11-guide-to-emacs.html
     "sr-only", // https://arxiv.org/abs/2206.02871
     "extra", // https://arxiv.org/abs/2206.02871
+    "contacts", // https://www.europarl.europa.eu/news/en/press-room/20220613IPR32838/eu-covid-certificate-meps-and-council-agree-to-extend-rules-for-another-year
 ];
 export const blockedSpecificSelectors = [
     // ads (be careful as 'ad' may appear in other words)

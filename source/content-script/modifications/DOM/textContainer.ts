@@ -228,9 +228,6 @@ export default class TextContainerModifier implements PageModifier {
                 return;
             }
 
-            // make node as processed only if valid text container to also abort future stacks
-            this.validatedNodes.add(currentElem);
-
             // handle text elements that are part of headings
             if (stackType === "text") {
                 if (
@@ -372,11 +369,13 @@ export default class TextContainerModifier implements PageModifier {
             }
 
             // apply override classes (but not text container) e.g. for text elements on theatlantic.com
-            this._getNodeOverrideClasses(elem, activeStyle).map((className) =>
-                this.batchedNodeClassAdditions.push([elem, className])
+            this._getNodeOverrideClasses(elem, activeStyle, stackType).map(
+                (className) =>
+                    this.batchedNodeClassAdditions.push([elem, className])
             );
             this._prepareBeforeAnimationPatches(elem, activeStyle);
 
+            this.validatedNodes.add(currentElem); // add during second iteration to ignore aborted stacks
             if (isMainStack) {
                 // skip processing in next iteration phase (respect main text elems when checking headers)
                 this.mainStackElements.add(elem);
@@ -508,7 +507,6 @@ export default class TextContainerModifier implements PageModifier {
             }
             /* more strict cleanup for contains of the main page text */
             .${lindyMainContentContainerClass}.${lindyMainContentContainerClass}:not(body) {
-                border: solid 1px none !important;
                 position: relative !important;
                 margin-top: 0 !important;
                 margin-bottom: 0 !important;
@@ -610,6 +608,8 @@ export default class TextContainerModifier implements PageModifier {
         `.${lindyContainerClass} > td:not(.${lindyContainerClass}) { 
                 display: none !important;
             }`,
+        // Remove horizontal flex partitioning, e.g. https://www.nationalgeographic.com/science/article/the-controversial-quest-to-make-a-contagious-vaccine
+        `.lindy-text-remove-horizontal-flex { display: block !important; }`,
         // Remove grids, e.g. https://www.washingtonpost.com/business/2022/02/27/bp-russia-rosneft-ukraine or https://www.trickster.dev/post/decrypting-your-own-https-traffic-with-wireshark/
         `.lindy-text-remove-grid { 
                 display: block !important;
@@ -626,10 +626,19 @@ export default class TextContainerModifier implements PageModifier {
     // Get classes from overrideCssDeclarations to apply to a certain node
     private _getNodeOverrideClasses(
         node: HTMLElement,
-        activeStyle: CSSStyleDeclaration
+        activeStyle: CSSStyleDeclaration,
+        stackType: "text" | "header" | "image"
     ): string[] {
         // batch creation of unique node selectors if required
         const classes = [];
+
+        if (
+            stackType === "text" &&
+            activeStyle.display === "flex" &&
+            activeStyle.flexDirection === "row"
+        ) {
+            classes.push("lindy-text-remove-horizontal-flex");
+        }
 
         if (activeStyle.display === "grid") {
             classes.push("lindy-text-remove-grid");
