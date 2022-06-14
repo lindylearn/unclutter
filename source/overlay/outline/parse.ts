@@ -161,7 +161,7 @@ function getHeadingItems(): OutlineItem[] {
         if (linkElem?.tagName === "A") {
             // often related link, e.g. https://www.worksinprogress.co/issue/womb-for-improvement/, https://www.propublica.org/article/filing-taxes-could-be-free-simple-hr-block-intuit-lobbying-against-it
 
-            if (linkElem.getAttribute("href").startsWith("#")) {
+            if (linkElem.getAttribute("href")?.startsWith("#")) {
                 // allow page-internal links, e.g. https://scripter.co/zero-html-validation-errors/#validation-ignores
             } else {
                 continue;

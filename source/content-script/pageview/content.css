@@ -39,7 +39,7 @@ html.pageview.pageview > body {
     transition: all 0.4s cubic-bezier(0.33, 1, 0.68, 1) !important;
 }
 
-.lindy-body-background {
+#lindy-body-background {
     position: absolute !important;
     top: 0 !important;
     left: 0 !important;
