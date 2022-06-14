@@ -62,12 +62,14 @@ async function getRedditTopLinks(subreddit, limit = 30) {
         .slice(0, limit);
 }
 
-async function main() {
-    let urls = await getHnTopLinks(1000);
+async function fetchHN() {
+    const urls = await getHnTopLinks(1000);
     await fs.writeFile("./urls/hn.json", JSON.stringify(urls));
+}
 
-    // repeats after 250 results, so use multiple subreddits
-    urls = [
+async function fetchReddit() {
+    let urls = [
+        // repeats after 250 results, so use multiple subreddits
         ...(await getRedditTopLinks("worldnews", 300)),
         ...(await getRedditTopLinks("news", 300)),
         ...(await getRedditTopLinks("UpliftingNews", 300)),
@@ -75,7 +77,30 @@ async function main() {
         ...(await getRedditTopLinks("space", 300)),
         ...(await getRedditTopLinks("politics", 300)),
     ];
+
     urls = [...new Set(urls)];
     await fs.writeFile("./urls/reddit.json", JSON.stringify(urls));
+}
+
+async function convertCSV(fileBase) {
+    const content = await fs.readFile(`./urls/${fileBase}.csv`, "utf8");
+    const urls = content
+        .split("\n")
+        .slice(1)
+        .map((line) => line.split(",")[0].split('"')[1])
+        .filter((url) => url);
+
+    await fs.writeFile(`./urls/${fileBase}.json`, JSON.stringify(urls));
+}
+
+async function fetchCSV() {
+    await convertCSV("top_hn_annotations");
+    await convertCSV("recent_hn_annotations");
+}
+
+async function main() {
+    await fetchHN();
+    await fetchReddit();
+    await fetchCSV();
 }
 main();

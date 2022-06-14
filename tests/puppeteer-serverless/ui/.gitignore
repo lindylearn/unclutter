@@ -35,5 +35,7 @@ yarn-error.log*
 *.tsbuildinfo
 
 urls/*.json
+urls/*.csv
+
 extension
 extension.zip

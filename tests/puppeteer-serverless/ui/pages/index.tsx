@@ -2,7 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import ClipLoader from "react-spinners/ClipLoader";
 import { triggerScreenshots } from "../common/api";
 import hnLinks from "../urls/hn.json";
+import recentHnLinks from "../urls/recent_hn_annotations.json";
 import redditLinks from "../urls/reddit.json";
+import topHnLinks from "../urls/top_hn_annotations.json";
 
 const gcsToken = "";
 const bucketName = "unclutter-screenshots-serverless";
@@ -65,7 +67,12 @@ function Home() {
             urls = hnLinks;
         } else if (prefixRef.current.value === "reddit") {
             urls = redditLinks;
+        } else if (prefixRef.current.value === "top_hn") {
+            urls = topHnLinks;
+        } else if (prefixRef.current.value === "recent_hn") {
+            urls = recentHnLinks;
         }
+
         await triggerScreenshots(
             urls.slice(0, countRef.current.value),
             prefixRef.current.value,
