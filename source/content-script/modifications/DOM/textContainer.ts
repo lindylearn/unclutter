@@ -48,7 +48,7 @@ export default class TextContainerModifier implements PageModifier {
 
     // Text paragraph samples
     private mainFontSize: number;
-    public mainTextColor: string = "black";
+    public mainTextColor: string;
     private exampleMainFontSizeElement: HTMLElement;
 
     // Iterate DOM to apply text container classes and populate the state above
@@ -508,7 +508,9 @@ export default class TextContainerModifier implements PageModifier {
 
             .${lindyImageContainerClass} {
                 margin: 0 !important;
-                padding: 0; /* careful with cnbc.com image padding */
+                /* y padding often used to make space for images, e.g. on theintercept or variety.com */
+                padding-left: 0 !important;
+                padding-right: 0 !important;
             }
 
             /* block non-container siblings of main containers, but don't apply to first main container to not block images etc */
@@ -548,7 +550,11 @@ export default class TextContainerModifier implements PageModifier {
             .${lindyHeadingContainerClass}.${lindyHeadingContainerClass}.${lindyHeadingContainerClass}.${lindyHeadingContainerClass}, 
             .${lindyHeadingContainerClass} > * {
                 color: var(--lindy-dark-theme-text-color) !important;
-            }`;
+            }
+            .${lindyHeadingContainerClass} a {
+                color: var(--lindy-dark-theme-text-color) !important;
+            }
+            `;
         createStylesheetText(css, "lindy-dark-mode-text");
     }
 

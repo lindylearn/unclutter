@@ -127,12 +127,12 @@ export default class ThemeModifier implements PageModifier {
 
         // test if dark mode enabled
         const backgroundBrightness = getBrightness(this.backgroundColor);
-        const textBrightness = getBrightness(
-            this.textContainerModifier.mainTextColor
-        );
+        const textBrightness = this.textContainerModifier.mainTextColor
+            ? getBrightness(this.textContainerModifier.mainTextColor)
+            : null;
 
         if (backgroundBrightness < 0.6 && !this.darkModeActive) {
-            if (textBrightness > 0.5) {
+            if (!textBrightness || textBrightness > 0.5) {
                 // Site uses dark mode by default
                 this.siteUsesDefaultDarkMode = true;
 
