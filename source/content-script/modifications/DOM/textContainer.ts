@@ -478,14 +478,15 @@ export default class TextContainerModifier implements PageModifier {
     }
 
     private getTextElementChainOverrideStyle() {
-        // Remove margin from matched paragraphs and all their parent DOM nodes
+        // :not(#fakeID#fakeID) used to override stubborn site styles
         return `
             /* clean up all text containers */
-            .${lindyContainerClass}.${lindyContainerClass}, 
-            .${lindyContainerClass} > :is(${
-            this.usedTextElementSelector
-        }, ${globalHeadingSelector}), 
-            .${lindyHeadingContainerClass}.${lindyHeadingContainerClass}.${lindyHeadingContainerClass} {
+            .${lindyContainerClass}:not(#fakeID#fakeID),
+            .${lindyHeadingContainerClass}:not(#fakeID#fakeID),
+            .${lindyContainerClass}:not(#fakeID#fakeID) > :is(
+                ${this.usedTextElementSelector}, 
+                ${globalHeadingSelector}
+            ) {
                 width: 100% !important;
                 min-width: 0 !important;
                 min-height: 0 !important;
@@ -502,7 +503,7 @@ export default class TextContainerModifier implements PageModifier {
                 transition: margin-left 0.4s cubic-bezier(0.33, 1, 0.68, 1);
             }
             /* more strict cleanup for main text containers */
-            .${lindyMainContentContainerClass}.${lindyMainContentContainerClass}:not(body) {
+            .${lindyMainContentContainerClass}:not(#fakeID#fakeID):not(body) {
                 position: relative !important;
                 margin-top: 0 !important;
                 margin-bottom: 0 !important;
@@ -512,8 +513,8 @@ export default class TextContainerModifier implements PageModifier {
             }
 
             /* clean up headings */
-            .${lindyHeadingContainerClass}.${lindyHeadingContainerClass}.${lindyHeadingContainerClass}:not(body), 
-            .${lindyHeadingContainerClass} > * {
+            .${lindyHeadingContainerClass}:not(#fakeID#fakeID):not(body), 
+            .${lindyHeadingContainerClass}:not(#fakeID#fakeID) > * {
                 color: black !important;
                 -webkit-text-fill-color: unset !important;
                 text-shadow: none !important;
@@ -538,13 +539,13 @@ export default class TextContainerModifier implements PageModifier {
                 padding-top: 0 !important;
                 margin-bottom: 0 !important;
             }
-            .${lindyHeadingContainerClass} a {
+            .${lindyHeadingContainerClass}:not(#fakeID#fakeID) a {
                 color: black !important;
                 background: none !important;
             }
 
             /* image container cleanup */
-            .${lindyImageContainerClass} {
+            .${lindyImageContainerClass}:not(#fakeID#fakeID) {
                 margin-left: auto !important;
                 margin-right: auto !important;
                 /* y padding often used to make space for images, e.g. on theintercept or variety.com */
