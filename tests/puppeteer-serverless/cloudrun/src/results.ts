@@ -69,6 +69,8 @@ export async function uploadResults(prefix: string) {
 }
 
 export async function downloadExtensionCode() {
+    execSync("rm extension.zip");
+
     await storage
         .bucket(bucketName)
         .file(`extension.zip`)

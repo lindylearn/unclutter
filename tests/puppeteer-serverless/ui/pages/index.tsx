@@ -130,7 +130,7 @@ function Home() {
                     </div>
                     <div className="flex flex-wrap gap-5">
                         {changedScreenshots.map((file) => (
-                            <Screenshot key={file.md5Hash} {...file} />
+                            <Screenshot key={file.id} {...file} />
                         ))}
                     </div>
                 </div>
@@ -141,7 +141,7 @@ function Home() {
                     </div>
                     <div className="flex flex-wrap gap-5">
                         {currentScreenshots.map((file) => (
-                            <Screenshot key={file.md5Hash} {...file} />
+                            <Screenshot key={file.id} {...file} />
                         ))}
                     </div>
                 </div>
