@@ -116,10 +116,19 @@ export default class BodyStyleModifier implements PageModifier {
             "var(--lindy-pagewidth)",
             "important"
         );
-
         document.body.style.setProperty("display", "block", "important");
-
         document.body.style.setProperty("height", "auto", "important");
+        document.body.style.setProperty("overflow", "hidden", "important");
+        document.body.style.setProperty(
+            "box-shadow",
+            "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
+            "important"
+        );
+        document.body.style.setProperty(
+            "transition",
+            "all 0.4s cubic-bezier(0.33, 1, 0.68, 1)",
+            "important"
+        );
     }
 
     private applyResponsiveStyle(isMobile: boolean) {

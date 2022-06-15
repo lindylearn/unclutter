@@ -501,6 +501,7 @@ export default class TextContainerModifier implements PageModifier {
                 background: none !important;
                 box-shadow: none !important;
                 z-index: 1 !important;
+                overflow-y: visible !important;
                 transition: margin-left 0.4s cubic-bezier(0.33, 1, 0.68, 1);
             }
             /* more strict cleanup for main text containers */
