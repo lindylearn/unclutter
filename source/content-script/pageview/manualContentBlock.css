@@ -403,10 +403,6 @@ html.flexbox.flexboxlegacy > body {
 .zn-body-text ~ * {
     display: none !important;
 }
-/* https://edition.cnn.com/2022/05/24/tech/cher-scarlett-facial-recognition-trauma/index.html */
-.owl-carousel {
-    display: none !important;
-}
 
 /* https://www.independent.co.uk/news/world/europe/mcdonalds-russia-fast-food-trademark-b2037987.html */
 .sc-jcZdLI {

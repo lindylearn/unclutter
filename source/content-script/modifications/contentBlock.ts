@@ -5,7 +5,6 @@ import {
 } from "../../common/stylesheets";
 import TextContainerModifier, {
     lindyContainerClass,
-    lindyHeadingContainerClass,
     lindyImageContainerClass,
     lindyMainContentContainerClass,
     lindyMainHeaderContainerClass,
@@ -39,7 +38,7 @@ export default class ContentBlockModifier implements PageModifier {
         if (this.textContainerModifier.foundMainHeadingElement) {
             excludedSelectors.push(`.${lindyMainHeaderContainerClass}`);
         } else {
-            excludedSelectors.push(`.${lindyHeadingContainerClass}`);
+            // excludedSelectors.push(`.${lindyHeadingContainerClass}`);
         }
 
         const wordSelectors = blockedWords

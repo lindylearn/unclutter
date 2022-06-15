@@ -123,6 +123,7 @@ export default class TextContainerModifier implements PageModifier {
         this.batchedNodeClassAdditions.map(([node, className]) => {
             node.classList.add(className);
         });
+        this.watchElementClassnames();
     }
 
     // Process text or heading elements and iterate upwards
@@ -197,7 +198,7 @@ export default class TextContainerModifier implements PageModifier {
     private batchedNodeClassAdditions: [HTMLElement, string][] = [];
     private headingParagraphNodes: HTMLElement[] = [];
     private cleanPageTitle = cleanTitle(document.title)
-        .slice(0, 30)
+        .slice(0, 15) // match only beginning
         .toLowerCase();
 
     // map paragraphs nodes and iterate their parent nodes
@@ -289,10 +290,11 @@ export default class TextContainerModifier implements PageModifier {
                     isOnFirstPage &&
                     (linkElem?.tagName !== "A" ||
                         linkElem.href === window.location.href) &&
-                    ((elem.tagName === "H1" && elem.innerText.length >= 20) ||
+                    ((elem.tagName === "H1" && elem.innerText.length >= 15) ||
                         elem.innerText
                             .toLowerCase()
                             .includes(this.cleanPageTitle));
+
                 if (isMainStack) {
                     this.foundMainHeadingElement = true;
                     this.batchedNodeClassAdditions.push([
@@ -478,7 +480,7 @@ export default class TextContainerModifier implements PageModifier {
     private getTextElementChainOverrideStyle() {
         // Remove margin from matched paragraphs and all their parent DOM nodes
         return `
-            /* clean up all page text containers */
+            /* clean up all text containers */
             .${lindyContainerClass}.${lindyContainerClass}, 
             .${lindyContainerClass} > :is(${
             this.usedTextElementSelector
@@ -499,6 +501,16 @@ export default class TextContainerModifier implements PageModifier {
                 z-index: 1 !important;
                 transition: margin-left 0.4s cubic-bezier(0.33, 1, 0.68, 1);
             }
+            /* more strict cleanup for main text containers */
+            .${lindyMainContentContainerClass}.${lindyMainContentContainerClass}:not(body) {
+                position: relative !important;
+                margin-top: 0 !important;
+                margin-bottom: 0 !important;
+                padding-top: 0 !important;
+                padding-bottom: 0 !important;
+                top: 0 !important;
+            }
+
             /* clean up headings */
             .${lindyHeadingContainerClass}.${lindyHeadingContainerClass}.${lindyHeadingContainerClass}:not(body), 
             .${lindyHeadingContainerClass} > * {
@@ -516,6 +528,7 @@ export default class TextContainerModifier implements PageModifier {
                 transform: none !important;
                 float: none !important;
             }
+            /* heading style tweaks */
             .${lindyHeadingContainerClass}:before, 
             .${lindyHeadingContainerClass}:after {
                 display: none !important;
@@ -531,6 +544,7 @@ export default class TextContainerModifier implements PageModifier {
                 background: none !important;
             }
 
+            /* image container cleanup */
             .${lindyImageContainerClass} {
                 margin-left: 0 !important;
                 margin-right: 0 !important;
@@ -543,8 +557,8 @@ export default class TextContainerModifier implements PageModifier {
                 left: 0 !important;
             }
 
-            /* block non-container siblings of main containers, but don't apply to first main container to not block images etc */
-            .${lindyMainContentContainerClass}:not(.${lindyFirstMainContainerClass}) > :not(.${lindyMainContentContainerClass}, 
+            /* block non-container siblings of main text containers */
+            :is(.${lindyMainContentContainerClass}, .${lindyMainHeaderContainerClass}):not(.${lindyFirstMainContainerClass}) > :not(.${lindyMainContentContainerClass}, 
             .${lindyImageContainerClass}, 
             .${
                 this.foundMainHeadingElement
@@ -552,15 +566,6 @@ export default class TextContainerModifier implements PageModifier {
                     : lindyHeadingContainerClass
             }) {
                 display: none !important;
-            }
-            /* more strict cleanup for contains of the main page text */
-            .${lindyMainContentContainerClass}.${lindyMainContentContainerClass}:not(body) {
-                position: relative !important;
-                margin-top: 0 !important;
-                margin-bottom: 0 !important;
-                padding-top: 0 !important;
-                padding-bottom: 0 !important;
-                top: 0 !important;
             }
         `;
     }
@@ -772,4 +777,6 @@ export default class TextContainerModifier implements PageModifier {
 
         return false;
     }
+
+    private watchElementClassnames() {}
 }
