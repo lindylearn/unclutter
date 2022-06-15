@@ -123,6 +123,17 @@ export default class TextContainerModifier implements PageModifier {
         this.batchedNodeClassAdditions.map(([node, className]) => {
             node.classList.add(className);
         });
+
+        // apply first-main class to all candidates, as often detects multiple
+        this.firstMainTextContainerCandidates.map((elem) => {
+            elem.classList.add(lindyFirstMainContainerClass);
+        });
+        this.firstMainHeaderCandidates.map((elem) => {
+            elem.classList.add(lindyFirstMainContainerClass);
+            // use parent elem as first header element to not block siblings
+            elem.parentElement.classList.add(lindyFirstMainContainerClass);
+        });
+
         this.watchElementClassnames();
     }
 
@@ -196,6 +207,8 @@ export default class TextContainerModifier implements PageModifier {
     private mainStackElements: Set<HTMLElement> = new Set(); // nodes that have the main text or header container class applied
     // add all classes at once to prevent multiple reflows
     private batchedNodeClassAdditions: [HTMLElement, string][] = [];
+    private firstMainTextContainerCandidates: HTMLElement[] = [];
+    private firstMainHeaderCandidates: HTMLElement[] = [];
     private headingParagraphNodes: HTMLElement[] = [];
     private cleanPageTitle = cleanTitle(document.title)
         .slice(0, 15) // match only beginning
@@ -203,13 +216,13 @@ export default class TextContainerModifier implements PageModifier {
 
     // map paragraphs nodes and iterate their parent nodes
     private prepareIterateParents(
-        elem: HTMLElement,
+        startElem: HTMLElement,
         stackType: "text" | "header" | "image"
     ): boolean {
         // calls for headings happen after text elements -> mark entire stack as heading later
 
         // Iterate upwards in DOM tree from paragraph node
-        let currentElem = elem;
+        let currentElem = startElem;
         let currentStack: HTMLElement[] = [];
         while (currentElem !== document.documentElement) {
             if (
@@ -248,11 +261,11 @@ export default class TextContainerModifier implements PageModifier {
                     // double check to exclude matches on main text containers
                     // e.g. on https://pharmaphorum.com/views-and-analysis/how-celebrity-investor-mark-cuban-is-tackling-out-of-control-drug-prices/
                     const pageContentFraction =
-                        elem.innerText.length / this.bodyContentLength;
+                        currentElem.innerText.length / this.bodyContentLength;
 
                     if (!(pageContentFraction > mainContentFractionThreshold)) {
                         // handle heading nodes later, after all text containers are assigned
-                        this.headingParagraphNodes.push(elem);
+                        this.headingParagraphNodes.push(startElem);
                         return false;
                     }
                 }
@@ -272,7 +285,7 @@ export default class TextContainerModifier implements PageModifier {
         ) {
             // for headings check tagName, content & if on first page
             // this should exclude heading elements that are part of "related articles" sections
-            const pos = elem.getBoundingClientRect(); // TODO measure performance
+            const pos = startElem.getBoundingClientRect(); // TODO measure performance
             const top = pos.top + window.scrollY;
 
             const isOnFirstPage = top < window.innerHeight * 2 && top >= 0;
@@ -281,30 +294,24 @@ export default class TextContainerModifier implements PageModifier {
 
             if (stackType === "header") {
                 const linkElem =
-                    elem.parentElement.tagName === "A"
-                        ? elem.parentElement
-                        : elem.firstElementChild;
+                    startElem.parentElement.tagName === "A"
+                        ? startElem.parentElement
+                        : startElem.firstElementChild;
 
                 // main stack state determined by leaf element
                 isMainStack =
                     isOnFirstPage &&
                     (linkElem?.tagName !== "A" ||
                         linkElem.href === window.location.href) &&
-                    ((elem.tagName === "H1" && elem.innerText.length >= 15) ||
-                        elem.innerText
+                    ((startElem.tagName === "H1" &&
+                        startElem.innerText.length >= 15) ||
+                        startElem.innerText
                             .toLowerCase()
                             .includes(this.cleanPageTitle));
 
                 if (isMainStack) {
                     this.foundMainHeadingElement = true;
-                    this.batchedNodeClassAdditions.push([
-                        elem, // add first-main-container class to parent in order to not block siblings
-                        lindyFirstMainContainerClass,
-                    ]);
-                    this.batchedNodeClassAdditions.push([
-                        elem.parentElement, // add first-main-container class also to parent in order to not block siblings
-                        lindyFirstMainContainerClass,
-                    ]);
+                    this.firstMainHeaderCandidates.push(startElem);
                 }
             } else if (stackType === "image") {
                 if (!isOnFirstPage || pos.height < 300) {
@@ -314,8 +321,8 @@ export default class TextContainerModifier implements PageModifier {
         }
 
         // perform modifications on valid text element stack
-        for (const elem of currentStack) {
-            const activeStyle = window.getComputedStyle(elem);
+        for (const currentElem of currentStack) {
+            const activeStyle = window.getComputedStyle(currentElem);
 
             // abort based on activeStyle (leaves children behind, but better than nothing)
             if (
@@ -329,22 +336,17 @@ export default class TextContainerModifier implements PageModifier {
             if (
                 stackType === "text" &&
                 !isMainStack &&
-                elem !== document.body
+                currentElem !== document.body
             ) {
                 // for text containers, consider the fraction of the page text
                 const pageContentFraction =
-                    elem.innerText.length / this.bodyContentLength;
+                    currentElem.innerText.length / this.bodyContentLength;
 
                 isMainStack =
                     pageContentFraction > mainContentFractionThreshold;
-
                 if (isMainStack) {
-                    this.batchedNodeClassAdditions.push([
-                        elem,
-                        lindyFirstMainContainerClass,
-                    ]);
-
                     this.foundMainContentElement = true;
+                    this.firstMainTextContainerCandidates.push(currentElem);
                 }
             }
 
@@ -367,48 +369,48 @@ export default class TextContainerModifier implements PageModifier {
             // save classes to add
             if (stackType === "header") {
                 this.batchedNodeClassAdditions.push([
-                    elem,
+                    currentElem,
                     lindyHeadingContainerClass,
                 ]);
-                if (isMainStack && elem !== document.body) {
+                if (isMainStack && currentElem !== document.body) {
                     this.batchedNodeClassAdditions.push([
-                        elem,
+                        currentElem,
                         lindyMainHeaderContainerClass,
                     ]);
                 }
             } else if (stackType === "text") {
                 this.batchedNodeClassAdditions.push([
-                    elem,
+                    currentElem,
                     lindyContainerClass,
                 ]);
                 if (isMainStack) {
                     this.batchedNodeClassAdditions.push([
-                        elem,
+                        currentElem,
                         lindyMainContentContainerClass,
                     ]);
                 }
             } else if (stackType === "image") {
                 this.batchedNodeClassAdditions.push([
-                    elem,
+                    currentElem,
                     lindyImageContainerClass,
                 ]);
             }
 
             // apply override classes (but not text container) e.g. for text elements on theatlantic.com
             this._getNodeOverrideClasses(
-                elem,
+                currentElem,
                 activeStyle,
                 stackType,
                 isMainStack
             ).map((className) =>
-                this.batchedNodeClassAdditions.push([elem, className])
+                this.batchedNodeClassAdditions.push([currentElem, className])
             );
-            this._prepareBeforeAnimationPatches(elem, activeStyle);
+            this._prepareBeforeAnimationPatches(currentElem, activeStyle);
 
             this.validatedNodes.add(currentElem); // add during second iteration to ignore aborted stacks
             if (isMainStack) {
                 // skip processing in next iteration phase (respect main text elems when checking headers)
-                this.mainStackElements.add(elem);
+                this.mainStackElements.add(currentElem);
             }
         }
 
@@ -536,8 +538,7 @@ export default class TextContainerModifier implements PageModifier {
             .${lindyHeadingContainerClass}:first-child, .${lindyMainHeaderContainerClass} {
                 margin-top: 0 !important;
                 padding-top: 0 !important;
-                margin-bottom: 10px !important;
-                padding-bottom: 10px !important;
+                margin-bottom: 0 !important;
             }
             .${lindyHeadingContainerClass} a {
                 color: black !important;
@@ -679,7 +680,7 @@ export default class TextContainerModifier implements PageModifier {
             column-gap: 0 !important;
         }`,
         `.lindy-header-font-size-max {
-            font-size: 40px !important;
+            font-size: 60px !important;
         }`,
         // TODO add classes to siblings to improve selector performance
         // `.lindy-text-remove-grid > *:not(.${lindyContainerClass}) {
@@ -705,7 +706,7 @@ export default class TextContainerModifier implements PageModifier {
             classes.push("lindy-text-remove-horizontal-flex");
         }
 
-        if (stackType === "header" && activeStyle.fontSize > "40px") {
+        if (stackType === "header" && activeStyle.fontSize > "60px") {
             // put maximum on header font size
             // e.g. WP template uses 6em on https://blog.relyabilit.ie/the-curse-of-systems-thinkers/
             classes.push("lindy-header-font-size-max");
