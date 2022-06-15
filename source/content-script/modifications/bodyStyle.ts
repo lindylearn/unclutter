@@ -36,7 +36,6 @@ export default class BodyStyleModifier implements PageModifier {
             this.modifyHtmlStyle();
         });
         this.styleObserver.observe(document.documentElement, {
-            attributes: true,
             attributeFilter: ["style"],
         });
 

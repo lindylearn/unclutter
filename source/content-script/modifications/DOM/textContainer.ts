@@ -318,7 +318,7 @@ export default class TextContainerModifier implements PageModifier {
                     this.firstMainHeaderCandidates.push(startElem);
                 }
             } else if (stackType === "image") {
-                if (!isOnFirstPage || pos.height < 300) {
+                if (!isOnFirstPage || pos.height < 250) {
                     return false;
                 }
             }
@@ -439,6 +439,8 @@ export default class TextContainerModifier implements PageModifier {
     }
 
     transitionOut() {
+        this.classNamesObserver.disconnect();
+
         document
             .querySelectorAll(".lindy-text-chain-override")
             .forEach((e) => e.remove());
@@ -785,5 +787,29 @@ export default class TextContainerModifier implements PageModifier {
         return false;
     }
 
-    private watchElementClassnames() {}
+    // Make sure the classes we added do not get removed by the site JS (e.g. on techcrunch.com)
+    private classNamesObserver: MutationObserver;
+    private watchElementClassnames() {
+        this.classNamesObserver = new MutationObserver((mutations) =>
+            mutations.forEach((mutation) => {
+                const target = mutation.target as HTMLElement;
+
+                if (this.nodeClasses.has(target)) {
+                    const removedClasses = this.nodeClasses
+                        .get(target)
+                        .filter(
+                            (className) => !target.classList.contains(className)
+                        );
+
+                    if (removedClasses.length > 0) {
+                        target.classList.add(...removedClasses);
+                    }
+                }
+            })
+        );
+        this.classNamesObserver.observe(document.body, {
+            subtree: true,
+            attributeFilter: ["class"],
+        });
+    }
 }
