@@ -269,6 +269,8 @@ export const blockedSpecificSelectors = [
     ".blog-header", // https://dx.tips/the-end-of-localhost
     "#headerArea", // https://blogs.microsoft.com/on-the-issues/2022/06/08/microsoft-announces-four-new-employee-workforce-initiatives/
     ".page-header", // https://www.dailymail.co.uk/tvshowbiz/article-10913383/Hugh-Jackman-tests-positive-COVID-19-just-one-day-Tony-Awards.html
+    ".post-info", // https://theantistartup.com/i-stopped-advertising-everywhere-and-nothing-happened/
+    "#topMetaLang", // https://www.dw.com/en/germany-takes-first-step-towards-relaxing-cannabis-law/a-62120448
 
     ".Post-header-grid", // https://theintercept.com/2022/06/13/progressive-organizing-infighting-callout-culture/
 

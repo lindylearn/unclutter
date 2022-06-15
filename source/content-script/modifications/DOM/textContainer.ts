@@ -35,6 +35,10 @@ This is done so that we can:
 */
 @trackModifierExecution
 export default class TextContainerModifier implements PageModifier {
+    private cleanPageTitle = cleanTitle(document.title)
+        .slice(0, 15) // match only beginning
+        .toLowerCase();
+
     private usedTextElementSelector: string = globalTextElementSelector; // may get updated if page uses different html elements
 
     // style tweaks to apply just before the pageview animation (populated via _prepareBeforeAnimationPatches())
@@ -203,16 +207,16 @@ export default class TextContainerModifier implements PageModifier {
         return hasValidTextChain;
     }
 
+    // iteration state
     private validatedNodes: Set<HTMLElement> = new Set(); // nodes processed in the current phase of prepareIterateParents()
     private mainStackElements: Set<HTMLElement> = new Set(); // nodes that have the main text or header container class applied
-    // add all classes at once to prevent multiple reflows
+    private headingParagraphNodes: HTMLElement[] = [];
+
+    // DOM changes to perform (batched to avoid multiple reflows)
+    private nodeClasses: Map<HTMLElement, string[]> = new Map();
     private batchedNodeClassAdditions: [HTMLElement, string][] = [];
     private firstMainTextContainerCandidates: HTMLElement[] = [];
     private firstMainHeaderCandidates: HTMLElement[] = [];
-    private headingParagraphNodes: HTMLElement[] = [];
-    private cleanPageTitle = cleanTitle(document.title)
-        .slice(0, 15) // match only beginning
-        .toLowerCase();
 
     // map paragraphs nodes and iterate their parent nodes
     private prepareIterateParents(
@@ -306,6 +310,7 @@ export default class TextContainerModifier implements PageModifier {
                     ((startElem.tagName === "H1" &&
                         startElem.innerText.length >= 15) ||
                         startElem.innerText
+                            .slice(0, 30)
                             .toLowerCase()
                             .includes(this.cleanPageTitle));
 
@@ -526,7 +531,7 @@ export default class TextContainerModifier implements PageModifier {
                 margin-right: 0 !important;
                 padding-left: 0 !important;
                 padding-right: 0 !important;
-                height: auto !important;
+                /* height: auto issue on https://www.theguardian.com/technology/2022/may/12/ebay-executive-guilty-boston-couple-harassment */
                 transform: none !important;
                 float: none !important;
             }
@@ -547,8 +552,8 @@ export default class TextContainerModifier implements PageModifier {
 
             /* image container cleanup */
             .${lindyImageContainerClass} {
-                margin-left: 0 !important;
-                margin-right: 0 !important;
+                margin-left: auto !important;
+                margin-right: auto !important;
                 /* y padding often used to make space for images, e.g. on theintercept or variety.com */
                 padding-left: 0 !important;
                 padding-right: 0 !important;
@@ -558,17 +563,27 @@ export default class TextContainerModifier implements PageModifier {
                 left: 0 !important;
             }
 
-            /* block non-container siblings of main text containers */
-            :is(.${lindyMainContentContainerClass}, .${lindyMainHeaderContainerClass}):not(.${lindyFirstMainContainerClass}) > :not(.${lindyMainContentContainerClass}, 
-            .${lindyImageContainerClass}, 
-            .${
-                this.foundMainHeadingElement
-                    ? lindyMainHeaderContainerClass
-                    : lindyHeadingContainerClass
-            }) {
+            /* block siblings of main text containers */
+            .${lindyMainContentContainerClass}:not(.${lindyFirstMainContainerClass}) > :not(
+                .${lindyMainContentContainerClass}, 
+                .${lindyImageContainerClass}, 
+                .${
+                    this.foundMainHeadingElement
+                        ? lindyMainHeaderContainerClass
+                        : lindyHeadingContainerClass
+                }
+            ) {
                 display: none !important;
             }
         `;
+        // /* block siblings of main header containers */
+        // .${lindyMainHeaderContainerClass}:not(.${lindyFirstMainContainerClass}) > :not(
+        //     .${lindyHeadingContainerClass},
+        //     .${lindyImageContainerClass},
+        //     .${lindyContainerClass}
+        // ) {
+        //     display: none !important;
+        // }
     }
 
     // set text color variable only when dark mode enabled, otherwise overwrites color (even if css var not set)
@@ -680,7 +695,7 @@ export default class TextContainerModifier implements PageModifier {
             column-gap: 0 !important;
         }`,
         `.lindy-header-font-size-max {
-            font-size: 60px !important;
+            font-size: 50px !important;
         }`,
         // TODO add classes to siblings to improve selector performance
         // `.lindy-text-remove-grid > *:not(.${lindyContainerClass}) {
@@ -706,7 +721,7 @@ export default class TextContainerModifier implements PageModifier {
             classes.push("lindy-text-remove-horizontal-flex");
         }
 
-        if (stackType === "header" && activeStyle.fontSize > "60px") {
+        if (stackType === "header" && activeStyle.fontSize > "50px") {
             // put maximum on header font size
             // e.g. WP template uses 6em on https://blog.relyabilit.ie/the-curse-of-systems-thinkers/
             classes.push("lindy-header-font-size-max");
