@@ -274,15 +274,21 @@ export default class TextContainerModifier implements PageModifier {
             const pos = elem.getBoundingClientRect(); // TODO measure performance
             const top = pos.top + window.scrollY;
 
-            if (stackType === "header") {
-                const isOnFirstPage = top < window.innerHeight && top >= 0;
-                // hidden above page e.g. for https://www.city-journal.org/san-francisco-recalls-da-chesa-boudin
+            const isOnFirstPage = top < window.innerHeight * 2 && top >= 0;
+            // hidden above page e.g. for https://www.city-journal.org/san-francisco-recalls-da-chesa-boudin
+            // e.g. just below fold on https://spectrum.ieee.org/commodore-64
 
-                // base main stack state on leaf element
+            if (stackType === "header") {
+                const linkElem =
+                    elem.parentElement.tagName === "A"
+                        ? elem.parentElement
+                        : elem.firstElementChild;
+
+                // main stack state determined by leaf element
                 isMainStack =
                     isOnFirstPage &&
-                    (elem.firstElementChild?.tagName !== "A" ||
-                        elem.firstElementChild.href === window.location.href) &&
+                    (linkElem?.tagName !== "A" ||
+                        linkElem.href === window.location.href) &&
                     ((elem.tagName === "H1" && elem.innerText.length >= 20) ||
                         elem.innerText
                             .toLowerCase()
@@ -290,14 +296,15 @@ export default class TextContainerModifier implements PageModifier {
                 if (isMainStack) {
                     this.foundMainHeadingElement = true;
                     this.batchedNodeClassAdditions.push([
-                        elem,
+                        elem, // add first-main-container class to parent in order to not block siblings
+                        lindyFirstMainContainerClass,
+                    ]);
+                    this.batchedNodeClassAdditions.push([
+                        elem.parentElement, // add first-main-container class also to parent in order to not block siblings
                         lindyFirstMainContainerClass,
                     ]);
                 }
             } else if (stackType === "image") {
-                // protect large images at start of article
-                // e.g. just below fold on https://spectrum.ieee.org/commodore-64
-                const isOnFirstPage = top < window.innerHeight * 2;
                 if (!isOnFirstPage || pos.height < 300) {
                     return false;
                 }

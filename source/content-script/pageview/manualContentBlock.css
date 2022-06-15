@@ -842,3 +842,8 @@ pre {
 .img-share.img-share.img-share.img-share.img-share {
     display: block !important;
 }
+
+/* https://theintercept.com/2022/06/14/amazon-ring-camera-police-privacy-ed-markey/ */
+.Post-image-block {
+    padding-bottom: 10px;
+}
