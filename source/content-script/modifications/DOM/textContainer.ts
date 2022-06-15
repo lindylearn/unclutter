@@ -124,8 +124,8 @@ export default class TextContainerModifier implements PageModifier {
         }
 
         // batch className changes to only do one reflow
-        this.batchedNodeClassAdditions.map(([node, className]) => {
-            node.classList.add(className);
+        this.nodeClasses.forEach((classes, node) => {
+            node.classList.add(...classes);
         });
 
         // apply first-main class to all candidates, as often detects multiple
@@ -214,7 +214,6 @@ export default class TextContainerModifier implements PageModifier {
 
     // DOM changes to perform (batched to avoid multiple reflows)
     private nodeClasses: Map<HTMLElement, string[]> = new Map();
-    private batchedNodeClassAdditions: [HTMLElement, string][] = [];
     private firstMainTextContainerCandidates: HTMLElement[] = [];
     private firstMainHeaderCandidates: HTMLElement[] = [];
 
@@ -372,44 +371,36 @@ export default class TextContainerModifier implements PageModifier {
             }
 
             // save classes to add
+            const currentNodeClasses: string[] = [];
             if (stackType === "header") {
-                this.batchedNodeClassAdditions.push([
-                    currentElem,
-                    lindyHeadingContainerClass,
-                ]);
+                currentNodeClasses.push(lindyHeadingContainerClass);
                 if (isMainStack && currentElem !== document.body) {
-                    this.batchedNodeClassAdditions.push([
-                        currentElem,
-                        lindyMainHeaderContainerClass,
-                    ]);
+                    currentNodeClasses.push(lindyMainHeaderContainerClass);
                 }
             } else if (stackType === "text") {
-                this.batchedNodeClassAdditions.push([
-                    currentElem,
-                    lindyContainerClass,
-                ]);
+                currentNodeClasses.push(lindyContainerClass);
                 if (isMainStack) {
-                    this.batchedNodeClassAdditions.push([
-                        currentElem,
-                        lindyMainContentContainerClass,
-                    ]);
+                    currentNodeClasses.push(lindyMainContentContainerClass);
                 }
             } else if (stackType === "image") {
-                this.batchedNodeClassAdditions.push([
-                    currentElem,
-                    lindyImageContainerClass,
-                ]);
+                currentNodeClasses.push(lindyImageContainerClass);
             }
 
             // apply override classes (but not text container) e.g. for text elements on theatlantic.com
-            this._getNodeOverrideClasses(
+            const overrideClasses = this._getNodeOverrideClasses(
                 currentElem,
                 activeStyle,
                 stackType,
                 isMainStack
-            ).map((className) =>
-                this.batchedNodeClassAdditions.push([currentElem, className])
             );
+            currentNodeClasses.push(...overrideClasses);
+
+            this.nodeClasses.set(currentElem, [
+                ...(this.nodeClasses.get(currentElem) || []),
+                ...currentNodeClasses,
+            ]);
+
+            // save style properties for animation
             this._prepareBeforeAnimationPatches(currentElem, activeStyle);
 
             this.validatedNodes.add(currentElem); // add during second iteration to ignore aborted stacks
