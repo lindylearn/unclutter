@@ -816,6 +816,9 @@ body > div:first-child:not(.lindy-text-container) {
 .dcr-3jlghf, .dcr-chmysj {
     font-size: calc(var(--lindy-active-font-size) * 0.94) !important;
 }
+.dcr-92oqeo {
+    display: none !important;
+}
 
 /* https://xkcd.com/ */
 #middleContainer {

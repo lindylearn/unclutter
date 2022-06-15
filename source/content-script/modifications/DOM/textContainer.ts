@@ -12,7 +12,8 @@ export const lindyMainHeaderContainerClass = "lindy-main-header-container";
 export const lindyFirstMainContainerClass = "lindy-first-main-container";
 
 const globalTextElementSelector = "p, font, pre";
-const globalHeadingSelector = "h1, h2, h3, h4, header";
+const globalHeadingSelector =
+    "h1, h2, h3, h4, header, [class*='head' i], [class*='title' i]";
 const headingClassWordlist = ["header", "heading", "title", "article-details"]; // be careful here
 const globalImageSelector = "img, picture, figure";
 
@@ -307,9 +308,9 @@ export default class TextContainerModifier implements PageModifier {
                     (linkElem?.tagName !== "A" ||
                         linkElem.href === window.location.href) &&
                     ((startElem.tagName === "H1" &&
-                        startElem.innerText.length >= 15) ||
+                        startElem.innerText?.length >= 15) ||
                         startElem.innerText
-                            .slice(0, 30)
+                            ?.slice(0, 30)
                             .toLowerCase()
                             .includes(this.cleanPageTitle));
 
@@ -525,7 +526,7 @@ export default class TextContainerModifier implements PageModifier {
                 margin-right: 0 !important;
                 padding-left: 0 !important;
                 padding-right: 0 !important;
-                /* height: auto issue on https://www.theguardian.com/technology/2022/may/12/ebay-executive-guilty-boston-couple-harassment */
+                height: auto !important;
                 transform: none !important;
                 float: none !important;
             }
@@ -791,6 +792,13 @@ export default class TextContainerModifier implements PageModifier {
     // Make sure the classes we added do not get removed by the site JS (e.g. on techcrunch.com)
     private classNamesObserver: MutationObserver;
     private watchElementClassnames() {
+        if (document.body.classList.contains("notion-body")) {
+            // notion undos all className changes, see e.g. https://abhinavsharma.com/blog/google-alternatives
+            this.foundMainContentElement = false;
+            this.foundMainHeadingElement = false;
+            return;
+        }
+
         this.classNamesObserver = new MutationObserver((mutations) =>
             mutations.forEach((mutation) => {
                 const target = mutation.target as HTMLElement;
