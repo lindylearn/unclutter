@@ -25,12 +25,21 @@ export default class ContentBlockModifier implements PageModifier {
     }
 
     prepare() {
-        // 'shareable' class on <p> on https://www.undrr.org/publication/global-assessment-report-disaster-risk-reduction-2022
-        // <svg> e.g. on https://garymarcus.substack.com/p/what-does-it-mean-when-an-ai-fails?s=r
-        let excludeValidElements = `:not(.${lindyMainContentContainerClass}, .${lindyMainHeaderContainerClass}, .${lindyImageContainerClass}, svg)`;
-        if (!this.textContainerModifier.foundMainContentElement) {
-            // be less strict if no main text found with reasonable certainty
-            excludeValidElements = `:not(.${lindyContainerClass}, .${lindyHeadingContainerClass}, .${lindyImageContainerClass}, svg)`;
+        const excludedSelectors = [
+            `.${lindyImageContainerClass}`,
+            `svg`, // <svg> e.g. on https://garymarcus.substack.com/p/what-does-it-mean-when-an-ai-fails?s=r
+        ];
+
+        // be less strict if no main text or header found respectively
+        if (this.textContainerModifier.foundMainContentElement) {
+            excludedSelectors.push(`.${lindyMainContentContainerClass}`);
+        } else {
+            excludedSelectors.push(`.${lindyContainerClass}`);
+        }
+        if (this.textContainerModifier.foundMainHeadingElement) {
+            excludedSelectors.push(`.${lindyMainHeaderContainerClass}`);
+        } else {
+            excludedSelectors.push(`.${lindyHeadingContainerClass}`);
         }
 
         const wordSelectors = blockedWords
@@ -44,7 +53,9 @@ export default class ContentBlockModifier implements PageModifier {
                 `[style*='sticky']`,
             ])
             .concat(blockedSpecificSelectors)
-            .map((selector) => `${selector}${excludeValidElements}`);
+            .map(
+                (selector) => `${selector}:not(${excludedSelectors.join(", ")})`
+            );
 
         this.selectors = blockedTags.concat(wordSelectors);
     }
@@ -201,6 +212,7 @@ export const blockedWords = [
     "disqus", // also may include ads, e.g. https://david-codes.hatanian.com/2019/06/09/aws-costs-every-programmer-should-now.html
     "video",
     // "share", // blocks images e.g. on https://spectrum.ieee.org/commodore-64
+    "-share-", // https://www.bbc.com/worklife/article/20220525-how-self-deception-allows-people-to-lie
     "share-section", // https://brighterworld.mcmaster.ca/articles/going-all-the-way-scientists-prove-inhaled-vaccines-offer-better-protection-than-nasal-sprays/
     "sharing", // https://theaviationgeekclub.com/sr-71-pilot-explains-how-he-survived-to-his-blackbird-disintegration-at-a-speed-of-mach-3-2/
     "composer",
@@ -285,6 +297,7 @@ export const blockedSpecificSelectors = [
     ".sdc-article-author", // https://news.sky.com/story/russia-made-79-4bn-in-first-100-days-of-ukraine-war-by-selling-oil-and-gas-to-the-world-12632810
     "#news_ticker", // https://www.sentinelassam.com/international/serbia-germany-disagree-over-imposing-sanctions-on-russia-596536
     ".social", // https://thehill.com/news/administration/3522080-trump-releases-12-page-response-to-jan-6-hearing/
+    ".PostSocial", // https://theintercept.com/2022/06/14/amazon-ring-camera-police-privacy-ed-markey/
 
     // term of contents (Unclutter shows its own outline)
     ".toc",
