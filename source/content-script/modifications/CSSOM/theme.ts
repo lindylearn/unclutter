@@ -20,7 +20,6 @@ import {
     parse,
     rgbToHSL,
 } from "../../../common/util/color";
-import { highlightActiveColorThemeButton } from "../../../overlay/insert";
 import { getOutlineIframe } from "../../../overlay/outline/common";
 import AnnotationsModifier from "../annotations/annotationsModifier";
 import BodyStyleModifier from "../bodyStyle";
@@ -37,8 +36,10 @@ export default class ThemeModifier implements PageModifier {
     private bodyStyleModifier: BodyStyleModifier;
 
     private theme: UserTheme;
-    private activeColorTheme: themeName;
     private darkModeActive = false; // seperate from theme -- auto theme enables and disable dark mode
+
+    public activeColorTheme: themeName;
+    public activeColorThemeListeners: ((newTheme: themeName) => void)[] = [];
 
     constructor(
         cssomProvider: CSSOMProvider,
@@ -185,7 +186,9 @@ export default class ThemeModifier implements PageModifier {
     private applyActiveColorTheme() {
         // State for UI switch
         setCssThemeVariable(activeColorThemeVariable, this.activeColorTheme);
-        highlightActiveColorThemeButton(this.activeColorTheme);
+        this.activeColorThemeListeners.map((listener) =>
+            listener(this.activeColorTheme)
+        );
 
         // Determine if should use dark mode
         const prevDarkModeState = this.darkModeActive;

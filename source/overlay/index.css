@@ -399,8 +399,6 @@ svg.lindy-ui-icon#lindy-theme-icon > path {
     font-family: Poppins, sans-serif;
     font-weight: 600;
     font-size: 11px;
-
-    display: none; /* overwritten once count known */
 }
 
 @media (max-width: 1200px) {

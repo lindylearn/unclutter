@@ -9,14 +9,11 @@ import browser from "../../common/polyfill";
 import {
     domainUserSetting,
     getUserSettingForDomain,
-    setUserSettingsForDomain,
 } from "../../common/storage";
 import {
-    insertPageSettings,
-    updateDomainState,
-    updateSocialCommentsCount,
-    wiggleDomainState,
-} from "../../overlay/insert";
+    createStylesheetLink,
+    overrideClassname,
+} from "../../common/stylesheets";
 import { getElementYOffset } from "../../overlay/outline/common";
 import {
     createRootItem,
@@ -24,6 +21,7 @@ import {
     OutlineItem,
 } from "../../overlay/outline/parse";
 import TopLeftContainer from "../../overlay/outline/TopLeftContainer.svelte";
+import TopRightContainerSvelte from "../../overlay/ui/TopRightContainer.svelte";
 import AnnotationsModifier from "./annotations/annotationsModifier";
 import ThemeModifier from "./CSSOM/theme";
 import { PageModifier, trackModifierExecution } from "./_interface";
@@ -37,6 +35,7 @@ export default class OverlayManager implements PageModifier {
     private outline: OutlineItem[];
     private flatOutline: OutlineItem[];
     private topleftSvelteComponent: TopLeftContainer;
+    private toprightSvelteComponent: TopRightContainerSvelte;
 
     private domainSetting: domainUserSetting;
     private allowlistOnActivation: boolean;
@@ -97,24 +96,19 @@ export default class OverlayManager implements PageModifier {
         // get outline before DOM modifications
         this.enableOutline();
 
-        // page settings
-        insertPageSettings(
-            this.domain,
-            this.themeModifier,
-            this.annotationsModifer,
-            this
-        );
+        // render UI into main page to prevent overlaps with sidebar iframe
+        this.renderTopRightUi();
 
-        if (this.domainSetting === "allow") {
-            wiggleDomainState(400);
-        } else if (this.allowlistOnActivation && this.domainSetting === null) {
-            const newDomainSetting = "allow";
+        // if (this.domainSetting === "allow") {
+        //     wiggleDomainState(400);
+        // } else if (this.allowlistOnActivation && this.domainSetting === null) {
+        //     const newDomainSetting = "allow";
 
-            setUserSettingsForDomain(this.domain, newDomainSetting); // async
-            updateDomainState(newDomainSetting, this.domain);
+        //     setUserSettingsForDomain(this.domain, newDomainSetting); // async
+        //     updateDomainState(newDomainSetting, this.domain);
 
-            wiggleDomainState(400);
-        }
+        //     wiggleDomainState(400);
+        // }
 
         this.renderTopLeftContainer();
     }
@@ -165,6 +159,37 @@ export default class OverlayManager implements PageModifier {
                 outline: this.outline, // null at first
                 activeOutlineIndex: this.outline?.[0].index,
                 annotationsEnabled: this.annotationsEnabled,
+            },
+        });
+    }
+
+    renderTopRightUi() {
+        // create container DOM element
+        const container = document.createElement("div");
+        container.id = "lindy-page-settings-toprght";
+        container.className = `${overrideClassname} lindy-page-settings-toprght`;
+        container.style.contain = "layout style";
+        container.style.visibility = "hidden"; // hide until overlay/index.css applied
+        document.documentElement.appendChild(container);
+
+        // insert styles and font definition
+        createStylesheetLink(
+            browser.runtime.getURL("overlay/index.css"),
+            "lindy-switch-style"
+        );
+        const fontLink = document.createElement("link");
+        fontLink.rel = "stylesheet";
+        fontLink.href = browser.runtime.getURL("assets/fonts/fontface.css");
+        document.head.appendChild(fontLink);
+
+        // render svelte component to the container element
+        this.toprightSvelteComponent = new TopRightContainerSvelte({
+            target: container,
+            props: {
+                domain: this.domain,
+                themeModifier: this.themeModifier,
+                annotationsModifer: this.annotationsModifer,
+                overlayModifier: this,
             },
         });
     }
@@ -321,7 +346,11 @@ export default class OverlayManager implements PageModifier {
                 return;
             }
         }
-        updateSocialCommentsCount(this.totalSocialCommentsCount);
+        setTimeout(() => {
+            this.toprightSvelteComponent?.$set({
+                anchoredSocialHighlightsCount: this.totalSocialCommentsCount,
+            });
+        }, 4000);
         browser.runtime.sendMessage(null, {
             event: "setSocialAnnotationsCount",
             count: this.totalSocialCommentsCount,
@@ -364,4 +393,6 @@ export default class OverlayManager implements PageModifier {
             readingTimeLeft: minutes,
         });
     }
+
+    updateActiveColorScheme() {}
 }
