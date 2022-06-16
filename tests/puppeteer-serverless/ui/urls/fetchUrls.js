@@ -82,12 +82,17 @@ async function fetchReddit() {
     await fs.writeFile("./urls/reddit.json", JSON.stringify(urls));
 }
 
-async function convertCSV(fileBase) {
+async function convertCSV(
+    fileBase,
+    dropFirstLine = true,
+    column = 0,
+    columnSep = ","
+) {
     const content = await fs.readFile(`./urls/${fileBase}.csv`, "utf8");
     const urls = content
         .split("\n")
-        .slice(1)
-        .map((line) => line.split(",")[0].split('"')[1])
+        .slice(dropFirstLine ? 1 : 0)
+        .map((line) => line.split(columnSep)[column].replace('"', ""))
         .filter((url) => url);
 
     await fs.writeFile(`./urls/${fileBase}.json`, JSON.stringify(urls));
@@ -96,6 +101,7 @@ async function convertCSV(fileBase) {
 async function fetchCSV() {
     await convertCSV("top_hn_annotations");
     await convertCSV("recent_hn_annotations");
+    await convertCSV("infeather", false, 1, "	");
 }
 
 async function main() {
