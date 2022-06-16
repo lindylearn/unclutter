@@ -126,7 +126,7 @@ export default class TransitionManager implements PageModifier {
 
     async afterTransitionIn() {
         // insert iframe and wait until font loaded
-        this.overlayManager.createTopLeftIframe();
+        this.overlayManager.createIframes();
         await new Promise((r) => setTimeout(r, 50));
 
         // show UI

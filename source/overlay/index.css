@@ -402,3 +402,16 @@ svg.lindy-ui-icon#lindy-theme-icon > path {
 
     display: none; /* overwritten once count known */
 }
+
+@media (max-width: 1200px) {
+    #lindy-info-topleft {
+        display: none !important;
+    }
+    #lindy-annotations-bar {
+        left: calc(var(--lindy-pagewidth) + 20px + 5px);
+        width: calc(100vw - (var(--lindy-pagewidth) + 20px + 5px) - 50px);
+    }
+    .lindy-page-settings-pageadjacent {
+        left: calc(var(--lindy-pagewidth) + 20px + 0px) !important;
+    }
+}

@@ -68,23 +68,29 @@ export default class OverlayManager implements PageModifier {
     }
 
     private topleftIframe: HTMLIFrameElement;
-    createTopLeftIframe() {
+    createIframes() {
+        this.topleftIframe = this.createIframeNode("lindy-info-topleft");
+        this.topleftIframe.style.maxWidth =
+            "calc((100vw - var(--lindy-pagewidth)) / 2 - 5px)"; // set initial style to prevent initial transition
+
+        document.documentElement.appendChild(this.topleftIframe);
+
+        setTimeout(() => {
+            this.insertIframeFont(this.topleftIframe);
+        }, 0);
+    }
+
+    private createIframeNode(id: string) {
         const iframe = document.createElement("iframe");
         iframe.classList.add("lindy-allowed-iframe");
-        iframe.id = "lindy-info-topleft";
+        iframe.id = id;
+
         iframe.setAttribute("scrolling", "no");
         iframe.setAttribute("frameBorder", "0");
         iframe.style.contain = "strict";
         iframe.style.zIndex = "300";
-        iframe.style.maxWidth =
-            "calc((100vw - var(--lindy-pagewidth)) / 2 - 5px)"; /* set via inline styles to prevent initial transition */
 
-        this.topleftIframe = iframe;
-        document.documentElement.appendChild(this.topleftIframe);
-
-        setTimeout(() => {
-            this.insertFontTopLeft();
-        }, 0);
+        return iframe;
     }
 
     afterTransitionIn() {
@@ -143,14 +149,13 @@ export default class OverlayManager implements PageModifier {
         this.listenToOutlineScroll();
     }
 
-    insertFontTopLeft() {
+    insertIframeFont(iframe: HTMLIFrameElement) {
         // Firefox bug: need to wait until iframe initial render to insert elements
         // See https://stackoverflow.com/questions/60814167/firefox-deleted-innerhtml-of-generated-iframe
-        const fontLink =
-            this.topleftIframe.contentDocument.createElement("link");
+        const fontLink = iframe.contentDocument.createElement("link");
         fontLink.rel = "stylesheet";
         fontLink.href = browser.runtime.getURL("assets/fonts/fontface.css");
-        this.topleftIframe.contentDocument.head.appendChild(fontLink);
+        iframe.contentDocument.head.appendChild(fontLink);
     }
 
     renderTopLeftContainer() {
