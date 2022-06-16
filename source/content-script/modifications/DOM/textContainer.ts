@@ -592,13 +592,13 @@ export default class TextContainerModifier implements PageModifier {
         }
 
         const css = `
-            .${lindyContainerClass}.${lindyContainerClass}, 
-            .${lindyContainerClass} > :is(${this.usedTextElementSelector}, .${globalHeadingSelector}),
-            .${lindyHeadingContainerClass}.${lindyHeadingContainerClass}.${lindyHeadingContainerClass}.${lindyHeadingContainerClass}, 
-            .${lindyHeadingContainerClass} > * {
+            .${lindyContainerClass}:not(#fakeID#fakeID#fakeID), 
+            .${lindyContainerClass}:not(#fakeID#fakeID#fakeID) > :is(${this.usedTextElementSelector}, .${globalHeadingSelector}),
+            .${lindyHeadingContainerClass}:not(#fakeID#fakeID#fakeID), 
+            .${lindyHeadingContainerClass}:not(#fakeID#fakeID#fakeID) > * {
                 color: var(--lindy-dark-theme-text-color) !important;
             }
-            .${lindyHeadingContainerClass} a {
+            .${lindyHeadingContainerClass}:not(#fakeID#fakeID#fakeID) a {
                 color: var(--lindy-dark-theme-text-color) !important;
             }
             `;

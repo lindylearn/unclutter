@@ -299,6 +299,8 @@ export const blockedSpecificSelectors = [
     "#news_ticker", // https://www.sentinelassam.com/international/serbia-germany-disagree-over-imposing-sanctions-on-russia-596536
     ".social", // https://thehill.com/news/administration/3522080-trump-releases-12-page-response-to-jan-6-hearing/
     ".PostSocial", // https://theintercept.com/2022/06/14/amazon-ring-camera-police-privacy-ed-markey/
+    ".share-module", // https://pitchfork.com/features/article/10055-how-to-buy-the-best-home-recording-studio-equipment-a-beginners-guide/
+    ".highwire-cite-authors", // https://www.biorxiv.org/content/10.1101/2022.05.15.491973v1
 
     // term of contents (Unclutter shows its own outline)
     ".toc",
