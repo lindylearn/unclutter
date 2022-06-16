@@ -518,8 +518,10 @@ export default class TextContainerModifier implements PageModifier {
             .${lindyHeadingContainerClass}:not(#fakeID#fakeID):not(body), 
             .${lindyHeadingContainerClass}:not(#fakeID#fakeID) > * {
                 color: black !important;
+                background: none !important;
                 -webkit-text-fill-color: unset !important;
                 text-shadow: none !important;
+                box-shadow: none !important;
 
                 position: relative !important;
                 top: 0 !important;
