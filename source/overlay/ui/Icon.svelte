@@ -122,7 +122,8 @@
         stroke-width: 20px;
     }
     .lindy-tooltp:hover > .lindy-ui-icon,
-    .lindy-ui-dialog-container:hover > .lindy-ui-icon {
+    .lindy-ui-dialog-container:hover > .lindy-ui-icon,
+    .lindy-ui-dialog-container.lindy-default-open > .lindy-ui-icon {
         color: var(--text-color) !important;
         filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.05));
     }

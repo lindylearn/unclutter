@@ -40,7 +40,8 @@ export default class TransitionManager implements PageModifier {
     private overlayManager = new OverlayManager(
         this.domain,
         this.themeModifier,
-        this.annotationsModifier
+        this.annotationsModifier,
+        this.textContainerModifier
     );
 
     private readingTimeModifier = new ReadingTimeModifier(this.overlayManager);

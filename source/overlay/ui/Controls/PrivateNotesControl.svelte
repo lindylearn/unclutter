@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { enableAnnotationsFeatureFlag } from "../../../../distribution/common/featureFlags";
     import {
+        enableAnnotationsFeatureFlag,
         getFeatureFlag,
         setFeatureFlag,
     } from "../../../common/featureFlags";

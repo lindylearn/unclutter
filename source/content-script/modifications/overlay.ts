@@ -20,6 +20,7 @@ import PageAdjacentContainerSvelte from "../../overlay/ui/PageAdjacentContainer.
 import TopRightContainerSvelte from "../../overlay/ui/TopRightContainer.svelte";
 import AnnotationsModifier from "./annotations/annotationsModifier";
 import ThemeModifier from "./CSSOM/theme";
+import TextContainerModifier from "./DOM/textContainer";
 import { PageModifier, trackModifierExecution } from "./_interface";
 
 @trackModifierExecution
@@ -27,6 +28,7 @@ export default class OverlayManager implements PageModifier {
     private domain: string;
     private themeModifier: ThemeModifier;
     private annotationsModifer: AnnotationsModifier;
+    private textContainerModifier: TextContainerModifier;
 
     private outline: OutlineItem[];
     private flatOutline: OutlineItem[];
@@ -39,11 +41,13 @@ export default class OverlayManager implements PageModifier {
     constructor(
         domain: string,
         themeModifier: ThemeModifier,
-        annotationsModifer: AnnotationsModifier
+        annotationsModifer: AnnotationsModifier,
+        textContainerModifier: TextContainerModifier
     ) {
         this.domain = domain;
         this.themeModifier = themeModifier;
         this.annotationsModifer = annotationsModifer;
+        this.textContainerModifier = textContainerModifier;
 
         this.annotationsModifer.annotationListeners.push(
             this.onAnnotationUpdate.bind(this)
@@ -170,6 +174,7 @@ export default class OverlayManager implements PageModifier {
                 themeModifier: this.themeModifier,
                 annotationsModifer: this.annotationsModifer,
                 overlayModifier: this,
+                textContainerModifier: this.textContainerModifier,
             },
         });
         this.pageAdjacentSvelteComponent = new PageAdjacentContainerSvelte({

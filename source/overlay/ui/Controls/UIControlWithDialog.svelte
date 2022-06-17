@@ -2,9 +2,13 @@
     import Icon from "../Icon.svelte";
 
     export let iconName: string;
+    export let defaultOpen: boolean = false;
 </script>
 
-<div class="lindy-ui-dialog-container">
+<div
+    class={"lindy-ui-dialog-container " +
+        (defaultOpen ? "lindy-default-open" : "")}
+>
     <Icon {iconName} />
     <div class="lindy-ui-dialog"><slot /></div>
 </div>
@@ -34,6 +38,11 @@
         transition: all 0.15s ease-out;
     }
     .lindy-ui-dialog-container:hover > .lindy-ui-dialog {
+        visibility: visible;
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+    .lindy-default-open > .lindy-ui-dialog {
         visibility: visible;
         opacity: 1;
         transform: translate3d(0, 0, 0);

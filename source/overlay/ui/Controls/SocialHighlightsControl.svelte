@@ -1,7 +1,7 @@
 <script lang="ts">
     import browser from "../../../common/polyfill";
-    import { enableSocialCommentsFeatureFlag } from "../../../../distribution/common/featureFlags";
     import {
+        enableSocialCommentsFeatureFlag,
         getFeatureFlag,
         setFeatureFlag,
     } from "../../../common/featureFlags";

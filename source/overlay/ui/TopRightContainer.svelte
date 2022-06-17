@@ -9,11 +9,14 @@
     import SocialHighlightsControl from "./Controls/SocialHighlightsControl.svelte";
     import ThemeControl from "./Controls/ThemeControl.svelte";
     import BugReportControl from "./Controls/BugReportControl.svelte";
+    import TextContainerModifier from "../../content-script/modifications/DOM/textContainer";
 
-    export let domain: string;
     export let themeModifier: ThemeModifier;
     export let annotationsModifer: AnnotationsModifier;
     export let overlayModifier: OverlayManager;
+    export let textContainerModifier: TextContainerModifier;
+
+    export let domain: string;
     export let anchoredSocialHighlightsCount: number = null;
 </script>
 
@@ -22,7 +25,7 @@
     tooltip="Unclutter settings"
     onClick={() => browser.runtime.sendMessage({ event: "openOptionsPage" })}
 />
-<BugReportControl />
+<BugReportControl {textContainerModifier} />
 <ThemeControl {domain} {themeModifier} />
 <PrivateNotesControl {annotationsModifer} {overlayModifier} />
 <SocialHighlightsControl
