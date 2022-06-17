@@ -40,7 +40,7 @@
 
         display: block;
         content: attr(data-title);
-        font-size: 13px;
+        font-size: 14px;
 
         background: var(--background-color);
         color: var(--text-color);
@@ -80,10 +80,10 @@
         transform: translate3d(-10px, 0, 0) !important;
 
         line-height: 1.3;
-        white-space: pre-wrap !important;
-        /* word-break: break-all; */
+        white-space: break-spaces !important;
         width: max-content;
-        max-width: 250px;
+        max-width: 245px;
+        box-sizing: border-box;
     }
     .lindy-tooltp-reverse:after {
         transform: translate3d(-10px, 0, 0) scaleX(-1) !important;

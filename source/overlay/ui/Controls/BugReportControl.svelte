@@ -45,19 +45,19 @@
 <UiControlWithDialog iconName="bug" {defaultOpen}>
     <div class="lindy-bugreport-content" bind:this={containerElement}>
         <div class="lindy-bugreport-caption">{captionMessage}</div>
-        <button
+        <div
             class={"lindy-bugreport-button " +
                 (reportedPage ? "lindy-reported" : "")}
             on:click={reportPage}
         >
             {reportedPage ? "Thank you!" : "Report page"}
-        </button>
+        </div>
     </div>
 </UiControlWithDialog>
 
 <style global lang="postcss">
     .lindy-bugreport-content {
-        padding: 10px;
+        padding: 8px 10px;
         width: max-content;
         display: flex;
         flex-direction: column;
@@ -71,11 +71,11 @@
     .lindy-bugreport-caption {
         margin-bottom: 10px;
 
-        font-size: 15px;
+        font-size: 14px;
     }
 
     .lindy-bugreport-button {
-        padding: 3px 6px;
+        padding: 5px 8px;
 
         font-size: 13px;
         font-weight: 600;
@@ -88,12 +88,15 @@
         box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1),
             0 1px 2px -1px rgb(0 0 0 / 0.1);
         transform: scale(100%);
+        filter: brightness(100%);
         transition: box-shadow 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
-            transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
+            filter 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
     .lindy-bugreport-button:not(.lindy-reported):hover {
         box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1),
             0 2px 4px -2px rgb(0 0 0 / 0.1);
+        filter: brightness(95%);
     }
     .lindy-bugreport-button.lindy-reported {
         transform: scale(97%);
