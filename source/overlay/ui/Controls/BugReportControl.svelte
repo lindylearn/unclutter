@@ -1,6 +1,7 @@
 <script lang="ts">
     import { reportPageContentScript } from "../../../common/bugReport";
     import TextContainerModifier from "../../../content-script/modifications/DOM/textContainer";
+    import Icon from "../Icon.svelte";
     import UiControlWithDialog from "./UIControlWithDialog.svelte";
 
     export let textContainerModifier: TextContainerModifier;
@@ -50,21 +51,21 @@
                 (reportedPage ? "lindy-reported" : "")}
             on:click={reportPage}
         >
-            {reportedPage ? "Thank you!" : "Report page"}
+            <Icon iconName="flag" />
+            <div>{reportedPage ? "Thank you!" : "Report page"}</div>
         </div>
     </div>
 </UiControlWithDialog>
 
 <style global lang="postcss">
     .lindy-bugreport-content {
-        padding: 8px 10px;
+        padding: 10px 12px;
         width: max-content;
         display: flex;
         flex-direction: column;
         align-items: center;
 
         color: var(--text-color);
-        font-weight: 600;
         font-family: Poppins, sans-serif;
     }
 
@@ -72,10 +73,13 @@
         margin-bottom: 10px;
 
         font-size: 14px;
+        font-weight: 600;
     }
 
     .lindy-bugreport-button {
-        padding: 5px 8px;
+        padding: 2px 8px;
+        display: flex;
+        align-items: center;
 
         font-size: 13px;
         font-weight: 600;
@@ -93,6 +97,12 @@
             transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
             filter 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
+    .lindy-bugreport-button > .lindy-ui-icon {
+        color: var(--text-color) !important;
+        width: 1em !important;
+        margin-right: 3px;
+    }
+
     .lindy-bugreport-button:not(.lindy-reported):hover {
         box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1),
             0 2px 4px -2px rgb(0 0 0 / 0.1);
