@@ -175,8 +175,7 @@
         background-color: var(--background-color);
         color: #9ca3af;
         border-radius: 5px;
-        box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1),
-            0 1px 2px -1px rgb(0 0 0 / 0.1);
+        filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.05));
         cursor: auto;
 
         visibility: hidden;

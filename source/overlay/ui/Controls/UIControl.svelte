@@ -21,6 +21,7 @@
 <style global lang="postcss">
     .lindy-tooltp {
         position: relative;
+        filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.05));
     }
     .lindy-tooltp:before,
     .lindy-tooltp:after {
@@ -32,7 +33,7 @@
     }
     .lindy-tooltp:before {
         /* box */
-        top: 0px;
+        top: 1px;
         right: calc(100% + 6px);
         padding: 6px 8px;
 
@@ -44,7 +45,6 @@
         color: var(--text-color);
         border-radius: 5px;
         white-space: nowrap;
-        filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.05));
 
         font-family: Poppins, sans-serif;
         font-weight: 600;
