@@ -143,7 +143,7 @@
     </div>
 </UiControlWithDialog>
 
-<style lang="postcss">
+<style global lang="postcss">
     /* row with plus and minus buttons */
     .lindy-plusminus {
         display: flex;

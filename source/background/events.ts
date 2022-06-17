@@ -1,5 +1,6 @@
 import { Runtime, Tabs } from "webextension-polyfill";
 import { extensionSupportsUrl } from "../common/articleDetection";
+import { handleReportBrokenPage } from "../common/bugReport";
 import {
     collectAnonymousMetricsFeatureFlag,
     getFeatureFlag,
@@ -97,6 +98,8 @@ browser.runtime.onMessage.addListener(
             return true;
         } else if (message.event === "setSocialAnnotationsCount") {
             tabsManager.setSocialAnnotationsCount(sender.tab.id, message.count);
+        } else if (message.event === "reportBrokenPage") {
+            handleReportBrokenPage(message);
         }
 
         return false;

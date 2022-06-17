@@ -1,21 +1,25 @@
 <script lang="ts">
+    import { reportPageContentScript } from "../../../common/bugReport";
+
     import UiControlWithDialog from "./UIControlWithDialog.svelte";
 
     let reportedPage: boolean = false;
     function reportPage() {
         reportedPage = true;
+        reportPageContentScript();
 
-        setTimeout(() => {
-            reportedPage = false;
-        }, 3000);
+        // setTimeout(() => {
+        //     reportedPage = false;
+        // }, 3000);
     }
 </script>
 
 <UiControlWithDialog iconName="bug">
-    <div class="bugreport-content">
-        <div class="caption">Sorry that didn't work well.</div>
+    <div class="lindy-bugreport-content">
+        <div class="lindy-bugreport-caption">Sorry that didn't work well.</div>
         <button
-            class={"report-button " + (reportedPage ? "reported" : "")}
+            class={"lindy-bugreport-button " +
+                (reportedPage ? "lindy-reported" : "")}
             on:click={reportPage}
         >
             {reportedPage ? "Thank you!" : "Report this page"}
@@ -23,8 +27,8 @@
     </div>
 </UiControlWithDialog>
 
-<style lang="postcss">
-    .bugreport-content {
+<style global lang="postcss">
+    .lindy-bugreport-content {
         padding: 10px;
         width: max-content;
         display: flex;
@@ -36,16 +40,16 @@
         font-family: Poppins, sans-serif;
     }
 
-    .caption {
+    .lindy-bugreport-caption {
         margin-bottom: 10px;
 
         font-size: 15px;
     }
 
-    .report-button {
+    .lindy-bugreport-button {
         padding: 3px 6px;
 
-        font-size: 15px;
+        font-size: 13px;
         font-weight: 600;
         color: var(--text-color);
 
@@ -58,11 +62,11 @@
         transform: scale(100%);
         transition: box-shadow 0.2s ease-out, transform 0.2s ease-out;
     }
-    .report-button:not(.reported):hover {
+    .lindy-bugreport-button:not(.lindy-reported):hover {
         box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1),
             0 2px 4px -2px rgb(0 0 0 / 0.1);
     }
-    .report-button.reported {
+    .lindy-bugreport-button.lindy-reported {
         transform: scale(95%);
     }
 </style>

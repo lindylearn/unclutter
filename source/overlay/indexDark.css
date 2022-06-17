@@ -35,3 +35,7 @@
 .lindy-active-theme {
     border: 2.5px solid var(--text-color);
 }
+
+.lindy-bugreport-button {
+    color: #374151;
+}

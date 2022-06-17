@@ -1,3 +1,3 @@
-export function getDomainFrom(url) {
+export function getDomainFrom(url: URL) {
     return url.hostname.replace("www.", "");
 }
