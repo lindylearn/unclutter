@@ -35,4 +35,11 @@
 />
 
 <style global lang="postcss">
+    .lindy-page-settings-toprght > * {
+        all: revert;
+    }
+    .lindy-page-settings-toprght > a {
+        text-decoration: none !important;
+        border: none !important;
+    }
 </style>

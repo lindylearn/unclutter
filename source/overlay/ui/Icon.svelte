@@ -101,3 +101,28 @@
         />
     </svg>
 {/if}
+
+<style global lang="postcss">
+    .lindy-ui-icon {
+        width: 20px;
+        height: 20px;
+        padding: 3px;
+        cursor: pointer;
+        box-sizing: content-box !important;
+        color: var(--color-muted) !important;
+        overflow: visible;
+    }
+    svg.lindy-ui-icon > path {
+        fill: currentColor;
+        stroke: currentColor;
+        stroke-width: 10px;
+    }
+    svg.lindy-ui-icon#lindy-theme-icon > path {
+        stroke-width: 20px;
+    }
+    .lindy-tooltp:hover > .lindy-ui-icon,
+    .lindy-theme-container:hover > .lindy-ui-icon {
+        color: var(--text-color) !important;
+        filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.05));
+    }
+</style>

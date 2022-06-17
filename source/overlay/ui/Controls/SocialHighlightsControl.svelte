@@ -75,4 +75,23 @@
 </div>
 
 <style global lang="postcss">
+    #lindy-crowd-toggle-container {
+        position: relative;
+    }
+    #lindy-crowd-count-label {
+        all: revert;
+        position: absolute;
+        top: 68%;
+        left: 56%;
+        padding: 2px 4px;
+
+        background: var(--background-color);
+        border-radius: 4px;
+        filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.05));
+
+        color: var(--text-color);
+        font-family: Poppins, sans-serif;
+        font-weight: 600;
+        font-size: 11px;
+    }
 </style>
