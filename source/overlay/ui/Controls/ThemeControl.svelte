@@ -5,9 +5,9 @@
         getThemeValue,
         pageWidthThemeVariable,
         themeName,
-    } from "../../common/theme";
-    import { reportEventContentScript } from "../../content-script/messaging";
-    import ThemeModifier from "../../content-script/modifications/CSSOM/theme";
+    } from "../../../common/theme";
+    import { reportEventContentScript } from "../../../content-script/messaging";
+    import ThemeModifier from "../../../content-script/modifications/CSSOM/theme";
 
     export let domain: string;
     export let themeModifier: ThemeModifier;

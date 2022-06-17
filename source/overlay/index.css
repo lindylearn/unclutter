@@ -60,8 +60,11 @@
     }
 }
 
-#lindy-domain-switch-icon-container.lindy-domain-switch-wiggle > svg {
+.lindy-domain-switch-wiggle > svg {
     animation: wiggle 0.6s ease-in-out;
+}
+.lindy-domain-switch-wiggle-initial-delay > svg {
+    animation-delay: 0.6s;
 }
 @keyframes wiggle {
     0% {

@@ -1,9 +1,12 @@
 <script lang="ts">
-    import { enableAnnotationsFeatureFlag } from "../../../distribution/common/featureFlags";
-    import { getFeatureFlag, setFeatureFlag } from "../../common/featureFlags";
-    import { reportEventContentScript } from "../../content-script/messaging";
-    import AnnotationsModifier from "../../content-script/modifications/annotations/annotationsModifier";
-    import OverlayManager from "../../content-script/modifications/overlay";
+    import { enableAnnotationsFeatureFlag } from "../../../../distribution/common/featureFlags";
+    import {
+        getFeatureFlag,
+        setFeatureFlag,
+    } from "../../../common/featureFlags";
+    import { reportEventContentScript } from "../../../content-script/messaging";
+    import AnnotationsModifier from "../../../content-script/modifications/annotations/annotationsModifier";
+    import OverlayManager from "../../../content-script/modifications/overlay";
     import UiControl from "./UIControl.svelte";
 
     export let annotationsModifer: AnnotationsModifier;

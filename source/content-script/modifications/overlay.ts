@@ -1,15 +1,10 @@
 import { LindyAnnotation } from "../../common/annotations/create";
 import {
-    allowlistDomainOnManualActivationFeatureFlag,
     enableAnnotationsFeatureFlag,
     enableSocialCommentsFeatureFlag,
     getFeatureFlag,
 } from "../../common/featureFlags";
 import browser from "../../common/polyfill";
-import {
-    domainUserSetting,
-    getUserSettingForDomain,
-} from "../../common/storage";
 import {
     createStylesheetLink,
     overrideClassname,
@@ -21,6 +16,7 @@ import {
     OutlineItem,
 } from "../../overlay/outline/parse";
 import TopLeftContainer from "../../overlay/outline/TopLeftContainer.svelte";
+import PageAdjacentContainerSvelte from "../../overlay/ui/PageAdjacentContainer.svelte";
 import TopRightContainerSvelte from "../../overlay/ui/TopRightContainer.svelte";
 import AnnotationsModifier from "./annotations/annotationsModifier";
 import ThemeModifier from "./CSSOM/theme";
@@ -36,9 +32,8 @@ export default class OverlayManager implements PageModifier {
     private flatOutline: OutlineItem[];
     private topleftSvelteComponent: TopLeftContainer;
     private toprightSvelteComponent: TopRightContainerSvelte;
+    private pageAdjacentSvelteComponent: PageAdjacentContainerSvelte;
 
-    private domainSetting: domainUserSetting;
-    private allowlistOnActivation: boolean;
     private annotationsEnabled: boolean;
 
     constructor(
@@ -56,10 +51,6 @@ export default class OverlayManager implements PageModifier {
 
         // fetch users settings to run code synchronously later
         (async () => {
-            this.domainSetting = await getUserSettingForDomain(this.domain);
-            this.allowlistOnActivation = await getFeatureFlag(
-                allowlistDomainOnManualActivationFeatureFlag
-            );
             this.annotationsEnabled = await getFeatureFlag(
                 enableAnnotationsFeatureFlag
             );
@@ -97,18 +88,7 @@ export default class OverlayManager implements PageModifier {
         this.enableOutline();
 
         // render UI into main page to prevent overlaps with sidebar iframe
-        this.renderTopRightUi();
-
-        // if (this.domainSetting === "allow") {
-        //     wiggleDomainState(400);
-        // } else if (this.allowlistOnActivation && this.domainSetting === null) {
-        //     const newDomainSetting = "allow";
-
-        //     setUserSettingsForDomain(this.domain, newDomainSetting); // async
-        //     updateDomainState(newDomainSetting, this.domain);
-
-        //     wiggleDomainState(400);
-        // }
+        this.renderUiContainers();
 
         this.renderTopLeftContainer();
     }
@@ -163,15 +143,7 @@ export default class OverlayManager implements PageModifier {
         });
     }
 
-    renderTopRightUi() {
-        // create container DOM element
-        const container = document.createElement("div");
-        container.id = "lindy-page-settings-toprght";
-        container.className = `${overrideClassname} lindy-page-settings-toprght`;
-        container.style.contain = "layout style";
-        container.style.visibility = "hidden"; // hide until overlay/index.css applied
-        document.documentElement.appendChild(container);
-
+    renderUiContainers() {
         // insert styles and font definition
         createStylesheetLink(
             browser.runtime.getURL("overlay/index.css"),
@@ -182,9 +154,17 @@ export default class OverlayManager implements PageModifier {
         fontLink.href = browser.runtime.getURL("assets/fonts/fontface.css");
         document.head.appendChild(fontLink);
 
-        // render svelte component to the container element
+        // create DOM container nodes
+        const topRightContainer = this.createUiContainer(
+            "lindy-page-settings-toprght"
+        );
+        const pageAdjacentContainer = this.createUiContainer(
+            "lindy-page-settings-pageadjacent"
+        );
+
+        // render svelte component
         this.toprightSvelteComponent = new TopRightContainerSvelte({
-            target: container,
+            target: topRightContainer,
             props: {
                 domain: this.domain,
                 themeModifier: this.themeModifier,
@@ -192,6 +172,27 @@ export default class OverlayManager implements PageModifier {
                 overlayModifier: this,
             },
         });
+        this.pageAdjacentSvelteComponent = new PageAdjacentContainerSvelte({
+            target: pageAdjacentContainer,
+            props: {
+                domain: this.domain,
+            },
+        });
+
+        // insert rendered nodes into document
+        document.documentElement.appendChild(topRightContainer);
+        document.documentElement.appendChild(pageAdjacentContainer);
+    }
+
+    private createUiContainer(id: string) {
+        // create container DOM element
+        const container = document.createElement("div");
+        container.id = id;
+        container.className = `${overrideClassname} ${id}`;
+        container.style.contain = "layout style";
+        container.style.visibility = "hidden"; // hide until overlay/index.css applied
+
+        return container;
     }
 
     private uninstallScrollListener: () => void;
