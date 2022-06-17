@@ -99,7 +99,7 @@ browser.runtime.onMessage.addListener(
         } else if (message.event === "setSocialAnnotationsCount") {
             tabsManager.setSocialAnnotationsCount(sender.tab.id, message.count);
         } else if (message.event === "reportBrokenPage") {
-            handleReportBrokenPage(message);
+            handleReportBrokenPage(message.data);
         }
 
         return false;

@@ -36,6 +36,7 @@
     border: 2.5px solid var(--text-color);
 }
 
-.lindy-bugreport-button {
-    color: #374151;
+.lindy-bugreport-button, 
+.lindy-bugreport-button > .lindy-ui-icon {
+    color: #1f2937 !important;
 }

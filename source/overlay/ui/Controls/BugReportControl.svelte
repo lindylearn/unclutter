@@ -7,7 +7,7 @@
     export let textContainerModifier: TextContainerModifier;
 
     let defaultOpen: boolean = false;
-    let captionMessage: string = `Is there an issue with the article?`;
+    let captionMessage: string = `Is there an issue with this article?`;
     if (document.body.scrollHeight < 300) {
         captionMessage = `Sorry this article doesn't work.`;
         setDefaultOpen();

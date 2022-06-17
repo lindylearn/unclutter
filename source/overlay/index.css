@@ -29,7 +29,7 @@
     left: calc(
         (100vw - var(--lindy-pagewidth)) / 2 + var(--lindy-pagewidth) - 5px
     );
-    z-index: 100;
+    z-index: 101;
     padding: 10px;
     contain: layout style;
 
