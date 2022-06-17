@@ -6,5 +6,5 @@
 
 <DomainSettingControl {domain} />
 
-<style global lang="postcss">
+<style lang="postcss">
 </style>

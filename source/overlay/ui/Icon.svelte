@@ -111,6 +111,7 @@
         box-sizing: content-box !important;
         color: var(--color-muted) !important;
         overflow: visible;
+        transition: color 0.15s ease-out;
     }
     svg.lindy-ui-icon > path {
         fill: currentColor;
@@ -121,7 +122,7 @@
         stroke-width: 20px;
     }
     .lindy-tooltp:hover > .lindy-ui-icon,
-    .lindy-theme-container:hover > .lindy-ui-icon {
+    .lindy-ui-dialog-container:hover > .lindy-ui-icon {
         color: var(--text-color) !important;
         filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.05));
     }

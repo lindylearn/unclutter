@@ -38,5 +38,5 @@
     onClick={toggleEnabled}
 />
 
-<style global lang="postcss">
+<style lang="postcss">
 </style>

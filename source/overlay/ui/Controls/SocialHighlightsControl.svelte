@@ -51,33 +51,21 @@
         });
 </script>
 
-<div id="lindy-crowd-toggle-container">
-    <div id="lindy-crowd-toggle-content" class="lindy-tooltp lindy-fade">
-        <UiControl
-            iconName={socialHighlightsEnabled
-                ? "social_enabled"
-                : "social_disabled"}
-            tooltip={socialHighlightsEnabled
-                ? `Click to hide ${
-                      socialHighlightsCount || 0
-                  } social highlights`
-                : `Click to show ${
-                      socialHighlightsCount || 0
-                  } social highlights`}
-            onClick={toggleEnabled}
-        />
-    </div>
+<UiControl
+    iconName={socialHighlightsEnabled ? "social_enabled" : "social_disabled"}
+    tooltip={socialHighlightsEnabled
+        ? `Click to hide ${socialHighlightsCount || 0} social highlights`
+        : `Click to show ${socialHighlightsCount || 0} social highlights`}
+    onClick={toggleEnabled}
+>
     {#if socialHighlightsCount}
         <div id="lindy-crowd-count-label">
             {socialHighlightsCount}
         </div>
     {/if}
-</div>
+</UiControl>
 
-<style global lang="postcss">
-    #lindy-crowd-toggle-container {
-        position: relative;
-    }
+<style lang="postcss">
     #lindy-crowd-count-label {
         all: revert;
         position: absolute;
@@ -88,6 +76,7 @@
         background: var(--background-color);
         border-radius: 4px;
         filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.05));
+        cursor: pointer;
 
         color: var(--text-color);
         font-family: Poppins, sans-serif;

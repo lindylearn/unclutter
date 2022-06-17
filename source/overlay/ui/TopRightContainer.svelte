@@ -8,6 +8,7 @@
     import OverlayManager from "../../content-script/modifications/overlay";
     import SocialHighlightsControl from "./Controls/SocialHighlightsControl.svelte";
     import ThemeControl from "./Controls/ThemeControl.svelte";
+    import BugReportControl from "./Controls/BugReportControl.svelte";
 
     export let domain: string;
     export let themeModifier: ThemeModifier;
@@ -21,11 +22,7 @@
     tooltip="Unclutter settings"
     onClick={() => browser.runtime.sendMessage({ event: "openOptionsPage" })}
 />
-<UIControl
-    iconName="bug"
-    tooltip="Unclutter settings"
-    onClick={() => reportEventContentScript("reportBugClick")}
-/>
+<BugReportControl />
 <ThemeControl {domain} {themeModifier} />
 <PrivateNotesControl {annotationsModifer} {overlayModifier} />
 <SocialHighlightsControl

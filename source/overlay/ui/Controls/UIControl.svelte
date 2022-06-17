@@ -16,9 +16,10 @@
     on:click={onClick}
 >
     <Icon {iconName} />
+    <slot />
 </div>
 
-<style global lang="postcss">
+<style lang="postcss">
     .lindy-tooltp {
         position: relative;
         filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.05));
@@ -65,7 +66,7 @@
     .lindy-tooltp.lindy-fade:after,
     .lindy-tooltp.lindy-fade:before {
         transform: translate3d(10px, 0, 0);
-        transition: all 0.15s ease-in-out;
+        transition: all 0.15s ease-out;
     }
     .lindy-tooltp.lindy-fade:hover:after,
     .lindy-tooltp.lindy-fade:hover:before {
