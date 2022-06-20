@@ -58,7 +58,7 @@
 
             <div
                 class={"lindy-bugreport-button lindy-bugreport-flag " +
-                    (reportedPage ? "lindy-reported" : "")}
+                    (reportedPage ? "lindy-selected" : "")}
                 on:click={reportPage}
             >
                 <Icon iconName="flag" />
@@ -106,7 +106,7 @@
         background-color: #f3f4f6;
 
         transform: scale(100%);
-        /* filter: brightness(100%); */
+        filter: brightness(100%);
         transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
     .lindy-bugreport-button > .lindy-ui-icon {
@@ -115,21 +115,20 @@
         margin-right: 3px;
     }
 
-    .lindy-bugreport-button:not(.lindy-reported):hover {
+    .lindy-bugreport-button:not(.lindy-selected):hover {
         box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1),
             0 2px 4px -2px rgb(0 0 0 / 0.1);
-        background-color: #e5e7eb;
-        /* filter: brightness(95%); */
+        filter: brightness(95%);
     }
-    .lindy-bugreport-button.lindy-reported {
+    .lindy-bugreport-button.lindy-selected {
         transform: scale(97%);
         box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
     }
 
-    /* .lindy-bugreport-flag:hover {
+    .lindy-bugreport-flag {
         background-color: #edd75b;
     }
-    .lindy-bugreport-block:hover {
+    /* .lindy-bugreport-block:hover {
         background-color: #f87171;
     } */
 </style>
