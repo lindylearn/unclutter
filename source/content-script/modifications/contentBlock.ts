@@ -108,7 +108,7 @@ export default class ContentBlockModifier implements PageModifier {
     }
 }
 
-const blockedTags = ["footer", "aside", "nav", "gpt-ad", "video"];
+const blockedTags = ["footer", "aside", "nav", "gpt-ad"];
 
 // words just blocked, but considered if matched text container
 export const blockedWords = [
@@ -209,7 +209,6 @@ export const blockedWords = [
     "follow", // https://english.alarabiya.net/News/world/2022/06/09/Berlin-driver-s-confused-statements-under-investigation
     "download", // https://www.globalwitness.org/en/campaigns/digital-threats/ethiopia-hate-speech/
     "disqus", // also may include ads, e.g. https://david-codes.hatanian.com/2019/06/09/aws-costs-every-programmer-should-now.html
-    "video",
     // "share", // blocks images e.g. on https://spectrum.ieee.org/commodore-64
     "-share-", // https://www.bbc.com/worklife/article/20220525-how-self-deception-allows-people-to-lie
     "share-section", // https://brighterworld.mcmaster.ca/articles/going-all-the-way-scientists-prove-inhaled-vaccines-offer-better-protection-than-nasal-sprays/
@@ -241,6 +240,7 @@ export const blockedSpecificSelectors = [
     "[id$='-ads']",
     "[id*='-ads ']",
     "[id*='-ad-']",
+    ".apexAd", // https://www.axios.com/2022/06/18/black-hole-milky-way-hubble-space-telescope
     ".RTEHashTagLabAdModule",
     ".adplaceholder",
     ".c-adDisplay_container", // https://www.zdnet.com/article/opera-brave-vivaldi-to-ignore-chromes-anti-ad-blocker-changes-despite-shared-codebase/

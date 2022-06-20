@@ -15,7 +15,7 @@ const globalTextElementSelector = "p, font, pre";
 const globalHeadingSelector =
     "h1, h2, h3, h4, header, [class*='head' i], [class*='title' i]";
 const headingClassWordlist = ["header", "heading", "title", "article-details"]; // be careful here
-const globalImageSelector = "img, picture, figure";
+const globalImageSelector = "img, picture, figure, video";
 
 const headingTags = globalHeadingSelector.split(", ");
 
@@ -501,7 +501,7 @@ export default class TextContainerModifier implements PageModifier {
                 background: none !important;
                 box-shadow: none !important;
                 z-index: 1 !important;
-                overflow-y: visible !important;
+                overflow: hidden !important;
                 transition: margin-left 0.4s cubic-bezier(0.33, 1, 0.68, 1);
             }
             /* more strict cleanup for main text containers */
@@ -810,6 +810,12 @@ export default class TextContainerModifier implements PageModifier {
     // very carefully exclude elements as text containers to avoid incorrect main container selection for small articles
     // this doesn't mean these elements will be removed, but they might
     private shouldExcludeAsTextContainer(node: HTMLElement) {
+        if (node.tagName === "BLOCKQUOTE") {
+            // leave style of quotes intact
+            // e.g. https://knowledge.wharton.upenn.edu/article/how-price-shocks-in-formative-years-scar-consumption-for-life/
+            return true;
+        }
+
         if (
             [
                 "module-moreStories", // https://news.yahoo.com/thailand-legalizes-growing-consumption-marijuana-135808124.html

@@ -9,7 +9,7 @@
     let defaultOpen: boolean = false;
     let showElementBlocker: boolean = true;
     let captionMessage: string = `Is there an issue with this article?`;
-    if (document.body.scrollHeight < 300) {
+    if (document.body.scrollHeight < 500) {
         captionMessage = `Sorry this article doesn't work.`;
         setDefaultOpen();
     }
