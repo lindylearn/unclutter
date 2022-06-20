@@ -11,7 +11,7 @@ export const lindyMainContentContainerClass = "lindy-main-text-container";
 export const lindyMainHeaderContainerClass = "lindy-main-header-container";
 export const lindyFirstMainContainerClass = "lindy-first-main-container";
 
-const globalTextElementSelector = "p, font, pre";
+const globalTextElementSelector = "p, font";
 const globalHeadingSelector =
     "h1, h2, h3, h4, header, [class*='head' i], [class*='title' i]";
 const headingClassWordlist = ["header", "heading", "title", "article-details"]; // be careful here
@@ -810,7 +810,7 @@ export default class TextContainerModifier implements PageModifier {
     // very carefully exclude elements as text containers to avoid incorrect main container selection for small articles
     // this doesn't mean these elements will be removed, but they might
     private shouldExcludeAsTextContainer(node: HTMLElement) {
-        if (node.tagName === "BLOCKQUOTE") {
+        if (["BLOCKQUOTE", "CODE", "PRE"].includes(node.tagName)) {
             // leave style of quotes intact
             // e.g. https://knowledge.wharton.upenn.edu/article/how-price-shocks-in-formative-years-scar-consumption-for-life/
             return true;
