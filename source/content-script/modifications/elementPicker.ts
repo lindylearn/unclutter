@@ -2,7 +2,10 @@ import {
     getBlockedElementSelectors,
     setBlockedElementSelectors,
 } from "../../common/storage";
-import { overrideClassname } from "../../common/stylesheets";
+import {
+    createStylesheetText,
+    overrideClassname,
+} from "../../common/stylesheets";
 import {
     lindyContainerClass,
     lindyFirstMainContainerClass,
@@ -26,10 +29,18 @@ export default class ElementPickerModifier implements PageModifier {
 
     constructor(domain: string) {
         this.domain = domain;
+    }
 
-        getBlockedElementSelectors(this.domain).then((selectors) => {
-            this.pageSelectors = selectors;
-        });
+    async prepare() {
+        this.pageSelectors = await getBlockedElementSelectors(this.domain);
+        console.log(this.pageSelectors);
+    }
+
+    transitionIn() {
+        const css = `${this.pageSelectors.join(
+            ", "
+        )} { display: none !important; }`;
+        createStylesheetText(css, "element-picker-block");
     }
 
     enable() {
@@ -67,6 +78,7 @@ export default class ElementPickerModifier implements PageModifier {
         document
             .querySelectorAll(`.${pendingBlockedElement}`)
             .forEach((node) => node.classList.remove(pendingBlockedElement));
+        document.getElementById("element-picker-block").remove();
     }
 
     async saveSelectors() {

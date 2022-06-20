@@ -37,7 +37,7 @@
                 "overlay/index.css",
                 "overlay/indexDark.css",
                 "overlay/outline/outlineDark.css",
-                "content-script/pageview/manualContentBlock.css",
+                "data/manualContentBlock.css",
                 "sidebar/index.html",
                 "sidebar/index.css",
                 "sidebar/dark.css",

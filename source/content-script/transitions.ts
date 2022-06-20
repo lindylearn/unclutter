@@ -29,6 +29,7 @@ export default class TransitionManager implements PageModifier {
     private annotationsModifier = new AnnotationsModifier();
     private textContainerModifier = new TextContainerModifier();
     private contentBlockModifier = new ContentBlockModifier(
+        this.domain,
         this.textContainerModifier
     );
     private backgroundModifier = new BackgroundModifier();
@@ -66,6 +67,7 @@ export default class TransitionManager implements PageModifier {
             this.textContainerModifier.prepare(),
             // get active theme state
             this.themeModifier.prepare(this.domain),
+            this.elementPickerModifier.prepare(),
         ]);
 
         // configure selectors
@@ -104,6 +106,7 @@ export default class TransitionManager implements PageModifier {
         // remove faded-out elements
         this.contentBlockModifier.transitionIn();
         this.responsiveStyleModifier.transitionIn();
+        this.elementPickerModifier.transitionIn();
     }
 
     // pageview width change was triggered just before calling this

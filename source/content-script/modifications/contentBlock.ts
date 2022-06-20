@@ -3,6 +3,7 @@ import {
     createStylesheetLink,
     createStylesheetText,
 } from "../../common/stylesheets";
+import domainBlocklistSelectors from "../../data/domainBlocklistSelectors.json";
 import TextContainerModifier, {
     lindyContainerClass,
     lindyImageContainerClass,
@@ -15,11 +16,13 @@ import { PageModifier, trackModifierExecution } from "./_interface";
 // TODO use statically generated CSS?
 @trackModifierExecution
 export default class ContentBlockModifier implements PageModifier {
+    private domain: string;
     private selectors: string[];
 
     private textContainerModifier: TextContainerModifier;
 
-    constructor(textContainerModifier: TextContainerModifier) {
+    constructor(domain: string, textContainerModifier: TextContainerModifier) {
+        this.domain = domain;
         this.textContainerModifier = textContainerModifier;
     }
 
@@ -56,7 +59,9 @@ export default class ContentBlockModifier implements PageModifier {
                 (selector) => `${selector}:not(${excludedSelectors.join(", ")})`
             );
 
-        this.selectors = blockedTags.concat(wordSelectors);
+        this.selectors = blockedTags
+            .concat(wordSelectors)
+            .concat(domainBlocklistSelectors[this.domain] || []);
     }
 
     fadeOutNoise() {
@@ -83,9 +88,7 @@ export default class ContentBlockModifier implements PageModifier {
         createStylesheetText(css, "content-block-hide");
 
         createStylesheetLink(
-            browser.runtime.getURL(
-                "content-script/pageview/manualContentBlock.css"
-            ),
+            browser.runtime.getURL("data/manualContentBlock.css"),
             "content-block-custom-sites"
         );
     }

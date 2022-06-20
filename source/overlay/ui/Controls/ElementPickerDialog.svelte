@@ -63,7 +63,7 @@
         top: 10px;
         left: 0;
         z-index: 99;
-        width: calc(100% - 2 * 10px);
+        width: 100%;
         padding: 10px;
 
         background-color: var(--background-color);

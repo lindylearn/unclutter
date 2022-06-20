@@ -92,7 +92,7 @@ async function convertCSV(
     const urls = content
         .split("\n")
         .slice(dropFirstLine ? 1 : 0)
-        .map((line) => line.split(columnSep)[column].replace('"', ""))
+        .map((line) => line.split(columnSep)[column].replaceAll('"', ""))
         .filter((url) => url);
 
     await fs.writeFile(`./urls/${fileBase}.json`, JSON.stringify(urls));
