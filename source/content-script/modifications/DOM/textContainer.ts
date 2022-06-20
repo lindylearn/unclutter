@@ -694,11 +694,13 @@ export default class TextContainerModifier implements PageModifier {
         }`,
         `.lindy-header-font-size-max {
             font-size: 50px !important;
+            line-height: 1em !important;
         }`,
-        // TODO add classes to siblings to improve selector performance
-        // `.lindy-text-remove-grid > *:not(.${lindyContainerClass}) {
-        //     display: none !important;
-        // }`,
+        ...["margin-top", "margin-bottom", "padding-top", "padding-bottom"].map(
+            (property) => `.lindy-clean-${property}:not(#fakeID#fakeID#fakeID) {
+            ${property}: 10px !important;
+        }`
+        ),
     ];
 
     // Get classes from overrideCssDeclarations to apply to a certain node
@@ -723,6 +725,35 @@ export default class TextContainerModifier implements PageModifier {
             // put maximum on header font size
             // e.g. WP template uses 6em on https://blog.relyabilit.ie/the-curse-of-systems-thinkers/
             classes.push("lindy-header-font-size-max");
+        }
+
+        if (stackType === "header" || stackType === "image") {
+            [
+                "margin-top",
+                "margin-bottom",
+                "padding-top",
+                "padding-bottom",
+            ].map((property) => {
+                const value = activeStyle.getPropertyValue(property);
+                const valueFloat = parseFloat(value.replace("px", ""));
+
+                if (value.startsWith("-")) {
+                    classes.push(`lindy-clean-${property}`);
+                    return;
+                }
+
+                if (
+                    valueFloat >= 60 &&
+                    (stackType !== "image" ||
+                        valueFloat < node.scrollHeight * 0.7)
+                ) {
+                    // remove large margins (e.g. on https://progressive.org/magazine/bipartisan-rejection-school-choice-bryant/)
+                    // skip this if margin contributes 70% of an image's height (e.g. on https://www.cnbc.com/2022/06/20/what-is-staked-ether-steth-and-why-is-it-causing-havoc-in-crypto.html)
+
+                    classes.push(`lindy-clean-${property}`);
+                    return;
+                }
+            });
         }
 
         if (activeStyle.display === "grid") {
