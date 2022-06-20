@@ -65,7 +65,7 @@ export default class OverlayManager implements PageModifier {
     createIframes() {
         this.topleftIframe = this.createIframeNode("lindy-info-topleft");
         this.topleftIframe.style.maxWidth =
-            "calc((100vw - var(--lindy-pagewidth)) / 2 - 5px)"; // set initial style to prevent initial transition
+            "calc((100vw - var(--lindy-pagewidth)) / 2 - 7px)"; // set initial style to prevent initial transition
 
         document.documentElement.appendChild(this.topleftIframe);
 
