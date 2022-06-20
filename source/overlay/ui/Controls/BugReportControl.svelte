@@ -1,13 +1,13 @@
 <script lang="ts">
     import { reportPageContentScript } from "../../../common/bugReport";
     import TextContainerModifier from "../../../content-script/modifications/DOM/textContainer";
-    import ElementPicker from "../elementPicker";
+    import ElementPickerModifier from "../../../content-script/modifications/elementPicker";
     import Icon from "../Icon.svelte";
-    import ElementPickerDialog from "./ElementPickerDialog.svelte";
+    import ElementPickerModifierDialog from "./ElementPickerDialog.svelte";
     import UiControlWithDialog from "./UIControlWithDialog.svelte";
 
-    export let domain: string;
-    export let textContainerModifier: TextContainerModifier;
+    export let elementPickerModifier: ElementPickerModifier;
+    // export let textContainerModifier: TextContainerModifier;
 
     let defaultOpen: boolean = false;
     let supportElementBlocker: boolean = true;
@@ -48,13 +48,12 @@
         // }, 3000);
     }
 
-    const elementPicker = new ElementPicker(domain);
     function toggleElementBlocker() {
         activeElementBlocker = !activeElementBlocker;
         if (activeElementBlocker) {
-            elementPicker.enable();
+            elementPickerModifier.enable();
         } else {
-            elementPicker.disable();
+            elementPickerModifier.disable();
         }
     }
 </script>
@@ -87,7 +86,10 @@
         </div>
     </div>
     {#if activeElementBlocker}
-        <ElementPickerDialog {elementPicker} on:save={toggleElementBlocker} />
+        <ElementPickerModifierDialog
+            {elementPickerModifier}
+            on:save={toggleElementBlocker}
+        />
     {/if}
 </UiControlWithDialog>
 

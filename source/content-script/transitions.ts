@@ -10,6 +10,7 @@ import ThemeModifier from "./modifications/CSSOM/theme";
 import CSSOMProvider from "./modifications/CSSOM/_provider";
 import ReadingTimeModifier from "./modifications/DOM/readingTime";
 import TextContainerModifier from "./modifications/DOM/textContainer";
+import ElementPickerModifier from "./modifications/elementPicker";
 import OverlayManager from "./modifications/overlay";
 import {
     PageModifier,
@@ -37,11 +38,13 @@ export default class TransitionManager implements PageModifier {
         this.textContainerModifier,
         this.bodyStyleModifier
     );
+    private elementPickerModifier = new ElementPickerModifier(this.domain);
     private overlayManager = new OverlayManager(
         this.domain,
         this.themeModifier,
         this.annotationsModifier,
-        this.textContainerModifier
+        this.textContainerModifier,
+        this.elementPickerModifier
     );
 
     private readingTimeModifier = new ReadingTimeModifier(this.overlayManager);

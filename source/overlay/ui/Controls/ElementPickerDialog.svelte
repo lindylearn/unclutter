@@ -1,20 +1,20 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
-    import ElementPicker from "../elementPicker";
+    import ElementPickerModifier from "../../../content-script/modifications/elementPicker";
     import Icon from "../Icon.svelte";
 
-    export let elementPicker: ElementPicker;
+    export let elementPickerModifier: ElementPickerModifier;
     const dispatch = createEventDispatcher();
 
-    let elementCount: number = elementPicker.pageSelectors.length;
-    elementPicker.pickedElementListener.push(onPickedElement);
+    let elementCount: number = elementPickerModifier.pageSelectors.length;
+    elementPickerModifier.pickedElementListener.push(onPickedElement);
     function onPickedElement() {
         elementCount += 1;
     }
 
     function reset() {
         elementCount = 0;
-        elementPicker.resetPage();
+        elementPickerModifier.resetPage();
     }
 
     let showSaveMessage: boolean = false;
@@ -24,7 +24,7 @@
             await new Promise((r) => setTimeout(r, 600));
         }
 
-        elementPicker.saveSelectors();
+        elementPickerModifier.saveSelectors();
         dispatch("save");
     }
 </script>

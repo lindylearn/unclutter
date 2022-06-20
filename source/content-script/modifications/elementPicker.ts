@@ -10,11 +10,13 @@ import {
     lindyImageContainerClass,
     lindyMainContentContainerClass,
     lindyMainHeaderContainerClass,
-} from "../../content-script/modifications/DOM/textContainer";
+} from "./DOM/textContainer";
+import { PageModifier, trackModifierExecution } from "./_interface";
 
 const pendingBlockedElement = "lindy-just-blocked-element";
 
-export default class ElementPicker {
+@trackModifierExecution
+export default class ElementPickerModifier implements PageModifier {
     private domain: string;
     private spotlight: HTMLElement;
     private currentSelection: HTMLElement;
