@@ -29,6 +29,8 @@
     .lindy-tooltp {
         position: relative;
         filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.05));
+
+        cursor: pointer;
     }
     .lindy-tooltp:before,
     .lindy-tooltp:after {

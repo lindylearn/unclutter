@@ -7,6 +7,7 @@
     export let textContainerModifier: TextContainerModifier;
 
     let defaultOpen: boolean = false;
+    let showElementBlocker: boolean = true;
     let captionMessage: string = `Is there an issue with this article?`;
     if (document.body.scrollHeight < 300) {
         captionMessage = `Sorry this article doesn't work.`;
@@ -29,6 +30,7 @@
         window.addEventListener("blur", onInteraction); // iframe click
         containerElement.addEventListener("mouseenter", onInteraction);
 
+        showElementBlocker = false;
         defaultOpen = true;
     }
 
@@ -46,24 +48,30 @@
 <UiControlWithDialog iconName="bug" {defaultOpen}>
     <div class="lindy-bugreport-content" bind:this={containerElement}>
         <div class="lindy-bugreport-caption">{captionMessage}</div>
-        <div
-            class={"lindy-bugreport-button " +
-                (reportedPage ? "lindy-reported" : "")}
-            on:click={reportPage}
-        >
-            <Icon iconName="flag" />
-            <div>{reportedPage ? "Thank you!" : "Report page"}</div>
+        <div class="lindy-bugreport-buttons">
+            {#if showElementBlocker}
+                <div class="lindy-bugreport-button lindy-bugreport-block">
+                    <Icon iconName="selector" />
+                    <div>Block elements</div>
+                </div>
+            {/if}
+
+            <div
+                class={"lindy-bugreport-button lindy-bugreport-flag " +
+                    (reportedPage ? "lindy-reported" : "")}
+                on:click={reportPage}
+            >
+                <Icon iconName="flag" />
+                <div>{reportedPage ? "Thank you!" : "Report page"}</div>
+            </div>
         </div>
     </div>
 </UiControlWithDialog>
 
 <style global lang="postcss">
     .lindy-bugreport-content {
-        padding: 10px 12px;
+        padding: 10px;
         width: max-content;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
 
         color: var(--text-color);
         font-family: Poppins, sans-serif;
@@ -76,6 +84,11 @@
         font-weight: 600;
     }
 
+    .lindy-bugreport-buttons {
+        display: flex;
+        justify-content: end;
+        gap: 10px;
+    }
     .lindy-bugreport-button {
         padding: 2px 8px;
         display: flex;
@@ -86,16 +99,15 @@
         color: var(--text-color);
 
         cursor: pointer;
-        background-color: #edd75b;
         border: none;
         border-radius: 5px;
         box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1),
             0 1px 2px -1px rgb(0 0 0 / 0.1);
+        background-color: #f3f4f6;
+
         transform: scale(100%);
-        filter: brightness(100%);
-        transition: box-shadow 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
-            transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
-            filter 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        /* filter: brightness(100%); */
+        transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
     .lindy-bugreport-button > .lindy-ui-icon {
         color: var(--text-color) !important;
@@ -106,10 +118,18 @@
     .lindy-bugreport-button:not(.lindy-reported):hover {
         box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1),
             0 2px 4px -2px rgb(0 0 0 / 0.1);
-        filter: brightness(95%);
+        background-color: #e5e7eb;
+        /* filter: brightness(95%); */
     }
     .lindy-bugreport-button.lindy-reported {
         transform: scale(97%);
         box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
     }
+
+    /* .lindy-bugreport-flag:hover {
+        background-color: #edd75b;
+    }
+    .lindy-bugreport-block:hover {
+        background-color: #f87171;
+    } */
 </style>
