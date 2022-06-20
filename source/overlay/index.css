@@ -92,6 +92,39 @@
     animation: none;
 }
 
+.lindy-element-spotlght {
+    position: absolute;
+    z-index: 200;
+    visibility: hidden;
+    opacity: 0;
+
+    background-color: red;
+    border-radius: 5px;
+    cursor: pointer;
+
+    transition: opacity 0.1s ease-in-out, top 0.1s ease-in-out, left 0.1s ease-in-out, height 0.1s ease-in-out;
+}
+.lindy-element-spotlght.lindy-is-shrinking {
+    height: 0 !important;
+    transition: height 0.3s ease-in-out;
+}
+.lindy-just-blocked-element:not(#fakeID#fakeID#fakeID#fakeID) {
+    display: block !important;
+    overflow: hidden !important;
+
+    height: 0px !important;
+    max-height: none !important;
+    min-height: auto !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+
+    opacity: 0 !important;
+
+    transition: all 0.3s ease-in-out;
+}
+
 @media (max-width: 1200px) {
     #lindy-info-topleft {
         display: none !important;

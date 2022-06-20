@@ -100,6 +100,8 @@ export default class BodyStyleModifier implements PageModifier {
             "none",
             "important"
         );
+        document.documentElement.style.setProperty("margin", "0", "important");
+        document.documentElement.style.setProperty("padding", "0", "important");
     }
 
     private modifyBodyStyle() {

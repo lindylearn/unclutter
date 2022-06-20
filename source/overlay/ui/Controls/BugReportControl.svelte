@@ -1,13 +1,16 @@
 <script lang="ts">
     import { reportPageContentScript } from "../../../common/bugReport";
     import TextContainerModifier from "../../../content-script/modifications/DOM/textContainer";
+    import ElementPicker from "../elementPicker";
     import Icon from "../Icon.svelte";
+    import ElementPickerDialog from "./ElementPickerDialog.svelte";
     import UiControlWithDialog from "./UIControlWithDialog.svelte";
 
     export let textContainerModifier: TextContainerModifier;
 
-    let defaultOpen: boolean = false;
-    let showElementBlocker: boolean = true;
+    let defaultOpen: boolean = true;
+    let supportElementBlocker: boolean = true;
+    let activeElementBlocker: boolean = false;
     let captionMessage: string = `Is there an issue with this article?`;
     if (document.body.scrollHeight < 500) {
         captionMessage = `Sorry this article doesn't work.`;
@@ -30,7 +33,7 @@
         window.addEventListener("blur", onInteraction); // iframe click
         containerElement.addEventListener("mouseenter", onInteraction);
 
-        showElementBlocker = false;
+        supportElementBlocker = false;
         defaultOpen = true;
     }
 
@@ -43,14 +46,27 @@
         //     reportedPage = false;
         // }, 3000);
     }
+
+    const elementPicker = new ElementPicker();
+    function toggleElementBlocker() {
+        activeElementBlocker = !activeElementBlocker;
+        if (activeElementBlocker) {
+            elementPicker.enable();
+        } else {
+            elementPicker.disable();
+        }
+    }
 </script>
 
 <UiControlWithDialog iconName="bug" {defaultOpen}>
     <div class="lindy-bugreport-content" bind:this={containerElement}>
         <div class="lindy-bugreport-caption">{captionMessage}</div>
         <div class="lindy-bugreport-buttons">
-            {#if showElementBlocker}
-                <div class="lindy-bugreport-button lindy-bugreport-block">
+            {#if supportElementBlocker}
+                <div
+                    class="lindy-bugreport-button lindy-bugreport-block"
+                    on:click={toggleElementBlocker}
+                >
                     <Icon iconName="selector" />
                     <div>Block elements</div>
                 </div>
@@ -66,12 +82,17 @@
             </div>
         </div>
     </div>
+    {#if activeElementBlocker}
+        <ElementPickerDialog {elementPicker} on:save={toggleElementBlocker} />
+    {/if}
 </UiControlWithDialog>
 
 <style global lang="postcss">
     .lindy-bugreport-content {
+        position: relative;
         padding: 10px;
         width: max-content;
+        z-index: 100;
 
         color: var(--text-color);
         font-family: Poppins, sans-serif;
@@ -104,6 +125,7 @@
         box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1),
             0 1px 2px -1px rgb(0 0 0 / 0.1);
         background-color: #f3f4f6;
+        user-select: none;
 
         transform: scale(100%);
         filter: brightness(100%);
@@ -118,7 +140,7 @@
     .lindy-bugreport-button:not(.lindy-selected):hover {
         box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1),
             0 2px 4px -2px rgb(0 0 0 / 0.1);
-        filter: brightness(95%);
+        filter: brightness(90%);
     }
     .lindy-bugreport-button.lindy-selected {
         transform: scale(97%);

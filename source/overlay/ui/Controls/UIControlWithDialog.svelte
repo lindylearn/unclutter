@@ -16,6 +16,7 @@
 <style lang="postcss">
     .lindy-ui-dialog-container {
         position: relative;
+        z-index: 100;
     }
 
     /* dialog box */

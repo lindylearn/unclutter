@@ -529,7 +529,7 @@ export default class TextContainerModifier implements PageModifier {
                 margin-right: 0 !important;
                 padding-left: 0 !important;
                 padding-right: 0 !important;
-                height: auto !important;
+                height: auto;
                 transform: none !important;
                 float: none !important;
             }
