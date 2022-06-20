@@ -846,3 +846,10 @@ pre {
 .Post-image-block {
     padding-bottom: 10px;
 }
+
+
+/* https://www.vox.com/recode/23170900/leaked-amazon-memo-warehouses-hiring-shortage */
+.c-wide-block {
+    width: 100% !important;
+    margin-left: 0 !important;
+}

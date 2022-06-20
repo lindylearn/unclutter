@@ -501,7 +501,7 @@ export default class TextContainerModifier implements PageModifier {
                 background: none !important;
                 box-shadow: none !important;
                 z-index: 1 !important;
-                overflow: hidden !important;
+                overflow: visible !important;
                 transition: margin-left 0.4s cubic-bezier(0.33, 1, 0.68, 1);
             }
             /* more strict cleanup for main text containers */
@@ -555,6 +555,7 @@ export default class TextContainerModifier implements PageModifier {
                 /* y padding often used to make space for images, e.g. on theintercept or variety.com */
                 padding-left: 0 !important;
                 padding-right: 0 !important;
+                height: auto !important;
 
                 transform: none !important;
                 top: 0 !important;
@@ -745,10 +746,10 @@ export default class TextContainerModifier implements PageModifier {
                 if (
                     valueFloat >= 60 &&
                     (stackType !== "image" ||
-                        valueFloat < node.scrollHeight * 0.7)
+                        valueFloat < node.scrollHeight * 0.9)
                 ) {
                     // remove large margins (e.g. on https://progressive.org/magazine/bipartisan-rejection-school-choice-bryant/)
-                    // skip this if margin contributes 70% of an image's height (e.g. on https://www.cnbc.com/2022/06/20/what-is-staked-ether-steth-and-why-is-it-causing-havoc-in-crypto.html)
+                    // skip this if margin contributes >= 90% of an image's height (e.g. on https://www.cnbc.com/2022/06/20/what-is-staked-ether-steth-and-why-is-it-causing-havoc-in-crypto.html)
 
                     classes.push(`lindy-clean-${property}`);
                     return;
