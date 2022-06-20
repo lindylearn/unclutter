@@ -88,6 +88,9 @@
         transform: translate3d(-10px, 0, 0) !important;
 
         line-height: 1.3;
+        padding-top: calc(6px - 0.15em);
+        padding-bottom: calc(6px - 0.15em);
+
         white-space: break-spaces !important;
         width: max-content;
         max-width: 245px;
