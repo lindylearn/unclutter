@@ -2,6 +2,7 @@
     import Icon from "../Icon.svelte";
 
     export let iconName: string;
+    export let iconNameOnHover: string;
     export let tooltip: string;
     export let tooltipReverse: boolean = false;
     export let className: string = "";
@@ -10,16 +11,21 @@
 
 <div
     class={"lindy-tooltp lindy-fade " +
-        (tooltipReverse ? "lindy-tooltp-reverse " : " ") +
+        (tooltipReverse ? "lindy-tooltp-reverse " : "") +
+        (iconNameOnHover ? "hover-icon-change " : "") +
         className}
     data-title={tooltip}
     on:click={onClick}
 >
     <Icon {iconName} />
+    {#if iconNameOnHover}
+        <Icon iconName={iconNameOnHover} />
+    {/if}
+
     <slot />
 </div>
 
-<style lang="postcss">
+<style global lang="postcss">
     .lindy-tooltp {
         position: relative;
         filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.05));
@@ -94,5 +100,19 @@
     }
     .lindy-tooltp-reverse.lindy-fade:hover:after {
         transform: translate3d(0, 0, 0) scaleX(-1) !important;
+    }
+
+    .hover-icon-change > .lindy-ui-icon:nth-child(2) {
+        position: absolute;
+        top: 0;
+        left: 0;
+
+        opacity: 0;
+    }
+    .hover-icon-change:hover > .lindy-ui-icon:first-child {
+        opacity: 0;
+    }
+    .hover-icon-change:hover > .lindy-ui-icon:nth-child(2) {
+        opacity: 1;
     }
 </style>
