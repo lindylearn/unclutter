@@ -25,7 +25,7 @@
     tooltip="Unclutter settings"
     onClick={() => browser.runtime.sendMessage({ event: "openOptionsPage" })}
 />
-<BugReportControl {textContainerModifier} />
+<BugReportControl {domain} {textContainerModifier} />
 <ThemeControl {domain} {themeModifier} />
 <PrivateNotesControl {annotationsModifer} {overlayModifier} />
 <SocialHighlightsControl

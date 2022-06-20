@@ -1,3 +1,7 @@
+import {
+    getBlockedElementSelectors,
+    setBlockedElementSelectors,
+} from "../../common/storage";
 import { overrideClassname } from "../../common/stylesheets";
 import {
     lindyContainerClass,
@@ -11,11 +15,20 @@ import {
 const pendingBlockedElement = "lindy-just-blocked-element";
 
 export default class ElementPicker {
+    private domain: string;
     private spotlight: HTMLElement;
     private currentSelection: HTMLElement;
 
-    private pageSelectors: string[] = [];
+    public pageSelectors: string[] = [];
     public pickedElementListener: (() => void)[] = [];
+
+    constructor(domain: string) {
+        this.domain = domain;
+
+        getBlockedElementSelectors(this.domain).then((selectors) => {
+            this.pageSelectors = selectors;
+        });
+    }
 
     enable() {
         console.log("enable element picker");
@@ -41,7 +54,9 @@ export default class ElementPicker {
         );
         this.spotlight.remove();
 
-        this.pageSelectors = [];
+        getBlockedElementSelectors(this.domain).then((selectors) => {
+            this.pageSelectors = selectors;
+        });
     }
 
     resetPage() {
@@ -52,8 +67,8 @@ export default class ElementPicker {
             .forEach((node) => node.classList.remove(pendingBlockedElement));
     }
 
-    saveSelectors() {
-        // TODO
+    async saveSelectors() {
+        await setBlockedElementSelectors(this.domain, this.pageSelectors);
     }
 
     private onMouseOver(event: MouseEvent) {
@@ -151,7 +166,7 @@ export default class ElementPicker {
 
     private async onFinishSelection() {
         const selector = this.generateSelectorFor(this.currentSelection);
-        console.log(selector, this.currentSelection);
+        // console.log(selector, this.currentSelection);
 
         // set animation start properties
         const activeStyle = window.getComputedStyle(this.currentSelection);

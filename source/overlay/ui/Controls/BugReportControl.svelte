@@ -6,9 +6,10 @@
     import ElementPickerDialog from "./ElementPickerDialog.svelte";
     import UiControlWithDialog from "./UIControlWithDialog.svelte";
 
+    export let domain: string;
     export let textContainerModifier: TextContainerModifier;
 
-    let defaultOpen: boolean = true;
+    let defaultOpen: boolean = false;
     let supportElementBlocker: boolean = true;
     let activeElementBlocker: boolean = false;
     let captionMessage: string = `Is there an issue with this article?`;
@@ -47,7 +48,7 @@
         // }, 3000);
     }
 
-    const elementPicker = new ElementPicker();
+    const elementPicker = new ElementPicker(domain);
     function toggleElementBlocker() {
         activeElementBlocker = !activeElementBlocker;
         if (activeElementBlocker) {
@@ -58,7 +59,10 @@
     }
 </script>
 
-<UiControlWithDialog iconName="bug" {defaultOpen}>
+<UiControlWithDialog
+    iconName="bug"
+    defaultOpen={defaultOpen || activeElementBlocker}
+>
     <div class="lindy-bugreport-content" bind:this={containerElement}>
         <div class="lindy-bugreport-caption">{captionMessage}</div>
         <div class="lindy-bugreport-buttons">

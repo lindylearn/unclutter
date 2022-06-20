@@ -6,7 +6,7 @@
     export let elementPicker: ElementPicker;
     const dispatch = createEventDispatcher();
 
-    let elementCount: number = 0;
+    let elementCount: number = elementPicker.pageSelectors.length;
     elementPicker.pickedElementListener.push(onPickedElement);
     function onPickedElement() {
         elementCount += 1;
@@ -21,7 +21,7 @@
     async function save() {
         if (elementCount > 0) {
             showSaveMessage = true;
-            await new Promise((r) => setTimeout(r, 1000));
+            await new Promise((r) => setTimeout(r, 600));
         }
 
         elementPicker.saveSelectors();
@@ -48,7 +48,7 @@
             <div>
                 {#if !showSaveMessage}
                     Save <span class="lindy-counter-num">{elementCount}</span>
-                    change{elementCount !== 1 ? "s" : ""}
+                    selection{elementCount !== 1 ? "s" : ""}
                 {:else}
                     Thank you!
                 {/if}

@@ -76,3 +76,27 @@ export async function mergeUserTheme(partialTheme: UserTheme): Promise<void> {
     };
     await browser.storage.sync.set({ "custom-global-theme": themeConfig });
 }
+
+export async function getBlockedElementSelectors(
+    domain: string
+): Promise<string[]> {
+    const config = await browser.storage.sync.get([
+        "blocked-element-selectors",
+    ]);
+    const selectorsPerDomain = config["blocked-element-selectors"] || {};
+    return selectorsPerDomain[domain] || [];
+}
+export async function setBlockedElementSelectors(
+    domain: string,
+    selectors: string[]
+): Promise<void> {
+    const config = await browser.storage.sync.get([
+        "blocked-element-selectors",
+    ]);
+    await browser.storage.sync.set({
+        "blocked-element-selectors": {
+            ...config["blocked-element-selectors"],
+            [domain]: selectors,
+        },
+    });
+}
