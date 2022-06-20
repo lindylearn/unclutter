@@ -74,9 +74,9 @@
     }
     function getTooltip(currentUserSetting: domainUserSetting): string {
         if (currentUserSetting === "allow") {
-            return `Enabled on ${domain}`;
+            return `Disable automatic activation`;
         } else if (currentUserSetting === "deny") {
-            return `Disabled on ${domain}`;
+            return `Enable automatic activation`;
         } else {
             return `Click to automatically unclutter ${domain}`;
         }

@@ -54,8 +54,12 @@
 <UiControl
     iconName={socialHighlightsEnabled ? "social_enabled" : "social_disabled"}
     tooltip={socialHighlightsEnabled
-        ? `Click to hide ${socialHighlightsCount || 0} social highlights`
-        : `Click to show ${socialHighlightsCount || 0} social highlights`}
+        ? `Click to hide ${socialHighlightsCount || 0} social highlight${
+              socialHighlightsCount !== 1 ? "s" : ""
+          }`
+        : `Click to show ${socialHighlightsCount || 0} social highlight${
+              socialHighlightsCount !== 1 ? "s" : ""
+          }`}
     onClick={toggleEnabled}
 >
     {#if socialHighlightsCount}
