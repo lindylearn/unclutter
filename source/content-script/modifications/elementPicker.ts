@@ -43,8 +43,6 @@ export default class ElementPickerModifier implements PageModifier {
     }
 
     enable() {
-        console.log("enable element picker");
-
         this.spotlight = document.createElement("div");
         this.spotlight.className = `${overrideClassname} lindy-element-spotlght`;
         // this.spotlight.style.contain = "strict";

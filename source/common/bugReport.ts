@@ -40,6 +40,9 @@ export async function submitElementBlocklistContentScript(selectors: string[]) {
     try {
         await fetch(`https://api2.lindylearn.io/report_blocked_elements`, {
             method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
             body: JSON.stringify({
                 url,
                 domain,

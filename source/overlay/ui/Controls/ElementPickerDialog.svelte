@@ -32,9 +32,9 @@
             showSaveMessage = true;
 
             // submit to github, but keep local state
-            // submitElementBlocklistContentScript(
-            //     elementPickerModifier.pageSelectors
-            // );
+            submitElementBlocklistContentScript(
+                elementPickerModifier.pageSelectors
+            );
             await new Promise((r) => setTimeout(r, 600));
         }
 
