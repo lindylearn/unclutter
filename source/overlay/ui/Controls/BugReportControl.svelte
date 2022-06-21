@@ -10,7 +10,7 @@
     export let elementPickerModifier: ElementPickerModifier;
     // export let textContainerModifier: TextContainerModifier;
 
-    let defaultOpen: boolean = false;
+    let defaultOpen: boolean = true;
     let supportElementBlocker: boolean = true;
     let activeElementBlocker: boolean = false;
     let captionMessage: string = `Is there an issue with this article?`;
@@ -42,12 +42,14 @@
     let reportedPage: boolean = false;
     function reportPage() {
         reportedPage = true;
+
+        setTimeout(() => {
+            reportedPage = false;
+        }, 3000);
+        return;
+
         incrementPageReportCount();
         reportPageContentScript();
-
-        // setTimeout(() => {
-        //     reportedPage = false;
-        // }, 3000);
     }
 
     function toggleElementBlocker() {
@@ -69,7 +71,8 @@
         <div class="lindy-bugreport-buttons">
             {#if supportElementBlocker}
                 <div
-                    class="lindy-bugreport-button lindy-bugreport-block"
+                    class={"lindy-bugreport-button lindy-bugreport-block " +
+                        (activeElementBlocker ? "lindy-pressed" : "")}
                     on:click={toggleElementBlocker}
                 >
                     <Icon iconName="selector" />
@@ -79,7 +82,7 @@
 
             <div
                 class={"lindy-bugreport-button lindy-bugreport-flag " +
-                    (reportedPage ? "lindy-selected" : "")}
+                    (reportedPage ? "lindy-pressed" : "")}
                 on:click={reportPage}
             >
                 <Icon iconName="flag" />
@@ -145,14 +148,14 @@
         margin-right: 3px;
     }
 
-    .lindy-bugreport-button:not(.lindy-selected):hover {
+    .lindy-bugreport-button:not(.lindy-pressed):hover {
         box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1),
             0 2px 4px -2px rgb(0 0 0 / 0.1);
-        filter: brightness(90%);
+        filter: brightness(95%);
     }
-    .lindy-bugreport-button.lindy-selected {
+    .lindy-bugreport-button.lindy-pressed {
         transform: scale(97%);
-        box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+        box-shadow: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
     }
 
     .lindy-bugreport-flag {

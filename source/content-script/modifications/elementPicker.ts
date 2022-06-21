@@ -74,10 +74,13 @@ export default class ElementPickerModifier implements PageModifier {
     resetPage() {
         this.pageSelectors = [];
 
-        document
-            .querySelectorAll(`.${pendingBlockedElement}`)
-            .forEach((node) => node.classList.remove(pendingBlockedElement));
-        document.getElementById("element-picker-block").remove();
+        try {
+            document
+                .querySelectorAll(`.${pendingBlockedElement}`)
+                .forEach((node) =>
+                    node.classList.remove(pendingBlockedElement)
+                );
+        } catch {}
     }
 
     async saveSelectors() {

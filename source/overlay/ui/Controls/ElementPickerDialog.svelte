@@ -13,9 +13,14 @@
         elementCount += 1;
     }
 
-    function reset() {
+    let isResetDelay = false;
+    async function reset() {
         elementCount = 0;
         elementPickerModifier.resetPage();
+        isResetDelay = true;
+
+        await new Promise((r) => setTimeout(r, 200));
+        isResetDelay = false;
     }
 
     let showSaveMessage: boolean = false;
@@ -24,9 +29,9 @@
             showSaveMessage = true;
 
             // submit to github, but keep local state
-            submitElementBlocklistContentScript(
-                elementPickerModifier.pageSelectors
-            );
+            // submitElementBlocklistContentScript(
+            //     elementPickerModifier.pageSelectors
+            // );
             await new Promise((r) => setTimeout(r, 600));
         }
 
@@ -45,11 +50,19 @@
         > about element blocking
     </div>
     <div class="lindy-bugreport-buttons">
-        <div class="lindy-bugreport-button" on:click={reset}>
+        <div
+            class={"lindy-bugreport-button " +
+                (isResetDelay ? "lindy-pressed" : "")}
+            on:click={reset}
+        >
             <Icon iconName="reset" />
             <div>Reset</div>
         </div>
-        <div class="lindy-bugreport-button" on:click={save}>
+        <div
+            class={"lindy-bugreport-button " +
+                (showSaveMessage ? "lindy-pressed" : "")}
+            on:click={save}
+        >
             <Icon iconName="save" />
             <div>
                 {#if !showSaveMessage}
