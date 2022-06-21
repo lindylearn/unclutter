@@ -2,6 +2,13 @@
     "lemonde.fr": [
         ".meta__date-reading",
         ".meta.meta__social.old__meta-social",
-        ".article__status"
-    ]
+        ".article__status",
+    ],
+    "steveblank.com": [
+        "#syndication",
+        "#searchbox",
+        ".alignright.wp-image-4466.size-full.jetpack-lazy-image.jetpack-lazy-image--handled",
+        ".getsocial",
+        "[id*='like-post-wrapper-']",
+    ],
 }
