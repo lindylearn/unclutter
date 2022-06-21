@@ -10,5 +10,10 @@
         ".alignright.wp-image-4466.size-full.jetpack-lazy-image.jetpack-lazy-image--handled",
         ".getsocial",
         "[id*='like-post-wrapper-']"
+    ],
+    "news.microsoft.com": [
+        ".f-hero-header",
+        ".iframe-fragment.x-type-center",
+        ".f-content-column.f-content-column-1"
     ]
 }
