@@ -8,6 +8,7 @@ Here you'll find the semi-technical documentation for most Unclutter features:
 -   [Automatic activation settings](article-detection.md)
 -   [Social highlights](social-highlights.md)
 -   [Private notes](annotations.md)
+-   [Element blocking](element-blocking.md)
 
 As well as related topics:
 
