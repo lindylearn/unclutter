@@ -86,7 +86,17 @@
                 on:click={reportPage}
             >
                 <Icon iconName="flag" />
-                <div>{reportedPage ? "Thank you!" : "Report page"}</div>
+                <div style="position: relative;">
+                    <span style={reportedPage ? "visibility: hidden;" : ""}
+                        >Report page</span
+                    >
+                    <div
+                        style={"position: absolute; top: 0; left: 0;" +
+                            (reportedPage ? "" : "display: none;")}
+                    >
+                        Thank you!
+                    </div>
+                </div>
             </div>
         </div>
     </div>

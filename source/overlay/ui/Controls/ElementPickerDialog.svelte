@@ -64,13 +64,20 @@
             on:click={save}
         >
             <Icon iconName="save" />
-            <div>
-                {#if !showSaveMessage}
-                    Save <span class="lindy-counter-num">{elementCount}</span>
-                    selector{elementCount !== 1 ? "s" : ""}
-                {:else}
+            <div style="position: relative;">
+                <span style={showSaveMessage ? "visibility: hidden;" : ""}
+                    >Save <span class="lindy-counter-num">{elementCount}</span>
+                    selector<span
+                        style={elementCount !== 1 ? "" : "visibility: hidden;"}
+                        >s</span
+                    ></span
+                >
+                <div
+                    style={"position: absolute; top: 0; left: 0;" +
+                        (showSaveMessage ? "" : "display: none;")}
+                >
                     Thank you!
-                {/if}
+                </div>
             </div>
         </div>
     </div>
@@ -92,8 +99,7 @@
         font-family: Poppins, sans-serif;
 
         border-radius: 5px;
-        filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.06))
-            drop-shadow(0 1px 2px rgb(0 0 0 / 0.05)); /* custom shadow, lighter than tw 'drop-shadow' */
+        /* shadow already set in parent */
         cursor: auto;
 
         animation: easeOutBounce 0.75s;
@@ -148,6 +154,6 @@
 
     .lindy-counter-num {
         display: inline-block;
-        font-variant-numeric: tabular-nums;
+        min-width: 0.5em;
     }
 </style>
