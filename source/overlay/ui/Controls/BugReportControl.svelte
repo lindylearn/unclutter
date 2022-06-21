@@ -1,5 +1,6 @@
 <script lang="ts">
     import { reportPageContentScript } from "../../../common/bugReport";
+    import { incrementPageReportCount } from "../../../common/storage";
     import TextContainerModifier from "../../../content-script/modifications/DOM/textContainer";
     import ElementPickerModifier from "../../../content-script/modifications/elementPicker";
     import Icon from "../Icon.svelte";
@@ -41,6 +42,7 @@
     let reportedPage: boolean = false;
     function reportPage() {
         reportedPage = true;
+        incrementPageReportCount();
         reportPageContentScript();
 
         // setTimeout(() => {

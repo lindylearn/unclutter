@@ -8,6 +8,7 @@ import {
 } from "../common/featureFlags";
 import browser, { getBrowserType } from "../common/polyfill";
 import { reportEventContentScript } from "../content-script/messaging";
+import ContributionStats from "./ContributionStats";
 import DomainSettingsList from "./DomainSettingsList";
 import FeatureFlagSwitch from "./FeatureFlagSwitch";
 import HypothesisConfig from "./HypothesisConfig";
@@ -207,7 +208,7 @@ function OptionsPage({}) {
             </OptionsGroup>
 
             <OptionsGroup
-                headerText="Other"
+                headerText="Contributions"
                 iconSvg={
                     <svg className="w-5" viewBox="0 0 512 512">
                         <path
@@ -217,6 +218,7 @@ function OptionsPage({}) {
                     </svg>
                 }
             >
+                <ContributionStats />
                 <div className="">
                     This project is open source! Please post issues and feature
                     ideas{" "}
