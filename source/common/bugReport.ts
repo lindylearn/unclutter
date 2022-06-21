@@ -1,3 +1,5 @@
+import { reportEvent } from "../background/metrics";
+import { reportEventContentScript } from "../content-script/messaging";
 import browser, { getBrowserType } from "./polyfill";
 import { getDomainFrom } from "./util";
 
@@ -31,6 +33,7 @@ export async function handleReportBrokenPage(data) {
             }),
         });
     } catch {}
+    reportEvent("reportPage", { domain: data.domain });
 }
 
 export async function submitElementBlocklistContentScript(selectors: string[]) {
@@ -50,4 +53,8 @@ export async function submitElementBlocklistContentScript(selectors: string[]) {
             }),
         });
     } catch {}
+    reportEventContentScript("saveElementBlocker", {
+        domain,
+        selectorsCount: selectors.length,
+    });
 }

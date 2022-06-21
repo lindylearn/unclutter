@@ -1,6 +1,7 @@
 <script lang="ts">
     import { reportPageContentScript } from "../../../common/bugReport";
     import { incrementPageReportCount } from "../../../common/storage";
+    import { reportEventContentScript } from "../../../content-script/messaging";
     import TextContainerModifier from "../../../content-script/modifications/DOM/textContainer";
     import ElementPickerModifier from "../../../content-script/modifications/elementPicker";
     import Icon from "../Icon.svelte";
@@ -66,6 +67,7 @@
                 }
             }
             document.addEventListener("keydown", onKeyPress);
+            reportEventContentScript("enableElementBlocker");
         } else {
             elementPickerModifier.disable();
         }
