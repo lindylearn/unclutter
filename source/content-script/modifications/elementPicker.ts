@@ -81,6 +81,8 @@ export default class ElementPickerModifier implements PageModifier {
                     node.classList.remove(pendingBlockedElement)
                 );
         } catch {}
+
+        document.getElementById("element-picker-block")?.remove();
     }
 
     async saveSelectors() {
@@ -90,7 +92,6 @@ export default class ElementPickerModifier implements PageModifier {
     private onMouseOver(event: MouseEvent) {
         const startElement = event.target as HTMLElement;
         const endElement = this.iterateParents(startElement);
-        // console.log(startElement, endElement);
 
         let rect: DOMRect;
         if (endElement) {
@@ -141,11 +142,12 @@ export default class ElementPickerModifier implements PageModifier {
                 break;
             }
             if (
-                [lindyContainerClass, lindyMainHeaderContainerClass].some(
-                    (className) =>
-                        currentNode.parentElement.classList.contains(className)
-                )
+                currentNode.clientHeight + 20 <=
+                    currentNode.parentElement.clientHeight ||
+                currentNode.clientWidth >
+                    currentNode.parentElement.clientWidth + 20
             ) {
+                // significant height difference to parent -- give user the choice
                 break;
             }
 
@@ -182,7 +184,7 @@ export default class ElementPickerModifier implements PageModifier {
 
     private async onFinishSelection() {
         const selector = this.generateSelectorFor(this.currentSelection);
-        // console.log(selector, this.currentSelection);
+        console.log(selector, this.currentSelection);
 
         // set animation start properties
         const activeStyle = window.getComputedStyle(this.currentSelection);
@@ -199,8 +201,10 @@ export default class ElementPickerModifier implements PageModifier {
         this.spotlight.classList.remove("lindy-is-shrinking");
 
         // update UI
-        this.pageSelectors.push(selector);
-        this.pickedElementListener.map((listener) => listener());
+        if (selector) {
+            this.pageSelectors.push(selector);
+            this.pickedElementListener.map((listener) => listener());
+        }
     }
 
     private generateSelectorFor(node: HTMLElement): string {

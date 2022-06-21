@@ -25,6 +25,9 @@
 
     let showSaveMessage: boolean = false;
     async function save() {
+        // always save, can also be used to remove selectors
+        elementPickerModifier.saveSelectors();
+
         if (elementCount > 0) {
             showSaveMessage = true;
 
@@ -35,7 +38,6 @@
             await new Promise((r) => setTimeout(r, 600));
         }
 
-        elementPickerModifier.saveSelectors();
         dispatch("save");
     }
 </script>
