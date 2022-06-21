@@ -16,8 +16,8 @@ export async function getVersionMessagesToShow(): Promise<VersionMessage[]> {
     // but hide messages the user has dismissed
     const dismissedVersions = await getDismissedVersionMessages();
     const messagesToShow = newMessages
-        .filter(({ version }) => !dismissedVersions.includes(version))
-        .slice(0, 3);
+        .slice(0, 2) // only show newest updates
+        .filter(({ version }) => !dismissedVersions.includes(version));
 
     return messagesToShow;
 }
@@ -52,6 +52,10 @@ export async function saveDismissedVersionMessage(version: string) {
 }
 
 function getMainVersion(version: string) {
+    if (!version) {
+        return "";
+    }
+
     // drop bugfix release number
     return version.split(".").slice(0, 2).join(".");
 }

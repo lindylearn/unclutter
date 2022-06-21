@@ -169,7 +169,7 @@ function OptionsPage({}) {
                 }
             >
                 <p>
-                    Click the underlined text on 55,688 supported articles to
+                    Click the underlined text on 86,457+ supported articles to
                     show related conversations from{" "}
                     <a
                         href="https://news.ycombinator.com"

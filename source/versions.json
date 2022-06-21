@@ -13,6 +13,10 @@
     },
     {
         "version": "0.15.0",
-        "updateMessage": "New update: Article unclutter animation and stability improvements."
+        "updateMessage": "New update: Improved article unclutter animation."
+    },
+    {
+        "version": "0.16.0",
+        "updateMessage": "New update: Reliability improvements, element blocker & report page button."
     }
 ]
