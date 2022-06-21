@@ -154,14 +154,11 @@
         filter: brightness(95%);
     }
     .lindy-bugreport-button.lindy-pressed {
-        transform: scale(97%);
+        transform: scale(95%);
         box-shadow: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
     }
 
     .lindy-bugreport-flag {
         background-color: #edd75b;
     }
-    /* .lindy-bugreport-block:hover {
-        background-color: #f87171;
-    } */
 </style>
