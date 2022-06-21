@@ -10,7 +10,7 @@
     export let elementPickerModifier: ElementPickerModifier;
     // export let textContainerModifier: TextContainerModifier;
 
-    let defaultOpen: boolean = true;
+    let defaultOpen: boolean = false;
     let supportElementBlocker: boolean = true;
     let activeElementBlocker: boolean = false;
     let captionMessage: string = `Is there an issue with this article?`;
@@ -43,9 +43,9 @@
     function reportPage() {
         reportedPage = true;
 
-        setTimeout(() => {
-            reportedPage = false;
-        }, 3000);
+        // setTimeout(() => {
+        //     reportedPage = false;
+        // }, 3000);
         return;
 
         incrementPageReportCount();
@@ -56,6 +56,16 @@
         activeElementBlocker = !activeElementBlocker;
         if (activeElementBlocker) {
             elementPickerModifier.enable();
+
+            function onKeyPress(event: KeyboardEvent) {
+                if (["Esc", "Escape"].includes(event.key)) {
+                    document.removeEventListener("keydown", onKeyPress);
+
+                    elementPickerModifier.resetPage();
+                    toggleElementBlocker();
+                }
+            }
+            document.addEventListener("keydown", onKeyPress);
         } else {
             elementPickerModifier.disable();
         }
