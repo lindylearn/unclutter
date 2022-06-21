@@ -184,16 +184,25 @@ export default class ElementPickerModifier implements PageModifier {
 
     private async onFinishSelection() {
         const selector = this.generateSelectorFor(this.currentSelection);
-        console.log(selector, this.currentSelection);
+        if (!selector) {
+            return;
+        }
+        console.log(selector);
 
-        // set animation start properties
-        const activeStyle = window.getComputedStyle(this.currentSelection);
-        this.currentSelection.style.height = activeStyle.height;
-        this.currentSelection.style.opacity = "1";
+        const blockedNodes = [...document.querySelectorAll(selector)];
+
+        // set animation start properties`
+        blockedNodes.forEach((node: HTMLElement) => {
+            const activeStyle = window.getComputedStyle(node);
+            node.style.height = activeStyle.height;
+            node.style.opacity = "1";
+        });
         await new Promise((r) => setTimeout(r, 0)); // wait until applied
 
-        // block via removable class for now
-        this.currentSelection.classList.add(pendingBlockedElement);
+        // block via removable class
+        blockedNodes.forEach((node: HTMLElement) => {
+            node.classList.add(pendingBlockedElement);
+        });
         this.spotlight.classList.add("lindy-is-shrinking");
 
         // wait until transition done
