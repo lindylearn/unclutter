@@ -2,6 +2,7 @@
     "lemonde.fr": [
         ".meta__date-reading",
         ".meta.meta__social.old__meta-social",
-        ".article__status"
-    ]
+        ".article__status",
+    ],
+    "example.com": ["test-1", "test-3"],
 }
