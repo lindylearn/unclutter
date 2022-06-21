@@ -8,9 +8,7 @@
         "#syndication",
         "#searchbox",
         ".alignright.wp-image-4466.size-full.jetpack-lazy-image.jetpack-lazy-image--handled",
-        "#like-post-wrapper-6599589-4461-62b1c6c25059d",
         ".getsocial",
-        "#like-post-wrapper-6599589-4461-62b1cb5d41167",
-        "#like-post-wrapper-6599589-28976-62b1cac1be648",
+        "[id*='like-post-wrapper-']",
     ],
 }
