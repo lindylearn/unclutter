@@ -20,13 +20,31 @@ export async function handleReportBrokenPage(data) {
     const extensionInfo = await browser.management.getSelf();
 
     // running in unclutter-web via Next.js API function
-    fetch(`https://unclutter.lindylearn.io/api/reportBrokenPage`, {
-        method: "POST",
-        body: JSON.stringify({
-            ...data,
-            userAgent: navigator.userAgent,
-            browserType,
-            unclutterVersion: extensionInfo.version,
-        }),
-    });
+    try {
+        await fetch(`https://unclutter.lindylearn.io/api/reportBrokenPage`, {
+            method: "POST",
+            body: JSON.stringify({
+                ...data,
+                userAgent: navigator.userAgent,
+                browserType,
+                unclutterVersion: extensionInfo.version,
+            }),
+        });
+    } catch {}
+}
+
+export async function submitElementBlocklistContentScript(selectors: string[]) {
+    const url = window.location.href;
+    const domain = getDomainFrom(new URL(url));
+
+    try {
+        await fetch(`https://api2.lindylearn.io/report_blocked_elements`, {
+            method: "POST",
+            body: JSON.stringify({
+                url,
+                domain,
+                selectors,
+            }),
+        });
+    } catch {}
 }

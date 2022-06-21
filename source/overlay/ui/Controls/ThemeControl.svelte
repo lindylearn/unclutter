@@ -232,31 +232,4 @@
     #lindy-dark-theme-button {
         background-color: #212121;
     }
-
-    /* popup arrow */
-    .lindy-theme-ui:before {
-        /* arrow */
-        position: absolute;
-        top: 10px;
-        right: -8px;
-        height: 0;
-        width: 0;
-        content: "";
-
-        border-top: 8px solid transparent;
-        border-bottom: 8px solid transparent;
-        border-left: 8px solid var(--background-color);
-    }
-    /* spacer under arrow to avoid breaking hover state */
-    .lindy-theme-container:hover:before {
-        position: absolute;
-        top: 0;
-        right: 0;
-
-        display: block;
-        content: "";
-        width: 200%;
-        height: 300%;
-        cursor: auto;
-    }
 </style>

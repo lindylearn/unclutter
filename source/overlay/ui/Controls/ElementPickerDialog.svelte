@@ -1,5 +1,6 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
+    import { submitElementBlocklistContentScript } from "../../../common/bugReport";
     import ElementPickerModifier from "../../../content-script/modifications/elementPicker";
     import Icon from "../Icon.svelte";
 
@@ -21,6 +22,11 @@
     async function save() {
         if (elementCount > 0) {
             showSaveMessage = true;
+
+            // submit to github, but keep local state
+            submitElementBlocklistContentScript(
+                elementPickerModifier.pageSelectors
+            );
             await new Promise((r) => setTimeout(r, 600));
         }
 
@@ -48,7 +54,7 @@
             <div>
                 {#if !showSaveMessage}
                     Save <span class="lindy-counter-num">{elementCount}</span>
-                    selection{elementCount !== 1 ? "s" : ""}
+                    selector{elementCount !== 1 ? "s" : ""}
                 {:else}
                     Thank you!
                 {/if}
@@ -64,10 +70,14 @@
         left: 0;
         z-index: 99;
         width: 100%;
+        box-sizing: border-box;
         padding: 10px;
 
         background-color: var(--background-color);
         color: var(--text-color);
+        font-weight: 600;
+        font-family: Poppins, sans-serif;
+
         border-radius: 5px;
         filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.06))
             drop-shadow(0 1px 2px rgb(0 0 0 / 0.05)); /* custom shadow, lighter than tw 'drop-shadow' */
@@ -118,8 +128,6 @@
 
         color: var(--color-muted) !important;
         font-size: 11px !important;
-        font-weight: 600;
-        font-family: Poppins, sans-serif;
     }
     .lindy-element-picker-caption-link {
         text-decoration: underline;

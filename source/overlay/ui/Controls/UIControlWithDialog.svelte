@@ -75,7 +75,7 @@
         display: block;
         content: "";
         width: 200%;
-        height: 300%;
+        height: 150%;
         cursor: auto;
     }
 </style>

@@ -33,7 +33,6 @@ export default class ElementPickerModifier implements PageModifier {
 
     async prepare() {
         this.pageSelectors = await getBlockedElementSelectors(this.domain);
-        console.log(this.pageSelectors);
     }
 
     transitionIn() {
