@@ -254,6 +254,9 @@ body.mediawiki {
 .inline-playlist {
     display: none !important;
 }
+[data-page]:not(#fakeId#fakeId#fakeId) {
+    display: block !important;
+}
 
 /* https://www.independent.co.uk/news/turkish-far-right-on-the-rise-1088461.html */
 #newsletter-component,
