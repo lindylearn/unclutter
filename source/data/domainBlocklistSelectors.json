@@ -18,6 +18,6 @@
     ],
     "voxeu.org": [".bookmarks.autoclear", ".slogan", "#header"],
     "zdnet.com": [
-        ".c-socialSharebar.g-outer-spacing-right-small.g-outer-spacing-bottom-medium.g-outer-spacing-top-medium"
+        ".c-socialSharebar"
     ]
 }
