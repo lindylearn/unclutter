@@ -54,19 +54,22 @@ export default class TransitionManager implements PageModifier {
         // save original styles before changes
         this.bodyStyleModifier.prepare();
 
-        // fetching CSS may take some time, so run other things in parallel
+        // iterate DOM before potententiall modifying CSS
+        this.textContainerModifier.prepare();
+        this.textContainerModifier.measureFontProperties();
+        this.backgroundModifier.prepare();
+
+        // proxying CSS may take some time, and will trigger reflow
         await Promise.all([
             // handle CSS
             (async () => {
-                // fetch CSS stylesheets if required
+                // fetch & re-insert CSS stylesheets if required
                 await this.cssomProvider.prepare();
-                // iterate CSS stylesheets
+                // iterate CSSOM
                 await this.responsiveStyleModifier.prepare(this.cssomProvider);
                 await this.stylePatchesModifier.prepare();
             })(),
-            // iterate DOM
-            this.textContainerModifier.prepare(),
-            // get active theme state
+            // fetch settings
             this.themeModifier.prepare(this.domain),
             this.elementPickerModifier.prepare(),
         ]);
@@ -88,9 +91,6 @@ export default class TransitionManager implements PageModifier {
     // prepare upcoming transition
     prepareTransition() {
         // order is important -- should only trigger one reflow for background insert & text baseline styles
-
-        // measure style properties for later
-        this.textContainerModifier.measureFontProperties();
 
         // parse text background colors, insert background
         this.textContainerModifier.fadeOutNoise();

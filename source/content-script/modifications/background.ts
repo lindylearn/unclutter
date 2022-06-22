@@ -5,6 +5,12 @@ import { PageModifier, trackModifierExecution } from "./_interface";
 export default class BackgroundModifier implements PageModifier {
     constructor() {}
 
+    private initialBodyHeight: number;
+    prepare() {
+        // read height before modifying DOM
+        this.initialBodyHeight = document.body.scrollHeight;
+    }
+
     fadeOutNoise() {
         this.insertBackground();
     }
@@ -22,7 +28,7 @@ export default class BackgroundModifier implements PageModifier {
         background.style.setProperty("height", "100%", "important");
         background.style.setProperty(
             "min-height",
-            `${document.body.scrollHeight}px`,
+            `${this.initialBodyHeight}px`,
             "important"
         );
 
