@@ -229,7 +229,7 @@ export default class TextContainerModifier implements PageModifier {
         // Iterate upwards in DOM tree from paragraph node
         let currentElem = startElem;
         let currentStack: HTMLElement[] = [];
-        while (currentElem !== document.documentElement) {
+        while (currentElem !== document.body) {
             if (
                 this.mainStackElements.has(currentElem) ||
                 // don't go into parents if already validated them (only for text containers since their mainStack state doesn't change for parents)
@@ -423,9 +423,7 @@ export default class TextContainerModifier implements PageModifier {
         this.processBackgroundColors();
     }
 
-    afterTransitionIn() {
-        // changing text style often seems to break animation, so do after transition
-
+    applyContainerStyles() {
         // Removing margin and cleaning up background, shadows etc
         createStylesheetText(
             this.getTextElementChainOverrideStyle(),
@@ -458,14 +456,20 @@ export default class TextContainerModifier implements PageModifier {
 
     prepareAnimation() {
         // should leave text in same place as before, but positioned animation-friendly using left margins
-
         this.nodeBeforeAnimationStyle.map(
             ([node, { marginLeft, maxWidth, width }]) => {
+                // can only animate blocks?
+                node.style.setProperty("display", "block");
+
                 if (marginLeft) {
-                    node.style.setProperty("margin-left", marginLeft);
+                    node.style.setProperty("margin-left", "0");
+                    node.style.setProperty(
+                        "transform",
+                        `translateX(${marginLeft})`
+                    );
                 }
                 if (maxWidth) {
-                    node.style.setProperty("width", maxWidth);
+                    node.style.setProperty("max-width", maxWidth);
                 }
                 if (width) {
                     node.style.setProperty("width", width);
@@ -473,6 +477,9 @@ export default class TextContainerModifier implements PageModifier {
 
                 // e.g. xkcd.com
                 node.style.setProperty("left", "0");
+
+                // put on new layer
+                node.style.setProperty("will-change", "transform");
             }
         );
 
@@ -481,6 +488,28 @@ export default class TextContainerModifier implements PageModifier {
             this.overrideCssDeclarations.join("\n"),
             "lindy-text-node-overrides"
         );
+    }
+
+    executeAnimation() {
+        this.nodeBeforeAnimationStyle.map(([node, { marginLeft, width }]) => {
+            let transition = "";
+            if (marginLeft) {
+                transition += `transform 0.4s cubic-bezier(0.33, 1, 0.68, 1)`;
+            } else if (width) {
+                if (marginLeft) {
+                    transition += ", ";
+                }
+                transition += `width 0.4s cubic-bezier(0.33, 1, 0.68, 1)`;
+            }
+            node.style.setProperty("transition", transition);
+
+            if (marginLeft) {
+                node.style.setProperty("transform", "translateX(0)");
+            }
+            if (width) {
+                node.style.setProperty("width", "100%");
+            }
+        });
     }
 
     private getTextElementChainOverrideStyle() {
@@ -507,7 +536,6 @@ export default class TextContainerModifier implements PageModifier {
                 box-shadow: none !important;
                 z-index: 1 !important;
                 overflow: visible !important;
-                transition: margin-left 0.4s cubic-bezier(0.33, 1, 0.68, 1);
             }
             /* more strict cleanup for main text containers */
             .${lindyMainContentContainerClass}:not(#fakeID#fakeID):not(body) {
@@ -535,7 +563,6 @@ export default class TextContainerModifier implements PageModifier {
                 padding-left: 0 !important;
                 padding-right: 0 !important;
                 height: auto;
-                transform: none !important;
                 float: none !important;
             }
             /* heading style tweaks */
@@ -561,13 +588,10 @@ export default class TextContainerModifier implements PageModifier {
                 padding-right: 0 !important;
                 /* y padding often used to make space for images, e.g. on theintercept or variety.com */
                 height: auto !important;
+                backdrop-filter: none !important; /* prevent implicit GPU layer */
 
-                transform: none !important;
                 top: 0 !important;
                 left: 0 !important;
-
-                width: 100% !important;
-                transition: margin-left 0.4s cubic-bezier(0.33, 1, 0.68, 1), width 0.3s cubic-bezier(0.33, 1, 0.68, 1);
             }
 
             /* block siblings of main text containers */
@@ -794,10 +818,9 @@ export default class TextContainerModifier implements PageModifier {
                     .getComputedStyle(node.parentElement)
                     .paddingLeft.replace("px", "")
             );
+            const leftMargin = Math.max(leftOffset - parentPadding, 0);
 
-            beforeAnimationProperties.marginLeft = `${
-                leftOffset - parentPadding
-            }px`;
+            beforeAnimationProperties.marginLeft = `${leftMargin}px`;
         }
 
         // flex and grid layouts are removed via _getNodeOverrideClasses() above, so set max-width on children to retain width without siblings
@@ -809,10 +832,14 @@ export default class TextContainerModifier implements PageModifier {
             beforeAnimationProperties.maxWidth = `${nodeBox.width}px`;
         }
 
-        // aniamte header image width reduction (not for text elements for performance)
+        // animate header image width (not for text elements for performance)
         if (stackType === "image") {
-            // use width instead of max-width to allow overflow of parent header containers
-            beforeAnimationProperties.width = `${nodeBox.width}px`;
+            if (nodeBox.width !== parentBox.width) {
+                // animate elements only if needed, to reduce GPU layers
+
+                // use width instead of max-width to allow overflow of parent header containers
+                beforeAnimationProperties.width = `${nodeBox.width}px`;
+            }
         }
 
         if (Object.keys(beforeAnimationProperties).length > 0) {

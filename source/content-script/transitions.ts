@@ -98,38 +98,31 @@ export default class TransitionManager implements PageModifier {
         // set background dark if dark mode enabled, configure font size variable
         this.themeModifier.transitionIn();
 
-        // keep text in same position but use animatable leftMargin everywhere
-        // needs to be applied before transitionIn()
-        this.textContainerModifier.prepareAnimation();
-
         // below steps where originally in transitionIn()
 
         // remove faded-out elements
         this.contentBlockModifier.transitionIn();
         this.responsiveStyleModifier.transitionIn();
         this.elementPickerModifier.transitionIn();
+
+        this.textContainerModifier.applyContainerStyles();
+        this.textContainerModifier.prepareAnimation();
     }
 
     // pageview width change was triggered just before calling this
     transitionIn() {
-        // enable site mobile styles
+        // enable mobile styles & style patches
         // this may shift layout in various ways
         this.responsiveStyleModifier.enableResponsiveStyles();
-
-        // apply text container style
-        this.textContainerModifier.afterTransitionIn();
+        this.stylePatchesModifier.transitionIn();
 
         // adjust font size
         this.textContainerModifier.setTextFontOverride();
 
-        // patch inline styles to overcome stubborn sites
-        // modifies DOM & CSSOM
+        // patch inline styles to overcome stubborn sites (modifies DOM & CSSOM)
         this.bodyStyleModifier.transitionIn();
 
-        // TODO move this elsewhere if takes too much performance?
-        this.stylePatchesModifier.transitionIn();
-
-        // to look nice, all layout shifts should be done in this phase
+        this.textContainerModifier.executeAnimation();
     }
 
     async afterTransitionIn() {
