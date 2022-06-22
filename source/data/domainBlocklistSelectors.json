@@ -15,5 +15,6 @@
         ".f-hero-header",
         ".iframe-fragment.x-type-center",
         ".f-content-column.f-content-column-1"
-    ]
+    ],
+    "voxeu.org": [".bookmarks.autoclear", ".element-invisible", "#header"]
 }
