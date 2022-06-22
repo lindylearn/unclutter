@@ -17,7 +17,6 @@
         ".f-content-column.f-content-column-1"
     ],
     "voxeu.org": [".bookmarks.autoclear", ".slogan", "#header"],
-    "zdnet.com": [
-        ".c-socialSharebar"
-    ]
+    "zdnet.com": [".c-socialSharebar"],
+    "euronews.com": [".editor-tv-wrapper.editor-tv-active"]
 }
