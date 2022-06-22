@@ -1,4 +1,4 @@
-import { chromium, expect, test as base } from "@playwright/test";
+import { chromium, expect, firefox, test as base } from "@playwright/test";
 import path from "path";
 
 const extensionPath = path.resolve("./distribution");
@@ -12,7 +12,7 @@ const test = base.extend<{}, WorkerContextFixture>({
     // it's not possible to set this via the config at the moment: https://github.com/microsoft/playwright/issues/11833
     context: [
         async ({ browserName }, use) => {
-            const browserTypes = { chromium };
+            const browserTypes = { chromium, firefox };
             const launchOptions = {
                 headless: false, // extension are allowed only in head-full mode
                 defaultViewport: { width: 1920, height: 1080 },

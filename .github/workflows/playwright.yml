@@ -17,8 +17,10 @@ jobs:
       run: yarn
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
-    - name: Run Playwright tests
-      run: yarn playwright test
+    - name: Build extension for Chromium
+      run: yarn build
+    - name: Run Playwright tests for Chromium
+      run: yarn playwright test --project=chromium
     - uses: actions/upload-artifact@v2
       if: always()
       with:
