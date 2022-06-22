@@ -45,7 +45,7 @@ export default class TextContainerModifier implements PageModifier {
     // style tweaks to apply just before the pageview animation (populated via _prepareBeforeAnimationPatches())
     private nodeBeforeAnimationStyle: [
         HTMLElement,
-        { marginLeft?: string; maxWidth?: string }
+        { marginLeft?: string; maxWidth?: string; width?: string }
     ][] = [];
 
     // Remember background colors on text containers
@@ -191,7 +191,7 @@ export default class TextContainerModifier implements PageModifier {
             }
         }
 
-        // iterate parents
+        // iterate parent containers (don't start with elem for text containers)
         const iterationStart =
             elementType === "header" || elementType === "image"
                 ? elem
@@ -201,8 +201,9 @@ export default class TextContainerModifier implements PageModifier {
             elementType
         );
 
-        if (hasValidTextChain) {
-            this._prepareBeforeAnimationPatches(elem, activeStyle);
+        // if starting iteration at parent, still prepare elem animation
+        if (iterationStart == elem.parentElement && hasValidTextChain) {
+            this._prepareBeforeAnimationPatches(elem, elementType, activeStyle);
         }
 
         return hasValidTextChain;
@@ -402,7 +403,11 @@ export default class TextContainerModifier implements PageModifier {
             ]);
 
             // save style properties for animation
-            this._prepareBeforeAnimationPatches(currentElem, activeStyle);
+            this._prepareBeforeAnimationPatches(
+                currentElem,
+                stackType,
+                activeStyle
+            );
 
             this.validatedNodes.add(currentElem); // add during second iteration to ignore aborted stacks
             if (isMainStack) {
@@ -429,14 +434,12 @@ export default class TextContainerModifier implements PageModifier {
     }
 
     prepareTransitionOut() {
-        this.nodeBeforeAnimationStyle.map(
-            ([node, { marginLeft, maxWidth }]) => {
-                node.style.setProperty(
-                    "transition",
-                    "margin-left 0.4s cubic-bezier(0.33, 1, 0.68, 1)"
-                );
-            }
-        );
+        this.nodeBeforeAnimationStyle.map(([node, {}]) => {
+            node.style.setProperty(
+                "transition",
+                "margin-left 1s cubic-bezier(0.33, 1, 0.68, 1)"
+            );
+        });
     }
 
     transitionOut() {
@@ -457,13 +460,15 @@ export default class TextContainerModifier implements PageModifier {
         // should leave text in same place as before, but positioned animation-friendly using left margins
 
         this.nodeBeforeAnimationStyle.map(
-            ([node, { marginLeft, maxWidth }]) => {
+            ([node, { marginLeft, maxWidth, width }]) => {
                 if (marginLeft) {
                     node.style.setProperty("margin-left", marginLeft);
                 }
                 if (maxWidth) {
-                    // node.style.setProperty("width", "100%");
-                    node.style.setProperty("max-width", maxWidth);
+                    node.style.setProperty("width", maxWidth);
+                }
+                if (width) {
+                    node.style.setProperty("width", width);
                 }
 
                 // e.g. xkcd.com
@@ -502,7 +507,7 @@ export default class TextContainerModifier implements PageModifier {
                 box-shadow: none !important;
                 z-index: 1 !important;
                 overflow: visible !important;
-                transition: margin-left 0.4s cubic-bezier(0.33, 1, 0.68, 1);
+                transition: margin-left 1s cubic-bezier(0.33, 1, 0.68, 1);
             }
             /* more strict cleanup for main text containers */
             .${lindyMainContentContainerClass}:not(#fakeID#fakeID):not(body) {
@@ -550,16 +555,19 @@ export default class TextContainerModifier implements PageModifier {
 
             /* image container cleanup */
             .${lindyImageContainerClass}:not(#fakeID#fakeID) {
-                margin-left: auto !important;
-                margin-right: auto !important;
-                /* y padding often used to make space for images, e.g. on theintercept or variety.com */
+                margin-left: 0 !important;
+                margin-right: 0 !important;
                 padding-left: 0 !important;
                 padding-right: 0 !important;
+                /* y padding often used to make space for images, e.g. on theintercept or variety.com */
                 height: auto !important;
 
                 transform: none !important;
                 top: 0 !important;
                 left: 0 !important;
+
+                width: 100% !important;
+                transition: margin-left 1s cubic-bezier(0.33, 1, 0.68, 1), width 0.7s cubic-bezier(0.33, 1, 0.68, 1);
             }
 
             /* block siblings of main text containers */
@@ -764,10 +772,11 @@ export default class TextContainerModifier implements PageModifier {
         return classes;
     }
 
-    // prepare changes to apply before animating the pageview entry
-    // reading this later would trigger another reflow
+    // prepare animation of text and image nodes (setting start position)
+    // called on each element in the container stack
     private _prepareBeforeAnimationPatches(
         node: HTMLElement,
+        stackType: string,
         activeStyle: CSSStyleDeclaration
     ) {
         const beforeAnimationProperties: any = {};
@@ -798,6 +807,12 @@ export default class TextContainerModifier implements PageModifier {
             parentStyle.display === "grid"
         ) {
             beforeAnimationProperties.maxWidth = `${nodeBox.width}px`;
+        }
+
+        // aniamte header image width reduction (not for text elements for performance)
+        if (stackType === "image") {
+            // use width instead of max-width to allow overflow of parent header containers
+            beforeAnimationProperties.width = `${nodeBox.width}px`;
         }
 
         if (Object.keys(beforeAnimationProperties).length > 0) {
