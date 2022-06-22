@@ -24,5 +24,11 @@
         ".img-con.img-cover.imgLiquid_bgSize.imgLiquid_ready",
         ".most-photo-zone.right-list-zone",
         ".most-news-zone.right-list-zone"
+    ],
+    "gizmodo.com": [
+        ".ag987e-0.pxCch.btn.btn-play",
+        ".video-html5-player",
+        ".sc-1wkneyl-0.hxLRyg.video-html5-playlist",
+        ".bxm4mm-3.eCMXYG"
     ]
 }
