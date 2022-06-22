@@ -17,7 +17,12 @@
         ".f-content-column.f-content-column-1"
     ],
     "voxeu.org": [".bookmarks.autoclear", ".slogan", "#header"],
-    "zdnet.com": [
-        ".c-socialSharebar"
+    "zdnet.com": [".c-socialSharebar"],
+    "en.yna.co.kr": [
+        ".keyword-zone.right-list-zone",
+        ".section-tit",
+        ".img-con.img-cover.imgLiquid_bgSize.imgLiquid_ready",
+        ".most-photo-zone.right-list-zone",
+        ".most-news-zone.right-list-zone"
     ]
 }
