@@ -437,7 +437,7 @@ export default class TextContainerModifier implements PageModifier {
         this.nodeBeforeAnimationStyle.map(([node, {}]) => {
             node.style.setProperty(
                 "transition",
-                "margin-left 1s cubic-bezier(0.33, 1, 0.68, 1)"
+                "margin-left 0.4s cubic-bezier(0.33, 1, 0.68, 1)"
             );
         });
     }
@@ -507,7 +507,7 @@ export default class TextContainerModifier implements PageModifier {
                 box-shadow: none !important;
                 z-index: 1 !important;
                 overflow: visible !important;
-                transition: margin-left 1s cubic-bezier(0.33, 1, 0.68, 1);
+                transition: margin-left 0.4s cubic-bezier(0.33, 1, 0.68, 1);
             }
             /* more strict cleanup for main text containers */
             .${lindyMainContentContainerClass}:not(#fakeID#fakeID):not(body) {
@@ -567,7 +567,7 @@ export default class TextContainerModifier implements PageModifier {
                 left: 0 !important;
 
                 width: 100% !important;
-                transition: margin-left 1s cubic-bezier(0.33, 1, 0.68, 1), width 0.7s cubic-bezier(0.33, 1, 0.68, 1);
+                transition: margin-left 0.4s cubic-bezier(0.33, 1, 0.68, 1), width 0.3s cubic-bezier(0.33, 1, 0.68, 1);
             }
 
             /* block siblings of main text containers */

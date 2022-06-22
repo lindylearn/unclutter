@@ -62,6 +62,7 @@ export default class TransitionManager implements PageModifier {
                 await this.cssomProvider.prepare();
                 // iterate CSS stylesheets
                 await this.responsiveStyleModifier.prepare(this.cssomProvider);
+                await this.stylePatchesModifier.prepare();
             })(),
             // iterate DOM
             this.textContainerModifier.prepare(),
@@ -119,14 +120,14 @@ export default class TransitionManager implements PageModifier {
         this.textContainerModifier.afterTransitionIn();
 
         // adjust font size
-        // this.textContainerModifier.setTextFontOverride();
+        this.textContainerModifier.setTextFontOverride();
 
         // patch inline styles to overcome stubborn sites
         // modifies DOM & CSSOM
         this.bodyStyleModifier.transitionIn();
 
         // TODO move this elsewhere if takes too much performance?
-        // this.stylePatchesModifier.afterTransitionIn();
+        this.stylePatchesModifier.transitionIn();
 
         // to look nice, all layout shifts should be done in this phase
     }

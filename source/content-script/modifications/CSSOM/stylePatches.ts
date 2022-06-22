@@ -9,15 +9,26 @@ export default class StylePatchesModifier implements PageModifier {
         this.cssomProvider = cssomProvider;
     }
 
-    async afterTransitionIn() {
+    private styleRuleTweaks: [CSSStyleRule, { [key: string]: string }][] = [];
+    async prepare() {
+        // iterating the CSSOM can take time -- so run outside transitionIn()
+        // TODO maybe do in afterTransitionIn()?
         this.cssomProvider.iterateRules((rule) => {
             if (isStyleRule(rule)) {
-                this.styleRuleTweaks(rule);
+                this.prepareStyleRuleTweaks(rule);
             }
         });
     }
 
-    private styleRuleTweaks(rule: CSSStyleRule) {
+    transitionIn() {
+        this.styleRuleTweaks.forEach(([rule, propertiesToSet]) => {
+            for (const [key, value] of Object.entries(propertiesToSet)) {
+                rule.style.setProperty(key, value);
+            }
+        });
+    }
+
+    private prepareStyleRuleTweaks(rule: CSSStyleRule) {
         // performance is important here, as this run on every single CSS declation
         // can take up to 600ms e.g. for https://slack.com/intl/en-gb/blog/collaboration/etiquette-tips-in-slack
         if (
@@ -31,28 +42,39 @@ export default class StylePatchesModifier implements PageModifier {
             return;
         }
 
+        let override = false;
+        const propertiesToSet = {};
+
         // hack: remove vw and vh rules for now (mostly used to add margin, which we already add elsewhere)
         // conditionScale is not neccessarily equal to actual pageview with, so cannot easily get correct margin
         if (
             rule.style.getPropertyValue("width")?.includes("vw") ||
             rule.style.getPropertyValue("min-width")?.includes("vw")
         ) {
-            rule.style.setProperty("width", "100%");
-            rule.style.setProperty("min-width", "100%");
+            override = true;
+            propertiesToSet["width"] = "100%";
+            propertiesToSet["min-width"] = "100%";
         }
         if (
             rule.style.getPropertyValue("height")?.includes("vh") ||
             rule.style.getPropertyValue("min-height")?.includes("vh")
         ) {
-            rule.style.setProperty("height", "100%");
-            rule.style.setProperty("min-height", "100%");
+            override = true;
+            propertiesToSet["height"] = "100%";
+            propertiesToSet["min-height"] = "100%";
         }
 
         if (rule.style.getPropertyValue("margin")?.includes("vw")) {
-            rule.style.setProperty("margin", "0");
+            override = true;
+            propertiesToSet["margin"] = "0";
         }
         if (rule.style.getPropertyValue("left")?.includes("vw")) {
-            rule.style.setProperty("left", "0");
+            override = true;
+            propertiesToSet["left"] = "0";
+        }
+
+        if (override) {
+            this.styleRuleTweaks.push([rule, propertiesToSet]);
         }
     }
 }

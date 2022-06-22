@@ -41,7 +41,7 @@
     transition: left 0.2s ease-in-out;
 }
 .lindy-page-settings-toprght, .lindy-page-settings-pageadjacent {
-    animation: fadeInIcons 0.3s cubic-bezier(0.33, 1, 0.68, 1);
+    animation: fadeInIcons 0.4s cubic-bezier(0.33, 1, 0.68, 1);
     animation-fill-mode: both;
 }
 @keyframes fadeInIcons {
