@@ -31,5 +31,10 @@
         ".sc-1wkneyl-0.hxLRyg.video-html5-playlist",
         ".bxm4mm-3.eCMXYG"
     ],
-    "euronews.com": [".editor-tv-wrapper.editor-tv-active"]
+    "euronews.com": [".editor-tv-wrapper.editor-tv-active"],
+    "aalto.fi": [
+        ".aalto-tiles-layout__items-container",
+        ".aalto-component-wrapper.lindy-clean-margin-bottom",
+        ".aalto-content-bottom-wrapper.content-container"
+    ]
 }
