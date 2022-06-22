@@ -17,7 +17,11 @@
         ".f-content-column.f-content-column-1"
     ],
     "voxeu.org": [".bookmarks.autoclear", ".slogan", "#header"],
-    "zdnet.com": [
-        ".c-socialSharebar"
+    "zdnet.com": [".c-socialSharebar"],
+    "gizmodo.com": [
+        ".ag987e-0.pxCch.btn.btn-play",
+        ".video-html5-player",
+        ".sc-1wkneyl-0.hxLRyg.video-html5-playlist",
+        ".bxm4mm-3.eCMXYG"
     ]
 }
