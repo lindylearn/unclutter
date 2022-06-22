@@ -16,5 +16,8 @@
         ".iframe-fragment.x-type-center",
         ".f-content-column.f-content-column-1"
     ],
-    "voxeu.org": [".bookmarks.autoclear", ".slogan", "#header"]
+    "voxeu.org": [".bookmarks.autoclear", ".slogan", "#header"],
+    "zdnet.com": [
+        ".c-socialSharebar"
+    ]
 }
