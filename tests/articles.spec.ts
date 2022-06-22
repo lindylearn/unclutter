@@ -22,6 +22,7 @@ const test = base.extend<{}, WorkerContextFixture>({
                     `--disable-site-isolation-trials`, // to ignore some chromium errors
                 ],
                 dumpio: true,
+                executablePath: process.env.PUPPETEER_EXEC_PATH, // set by docker container
             };
             const context = await browserTypes[
                 browserName

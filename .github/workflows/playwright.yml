@@ -13,6 +13,8 @@ jobs:
     - uses: actions/setup-node@v2
       with:
         node-version: '16.x'
+      env:
+        PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 'true'
     - name: Install dependencies
       run: yarn
     - name: Install Playwright Browsers
@@ -20,10 +22,8 @@ jobs:
     - name: Build extension for Chromium
       run: yarn build
     - name: Run Playwright tests for Chromium
-      run: yarn playwright test --project=chromium
-    - uses: actions/upload-artifact@v2
-      if: always()
+      uses: mujo-code/puppeteer-headful@v2
+      env:
+        CI: 'true'
       with:
-        name: playwright-report
-        path: playwright-report/
-        retention-days: 30
+        args: yarn playwright test --project=chromium
