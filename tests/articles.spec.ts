@@ -1,20 +1,18 @@
-import { chromium, expect, firefox, test as base } from "@playwright/test";
+import { chromium, expect, test as base } from "@playwright/test";
 import path from "path";
-import type { BrowserContext } from "playwright-core";
 
 const extensionPath = path.resolve("./distribution");
 
 type WorkerContextFixture = {
-    globalContext: BrowserContext;
     unclutterExtension: any;
 };
 
 const test = base.extend<{}, WorkerContextFixture>({
     // override default context to use launchPersistentContext(), which is required for browser extensions
     // it's not possible to set this via the config at the moment: https://github.com/microsoft/playwright/issues/11833
-    globalContext: [
+    context: [
         async ({ browserName }, use) => {
-            const browserTypes = { chromium, firefox };
+            const browserTypes = { chromium };
             const launchOptions = {
                 headless: false, // extension are allowed only in head-full mode
                 defaultViewport: { width: 1920, height: 1080 },
@@ -33,18 +31,11 @@ const test = base.extend<{}, WorkerContextFixture>({
 
             await context.close();
         },
-        { scope: "worker" },
+        { scope: "test" },
     ],
 
-    // reuse browser between tests
-    page: async ({ globalContext }, use) => {
-        const page = await globalContext.newPage();
-        await use(page);
-        await page.close();
-    },
-
-    unclutterExtension: async ({ globalContext }, use) => {
-        const extWorker = globalContext.serviceWorkers()[0];
+    unclutterExtension: async ({ context }, use) => {
+        const extWorker = context.serviceWorkers()[0];
 
         use({
             unclutterActiveTab: async () =>
@@ -60,8 +51,6 @@ const test = base.extend<{}, WorkerContextFixture>({
 });
 
 test.describe("Article uncluttering", () => {
-    test.beforeEach(() => {});
-
     // const urls = await getHnTopLinks(20);
     const urls = [
         "https://amarioguy.github.io/m1windowsproject/",
@@ -87,21 +76,29 @@ test.describe("Article uncluttering", () => {
                 waitUntil: "networkidle",
             });
 
+            const beforeText = await page.evaluate(
+                () => document.body.innerText
+            );
+
             await unclutterExtension.unclutterActiveTab();
             await new Promise((r) => setTimeout(r, 1500));
 
-            const body = await page.$("body");
-            const bodyPos = await body.boundingBox();
-            await expect(page).toHaveScreenshot({
-                clip: {
-                    x: bodyPos.x - 10,
-                    y: bodyPos.y - 10,
-                    width: bodyPos.width + 15 + 10,
-                    height: 1500,
-                },
-            });
+            // check if page has minmum character count
+            const afterText = await page.evaluate(
+                () => document.body.innerText
+            );
+            expect(afterText.length).toBeGreaterThan(beforeText.length * 0.5);
 
-            await new Promise((r) => setTimeout(r, 5000));
+            // const body = await page.$("body");
+            // const bodyPos = await body.boundingBox();
+            // await expect(page).toHaveScreenshot({
+            //     clip: {
+            //         x: bodyPos.x - 10,
+            //         y: bodyPos.y - 10,
+            //         width: bodyPos.width + 15 + 10,
+            //         height: 1500,
+            //     },
+            // });
         });
     }
 });
