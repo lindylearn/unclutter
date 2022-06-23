@@ -1,3 +1,4 @@
+import { pxToNumber } from "./css";
 import { defaultFontSizePx } from "./defaultStorage";
 import browser from "./polyfill";
 import { themeName } from "./theme";
@@ -61,7 +62,7 @@ export async function getUserTheme(): Promise<UserTheme> {
 
     if (
         !theme.fontSize ||
-        (theme.fontSize && isNaN(parseFloat(theme.fontSize.replace("px", ""))))
+        (theme.fontSize && isNaN(pxToNumber(theme.fontSize)))
     ) {
         theme.fontSize = defaultFontSizePx;
     }

@@ -1,3 +1,4 @@
+import { pxToNumber } from "../../common/css";
 import {
     getBlockedElementSelectors,
     setBlockedElementSelectors,
@@ -237,8 +238,4 @@ export default class ElementPickerModifier implements PageModifier {
         console.log(`No selector for ${node}`);
         return "";
     }
-}
-
-function pxToNumber(pxValue: string): number {
-    return parseFloat(pxValue.replace("px", ""));
 }

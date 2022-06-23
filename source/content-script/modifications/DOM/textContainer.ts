@@ -1,3 +1,4 @@
+import { pxToNumber } from "../../../common/css";
 import { createStylesheetText } from "../../../common/stylesheets";
 import { fontSizeThemeVariable } from "../../../common/theme";
 import { cleanTitle } from "../../../overlay/outline/parse";
@@ -46,10 +47,11 @@ export default class TextContainerModifier implements PageModifier {
     private animationLayerElements: [
         HTMLElement,
         {
-            marginLeft?: string;
-            maxWidth?: string;
+            nodeBox: DOMRect;
+            afterNodeBox: DOMRect;
+            parentLayer: HTMLElement;
+            parentLayerStyle: CSSStyleDeclaration;
             width?: string;
-            beforeTopOffset?: number;
         }
     ][] = [];
     private inlineStyleTweaks: [HTMLElement, Partial<CSSStyleDeclaration>][] =
@@ -214,7 +216,7 @@ export default class TextContainerModifier implements PageModifier {
         // if starting iteration at parent, still prepare elem animation
         if (iterationStart == elem.parentElement && hasValidTextChain) {
             const nodeBox = elem.getBoundingClientRect();
-            this.prepareAnimationLayerFor(elem, elementType, nodeBox);
+            this.checkShouldCreateAnimationLayer(elem, elementType, nodeBox);
         }
 
         return hasValidTextChain;
@@ -417,7 +419,11 @@ export default class TextContainerModifier implements PageModifier {
 
             // check if should create layer
             this.prepareInlineStyleTweaks(currentElem, stackType, nodeBox);
-            this.prepareAnimationLayerFor(currentElem, stackType, nodeBox);
+            this.checkShouldCreateAnimationLayer(
+                currentElem,
+                stackType,
+                nodeBox
+            );
 
             this.validatedNodes.add(currentElem); // add during second iteration to ignore aborted stacks
             if (isMainStack) {
@@ -468,69 +474,6 @@ export default class TextContainerModifier implements PageModifier {
         document
             .querySelectorAll(".lindy-font-size, .lindy-node-overrides")
             .forEach((e) => e.remove());
-    }
-
-    prepareAnimation() {
-        // read DOM before writing styles (triggers reflow as in write phase - expected as we want to know the current state)
-        const afterTopOffsets: number[] = [];
-        this.animationLayerElements.map(([node, {}]) => {
-            const afterTopOffset = node.getBoundingClientRect().top;
-            afterTopOffsets.push(afterTopOffset);
-        });
-
-        // put text containers in same place as before content block, but positioned using CSS transforms
-        this.animationLayerElements.map(
-            ([node, { marginLeft, beforeTopOffset, maxWidth, width }], i) => {
-                const afterTopOffset = afterTopOffsets[i];
-
-                // can only animate blocks?
-                node.style.setProperty("display", "block");
-
-                const yTranslate = beforeTopOffset - afterTopOffset;
-                node.style.setProperty(
-                    "transform",
-                    `translate(${marginLeft}, ${yTranslate}px)`
-                );
-
-                if (marginLeft) {
-                    // set via translate() above
-                    node.style.setProperty("margin-left", "0");
-                }
-                if (maxWidth) {
-                    node.style.setProperty("max-width", maxWidth);
-                }
-                if (width) {
-                    node.style.setProperty("width", width);
-                }
-
-                // e.g. xkcd.com
-                node.style.setProperty("left", "0");
-
-                // put on new layer
-                node.style.setProperty("will-change", "transform");
-            }
-        );
-
-        // Display fixes with visible layout shift (e.g. removing horizontal partitioning)
-        createStylesheetText(
-            this.overrideCssDeclarations.join("\n"),
-            "lindy-text-node-overrides"
-        );
-    }
-
-    executeAnimation() {
-        this.animationLayerElements.map(([node, { marginLeft, width }]) => {
-            let transition = "transform 0.4s cubic-bezier(0.33, 1, 0.68, 1)";
-            if (width) {
-                transition += `, width 0.4s cubic-bezier(0.33, 1, 0.68, 1)`;
-            }
-            node.style.setProperty("transition", transition);
-
-            node.style.setProperty("transform", "translate(0, 0)");
-            if (width) {
-                node.style.setProperty("width", "100%");
-            }
-        });
     }
 
     private getTextElementChainOverrideStyle() {
@@ -676,8 +619,8 @@ export default class TextContainerModifier implements PageModifier {
         // Convert line-height to relative and specify override in case it was set as px
         if (activeStyle.lineHeight.includes("px")) {
             this.relativeLineHeight = (
-                parseFloat(activeStyle.lineHeight.replace("px", "")) /
-                parseFloat(activeStyle.fontSize.replace("px", ""))
+                pxToNumber(activeStyle.lineHeight) /
+                pxToNumber(activeStyle.fontSize)
             ).toFixed(2);
         } else {
             this.relativeLineHeight = activeStyle.lineHeight;
@@ -840,9 +783,12 @@ export default class TextContainerModifier implements PageModifier {
         }
     }
 
-    // prepare animation of text and image nodes (setting start position)
-    // called on each element in the container stack
-    private prepareAnimationLayerFor(
+    // stage elements to put on animation layers, with their original page position
+    // know actual parent layers for each layer only once content block done
+    private animationLayerCandidates: [HTMLElement, DOMRect][] = [
+        [document.body, document.body.getBoundingClientRect()],
+    ];
+    private checkShouldCreateAnimationLayer(
         node: HTMLElement,
         stackType: string,
         nodeBox: DOMRect
@@ -852,43 +798,134 @@ export default class TextContainerModifier implements PageModifier {
             return;
         }
 
-        const beforeAnimationProperties: any = {};
+        // tentative x and y offsets
         const parentBox = node.parentElement.getBoundingClientRect();
-
         const leftOffset = nodeBox.left - parentBox.left;
-        if (leftOffset !== 0) {
-            // activeStyle.marginLeft returns concrete values for "auto"
-            // use x offset to parent instead of margin to handle grid & flex layouts which we remove with #lindy-text-node-override
+        const topOffset = 0; // nodeBox.top - parentBox.top;
 
-            const parentPadding = parseFloat(
-                window
-                    .getComputedStyle(node.parentElement)
-                    .paddingLeft.replace("px", "")
-            );
-            const leftMargin = leftOffset - parentPadding;
-            // allow negative margin e.g. on https://www.statnews.com/2019/06/25/alzheimers-cabal-thwarted-progress-toward-cure/
-
-            beforeAnimationProperties.marginLeft = `${leftMargin}px`;
+        // || stackType === "image"
+        if (leftOffset !== 0 || topOffset !== 0) {
+            this.animationLayerCandidates.push([node, nodeBox]);
         }
+    }
 
-        // animate header image width (not for text elements for performance)
-        if (stackType === "image") {
-            if (nodeBox.width !== parentBox.width) {
-                // animate elements only if needed, to reduce GPU layers
-
-                // use width instead of max-width to allow overflow of parent header containers
-                beforeAnimationProperties.width = `${nodeBox.width}px`;
+    prepareAnimation() {
+        // filter to visible elements, and read after-content-block DOM position
+        const layerElements: Map<
+            HTMLElement,
+            {
+                nodeBox: DOMRect;
+                afterNodeBox: DOMRect;
+                parentLayer: HTMLElement;
+                parentLayerStyle: CSSStyleDeclaration;
             }
-        }
+        > = new Map();
+        this.animationLayerCandidates.forEach(([node, nodeBox]) => {
+            const afterNodeBox = node.getBoundingClientRect();
+            if (afterNodeBox.height === 0) {
+                // ignore blocked elements
+                return;
+            }
 
-        if (Object.keys(beforeAnimationProperties).length > 0) {
-            // only create CSS layer if has animateble properties
+            layerElements.set(node, {
+                nodeBox,
+                afterNodeBox,
+                parentLayer: null, // set below
+                parentLayerStyle: null,
+            });
+        });
 
-            // really need to get top offset to latest layer
-            beforeAnimationProperties.beforeTopOffset = nodeBox.top; // - parentBox.top;
+        // populate parent layer for each layer
+        layerElements.forEach((properties, node) => {
+            let parentLayer = node.parentElement;
+            while (parentLayer && !layerElements.has(parentLayer)) {
+                parentLayer = parentLayer.parentElement;
+            }
 
-            this.animationLayerElements.push([node, beforeAnimationProperties]);
-        }
+            const parentLayerStyle =
+                parentLayer && window.getComputedStyle(parentLayer);
+
+            layerElements.set(node, {
+                ...properties,
+                parentLayer,
+                parentLayerStyle,
+            });
+        });
+
+        this.animationLayerElements = [...layerElements.entries()].filter(
+            ([node]) => node !== document.body
+        );
+
+        // put text containers in same place as before content block, but positioned using CSS transforms
+        this.animationLayerElements.forEach(([node, layerProps]) => {
+            const parentLayerProps = layerElements.get(layerProps.parentLayer);
+
+            console.log("layer", node, layerProps.parentLayer);
+
+            // get x and y offsets
+            // allow negative e.g. on https://www.statnews.com/2019/06/25/alzheimers-cabal-thwarted-progress-toward-cure/
+            const beforeLeftOffset =
+                layerProps.nodeBox.left - parentLayerProps.nodeBox.left;
+            const afterLeftOffset =
+                layerProps.afterNodeBox.left -
+                parentLayerProps.afterNodeBox.left;
+            const leftOffset = beforeLeftOffset - afterLeftOffset;
+
+            const beforeTopOffset =
+                layerProps.nodeBox.top - parentLayerProps.nodeBox.top;
+            const afterTopOffset =
+                layerProps.afterNodeBox.top - parentLayerProps.afterNodeBox.top;
+            const topOffset = beforeTopOffset - afterTopOffset;
+
+            // pxToNumber(parentLayerProps.parentLayerStyle.paddingLeft)
+
+            // TODO consider negative margin of parent
+            // https://www.statnews.com/2019/06/25/alzheimers-cabal-thwarted-progress-toward-cure/
+
+            // animate header image width (not for text elements for performance)
+            // if (stackType === "image") {
+            //     if (nodeBox.width !== parentBox.width) {
+            //         // animate elements only if needed, to reduce GPU layers
+
+            //         // use width instead of max-width to allow overflow of parent header containers
+            //         beforeAnimationProperties.width = `${nodeBox.width}px`;
+            //     }
+            // }
+            // if (width) {
+            //     node.style.setProperty("width", width);
+            // }
+
+            node.style.setProperty(
+                "transform",
+                `translate(${leftOffset}px, ${topOffset}px)`
+            );
+            node.style.setProperty("left", "0"); // e.g. xkcd.com
+            node.style.setProperty("display", "block"); // can only animate blocks?
+
+            // put on new layer
+            node.style.setProperty("will-change", "transform");
+        });
+
+        // Display fixes with visible layout shift (e.g. removing horizontal partitioning)
+        createStylesheetText(
+            this.overrideCssDeclarations.join("\n"),
+            "lindy-text-node-overrides"
+        );
+    }
+
+    executeAnimation() {
+        this.animationLayerElements.map(([node, { width }]) => {
+            let transition = "transform 0.4s cubic-bezier(0.33, 1, 0.68, 1)";
+            if (width) {
+                transition += `, width 0.4s cubic-bezier(0.33, 1, 0.68, 1)`;
+            }
+            node.style.setProperty("transition", transition);
+
+            node.style.setProperty("transform", "translate(0, 0)");
+            if (width) {
+                node.style.setProperty("width", "100%");
+            }
+        });
     }
 
     // very carefully exclude elements as text containers to avoid incorrect main container selection for small articles

@@ -46,6 +46,7 @@ export async function togglePageView() {
         transitions.prepareTransition();
         // adding a small delay >0 seems to help textContainerModifier.prepareAnimation()
         await new Promise((r) => setTimeout(r, 10));
+        // return;
 
         disablePageViewHandlers = enablePageView();
         transitions.transitionIn();
