@@ -24,23 +24,3 @@ export function enablePageView(): () => void {
 
     return disablePageView;
 }
-
-// should be called at least ~100ms before enabling pageview, otherwise seems not to trigger sometimes
-// can't set animation start properties in content.css, as that breaks some sites (e.g. xkcd.com)
-export function preparePageviewAnimation() {
-    if (!document.body) {
-        return;
-    }
-
-    // set animation style inline to have out transition
-    // adding padding seems to not work
-    document.body.style.transition = `all 0.4s cubic-bezier(0.33, 1, 0.68, 1)`; // easeOutExpo
-
-    // set start properties for animation immediately
-    // document.body.style.margin = "0";
-    document.body.style.width = "100%";
-    document.body.style.maxWidth = "100%";
-
-    // wait until next execution loop so animation works
-    // await new Promise((r) => setTimeout(r, 0));
-}

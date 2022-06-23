@@ -44,11 +44,19 @@ export async function togglePageView() {
         await transitions.prepare();
 
         transitions.prepareTransition();
-        await new Promise((r) => setTimeout(r, 10)); // a small delay >0 seems to help textContainerModifier.prepareAnimation()
 
-        disablePageViewHandlers = enablePageView();
+        disablePageViewHandlers = enablePageView(); // trigger earlier
+        requestAnimationFrame(() => {
+            // reads changed page layout and changes it to be animatable
+            transitions.prepareAnimation();
+        });
+
+        await new Promise((r) => setTimeout(r, 10));
+
+        // trigger page transitions
         transitions.transitionIn();
 
+        return;
         await new Promise((r) => setTimeout(r, 400));
 
         await transitions.afterTransitionIn();

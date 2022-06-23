@@ -846,6 +846,11 @@ export default class TextContainerModifier implements PageModifier {
                     return;
                 }
 
+                if (node === document.body) {
+                    // body is not animated, so need to include its movement into child layers
+                    nodeBox = afterNodeBox; // pretend body stayed in place
+                }
+
                 layerElements.set(node, {
                     nodeBox,
                     afterNodeBox,

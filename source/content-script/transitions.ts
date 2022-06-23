@@ -16,7 +16,6 @@ import {
     PageModifier,
     trackModifierExecution,
 } from "./modifications/_interface";
-import { preparePageviewAnimation } from "./pageview/enablePageView";
 
 @trackModifierExecution
 export default class TransitionManager implements PageModifier {
@@ -84,8 +83,6 @@ export default class TransitionManager implements PageModifier {
 
         // configure selectors (does not interact with DOM)
         this.contentBlockModifier.prepare();
-
-        preparePageviewAnimation();
     }
 
     // prepare upcoming transition
@@ -105,15 +102,15 @@ export default class TransitionManager implements PageModifier {
 
         // apply text container styles (without moving position)
         this.textContainerModifier.applyContainerStyles();
+    }
 
-        // set inline start position for text container position animation
-        // must read DOM just after content block takes effect to animate y change
-        requestAnimationFrame(() => {
-            // *** read DOM phase ***
-            this.textContainerModifier.prepareAnimation(); // triggers reflow
+    // set inline start position for text container position animation
+    // must read DOM just after content block takes effect to animate y change
+    prepareAnimation() {
+        // *** read DOM phase ***
+        this.textContainerModifier.prepareAnimation(); // triggers reflow
 
-            // *** write DOM phase ***
-        });
+        // *** write DOM phase ***
     }
 
     // pageview width change was triggered just before calling this
@@ -153,16 +150,10 @@ export default class TransitionManager implements PageModifier {
         // adjust background element height only after animations done
         this.backgroundModifier.observeHeightChanges();
 
-        document.body.style.setProperty(
-            "transition",
-            "all 0.2s cubic-bezier(0.33, 1, 0.68, 1)",
-            "important"
-        );
+        this.bodyStyleModifier.afterTransitionIn();
     }
 
     async transitionOut() {
-        // incoming animation set via pageview class, need inline styles for outgoing animation
-        preparePageviewAnimation();
         // setup transition for changing text margin
         this.textContainerModifier.prepareTransitionOut();
 

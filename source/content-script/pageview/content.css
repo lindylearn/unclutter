@@ -23,9 +23,6 @@ html.pageview.pageview > body {
     visibility: visible !important;
 
     border-radius: 10px !important;
-    overflow-x: hidden !important;
-    overflow-y: hidden !important;
-
     /* margins are also set inline in body.js for higher specifity */
     padding: 30px 50px !important;
 
@@ -34,7 +31,6 @@ html.pageview.pageview > body {
     top: 0 !important;
 
     box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1) !important;
-    transition: max-width 0.4s cubic-bezier(0.33, 1, 0.68, 1) !important;
 }
 
 #lindy-body-background#lindy-body-background#lindy-body-background {
