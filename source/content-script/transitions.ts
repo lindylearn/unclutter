@@ -110,7 +110,7 @@ export default class TransitionManager implements PageModifier {
         // must read DOM just after content block takes effect to animate y change
         requestAnimationFrame(() => {
             // *** read DOM phase ***
-            this.textContainerModifier.prepareAnimation();
+            this.textContainerModifier.prepareAnimation(); // triggers reflow
 
             // *** write DOM phase ***
         });

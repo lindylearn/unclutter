@@ -462,10 +462,17 @@ export default class TextContainerModifier implements PageModifier {
     }
 
     prepareAnimation() {
-        // should leave text in same place as before, but positioned animation-friendly using left margins
+        // read DOM before writing styles (triggers reflow as in write phase - expected as we want to know the current state)
+        const afterTopOffsets: number[] = [];
+        this.nodeBeforeAnimationStyle.map(([node, {}]) => {
+            const afterTopOffset = node.getBoundingClientRect().top;
+            afterTopOffsets.push(afterTopOffset);
+        });
+
+        // put text containers in same place as before content block, but positioned using CSS transforms
         this.nodeBeforeAnimationStyle.map(
             ([node, { marginLeft, beforeTopOffset, maxWidth, width }], i) => {
-                const afterTopOffset = node.getBoundingClientRect().top;
+                const afterTopOffset = afterTopOffsets[i];
 
                 // can only animate blocks?
                 node.style.setProperty("display", "block");
