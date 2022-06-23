@@ -51,6 +51,8 @@ export default class TransitionManager implements PageModifier {
     private readingTimeModifier = new ReadingTimeModifier(this.overlayManager);
 
     async prepare() {
+        // *** read DOM phase ***
+
         // save original styles before changes
         this.bodyStyleModifier.prepare();
 
@@ -58,6 +60,8 @@ export default class TransitionManager implements PageModifier {
         this.textContainerModifier.prepare();
         this.textContainerModifier.measureFontProperties();
         this.backgroundModifier.prepare();
+
+        // *** write DOM phase ***
 
         // proxying CSS may take some time, and will trigger reflow
         await Promise.all([
@@ -81,39 +85,40 @@ export default class TransitionManager implements PageModifier {
         preparePageviewAnimation();
     }
 
-    // visually fade out noisy elements
-    fadeOutNoise() {
-        // inserts new stylesheets which trigger ~50ms reflow
-        this.contentBlockModifier.fadeOutNoise();
-        this.responsiveStyleModifier.fadeOutNoise();
-    }
-
     // prepare upcoming transition
     prepareTransition() {
-        // order is important -- should only trigger one reflow for background insert & text baseline styles
+        // *** write DOM phase ***
 
-        // parse text background colors, insert background
+        // set background colors, insert background
         this.textContainerModifier.fadeOutNoise();
         this.backgroundModifier.fadeOutNoise();
         // set background dark if dark mode enabled, configure font size variable
         this.themeModifier.transitionIn();
 
-        // below steps where originally in transitionIn()
-
-        // remove faded-out elements
-        this.contentBlockModifier.transitionIn();
+        // remove blocked elements
         this.responsiveStyleModifier.transitionIn();
         this.elementPickerModifier.transitionIn();
+        this.contentBlockModifier.transitionIn();
 
+        // apply text container styles (without moving position)
         this.textContainerModifier.applyContainerStyles();
-        this.textContainerModifier.prepareAnimation();
+
+        // set inline start position for text container position animation
+        // must read DOM just after content block takes effect to animate y change
+        requestAnimationFrame(() => {
+            // *** read DOM phase ***
+            this.textContainerModifier.prepareAnimation();
+
+            // *** write DOM phase ***
+        });
     }
 
     // pageview width change was triggered just before calling this
     transitionIn() {
-        // enable mobile styles & style patches
-        // this may shift layout in various ways
-        this.responsiveStyleModifier.enableResponsiveStyles();
+        // *** write DOM phase ***
+
+        // enable mobile styles & style patches (this may shift layout in various ways)
+        // this.responsiveStyleModifier.enableResponsiveStyles();
         this.stylePatchesModifier.transitionIn();
 
         // adjust font size

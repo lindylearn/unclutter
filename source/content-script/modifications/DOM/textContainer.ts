@@ -45,7 +45,12 @@ export default class TextContainerModifier implements PageModifier {
     // style tweaks to apply just before the pageview animation (populated via _prepareBeforeAnimationPatches())
     private nodeBeforeAnimationStyle: [
         HTMLElement,
-        { marginLeft?: string; maxWidth?: string; width?: string }
+        {
+            marginLeft?: string;
+            maxWidth?: string;
+            width?: string;
+            beforeTopOffset?: number;
+        }
     ][] = [];
 
     // Remember background colors on text containers
@@ -457,16 +462,21 @@ export default class TextContainerModifier implements PageModifier {
     prepareAnimation() {
         // should leave text in same place as before, but positioned animation-friendly using left margins
         this.nodeBeforeAnimationStyle.map(
-            ([node, { marginLeft, maxWidth, width }]) => {
+            ([node, { marginLeft, beforeTopOffset, maxWidth, width }], i) => {
+                const afterTopOffset = node.getBoundingClientRect().top;
+
                 // can only animate blocks?
                 node.style.setProperty("display", "block");
 
+                const yTranslate = beforeTopOffset - afterTopOffset;
+                node.style.setProperty(
+                    "transform",
+                    `translate(${marginLeft}, ${yTranslate}px)`
+                );
+
                 if (marginLeft) {
+                    // set via translate() above
                     node.style.setProperty("margin-left", "0");
-                    node.style.setProperty(
-                        "transform",
-                        `translateX(${marginLeft})`
-                    );
                 }
                 if (maxWidth) {
                     node.style.setProperty("max-width", maxWidth);
@@ -492,20 +502,13 @@ export default class TextContainerModifier implements PageModifier {
 
     executeAnimation() {
         this.nodeBeforeAnimationStyle.map(([node, { marginLeft, width }]) => {
-            let transition = "";
-            if (marginLeft) {
-                transition += `transform 0.4s cubic-bezier(0.33, 1, 0.68, 1)`;
-            } else if (width) {
-                if (marginLeft) {
-                    transition += ", ";
-                }
-                transition += `width 0.4s cubic-bezier(0.33, 1, 0.68, 1)`;
+            let transition = "transform 0.4s cubic-bezier(0.33, 1, 0.68, 1)";
+            if (width) {
+                transition += `, width 0.4s cubic-bezier(0.33, 1, 0.68, 1)`;
             }
             node.style.setProperty("transition", transition);
 
-            if (marginLeft) {
-                node.style.setProperty("transform", "translateX(0)");
-            }
+            node.style.setProperty("transform", "translate(0, 0)");
             if (width) {
                 node.style.setProperty("width", "100%");
             }
@@ -586,6 +589,7 @@ export default class TextContainerModifier implements PageModifier {
                 margin-right: 0 !important;
                 padding-left: 0 !important;
                 padding-right: 0 !important;
+                border: none !important;
                 /* y padding often used to make space for images, e.g. on theintercept or variety.com */
                 height: auto !important;
                 backdrop-filter: none !important; /* prevent implicit GPU layer */
@@ -818,7 +822,8 @@ export default class TextContainerModifier implements PageModifier {
                     .getComputedStyle(node.parentElement)
                     .paddingLeft.replace("px", "")
             );
-            const leftMargin = Math.max(leftOffset - parentPadding, 0);
+            const leftMargin = leftOffset - parentPadding;
+            // allow negative margin e.g. on https://www.statnews.com/2019/06/25/alzheimers-cabal-thwarted-progress-toward-cure/
 
             beforeAnimationProperties.marginLeft = `${leftMargin}px`;
         }
@@ -843,6 +848,11 @@ export default class TextContainerModifier implements PageModifier {
         }
 
         if (Object.keys(beforeAnimationProperties).length > 0) {
+            // base layers off y margin?
+
+            // really need to get top offset to latest layer
+            beforeAnimationProperties.beforeTopOffset = nodeBox.top; // - parentBox.top;
+
             this.nodeBeforeAnimationStyle.push([
                 node,
                 beforeAnimationProperties,

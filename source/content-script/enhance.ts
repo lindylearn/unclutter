@@ -43,9 +43,6 @@ export async function togglePageView() {
         // enable pageview
         await transitions.prepare();
 
-        // transitions.fadeOutNoise(); // 0.3s second fade-out
-        // await new Promise((r) => setTimeout(r, 100));
-
         transitions.prepareTransition();
         // adding a small delay >0 seems to help textContainerModifier.prepareAnimation()
         await new Promise((r) => setTimeout(r, 10));
