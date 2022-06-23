@@ -56,7 +56,6 @@ export async function togglePageView() {
         // trigger page transitions
         transitions.transitionIn();
 
-        return;
         await new Promise((r) => setTimeout(r, 400));
 
         await transitions.afterTransitionIn();
