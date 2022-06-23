@@ -36,5 +36,6 @@
         ".aalto-tiles-layout__items-container",
         ".aalto-component-wrapper.lindy-clean-margin-bottom",
         ".aalto-content-bottom-wrapper.content-container"
-    ]
+    ],
+    "onlinetutorialspoint.com": [".code-block.code-block-4"]
 }
