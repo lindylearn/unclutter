@@ -1,9 +1,17 @@
+import { pxToNumber } from "../../common/css";
 import { overrideClassname } from "../../common/stylesheets";
+import ThemeModifier from "./CSSOM/theme";
 import { PageModifier, trackModifierExecution } from "./_interface";
 
 @trackModifierExecution
 export default class BackgroundModifier implements PageModifier {
-    constructor() {}
+    private themeModifier: ThemeModifier;
+
+    private backgroundElement: HTMLElement;
+
+    constructor(themeModifier: ThemeModifier) {
+        this.themeModifier = themeModifier;
+    }
 
     private initialBodyHeight: number;
     prepare() {
@@ -11,28 +19,41 @@ export default class BackgroundModifier implements PageModifier {
         this.initialBodyHeight = document.body.scrollHeight;
     }
 
-    fadeOutNoise() {
-        this.insertBackground();
-    }
-
     // Insert an element behind a site's <body> content to show a white background if the page doesn't provide it.
     // The height of this element needs to be dynamically kept in sync with the body height.
-    private insertBackground() {
+    insertBackground() {
         // create element of full height of all children, in case body height != content height
-        var background = document.createElement("div");
-        background.id = "lindy-body-background";
-        background.className = `${overrideClassname} lindy-body-background`;
+        this.backgroundElement = document.createElement("div");
+        this.backgroundElement.id = "lindy-body-background";
+        this.backgroundElement.className = `${overrideClassname} lindy-body-background`;
 
         // body '100%' may not refer to full height of children (e.g. https://torontolife.com/memoir/the-horrifying-truth-about-my-biological-father/)
         // so also se min-height based on children scollHeight
-        background.style.setProperty("height", "100%", "important");
-        background.style.setProperty(
+        this.backgroundElement.style.setProperty("height", "100%", "important");
+        this.backgroundElement.style.setProperty(
             "min-height",
             `${this.initialBodyHeight}px`,
             "important"
         );
 
-        document.body.appendChild(background);
+        // scale-up background to entire screen width using transform (performant to animate)
+        const initialScale =
+            window.innerWidth / pxToNumber(this.themeModifier.theme.pageWidth);
+        this.backgroundElement.style.setProperty(
+            "transform",
+            `scaleX(${initialScale}) translateY(-10px)`,
+            "important"
+        );
+
+        document.body.appendChild(this.backgroundElement);
+    }
+
+    animateWidthReduction() {
+        this.backgroundElement.style.setProperty(
+            "transform",
+            "scaleX(1.0) translateY(0)",
+            "important"
+        );
     }
 
     observeHeightChanges() {
@@ -55,13 +76,10 @@ export default class BackgroundModifier implements PageModifier {
             0
         );
 
-        const background = document.getElementById("lindy-body-background");
-        if (background) {
-            background.style.setProperty(
-                "min-height",
-                `${bodyHeigth}px`,
-                "important"
-            );
-        }
+        this.backgroundElement?.style.setProperty(
+            "min-height",
+            `${bodyHeigth}px`,
+            "important"
+        );
     }
 }

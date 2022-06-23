@@ -1,8 +1,4 @@
 html {
-    /* initial theme variables, updated by JS later */
-    /* need on html element to access outside body */
-    --lindy-pagewidth: 780px;
-    /* --lindy-active-font-size set in iterateDOM() */
     transition: background 0.2s ease-in-out;
 }
 
@@ -29,8 +25,6 @@ html.pageview.pageview > body {
     cursor: auto;
     left: 0 !important;
     top: 0 !important;
-
-    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1) !important;
 }
 
 #lindy-body-background#lindy-body-background#lindy-body-background {
@@ -41,9 +35,11 @@ html.pageview.pageview > body {
     z-index: -100 !important;
     content: "" !important;
     background: inherit;
-    transition: background 0.4s cubic-bezier(0.33, 1, 0.68, 1);
+    transition: transform 0.4s cubic-bezier(0.33, 1, 0.68, 1), background 0.4s cubic-bezier(0.33, 1, 0.68, 1);
+    will-change: transform, background;
 
     border-radius: 10px !important;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1) !important;
 }
 
 .lindy-toast {

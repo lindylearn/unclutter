@@ -35,7 +35,7 @@ export default class ThemeModifier implements PageModifier {
     private textContainerModifier: TextContainerModifier;
     private bodyStyleModifier: BodyStyleModifier;
 
-    private theme: UserTheme;
+    public theme: UserTheme;
     private darkModeActive = false; // seperate from theme -- auto theme enables and disable dark mode
 
     public activeColorTheme: themeName;
@@ -57,19 +57,11 @@ export default class ThemeModifier implements PageModifier {
     async prepare(domain: string) {
         this.domain = domain;
 
-        // Get saved domain-specific theme
+        // Get saved user theme
         this.theme = await getUserTheme();
-        if (!this.theme) {
-            return;
-        }
-        if (this.theme.pageWidth) {
-            setCssThemeVariable(pageWidthThemeVariable, this.theme.pageWidth);
-        }
-
         this.activeColorTheme = this.theme.colorTheme;
-        if (!this.activeColorTheme) {
-            this.activeColorTheme = "auto";
-        }
+
+        setCssThemeVariable(pageWidthThemeVariable, this.theme.pageWidth);
 
         // Listen to system dark mode preference
         this.systemDarkModeQuery = window.matchMedia(
@@ -81,7 +73,7 @@ export default class ThemeModifier implements PageModifier {
         );
     }
 
-    async transitionIn() {
+    setThemeVariables() {
         // basic heuristic whether to enable dark mode, to show it earlier
         const darkModeActive =
             this.darkModeActive ||

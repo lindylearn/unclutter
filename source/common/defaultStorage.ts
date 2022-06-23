@@ -51,3 +51,4 @@ export const defaultExcludedDomains = [
 ];
 
 export const defaultFontSizePx = "18px";
+export const defaultPageWidth = "780px";

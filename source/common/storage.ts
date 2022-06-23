@@ -1,5 +1,5 @@
 import { pxToNumber } from "./css";
-import { defaultFontSizePx } from "./defaultStorage";
+import { defaultFontSizePx, defaultPageWidth } from "./defaultStorage";
 import browser from "./polyfill";
 import { themeName } from "./theme";
 
@@ -60,14 +60,19 @@ export async function getUserTheme(): Promise<UserTheme> {
     const config = await browser.storage.sync.get(["custom-global-theme"]);
     const theme = config["custom-global-theme"] || {};
 
+    let fontSize = theme.fontSize;
     if (
         !theme.fontSize ||
         (theme.fontSize && isNaN(pxToNumber(theme.fontSize)))
     ) {
-        theme.fontSize = defaultFontSizePx;
+        fontSize = defaultFontSizePx;
     }
 
-    return theme;
+    return {
+        fontSize,
+        pageWidth: theme.pageWidth || defaultPageWidth,
+        colorTheme: theme.colorTheme || "auto",
+    };
 }
 export async function mergeUserTheme(partialTheme: UserTheme): Promise<void> {
     const config = await browser.storage.sync.get(["custom-global-theme"]);

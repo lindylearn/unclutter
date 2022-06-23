@@ -442,10 +442,6 @@ export default class TextContainerModifier implements PageModifier {
         return true;
     }
 
-    fadeOutNoise() {
-        this.processBackgroundColors();
-    }
-
     applyContainerStyles() {
         // Removing margin and cleaning up background, shadows etc
         createStylesheetText(
@@ -674,7 +670,7 @@ export default class TextContainerModifier implements PageModifier {
     }
 
     public originalBackgroundColor: string;
-    private processBackgroundColors() {
+    processBackgroundColors() {
         if (
             this.backgroundColors.length > 0 &&
             this.backgroundColors[0] !== "rgba(0, 0, 0, 0)"

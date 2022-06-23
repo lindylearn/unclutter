@@ -36,7 +36,7 @@ export function getThemeValue(varName) {
         .trim();
 }
 
-export function setCssThemeVariable(varName, value, ...params) {
+export function setCssThemeVariable(varName, value, params = {}) {
     // To minimize rerenders, set CSS variables only on elements where they're used
     if (varName === fontSizeThemeVariable) {
         document.documentElement.style.setProperty(varName, value);
@@ -47,7 +47,7 @@ export function setCssThemeVariable(varName, value, ...params) {
             document.body.style.setProperty("background", value, "important");
             document
                 .getElementById("lindy-body-background")
-                .style.setProperty("background", value, "important");
+                ?.style.setProperty("background", value, "important");
         }
 
         getOutlineIframe()?.body.style.setProperty(varName, value);

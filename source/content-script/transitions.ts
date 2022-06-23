@@ -33,13 +33,13 @@ export default class TransitionManager implements PageModifier {
         this.domain,
         this.textContainerModifier
     );
-    private backgroundModifier = new BackgroundModifier();
     private themeModifier = new ThemeModifier(
         this.cssomProvider,
         this.annotationsModifier,
         this.textContainerModifier,
         this.bodyStyleModifier
     );
+    private backgroundModifier = new BackgroundModifier(this.themeModifier);
     private elementPickerModifier = new ElementPickerModifier(this.domain);
     private overlayManager = new OverlayManager(
         this.domain,
@@ -89,11 +89,12 @@ export default class TransitionManager implements PageModifier {
     prepareTransition() {
         // *** write DOM phase ***
 
-        // set background colors, insert background
-        this.textContainerModifier.fadeOutNoise();
-        this.backgroundModifier.fadeOutNoise();
         // set background dark if dark mode enabled, configure font size variable
-        this.themeModifier.transitionIn();
+        this.textContainerModifier.processBackgroundColors();
+        this.themeModifier.setThemeVariables();
+
+        // create background element, prepare animation based on theme pagewidth
+        this.backgroundModifier.insertBackground();
 
         // remove blocked elements
         this.responsiveStyleModifier.transitionIn();
@@ -109,6 +110,8 @@ export default class TransitionManager implements PageModifier {
     prepareAnimation() {
         // *** read DOM phase ***
         this.textContainerModifier.prepareAnimation(); // triggers reflow
+
+        this.backgroundModifier.animateWidthReduction();
 
         // *** write DOM phase ***
     }
