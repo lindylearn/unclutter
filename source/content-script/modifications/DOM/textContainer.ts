@@ -49,9 +49,9 @@ export default class TextContainerModifier implements PageModifier {
         {
             nodeBox: DOMRect;
             afterNodeBox: DOMRect;
+            stackType: string;
             parentLayer: HTMLElement;
             parentLayerStyle: CSSStyleDeclaration;
-            width?: string;
         }
     ][] = [];
     private inlineStyleTweaks: [HTMLElement, Partial<CSSStyleDeclaration>][] =
@@ -133,6 +133,14 @@ export default class TextContainerModifier implements PageModifier {
                 this.exampleMainFontSizeElement
             ).color;
         }
+
+        this.animationLayerCandidates.push([
+            document.body,
+            {
+                nodeBox: document.body.getBoundingClientRect(),
+                stackType: "text",
+            },
+        ]);
     }
 
     assignClassnames() {
@@ -546,6 +554,7 @@ export default class TextContainerModifier implements PageModifier {
 
             /* image container cleanup */
             .${lindyImageContainerClass}:not(#fakeID#fakeID) {
+                width: 100% !important;
                 margin-left: 0 !important;
                 margin-right: 0 !important;
                 padding-left: 0 !important;
@@ -785,9 +794,10 @@ export default class TextContainerModifier implements PageModifier {
 
     // stage elements to put on animation layers, with their original page position
     // know actual parent layers for each layer only once content block done
-    private animationLayerCandidates: [HTMLElement, DOMRect][] = [
-        [document.body, document.body.getBoundingClientRect()],
-    ];
+    private animationLayerCandidates: [
+        HTMLElement,
+        { nodeBox: DOMRect; stackType: string }
+    ][] = [];
     private checkShouldCreateAnimationLayer(
         node: HTMLElement,
         stackType: string,
@@ -805,7 +815,7 @@ export default class TextContainerModifier implements PageModifier {
 
         // || stackType === "image"
         if (leftOffset !== 0 || topOffset !== 0) {
-            this.animationLayerCandidates.push([node, nodeBox]);
+            this.animationLayerCandidates.push([node, { nodeBox, stackType }]);
         }
     }
 
@@ -816,24 +826,28 @@ export default class TextContainerModifier implements PageModifier {
             {
                 nodeBox: DOMRect;
                 afterNodeBox: DOMRect;
+                stackType: string;
                 parentLayer: HTMLElement;
                 parentLayerStyle: CSSStyleDeclaration;
             }
         > = new Map();
-        this.animationLayerCandidates.forEach(([node, nodeBox]) => {
-            const afterNodeBox = node.getBoundingClientRect();
-            if (afterNodeBox.height === 0) {
-                // ignore blocked elements
-                return;
-            }
+        this.animationLayerCandidates.forEach(
+            ([node, { nodeBox, stackType }]) => {
+                const afterNodeBox = node.getBoundingClientRect();
+                if (afterNodeBox.height === 0) {
+                    // ignore blocked elements
+                    return;
+                }
 
-            layerElements.set(node, {
-                nodeBox,
-                afterNodeBox,
-                parentLayer: null, // set below
-                parentLayerStyle: null,
-            });
-        });
+                layerElements.set(node, {
+                    nodeBox,
+                    afterNodeBox,
+                    stackType,
+                    parentLayer: null, // set below
+                    parentLayerStyle: null,
+                });
+            }
+        );
 
         // populate parent layer for each layer
         layerElements.forEach((properties, node) => {
@@ -859,8 +873,7 @@ export default class TextContainerModifier implements PageModifier {
         // put text containers in same place as before content block, but positioned using CSS transforms
         this.animationLayerElements.forEach(([node, layerProps]) => {
             const parentLayerProps = layerElements.get(layerProps.parentLayer);
-
-            console.log("layer", node, layerProps.parentLayer);
+            console.log("layer", layerProps.stackType, node);
 
             // get x and y offsets
             // allow negative e.g. on https://www.statnews.com/2019/06/25/alzheimers-cabal-thwarted-progress-toward-cure/
@@ -877,28 +890,18 @@ export default class TextContainerModifier implements PageModifier {
                 layerProps.afterNodeBox.top - parentLayerProps.afterNodeBox.top;
             const topOffset = beforeTopOffset - afterTopOffset;
 
-            // pxToNumber(parentLayerProps.parentLayerStyle.paddingLeft)
-
-            // TODO consider negative margin of parent
-            // https://www.statnews.com/2019/06/25/alzheimers-cabal-thwarted-progress-toward-cure/
+            let transform = `translate(${leftOffset}px, ${topOffset}px)`;
 
             // animate header image width (not for text elements for performance)
-            // if (stackType === "image") {
-            //     if (nodeBox.width !== parentBox.width) {
-            //         // animate elements only if needed, to reduce GPU layers
+            if (layerProps.stackType === "image") {
+                const scaleX =
+                    layerProps.nodeBox.width / layerProps.afterNodeBox.width;
+                transform += ` scale(${scaleX})`;
+                node.style.setProperty("transform-origin", "top left");
+            }
 
-            //         // use width instead of max-width to allow overflow of parent header containers
-            //         beforeAnimationProperties.width = `${nodeBox.width}px`;
-            //     }
-            // }
-            // if (width) {
-            //     node.style.setProperty("width", width);
-            // }
+            node.style.setProperty("transform", transform);
 
-            node.style.setProperty(
-                "transform",
-                `translate(${leftOffset}px, ${topOffset}px)`
-            );
             node.style.setProperty("left", "0"); // e.g. xkcd.com
             node.style.setProperty("display", "block"); // can only animate blocks?
 
@@ -914,17 +917,17 @@ export default class TextContainerModifier implements PageModifier {
     }
 
     executeAnimation() {
-        this.animationLayerElements.map(([node, { width }]) => {
-            let transition = "transform 0.4s cubic-bezier(0.33, 1, 0.68, 1)";
-            if (width) {
-                transition += `, width 0.4s cubic-bezier(0.33, 1, 0.68, 1)`;
-            }
-            node.style.setProperty("transition", transition);
+        this.animationLayerElements.map(([node, { stackType }]) => {
+            node.style.setProperty(
+                "transition",
+                "transform 0.4s cubic-bezier(0.33, 1, 0.68, 1)"
+            );
 
-            node.style.setProperty("transform", "translate(0, 0)");
-            if (width) {
-                node.style.setProperty("width", "100%");
+            let transform = `translate(0, 0)`;
+            if (stackType === "image") {
+                transform += ` scale(1)`;
             }
+            node.style.setProperty("transform", transform);
         });
     }
 
