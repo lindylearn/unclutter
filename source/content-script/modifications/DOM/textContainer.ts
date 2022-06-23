@@ -65,7 +65,7 @@ export default class TextContainerModifier implements PageModifier {
     public foundMainContentElement = false;
     public foundMainHeadingElement = false;
     private bodyContentLength: number;
-    async prepare() {
+    async iterateDom() {
         this.bodyContentLength = document.body.innerText.length;
         if (this.bodyContentLength < mainContentMinLength) {
             // set large number so all fractions are small -> foundMainContentElement stays false
@@ -128,7 +128,9 @@ export default class TextContainerModifier implements PageModifier {
                 this.exampleMainFontSizeElement
             ).color;
         }
+    }
 
+    assignClassnames() {
         // batch className changes to only do one reflow
         this.nodeClasses.forEach((classes, node) => {
             node.classList.add(...classes);

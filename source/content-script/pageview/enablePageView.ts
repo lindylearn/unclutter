@@ -26,6 +26,7 @@ export function enablePageView(): () => void {
 }
 
 // should be called at least ~100ms before enabling pageview, otherwise seems not to trigger sometimes
+// can't set animation start properties in content.css, as that breaks some sites (e.g. xkcd.com)
 export function preparePageviewAnimation() {
     if (!document.body) {
         return;

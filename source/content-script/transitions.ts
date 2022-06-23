@@ -24,7 +24,9 @@ export default class TransitionManager implements PageModifier {
 
     private bodyStyleModifier = new BodyStyleModifier();
     private cssomProvider = new CSSOMProvider();
-    private responsiveStyleModifier = new ResponsiveStyleModifier();
+    private responsiveStyleModifier = new ResponsiveStyleModifier(
+        this.cssomProvider
+    );
     private stylePatchesModifier = new StylePatchesModifier(this.cssomProvider);
     private annotationsModifier = new AnnotationsModifier();
     private textContainerModifier = new TextContainerModifier();
@@ -55,11 +57,11 @@ export default class TransitionManager implements PageModifier {
 
         // save original styles before changes
         this.bodyStyleModifier.prepare();
-
-        // iterate DOM before potententiall modifying CSS
-        this.textContainerModifier.prepare();
-        this.textContainerModifier.measureFontProperties();
         this.backgroundModifier.prepare();
+
+        // iterate DOM in original state (& in read phase)
+        this.textContainerModifier.iterateDom();
+        this.textContainerModifier.measureFontProperties();
 
         // *** write DOM phase ***
 
@@ -70,7 +72,7 @@ export default class TransitionManager implements PageModifier {
                 // fetch & re-insert CSS stylesheets if required
                 await this.cssomProvider.prepare();
                 // iterate CSSOM
-                await this.responsiveStyleModifier.prepare(this.cssomProvider);
+                await this.responsiveStyleModifier.iterateCSSOM();
                 await this.stylePatchesModifier.prepare();
             })(),
             // fetch settings
@@ -78,10 +80,11 @@ export default class TransitionManager implements PageModifier {
             this.elementPickerModifier.prepare(),
         ]);
 
-        // configure selectors
+        this.textContainerModifier.assignClassnames();
+
+        // configure selectors (does not interact with DOM)
         this.contentBlockModifier.prepare();
 
-        // can't set animation start properties in content.css, as that breaks some sites (e.g. xkcd.com)
         preparePageviewAnimation();
     }
 
