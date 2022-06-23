@@ -42,8 +42,8 @@ export default class TextContainerModifier implements PageModifier {
 
     private usedTextElementSelector: string = globalTextElementSelector; // may get updated if page uses different html elements
 
-    // style tweaks to apply just before the pageview animation (populated via _prepareBeforeAnimationPatches())
-    private nodeBeforeAnimationStyle: [
+    // text containers to put on a seperate CSS GPU layer to animate their position
+    private animationLayerElements: [
         HTMLElement,
         {
             marginLeft?: string;
@@ -52,6 +52,8 @@ export default class TextContainerModifier implements PageModifier {
             beforeTopOffset?: number;
         }
     ][] = [];
+    private inlineStyleTweaks: [HTMLElement, Partial<CSSStyleDeclaration>][] =
+        [];
 
     // Remember background colors on text containers
     private backgroundColors = [];
@@ -116,6 +118,7 @@ export default class TextContainerModifier implements PageModifier {
 
         // Just use the most common font size for now
         // Note that the actual font size might be changed by responsive styles
+        // @ts-ignore
         this.mainFontSize = Object.keys(this.paragraphFontSizes).reduce(
             (a, b) =>
                 this.paragraphFontSizes[a] > this.paragraphFontSizes[b] ? a : b,
@@ -210,7 +213,8 @@ export default class TextContainerModifier implements PageModifier {
 
         // if starting iteration at parent, still prepare elem animation
         if (iterationStart == elem.parentElement && hasValidTextChain) {
-            this._prepareBeforeAnimationPatches(elem, elementType, activeStyle);
+            const nodeBox = elem.getBoundingClientRect();
+            this.prepareAnimationLayerFor(elem, elementType, nodeBox);
         }
 
         return hasValidTextChain;
@@ -409,12 +413,11 @@ export default class TextContainerModifier implements PageModifier {
                 ...currentNodeClasses,
             ]);
 
-            // save style properties for animation
-            this._prepareBeforeAnimationPatches(
-                currentElem,
-                stackType,
-                activeStyle
-            );
+            const nodeBox = currentElem.getBoundingClientRect();
+
+            // check if should create layer
+            this.prepareInlineStyleTweaks(currentElem, stackType, nodeBox);
+            this.prepareAnimationLayerFor(currentElem, stackType, nodeBox);
 
             this.validatedNodes.add(currentElem); // add during second iteration to ignore aborted stacks
             if (isMainStack) {
@@ -436,10 +439,16 @@ export default class TextContainerModifier implements PageModifier {
             this.getTextElementChainOverrideStyle(),
             "lindy-text-chain-override"
         );
+
+        this.inlineStyleTweaks.forEach(([elem, style]) => {
+            for (const [key, value] of Object.entries(style)) {
+                elem.style[key] = value;
+            }
+        });
     }
 
     prepareTransitionOut() {
-        this.nodeBeforeAnimationStyle.map(([node, {}]) => {
+        this.animationLayerElements.map(([node, {}]) => {
             node.style.setProperty(
                 "transition",
                 "margin-left 0.4s cubic-bezier(0.33, 1, 0.68, 1)"
@@ -464,13 +473,13 @@ export default class TextContainerModifier implements PageModifier {
     prepareAnimation() {
         // read DOM before writing styles (triggers reflow as in write phase - expected as we want to know the current state)
         const afterTopOffsets: number[] = [];
-        this.nodeBeforeAnimationStyle.map(([node, {}]) => {
+        this.animationLayerElements.map(([node, {}]) => {
             const afterTopOffset = node.getBoundingClientRect().top;
             afterTopOffsets.push(afterTopOffset);
         });
 
         // put text containers in same place as before content block, but positioned using CSS transforms
-        this.nodeBeforeAnimationStyle.map(
+        this.animationLayerElements.map(
             ([node, { marginLeft, beforeTopOffset, maxWidth, width }], i) => {
                 const afterTopOffset = afterTopOffsets[i];
 
@@ -510,7 +519,7 @@ export default class TextContainerModifier implements PageModifier {
     }
 
     executeAnimation() {
-        this.nodeBeforeAnimationStyle.map(([node, { marginLeft, width }]) => {
+        this.animationLayerElements.map(([node, { marginLeft, width }]) => {
             let transition = "transform 0.4s cubic-bezier(0.33, 1, 0.68, 1)";
             if (width) {
                 transition += `, width 0.4s cubic-bezier(0.33, 1, 0.68, 1)`;
@@ -809,23 +818,48 @@ export default class TextContainerModifier implements PageModifier {
         return classes;
     }
 
-    // prepare animation of text and image nodes (setting start position)
-    // called on each element in the container stack
-    private _prepareBeforeAnimationPatches(
+    private prepareInlineStyleTweaks(
         node: HTMLElement,
         stackType: string,
-        activeStyle: CSSStyleDeclaration
+        nodeBox: DOMRect
     ) {
-        const beforeAnimationProperties: any = {};
-
-        const nodeBox = node.getBoundingClientRect();
-        const parentBox = node.parentElement.getBoundingClientRect();
+        const styleTweaks: Partial<CSSStyleDeclaration> = {};
         const parentStyle = window.getComputedStyle(node.parentElement);
 
-        // activeStyle.marginLeft returns concrete values for "auto" -- use this to make margin animation work
-        // use x offset to parent instead of margin to handle grid & flex layouts which we remove with #lindy-text-node-override
+        // flex and grid layouts are removed via _getNodeOverrideClasses() above, so save max-width on children to retain width without siblings
+        if (
+            (parentStyle.display === "flex" &&
+                parentStyle.flexDirection === "row") ||
+            parentStyle.display === "grid"
+        ) {
+            styleTweaks.maxWidth = `${nodeBox.width}px`;
+        }
+
+        if (Object.keys(styleTweaks).length > 0) {
+            this.inlineStyleTweaks.push([node, styleTweaks]);
+        }
+    }
+
+    // prepare animation of text and image nodes (setting start position)
+    // called on each element in the container stack
+    private prepareAnimationLayerFor(
+        node: HTMLElement,
+        stackType: string,
+        nodeBox: DOMRect
+    ) {
+        // only animate elements in (or above) viewport for performance
+        if (nodeBox.top > window.scrollY + window.innerHeight * 2) {
+            return;
+        }
+
+        const beforeAnimationProperties: any = {};
+        const parentBox = node.parentElement.getBoundingClientRect();
+
         const leftOffset = nodeBox.left - parentBox.left;
         if (leftOffset !== 0) {
+            // activeStyle.marginLeft returns concrete values for "auto"
+            // use x offset to parent instead of margin to handle grid & flex layouts which we remove with #lindy-text-node-override
+
             const parentPadding = parseFloat(
                 window
                     .getComputedStyle(node.parentElement)
@@ -835,15 +869,6 @@ export default class TextContainerModifier implements PageModifier {
             // allow negative margin e.g. on https://www.statnews.com/2019/06/25/alzheimers-cabal-thwarted-progress-toward-cure/
 
             beforeAnimationProperties.marginLeft = `${leftMargin}px`;
-        }
-
-        // flex and grid layouts are removed via _getNodeOverrideClasses() above, so set max-width on children to retain width without siblings
-        if (
-            (parentStyle.display === "flex" &&
-                parentStyle.flexDirection === "row") ||
-            parentStyle.display === "grid"
-        ) {
-            beforeAnimationProperties.maxWidth = `${nodeBox.width}px`;
         }
 
         // animate header image width (not for text elements for performance)
@@ -857,15 +882,12 @@ export default class TextContainerModifier implements PageModifier {
         }
 
         if (Object.keys(beforeAnimationProperties).length > 0) {
-            // base layers off y margin?
+            // only create CSS layer if has animateble properties
 
             // really need to get top offset to latest layer
             beforeAnimationProperties.beforeTopOffset = nodeBox.top; // - parentBox.top;
 
-            this.nodeBeforeAnimationStyle.push([
-                node,
-                beforeAnimationProperties,
-            ]);
+            this.animationLayerElements.push([node, beforeAnimationProperties]);
         }
     }
 
