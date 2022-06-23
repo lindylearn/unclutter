@@ -221,11 +221,9 @@ export default class TextContainerModifier implements PageModifier {
             elementType
         );
 
-        // if starting iteration at parent, still prepare elem animation
-        if (iterationStart == elem.parentElement && hasValidTextChain) {
-            const nodeBox = elem.getBoundingClientRect();
-            this.checkShouldCreateAnimationLayer(elem, elementType, nodeBox);
-        }
+        // check all leaf nodes if should create layer
+        const nodeBox = elem.getBoundingClientRect();
+        this.checkShouldCreateAnimationLayer(elem, elementType, nodeBox, true);
 
         return hasValidTextChain;
     }
@@ -424,13 +422,14 @@ export default class TextContainerModifier implements PageModifier {
             ]);
 
             const nodeBox = currentElem.getBoundingClientRect();
-
-            // check if should create layer
             this.prepareInlineStyleTweaks(currentElem, stackType, nodeBox);
+
+            // creating layers for some container elements creates better results in case we don't detect all content elements
             this.checkShouldCreateAnimationLayer(
                 currentElem,
                 stackType,
-                nodeBox
+                nodeBox,
+                false
             );
 
             this.validatedNodes.add(currentElem); // add during second iteration to ignore aborted stacks
@@ -801,10 +800,16 @@ export default class TextContainerModifier implements PageModifier {
     private checkShouldCreateAnimationLayer(
         node: HTMLElement,
         stackType: string,
-        nodeBox: DOMRect
+        nodeBox: DOMRect,
+        isLeafElement: boolean
     ) {
         // only animate elements in (or above) viewport for performance
-        if (nodeBox.top > window.scrollY + window.innerHeight * 2) {
+        if (nodeBox.top > window.scrollY + window.innerHeight * 1.5) {
+            return;
+        }
+
+        if (stackType === "image" && !isLeafElement) {
+            // further filtered down in prepareAnimation()
             return;
         }
 
@@ -813,8 +818,10 @@ export default class TextContainerModifier implements PageModifier {
         const leftOffset = nodeBox.left - parentBox.left;
         const topOffset = 0; // nodeBox.top - parentBox.top;
 
-        // || stackType === "image"
-        if (leftOffset !== 0 || topOffset !== 0) {
+        // layer candidates are further pruned in prepareAnimation() based on blocked elems & parent offsets
+
+        if (stackType === "image" || leftOffset !== 0 || topOffset !== 0) {
+            // console.log(leftOffset, node);
             this.animationLayerCandidates.push([node, { nodeBox, stackType }]);
         }
     }
@@ -866,6 +873,51 @@ export default class TextContainerModifier implements PageModifier {
             });
         });
 
+        // filter out unnecessary layers
+        layerElements.forEach((properties, node) => {
+            if (
+                node === document.body ||
+                properties.parentLayer === document.body
+            ) {
+                // allow all top-level layers
+                return;
+            }
+
+            const parentLayerProps = layerElements.get(properties.parentLayer);
+            if (!parentLayerProps) {
+                // console.log("no valid parent", node, properties.parentLayer);
+                return;
+            }
+
+            // only keep one layer per image chain (often matches containers by classname)
+            if (
+                properties.stackType === "image" &&
+                parentLayerProps.stackType === "image"
+            ) {
+                layerElements.delete(node);
+                return;
+            }
+
+            // container styles collapsed layers (parent has no other content)
+            // e.g. on https://www.nbcnews.com/business/business-news/tesla-racism-lawsuit-worker-rejects-15-million-payout-rcna34655
+            if (
+                properties.afterNodeBox.top ===
+                    parentLayerProps?.afterNodeBox.top &&
+                properties.afterNodeBox.height ===
+                    parentLayerProps?.afterNodeBox.height
+            ) {
+                // console.log("delete", node, properties.parentLayer);
+
+                layerElements.set(node, {
+                    ...properties,
+                    parentLayer: parentLayerProps.parentLayer,
+                    parentLayerStyle: parentLayerProps.parentLayerStyle,
+                });
+                layerElements.delete(properties.parentLayer);
+                return;
+            }
+        });
+
         this.animationLayerElements = [...layerElements.entries()].filter(
             ([node]) => node !== document.body
         );
@@ -873,7 +925,16 @@ export default class TextContainerModifier implements PageModifier {
         // put text containers in same place as before content block, but positioned using CSS transforms
         this.animationLayerElements.forEach(([node, layerProps]) => {
             const parentLayerProps = layerElements.get(layerProps.parentLayer);
-            console.log("layer", layerProps.stackType, node);
+            if (!parentLayerProps) {
+                // console.log("no valid parent", node);
+                return;
+            }
+            console.log(
+                "layer",
+                layerProps.stackType,
+                node,
+                layerProps.parentLayer
+            );
 
             // get x and y offsets
             // allow negative e.g. on https://www.statnews.com/2019/06/25/alzheimers-cabal-thwarted-progress-toward-cure/
