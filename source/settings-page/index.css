@@ -25,7 +25,7 @@ body {
 }
 
 @media (prefers-color-scheme: dark) {
-    :root {
+    html {
         /* from chrome default dark ui */
         background-color: #292a2d; 
         --embedded-background: #202124;
@@ -45,6 +45,8 @@ body {
     display: inline-block;
     position: relative;
     margin: 0 0 10px 2px;
+
+    transform: scale(0.9) translateX(-5px);
 
     /* from chrome default dark ui */
     --bg-disabled-color: #bdc1c5;

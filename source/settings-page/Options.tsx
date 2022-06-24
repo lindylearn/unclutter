@@ -41,7 +41,7 @@ function OptionsPage({}) {
             : "https://support.mozilla.org/en-US/kb/manage-extension-shortcuts-firefox";
 
     return (
-        <div className="flex flex-col gap-3 dark:text-white">
+        <div className="flex flex-col gap-5 dark:text-white">
             <OptionsGroup
                 headerText="Global Settings"
                 iconSvg={
@@ -233,9 +233,9 @@ export default OptionsPage;
 function OptionsGroup({ headerText, iconSvg, children, docsLink }) {
     return (
         <div>
-            <h2 className="text-lg font-semibold mb-1 flex items-center">
-                <div className="w-7 mr-1">{iconSvg}</div>
-                <div className="">{headerText}</div>
+            <h2 className="text-lg font-semibold mb-1 flex items-center select-none">
+                <div className="group-icon w-7 mr-1">{iconSvg}</div>
+                <div className="group-title">{headerText}</div>
                 {docsLink && (
                     <a
                         href={docsLink}

@@ -43,6 +43,7 @@
                 "sidebar/dark.css",
                 "sidebar/index.js",
                 "sidebar/messaging.js",
+                "settings-page/indexFirefoxOverride.css",
                 "assets/**"
             ],
             "matches": ["<all_urls>"]

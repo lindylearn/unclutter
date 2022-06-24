@@ -1,0 +1,22 @@
+html {
+    max-width: none !important;
+    overflow-x: hidden;
+
+    --embedded-background: #efeff2 !important;
+}
+
+.group-title {
+    font-size: 18px;
+}
+.group-icon > svg {
+    width: 1.5rem !important;
+    margin-left: -0.25rem !important;
+}
+
+@media (prefers-color-scheme: dark) {
+    html {
+        /* from chrome default dark ui */
+        background-color: rgb(35, 34, 43) !important;
+        --embedded-background: #1c1b22 !important;
+    }
+}
