@@ -56,7 +56,10 @@ function OptionsPage({}) {
                 <p>
                     Unclutter articles by clicking the extension icon or
                     pressing{" "}
-                    <div className="inline-block px-1 py-0.5 bg-gray-100 dark:bg-gray-800 shadow-inner text-gray-600 dark:text-gray-300">
+                    <div
+                        className="inline-block px-1 py-0.5 shadow-inner text-gray-600 dark:text-gray-300"
+                        style={{ background: "var(--embedded-background)" }}
+                    >
                         {keyboardShortcut}
                     </div>{" "}
                     (

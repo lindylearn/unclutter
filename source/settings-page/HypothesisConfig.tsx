@@ -69,11 +69,12 @@ export default function HypothesisConfig() {
             </p>
             <input
                 className={
-                    "flex-grow bg-gray-100 dark:bg-gray-800 shadow-inner py-1 px-2 outline-none rounded border-2 " +
+                    "flex-grow shadow-inner py-1 px-2 outline-none rounded border-2 " +
                     (tokenValid
                         ? "border-green-300 dark:border-green-500"
                         : "border-red-300 dark:border-red-500")
                 }
+                style={{ background: "var(--embedded-background)" }}
                 placeholder="Hypothes.is API token"
                 spellCheck="false"
                 value={token}

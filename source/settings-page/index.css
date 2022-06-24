@@ -9,6 +9,8 @@ html {
     overflow-x: hidden; /* Required to hide horizontal scroll on Firefox */
     /* color: #1f2937; */
     color-scheme: light dark;
+
+    --embedded-background: #f1f3f4;
 }
 
 body {
@@ -24,7 +26,17 @@ body {
 
 @media (prefers-color-scheme: dark) {
     :root {
-        background-color: rgb(35, 34, 43);
+        /* from chrome default dark ui */
+        background-color: #292a2d; 
+        --embedded-background: #202124;
+    }
+
+    .switch {   
+        /* from chrome default dark ui */
+        --bg-disabled-color: #9aa0a6;
+        --lever-disabled-color: #dadce0;
+        --bg-enabled-color: #5a6f93;
+        --lever-enabled-color: #8bb4f7;
     }
 }
 
@@ -34,10 +46,11 @@ body {
     position: relative;
     margin: 0 0 10px 2px;
 
-    --bg-disabled-color: rgba(0, 0, 0, 0.26);
-    --bg-enabled-color: rgba(63, 81, 181, 0.5);
-    --lever-disabled-color: #fff;
-    --lever-enabled-color: #3f51b5;
+    /* from chrome default dark ui */
+    --bg-disabled-color: #bdc1c5;
+    --lever-disabled-color: #ffffff;
+    --bg-enabled-color: #95b9f5;
+    --lever-enabled-color: #1c72e8;
 }
 .switch__input {
     position: absolute;
