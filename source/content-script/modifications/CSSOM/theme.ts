@@ -142,10 +142,6 @@ export default class ThemeModifier implements PageModifier {
         // this.siteUsesDefaultDarkMode read in applyActiveColorTheme() below
     }
 
-    afterTransitionIn() {
-        this.applyActiveColorTheme();
-    }
-
     transitionOut() {
         if (this.darkModeActive) {
             this.disableDarkMode();
@@ -174,8 +170,7 @@ export default class ThemeModifier implements PageModifier {
         );
     }
 
-    // also called from overlay theme selector
-    private applyActiveColorTheme() {
+    applyActiveColorTheme() {
         // State for UI switch
         setCssThemeVariable(activeColorThemeVariable, this.activeColorTheme);
         this.activeColorThemeListeners.map((listener) =>
@@ -235,12 +230,11 @@ export default class ThemeModifier implements PageModifier {
     }
 
     private enableDarkMode() {
-        // UI dark style
-        createStylesheetLink(
-            browser.runtime.getURL("content-script/pageview/contentDark.css"),
-            "dark-mode-ui-style",
-            // insert at beginning of header to not override site dark styles
-            document.head.firstChild as HTMLElement
+        // trigger html background change immediately (loading css takes time)
+        document.documentElement.style.setProperty(
+            "background",
+            "#131516",
+            "important"
         );
         createStylesheetLink(
             browser.runtime.getURL("overlay/indexDark.css"),
@@ -251,6 +245,14 @@ export default class ThemeModifier implements PageModifier {
             "dark-mode-ui-style",
             getOutlineIframe()?.head.lastChild as HTMLElement
         );
+        // global tweaks (not used right now)
+        // createStylesheetLink(
+        //     browser.runtime.getURL("content-script/pageview/contentDark.css"),
+        //     "dark-mode-ui-style",
+        //     // insert at beginning of header to not override site dark styles
+        //     document.head.firstChild as HTMLElement
+        // );
+
         this.annotationsModifer.setSidebarDarkMode(true);
 
         // enable site dark mode styles if present, but always run our css tweaks too

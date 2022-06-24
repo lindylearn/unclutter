@@ -1,17 +1,4 @@
-html.pageview.pageview {
-    background-color: #131516 !important;
-}
-
-.html.pageview.pageview > body {
-    filter: drop-shadow(0 10px 8px rgb(255 255 255 / 0.15))
-        drop-shadow(0 4px 3px rgb(255 255 255 / 0.2));
-}
-
-.lindy-page-broken.lindy-page-broken {
-    color: #d1d5db;
-}
-
-/* dark mode global tweaks */
+/* global dark mode tweaks */
 html {
     scrollbar-color: var(--lindy-dark-theme-text-color) #131516 !important; /* only firefox */
 }

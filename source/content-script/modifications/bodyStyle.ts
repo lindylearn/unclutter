@@ -62,9 +62,15 @@ export default class BodyStyleModifier implements PageModifier {
             "important"
         );
 
+        // delay background transition slightly to render style tweaks first
+        document.documentElement.style.setProperty(
+            "transition",
+            "background 0.3s ease-in-out 0.1s",
+            "important"
+        );
         document.body.style.setProperty(
             "transition",
-            "max-width 0.2s cubic-bezier(0.33, 1, 0.68, 1), background 0.3s ease-in-out",
+            "max-width 0.2s cubic-bezier(0.33, 1, 0.68, 1), background 0.3s ease-in-out 0.1s",
             "important"
         );
     }
