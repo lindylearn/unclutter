@@ -41,5 +41,6 @@
         "#ez-toc-container",
         ".content__pagination",
         ".content__row"
-    ]
+    ],
+    "indiehackers.com": ["#ember62"]
 }
