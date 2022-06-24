@@ -65,20 +65,6 @@ export default class ContentBlockModifier implements PageModifier {
             .concat(domainBlocklistSelectors[this.domain] || []);
     }
 
-    fadeOutNoise() {
-        document.getElementById("content-block-fadein")?.remove();
-        if (document.getElementById("content-block-fadeout")) {
-            return;
-        }
-
-        const css = `${this.selectors.join(
-            ", "
-        )} { visibility: hidden !important; opacity: 0 !important; transition: opacity 0.3s linear, visibility 0.3s linear; }`;
-        // background-color: #e5e7eb !important;
-
-        createStylesheetText(css, "content-block-fadeout");
-    }
-
     // need to actually remove in pageview (may override responsive style)
     transitionIn() {
         // completely hide blocked elements to reduce their render cost
@@ -92,15 +78,6 @@ export default class ContentBlockModifier implements PageModifier {
             browser.runtime.getURL("data/manualContentBlock.css"),
             "content-block-custom-sites"
         );
-    }
-
-    fadeInNoise() {
-        const css = `${this.selectors.join(
-            ", "
-        )} { visibility: visible !important; opacity: 1 !important; transition: all 0.3s linear; }`;
-        createStylesheetText(css, "content-block-fadein");
-
-        document.getElementById("content-block-fadeout")?.remove();
     }
 
     transitionOut() {

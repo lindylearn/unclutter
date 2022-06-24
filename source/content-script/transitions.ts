@@ -86,7 +86,7 @@ export default class TransitionManager implements PageModifier {
     }
 
     // prepare upcoming transition
-    prepareTransition() {
+    transitionIn() {
         // *** write DOM phase ***
 
         // set background dark if dark mode enabled, configure font size variable

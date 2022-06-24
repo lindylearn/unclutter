@@ -31,24 +31,6 @@ export async function displayToast(
 
         onClick();
     };
-
-    // hiding noise on hover disabled for performance.
-    // const contentBlockModifier = new ContentBlockModifier();
-    // const cssomProvider = new CSSOMProvider();
-    // const responsiveStyleModifier = new ResponsiveStyleModifier();
-
-    // // run every time an article is potentially an article
-    // await cssomProvider.prepare();
-    // await responsiveStyleModifier.prepare(cssomProvider);
-
-    // container.onmouseenter = () => {
-    //     contentBlockModifier.fadeOutNoise();
-    //     responsiveStyleModifier.fadeOutNoise();
-    // };
-    // container.onmouseleave = () => {
-    //     contentBlockModifier.fadeInNoise();
-    //     responsiveStyleModifier.fadeInNoise();
-    // };
 }
 export function removeToast() {
     const container = document.getElementById("lindy-toast");

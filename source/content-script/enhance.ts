@@ -40,23 +40,26 @@ export async function togglePageView() {
         document.documentElement.classList.contains("pageview");
 
     if (!alreadyEnabled) {
-        // enable pageview
+        // parse page
         await transitions.prepare();
 
-        transitions.prepareTransition();
+        // perform modifications
+        transitions.transitionIn();
+        disablePageViewHandlers = enablePageView();
 
-        disablePageViewHandlers = enablePageView(); // trigger earlier
+        // prepare animation based on changed page layout
         requestAnimationFrame(() => {
-            // reads changed page layout and changes it to be animatable
             transitions.prepareAnimation();
         });
-
         await new Promise((r) => setTimeout(r, 10));
-        transitions.executeAnimation();
 
+        // trigger computed animation
+        transitions.executeAnimation();
         await new Promise((r) => setTimeout(r, 400 - 100));
 
+        // later changes
         await transitions.afterTransitionIn();
+
         return true;
     } else {
         // disable page view
