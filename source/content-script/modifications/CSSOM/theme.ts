@@ -170,7 +170,7 @@ export default class ThemeModifier implements PageModifier {
         );
     }
 
-    applyActiveColorTheme() {
+    applyActiveColorTheme(): boolean {
         // State for UI switch
         setCssThemeVariable(activeColorThemeVariable, this.activeColorTheme);
         this.activeColorThemeListeners.map((listener) =>
@@ -214,6 +214,9 @@ export default class ThemeModifier implements PageModifier {
         }
 
         this.updateAutoModeColor();
+
+        // return if enabled dark mode
+        return this.darkModeActive;
     }
 
     // Update auto state (shown in theme switcher)

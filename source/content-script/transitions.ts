@@ -152,14 +152,17 @@ export default class TransitionManager implements PageModifier {
 
         // apply color theme - iterating CSSOM and re-rendering page is potentially expensive
         this.bodyStyleModifier.afterTransitionIn();
-        this.themeModifier.applyActiveColorTheme();
+        const enabledDarkMode = this.themeModifier.applyActiveColorTheme();
 
-        return;
+        if (enabledDarkMode) {
+            // wait until dark mode enabled (perf seems fine, but sidebar immediately shows dark background)
+            await new Promise((r) => setTimeout(r, 400));
+        }
+
         // insert annotations sidebar, start fetch
         this.annotationsModifier.afterTransitionIn();
 
-        await new Promise((r) => setTimeout(r, 300));
-        // this.overlayManager.insertUiFont(); // causes ~50ms layout reflow
+        this.overlayManager.insertUiFont(); // causes ~50ms layout reflow
     }
 
     async transitionOut() {
