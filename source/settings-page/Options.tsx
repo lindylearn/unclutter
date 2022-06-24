@@ -78,7 +78,7 @@ function OptionsPage({}) {
                 <FeatureFlagSwitch featureFlagKey={enableBootUnclutterMessage}>
                     Show unclutter reminder on web pages{" "}
                     <a
-                        href="https://github.com/lindylearn/unclutter/tree/main/docs/article-detection.md"
+                        href="https://github.com/lindylearn/unclutter/blob/main/docs/article-detection.md#unclutter-reminder"
                         className="underline"
                         target="_blank"
                         rel="noopener noreferrer"
@@ -100,8 +100,16 @@ function OptionsPage({}) {
                 }
             >
                 <p className="">
-                    Click the "bolt" icon next to each article to automatically
-                    unclutter all pages on a certain domain.
+                    Click the "bolt" icon next to each article to{" "}
+                    <a
+                        href="https://github.com/lindylearn/unclutter/tree/main/docs/article-detection.md"
+                        className="underline"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        automatically unclutter
+                    </a>{" "}
+                    all pages on the current domain.
                 </p>
 
                 <FeatureFlagSwitch
@@ -126,9 +134,17 @@ function OptionsPage({}) {
                 }
             >
                 <p>
-                    Highlight any text to create a private note saved in your
-                    browser. Toggle the feature via the toolbar in the top right
-                    of the article view.
+                    Select any article text to create a{" "}
+                    <a
+                        href="https://github.com/lindylearn/unclutter/blob/main/docs/annotations.md"
+                        className="underline"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        private note
+                    </a>{" "}
+                    saved in your browser. Toggle the feature via the "pen"
+                    toolbar icon in the top right of the article view.
                 </p>
                 <FeatureFlagSwitch
                     featureFlagKey={hypothesisSyncFeatureFlag}
@@ -143,16 +159,7 @@ function OptionsPage({}) {
                     >
                         Hypothes.is
                     </a>{" "}
-                    account (
-                    <a
-                        href="https://github.com/lindylearn/unclutter/blob/main/docs/annotations.md"
-                        className="underline"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        more info
-                    </a>
-                    )
+                    account
                 </FeatureFlagSwitch>
                 {hypothesisEnabled && <HypothesisConfig />}
             </OptionsGroup>
@@ -169,35 +176,17 @@ function OptionsPage({}) {
                 }
             >
                 <p>
-                    Click the underlined text on 86,457+ supported articles to
-                    show related conversations from{" "}
-                    <a
-                        href="https://news.ycombinator.com"
-                        className="underline"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        Hacker News
-                    </a>{" "}
-                    and{" "}
-                    <a
-                        href="https://web.hypothes.is"
-                        className="underline"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        Hypothes.is
-                    </a>
-                    . (
+                    Click the underlined quotes on 86,457+ supported articles to
+                    show{" "}
                     <a
                         href="https://github.com/lindylearn/unclutter/blob/main/docs/social-highlights.md"
                         className="underline"
                         target="_blank"
                         rel="noopener noreferrer"
                     >
-                        how this works
-                    </a>
-                    )
+                        related conversations
+                    </a>{" "}
+                    from Hacker News and Hypothes.is.
                 </p>
                 <FeatureFlagSwitch
                     featureFlagKey={enableSocialCountsFeatureFlag}
@@ -223,7 +212,7 @@ function OptionsPage({}) {
                     This project is open source! Please post issues and feature
                     ideas{" "}
                     <a
-                        href="https://github.com/lindylearn/unclutter"
+                        href="https://github.com/lindylearn/unclutter/issues"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="underline"
@@ -238,12 +227,30 @@ function OptionsPage({}) {
 }
 export default OptionsPage;
 
-function OptionsGroup({ headerText, iconSvg, children }) {
+function OptionsGroup({ headerText, iconSvg, children, docsLink }) {
     return (
         <div>
             <h2 className="text-lg font-semibold mb-1 flex items-center">
                 <div className="w-7 mr-1">{iconSvg}</div>
-                {headerText}
+                <div className="">{headerText}</div>
+                {docsLink && (
+                    <a
+                        href={docsLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="ml-5"
+                    >
+                        <svg
+                            className="h-4 text-gray-400"
+                            viewBox="0 0 320 512"
+                        >
+                            <path
+                                fill="currentColor"
+                                d="M144 416c-17.67 0-32 14.33-32 32s14.33 32.01 32 32.01s32-14.34 32-32.01S161.7 416 144 416zM211.2 32H104C46.66 32 0 78.66 0 136v16C0 165.3 10.75 176 24 176S48 165.3 48 152v-16c0-30.88 25.12-56 56-56h107.2C244.7 80 272 107.3 272 140.8c0 22.66-12.44 43.27-32.5 53.81L167 232.8C137.1 248 120 277.9 120 310.6V328c0 13.25 10.75 24.01 24 24.01S168 341.3 168 328V310.6c0-14.89 8.188-28.47 21.38-35.41l72.47-38.14C297.7 218.2 320 181.3 320 140.8C320 80.81 271.2 32 211.2 32z"
+                            />
+                        </svg>
+                    </a>
+                )}
             </h2>
             <div className="ml-8 mr-5 flex flex-col gap-2">{children}</div>
         </div>
