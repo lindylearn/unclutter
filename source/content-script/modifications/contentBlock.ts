@@ -29,6 +29,7 @@ export default class ContentBlockModifier implements PageModifier {
     prepare() {
         const excludedSelectors = [
             `.${lindyImageContainerClass}`,
+            `.lindy-allowed-iframe`,
             `svg`, // <svg> e.g. on https://garymarcus.substack.com/p/what-does-it-mean-when-an-ai-fails?s=r
         ];
 

@@ -71,8 +71,9 @@ export default class OverlayManager implements PageModifier {
     private topleftIframe: HTMLIFrameElement;
     createIframes() {
         this.topleftIframe = this.createIframeNode("lindy-info-topleft");
+        this.topleftIframe.style.position = "fixed"; // put on new layer
         this.topleftIframe.style.maxWidth =
-            "calc((100vw - var(--lindy-pagewidth)) / 2 - 7px)"; // set initial style to prevent initial transition
+            "calc((100vw - var(--lindy-pagewidth)) / 2 - 7px)"; // prevent initial transition
 
         document.documentElement.appendChild(this.topleftIframe);
 
@@ -106,16 +107,8 @@ export default class OverlayManager implements PageModifier {
             browser.runtime.getURL("overlay/index.css"),
             "lindy-switch-style"
         );
-        const fontLink = document.createElement("link");
-        fontLink.rel = "stylesheet";
-        fontLink.href = browser.runtime.getURL("assets/fonts/fontface.css");
-        document.head.appendChild(fontLink);
 
-        // get outline before DOM modifications
-        this.enableOutline();
         this.renderTopLeftContainer();
-
-        // render UI into main page to prevent overlaps with sidebar iframe
         this.renderUiContainers();
     }
 
@@ -125,7 +118,7 @@ export default class OverlayManager implements PageModifier {
         });
     }
 
-    private enableOutline() {
+    parseOutline() {
         this.outline = getOutline();
         if (this.outline.length <= 3) {
             // note that 'Introduction' heading always exists
@@ -186,6 +179,8 @@ export default class OverlayManager implements PageModifier {
     }
 
     renderUiContainers() {
+        // render UI into main page to prevent overlaps with sidebar iframe
+
         // create DOM container nodes
         const topRightContainer = this.createUiContainer(
             "lindy-page-settings-toprght"
@@ -218,6 +213,13 @@ export default class OverlayManager implements PageModifier {
         document.documentElement.appendChild(pageAdjacentContainer);
     }
 
+    insertUiFont() {
+        const fontLink = document.createElement("link");
+        fontLink.rel = "stylesheet";
+        fontLink.href = browser.runtime.getURL("assets/fonts/fontface.css");
+        document.head.appendChild(fontLink);
+    }
+
     private createUiContainer(id: string) {
         // create container DOM element
         const container = document.createElement("div");
@@ -225,6 +227,7 @@ export default class OverlayManager implements PageModifier {
         container.className = `${overrideClassname} ${id}`;
         container.style.contain = "layout style";
         container.style.visibility = "hidden"; // hide until overlay/index.css applied
+        container.style.willChange = "opacity";
 
         return container;
     }

@@ -136,6 +136,7 @@ export default class TransitionManager implements PageModifier {
         // read DOM after content block
         this.readingTimeModifier.afterTransitionIn();
         this.annotationsModifier.readPageHeight();
+        this.overlayManager.parseOutline();
 
         // *** write DOM phase ***
         // insert iframes & render UI
@@ -148,6 +149,7 @@ export default class TransitionManager implements PageModifier {
 
         // apply color theme - iterating CSSOM and re-rendering page is potentially expensive
         this.themeModifier.afterTransitionIn();
+        this.overlayManager.insertUiFont(); // causes ~50ms layout reflow
 
         // adjust background element height only after animations done
         this.backgroundModifier.observeHeightChanges();
