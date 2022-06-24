@@ -91,6 +91,7 @@
     }
     #lindy-info-topleft-content > * {
         background-color: var(--lindy-background-color);
+        transition: background 0.3s ease-in-out;
     }
     svg.icon > path {
         fill: currentColor;

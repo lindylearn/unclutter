@@ -133,24 +133,28 @@ export default class TransitionManager implements PageModifier {
 
     async afterTransitionIn() {
         // *** read DOM phase ***
+        // read DOM after content block
+        this.readingTimeModifier.afterTransitionIn();
+        this.annotationsModifier.readPageHeight();
 
+        // *** write DOM phase ***
         // insert iframes & render UI
         this.overlayManager.createIframes();
         this.overlayManager.renderUi();
 
-        return;
+        await new Promise((r) => setTimeout(r, 300));
+        // *** read DOM phase ***
+        // *** write DOM phase ***
 
-        // apply color theme - potentially expensive
+        // apply color theme - iterating CSSOM and re-rendering page is potentially expensive
         this.themeModifier.afterTransitionIn();
-        await new Promise((r) => setTimeout(r, 0));
-
-        // UI enhancements, can show up later
-        this.annotationsModifier.afterTransitionIn(); // annotations fetch may take another 500ms
-        this.readingTimeModifier.afterTransitionIn();
 
         // adjust background element height only after animations done
         this.backgroundModifier.observeHeightChanges();
         this.bodyStyleModifier.afterTransitionIn();
+
+        // insert annotations sidebar, start fetch
+        this.annotationsModifier.afterTransitionIn();
     }
 
     async transitionOut() {

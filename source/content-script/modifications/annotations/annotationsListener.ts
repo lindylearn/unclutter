@@ -60,11 +60,19 @@ export function createAnnotationListener(
     };
     window.addEventListener("message", onMessage);
     listenerRef = onMessage;
+}
 
-    // update offsets if the page changes (e.g. after insert of mobile css)
-    _observeHeightChange(document, () => {
+export function removeAnnotationListener() {
+    window.removeEventListener("message", listenerRef);
+    removeAllHighlights();
+}
+
+export function updateOffsetsOnHeightChange(
+    sidebarIframe: HTMLIFrameElement,
+    initialScollHeight: number
+): ResizeObserver {
+    return _observeHeightChange(document, initialScollHeight, () => {
         if (!sidebarIframe.contentWindow) {
-            resizeObserver?.unobserve(document.body);
             return;
         }
 
@@ -80,27 +88,25 @@ export function createAnnotationListener(
     });
 }
 
-export function removeAnnotationListener() {
-    window.removeEventListener("message", listenerRef);
-    resizeObserver?.unobserve(document.body);
-    removeAllHighlights();
-}
-
-let resizeObserver;
-function _observeHeightChange(document, callback) {
+function _observeHeightChange(
+    document: Document,
+    initialScollHeight: number,
+    callback: () => void
+) {
     const throttledCallback = throttle(callback, 2000);
 
-    let oldHeight = document.body.scrollHeight;
-    resizeObserver = new ResizeObserver((entries) => {
+    let oldHeight = initialScollHeight;
+    const resizeObserver = new ResizeObserver((entries) => {
         const newHeight = entries[0].target.scrollHeight;
 
         if (newHeight !== oldHeight) {
-            throttledCallback(document.body.scrollHeight + "px");
+            throttledCallback();
             oldHeight = newHeight;
         }
     });
 
     resizeObserver.observe(document.body);
+    return resizeObserver;
 }
 
 export function sendSidebarEvent(

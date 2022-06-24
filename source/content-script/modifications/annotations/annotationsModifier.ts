@@ -8,6 +8,7 @@ import {
     createAnnotationListener,
     removeAnnotationListener,
     sendSidebarEvent,
+    updateOffsetsOnHeightChange,
 } from "./annotationsListener";
 import { removeAllHighlights } from "./highlightsApi";
 import {
@@ -24,6 +25,12 @@ import {
 export default class AnnotationsModifier implements PageModifier {
     private sidebarIframe: HTMLIFrameElement;
     private sidebarLoaded: boolean = false;
+    private pageResizeObserver: ResizeObserver;
+
+    private initialScollHeight: number;
+    readPageHeight() {
+        this.initialScollHeight = document.body.scrollHeight;
+    }
 
     async afterTransitionIn() {
         // always enable sidebar
@@ -38,6 +45,10 @@ export default class AnnotationsModifier implements PageModifier {
         createAnnotationListener(
             this.sidebarIframe,
             this.onAnnotationUpdate.bind(this)
+        );
+        this.pageResizeObserver = updateOffsetsOnHeightChange(
+            this.sidebarIframe,
+            this.initialScollHeight
         );
 
         // annotations may be toggled independently
@@ -60,6 +71,7 @@ export default class AnnotationsModifier implements PageModifier {
     async transitionOut() {
         this.disableAnnotations();
         removeAnnotationListener();
+        this.pageResizeObserver?.unobserve(document.body);
 
         if (this.sidebarIframe) {
             removeSidebar();

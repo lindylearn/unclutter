@@ -75,23 +75,23 @@ export default class ThemeModifier implements PageModifier {
 
     setThemeVariables() {
         // basic heuristic whether to enable dark mode, to show it earlier
-        const darkModeActive =
-            this.darkModeActive ||
-            this.activeColorTheme === "dark" ||
-            (this.activeColorTheme === "auto" &&
-                this.systemDarkModeQuery.matches);
-        if (darkModeActive) {
-            document.documentElement.style.setProperty(
-                "background",
-                "#131516",
-                "important"
-            );
-            document.body.style.setProperty(
-                "background",
-                colorThemeToBackgroundColor("dark"),
-                "important"
-            );
-        }
+        // const darkModeActive =
+        //     this.darkModeActive ||
+        //     this.activeColorTheme === "dark" ||
+        //     (this.activeColorTheme === "auto" &&
+        //         this.systemDarkModeQuery.matches);
+        // if (darkModeActive) {
+        //     document.documentElement.style.setProperty(
+        //         "background",
+        //         "#131516",
+        //         "important"
+        //     );
+        //     document.body.style.setProperty(
+        //         "background",
+        //         colorThemeToBackgroundColor("dark"),
+        //         "important"
+        //     );
+        // }
 
         // look at background color and modify if necessary
         // do now to avoid visible changes later
@@ -319,9 +319,7 @@ export default class ThemeModifier implements PageModifier {
 
         // always dark text color for ui elements
         const darkTextColor = "rgb(232, 230, 227)";
-        setCssThemeVariable(darkThemeTextColor, darkTextColor, {
-            setOnlyUi: true,
-        });
+        setCssThemeVariable(darkThemeTextColor, darkTextColor);
         this.annotationsModifer.setSidebarCssVariable(
             darkThemeTextColor,
             darkTextColor

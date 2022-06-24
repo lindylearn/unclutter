@@ -63,8 +63,8 @@ export default class BodyStyleModifier implements PageModifier {
         );
 
         document.body.style.setProperty(
-            "max-width",
-            "0.2s cubic-bezier(0.33, 1, 0.68, 1)",
+            "transition",
+            "max-width 0.2s cubic-bezier(0.33, 1, 0.68, 1), background 0.3s ease-in-out",
             "important"
         );
     }

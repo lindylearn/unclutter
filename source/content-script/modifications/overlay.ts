@@ -180,6 +180,7 @@ export default class OverlayManager implements PageModifier {
                 outline: this.outline, // null at first
                 activeOutlineIndex: this.outline?.[0].index,
                 annotationsEnabled: this.annotationsEnabled,
+                readingTimeLeft: this.readingTimeLeft,
             },
         });
     }
@@ -422,7 +423,9 @@ export default class OverlayManager implements PageModifier {
         return lastIndex;
     }
 
+    private readingTimeLeft: number = null;
     updateReadingTimeLeft(minutes: number) {
+        this.readingTimeLeft = minutes;
         this.topleftSvelteComponent?.$set({
             readingTimeLeft: minutes,
         });

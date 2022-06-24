@@ -85,8 +85,10 @@
         {/if}
         {#if socialAnnotationsEnabled}
             <svg
-                class={"w-4 mt-1 flex-shrink-0 " +
-                    (socialCommentsCount ? "visible" : "invisible")}
+                class={"w-4 mt-1 flex-shrink-0 invisible opacity-0 transition-opacity"}
+                style={socialCommentsCount
+                    ? "visibility: visible; opacity: 1;"
+                    : ""}
                 viewBox="0 0 640 512"
             >
                 <path
