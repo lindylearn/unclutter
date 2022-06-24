@@ -17,7 +17,7 @@
     class="max-w-full px-5 py-4 cursor-auto bg-white rounded-lg shadow transition-all relative"
 >
     <div>
-        <div class="flex items-center justify-between">
+        <div class="flex justify-between">
             <div
                 class="text-base font-header font-semibold cursor-pointer"
                 on:click={() => scrollToElement(outline[0].element)}
@@ -25,7 +25,7 @@
                 {outline[0]?.title}
             </div>
             {#if annotationsEnabled}
-                <div class="-mr-1">
+                <div class="progress-container h-0 -mr-1 -mt-0.5">
                     <ProgressCircle {totalAnnotationCount} />
                 </div>
             {/if}
@@ -80,5 +80,22 @@
     }
     .reading-time-count::after {
         content: counter(num);
+    }
+
+    .progress-container {
+        animation-duration: 0.3s;
+        animation-name: fadeInFromNone;
+        animation-fill-mode: forwards;
+    }
+    @keyframes fadeInFromNone {
+        0% {
+            opacity: 0;
+        }
+        1% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
     }
 </style>
