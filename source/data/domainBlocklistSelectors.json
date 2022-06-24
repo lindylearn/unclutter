@@ -36,5 +36,10 @@
         ".aalto-tiles-layout__items-container",
         ".aalto-component-wrapper.lindy-clean-margin-bottom",
         ".aalto-content-bottom-wrapper.content-container"
+    ],
+    "blog.jetbrains.com": [
+        "#ez-toc-container",
+        ".content__pagination",
+        ".content__row"
     ]
 }
