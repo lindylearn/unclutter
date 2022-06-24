@@ -35,7 +35,7 @@ html.pageview.pageview > body {
     z-index: -100 !important;
     content: "" !important;
     background: inherit;
-    transition: transform 0.4s cubic-bezier(0.33, 1, 0.68, 1), background 0.4s cubic-bezier(0.33, 1, 0.68, 1);
+    transition: transform 0.4s cubic-bezier(0.33, 1, 0.68, 1), background 0.4s cubic-bezier(0.33, 1, 0.68, 1); /* easeOutCubic */
     will-change: transform, background;
 
     border-radius: 10px !important;

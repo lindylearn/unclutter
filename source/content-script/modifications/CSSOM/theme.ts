@@ -103,7 +103,7 @@ export default class ThemeModifier implements PageModifier {
         }
     }
 
-    private backgroundColor: string;
+    public backgroundColor: string;
     private siteUsesDefaultDarkMode: boolean = false;
     private processBackgroundColor() {
         // use detected site color to keep personality

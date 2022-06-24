@@ -101,46 +101,44 @@ export default class TransitionManager implements PageModifier {
         this.elementPickerModifier.transitionIn();
         this.contentBlockModifier.transitionIn();
 
+        // enable mobile styles & style patches (this may shift layout in various ways)
+        this.responsiveStyleModifier.enableResponsiveStyles();
+        this.stylePatchesModifier.transitionIn();
+
         // apply text container styles (without moving position)
         this.textContainerModifier.applyContainerStyles();
+        // adjust font size
+        this.textContainerModifier.setTextFontOverride();
+
+        // patch inline styles to overcome stubborn sites (modifies DOM & CSSOM)
+        this.bodyStyleModifier.transitionIn();
     }
 
     // set inline start position for text container position animation
     // must read DOM just after content block takes effect to animate y change
     prepareAnimation() {
         // *** read DOM phase ***
-        this.textContainerModifier.prepareAnimation(); // triggers reflow
-
-        this.backgroundModifier.animateWidthReduction();
-
         // *** write DOM phase ***
+
+        this.textContainerModifier.prepareAnimation();
+        this.backgroundModifier.animateWidthReduction();
     }
 
-    // pageview width change was triggered just before calling this
-    transitionIn() {
+    executeAnimation() {
+        // *** read DOM phase ***
         // *** write DOM phase ***
-
-        // enable mobile styles & style patches (this may shift layout in various ways)
-        // this.responsiveStyleModifier.enableResponsiveStyles();
-        this.stylePatchesModifier.transitionIn();
-
-        // adjust font size
-        this.textContainerModifier.setTextFontOverride();
-
-        // patch inline styles to overcome stubborn sites (modifies DOM & CSSOM)
-        this.bodyStyleModifier.transitionIn();
 
         this.textContainerModifier.executeAnimation();
     }
 
     async afterTransitionIn() {
-        // insert iframe and wait until font loaded
-        this.overlayManager.createIframes();
-        await new Promise((r) => setTimeout(r, 50));
+        // *** read DOM phase ***
 
-        // show UI
-        // needs to be run before themeModifier to set correct auto theme value
-        this.overlayManager.afterTransitionIn();
+        // insert iframes & render UI
+        this.overlayManager.createIframes();
+        this.overlayManager.renderUi();
+
+        return;
 
         // apply color theme - potentially expensive
         this.themeModifier.afterTransitionIn();
@@ -152,7 +150,6 @@ export default class TransitionManager implements PageModifier {
 
         // adjust background element height only after animations done
         this.backgroundModifier.observeHeightChanges();
-
         this.bodyStyleModifier.afterTransitionIn();
     }
 

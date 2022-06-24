@@ -907,7 +907,7 @@ export default class TextContainerModifier implements PageModifier {
                 properties.afterNodeBox.height ===
                     parentLayerProps?.afterNodeBox.height
             ) {
-                // console.log("delete", node, properties.parentLayer);
+                // console.log("delete", properties.parentLayer);
 
                 layerElements.set(node, {
                     ...properties,
@@ -930,12 +930,12 @@ export default class TextContainerModifier implements PageModifier {
                 // console.log("no valid parent", node);
                 return;
             }
-            console.log(
-                "layer",
-                layerProps.stackType,
-                node,
-                layerProps.parentLayer
-            );
+            // console.log(
+            //     "layer",
+            //     layerProps.stackType,
+            //     node,
+            //     layerProps.parentLayer
+            // );
 
             // get x and y offsets
             // allow negative e.g. on https://www.statnews.com/2019/06/25/alzheimers-cabal-thwarted-progress-toward-cure/

@@ -68,6 +68,7 @@
     user-select: none;
     contain: strict;
     z-index: 300;
+    will-change: transform;
 
     width: 400px;
     max-width: calc((100vw - var(--lindy-pagewidth)) / 2 - 7px); /* also set via inline styles to prevent initial transition */

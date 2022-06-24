@@ -52,11 +52,9 @@ export async function togglePageView() {
         });
 
         await new Promise((r) => setTimeout(r, 10));
+        transitions.executeAnimation();
 
-        // trigger page transitions
-        transitions.transitionIn();
-
-        await new Promise((r) => setTimeout(r, 400));
+        await new Promise((r) => setTimeout(r, 400 - 100));
 
         await transitions.afterTransitionIn();
         return true;

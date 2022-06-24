@@ -4,11 +4,12 @@ import {
     enableSocialCommentsFeatureFlag,
     getFeatureFlag,
 } from "../../common/featureFlags";
-import browser from "../../common/polyfill";
+import browser, { BrowserType, getBrowserType } from "../../common/polyfill";
 import {
     createStylesheetLink,
     overrideClassname,
 } from "../../common/stylesheets";
+import { backgroundColorThemeVariable } from "../../common/theme";
 import { getElementYOffset } from "../../overlay/outline/common";
 import {
     createRootItem,
@@ -27,6 +28,7 @@ import { PageModifier, trackModifierExecution } from "./_interface";
 @trackModifierExecution
 export default class OverlayManager implements PageModifier {
     private domain: string;
+    private browserType: BrowserType;
     private themeModifier: ThemeModifier;
     private annotationsModifer: AnnotationsModifier;
     private textContainerModifier: TextContainerModifier;
@@ -48,6 +50,7 @@ export default class OverlayManager implements PageModifier {
         elementPickerModifier: ElementPickerModifier
     ) {
         this.domain = domain;
+        this.browserType = getBrowserType();
         this.themeModifier = themeModifier;
         this.annotationsModifer = annotationsModifer;
         this.textContainerModifier = textContainerModifier;
@@ -73,9 +76,15 @@ export default class OverlayManager implements PageModifier {
 
         document.documentElement.appendChild(this.topleftIframe);
 
-        setTimeout(() => {
+        if (this.browserType === "firefox") {
+            // Firefox bug: need to wait until iframe initial render to insert elements
+            // See https://stackoverflow.com/questions/60814167/firefox-deleted-innerhtml-of-generated-iframe
+            setTimeout(() => {
+                this.insertIframeFont(this.topleftIframe);
+            }, 0);
+        } else {
             this.insertIframeFont(this.topleftIframe);
-        }, 0);
+        }
     }
 
     private createIframeNode(id: string) {
@@ -91,14 +100,23 @@ export default class OverlayManager implements PageModifier {
         return iframe;
     }
 
-    afterTransitionIn() {
+    renderUi() {
+        // insert styles and font definition
+        createStylesheetLink(
+            browser.runtime.getURL("overlay/index.css"),
+            "lindy-switch-style"
+        );
+        const fontLink = document.createElement("link");
+        fontLink.rel = "stylesheet";
+        fontLink.href = browser.runtime.getURL("assets/fonts/fontface.css");
+        document.head.appendChild(fontLink);
+
         // get outline before DOM modifications
         this.enableOutline();
+        this.renderTopLeftContainer();
 
         // render UI into main page to prevent overlaps with sidebar iframe
         this.renderUiContainers();
-
-        this.renderTopLeftContainer();
     }
 
     setEnableAnnotations(enableAnnotations: boolean) {
@@ -132,15 +150,30 @@ export default class OverlayManager implements PageModifier {
     }
 
     insertIframeFont(iframe: HTMLIFrameElement) {
-        // Firefox bug: need to wait until iframe initial render to insert elements
-        // See https://stackoverflow.com/questions/60814167/firefox-deleted-innerhtml-of-generated-iframe
+        if (!iframe.contentDocument) {
+            return;
+        }
+
         const fontLink = iframe.contentDocument.createElement("link");
         fontLink.rel = "stylesheet";
         fontLink.href = browser.runtime.getURL("assets/fonts/fontface.css");
         iframe.contentDocument.head.appendChild(fontLink);
     }
 
-    renderTopLeftContainer() {
+    async renderTopLeftContainer() {
+        if (this.browserType === "firefox") {
+            // wait until iframe rendered
+            // TODO attach listener instead of static wait?
+            await new Promise((r) => setTimeout(r, 10));
+        }
+
+        // set background color immediately
+        this.topleftIframe.contentDocument.body.style.setProperty(
+            backgroundColorThemeVariable,
+            this.themeModifier.backgroundColor
+        );
+
+        // render DOM elements into iframe to simplify message passing
         this.topleftSvelteComponent = new TopLeftContainer({
             target: this.topleftIframe.contentDocument.body,
             props: {
@@ -152,16 +185,6 @@ export default class OverlayManager implements PageModifier {
     }
 
     renderUiContainers() {
-        // insert styles and font definition
-        createStylesheetLink(
-            browser.runtime.getURL("overlay/index.css"),
-            "lindy-switch-style"
-        );
-        const fontLink = document.createElement("link");
-        fontLink.rel = "stylesheet";
-        fontLink.href = browser.runtime.getURL("assets/fonts/fontface.css");
-        document.head.appendChild(fontLink);
-
         // create DOM container nodes
         const topRightContainer = this.createUiContainer(
             "lindy-page-settings-toprght"
