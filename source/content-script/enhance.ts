@@ -32,7 +32,7 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
 });
 
 const transitions = new TransitionManager();
-let disablePageViewHandlers: () => void;
+let disablePageView: () => void;
 export async function togglePageView() {
     // manually toggle pageview status in this tab
 
@@ -40,12 +40,14 @@ export async function togglePageView() {
         document.documentElement.classList.contains("pageview");
 
     if (!alreadyEnabled) {
+        // enable extension
+
         // parse page
         await transitions.prepare();
 
         // perform modifications
         transitions.transitionIn();
-        disablePageViewHandlers = enablePageView();
+        disablePageView = enablePageView();
 
         // prepare animation based on changed page layout
         requestAnimationFrame(() => {
@@ -62,16 +64,25 @@ export async function togglePageView() {
 
         return true;
     } else {
-        // disable page view
+        // disable extension (keeps some state for quicker re-enable)
+        // otherwise perform changes in reverse order
 
-        // unobserve pageview class removal
-        disablePageViewHandlers();
+        // undo later ui changes first
+        transitions.beforeTransitionOut();
+        await new Promise((r) => setTimeout(r, 500));
+        return;
 
+        // restore original page
         transitions.transitionOut();
-        await new Promise((r) => setTimeout(r, 700));
+        disablePageView();
+        // but keep animated elements in uncluttered position
+        transitions.prepareReverseAnimation();
+        await new Promise((r) => setTimeout(r, 10));
 
-        transitions.fadeinNoise();
-        await new Promise((r) => setTimeout(r, 200));
+        // trigger computed animation
+        transitions.executeReverseAnimation();
+
+        // cleanup DOM, save state
 
         transitions.afterTransitionOut();
 

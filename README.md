@@ -60,6 +60,6 @@ For hot reloading during development, run `yarn watch` and `npx web-ext run` in 
 
 ## Licence
 
-This code is released under the [Simplified BSD License](https://choosealicense.com/licenses/bsd-2-clause/), which excludes liability for bugs. The project is part of the [LindyLearn](http://lindylearn.io/) suite of free tools and will stay open-source.
+This code is released under the [Simplified BSD License](https://choosealicense.com/licenses/bsd-2-clause/), which excludes liability for bugs. The project is part of the [LindyLearn](http://lindylearn.io/) suite of free tools.
 
 The private notes and social highlights feature uses code from the annotator subcomponent of [hypothesis/client](https://github.com/hypothesis/client) to anchor text fragments. See [LICENCE](https://github.com/lindylearn/annotations/blob/main/LICENCE) for the legal boilerplate.

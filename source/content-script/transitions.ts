@@ -165,7 +165,13 @@ export default class TransitionManager implements PageModifier {
         this.overlayManager.insertUiFont(); // causes ~50ms layout reflow
     }
 
-    async transitionOut() {
+    beforeTransitionOut() {}
+
+    prepareReverseAnimation() {}
+
+    executeReverseAnimation() {}
+
+    transitionOut() {
         // setup transition for changing text margin
         this.textContainerModifier.prepareTransitionOut();
 
@@ -176,24 +182,15 @@ export default class TransitionManager implements PageModifier {
         // disable dark mode
         this.themeModifier.transitionOut();
 
-        await new Promise((r) => setTimeout(r, 0));
+        // await new Promise((r) => setTimeout(r, 0));
 
         this.bodyStyleModifier.transitionOut();
-        document.documentElement.classList.remove("pageview");
 
         this.textContainerModifier.transitionOut();
 
         // restore original layout
         this.responsiveStyleModifier.transitionOut();
         this.contentBlockModifier.transitionOut();
-    }
-
-    fadeinNoise() {
-        this.textContainerModifier.afterTransitionOut();
-
-        // restore noisy elements
-        this.contentBlockModifier.fadeInNoise();
-        this.responsiveStyleModifier.fadeInNoise();
     }
 
     afterTransitionOut() {

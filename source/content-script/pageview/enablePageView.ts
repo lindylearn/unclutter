@@ -19,7 +19,7 @@ export function enablePageView(): () => void {
     async function disablePageView() {
         htmlClassObserver.disconnect();
 
-        // pageview class should be removed in disableHook
+        document.documentElement.classList.remove("pageview");
     }
 
     return disablePageView;
