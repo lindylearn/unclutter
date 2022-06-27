@@ -43,5 +43,10 @@
         ".content__row"
     ],
     "github.com": [".anchor", ".sr-only"],
-    "meduza.io": [".Layout-bannerTop"]
+    "meduza.io": [".Layout-bannerTop"],
+    "valeriorosso.com": [
+        ".aligncenter.wp-image-7359.size-full.entered.lazyloaded",
+        ".aligncenter.size-medium.wp-image-6583.entered.lazyloaded",
+        ".aligncenter.size-full.wp-image-6800.entered.lazyloaded"
+    ]
 }
