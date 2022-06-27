@@ -43,17 +43,6 @@ export default class TextContainerModifier implements PageModifier {
 
     private usedTextElementSelector: string = globalTextElementSelector; // may get updated if page uses different html elements
 
-    // text containers to put on a seperate CSS GPU layer to animate their position
-    private animationLayerElements: [
-        HTMLElement,
-        {
-            nodeBox: DOMRect;
-            afterNodeBox: DOMRect;
-            stackType: string;
-            parentLayer: HTMLElement;
-            parentLayerStyle: CSSStyleDeclaration;
-        }
-    ][] = [];
     private inlineStyleTweaks: [HTMLElement, Partial<CSSStyleDeclaration>][] =
         [];
 
@@ -456,15 +445,6 @@ export default class TextContainerModifier implements PageModifier {
         });
     }
 
-    prepareTransitionOut() {
-        this.animationLayerElements.map(([node, {}]) => {
-            node.style.setProperty(
-                "transition",
-                "margin-left 0.4s cubic-bezier(0.33, 1, 0.68, 1)"
-            );
-        });
-    }
-
     transitionOut() {
         this.classNamesObserver.disconnect();
 
@@ -822,6 +802,15 @@ export default class TextContainerModifier implements PageModifier {
         }
     }
 
+    // text containers put on seperate CSS GPU layers, with their original position transforms
+    private animationLayerTransforms: [
+        HTMLElement,
+        {
+            translateX: number;
+            translateY: number;
+            scaleX?: number;
+        }
+    ][] = [];
     prepareAnimation() {
         // filter to visible elements, and read after-content-block DOM position
         const layerElements: Map<
@@ -919,57 +908,59 @@ export default class TextContainerModifier implements PageModifier {
             }
         });
 
-        this.animationLayerElements = [...layerElements.entries()].filter(
-            ([node]) => node !== document.body
-        );
+        // generate animation layer properties
+        this.animationLayerTransforms = [...layerElements.entries()]
+            .filter(([node]) => node !== document.body)
+            .map(([node, layerProps]) => {
+                const parentLayerProps = layerElements.get(
+                    layerProps.parentLayer
+                );
+                if (!parentLayerProps) {
+                    // console.log("no valid parent", node);
+                    return;
+                }
+                // console.log(
+                //     "layer",
+                //     layerProps.stackType,
+                //     node,
+                //     layerProps.parentLayer
+                // );
 
-        // put text containers in same place as before content block, but positioned using CSS transforms
-        this.animationLayerElements.forEach(([node, layerProps]) => {
-            const parentLayerProps = layerElements.get(layerProps.parentLayer);
-            if (!parentLayerProps) {
-                // console.log("no valid parent", node);
-                return;
-            }
-            // console.log(
-            //     "layer",
-            //     layerProps.stackType,
-            //     node,
-            //     layerProps.parentLayer
-            // );
+                // get x and y transforms
+                // allow negative e.g. on https://www.statnews.com/2019/06/25/alzheimers-cabal-thwarted-progress-toward-cure/
+                const beforeLeftOffset =
+                    layerProps.nodeBox.left - parentLayerProps.nodeBox.left;
+                const afterLeftOffset =
+                    layerProps.afterNodeBox.left -
+                    parentLayerProps.afterNodeBox.left;
+                const translateX = beforeLeftOffset - afterLeftOffset;
 
-            // get x and y offsets
-            // allow negative e.g. on https://www.statnews.com/2019/06/25/alzheimers-cabal-thwarted-progress-toward-cure/
-            const beforeLeftOffset =
-                layerProps.nodeBox.left - parentLayerProps.nodeBox.left;
-            const afterLeftOffset =
-                layerProps.afterNodeBox.left -
-                parentLayerProps.afterNodeBox.left;
-            const leftOffset = beforeLeftOffset - afterLeftOffset;
+                const beforeTopOffset =
+                    layerProps.nodeBox.top - parentLayerProps.nodeBox.top;
+                const afterTopOffset =
+                    layerProps.afterNodeBox.top -
+                    parentLayerProps.afterNodeBox.top;
+                const translateY = beforeTopOffset - afterTopOffset;
 
-            const beforeTopOffset =
-                layerProps.nodeBox.top - parentLayerProps.nodeBox.top;
-            const afterTopOffset =
-                layerProps.afterNodeBox.top - parentLayerProps.afterNodeBox.top;
-            const topOffset = beforeTopOffset - afterTopOffset;
+                let scaleX = null;
+                // animate header image width (not for text elements for performance)
+                if (layerProps.stackType === "image") {
+                    scaleX =
+                        layerProps.nodeBox.width /
+                        layerProps.afterNodeBox.width;
+                }
 
-            let transform = `translate(${leftOffset}px, ${topOffset}px)`;
+                return [
+                    node,
+                    {
+                        translateX,
+                        translateY,
+                        scaleX,
+                    },
+                ];
+            });
 
-            // animate header image width (not for text elements for performance)
-            if (layerProps.stackType === "image") {
-                const scaleX =
-                    layerProps.nodeBox.width / layerProps.afterNodeBox.width;
-                transform += ` scale(${scaleX})`;
-                node.style.setProperty("transform-origin", "top left");
-            }
-
-            node.style.setProperty("transform", transform);
-
-            node.style.setProperty("left", "0"); // e.g. xkcd.com
-            node.style.setProperty("display", "block"); // can only animate blocks?
-
-            // put on new layer
-            node.style.setProperty("will-change", "transform");
-        });
+        this.positionAnimationLayers();
 
         // Display fixes with visible layout shift (e.g. removing horizontal partitioning)
         createStylesheetText(
@@ -978,19 +969,43 @@ export default class TextContainerModifier implements PageModifier {
         );
     }
 
+    // put text containers in same place as before content block, but positioned using CSS transforms
+    private positionAnimationLayers() {
+        this.animationLayerTransforms.map(
+            ([node, { translateX, translateY, scaleX }]) => {
+                let transform = `translate(${translateX}px, ${translateY}px)`;
+                if (scaleX) {
+                    transform += ` scale(${scaleX})`;
+                    node.style.setProperty("transform-origin", "top left");
+                }
+                node.style.setProperty("transform", transform);
+
+                node.style.setProperty("left", "0"); // e.g. xkcd.com
+                node.style.setProperty("display", "block"); // can only animate blocks?
+
+                // put on new layer
+                node.style.setProperty("will-change", "transform");
+            }
+        );
+    }
+
     executeAnimation() {
-        this.animationLayerElements.map(([node, { stackType }]) => {
+        this.animationLayerTransforms.map(([node, { scaleX }]) => {
             node.style.setProperty(
                 "transition",
                 "transform 0.4s cubic-bezier(0.33, 1, 0.68, 1)"
             );
 
             let transform = `translate(0, 0)`;
-            if (stackType === "image") {
+            if (scaleX) {
                 transform += ` scale(1)`;
             }
             node.style.setProperty("transform", transform);
         });
+    }
+
+    executeReverseAnimation() {
+        this.positionAnimationLayers();
     }
 
     // very carefully exclude elements as text containers to avoid incorrect main container selection for small articles
