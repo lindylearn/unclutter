@@ -225,7 +225,6 @@ export const blockedWords = [
     "comment", // https://slatestarcodex.com/2014/09/30/i-can-tolerate-anything-except-the-outgroup/
     "print", // catch all .hidden-print and .print-remove ?
     "skip", // https://www.fugue.co/blog/2015-11-11-guide-to-emacs.html
-    "sr-only", // https://arxiv.org/abs/2206.02871
     "extra", // https://arxiv.org/abs/2206.02871
     "contacts", // https://www.europarl.europa.eu/news/en/press-room/20220613IPR32838/eu-covid-certificate-meps-and-council-agree-to-extend-rules-for-another-year
     "home", // https://blog.cryptographyengineering.com/2022/06/09/in-defense-of-cryptocurrency/
@@ -279,6 +278,7 @@ export const blockedSpecificSelectors = [
     ".page-header", // https://www.dailymail.co.uk/tvshowbiz/article-10913383/Hugh-Jackman-tests-positive-COVID-19-just-one-day-Tony-Awards.html
     ".post-info", // https://theantistartup.com/i-stopped-advertising-everywhere-and-nothing-happened/
     "#topMetaLang", // https://www.dw.com/en/germany-takes-first-step-towards-relaxing-cannabis-law/a-62120448
+    ".sr-only", // https://arxiv.org/abs/2206.02871
 
     ".Post-header-grid", // https://theintercept.com/2022/06/13/progressive-organizing-infighting-callout-culture/
 

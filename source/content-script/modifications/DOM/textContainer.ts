@@ -440,7 +440,7 @@ export default class TextContainerModifier implements PageModifier {
 
         this.inlineStyleTweaks.forEach(([elem, style]) => {
             for (const [key, value] of Object.entries(style)) {
-                elem.style[key] = value;
+                elem.style.setProperty(key, `${value}`, "important");
             }
         });
 
@@ -811,7 +811,7 @@ export default class TextContainerModifier implements PageModifier {
                 parentStyle.flexDirection === "row") ||
             parentStyle.display === "grid"
         ) {
-            styleTweaks.maxWidth = `${nodeBox.width}px`;
+            styleTweaks["max-width"] = `${nodeBox.width}px`;
         }
 
         if (Object.keys(styleTweaks).length > 0) {
