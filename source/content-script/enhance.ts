@@ -35,6 +35,7 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
 const transitions = new TransitionManager();
 let disablePageView: () => void;
+let preparedPage = false;
 export async function togglePageView() {
     // manually toggle pageview status in this tab
 
@@ -44,8 +45,11 @@ export async function togglePageView() {
     if (!alreadyEnabled) {
         // enable extension
 
-        // parse page
-        await transitions.prepare();
+        if (!preparedPage) {
+            // only run once if enabled multiple times on same page
+            await transitions.prepare();
+            preparedPage = true;
+        }
 
         // perform modifications
         transitions.transitionIn();
