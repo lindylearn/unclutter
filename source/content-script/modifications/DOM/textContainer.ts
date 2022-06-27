@@ -485,12 +485,12 @@ export default class TextContainerModifier implements PageModifier {
     }
 
     private getTextElementChainOverrideStyle() {
-        // :not(#fakeID#fakeID) used to override stubborn site styles
+        // :not(#fakeID#fakeID#fakeID) used to override stubborn site styles
         return `
             /* clean up all text containers */
-            .${lindyContainerClass}:not(#fakeID#fakeID),
-            .${lindyHeadingContainerClass}:not(#fakeID#fakeID),
-            .${lindyContainerClass}:not(#fakeID#fakeID) > :is(
+            .${lindyContainerClass}:not(#fakeID#fakeID#fakeID),
+            .${lindyHeadingContainerClass}:not(#fakeID#fakeID#fakeID),
+            .${lindyContainerClass}:not(#fakeID#fakeID#fakeID) > :is(
                 ${this.usedTextElementSelector}, 
                 ${globalHeadingSelector}
             ) {
@@ -510,7 +510,7 @@ export default class TextContainerModifier implements PageModifier {
                 overflow: visible !important;
             }
             /* more strict cleanup for main text containers */
-            .${lindyMainContentContainerClass}:not(#fakeID#fakeID):not(body) {
+            .${lindyMainContentContainerClass}:not(#fakeID#fakeID#fakeID):not(body) {
                 position: relative !important;
                 margin-top: 0 !important;
                 margin-bottom: 0 !important;
@@ -520,8 +520,8 @@ export default class TextContainerModifier implements PageModifier {
             }
 
             /* clean up headings */
-            .${lindyHeadingContainerClass}:not(#fakeID#fakeID):not(body), 
-            .${lindyHeadingContainerClass}:not(#fakeID#fakeID) > * {
+            .${lindyHeadingContainerClass}:not(#fakeID#fakeID#fakeID):not(body), 
+            .${lindyHeadingContainerClass}:not(#fakeID#fakeID#fakeID) > * {
                 color: black !important;
                 background: none !important;
                 -webkit-text-fill-color: unset !important;
@@ -547,13 +547,13 @@ export default class TextContainerModifier implements PageModifier {
                 padding-top: 0 !important;
                 margin-bottom: 0 !important;
             }
-            .${lindyHeadingContainerClass}:not(#fakeID#fakeID) a {
+            .${lindyHeadingContainerClass}:not(#fakeID#fakeID#fakeID) a {
                 color: black !important;
                 background: none !important;
             }
 
             /* image container cleanup */
-            .${lindyImageContainerClass}:not(#fakeID#fakeID) {
+            .${lindyImageContainerClass}:not(#fakeID#fakeID#fakeID) {
                 width: 100% !important;
                 margin-left: 0 !important;
                 margin-right: 0 !important;
@@ -632,13 +632,13 @@ export default class TextContainerModifier implements PageModifier {
         }
 
         const css = `
-            .${lindyContainerClass}:not(#fakeID#fakeID#fakeID), 
-            .${lindyContainerClass}:not(#fakeID#fakeID#fakeID) > :is(${this.usedTextElementSelector}, .${globalHeadingSelector}),
-            .${lindyHeadingContainerClass}:not(#fakeID#fakeID#fakeID), 
-            .${lindyHeadingContainerClass}:not(#fakeID#fakeID#fakeID) > * {
+            .${lindyContainerClass}:not(#fakeID#fakeID#fakeID#fakeID), 
+            .${lindyContainerClass}:not(#fakeID#fakeID#fakeID#fakeID) > :is(${this.usedTextElementSelector}, .${globalHeadingSelector}),
+            .${lindyHeadingContainerClass}:not(#fakeID#fakeID#fakeID#fakeID), 
+            .${lindyHeadingContainerClass}:not(#fakeID#fakeID#fakeID#fakeID) > * {
                 color: var(--lindy-dark-theme-text-color) !important;
             }
-            .${lindyHeadingContainerClass}:not(#fakeID#fakeID#fakeID) a {
+            .${lindyHeadingContainerClass}:not(#fakeID#fakeID#fakeID#fakeID) a {
                 color: var(--lindy-dark-theme-text-color) !important;
             }
             `;
@@ -731,7 +731,9 @@ export default class TextContainerModifier implements PageModifier {
             line-height: 1em !important;
         }`,
         ...["margin-top", "margin-bottom", "padding-top", "padding-bottom"].map(
-            (property) => `.lindy-clean-${property}:not(#fakeID#fakeID#fakeID) {
+            (
+                property
+            ) => `.lindy-clean-${property}:not(#fakeID#fakeID#fakeID#fakeID) {
             ${property}: 10px !important;
         }`
         ),
