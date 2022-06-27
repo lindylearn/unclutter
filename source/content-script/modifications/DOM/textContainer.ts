@@ -566,6 +566,7 @@ export default class TextContainerModifier implements PageModifier {
                 /* y padding often used to make space for images, e.g. on theintercept or variety.com */
                 /* height causes issues for image spacers, e.g. on arstechnica.com */
                 backdrop-filter: none !important; /* prevent implicit GPU layer */
+                transform: none !important;
 
                 top: 0 !important;
                 left: 0 !important;
@@ -1038,10 +1039,10 @@ export default class TextContainerModifier implements PageModifier {
                     transform += ` scale(${scaleX})`;
                     node.style.setProperty("transform-origin", "top left");
                 }
-                node.style.setProperty("transform", transform);
+                node.style.setProperty("transform", transform, "important");
 
-                node.style.setProperty("left", "0"); // e.g. xkcd.com
-                node.style.setProperty("display", "block"); // can only animate blocks?
+                node.style.setProperty("left", "0", "important"); // e.g. xkcd.com
+                node.style.setProperty("display", "block", "important"); // can only animate blocks?
 
                 // put on new layer
                 node.style.setProperty("will-change", "transform");
@@ -1053,14 +1054,15 @@ export default class TextContainerModifier implements PageModifier {
         this.animationLayerTransforms.map(([node, { scaleX }]) => {
             node.style.setProperty(
                 "transition",
-                "transform 0.4s cubic-bezier(0.33, 1, 0.68, 1)"
+                "transform 0.4s cubic-bezier(0.33, 1, 0.68, 1)",
+                "important"
             );
 
             let transform = `translate(0, 0)`;
             if (scaleX) {
                 transform += ` scale(1)`;
             }
-            node.style.setProperty("transform", transform);
+            node.style.setProperty("transform", transform, "important");
         });
     }
 
