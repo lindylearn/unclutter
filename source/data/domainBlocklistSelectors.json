@@ -57,5 +57,9 @@
         ".paging",
         ".c-keywords",
         ".c-detailkeyward"
+    ],
+    "technologyreview.com": [
+        "#piano__post_body-desktop-1",
+        "#piano__post_body-desktop-2"
     ]
 }
