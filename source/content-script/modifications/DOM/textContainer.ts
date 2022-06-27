@@ -518,6 +518,9 @@ export default class TextContainerModifier implements PageModifier {
                 padding-bottom: 0 !important;
                 top: 0 !important;
             }
+            .${lindyContainerClass}:not(#fakeID#fakeID#fakeID) > * {
+                max-width: 100% !important;
+            }
 
             /* clean up headings */
             .${lindyHeadingContainerClass}:not(#fakeID#fakeID#fakeID):not(body), 
