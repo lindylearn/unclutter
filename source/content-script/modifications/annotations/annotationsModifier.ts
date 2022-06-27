@@ -68,10 +68,10 @@ export default class AnnotationsModifier implements PageModifier {
         );
     }
 
-    async transitionOut() {
+    async beforeTransitionOut() {
         this.disableAnnotations();
         removeAnnotationListener();
-        this.pageResizeObserver?.unobserve(document.body);
+        this.pageResizeObserver?.disconnect();
 
         if (this.sidebarIframe) {
             removeSidebar();

@@ -8,6 +8,7 @@ export default class BackgroundModifier implements PageModifier {
     private themeModifier: ThemeModifier;
 
     private backgroundElement: HTMLElement;
+    private resizeObserver: ResizeObserver;
 
     constructor(themeModifier: ThemeModifier) {
         this.themeModifier = themeModifier;
@@ -58,10 +59,16 @@ export default class BackgroundModifier implements PageModifier {
 
     observeHeightChanges() {
         // observe children height changes
-        const observer = new ResizeObserver(() => {
+        this.resizeObserver = new ResizeObserver(() => {
             this.updateBackgroundHeight();
         });
-        [...document.body.children].map((node) => observer.observe(node));
+        [...document.body.children].map((node) =>
+            this.resizeObserver.observe(node)
+        );
+    }
+
+    unObserveHeightChanges() {
+        this.resizeObserver.disconnect();
     }
 
     private updateBackgroundHeight() {

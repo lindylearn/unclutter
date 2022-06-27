@@ -301,14 +301,18 @@ export default class OverlayManager implements PageModifier {
             document.removeEventListener("scroll", scrollListener);
     }
 
-    async transitionOut() {
-        document
-            .getElementById("lindy-info-topleft")
-            ?.classList.add("lindy-overlay-fadeout");
-
+    fadeOutUi() {
         document
             .querySelectorAll(
-                ".lindy-page-settings-toprght, .lindy-page-settings-pageadjacent, #lindy-info-topleft"
+                "#lindy-page-settings-toprght, #lindy-page-settings-pageadjacent, #lindy-info-topleft"
+            )
+            .forEach((e) => e.classList.add("lindy-ui-fadeout"));
+    }
+
+    removeUi() {
+        document
+            .querySelectorAll(
+                "#lindy-page-settings-toprght, #lindy-page-settings-pageadjacent, #lindy-info-topleft"
             )
             .forEach((e) => e.remove());
 

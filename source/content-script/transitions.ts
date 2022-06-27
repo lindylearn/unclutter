@@ -165,9 +165,20 @@ export default class TransitionManager implements PageModifier {
         this.overlayManager.insertUiFont(); // causes ~50ms layout reflow
     }
 
-    beforeTransitionOut() {}
+    beforeTransitionOut() {
+        // remove ui enhancements
+        this.readingTimeModifier.beforeTransitionOut();
+        this.annotationsModifier.beforeTransitionOut();
 
-    prepareReverseAnimation() {}
+        // fade-out ui
+        this.overlayManager.fadeOutUi();
+
+        // TODO undo theme?
+
+        // undo hardcoded styles
+        this.backgroundModifier.unObserveHeightChanges();
+        this.bodyStyleModifier.transitionOut();
+    }
 
     executeReverseAnimation() {}
 
@@ -176,8 +187,7 @@ export default class TransitionManager implements PageModifier {
         this.textContainerModifier.prepareTransitionOut();
 
         // remove UI
-        this.annotationsModifier.transitionOut();
-        this.overlayManager.transitionOut();
+        this.overlayManager.removeUi();
 
         // disable dark mode
         this.themeModifier.transitionOut();

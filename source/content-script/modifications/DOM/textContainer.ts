@@ -556,7 +556,7 @@ export default class TextContainerModifier implements PageModifier {
                 padding-right: 0 !important;
                 border: none !important;
                 /* y padding often used to make space for images, e.g. on theintercept or variety.com */
-                height: auto !important;
+                /* height causes issues for image spacers, e.g. on arstechnica.com */
                 backdrop-filter: none !important; /* prevent implicit GPU layer */
 
                 top: 0 !important;

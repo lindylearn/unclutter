@@ -69,14 +69,18 @@ export async function togglePageView() {
 
         // undo later ui changes first
         transitions.beforeTransitionOut();
-        await new Promise((r) => setTimeout(r, 500));
-        return;
+        await new Promise((r) => setTimeout(r, 300));
 
+        // move text elements to original position
+        transitions.executeReverseAnimation();
+
+        return;
         // restore original page
         transitions.transitionOut();
         disablePageView();
+
         // but keep animated elements in uncluttered position
-        transitions.prepareReverseAnimation();
+
         await new Promise((r) => setTimeout(r, 10));
 
         // trigger computed animation

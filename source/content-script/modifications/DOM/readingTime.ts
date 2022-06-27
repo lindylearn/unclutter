@@ -48,7 +48,7 @@ export default class ReadingTimeModifier implements PageModifier {
         this.overlayManager.updateReadingTimeLeft(readingTimeLeft);
     }
 
-    async afterTransitionOut() {
+    async beforeTransitionOut() {
         if (this.uninstallScrollListener) {
             this.uninstallScrollListener();
         }

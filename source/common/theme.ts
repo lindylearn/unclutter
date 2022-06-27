@@ -45,9 +45,6 @@ export function setCssThemeVariable(varName, value, params = {}) {
     } else if (varName === backgroundColorThemeVariable) {
         if (!params["setOnlyUi"]) {
             document.body.style.setProperty("background", value, "important");
-            document
-                .getElementById("lindy-body-background")
-                ?.style.setProperty("background", value, "important");
         }
 
         getOutlineIframe()?.body.style.setProperty(varName, value);
