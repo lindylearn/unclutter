@@ -866,3 +866,9 @@ pre {
 section.ItemPageLayout.ItemPageLayout {
     display: block !important;
 }
+
+/* https://www.express.co.uk/news/politics/1630653/rishi-sunak-brexit-financial-services-rules-regulations-lord-frost */
+picture {
+    height: auto !important;
+    max-height: max-content !important;
+}
