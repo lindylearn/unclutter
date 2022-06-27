@@ -65,14 +65,15 @@ export async function togglePageView() {
         return true;
     } else {
         // disable extension (keeps some state for quicker re-enable)
-        // otherwise perform changes in reverse order
+        // generally perform changes in reverse order
 
-        // undo later ui changes first
+        // undo ui enhancements
         transitions.beforeTransitionOut();
-        await new Promise((r) => setTimeout(r, 300));
+        await new Promise((r) => setTimeout(r, 10));
 
         // move text elements to original position
         transitions.executeReverseAnimation();
+        await new Promise((r) => setTimeout(r, 400));
 
         return;
         // restore original page

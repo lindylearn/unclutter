@@ -972,7 +972,8 @@ export default class TextContainerModifier implements PageModifier {
                         scaleX,
                     },
                 ];
-            });
+            })
+            .filter((x) => x);
 
         this.positionAnimationLayers();
     }

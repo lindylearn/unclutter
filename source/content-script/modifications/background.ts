@@ -37,7 +37,13 @@ export default class BackgroundModifier implements PageModifier {
             "important"
         );
 
-        // scale-up background to entire screen width using transform (performant to animate)
+        this.scaleUpWidthToPage();
+
+        document.body.appendChild(this.backgroundElement);
+    }
+
+    // scale-up background to entire screen width using transform (performant to animate)
+    private scaleUpWidthToPage() {
         const initialScale =
             window.innerWidth / pxToNumber(this.themeModifier.theme.pageWidth);
         this.backgroundElement.style.setProperty(
@@ -45,8 +51,6 @@ export default class BackgroundModifier implements PageModifier {
             `scaleX(${initialScale}) translateY(-10px)`,
             "important"
         );
-
-        document.body.appendChild(this.backgroundElement);
     }
 
     animateWidthReduction() {
@@ -55,6 +59,10 @@ export default class BackgroundModifier implements PageModifier {
             "scaleX(1.0) translateY(0)",
             "important"
         );
+    }
+
+    animateReverseWidthReduction() {
+        this.scaleUpWidthToPage();
     }
 
     observeHeightChanges() {

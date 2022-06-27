@@ -75,6 +75,12 @@ export default class BodyStyleModifier implements PageModifier {
         );
     }
 
+    // prepare reverse pageview animation (undo afterTransitionIn())
+    beforeTransitionOut() {
+        document.body.style.setProperty("overflow", "visible", "important");
+        document.body.style.removeProperty("box-shadow");
+    }
+
     transitionOut() {
         this.styleObserver.disconnect();
         this.removeResponsiveStyleListener();

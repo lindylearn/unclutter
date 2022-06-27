@@ -177,10 +177,13 @@ export default class TransitionManager implements PageModifier {
 
         // undo hardcoded styles
         this.backgroundModifier.unObserveHeightChanges();
-        this.bodyStyleModifier.transitionOut();
+        this.bodyStyleModifier.beforeTransitionOut();
     }
 
-    executeReverseAnimation() {}
+    executeReverseAnimation() {
+        this.textContainerModifier.executeReverseAnimation();
+        this.backgroundModifier.animateReverseWidthReduction();
+    }
 
     transitionOut() {
         // setup transition for changing text margin
