@@ -97,7 +97,7 @@ export default class TransitionManager implements PageModifier {
         this.backgroundModifier.insertBackground();
 
         // remove blocked elements
-        this.responsiveStyleModifier.transitionIn();
+        this.responsiveStyleModifier.blockFixedElements();
         this.elementPickerModifier.transitionIn();
         this.contentBlockModifier.transitionIn();
 
@@ -186,23 +186,23 @@ export default class TransitionManager implements PageModifier {
     }
 
     transitionOut() {
-        // setup transition for changing text margin
-        this.textContainerModifier.prepareTransitionOut();
-
-        // remove UI
+        // remove faded-out UI components
         this.overlayManager.removeUi();
 
         // disable dark mode
-        this.themeModifier.transitionOut();
+        // this.themeModifier.transitionOut();
 
-        // await new Promise((r) => setTimeout(r, 0));
-
+        // disable text container styles
+        this.textContainerModifier.removeContainerStyles();
         this.bodyStyleModifier.transitionOut();
 
-        this.textContainerModifier.transitionOut();
-
         // restore original layout
-        this.responsiveStyleModifier.transitionOut();
+        this.responsiveStyleModifier.disableResponsiveStyles();
+        this.stylePatchesModifier.transitionIn();
+
+        // undo element block
+        this.responsiveStyleModifier.unblockFixedElements();
+        this.elementPickerModifier.transitionOut();
         this.contentBlockModifier.transitionOut();
     }
 

@@ -85,11 +85,9 @@ export default class BodyStyleModifier implements PageModifier {
         this.styleObserver.disconnect();
         this.removeResponsiveStyleListener();
 
-        // can't reference the variables here for some reason
+        // can't reference the classname variables here for some reason
         document.body.classList.remove("lindy-container");
-    }
 
-    afterTransitionOut() {
         document.body.style.removeProperty("width");
         document.body.style.removeProperty("max-width");
         document.body.style.removeProperty("margin");
@@ -99,6 +97,7 @@ export default class BodyStyleModifier implements PageModifier {
         document.body.style.removeProperty("height");
         document.body.style.removeProperty("background");
         document.body.style.removeProperty("transition");
+        document.body.style.removeProperty("overflow");
     }
 
     private modifyHtmlStyle() {

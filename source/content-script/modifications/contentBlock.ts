@@ -83,7 +83,7 @@ export default class ContentBlockModifier implements PageModifier {
     transitionOut() {
         document
             .querySelectorAll(
-                ".content-block-hide, .content-block-custom-sites"
+                "#content-block-hide, #content-block-custom-sites"
             )
             .forEach((e) => e.remove());
     }

@@ -73,20 +73,8 @@ export default class ResponsiveStyleModifier implements PageModifier {
         }
     }
 
-    private animatedRulesToHide = []; // list of obj and previous display style
-
-    private originalStyleList: object[] = [];
+    private expiredRulesOriginalStyles: object[] = [];
     private addedRules: CSSStyleRule[] = [];
-    transitionIn() {
-        // completely remove fade-out elements (shifts layout)
-        this.fixedPositionRules.map((rule) => {
-            rule.style.setProperty("display", "none", "important");
-        });
-        this.animatedRulesToHide.map(([rule, display]) => {
-            rule.style.setProperty("display", "none", "important");
-        });
-    }
-
     enableResponsiveStyles() {
         // disable desktop-only styles
         this.expiredRules.map((rule, index) => {
@@ -99,10 +87,10 @@ export default class ResponsiveStyleModifier implements PageModifier {
             for (const key of rule.style) {
                 obj[key] = rule.style.getPropertyValue(key);
             }
-            this.originalStyleList.push(obj);
+            this.expiredRulesOriginalStyles.push(obj);
 
-            // this works, even if it should be read-only in theory
-            rule.style = { transition: "all 0.2s linear" };
+            // @ts-ignore this works, even if it should be read-only in theory
+            rule.style = {};
         });
 
         // enable mobile styles
@@ -115,45 +103,43 @@ export default class ResponsiveStyleModifier implements PageModifier {
                 newIndex
             ] as CSSStyleRule;
 
-            newRule.style.setProperty("transition", "all 0.2s linear");
-
             this.addedRules.push(newRule);
         });
     }
 
-    transitionOut() {
+    disableResponsiveStyles() {
         this.expiredRules.map((rule, index) => {
             for (const [key, value] of Object.entries(
-                this.originalStyleList[index]
+                this.expiredRulesOriginalStyles[index]
             )) {
                 rule.style.setProperty(key, value);
             }
         });
 
         this.addedRules.map((rule) => {
+            // @ts-ignore this works, even if it should be read-only in theory
             rule.style = {};
-        });
-
-        // set up for animation again
-        this.animatedRulesToHide.map(([rule, display]) => {
-            rule.style.setProperty("opacity", "0", "important");
-            rule.style.setProperty("visibility", "hidden", "important");
-
-            // Position: sticky doesn't show correctly unfortunately
-            // e.g. at https://slack.com/intl/en-gb/blog/collaboration/etiquette-tips-in-slack
-
-            rule.style.setProperty("display", display);
         });
     }
 
-    fadeInNoise() {
-        this.animatedRulesToHide.map(([rule, display]) => {
-            rule.style.removeProperty("opacity", "1");
-            rule.style.removeProperty("visibility", "visible");
-            rule.style.setProperty(
-                "transition",
-                "visibility 0.3s, opacity 0.3s linear"
-            );
+    private fixedElementsOriginalDisplay: string[] = [];
+    blockFixedElements() {
+        // completely remove fade-out elements (shifts layout)
+        this.fixedElementsOriginalDisplay = this.fixedPositionRules.map(
+            (rule) => {
+                const originalValue = rule.style.getPropertyValue("display");
+
+                rule.style.setProperty("display", "none", "important");
+
+                return originalValue;
+            }
+        );
+    }
+
+    unblockFixedElements() {
+        this.fixedPositionRules.map((rule, index) => {
+            const originalValue = this.fixedElementsOriginalDisplay[index];
+            rule.style.setProperty("display", originalValue);
         });
     }
 

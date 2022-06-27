@@ -43,6 +43,12 @@ export default class ElementPickerModifier implements PageModifier {
         createStylesheetText(css, "element-picker-block");
     }
 
+    transitionOut() {
+        document
+            .querySelectorAll("#element-picker-block")
+            .forEach((e) => e.remove());
+    }
+
     enable() {
         this.spotlight = document.createElement("div");
         this.spotlight.className = `${overrideClassname} lindy-element-spotlght`;

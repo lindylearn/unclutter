@@ -307,6 +307,10 @@ export default class OverlayManager implements PageModifier {
                 "#lindy-page-settings-toprght, #lindy-page-settings-pageadjacent, #lindy-info-topleft"
             )
             .forEach((e) => e.classList.add("lindy-ui-fadeout"));
+
+        if (this.uninstallScrollListener) {
+            this.uninstallScrollListener();
+        }
     }
 
     removeUi() {
@@ -315,10 +319,6 @@ export default class OverlayManager implements PageModifier {
                 "#lindy-page-settings-toprght, #lindy-page-settings-pageadjacent, #lindy-info-topleft"
             )
             .forEach((e) => e.remove());
-
-        if (this.uninstallScrollListener) {
-            this.uninstallScrollListener();
-        }
     }
 
     // listen to annotation updates and attribute to outline heading

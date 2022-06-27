@@ -451,18 +451,30 @@ export default class TextContainerModifier implements PageModifier {
         );
     }
 
-    transitionOut() {
+    removeContainerStyles() {
         this.classNamesObserver.disconnect();
 
         document
-            .querySelectorAll(".lindy-text-chain-override")
+            .querySelectorAll(
+                "#lindy-text-chain-override, #lindy-text-node-overrides, #lindy-font-size, #lindy-dark-mode-text"
+            )
             .forEach((e) => e.remove());
-    }
 
-    afterTransitionOut() {
-        document
-            .querySelectorAll(".lindy-font-size, .lindy-node-overrides")
-            .forEach((e) => e.remove());
+        this.inlineStyleTweaks.forEach(([elem, style]) => {
+            for (const [key, value] of Object.entries(style)) {
+                elem.style.removeProperty(key);
+            }
+        });
+
+        this.animationLayerTransforms.map(([node, { scaleX }]) => {
+            node.style.removeProperty("transition");
+            node.style.removeProperty("transform");
+            node.style.removeProperty("left");
+            node.style.removeProperty("display");
+            node.style.removeProperty("transform-origin");
+
+            // keep will-change
+        });
     }
 
     private getTextElementChainOverrideStyle() {
