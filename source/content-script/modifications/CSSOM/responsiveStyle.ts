@@ -73,7 +73,8 @@ export default class ResponsiveStyleModifier implements PageModifier {
         }
     }
 
-    private expiredRulesOriginalStyles: object[] = [];
+    private expiredRulesOriginalStyles: { [key: string]: [string, boolean] }[] =
+        [];
     private addedRules: CSSStyleRule[] = [];
     enableResponsiveStyles() {
         // disable desktop-only styles
@@ -85,7 +86,10 @@ export default class ResponsiveStyleModifier implements PageModifier {
             // TODO measure performance of this
             const obj = {};
             for (const key of rule.style) {
-                obj[key] = rule.style.getPropertyValue(key);
+                obj[key] = [
+                    rule.style.getPropertyValue(key),
+                    rule.style.getPropertyPriority(key) === "important",
+                ];
             }
             this.expiredRulesOriginalStyles.push(obj);
 
@@ -109,10 +113,14 @@ export default class ResponsiveStyleModifier implements PageModifier {
 
     disableResponsiveStyles() {
         this.expiredRules.map((rule, index) => {
-            for (const [key, value] of Object.entries(
+            for (const [key, [value, isImportant]] of Object.entries(
                 this.expiredRulesOriginalStyles[index]
             )) {
-                rule.style.setProperty(key, value);
+                rule.style.setProperty(
+                    key,
+                    value,
+                    isImportant ? "important" : ""
+                );
             }
         });
 

@@ -397,7 +397,10 @@ export default class ThemeModifier implements PageModifier {
         return siteSupportsDarkMode;
     }
 
-    private activeDarkModeStyleTweaks: [CSSStyleRule, object][] = [];
+    private activeDarkModeStyleTweaks: [
+        CSSStyleRule,
+        { [key: string]: string }
+    ][] = [];
     private enableDarkModeStyleTweaks() {
         // patch site stylesheet colors
         this.cssomProvider.iterateRules((rule) => {
@@ -410,7 +413,10 @@ export default class ThemeModifier implements PageModifier {
                 // save properties for restoration later
                 const obj = {};
                 for (const key of rule.style) {
-                    obj[key] = rule.style.getPropertyValue(key);
+                    obj[key] = [
+                        rule.style.getPropertyValue(key),
+                        rule.style.getPropertyPriority(key) === "important",
+                    ];
                 }
                 this.activeDarkModeStyleTweaks.push([rule, obj]);
 
@@ -428,8 +434,14 @@ export default class ThemeModifier implements PageModifier {
 
     private disableDarkModeStyleTweaks() {
         this.activeDarkModeStyleTweaks.map(([rule, originalStyle]) => {
-            for (const [key, value] of Object.entries(originalStyle)) {
-                rule.style.setProperty(key, value);
+            for (const [key, [value, isImportant]] of Object.entries(
+                originalStyle
+            )) {
+                rule.style.setProperty(
+                    key,
+                    value,
+                    isImportant ? "important" : ""
+                );
             }
         });
         this.activeDarkModeStyleTweaks = [];
