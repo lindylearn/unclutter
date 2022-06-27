@@ -237,7 +237,7 @@ export default class TextContainerModifier implements PageModifier {
         // Iterate upwards in DOM tree from paragraph node
         let currentElem = startElem;
         let currentStack: HTMLElement[] = [];
-        while (currentElem !== document.body) {
+        while (currentElem !== document.documentElement) {
             if (
                 this.mainStackElements.has(currentElem) ||
                 // don't go into parents if already validated them (only for text containers since their mainStack state doesn't change for parents)
@@ -576,7 +576,7 @@ export default class TextContainerModifier implements PageModifier {
     // block siblings of main text containers
     enableSiblingBlock() {
         /* hide sidebar siblings, e.g. on https://www.thespacereview.com/article/4384/1 or http://www.paulgraham.com/think.html */
-        const css = `.${lindyMainContentContainerClass}:not(.${lindyFirstMainContainerClass}) > :not(
+        const css = `.${lindyMainContentContainerClass}:not(.${lindyFirstMainContainerClass}, body) > :not(
             .${lindyMainContentContainerClass}, 
             .${lindyImageContainerClass}, 
             .${
