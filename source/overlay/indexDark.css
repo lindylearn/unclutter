@@ -5,10 +5,8 @@
     --color-muted: #525252;
 }
 
-
 .lindy-tooltp.lindy-tooltp:hover > .lindy-ui-icon,
-.lindy-theme-container.lindy-theme-container:hover
-    > .lindy-ui-icon {
+.lindy-theme-container.lindy-theme-container:hover > .lindy-ui-icon {
     filter: none;
 }
 
@@ -39,7 +37,8 @@
 .lindy-bugreport-button {
     background-color: #404040 !important;
 }
-.lindy-bugreport-flag, .lindy-bugreport-flag > .lindy-ui-icon {
+.lindy-bugreport-flag,
+.lindy-bugreport-flag > .lindy-ui-icon {
     background-color: #edd75b !important;
     color: #374151 !important;
 }

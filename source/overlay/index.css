@@ -43,7 +43,8 @@
 
     transition: left 0.2s ease-in-out;
 }
-.lindy-page-settings-toprght, .lindy-page-settings-pageadjacent {
+.lindy-page-settings-toprght,
+.lindy-page-settings-pageadjacent {
     animation: fadeInUi 0.2s cubic-bezier(0.33, 1, 0.68, 1);
     animation-fill-mode: both;
 }
@@ -57,7 +58,7 @@
         opacity: 1;
     }
 }
-.lindy-page-settings-toprght.lindy-ui-fadeout, 
+.lindy-page-settings-toprght.lindy-ui-fadeout,
 .lindy-page-settings-pageadjacent.lindy-ui-fadeout {
     animation: fadeOutUi 0.2s cubic-bezier(0.33, 1, 0.68, 1);
     animation-fill-mode: both;
@@ -86,7 +87,9 @@
     will-change: transform;
 
     width: 400px;
-    max-width: calc((100vw - var(--lindy-pagewidth)) / 2 - 7px); /* also set via inline styles to prevent initial transition */
+    max-width: calc(
+        (100vw - var(--lindy-pagewidth)) / 2 - 7px
+    ); /* also set via inline styles to prevent initial transition */
 
     transition: max-width 0.2s cubic-bezier(0.33, 1, 0.68, 1);
     animation: fadeInOutline 0.2s cubic-bezier(0.33, 1, 0.68, 1);
@@ -131,7 +134,8 @@
     border-radius: 5px;
     cursor: pointer;
 
-    transition: opacity 0.1s ease-in-out, top 0.1s ease-in-out, left 0.1s ease-in-out, height 0.1s ease-in-out;
+    transition: opacity 0.1s ease-in-out, top 0.1s ease-in-out,
+        left 0.1s ease-in-out, height 0.1s ease-in-out;
 }
 .lindy-element-spotlght.lindy-is-shrinking {
     height: 0 !important;

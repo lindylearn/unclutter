@@ -33,7 +33,8 @@ html.pageview.pageview > body {
     z-index: -100 !important;
     content: "" !important;
     background: inherit;
-    transition: transform 0.4s cubic-bezier(0.33, 1, 0.68, 1), background 0.4s cubic-bezier(0.33, 1, 0.68, 1); /* easeOutCubic */
+    transition: transform 0.4s cubic-bezier(0.33, 1, 0.68, 1),
+        background 0.4s cubic-bezier(0.33, 1, 0.68, 1); /* easeOutCubic */
     will-change: transform, background;
 
     border-radius: 10px !important;
@@ -163,7 +164,7 @@ html.pageview.pageview > body {
     /* top and height set via JS */
 }
 .lindy-marginbar-dot {
-    content: '';
+    content: "";
     display: block;
     width: 10px;
     height: 10px;
@@ -204,7 +205,7 @@ html.pageview.pageview > body {
     top: -0.3em;
     left: 0.1em;
 
-    content: '';
+    content: "";
     display: inline-block;
     width: 10px;
     height: 10px;

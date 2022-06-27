@@ -31,7 +31,7 @@
     opacity: 1;
 }
 
-.annotation > .info-bar > .upvote-button, 
+.annotation > .info-bar > .upvote-button,
 .annotation > .info-bar > .reply-button {
     visibility: hidden;
     opacity: 0;
@@ -48,13 +48,12 @@ svg.icon > path {
     stroke-width: 10px;
 }
 
-
 /* setup tooltips (adapted from overlay css) */
 .lindy-tooltp {
     position: relative;
 
     --background-color: var(--lindy-background-color);
-    --text-color: #374151; /* text-gray-700 */;
+    --text-color: #374151; /* text-gray-700 */
 }
 .lindy-tooltp:before,
 .lindy-tooltp:after {
@@ -109,7 +108,7 @@ svg.icon > path {
 
 .crowd-annotation-dot {
     /* keep in sync with .lindy-crowd-highlight:after style in pageview/content.css */
-    content: '';
+    content: "";
     display: inline-block;
     width: 10px;
     height: 10px;
@@ -120,9 +119,8 @@ svg.icon > path {
     background: rgba(255, 102, 0, 0.8);
 }
 .crowd-annotation-dot.h {
-    background: rgba(189, 28, 43, 0.8)
+    background: rgba(189, 28, 43, 0.8);
 }
-
 
 .annotation-list-item {
     transition: top 0.2s cubic-bezier(0.65, 0, 0.35, 1);
@@ -135,8 +133,7 @@ svg.icon > path {
     opacity: 1;
     transform: translate(0);
 
-    transition: 
-        opacity   0.2s cubic-bezier(0.16, 1, 0.3, 1), 
+    transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1),
         transform 0.2s cubic-bezier(0.16, 1, 0.3, 1); /* easeOutExpo */
 }
 .annotation-list-item-exit {
@@ -147,8 +144,6 @@ svg.icon > path {
     opacity: 0;
     transform: translate(50px);
 
-    transition: 
-        opacity   0.1s cubic-bezier(0.32, 0, 0.67, 0), 
+    transition: opacity 0.1s cubic-bezier(0.32, 0, 0.67, 0),
         transform 0.1s cubic-bezier(0.32, 0, 0.67, 0); /* easeInCubic */
 }
-  

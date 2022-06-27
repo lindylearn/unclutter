@@ -27,7 +27,6 @@
     display: none !important;
 }
 
-
 /* https://www.worksinprogress.co/issue/the-housing-theory-of-everything/ */
 .site-content {
     padding-top: 0 !important;
@@ -91,7 +90,6 @@
 .article-body__element__OOj6H {
     margin: 20px 0 !important;
 }
-
 
 /* https://www.quantamagazine.org/in-new-experiment-astronomers-see-no-sign-of-cosmic-dawn-20220228/ */
 .cookie-not-accepted {
@@ -166,7 +164,8 @@ span > article:not(.lindy-text-container) {
 }
 
 /* https://www.nytimes.com/2020/06/17/learning/bringing-ethics-to-your-plate.html */
-.css-tux0zj, .css-9om1bq {
+.css-tux0zj,
+.css-9om1bq {
     display: none !important;
 }
 section[name="articleBody"] ~ div {
@@ -533,7 +532,7 @@ article.article-container.article--post {
     display: none !important;
 }
 /* https://www.washingtonpost.com/local/route-29-batman-is-killed-after-his-car-breaks-down-along-a-maryland-highway/2015/08/17/13f0e9b2-44e3-11e5-8ab4-c73967a143d3_story.html */
-article[itemprop='articleBody'] > .grey-bg {
+article[itemprop="articleBody"] > .grey-bg {
     display: none !important;
 }
 
@@ -609,7 +608,6 @@ body.fastcompany {
 body[link="000099"] {
     padding-top: 20px !important;
 }
-
 
 /* https://tonsky.me/blog/disenchantment/ */
 .lindy-main-text-container > figure {
@@ -706,17 +704,23 @@ code {
 }
 
 /* https://steveblank.com/2022/05/17/artificial-intelligence-and-machine-learning-explained/ */
-.obar, .widget_twitter_timeline, .sidebar > ul {
+.obar,
+.widget_twitter_timeline,
+.sidebar > ul {
     display: none !important;
 }
 
 /* https://dereksmart.com/2015/07/interstellar-citizens/ */
-#masthead, .parallax-window, .parallax-mirror {
+#masthead,
+.parallax-window,
+.parallax-mirror {
     display: none !important;
 }
 
 /* https://psyche.co/guides/how-to-have-a-life-full-of-wonder-and-learning-about-the-world */
-.styled__Container-sc-103nbgy-0.styled__Container-sc-103nbgy-0, .styled__HeaderWrapper-sc-d6b46r-0, .styled__Thumbnail-sc-1ojdm6l-6 {
+.styled__Container-sc-103nbgy-0.styled__Container-sc-103nbgy-0,
+.styled__HeaderWrapper-sc-d6b46r-0,
+.styled__Thumbnail-sc-1ojdm6l-6 {
     display: none !important;
 }
 
@@ -734,7 +738,8 @@ div.bubble-element.CustomElement.bubble-r-container {
 }
 
 /* https://www.theatlantic.com/ideas/archive/2022/03/putin-russian-political-deterioration/626966/ */
-.vwo-modal-wrapper, .vwo-modal__mask {
+.vwo-modal-wrapper,
+.vwo-modal__mask {
     display: none !important;
 }
 
@@ -768,14 +773,14 @@ div.bubble-element.CustomElement.bubble-r-container {
 
 /*  */
 
-
 /* https://deadline.com/2022/05/fbi-season-finale-pulled-cbs-1235031812/ */
 [class~="u-hidden@desktop-max"] {
     display: none !important;
 }
 
 /* https://www.vice.com/en/article/bvnwg4/indonesia-lgbtq-rights-crackdown */
-.article__embed-component, .vice-card {
+.article__embed-component,
+.vice-card {
     display: none !important;
 }
 .inbody-article {
@@ -783,13 +788,14 @@ div.bubble-element.CustomElement.bubble-r-container {
 }
 
 /* https://www.lesswrong.com/posts/tscc3e5eujrsEeFN4/well-kept-gardens-die-by-pacifism */
-.PostsPagePostHeader-headerVote, .PostsPagePostFooter-voteBottom {
+.PostsPagePostHeader-headerVote,
+.PostsPagePostFooter-voteBottom {
     display: none !important;
 }
 
 /* https://www.euronews.com/green/2022/05/25/brussels-grows-fruits-and-vegetables-on-top-of-a-supermarket */
 .swiper-wrapper--article {
-    left: 0 !important
+    left: 0 !important;
 }
 
 /* https://www.marketwatch.com/story/if-youre-ready-to-buy-china-tech-stocks-again-these-five-may-be-the-best-path-to-outperformance-11647881900?mod=home-page */
@@ -816,7 +822,8 @@ body > div:first-child:not(.lindy-text-container) {
 }
 
 /* https://www.theguardian.com/lifeandstyle/2014/jul/19/change-your-life-sit-down-and-think */
-.dcr-3jlghf, .dcr-chmysj {
+.dcr-3jlghf,
+.dcr-chmysj {
     font-size: calc(var(--lindy-active-font-size) * 0.94) !important;
 }
 .dcr-92oqeo {
@@ -829,7 +836,8 @@ body > div:first-child:not(.lindy-text-container) {
     margin: 0 !important;
     width: auto !important;
 }
-#topContainer, #bottom {
+#topContainer,
+#bottom {
     display: none !important;
 }
 img {
@@ -849,7 +857,6 @@ pre {
 .Post-image-block {
     padding-bottom: 10px;
 }
-
 
 /* https://www.vox.com/recode/23170900/leaked-amazon-memo-warehouses-hiring-shortage */
 .c-wide-block {

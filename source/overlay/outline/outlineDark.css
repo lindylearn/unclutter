@@ -7,7 +7,7 @@
     --text-color: var(--lindy-dark-theme-text-color) !important;
 }
 
-.heading-text.visited > .title, 
+.heading-text.visited > .title,
 .reading-time {
     color: #52525b !important;
 }

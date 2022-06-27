@@ -27,11 +27,11 @@ body {
 @media (prefers-color-scheme: dark) {
     html {
         /* from chrome default dark ui */
-        background-color: #292a2d; 
+        background-color: #292a2d;
         --embedded-background: #202124;
     }
 
-    .switch {   
+    .switch {
         /* from chrome default dark ui */
         --bg-disabled-color: #9aa0a6;
         --lever-disabled-color: #dadce0;

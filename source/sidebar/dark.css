@@ -16,7 +16,7 @@ body {
 .annotation > textarea::placeholder {
     color: #757575 !important;
 }
-.annotation > .top-icons, 
+.annotation > .top-icons,
 .annotation > .info-bar {
     color: #616161 !important;
 }
@@ -25,7 +25,7 @@ body {
 .upvote-button:hover,
 .reply-button:hover,
 .public-toggle.is-public {
-    color: #bdbdbd !important
+    color: #bdbdbd !important;
 }
 
 .lindy-tooltp {
