@@ -443,6 +443,12 @@ export default class TextContainerModifier implements PageModifier {
                 elem.style[key] = value;
             }
         });
+
+        // Display fixes with visible layout shift (e.g. removing horizontal partitioning)
+        createStylesheetText(
+            this.overrideCssDeclarations.join("\n"),
+            "lindy-text-node-overrides"
+        );
     }
 
     transitionOut() {
@@ -771,7 +777,7 @@ export default class TextContainerModifier implements PageModifier {
     // know actual parent layers for each layer only once content block done
     private animationLayerCandidates: [
         HTMLElement,
-        { nodeBox: DOMRect; stackType: string }
+        { stackType: string; nodeBox: DOMRect }
     ][] = [];
     private checkShouldCreateAnimationLayer(
         node: HTMLElement,
@@ -798,7 +804,13 @@ export default class TextContainerModifier implements PageModifier {
 
         if (stackType === "image" || leftOffset !== 0 || topOffset !== 0) {
             // console.log(leftOffset, node);
-            this.animationLayerCandidates.push([node, { nodeBox, stackType }]);
+            this.animationLayerCandidates.push([
+                node,
+                {
+                    stackType,
+                    nodeBox,
+                },
+            ]);
         }
     }
 
@@ -816,32 +828,33 @@ export default class TextContainerModifier implements PageModifier {
         const layerElements: Map<
             HTMLElement,
             {
+                stackType: string;
                 nodeBox: DOMRect;
                 afterNodeBox: DOMRect;
-                stackType: string;
+                afterMarginLeft: number;
+                afterMarginTop: number;
                 parentLayer: HTMLElement;
-                parentLayerStyle: CSSStyleDeclaration;
             }
         > = new Map();
         this.animationLayerCandidates.forEach(
-            ([node, { nodeBox, stackType }]) => {
+            ([node, { stackType, nodeBox }]) => {
                 const afterNodeBox = node.getBoundingClientRect();
                 if (afterNodeBox.height === 0) {
                     // ignore blocked elements
                     return;
                 }
 
-                if (node === document.body) {
-                    // body is not animated, so need to include its movement into child layers
-                    nodeBox = afterNodeBox; // pretend body stayed in place
-                }
+                const afterStyle = window.getComputedStyle(node);
+                const afterMarginLeft = pxToNumber(afterStyle.marginLeft);
+                const afterMarginTop = pxToNumber(afterStyle.marginTop);
 
                 layerElements.set(node, {
+                    stackType,
                     nodeBox,
                     afterNodeBox,
-                    stackType,
+                    afterMarginLeft,
+                    afterMarginTop,
                     parentLayer: null, // set below
-                    parentLayerStyle: null,
                 });
             }
         );
@@ -853,17 +866,13 @@ export default class TextContainerModifier implements PageModifier {
                 parentLayer = parentLayer.parentElement;
             }
 
-            const parentLayerStyle =
-                parentLayer && window.getComputedStyle(parentLayer);
-
             layerElements.set(node, {
                 ...properties,
                 parentLayer,
-                parentLayerStyle,
             });
         });
 
-        // filter out unnecessary layers
+        // remove unnecessary layers from map
         layerElements.forEach((properties, node) => {
             if (
                 node === document.body ||
@@ -901,7 +910,6 @@ export default class TextContainerModifier implements PageModifier {
                 layerElements.set(node, {
                     ...properties,
                     parentLayer: parentLayerProps.parentLayer,
-                    parentLayerStyle: parentLayerProps.parentLayerStyle,
                 });
                 layerElements.delete(properties.parentLayer);
                 return;
@@ -933,14 +941,20 @@ export default class TextContainerModifier implements PageModifier {
                 const afterLeftOffset =
                     layerProps.afterNodeBox.left -
                     parentLayerProps.afterNodeBox.left;
-                const translateX = beforeLeftOffset - afterLeftOffset;
+                const translateX =
+                    beforeLeftOffset -
+                    afterLeftOffset -
+                    parentLayerProps.afterMarginLeft; // only after margins are relevant, since transform() is relative to it
 
                 const beforeTopOffset =
                     layerProps.nodeBox.top - parentLayerProps.nodeBox.top;
                 const afterTopOffset =
                     layerProps.afterNodeBox.top -
                     parentLayerProps.afterNodeBox.top;
-                const translateY = beforeTopOffset - afterTopOffset;
+                const translateY =
+                    beforeTopOffset -
+                    afterTopOffset -
+                    parentLayerProps.afterMarginTop;
 
                 let scaleX = null;
                 // animate header image width (not for text elements for performance)
@@ -961,12 +975,6 @@ export default class TextContainerModifier implements PageModifier {
             });
 
         this.positionAnimationLayers();
-
-        // Display fixes with visible layout shift (e.g. removing horizontal partitioning)
-        createStylesheetText(
-            this.overrideCssDeclarations.join("\n"),
-            "lindy-text-node-overrides"
-        );
     }
 
     // put text containers in same place as before content block, but positioned using CSS transforms
