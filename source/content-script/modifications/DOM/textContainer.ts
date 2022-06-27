@@ -567,32 +567,58 @@ export default class TextContainerModifier implements PageModifier {
                 top: 0 !important;
                 left: 0 !important;
             }
-
-            /* block siblings of main text containers */
-            .${lindyMainContentContainerClass}:not(.${lindyFirstMainContainerClass}) > :not(
-                .${lindyMainContentContainerClass}, 
-                .${lindyImageContainerClass}, 
-                .${
-                    this.foundMainHeadingElement
-                        ? lindyMainHeaderContainerClass
-                        : lindyHeadingContainerClass
-                }
-            ) {
-                display: none !important;
-            }
         `;
-        // /* block siblings of main header containers */
-        // .${lindyMainHeaderContainerClass}:not(.${lindyFirstMainContainerClass}) > :not(
-        //     .${lindyHeadingContainerClass},
-        //     .${lindyImageContainerClass},
-        //     .${lindyContainerClass}
-        // ) {
-        //     display: none !important;
-        // }
+    }
+
+    // block siblings of main text containers
+    enableSiblingBlock() {
+        const css = `.${lindyMainContentContainerClass}:not(.${lindyFirstMainContainerClass}) > :not(
+            .${lindyMainContentContainerClass}, 
+            .${lindyImageContainerClass}, 
+            .${
+                this.foundMainHeadingElement
+                    ? lindyMainHeaderContainerClass
+                    : lindyHeadingContainerClass
+            }
+        ) {
+            display: none !important;
+        }`;
+        createStylesheetText(css, "lindy-text-sibling-block");
+    }
+
+    fadeInSiblings() {
+        const css = `.${lindyMainContentContainerClass}:not(.${lindyFirstMainContainerClass}) > :not(
+            .${lindyMainContentContainerClass}, 
+            .${lindyImageContainerClass}, 
+            .${
+                this.foundMainHeadingElement
+                    ? lindyMainHeaderContainerClass
+                    : lindyHeadingContainerClass
+            }
+        ) {
+            animation-duration: 0.3s;
+            animation-name: fadeInFromNone;
+        }
+        @keyframes fadeInFromNone {
+            0% {
+                opacity: 0;
+            }
+            1% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }`;
+        createStylesheetText(css, "lindy-text-sibling-fade-in");
+
+        document
+            .querySelectorAll("#lindy-text-sibling-block")
+            .forEach((e) => e.remove());
     }
 
     // set text color variable only when dark mode enabled, otherwise overwrites color (even if css var not set)
-    public setTextDarkModeVariable(darkModeEnabled: boolean) {
+    setTextDarkModeVariable(darkModeEnabled: boolean) {
         if (!darkModeEnabled) {
             document
                 .querySelectorAll(".lindy-dark-mode-text")

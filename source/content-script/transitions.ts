@@ -107,7 +107,7 @@ export default class TransitionManager implements PageModifier {
 
         // apply text container styles (without moving position)
         this.textContainerModifier.applyContainerStyles();
-        // adjust font size
+        this.textContainerModifier.enableSiblingBlock();
         this.textContainerModifier.setTextFontOverride();
 
         // patch inline styles to overcome stubborn sites (modifies DOM & CSSOM)
@@ -203,11 +203,13 @@ export default class TransitionManager implements PageModifier {
         this.textContainerModifier.removeContainerStyles();
         this.bodyStyleModifier.transitionOut();
 
-        // undo element block
-        this.responsiveStyleModifier.unblockFixedElements();
-        this.elementPickerModifier.transitionOut();
-
+        // undo element block and start fade-in
         this.contentBlockModifier.fadeInNoise();
+        this.textContainerModifier.fadeInSiblings();
+
+        // content block without fade-in for now
+        this.elementPickerModifier.transitionOut();
+        this.responsiveStyleModifier.unblockFixedElements();
     }
 
     afterTransitionOut() {
@@ -217,8 +219,9 @@ export default class TransitionManager implements PageModifier {
         // remove rest
         document
             .querySelectorAll(
+                // keep proxied stylesheets active for faster re-enable
                 `.${overrideClassname}:not(.lindy-stylesheet-proxy)`
-            ) // keep proxied stylesheets active for faster re-enable
+            )
             .forEach((e) => e.remove());
     }
 }
