@@ -183,7 +183,7 @@ export default class TransitionManager implements PageModifier {
 
         // restore original style
         this.responsiveStyleModifier.disableResponsiveStyles();
-        this.stylePatchesModifier.transitionIn();
+        this.stylePatchesModifier.transitionOut();
         this.textContainerModifier.removeOverrideStyles();
     }
 
