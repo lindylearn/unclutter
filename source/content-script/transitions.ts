@@ -173,7 +173,8 @@ export default class TransitionManager implements PageModifier {
         // fade-out ui
         this.overlayManager.fadeOutUi();
 
-        // TODO undo theme?
+        // disable dark mode
+        this.themeModifier.transitionOut();
 
         // undo hardcoded styles
         this.backgroundModifier.unObserveHeightChanges();
@@ -195,9 +196,6 @@ export default class TransitionManager implements PageModifier {
     transitionOut() {
         // remove faded-out UI components
         this.overlayManager.removeUi();
-
-        // disable dark mode
-        // this.themeModifier.transitionOut();
 
         // disable text container styles
         this.textContainerModifier.removeContainerStyles();
