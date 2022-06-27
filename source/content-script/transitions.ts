@@ -206,11 +206,13 @@ export default class TransitionManager implements PageModifier {
         // undo element block
         this.responsiveStyleModifier.unblockFixedElements();
         this.elementPickerModifier.transitionOut();
-        this.contentBlockModifier.transitionOut();
+
+        this.contentBlockModifier.fadeInNoise();
     }
 
     afterTransitionOut() {
         this.backgroundModifier.removeBackground();
+        this.contentBlockModifier.transitionOut();
 
         // remove rest
         document

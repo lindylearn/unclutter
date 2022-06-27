@@ -17,12 +17,14 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
         sendResponse({ pageViewEnabled });
         return true;
     } else if (message.event === "togglePageView") {
+        const pageHeightPx = document.body.clientHeight;
+
         togglePageView().then((enabledNow) => {
             if (!enabledNow) {
                 browser.runtime.sendMessage(null, {
                     event: "disabledPageView",
                     trigger: "extensionIcon",
-                    pageHeightPx: document.body.clientHeight,
+                    pageHeightPx,
                 });
             }
         });
@@ -80,7 +82,7 @@ export async function togglePageView() {
         disablePageView();
 
         // later fixes
-        await new Promise((r) => setTimeout(r, 100));
+        await new Promise((r) => setTimeout(r, 300));
         transitions.afterTransitionOut();
 
         return false;

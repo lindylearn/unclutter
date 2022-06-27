@@ -8,6 +8,7 @@ export function createStylesheetLink(
     const link = document.createElement("link");
     link.classList.add(overrideClassname);
     link.classList.add(styleId);
+    link.id = styleId;
     link.type = "text/css";
     link.rel = "stylesheet";
     link.href = url;

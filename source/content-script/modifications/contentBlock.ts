@@ -80,10 +80,37 @@ export default class ContentBlockModifier implements PageModifier {
         );
     }
 
-    transitionOut() {
+    fadeInNoise() {
+        const css = `
+        ${this.selectors.join(", ")} {
+            animation-duration: 0.3s;
+            animation-name: fadeInFromNone;
+        }
+        @keyframes fadeInFromNone {
+            0% {
+                opacity: 0;
+            }
+            1% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+        `;
+        createStylesheetText(css, "content-block-fade-in");
+
         document
             .querySelectorAll(
                 "#content-block-hide, #content-block-custom-sites"
+            )
+            .forEach((e) => e.remove());
+    }
+
+    transitionOut() {
+        document
+            .querySelectorAll(
+                "#content-block-hide, #content-block-custom-sites, #content-block-fade-in"
             )
             .forEach((e) => e.remove());
     }
