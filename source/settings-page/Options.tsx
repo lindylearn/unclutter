@@ -57,7 +57,7 @@ function OptionsPage({}) {
                     Unclutter articles by clicking the extension icon or
                     pressing{" "}
                     <div
-                        className="inline-block px-1 py-0.5 shadow-inner text-gray-600 dark:text-gray-300"
+                        className="inline-block px-1 py-0.5 text-gray-600 shadow-inner dark:text-gray-300"
                         style={{ background: "var(--embedded-background)" }}
                     >
                         {keyboardShortcut}
@@ -94,7 +94,7 @@ function OptionsPage({}) {
             <OptionsGroup
                 headerText="Automatic Activation"
                 iconSvg={
-                    <svg className="w-5 ml-0.5" viewBox="0 0 512 512">
+                    <svg className="ml-0.5 w-5" viewBox="0 0 512 512">
                         <path
                             fill="currentColor"
                             d="M240.5 224H352C365.3 224 377.3 232.3 381.1 244.7C386.6 257.2 383.1 271.3 373.1 280.1L117.1 504.1C105.8 513.9 89.27 514.7 77.19 505.9C65.1 497.1 60.7 481.1 66.59 467.4L143.5 288H31.1C18.67 288 6.733 279.7 2.044 267.3C-2.645 254.8 .8944 240.7 10.93 231.9L266.9 7.918C278.2-1.92 294.7-2.669 306.8 6.114C318.9 14.9 323.3 30.87 317.4 44.61L240.5 224z"
@@ -233,8 +233,8 @@ export default OptionsPage;
 function OptionsGroup({ headerText, iconSvg, children, docsLink }) {
     return (
         <div>
-            <h2 className="text-lg font-semibold mb-1 flex items-center select-none">
-                <div className="group-icon w-7 mr-1">{iconSvg}</div>
+            <h2 className="mb-1 flex select-none items-center text-lg font-semibold">
+                <div className="group-icon mr-1 w-7">{iconSvg}</div>
                 <div className="group-title">{headerText}</div>
                 {docsLink && (
                     <a

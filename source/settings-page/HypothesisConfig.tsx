@@ -54,7 +54,7 @@ export default function HypothesisConfig() {
     }, [tokenValid]);
 
     return (
-        <div className="flex gap-2 items-center">
+        <div className="flex items-center gap-2">
             <p className="mb-1">
                 Your{" "}
                 <a
@@ -69,7 +69,7 @@ export default function HypothesisConfig() {
             </p>
             <input
                 className={
-                    "flex-grow shadow-inner py-1 px-2 outline-none rounded border-2 " +
+                    "flex-grow rounded border-2 py-1 px-2 shadow-inner outline-none " +
                     (tokenValid
                         ? "border-green-300 dark:border-green-500"
                         : "border-red-300 dark:border-red-500")

@@ -6,13 +6,13 @@
 </script>
 
 <a
-    class="feedback-container max-w-full px-2 py-2 pr-5 cursor-pointer relative rounded-lg shadow hover:shadow-md transition-all"
+    class="feedback-container relative max-w-full cursor-pointer rounded-lg px-2 py-2 pr-5 shadow transition-all hover:shadow-md"
     href="https://unclutter.lindylearn.io/feedback"
     target="_blank"
     on:click={() => reportEventContentScript("clickFeedbackRequest")}
 >
     <svg
-        class="close-message absolute top-1.5 right-2 w-2.5 opacity-70 text-gray-400 hover:text-gray-700 hover:scale-110 transition-all"
+        class="close-message absolute top-1.5 right-2 w-2.5 text-gray-400 opacity-70 transition-all hover:scale-110 hover:text-gray-700"
         viewBox="0 0 320 512"
         on:click={(e) => {
             dispatch("dismissed");
@@ -28,7 +28,7 @@
 
     <div class="flex gap-2">
         <svg
-            class="icon message-icon w-5 flex-shrink-0 mx-1"
+            class="icon message-icon mx-1 w-5 flex-shrink-0"
             viewBox="0 0 512 512"
         >
             <path

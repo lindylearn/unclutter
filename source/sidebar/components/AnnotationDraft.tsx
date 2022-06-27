@@ -89,7 +89,7 @@ function AnnotationDraft({
     return (
         <div
             className={
-                `annotation p-1 pl-1.5 rounded-l-sm rounded-r bg-white text-gray-800 shadow-sm hover:shadow transition-all relative ` +
+                `annotation relative rounded-l-sm rounded-r bg-white p-1 pl-1.5 text-gray-800 shadow-sm transition-all hover:shadow ` +
                 (isReply ? "rounded-l pl-1 " : "") +
                 (className || "")
             }
@@ -102,7 +102,7 @@ function AnnotationDraft({
             onMouseLeave={() => onHoverUpdate(false)}
         >
             <TextareaAutosize
-                className="text-sm md:text-base w-full bg-gray-50 select-none placeholder-gray-400 placeholder:select-none rounded py-1 pl-2 pr-6 outline-none align-top"
+                className="w-full select-none rounded bg-gray-50 py-1 pl-2 pr-6 align-top text-sm placeholder-gray-400 outline-none placeholder:select-none md:text-base"
                 placeholder={
                     (localAnnotation.isPublic ? "Public " : "Private ") +
                     (isReply ? "reply" : "note")
@@ -120,9 +120,9 @@ function AnnotationDraft({
                 onFocus={() => onHoverUpdate(true)}
                 onBlur={() => onHoverUpdate(false)}
             />
-            <div className="top-icons absolute top-1.5 right-1.5 p-1 flex gap-2 text-gray-400">
+            <div className="top-icons absolute top-1.5 right-1.5 flex gap-2 p-1 text-gray-400">
                 <div
-                    className="cursor-pointer hover:text-gray-600 hover:drop-shadow-md lindy-tooltp lindy-fade transition-all"
+                    className="lindy-tooltp lindy-fade cursor-pointer transition-all hover:text-gray-600 hover:drop-shadow-md"
                     onClick={deleteWithConfirmStep}
                     data-title={
                         showDeleteConfirmation
@@ -145,7 +145,7 @@ function AnnotationDraft({
                 {hypothesisSyncEnabled && (
                     <div
                         className={
-                            "public-toggle cursor-pointer hover:text-gray-600 hover:drop-shadow-md lindy-tooltp lindy-fade transition-all " +
+                            "public-toggle lindy-tooltp lindy-fade cursor-pointer transition-all hover:text-gray-600 hover:drop-shadow-md " +
                             (localAnnotation.isPublic
                                 ? "is-public visible text-gray-600"
                                 : "")

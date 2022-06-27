@@ -57,7 +57,7 @@
         on:click={focusHeading}
     >
         <svg
-            class="absolute active-dot hidden"
+            class="active-dot absolute hidden"
             style="width: 6px;"
             viewBox="0 0 320 512"
         >
@@ -66,7 +66,7 @@
                 d="M320 256C320 344.4 248.4 416 160 416C71.63 416 0 344.4 0 256C0 167.6 71.63 96 160 96C248.4 96 320 167.6 320 256z"
             />
         </svg>
-        <div class="title flex-grow relative whitespace-nowrap overflow-hidden">
+        <div class="title relative flex-grow overflow-hidden whitespace-nowrap">
             <div class="default-title">{title}</div>
             <div class="active-title absolute top-0 left-0 font-header">
                 {title}
@@ -96,7 +96,7 @@
         </svg>
     </div>
     {#if children.length > 0}
-        <ul class="m-0 ml-5 p-0 list-none mt-1 flex flex-col gap-1">
+        <ul class="m-0 ml-5 mt-1 flex list-none flex-col gap-1 p-0">
             {#each children as child, i}
                 <svelte:self
                     {activeOutlineIndex}

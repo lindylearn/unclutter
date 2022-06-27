@@ -35,7 +35,7 @@ export function PageNote({
         <Component
             url={url}
             annotation={annotation}
-            className="border-l-0 rounded"
+            className="rounded border-l-0"
             createAnnotation={createAnnotation}
             deleteHideAnnotation={deleteHideAnnotation}
             placeholder="Page note"

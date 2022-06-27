@@ -14,18 +14,18 @@
 
 <div
     id="outline"
-    class="max-w-full px-5 py-4 cursor-auto bg-white rounded-lg shadow transition-all relative"
+    class="relative max-w-full cursor-auto rounded-lg bg-white px-5 py-4 shadow transition-all"
 >
     <div>
         <div class="flex justify-between">
             <div
-                class="text-base font-header font-semibold cursor-pointer"
+                class="cursor-pointer font-header text-base font-semibold"
                 on:click={() => scrollToElement(outline[0].element)}
             >
                 {outline[0]?.title}
             </div>
             {#if annotationsEnabled}
-                <div class="progress-container h-0 -mr-1 -mt-0.5">
+                <div class="progress-container -mr-1 -mt-0.5 h-0">
                     <ProgressCircle {totalAnnotationCount} />
                 </div>
             {/if}
@@ -34,7 +34,7 @@
         <div class="">
             {#if readingTimeLeft !== null}
                 <div
-                    class="reading-time text-sm text-gray-400 tabular-nums mt-1"
+                    class="reading-time mt-1 text-sm tabular-nums text-gray-400"
                 >
                     <span
                         class="reading-time-count"
@@ -45,12 +45,12 @@
 
             {#if outline.length > 1}
                 <div
-                    class="spacer-line border-b-2 border-gray-100 -mx-5 mb-2 mt-1"
+                    class="spacer-line -mx-5 mb-2 mt-1 border-b-2 border-gray-100"
                 />
             {/if}
         </div>
 
-        <ul class="m-0 p-0 list-none flex flex-col gap-1">
+        <ul class="m-0 flex list-none flex-col gap-1 p-0">
             {#each outline.slice(1) as child, i}
                 <Heading
                     {...child}

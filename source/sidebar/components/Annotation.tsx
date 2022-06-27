@@ -71,7 +71,7 @@ function Annotation({
     return (
         <div
             className={
-                "annotation px-2.5 py-1.5 bg-white text-gray-800 rounded shadow-sm hover:shadow transition-all relative " +
+                "annotation relative rounded bg-white px-2.5 py-1.5 text-gray-800 shadow-sm transition-all hover:shadow " +
                 className
             }
             style={{
@@ -84,7 +84,7 @@ function Annotation({
             ref={ref}
         >
             <a
-                className="annotation-text text-sm select-none mr-3"
+                className="annotation-text mr-3 select-none text-sm"
                 style={{
                     display: "-webkit-box",
                     // restrict text height by whole lines
@@ -136,9 +136,9 @@ function Annotation({
                 )}
             </a>
 
-            <div className="top-icons absolute top-1 right-1 p-1 flex gap-3 text-gray-400">
+            <div className="top-icons absolute top-1 right-1 flex gap-3 p-1 text-gray-400">
                 <div
-                    className="cursor-pointer hover:text-gray-600 hover:drop-shadow lindy-tooltp lindy-fade transition-all"
+                    className="lindy-tooltp lindy-fade cursor-pointer transition-all hover:text-gray-600 hover:drop-shadow"
                     onClick={deleteHide}
                     data-title="Remove comment"
                 >
@@ -153,7 +153,7 @@ function Annotation({
 
             {/* <div className="spacer-line border-b-2 border-gray-100 -mx-3 my-1"></div> */}
 
-            <div className="info-bar mt-0.5 text-sm text-gray-400 flex gap-3 justify-between items-end transition-all">
+            <div className="info-bar mt-0.5 flex items-end justify-between gap-3 text-sm text-gray-400 transition-all">
                 {/* <div
                     className={
                         "upvote-button flex-shrink-0 flex cursor-pointer select-none hover:text-gray-700 hover:scale-110 transition-all " +
@@ -176,13 +176,13 @@ function Annotation({
 
                 {!showingReplies && annotation.reply_count !== 0 && (
                     <a
-                        className="select-none hover:text-gray-700 hover:drop-shadow-sm transition-all cursor-pointer"
+                        className="cursor-pointer select-none transition-all hover:text-gray-700 hover:drop-shadow-sm"
                         href={link}
                         target="_blank"
                         rel="noreferrer"
                     >
                         <svg
-                            className="inline-block align-baseline rotate-180 w-3 mr-1"
+                            className="mr-1 inline-block w-3 rotate-180 align-baseline"
                             viewBox="0 0 512 512"
                             style={{ marginBottom: "-1px" }}
                         >
@@ -204,7 +204,7 @@ function Annotation({
                     annotation.platform === "h" &&
                     hypothesisSyncEnabled && (
                         <a
-                            className="reply-button invisible select-none hover:text-gray-700 hover:scale-110 hover:pl-0.5 transition-all cursor-pointer"
+                            className="reply-button invisible cursor-pointer select-none transition-all hover:scale-110 hover:pl-0.5 hover:text-gray-700"
                             onClick={
                                 showingReplies
                                     ? createReply
@@ -215,7 +215,7 @@ function Annotation({
                             rel="noreferrer"
                         >
                             <svg
-                                className="inline-block align-baseline rotate-180 w-3 mr-1"
+                                className="mr-1 inline-block w-3 rotate-180 align-baseline"
                                 viewBox="0 0 512 512"
                                 style={{ marginBottom: "-1px" }}
                             >
@@ -232,7 +232,7 @@ function Annotation({
 
                 <div className="flex-grow" />
                 <a
-                    className="hover:text-gray-700 hover:drop-shadow-sm select-none flex-shrink-0"
+                    className="flex-shrink-0 select-none hover:text-gray-700 hover:drop-shadow-sm"
                     href={
                         platform === "h"
                             ? `https://annotations.lindylearn.io/@${author}`
@@ -250,13 +250,13 @@ function Annotation({
                         {platform == "h" && (
                             <img
                                 src="../assets/icons/hypothesis.svg"
-                                className="inline-block w-3 ml-1"
+                                className="ml-1 inline-block w-3"
                             />
                         )}
                         {platform == "hn" && (
                             <img
                                 src="../assets/icons/yc.svg"
-                                className="inline-block w-3 ml-1 mb-0.5"
+                                className="ml-1 mb-0.5 inline-block w-3"
                             />
                         )}
                     </>

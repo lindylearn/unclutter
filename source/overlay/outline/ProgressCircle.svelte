@@ -13,7 +13,7 @@
 </script>
 
 <div
-    class="relative font-header hover:drop-shadow cursor-pointer lindy-tooltp lindy-fade"
+    class="lindy-tooltp lindy-fade relative cursor-pointer font-header hover:drop-shadow"
     data-title={`Created ${totalAnnotationCount} private note${
         totalAnnotationCount !== 1 ? "s" : ""
     }`}
@@ -53,7 +53,7 @@
         style="top: 20%; left: 0;"
     >
         <svg
-            class="icon celebration-icon absolute invisible"
+            class="icon celebration-icon invisible absolute"
             style="width: 18px; top: 2px;"
             viewBox="0 0 512 512"
         >

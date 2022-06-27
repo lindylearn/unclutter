@@ -66,7 +66,7 @@ export default function DomainSettingsList({}) {
     return (
         <>
             <ul
-                className="mt-1 px-3 py-2 flex flex-col items-start gap-1 h-32 overflow-y-auto shadow-inner"
+                className="mt-1 flex h-32 flex-col items-start gap-1 overflow-y-auto px-3 py-2 shadow-inner"
                 style={{ background: "var(--embedded-background)" }}
             >
                 {overrideList?.length === 0 && (
@@ -75,8 +75,8 @@ export default function DomainSettingsList({}) {
                     </li>
                 )}
                 {overrideList?.map(({ domain, status }) => (
-                    <li className="flex gap-5 items-center">
-                        <div className="underline w-52 flex-shrink">
+                    <li className="flex items-center gap-5">
+                        <div className="w-52 flex-shrink underline">
                             <a
                                 href={`https://${domain}`}
                                 target="_blank"
@@ -92,7 +92,7 @@ export default function DomainSettingsList({}) {
                                 updateDomainStatus(domain, e.target.value)
                             }
                             className={
-                                "p-1 rounded-sm " + getDomainStatusStyle(status)
+                                "rounded-sm p-1 " + getDomainStatusStyle(status)
                             }
                         >
                             <option value={null} className="bg-white">
@@ -107,7 +107,7 @@ export default function DomainSettingsList({}) {
                         </select>
 
                         <svg
-                            className="text-gray-400 dark:text-white h-4 cursor-pointer"
+                            className="h-4 cursor-pointer text-gray-400 dark:text-white"
                             viewBox="0 0 448 512"
                             onClick={() => deleteDomainSettings(domain)}
                         >
