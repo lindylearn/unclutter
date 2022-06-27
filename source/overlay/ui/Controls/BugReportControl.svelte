@@ -125,7 +125,7 @@
         position: relative;
         padding: 10px;
         width: max-content;
-        z-index: 100;
+        z-index: 3001;
 
         color: var(--text-color);
         font-family: Poppins, sans-serif;

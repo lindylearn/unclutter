@@ -15,7 +15,7 @@
     position: fixed !important;
     top: 0;
     right: 0;
-    z-index: 300;
+    z-index: 3000;
     padding: 9px;
     contain: layout style;
 
@@ -32,7 +32,7 @@
     left: calc(
         (100vw - var(--lindy-pagewidth)) / 2 + var(--lindy-pagewidth) - 5px
     );
-    z-index: 101;
+    z-index: 2000;
     padding: 10px;
     contain: layout style;
 
@@ -82,7 +82,7 @@
     height: calc(100vh - 10px);
     user-select: none;
     contain: strict;
-    z-index: 300;
+    z-index: 3000;
     will-change: transform;
 
     width: 400px;
@@ -123,7 +123,7 @@
 
 .lindy-element-spotlght {
     position: absolute;
-    z-index: 200;
+    z-index: 10000;
     visibility: hidden;
     opacity: 0;
 

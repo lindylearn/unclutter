@@ -133,7 +133,7 @@ export default class ElementPickerModifier implements PageModifier {
 
         this.spotlight.style.visibility = "visible";
         this.spotlight.style.opacity = "0.4";
-        this.spotlight.style.zIndex = "200";
+        this.spotlight.style.zIndex = "10000";
     }
 
     private iterateParents(startNode: HTMLElement) {

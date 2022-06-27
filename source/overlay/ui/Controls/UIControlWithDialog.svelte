@@ -16,7 +16,7 @@
 <style lang="postcss">
     .lindy-ui-dialog-container {
         position: relative;
-        z-index: 100;
+        z-index: 3000;
     }
 
     /* dialog box */
@@ -25,7 +25,7 @@
         position: absolute;
         top: -5px;
         right: calc(100% + 10px);
-        z-index: 100;
+        z-index: 3000;
 
         background-color: var(--background-color);
         color: #9ca3af;
@@ -60,7 +60,7 @@
         height: 0;
         width: 0;
         content: "";
-        z-index: 99;
+        z-index: 2999;
 
         border-top: 8px solid transparent;
         border-bottom: 8px solid transparent;

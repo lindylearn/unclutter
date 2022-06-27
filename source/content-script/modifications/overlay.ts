@@ -96,7 +96,7 @@ export default class OverlayManager implements PageModifier {
         iframe.setAttribute("scrolling", "no");
         iframe.setAttribute("frameBorder", "0");
         iframe.style.contain = "strict";
-        iframe.style.zIndex = "300";
+        iframe.style.zIndex = "3000";
 
         return iframe;
     }

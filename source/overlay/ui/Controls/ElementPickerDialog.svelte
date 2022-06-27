@@ -90,7 +90,7 @@
         position: absolute;
         top: 10px;
         left: 0;
-        z-index: 99;
+        z-index: 3000;
         width: 100%;
         box-sizing: border-box;
         padding: 10px;

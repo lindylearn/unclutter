@@ -143,7 +143,7 @@ html.pageview.pageview > body {
     height: calc(100% - 50px - 50px);
     user-select: none;
     contain: strict style;
-    z-index: 100;
+    z-index: 1000;
 }
 
 #lindy-annotations-marginbar {
