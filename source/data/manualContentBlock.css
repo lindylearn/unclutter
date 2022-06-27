@@ -856,3 +856,8 @@ pre {
     width: 100% !important;
     margin-left: 0 !important;
 }
+
+/* https://wizenguides.com/cold-email-outreach */
+.notion-spacer {
+    min-width: 0 !important;
+}
