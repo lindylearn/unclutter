@@ -42,5 +42,6 @@
         ".content__pagination",
         ".content__row"
     ],
-    "github.com": [".anchor", ".sr-only"]
+    "github.com": [".anchor", ".sr-only"],
+    "meduza.io": [".Layout-bannerTop"]
 }
