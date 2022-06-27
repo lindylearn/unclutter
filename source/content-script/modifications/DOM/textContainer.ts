@@ -572,6 +572,7 @@ export default class TextContainerModifier implements PageModifier {
 
     // block siblings of main text containers
     enableSiblingBlock() {
+        /* hide sidebar siblings, e.g. on https://www.thespacereview.com/article/4384/1 or http://www.paulgraham.com/think.html */
         const css = `.${lindyMainContentContainerClass}:not(.${lindyFirstMainContainerClass}) > :not(
             .${lindyMainContentContainerClass}, 
             .${lindyImageContainerClass}, 
@@ -582,7 +583,11 @@ export default class TextContainerModifier implements PageModifier {
             }
         ) {
             display: none !important;
-        }`;
+        }
+        .${lindyContainerClass} > td:not(.${lindyContainerClass}) { 
+            display: none !important;
+        }
+        `;
         createStylesheetText(css, "lindy-text-sibling-block");
     }
 
@@ -712,10 +717,6 @@ export default class TextContainerModifier implements PageModifier {
 
     // Collect overrides for specific container elements (insert as stylesheet for easy unpatching)
     private overrideCssDeclarations = [
-        // hide sidebar siblings, e.g. on https://www.thespacereview.com/article/4384/1
-        `.${lindyContainerClass} > td:not(.${lindyContainerClass}) { 
-            display: none !important;
-        }`,
         // Remove horizontal flex partitioning, e.g. https://www.nationalgeographic.com/science/article/the-controversial-quest-to-make-a-contagious-vaccine
         `.lindy-text-remove-horizontal-flex { display: block !important; }`,
         // Remove grids, e.g. https://www.washingtonpost.com/business/2022/02/27/bp-russia-rosneft-ukraine or https://www.trickster.dev/post/decrypting-your-own-https-traffic-with-wireshark/
