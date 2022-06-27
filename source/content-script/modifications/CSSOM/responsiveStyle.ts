@@ -1,3 +1,4 @@
+import { pxToNumber } from "../../../common/css";
 import { PageModifier, trackModifierExecution } from "../_interface";
 import CSSOMProvider, {
     isMediaRule,
@@ -41,6 +42,14 @@ export default class ResponsiveStyleModifier implements PageModifier {
                     position &&
                     (position === "fixed" || position === "sticky")
                 ) {
+                    // allow full-page containers, e.g. https://developer.android.com/codelabs/basic-android-kotlin-training-shared-viewmodel?continue=https%3A%2F%2Fdeveloper.android.com%2Fcourses%2Fpathways%2Fandroid-basics-kotlin-unit-3-pathway-4%23codelab-https%3A%2F%2Fdeveloper.android.com%2Fcodelabs%2Fbasic-android-kotlin-training-shared-viewmodel#5
+                    if (
+                        pxToNumber(rule.style.top) === 0 &&
+                        pxToNumber(rule.style.bottom) === 0
+                    ) {
+                        continue;
+                    }
+
                     this.fixedPositionRules.push(rule);
                 }
             } else if (isSupportsRule(rule)) {
