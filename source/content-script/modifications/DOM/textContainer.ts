@@ -506,7 +506,7 @@ export default class TextContainerModifier implements PageModifier {
                 border: none !important;
                 background: none !important;
                 box-shadow: none !important;
-                z-index: 1 !important;
+                z-index: 1000 !important;
                 overflow: visible !important;
             }
             /* more strict cleanup for main text containers */
