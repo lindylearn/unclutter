@@ -78,17 +78,9 @@ export async function togglePageView() {
         // restore original page
         transitions.transitionOut();
         disablePageView();
-        return;
 
-        // but keep animated elements in uncluttered position
-
-        await new Promise((r) => setTimeout(r, 10));
-
-        // trigger computed animation
-        transitions.executeReverseAnimation();
-
-        // cleanup DOM, save state
-
+        // later fixes
+        await new Promise((r) => setTimeout(r, 100));
         transitions.afterTransitionOut();
 
         return false;

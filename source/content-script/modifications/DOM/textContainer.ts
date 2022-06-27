@@ -451,12 +451,11 @@ export default class TextContainerModifier implements PageModifier {
         );
     }
 
-    removeContainerStyles() {
-        this.classNamesObserver.disconnect();
-
+    // remove container styles that don't break the layout faster
+    removeOverrideStyles() {
         document
             .querySelectorAll(
-                "#lindy-text-chain-override, #lindy-text-node-overrides, #lindy-font-size, #lindy-dark-mode-text"
+                "#lindy-text-node-overrides, #lindy-font-size, #lindy-dark-mode-text"
             )
             .forEach((e) => e.remove());
 
@@ -465,6 +464,14 @@ export default class TextContainerModifier implements PageModifier {
                 elem.style.removeProperty(key);
             }
         });
+    }
+
+    removeContainerStyles() {
+        this.classNamesObserver.disconnect();
+
+        document
+            .querySelectorAll("#lindy-text-chain-override")
+            .forEach((e) => e.remove());
 
         this.animationLayerTransforms.map(([node, { scaleX }]) => {
             node.style.removeProperty("transition");

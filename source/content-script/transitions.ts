@@ -178,6 +178,13 @@ export default class TransitionManager implements PageModifier {
         // undo hardcoded styles
         this.backgroundModifier.unObserveHeightChanges();
         this.bodyStyleModifier.beforeTransitionOut();
+
+        // ideally perform all style undos here to make transition look nicer
+
+        // restore original style
+        this.responsiveStyleModifier.disableResponsiveStyles();
+        this.stylePatchesModifier.transitionIn();
+        this.textContainerModifier.removeOverrideStyles();
     }
 
     executeReverseAnimation() {
@@ -196,10 +203,6 @@ export default class TransitionManager implements PageModifier {
         this.textContainerModifier.removeContainerStyles();
         this.bodyStyleModifier.transitionOut();
 
-        // restore original layout
-        this.responsiveStyleModifier.disableResponsiveStyles();
-        this.stylePatchesModifier.transitionIn();
-
         // undo element block
         this.responsiveStyleModifier.unblockFixedElements();
         this.elementPickerModifier.transitionOut();
@@ -207,14 +210,13 @@ export default class TransitionManager implements PageModifier {
     }
 
     afterTransitionOut() {
-        this.cssomProvider.reenableOriginalStylesheets();
+        this.backgroundModifier.removeBackground();
 
         // remove rest
         document
-            .querySelectorAll(`.${overrideClassname}`)
+            .querySelectorAll(
+                `.${overrideClassname}:not(.lindy-stylesheet-proxy)`
+            ) // keep proxied stylesheets active for faster re-enable
             .forEach((e) => e.remove());
-
-        // final cleanup, includes removing animation settings
-        this.bodyStyleModifier.afterTransitionOut();
     }
 }

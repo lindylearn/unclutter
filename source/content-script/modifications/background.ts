@@ -42,6 +42,10 @@ export default class BackgroundModifier implements PageModifier {
         document.body.appendChild(this.backgroundElement);
     }
 
+    removeBackground() {
+        this.backgroundElement.remove();
+    }
+
     // scale-up background to entire screen width using transform (performant to animate)
     private scaleUpWidthToPage() {
         const initialScale =
