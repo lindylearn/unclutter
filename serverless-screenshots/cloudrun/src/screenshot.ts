@@ -21,7 +21,32 @@ export async function captureUrl(
         });
     } catch {}
 
-    await new Promise((r) => setTimeout(r, 2500));
+    await new Promise((r) => setTimeout(r, 3000));
+
+    // clean up page for screenshot
+    await page.evaluate(() => {
+        console.log("patching!");
+        document.documentElement.style.setProperty(
+            "background",
+            "transparent",
+            "important"
+        );
+        document.documentElement.style.setProperty(
+            "--lindy-active-font-size",
+            "20px"
+        );
+        document.documentElement.style.setProperty(
+            "--lindy-pagewidth",
+            "750px"
+        );
+        document.body.style.removeProperty("box-shadow");
+
+        document.getElementById("lindy-page-settings-pageadjacent")?.remove();
+
+        // trigger rerender
+        document.body.getBoundingClientRect();
+    });
+    await new Promise((r) => setTimeout(r, 1000));
 
     const body = await page.$("body");
     if (!body) {
@@ -29,15 +54,27 @@ export async function captureUrl(
         return;
     }
     const bodyPos = await body.boundingBox();
-    await page.screenshot({
+    await body.screenshot({
         path: `${localScreenshotsPath}/${getUrlFilename(url)}`,
+        type: "webp",
         clip: {
-            x: bodyPos!.x - 10,
-            y: bodyPos!.y - 10,
-            width: bodyPos!.width + 20 + 10,
-            height: 1100,
+            x: bodyPos!.x,
+            y: bodyPos!.y,
+            width: bodyPos!.width,
+            height: 900,
         },
+        omitBackground: true,
     });
+    // await page.screenshot({
+    //     path: `${localScreenshotsPath}/${getUrlFilename(url)}`,
+    //     clip: {
+    //         x: bodyPos!.x,
+    //         y: bodyPos!.y,
+    //         width: bodyPos!.width - 20,
+    //         height: 900,
+    //     },
+    //     omitBackground: true,
+    // });
 
     await page.close();
 }
@@ -46,5 +83,5 @@ export function getUrlFilename(url: string) {
     const urlObj = new URL(url);
     const urlString = `${urlObj.origin}${urlObj.pathname}`.slice(0, 150);
 
-    return `${encodeURIComponent(urlString)}.png`;
+    return `${encodeURIComponent(urlString)}.webp`;
 }

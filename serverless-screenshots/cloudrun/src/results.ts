@@ -52,6 +52,9 @@ export async function uploadResults(prefix: string) {
                 .bucket(bucketName)
                 .upload(`${localScreenshotsPath}/${file}`, {
                     destination: `${prefix}/current/${file}`,
+                    metadata: {
+                        cacheControl: "no-store",
+                    },
                 });
         })
     );
@@ -63,14 +66,15 @@ export async function uploadResults(prefix: string) {
                 .bucket(bucketName)
                 .upload(`${diffScreenshotsPath}/${file}`, {
                     destination: `${prefix}/diff/${file}`,
+                    metadata: {
+                        cacheControl: "no-store",
+                    },
                 });
         })
     );
 }
 
 export async function downloadExtensionCode() {
-    execSync("rm extension.zip");
-
     await storage
         .bucket(bucketName)
         .file(`extension.zip`)
