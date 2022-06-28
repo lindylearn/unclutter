@@ -79,7 +79,7 @@ function Home() {
         await triggerScreenshots(
             urls.slice(0, countRef.current.value),
             prefixRef.current.value,
-            10
+            5
         );
 
         setIsTriggering(false);
@@ -94,30 +94,30 @@ function Home() {
     return (
         <div className="">
             <header className="mt-5 flex items-center justify-center gap-5">
-                <div className="text-2xl font-bold text-center">
+                <div className="text-center text-2xl font-bold">
                     Unclutter Screenshot Tester
                 </div>
-                <div className="flex gap-2 items-center">
+                <div className="flex items-center gap-2">
                     <input
-                        className="w-20 px-1 py-0.5 shadow rounded"
+                        className="w-20 rounded px-1 py-0.5 shadow"
                         defaultValue={""}
                         placeholder="prefix"
                         ref={prefixRef}
                     />
                     <input
-                        className="w-20 px-1 py-0.5 shadow rounded"
+                        className="w-20 rounded px-1 py-0.5 shadow"
                         defaultValue={20}
                         ref={countRef}
                     />
 
                     <button
-                        className="bg-yellow-400 rounded text-lg px-1 shadow hover:shadow-md transition-all"
+                        className="rounded bg-yellow-400 px-1 text-lg shadow transition-all hover:shadow-md"
                         onClick={trigger}
                     >
                         Trigger
                     </button>
                     <button
-                        className="bg-yellow-400 rounded text-lg px-1 shadow hover:shadow-md transition-all"
+                        className="rounded bg-yellow-400 px-1 text-lg shadow transition-all hover:shadow-md"
                         onClick={fetchResults}
                     >
                         Fetch
@@ -128,7 +128,7 @@ function Home() {
 
             <main className="mt-5">
                 <div>
-                    <div className="text-lg ml-3 mb-3">
+                    <div className="ml-3 mb-3 text-lg">
                         {changedScreenshots.length} Changed pages
                     </div>
                     <div className="flex flex-wrap gap-5">
@@ -139,7 +139,7 @@ function Home() {
                 </div>
 
                 <div>
-                    <div className="text-lg ml-3 mb-3">
+                    <div className="ml-3 mb-3 text-lg">
                         {currentScreenshots.length} Current pages
                     </div>
                     <div className="flex flex-wrap gap-5">
@@ -159,13 +159,13 @@ function Screenshot({ name }) {
 
     return (
         <a
-            className="cursor-pointer hover:shadow-xl transition-all"
+            className="cursor-pointer transition-all hover:shadow-xl"
             href={url}
             target="_blank"
         >
             <img
                 className="w-72"
-                src={`https://storage.cloud.google.com/unclutter-screenshots-serverless/${name.replaceAll(
+                src={`https://storage.googleapis.com/unclutter-screenshots-serverless/${name.replaceAll(
                     "%",
                     "%25"
                 )}`}
