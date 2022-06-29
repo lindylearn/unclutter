@@ -179,6 +179,8 @@ export const blockedWords = [
     "breaking", // https://www.cbsnews.com/boston/news/simone-biles-aly-raisman-gymnasts-larry-nassar-fbi-lawsuit/
     "recent", // https://thehustle.co/06062022-social-audio/
     "notification", // https://garymarcus.substack.com/p/nonsense-on-stilts?s=r
+    "ticker", // https://edition.cnn.com/2022/06/19/energy/germany-russia-gas-supplies-winter-intl/index.html
+    "ribbon", // https://edition.cnn.com/2022/06/19/energy/germany-russia-gas-supplies-winter-intl/index.html
 
     // related articles
     "related",

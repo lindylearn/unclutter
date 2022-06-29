@@ -37,9 +37,14 @@ export default class ElementPickerModifier implements PageModifier {
     }
 
     transitionIn() {
+        if (this.pageSelectors.length === 0) {
+            return;
+        }
+
+        // override text container protection
         const css = `${this.pageSelectors.join(
             ", "
-        )} { display: none !important; }`;
+        )}:not(#fakeID#fakeID#fakeID#fakeID#fakeID) { display: none !important; }`;
         createStylesheetText(css, "element-picker-block");
     }
 
@@ -226,15 +231,7 @@ export default class ElementPickerModifier implements PageModifier {
             return `#${node.id}`;
         }
         const nonLindyClasses = [...node.classList].filter(
-            (className) =>
-                ![
-                    lindyContainerClass,
-                    lindyHeadingContainerClass,
-                    lindyImageContainerClass,
-                    lindyMainContentContainerClass,
-                    lindyMainHeaderContainerClass,
-                    lindyFirstMainContainerClass,
-                ].includes(className)
+            (className) => !className.startsWith("lindy-")
         );
 
         if (nonLindyClasses.length) {

@@ -735,7 +735,8 @@ export default class TextContainerModifier implements PageModifier {
     // Collect overrides for specific container elements (insert as stylesheet for easy unpatching)
     private overrideCssDeclarations = [
         // Remove horizontal flex partitioning, e.g. https://www.nationalgeographic.com/science/article/the-controversial-quest-to-make-a-contagious-vaccine
-        `.lindy-text-remove-horizontal-flex:not(#fakeID#fakeID#fakeID#fakeID) { 
+        // be careful to not override content block
+        `.lindy-text-remove-horizontal-flex {
             display: block !important; 
         }`,
         // Remove grids, e.g. https://www.washingtonpost.com/business/2022/02/27/bp-russia-rosneft-ukraine or https://www.trickster.dev/post/decrypting-your-own-https-traffic-with-wireshark/
