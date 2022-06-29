@@ -31,12 +31,13 @@ html.pageview.pageview > body {
     top: 0 !important;
     left: 0 !important;
     width: 100% !important;
+    max-width: none !important;
     z-index: -100 !important;
     content: "" !important;
-    background: inherit;
+    background: inherit !important;
     transition: transform 0.4s cubic-bezier(0.33, 1, 0.68, 1),
-        background 0.4s cubic-bezier(0.33, 1, 0.68, 1); /* easeOutCubic */
-    will-change: transform, background;
+        background 0.4s cubic-bezier(0.33, 1, 0.68, 1) !important; /* easeOutCubic */
+    will-change: transform, background !important;
 
     border-radius: 10px !important;
     box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1) !important;

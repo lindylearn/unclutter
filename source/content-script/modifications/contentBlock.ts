@@ -228,6 +228,8 @@ export const blockedWords = [
     "extra", // https://arxiv.org/abs/2206.02871
     "contacts", // https://www.europarl.europa.eu/news/en/press-room/20220613IPR32838/eu-covid-certificate-meps-and-council-agree-to-extend-rules-for-another-year
     "home", // https://blog.cryptographyengineering.com/2022/06/09/in-defense-of-cryptocurrency/
+
+    "search", // https://blog.thunderbird.net/2022/06/thunderbird-102-released-a-serious-upgrade-to-your-communication/
 ];
 export const blockedSpecificSelectors = [
     // ads (be careful as 'ad' may appear in other words)
