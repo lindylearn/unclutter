@@ -100,7 +100,7 @@ export default class TextContainerModifier implements PageModifier {
             this.processElement(elem, "header");
         });
 
-        // search images
+        // search images inside header
         this.validatedNodes = new Set();
         document.body
             .querySelectorAll(globalImageSelector)
@@ -347,7 +347,7 @@ export default class TextContainerModifier implements PageModifier {
                 return false;
             }
 
-            // check if element is main text or header
+            // check if text element is main text container
             if (
                 stackType === "text" &&
                 !isMainStack &&
@@ -379,6 +379,18 @@ export default class TextContainerModifier implements PageModifier {
                     // console.log(activeStyle.backgroundColor, elem);
                     this.backgroundColors.push(activeStyle.backgroundColor);
                 }
+            }
+
+            // test if previous classes are still accurate
+            const previousNodeClasses = this.nodeClasses.get(currentElem);
+            if (
+                stackType === "image" &&
+                previousNodeClasses?.includes(lindyHeadingContainerClass) &&
+                currentElem.childElementCount <= 1
+            ) {
+                // previously detected heading container is really just an image
+                // only use image classes to avoid messing up image padding, e.g. on https://gamerant.com/play-assassins-creed-syndicate-2021-traditional-assassins-creed/
+                this.nodeClasses.set(currentElem, []);
             }
 
             // save classes to add
@@ -779,6 +791,7 @@ export default class TextContainerModifier implements PageModifier {
                 const valueFloat = parseFloat(value.replace("px", ""));
 
                 if (value.startsWith("-")) {
+                    // always remove negative margins
                     classes.push(`lindy-clean-${property}`);
                     return;
                 }
@@ -1082,7 +1095,7 @@ export default class TextContainerModifier implements PageModifier {
 
         if (
             node.tagName.toLowerCase() === "tbody" &&
-            node.childNodes.length >= 5
+            node.childElementCount >= 5
         ) {
             // leave actual tables in original formatting, e.g. https://developers.facebook.com/docs/meta-pixel/reference#standard-events
             // but try to process tables used for layout, e.g. http://www.paulgraham.com/weird.html
