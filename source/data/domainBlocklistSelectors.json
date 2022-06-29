@@ -64,5 +64,5 @@
     ],
     "christianitytoday.com": [".article-embed"],
     "news.yahoo.com": ["#close-button-section"],
-    "edition.cnn.com": [".ticker-ribbon.lindy-text-remove-horizontal-flex"]
+    "edition.cnn.com": [".ticker-ribbon"]
 }
