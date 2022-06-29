@@ -42,9 +42,10 @@
 
     let reportedPage: boolean = false;
     function reportPage() {
-        reportedPage = true;
-
-        reportPageContentScript();
+        if (!reportedPage) {
+            reportedPage = true;
+            reportPageContentScript();
+        }
     }
 
     function toggleElementBlocker() {
@@ -176,5 +177,8 @@
 
     .lindy-bugreport-flag {
         background-color: #edd75b;
+    }
+    .lindy-bugreport-flag.lindy-pressed {
+        cursor: default;
     }
 </style>
