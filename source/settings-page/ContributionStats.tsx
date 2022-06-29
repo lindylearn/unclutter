@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
-import {
-    getAllElementBlockSelectors,
-    getPageReportCount,
-} from "../common/storage2";
+import { getPageReportCount } from "../common/storage";
+import { getAllElementBlockSelectors } from "../common/storage2";
 
 export default function ContributionStats() {
     const [reportCount, setReportCount] = useState(0);

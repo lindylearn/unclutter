@@ -44,12 +44,6 @@
     function reportPage() {
         reportedPage = true;
 
-        // setTimeout(() => {
-        //     reportedPage = false;
-        // }, 3000);
-        // return;
-
-        incrementPageReportCount();
         reportPageContentScript();
     }
 

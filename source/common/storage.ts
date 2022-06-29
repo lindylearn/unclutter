@@ -83,6 +83,11 @@ export async function mergeUserTheme(partialTheme: UserTheme): Promise<void> {
     await browser.storage.sync.set({ "custom-global-theme": themeConfig });
 }
 
+export async function getPageReportCount(): Promise<number> {
+    const config = await browser.storage.sync.get(["reported-pages-count"]);
+    return config["reported-pages-count"] || 0;
+}
+
 export async function incrementPageReportCount(): Promise<void> {
     const config = await browser.storage.sync.get(["reported-pages-count"]);
     await browser.storage.sync.set({
