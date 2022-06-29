@@ -17,6 +17,7 @@ const globalHeadingSelector =
     "h1, h2, h3, h4, header, [class*='head' i], [class*='title' i]";
 const headingClassWordlist = ["header", "heading", "title", "article-details"]; // be careful here
 const globalImageSelector = "img, picture, figure, video";
+const textContainerExcludedTags = ["blockquote", "code", "pre"];
 
 const headingTags = globalHeadingSelector.split(", ");
 
@@ -1073,9 +1074,18 @@ export default class TextContainerModifier implements PageModifier {
     // very carefully exclude elements as text containers to avoid incorrect main container selection for small articles
     // this doesn't mean these elements will be removed, but they might
     private shouldExcludeAsTextContainer(node: HTMLElement) {
-        if (["BLOCKQUOTE", "CODE", "PRE"].includes(node.tagName)) {
+        if (textContainerExcludedTags.includes(node.tagName.toLowerCase())) {
             // leave style of quotes intact
             // e.g. https://knowledge.wharton.upenn.edu/article/how-price-shocks-in-formative-years-scar-consumption-for-life/
+            return true;
+        }
+
+        if (
+            node.tagName.toLowerCase() === "tbody" &&
+            node.childNodes.length >= 5
+        ) {
+            // leave actual tables in original formatting, e.g. https://developers.facebook.com/docs/meta-pixel/reference#standard-events
+            // but try to process tables used for layout, e.g. http://www.paulgraham.com/weird.html
             return true;
         }
 
