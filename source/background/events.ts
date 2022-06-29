@@ -100,6 +100,13 @@ browser.runtime.onMessage.addListener(
             tabsManager.setSocialAnnotationsCount(sender.tab.id, message.count);
         } else if (message.event === "reportBrokenPage") {
             handleReportBrokenPage(message.data);
+        } else if (message.event === "openLinkWithUnclutter") {
+            browser.tabs.create({ url: message.url, active: true }, (tab) => {
+                // need to wait until loaded, as have no permissions on new tab page
+                setTimeout(() => {
+                    injectScript(tab.id, "content-script/enhance.js");
+                }, 1000);
+            });
         }
 
         return false;

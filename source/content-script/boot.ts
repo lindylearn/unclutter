@@ -44,8 +44,8 @@ async function boot() {
         isLikelyArticle(domain);
     }
 
-    if (domain === "unclutter.lindylearn.io") {
-        listenForTutorialPageEvents();
+    if (["unclutter.lindylearn.io", "localhost"].includes(domain)) {
+        listenForPageEvents();
     }
 }
 
@@ -82,10 +82,15 @@ function enablePageView(trigger) {
 }
 
 // handle events from unclutter.lindylearn.io/welcome
-function listenForTutorialPageEvents() {
+function listenForPageEvents() {
     window.addEventListener("message", function (event) {
         if (event.data.type === "openUnclutterOptionsPage") {
             browser.runtime.sendMessage({ event: "openOptionsPage" });
+        } else if (event.data.type === "openLinkWithUnclutter") {
+            browser.runtime.sendMessage({
+                event: "openLinkWithUnclutter",
+                url: event.data.url,
+            });
         }
     });
 }
