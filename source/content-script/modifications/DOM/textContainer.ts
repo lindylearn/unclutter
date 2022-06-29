@@ -735,15 +735,17 @@ export default class TextContainerModifier implements PageModifier {
     // Collect overrides for specific container elements (insert as stylesheet for easy unpatching)
     private overrideCssDeclarations = [
         // Remove horizontal flex partitioning, e.g. https://www.nationalgeographic.com/science/article/the-controversial-quest-to-make-a-contagious-vaccine
-        `.lindy-text-remove-horizontal-flex { display: block !important; }`,
+        `.lindy-text-remove-horizontal-flex:not(#fakeID#fakeID#fakeID#fakeID) { 
+            display: block !important; 
+        }`,
         // Remove grids, e.g. https://www.washingtonpost.com/business/2022/02/27/bp-russia-rosneft-ukraine or https://www.trickster.dev/post/decrypting-your-own-https-traffic-with-wireshark/
-        `.lindy-text-remove-grid { 
+        `.lindy-text-remove-grid:not(#fakeID#fakeID#fakeID#fakeID) { 
             display: block !important;
             grid-template-columns: 1fr !important;
             grid-template-areas: none !important;
             column-gap: 0 !important;
         }`,
-        `.lindy-header-font-size-max {
+        `.lindy-header-font-size-max:not(#fakeID#fakeID#fakeID#fakeID) {
             font-size: 50px !important;
             line-height: 1em !important;
         }`,

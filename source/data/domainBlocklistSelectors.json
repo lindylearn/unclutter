@@ -62,5 +62,6 @@
         "#piano__post_body-desktop-1",
         "#piano__post_body-desktop-2"
     ],
-    "christianitytoday.com": [".article-embed"]
+    "christianitytoday.com": [".article-embed"],
+    "news.yahoo.com": ["#close-button-section"]
 }
