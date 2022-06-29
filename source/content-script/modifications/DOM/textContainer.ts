@@ -828,13 +828,14 @@ export default class TextContainerModifier implements PageModifier {
         const parentStyle = window.getComputedStyle(node.parentElement);
 
         // flex and grid layouts are removed via _getNodeOverrideClasses() above, so save max-width on children to retain width without siblings
-        if (
-            (parentStyle.display === "flex" &&
-                parentStyle.flexDirection === "row") ||
-            parentStyle.display === "grid"
-        ) {
-            styleTweaks["max-width"] = `${nodeBox.width}px`;
-        }
+        // still need this? causes issues on https://www.newyorker.com/magazine/1982/07/12/baby-the-rain-must-fall
+        // if (
+        //     (parentStyle.display === "flex" &&
+        //         parentStyle.flexDirection === "row") ||
+        //     parentStyle.display === "grid"
+        // ) {
+        //     styleTweaks["max-width"] = `${nodeBox.width}px`;
+        // }
 
         if (Object.keys(styleTweaks).length > 0) {
             this.inlineStyleTweaks.push([node, styleTweaks]);
