@@ -65,5 +65,13 @@
     "christianitytoday.com": [".article-embed"],
     "news.yahoo.com": ["#close-button-section"],
     "themarginalian.org": ["#social", "#article_share"],
-    "edition.cnn.com": [".ticker-ribbon"]
+    "edition.cnn.com": [".ticker-ribbon"],
+    "denizlihaber.com": [
+        "#topbtns",
+        ".ap.ap-615.ap-xpm-615",
+        ".passbnd",
+        ".ap.ap-300x400.casad01",
+        ".wide.lindy-clean-margin-top",
+        ".ap.ap-615.ap-xpe"
+    ]
 }
