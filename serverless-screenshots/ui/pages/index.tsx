@@ -154,7 +154,7 @@ function Home() {
 }
 
 function Screenshot({ name }) {
-    const fileName = name.split("/")[2].split(".png")[0];
+    const fileName = name.split("/")[2].split(".webp")[0];
     const url = decodeURIComponent(fileName);
 
     return (
