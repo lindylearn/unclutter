@@ -1095,7 +1095,7 @@ export default class TextContainerModifier implements PageModifier {
 
         if (
             node.tagName.toLowerCase() === "tbody" &&
-            node.childElementCount >= 5
+            node.childElementCount >= 4
         ) {
             // leave actual tables in original formatting, e.g. https://developers.facebook.com/docs/meta-pixel/reference#standard-events
             // but try to process tables used for layout, e.g. http://www.paulgraham.com/weird.html

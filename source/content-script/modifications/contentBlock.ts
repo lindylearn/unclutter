@@ -279,6 +279,7 @@ export const blockedSpecificSelectors = [
     ".post-info", // https://theantistartup.com/i-stopped-advertising-everywhere-and-nothing-happened/
     "#topMetaLang", // https://www.dw.com/en/germany-takes-first-step-towards-relaxing-cannabis-law/a-62120448
     ".sr-only", // https://arxiv.org/abs/2206.02871
+    ".header-link", // https://lazywinadmin.com/2013/10/powershell-using-adsi-with-alternate.html
 
     ".Post-header-grid", // https://theintercept.com/2022/06/13/progressive-organizing-infighting-callout-culture/
 
