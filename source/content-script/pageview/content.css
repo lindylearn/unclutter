@@ -25,7 +25,8 @@ html.pageview.pageview > body {
     transition: background 0.3s ease-in-out;
 }
 
-#lindy-body-background#lindy-body-background#lindy-body-background {
+/* needs to override text container children selector */
+#lindy-body-background:not(#fakeID#fakeID#fakeID#fakeID#fakeID) {
     position: absolute !important;
     top: 0 !important;
     left: 0 !important;
