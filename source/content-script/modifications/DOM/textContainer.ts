@@ -521,6 +521,7 @@ export default class TextContainerModifier implements PageModifier {
                 box-shadow: none !important;
                 z-index: 1000 !important;
                 overflow: visible !important;
+                float: none !important;
             }
             /* more strict cleanup for main text containers */
             .${lindyMainContentContainerClass}:not(#fakeID#fakeID#fakeID):not(body) {
@@ -551,7 +552,6 @@ export default class TextContainerModifier implements PageModifier {
                 padding-left: 0 !important;
                 padding-right: 0 !important;
                 height: auto;
-                float: none !important;
             }
             /* heading style tweaks */
             .${lindyHeadingContainerClass}:before, 
