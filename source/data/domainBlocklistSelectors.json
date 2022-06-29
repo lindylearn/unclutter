@@ -63,5 +63,6 @@
         "#piano__post_body-desktop-2"
     ],
     "christianitytoday.com": [".article-embed"],
-    "news.yahoo.com": ["#close-button-section"]
+    "news.yahoo.com": ["#close-button-section"],
+    "edition.cnn.com": [".ticker-ribbon.lindy-text-remove-horizontal-flex"]
 }
