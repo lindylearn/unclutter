@@ -65,5 +65,6 @@
     "christianitytoday.com": [".article-embed"],
     "news.yahoo.com": ["#close-button-section"],
     "themarginalian.org": ["#social", "#article_share"],
-    "edition.cnn.com": [".ticker-ribbon"]
+    "edition.cnn.com": [".ticker-ribbon"],
+    "thewalrus.ca": ["._form-content", ".code-block.code-block-4"]
 }
