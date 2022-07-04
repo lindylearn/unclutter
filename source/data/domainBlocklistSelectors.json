@@ -66,5 +66,23 @@
     "news.yahoo.com": ["#close-button-section"],
     "themarginalian.org": ["#social", "#article_share"],
     "edition.cnn.com": [".ticker-ribbon"],
-    "thewalrus.ca": ["._form-content", ".code-block.code-block-4"]
+    "thewalrus.ca": ["._form-content", ".code-block.code-block-4"],
+    "businessinsider.com": [".the-refresh-summary-list"],
+    "nytimes.com": [".css-vxcmzt"],
+    "eff.org": [".element-invisible.element-focusable"],
+    "mullvad.net": ["#connection-status"],
+    "kotaku.com": [
+        ".ag987e-0.jWLdUN.btn.btn-play",
+        ".video-html5-player",
+        ".sc-14ojfpu-5.jdlHci",
+        ".sc-1wkneyl-0.hxLRyg.video-html5-playlist",
+        ".bxm4mm-3.eCMXYG"
+    ],
+    "denizlihaber.com": [
+        "#topbtns",
+        ".combox",
+        ".passbnd",
+        ".ilce_side",
+        ".ap.ap-615.ap-xpe"
+    ]
 }
