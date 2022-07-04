@@ -66,6 +66,7 @@
     "news.yahoo.com": ["#close-button-section"],
     "themarginalian.org": ["#social", "#article_share"],
     "edition.cnn.com": [".ticker-ribbon"],
+    "nytimes.com": [".css-vxcmzt"],
     "eff.org": [".element-invisible.element-focusable"],
     "mullvad.net": ["#connection-status"],
     "kotaku.com": [
