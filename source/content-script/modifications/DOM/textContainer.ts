@@ -1062,8 +1062,9 @@ export default class TextContainerModifier implements PageModifier {
                 node.style.setProperty("left", "0", "important"); // e.g. xkcd.com
                 node.style.setProperty("display", "block", "important"); // can only animate blocks?
 
-                // put on new layer
-                node.style.setProperty("will-change", "transform");
+                // will-change sometimes causes blur after transition done (e.g. on https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Your_first_WebExtension)
+                // transform alone should already trigger layer creation
+                // node.style.setProperty("will-change", "transform");
             }
         );
     }
@@ -1111,6 +1112,9 @@ export default class TextContainerModifier implements PageModifier {
                 "module-moreStories", // https://news.yahoo.com/thailand-legalizes-growing-consumption-marijuana-135808124.html
                 "comments", // https://leslefts.blogspot.com/2013/11/the-great-medieval-water-myth.html
             ].includes(node.id) ||
+            [
+                "notecard", // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Your_first_WebExtension
+            ].some((className) => node.classList.contains(className)) ||
             node.getAttribute("aria-hidden") === "true"
         ) {
             return true;

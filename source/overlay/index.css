@@ -9,6 +9,7 @@
 
 .lindy-allowed-iframe {
     min-width: 0 !important;
+    border: none !important;
 }
 .lindy-page-settings-toprght {
     all: revert;
