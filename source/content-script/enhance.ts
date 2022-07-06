@@ -59,6 +59,9 @@ export async function togglePageView() {
         requestAnimationFrame(() => {
             transitions.prepareAnimation();
         });
+
+        // wait for transitionIn() updates to finish before triggering animation
+        // if the page re-render takes longer than 10ms, the text animation will be skipped
         await new Promise((r) => setTimeout(r, 10));
 
         // trigger computed animation

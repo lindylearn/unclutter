@@ -1050,6 +1050,12 @@ export default class TextContainerModifier implements PageModifier {
 
     // put text containers in same place as before content block, but positioned using CSS transforms
     private positionAnimationLayers() {
+        // requestAnimationFrame() may execute this after executeAnimation() below, which breaks the page layout
+        // See https://github.com/lindylearn/unclutter/issues/132
+        if (this.executedAnimation) {
+            return;
+        }
+
         this.animationLayerTransforms.map(
             ([node, { translateX, translateY, scaleX }]) => {
                 let transform = `translate(${translateX}px, ${translateY}px)`;
@@ -1069,6 +1075,7 @@ export default class TextContainerModifier implements PageModifier {
         );
     }
 
+    private executedAnimation = false;
     executeAnimation() {
         this.animationLayerTransforms.map(([node, { scaleX }]) => {
             node.style.setProperty(
@@ -1083,6 +1090,7 @@ export default class TextContainerModifier implements PageModifier {
             }
             node.style.setProperty("transform", transform, "important");
         });
+        this.executedAnimation = true;
     }
 
     executeReverseAnimation() {
