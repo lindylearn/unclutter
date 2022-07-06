@@ -881,7 +881,7 @@ picture {
 }
 
 /* https://www.sciencehistory.org/distillations/mouse-heaven-or-mouse-hell */
-iframe {
+iframe:not(.lindy-allowed-iframe) {
     max-width: 100% !important;
 }
 

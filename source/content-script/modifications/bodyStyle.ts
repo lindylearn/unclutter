@@ -40,7 +40,7 @@ export default class BodyStyleModifier implements PageModifier {
         });
 
         // watch for screen size changes
-        const mediaQueryList = window.matchMedia("(max-width: 1200px)");
+        const mediaQueryList = window.matchMedia("(max-width: 1300px)");
         const matchMediaListener = ({ matches }) => {
             this.applyResponsiveStyle(matches);
         };
