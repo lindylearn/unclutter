@@ -860,7 +860,7 @@ export default class TextContainerModifier implements PageModifier {
             return;
         }
 
-        if (stackType === "image" && !isLeafElement) {
+        if (stackType === "image" && (!isLeafElement || nodeBox.height < 100)) {
             // further filtered down in prepareAnimation()
             return;
         }
@@ -1066,7 +1066,9 @@ export default class TextContainerModifier implements PageModifier {
                 node.style.setProperty("transform", transform, "important");
 
                 node.style.setProperty("left", "0", "important"); // e.g. xkcd.com
-                node.style.setProperty("display", "block", "important"); // can only animate blocks?
+
+                // need this?
+                // node.style.setProperty("display", "block", "important");
 
                 // will-change sometimes causes blur after transition done (e.g. on https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Your_first_WebExtension)
                 // transform alone should already trigger layer creation
