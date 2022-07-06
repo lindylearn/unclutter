@@ -884,3 +884,8 @@ picture {
 iframe {
     max-width: 100% !important;
 }
+
+/* https://nautil.us/how-are-the-bees-20772/ */
+.lindy-image-container > figcaption {
+    display: block !important;
+}
