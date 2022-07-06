@@ -85,5 +85,6 @@
         ".ilce_side",
         ".ap.ap-615.ap-xpe"
     ],
-    "tomsguide.com": [".bordeaux-filled-slot"]
+    "tomsguide.com": [".bordeaux-filled-slot"],
+    "nautil.us": [".article-action-list"]
 }
