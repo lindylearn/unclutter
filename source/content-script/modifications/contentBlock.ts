@@ -161,6 +161,7 @@ export const blockedWords = [
     "member", // https://spectrum.ieee.org/commodore-64
     "subscription", // https://dx.tips/the-end-of-localhost
     "plea", // https://fortune.com/2022/06/12/if-you-thought-the-tech-rout-was-bad-spare-a-dime-for-retailers/
+    "onesignal", // https://www.tomsguide.com/face-off/macbook-air-vs-macbook-pro
 
     // banners
     "banner", // https://nautil.us/why-people-feel-like-victims-9728/
@@ -181,6 +182,7 @@ export const blockedWords = [
     "notification", // https://garymarcus.substack.com/p/nonsense-on-stilts?s=r
     "ticker", // https://edition.cnn.com/2022/06/19/energy/germany-russia-gas-supplies-winter-intl/index.html
     "ribbon", // https://edition.cnn.com/2022/06/19/energy/germany-russia-gas-supplies-winter-intl/index.html
+    "widget", // https://www.sciencehistory.org/distillations/mouse-heaven-or-mouse-hell
 
     // related articles
     "related",
@@ -315,6 +317,8 @@ export const blockedSpecificSelectors = [
     ".PostSocial", // https://theintercept.com/2022/06/14/amazon-ring-camera-police-privacy-ed-markey/
     ".share-module", // https://pitchfork.com/features/article/10055-how-to-buy-the-best-home-recording-studio-equipment-a-beginners-guide/
     ".highwire-cite-authors", // https://www.biorxiv.org/content/10.1101/2022.05.15.491973v1
+    "#_fbn_", // https://www.geeksforgeeks.org/fasttext-working-and-implementation/
+    ".lightbox-target", // https://www.geeksforgeeks.org/fasttext-working-and-implementation/
 
     // term of contents (Unclutter shows its own outline)
     ".toc",

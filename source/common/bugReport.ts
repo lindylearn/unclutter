@@ -23,7 +23,7 @@ export async function handleReportBrokenPage(data) {
     const browserType = getBrowserType();
     const extensionInfo = await browser.management.getSelf();
 
-    incrementPageReportCount();
+    await incrementPageReportCount();
     const userReportCount = await getPageReportCount();
 
     let base64Screenshot: string;
