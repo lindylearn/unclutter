@@ -80,6 +80,7 @@ async function fetchReddit() {
 
     urls = [...new Set(urls)];
     await fs.writeFile("./urls/reddit.json", JSON.stringify(urls));
+    await fs.writeFile("./urls/reddit.csv", ["url"].concat(urls).join("\n"));
 }
 
 async function convertCSV(
@@ -92,21 +93,29 @@ async function convertCSV(
     const urls = content
         .split("\n")
         .slice(dropFirstLine ? 1 : 0)
-        .map((line) => line.split(columnSep)[column].replaceAll('"', ""))
+        .map((line) => {
+            const parts = line?.replaceAll('"', "").split(columnSep);
+            return {
+                url: parts[column],
+                topic: parts[column + 1],
+            };
+        })
         .filter((url) => url);
 
     await fs.writeFile(`./urls/${fileBase}.json`, JSON.stringify(urls));
 }
 
 async function fetchCSV() {
-    await convertCSV("top_hn_annotations");
-    await convertCSV("recent_hn_annotations");
-    await convertCSV("infeather", false, 1, "	");
+    // await convertCSV("top_hn_annotations");
+    // await convertCSV("recent_hn_annotations");
+    // await convertCSV("infeather", false, 1, "	");
+
+    await convertCSV("topics", true, 1);
 }
 
 async function main() {
-    await fetchHN();
-    await fetchReddit();
+    // await fetchHN();
+    // await fetchReddit();
     await fetchCSV();
 }
 main();

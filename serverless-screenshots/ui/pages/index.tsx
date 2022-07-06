@@ -7,6 +7,8 @@ import recentHnLinks from "../urls/recent_hn_annotations.json";
 import redditLinks from "../urls/reddit.json";
 import topHnLinks from "../urls/top_hn_annotations.json";
 
+import topics from "../urls/urls-topics-100.json";
+
 const gcsToken = "";
 const bucketName = "unclutter-screenshots-serverless";
 
@@ -74,6 +76,8 @@ function Home() {
             urls = recentHnLinks;
         } else if (prefixRef.current.value === "infeather") {
             urls = infeatherLinks;
+        } else if (prefixRef.current.value === "topics") {
+            urls = topics.map((topic) => topic.url);
         }
 
         await triggerScreenshots(
