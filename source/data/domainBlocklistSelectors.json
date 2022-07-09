@@ -87,6 +87,11 @@
     ],
     "tomsguide.com": [".bordeaux-filled-slot"],
     "nautil.us": [".article-action-list"],
+    "autodesk.com": [
+        ".image-style-class-header-1x-desktop.lazyloaded",
+        ".class__active-el",
+        ".visually-hidden.focusable"
+    ],
     "litreactor.com": [
         ".imagecache.imagecache-header-square-tiny.imagecache-default.imagecache-header-square-tiny_default",
         ".imagecache.imagecache-staff-headshot-small.imagecache-linked.imagecache-staff-headshot-small_linked",
