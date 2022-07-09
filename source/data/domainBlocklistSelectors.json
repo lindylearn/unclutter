@@ -86,5 +86,10 @@
         ".ap.ap-615.ap-xpe"
     ],
     "tomsguide.com": [".bordeaux-filled-slot"],
-    "nautil.us": [".article-action-list"]
+    "nautil.us": [".article-action-list"],
+    "autodesk.com": [
+        ".image-style-class-header-1x-desktop.lazyloaded",
+        ".class__active-el",
+        ".visually-hidden.focusable"
+    ]
 }
