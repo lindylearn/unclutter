@@ -102,5 +102,32 @@
         ".text-gray-500.text-xs.mt-10",
         ".mt-10",
         ".mt-4.space-y-4"
-    ]
+    ],
+    "2bobs.com": [".Header-branding-logo", ".Header.Header--top"],
+    "vnexpress.net": [".section.page-detail.bottom-detail"],
+    "thesaigontimes.vn": [
+        ".vc_row_inner.tdi_167.vc_row.vc_inner.wpb_row.td-pb-row",
+        ".td_module_flex.td_module_flex_1.td_module_wrap.td-animation-stack",
+        ".td-block-title-wrap",
+        ".wpb_wrapper.td_block_separator.td_block_wrap.vc_separator.tdi_196.td_separator_solid.td_separator_center",
+        ".vc_row_inner.tdi_182.vc_row.vc_inner.wpb_row.td-pb-row",
+        ".td_block_wrap.td_flex_block_1.td_with_ajax_pagination.td-pb-border-top.td_block_template_1.td_flex_block",
+        ".wpb_wrapper.td_block_separator.td_block_wrap.vc_separator.td_separator_solid.td_separator_center",
+        ".wpb_wrapper.td_block_wrap.td_block_creative.content-tacgia",
+        ".vc_row_inner.vc_row.vc_inner.wpb_row.td-pb-row",
+        ".vc_column.tdi_48.wpb_column.vc_column_container.tdc-column.td-pb-span3",
+        "#tdi_45",
+        ".vc_column.tdi_71.wpb_column.vc_column_container.tdc-column.td-pb-span7",
+        "#tdi_86",
+        "#tdi_99",
+        "#tdi_59"
+    ],
+    "theleader.vn": [
+        ".mangsec-bold",
+        ".news-detail-other-news-title",
+        ".news-detail-other-news-content-item",
+        ".block-list-news-item",
+        ".block-list-news"
+    ],
+    "hdvietnam.org": ["#likes-post-10851880", ".sharePage"]
 }
