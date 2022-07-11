@@ -153,6 +153,7 @@
         all: revert;
     }
     .lindy-theme-ui-row-spacer {
+        display: block !important;
         border-top: 2px solid #f3f4f6;
     }
 
@@ -201,6 +202,7 @@
         flex-grow: 1;
     }
     .lindy-theme-button {
+        display: block !important;
         height: 20px;
 
         border: 2.5px solid #f3f4f6;
