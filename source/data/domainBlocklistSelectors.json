@@ -140,5 +140,6 @@
         ".block-list-news-item",
         ".block-list-news"
     ],
-    "hdvietnam.org": ["#likes-post-10851880", ".sharePage"]
+    "hdvietnam.org": ["#likes-post-10851880", ".sharePage"],
+    "theinformation.com": [".ti-awareness-bar"]
 }
