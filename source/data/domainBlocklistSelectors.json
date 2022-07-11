@@ -96,5 +96,15 @@
         ".imagecache.imagecache-header-square-tiny.imagecache-default.imagecache-header-square-tiny_default",
         ".imagecache.imagecache-staff-headshot-small.imagecache-linked.imagecache-staff-headshot-small_linked",
         "#preface-top-wrapper"
+    ],
+    "cloudemployee.co.uk": [
+        ".scroll.btn.btn-orange-split",
+        ".right-side",
+        ".col-md-4",
+        ".container",
+        ".layout-page",
+        "#job-application-form",
+        ".section-wrapper.hilight-career",
+        ".career-wraper"
     ]
 }
