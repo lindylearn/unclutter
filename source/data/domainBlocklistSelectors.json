@@ -97,6 +97,15 @@
         ".imagecache.imagecache-staff-headshot-small.imagecache-linked.imagecache-staff-headshot-small_linked",
         "#preface-top-wrapper"
     ],
+    "cloudemployee.co.uk": [
+        ".scroll.btn.btn-orange-split",
+        ".right-side",
+        ".col-md-4",
+        ".layout-page",
+        "#job-application-form",
+        ".section-wrapper.hilight-career",
+        ".career-wraper"
+    ],
     "speckle.systems": [
         ".mt-0.w-full.h-20",
         ".text-gray-500.text-xs.mt-10",
@@ -129,5 +138,5 @@
         ".block-list-news-item",
         ".block-list-news"
     ],
-    "hdvietnam.org": ["#likes-post-10851880", ".sharePage"]
+    "hdvietnam.org": ["#likes-post-10851880", ".sharePage"],
 }
