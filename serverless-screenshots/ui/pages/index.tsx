@@ -6,8 +6,7 @@ import infeatherLinks from "../urls/infeather.json";
 import recentHnLinks from "../urls/recent_hn_annotations.json";
 import redditLinks from "../urls/reddit.json";
 import topHnLinks from "../urls/top_hn_annotations.json";
-
-import topics from "../urls/urls-topics-100.json";
+import articles from "../urls/articles.json";
 
 const gcsToken = "";
 const bucketName = "unclutter-screenshots-serverless";
@@ -45,22 +44,22 @@ function Home() {
     async function trigger() {
         setIsTriggering(true);
 
-        await fetch("/api/syncExtensionCode");
+        // await fetch("/api/syncExtensionCode");
 
         // delete previous state
-        await Promise.all(
-            currentScreenshots.concat(changedScreenshots).map(async (file) => {
-                await fetch(
-                    `https://storage.googleapis.com/storage/v1/b/${bucketName}/o/${encodeURIComponent(
-                        file.name
-                    )}`,
-                    {
-                        method: "DELETE",
-                        // headers: { Authorization: `Bearer ${gcsToken}` },
-                    }
-                );
-            })
-        );
+        // await Promise.all(
+        //     currentScreenshots.concat(changedScreenshots).map(async (file) => {
+        //         await fetch(
+        //             `https://storage.googleapis.com/storage/v1/b/${bucketName}/o/${encodeURIComponent(
+        //                 file.name
+        //             )}`,
+        //             {
+        //                 method: "DELETE",
+        //                 // headers: { Authorization: `Bearer ${gcsToken}` },
+        //             }
+        //         );
+        //     })
+        // );
         setCurrentScreenshots([]);
         setChangedScreenshots([]);
 
@@ -76,14 +75,14 @@ function Home() {
             urls = recentHnLinks;
         } else if (prefixRef.current.value === "infeather") {
             urls = infeatherLinks;
-        } else if (prefixRef.current.value === "topics") {
-            urls = topics.map((topic) => topic.url);
+        } else if (prefixRef.current.value === "articles") {
+            urls = articles.slice(3000).map((topic) => topic.url);
         }
 
         await triggerScreenshots(
             urls.slice(0, countRef.current.value),
             prefixRef.current.value,
-            5
+            10
         );
 
         setIsTriggering(false);

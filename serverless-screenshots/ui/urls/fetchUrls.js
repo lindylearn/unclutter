@@ -109,8 +109,7 @@ async function fetchCSV() {
     // await convertCSV("top_hn_annotations");
     // await convertCSV("recent_hn_annotations");
     // await convertCSV("infeather", false, 1, "	");
-
-    await convertCSV("topics", true, 1);
+    // await convertCSV("articles", true, 1);
 }
 
 async function main() {
