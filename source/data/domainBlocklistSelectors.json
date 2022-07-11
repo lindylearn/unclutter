@@ -96,5 +96,6 @@
         ".imagecache.imagecache-header-square-tiny.imagecache-default.imagecache-header-square-tiny_default",
         ".imagecache.imagecache-staff-headshot-small.imagecache-linked.imagecache-staff-headshot-small_linked",
         "#preface-top-wrapper"
-    ]
+    ],
+    "2bobs.com": [".Header-branding-logo", ".Header.Header--top"]
 }
