@@ -111,7 +111,8 @@
         ".mt-0.w-full.h-20",
         ".text-gray-500.text-xs.mt-10",
         ".mt-10",
-        ".mt-4.space-y-4"
+        ".mt-4.space-y-4",
+        ".relative.bg-white.py-14"
     ],
     "2bobs.com": [".Header-branding-logo", ".Header.Header--top"],
     "vnexpress.net": [".section.page-detail.bottom-detail"],
