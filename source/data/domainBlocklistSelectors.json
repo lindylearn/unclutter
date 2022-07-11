@@ -97,5 +97,12 @@
         ".imagecache.imagecache-staff-headshot-small.imagecache-linked.imagecache-staff-headshot-small_linked",
         "#preface-top-wrapper"
     ],
+    "theleader.vn": [
+        ".mangsec-bold",
+        ".news-detail-other-news-title",
+        ".news-detail-other-news-content-item",
+        ".block-list-news-item",
+        ".block-list-news"
+    ],
     "hdvietnam.org": ["#likes-post-10851880", ".sharePage"]
 }
