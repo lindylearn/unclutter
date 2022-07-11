@@ -103,17 +103,23 @@
         ".td-block-title-wrap",
         ".wpb_wrapper.td_block_separator.td_block_wrap.vc_separator.tdi_196.td_separator_solid.td_separator_center",
         ".vc_row_inner.tdi_182.vc_row.vc_inner.wpb_row.td-pb-row",
-        ".td_block_wrap.td_flex_block_1.tdi_197.td_with_ajax_pagination.td-pb-border-top.td_block_template_1.td_flex_block",
-        ".td_block_wrap.td_flex_block_1.tdi_203.td_with_ajax_pagination.td-pb-border-top.td_block_template_1.td_flex_block",
-        ".td_block_wrap.td_flex_block_1.tdi_188.td_with_ajax_pagination.td-pb-border-top.td_block_template_1.td_flex_block",
-        ".wpb_wrapper.td_block_separator.td_block_wrap.vc_separator.tdi_202.td_separator_solid.td_separator_center",
+        ".td_block_wrap.td_flex_block_1.td_with_ajax_pagination.td-pb-border-top.td_block_template_1.td_flex_block",
+        ".wpb_wrapper.td_block_separator.td_block_wrap.vc_separator.td_separator_solid.td_separator_center",
         ".wpb_wrapper.td_block_wrap.td_block_creative.content-tacgia",
-        ".vc_row_inner.tdi_172.vc_row.vc_inner.wpb_row.td-pb-row",
+        ".vc_row_inner.vc_row.vc_inner.wpb_row.td-pb-row",
         ".vc_column.tdi_48.wpb_column.vc_column_container.tdc-column.td-pb-span3",
         "#tdi_45",
         ".vc_column.tdi_71.wpb_column.vc_column_container.tdc-column.td-pb-span7",
         "#tdi_86",
         "#tdi_99",
         "#tdi_59"
-    ]
+    ],
+    "theleader.vn": [
+        ".mangsec-bold",
+        ".news-detail-other-news-title",
+        ".news-detail-other-news-content-item",
+        ".block-list-news-item",
+        ".block-list-news"
+    ],
+    "hdvietnam.org": ["#likes-post-10851880", ".sharePage"]
 }
