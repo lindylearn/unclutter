@@ -27,6 +27,17 @@ export default class ContentBlockModifier implements PageModifier {
     }
 
     prepare() {
+        // apply no word-based blocking if no DOM elements found
+        if (
+            !this.textContainerModifier.foundMainContentElement &&
+            !this.textContainerModifier.foundMainHeadingElement
+        ) {
+            this.selectors = blockedTags.concat(
+                domainBlocklistSelectors[this.domain] || []
+            );
+            return;
+        }
+
         const excludedSelectors = [
             `.${lindyImageContainerClass}`,
             `.lindy-allowed-iframe`,

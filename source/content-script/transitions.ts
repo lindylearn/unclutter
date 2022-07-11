@@ -96,10 +96,13 @@ export default class TransitionManager implements PageModifier {
         // create background element, prepare animation based on theme pagewidth
         this.backgroundModifier.insertBackground();
 
-        // remove blocked elements
-        this.responsiveStyleModifier.blockFixedElements();
+        // remove blocked elements if markup as expected
+        if (this.textContainerModifier.foundMainContentElement) {
+            this.responsiveStyleModifier.blockFixedElements();
+            this.textContainerModifier.enableSiblingBlock();
+        }
+        this.contentBlockModifier.transitionIn(); // uses softer blocking if no text elements found
         this.elementPickerModifier.transitionIn();
-        this.contentBlockModifier.transitionIn();
 
         // enable mobile styles & style patches (this may shift layout in various ways)
         this.responsiveStyleModifier.enableResponsiveStyles();
@@ -107,7 +110,6 @@ export default class TransitionManager implements PageModifier {
 
         // apply text container styles (without moving position)
         this.textContainerModifier.applyContainerStyles();
-        this.textContainerModifier.enableSiblingBlock();
         this.textContainerModifier.setTextFontOverride();
 
         // patch inline styles to overcome stubborn sites (modifies DOM & CSSOM)
