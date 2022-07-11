@@ -96,5 +96,11 @@
         ".imagecache.imagecache-header-square-tiny.imagecache-default.imagecache-header-square-tiny_default",
         ".imagecache.imagecache-staff-headshot-small.imagecache-linked.imagecache-staff-headshot-small_linked",
         "#preface-top-wrapper"
+    ],
+    "speckle.systems": [
+        ".mt-0.w-full.h-20",
+        ".text-gray-500.text-xs.mt-10",
+        ".mt-10",
+        ".mt-4.space-y-4"
     ]
 }
