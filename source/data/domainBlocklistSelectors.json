@@ -115,7 +115,12 @@
         ".relative.bg-white.py-14"
     ],
     "2bobs.com": [".Header-branding-logo", ".Header.Header--top"],
-    "vnexpress.net": [".section.page-detail.bottom-detail"],
+    "vnexpress.net": [
+        ".section.page-detail.bottom-detail",
+        ".width_common.box-tinlienquanv2",
+        ".width_common.btn_guicauhoi_detail.mb20",
+        ".width_common.topic-detail.gaBoxLinkDisplay"
+    ],
     "thesaigontimes.vn": [
         ".vc_row_inner.tdi_167.vc_row.vc_inner.wpb_row.td-pb-row",
         ".td_module_flex.td_module_flex_1.td_module_wrap.td-animation-stack",
