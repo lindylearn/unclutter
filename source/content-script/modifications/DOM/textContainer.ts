@@ -347,7 +347,8 @@ export default class TextContainerModifier implements PageModifier {
                 return false;
             }
 
-            // check if text element is main text container
+            // check if text element starts a main text container
+            // it should not be part of another main stack already since that would abort the iteration
             if (
                 stackType === "text" &&
                 !isMainStack &&
@@ -361,6 +362,13 @@ export default class TextContainerModifier implements PageModifier {
                     pageContentFraction > mainContentFractionThreshold;
                 if (isMainStack) {
                     this.foundMainContentElement = true;
+
+                    // remove parent from first main stack candidates if present (always take deepest stack)
+                    // happens e.g. http://www.mackido.com/Interface/hysteresis.html
+                    this.firstMainTextContainerCandidates =
+                        this.firstMainTextContainerCandidates.filter(
+                            (elem) => !elem.contains(currentElem)
+                        );
                     this.firstMainTextContainerCandidates.push(currentElem);
                 }
             }
