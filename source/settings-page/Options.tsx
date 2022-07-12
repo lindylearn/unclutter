@@ -112,7 +112,7 @@ function OptionsPage({}) {
                     >
                         automatically unclutter
                     </a>{" "}
-                    all pages on the current domain.
+                    all pages on a certain domain.
                 </p>
 
                 <FeatureFlagSwitch
