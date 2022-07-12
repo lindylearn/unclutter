@@ -141,5 +141,6 @@
         ".block-list-news"
     ],
     "hdvietnam.org": ["#likes-post-10851880", ".sharePage"],
-    "theconstructor.org": [".cs-estimated-reading-time", "#toc_container"]
+    "theconstructor.org": [".cs-estimated-reading-time", "#toc_container"],
+    "makandracards.com": ["#tail", ".text_ad__more"]
 }
