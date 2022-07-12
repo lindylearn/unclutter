@@ -148,5 +148,7 @@
         ".row.justify-content-center",
         ".h1.g-color-black.g-font-weight-700.mb-4",
         ".row.g-mb-20"
-    ]
+    ],
+    "theconstructor.org": [".cs-estimated-reading-time", "#toc_container"],
+    "makandracards.com": ["#tail", ".text_ad__more"]
 }
