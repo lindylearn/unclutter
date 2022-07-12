@@ -140,5 +140,10 @@
         ".block-list-news-item",
         ".block-list-news"
     ],
-    "hdvietnam.org": ["#likes-post-10851880", ".sharePage"]
+    "hdvietnam.org": ["#likes-post-10851880", ".sharePage"],
+    "houzz.com": [
+        ".hz-editorial-gallery-action-bar.hz-track-me",
+        ".hz-editorial-gallery-author-info__content",
+        ".hz-editorial-gallery-author-info.hz-editorial-gallery-author-info--short"
+    ]
 }
