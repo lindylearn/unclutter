@@ -162,5 +162,6 @@
         ".row.g-mb-20"
     ],
     "theconstructor.org": [".cs-estimated-reading-time", "#toc_container"],
-    "makandracards.com": ["#tail", ".text_ad__more"]
+    "makandracards.com": ["#tail", ".text_ad__more"],
+    "web.archive.org": ["#wm-ipp-base"]
 }
