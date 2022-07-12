@@ -7,7 +7,7 @@
 
 <a
     class="feedback-container relative max-w-full cursor-pointer rounded-lg px-2 py-2 pr-5 shadow transition-all hover:shadow-md"
-    href="https://unclutter.lindylearn.io/feedback"
+    href="https://unclutter.lindylearn.io/librarybeta"
     target="_blank"
     on:click={() => reportEventContentScript("clickFeedbackRequest")}
 >
@@ -38,8 +38,8 @@
         </svg>
 
         <span class="text-sm">
-            How is Unclutter working for you? Let me know what to fix, improve,
-            or add!
+            I'm working on the Unclutter Library to automatically organize
+            articles. Sign up for the beta here!
         </span>
     </div>
 </a>
