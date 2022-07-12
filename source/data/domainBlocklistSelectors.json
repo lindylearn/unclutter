@@ -141,6 +141,12 @@
         ".block-list-news"
     ],
     "hdvietnam.org": ["#likes-post-10851880", ".sharePage"],
+    "srm.com": [
+        ".card__img.img-responsive.lazyloaded",
+        ".card-list",
+        ".btn.general-list-block__btn",
+        ".section.general-list-block.full-width.js-reveal.bg-blue.ruler-border-horizontal.js-animate"
+    ],
     "houzz.com": [
         ".hz-editorial-gallery-action-bar.hz-track-me",
         ".hz-editorial-gallery-author-info__content",
