@@ -38,8 +38,8 @@
         </svg>
 
         <span class="text-sm">
-            I'm working on the Unclutter Library to automatically organize
-            articles. Sign up for the beta here!
+            Coming soon: the "Unclutter Library" that automatically organizes
+            articles you read. Sign up for the beta here!
         </span>
     </div>
 </a>
