@@ -66,7 +66,7 @@ export default function DomainSettingsList({}) {
     return (
         <>
             <ul
-                className="mt-1 flex h-32 flex-col items-start gap-1 overflow-y-auto px-3 py-2 shadow-inner"
+                className="mt-1 flex h-32 flex-col items-stretch gap-1 overflow-y-auto px-3 py-2 shadow-inner"
                 style={{ background: "var(--embedded-background)" }}
             >
                 {overrideList?.length === 0 && (
@@ -75,8 +75,8 @@ export default function DomainSettingsList({}) {
                     </li>
                 )}
                 {overrideList?.map(({ domain, status }) => (
-                    <li className="flex items-center gap-5">
-                        <div className="w-52 flex-shrink underline">
+                    <li className="flex items-center justify-between gap-3">
+                        <div className="flex-grow underline">
                             <a
                                 href={`https://${domain}`}
                                 target="_blank"
@@ -95,9 +95,6 @@ export default function DomainSettingsList({}) {
                                 "rounded-sm p-1 " + getDomainStatusStyle(status)
                             }
                         >
-                            <option value={null} className="bg-white">
-                                No preference
-                            </option>
                             <option value="allow" className="bg-white">
                                 Always unclutter
                             </option>
@@ -107,7 +104,7 @@ export default function DomainSettingsList({}) {
                         </select>
 
                         <svg
-                            className="h-4 cursor-pointer text-gray-400 dark:text-white"
+                            className="h-4 cursor-pointer text-gray-500 dark:text-white"
                             viewBox="0 0 448 512"
                             onClick={() => deleteDomainSettings(domain)}
                         >

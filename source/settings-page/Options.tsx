@@ -41,7 +41,7 @@ function OptionsPage({}) {
             : "https://support.mozilla.org/en-US/kb/manage-extension-shortcuts-firefox";
 
     return (
-        <div className="flex flex-col gap-5 dark:text-white">
+        <div className="flex flex-col gap-5 text-gray-900 dark:text-white">
             <OptionsGroup
                 headerText="Global Settings"
                 iconSvg={
@@ -79,7 +79,7 @@ function OptionsPage({}) {
                     )
                 </p>
                 <FeatureFlagSwitch featureFlagKey={enableBootUnclutterMessage}>
-                    Show unclutter reminder on web pages{" "}
+                    Show unclutter button on web pages{" "}
                     <a
                         href="https://github.com/lindylearn/unclutter/blob/main/docs/article-detection.md#unclutter-reminder"
                         className="underline"
@@ -147,7 +147,7 @@ function OptionsPage({}) {
                         private note
                     </a>{" "}
                     saved in your browser. Toggle the feature via the "pen"
-                    toolbar icon in the top right of the article view.
+                    toolbar icon.
                 </p>
                 <FeatureFlagSwitch
                     featureFlagKey={hypothesisSyncFeatureFlag}
