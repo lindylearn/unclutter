@@ -150,7 +150,9 @@
     "houzz.com": [
         ".hz-editorial-gallery-action-bar.hz-track-me",
         ".hz-editorial-gallery-author-info__content",
-        ".hz-editorial-gallery-author-info.hz-editorial-gallery-author-info--short"
+        ".hz-editorial-gallery-author-info.hz-editorial-gallery-author-info--short",
+        ".hz-editorial-gallery-side-bar__ads",
+        ".hz-editorial-gallery-side-bar__section"
     ],
     "theinformation.com": [".ti-awareness-bar"],
     "kdd.org": [
