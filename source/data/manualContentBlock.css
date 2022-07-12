@@ -221,6 +221,9 @@ div[data-gu-name="body"] > div:first-child {
 .outbrain-container ~ div {
     display: none !important;
 }
+.p-fullbleed-block {
+    margin-left: 0 !important;
+}
 
 /* https://www.popularmechanics.com/adventure/outdoors/a19225/marooned-among-the-polar-bears/ */
 .transporter {
