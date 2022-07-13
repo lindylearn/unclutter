@@ -170,5 +170,6 @@
     ],
     "theconstructor.org": [".cs-estimated-reading-time", "#toc_container"],
     "makandracards.com": ["#tail", ".text_ad__more"],
-    "web.archive.org": ["#wm-ipp-base"]
+    "web.archive.org": ["#wm-ipp-base"],
+    "stackoverflow.com": [".votecell.post-layout--left", ".bottom-notice"]
 }
