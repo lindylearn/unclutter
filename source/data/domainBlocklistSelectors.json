@@ -170,5 +170,19 @@
     ],
     "theconstructor.org": [".cs-estimated-reading-time", "#toc_container"],
     "makandracards.com": ["#tail", ".text_ad__more"],
-    "web.archive.org": ["#wm-ipp-base"]
+    "web.archive.org": ["#wm-ipp-base"],
+    "dulich.tuoitre.vn": [
+        "#tagandnetwork",
+        ".title-box",
+        ".timeago.clearfix",
+        ".description",
+        ".name-news",
+        ".img469x293.pos-rlt",
+        ".news-item.news-big.item-normal",
+        ".news-item",
+        ".img120x75.pos-rlt",
+        ".area2",
+        ".timeago",
+        ".VCSortableInPreviewMode"
+    ]
 }
