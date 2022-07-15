@@ -170,5 +170,13 @@
     ],
     "theconstructor.org": [".cs-estimated-reading-time", "#toc_container"],
     "makandracards.com": ["#tail", ".text_ad__more"],
-    "web.archive.org": ["#wm-ipp-base"]
+    "web.archive.org": ["#wm-ipp-base"],
+    "economictimes.indiatimes.com": [
+        ".primeSWrapper",
+        ".clearfix.relTopics.raltedTopics",
+        ".disc_more",
+        "#topNewsTabs",
+        ".mb20.flt",
+        ".adBox.custom_ad.nonm.mgid.executed"
+    ]
 }
