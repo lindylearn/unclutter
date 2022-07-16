@@ -171,5 +171,36 @@
     "theconstructor.org": [".cs-estimated-reading-time", "#toc_container"],
     "makandracards.com": ["#tail", ".text_ad__more"],
     "web.archive.org": ["#wm-ipp-base"],
-    "theblock.co": [".newsletterModal"]
+    "theblock.co": [".newsletterModal"],
+    "economictimes.indiatimes.com": [
+        ".primeSWrapper",
+        ".clearfix.relTopics.raltedTopics",
+        ".disc_more",
+        "#topNewsTabs",
+        ".mb20.flt",
+        ".adBox.custom_ad.nonm.mgid.executed"
+    ],
+    "dulich.tuoitre.vn": [
+        "#tagandnetwork",
+        ".title-box",
+        ".timeago.clearfix",
+        ".description",
+        ".name-news",
+        ".img469x293.pos-rlt",
+        ".news-item.news-big.item-normal",
+        ".news-item",
+        ".img120x75.pos-rlt",
+        ".area2",
+        ".timeago",
+        ".VCSortableInPreviewMode",
+        ".title-content.clearfix.first",
+        ".title-content.clearfix"
+    ],
+    "techradar.com": [
+        ".pretty-verdict__heading-container",
+        ".read-more-container"
+    ],
+    "tinhte.vn": [".jsx-3147581474.info-block--right", ".jsx-3569995709.main"],
+    "stackoverflow.com": [".votecell.post-layout--left", ".bottom-notice"],
+    "snclavalin.com": [".top-content-item.read-time", ".top-content-item"]
 }
