@@ -171,6 +171,7 @@
     "theconstructor.org": [".cs-estimated-reading-time", "#toc_container"],
     "makandracards.com": ["#tail", ".text_ad__more"],
     "web.archive.org": ["#wm-ipp-base"],
+    "tinhte.vn": [".jsx-3147581474.info-block--right", ".jsx-3569995709.main"],
     "stackoverflow.com": [".votecell.post-layout--left", ".bottom-notice"],
-    "snclavalin.com": [".top-content-item.read-time", ".top-content-item"],
+    "snclavalin.com": [".top-content-item.read-time", ".top-content-item"]
 }
