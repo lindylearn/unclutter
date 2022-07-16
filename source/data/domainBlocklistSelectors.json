@@ -186,5 +186,12 @@
         ".VCSortableInPreviewMode",
         ".title-content.clearfix.first",
         ".title-content.clearfix"
-    ]
+    ],
+    "techradar.com": [
+        ".pretty-verdict__heading-container",
+        ".read-more-container"
+    ],
+    "tinhte.vn": [".jsx-3147581474.info-block--right", ".jsx-3569995709.main"],
+    "stackoverflow.com": [".votecell.post-layout--left", ".bottom-notice"],
+    "snclavalin.com": [".top-content-item.read-time", ".top-content-item"]
 }
