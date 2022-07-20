@@ -204,6 +204,7 @@
     "stackoverflow.com": [".votecell.post-layout--left", ".bottom-notice"],
     "snclavalin.com": [".top-content-item.read-time", ".top-content-item"],
     "lemonbin.com": ["#toc_container"],
+    "thenewstack.io": [".sponsor_note_rss"],
     "facebook.com": [
         ".rq0escxv.l9j0dhe7.du4w35lb.obtkqiv7.sv5sfqaa.sj5x9vvc.cxgpxx05",
         ".rq0escxv.l9j0dhe7.du4w35lb.j83agx80.cbu4d94t.pfnyh3mw.d2edcug0.sj5x9vvc.jb3vyjys",
