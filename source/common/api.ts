@@ -43,7 +43,7 @@ export async function addArticleToLibrary(
             body: JSON.stringify([{ url }]),
         }
     );
-    if (response.ok) {
+    if (!response.ok) {
         return null;
     }
 

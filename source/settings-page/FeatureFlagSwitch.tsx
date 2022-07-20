@@ -12,7 +12,7 @@ import { reportEventContentScript } from "../content-script/messaging";
 export default function FeatureFlagSwitch({
     featureFlagKey,
     children,
-    onChange,
+    onChange = (enabled: boolean) => {},
 }) {
     const [state, setState] = React.useState(null);
     React.useEffect(() => {

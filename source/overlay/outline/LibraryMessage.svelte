@@ -7,31 +7,44 @@
     } from "../../common/api";
     import { LibraryArticle } from "../../common/schema";
     import { getRelativeTime } from "../../common/time";
+    import { getRandomColor } from "../../common/annotations/styling";
 
     export let articleUrl: string;
 
     let libraryArticle: LibraryArticle = null;
+    let topicColor: string = null;
     let wasAlreadyPresent = null;
     (async () => {
         libraryArticle = await checkArticleInLibrary(articleUrl);
-        if (libraryArticle === null) {
+        if (!libraryArticle) {
             libraryArticle = await addArticleToLibrary(articleUrl);
         } else {
             wasAlreadyPresent = true;
         }
+
+        topicColor = getRandomColor(libraryArticle.topic_id);
     })();
 
     function openLibrary() {
-        window.close();
+        // window.close();
+    }
+    function openLibraryTopic() {
+        browser.tabs.create({
+            url: `https://library.lindylearn.io/topics/${libraryArticle.topic_id}_`,
+            active: true,
+        });
     }
 </script>
 
 <div
-    class="library-message relative max-w-full cursor-pointer rounded-lg px-2 py-2 pr-5 text-gray-800 shadow transition-all hover:shadow-md"
-    on:click={openLibrary}
+    class="library-message relative max-w-full rounded-lg px-2 py-2 pr-5 text-gray-800 shadow"
 >
     <div class="flex gap-2">
-        <svg class="w-8 flex-shrink-0" viewBox="0 0 512 512">
+        <svg
+            class="w-8 flex-shrink-0 cursor-pointer"
+            viewBox="0 0 512 512"
+            on:click={openLibrary}
+        >
             <path
                 fill="currentColor"
                 d="M322.92,363.59a16.27,16.27,0,0,0-10.77-8.46l-.17,0c-23.11-6.31-45.14-9.5-65.49-9.5-44.82,0-72.15,15.56-84.45,24.84a32.81,32.81,0,0,1-19.91,6.68,33.32,33.32,0,0,1-29.87-18.77L46.67,221.94a7.44,7.44,0,0,0-11.58-2.39l-.17.14a16.48,16.48,0,0,0-4,19.61l94.43,195.75a16.25,16.25,0,0,0,26.79,3.69c56.59-63.15,138.33-60.33,168.87-56.83a6.46,6.46,0,0,0,6.5-9.34Z"
@@ -57,11 +70,28 @@
         <div class="text-sm">
             {#if libraryArticle}
                 {wasAlreadyPresent ? "Already saved" : "Saved"} in
-                <a
-                    class="font-header font-bold"
-                    href={`https://library.lindylearn.io/topics/${libraryArticle.topic_id}_`}
-                    ># {libraryArticle.topic_id}</a
+
+                <div
+                    class="relative mr-1 inline-block cursor-pointer rounded-lg px-1 align-top text-sm shadow-sm transition-all hover:scale-95 hover:shadow dark:text-stone-200 dark:hover:shadow-2xl"
+                    style={`background-color: ${topicColor}`}
+                    on:click={openLibraryTopic}
                 >
+                    <!-- {topic?.emoji && (
+                    <Twemoji noWrapper>
+                        <span className="inline-block w-5 align-top mr-2 drop-shadow-sm">
+                            {topic.emoji}
+                        </span>
+                    </Twemoji>
+                )} -->
+
+                    Topic #{libraryArticle.topic_id}
+                    <!-- <div
+                        className="absolute -top-2 -right-2 px-1 rounded-full bg-white dark:bg-stone-600"
+                    >
+                        {articleCount}
+                    </div> -->
+                </div>
+
                 <!-- <svg
                     class="inline-block w-2.5 align-baseline"
                     viewBox="0 0 384 512"
@@ -71,9 +101,12 @@
                         d="M360.5 217.5l-152 143.1C203.9 365.8 197.9 368 192 368s-11.88-2.188-16.5-6.562L23.5 217.5C13.87 208.3 13.47 193.1 22.56 183.5C31.69 173.8 46.94 173.5 56.5 182.6L192 310.9l135.5-128.4c9.562-9.094 24.75-8.75 33.94 .9375C370.5 193.1 370.1 208.3 360.5 217.5z"
                     />
                 </svg> -->
+
+                <br />
                 {#if wasAlreadyPresent}
-                    <br />
                     Last read {getRelativeTime(libraryArticle.time_added)}.
+                {:else}
+                    Found 7 related articles.
                 {/if}
             {:else}
                 Loading...
