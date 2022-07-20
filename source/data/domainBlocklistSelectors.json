@@ -203,5 +203,13 @@
     "tinhte.vn": [".jsx-3147581474.info-block--right", ".jsx-3569995709.main"],
     "stackoverflow.com": [".votecell.post-layout--left", ".bottom-notice"],
     "snclavalin.com": [".top-content-item.read-time", ".top-content-item"],
-    "lemonbin.com": ["#toc_container"]
+    "lemonbin.com": ["#toc_container"],
+    "facebook.com": [
+        ".rq0escxv.l9j0dhe7.du4w35lb.obtkqiv7.sv5sfqaa.sj5x9vvc.cxgpxx05",
+        ".rq0escxv.l9j0dhe7.du4w35lb.j83agx80.cbu4d94t.pfnyh3mw.d2edcug0.sj5x9vvc.jb3vyjys",
+        ".bp9cbjyn.j83agx80.ihqw7lf3.hv4rvrfc.dati1w0a.pybr56ya",
+        ".bp9cbjyn.j83agx80.buofh1pr.ni8dbmo4.stjgntxs",
+        ".tvfksri0.ozuftl9m",
+        ".cwj9ozl2.tvmbv18p"
+    ]
 }
