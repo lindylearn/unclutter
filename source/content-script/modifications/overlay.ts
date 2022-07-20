@@ -170,6 +170,7 @@ export default class OverlayManager implements PageModifier {
         this.topleftSvelteComponent = new TopLeftContainer({
             target: this.topleftIframe.contentDocument.body,
             props: {
+                articleUrl: window.location.href,
                 outline: this.outline, // null at first
                 activeOutlineIndex: this.outline?.[0].index,
                 annotationsEnabled: this.annotationsEnabled,

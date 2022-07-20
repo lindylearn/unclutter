@@ -11,7 +11,7 @@
         reportEventContentScript,
     } from "../../content-script/messaging";
     import FeedbackMessage from "./FeedbackMessage.svelte";
-    // import LibraryMessage from "./LibraryMessage.svelte";
+    import LibraryMessage from "./LibraryMessage.svelte";
     import Outline from "./Outline.svelte";
     import { OutlineItem } from "./parse";
     import UpdateMessage from "./UpdateMessage.svelte";
@@ -20,6 +20,7 @@
         saveDismissedVersionMessage,
     } from "./updateMessages";
 
+    export let articleUrl: string;
     export let outline: OutlineItem[];
     export let activeOutlineIndex: number;
     export let annotationsEnabled: boolean;
@@ -59,7 +60,7 @@
     id="lindy-info-topleft-content"
     class="flex flex-col gap-1.5 font-paragraph"
 >
-    <!-- <LibraryMessage /> -->
+    <LibraryMessage {articleUrl} />
 
     <Outline
         {outline}
