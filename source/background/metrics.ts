@@ -119,8 +119,12 @@ function _bucketMetric(buckets, value) {
 }
 
 let distinctId = null;
-export async function startMetrics() {
-    distinctId = await _getDistinctId();
+export async function startMetrics(isDev: boolean) {
+    if (isDev) {
+        distinctId = "test-user";
+    } else {
+        distinctId = await _getDistinctId();
+    }
 }
 
 async function _getDistinctId() {

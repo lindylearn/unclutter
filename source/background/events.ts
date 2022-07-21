@@ -163,11 +163,11 @@ browser.tabs.onRemoved.addListener((tabId: number) =>
 // initialize on every service worker start
 async function initializeServiceWorker() {
     const isDev = await getFeatureFlag(isDevelopmentFeatureFlag);
-    if (isDev) {
-        return;
-    }
+    startMetrics(isDev);
 
-    startMetrics();
-    loadAnnotationCountsToMemory();
+    if (!isDev) {
+        // avoid during frequent reloads
+        loadAnnotationCountsToMemory();
+    }
 }
 initializeServiceWorker();
