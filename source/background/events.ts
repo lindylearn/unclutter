@@ -107,6 +107,16 @@ browser.runtime.onMessage.addListener(
                     injectScript(tab.id, "content-script/enhance.js");
                 }, 1000);
             });
+        } else if (message.event === "openLibrary") {
+            let urlToOpen = `https://library.lindylearn.io/`;
+            if (message.topicId !== undefined) {
+                urlToOpen = `https://library.lindylearn.io/topics/${message.topicId}_`;
+            }
+
+            browser.tabs.create({
+                url: urlToOpen,
+                active: true,
+            });
         }
 
         return false;

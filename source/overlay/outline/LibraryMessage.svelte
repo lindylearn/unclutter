@@ -1,11 +1,11 @@
 <script lang="ts">
     import browser from "../../common/polyfill";
     import { reportEventContentScript } from "source/content-script/messaging";
+    import { LibraryArticle } from "../../common/schema";
     import {
         addArticleToLibrary,
         checkArticleInLibrary,
     } from "../../common/api";
-    import { LibraryArticle } from "../../common/schema";
     import { getRelativeTime } from "../../common/time";
     import { getRandomColor } from "../../common/annotations/styling";
 
@@ -26,12 +26,14 @@
     })();
 
     function openLibrary() {
-        // window.close();
+        browser.runtime.sendMessage(null, {
+            event: "openLibrary",
+        });
     }
     function openLibraryTopic() {
-        browser.tabs.create({
-            url: `https://library.lindylearn.io/topics/${libraryArticle.topic_id}_`,
-            active: true,
+        browser.runtime.sendMessage(null, {
+            event: "openLibrary",
+            topicId: libraryArticle.topic_id,
         });
     }
 </script>
