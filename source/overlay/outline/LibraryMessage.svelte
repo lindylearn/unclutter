@@ -13,14 +13,15 @@
     import { getRandomColor } from "../../common/annotations/styling";
 
     export let articleUrl: string;
+    export let libraryUser: string;
 
     let libraryArticle: LibraryArticle = null;
     let topicColor: string = null;
     let wasAlreadyPresent = null;
     (async () => {
-        libraryArticle = await checkArticleInLibrary(articleUrl);
+        libraryArticle = await checkArticleInLibrary(articleUrl, libraryUser);
         if (!libraryArticle) {
-            libraryArticle = await addArticleToLibrary(articleUrl);
+            libraryArticle = await addArticleToLibrary(articleUrl, libraryUser);
         } else {
             wasAlreadyPresent = true;
         }

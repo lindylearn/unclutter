@@ -6,6 +6,7 @@
         setFeatureFlag,
         showFeedbackMessage,
     } from "../../common/featureFlags";
+    import { getLibraryUser } from "../../common/storage";
     import {
         getRemoteFeatureFlag,
         reportEventContentScript,
@@ -54,13 +55,20 @@
         saveDismissedVersionMessage(dismissedVersion);
         // event emitted in component
     }
+
+    let libraryUser = null;
+    getLibraryUser().then((userId) => {
+        libraryUser = userId;
+    });
 </script>
 
 <div
     id="lindy-info-topleft-content"
     class="flex flex-col gap-1.5 font-paragraph"
 >
-    <LibraryMessage {articleUrl} />
+    {#if libraryUser}
+        <LibraryMessage {articleUrl} {libraryUser} />
+    {/if}
 
     <Outline
         {outline}

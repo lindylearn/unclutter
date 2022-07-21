@@ -118,3 +118,12 @@ export async function setBlockedElementSelectors(
         },
     });
 }
+
+export async function getLibraryUser(): Promise<string | null> {
+    const config = await browser.storage.sync.get(["library-user-id"]);
+    return config["library-user-id"] || null;
+}
+
+export async function setLibraryUser(userId: string): Promise<void> {
+    await browser.storage.sync.set({ "library-user-id": userId });
+}

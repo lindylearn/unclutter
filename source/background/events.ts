@@ -8,6 +8,7 @@ import {
     setFeatureFlag,
 } from "../common/featureFlags";
 import browser from "../common/polyfill";
+import { setLibraryUser } from "../common/storage";
 import { saveInitialInstallVersionIfMissing } from "../overlay/outline/updateMessages";
 import { migrateAnnotationStorage } from "../sidebar/common/local";
 import { fetchCss } from "./actions";
@@ -107,6 +108,8 @@ browser.runtime.onMessage.addListener(
                     injectScript(tab.id, "content-script/enhance.js");
                 }, 1000);
             });
+        } else if (message.event === "setLibraryLogin") {
+            setLibraryUser(message.userId);
         } else if (message.event === "openLibrary") {
             let urlToOpen = `https://library.lindylearn.io/`;
             if (message.topicId !== undefined) {
