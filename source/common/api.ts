@@ -18,7 +18,7 @@ export async function checkArticleInLibrary(url) {
             },
         }
     );
-    if (response.ok) {
+    if (!response.ok) {
         return null;
     }
 

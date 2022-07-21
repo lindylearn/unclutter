@@ -1,5 +1,8 @@
 <script lang="ts">
     import browser from "../../common/polyfill";
+    import { fly } from "svelte/transition";
+    import { quintOut } from "svelte/easing";
+
     import { reportEventContentScript } from "source/content-script/messaging";
     import { LibraryArticle } from "../../common/schema";
     import {
@@ -71,47 +74,49 @@
 
         <div class="text-sm">
             {#if libraryArticle}
-                {wasAlreadyPresent ? "Already saved" : "Saved"} in
-
                 <div
-                    class="relative mr-1 inline-block cursor-pointer rounded-lg px-1 align-top text-sm shadow-sm transition-all hover:scale-95 hover:shadow dark:text-stone-200 dark:hover:shadow-2xl"
-                    style={`background-color: ${topicColor}`}
-                    on:click={openLibraryTopic}
+                    transition:fly={{ y: 10, duration: 200, easing: quintOut }}
                 >
-                    <!-- {topic?.emoji && (
-                    <Twemoji noWrapper>
-                        <span className="inline-block w-5 align-top mr-2 drop-shadow-sm">
-                            {topic.emoji}
-                        </span>
-                    </Twemoji>
-                )} -->
+                    <!-- {wasAlreadyPresent ? "Already saved" : "Saved"} in -->
+                    Saved in
 
-                    Topic #{libraryArticle.topic_id}
-                    <!-- <div
-                        className="absolute -top-2 -right-2 px-1 rounded-full bg-white dark:bg-stone-600"
+                    <span
+                        class="mr-1 inline-block cursor-pointer rounded-lg px-1 align-top text-sm shadow-sm transition-all hover:scale-95 hover:shadow dark:text-stone-200 dark:hover:shadow-2xl"
+                        style={`background-color: ${topicColor}`}
+                        on:click={openLibraryTopic}
                     >
-                        {articleCount}
-                    </div> -->
+                        <!-- {topic?.emoji && (
+                            <Twemoji noWrapper>
+                                <span className="inline-block w-5 align-top mr-2 drop-shadow-sm">
+                                    {topic.emoji}
+                                </span>
+                            </Twemoji>
+                        )} -->
+
+                        Topic #{libraryArticle.topic_id}
+                        <!-- <div
+                            className="absolute -top-2 -right-2 px-1 rounded-full bg-white dark:bg-stone-600"
+                        >
+                            {articleCount}
+                        </div> -->
+                    </span>
+
+                    <br />
+                    {#if wasAlreadyPresent}
+                        Last read {getRelativeTime(
+                            libraryArticle.time_added * 1000
+                        )}.
+                    {:else}
+                        Found 7 related articles.
+                    {/if}
                 </div>
-
-                <!-- <svg
-                    class="inline-block w-2.5 align-baseline"
-                    viewBox="0 0 384 512"
-                >
-                    <path
-                        fill="currentColor"
-                        d="M360.5 217.5l-152 143.1C203.9 365.8 197.9 368 192 368s-11.88-2.188-16.5-6.562L23.5 217.5C13.87 208.3 13.47 193.1 22.56 183.5C31.69 173.8 46.94 173.5 56.5 182.6L192 310.9l135.5-128.4c9.562-9.094 24.75-8.75 33.94 .9375C370.5 193.1 370.1 208.3 360.5 217.5z"
-                    />
-                </svg> -->
-
-                <br />
-                {#if wasAlreadyPresent}
-                    Last read {getRelativeTime(libraryArticle.time_added)}.
-                {:else}
-                    Found 7 related articles.
-                {/if}
             {:else}
-                Loading...
+                <!-- Loading... -->
+
+                <!-- use same height -->
+                {" "}
+                <br />
+                {" "}
             {/if}
         </div>
     </div>
