@@ -17,8 +17,6 @@
     export let articleUrl: string;
     export let libraryUser: string;
 
-    let emojiElement;
-
     let libraryInfo: LibraryInfo = null;
     let topicColor: string = null;
     let wasAlreadyPresent = null;
@@ -31,7 +29,6 @@
         }
 
         topicColor = getRandomColor(libraryInfo.topic.parent_topic_id);
-        // emojiElement.innerHTML = twemoji.parse(libraryInfo.topic.emoji);
     })();
 
     function openLibrary() {
@@ -48,7 +45,7 @@
 </script>
 
 <div
-    class="library-message relative max-w-full rounded-lg px-2 py-2 pr-5 text-gray-800 shadow"
+    class="library-message relative max-w-full rounded-lg px-2 py-2 text-gray-800 shadow"
 >
     <div class="flex gap-2">
         <svg
@@ -78,36 +75,30 @@
             />
         </svg>
 
-        <div class="text-sm">
+        <div class="flex-shrink overflow-hidden text-sm">
             {#if libraryInfo}
                 <div
+                    class="overflow-hidden whitespace-nowrap"
                     transition:fly={{ y: 10, duration: 200, easing: quintOut }}
                 >
-                    <!-- {wasAlreadyPresent ? "Already saved" : "Saved"} in -->
-                    Saved in
-
-                    <span
-                        class="mr-1 inline-block cursor-pointer rounded-lg px-1 align-top text-sm shadow-sm transition-all hover:scale-95 hover:shadow dark:text-stone-200 dark:hover:shadow-2xl"
-                        style={`background-color: ${topicColor}`}
-                        on:click={openLibraryTopic}
-                    >
-                        <span
-                            class="inline-block w-5 align-top drop-shadow-sm"
-                            bind:this={emojiElement}
-                            use:twemojiSvelte
+                    <div class="flex">
+                        <span>Saved in</span>
+                        <div
+                            class="ml-1 flex-shrink cursor-pointer overflow-hidden overflow-ellipsis rounded-lg px-1 align-top text-sm shadow-sm transition-all hover:scale-95 hover:shadow dark:text-stone-200 dark:hover:shadow-2xl"
+                            style={`background-color: ${topicColor}`}
+                            on:click={openLibraryTopic}
                         >
-                            {libraryInfo.topic.emoji}
-                        </span>
+                            <span
+                                class="inline-block w-5 align-top drop-shadow-sm"
+                                use:twemojiSvelte
+                            >
+                                {libraryInfo.topic.emoji}
+                            </span>
 
-                        {libraryInfo.topic.name}
-                        <!-- <div
-                            className="absolute -top-2 -right-2 px-1 rounded-full bg-white dark:bg-stone-600"
-                        >
-                            {articleCount}
-                        </div> -->
-                    </span>
+                            {libraryInfo.topic.name}
+                        </div>
+                    </div>
 
-                    <br />
                     {#if wasAlreadyPresent}
                         Last read {getRelativeTime(
                             libraryInfo.article.time_added * 1000
