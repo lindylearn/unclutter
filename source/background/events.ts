@@ -113,7 +113,7 @@ browser.runtime.onMessage.addListener(
         } else if (message.event === "openLibrary") {
             let urlToOpen = `https://library.lindylearn.io/`;
             if (message.topicId !== undefined) {
-                urlToOpen = `https://library.lindylearn.io/topics/${message.topicId}_`;
+                urlToOpen = `https://library.lindylearn.io/topics/${message.topicId}`;
             }
 
             browser.tabs.create({

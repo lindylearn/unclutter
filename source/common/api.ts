@@ -1,7 +1,7 @@
 // for some reason, using types in this file leads to bundling errors
 
-// const lindyApiUrl = "http://localhost:8000";
-const lindyApiUrl = "https://api2.lindylearn.io";
+const lindyApiUrl = "http://localhost:8000";
+// const lindyApiUrl = "https://api2.lindylearn.io";
 
 export async function checkArticleInLibrary(url, user_id) {
     const response = await fetch(
@@ -21,7 +21,7 @@ export async function checkArticleInLibrary(url, user_id) {
     }
 
     const json = await response.json();
-    return json.article;
+    return json;
 }
 
 export async function addArticleToLibrary(url, user_id) {

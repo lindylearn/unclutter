@@ -4,7 +4,7 @@
     import { quintOut } from "svelte/easing";
 
     import { reportEventContentScript } from "source/content-script/messaging";
-    import { LibraryArticle } from "../../common/schema";
+    import { LibraryInfo } from "../../common/schema";
     import {
         addArticleToLibrary,
         checkArticleInLibrary,
@@ -15,18 +15,18 @@
     export let articleUrl: string;
     export let libraryUser: string;
 
-    let libraryArticle: LibraryArticle = null;
+    let libraryInfo: LibraryInfo = null;
     let topicColor: string = null;
     let wasAlreadyPresent = null;
     (async () => {
-        libraryArticle = await checkArticleInLibrary(articleUrl, libraryUser);
-        if (!libraryArticle) {
-            libraryArticle = await addArticleToLibrary(articleUrl, libraryUser);
+        libraryInfo = await checkArticleInLibrary(articleUrl, libraryUser);
+        if (!libraryInfo) {
+            libraryInfo = await addArticleToLibrary(articleUrl, libraryUser);
         } else {
             wasAlreadyPresent = true;
         }
 
-        topicColor = getRandomColor(libraryArticle.topic_id);
+        topicColor = getRandomColor(libraryInfo.topic.parent_topic_id);
     })();
 
     function openLibrary() {
@@ -37,7 +37,7 @@
     function openLibraryTopic() {
         browser.runtime.sendMessage(null, {
             event: "openLibrary",
-            topicId: libraryArticle.topic_id,
+            topicId: libraryInfo.topic.id,
         });
     }
 </script>
@@ -74,7 +74,7 @@
         </svg>
 
         <div class="text-sm">
-            {#if libraryArticle}
+            {#if libraryInfo}
                 <div
                     transition:fly={{ y: 10, duration: 200, easing: quintOut }}
                 >
@@ -94,7 +94,7 @@
                             </Twemoji>
                         )} -->
 
-                        Topic #{libraryArticle.topic_id}
+                        {libraryInfo.topic.name}
                         <!-- <div
                             className="absolute -top-2 -right-2 px-1 rounded-full bg-white dark:bg-stone-600"
                         >
@@ -105,10 +105,13 @@
                     <br />
                     {#if wasAlreadyPresent}
                         Last read {getRelativeTime(
-                            libraryArticle.time_added * 1000
+                            libraryInfo.article.time_added * 1000
                         )}.
                     {:else}
-                        Found 7 related articles.
+                        Found {libraryInfo.sibling_count} related article{libraryInfo.sibling_count !==
+                        1
+                            ? "s"
+                            : ""}.
                     {/if}
                 </div>
             {:else}
