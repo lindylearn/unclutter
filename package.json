@@ -14,6 +14,7 @@
         "svelte": "^3.46.6",
         "timeago.js": "^4.0.2",
         "tinycolor2": "^1.4.2",
+        "twemoji": "^14.0.2",
         "webext-options-sync": "^2.0.1",
         "webextension-polyfill": "^0.8.0"
     },

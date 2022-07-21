@@ -2,6 +2,8 @@
     import browser from "../../common/polyfill";
     import { fly } from "svelte/transition";
     import { quintOut } from "svelte/easing";
+    // import twemoji from "twemoji";
+    import twemojiSvelte from "./twemoji-svelte";
 
     import { reportEventContentScript } from "source/content-script/messaging";
     import { LibraryInfo } from "../../common/schema";
@@ -15,6 +17,8 @@
     export let articleUrl: string;
     export let libraryUser: string;
 
+    let emojiElement;
+
     let libraryInfo: LibraryInfo = null;
     let topicColor: string = null;
     let wasAlreadyPresent = null;
@@ -27,6 +31,7 @@
         }
 
         topicColor = getRandomColor(libraryInfo.topic.parent_topic_id);
+        // emojiElement.innerHTML = twemoji.parse(libraryInfo.topic.emoji);
     })();
 
     function openLibrary() {
@@ -86,13 +91,13 @@
                         style={`background-color: ${topicColor}`}
                         on:click={openLibraryTopic}
                     >
-                        <!-- {topic?.emoji && (
-                            <Twemoji noWrapper>
-                                <span className="inline-block w-5 align-top mr-2 drop-shadow-sm">
-                                    {topic.emoji}
-                                </span>
-                            </Twemoji>
-                        )} -->
+                        <span
+                            class="inline-block w-5 align-top drop-shadow-sm"
+                            bind:this={emojiElement}
+                            use:twemojiSvelte
+                        >
+                            {libraryInfo.topic.emoji}
+                        </span>
 
                         {libraryInfo.topic.name}
                         <!-- <div
