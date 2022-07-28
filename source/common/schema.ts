@@ -1,6 +1,6 @@
 export type LibraryInfo = {
     article: LibraryArticle;
-    topic: LibraryTopic;
+    topic: LibraryTopic | null;
     sibling_count: number;
 };
 
