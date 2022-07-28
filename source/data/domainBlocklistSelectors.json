@@ -218,6 +218,10 @@
         ".tvfksri0.ozuftl9m",
         ".cwj9ozl2.tvmbv18p"
     ],
+    "blog.vespa.ai": [
+        ".col-xs-12.col-md-9.col-lg-10.text-center.text-md-left",
+        ".row.post-top-meta"
+    ],
     "geoslam.com": [
         ".has-text-align-center",
         ".ugb-blog-posts__content",
