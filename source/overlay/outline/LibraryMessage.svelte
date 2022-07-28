@@ -28,7 +28,7 @@
             wasAlreadyPresent = true;
         }
 
-        topicColor = getRandomColor(libraryInfo.topic.parent_topic_id);
+        topicColor = getRandomColor(libraryInfo.topic?.parent_topic_id);
     })();
 
     function openLibrary() {
@@ -82,25 +82,29 @@
                     transition:fly={{ y: 10, duration: 200, easing: quintOut }}
                 >
                     <div class="flex">
-                        <span>Saved in</span>
-                        <div
-                            class="ml-1 flex-shrink cursor-pointer overflow-hidden overflow-ellipsis rounded-lg px-1 align-top text-sm shadow-sm transition-all hover:scale-95 hover:shadow dark:text-stone-200 dark:hover:shadow-2xl"
-                            style={`background-color: ${topicColor}`}
-                            on:click={openLibraryTopic}
-                        >
-                            <span
-                                class="inline-block w-5 align-top drop-shadow-sm"
-                                use:twemojiSvelte
+                        {#if libraryInfo.topic}
+                            <span>Saved in</span>
+                            <div
+                                class="ml-1 flex-shrink cursor-pointer overflow-hidden overflow-ellipsis rounded-lg px-1 align-top text-sm shadow-sm transition-all hover:scale-95 hover:shadow dark:text-stone-200 dark:hover:shadow-2xl"
+                                style={`background-color: ${topicColor}`}
+                                on:click={openLibraryTopic}
                             >
-                                {libraryInfo.topic.emoji}
-                            </span>
+                                <span
+                                    class="inline-block w-5 align-top drop-shadow-sm"
+                                    use:twemojiSvelte
+                                >
+                                    {libraryInfo.topic.emoji}
+                                </span>
 
-                            {libraryInfo.topic.name}
-                        </div>
+                                {libraryInfo.topic.name}
+                            </div>
+                        {:else}
+                            <span>Saved in your Library.</span>
+                        {/if}
                     </div>
 
                     {#if wasAlreadyPresent}
-                        Last read {getRelativeTime(
+                        First read {getRelativeTime(
                             libraryInfo.article.time_added * 1000
                         )}.
                     {:else}
@@ -114,7 +118,7 @@
                 <!-- Loading... -->
 
                 <!-- use same height -->
-                {" "}
+                {"Loading... "}
                 <br />
                 {" "}
             {/if}
