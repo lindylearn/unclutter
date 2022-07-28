@@ -200,7 +200,11 @@
         ".pretty-verdict__heading-container",
         ".read-more-container"
     ],
-    "tinhte.vn": [".jsx-3147581474.info-block--right", ".jsx-3569995709.main"],
+    "tinhte.vn": [
+        ".jsx-3147581474.info-block--right",
+        ".jsx-3569995709.main",
+        "#sqseobar2"
+    ],
     "stackoverflow.com": [".votecell.post-layout--left", ".bottom-notice"],
     "snclavalin.com": [".top-content-item.read-time", ".top-content-item"],
     "lemonbin.com": ["#toc_container"],
@@ -223,5 +227,10 @@
         "#sqseobar2",
         ".wp-block-spacer",
         ".wp-block-ugb-spacer.ugb-spacer.ugb-67effb8.ugb-spacer--v2.ugb-main-block"
+    ],
+    "aecmag.com": [
+        ".relpost-thumb-wrapper",
+        ".size-full.wp-image-5967",
+        ".inarticlead728-end"
     ]
 }
