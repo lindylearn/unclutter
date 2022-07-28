@@ -65,6 +65,7 @@ async function getRedditTopLinks(subreddit, limit = 30) {
 async function fetchHN() {
     const urls = await getHnTopLinks(1000);
     await fs.writeFile("./urls/hn.json", JSON.stringify(urls));
+    await fs.writeFile("./urls/hn.csv", ["url"].concat(urls).join("\n"));
 }
 
 async function fetchReddit() {
@@ -113,8 +114,8 @@ async function fetchCSV() {
 }
 
 async function main() {
-    // await fetchHN();
-    // await fetchReddit();
-    await fetchCSV();
+    await fetchHN();
+    await fetchReddit();
+    // await fetchCSV();
 }
 main();
