@@ -6,20 +6,20 @@ export type LibraryInfo = {
 
 // imported from Unclutter Library src/store/_schema.ts
 export type LibraryArticle = {
-    title?: string | undefined;
     is_favorite?: boolean | undefined;
     url: string;
+    title: string | null;
     word_count: number;
     time_added: number;
     reading_progress: number;
-    topic_id: string;
+    topic_id: string | null;
     topic_sort_position: number;
     id: string;
 };
 
 export type LibraryTopic = {
-    emoji?: string | undefined;
-    parent_topic_id?: string | undefined;
+    group_id?: string | null | undefined;
     id: string;
     name: string;
+    emoji: string | null;
 };

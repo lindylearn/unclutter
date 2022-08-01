@@ -28,7 +28,7 @@
             wasAlreadyPresent = true;
         }
 
-        topicColor = getRandomColor(libraryInfo.topic?.parent_topic_id);
+        topicColor = getRandomColor(libraryInfo.topic?.group_id);
     })();
 
     function openLibrary() {
