@@ -644,7 +644,7 @@ div[role="banner"] {
 /* https://notes.eatonphil.com/documentdb.html */
 code {
     margin-left: 0 !important;
-    width: 100% !important;
+    max-width: 100% !important;
 }
 
 /* https://aws.amazon.com/blogs/aws/aws-lambda-now-supports-up-to-10-gb-ephemeral-storage/ */
