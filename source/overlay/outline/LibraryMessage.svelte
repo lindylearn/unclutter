@@ -20,15 +20,24 @@
     let libraryInfo: LibraryInfo = null;
     let topicColor: string = null;
     let wasAlreadyPresent = null;
+    let error = false;
     (async () => {
-        libraryInfo = await checkArticleInLibrary(articleUrl, libraryUser);
-        if (!libraryInfo) {
-            libraryInfo = await addArticleToLibrary(articleUrl, libraryUser);
-        } else {
-            wasAlreadyPresent = true;
-        }
+        try {
+            libraryInfo = await checkArticleInLibrary(articleUrl, libraryUser);
+            if (!libraryInfo) {
+                libraryInfo = await addArticleToLibrary(
+                    articleUrl,
+                    libraryUser
+                );
+            } else {
+                wasAlreadyPresent = true;
+            }
 
-        topicColor = getRandomColor(libraryInfo.topic?.group_id);
+            topicColor = getRandomColor(libraryInfo.topic?.group_id);
+        } catch (e) {
+            console.error(e);
+            error = true;
+        }
     })();
 
     function openLibrary() {
@@ -104,7 +113,7 @@
                     </div>
 
                     {#if wasAlreadyPresent}
-                        First read {getRelativeTime(
+                        Added {getRelativeTime(
                             libraryInfo.article.time_added * 1000
                         )}.
                     {:else}
@@ -114,11 +123,14 @@
                             : ""}.
                     {/if}
                 </div>
-            {:else}
-                <!-- Loading... -->
-
+            {:else if error}
+                Error adding article :(
                 <!-- use same height -->
-                {"Loading... "}
+                <br />
+                {" "}
+            {:else}
+                Loading...
+                <!-- use same height -->
                 <br />
                 {" "}
             {/if}
@@ -126,7 +138,7 @@
     </div>
 </div>
 
-<style lang="postcss">
+<style lang="postcss" global>
     .library-message {
         background-color: #edd75b !important;
     }

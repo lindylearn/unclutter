@@ -45,3 +45,7 @@
 .lindy-bugreport-button:not(.lindy-pressed):hover {
     filter: brightness(120%);
 }
+
+.library-message.library-message {
+    background-color: hsl(51, 80%, 43%) !important;
+}
