@@ -1,8 +1,7 @@
 <script lang="ts">
     import browser from "../../common/polyfill";
     import { fly } from "svelte/transition";
-    import { quintOut } from "svelte/easing";
-    // import twemoji from "twemoji";
+    import { cubicOut } from "svelte/easing";
     import twemojiSvelte from "./twemoji-svelte";
 
     import { reportEventContentScript } from "source/content-script/messaging";
@@ -13,18 +12,21 @@
     } from "../../common/api";
     import { getRelativeTime } from "../../common/time";
     import { getRandomColor } from "../../common/annotations/styling";
+    // import LoadingAnimation from "./LoadingAnimation.svelte";
 
     export let articleUrl: string;
     export let libraryUser: string;
 
     let libraryInfo: LibraryInfo = null;
     let topicColor: string = null;
-    let wasAlreadyPresent = null;
+    let isClustering = false;
+    let wasAlreadyPresent = false;
     let error = false;
     (async () => {
         try {
             libraryInfo = await checkArticleInLibrary(articleUrl, libraryUser);
             if (!libraryInfo) {
+                isClustering = true;
                 libraryInfo = await addArticleToLibrary(
                     articleUrl,
                     libraryUser
@@ -44,12 +46,14 @@
         browser.runtime.sendMessage(null, {
             event: "openLibrary",
         });
+        reportEventContentScript("openLibrary");
     }
     function openLibraryTopic() {
         browser.runtime.sendMessage(null, {
             event: "openLibrary",
             topicId: libraryInfo.topic.id,
         });
+        reportEventContentScript("openLibrary");
     }
 </script>
 
@@ -84,11 +88,11 @@
             />
         </svg>
 
-        <div class="flex-shrink overflow-hidden text-sm">
+        <div class="h-10 flex-shrink flex-grow text-sm">
             {#if libraryInfo}
                 <div
                     class="overflow-hidden whitespace-nowrap"
-                    transition:fly={{ y: 10, duration: 200, easing: quintOut }}
+                    in:fly={{ y: 10, duration: 300, easing: cubicOut }}
                 >
                     <div class="flex">
                         {#if libraryInfo.topic}
@@ -125,14 +129,14 @@
                 </div>
             {:else if error}
                 Error adding article :(
-                <!-- use same height -->
-                <br />
-                {" "}
-            {:else}
-                Loading...
-                <!-- use same height -->
-                <br />
-                {" "}
+            {:else if isClustering}
+                <div
+                    class="flex h-full flex-grow justify-between"
+                    in:fly={{ y: 10, duration: 300, easing: cubicOut }}
+                >
+                    <div>Adding to your library...</div>
+                    <!-- <LoadingAnimation class="self-center" /> -->
+                </div>
             {/if}
         </div>
     </div>

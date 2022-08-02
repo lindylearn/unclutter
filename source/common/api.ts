@@ -1,4 +1,4 @@
-// for some reason, using types in this file leads to bundling errors
+// NOTE: for some reason, using types in this file leads to bundling errors
 
 // const lindyApiUrl = "http://localhost:8000";
 const lindyApiUrl = "https://api2.lindylearn.io";
