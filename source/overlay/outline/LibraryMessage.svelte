@@ -88,7 +88,7 @@
             />
         </svg>
 
-        <div class="h-10 flex-shrink flex-grow text-sm">
+        <div class="h-10 flex-shrink flex-grow overflow-hidden text-sm">
             {#if libraryInfo}
                 <div
                     class="overflow-hidden whitespace-nowrap"
@@ -120,7 +120,7 @@
                         Added {getRelativeTime(
                             libraryInfo.article.time_added * 1000
                         )}.
-                    {:else}
+                    {:else if libraryInfo.sibling_count > 0}
                         Found {libraryInfo.sibling_count} related article{libraryInfo.sibling_count !==
                         1
                             ? "s"
