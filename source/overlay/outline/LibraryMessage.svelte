@@ -116,7 +116,7 @@
                         {/if}
                     </div>
 
-                    {#if wasAlreadyPresent}
+                    {#if wasAlreadyPresent && libraryInfo.article.time_added !== 0}
                         Added {getRelativeTime(
                             libraryInfo.article.time_added * 1000
                         )}.
