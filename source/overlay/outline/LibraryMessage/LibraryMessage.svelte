@@ -106,10 +106,13 @@
                         {#if libraryInfo.topic}
                             <span>Saved in</span>
                             <div
-                                class="ml-1 flex-shrink cursor-pointer overflow-hidden overflow-ellipsis rounded-lg px-1 align-top text-sm shadow-sm transition-all hover:scale-95 hover:shadow dark:text-stone-200 dark:hover:shadow-2xl"
-                                style={`background-color: ${topicColor}`}
+                                class="relative ml-1 inline-block flex-shrink cursor-pointer overflow-hidden overflow-ellipsis rounded-lg px-1 align-middle text-sm shadow-sm transition-all hover:scale-95 hover:shadow dark:hover:shadow-2xl"
                                 on:click={openLibraryTopic}
                             >
+                                <div
+                                    class="absolute left-0 top-0 h-full w-full dark:brightness-50"
+                                    style={`background-color: ${topicColor}`}
+                                />
                                 <span
                                     class="inline-block w-5 align-top drop-shadow-sm"
                                     use:twemojiSvelte
@@ -124,7 +127,7 @@
                         {/if}
                     </div>
 
-                    {#if wasAlreadyPresent && libraryInfo.article.time_added !== 0}
+                    {#if wasAlreadyPresent && libraryInfo.article.time_added}
                         Added {getRelativeTime(
                             libraryInfo.article.time_added * 1000
                         )}.
