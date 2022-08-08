@@ -11,6 +11,7 @@ import CSSOMProvider from "./modifications/CSSOM/_provider";
 import ReadingTimeModifier from "./modifications/DOM/readingTime";
 import TextContainerModifier from "./modifications/DOM/textContainer";
 import ElementPickerModifier from "./modifications/elementPicker";
+import LibraryModifier from "./modifications/library";
 import OverlayManager from "./modifications/overlay";
 import {
     PageModifier,
@@ -19,7 +20,8 @@ import {
 
 @trackModifierExecution
 export default class TransitionManager implements PageModifier {
-    private domain = getDomainFrom(new URL(window.location.href));
+    private url = window.location.href;
+    private domain = getDomainFrom(new URL(this.url));
 
     private bodyStyleModifier = new BodyStyleModifier();
     private cssomProvider = new CSSOMProvider();
@@ -48,8 +50,11 @@ export default class TransitionManager implements PageModifier {
         this.textContainerModifier,
         this.elementPickerModifier
     );
-
     private readingTimeModifier = new ReadingTimeModifier(this.overlayManager);
+    private libraryModifier = new LibraryModifier(
+        this.url,
+        this.overlayManager
+    );
 
     async prepare() {
         // *** read DOM phase ***
@@ -83,6 +88,9 @@ export default class TransitionManager implements PageModifier {
 
         // configure selectors (does not interact with DOM)
         this.contentBlockModifier.prepare();
+
+        // leave time for librarys state fetch
+        this.libraryModifier.fetchArticleState();
     }
 
     // prepare upcoming transition

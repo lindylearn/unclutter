@@ -6,45 +6,20 @@
     import clsx from "clsx";
 
     import { reportEventContentScript } from "source/content-script/messaging";
-    import { LibraryInfo } from "../../../common/schema";
-    import {
-        addArticleToLibrary,
-        checkArticleInLibrary,
-    } from "../../../common/api";
+    import { LibraryState } from "../../../common/schema";
     import { getRelativeTime } from "../../../common/time";
     import { getRandomColor } from "../../../common/annotations/styling";
     // import LibraryDropdown from "./LibraryDropdown.svelte";
     // import LoadingAnimation from "./LoadingAnimation.svelte";
 
-    export let articleUrl: string;
-    export let libraryUser: string;
+    export let libraryState: LibraryState;
 
-    let libraryInfo: LibraryInfo = null;
+    // local UI state
     let topicColor: string = null;
-    let isFavorite: boolean = null;
-    let isClustering = false;
-    let wasAlreadyPresent = false;
-    let error = false;
-    (async () => {
-        try {
-            libraryInfo = await checkArticleInLibrary(articleUrl, libraryUser);
-            if (!libraryInfo) {
-                isClustering = true;
-                libraryInfo = await addArticleToLibrary(
-                    articleUrl,
-                    libraryUser
-                );
-            } else {
-                wasAlreadyPresent = true;
-            }
+    $: topicColor = getRandomColor(libraryState.libraryInfo?.topic?.group_id);
 
-            topicColor = getRandomColor(libraryInfo.topic?.group_id);
-            isFavorite = libraryInfo.article.is_favorite;
-        } catch (e) {
-            console.error(e);
-            error = true;
-        }
-    })();
+    let isFavorite: boolean = null;
+    $: isFavorite = libraryState.libraryInfo?.article.is_favorite;
 
     function toggleFavorite() {
         isFavorite = !isFavorite;
@@ -59,7 +34,7 @@
     function openLibraryTopic() {
         browser.runtime.sendMessage(null, {
             event: "openLibrary",
-            topicId: libraryInfo.topic.id,
+            topicId: libraryState.libraryInfo.topic.id,
         });
         reportEventContentScript("openLibrary");
     }
@@ -97,13 +72,13 @@
         </svg>
 
         <div class="h-10 flex-shrink flex-grow overflow-hidden text-sm">
-            {#if libraryInfo}
+            {#if libraryState.libraryInfo}
                 <div
                     class="overflow-hidden whitespace-nowrap"
                     in:fly={{ y: 10, duration: 300, easing: cubicOut }}
                 >
                     <div class="flex">
-                        {#if libraryInfo.topic}
+                        {#if libraryState.libraryInfo.topic}
                             <span>Saved in</span>
                             <div
                                 class="relative ml-1 inline-block flex-shrink cursor-pointer overflow-hidden overflow-ellipsis rounded-lg px-1 align-middle text-sm shadow-sm transition-all hover:scale-95 hover:shadow dark:hover:shadow-2xl"
@@ -117,23 +92,23 @@
                                     class="inline-block w-5 align-top drop-shadow-sm"
                                     use:twemojiSvelte
                                 >
-                                    {libraryInfo.topic.emoji}
+                                    {libraryState.libraryInfo.topic.emoji}
                                 </span>
 
-                                {libraryInfo.topic.name}
+                                {libraryState.libraryInfo.topic.name}
                             </div>
                         {:else}
                             <span>Saved in your Library.</span>
                         {/if}
                     </div>
 
-                    {#if wasAlreadyPresent && libraryInfo.article.time_added}
+                    {#if libraryState.wasAlreadyPresent && libraryState.libraryInfo.article.time_added}
                         Added {getRelativeTime(
-                            libraryInfo.article.time_added * 1000
+                            libraryState.libraryInfo.article.time_added * 1000
                         )}.
-                    {:else if libraryInfo.sibling_count > 0}
-                        Found {libraryInfo.sibling_count} related article{libraryInfo.sibling_count !==
-                        1
+                    {:else if libraryState.libraryInfo.sibling_count > 0}
+                        Found {libraryState.libraryInfo.sibling_count} related article{libraryState
+                            .libraryInfo.sibling_count !== 1
                             ? "s"
                             : ""}.
                     {/if}
@@ -169,9 +144,9 @@
                         />
                     </svg>
                 </div>
-            {:else if error}
+            {:else if libraryState.error}
                 Error adding article :(
-            {:else if isClustering}
+            {:else if libraryState.isClustering}
                 <div
                     class="flex h-full flex-grow justify-between"
                     in:fly={{ y: 10, duration: 300, easing: cubicOut }}
