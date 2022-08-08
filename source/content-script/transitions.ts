@@ -50,10 +50,13 @@ export default class TransitionManager implements PageModifier {
         this.textContainerModifier,
         this.elementPickerModifier
     );
-    private readingTimeModifier = new ReadingTimeModifier(this.overlayManager);
     private libraryModifier = new LibraryModifier(
         this.url,
         this.overlayManager
+    );
+    private readingTimeModifier = new ReadingTimeModifier(
+        this.overlayManager,
+        this.libraryModifier
     );
 
     async prepare() {
@@ -89,7 +92,7 @@ export default class TransitionManager implements PageModifier {
         // configure selectors (does not interact with DOM)
         this.contentBlockModifier.prepare();
 
-        // leave time for librarys state fetch
+        // state library network fetch
         this.libraryModifier.fetchArticleState();
     }
 
@@ -173,6 +176,8 @@ export default class TransitionManager implements PageModifier {
         this.annotationsModifier.afterTransitionIn();
 
         this.overlayManager.insertUiFont(); // causes ~50ms layout reflow
+
+        this.libraryModifier.startReadingProgressSync();
     }
 
     beforeTransitionOut() {
