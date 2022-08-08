@@ -53,7 +53,7 @@ export default class ReadingTimeModifier implements PageModifier {
             this.totalReadingTime * (1 - this.pageProgress)
         );
         this.overlayManager.updateReadingTimeLeft(readingTimeLeft);
-        this.libraryModifier.handleScrollUpdate(this.pageProgress);
+        this.libraryModifier.onScrollUpdate(this.pageProgress);
     }
 
     async beforeTransitionOut() {

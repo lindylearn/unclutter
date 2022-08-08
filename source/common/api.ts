@@ -44,3 +44,24 @@ export async function addArticleToLibrary(url, user_id) {
     const json = await response.json();
     return json.added[0];
 }
+
+export async function updateLibraryArticle(url, user_id, diff) {
+    const response = await fetch(
+        `${lindyApiUrl}/library/update_article?${new URLSearchParams({
+            user_id,
+            url,
+        })}`,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(diff),
+            keepalive: true, // important to finish request after page close
+        }
+    );
+    if (!response.ok) {
+        console.error(`Updating library article failed: ${response}`);
+        return null;
+    }
+}

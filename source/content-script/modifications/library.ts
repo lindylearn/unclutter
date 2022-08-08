@@ -1,4 +1,10 @@
-import { addArticleToLibrary, checkArticleInLibrary } from "../../common/api";
+import throttle from "lodash/throttle";
+
+import {
+    addArticleToLibrary,
+    checkArticleInLibrary,
+    updateLibraryArticle,
+} from "../../common/api";
 import { LibraryState } from "../../common/schema";
 import { getLibraryUser } from "../../common/storage";
 import OverlayManager from "./overlay";
@@ -8,7 +14,7 @@ import { PageModifier, trackModifierExecution } from "./_interface";
 export default class LibraryModifier implements PageModifier {
     private articleUrl: string;
     private overlayManager: OverlayManager;
-    private readingProgressSyncIntervalSeconds = 10;
+    private readingProgressSyncIntervalSeconds = 30;
 
     libraryState: LibraryState = {
         isClustering: false,
@@ -45,16 +51,33 @@ export default class LibraryModifier implements PageModifier {
         }
     }
 
-    handleScrollUpdate(readingProgress: number) {
+    private lastReadingProgress: number;
+    onScrollUpdate(readingProgress: number) {
         if (!this.libraryState.libraryUser) {
             return;
         }
-        console.log(readingProgress);
+        this.lastReadingProgress = readingProgress;
+        this.sendProgressUpdateThrottled(readingProgress);
     }
 
     startReadingProgressSync() {
         window.addEventListener("beforeunload", () => {
-            console.log("beforeunload");
+            this.sendProgressUpdate(this.lastReadingProgress);
         });
     }
+
+    private sendProgressUpdate(readingProgress: number) {
+        if (!this.libraryState.libraryUser || !this.libraryState.libraryInfo) {
+            return;
+        }
+
+        updateLibraryArticle(this.articleUrl, this.libraryState.libraryUser, {
+            reading_progress: readingProgress,
+        });
+    }
+    // throttle to send updates less often, but do during continous reading scroll
+    private sendProgressUpdateThrottled = throttle(
+        this.sendProgressUpdate.bind(this),
+        this.readingProgressSyncIntervalSeconds * 1000
+    );
 }
