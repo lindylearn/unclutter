@@ -12,7 +12,7 @@
         reportEventContentScript,
     } from "../../content-script/messaging";
     import FeedbackMessage from "./FeedbackMessage.svelte";
-    import LibraryMessage from "./LibraryMessage.svelte";
+    import LibraryMessage from "./LibraryMessage/LibraryMessage.svelte";
     import Outline from "./Outline.svelte";
     import { OutlineItem } from "./parse";
     import UpdateMessage from "./UpdateMessage.svelte";
