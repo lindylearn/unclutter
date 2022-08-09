@@ -28,15 +28,21 @@ export default class LibraryModifier implements PageModifier {
     }
 
     async fetchArticleState() {
+        // get extension settings
         this.libraryState.libraryUser = await getLibraryUser();
+        if (!this.libraryState.libraryUser) {
+            return;
+        }
         this.overlayManager.updateLibraryState(this.libraryState);
 
+        // get library state
         this.libraryState.libraryInfo = await checkArticleInLibrary(
             this.articleUrl,
             this.libraryState.libraryUser
         );
 
         if (!this.libraryState.libraryInfo) {
+            // run on-demand adding
             this.libraryState.isClustering = true;
             this.overlayManager.updateLibraryState(this.libraryState);
 
@@ -46,9 +52,40 @@ export default class LibraryModifier implements PageModifier {
             );
             this.overlayManager.updateLibraryState(this.libraryState);
         } else {
+            // show retrieved state
             this.libraryState.wasAlreadyPresent = true;
             this.overlayManager.updateLibraryState(this.libraryState);
         }
+
+        if (this.scrollOnceFetchDone) {
+            this.scrollToLastReadingPosition();
+        }
+    }
+
+    private scrollOnceFetchDone = false;
+    scrollToLastReadingPosition() {
+        if (!this.libraryState.libraryUser) {
+            return;
+        }
+        if (!this.libraryState.libraryInfo) {
+            this.scrollOnceFetchDone = true;
+            return;
+        }
+
+        const readingProgress =
+            this.libraryState.libraryInfo.article.reading_progress;
+        if (
+            !this.libraryState.wasAlreadyPresent ||
+            !readingProgress ||
+            readingProgress >= 0.8
+        ) {
+            return;
+        }
+
+        window.scrollTo({
+            top: readingProgress * document.body.scrollHeight,
+            behavior: "smooth",
+        });
     }
 
     private lastReadingProgress: number;

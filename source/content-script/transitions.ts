@@ -178,6 +178,7 @@ export default class TransitionManager implements PageModifier {
         this.overlayManager.insertUiFont(); // causes ~50ms layout reflow
 
         this.libraryModifier.startReadingProgressSync();
+        this.libraryModifier.scrollToLastReadingPosition();
     }
 
     beforeTransitionOut() {
