@@ -9,6 +9,7 @@
     import { LibraryState } from "../../../common/schema";
     import { getRelativeTime } from "../../../common/time";
     import { getRandomColor } from "../../../common/annotations/styling";
+    import { updateLibraryArticle } from "../../../common/api";
     // import LibraryDropdown from "./LibraryDropdown.svelte";
     // import LoadingAnimation from "./LoadingAnimation.svelte";
 
@@ -23,6 +24,13 @@
 
     function toggleFavorite() {
         isFavorite = !isFavorite;
+        updateLibraryArticle(
+            libraryState.libraryInfo.article.url,
+            libraryState.libraryUser,
+            {
+                is_favorite: isFavorite,
+            }
+        );
     }
 
     function openLibrary() {
@@ -74,7 +82,7 @@
         <div class="h-10 flex-shrink flex-grow overflow-hidden text-sm">
             {#if libraryState.libraryInfo}
                 <div
-                    class="overflow-hidden whitespace-nowrap"
+                    class="mr-6 overflow-hidden whitespace-nowrap"
                     in:fly={{ y: 10, duration: 300, easing: cubicOut }}
                 >
                     <div class="flex">
