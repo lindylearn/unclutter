@@ -1,4 +1,5 @@
 import { Runtime, Tabs } from "webextension-polyfill";
+import { clusterLibraryArticles } from "../common/api";
 import { extensionSupportsUrl } from "../common/articleDetection";
 import { handleReportBrokenPage } from "../common/bugReport";
 import {
@@ -8,11 +9,12 @@ import {
     setFeatureFlag,
 } from "../common/featureFlags";
 import browser from "../common/polyfill";
-import { setLibraryUser } from "../common/storage";
+import { getLibraryUser, setLibraryUser } from "../common/storage";
 import { saveInitialInstallVersionIfMissing } from "../overlay/outline/updateMessages";
 import { migrateAnnotationStorage } from "../sidebar/common/local";
 import { fetchCss } from "./actions";
 import { loadAnnotationCountsToMemory } from "./annotationCounts";
+import { getAllBookmarks, requestBookmarksPermission } from "./bookmarks";
 import { enableInTab, injectScript, togglePageViewMessage } from "./inject";
 import { onNewInstall, requestOptionalPermissions } from "./install";
 import {
@@ -33,6 +35,23 @@ browser.action.onClicked.addListener((tab: Tabs.Tab) => {
 
     if (!extensionSupportsUrl(url)) {
         // ideally show some error message here
+        return;
+    }
+
+    // Support importing browser bookmarks into the extension companion website (which allows the user to organize & easily open articles with the extension).
+    // This code only runs if the user explicitly triggered it: they selected the browser import on the companion website, clicked the extension icon as stated in the instructions, then granted the optional bookmarks permission.
+    // lindylearn.io is the official publisher domain for this browser extension.
+    if (url.href === "http://localhost:3000/import?provider=bookmarks") {
+        requestBookmarksPermission().then(async (granted: boolean) => {
+            const libraryUser = await getLibraryUser();
+
+            if (granted && libraryUser) {
+                console.log("Starting bookmarks library import");
+                const bookmarks = await getAllBookmarks();
+                clusterLibraryArticles(bookmarks, libraryUser);
+            }
+        });
+
         return;
     }
 

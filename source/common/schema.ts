@@ -1,3 +1,13 @@
+export type LibraryState = {
+    libraryUser?: string;
+    libraryInfo?: LibraryInfo;
+
+    isClustering: boolean;
+    wasAlreadyPresent: boolean;
+    error: boolean;
+};
+
+// returned from API
 export type LibraryInfo = {
     article: LibraryArticle;
     topic: LibraryTopic | null;

@@ -5,6 +5,7 @@ import {
     getFeatureFlag,
 } from "../../common/featureFlags";
 import browser, { BrowserType, getBrowserType } from "../../common/polyfill";
+import { LibraryState } from "../../common/schema";
 import {
     createStylesheetLink,
     overrideClassname,
@@ -23,6 +24,7 @@ import AnnotationsModifier from "./annotations/annotationsModifier";
 import ThemeModifier from "./CSSOM/theme";
 import TextContainerModifier from "./DOM/textContainer";
 import ElementPickerModifier from "./elementPicker";
+import LibraryModifier from "./library";
 import { PageModifier, trackModifierExecution } from "./_interface";
 
 @trackModifierExecution
@@ -33,6 +35,7 @@ export default class OverlayManager implements PageModifier {
     private annotationsModifer: AnnotationsModifier;
     private textContainerModifier: TextContainerModifier;
     private elementPickerModifier: ElementPickerModifier;
+    private libraryModifier: LibraryModifier;
 
     private outline: OutlineItem[];
     private flatOutline: OutlineItem[];
@@ -170,11 +173,11 @@ export default class OverlayManager implements PageModifier {
         this.topleftSvelteComponent = new TopLeftContainer({
             target: this.topleftIframe.contentDocument.body,
             props: {
-                articleUrl: window.location.href,
                 outline: this.outline, // null at first
                 activeOutlineIndex: this.outline?.[0].index,
                 annotationsEnabled: this.annotationsEnabled,
                 readingTimeLeft: this.readingTimeLeft,
+                libraryState: this.libraryState,
             },
         });
     }
@@ -436,6 +439,14 @@ export default class OverlayManager implements PageModifier {
         this.readingTimeLeft = minutes;
         this.topleftSvelteComponent?.$set({
             readingTimeLeft: minutes,
+        });
+    }
+
+    private libraryState: LibraryState = null;
+    updateLibraryState(libraryState: LibraryState) {
+        this.libraryState = libraryState;
+        this.topleftSvelteComponent?.$set({
+            libraryState,
         });
     }
 
