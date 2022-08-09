@@ -50,9 +50,18 @@ export async function captureUrl(
 
     const body = await page.$("body");
     if (!body) {
-        console.error(`Error: no body tag on ${url}`);
+        console.error(`Error: no body tag`);
         return;
     }
+    const textContent = await body.evaluate(
+        (el: HTMLBodyElement) => el.innerText
+    );
+    const wordCount = textContent.trim().split(/\s+/).length;
+    if (wordCount < 250) {
+        console.error(`Error: page contains less than 250 words`);
+        return;
+    }
+
     const bodyPos = await body.boundingBox();
     await body.screenshot({
         path: `${localScreenshotsPath}/${getUrlFilename(url)}`,
@@ -65,16 +74,6 @@ export async function captureUrl(
         },
         omitBackground: true,
     });
-    // await page.screenshot({
-    //     path: `${localScreenshotsPath}/${getUrlFilename(url)}`,
-    //     clip: {
-    //         x: bodyPos!.x,
-    //         y: bodyPos!.y,
-    //         width: bodyPos!.width - 20,
-    //         height: 900,
-    //     },
-    //     omitBackground: true,
-    // });
 
     await page.close();
 }
