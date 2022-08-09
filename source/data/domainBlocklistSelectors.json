@@ -69,6 +69,7 @@
     ],
     "edition.cnn.com": [".ticker-ribbon"],
     "eff.org": [".element-invisible.element-focusable"],
+    "emeatribune.com": ["#vuukle-emote", ".vuukle-powerbar.powerbarBoxDiv"],
     "en.yna.co.kr": [
         ".keyword-zone.right-list-zone",
         ".section-tit",
@@ -132,6 +133,7 @@
         ".meta.meta__social.old__meta-social",
         ".article__status"
     ],
+    "leveragethoughts.substack.com": [".button-wrapper"],
     "litreactor.com": [
         ".imagecache.imagecache-header-square-tiny.imagecache-default.imagecache-header-square-tiny_default",
         ".imagecache.imagecache-staff-headshot-small.imagecache-linked.imagecache-staff-headshot-small_linked",

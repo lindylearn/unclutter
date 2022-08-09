@@ -6,13 +6,14 @@
         setFeatureFlag,
         showFeedbackMessage,
     } from "../../common/featureFlags";
-    import { getLibraryUser } from "../../common/storage";
+    import { LibraryState } from "../../common/schema";
     import {
         getRemoteFeatureFlag,
         reportEventContentScript,
     } from "../../content-script/messaging";
+    import LibraryModifier from "../../content-script/modifications/library";
     import FeedbackMessage from "./FeedbackMessage.svelte";
-    import LibraryMessage from "./LibraryMessage.svelte";
+    import LibraryMessage from "./LibraryMessage/LibraryMessage.svelte";
     import Outline from "./Outline.svelte";
     import { OutlineItem } from "./parse";
     import UpdateMessage from "./UpdateMessage.svelte";
@@ -21,12 +22,12 @@
         saveDismissedVersionMessage,
     } from "./updateMessages";
 
-    export let articleUrl: string;
     export let outline: OutlineItem[];
     export let activeOutlineIndex: number;
     export let annotationsEnabled: boolean;
     export let totalAnnotationCount: number = 0;
     export let readingTimeLeft: number = null;
+    export let libraryState: LibraryState;
 
     let displayFeedbackMessage = false;
     getFeatureFlag(dismissedFeedbackMessage)
@@ -55,19 +56,14 @@
         saveDismissedVersionMessage(dismissedVersion);
         // event emitted in component
     }
-
-    let libraryUser = null;
-    getLibraryUser().then((userId) => {
-        libraryUser = userId;
-    });
 </script>
 
 <div
     id="lindy-info-topleft-content"
     class="flex flex-col gap-1.5 font-paragraph"
 >
-    {#if libraryUser}
-        <LibraryMessage {articleUrl} {libraryUser} />
+    {#if libraryState?.libraryUser}
+        <LibraryMessage {libraryState} />
     {/if}
 
     <Outline
