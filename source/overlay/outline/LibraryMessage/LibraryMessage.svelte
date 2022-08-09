@@ -93,17 +93,18 @@
                                 on:click={openLibraryTopic}
                             >
                                 <div
-                                    class="absolute left-0 top-0 h-full w-full dark:brightness-50"
+                                    class="absolute left-0 top-0 z-0 h-full w-full dark:brightness-50"
                                     style={`background-color: ${topicColor}`}
                                 />
-                                <span
-                                    class="inline-block w-5 align-top drop-shadow-sm"
-                                    use:twemojiSvelte
-                                >
-                                    {libraryState.libraryInfo.topic.emoji}
-                                </span>
-
-                                {libraryState.libraryInfo.topic.name}
+                                <div class="relative z-10">
+                                    <span
+                                        class="inline-block w-5 align-top drop-shadow-sm"
+                                        use:twemojiSvelte
+                                    >
+                                        {libraryState.libraryInfo.topic.emoji}
+                                    </span>
+                                    {libraryState.libraryInfo.topic.name}
+                                </div>
                             </div>
                         {:else}
                             <span>Saved in your Library.</span>
