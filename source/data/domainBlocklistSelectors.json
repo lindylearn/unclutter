@@ -5,6 +5,7 @@
         ".aalto-component-wrapper.lindy-clean-margin-bottom",
         ".aalto-content-bottom-wrapper.content-container"
     ],
+    "about.gitlab.com": ["#on-this-page", ".hidden-md.hidden-lg"],
     "aecmag.com": [
         ".relpost-thumb-wrapper",
         ".size-full.wp-image-5967",
