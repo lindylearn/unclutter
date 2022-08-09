@@ -1,4 +1,4 @@
-// NOTE: for some reason, using types in this file leads to bundling errors
+// NOTE: for some reason using types in this file leads to bundling errors
 
 // const lindyApiUrl = "http://localhost:8000";
 const lindyApiUrl = "https://api2.lindylearn.io";
@@ -43,6 +43,28 @@ export async function addArticleToLibrary(url, user_id) {
 
     const json = await response.json();
     return json.added[0];
+}
+
+export async function clusterLibraryArticles(articles, user_id) {
+    // normalize fields to reduce message size
+    const importData = {
+        urls: articles.map(({ url }) => url),
+        time_added: articles.map(({ time_added }) => time_added),
+        favorite: articles.map(({ favorite }) => favorite),
+    };
+
+    await fetch(
+        `${lindyApiUrl}/library/cluster_articles?${new URLSearchParams({
+            user_id,
+        })}`,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(importData),
+        }
+    );
 }
 
 export async function updateLibraryArticle(url, user_id, diff) {
