@@ -28,37 +28,45 @@ export default class LibraryModifier implements PageModifier {
     }
 
     async fetchArticleState() {
-        // get extension settings
-        this.libraryState.libraryUser = await getLibraryUser();
-        if (!this.libraryState.libraryUser) {
-            return;
-        }
-        this.overlayManager.updateLibraryState(this.libraryState);
-
-        // get library state
-        this.libraryState.libraryInfo = await checkArticleInLibrary(
-            this.articleUrl,
-            this.libraryState.libraryUser
-        );
-
-        if (!this.libraryState.libraryInfo) {
-            // run on-demand adding
-            this.libraryState.isClustering = true;
+        try {
+            // get extension settings
+            this.libraryState.libraryUser = await getLibraryUser();
+            if (!this.libraryState.libraryUser) {
+                return;
+            }
             this.overlayManager.updateLibraryState(this.libraryState);
 
-            this.libraryState.libraryInfo = await addArticleToLibrary(
+            // get library state
+            this.libraryState.libraryInfo = await checkArticleInLibrary(
                 this.articleUrl,
                 this.libraryState.libraryUser
             );
-            this.overlayManager.updateLibraryState(this.libraryState);
-        } else {
-            // show retrieved state
-            this.libraryState.wasAlreadyPresent = true;
-            this.overlayManager.updateLibraryState(this.libraryState);
-        }
 
-        if (this.scrollOnceFetchDone) {
-            this.scrollToLastReadingPosition();
+            if (!this.libraryState.libraryInfo) {
+                // run on-demand adding
+                this.libraryState.isClustering = true;
+                this.overlayManager.updateLibraryState(this.libraryState);
+
+                this.libraryState.libraryInfo = await addArticleToLibrary(
+                    this.articleUrl,
+                    this.libraryState.libraryUser
+                );
+                if (!this.libraryState.libraryInfo) {
+                    this.libraryState.error = true;
+                }
+                this.overlayManager.updateLibraryState(this.libraryState);
+            } else {
+                // show retrieved state
+                this.libraryState.wasAlreadyPresent = true;
+                this.overlayManager.updateLibraryState(this.libraryState);
+            }
+
+            if (this.scrollOnceFetchDone) {
+                this.scrollToLastReadingPosition();
+            }
+        } catch {
+            this.libraryState.error = true;
+            this.overlayManager.updateLibraryState(this.libraryState);
         }
     }
 
