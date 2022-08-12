@@ -28,6 +28,6 @@ export async function getAllBookmarks(): Promise<BookmarkedPage[]> {
         .map((b) => ({
             url: b.url,
             time_added: Math.round(b.dateAdded / 1000),
-            favorite: true,
+            favorite: false,
         }));
 }
