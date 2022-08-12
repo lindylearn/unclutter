@@ -42,7 +42,7 @@ export async function addArticleToLibrary(url, user_id) {
     }
 
     const json = await response.json();
-    return json.added[0];
+    return json.added?.[0];
 }
 
 export async function clusterLibraryArticles(articles, user_id) {
