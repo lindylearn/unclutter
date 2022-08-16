@@ -160,6 +160,7 @@
         ".c-detailkeyward"
     ],
     "nytimes.com": [".css-vxcmzt"],
+    "observablehq.com": [".flex-grow-1", ".mr3.lh-copy", "#showtitlewrapper"],
     "snclavalin.com": [".top-content-item.read-time", ".top-content-item"],
     "speckle.systems": [
         ".mt-0.w-full.h-20",
