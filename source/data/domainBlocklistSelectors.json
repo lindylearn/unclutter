@@ -141,6 +141,7 @@
     ],
     "makandracards.com": ["#tail", ".text_ad__more"],
     "meduza.io": [".Layout-bannerTop"],
+    "mmazurek.dev": [".wp-block-separator", ".wp-block-tnp-minimal"],
     "modularhomesource.com": [".elementor-shape-fill", ".wp-block-image"],
     "mullvad.net": ["#connection-status"],
     "nautil.us": [".article-action-list"],
