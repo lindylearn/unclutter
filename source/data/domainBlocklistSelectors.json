@@ -166,6 +166,8 @@
         ".c-detailkeyward"
     ],
     "nytimes.com": [".css-vxcmzt"],
+    "observablehq.com": [".mr3.lh-copy", "#showtitlewrapper"],
+    "realpython.com": [".small.text-muted"],
     "snclavalin.com": [".top-content-item.read-time", ".top-content-item"],
     "speckle.systems": [
         ".mt-0.w-full.h-20",
