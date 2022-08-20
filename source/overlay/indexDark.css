@@ -1,3 +1,7 @@
+:root {
+    color-scheme: dark;
+}
+
 .lindy-page-settings-toprght,
 .lindy-page-settings-pageadjacent {
     --background-color: rgb(33, 33, 33);
