@@ -249,5 +249,6 @@
     ],
     "voxeu.org": [".bookmarks.autoclear", ".slogan", "#header"],
     "web.archive.org": ["#wm-ipp-base"],
+    "wsj.com": [".bigTop__media.bigTop__media--image.bigTop--8-16u"],
     "zdnet.com": [".c-socialSharebar"]
 }
