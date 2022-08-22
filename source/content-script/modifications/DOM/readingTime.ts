@@ -46,7 +46,8 @@ export default class ReadingTimeModifier implements PageModifier {
     private scollListener() {
         // take start of viewport offseet, so will never reach 100%
         this.pageProgress =
-            window.scrollY / document.documentElement.scrollHeight;
+            (window.scrollY + window.innerHeight) /
+            document.documentElement.scrollHeight;
 
         // TODO base on outline headings to be more robust against whitespace?
         const readingTimeLeft = Math.round(

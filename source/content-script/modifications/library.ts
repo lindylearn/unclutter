@@ -100,7 +100,9 @@ export default class LibraryModifier implements PageModifier {
         }
 
         window.scrollTo({
-            top: readingProgress * document.body.scrollHeight,
+            top:
+                readingProgress * document.body.scrollHeight -
+                window.innerHeight,
             behavior: "smooth",
         });
     }
