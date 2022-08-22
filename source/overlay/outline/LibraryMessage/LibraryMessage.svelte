@@ -35,18 +35,18 @@
         );
     }
 
-    function openLibrary() {
-        browser.runtime.sendMessage(null, {
+    function openLibrary(open_topic: boolean = false) {
+        const data = {
             event: "openLibrary",
+        };
+        if (open_topic) {
+            data["topicId"] = libraryState.libraryInfo.topic.id;
+        }
+
+        browser.runtime.sendMessage(null, data);
+        reportEventContentScript("openLibrary", {
+            libraryUser: libraryState.libraryUser,
         });
-        reportEventContentScript("openLibrary");
-    }
-    function openLibraryTopic() {
-        browser.runtime.sendMessage(null, {
-            event: "openLibrary",
-            topicId: libraryState.libraryInfo.topic.id,
-        });
-        reportEventContentScript("openLibrary");
     }
 </script>
 
@@ -58,7 +58,7 @@
         <svg
             class="w-8 flex-shrink-0 cursor-pointer"
             viewBox="0 0 512 512"
-            on:click={openLibrary}
+            on:click={() => openLibrary()}
         >
             <path
                 fill="currentColor"
@@ -93,7 +93,7 @@
                             <span>Saved in</span>
                             <div
                                 class="relative ml-1 inline-block flex-shrink cursor-pointer overflow-hidden overflow-ellipsis rounded-lg px-1 align-middle text-sm shadow-sm transition-all hover:scale-95 hover:shadow dark:hover:shadow-2xl"
-                                on:click={openLibraryTopic}
+                                on:click={() => openLibrary(true)}
                             >
                                 <div
                                     class="absolute left-0 top-0 z-0 h-full w-full dark:brightness-50"

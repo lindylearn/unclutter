@@ -7,6 +7,7 @@ import {
 } from "../../common/api";
 import { LibraryState } from "../../common/schema";
 import { getLibraryUser } from "../../common/storage";
+import { reportEventContentScript } from "../messaging";
 import OverlayManager from "./overlay";
 import { PageModifier, trackModifierExecution } from "./_interface";
 
@@ -55,10 +56,18 @@ export default class LibraryModifier implements PageModifier {
                     this.libraryState.error = true;
                 }
                 this.overlayManager.updateLibraryState(this.libraryState);
+
+                reportEventContentScript("addArticle", {
+                    libraryUser: this.libraryState.libraryUser,
+                });
             } else {
                 // show retrieved state
                 this.libraryState.wasAlreadyPresent = true;
                 this.overlayManager.updateLibraryState(this.libraryState);
+
+                reportEventContentScript("visitArticle", {
+                    libraryUser: this.libraryState.libraryUser,
+                });
             }
 
             if (this.scrollOnceFetchDone) {

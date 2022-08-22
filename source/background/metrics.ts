@@ -24,12 +24,19 @@ export async function reportEvent(name: string, data = {}) {
 }
 
 async function sendEvent(name, data, isDev) {
+    const libraryUser = data["libraryUser"];
+    if (libraryUser) {
+        delete data["libraryUser"];
+    }
+
     try {
         await fetch(`https://app.posthog.com/capture`, {
             method: "POST",
             body: JSON.stringify({
-                api_key: "phc_BQHO9btvNLVEbFC4ihMIS8deK5T6P4d8EF75Ihvkfaw",
-                distinct_id: distinctId,
+                api_key: !libraryUser
+                    ? "phc_BQHO9btvNLVEbFC4ihMIS8deK5T6P4d8EF75Ihvkfaw"
+                    : "phc_fvlWmeHRjWGBHLXEmhtwx8vp5mSNHq63YbvKE1THr2r",
+                distinct_id: libraryUser || distinctId,
                 event: name,
                 properties: {
                     $useragent: navigator.userAgent,
