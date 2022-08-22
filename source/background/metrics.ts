@@ -25,19 +25,6 @@ export async function reportEvent(name: string, data = {}) {
 
 async function sendEvent(name, data, isDev) {
     try {
-        await fetch(`https://plausible.io/api/event`, {
-            method: "POST",
-            headers: {
-                "User-Agent": navigator.userAgent,
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                domain: "unclutter-extension",
-                url: `app://unclutter-extension/${isDev ? "test" : ""}`,
-                name,
-                props: data,
-            }),
-        });
         await fetch(`https://app.posthog.com/capture`, {
             method: "POST",
             body: JSON.stringify({
