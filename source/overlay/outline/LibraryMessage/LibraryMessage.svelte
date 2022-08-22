@@ -51,7 +51,7 @@
 </script>
 
 <div
-    class="library-message relative max-w-full rounded-lg px-2 py-2 text-gray-800 shadow"
+    class="library-message relative max-w-full rounded-lg px-2 py-2 shadow"
     style={`background-color: ${topicColor}`}
 >
     <div class="flex gap-2">
@@ -92,7 +92,7 @@
                         {#if libraryState.libraryInfo.topic}
                             <span>Saved in</span>
                             <div
-                                class="relative ml-1 inline-block flex-shrink cursor-pointer overflow-hidden overflow-ellipsis rounded-lg px-1 align-middle text-sm shadow-sm transition-all hover:scale-95 hover:shadow dark:hover:shadow-2xl"
+                                class="relative ml-1 inline-block flex-shrink cursor-pointer overflow-hidden overflow-ellipsis rounded-lg px-1 align-middle text-sm shadow-sm transition-all hover:scale-95 hover:shadow"
                                 on:click={() => openLibrary(true)}
                             >
                                 <div
