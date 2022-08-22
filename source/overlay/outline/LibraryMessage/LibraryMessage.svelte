@@ -17,7 +17,9 @@
 
     // local UI state
     let topicColor: string = null;
-    $: topicColor = getRandomColor(libraryState.libraryInfo?.topic?.group_id);
+    $: topicColor = libraryState.libraryInfo?.topic?.group_id
+        ? getRandomColor(libraryState.libraryInfo?.topic?.group_id)
+        : "white";
 
     let isFavorite: boolean = null;
     $: isFavorite = libraryState.libraryInfo?.article.is_favorite;
@@ -50,6 +52,7 @@
 
 <div
     class="library-message relative max-w-full rounded-lg px-2 py-2 text-gray-800 shadow"
+    style={`background-color: ${topicColor}`}
 >
     <div class="flex gap-2">
         <svg
@@ -169,7 +172,4 @@
 </div>
 
 <style lang="postcss" global>
-    .library-message {
-        background-color: #edd75b !important;
-    }
 </style>
