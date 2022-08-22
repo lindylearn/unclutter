@@ -27,6 +27,7 @@ async function sendEvent(name, data, isDev) {
     const libraryUser = data["libraryUser"];
     if (libraryUser) {
         delete data["libraryUser"];
+        data["$set"] = { distinctId };
     }
 
     try {
