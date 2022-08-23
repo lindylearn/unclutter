@@ -5,6 +5,8 @@ export type LibraryState = {
     isClustering: boolean;
     wasAlreadyPresent: boolean;
     error: boolean;
+
+    relatedArticles?: LibraryArticle[];
 };
 
 // returned from API

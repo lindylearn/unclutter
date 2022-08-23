@@ -87,3 +87,23 @@ export async function updateLibraryArticle(url, user_id, diff) {
         return null;
     }
 }
+
+export async function getRelatedArticles(url, user_id) {
+    const response = await fetch(
+        `${lindyApiUrl}/library/related_articles?${new URLSearchParams({
+            user_id,
+            url,
+        })}`,
+        {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        }
+    );
+    if (!response.ok) {
+        return [];
+    }
+
+    const json = await response.json();
+    return json;
+}

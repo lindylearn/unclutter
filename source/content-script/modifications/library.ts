@@ -3,6 +3,7 @@ import throttle from "lodash/throttle";
 import {
     addArticleToLibrary,
     checkArticleInLibrary,
+    getRelatedArticles,
     updateLibraryArticle,
 } from "../../common/api";
 import { LibraryState } from "../../common/schema";
@@ -21,6 +22,7 @@ export default class LibraryModifier implements PageModifier {
         isClustering: false,
         wasAlreadyPresent: false,
         error: false,
+        relatedArticles: [],
     };
 
     constructor(articleUrl: string, overlayManager: OverlayManager) {
@@ -77,6 +79,12 @@ export default class LibraryModifier implements PageModifier {
             this.libraryState.error = true;
             this.overlayManager.updateLibraryState(this.libraryState);
         }
+
+        this.libraryState.relatedArticles = await getRelatedArticles(
+            this.articleUrl,
+            this.libraryState.libraryUser
+        );
+        this.overlayManager.updateLibraryState(this.libraryState);
     }
 
     private scrollOnceFetchDone = false;
