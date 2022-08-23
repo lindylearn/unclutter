@@ -112,6 +112,10 @@ export default class LibraryModifier implements PageModifier {
         if (!this.libraryState.libraryUser) {
             return;
         }
+        if (readingProgress < this.lastReadingProgress) {
+            // track only furthest scroll
+            return;
+        }
         this.lastReadingProgress = readingProgress;
         this.sendProgressUpdateThrottled(readingProgress);
     }
