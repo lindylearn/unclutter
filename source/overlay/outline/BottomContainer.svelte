@@ -8,10 +8,10 @@
     import LindyIcon from "./Library/LindyIcon.svelte";
     import { reportEventContentScript } from "../../content-script/messaging";
 
-    export let libraryState: LibraryState;
+    export let libraryState: LibraryState | null;
 
     let topicColor: string = null;
-    $: topicColor = libraryState.libraryInfo?.topic?.group_id
+    $: topicColor = libraryState?.libraryInfo?.topic?.group_id
         ? getRandomColor(libraryState.libraryInfo?.topic?.group_id)
         : "";
 

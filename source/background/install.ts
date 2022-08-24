@@ -1,4 +1,4 @@
-import browser from "../common/polyfill";
+import browser, { getBrowserType } from "../common/polyfill";
 import { injectScript } from "./inject";
 import { reportEnablePageView } from "./metrics";
 
@@ -42,17 +42,19 @@ export function requestOptionalPermissions() {
 async function _installContextMenu() {
     console.log("Registering context menu ...");
 
-    const menuOptions = {
+    createOrUpdateContextMenu("unclutter-link", {
         title: "Open Link with Unclutter",
         contexts: ["link"],
-    };
+    });
 
-    try {
-        browser.contextMenus.create({ ...menuOptions, id: "unclutter-link" });
-    } catch {
-        console.log(runtime.lastError);
+    let context = "action";
+    if (getBrowserType() === "firefox") {
+        context = "browser_action";
     }
-    browser.contextMenus.update("unclutter-link", menuOptions);
+    createOrUpdateContextMenu("open-library", {
+        title: "Open Unclutter Library",
+        contexts: [context],
+    });
 
     browser.contextMenus.onClicked.addListener((info, tab) => {
         if (info.menuItemId === "unclutter-link") {
@@ -63,6 +65,21 @@ async function _installContextMenu() {
                 }, 1000);
                 reportEnablePageView("contextMenu");
             });
+        } else if (info.menuItemId === "open-library") {
+            browser.tabs.create({
+                url: "https://library.lindylearn.io/",
+                active: true,
+            });
         }
     });
+}
+
+function createOrUpdateContextMenu(id, menuOptions) {
+    try {
+        browser.contextMenus.create({ ...menuOptions, id });
+    } catch {
+        // @ts-ignore
+        _ = runtime.lastError;
+    }
+    browser.contextMenus.update(id, menuOptions);
 }
