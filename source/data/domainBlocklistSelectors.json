@@ -141,6 +141,7 @@
         "#preface-top-wrapper"
     ],
     "makandracards.com": ["#tail", ".text_ad__more"],
+    "markmanson.net": [".mf-monday-opt-in"],
     "meduza.io": [".Layout-bannerTop"],
     "mmazurek.dev": [
         ".wp-block-separator",
