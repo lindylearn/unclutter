@@ -112,6 +112,7 @@
         ".hz-editorial-gallery-side-bar__ads",
         ".hz-editorial-gallery-side-bar__section"
     ],
+    "jamesclear.com": [".post__next"],
     "kdd.org": [
         ".btn.u-btn-primary.g-brd-2.g-brd-white.g-font-size-13.g-rounded-50.g-pl-20.g-mb-20.g-pr-15.g-py-9",
         ".col-md-5",
