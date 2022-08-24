@@ -37,7 +37,7 @@
             >
                 <RelatedArticles {libraryState} />
                 <div
-                    class="absolute top-3 right-3 flex cursor-pointer items-center gap-1 rounded-lg px-1.5 py-0.5 font-header text-sm font-bold shadow-sm transition-all hover:scale-95 hover:shadow"
+                    class="absolute top-3 right-3 flex cursor-pointer items-center gap-1 rounded-lg px-1.5 py-0.5 font-header text-sm font-semibold shadow-sm transition-all hover:scale-95 hover:shadow"
                     style={`background-color: ${topicColor}`}
                     on:click={() => openLibrary()}
                 >

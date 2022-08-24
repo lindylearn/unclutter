@@ -1,6 +1,6 @@
 <script lang="ts">
     import browser from "../../../common/polyfill";
-    import { fly } from "svelte/transition";
+    import { fly, fade } from "svelte/transition";
     import { cubicOut } from "svelte/easing";
     import twemojiSvelte from "../components/twemoji-svelte";
     import clsx from "clsx";
@@ -51,9 +51,7 @@
     }
 </script>
 
-<div
-    class="library-message relative max-w-full rounded-lg text-gray-800 shadow"
->
+<div class="library-message relative max-w-full rounded-lg  shadow">
     <div
         class="flex items-center gap-2 rounded-lg p-2"
         style={`background-color: ${topicColor}`}
@@ -75,7 +73,7 @@
                         {#if libraryState.libraryInfo.topic}
                             <span>Saved in</span>
                             <div
-                                class="relative ml-1 inline-block flex-shrink cursor-pointer overflow-hidden overflow-ellipsis rounded-lg px-1 align-middle font-header text-sm font-bold shadow-sm transition-all hover:scale-95 hover:shadow"
+                                class="relative ml-1 inline-block flex-shrink cursor-pointer overflow-hidden overflow-ellipsis rounded-lg px-1 align-middle font-header text-sm font-semibold shadow-sm transition-all hover:scale-95 hover:shadow"
                                 on:click={() => openLibrary(true)}
                             >
                                 <div
@@ -102,10 +100,12 @@
                             libraryState.libraryInfo.article.time_added * 1000
                         )}.
                     {:else if libraryState.relatedArticles?.length > 0}
-                        Found {libraryState.relatedArticles.length} related article{libraryState
-                            .relatedArticles.length
-                            ? "s"
-                            : ""}.
+                        <span in:fade
+                            >Found {libraryState.relatedArticles.length} related
+                            article{libraryState.relatedArticles.length
+                                ? "s"
+                                : ""}.</span
+                        >
                     {/if}
                 </div>
 

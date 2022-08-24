@@ -3,9 +3,11 @@
 
     import browser from "../../../common/polyfill";
     import { LibraryArticle } from "../../../common/schema";
+    import { reportEventContentScript } from "../../../content-script/messaging";
 
     export let article: LibraryArticle;
     export let index: number;
+    export let libraryUser: string;
 
     const imageUrl = `https://storage.googleapis.com/unclutter-screenshots-serverless/articles/current/${encodeURIComponent(
         article.url
@@ -36,6 +38,9 @@
             url: article.url,
             newTab: true,
         });
+        reportEventContentScript("clickRelatedArticle", {
+            libraryUser: libraryUser,
+        });
     }
 </script>
 
@@ -47,8 +52,8 @@
     href={article.url}
     on:click={openPage}
 >
-    <div class="article-fallback p-3">
-        <div class="select-none font-bold leading-tight">
+    <div class="article-fallback p-3 ">
+        <div class="select-none font-bold leading-tight text-gray-700">
             {article.title}
         </div>
     </div>

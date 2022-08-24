@@ -11,7 +11,11 @@
     <!-- <h2 class="mb-3">Related from your library:</h2> -->
     <div class="relative flex gap-2 rounded-lg" in:fade>
         {#each libraryState.relatedArticles as article, index}
-            <ArticlePreview {article} {index} />
+            <ArticlePreview
+                {article}
+                {index}
+                libraryUser={libraryState.libraryUser}
+            />
         {/each}
     </div>
 </div>
