@@ -19,7 +19,7 @@
     let topicColor: string = null;
     $: topicColor = libraryState.libraryInfo?.topic?.group_id
         ? getRandomColor(libraryState.libraryInfo?.topic?.group_id)
-        : "white";
+        : "";
 
     let isFavorite: boolean = null;
     $: isFavorite = libraryState.libraryInfo?.article.is_favorite;

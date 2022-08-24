@@ -11,9 +11,9 @@
         getRemoteFeatureFlag,
         reportEventContentScript,
     } from "../../content-script/messaging";
-    import LibraryModifier from "../../content-script/modifications/library";
     import FeedbackMessage from "./FeedbackMessage.svelte";
-    import LibraryMessage from "./LibraryMessage/LibraryMessage.svelte";
+    import LibraryMessage from "./Library/LibraryMessage.svelte";
+    import RelatedArticles from "./Library/RelatedArticles.svelte";
     import Outline from "./Outline.svelte";
     import { OutlineItem } from "./parse";
     import UpdateMessage from "./UpdateMessage.svelte";
@@ -73,6 +73,10 @@
         {totalAnnotationCount}
         {readingTimeLeft}
     />
+
+    <!-- {#if libraryState?.libraryUser && libraryState.relatedArticles.length > 0}
+        <RelatedArticles {libraryState} />
+    {/if} -->
 
     {#each updateMessages as { version, updateMessage }}
         <UpdateMessage
