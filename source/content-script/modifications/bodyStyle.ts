@@ -1,3 +1,4 @@
+import { getLibraryUser } from "../../common/storage";
 import { PageModifier, trackModifierExecution } from "./_interface";
 
 // Perform various inline style fixes to overwrite site styles
@@ -8,6 +9,7 @@ export default class BodyStyleModifier implements PageModifier {
 
     originalBackgroundColor: string;
     private bodyStyleProperties: any;
+    private libraryEnabled: boolean;
 
     constructor() {}
 
@@ -25,6 +27,8 @@ export default class BodyStyleModifier implements PageModifier {
         }
 
         this.bodyStyleProperties = {};
+
+        getLibraryUser().then((user) => (this.libraryEnabled = !!user));
     }
 
     transitionIn() {
@@ -154,18 +158,20 @@ export default class BodyStyleModifier implements PageModifier {
     }
 
     private applyResponsiveStyle(isMobile: boolean) {
-        if (isMobile) {
-            document.body.style.setProperty(
-                "margin",
-                "10px auto calc(5px + 260px) 20px",
-                "important"
-            );
-        } else {
-            document.body.style.setProperty(
-                "margin",
-                "10px auto calc(5px + 260px) auto",
-                "important"
-            );
+        let marginBottom = "20px";
+        if (this.libraryEnabled) {
+            marginBottom = "calc(5px + 260px)";
         }
+
+        let marginSide = "auto";
+        if (isMobile) {
+            marginSide = "20px";
+        }
+
+        document.body.style.setProperty(
+            "margin",
+            `10px ${marginSide} ${marginBottom} ${marginSide}`,
+            "important"
+        );
     }
 }
