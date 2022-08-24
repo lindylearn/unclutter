@@ -10,7 +10,7 @@ import {
 } from "../common/featureFlags";
 import browser from "../common/polyfill";
 import { getLibraryUser, setLibraryUser } from "../common/storage";
-import { saveInitialInstallVersionIfMissing } from "../overlay/outline/updateMessages";
+import { saveInitialInstallVersionIfMissing } from "../common/updateMessages";
 import { migrateAnnotationStorage } from "../sidebar/common/local";
 import { fetchCss } from "./actions";
 import { loadAnnotationCountsToMemory } from "./annotationCounts";

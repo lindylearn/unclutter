@@ -2,7 +2,7 @@
     import browser from "../../../common/polyfill";
     import { fly } from "svelte/transition";
     import { cubicOut } from "svelte/easing";
-    import twemojiSvelte from "../twemoji-svelte";
+    import twemojiSvelte from "../components/twemoji-svelte";
     import clsx from "clsx";
 
     import { reportEventContentScript } from "source/content-script/messaging";

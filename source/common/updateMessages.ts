@@ -1,5 +1,5 @@
-import browser from "../../common/polyfill";
-import updateMessages from "../../versions.json";
+import browser from "./polyfill";
+import updateMessages from "../versions.json";
 
 interface VersionMessage {
     version: string;

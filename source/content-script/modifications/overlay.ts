@@ -11,12 +11,12 @@ import {
     overrideClassname,
 } from "../../common/stylesheets";
 import { backgroundColorThemeVariable } from "../../common/theme";
-import { getElementYOffset } from "../../overlay/outline/common";
+import { getElementYOffset } from "../../overlay/outline/components/common";
 import {
     createRootItem,
     getOutline,
     OutlineItem,
-} from "../../overlay/outline/parse";
+} from "../../overlay/outline/components/parse";
 import TopLeftContainer from "../../overlay/outline/TopLeftContainer.svelte";
 import PageAdjacentContainerSvelte from "../../overlay/ui/PageAdjacentContainer.svelte";
 import TopRightContainerSvelte from "../../overlay/ui/TopRightContainer.svelte";

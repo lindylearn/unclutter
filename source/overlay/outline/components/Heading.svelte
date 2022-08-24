@@ -1,8 +1,8 @@
 <script lang="ts">
-    import { reportEventContentScript } from "../../content-script/messaging";
+    import { reportEventContentScript } from "../../../content-script/messaging";
     import { scrollToElement } from "./common";
     import { OutlineItem } from "./parse";
-    import { getRandomColor } from "../../common/annotations/styling";
+    import { getRandomColor } from "../../../common/annotations/styling";
 
     export let annotationsEnabled: boolean;
     export let socialAnnotationsEnabled: boolean;

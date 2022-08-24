@@ -1,4 +1,4 @@
-import { getOutlineIframe } from "../overlay/outline/common";
+import { getOutlineIframe } from "../overlay/outline/components/common";
 import { mergeUserTheme } from "./storage";
 
 export type themeName = "auto" | "white" | "sepia" | "dark";

@@ -11,16 +11,16 @@
         getRemoteFeatureFlag,
         reportEventContentScript,
     } from "../../content-script/messaging";
-    import FeedbackMessage from "./FeedbackMessage.svelte";
+    import FeedbackMessage from "./components/FeedbackMessage.svelte";
     import LibraryMessage from "./Library/LibraryMessage.svelte";
     import RelatedArticles from "./Library/RelatedArticles.svelte";
-    import Outline from "./Outline.svelte";
-    import { OutlineItem } from "./parse";
-    import UpdateMessage from "./UpdateMessage.svelte";
+    import Outline from "./components/Outline.svelte";
+    import { OutlineItem } from "./components/parse";
+    import UpdateMessage from "./components/UpdateMessage.svelte";
     import {
         getVersionMessagesToShow,
         saveDismissedVersionMessage,
-    } from "./updateMessages";
+    } from "../../common/updateMessages";
 
     export let outline: OutlineItem[];
     export let activeOutlineIndex: number;

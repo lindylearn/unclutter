@@ -20,7 +20,7 @@ import {
     parse,
     rgbToHSL,
 } from "../../../common/util/color";
-import { getOutlineIframe } from "../../../overlay/outline/common";
+import { getOutlineIframe } from "../../../overlay/outline/components/common";
 import AnnotationsModifier from "../annotations/annotationsModifier";
 import BodyStyleModifier from "../bodyStyle";
 import TextContainerModifier from "../DOM/textContainer";
