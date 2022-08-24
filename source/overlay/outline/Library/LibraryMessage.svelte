@@ -52,10 +52,12 @@
 </script>
 
 <div
-    class="library-message relative max-w-full rounded-lg px-2 py-2 shadow"
-    style={`background-color: ${topicColor}`}
+    class="library-message relative max-w-full rounded-lg text-gray-800 shadow"
 >
-    <div class="flex items-center gap-2">
+    <div
+        class="flex items-center gap-2 rounded-lg p-2"
+        style={`background-color: ${topicColor}`}
+    >
         <div
             class="w-8 flex-shrink-0 cursor-pointer transition-transform hover:scale-95"
             on:click={() => openLibrary()}
@@ -73,7 +75,7 @@
                         {#if libraryState.libraryInfo.topic}
                             <span>Saved in</span>
                             <div
-                                class="relative ml-1 inline-block flex-shrink cursor-pointer overflow-hidden overflow-ellipsis rounded-lg px-1 align-middle text-sm font-bold shadow-sm transition-all hover:scale-95 hover:shadow"
+                                class="relative ml-1 inline-block flex-shrink cursor-pointer overflow-hidden overflow-ellipsis rounded-lg px-1 align-middle font-header text-sm font-bold shadow-sm transition-all hover:scale-95 hover:shadow"
                                 on:click={() => openLibrary(true)}
                             >
                                 <div
@@ -109,7 +111,7 @@
 
                 <!-- <LibraryDropdown /> -->
                 <div
-                    class={"absolute top-2 right-2 drop-shadow-sm cursor-pointer"}
+                    class={"star-icon absolute top-2 right-2 drop-shadow-sm cursor-pointer"}
                     on:click={toggleFavorite}
                 >
                     <svg

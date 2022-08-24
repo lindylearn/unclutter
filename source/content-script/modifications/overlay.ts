@@ -80,12 +80,15 @@ export default class OverlayManager implements PageModifier {
         this.topleftIframe.style.position = "fixed"; // put on new layer
         this.topleftIframe.style.maxWidth =
             "calc((100vw - var(--lindy-pagewidth)) / 2 - 7px)"; // prevent initial transition
-        document.documentElement.appendChild(this.topleftIframe);
-        this.insertIframeFont(this.topleftIframe);
 
         this.bottomIframe = this.createIframeNode("lindy-info-bottom");
         this.bottomIframe.style.position = "absolute"; // put on new layer
+
+        document.documentElement.appendChild(this.topleftIframe);
         document.documentElement.appendChild(this.bottomIframe);
+
+        this.insertIframeFont(this.topleftIframe);
+        this.insertIframeFont(this.bottomIframe); // TODO run later? need to modify initial dark theme inser then
     }
 
     private createIframeNode(id: string) {
@@ -233,7 +236,6 @@ export default class OverlayManager implements PageModifier {
                 libraryState: this.libraryState,
             },
         });
-        this.insertIframeFont(this.bottomIframe);
     }
 
     // insert font into main HTML doc
@@ -328,7 +330,7 @@ export default class OverlayManager implements PageModifier {
     fadeOutUi() {
         document
             .querySelectorAll(
-                "#lindy-page-settings-toprght, #lindy-page-settings-pageadjacent, #lindy-info-topleft"
+                "#lindy-page-settings-toprght, #lindy-page-settings-pageadjacent, #lindy-info-topleft, #lindy-info-bottom"
             )
             .forEach((e) => e.classList.add("lindy-ui-fadeout"));
 
@@ -340,7 +342,7 @@ export default class OverlayManager implements PageModifier {
     removeUi() {
         document
             .querySelectorAll(
-                "#lindy-page-settings-toprght, #lindy-page-settings-pageadjacent, #lindy-info-topleft"
+                "#lindy-page-settings-toprght, #lindy-page-settings-pageadjacent, #lindy-info-topleft, #lindy-info-bottom"
             )
             .forEach((e) => e.remove());
     }

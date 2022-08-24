@@ -29,3 +29,7 @@ svg.message-icon {
 .progress-circle > .placeholder {
     stroke: #404040 !important; /* text-neutral-700 */
 }
+
+.library-message {
+    color: var(--lindy-dark-theme-text-color) !important;
+}

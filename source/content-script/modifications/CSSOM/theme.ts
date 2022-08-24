@@ -20,7 +20,10 @@ import {
     parse,
     rgbToHSL,
 } from "../../../common/util/color";
-import { getOutlineIframe } from "../../../overlay/outline/components/common";
+import {
+    getBottomIframe,
+    getOutlineIframe,
+} from "../../../overlay/outline/components/common";
 import AnnotationsModifier from "../annotations/annotationsModifier";
 import BodyStyleModifier from "../bodyStyle";
 import TextContainerModifier from "../DOM/textContainer";
@@ -248,6 +251,12 @@ export default class ThemeModifier implements PageModifier {
             "dark-mode-ui-style",
             getOutlineIframe()?.head.lastChild as HTMLElement
         );
+        createStylesheetLink(
+            browser.runtime.getURL("overlay/outline/bottomDark.css"),
+            "dark-mode-ui-style",
+            getBottomIframe()?.head.lastChild as HTMLElement
+        );
+
         // global tweaks (not used right now)
         // createStylesheetLink(
         //     browser.runtime.getURL("content-script/pageview/contentDark.css"),

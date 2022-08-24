@@ -28,18 +28,26 @@
 {#if libraryState?.libraryUser}
     {#if libraryState.relatedArticles?.length > 0}
         <div
-            class="relative m-[5px] rounded-lg px-3 py-3 font-paragraph text-gray-700 shadow"
-            style={`background-color: ${topicColor}`}
+            class="container-content m-[5px] rounded-lg font-paragraph text-gray-700 shadow"
             in:fade
         >
-            <RelatedArticles {libraryState} />
             <div
-                class="absolute top-3 right-3 flex cursor-pointer items-center gap-1 rounded-lg px-1.5 py-0.5 text-sm font-bold shadow-sm transition-all hover:scale-95 hover:shadow"
+                class="relative rounded-lg p-3"
                 style={`background-color: ${topicColor}`}
-                on:click={() => openLibrary()}
             >
-                <div class="w-6"><LindyIcon /></div>
-                Open Library
+                <RelatedArticles {libraryState} />
+                <div
+                    class="absolute top-3 right-3 flex cursor-pointer items-center gap-1 rounded-lg px-1.5 py-0.5 font-header text-sm font-bold shadow-sm transition-all hover:scale-95 hover:shadow"
+                    style={`background-color: ${topicColor}`}
+                    on:click={() => openLibrary()}
+                >
+                    <div class="w-6"><LindyIcon /></div>
+                    Open Library
+                </div>
+
+                <!-- <div class="absolute bottom-3 right-3 leading-none">
+                Related articles
+            </div> -->
             </div>
         </div>
     {/if}
@@ -51,4 +59,9 @@
     @tailwind base;
     @tailwind components;
     @tailwind utilities;
+
+    .container-content {
+        background-color: var(--lindy-background-color);
+        transition: background 0.3s ease-in-out 0.1s;
+    }
 </style>

@@ -15,3 +15,8 @@ export function getOutlineIframe(): Document | undefined {
     return (document.getElementById("lindy-info-topleft") as HTMLIFrameElement)
         ?.contentDocument;
 }
+
+export function getBottomIframe(): Document | undefined {
+    return (document.getElementById("lindy-info-bottom") as HTMLIFrameElement)
+        ?.contentDocument;
+}

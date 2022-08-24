@@ -41,7 +41,7 @@
 
 <a
     class={clsx(
-        "relative h-52 w-44 flex-shrink-0 cursor-pointer rounded-lg bg-white transition-all dark:brightness-90 shadow hover:shadow-lg",
+        "article-container relative h-52 w-44 flex-shrink-0 cursor-pointer rounded-lg bg-white transition-all shadow hover:shadow-lg overflow-hidden",
         index % 2 === 0 ? "hover:-rotate-2" : "hover:rotate-2"
     )}
     href={article.url}
@@ -60,7 +60,7 @@
     <svg
         viewBox="0 0 576 512"
         class={clsx(
-            "w-5 transition-all absolute bottom-3 right-1.5 text-right text-lindy dark:text-lindyDark drop-shadow-sm",
+            "star-icon w-5 transition-all absolute bottom-3 right-1.5 text-right text-lindy drop-shadow-sm",
             !article.is_favorite && "opacity-0"
         )}
     >
@@ -72,14 +72,14 @@
 
     {#if publishYear}
         <div
-            class="bg-lindy absolute bottom-3 left-2 select-none rounded-lg px-1.5 text-sm font-medium text-stone-800"
+            class="publish-year absolute bottom-3 left-2 select-none rounded-lg bg-lindy px-1.5 text-sm font-medium text-stone-800"
         >
             {publishYear}
         </div>
     {/if}
 
     <div
-        class="progress bg-lindy dark:bg-lindyDark absolute bottom-0 left-0 h-[7px] w-full rounded-r transition-all"
+        class="progress-bar absolute bottom-0 left-0 h-[7px] w-full rounded-r bg-lindy transition-all dark:bg-lindyDark"
         style={`width: ${readingProgress * 100}%`}
     />
 </a>
