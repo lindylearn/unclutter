@@ -22,6 +22,7 @@ export type LibraryArticle = {
     url: string;
     title: string | null;
     word_count: number;
+    publication_date: string | null;
     time_added: number;
     reading_progress: number;
     topic_id: string | null;

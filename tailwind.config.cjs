@@ -1,6 +1,10 @@
 module.exports = {
     theme: {
         extend: {
+            colors: {
+                lindy: "hsl(51, 80%, 64%)", // == #edd75b
+                lindyDark: "hsl(51, 80%, 43%)",
+            },
             keyframes: {
                 slidein: {
                     "0%": { transform: "translate(200px)", opacity: "0" },
