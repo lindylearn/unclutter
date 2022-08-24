@@ -252,6 +252,10 @@
     ],
     "voxeu.org": [".bookmarks.autoclear", ".slogan", "#header"],
     "web.archive.org": ["#wm-ipp-base"],
+    "wired.com": [
+        ".ChannelCloudHeaderContainer-iwljqD.gdeSvy",
+        ".GridWrapper-vhRNW.dfBYNc.grid.grid-margins.grid-items-2.grid-layout--adrail.narrow"
+    ],
     "wsj.com": [".bigTop__media.bigTop__media--image.bigTop--8-16u"],
     "zdnet.com": [".c-socialSharebar"]
 }
