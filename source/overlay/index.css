@@ -159,6 +159,20 @@
     transition: all 0.3s ease-in-out;
 }
 
+#lindy-info-bottom {
+    all: initial;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 250px;
+    width: 100%;
+
+    user-select: none;
+    contain: strict;
+    z-index: 3000;
+    will-change: transform;
+}
+
 @media (max-width: 1300px) {
     #lindy-info-topleft {
         display: none !important;

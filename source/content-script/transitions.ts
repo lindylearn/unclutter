@@ -179,6 +179,10 @@ export default class TransitionManager implements PageModifier {
 
         this.libraryModifier.startReadingProgressSync();
         this.libraryModifier.scrollToLastReadingPosition();
+
+        // insert UI at bottom of article later
+        await new Promise((r) => setTimeout(r, 1000));
+        this.overlayManager.renderBottomContainer();
     }
 
     beforeTransitionOut() {

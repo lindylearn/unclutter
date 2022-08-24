@@ -11,6 +11,7 @@ import {
     overrideClassname,
 } from "../../common/stylesheets";
 import { backgroundColorThemeVariable } from "../../common/theme";
+import BottomContainerSvelte from "../../overlay/outline/BottomContainer.svelte";
 import { getElementYOffset } from "../../overlay/outline/components/common";
 import {
     createRootItem,
@@ -42,6 +43,7 @@ export default class OverlayManager implements PageModifier {
     private topleftSvelteComponent: TopLeftContainer;
     private toprightSvelteComponent: TopRightContainerSvelte;
     private pageAdjacentSvelteComponent: PageAdjacentContainerSvelte;
+    private bottomSvelteComponent: BottomContainerSvelte;
 
     private annotationsEnabled: boolean;
 
@@ -72,23 +74,18 @@ export default class OverlayManager implements PageModifier {
     }
 
     private topleftIframe: HTMLIFrameElement;
+    private bottomIframe: HTMLIFrameElement;
     createIframes() {
         this.topleftIframe = this.createIframeNode("lindy-info-topleft");
         this.topleftIframe.style.position = "fixed"; // put on new layer
         this.topleftIframe.style.maxWidth =
             "calc((100vw - var(--lindy-pagewidth)) / 2 - 7px)"; // prevent initial transition
-
         document.documentElement.appendChild(this.topleftIframe);
+        this.insertIframeFont(this.topleftIframe);
 
-        if (this.browserType === "firefox") {
-            // Firefox bug: need to wait until iframe initial render to insert elements
-            // See https://stackoverflow.com/questions/60814167/firefox-deleted-innerhtml-of-generated-iframe
-            setTimeout(() => {
-                this.insertIframeFont(this.topleftIframe);
-            }, 0);
-        } else {
-            this.insertIframeFont(this.topleftIframe);
-        }
+        this.bottomIframe = this.createIframeNode("lindy-info-bottom");
+        this.bottomIframe.style.position = "fixed"; // put on new layer
+        document.documentElement.appendChild(this.bottomIframe);
     }
 
     private createIframeNode(id: string) {
@@ -146,6 +143,18 @@ export default class OverlayManager implements PageModifier {
     }
 
     insertIframeFont(iframe: HTMLIFrameElement) {
+        if (this.browserType === "firefox") {
+            // Firefox bug: need to wait until iframe initial render to insert elements
+            // See https://stackoverflow.com/questions/60814167/firefox-deleted-innerhtml-of-generated-iframe
+            setTimeout(() => {
+                this.insertIframeFontUnsafe(iframe);
+            }, 0);
+        } else {
+            this.insertIframeFontUnsafe(iframe);
+        }
+    }
+
+    insertIframeFontUnsafe(iframe: HTMLIFrameElement) {
         if (!iframe.contentDocument) {
             return;
         }
@@ -217,6 +226,17 @@ export default class OverlayManager implements PageModifier {
         document.documentElement.appendChild(pageAdjacentContainer);
     }
 
+    renderBottomContainer() {
+        this.bottomSvelteComponent = new BottomContainerSvelte({
+            target: this.bottomIframe.contentDocument.body,
+            props: {
+                libraryState: this.libraryState,
+            },
+        });
+        this.insertIframeFont(this.bottomIframe);
+    }
+
+    // insert font into main HTML doc
     insertUiFont() {
         const fontLink = document.createElement("link");
         fontLink.rel = "stylesheet";
@@ -445,7 +465,11 @@ export default class OverlayManager implements PageModifier {
     private libraryState: LibraryState = null;
     updateLibraryState(libraryState: LibraryState) {
         this.libraryState = libraryState;
+
         this.topleftSvelteComponent?.$set({
+            libraryState,
+        });
+        this.bottomSvelteComponent?.$set({
             libraryState,
         });
     }

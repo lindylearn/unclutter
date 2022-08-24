@@ -157,13 +157,13 @@ export default class BodyStyleModifier implements PageModifier {
         if (isMobile) {
             document.body.style.setProperty(
                 "margin",
-                "10px auto 40px 20px",
+                "10px auto 260px 20px",
                 "important"
             );
         } else {
             document.body.style.setProperty(
                 "margin",
-                "10px auto 40px auto",
+                "10px auto 260px auto",
                 "important"
             );
         }

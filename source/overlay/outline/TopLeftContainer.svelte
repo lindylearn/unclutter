@@ -74,10 +74,6 @@
         {readingTimeLeft}
     />
 
-    <!-- {#if libraryState?.libraryUser && libraryState.relatedArticles.length > 0}
-        <RelatedArticles {libraryState} />
-    {/if} -->
-
     {#each updateMessages as { version, updateMessage }}
         <UpdateMessage
             {version}
