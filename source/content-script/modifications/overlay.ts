@@ -84,7 +84,7 @@ export default class OverlayManager implements PageModifier {
         this.insertIframeFont(this.topleftIframe);
 
         this.bottomIframe = this.createIframeNode("lindy-info-bottom");
-        this.bottomIframe.style.position = "fixed"; // put on new layer
+        this.bottomIframe.style.position = "absolute"; // put on new layer
         document.documentElement.appendChild(this.bottomIframe);
     }
 

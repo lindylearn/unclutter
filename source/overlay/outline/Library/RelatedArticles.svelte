@@ -7,11 +7,11 @@
     export let libraryState: LibraryState;
 </script>
 
-<div
-    class="relative flex h-28 max-w-full items-center gap-3 rounded-lg px-2 py-2 shadow"
-    in:fade
->
-    {#each libraryState.relatedArticles.slice(0, 3) as article, index}
-        <ArticlePreview {article} {index} />
-    {/each}
+<div>
+    <!-- <h2 class="mb-3">Related from your library:</h2> -->
+    <div class="relative flex gap-2 rounded-lg" in:fade>
+        {#each libraryState.relatedArticles as article, index}
+            <ArticlePreview {article} {index} />
+        {/each}
+    </div>
 </div>

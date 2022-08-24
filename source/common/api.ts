@@ -105,5 +105,5 @@ export async function getRelatedArticles(url, user_id) {
     }
 
     const json = await response.json();
-    return json;
+    return json?.slice(0, 3);
 }

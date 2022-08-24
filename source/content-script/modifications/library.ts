@@ -22,7 +22,7 @@ export default class LibraryModifier implements PageModifier {
         isClustering: false,
         wasAlreadyPresent: false,
         error: false,
-        relatedArticles: [],
+        relatedArticles: null,
     };
 
     constructor(articleUrl: string, overlayManager: OverlayManager) {
