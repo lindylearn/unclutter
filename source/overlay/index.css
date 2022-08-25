@@ -186,4 +186,7 @@
     .lindy-page-settings-pageadjacent {
         left: calc(var(--lindy-pagewidth) + 20px + 0px) !important;
     }
+    #lindy-info-bottom {
+        margin-left: 15px;
+    }
 }
