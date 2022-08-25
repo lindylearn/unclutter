@@ -16,7 +16,7 @@ import { PageModifier, trackModifierExecution } from "./_interface";
 export default class LibraryModifier implements PageModifier {
     private articleUrl: string;
     private overlayManager: OverlayManager;
-    private readingProgressSyncIntervalSeconds = 30;
+    private readingProgressSyncIntervalSeconds = 10;
 
     libraryState: LibraryState = {
         isClustering: false,
