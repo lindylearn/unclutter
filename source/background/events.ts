@@ -147,6 +147,20 @@ browser.runtime.onMessage.addListener(
     }
 );
 
+// events from seperate Unclutter Library extension
+browser.runtime.onMessageExternal.addListener(
+    (message: any, sender: Runtime.MessageSender, sendResponse: () => void) => {
+        if (message.event === "openLinkWithUnclutter") {
+            browser.tabs.create({ url: message.url, active: true }, (tab) => {
+                // need to wait until loaded, as have no permissions on new tab page
+                setTimeout(() => {
+                    injectScript(tab.id, "content-script/enhance.js");
+                }, 1000);
+            });
+        }
+    }
+);
+
 // run on install, extension update, or browser update
 browser.runtime.onInstalled.addListener(async ({ reason }) => {
     const extensionInfo = await browser.management.getSelf();

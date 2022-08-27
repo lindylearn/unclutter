@@ -19,7 +19,7 @@
         publishYear = article.publication_date?.slice(0, 4);
     }
 
-    const readingProgressFullClamp = 0.8;
+    const readingProgressFullClamp = 0.95;
     let readingProgress: number = null;
     $: {
         if (readingProgress > readingProgressFullClamp) {
@@ -47,7 +47,7 @@
 <a
     class={clsx(
         "article-container relative h-52 w-44 flex-shrink-0 cursor-pointer rounded-lg bg-white transition-all shadow hover:shadow-lg overflow-hidden",
-        index % 2 === 0 ? "hover:-rotate-2" : "hover:rotate-2"
+        index % 2 === 0 ? "hover:-rotate-1" : "hover:rotate-1"
     )}
     href={article.url}
     on:click={openPage}
