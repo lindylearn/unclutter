@@ -136,7 +136,7 @@ const fileWatcher = (globs) => ({
 });
 const staticFilesConfig = {
     // needs dummy source file
-    input: "source/common/api.ts",
+    input: "source/assets/_rollupMockfile",
     output: {
         file: "distribution/staticFiles",
     },
