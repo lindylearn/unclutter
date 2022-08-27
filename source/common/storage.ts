@@ -125,7 +125,11 @@ export async function getLibraryUser(): Promise<string | null> {
     return config["library-user-id"] || null;
 }
 
-export async function setLibraryUser(userId: string): Promise<void> {
+export async function setLibraryUser(
+    userId: string,
+    webJwt: string
+): Promise<void> {
     await browser.storage.sync.set({ "library-user-id": userId });
+    await browser.storage.sync.set({ "library-web-jwt": webJwt });
     reportEvent("extensionLibraryLogin", { libraryUser: userId });
 }

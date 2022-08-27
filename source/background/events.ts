@@ -129,8 +129,6 @@ browser.runtime.onMessage.addListener(
                     injectScript(tab.id, "content-script/enhance.js");
                 }, 1000);
             });
-        } else if (message.event === "setLibraryLogin") {
-            setLibraryUser(message.userId);
         } else if (message.event === "openLibrary") {
             let urlToOpen = `https://library.lindylearn.io/`;
             if (message.topicId !== undefined) {
@@ -157,6 +155,10 @@ browser.runtime.onMessageExternal.addListener(
                     injectScript(tab.id, "content-script/enhance.js");
                 }, 1000);
             });
+        } else if (message.event === "setLibraryAuth") {
+            setLibraryUser(message.userId, message.webJwt);
+        } else if (message.event === "openUnclutterOptionsPage") {
+            browser.runtime.openOptionsPage();
         }
     }
 );

@@ -90,17 +90,10 @@ function enablePageView(trigger) {
 // handle events from the browser extension install page & integrated article library
 function listenForPageEvents() {
     window.addEventListener("message", function (event) {
-        if (event.data.type === "openUnclutterOptionsPage") {
-            browser.runtime.sendMessage({ event: "openOptionsPage" });
-        } else if (event.data.type === "openLinkWithUnclutter") {
+        if (event.data.type === "openLinkWithUnclutter") {
             browser.runtime.sendMessage({
                 event: "openLinkWithUnclutter",
                 url: event.data.url,
-            });
-        } else if (event.data.type === "setLibraryLogin") {
-            browser.runtime.sendMessage({
-                event: "setLibraryLogin",
-                userId: event.data.userId,
             });
         }
     });
