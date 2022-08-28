@@ -1,8 +1,8 @@
 # Privacy policy
 
-The Unclutter browser extension is provided for free, without any required sign-up or collection of personal information. **In particular, no information is collected about the webpages you visit or on which you activate the reader mode on.**
+The Unclutter browser extension is provided for free, without any required sign-up or collection of personal information. **In particular, no information is collected about the webpages you visit.**
 
-The extension does report usage metrics and error logs in order to understand which features work as expected and which do not.
+The extension reports technical usage metrics and error logs in order to understand which features work as expected and which do not.
 
 ## Specific features
 
@@ -14,6 +14,16 @@ The optional [social highlights](./social-highlights.md) feature sends a network
 The number of social highlights on the Unclutter extension icon works without network requests by periodically downloading a [static CSV](./social-highlights.md#privacy) file.
 
 If you enable the [Hypothes.is sync](./annotations.md.md) feature after signing up for an account there, your private notes will be uploaded to their service and are subject to their [privacy policy](https://web.hypothes.is/privacy/).
+
+## Unclutter Library
+
+If you sign up for the work-in-progress Unclutter Library beta and connect your account to the Unclutter extension, articles you activate the reader mode on will be saved to your account and categorized per topic.
+Your reading progress and created private notes will also be saved remotely.
+
+The seperate work-in-progress Unclutter Library extension also does not collect any personal information or information about the web pages you visit.
+It has the permission to access your browser bookmarks and frequently-visited websites solely in order to display them on the New Tab page it replaces, and does not save or send this data anywhere.
+
+The URLs, topics, and notes in your Unclutter Library account are not accessible to any third parties.
 
 ## Verification and Open Source
 
