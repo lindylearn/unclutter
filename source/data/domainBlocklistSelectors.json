@@ -11,6 +11,11 @@
         ".size-full.wp-image-5967",
         ".inarticlead728-end"
     ],
+    "apple.com": [
+        "#ac-localeswitcher",
+        ".sharesheet.component",
+        ".nr-article-share"
+    ],
     "autodesk.com": [
         ".image-style-class-header-1x-desktop.lazyloaded",
         ".class__active-el",
