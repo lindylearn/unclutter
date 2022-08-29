@@ -176,6 +176,7 @@
     ],
     "nytimes.com": [".css-vxcmzt"],
     "observablehq.com": [".mr3.lh-copy", "#showtitlewrapper"],
+    "radreads.co": [".tcb-flex-col"],
     "realpython.com": [".small.text-muted"],
     "snclavalin.com": [".top-content-item.read-time", ".top-content-item"],
     "speckle.systems": [
