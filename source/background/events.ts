@@ -139,6 +139,8 @@ browser.runtime.onMessage.addListener(
                 url: urlToOpen,
                 active: true,
             });
+        } else if (message.event === "setLibraryAuth") {
+            setLibraryUser(message.userId, message.webJwt);
         }
 
         return false;

@@ -88,12 +88,19 @@ function enablePageView(trigger) {
 }
 
 // handle events from the browser extension install page & integrated article library
+// adding externally_connectable may not work for existing installs, and isn't supported on firefox
 function listenForPageEvents() {
     window.addEventListener("message", function (event) {
         if (event.data.type === "openLinkWithUnclutter") {
             browser.runtime.sendMessage({
                 event: "openLinkWithUnclutter",
                 url: event.data.url,
+            });
+        } else if (event.data.type === "setLibraryAuth") {
+            browser.runtime.sendMessage({
+                event: "setLibraryAuth",
+                userId: event.data.userId,
+                webJwt: event.data.webJwt,
             });
         }
     });
