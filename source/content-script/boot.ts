@@ -91,9 +91,13 @@ function enablePageView(trigger) {
 // adding externally_connectable may not work for existing installs, and isn't supported on firefox
 function listenForPageEvents() {
     window.addEventListener("message", function (event) {
-        if (event.data.event === "openLinkWithUnclutter") {
-            browser.runtime.sendMessage(event.data);
-        } else if (event.data.event === "setLibraryAuth") {
+        if (
+            [
+                "openOptionsPage",
+                "openLinkWithUnclutter",
+                "setLibraryAuth",
+            ].includes(event.data.event)
+        ) {
             browser.runtime.sendMessage(event.data);
         }
     });
