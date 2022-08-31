@@ -96,9 +96,9 @@
 
 <style>
     .article-container:not(.disable-rotate):hover {
-        rotate: -2deg;
+        rotate: -1.5deg;
     }
     .article-container:not(.disable-rotate).list-alternate:hover {
-        rotate: 2deg;
+        rotate: 1.5deg;
     }
 </style>
