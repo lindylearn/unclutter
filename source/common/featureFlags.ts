@@ -50,6 +50,7 @@ export const dismissedFeedbackMessage = "dismissed-feedback-message2";
 
 // remote
 export const showFeedbackMessage = "show-feedback-message";
+export const showLibrarySignupFlag = "show-library-signup";
 
 export const defaultFeatureFlags = {
     [allowlistDomainOnManualActivationFeatureFlag]: false,

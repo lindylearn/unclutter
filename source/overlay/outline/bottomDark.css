@@ -1,4 +1,4 @@
-.container-content {
+.related-container {
     /* --lindy-dark-theme-text-color and background color injected from common/theme.ts */
 
     color: var(--lindy-dark-theme-text-color) !important;
@@ -13,4 +13,8 @@
 .article-container > .publish-year,
 .article-container > .progress-bar {
     background-color: hsl(51, 80%, 43%); /* lindyDark */
+}
+
+.signup-container {
+    background-color: hsl(51, 80%, 43%) !important; /* lindyDark */
 }

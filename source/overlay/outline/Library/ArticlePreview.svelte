@@ -8,6 +8,8 @@
     export let article: LibraryArticle;
     export let index: number;
     export let libraryUser: string;
+    export let className: string = "";
+    export let transform: string = "";
 
     const imageUrl = `https://storage.googleapis.com/unclutter-screenshots-serverless/articles/current/${encodeURIComponent(
         article.url
@@ -46,9 +48,12 @@
 
 <a
     class={clsx(
-        "article-container relative h-52 w-44 flex-shrink-0 cursor-pointer rounded-lg bg-white transition-all shadow hover:shadow-lg overflow-hidden",
-        index % 2 === 0 ? "hover:-rotate-1" : "hover:rotate-1"
+        "article-container h-52 w-44 flex-shrink-0 cursor-pointer rounded-lg bg-white transition-all shadow-article hover:shadow-articleHover overflow-hidden",
+        transform && "disable-rotate",
+        index % 2 === 1 && "list-alternate",
+        className || "relative"
     )}
+    style:transform
     href={article.url}
     on:click={openPage}
 >
@@ -88,3 +93,12 @@
         style={`width: ${readingProgress * 100}%`}
     />
 </a>
+
+<style>
+    .article-container:not(.disable-rotate):hover {
+        rotate: -2deg;
+    }
+    .article-container:not(.disable-rotate).list-alternate:hover {
+        rotate: 2deg;
+    }
+</style>

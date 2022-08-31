@@ -93,7 +93,7 @@ export default class TransitionManager implements PageModifier {
         this.contentBlockModifier.prepare();
 
         // state library network fetch
-        this.libraryModifier.fetchArticleState();
+        this.libraryModifier.fetchState();
     }
 
     // prepare upcoming transition

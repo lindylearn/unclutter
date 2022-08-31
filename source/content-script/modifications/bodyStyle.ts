@@ -1,4 +1,6 @@
+import { showLibrarySignupFlag } from "../../common/featureFlags";
 import { getLibraryUser } from "../../common/storage";
+import { getRemoteFeatureFlag } from "../messaging";
 import { PageModifier, trackModifierExecution } from "./_interface";
 
 // Perform various inline style fixes to overwrite site styles
@@ -9,9 +11,18 @@ export default class BodyStyleModifier implements PageModifier {
 
     originalBackgroundColor: string;
     private bodyStyleProperties: any;
-    private libraryEnabled: boolean;
 
-    constructor() {}
+    private libraryEnabled: boolean = false;
+    private showLibrarySignup: boolean = false;
+
+    constructor() {
+        getLibraryUser().then((user) => {
+            this.libraryEnabled = !!user;
+        });
+        getRemoteFeatureFlag(showLibrarySignupFlag).then((flag: boolean) => {
+            this.showLibrarySignup = flag;
+        });
+    }
 
     prepare() {
         // save before modifications state
@@ -27,8 +38,6 @@ export default class BodyStyleModifier implements PageModifier {
         }
 
         this.bodyStyleProperties = {};
-
-        getLibraryUser().then((user) => (this.libraryEnabled = !!user));
     }
 
     transitionIn() {
@@ -159,7 +168,7 @@ export default class BodyStyleModifier implements PageModifier {
 
     private applyResponsiveStyle(isMobile: boolean) {
         let marginBottom = "20px";
-        if (this.libraryEnabled) {
+        if (this.libraryEnabled || this.showLibrarySignup) {
             marginBottom = "calc(5px + 260px)";
         }
 

@@ -230,6 +230,16 @@ export default class OverlayManager implements PageModifier {
     }
 
     renderBottomContainer() {
+        const availableSpace = parseFloat(
+            window
+                .getComputedStyle(document.body)
+                .marginBottom.replace("px", "")
+        );
+        if (availableSpace < 100) {
+            // BodyStyleModifier did not add margin (e.g. feature flag fetching took longer)
+            return;
+        }
+
         this.bottomSvelteComponent = new BottomContainerSvelte({
             target: this.bottomIframe.contentDocument.body,
             props: {

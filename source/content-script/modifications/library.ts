@@ -6,9 +6,10 @@ import {
     getRelatedArticles,
     updateLibraryArticle,
 } from "../../common/api";
-import { LibraryState } from "../../common/schema";
+import { showLibrarySignupFlag } from "../../common/featureFlags";
+import { LibraryArticle, LibraryState } from "../../common/schema";
 import { getLibraryUser } from "../../common/storage";
-import { reportEventContentScript } from "../messaging";
+import { getRemoteFeatureFlag, reportEventContentScript } from "../messaging";
 import OverlayManager from "./overlay";
 import { PageModifier, trackModifierExecution } from "./_interface";
 
@@ -19,9 +20,15 @@ export default class LibraryModifier implements PageModifier {
     private readingProgressSyncIntervalSeconds = 10;
 
     libraryState: LibraryState = {
+        libraryUser: undefined,
+        libraryInfo: null,
+
+        showLibrarySignup: false,
+
         isClustering: false,
         wasAlreadyPresent: false,
         error: false,
+
         relatedArticles: null,
     };
 
@@ -30,15 +37,26 @@ export default class LibraryModifier implements PageModifier {
         this.overlayManager = overlayManager;
     }
 
-    async fetchArticleState() {
-        try {
-            // get extension settings
-            this.libraryState.libraryUser = await getLibraryUser();
-            if (!this.libraryState.libraryUser) {
-                return;
-            }
+    async fetchState() {
+        this.libraryState.libraryUser = await getLibraryUser();
+        if (this.libraryState.libraryUser) {
             this.overlayManager.updateLibraryState(this.libraryState);
+            this.fetchLibraryState();
+            return;
+        }
 
+        this.libraryState.showLibrarySignup = await getRemoteFeatureFlag(
+            showLibrarySignupFlag
+        );
+        if (this.libraryState.showLibrarySignup) {
+            this.overlayManager.updateLibraryState(this.libraryState);
+            this.fetchSignupArticles();
+            return;
+        }
+    }
+
+    async fetchLibraryState() {
+        try {
             // get library state
             this.libraryState.libraryInfo = await checkArticleInLibrary(
                 this.articleUrl,
@@ -87,6 +105,26 @@ export default class LibraryModifier implements PageModifier {
         this.overlayManager.updateLibraryState(this.libraryState);
     }
 
+    async fetchSignupArticles() {
+        // try {
+        //     this.libraryState.relatedArticles = await getRelatedArticles(
+        //         this.articleUrl,
+        //         "e2318252-3ff0-4345-9283-56597525e099"
+        //     );
+        // } catch {
+        //     this.libraryState.relatedArticles = [];
+        // }
+        this.libraryState.relatedArticles = [];
+
+        // fill missing slots with static articles
+        this.libraryState.relatedArticles =
+            this.libraryState.relatedArticles.concat(
+                librarySignupStaticArticles
+            );
+
+        this.overlayManager.updateLibraryState(this.libraryState);
+    }
+
     private scrollOnceFetchDone = false;
     scrollToLastReadingPosition() {
         if (!this.libraryState.libraryUser) {
@@ -117,15 +155,22 @@ export default class LibraryModifier implements PageModifier {
 
     private lastReadingProgress: number;
     onScrollUpdate(readingProgress: number) {
-        if (!this.libraryState.libraryUser) {
-            return;
-        }
         if (readingProgress < this.lastReadingProgress) {
             // track only furthest scroll
             return;
         }
+
+        if (this.libraryState.libraryUser) {
+            this.sendProgressUpdateThrottled(readingProgress);
+        } else if (
+            this.libraryState.showLibrarySignup &&
+            readingProgress >= 0.9 &&
+            this.lastReadingProgress < 0.9
+        ) {
+            reportEventContentScript("seeLibrarySignup");
+        }
+
         this.lastReadingProgress = readingProgress;
-        this.sendProgressUpdateThrottled(readingProgress);
     }
 
     startReadingProgressSync() {
@@ -149,3 +194,40 @@ export default class LibraryModifier implements PageModifier {
         this.readingProgressSyncIntervalSeconds * 1000
     );
 }
+
+const librarySignupStaticArticles: LibraryArticle[] = [
+    {
+        id: "21d298cc3c10aae89d9507eb5f7e6ffb98c263a3c345b5e6442f3aea32015a79",
+        url: "https://bigthink.com/neuropsych/do-i-own-too-many-books/",
+        title: "The value of owning more books than you can read - Big Think",
+        word_count: 13,
+        publication_date: null,
+        time_added: 1661946067,
+        reading_progress: 0,
+        topic_id: "7_",
+        is_favorite: false,
+    },
+    {
+        id: "732814a768b75aecfc665bd75fba6530704fae3264b95d6363953460b6230aa4",
+        url: "https://fs.blog/too-busy/",
+        title: "Too Busy to Pay Attention - Farnam Street",
+        word_count: 1501,
+        publication_date: null,
+        time_added: 1661945871,
+        reading_progress: 0,
+        topic_id: "-23_",
+        is_favorite: false,
+    },
+    {
+        id: "83c366a3ad7f968b2a54677f27e5d15d78250753bacff18413a8846f3e05bb18",
+        url: "https://www.theatlantic.com/science/archive/2019/07/we-need-new-science-progress/594946/",
+        title: "We Need a New Science of Progress - The Atlantic",
+        word_count: 2054,
+        publication_date: null,
+        time_added: null,
+        reading_progress: 0,
+        topic_id: "5_",
+        is_favorite: false,
+        topic_sort_position: 0,
+    },
+];

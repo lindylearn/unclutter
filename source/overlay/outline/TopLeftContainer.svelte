@@ -13,7 +13,6 @@
     } from "../../content-script/messaging";
     import FeedbackMessage from "./components/FeedbackMessage.svelte";
     import LibraryMessage from "./Library/LibraryMessage.svelte";
-    import RelatedArticles from "./Library/RelatedArticles.svelte";
     import Outline from "./components/Outline.svelte";
     import { OutlineItem } from "./components/parse";
     import UpdateMessage from "./components/UpdateMessage.svelte";

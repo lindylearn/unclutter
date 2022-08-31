@@ -14,6 +14,12 @@ module.exports = {
             animation: {
                 slidein: "slidein 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
             },
+            boxShadow: {
+                article:
+                    "0 1px 2px 1px rgb(0 0 0 / 0.15), 0 4px 6px -1px rgb(0 0 0 / 0.1)",
+                articleHover:
+                    "0 1px 2px 1px rgb(0 0 0 / 0.15), 0 20px 25px -5px rgb(0 0 0 / 0.1)",
+            },
         },
         fontFamily: {
             header: ["Poppins", "sans-serif"],

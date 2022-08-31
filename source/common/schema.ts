@@ -2,6 +2,8 @@ export type LibraryState = {
     libraryUser?: string;
     libraryInfo?: LibraryInfo;
 
+    showLibrarySignup: boolean;
+
     isClustering: boolean;
     wasAlreadyPresent: boolean;
     error: boolean;
@@ -26,7 +28,7 @@ export type LibraryArticle = {
     time_added: number;
     reading_progress: number;
     topic_id: string | null;
-    topic_sort_position: number;
+    topic_sort_position?: number;
     id: string;
 };
 
