@@ -90,7 +90,7 @@
                     <li>
                         Automatically save articles you open with Unclutter.
                     </li>
-                    <li>Organize links using AI-generated topics.</li>
+                    <li>Organize links using AI topic classification.</li>
                     <li>Full-text-search across your entire library.</li>
                 </ul>
             </div>
