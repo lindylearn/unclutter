@@ -30,6 +30,11 @@
         ".col-xs-12.col-md-9.col-lg-10.text-center.text-md-left",
         ".row.post-top-meta"
     ],
+    "builtin.com": [
+        ".creds-form-wrap.block.block-bix-jobs.block-bix-jobs-apply-bottom",
+        ".row.no-gutters",
+        ".block.block-bix-jobs-apply-bottom-only-apply.creds-form-wrap"
+    ],
     "businessinsider.com": [".the-refresh-summary-list"],
     "christianitytoday.com": [".article-embed"],
     "cloudemployee.co.uk": [
