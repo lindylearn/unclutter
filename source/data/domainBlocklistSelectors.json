@@ -176,6 +176,7 @@
     ],
     "nytimes.com": [".css-vxcmzt"],
     "observablehq.com": [".mr3.lh-copy", "#showtitlewrapper"],
+    "osrp.lanl.gov": ["#backband", "#backband2", "#lanlbar", "#toolbar"],
     "realpython.com": [".small.text-muted"],
     "snclavalin.com": [".top-content-item.read-time", ".top-content-item"],
     "speckle.systems": [
