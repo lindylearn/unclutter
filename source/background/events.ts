@@ -33,17 +33,13 @@ const tabsManager = new TabStateManager();
 browser.action.onClicked.addListener((tab: Tabs.Tab) => {
     const url = new URL(tab.url);
 
-    if (!extensionSupportsUrl(url)) {
-        // ideally show some error message here
-        return;
-    }
-
-    // Support importing browser bookmarks into the extension companion website (which allows the user to organize & easily open articles with the extension).
-    // This code only runs if the user explicitly triggered it: they selected the browser import on the companion website, clicked the extension icon as stated in the instructions, then granted the optional bookmarks permission.
-    // lindylearn.io is the official publisher domain for this browser extension.
     if (
         url.href === "https://library.lindylearn.io/import?provider=bookmarks"
     ) {
+        // Support importing browser bookmarks into the extension companion website (which allows the user to organize & easily open articles with the extension).
+        // This code only runs if the user explicitly triggered it: they selected the browser import on the companion website, clicked the extension icon as stated in the instructions, then granted the optional bookmarks permission.
+        // lindylearn.io is the official publisher domain for this browser extension.
+
         requestBookmarksPermission().then(async (granted: boolean) => {
             const libraryUser = await getLibraryUser();
 
@@ -53,26 +49,25 @@ browser.action.onClicked.addListener((tab: Tabs.Tab) => {
                 clusterLibraryArticles(bookmarks, libraryUser);
             }
         });
+    } else if (extensionSupportsUrl(url)) {
+        // enable reader mode on current site
+        enableInTab(tab.id).then((didEnable) => {
+            if (!didEnable) {
+                // already active, so disable
+                togglePageViewMessage(tab.id);
+                return;
+            }
 
-        return;
+            tabsManager.checkIsArticle(tab.id, tab.url);
+            if (didEnable) {
+                tabsManager
+                    .getSocialAnnotationsCount(tab.id, tab.url)
+                    .then((socialCommentsCount) =>
+                        reportEnablePageView("manual", socialCommentsCount)
+                    );
+            }
+        });
     }
-
-    enableInTab(tab.id).then((didEnable) => {
-        if (!didEnable) {
-            // already active, so disable
-            togglePageViewMessage(tab.id);
-            return;
-        }
-
-        tabsManager.checkIsArticle(tab.id, tab.url);
-        if (didEnable) {
-            tabsManager
-                .getSocialAnnotationsCount(tab.id, tab.url)
-                .then((socialCommentsCount) =>
-                    reportEnablePageView("manual", socialCommentsCount)
-                );
-        }
-    });
 
     // can only request permissions from user action, use this opportunity
     // can't make callback a promise for this to work

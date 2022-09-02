@@ -102,6 +102,9 @@ export default class LibraryModifier implements PageModifier {
             this.articleUrl,
             this.libraryState.libraryUser
         );
+        if (this.libraryState.relatedArticles.length === 0) {
+            console.error("No related articles found");
+        }
         this.overlayManager.updateLibraryState(this.libraryState);
     }
 
