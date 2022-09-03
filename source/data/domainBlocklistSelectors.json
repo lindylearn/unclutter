@@ -30,6 +30,14 @@
         ".col-xs-12.col-md-9.col-lg-10.text-center.text-md-left",
         ".row.post-top-meta"
     ],
+    "builtin.com": [
+        ".field.field--name-field-oc-name.field--type-string.field--label-hidden.field__item",
+        ".info",
+        ".category-icon",
+        ".field-title",
+        ".col-second",
+        ".row-quote"
+    ],
     "businessinsider.com": [".the-refresh-summary-list"],
     "christianitytoday.com": [".article-embed"],
     "cloudemployee.co.uk": [
@@ -177,6 +185,7 @@
     "nytimes.com": [".css-vxcmzt"],
     "observablehq.com": [".mr3.lh-copy", "#showtitlewrapper"],
     "osrp.lanl.gov": ["#backband", "#backband2", "#lanlbar", "#toolbar"],
+    "radreads.co": [".tcb-flex-col"],
     "realpython.com": [".small.text-muted"],
     "snclavalin.com": [".top-content-item.read-time", ".top-content-item"],
     "speckle.systems": [
