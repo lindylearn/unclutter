@@ -30,6 +30,14 @@
         ".col-xs-12.col-md-9.col-lg-10.text-center.text-md-left",
         ".row.post-top-meta"
     ],
+    "builtin.com": [
+        ".field.field--name-field-oc-name.field--type-string.field--label-hidden.field__item",
+        ".info",
+        ".category-icon",
+        ".field-title",
+        ".col-second",
+        ".row-quote"
+    ],
     "businessinsider.com": [".the-refresh-summary-list"],
     "christianitytoday.com": [".article-embed"],
     "cloudemployee.co.uk": [
