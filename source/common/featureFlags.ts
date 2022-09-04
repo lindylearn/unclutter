@@ -46,7 +46,7 @@ export const enableSocialCountsFeatureFlag =
 export const enableAnnotationsFeatureFlag = "annotations-enabled";
 export const enableSocialCommentsFeatureFlag = "social-annotations-enabled";
 
-export const dismissedFeedbackMessage = "dismissed-feedback-message2";
+export const dismissedFeedbackMessage = "dismissed-feedback-message3";
 
 // remote
 export const showFeedbackMessage = "show-feedback-message";

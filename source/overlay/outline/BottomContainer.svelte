@@ -73,7 +73,17 @@
             </a>
             <div class="flex-grow">
                 <span
-                    >Sign up for the
+                    ><a
+                        class="inline-block cursor-pointer font-header font-bold transition-all hover:rotate-1"
+                        href="https://library.lindylearn.io/signup"
+                        target="_blank"
+                        rel="noreferrer"
+                        on:click={() =>
+                            reportEventContentScript("clickLibrarySignup")}
+                    >
+                        Sign up
+                    </a>
+                    for the
                     <a
                         class="inline-block cursor-pointer font-header font-bold transition-all hover:rotate-1"
                         href="https://library.lindylearn.io/signup"
@@ -82,16 +92,15 @@
                         on:click={() =>
                             reportEventContentScript("clickLibrarySignup")}
                     >
-                        Unclutter Library beta
+                        Unclutter Library
                     </a>
-                    to:</span
+                    beta to:</span
                 >
                 <ul class="ml-12 list-disc">
-                    <li>
-                        Automatically save articles you open with Unclutter.
-                    </li>
-                    <li>Organize links using AI topic classification.</li>
-                    <li>Full-text-search across your entire library.</li>
+                    <li>Automatically save articles you open</li>
+                    <li>Organize links using AI topic classification</li>
+                    <li>Full-text-search across your entire library</li>
+                    <li>See related articles in place of this message</li>
                 </ul>
             </div>
             {#if libraryState.relatedArticles}

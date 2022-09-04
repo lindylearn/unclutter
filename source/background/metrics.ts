@@ -3,6 +3,7 @@ import {
     getAllFeatureFlags,
     getFeatureFlag,
     isDevelopmentFeatureFlag,
+    showFeedbackMessage,
     showLibrarySignupFlag,
 } from "../common/featureFlags";
 import browser from "../common/polyfill";
@@ -42,6 +43,7 @@ async function sendEvent(name, data, isDev) {
                 event: name,
                 properties: {
                     $useragent: navigator.userAgent,
+                    $current_url: "unclutter",
                     isDev,
                     ...data,
                 },
@@ -153,6 +155,7 @@ export async function getRemoteFeatureFlags() {
         lastFeatureFlagFetch = new Date();
         cachedRemoteFeatureFlags = {
             [showLibrarySignupFlag]: true,
+            [showFeedbackMessage]: true,
         };
         return cachedRemoteFeatureFlags;
     }
