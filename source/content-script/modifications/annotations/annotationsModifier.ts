@@ -41,7 +41,7 @@ export default class AnnotationsModifier implements PageModifier {
             }
         });
 
-        // alwasys created anchor listener to handle social comments
+        // always created anchor listener to handle social comments
         createAnnotationListener(
             this.sidebarIframe,
             this.onAnnotationUpdate.bind(this)

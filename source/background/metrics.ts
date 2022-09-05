@@ -77,6 +77,7 @@ export async function reportSettings(version, isNewInstall) {
         $set: {
             ...featureFlagSettings,
             isDev,
+            version,
             initialInstallVersion: await getInitialInstallVersion(),
         },
     });

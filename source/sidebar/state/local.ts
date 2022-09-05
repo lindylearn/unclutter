@@ -32,7 +32,7 @@ export function annotationReducer(
             return [
                 ...annotations.map((a) => ({ ...a, focused: false })),
                 ,
-                { ...mutation.annotation, focused: true },
+                { ...mutation.annotation },
             ];
         case "remove":
             return annotations.filter(
