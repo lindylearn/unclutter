@@ -146,12 +146,24 @@ browser.runtime.onMessage.addListener(
 browser.runtime.onMessageExternal.addListener(
     (message: any, sender: Runtime.MessageSender, sendResponse: () => void) => {
         if (message.event === "openLinkWithUnclutter") {
-            browser.tabs.create({ url: message.url, active: true }, (tab) => {
+            const onTabActive = (tab) => {
                 // need to wait until loaded, as have no permissions on new tab page
                 setTimeout(() => {
                     injectScript(tab.id, "content-script/enhance.js");
                 }, 1000);
-            });
+            };
+            if (message.newTab) {
+                browser.tabs.create(
+                    { url: message.url, active: true },
+                    onTabActive
+                );
+            } else {
+                browser.tabs.update(
+                    undefined,
+                    { url: message.url },
+                    onTabActive
+                );
+            }
         } else if (message.event === "setLibraryAuth") {
             setLibraryUser(message.userId, message.webJwt);
         } else if (message.event === "openUnclutterOptionsPage") {
