@@ -100,6 +100,7 @@
         ".tvfksri0.ozuftl9m",
         ".cwj9ozl2.tvmbv18p"
     ],
+    "foxnews.com": [".m.video-player", ".video-container"],
     "gamesindustry.biz": [".thumbnail", ".shelf", "#newsletters"],
     "geoslam.com": [
         ".has-text-align-center",
