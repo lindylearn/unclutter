@@ -44,29 +44,7 @@ function Annotation({
 
     // const relativeTime = formatRelativeTime(parseDate(annotation.created_at));
 
-    // if annotation focused, detect clicks to unfocus it
-    const ref = useRef<HTMLDivElement>();
-    useEffect(() => {
-        if (annotation.focused) {
-            const onClick = (e) => {
-                const clickTarget: HTMLElement = e.target;
-
-                // ignore actions performed on other annotations (e.g. deletes)
-                if (clickTarget.classList.contains("icon")) {
-                    return;
-                }
-
-                if (ref.current && !ref.current.contains(clickTarget)) {
-                    unfocusAnnotation(annotation);
-                }
-            };
-
-            document.addEventListener("click", onClick, true);
-            return () => {
-                document.removeEventListener("click", onClick, true);
-            };
-        }
-    }, [annotation.focused]);
+    const ref = useBlurRef(annotation, unfocusAnnotation);
 
     return (
         <div
@@ -300,4 +278,35 @@ function onExpand(annotation: LindyAnnotation) {
         platform: annotation.platform,
         reply_count: annotation.reply_count,
     });
+}
+
+export function useBlurRef(
+    annotation: LindyAnnotation,
+    unfocusAnnotation: (annotation: LindyAnnotation) => void
+) {
+    // if annotation focused, detect clicks to unfocus it
+    const ref = useRef<HTMLDivElement>();
+    useEffect(() => {
+        if (annotation.focused) {
+            const onClick = (e) => {
+                const clickTarget: HTMLElement = e.target;
+
+                // ignore actions performed on other annotations (e.g. deletes)
+                if (clickTarget.classList.contains("icon")) {
+                    return;
+                }
+
+                if (ref.current && !ref.current.contains(clickTarget)) {
+                    unfocusAnnotation(annotation);
+                }
+            };
+
+            document.addEventListener("click", onClick, true);
+            return () => {
+                document.removeEventListener("click", onClick, true);
+            };
+        }
+    }, [annotation.focused]);
+
+    return ref;
 }

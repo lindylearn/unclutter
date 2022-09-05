@@ -54,7 +54,7 @@ export default function App({ url, title }) {
     >([]);
     React.useEffect(() => {
         const visibleAnnotations = annotations.filter(
-            (a) => a.focused || a.text
+            (a) => a.focused || (a.isMyAnnotation && a.text)
         );
 
         // use large grouping margin to display every annotation properly

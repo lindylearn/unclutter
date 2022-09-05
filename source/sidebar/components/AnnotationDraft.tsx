@@ -4,9 +4,9 @@ import TextareaAutosize from "react-textarea-autosize";
 import { LindyAnnotation } from "../../common/annotations/create";
 import { getAnnotationColor } from "../../common/annotations/styling";
 import { updateAnnotation as updateAnnotationApi } from "../common/CRUD";
+import { useBlurRef } from "./Annotation";
 
 interface AnnotationDraftProps {
-    url: string;
     annotation: LindyAnnotation;
     className?: string;
     heightLimitPx?: number;
@@ -18,10 +18,10 @@ interface AnnotationDraftProps {
     onHoverUpdate: (hoverActive: boolean) => void;
     createReply: () => void;
     updateAnnotation: (annotation: LindyAnnotation) => void;
+    unfocusAnnotation: (annotation: LindyAnnotation) => void;
 }
 
 function AnnotationDraft({
-    url,
     annotation,
     className,
     deleteHide,
@@ -30,13 +30,18 @@ function AnnotationDraft({
     heightLimitPx,
     updateAnnotation,
     onHoverUpdate,
+    unfocusAnnotation,
 }: AnnotationDraftProps) {
     const inputRef = useRef<HTMLTextAreaElement>();
+
+    // focus on initial render
     useEffect(() => {
         if (annotation.focused) {
             inputRef.current?.focus();
         }
     }, [inputRef, annotation.focused]);
+
+    const ref = useBlurRef(annotation, unfocusAnnotation);
 
     // debounce to reduce API calls
     // debounce instead of throttle so that newest call eventually runs
@@ -100,6 +105,7 @@ function AnnotationDraft({
             }}
             onMouseEnter={() => onHoverUpdate(true)}
             onMouseLeave={() => onHoverUpdate(false)}
+            ref={ref}
         >
             <TextareaAutosize
                 className="w-full select-none rounded bg-gray-50 py-1 pl-2 pr-6 align-top text-sm placeholder-gray-400 outline-none placeholder:select-none md:text-base"

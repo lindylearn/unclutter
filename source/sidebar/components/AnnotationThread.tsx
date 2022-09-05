@@ -6,7 +6,6 @@ import AnnotationDraft from "./AnnotationDraft";
 const maxReplyNesting = 1;
 
 interface AnnotationThreadProps {
-    url: string;
     annotation: LindyAnnotation;
     heightLimitPx?: number;
 
