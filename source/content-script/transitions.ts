@@ -8,6 +8,7 @@ import ResponsiveStyleModifier from "./modifications/CSSOM/responsiveStyle";
 import StylePatchesModifier from "./modifications/CSSOM/stylePatches";
 import ThemeModifier from "./modifications/CSSOM/theme";
 import CSSOMProvider from "./modifications/CSSOM/_provider";
+import LinkAnnotationsModifier from "./modifications/DOM/linksAnnotations";
 import ReadingTimeModifier from "./modifications/DOM/readingTime";
 import TextContainerModifier from "./modifications/DOM/textContainer";
 import ElementPickerModifier from "./modifications/elementPicker";
@@ -29,7 +30,10 @@ export default class TransitionManager implements PageModifier {
         this.cssomProvider
     );
     private stylePatchesModifier = new StylePatchesModifier(this.cssomProvider);
-    private annotationsModifier = new AnnotationsModifier();
+    private linkAnnotationsModifier = new LinkAnnotationsModifier();
+    private annotationsModifier = new AnnotationsModifier(
+        this.linkAnnotationsModifier
+    );
     private textContainerModifier = new TextContainerModifier();
     private contentBlockModifier = new ContentBlockModifier(
         this.domain,
@@ -173,6 +177,7 @@ export default class TransitionManager implements PageModifier {
         }
 
         // insert annotations sidebar, start fetch
+        this.linkAnnotationsModifier.parseArticle(); // reads page, wraps link elems
         this.annotationsModifier.afterTransitionIn();
 
         this.overlayManager.insertUiFont(); // causes ~50ms layout reflow

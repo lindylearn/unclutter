@@ -46,6 +46,7 @@ export default function App({ url, title }) {
             setPersonalAnnotationsEnabled,
             title
         );
+        window.top.postMessage({ event: "sidebarAppReady" }, "*");
     }, []);
 
     // group and filter annotations on every local state change (e.g. added, focused)
@@ -54,7 +55,10 @@ export default function App({ url, title }) {
     >([]);
     React.useEffect(() => {
         const visibleAnnotations = annotations.filter(
-            (a) => a.focused || (a.isMyAnnotation && a.text)
+            (a) =>
+                a.focused ||
+                (a.isMyAnnotation && a.text) ||
+                a.platform === "info"
         );
 
         // use large grouping margin to display every annotation properly

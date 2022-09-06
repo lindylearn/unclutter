@@ -75,9 +75,13 @@ export function updateOffsetsOnHeightChange(
         if (!sidebarIframe.contentWindow) {
             return;
         }
-
         console.info(`page resized, recalculating annotation offsets...`);
-        const [offsetById, offsetEndById] = getHighlightOffsets();
+
+        const highlightNodes = [
+            ...document.body.querySelectorAll("lindy-highlight"),
+        ];
+
+        const [offsetById, offsetEndById] = getHighlightOffsets(highlightNodes);
         sendSidebarEvent(sidebarIframe, {
             event: "changedDisplayOffset",
             offsetById,

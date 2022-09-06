@@ -23,16 +23,24 @@ export function annotationReducer(
     annotations: LindyAnnotation[],
     mutation: AnnotationMutation
 ): LindyAnnotation[] {
-    // console.log(mutation);
-
     switch (mutation.action) {
         case "set":
             return mutation.annotations;
         case "add":
-            return [
-                ...annotations.map((a) => ({ ...a, focused: false })),
-                { ...mutation.annotation },
-            ];
+            const existingAnnotations = annotations.map((a) => ({
+                ...a,
+                focused: false,
+            }));
+            if (mutation.annotation) {
+                // single annotation
+                return [...existingAnnotations, { ...mutation.annotation }];
+            } else if (mutation.annotations) {
+                // multiple
+                return [
+                    ...existingAnnotations,
+                    ...(mutation.annotations || []),
+                ];
+            }
         case "remove":
             return annotations.filter(
                 (a) => a.localId !== mutation.annotation.localId
@@ -88,7 +96,7 @@ export function handleWindowEventFactory(
             if (data.annotations.length === 0) {
                 // shortcut
                 mutateAnnotations({
-                    action: "set",
+                    action: "add",
                     annotations: [],
                 });
                 return;
@@ -121,7 +129,7 @@ export function handleWindowEventFactory(
                 "*"
             );
             mutateAnnotations({
-                action: "set",
+                action: "add",
                 annotations: displayedAnnotations,
             });
         } else if (data.event === "changedDisplayOffset") {
@@ -145,6 +153,8 @@ export function handleWindowEventFactory(
                     platform: data.annotation.platform,
                 });
             }
+        } else if (data.event === "setInfoAnnotations") {
+            mutateAnnotations({ action: "add", annotations: data.annotations });
         }
     };
 }

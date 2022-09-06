@@ -3,6 +3,7 @@ import {
     enableAnnotationsFeatureFlag,
     getFeatureFlag,
 } from "../../../common/featureFlags";
+import LinkAnnotationsModifier from "../DOM/linksAnnotations";
 import { PageModifier, trackModifierExecution } from "../_interface";
 import {
     createAnnotationListener,
@@ -23,9 +24,15 @@ import {
 
 @trackModifierExecution
 export default class AnnotationsModifier implements PageModifier {
-    private sidebarIframe: HTMLIFrameElement;
-    private sidebarLoaded: boolean = false;
+    sidebarIframe: HTMLIFrameElement;
+    sidebarLoaded: boolean = false;
+
     private pageResizeObserver: ResizeObserver;
+    private linkAnnotationsModifier: LinkAnnotationsModifier;
+
+    constructor(linkAnnotationsModifier: LinkAnnotationsModifier) {
+        this.linkAnnotationsModifier = linkAnnotationsModifier;
+    }
 
     private initialScollHeight: number;
     readPageHeight() {
@@ -37,7 +44,18 @@ export default class AnnotationsModifier implements PageModifier {
         this.sidebarIframe = injectSidebar();
         window.addEventListener("message", ({ data }) => {
             if (data.event === "sidebarIframeLoaded") {
+                // ready for css inject
                 this.sidebarLoaded = true;
+            } else if (data.event === "sidebarAppReady") {
+                // react app loaded, can now handle events
+
+                // enable parsed link annotations
+                if (this.linkAnnotationsModifier.annotations.length > 0) {
+                    sendSidebarEvent(this.sidebarIframe, {
+                        event: "setInfoAnnotations",
+                        annotations: this.linkAnnotationsModifier.annotations,
+                    });
+                }
             }
         });
 

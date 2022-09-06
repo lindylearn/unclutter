@@ -198,11 +198,7 @@ export function removeHighlight(annotation) {
 }
 
 // get the Y position of all text highlighlights
-export function getHighlightOffsets() {
-    const body = document.body;
-
-    const highlightNodes = [...body.querySelectorAll("lindy-highlight")];
-
+export function getHighlightOffsets(highlightNodes: Element[]) {
     // highlight may include multiple nodes across html tags
     // so iterate nodes in sequence and only take the first offset
     const offsetById = {};
