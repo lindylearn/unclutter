@@ -30,10 +30,7 @@ export default class TransitionManager implements PageModifier {
         this.cssomProvider
     );
     private stylePatchesModifier = new StylePatchesModifier(this.cssomProvider);
-    private linkAnnotationsModifier = new LinkAnnotationsModifier();
-    private annotationsModifier = new AnnotationsModifier(
-        this.linkAnnotationsModifier
-    );
+    private annotationsModifier = new AnnotationsModifier();
     private textContainerModifier = new TextContainerModifier();
     private contentBlockModifier = new ContentBlockModifier(
         this.domain,
@@ -57,6 +54,10 @@ export default class TransitionManager implements PageModifier {
     private libraryModifier = new LibraryModifier(
         this.url,
         this.overlayManager
+    );
+    private linkAnnotationsModifier = new LinkAnnotationsModifier(
+        this.annotationsModifier,
+        this.libraryModifier
     );
     private readingTimeModifier = new ReadingTimeModifier(
         this.overlayManager,

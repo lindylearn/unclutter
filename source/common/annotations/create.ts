@@ -1,3 +1,5 @@
+import { LibraryArticle } from "../schema";
+
 export function createDraftAnnotation(
     url: string,
     selector: object,
@@ -14,12 +16,12 @@ export function createDraftAnnotation(
 export function createLinkAnnotation(
     page_url: string,
     selector: object,
-    href: string
+    article: LibraryArticle
 ): LindyAnnotation {
     return createAnnotation(page_url, selector, {
         id: generateId(),
-        text: href,
         platform: "info",
+        article,
     });
 }
 
@@ -29,6 +31,7 @@ function createAnnotation(
     partial: Partial<LindyAnnotation> = {}
 ): LindyAnnotation {
     return {
+        ...partial,
         id: partial.id,
         localId: partial.localId || partial.id,
         url,
@@ -81,6 +84,9 @@ export interface LindyAnnotation {
 
     hidden?: boolean;
     focused?: boolean; // should only be set for one annotation
+
+    // only for info annotations
+    article?: LibraryArticle;
 }
 
 export function hypothesisToLindyFormat(

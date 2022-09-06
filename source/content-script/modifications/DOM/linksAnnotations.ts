@@ -8,39 +8,68 @@ import { getNodeOffset } from "../../../common/annotations/offset";
 import { sendSidebarEvent } from "../annotations/annotationsListener";
 import AnnotationsModifier from "../annotations/annotationsModifier";
 import { highlightRange } from "../../../common/annotator/highlighter";
+import { getLinkedArticles } from "../../../common/api";
+import LibraryModifier from "../library";
+import { LibraryArticle } from "../../../common/schema";
 
 /*
     Parse links inside the article text and create annotations for them.
 */
 @trackModifierExecution
 export default class LinkAnnotationsModifier implements PageModifier {
-    // private annotationsModifier: AnnotationsModifier;
-    // constructor(annotationsModifier: AnnotationsModifier) {
-    //     this.annotationsModifier = annotationsModifier;
-    // }
+    private annotationsModifier: AnnotationsModifier;
+    private libraryModifier: LibraryModifier;
 
-    annotations: LindyAnnotation[] = [];
-    parseArticle() {
-        const links = document.body.querySelectorAll("a");
-        for (const link of links) {
-            const annotation = this._createAnnotationFromLink(link);
-            if (annotation) {
-                this.annotations.push(annotation);
-            }
-        }
+    constructor(
+        annotationsModifier: AnnotationsModifier,
+        libraryModifier: LibraryModifier
+    ) {
+        this.annotationsModifier = annotationsModifier;
+        this.libraryModifier = libraryModifier;
     }
 
-    _createAnnotationFromLink(link: HTMLAnchorElement): LindyAnnotation | null {
-        // Ignore invisible nodes
-        if (link.offsetHeight === 0) {
-            return null;
-        }
+    annotations: LindyAnnotation[] = [];
+    async parseArticle() {
+        const links = [...document.body.querySelectorAll("a")]
+            .map((link) => {
+                // Ignore invisible nodes
+                if (link.offsetHeight === 0) {
+                    return null;
+                }
 
-        const href = link.getAttribute("href");
-        if (!href || !href.startsWith("http")) {
-            return null;
-        }
+                const href = link.getAttribute("href");
+                if (!href || !href.startsWith("http")) {
+                    return null;
+                }
 
+                return [href, link];
+            })
+            .filter((e) => e !== null) as [string, HTMLAnchorElement][];
+
+        const articles = await getLinkedArticles(
+            links.map((e) => e[0]),
+            this.libraryModifier.libraryState.libraryUser
+        );
+
+        this.annotations = links
+            .map(([href, link], index) => {
+                const article = articles[index];
+                if (!article) {
+                    // invalid or non-article sites
+                    return;
+                }
+
+                return this.createAnnotationFromLink(link, article);
+            })
+            .filter((a) => a);
+
+        this.annotationsModifier.setInfoAnnotations(this.annotations);
+    }
+
+    private createAnnotationFromLink(
+        link: HTMLAnchorElement,
+        article: LibraryArticle
+    ): LindyAnnotation | null {
         const range = document.createRange();
         range.selectNode(link);
         const selector = describeAnnotation(document.body, range);
@@ -49,16 +78,20 @@ export default class LinkAnnotationsModifier implements PageModifier {
         }
 
         const annotation = {
-            ...createLinkAnnotation(window.location.href, selector, href),
+            ...createLinkAnnotation(window.location.href, selector, article),
             displayOffset: getNodeOffset(link),
             displayOffsetEnd: getNodeOffset(link, "bottom"),
         };
 
-        // set id & class to update display offsets on resize
-        // wrapping with custom <lindy-highlight> elem seems to not work
-        link.id = annotation.id;
-        link.classList.add("lindy-link-info");
+        this.wrapLink(annotation.id, link);
 
         return annotation;
+    }
+
+    private wrapLink(annotationId: string, link: HTMLAnchorElement) {
+        // set id & class to update display offsets on resize
+        // wrapping with custom <lindy-highlight> elem seems to not work
+        link.id = annotationId;
+        link.classList.add("lindy-link-info");
     }
 }

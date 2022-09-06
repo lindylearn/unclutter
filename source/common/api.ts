@@ -1,7 +1,10 @@
 // TODO: re-add types
 
-// const lindyApiUrl = "http://localhost:8000";
-const lindyApiUrl = "https://api2.lindylearn.io";
+import { LindyAnnotation } from "./annotations/create";
+import { LibraryArticle } from "./schema";
+
+const lindyApiUrl = "http://localhost:8000";
+// const lindyApiUrl = "https://api2.lindylearn.io";
 
 export async function checkArticleInLibrary(url, user_id) {
     const response = await fetch(
@@ -106,4 +109,28 @@ export async function getRelatedArticles(url, user_id) {
 
     const json = await response.json();
     return json?.slice(0, 3);
+}
+
+export async function getLinkedArticles(
+    urls: string[],
+    user_id: string
+): Promise<(LibraryArticle | null)[]> {
+    const response = await fetch(
+        `${lindyApiUrl}/library/linked_article_info?${new URLSearchParams({
+            user_id,
+        })}`,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ urls }),
+        }
+    );
+    if (!response.ok) {
+        return [];
+    }
+
+    const json = await response.json();
+    return json?.articles || [];
 }
