@@ -26,7 +26,8 @@
     visibility: hidden;
     opacity: 0;
 }
-.annotation:hover > .top-icons > div {
+.annotation:hover > .top-icons > div,
+.annotation.focused > .top-icons > div {
     visibility: visible;
     opacity: 1;
 }

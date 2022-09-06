@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import debounce from "lodash/debounce";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import TextareaAutosize from "react-textarea-autosize";
@@ -85,9 +86,10 @@ function AnnotationDraft({
         }
     }
 
+    // show confirm step if annotation has text
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
     function deleteWithConfirmStep() {
-        if (!showDeleteConfirmation) {
+        if (localAnnotation.text && !showDeleteConfirmation) {
             setShowDeleteConfirmation(true);
             return;
         }
@@ -99,11 +101,12 @@ function AnnotationDraft({
 
     return (
         <div
-            className={
-                `annotation relative rounded-l-sm rounded-r bg-white p-1 pl-1.5 text-gray-800 shadow-sm transition-all hover:shadow ` +
-                (isReply ? "rounded-l pl-1 " : "") +
-                (className || "")
-            }
+            className={clsx(
+                `annotation relative rounded-l-sm rounded-r bg-white p-1 pl-1.5 text-gray-800 shadow-sm transition-all hover:shadow`,
+                isReply && "rounded-l pl-1",
+                annotation.focused && "focused",
+                className
+            )}
             style={{
                 // boxShadow: `-1.5px 0.5px 2px 0 ${color}`,
                 borderLeft: !isReply ? `5px solid ${color}` : "",

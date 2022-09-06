@@ -133,16 +133,14 @@ function insertMarginBar(
 
     const bodyOffset = getNodeOffset(document.body);
     anchoredAnnotations.map((annotation) => {
-        if (annotation.isMyAnnotation) {
-            return;
-        }
+        // if (annotation.isMyAnnotation) {
+        //     return;
+        // }
 
         const barElement = document.createElement("div");
 
         barElement.className = "lindy-marginbar-dot";
-        barElement.style.top = `${
-            annotation.displayOffset - bodyOffset + 10
-        }px`;
+        barElement.style.top = `${annotation.displayOffset - bodyOffset + 5}px`;
         // barElement.style.height = `${
         //     annotation.displayOffsetEnd - annotation.displayOffset
         // }px`;
