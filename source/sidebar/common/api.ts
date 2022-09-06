@@ -25,26 +25,31 @@ export async function getLindyAnnotations(
     // query API with hash of normalized url to not leak visited articles
     const url_hash = getUrlHash(url);
 
-    const response = await fetch(
-        `${lindyApiUrl}/annotations/?${new URLSearchParams({
-            page_hash: url_hash,
-        })}`,
-        await _getConfig()
-    );
-    const json = await response.json();
+    try {
+        const response = await fetch(
+            `${lindyApiUrl}/annotations/?${new URLSearchParams({
+                page_hash: url_hash,
+            })}`,
+            await _getConfig()
+        );
+        const json = await response.json();
 
-    const username = await getHypothesisUsername();
-    function mapFormat(annotation: LindyAnnotation): LindyAnnotation {
-        return {
-            ...annotation,
-            isPublic: true,
-            localId: annotation.id,
-            url,
-            replies: annotation.replies.map(mapFormat),
-            isMyAnnotation: annotation.author === username,
-        };
+        const username = await getHypothesisUsername();
+        function mapFormat(annotation: LindyAnnotation): LindyAnnotation {
+            return {
+                ...annotation,
+                isPublic: true,
+                localId: annotation.id,
+                url,
+                replies: annotation.replies.map(mapFormat),
+                isMyAnnotation: annotation.author === username,
+            };
+        }
+        return json.results.map(mapFormat);
+    } catch (err) {
+        console.error(err);
+        return [];
     }
-    return json.results.map(mapFormat);
 }
 
 // private annotations directly from hypothesis
