@@ -54,9 +54,10 @@ export default class LinkAnnotationsModifier implements PageModifier {
             displayOffsetEnd: getNodeOffset(link, "bottom"),
         };
 
-        // wrap link nodes to track offset changes
-        // triggers DOM write phase
-        highlightRange(annotation.id, range, "lindy-link-info");
+        // set id & class to update display offsets on resize
+        // wrapping with custom <lindy-highlight> elem seems to not work
+        link.id = annotation.id;
+        link.classList.add("lindy-link-info");
 
         return annotation;
     }

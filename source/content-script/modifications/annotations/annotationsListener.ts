@@ -78,7 +78,9 @@ export function updateOffsetsOnHeightChange(
         console.info(`page resized, recalculating annotation offsets...`);
 
         const highlightNodes = [
-            ...document.body.querySelectorAll("lindy-highlight"),
+            ...document.body.querySelectorAll(
+                "lindy-highlight, a.lindy-link-info"
+            ),
         ];
 
         const [offsetById, offsetEndById] = getHighlightOffsets(highlightNodes);
