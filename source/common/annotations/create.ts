@@ -7,6 +7,19 @@ export function createDraftAnnotation(
         id: null,
         localId: generateId(),
         reply_to,
+        isMyAnnotation: true,
+    });
+}
+
+export function createLinkAnnotation(
+    page_url: string,
+    selector: object,
+    href: string
+): LindyAnnotation {
+    return createAnnotation(page_url, selector, {
+        id: generateId(),
+        text: href,
+        platform: "info",
     });
 }
 
@@ -27,7 +40,7 @@ function createAnnotation(
         link: partial.id,
         reply_count: partial.reply_count || 0,
 
-        isMyAnnotation: true,
+        isMyAnnotation: partial.isMyAnnotation || false,
         isPublic: false,
         upvote_count: 0,
         tags: partial.tags || [],
@@ -45,7 +58,7 @@ function generateId(): string {
 export interface LindyAnnotation {
     id: string;
     author: string;
-    platform: "h" | "hn" | "ll";
+    platform: "h" | "hn" | "ll" | "info";
     link: string;
     created_at: string;
     reply_count: number;
@@ -126,9 +139,8 @@ export function pickleLocalAnnotation(
 export function unpickleLocalAnnotation(
     annotation: PickledAnnotation
 ): LindyAnnotation {
-    return createAnnotation(
-        annotation.url,
-        annotation.quote_html_selector,
-        annotation
-    );
+    return createAnnotation(annotation.url, annotation.quote_html_selector, {
+        ...annotation,
+        isMyAnnotation: true,
+    });
 }
