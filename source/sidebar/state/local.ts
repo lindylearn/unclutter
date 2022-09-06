@@ -31,7 +31,6 @@ export function annotationReducer(
         case "add":
             return [
                 ...annotations.map((a) => ({ ...a, focused: false })),
-                ,
                 { ...mutation.annotation },
             ];
         case "remove":
@@ -39,12 +38,18 @@ export function annotationReducer(
                 (a) => a.localId !== mutation.annotation.localId
             );
         case "update":
-            return [
-                ...annotations.filter(
-                    (a) => a.localId !== mutation.annotation.localId
-                ),
-                mutation.annotation,
-            ];
+            return annotations.map((a) => {
+                if (a.localId !== mutation.annotation.localId) {
+                    return a;
+                } else {
+                    // don't overwrite local focus changes
+                    // focused state changed via focusAnnotation below
+                    return {
+                        ...mutation.annotation,
+                        focused: a?.focused || false,
+                    };
+                }
+            });
         case "changeDisplayOffsets":
             return annotations.map((a) => ({
                 ...a,
