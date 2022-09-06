@@ -43,7 +43,7 @@ function AnnotationDraft({
 
     const ref = useBlurRef(annotation, unfocusAnnotation);
 
-    // debounce to reduce API calls
+    // debounce local state and remote updates
     // debounce instead of throttle so that newest call eventually runs
     const debouncedUpdateApi: (
         annotation: LindyAnnotation
@@ -75,8 +75,14 @@ function AnnotationDraft({
             return;
         }
 
-        // call with newAnnotation as localAnnotation takes once loop iteration to update
-        await debouncedUpdateApi(newAnnotation);
+        if (!!annotation.text !== !!newAnnotation.text) {
+            // immediately update if added first text or removed text (impacts visibility)
+            updateAnnotation(newAnnotation);
+            updateAnnotationApi(newAnnotation);
+        } else {
+            // call with newAnnotation as localAnnotation takes once loop iteration to update
+            await debouncedUpdateApi(newAnnotation);
+        }
     }
 
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
