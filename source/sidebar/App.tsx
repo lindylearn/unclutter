@@ -58,7 +58,7 @@ export default function App({ url, title }) {
         );
 
         // use large grouping margin to display every annotation properly
-        const groupedAnnotations = groupAnnotations(visibleAnnotations, 100);
+        const groupedAnnotations = groupAnnotations(visibleAnnotations, 50);
         setGroupedAnnotations(groupedAnnotations);
     }, [annotations]);
 
