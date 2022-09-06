@@ -1,3 +1,4 @@
+import partition from "lodash/partition";
 import { LindyAnnotation } from "../../common/annotations/create";
 
 // group annotations that appear closely together, to display them with correct margins
@@ -30,12 +31,14 @@ export function groupAnnotations(
     }
 
     groupedAnnotations = groupedAnnotations.map((groupList) => {
-        // show all personal annotations
-        const myAnnotations = groupList.filter((a) => a.isMyAnnotation);
+        // show all personal or info annotations
+        const [staticAnnotations, socialComments] = partition(
+            groupList,
+            (a) => a.isMyAnnotation || a.platform === "info"
+        );
 
         // but filter social comments
-        const bestSocialComments = groupList
-            .filter((a) => !a.isMyAnnotation)
+        const bestSocialComments = socialComments
             .sort((a, b) => {
                 // prefer more replies
                 if (b.reply_count !== a.reply_count) {
@@ -49,7 +52,7 @@ export function groupAnnotations(
 
         // Order by appearance
         return bestSocialComments
-            .concat(myAnnotations)
+            .concat(staticAnnotations)
             .sort((a, b) => a.displayOffset - b.displayOffset);
     });
 

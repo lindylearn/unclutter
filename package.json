@@ -30,6 +30,7 @@
         "@rollup/plugin-replace": "^4.0.0",
         "@rollup/plugin-typescript": "^8.3.1",
         "@tsconfig/svelte": "^3.0.0",
+        "@types/lodash": "^4.14.184",
         "@types/react": "^18.0.9",
         "@types/react-dom": "^18.0.3",
         "@types/react-transition-group": "^4.4.4",
