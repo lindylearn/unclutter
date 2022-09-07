@@ -86,16 +86,16 @@
 
     {#if publishYear}
         <div
-            class="publish-year absolute bottom-3 left-2 select-none rounded-lg bg-lindy px-1.5 text-sm font-medium text-stone-800"
+            class="publish-year absolute bottom-2 left-2 select-none rounded-lg bg-lindy px-1.5 text-sm font-medium text-stone-800"
         >
             {publishYear}
         </div>
     {/if}
 
-    <div
+    <!-- <div
         class="progress-bar absolute bottom-0 left-0 h-[7px] w-full rounded-r bg-lindy transition-all dark:bg-lindyDark"
         style={`width: ${readingProgress * 100}%`}
-    />
+    /> -->
 </a>
 
 <style>

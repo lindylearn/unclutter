@@ -3,8 +3,8 @@
 import { LindyAnnotation } from "./annotations/create";
 import { LibraryArticle } from "./schema";
 
-const lindyApiUrl = "http://localhost:8000";
-// const lindyApiUrl = "https://api2.lindylearn.io";
+// const lindyApiUrl = "http://localhost:8000";
+const lindyApiUrl = "https://api2.lindylearn.io";
 
 export async function checkArticleInLibrary(url, user_id) {
     const response = await fetch(
