@@ -11,6 +11,7 @@ import { highlightRange } from "../../../common/annotator/highlighter";
 import { getLinkedArticles } from "../../../common/api";
 import LibraryModifier from "../library";
 import { LibraryArticle } from "../../../common/schema";
+import { openArticle } from "../../messaging";
 
 /*
     Parse links inside the article text and create annotations for them.
@@ -83,15 +84,24 @@ export default class LinkAnnotationsModifier implements PageModifier {
             displayOffsetEnd: getNodeOffset(link, "bottom"),
         };
 
-        this.wrapLink(annotation.id, link);
+        this.wrapLink(annotation.id, link, article);
 
         return annotation;
     }
 
-    private wrapLink(annotationId: string, link: HTMLAnchorElement) {
+    private wrapLink(
+        annotationId: string,
+        link: HTMLAnchorElement,
+        article: LibraryArticle
+    ) {
         // set id & class to update display offsets on resize
         // wrapping with custom <lindy-highlight> elem seems to not work
         link.id = annotationId;
         link.classList.add("lindy-link-info");
+
+        link.onclick = (e) => {
+            e.preventDefault();
+            openArticle(article.url);
+        };
     }
 }

@@ -14,3 +14,11 @@ export async function getRemoteFeatureFlag(key: string) {
     });
     return featureFlags?.[key];
 }
+
+export async function openArticle(url: string) {
+    browser.runtime.sendMessage(null, {
+        event: "openLinkWithUnclutter",
+        url: url,
+        newTab: true,
+    });
+}

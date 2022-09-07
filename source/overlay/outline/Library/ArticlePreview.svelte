@@ -3,7 +3,10 @@
 
     import browser from "../../../common/polyfill";
     import { LibraryArticle } from "../../../common/schema";
-    import { reportEventContentScript } from "../../../content-script/messaging";
+    import {
+        openArticle,
+        reportEventContentScript,
+    } from "../../../content-script/messaging";
 
     export let article: LibraryArticle;
     export let index: number;
@@ -35,11 +38,7 @@
         e.preventDefault();
         e.stopPropagation();
 
-        browser.runtime.sendMessage(null, {
-            event: "openLinkWithUnclutter",
-            url: article.url,
-            newTab: true,
-        });
+        openArticle(article.url);
         reportEventContentScript("clickRelatedArticle", {
             libraryUser: libraryUser,
         });
