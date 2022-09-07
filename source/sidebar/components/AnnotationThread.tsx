@@ -2,6 +2,7 @@ import React from "react";
 import { LindyAnnotation } from "../../common/annotations/create";
 import Annotation from "./Annotation";
 import AnnotationDraft from "./AnnotationDraft";
+import RelatedArticle from "./RelatedArticle";
 
 const maxReplyNesting = 1;
 
@@ -28,9 +29,12 @@ interface AnnotationThreadProps {
 function AnnotationThread(props: AnnotationThreadProps) {
     const replyLevel = props.replyLevel || 0;
 
-    const Component = props.annotation.isMyAnnotation
-        ? AnnotationDraft
-        : Annotation;
+    let Component = Annotation;
+    if (props.annotation.isMyAnnotation) {
+        Component = AnnotationDraft;
+    } else if (props.annotation.platform === "info") {
+        Component = RelatedArticle;
+    }
 
     const showReplies = false;
     // const spaceForReplies = props.heightLimitPx - 140;
