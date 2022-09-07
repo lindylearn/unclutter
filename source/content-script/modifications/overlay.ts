@@ -486,9 +486,9 @@ export default class OverlayManager implements PageModifier {
         });
     }
 
-    updateLinkedArticles(articles: LibraryArticle[]) {
+    updateLinkedArticles(linkedArticles: LibraryArticle[]) {
         this.bottomSvelteComponent?.$set({
-            linkedArticles: articles,
+            linkedArticles,
         });
     }
 

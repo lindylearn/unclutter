@@ -8,7 +8,7 @@ import { getNodeOffset } from "../../../common/annotations/offset";
 import { sendSidebarEvent } from "../annotations/annotationsListener";
 import AnnotationsModifier from "../annotations/annotationsModifier";
 import { highlightRange } from "../../../common/annotator/highlighter";
-import { getLinkedArticles } from "../../../common/api";
+import { createScreenshots, getLinkedArticles } from "../../../common/api";
 import LibraryModifier from "../library";
 import { LibraryArticle } from "../../../common/schema";
 import { insertMarginBar } from "../annotations/highlightsApi";
@@ -78,13 +78,34 @@ export default class LinkAnnotationsModifier implements PageModifier {
         const hrefs = Object.keys(linksPerHref)
             .sort((a, b) => linksPerHref[b].length - linksPerHref[a].length)
             .slice(0, 5);
-        console.log(hrefs);
-        const articles = await getLinkedArticles(
+        if (hrefs.length === 0) {
+            return;
+        }
+
+        // run article & screenshots fetch in parallel, to show results faster & re-render once screenshots complete
+        let articles: LibraryArticle[] = [];
+        getLinkedArticles(
             hrefs,
             this.libraryModifier.libraryState.libraryUser
-        );
+        ).then((newArticles) => {
+            articles = newArticles;
+            this.overlayManager.updateLinkedArticles(articles);
+        });
+        createScreenshots(hrefs).then(async (newUrls: string[]) => {
+            if (articles.length > 0 && newUrls.length > 0) {
+                // needs some time to propagate
+                await new Promise((resolve) => setTimeout(resolve, 3000));
 
-        this.overlayManager.updateLinkedArticles(articles.filter((a) => a));
+                // force re-render
+                const newUrlsSet = new Set(newUrls);
+                this.overlayManager.updateLinkedArticles(
+                    articles.map((a) => ({
+                        ...a,
+                        bust_image_cache: newUrlsSet.has(a.url),
+                    }))
+                );
+            }
+        });
 
         // Create annotations
         // this.annotations = links

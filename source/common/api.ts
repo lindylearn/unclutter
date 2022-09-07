@@ -134,3 +134,14 @@ export async function getLinkedArticles(
     const json = await response.json();
     return json?.articles || [];
 }
+
+export async function createScreenshots(urls: string[]): Promise<string[]> {
+    const response = await fetch(`${lindyApiUrl}/library/create_screenshots`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ urls }),
+    });
+    return await response.json(); // returns new urls
+}

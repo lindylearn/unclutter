@@ -30,6 +30,8 @@ export type LibraryArticle = {
     topic_id: string | null;
     topic_sort_position?: number;
     id: string;
+
+    bust_image_cache?: boolean; // to re-render image after screenshot fetch
 };
 
 export type LibraryTopic = {
