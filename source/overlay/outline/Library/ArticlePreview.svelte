@@ -20,8 +20,11 @@
     ).replaceAll("%", "%25")}.webp`;
 
     let publishYear: string = null;
-    $: if (publishYear !== "2022") {
-        publishYear = article.publication_date?.slice(0, 4);
+    $: {
+        const actualPublishYear = article.publication_date?.slice(0, 4);
+        if (actualPublishYear !== "2022") {
+            publishYear = actualPublishYear;
+        }
     }
 
     const readingProgressFullClamp = 0.95;
@@ -47,7 +50,7 @@
 
 <a
     class={clsx(
-        "article-container h-52 w-44 flex-shrink-0 cursor-pointer rounded-lg bg-white transition-all shadow-article hover:shadow-articleHover overflow-hidden",
+        "article-container h-48 w-40 flex-shrink-0 cursor-pointer rounded-lg bg-white transition-all shadow hover:shadow-lg overflow-hidden",
         transform && "disable-rotate",
         index % 2 === 1 && "list-alternate",
         className || "relative"

@@ -166,8 +166,10 @@
     right: 0;
     bottom: 0;
     height: 260px;
-    width: calc(var(--lindy-pagewidth) + 10px);
-    margin: 0 auto;
+    margin: 0;
+    --side-width: calc((100vw - var(--lindy-pagewidth)) / 2 - 12px);
+    margin-left: var(--side-width);
+    width: calc(var(--side-width) + var(--lindy-pagewidth));
 
     user-select: none;
     contain: strict;
@@ -188,5 +190,6 @@
     }
     #lindy-info-bottom {
         margin-left: 15px;
+        width: calc(100% - 15px);
     }
 }
