@@ -13,6 +13,7 @@ import LibraryModifier from "../library";
 import { LibraryArticle } from "../../../common/schema";
 import { insertMarginBar } from "../annotations/highlightsApi";
 import { openArticle } from "../../messaging";
+import OverlayManager from "../overlay";
 
 /*
     Parse links inside the article text and create annotations for them.
@@ -21,13 +22,16 @@ import { openArticle } from "../../messaging";
 export default class LinkAnnotationsModifier implements PageModifier {
     private annotationsModifier: AnnotationsModifier;
     private libraryModifier: LibraryModifier;
+    private overlayManager: OverlayManager;
 
     constructor(
         annotationsModifier: AnnotationsModifier,
-        libraryModifier: LibraryModifier
+        libraryModifier: LibraryModifier,
+        overlayManager: OverlayManager
     ) {
         this.annotationsModifier = annotationsModifier;
         this.libraryModifier = libraryModifier;
+        this.overlayManager = overlayManager;
     }
 
     annotations: LindyAnnotation[] = [];
@@ -53,24 +57,37 @@ export default class LinkAnnotationsModifier implements PageModifier {
             this.libraryModifier.libraryState.libraryUser
         );
 
-        this.annotations = links
-            .map(([href, link], index) => {
-                const article = articles[index];
-                if (!article) {
-                    // invalid or non-article sites
-                    return;
-                }
+        // open reader view for article links
+        links.map(([href, link], index) => {
+            const article = articles[index];
+            if (article) {
+                link.onclick = (e) => {
+                    e.preventDefault();
+                    openArticle(article.url);
+                };
+            }
+        });
 
-                return this.createAnnotationFromLink(link, article);
-            })
-            .filter((a) => a);
+        this.overlayManager.updateLinkedArticles(articles.filter((a) => a));
 
-        insertMarginBar(
-            this.annotations,
-            this.annotationsModifier.sidebarIframe
-        );
+        // Create annotations
+        // this.annotations = links
+        //     .map(([href, link], index) => {
+        //         const article = articles[index];
+        //         if (!article) {
+        //             // invalid or non-article sites
+        //             return;
+        //         }
 
-        this.annotationsModifier.setInfoAnnotations(this.annotations);
+        //         return this.createAnnotationFromLink(link, article);
+        //     })
+        //     .filter((a) => a);
+
+        // insertMarginBar(
+        //     this.annotations,
+        //     this.annotationsModifier.sidebarIframe
+        // );
+        // this.annotationsModifier.setInfoAnnotations(this.annotations);
     }
 
     private createAnnotationFromLink(

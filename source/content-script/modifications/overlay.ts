@@ -5,7 +5,7 @@ import {
     getFeatureFlag,
 } from "../../common/featureFlags";
 import browser, { BrowserType, getBrowserType } from "../../common/polyfill";
-import { LibraryState } from "../../common/schema";
+import { LibraryArticle, LibraryState } from "../../common/schema";
 import {
     createStylesheetLink,
     overrideClassname,
@@ -483,6 +483,12 @@ export default class OverlayManager implements PageModifier {
         });
         this.bottomSvelteComponent?.$set({
             libraryState,
+        });
+    }
+
+    updateLinkedArticles(articles: LibraryArticle[]) {
+        this.bottomSvelteComponent?.$set({
+            linkedArticles: articles,
         });
     }
 

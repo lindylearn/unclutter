@@ -57,7 +57,8 @@ export default class TransitionManager implements PageModifier {
     );
     private linkAnnotationsModifier = new LinkAnnotationsModifier(
         this.annotationsModifier,
-        this.libraryModifier
+        this.libraryModifier,
+        this.overlayManager
     );
     private readingTimeModifier = new ReadingTimeModifier(
         this.overlayManager,
