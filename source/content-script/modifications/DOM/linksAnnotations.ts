@@ -11,6 +11,7 @@ import { highlightRange } from "../../../common/annotator/highlighter";
 import { getLinkedArticles } from "../../../common/api";
 import LibraryModifier from "../library";
 import { LibraryArticle } from "../../../common/schema";
+import { insertMarginBar } from "../annotations/highlightsApi";
 import { openArticle } from "../../messaging";
 
 /*
@@ -63,6 +64,11 @@ export default class LinkAnnotationsModifier implements PageModifier {
                 return this.createAnnotationFromLink(link, article);
             })
             .filter((a) => a);
+
+        insertMarginBar(
+            this.annotations,
+            this.annotationsModifier.sidebarIframe
+        );
 
         this.annotationsModifier.setInfoAnnotations(this.annotations);
     }

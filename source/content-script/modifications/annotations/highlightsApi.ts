@@ -1,3 +1,4 @@
+import browser from "../../../common/polyfill";
 import { LindyAnnotation } from "../../../common/annotations/create";
 import { getNodeOffset } from "../../../common/annotations/offset";
 import { getAnnotationColor } from "../../../common/annotations/styling";
@@ -122,7 +123,7 @@ export function paintHighlight(
     });
 }
 
-function insertMarginBar(
+export function insertMarginBar(
     anchoredAnnotations: LindyAnnotation[],
     sidebarIframe: HTMLIFrameElement
 ) {
@@ -132,18 +133,30 @@ function insertMarginBar(
     document.body.appendChild(container);
 
     const bodyOffset = getNodeOffset(document.body);
-    anchoredAnnotations.map((annotation) => {
+    anchoredAnnotations.map((annotation, index) => {
         // if (annotation.isMyAnnotation) {
         //     return;
         // }
 
         const barElement = document.createElement("div");
+        barElement.style.top = `${annotation.displayOffset - bodyOffset}px`;
 
-        barElement.className = "lindy-marginbar-dot";
-        barElement.style.top = `${annotation.displayOffset - bodyOffset + 5}px`;
+        // dot style
+        // barElement.className = "lindy-marginbar-dot";
+
+        // bar style
         // barElement.style.height = `${
         //     annotation.displayOffsetEnd - annotation.displayOffset
         // }px`;
+
+        // text style
+        // barElement.innerText = `${index + 1}`;
+
+        // icon style
+        barElement.style.width = "16px";
+        const img = document.createElement("img");
+        img.src = browser.runtime.getURL("assets/link.svg");
+        barElement.appendChild(img);
 
         const annotationColor =
             annotation.platform === "hn"
