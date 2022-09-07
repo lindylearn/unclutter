@@ -50,7 +50,7 @@ export function isNonLeafPage(url) {
     */
     if (
         url.pathname.match(
-            /\/(post|posts|wiki|blog|article|articles|essays|doi)\//
+            /\/(post|posts|wiki|blog|article|articles|essays|doi|papers)\//
         )
     ) {
         return false;
@@ -60,7 +60,7 @@ export function isNonLeafPage(url) {
         https://www.newyorker.com/magazine/annals-of-medicine
     */
     if (
-        url.pathname.match(/\/(magazine)\//) &&
+        url.pathname.match(/\/(magazine|category|author)\//) &&
         !url.pathname.match(/\/([0-9]+)\//)
     ) {
         return true;
@@ -73,6 +73,7 @@ export function isNonLeafPage(url) {
         "fs.blog",
         "danluu.com",
         "xkcd.com",
+        "ourworldindata.org",
     ];
     if (excludedDomains.includes(getDomainFrom(url))) {
         return false;

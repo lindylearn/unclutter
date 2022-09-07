@@ -14,6 +14,10 @@ import { LibraryArticle } from "../../../common/schema";
 import { insertMarginBar } from "../annotations/highlightsApi";
 import { openArticle } from "../../messaging";
 import OverlayManager from "../overlay";
+import {
+    extensionSupportsUrl,
+    isNonLeafPage,
+} from "../../../common/articleDetection";
 
 /*
     Parse links inside the article text and create annotations for them.
@@ -48,9 +52,16 @@ export default class LinkAnnotationsModifier implements PageModifier {
                     return null;
                 }
 
+                const url = new URL(href);
+                if (!extensionSupportsUrl(url) || isNonLeafPage(url)) {
+                    return null;
+                }
+
                 return [href, link];
             })
             .filter((e) => e !== null) as [string, HTMLAnchorElement][];
+
+        console.log(links.map((e) => e[0]));
 
         const articles = await getLinkedArticles(
             links.map((e) => e[0]),
