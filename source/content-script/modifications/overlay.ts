@@ -5,7 +5,8 @@ import {
     getFeatureFlag,
 } from "../../common/featureFlags";
 import browser, { BrowserType, getBrowserType } from "../../common/polyfill";
-import { LibraryState } from "../../common/schema";
+import { LibraryArticle, LibraryState } from "../../common/schema";
+import { getLibraryUser } from "../../common/storage";
 import {
     createStylesheetLink,
     overrideClassname,
@@ -46,6 +47,7 @@ export default class OverlayManager implements PageModifier {
     private bottomSvelteComponent: BottomContainerSvelte;
 
     private annotationsEnabled: boolean;
+    private libraryEnabled: boolean = false;
 
     constructor(
         domain: string,
@@ -70,6 +72,7 @@ export default class OverlayManager implements PageModifier {
             this.annotationsEnabled = await getFeatureFlag(
                 enableAnnotationsFeatureFlag
             );
+            this.libraryEnabled = !!(await getLibraryUser());
         })();
     }
 
@@ -83,6 +86,10 @@ export default class OverlayManager implements PageModifier {
 
         this.bottomIframe = this.createIframeNode("lindy-info-bottom");
         this.bottomIframe.style.position = "absolute"; // put on new layer
+        if (this.libraryEnabled) {
+            // allow overflow to the right
+            this.bottomIframe.style.width = `calc(var(--side-width) + var(--lindy-pagewidth))`;
+        }
 
         document.documentElement.appendChild(this.topleftIframe);
         document.documentElement.appendChild(this.bottomIframe);
@@ -483,6 +490,12 @@ export default class OverlayManager implements PageModifier {
         });
         this.bottomSvelteComponent?.$set({
             libraryState,
+        });
+    }
+
+    updateLinkedArticles(linkedArticles: LibraryArticle[]) {
+        this.bottomSvelteComponent?.$set({
+            linkedArticles,
         });
     }
 

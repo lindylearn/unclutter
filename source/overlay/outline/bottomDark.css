@@ -18,3 +18,7 @@
 .signup-container {
     background-color: hsl(51, 80%, 43%) !important; /* lindyDark */
 }
+
+.related-caption {
+    color: #52525b !important;
+}

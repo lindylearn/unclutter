@@ -3,7 +3,10 @@
 
     import browser from "../../../common/polyfill";
     import { LibraryArticle } from "../../../common/schema";
-    import { reportEventContentScript } from "../../../content-script/messaging";
+    import {
+        openArticle,
+        reportEventContentScript,
+    } from "../../../content-script/messaging";
 
     export let article: LibraryArticle;
     export let index: number;
@@ -17,8 +20,11 @@
     ).replaceAll("%", "%25")}.webp`;
 
     let publishYear: string = null;
-    $: if (publishYear !== "2022") {
-        publishYear = article.publication_date?.slice(0, 4);
+    $: {
+        const actualPublishYear = article.publication_date?.slice(0, 4);
+        if (actualPublishYear !== "2022") {
+            publishYear = actualPublishYear;
+        }
     }
 
     const readingProgressFullClamp = 0.95;
@@ -35,11 +41,7 @@
         e.preventDefault();
         e.stopPropagation();
 
-        browser.runtime.sendMessage(null, {
-            event: "openLinkWithUnclutter",
-            url: article.url,
-            newTab: true,
-        });
+        openArticle(article.url);
         reportEventContentScript("clickRelatedArticle", {
             libraryUser: libraryUser,
         });
@@ -48,7 +50,7 @@
 
 <a
     class={clsx(
-        "article-container h-52 w-44 flex-shrink-0 cursor-pointer rounded-lg bg-white transition-all shadow-article hover:shadow-articleHover overflow-hidden",
+        "article-container h-48 w-40 flex-shrink-0 cursor-pointer rounded-lg bg-white transition-all shadow hover:shadow-lg overflow-hidden",
         transform && "disable-rotate",
         index % 2 === 1 && "list-alternate",
         className || "relative"
@@ -64,7 +66,9 @@
     </div>
     <div
         class="absolute top-0 left-0 h-full w-full rounded-lg bg-cover"
-        style={`background-image: url(${imageUrl});`}
+        style={`background-image: url(${imageUrl}${
+            article.bust_image_cache ? "?" : ""
+        });`}
     />
 
     <svg
@@ -82,16 +86,16 @@
 
     {#if publishYear}
         <div
-            class="publish-year absolute bottom-3 left-2 select-none rounded-lg bg-lindy px-1.5 text-sm font-medium text-stone-800"
+            class="publish-year absolute bottom-2 left-2 select-none rounded-lg bg-lindy px-1.5 text-sm font-medium text-stone-800"
         >
             {publishYear}
         </div>
     {/if}
 
-    <div
+    <!-- <div
         class="progress-bar absolute bottom-0 left-0 h-[7px] w-full rounded-r bg-lindy transition-all dark:bg-lindyDark"
         style={`width: ${readingProgress * 100}%`}
-    />
+    /> -->
 </a>
 
 <style>

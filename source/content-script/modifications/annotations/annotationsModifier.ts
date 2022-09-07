@@ -26,13 +26,11 @@ import {
 export default class AnnotationsModifier implements PageModifier {
     sidebarIframe: HTMLIFrameElement;
     sidebarLoaded: boolean = false;
+    reactLoaded: boolean = false;
 
     private pageResizeObserver: ResizeObserver;
-    private linkAnnotationsModifier: LinkAnnotationsModifier;
 
-    constructor(linkAnnotationsModifier: LinkAnnotationsModifier) {
-        this.linkAnnotationsModifier = linkAnnotationsModifier;
-    }
+    constructor() {}
 
     private initialScollHeight: number;
     readPageHeight() {
@@ -48,14 +46,7 @@ export default class AnnotationsModifier implements PageModifier {
                 this.sidebarLoaded = true;
             } else if (data.event === "sidebarAppReady") {
                 // react app loaded, can now handle events
-
-                // enable parsed link annotations
-                if (this.linkAnnotationsModifier.annotations.length > 0) {
-                    sendSidebarEvent(this.sidebarIframe, {
-                        event: "setInfoAnnotations",
-                        annotations: this.linkAnnotationsModifier.annotations,
-                    });
-                }
+                this.reactLoaded = true;
             }
         });
 
@@ -170,6 +161,15 @@ export default class AnnotationsModifier implements PageModifier {
         sendSidebarEvent(this.sidebarIframe, {
             event: "setDarkMode",
             darkModeEnabled,
+        });
+    }
+
+    setInfoAnnotations(annotations: LindyAnnotation[]) {
+        // ideally need to listen for reactLoaded event
+
+        sendSidebarEvent(this.sidebarIframe, {
+            event: "setInfoAnnotations",
+            annotations: annotations,
         });
     }
 
