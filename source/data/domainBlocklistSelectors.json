@@ -157,6 +157,11 @@
     ],
     "makandracards.com": ["#tail", ".text_ad__more"],
     "markmanson.net": [".mf-monday-opt-in"],
+    "mcgill.ca": [
+        ".field.field-name-field-single-link.field-type-link-field.field-label-hidden",
+        "#explore-mcgill",
+        "#highlighted"
+    ],
     "meduza.io": [".Layout-bannerTop"],
     "mmazurek.dev": [
         ".wp-block-separator",
