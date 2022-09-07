@@ -40,6 +40,10 @@ export default class LinkAnnotationsModifier implements PageModifier {
 
     annotations: LindyAnnotation[] = [];
     async parseArticle() {
+        if (!this.libraryModifier.libraryState.libraryUser) {
+            return;
+        }
+
         const linksPerHref: { [href: string]: HTMLAnchorElement[] } = {};
         [...document.body.querySelectorAll("a")].map((link) => {
             // Ignore invisible nodes

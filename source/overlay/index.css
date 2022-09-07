@@ -169,7 +169,7 @@
     margin: 0;
     --side-width: calc((100vw - var(--lindy-pagewidth)) / 2 - 12px);
     margin-left: var(--side-width);
-    width: calc(var(--side-width) + var(--lindy-pagewidth));
+    width: calc(var(--lindy-pagewidth) + 12px);
 
     user-select: none;
     contain: strict;
@@ -190,6 +190,6 @@
     }
     #lindy-info-bottom {
         margin-left: 15px;
-        width: calc(100% - 15px);
+        max-width: calc(100% - 15px);
     }
 }

@@ -43,7 +43,7 @@
     }
 </script>
 
-{#if true || libraryState?.libraryUser}
+{#if libraryState?.libraryUser}
     {#if linkedArticles?.length > 0}
         <!-- solid background for transparent topic color -->
         <div
