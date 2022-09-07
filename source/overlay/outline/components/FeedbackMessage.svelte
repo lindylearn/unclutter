@@ -38,8 +38,8 @@
         </svg>
 
         <span class="text-sm">
-            Hey, thank you for using Unclutter! Which features should I add or
-            improve next?
+            Hey, thank you for using Unclutter! Which features do you want to
+            see improved or added next?
         </span>
     </div>
 </a>

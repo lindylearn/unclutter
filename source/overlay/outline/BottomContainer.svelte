@@ -118,7 +118,7 @@
                     beta to:</span
                 >
                 <ul class="ml-12 list-disc">
-                    <li>Automatically save articles you open</li>
+                    <li>Automatically save articles you read</li>
                     <li>Organize links using AI topic classification</li>
                     <li>Full-text-search across your entire library</li>
                     <li>See related articles below each page</li>
