@@ -50,7 +50,9 @@
             class="related-container m-[5px] font-paragraph text-gray-700"
             in:fade
         >
-            <div class="mt-2 mb-2 text-sm tabular-nums text-gray-400">
+            <div
+                class="related-caption mt-2 mb-2 text-sm tabular-nums text-gray-400"
+            >
                 <svg class="inline-block w-4" viewBox="0 0 640 512"
                     ><path
                         fill="currentColor"
