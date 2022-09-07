@@ -40,44 +40,49 @@ export default class LinkAnnotationsModifier implements PageModifier {
 
     annotations: LindyAnnotation[] = [];
     async parseArticle() {
-        const links = [...document.body.querySelectorAll("a")]
-            .map((link) => {
-                // Ignore invisible nodes
-                if (link.offsetHeight === 0) {
-                    return null;
-                }
+        const linksPerHref: { [href: string]: HTMLAnchorElement[] } = {};
+        [...document.body.querySelectorAll("a")].map((link) => {
+            // Ignore invisible nodes
+            if (link.offsetHeight === 0) {
+                return;
+            }
 
-                const href = link.getAttribute("href");
-                if (!href || !href.startsWith("http")) {
-                    return null;
-                }
-
+            // test if is likely article
+            const href = link.getAttribute("href");
+            if (!href || !href.startsWith("http")) {
+                return;
+            }
+            try {
                 const url = new URL(href);
                 if (!extensionSupportsUrl(url) || isNonLeafPage(url)) {
-                    return null;
+                    return;
                 }
+            } catch {
+                // url may be invalid
+                return;
+            }
 
-                return [href, link];
-            })
-            .filter((e) => e !== null) as [string, HTMLAnchorElement][];
+            // save for remote fetch
+            if (!linksPerHref[href]) {
+                linksPerHref[href] = [];
+            }
+            linksPerHref[href].push(link);
 
-        console.log(links.map((e) => e[0]));
+            // open reader view for article links
+            link.onclick = (e) => {
+                e.preventDefault();
+                openArticle(href);
+            };
+        });
 
+        const hrefs = Object.keys(linksPerHref)
+            .sort((a, b) => linksPerHref[b].length - linksPerHref[a].length)
+            .slice(0, 5);
+        console.log(hrefs);
         const articles = await getLinkedArticles(
-            links.map((e) => e[0]),
+            hrefs,
             this.libraryModifier.libraryState.libraryUser
         );
-
-        // open reader view for article links
-        links.map(([href, link], index) => {
-            const article = articles[index];
-            if (article) {
-                link.onclick = (e) => {
-                    e.preventDefault();
-                    openArticle(article.url);
-                };
-            }
-        });
 
         this.overlayManager.updateLinkedArticles(articles.filter((a) => a));
 
