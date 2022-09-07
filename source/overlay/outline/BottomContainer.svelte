@@ -72,7 +72,7 @@
             </div>
         </div>
     {/if}
-{:else if libraryState?.showLibrarySignup && libraryState?.relatedArticles && dismissedSignupMessage}
+{:else if libraryState?.showLibrarySignup && libraryState?.relatedArticles && !dismissedSignupMessage}
     <div
         class="signup-container relative m-[5px] rounded-lg bg-lindy p-4 pr-6 font-paragraph text-gray-800 shadow"
         in:fade
