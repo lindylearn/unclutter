@@ -172,6 +172,7 @@
     "modularhomesource.com": [".elementor-shape-fill", ".wp-block-image"],
     "mullvad.net": ["#connection-status"],
     "nautil.us": [".article-action-list"],
+    "nazory.pravda.sk": ["#rmpPlayer", ".container.no-padding-advert"],
     "news.microsoft.com": [
         ".f-hero-header",
         ".iframe-fragment.x-type-center",
