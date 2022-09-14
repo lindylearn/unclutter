@@ -179,7 +179,7 @@ export default class BodyStyleModifier implements PageModifier {
 
         document.body.style.setProperty(
             "margin",
-            `10px ${marginSide} ${marginBottom} ${marginSide}`,
+            `8px ${marginSide} ${marginBottom} ${marginSide}`,
             "important"
         );
     }

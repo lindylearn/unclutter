@@ -58,12 +58,9 @@
     }
 </script>
 
-<div
-    id="lindy-info-topleft-content"
-    class="flex flex-col gap-1.5 font-paragraph"
->
+<div id="lindy-info-topleft-content" class="flex flex-col gap-2 font-paragraph">
     {#if libraryState?.libraryUser}
-        <LibraryMessage {libraryState} />
+        <!-- <LibraryMessage {libraryState} /> -->
         <ArticleGraph {libraryState} />
     {/if}
 
@@ -94,7 +91,7 @@
     @tailwind utilities;
 
     #lindy-info-topleft-content {
-        margin: 10px;
+        margin: 8px;
         color: #374151; /* text-gray-700 */
         transition: width 0.2s cubic-bezier(0.33, 1, 0.68, 1); /* same as #lindy-info-topleft outside */
     }
