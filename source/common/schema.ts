@@ -1,3 +1,5 @@
+import type { GraphData } from "force-graph";
+
 export type LibraryState = {
     libraryUser?: string;
     libraryInfo?: LibraryInfo;
@@ -9,6 +11,7 @@ export type LibraryState = {
     error: boolean;
 
     relatedArticles?: LibraryArticle[];
+    graph: GraphData;
 };
 
 // returned from API

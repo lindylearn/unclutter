@@ -51,7 +51,7 @@
     }
 </script>
 
-<div class="library-message relative max-w-full rounded-lg  shadow">
+<div class="library-message relative max-w-full rounded-lg shadow">
     <div
         class="flex items-center gap-2 rounded-lg p-2"
         style={`background-color: ${topicColor}`}

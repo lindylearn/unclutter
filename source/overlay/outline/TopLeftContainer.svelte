@@ -20,6 +20,7 @@
         getVersionMessagesToShow,
         saveDismissedVersionMessage,
     } from "../../common/updateMessages";
+    import ArticleGraph from "./Library/ArticleGraph.svelte";
 
     export let outline: OutlineItem[];
     export let activeOutlineIndex: number;
@@ -63,6 +64,7 @@
 >
     {#if libraryState?.libraryUser}
         <LibraryMessage {libraryState} />
+        <ArticleGraph {libraryState} />
     {/if}
 
     <Outline

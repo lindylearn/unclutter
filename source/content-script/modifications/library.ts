@@ -3,6 +3,7 @@ import throttle from "lodash/throttle";
 import {
     addArticleToLibrary,
     checkArticleInLibrary,
+    getArticleGraph,
     getRelatedArticles,
     updateLibraryArticle,
 } from "../../common/api";
@@ -30,6 +31,7 @@ export default class LibraryModifier implements PageModifier {
         error: false,
 
         relatedArticles: null,
+        graph: null,
     };
 
     constructor(articleUrl: string, overlayManager: OverlayManager) {
@@ -38,7 +40,7 @@ export default class LibraryModifier implements PageModifier {
     }
 
     async fetchState() {
-        this.libraryState.libraryUser = await getLibraryUser();
+        this.libraryState.libraryUser = "e2318252-3ff0-4345-9283-56597525e099"; // await getLibraryUser();
         if (this.libraryState.libraryUser) {
             this.overlayManager.updateLibraryState(this.libraryState);
             this.fetchLibraryState();
@@ -98,6 +100,14 @@ export default class LibraryModifier implements PageModifier {
             this.overlayManager.updateLibraryState(this.libraryState);
         }
 
+        // fetch library article graph
+        this.libraryState.graph = await getArticleGraph(
+            this.articleUrl,
+            this.libraryState.libraryUser
+        );
+        this.overlayManager.updateLibraryState(this.libraryState);
+
+        // old individual articles fetch
         // this.libraryState.relatedArticles = await getRelatedArticles(
         //     this.articleUrl,
         //     this.libraryState.libraryUser

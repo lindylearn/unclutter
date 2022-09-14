@@ -1,5 +1,6 @@
 // TODO: re-add types
 
+import type { GraphData } from "force-graph";
 import { LindyAnnotation } from "./annotations/create";
 import { LibraryArticle } from "./schema";
 
@@ -144,4 +145,21 @@ export async function createScreenshots(urls: string[]): Promise<string[]> {
         body: JSON.stringify({ urls }),
     });
     return await response.json(); // returns new urls
+}
+
+export async function getArticleGraph(
+    url: string,
+    user_id: string
+): Promise<GraphData | null> {
+    const response = await fetch(
+        `${lindyApiUrl}/library_graph/fetch?${new URLSearchParams({
+            url,
+            user_id,
+        })}`
+    );
+    if (!response.ok) {
+        return null;
+    }
+
+    return await response.json();
 }

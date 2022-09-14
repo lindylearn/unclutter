@@ -5,6 +5,7 @@
         "approx-string-match": "^2.0.0",
         "clsx": "^1.2.1",
         "crypto-js": "^4.1.1",
+        "force-graph": "^1.42.13",
         "lodash": "^4.17.21",
         "react": "^18.1.0",
         "react-dom": "^18.1.0",
