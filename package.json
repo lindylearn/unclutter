@@ -7,6 +7,7 @@
         "crypto-js": "^4.1.1",
         "force-graph": "^1.42.13",
         "lodash": "^4.17.21",
+        "patch-package": "^6.4.7",
         "react": "^18.1.0",
         "react-dom": "^18.1.0",
         "react-textarea-autosize": "^8.3.3",
@@ -69,7 +70,8 @@
         "install-v3-manifest": "cp source/manifest.json distribution/manifest.json",
         "install-v2-manifest": "cp source/manifest_v2.json distribution/manifest.json",
         "package": "yarn build && npx web-ext build -o -n extension_manifest-v3.zip --ignore-files '!node_modules' '!node_modules/**' && yarn install-v2-manifest && npx web-ext build -o -n extension_manifest-v2.zip --ignore-files '!node_modules' '!node_modules/**' && yarn install-v3-manifest",
-        "test": "npx ts-node-esm test/main.ts"
+        "test": "npx ts-node-esm test/main.ts",
+        "postinstall": "patch-package"
     },
     "browserslist": "last 1 version",
     "xo": {

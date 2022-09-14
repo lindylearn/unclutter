@@ -1,0 +1,20 @@
+diff --git a/node_modules/force-graph/dist/force-graph.module.js b/node_modules/force-graph/dist/force-graph.module.js
+index c63d5d7..a245d9c 100644
+--- a/node_modules/force-graph/dist/force-graph.module.js
++++ b/node_modules/force-graph/dist/force-graph.module.js
+@@ -1595,12 +1595,10 @@ var forceGraph = Kapsule({
+         toolTipElem.style.left = "".concat(pointerPos.x, "px"); //
+ 
+         function getOffset(el) {
+-          var rect = el.getBoundingClientRect(),
+-              scrollLeft = window.pageXOffset || document.documentElement.scrollLeft,
+-              scrollTop = window.pageYOffset || document.documentElement.scrollTop;
++          var rect = el.getBoundingClientRect()
+           return {
+-            top: rect.top + scrollTop,
+-            left: rect.left + scrollLeft
++            top: rect.top,
++            left: rect.left
+           };
+         }
+       }, {
