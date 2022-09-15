@@ -40,7 +40,7 @@ export default class LibraryModifier implements PageModifier {
     }
 
     async fetchState() {
-        this.libraryState.libraryUser = "e2318252-3ff0-4345-9283-56597525e099"; // await getLibraryUser();
+        this.libraryState.libraryUser = await getLibraryUser();
         if (this.libraryState.libraryUser) {
             this.overlayManager.updateLibraryState(this.libraryState);
             this.fetchLibraryState();

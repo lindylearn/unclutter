@@ -135,7 +135,10 @@
                     (node.depth === 3 && globalScale >= 3.5)
                 ) {
                     // title label
-                    const label = node.name.slice(0, 30);
+                    let label = node.name.slice(0, 30);
+                    if (node.name.length > 30) {
+                        label = label.concat("…");
+                    }
                     const fontSize = 11 / globalScale;
 
                     ctx.font = `${fontSize}px Work Sans, Sans-Serif`;
@@ -145,7 +148,7 @@
                     ctx.fillText(label, node.x, node.y + 5);
                 }
             })
-            .nodeCanvasObjectMode(() => "before")
+            .nodeCanvasObjectMode(() => "after")
             // link styling
             .linkColor(
                 byDepth(
@@ -230,6 +233,9 @@
                 is_favorite: isFavorite,
             }
         );
+        reportEventContentScript("toggleArticleFavorite", {
+            libraryUser: libraryState.libraryUser,
+        });
     }
 </script>
 
@@ -254,8 +260,8 @@
         {#if isExpanded && !changedZoom}
             <div
                 class="absolute top-0 left-0 w-full rounded-t-lg text-gray-600"
-                in:fade
-                out:fade
+                in:fade={{ duration: 200 }}
+                out:fade={{ duration: 100 }}
             >
                 <div class="flex items-center p-2 pl-5">
                     <!-- <div class="flex h-0 w-3 flex-shrink-0 items-center">
@@ -270,9 +276,9 @@
                                     1000
                             )}
                         {:else}
-                            Added {libraryState.graph.links.filter(
+                            Found {libraryState.graph.links.filter(
                                 (l) => l.depth === 1
-                            ).length} library links
+                            ).length} related articles
                         {/if}
                     </div>
                 </div>
