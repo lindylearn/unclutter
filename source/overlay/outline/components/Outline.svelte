@@ -34,7 +34,7 @@
         <div class="">
             {#if readingTimeLeft !== null}
                 <div
-                    class="reading-time mt-1 text-sm tabular-nums text-gray-400"
+                    class="reading-time mt-1 text-sm tabular-nums text-gray-500"
                 >
                     <span
                         class="reading-time-count"

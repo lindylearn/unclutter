@@ -15,7 +15,7 @@
     let graphContainer: HTMLDivElement;
     let forceGraph: ForceGraphInstance;
     $: if (libraryState.graph && graphContainer) {
-        console.log("render");
+        console.log("render graph");
         const nodes = libraryState.graph.nodes;
         const links = libraryState.graph.links;
 
@@ -39,8 +39,8 @@
             .d3Force("center", (alpha) => {
                 nodes.forEach((node) => {
                     // different strengths for x and y
-                    node.vy -= node.y * alpha * 0.1;
-                    node.vx -= node.x * alpha * 0.02;
+                    node.vy -= node.y * alpha * 0.15;
+                    node.vx -= node.x * alpha * 0.05;
                 });
             })
             .d3Force(
@@ -86,10 +86,12 @@
             .linkWidth(byDepth([null, 2, 1]))
             .linkLabel("none")
             .nodeCanvasObject((node, ctx, globalScale) => {
+                return;
                 if (node.depth === 1) {
                     // title label
                     const label = node.name.slice(0, 30);
                     const fontSize = 10 / globalScale;
+
                     ctx.font = `${fontSize}px Work Sans, Sans-Serif`;
                     ctx.textAlign = "center";
                     ctx.textBaseline = "middle";
@@ -106,9 +108,14 @@
         let initialZoomDone = false;
         forceGraph.onEngineStop(() => {
             if (!initialZoomDone) {
-                forceGraph.zoomToFit(0, 10, (node) => node.depth <= 1);
+                forceGraph.zoomToFit(0, 5, (node) => node.depth <= 1);
                 forceGraph.cooldownTicks(Infinity);
                 initialZoomDone = true;
+
+                // track user zoom changes only after initial zoom
+                forceGraph.onZoom((zoom) => {
+                    changedZoom = true;
+                });
             }
         });
 
@@ -118,12 +125,14 @@
     }
 
     let currentZoom = 1;
+    let changedZoom = false;
     function onZoomButton(isPlus: boolean) {
-        forceGraph.zoom(currentZoom + (isPlus ? 1 : -1), 200);
+        forceGraph.zoom(currentZoom + (isPlus ? 0.5 : -0.5), 200);
+        changedZoom = true;
     }
 </script>
 
-<div class="library-message relative h-28 max-w-full rounded-lg text-sm shadow">
+<div class="library-message relative h-16 max-w-full rounded-lg text-sm shadow">
     {#if libraryState.graph}
         <div
             class="h-full w-full overflow-hidden rounded-lg"
@@ -150,20 +159,21 @@
                 /></svg
             >
         </div>
-        <div
-            class="links-message absolute bottom-0 right-0 select-none rounded-tl-md rounded-br-lg p-1 text-sm leading-none"
-        >
-            {libraryState.graph.links.filter((l) => l.depth === 1).length} new library
-            links
-        </div>
+        {#if !changedZoom}
+            <div
+                class="links-message absolute bottom-0 right-0 select-none rounded-tl-md rounded-br-lg p-1 pr-1.5 text-sm leading-none"
+                out:fade
+            >
+                {libraryState.graph.links.filter((l) => l.depth === 1).length}
+                new links
+            </div>
+        {/if}
     {:else}
         <div
             class="flex h-full flex-grow justify-between p-3"
             in:fly={{ y: 10, duration: 300, easing: cubicOut }}
         >
-            {#if libraryState.libraryInfo}
-                Fetching graph
-            {:else if libraryState.error}
+            {#if libraryState.error}
                 Error adding article :(
             {:else if libraryState.isClustering}
                 Adding article to your library
@@ -184,7 +194,7 @@
 
     .zoom-icon {
         color: #6b7280;
-        @apply w-[18px] cursor-pointer rounded-md bg-gray-100 p-1;
+        @apply w-[18px] cursor-pointer rounded-md bg-gray-100 p-1 shadow-sm transition-transform hover:scale-95;
     }
     .zoom-icon > path {
         stroke: currentColor;
@@ -192,7 +202,7 @@
     }
 
     .links-message {
-        color: #4b5563;
-        /* background-color: var(--lindy-background-color); */
+        @apply text-gray-500;
+        background-color: var(--lindy-background-color);
     }
 </style>
