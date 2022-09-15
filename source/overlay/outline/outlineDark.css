@@ -24,10 +24,10 @@ svg.message-icon {
 }
 
 .spacer-line {
-    border-color: #404040 !important; /* text-neutral-700 */
+    border-color: #44403c !important; /* text-stone-700 */
 }
 .progress-circle > .placeholder {
-    stroke: #404040 !important; /* text-neutral-700 */
+    stroke: #44403c !important; /* text-stone-700 */
 }
 
 .library-message {

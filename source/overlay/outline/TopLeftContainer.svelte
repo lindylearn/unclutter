@@ -72,6 +72,10 @@
         {readingTimeLeft}
     />
 
+    <!-- {#if libraryState?.libraryUser}
+        <ArticleGraph {libraryState} />
+    {/if} -->
+
     {#each updateMessages as { version, updateMessage }}
         <UpdateMessage
             {version}
