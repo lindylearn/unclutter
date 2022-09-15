@@ -99,7 +99,7 @@
                         ? [
                               "rgb(232, 230, 227)",
                               "rgb(232, 230, 227)",
-                              "#57534e",
+                              "#78716c",
                           ]
                         : ["#374151", "#374151", "#9ca3af"]
                 )
@@ -153,7 +153,7 @@
             .linkColor(
                 byDepth(
                     darkModeEnabled
-                        ? [null, "rgb(232, 230, 227)", "#57534e"]
+                        ? [null, "rgb(232, 230, 227)", "#78716c"]
                         : [null, "#374151", "#9ca3af"]
                 )
             )
@@ -262,11 +262,11 @@
         />
         {#if (isExpanded && !changedZoom) || libraryState.graph.links.length === 0}
             <div
-                class="absolute top-0 left-0 w-full rounded-t-lg text-gray-600"
+                class="graph-caption absolute top-0 left-0 w-full rounded-t-lg text-gray-600"
                 in:fade={{ duration: 200 }}
                 out:fade={{ duration: 100 }}
             >
-                <div class="flex items-center p-2 pl-5">
+                <div class="flex items-center p-2 pl-3">
                     <!-- <div class="flex h-0 w-3 flex-shrink-0 items-center">
                         <div class="w-5 flex-shrink-0 cursor-pointer">
                             <LindyIcon />
@@ -336,14 +336,14 @@
         </div>
     {:else if libraryState.error}
         <div
-            class="flex h-full flex-grow justify-between p-3 pl-5"
+            class="flex h-full flex-grow justify-between p-3 pl-3"
             in:fly={{ y: 10, duration: 300, easing: cubicOut }}
         >
             Error while saving article :(
         </div>
     {:else if libraryState.isClustering}
         <div
-            class="flex h-full flex-grow justify-between p-3 pl-5"
+            class="flex h-full flex-grow justify-between p-3 pl-3"
             in:fly={{ y: 10, duration: 300, easing: cubicOut }}
         >
             Saving article to your library...
@@ -385,10 +385,5 @@
     .star-full {
         color: hsl(51, 80%, 64%);
         background-color: hsl(51, 80%, 90%);
-    }
-
-    .links-message {
-        @apply text-gray-400;
-        background-color: var(--lindy-background-color);
     }
 </style>
