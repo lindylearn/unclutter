@@ -243,10 +243,13 @@
     class={clsx(
         "library-message relative max-w-full rounded-lg text-sm shadow h-20",
         isExpanded && "is-expanded",
-        !isExpanded && libraryState.graph && "cursor-pointer hover:scale-[99%]"
+        !isExpanded &&
+            libraryState.graph &&
+            libraryState.graph.links.length !== 0 &&
+            "cursor-pointer hover:scale-[99%]"
     )}
     on:click={(e) => {
-        if (!isExpanded) {
+        if (!isExpanded && libraryState.graph.links.length !== 0) {
             toggleExpanded(e);
         }
     }}
@@ -257,7 +260,7 @@
             bind:this={graphContainer}
             in:fade
         />
-        {#if isExpanded && !changedZoom}
+        {#if (isExpanded && !changedZoom) || libraryState.graph.links.length === 0}
             <div
                 class="absolute top-0 left-0 w-full rounded-t-lg text-gray-600"
                 in:fade={{ duration: 200 }}
@@ -271,14 +274,16 @@
                     </div> -->
                     <div class="select-none text-sm">
                         {#if libraryState.wasAlreadyPresent && libraryState.libraryInfo.article.time_added}
-                            Article saved {getRelativeTime(
+                            Saved {getRelativeTime(
                                 libraryState.libraryInfo.article.time_added *
                                     1000
                             )}
-                        {:else}
+                        {:else if libraryState.graph.links.filter((l) => l.depth === 1).length > 0}
                             Found {libraryState.graph.links.filter(
                                 (l) => l.depth === 1
                             ).length} related articles
+                        {:else}
+                            Article saved to your library
                         {/if}
                     </div>
                 </div>
@@ -287,7 +292,7 @@
         {/if}
 
         <div class="absolute top-1.5 right-1.5 flex gap-1.5">
-            {#if isExpanded && isFavorite}
+            {#if (isExpanded || libraryState.graph.links.length === 0) && isFavorite}
                 <svg
                     viewBox="0 0 576 512"
                     class="graph-icon star-icon star-full"
@@ -298,7 +303,7 @@
                         d="M381.2 150.3L524.9 171.5C536.8 173.2 546.8 181.6 550.6 193.1C554.4 204.7 551.3 217.3 542.7 225.9L438.5 328.1L463.1 474.7C465.1 486.7 460.2 498.9 450.2 506C440.3 513.1 427.2 514 416.5 508.3L288.1 439.8L159.8 508.3C149 514 135.9 513.1 126 506C116.1 498.9 111.1 486.7 113.2 474.7L137.8 328.1L33.58 225.9C24.97 217.3 21.91 204.7 25.69 193.1C29.46 181.6 39.43 173.2 51.42 171.5L195 150.3L259.4 17.97C264.7 6.954 275.9-.0391 288.1-.0391C300.4-.0391 311.6 6.954 316.9 17.97L381.2 150.3z"
                     />
                 </svg>
-            {:else if isExpanded}
+            {:else if isExpanded || libraryState.graph.links.length === 0}
                 <svg
                     class="graph-icon star-icon"
                     viewBox="0 0 576 512"
@@ -311,35 +316,37 @@
                 </svg>
             {/if}
 
-            <svg
-                class="graph-icon"
-                viewBox="0 0 384 512"
-                on:click={toggleExpanded}
-                in:fade
-            >
-                <path
-                    class={clsx(
-                        "transition-transform origin-center",
-                        isExpanded && "rotate-180"
-                    )}
-                    fill="currentColor"
-                    d="M360.5 217.5l-152 143.1C203.9 365.8 197.9 368 192 368s-11.88-2.188-16.5-6.562L23.5 217.5C13.87 208.3 13.47 193.1 22.56 183.5C31.69 173.8 46.94 173.5 56.5 182.6L192 310.9l135.5-128.4c9.562-9.094 24.75-8.75 33.94 .9375C370.5 193.1 370.1 208.3 360.5 217.5z"
-                />
-            </svg>
+            {#if libraryState.graph.links.length !== 0}
+                <svg
+                    class="graph-icon"
+                    viewBox="0 0 384 512"
+                    on:click={toggleExpanded}
+                    in:fade
+                >
+                    <path
+                        class={clsx(
+                            "transition-transform origin-center",
+                            isExpanded && "rotate-180"
+                        )}
+                        fill="currentColor"
+                        d="M360.5 217.5l-152 143.1C203.9 365.8 197.9 368 192 368s-11.88-2.188-16.5-6.562L23.5 217.5C13.87 208.3 13.47 193.1 22.56 183.5C31.69 173.8 46.94 173.5 56.5 182.6L192 310.9l135.5-128.4c9.562-9.094 24.75-8.75 33.94 .9375C370.5 193.1 370.1 208.3 360.5 217.5z"
+                    />
+                </svg>
+            {/if}
         </div>
     {:else if libraryState.error}
         <div
             class="flex h-full flex-grow justify-between p-3 pl-5"
             in:fly={{ y: 10, duration: 300, easing: cubicOut }}
         >
-            Error adding article :(
+            Error while saving article :(
         </div>
     {:else if libraryState.isClustering}
         <div
             class="flex h-full flex-grow justify-between p-3 pl-5"
             in:fly={{ y: 10, duration: 300, easing: cubicOut }}
         >
-            Adding to your library...
+            Saving article to your library...
         </div>
     {/if}
 </div>
