@@ -499,5 +499,37 @@ export default class OverlayManager implements PageModifier {
         });
     }
 
-    updateActiveColorScheme() {}
+    private darkModeEnabled: boolean = null;
+    async setOverlayDarkMode(darkModeEnabled: boolean) {
+        this.darkModeEnabled = darkModeEnabled;
+
+        if (darkModeEnabled) {
+            createStylesheetLink(
+                browser.runtime.getURL("overlay/indexDark.css"),
+                "dark-mode-ui-style"
+            );
+            createStylesheetLink(
+                browser.runtime.getURL("overlay/outline/outlineDark.css"),
+                "dark-mode-ui-style",
+                this.topleftIframe.contentDocument?.head
+                    .lastChild as HTMLElement
+            );
+            createStylesheetLink(
+                browser.runtime.getURL("overlay/outline/bottomDark.css"),
+                "dark-mode-ui-style",
+                this.bottomIframe?.contentDocument?.head
+                    .lastChild as HTMLElement
+            );
+        } else {
+            document
+                .querySelectorAll(".dark-mode-ui-style")
+                .forEach((e) => e.remove());
+            this.topleftIframe.contentDocument?.head
+                ?.querySelectorAll(".dark-mode-ui-style")
+                .forEach((e) => e.remove());
+            this.bottomIframe?.contentDocument?.head
+                ?.querySelectorAll(".dark-mode-ui-style")
+                .forEach((e) => e.remove());
+        }
+    }
 }

@@ -68,6 +68,8 @@ export default class TransitionManager implements PageModifier {
     async prepare() {
         // *** read DOM phase ***
 
+        this.themeModifier.setCyclicDependencies(this.overlayManager);
+
         // save original styles before changes
         this.bodyStyleModifier.prepare();
         this.backgroundModifier.prepare();

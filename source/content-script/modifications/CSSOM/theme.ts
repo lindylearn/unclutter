@@ -27,6 +27,7 @@ import {
 import AnnotationsModifier from "../annotations/annotationsModifier";
 import BodyStyleModifier from "../bodyStyle";
 import TextContainerModifier from "../DOM/textContainer";
+import type OverlayManager from "../overlay";
 import { PageModifier, trackModifierExecution } from "../_interface";
 import CSSOMProvider, { isMediaRule, isStyleRule } from "./_provider";
 
@@ -37,6 +38,7 @@ export default class ThemeModifier implements PageModifier {
     private annotationsModifer: AnnotationsModifier;
     private textContainerModifier: TextContainerModifier;
     private bodyStyleModifier: BodyStyleModifier;
+    private overlayModifier: OverlayManager;
 
     public theme: UserTheme;
     private darkModeActive = false; // seperate from theme -- auto theme enables and disable dark mode
@@ -54,6 +56,10 @@ export default class ThemeModifier implements PageModifier {
         this.annotationsModifer = annotationsModifer;
         this.textContainerModifier = textContainerModifier;
         this.bodyStyleModifier = bodyStyleModifier;
+    }
+
+    setCyclicDependencies(overlayModifier: OverlayManager) {
+        this.overlayModifier = overlayModifier;
     }
 
     private systemDarkModeQuery: MediaQueryList;
@@ -242,20 +248,6 @@ export default class ThemeModifier implements PageModifier {
             "#131516",
             "important"
         );
-        createStylesheetLink(
-            browser.runtime.getURL("overlay/indexDark.css"),
-            "dark-mode-ui-style"
-        );
-        createStylesheetLink(
-            browser.runtime.getURL("overlay/outline/outlineDark.css"),
-            "dark-mode-ui-style",
-            getOutlineIframe()?.head.lastChild as HTMLElement
-        );
-        createStylesheetLink(
-            browser.runtime.getURL("overlay/outline/bottomDark.css"),
-            "dark-mode-ui-style",
-            getBottomIframe()?.head.lastChild as HTMLElement
-        );
 
         // global tweaks (not used right now)
         // createStylesheetLink(
@@ -265,6 +257,7 @@ export default class ThemeModifier implements PageModifier {
         //     document.head.firstChild as HTMLElement
         // );
 
+        this.overlayModifier.setOverlayDarkMode(true);
         this.annotationsModifer.setSidebarDarkMode(true);
 
         // enable site dark mode styles if present, but always run our css tweaks too
@@ -349,14 +342,7 @@ export default class ThemeModifier implements PageModifier {
         // undo dark mode style tweaks
         this.disableDarkModeStyleTweaks();
 
-        document
-            .querySelectorAll(".dark-mode-ui-style")
-            .forEach((e) => e.remove());
-
-        getOutlineIframe()
-            ?.querySelectorAll(".dark-mode-ui-style")
-            .forEach((e) => e.remove());
-
+        this.overlayModifier.setOverlayDarkMode(false);
         this.annotationsModifer.setSidebarDarkMode(false);
     }
 
