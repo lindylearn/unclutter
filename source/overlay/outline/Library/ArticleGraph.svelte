@@ -16,6 +16,8 @@
         openArticle,
         reportEventContentScript,
     } from "../../../content-script/messaging";
+    import { getRelativeTime } from "../../../common/time";
+    import { updateLibraryArticle } from "../../../common/api";
 
     export let libraryState: LibraryState;
     export let darkModeEnabled: boolean;
@@ -134,7 +136,7 @@
                 ) {
                     // title label
                     const label = node.name.slice(0, 30);
-                    const fontSize = 10 / globalScale;
+                    const fontSize = 11 / globalScale;
 
                     ctx.font = `${fontSize}px Work Sans, Sans-Serif`;
                     ctx.textAlign = "center";
@@ -181,7 +183,7 @@
                 if (!initialZoomDone) {
                     forceGraph.zoomToFit(
                         0,
-                        10,
+                        12,
                         (node) => node.depth <= (isExpanded ? 2 : 1)
                     );
                     forceGraph.cooldownTicks(Infinity);
@@ -216,6 +218,19 @@
 
         e.stopPropagation();
     }
+
+    let isFavorite: boolean = null;
+    $: isFavorite = libraryState.libraryInfo?.article.is_favorite;
+    function toggleFavorite() {
+        isFavorite = !isFavorite;
+        updateLibraryArticle(
+            libraryState.libraryInfo.article.url,
+            libraryState.libraryUser,
+            {
+                is_favorite: isFavorite,
+            }
+        );
+    }
 </script>
 
 <div
@@ -236,53 +251,76 @@
             bind:this={graphContainer}
             in:fade
         />
-        <div class="absolute top-1 right-1 flex flex-col gap-1">
-            <!-- {#if isExpanded}
+        {#if isExpanded && !changedZoom}
+            <div
+                class="absolute top-0 left-0 w-full rounded-t-lg text-gray-600"
+                in:fade
+                out:fade
+            >
+                <div class="flex items-center p-2 pl-5">
+                    <!-- <div class="flex h-0 w-3 flex-shrink-0 items-center">
+                        <div class="w-5 flex-shrink-0 cursor-pointer">
+                            <LindyIcon />
+                        </div>
+                    </div> -->
+                    <div class="select-none text-sm">
+                        {#if libraryState.wasAlreadyPresent && libraryState.libraryInfo.article.time_added}
+                            Saved {getRelativeTime(
+                                libraryState.libraryInfo.article.time_added *
+                                    1000
+                            )}
+                        {:else}
+                            Added {libraryState.graph.links.filter(
+                                (l) => l.depth === 1
+                            ).length} library links
+                        {/if}
+                    </div>
+                </div>
+                <!-- <div class="spacer-line border-b-2 border-gray-100" /> -->
+            </div>
+        {/if}
+
+        <div class="absolute top-1.5 right-1.5 flex gap-1.5">
+            {#if isExpanded && isFavorite}
                 <svg
-                    class="zoom-icon"
-                    viewBox="0 0 448 512"
-                    on:click={() => onZoomButton(true)}
-                    in:fade
-                    ><path
-                        fill="currentColor"
-                        d="M432 256C432 269.3 421.3 280 408 280h-160v160c0 13.25-10.75 24.01-24 24.01S200 453.3 200 440v-160h-160c-13.25 0-24-10.74-24-23.99C16 242.8 26.75 232 40 232h160v-160c0-13.25 10.75-23.99 24-23.99S248 58.75 248 72v160h160C421.3 232 432 242.8 432 256z"
-                    /></svg
+                    viewBox="0 0 576 512"
+                    class="graph-icon star-icon star-full"
+                    on:click={toggleFavorite}
                 >
+                    <path
+                        fill="currentColor"
+                        d="M381.2 150.3L524.9 171.5C536.8 173.2 546.8 181.6 550.6 193.1C554.4 204.7 551.3 217.3 542.7 225.9L438.5 328.1L463.1 474.7C465.1 486.7 460.2 498.9 450.2 506C440.3 513.1 427.2 514 416.5 508.3L288.1 439.8L159.8 508.3C149 514 135.9 513.1 126 506C116.1 498.9 111.1 486.7 113.2 474.7L137.8 328.1L33.58 225.9C24.97 217.3 21.91 204.7 25.69 193.1C29.46 181.6 39.43 173.2 51.42 171.5L195 150.3L259.4 17.97C264.7 6.954 275.9-.0391 288.1-.0391C300.4-.0391 311.6 6.954 316.9 17.97L381.2 150.3z"
+                    />
+                </svg>
+            {:else if isExpanded}
                 <svg
-                    class="zoom-icon"
-                    viewBox="0 0 448 512"
-                    on:click={() => onZoomButton(false)}
-                    in:fade
-                    ><path
-                        fill="currentColor"
-                        d="M432 256C432 269.3 421.3 280 408 280H40c-13.25 0-24-10.74-24-23.99C16 242.8 26.75 232 40 232h368C421.3 232 432 242.8 432 256z"
-                    /></svg
+                    class="graph-icon star-icon"
+                    viewBox="0 0 576 512"
+                    on:click={toggleFavorite}
                 >
-            {:else} -->
+                    <path
+                        fill="currentColor"
+                        d="M287.9 0C297.1 0 305.5 5.25 309.5 13.52L378.1 154.8L531.4 177.5C540.4 178.8 547.8 185.1 550.7 193.7C553.5 202.4 551.2 211.9 544.8 218.2L433.6 328.4L459.9 483.9C461.4 492.9 457.7 502.1 450.2 507.4C442.8 512.7 432.1 513.4 424.9 509.1L287.9 435.9L150.1 509.1C142.9 513.4 133.1 512.7 125.6 507.4C118.2 502.1 114.5 492.9 115.1 483.9L142.2 328.4L31.11 218.2C24.65 211.9 22.36 202.4 25.2 193.7C28.03 185.1 35.5 178.8 44.49 177.5L197.7 154.8L266.3 13.52C270.4 5.249 278.7 0 287.9 0L287.9 0zM287.9 78.95L235.4 187.2C231.9 194.3 225.1 199.3 217.3 200.5L98.98 217.9L184.9 303C190.4 308.5 192.9 316.4 191.6 324.1L171.4 443.7L276.6 387.5C283.7 383.7 292.2 383.7 299.2 387.5L404.4 443.7L384.2 324.1C382.9 316.4 385.5 308.5 391 303L476.9 217.9L358.6 200.5C350.7 199.3 343.9 194.3 340.5 187.2L287.9 78.95z"
+                    />
+                </svg>
+            {/if}
+
             <svg
-                class={clsx(
-                    "zoom-icon transition-transform",
-                    isExpanded && "rotate-180"
-                )}
+                class="graph-icon"
                 viewBox="0 0 384 512"
                 on:click={toggleExpanded}
                 in:fade
             >
                 <path
+                    class={clsx(
+                        "transition-transform origin-center",
+                        isExpanded && "rotate-180"
+                    )}
                     fill="currentColor"
                     d="M360.5 217.5l-152 143.1C203.9 365.8 197.9 368 192 368s-11.88-2.188-16.5-6.562L23.5 217.5C13.87 208.3 13.47 193.1 22.56 183.5C31.69 173.8 46.94 173.5 56.5 182.6L192 310.9l135.5-128.4c9.562-9.094 24.75-8.75 33.94 .9375C370.5 193.1 370.1 208.3 360.5 217.5z"
                 />
             </svg>
         </div>
-        <!-- {#if !changedZoom}
-            <div
-                class="links-message absolute bottom-0 right-0 select-none rounded-tl-md rounded-br-lg p-1 pr-1.5 text-sm leading-none"
-                out:fade
-            >
-                {libraryState.graph.links.filter((l) => l.depth === 1).length}
-                new links
-            </div>
-        {/if} -->
     {:else if libraryState.error}
         <div
             class="flex h-full flex-grow justify-between p-3 pl-5"
@@ -320,13 +358,20 @@
         @apply cursor-pointer bg-none text-center text-sm leading-none;
     }
 
-    .zoom-icon {
+    .graph-icon {
         color: #6b7280;
         @apply w-[18px] cursor-pointer rounded-md bg-gray-100 p-1 shadow-sm transition-all hover:scale-90 hover:shadow;
     }
-    .zoom-icon > path {
+    .graph-icon > path {
         stroke: currentColor;
-        stroke-width: 30px;
+        stroke-width: 25px;
+    }
+    .star-icon {
+        width: 20px !important;
+    }
+    .star-full {
+        color: hsl(51, 80%, 64%);
+        background-color: hsl(51, 80%, 90%);
     }
 
     .links-message {

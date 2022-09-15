@@ -41,3 +41,6 @@ svg.message-icon {
 .links-message {
     color: #d6d3d1 !important; /* text-stone-300 */
 }
+.star-full {
+    color: hsl(51, 80%, 43%) !important;
+}
