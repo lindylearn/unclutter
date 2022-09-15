@@ -10,6 +10,7 @@
     import { LibraryState } from "../../../common/schema";
 
     export let libraryState: LibraryState;
+    export let darkModeEnabled: boolean;
 
     let graphContainer: HTMLDivElement;
     $: if (libraryState.graph && graphContainer) {
@@ -62,10 +63,24 @@
             .nodeRelSize(3)
             .nodeVal(byDepth([2, 1]))
             .nodeColor(
-                byDepth(["rgb(232, 230, 227)", "rgb(232, 230, 227)", "#57534e"])
+                byDepth(
+                    darkModeEnabled
+                        ? [
+                              "rgb(232, 230, 227)",
+                              "rgb(232, 230, 227)",
+                              "#57534e",
+                          ]
+                        : ["#374151", "#374151", "#6b7280"]
+                )
             )
             .nodeLabel("none")
-            .linkColor(byDepth([null, "rgb(232, 230, 227)", "#57534e"]))
+            .linkColor(
+                byDepth(
+                    darkModeEnabled
+                        ? [null, "rgb(232, 230, 227)", "#57534e"]
+                        : [null, "#374151", "#6b7280"]
+                )
+            )
             .linkWidth(byDepth([null, 2, 1]))
             .linkLabel("none")
             .nodeCanvasObject((node, ctx, globalScale) => {
@@ -76,7 +91,7 @@
                     ctx.font = `${fontSize}px Work Sans, Sans-Serif`;
                     ctx.textAlign = "center";
                     ctx.textBaseline = "middle";
-                    ctx.fillStyle = "#d6d3d1";
+                    ctx.fillStyle = darkModeEnabled ? "#d6d3d1" : "#4b5563";
                     ctx.fillText(label, node.x, node.y + 7);
                 }
             })
@@ -104,7 +119,7 @@
             bind:this={graphContainer}
             in:fade
         />
-        <div class="absolute top-1 right-1 flex flex-col gap-1 text-stone-300">
+        <div class="absolute top-1 right-1 flex flex-col gap-1">
             <svg class="zoom-icon" viewBox="0 0 448 512"
                 ><path
                     fill="currentColor"
@@ -151,7 +166,8 @@
     }
 
     .zoom-icon {
-        @apply w-[18px] cursor-pointer rounded-md bg-stone-700 p-1;
+        color: #6b7280;
+        @apply w-[18px] cursor-pointer rounded-md bg-gray-100 p-1;
     }
     .zoom-icon > path {
         stroke: currentColor;

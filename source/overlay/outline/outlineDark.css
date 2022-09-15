@@ -33,3 +33,8 @@ svg.message-icon {
 .library-message {
     color: var(--lindy-dark-theme-text-color) !important;
 }
+
+.zoom-icon {
+    color: #d6d3d1; /* text-stone-300 */
+    background-color: #44403c !important; /* bg-stone-700 */
+}

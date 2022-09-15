@@ -28,6 +28,7 @@
     export let totalAnnotationCount: number = 0;
     export let readingTimeLeft: number = null;
     export let libraryState: LibraryState;
+    export let darkModeEnabled: boolean;
 
     let displayFeedbackMessage = false;
     getFeatureFlag(dismissedFeedbackMessage)
@@ -61,7 +62,7 @@
 <div id="lindy-info-topleft-content" class="flex flex-col gap-2 font-paragraph">
     {#if libraryState?.libraryUser}
         <!-- <LibraryMessage {libraryState} /> -->
-        <ArticleGraph {libraryState} />
+        <ArticleGraph {libraryState} {darkModeEnabled} />
     {/if}
 
     <Outline
@@ -71,10 +72,6 @@
         {totalAnnotationCount}
         {readingTimeLeft}
     />
-
-    <!-- {#if libraryState?.libraryUser}
-        <ArticleGraph {libraryState} />
-    {/if} -->
 
     {#each updateMessages as { version, updateMessage }}
         <UpdateMessage

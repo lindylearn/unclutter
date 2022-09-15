@@ -197,6 +197,7 @@ export default class OverlayManager implements PageModifier {
                 annotationsEnabled: this.annotationsEnabled,
                 readingTimeLeft: this.readingTimeLeft,
                 libraryState: this.libraryState,
+                darkModeEnabled: this.darkModeEnabled,
             },
         });
     }
@@ -531,5 +532,9 @@ export default class OverlayManager implements PageModifier {
                 ?.querySelectorAll(".dark-mode-ui-style")
                 .forEach((e) => e.remove());
         }
+
+        this.topleftSvelteComponent?.$set({
+            darkModeEnabled: this.darkModeEnabled,
+        });
     }
 }
