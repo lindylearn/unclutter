@@ -271,7 +271,7 @@
                     </div> -->
                     <div class="select-none text-sm">
                         {#if libraryState.wasAlreadyPresent && libraryState.libraryInfo.article.time_added}
-                            Saved {getRelativeTime(
+                            Article saved {getRelativeTime(
                                 libraryState.libraryInfo.article.time_added *
                                     1000
                             )}
