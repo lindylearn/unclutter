@@ -38,3 +38,6 @@ svg.message-icon {
     color: #d6d3d1; /* text-stone-300 */
     background-color: #44403c !important; /* bg-stone-700 */
 }
+.links-message {
+    color: #d6d3d1 !important; /* text-stone-300 */
+}

@@ -4,7 +4,7 @@
     import { fly, fade } from "svelte/transition";
     import { cubicOut } from "svelte/easing";
     import clsx from "clsx";
-    import ForceGraph from "force-graph";
+    import ForceGraph, { ForceGraphInstance } from "force-graph";
     import { forceManyBody } from "d3-force";
 
     import { LibraryState } from "../../../common/schema";
@@ -13,7 +13,9 @@
     export let darkModeEnabled: boolean;
 
     let graphContainer: HTMLDivElement;
+    let forceGraph: ForceGraphInstance;
     $: if (libraryState.graph && graphContainer) {
+        console.log("render");
         const nodes = libraryState.graph.nodes;
         const links = libraryState.graph.links;
 
@@ -24,7 +26,7 @@
             return (item) => values[item.depth] || values[values.length - 1];
         }
 
-        const forceGraph = ForceGraph()(graphContainer)
+        forceGraph = ForceGraph()(graphContainer)
             // layout
             .graphData({ nodes, links })
             .width(width)
@@ -109,6 +111,15 @@
                 initialZoomDone = true;
             }
         });
+
+        forceGraph.onZoom((zoom) => {
+            currentZoom = zoom.k;
+        });
+    }
+
+    let currentZoom = 1;
+    function onZoomButton(isPlus: boolean) {
+        forceGraph.zoom(currentZoom + (isPlus ? 1 : -1), 200);
     }
 </script>
 
@@ -120,25 +131,31 @@
             in:fade
         />
         <div class="absolute top-1 right-1 flex flex-col gap-1">
-            <svg class="zoom-icon" viewBox="0 0 448 512"
+            <svg
+                class="zoom-icon"
+                viewBox="0 0 448 512"
+                on:click={() => onZoomButton(true)}
                 ><path
                     fill="currentColor"
                     d="M432 256C432 269.3 421.3 280 408 280h-160v160c0 13.25-10.75 24.01-24 24.01S200 453.3 200 440v-160h-160c-13.25 0-24-10.74-24-23.99C16 242.8 26.75 232 40 232h160v-160c0-13.25 10.75-23.99 24-23.99S248 58.75 248 72v160h160C421.3 232 432 242.8 432 256z"
                 /></svg
             >
-            <svg class="zoom-icon" viewBox="0 0 448 512"
+            <svg
+                class="zoom-icon"
+                viewBox="0 0 448 512"
+                on:click={() => onZoomButton(false)}
                 ><path
                     fill="currentColor"
                     d="M432 256C432 269.3 421.3 280 408 280H40c-13.25 0-24-10.74-24-23.99C16 242.8 26.75 232 40 232h368C421.3 232 432 242.8 432 256z"
                 /></svg
             >
         </div>
-        <!-- <div
-            class="links-message absolute bottom-0 right-0 rounded-tl-md rounded-br-lg p-1 text-sm leading-none text-stone-500"
+        <div
+            class="links-message absolute bottom-0 right-0 select-none rounded-tl-md rounded-br-lg p-1 text-sm leading-none"
         >
-            {libraryState.graph.links.filter((l) => l.depth === 1).length} library
+            {libraryState.graph.links.filter((l) => l.depth === 1).length} new library
             links
-        </div> -->
+        </div>
     {:else}
         <div
             class="flex h-full flex-grow justify-between p-3"
@@ -175,6 +192,7 @@
     }
 
     .links-message {
-        background-color: var(--lindy-background-color);
+        color: #4b5563;
+        /* background-color: var(--lindy-background-color); */
     }
 </style>
