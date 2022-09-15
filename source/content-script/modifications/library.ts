@@ -65,6 +65,15 @@ export default class LibraryModifier implements PageModifier {
                 this.libraryState.libraryUser
             );
 
+            // fetch article graph in parallel to clustering
+            getArticleGraph(
+                this.articleUrl,
+                this.libraryState.libraryUser
+            ).then((graph) => {
+                this.libraryState.graph = graph;
+                this.overlayManager.updateLibraryState(this.libraryState);
+            });
+
             if (!this.libraryState.libraryInfo) {
                 // run on-demand adding
                 this.libraryState.isClustering = true;
@@ -74,6 +83,7 @@ export default class LibraryModifier implements PageModifier {
                     this.articleUrl,
                     this.libraryState.libraryUser
                 );
+                this.libraryState.isClustering = false;
                 if (!this.libraryState.libraryInfo) {
                     this.libraryState.error = true;
                 }
@@ -99,13 +109,6 @@ export default class LibraryModifier implements PageModifier {
             this.libraryState.error = true;
             this.overlayManager.updateLibraryState(this.libraryState);
         }
-
-        // fetch library article graph
-        this.libraryState.graph = await getArticleGraph(
-            this.articleUrl,
-            this.libraryState.libraryUser
-        );
-        this.overlayManager.updateLibraryState(this.libraryState);
 
         // old individual articles fetch
         // this.libraryState.relatedArticles = await getRelatedArticles(

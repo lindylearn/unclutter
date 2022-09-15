@@ -14,10 +14,11 @@
 
     let graphContainer: HTMLDivElement;
     let forceGraph: ForceGraphInstance;
-    $: if (libraryState.graph && graphContainer) {
+    $: graph = libraryState.graph; // re-render only on graph changes
+    $: if (graph && !libraryState.isClustering && graphContainer) {
         console.log("render graph");
-        const nodes = libraryState.graph.nodes;
-        const links = libraryState.graph.links;
+        const nodes = graph.nodes;
+        const links = graph.links;
 
         const width = graphContainer.clientWidth;
         const height = graphContainer.clientHeight;
@@ -134,7 +135,7 @@
 </script>
 
 <div class="library-message relative h-16 max-w-full rounded-lg text-sm shadow">
-    {#if libraryState.graph}
+    {#if graph}
         <div
             class="h-full w-full overflow-hidden rounded-lg"
             bind:this={graphContainer}
@@ -166,25 +167,28 @@
                 /></svg
             > -->
         </div>
-        {#if !changedZoom}
+        <!-- {#if !changedZoom}
             <div
                 class="links-message absolute bottom-0 right-0 select-none rounded-tl-md rounded-br-lg p-1 pr-1.5 text-sm leading-none"
                 out:fade
             >
-                {libraryState.graph.links.filter((l) => l.depth === 1).length}
+                {graph.links.filter((l) => l.depth === 1).length}
                 new links
             </div>
-        {/if}
-    {:else}
+        {/if} -->
+    {:else if libraryState.error}
         <div
-            class="flex h-full flex-grow justify-between p-3"
+            class="flex h-full flex-grow justify-between p-3 pl-5"
             in:fly={{ y: 10, duration: 300, easing: cubicOut }}
         >
-            {#if libraryState.error}
-                Error adding article :(
-            {:else if libraryState.isClustering}
-                Adding article to your library
-            {/if}
+            Error adding article :(
+        </div>
+    {:else if libraryState.isClustering}
+        <div
+            class="flex h-full flex-grow justify-between p-3 pl-5"
+            in:fly={{ y: 10, duration: 300, easing: cubicOut }}
+        >
+            Adding to your library...
         </div>
     {/if}
 </div>
