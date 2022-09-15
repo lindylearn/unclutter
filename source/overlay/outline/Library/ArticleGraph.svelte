@@ -112,30 +112,29 @@
                     return;
                 }
 
-                if (node.id === hoverNode?.id) {
-                    ctx.beginPath();
-                    ctx.arc(node.x, node.y, NODE_R, 0, 2 * Math.PI);
-                    ctx.fillStyle = darkModeEnabled ? "#d6d3d1" : "#4b5563";
+                // if (node.id === hoverNode?.id) {
+                //     ctx.beginPath();
+                //     ctx.arc(node.x, node.y, NODE_R, 0, 2 * Math.PI);
+                //     ctx.fillStyle = darkModeEnabled ? "#d6d3d1" : "#4b5563";
 
-                    ctx.shadowColor = "rgba(0, 0, 0, 0.1)";
-                    ctx.shadowOffsetX = 0;
-                    ctx.shadowOffsetY = 1;
-                    ctx.shadowBlur = 10;
+                //     ctx.shadowColor = "rgba(0, 0, 0, 0.1)";
+                //     ctx.shadowOffsetX = 0;
+                //     ctx.shadowOffsetY = 1;
+                //     ctx.shadowBlur = 10;
 
-                    ctx.fill();
+                //     ctx.fill();
 
-                    // reset shadow
-                    ctx.shadowColor = "transparent";
-                }
+                //     // reset shadow
+                //     ctx.shadowColor = "transparent";
+                // }
                 if (
-                    node.id === hoverNode?.id ||
                     (node.depth === 1 && globalScale >= 1.5) ||
                     (node.depth === 2 && globalScale >= 2.5) ||
                     (node.depth === 3 && globalScale >= 3.5)
                 ) {
                     // title label
                     const label = node.name.slice(0, 30);
-                    const fontSize = 12 / globalScale;
+                    const fontSize = 10 / globalScale;
 
                     ctx.font = `${fontSize}px Work Sans, Sans-Serif`;
                     ctx.textAlign = "center";
@@ -206,19 +205,28 @@
         forceGraph.zoom(currentZoom + (isPlus ? 0.25 : -0.25), 200);
         changedZoom = true;
     }
+
+    function toggleExpanded(e) {
+        isExpanded = !isExpanded;
+        if (isExpanded) {
+            reportEventContentScript("expandArticleGraph", {
+                libraryUser: libraryState.libraryUser,
+            });
+        }
+
+        e.stopPropagation();
+    }
 </script>
 
 <div
     class={clsx(
         "library-message relative max-w-full rounded-lg text-sm shadow h-20",
-        isExpanded ? "is-expanded" : "cursor-pointer hover:scale-[99%]"
+        isExpanded && "is-expanded",
+        !isExpanded && libraryState.graph && "cursor-pointer hover:scale-[99%]"
     )}
-    on:click={() => {
+    on:click={(e) => {
         if (!isExpanded) {
-            isExpanded = true;
-            reportEventContentScript("expandArticleGraph", {
-                libraryUser: libraryState.libraryUser,
-            });
+            toggleExpanded(e);
         }
     }}
 >
@@ -229,7 +237,7 @@
             in:fade
         />
         <div class="absolute top-1 right-1 flex flex-col gap-1">
-            {#if isExpanded}
+            <!-- {#if isExpanded}
                 <svg
                     class="zoom-icon"
                     viewBox="0 0 448 512"
@@ -250,14 +258,21 @@
                         d="M432 256C432 269.3 421.3 280 408 280H40c-13.25 0-24-10.74-24-23.99C16 242.8 26.75 232 40 232h368C421.3 232 432 242.8 432 256z"
                     /></svg
                 >
-            {:else}
-                <svg class="zoom-icon" viewBox="0 0 448 512" in:fade
-                    ><path
-                        fill="currentColor"
-                        d="M136 32h-112C10.75 32 0 42.75 0 56v112C0 181.3 10.75 192 24 192C37.26 192 48 181.3 48 168V80h88C149.3 80 160 69.25 160 56S149.3 32 136 32zM424 32h-112C298.7 32 288 42.75 288 56c0 13.26 10.75 24 24 24h88v88C400 181.3 410.7 192 424 192S448 181.3 448 168v-112C448 42.75 437.3 32 424 32zM136 432H48v-88C48 330.7 37.25 320 24 320S0 330.7 0 344v112C0 469.3 10.75 480 24 480h112C149.3 480 160 469.3 160 456C160 442.7 149.3 432 136 432zM424 320c-13.26 0-24 10.75-24 24v88h-88c-13.26 0-24 10.75-24 24S298.7 480 312 480h112c13.25 0 24-10.75 24-24v-112C448 330.7 437.3 320 424 320z"
-                    /></svg
-                >
-            {/if}
+            {:else} -->
+            <svg
+                class={clsx(
+                    "zoom-icon transition-transform",
+                    isExpanded && "rotate-180"
+                )}
+                viewBox="0 0 384 512"
+                on:click={toggleExpanded}
+                in:fade
+            >
+                <path
+                    fill="currentColor"
+                    d="M360.5 217.5l-152 143.1C203.9 365.8 197.9 368 192 368s-11.88-2.188-16.5-6.562L23.5 217.5C13.87 208.3 13.47 193.1 22.56 183.5C31.69 173.8 46.94 173.5 56.5 182.6L192 310.9l135.5-128.4c9.562-9.094 24.75-8.75 33.94 .9375C370.5 193.1 370.1 208.3 360.5 217.5z"
+                />
+            </svg>
         </div>
         <!-- {#if !changedZoom}
             <div
@@ -307,7 +322,7 @@
 
     .zoom-icon {
         color: #6b7280;
-        @apply w-[18px] cursor-pointer rounded-md bg-gray-100 p-1 shadow-sm transition-transform hover:scale-95;
+        @apply w-[18px] cursor-pointer rounded-md bg-gray-100 p-1 shadow-sm transition-all hover:scale-90 hover:shadow;
     }
     .zoom-icon > path {
         stroke: currentColor;
