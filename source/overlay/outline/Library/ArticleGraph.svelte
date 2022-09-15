@@ -4,29 +4,55 @@
     import { fly, fade } from "svelte/transition";
     import { cubicOut } from "svelte/easing";
     import clsx from "clsx";
-    import ForceGraph, { ForceGraphInstance } from "force-graph";
+    import ForceGraph, {
+        ForceGraphInstance,
+        GraphData,
+        NodeObject,
+    } from "force-graph";
     import { forceManyBody } from "d3-force";
 
     import { LibraryState } from "../../../common/schema";
+    import {
+        openArticle,
+        reportEventContentScript,
+    } from "../../../content-script/messaging";
 
     export let libraryState: LibraryState;
     export let darkModeEnabled: boolean;
 
+    let isExpanded: boolean = false;
+
     let graphContainer: HTMLDivElement;
     let forceGraph: ForceGraphInstance;
-    $: graph = libraryState.graph; // re-render only on graph changes
-    $: if (graph && !libraryState.isClustering && graphContainer) {
+    // render once data available
+    $: if (libraryState.graph && graphContainer && !libraryState.isClustering) {
+        // re-render only for specific value changes
+        renderGraph(
+            libraryState.graph,
+            graphContainer,
+            darkModeEnabled,
+            isExpanded
+        );
+    }
+    function renderGraph(
+        graph: GraphData,
+        graphContainer: HTMLDivElement,
+        darkModeEnabled: boolean,
+        isExpanded: boolean
+    ) {
         console.log("render graph");
         const nodes = graph.nodes;
         const links = graph.links;
 
         const width = graphContainer.clientWidth;
-        const height = graphContainer.clientHeight;
+        const height = isExpanded ? 208 : 80; // clientHeight doesn't get updated until the first render
+        const NODE_R = 3;
 
         function byDepth(values: any[]) {
             return (item) => values[item.depth] || values[values.length - 1];
         }
 
+        let hoverNode: NodeObject | null = null;
         forceGraph = ForceGraph()(graphContainer)
             // layout
             .graphData({ nodes, links })
@@ -62,8 +88,8 @@
             //         );
             //     });
             // })
-            // styling
-            .nodeRelSize(3)
+            // node styling
+            .nodeRelSize(NODE_R)
             .nodeVal(byDepth([2, 1]))
             .nodeColor(
                 byDepth(
@@ -73,22 +99,35 @@
                               "rgb(232, 230, 227)",
                               "#57534e",
                           ]
-                        : ["#374151", "#374151", "#6b7280"]
+                        : ["#374151", "#374151", "#9ca3af"]
                 )
             )
             .nodeLabel("none")
-            .linkColor(
-                byDepth(
-                    darkModeEnabled
-                        ? [null, "rgb(232, 230, 227)", "#57534e"]
-                        : [null, "#374151", "#6b7280"]
-                )
-            )
-            .linkWidth(byDepth([null, 2, 1]))
-            .linkLabel("none")
+            .onNodeHover((node) => {
+                hoverNode = node || null;
+                graphContainer.style.cursor = node ? "pointer" : null;
+            })
             .nodeCanvasObject((node, ctx, globalScale) => {
-                return;
-                if (node.depth === 1) {
+                if (!isExpanded) {
+                    return;
+                }
+
+                if (node.id === hoverNode?.id) {
+                    ctx.beginPath();
+                    ctx.arc(node.x, node.y, NODE_R, 0, 2 * Math.PI);
+                    ctx.fillStyle = darkModeEnabled ? "#d6d3d1" : "#4b5563";
+
+                    ctx.shadowColor = "rgba(0, 0, 0, 0.1)";
+                    ctx.shadowOffsetX = 0;
+                    ctx.shadowOffsetY = 1;
+                    ctx.shadowBlur = 10;
+
+                    ctx.fill();
+
+                    // reset shadow
+                    ctx.shadowColor = "transparent";
+                }
+                if (node.id === hoverNode?.id || node.depth === 1) {
                     // title label
                     const label = node.name.slice(0, 30);
                     const fontSize = 10 / globalScale;
@@ -97,20 +136,42 @@
                     ctx.textAlign = "center";
                     ctx.textBaseline = "middle";
                     ctx.fillStyle = darkModeEnabled ? "#d6d3d1" : "#4b5563";
-                    ctx.fillText(label, node.x, node.y + 7);
+                    ctx.fillText(label, node.x, node.y + 5);
                 }
             })
-            .nodeCanvasObjectMode(() => "after")
-            // interaction
-            .enableNodeDrag(false)
-            .enableZoomInteraction(false)
-            .enablePanInteraction(false);
-        // .onNodeClick((node, event) => window.open(node.id.toString()));
+            .nodeCanvasObjectMode(() => "before")
+            // link styling
+            .linkColor(
+                byDepth(
+                    darkModeEnabled
+                        ? [null, "rgb(232, 230, 227)", "#57534e"]
+                        : [null, "#374151", "#9ca3af"]
+                )
+            )
+            .linkWidth(byDepth([null, 2, 1]))
+            .linkLabel("none");
+
+        // interaction
+        if (isExpanded) {
+            forceGraph
+                .autoPauseRedraw(false) // re-render nodes on hover
+                .onNodeClick((node, event) => {
+                    openArticle(node.id.toString());
+                    reportEventContentScript("clickGraphArticle", {
+                        libraryUser: libraryState.libraryUser,
+                    });
+                });
+        } else {
+            forceGraph
+                .enableNodeDrag(false)
+                .enableZoomInteraction(false)
+                .enablePanInteraction(false);
+        }
 
         let initialZoomDone = false;
         forceGraph.onEngineStop(() => {
             if (!initialZoomDone) {
-                forceGraph.zoomToFit(0, 5, (node) => node.depth <= 1);
+                forceGraph.zoomToFit(0, 10, (node) => node.depth <= 2);
                 forceGraph.cooldownTicks(Infinity);
                 initialZoomDone = true;
 
@@ -134,8 +195,21 @@
     }
 </script>
 
-<div class="library-message relative h-16 max-w-full rounded-lg text-sm shadow">
-    {#if graph}
+<div
+    class={clsx(
+        "library-message relative max-w-full rounded-lg text-sm shadow h-20",
+        isExpanded ? "is-expanded" : "cursor-pointer hover:scale-[99%]"
+    )}
+    on:click={() => {
+        if (!isExpanded) {
+            isExpanded = true;
+            reportEventContentScript("expandArticleGraph", {
+                libraryUser: libraryState.libraryUser,
+            });
+        }
+    }}
+>
+    {#if libraryState.graph}
         <div
             class="h-full w-full overflow-hidden rounded-lg"
             bind:this={graphContainer}
@@ -172,7 +246,7 @@
                 class="links-message absolute bottom-0 right-0 select-none rounded-tl-md rounded-br-lg p-1 pr-1.5 text-sm leading-none"
                 out:fade
             >
-                {graph.links.filter((l) => l.depth === 1).length}
+                {libraryState.graph.links.filter((l) => l.depth === 1).length}
                 new links
             </div>
         {/if} -->
@@ -194,6 +268,16 @@
 </div>
 
 <style lang="postcss" global>
+    .library-message {
+        /* background transition overrides transform otherwise */
+        transition: background 0.3s ease-in-out 0.1s,
+            transform 150ms cubic-bezier(0.4, 0, 0.2, 1),
+            height 150ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+    }
+    .library-message.is-expanded {
+        @apply h-52;
+    }
+
     .graph-tooltip {
         position: absolute;
         width: 200px;
@@ -213,7 +297,7 @@
     }
 
     .links-message {
-        @apply text-gray-500;
+        @apply text-gray-400;
         background-color: var(--lindy-background-color);
     }
 </style>
