@@ -173,7 +173,7 @@
 
     user-select: none;
     contain: strict;
-    z-index: 3000;
+    z-index: -101; /* put behind body if library not enabled */
     will-change: transform;
 }
 

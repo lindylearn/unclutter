@@ -86,6 +86,7 @@ export default class OverlayManager implements PageModifier {
 
         this.bottomIframe = this.createIframeNode("lindy-info-bottom");
         this.bottomIframe.style.position = "absolute"; // put on new layer
+        this.bottomIframe.style.zIndex = "-101"; // put behind body if library not enabled
         if (this.libraryEnabled) {
             // allow overflow to the right
             this.bottomIframe.style.width = `calc(var(--side-width) + var(--lindy-pagewidth))`;
@@ -249,7 +250,7 @@ export default class OverlayManager implements PageModifier {
         }
 
         this.bottomSvelteComponent = new BottomContainerSvelte({
-            target: this.bottomIframe.contentDocument.body,
+            target: this.bottomIframe?.contentDocument.body,
             props: {
                 libraryState: this.libraryState,
             },
