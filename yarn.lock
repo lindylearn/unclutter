@@ -1255,6 +1255,11 @@
     stack-utils "2.0.5"
     yazl "2.5.1"
 
+"@rocicorp/rails@^0.2.2":
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/@rocicorp/rails/-/rails-0.2.2.tgz#d8977049d49f7c8ce63a2837e420400e4bea5f3a"
+  integrity sha512-G4ChEdzHi/9HiweGGm6Jv+sJrhWyL0L8WL720Ut43wwP9jWkX26vCRcnT06tW5NpX0OouypFbCzIpw3Q7vwTxQ==
+
 "@rollup/plugin-babel@^5.3.1":
   version "5.3.1"
   resolved "https://registry.yarnpkg.com/@rollup/plugin-babel/-/plugin-babel-5.3.1.tgz#04bc0608f4aa4b2e4b1aebf284344d0f68fda283"
@@ -6099,6 +6104,11 @@ repeat-string@^1.0.0:
   resolved "https://registry.yarnpkg.com/repeat-string/-/repeat-string-1.6.1.tgz#8dcae470e1c88abc2d600fff4a776286da75e637"
   integrity sha512-PV0dzCYDNfRi1jCDbJzpW7jNNDRuCOG/jI5ctQcGKt/clZD+YcPS3yIlWuTJMmESC8aevCFmWJy5wjAFgNqN6w==
 
+replicache@^11.2.0:
+  version "11.2.0"
+  resolved "https://registry.yarnpkg.com/replicache/-/replicache-11.2.0.tgz#0eed354fb2906497456f6c9f09e27334c15808f5"
+  integrity sha512-LK2wv3OIxNzAe4JNePC8mj9u4jC3+piSfxRTd/e+gTS7xSoSrI7eo5lDrFbS0NLgpD3nT8OoitIJUyE0wlLZ9g==
+
 require-from-string@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/require-from-string/-/require-from-string-2.0.2.tgz#89a7fdd938261267318eafe14f9c32e598c36909"
@@ -7313,6 +7323,11 @@ yocto-queue@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/yocto-queue/-/yocto-queue-0.1.0.tgz#0294eb3dee05028d31ee1a5fa2c556a6aaf10a1b"
   integrity sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==
+
+zod@^3.19.1:
+  version "3.19.1"
+  resolved "https://registry.yarnpkg.com/zod/-/zod-3.19.1.tgz#112f074a97b50bfc4772d4ad1576814bd8ac4473"
+  integrity sha512-LYjZsEDhCdYET9ikFu6dVPGp2YH9DegXjdJToSzD9rO6fy4qiRYFoyEYwps88OseJlPyl2NOe2iJuhEhL7IpEA==
 
 zwitch@^1.0.0:
   version "1.0.5"

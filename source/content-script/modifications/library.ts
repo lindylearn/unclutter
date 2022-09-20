@@ -1,4 +1,5 @@
 import throttle from "lodash/throttle";
+import browser from "../../common/polyfill";
 
 import {
     addArticleToLibrary,
@@ -10,7 +11,11 @@ import {
 import { showLibrarySignupFlag } from "../../common/featureFlags";
 import { LibraryArticle, LibraryState } from "../../common/schema";
 import { getLibraryUser } from "../../common/storage";
-import { getRemoteFeatureFlag, reportEventContentScript } from "../messaging";
+import {
+    getRemoteFeatureFlag,
+    processReplicacheAccessor,
+    reportEventContentScript,
+} from "../messaging";
 import OverlayManager from "./overlay";
 import { PageModifier, trackModifierExecution } from "./_interface";
 
@@ -109,6 +114,8 @@ export default class LibraryModifier implements PageModifier {
             this.libraryState.error = true;
             this.overlayManager.updateLibraryState(this.libraryState);
         }
+
+        console.log(2, await processReplicacheAccessor("listArticles"));
 
         // old individual articles fetch
         // this.libraryState.relatedArticles = await getRelatedArticles(

@@ -2,6 +2,7 @@
     "name": "unclutter",
     "private": true,
     "dependencies": {
+        "@rocicorp/rails": "^0.2.2",
         "approx-string-match": "^2.0.0",
         "clsx": "^1.2.1",
         "crypto-js": "^4.1.1",
@@ -14,13 +15,15 @@
         "react-textarea-autosize": "^8.3.3",
         "react-transition-group": "^4.4.2",
         "recharts": "^2.1.9",
+        "replicache": "^11.2.0",
         "seedrandom": "^3.0.5",
         "svelte": "^3.46.6",
         "timeago.js": "^4.0.2",
         "tinycolor2": "^1.4.2",
         "twemoji": "^14.0.2",
         "webext-options-sync": "^2.0.1",
-        "webextension-polyfill": "^0.8.0"
+        "webextension-polyfill": "^0.8.0",
+        "zod": "^3.19.1"
     },
     "devDependencies": {
         "@babel/preset-env": "^7.16.11",

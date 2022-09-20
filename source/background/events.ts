@@ -25,6 +25,11 @@ import {
     reportSettings,
     startMetrics,
 } from "./metrics";
+import {
+    initReplicache,
+    processReplicacheAccessor,
+    processReplicacheMutator,
+} from "./replicache";
 import { TabStateManager } from "./tabs";
 
 const tabsManager = new TabStateManager();
@@ -136,6 +141,16 @@ browser.runtime.onMessage.addListener(
             });
         } else if (message.event === "setLibraryAuth") {
             setLibraryUser(message.userId, message.webJwt);
+        } else if (message.event === "processReplicacheAccessor") {
+            processReplicacheAccessor(message.methodName, message.args).then(
+                sendResponse
+            );
+            return true;
+        } else if (message.event === "processReplicacheMutator") {
+            processReplicacheMutator(message.methodName, message.args).then(
+                sendResponse
+            );
+            return true;
         }
 
         return false;
@@ -165,7 +180,10 @@ browser.runtime.onMessageExternal.addListener(
                 );
             }
         } else if (message.event === "setLibraryAuth") {
-            setLibraryUser(message.userId, message.webJwt);
+            // console.log("setLibraryAuth", message);
+            setLibraryUser(message.userId, message.webJwt).then(() => {
+                initReplicache();
+            });
         } else if (message.event === "openUnclutterOptionsPage") {
             browser.runtime.openOptionsPage();
         }
@@ -230,3 +248,4 @@ async function initializeServiceWorker() {
     }
 }
 initializeServiceWorker();
+initReplicache();

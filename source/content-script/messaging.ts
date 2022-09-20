@@ -22,3 +22,24 @@ export async function openArticle(url: string) {
         newTab: true,
     });
 }
+
+export async function processReplicacheAccessor(
+    methodName: string,
+    args: any[] = []
+) {
+    return await browser.runtime.sendMessage(null, {
+        event: "processReplicacheAccessor",
+        methodName,
+        args,
+    });
+}
+export async function processReplicacheMutator(
+    methodName: string,
+    args: object = {}
+) {
+    return await browser.runtime.sendMessage(null, {
+        event: "processReplicacheMutator",
+        methodName,
+        args,
+    });
+}

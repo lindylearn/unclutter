@@ -125,11 +125,16 @@ export async function getLibraryUser(): Promise<string | null> {
     return config["library-user-id"] || null;
 }
 
+export async function getLibraryUserJwt(): Promise<string | null> {
+    const config = await browser.storage.sync.get(["library-web-jwt"]);
+    return config["library-web-jwt"] || null;
+}
+
 export async function setLibraryUser(
     userId: string,
     webJwt: string
 ): Promise<void> {
     await browser.storage.sync.set({ "library-user-id": userId });
     await browser.storage.sync.set({ "library-web-jwt": webJwt });
-    reportEvent("extensionLibraryLogin", { libraryUser: userId });
+    // reportEvent("extensionLibraryLogin", { libraryUser: userId });
 }
