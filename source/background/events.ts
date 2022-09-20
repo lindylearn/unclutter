@@ -16,7 +16,7 @@ import { fetchCss } from "./actions";
 import { loadAnnotationCountsToMemory } from "./annotationCounts";
 import { getAllBookmarks, requestBookmarksPermission } from "./bookmarks";
 import { enableInTab, injectScript, togglePageViewMessage } from "./inject";
-import { onNewInstall, requestOptionalPermissions } from "./install";
+import { onNewInstall, setupWithPermissions } from "./install";
 import {
     getRemoteFeatureFlags,
     reportDisablePageView,
@@ -76,7 +76,7 @@ browser.action.onClicked.addListener((tab: Tabs.Tab) => {
 
     // can only request permissions from user action, use this opportunity
     // can't make callback a promise for this to work
-    requestOptionalPermissions();
+    setupWithPermissions();
 });
 
 // handle events from content scripts
@@ -247,5 +247,7 @@ async function initializeServiceWorker() {
         loadAnnotationCountsToMemory();
     }
 }
+
+setupWithPermissions();
 initializeServiceWorker();
 initReplicache();

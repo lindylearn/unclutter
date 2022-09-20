@@ -14,12 +14,18 @@ export function onNewInstall(version: string) {
 }
 
 // only run one time after each update
-let requestedOptionalPermissions = false;
-export function requestOptionalPermissions() {
-    if (requestedOptionalPermissions) {
+let installed = false;
+export function setupWithPermissions() {
+    if (installed) {
         return;
     }
-    requestedOptionalPermissions = true;
+    installed = true;
+
+    try {
+        // already have permissions, install directly
+        _installContextMenu();
+        return;
+    } catch {}
 
     console.log("Requesting optional permissions ...");
 
@@ -32,10 +38,8 @@ export function requestOptionalPermissions() {
             .then(() => {
                 _installContextMenu();
             });
-    } catch {
-        try {
-            _installContextMenu();
-        } catch {}
+    } catch (err) {
+        console.error(err);
     }
 }
 
@@ -75,11 +79,15 @@ async function _installContextMenu() {
 }
 
 function createOrUpdateContextMenu(id, menuOptions) {
+    // try update first
+    try {
+        browser.contextMenus.update(id, menuOptions);
+    } catch {}
+
     try {
         browser.contextMenus.create({ ...menuOptions, id });
     } catch {
         // @ts-ignore
         _ = runtime.lastError;
     }
-    browser.contextMenus.update(id, menuOptions);
 }
