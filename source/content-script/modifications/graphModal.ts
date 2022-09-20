@@ -39,6 +39,7 @@ export default class GraphModalModifier implements PageModifier {
             props: {
                 graphModalModifier: this,
                 libraryState: this.libraryState,
+                darkModeEnabled: this.darkModeEnabled,
             },
         });
     }
@@ -57,6 +58,14 @@ export default class GraphModalModifier implements PageModifier {
 
         this.modalSvelteComponent?.$set({
             libraryState,
+        });
+    }
+
+    private darkModeEnabled: boolean = null;
+    setDarkMode(darkModeEnabled: boolean) {
+        this.darkModeEnabled = darkModeEnabled;
+        this.modalSvelteComponent?.$set({
+            darkModeEnabled,
         });
     }
 }

@@ -506,6 +506,7 @@ export default class OverlayManager implements PageModifier {
         this.topleftSvelteComponent?.$set({
             darkModeEnabled: this.darkModeEnabled,
         });
+        this.graphModalModifier.setDarkMode(darkModeEnabled);
     }
 }
 

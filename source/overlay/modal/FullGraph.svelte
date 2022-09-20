@@ -88,10 +88,15 @@
             // node styling
             .nodeRelSize(NODE_R)
             .nodeVal((n) => 1 + n.linkCount * 0.25)
-            // .nodeAutoColorBy("topic_id")
-            .nodeColor((n) =>
-                n.reading_progress >= 0.7 ? "#9ca3af" : "#374151"
-            )
+            .nodeColor((n) => {
+                if (darkModeEnabled) {
+                    return n.reading_progress >= 0.7
+                        ? "rgb(232, 230, 227)"
+                        : "#78716c";
+                } else {
+                    return n.reading_progress >= 0.7 ? "#9ca3af" : "#374151";
+                }
+            })
             // .nodeColor(
             //     (n) => `rgba(55, 65, 81, ${Math.max(10, 30 - n.days_ago) / 30})`
             // )
@@ -142,7 +147,8 @@
             })
             .nodeCanvasObjectMode(() => "after")
             // link styling
-            .linkLabel("score");
+            .linkLabel("score")
+            .linkColor((l) => (darkModeEnabled ? "#44403c" : "#374151"));
 
         // forceGraph.d3Force(
         //     "link",

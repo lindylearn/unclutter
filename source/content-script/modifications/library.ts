@@ -78,7 +78,6 @@ export default class LibraryModifier implements PageModifier {
             //     this.libraryState.libraryUser
             // )
             this.getFullGraphData().then((graph) => {
-                console.log(graph);
                 this.libraryState.graph = graph;
                 this.overlayManager.updateLibraryState(this.libraryState);
             });

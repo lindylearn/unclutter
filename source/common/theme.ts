@@ -1,5 +1,6 @@
 import {
     getBottomIframe,
+    getGraphModalIframe,
     getOutlineIframe,
 } from "../overlay/outline/components/common";
 import { mergeUserTheme } from "./storage";
@@ -52,6 +53,7 @@ export function setCssThemeVariable(varName, value, params = {}) {
 
         getOutlineIframe()?.body.style.setProperty(varName, value);
         getBottomIframe()?.body.style.setProperty(varName, value);
+        getGraphModalIframe()?.body.style.setProperty(varName, value);
         // set on annotation sidebar via modifier method
     } else if (
         varName === autoBackgroundThemeVariable ||
@@ -67,6 +69,7 @@ export function setCssThemeVariable(varName, value, params = {}) {
 
         getOutlineIframe()?.body.style.setProperty(varName, value);
         getBottomIframe()?.body.style.setProperty(varName, value);
+        getGraphModalIframe()?.body.style.setProperty(varName, value);
         // set on annotation sidebar via modifier method
     } else {
         document.documentElement.style.setProperty(varName, value);

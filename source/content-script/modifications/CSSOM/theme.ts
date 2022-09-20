@@ -312,6 +312,9 @@ export default class ThemeModifier implements PageModifier {
                     backgroundColor
                 );
             }
+
+            // save e.g. to access in modal modifier
+            this.backgroundColor = backgroundColor;
         } else {
             // Background color
             const concreteColor = colorThemeToBackgroundColor("dark");
@@ -322,6 +325,9 @@ export default class ThemeModifier implements PageModifier {
             );
 
             this.enableDarkModeStyleTweaks();
+
+            // save e.g. to access in modal modifier
+            this.backgroundColor = colorThemeToBackgroundColor("dark");
         }
 
         // always dark text color for ui elements
