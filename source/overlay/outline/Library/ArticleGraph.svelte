@@ -266,7 +266,7 @@
                 in:fade={{ duration: 200 }}
                 out:fade={{ duration: 100 }}
             >
-                <div class="flex items-center p-2 pl-3">
+                <div class="flex items-center p-2 pl-5">
                     <!-- <div class="flex h-0 w-3 flex-shrink-0 items-center">
                         <div class="w-5 flex-shrink-0 cursor-pointer">
                             <LindyIcon />
@@ -336,14 +336,14 @@
         </div>
     {:else if libraryState.error}
         <div
-            class="flex h-full flex-grow justify-between p-3 pl-3"
+            class="flex h-full flex-grow justify-between p-3 pl-5"
             in:fly={{ y: 10, duration: 300, easing: cubicOut }}
         >
             Error while saving article :(
         </div>
     {:else if libraryState.isClustering}
         <div
-            class="flex h-full flex-grow justify-between p-3 pl-3"
+            class="flex h-full flex-grow justify-between p-3 pl-5"
             in:fly={{ y: 10, duration: 300, easing: cubicOut }}
         >
             Saving article to your library...
