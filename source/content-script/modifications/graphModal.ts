@@ -1,10 +1,11 @@
-import { getBrowserType } from "../../common/polyfill";
+import browser, { getBrowserType } from "../../common/polyfill";
 import { LibraryState } from "../../common/schema";
 import { createIframeNode, insertIframeFont } from "./overlay";
 import { PageModifier, trackModifierExecution } from "./_interface";
 import GraphModalSvelte from "../../overlay/modal/GraphModal.svelte";
 import { backgroundColorThemeVariable } from "../../common/theme";
 import ThemeModifier from "./CSSOM/theme";
+import { createStylesheetLink } from "../../common/stylesheets";
 
 @trackModifierExecution
 export default class GraphModalModifier implements PageModifier {
@@ -63,6 +64,18 @@ export default class GraphModalModifier implements PageModifier {
 
     private darkModeEnabled: boolean = null;
     setDarkMode(darkModeEnabled: boolean) {
+        if (darkModeEnabled) {
+            createStylesheetLink(
+                browser.runtime.getURL("overlay/modal/modalDark.css"),
+                "dark-mode-ui-style",
+                this.modalIframe?.contentDocument?.head.lastChild as HTMLElement
+            );
+        } else {
+            this.modalIframe?.contentDocument?.head
+                ?.querySelectorAll(".dark-mode-ui-style")
+                .forEach((e) => e.remove());
+        }
+
         this.darkModeEnabled = darkModeEnabled;
         this.modalSvelteComponent?.$set({
             darkModeEnabled,

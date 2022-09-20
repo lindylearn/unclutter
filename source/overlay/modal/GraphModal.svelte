@@ -20,7 +20,7 @@
         on:click={() => graphModalModifier.closeModal()}
     />
     <div
-        class="modal-content relative z-10 mx-auto h-4/6 w-4/6 rounded-lg px-2 py-2 pr-3 shadow"
+        class="modal-content relative z-10 mx-auto h-4/6 w-4/6 rounded-lg shadow"
     >
         {#if libraryState.graph && !libraryState.isClustering}
             <FullGraph {libraryState} {graphModalModifier} {darkModeEnabled} />

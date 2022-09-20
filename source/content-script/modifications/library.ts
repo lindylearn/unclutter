@@ -222,10 +222,10 @@ export default class LibraryModifier implements PageModifier {
         const start = new Date();
         start.setDate(start.getDate() - 90);
 
-        // let nodes = await processReplicacheAccessor("listRecentArticles", [
-        //     start,
-        // ]);
-        let nodes = await processReplicacheAccessor("listArticles");
+        let nodes = await processReplicacheAccessor("listRecentArticles", [
+            start,
+        ]);
+        // let nodes = await processReplicacheAccessor("listArticles");
         let links = await processReplicacheAccessor("listArticleLinks");
 
         const nodeById = nodes.reduce(

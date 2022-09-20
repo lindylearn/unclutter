@@ -48,7 +48,7 @@
 
         const width = graphContainer.clientWidth;
         const height = graphContainer.clientHeight;
-        const NODE_R = 5;
+        const NODE_R = 3;
 
         let hoverNode: NodeObject | null = null;
         let forceGraph = ForceGraph()(graphContainer)
@@ -166,6 +166,7 @@
         if (isExpanded) {
             forceGraph
                 // .autoPauseRedraw(false) // re-render nodes on hover
+                .minZoom(0.5)
                 .onNodeClick((node, event) => {
                     openArticle(node.url);
                     reportEventContentScript("clickGraphArticle", {
@@ -179,13 +180,39 @@
                 .enablePanInteraction(false);
         }
 
+        // zoom
+        let initialZoomDone = false;
+        forceGraph
+            .minZoom(0.5)
+            .maxZoom(isExpanded ? 4 : 2)
+            .onEngineStop(() => {
+                if (!initialZoomDone) {
+                    forceGraph.zoomToFit(
+                        0,
+                        12,
+                        (node) => node.depth <= (isExpanded ? 2 : 1)
+                    );
+                    forceGraph.cooldownTicks(Infinity);
+                    initialZoomDone = true;
+
+                    // track user zoom changes only after initial zoom
+                    forceGraph.onZoom((zoom) => {
+                        changedZoom = true;
+                    });
+                }
+            });
+
+        forceGraph.onZoom((zoom) => {
+            currentZoom = zoom.k;
+        });
+
         return forceGraph;
     }
 
     let currentZoom = 1;
     let changedZoom = false;
     function onZoomButton(isPlus: boolean) {
-        forceGraph.zoom(currentZoom + (isPlus ? 0.25 : -0.25), 200);
+        forceGraph.zoom(currentZoom + (isPlus ? 0.5 : -0.5), 200);
         changedZoom = true;
     }
 </script>
@@ -195,3 +222,34 @@
     bind:this={graphContainer}
     in:fade
 />
+<div class="absolute top-2 right-2 flex flex-col gap-2">
+    <svg
+        class="graph-icon star-icon"
+        viewBox="0 0 448 512"
+        on:click={() => onZoomButton(true)}
+        ><path
+            fill="currentColor"
+            d="M432 256C432 269.3 421.3 280 408 280h-160v160c0 13.25-10.75 24.01-24 24.01S200 453.3 200 440v-160h-160c-13.25 0-24-10.74-24-23.99C16 242.8 26.75 232 40 232h160v-160c0-13.25 10.75-23.99 24-23.99S248 58.75 248 72v160h160C421.3 232 432 242.8 432 256z"
+        /></svg
+    >
+    <svg
+        class="graph-icon star-icon"
+        viewBox="0 0 448 512"
+        on:click={() => onZoomButton(false)}
+        ><path
+            fill="currentColor"
+            d="M432 256C432 269.3 421.3 280 408 280H40c-13.25 0-24-10.74-24-23.99C16 242.8 26.75 232 40 232h368C421.3 232 432 242.8 432 256z"
+        /></svg
+    >
+</div>
+
+<style lang="postcss" global>
+    .graph-icon {
+        color: #6b7280;
+        @apply w-[18px] cursor-pointer rounded-md bg-gray-100 p-1 shadow-sm transition-all hover:scale-95 hover:shadow;
+    }
+    .graph-icon > path {
+        stroke: currentColor;
+        stroke-width: 25px;
+    }
+</style>
