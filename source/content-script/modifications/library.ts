@@ -18,6 +18,8 @@ import {
 } from "../messaging";
 import OverlayManager from "./overlay";
 import { PageModifier, trackModifierExecution } from "./_interface";
+import { GraphData } from "force-graph";
+import { ArticleLink } from "../../library-store";
 
 @trackModifierExecution
 export default class LibraryModifier implements PageModifier {
@@ -71,10 +73,12 @@ export default class LibraryModifier implements PageModifier {
             );
 
             // fetch article graph in parallel to clustering
-            getArticleGraph(
-                this.articleUrl,
-                this.libraryState.libraryUser
-            ).then((graph) => {
+            // getArticleGraph(
+            //     this.articleUrl,
+            //     this.libraryState.libraryUser
+            // )
+            this.getFullGraphData().then((graph) => {
+                console.log(graph);
                 this.libraryState.graph = graph;
                 this.overlayManager.updateLibraryState(this.libraryState);
             });
@@ -114,8 +118,6 @@ export default class LibraryModifier implements PageModifier {
             this.libraryState.error = true;
             this.overlayManager.updateLibraryState(this.libraryState);
         }
-
-        console.log(2, await processReplicacheAccessor("listArticles"));
 
         // old individual articles fetch
         // this.libraryState.relatedArticles = await getRelatedArticles(
@@ -216,6 +218,82 @@ export default class LibraryModifier implements PageModifier {
         this.sendProgressUpdate.bind(this),
         this.readingProgressSyncIntervalSeconds * 1000
     );
+
+    private async getFullGraphData(): Promise<GraphData> {
+        const start = new Date();
+        start.setDate(start.getDate() - 90);
+
+        // let nodes = await processReplicacheAccessor("listRecentArticles", [
+        //     start,
+        // ]);
+        let nodes = await processReplicacheAccessor("listArticles");
+        let links = await processReplicacheAccessor("listArticleLinks");
+
+        const nodeById = nodes.reduce(
+            (acc, node) => ((acc[node.id] = node), acc)
+        );
+        links = links.filter((l) => nodeById[l.source] && nodeById[l.target]);
+
+        const linksPerNode = new Map<string, ArticleLink>();
+        links
+            .sort((a, b) => a.weight - b.weight)
+            .map((l) => {
+                linksPerNode.set(l.source, [
+                    ...(linksPerNode.get(l.source) || []),
+                    l,
+                ]);
+                // linksPerNode.set(l.target, [
+                //     ...(linksPerNode.get(l.target) || []),
+                //     l,
+                // ]);
+            });
+
+        // links = links.map((l) => {
+        //     l.source = nodeIndexById[l.source];
+        //     l.target = nodeIndexById[l.target];
+        //     return l;
+        // });
+        // nodes = nodes.map((n) => {
+        //     n.id = nodeIndexById[n.id] || 0;
+        //     return n;
+        // });
+
+        links = [];
+        const filteredLinkCountPerNode = {};
+        [...linksPerNode.entries()].map(([id, ls]) => {
+            ls.sort((a, b) => b.score - a.score)
+                .slice(0, 3)
+                .map((l) => {
+                    links.push(l);
+
+                    // filteredLinkCountPerNode[l.source] =
+                    //     (filteredLinkCountPerNode[l.source] || 0) + 1;
+                    filteredLinkCountPerNode[l.target] =
+                        (filteredLinkCountPerNode[l.target] || 0) + 1;
+                });
+        });
+
+        // console.log(filteredLinkCountPerNode);
+        nodes = nodes.map((n) => {
+            return {
+                ...n,
+                linkCount: filteredLinkCountPerNode[n.id] || 0,
+                days_ago: (Date.now() - n.time_added * 1000) / 86400000,
+            };
+        });
+
+        return { nodes, links };
+
+        // const mstLinks = kruskal(
+        //     links.map((l) => ({
+        //         ...l,
+        //         from: l.source,
+        //         to: l.target,
+        //         weight: 1 - l.score!,
+        //     }))
+        // );
+        // setGraph({ nodes, links: mstLinks });
+    }
 }
 
 const librarySignupStaticArticles: LibraryArticle[] = [
