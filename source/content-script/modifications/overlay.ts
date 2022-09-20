@@ -26,7 +26,7 @@ import AnnotationsModifier from "./annotations/annotationsModifier";
 import ThemeModifier from "./CSSOM/theme";
 import TextContainerModifier from "./DOM/textContainer";
 import ElementPickerModifier from "./elementPicker";
-import LibraryModifier from "./library";
+import GraphModalModifier from "./graphModal";
 import { PageModifier, trackModifierExecution } from "./_interface";
 
 @trackModifierExecution
@@ -37,7 +37,7 @@ export default class OverlayManager implements PageModifier {
     private annotationsModifer: AnnotationsModifier;
     private textContainerModifier: TextContainerModifier;
     private elementPickerModifier: ElementPickerModifier;
-    private libraryModifier: LibraryModifier;
+    private graphModalModifier: GraphModalModifier;
 
     private outline: OutlineItem[];
     private flatOutline: OutlineItem[];
@@ -54,7 +54,8 @@ export default class OverlayManager implements PageModifier {
         themeModifier: ThemeModifier,
         annotationsModifer: AnnotationsModifier,
         textContainerModifier: TextContainerModifier,
-        elementPickerModifier: ElementPickerModifier
+        elementPickerModifier: ElementPickerModifier,
+        graphModalModifier: GraphModalModifier
     ) {
         this.domain = domain;
         this.browserType = getBrowserType();
@@ -62,6 +63,7 @@ export default class OverlayManager implements PageModifier {
         this.annotationsModifer = annotationsModifer;
         this.textContainerModifier = textContainerModifier;
         this.elementPickerModifier = elementPickerModifier;
+        this.graphModalModifier = graphModalModifier;
 
         this.annotationsModifer.annotationListeners.push(
             this.onAnnotationUpdate.bind(this)
@@ -79,12 +81,12 @@ export default class OverlayManager implements PageModifier {
     private topleftIframe: HTMLIFrameElement;
     private bottomIframe: HTMLIFrameElement;
     createIframes() {
-        this.topleftIframe = this.createIframeNode("lindy-info-topleft");
+        this.topleftIframe = createIframeNode("lindy-info-topleft");
         this.topleftIframe.style.position = "fixed"; // put on new layer
         this.topleftIframe.style.maxWidth =
             "calc((100vw - var(--lindy-pagewidth)) / 2 - 7px)"; // prevent initial transition
 
-        this.bottomIframe = this.createIframeNode("lindy-info-bottom");
+        this.bottomIframe = createIframeNode("lindy-info-bottom");
         this.bottomIframe.style.position = "absolute"; // put on new layer
         this.bottomIframe.style.zIndex = "-101"; // put behind body if library not enabled
         if (this.libraryEnabled) {
@@ -95,21 +97,8 @@ export default class OverlayManager implements PageModifier {
         document.documentElement.appendChild(this.topleftIframe);
         document.documentElement.appendChild(this.bottomIframe);
 
-        this.insertIframeFont(this.topleftIframe);
-        this.insertIframeFont(this.bottomIframe); // TODO run later? need to modify initial dark theme inser then
-    }
-
-    private createIframeNode(id: string) {
-        const iframe = document.createElement("iframe");
-        iframe.classList.add("lindy-allowed-iframe");
-        iframe.id = id;
-
-        iframe.setAttribute("scrolling", "no");
-        iframe.setAttribute("frameBorder", "0");
-        iframe.style.contain = "strict";
-        iframe.style.zIndex = "3000";
-
-        return iframe;
+        insertIframeFont(this.topleftIframe);
+        insertIframeFont(this.bottomIframe); // TODO run later? need to modify initial dark theme inser then
     }
 
     renderUi() {
@@ -153,29 +142,6 @@ export default class OverlayManager implements PageModifier {
         this.listenToOutlineScroll();
     }
 
-    insertIframeFont(iframe: HTMLIFrameElement) {
-        if (this.browserType === "firefox") {
-            // Firefox bug: need to wait until iframe initial render to insert elements
-            // See https://stackoverflow.com/questions/60814167/firefox-deleted-innerhtml-of-generated-iframe
-            setTimeout(() => {
-                this.insertIframeFontUnsafe(iframe);
-            }, 0);
-        } else {
-            this.insertIframeFontUnsafe(iframe);
-        }
-    }
-
-    insertIframeFontUnsafe(iframe: HTMLIFrameElement) {
-        if (!iframe.contentDocument) {
-            return;
-        }
-
-        const fontLink = iframe.contentDocument.createElement("link");
-        fontLink.rel = "stylesheet";
-        fontLink.href = browser.runtime.getURL("assets/fonts/fontface.css");
-        iframe.contentDocument.head.appendChild(fontLink);
-    }
-
     async renderTopLeftContainer() {
         if (this.browserType === "firefox") {
             // wait until iframe rendered
@@ -199,6 +165,7 @@ export default class OverlayManager implements PageModifier {
                 readingTimeLeft: this.readingTimeLeft,
                 libraryState: this.libraryState,
                 darkModeEnabled: this.darkModeEnabled,
+                graphModalModifier: this.graphModalModifier,
             },
         });
     }
@@ -538,4 +505,40 @@ export default class OverlayManager implements PageModifier {
             darkModeEnabled: this.darkModeEnabled,
         });
     }
+}
+
+export function createIframeNode(id: string) {
+    const iframe = document.createElement("iframe");
+    iframe.classList.add("lindy-allowed-iframe");
+    iframe.id = id;
+
+    iframe.setAttribute("scrolling", "no");
+    iframe.setAttribute("frameBorder", "0");
+    iframe.style.contain = "strict";
+    iframe.style.zIndex = "3000";
+
+    return iframe;
+}
+
+export function insertIframeFont(iframe: HTMLIFrameElement) {
+    if (getBrowserType() === "firefox") {
+        // Firefox bug: need to wait until iframe initial render to insert elements
+        // See https://stackoverflow.com/questions/60814167/firefox-deleted-innerhtml-of-generated-iframe
+        setTimeout(() => {
+            insertIframeFontUnsafe(iframe);
+        }, 0);
+    } else {
+        insertIframeFontUnsafe(iframe);
+    }
+}
+
+function insertIframeFontUnsafe(iframe: HTMLIFrameElement) {
+    if (!iframe.contentDocument) {
+        return;
+    }
+
+    const fontLink = iframe.contentDocument.createElement("link");
+    fontLink.rel = "stylesheet";
+    fontLink.href = browser.runtime.getURL("assets/fonts/fontface.css");
+    iframe.contentDocument.head.appendChild(fontLink);
 }

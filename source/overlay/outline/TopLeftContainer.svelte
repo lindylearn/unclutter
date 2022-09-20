@@ -24,6 +24,7 @@
         saveDismissedVersionMessage,
     } from "../../common/updateMessages";
     import ArticleGraph from "./Library/ArticleGraph.svelte";
+    import GraphModalModifier from "../../content-script/modifications/graphModal";
 
     export let outline: OutlineItem[];
     export let activeOutlineIndex: number;
@@ -32,6 +33,7 @@
     export let readingTimeLeft: number = null;
     export let libraryState: LibraryState;
     export let darkModeEnabled: boolean;
+    export let graphModalModifier: GraphModalModifier;
 
     let displayFeedbackMessage = false;
     getFeatureFlag(dismissedFeedbackMessage)
@@ -70,7 +72,11 @@
 <div id="lindy-info-topleft-content" class="flex flex-col gap-2 font-paragraph">
     {#if libraryState?.libraryUser && showArticleGraph !== null}
         {#if showArticleGraph}
-            <ArticleGraph {libraryState} {darkModeEnabled} />
+            <ArticleGraph
+                {libraryState}
+                {darkModeEnabled}
+                {graphModalModifier}
+            />
         {:else}
             <LibraryMessage {libraryState} />
         {/if}

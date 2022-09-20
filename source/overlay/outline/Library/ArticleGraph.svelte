@@ -1,6 +1,4 @@
 <script lang="ts">
-    import { onMount } from "svelte";
-    import browser from "../../../common/polyfill";
     import { fly, fade } from "svelte/transition";
     import { cubicOut } from "svelte/easing";
     import clsx from "clsx";
@@ -18,9 +16,11 @@
     } from "../../../content-script/messaging";
     import { getRelativeTime } from "../../../common/time";
     import { updateLibraryArticle } from "../../../common/api";
+    import GraphModalModifier from "../../../content-script/modifications/graphModal";
 
     export let libraryState: LibraryState;
     export let darkModeEnabled: boolean;
+    export let graphModalModifier: GraphModalModifier;
 
     let isExpanded: boolean = false;
 
@@ -237,6 +237,11 @@
             libraryUser: libraryState.libraryUser,
         });
     }
+
+    function openModal(e) {
+        graphModalModifier.showModal();
+        e.stopPropagation();
+    }
 </script>
 
 <div
@@ -249,9 +254,10 @@
             "cursor-pointer hover:scale-[99%]"
     )}
     on:click={(e) => {
-        if (!isExpanded && libraryState.graph.links.length !== 0) {
-            toggleExpanded(e);
-        }
+        openModal(e);
+        // if (!isExpanded && libraryState.graph.links.length !== 0) {
+        //     toggleExpanded(e);
+        // }
     }}
 >
     {#if libraryState.graph}

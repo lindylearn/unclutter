@@ -12,6 +12,7 @@ import LinkAnnotationsModifier from "./modifications/DOM/linksAnnotations";
 import ReadingTimeModifier from "./modifications/DOM/readingTime";
 import TextContainerModifier from "./modifications/DOM/textContainer";
 import ElementPickerModifier from "./modifications/elementPicker";
+import GraphModalModifier from "./modifications/graphModal";
 import LibraryModifier from "./modifications/library";
 import OverlayManager from "./modifications/overlay";
 import {
@@ -44,12 +45,14 @@ export default class TransitionManager implements PageModifier {
     );
     private backgroundModifier = new BackgroundModifier(this.themeModifier);
     private elementPickerModifier = new ElementPickerModifier(this.domain);
+    private graphModalModifier = new GraphModalModifier(this.themeModifier);
     private overlayManager = new OverlayManager(
         this.domain,
         this.themeModifier,
         this.annotationsModifier,
         this.textContainerModifier,
-        this.elementPickerModifier
+        this.elementPickerModifier,
+        this.graphModalModifier
     );
     private libraryModifier = new LibraryModifier(
         this.url,

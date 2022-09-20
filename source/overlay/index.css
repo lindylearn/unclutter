@@ -177,6 +177,15 @@
     will-change: transform;
 }
 
+#lindy-graph-modal {
+    all: initial;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+}
+
 @media (max-width: 1300px) {
     #lindy-info-topleft {
         display: none !important;
