@@ -460,6 +460,8 @@ export default class OverlayManager implements PageModifier {
         this.bottomSvelteComponent?.$set({
             libraryState,
         });
+
+        this.graphModalModifier.updateLibraryState(libraryState);
     }
 
     updateLinkedArticles(linkedArticles: LibraryArticle[]) {

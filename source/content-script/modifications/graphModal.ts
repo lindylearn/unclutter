@@ -52,11 +52,11 @@ export default class GraphModalModifier implements PageModifier {
     }
 
     private libraryState: LibraryState = null;
-    // updateLibraryState(libraryState: LibraryState) {
-    //     this.libraryState = libraryState;
+    updateLibraryState(libraryState: LibraryState) {
+        this.libraryState = libraryState;
 
-    //     this.modalSvelteComponent?.$set({
-    //         libraryState,
-    //     });
-    // }
+        this.modalSvelteComponent?.$set({
+            libraryState,
+        });
+    }
 }
