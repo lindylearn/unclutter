@@ -19,31 +19,31 @@ export function setupWithPermissions() {
     if (installed) {
         return;
     }
-    installed = true;
 
     try {
-        // already have permissions, install directly
+        // test if already have permissions
         _installContextMenu();
+        installed = true;
         return;
     } catch {}
 
-    console.log("Requesting optional permissions ...");
-
     // need to request permissions as part of user action, so can't use async functions
     try {
+        console.log("Requesting optional permissions ...");
         browser.permissions
             .request({
                 permissions: ["contextMenus"],
             })
             .then(() => {
                 _installContextMenu();
+                installed = true;
             });
     } catch (err) {
         console.error(err);
     }
 }
 
-async function _installContextMenu() {
+function _installContextMenu() {
     console.log("Registering context menu ...");
 
     createOrUpdateContextMenu("unclutter-link", {
@@ -60,6 +60,7 @@ async function _installContextMenu() {
         contexts: [context],
     });
 
+    // throws error if no permission
     browser.contextMenus.onClicked.addListener((info, tab) => {
         if (info.menuItemId === "unclutter-link") {
             browser.tabs.create({ url: info.linkUrl, active: true }, (tab) => {
@@ -87,7 +88,6 @@ function createOrUpdateContextMenu(id, menuOptions) {
     try {
         browser.contextMenus.create({ ...menuOptions, id });
     } catch {
-        // @ts-ignore
-        _ = runtime.lastError;
+        const _ = browser.runtime.lastError;
     }
 }
