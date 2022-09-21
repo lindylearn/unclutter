@@ -248,6 +248,6 @@ async function initializeServiceWorker() {
     }
 }
 
-setupWithPermissions();
-initializeServiceWorker();
+// setupWithPermissions();
+// initializeServiceWorker();
 initReplicache();

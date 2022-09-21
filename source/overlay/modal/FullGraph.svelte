@@ -60,7 +60,7 @@
             .d3AlphaDecay(0.01)
             .d3VelocityDecay(0.08)
             .warmupTicks(100)
-            // .cooldownTicks(0)
+            .cooldownTime(2000)
             .d3Force("center", (alpha) => {
                 nodes.forEach((node) => {
                     // different strengths for x and y
@@ -97,9 +97,7 @@
             //         return n.reading_progress >= 0.7 ? "#9ca3af" : "#374151";
             //     }
             // })
-            .nodeColor((n) =>
-                n.depth !== undefined && n.depth <= 3 ? "#374151" : "#9ca3af"
-            )
+            .nodeColor((n) => (n.depth !== undefined ? "#374151" : "#9ca3af"))
             // .nodeColor(
             //     (n) => `rgba(55, 65, 81, ${Math.max(10, 30 - n.days_ago) / 30})`
             // )
@@ -150,8 +148,8 @@
             })
             .nodeCanvasObjectMode(() => "after")
             // link styling
-            .linkLabel("score");
-        // .linkColor((l) => (darkModeEnabled ? "#44403c" : "#374151"));
+            .linkLabel("score")
+            .linkColor((l) => (l.depth !== undefined ? "#374151" : "#9ca3af"));
 
         // forceGraph.d3Force(
         //     "link",
@@ -191,9 +189,9 @@
             .onEngineStop(() => {
                 if (!initialZoomDone) {
                     forceGraph.zoomToFit(
-                        0,
-                        12,
-                        (node) => node.depth <= (isExpanded ? 2 : 1)
+                        200,
+                        50,
+                        (node) => node.depth !== undefined
                     );
                     forceGraph.cooldownTicks(Infinity);
                     initialZoomDone = true;

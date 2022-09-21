@@ -227,7 +227,9 @@ export default class LibraryModifier implements PageModifier {
             [start]
         );
         // let nodes = await processReplicacheAccessor("listArticles");
-        let links = await processReplicacheAccessor("listArticleLinks");
+        let links: ArticleLink[] = await processReplicacheAccessor(
+            "listArticleLinks"
+        );
 
         // only consider links of filtered articles
         const nodeIndexById = nodes.reduce((acc, node, index) => {
@@ -252,13 +254,19 @@ export default class LibraryModifier implements PageModifier {
         // filter number of links per node
         links = [];
         const filteredLinksPerNode: { [id: string]: ArticleLink[] } = {};
-        Object.entries(linksPerNode).map(([id, ls]) => {
+        for (const [id, ls] of Object.entries(linksPerNode)) {
             const filteredLinks = ls
                 .sort((a, b) => b.score - a.score)
                 .slice(0, 3);
 
-            links.push(...filteredLinks);
-            filteredLinks.map((l) => {
+            for (const l of filteredLinks) {
+                if (l["_index"] !== undefined) {
+                    // skip duplicate links
+                    continue;
+                }
+                l["_index"] = links.length;
+                links.push(l);
+
                 filteredLinksPerNode[l.source] = [
                     ...(filteredLinksPerNode[l.source] || []),
                     l,
@@ -272,17 +280,13 @@ export default class LibraryModifier implements PageModifier {
                         target: l.source,
                     },
                 ];
-            });
-        });
-
-        // links = links.map((link, index) => {
-        //     link.index = index;
-        // });
+            }
+        }
 
         nodes = nodes.map((node, index) => {
             return {
                 ...node,
-                linkCount: linksPerNode[node.id]?.length || 0, // use unfiltered links
+                linkCount: filteredLinksPerNode[node.id]?.length || 0,
                 days_ago: (Date.now() - node.time_added * 1000) / 86400000,
             };
         });
@@ -309,13 +313,15 @@ export default class LibraryModifier implements PageModifier {
                     break;
                 }
 
-                const links = filteredLinksPerNode[node.id] || [];
-                console.log(node, links);
+                const adjacentLinks = filteredLinksPerNode[node.id] || [];
+                // console.log(node, links);
 
-                links.map((l) => {
+                adjacentLinks.map((l) => {
                     const targetNode = nodes[nodeIndexById[l.target]];
                     if (targetNode && targetNode.depth === undefined) {
                         targetNode.depth = node.depth + 1;
+                        links[l["_index"]].depth = node.depth + 1;
+
                         queue.push(targetNode);
                     }
                 });
