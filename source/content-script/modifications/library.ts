@@ -219,70 +219,75 @@ export default class LibraryModifier implements PageModifier {
     );
 
     private async getFullGraphData(): Promise<GraphData> {
+        // fetch filtered data
         const start = new Date();
         start.setDate(start.getDate() - 90);
-
-        let nodes = await processReplicacheAccessor("listRecentArticles", [
-            start,
-        ]);
+        let nodes: LibraryArticle[] = await processReplicacheAccessor(
+            "listRecentArticles",
+            [start]
+        );
         // let nodes = await processReplicacheAccessor("listArticles");
         let links = await processReplicacheAccessor("listArticleLinks");
 
-        const nodeById = nodes.reduce(
-            (acc, node) => ((acc[node.id] = node), acc)
+        // only consider links of filtered articles
+        const nodeIndexById = nodes.reduce((acc, node, index) => {
+            acc[node.id] = index;
+            return acc;
+        }, {});
+        links = links.filter(
+            (l) =>
+                nodeIndexById[l.source] !== undefined &&
+                nodeIndexById[l.target] !== undefined
         );
-        links = links.filter((l) => nodeById[l.source] && nodeById[l.target]);
 
-        const linksPerNode = new Map<string, ArticleLink>();
+        // save links per node
+        const linksPerNode: { [id: string]: ArticleLink[] } = {};
         links
             .sort((a, b) => a.weight - b.weight)
             .map((l) => {
-                linksPerNode.set(l.source, [
-                    ...(linksPerNode.get(l.source) || []),
-                    l,
-                ]);
-                // linksPerNode.set(l.target, [
-                //     ...(linksPerNode.get(l.target) || []),
-                //     l,
-                // ]);
+                linksPerNode[l.source] = [...(linksPerNode[l.source] || []), l];
+                linksPerNode[l.target] = [...(linksPerNode[l.target] || []), l];
             });
 
-        // links = links.map((l) => {
-        //     l.source = nodeIndexById[l.source];
-        //     l.target = nodeIndexById[l.target];
-        //     return l;
-        // });
-        // nodes = nodes.map((n) => {
-        //     n.id = nodeIndexById[n.id] || 0;
-        //     return n;
-        // });
-
+        // filter number of links per node
         links = [];
-        const filteredLinkCountPerNode = {};
-        [...linksPerNode.entries()].map(([id, ls]) => {
-            ls.sort((a, b) => b.score - a.score)
-                .slice(0, 3)
-                .map((l) => {
-                    links.push(l);
+        const filteredLinksPerNode: { [id: string]: ArticleLink[] } = {};
+        Object.entries(linksPerNode).map(([id, ls]) => {
+            const filteredLinks = ls
+                .sort((a, b) => b.score - a.score)
+                .slice(0, 3);
 
-                    // filteredLinkCountPerNode[l.source] =
-                    //     (filteredLinkCountPerNode[l.source] || 0) + 1;
-                    filteredLinkCountPerNode[l.target] =
-                        (filteredLinkCountPerNode[l.target] || 0) + 1;
-                });
+            links.push(...filteredLinks);
+            filteredLinks.map((l) => {
+                filteredLinksPerNode[l.source] = [
+                    ...(filteredLinksPerNode[l.source] || []),
+                    l,
+                ];
+                filteredLinksPerNode[l.target] = [
+                    ...(filteredLinksPerNode[l.target] || []),
+                    // reverse link
+                    {
+                        ...l,
+                        source: l.target,
+                        target: l.source,
+                    },
+                ];
+            });
         });
 
-        // console.log(filteredLinkCountPerNode);
-        nodes = nodes.map((n) => {
+        // links = links.map((link, index) => {
+        //     link.index = index;
+        // });
+
+        nodes = nodes.map((node, index) => {
             return {
-                ...n,
-                linkCount: filteredLinkCountPerNode[n.id] || 0,
-                days_ago: (Date.now() - n.time_added * 1000) / 86400000,
+                ...node,
+                linkCount: linksPerNode[node.id]?.length || 0, // use unfiltered links
+                days_ago: (Date.now() - node.time_added * 1000) / 86400000,
             };
         });
 
-        return { nodes, links };
-
+        // spanning tree
         // const mstLinks = kruskal(
         //     links.map((l) => ({
         //         ...l,
@@ -292,6 +297,32 @@ export default class LibraryModifier implements PageModifier {
         //     }))
         // );
         // setGraph({ nodes, links: mstLinks });
+
+        // add depth from current url
+        const startNode = nodes.find((n) => n.url === this.articleUrl);
+        if (startNode) {
+            startNode.depth = 0;
+            const queue = [startNode];
+            while (queue.length > 0) {
+                const node = queue.shift();
+                if (node.depth >= 2) {
+                    break;
+                }
+
+                const links = filteredLinksPerNode[node.id] || [];
+                console.log(node, links);
+
+                links.map((l) => {
+                    const targetNode = nodes[nodeIndexById[l.target]];
+                    if (targetNode && targetNode.depth === undefined) {
+                        targetNode.depth = node.depth + 1;
+                        queue.push(targetNode);
+                    }
+                });
+            }
+        }
+
+        return { nodes, links };
     }
 }
 
