@@ -21,6 +21,10 @@
         ".class__active-el",
         ".visually-hidden.focusable"
     ],
+    "avclub.com": [
+        ".sc-1wkneyl-0.hxLRyg.video-html5-playlist",
+        ".bxm4mm-2.hKBnez"
+    ],
     "blog.jetbrains.com": [
         "#ez-toc-container",
         ".content__pagination",
