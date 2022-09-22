@@ -16,6 +16,7 @@
         ".sharesheet.component",
         ".nr-article-share"
     ],
+    "augmentingcognition.com": [".marginnote"],
     "autodesk.com": [
         ".image-style-class-header-1x-desktop.lazyloaded",
         ".class__active-el",
