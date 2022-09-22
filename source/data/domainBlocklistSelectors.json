@@ -155,6 +155,7 @@
         ".imagecache.imagecache-staff-headshot-small.imagecache-linked.imagecache-staff-headshot-small_linked",
         "#preface-top-wrapper"
     ],
+    "lwn.net": [".FeatureByline", ".IndexEntries"],
     "makandracards.com": ["#tail", ".text_ad__more"],
     "markmanson.net": [".mf-monday-opt-in"],
     "mcgill.ca": [
