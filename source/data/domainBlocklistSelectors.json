@@ -171,6 +171,7 @@
     ],
     "modularhomesource.com": [".elementor-shape-fill", ".wp-block-image"],
     "mullvad.net": ["#connection-status"],
+    "nationalpost.com": [".visually-hidden", ".more-topic"],
     "nautil.us": [".article-action-list"],
     "news.microsoft.com": [
         ".f-hero-header",
