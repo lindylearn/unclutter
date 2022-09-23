@@ -39,6 +39,7 @@
         ".row-quote"
     ],
     "businessinsider.com": [".the-refresh-summary-list"],
+    "businessinsider.de": [".tp-container-inner"],
     "christianitytoday.com": [".article-embed"],
     "cloudemployee.co.uk": [
         ".scroll.btn.btn-orange-split",
