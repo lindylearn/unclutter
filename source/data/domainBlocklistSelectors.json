@@ -21,6 +21,13 @@
         ".class__active-el",
         ".visually-hidden.focusable"
     ],
+    "blog.csdn.net": [
+        ".article-bar-top",
+        ".article-info-box",
+        "#blogExtensionBox",
+        "#toolBarBox",
+        ".template-box"
+    ],
     "blog.jetbrains.com": [
         "#ez-toc-container",
         ".content__pagination",
