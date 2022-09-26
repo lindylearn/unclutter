@@ -27,26 +27,27 @@ export default class LibraryModalModifier implements PageModifier {
             }
         });
 
+        // set theme variables once html ready, before react rendered
         await waitUntilIframeLoaded(this.modalIframe);
-
-        // set theme variables if those are already configured
-        // TODO set via initial params?
         if (this.darkModeEnabled !== null) {
             this.setDarkMode(this.darkModeEnabled);
         }
         Object.entries(this.cssVariables).map(([key, value]) =>
             this.setCssVariable(key, value)
         );
+        // set initial library state
+        this.sendModalEvent({
+            event: "setLibraryState",
+            libraryState: this.libraryState,
+        });
     }
 
     private createIframe() {
         const iframeUrl = new URL(browser.runtime.getURL("/modal/index.html"));
-        if (this.darkModeEnabled !== null) {
-            iframeUrl.searchParams.append(
-                "darkModeEnabled",
-                this.darkModeEnabled.toString()
-            );
-        }
+        iframeUrl.searchParams.append(
+            "darkModeEnabled",
+            (this.darkModeEnabled || false).toString()
+        );
 
         this.modalIframe = createIframeNode("lindy-library-modal");
         this.modalIframe.src = iframeUrl.toString();
@@ -107,5 +108,10 @@ export default class LibraryModalModifier implements PageModifier {
     private libraryState: LibraryState = null;
     updateLibraryState(libraryState: LibraryState) {
         this.libraryState = libraryState;
+
+        this.sendModalEvent({
+            event: "setLibraryState",
+            libraryState: this.libraryState,
+        });
     }
 }

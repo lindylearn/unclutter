@@ -1,9 +1,23 @@
 import clsx from "clsx";
-import React, { useEffect, useMemo, useReducer, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { LibraryState } from "../common/schema";
 
-export default function App({ darkModeEnabled = false }) {
+export default function App({
+    darkModeEnabled = false,
+}: {
+    darkModeEnabled?: boolean;
+}) {
+    const [libraryState, setLibraryState] = useState<LibraryState | null>(null);
     useEffect(() => {
-        window.onmessage = ({ data }) => {};
+        window.addEventListener("message", ({ data }) => {
+            if (data.event === "setLibraryState") {
+                console.log(2, data);
+                setLibraryState(data.libraryState);
+            }
+        });
+
+        // initial state set in messaging.ts
+        setLibraryState(libraryState || window["libraryState"] || null);
 
         window.top.postMessage({ event: "modalAppReady" }, "*");
     }, []);
@@ -24,7 +38,7 @@ export default function App({ darkModeEnabled = false }) {
                 onClick={closeModal}
             />
             <div className="modal-content relative z-10 mx-auto h-4/6 w-4/6 rounded-lg p-5 shadow">
-                1
+                {libraryState?.libraryInfo?.article.title}
             </div>
         </div>
     );
