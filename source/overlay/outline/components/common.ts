@@ -20,8 +20,3 @@ export function getBottomIframe(): Document | undefined {
     return (document.getElementById("lindy-info-bottom") as HTMLIFrameElement)
         ?.contentDocument;
 }
-
-export function getGraphModalIframe(): Document | undefined {
-    return (document.getElementById("lindy-graph-modal") as HTMLIFrameElement)
-        ?.contentDocument;
-}

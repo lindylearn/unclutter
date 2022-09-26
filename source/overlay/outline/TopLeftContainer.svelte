@@ -24,7 +24,7 @@
         saveDismissedVersionMessage,
     } from "../../common/updateMessages";
     import ArticleGraph from "./Library/ArticleGraph.svelte";
-    import GraphModalModifier from "../../content-script/modifications/graphModal";
+    import LibraryModalModifier from "../../content-script/modifications/libraryModal";
 
     export let outline: OutlineItem[];
     export let activeOutlineIndex: number;
@@ -33,7 +33,7 @@
     export let readingTimeLeft: number = null;
     export let libraryState: LibraryState;
     export let darkModeEnabled: boolean;
-    export let graphModalModifier: GraphModalModifier;
+    export let libraryModalModifier: LibraryModalModifier;
 
     let displayFeedbackMessage = false;
     getFeatureFlag(dismissedFeedbackMessage)
@@ -75,7 +75,7 @@
             <ArticleGraph
                 {libraryState}
                 {darkModeEnabled}
-                {graphModalModifier}
+                {libraryModalModifier}
             />
         {:else}
             <LibraryMessage {libraryState} />

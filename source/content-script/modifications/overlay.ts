@@ -26,7 +26,7 @@ import AnnotationsModifier from "./annotations/annotationsModifier";
 import ThemeModifier from "./CSSOM/theme";
 import TextContainerModifier from "./DOM/textContainer";
 import ElementPickerModifier from "./elementPicker";
-import GraphModalModifier from "./graphModal";
+import LibraryModalModifier from "./libraryModal";
 import { PageModifier, trackModifierExecution } from "./_interface";
 
 @trackModifierExecution
@@ -37,7 +37,7 @@ export default class OverlayManager implements PageModifier {
     private annotationsModifer: AnnotationsModifier;
     private textContainerModifier: TextContainerModifier;
     private elementPickerModifier: ElementPickerModifier;
-    private graphModalModifier: GraphModalModifier;
+    private libraryModalModifier: LibraryModalModifier;
 
     private outline: OutlineItem[];
     private flatOutline: OutlineItem[];
@@ -55,7 +55,7 @@ export default class OverlayManager implements PageModifier {
         annotationsModifer: AnnotationsModifier,
         textContainerModifier: TextContainerModifier,
         elementPickerModifier: ElementPickerModifier,
-        graphModalModifier: GraphModalModifier
+        libraryModalModifier: LibraryModalModifier
     ) {
         this.domain = domain;
         this.browserType = getBrowserType();
@@ -63,7 +63,7 @@ export default class OverlayManager implements PageModifier {
         this.annotationsModifer = annotationsModifer;
         this.textContainerModifier = textContainerModifier;
         this.elementPickerModifier = elementPickerModifier;
-        this.graphModalModifier = graphModalModifier;
+        this.libraryModalModifier = libraryModalModifier;
 
         this.annotationsModifer.annotationListeners.push(
             this.onAnnotationUpdate.bind(this)
@@ -165,7 +165,7 @@ export default class OverlayManager implements PageModifier {
                 readingTimeLeft: this.readingTimeLeft,
                 libraryState: this.libraryState,
                 darkModeEnabled: this.darkModeEnabled,
-                graphModalModifier: this.graphModalModifier,
+                libraryModalModifier: this.libraryModalModifier,
             },
         });
     }
@@ -461,7 +461,7 @@ export default class OverlayManager implements PageModifier {
             libraryState,
         });
 
-        this.graphModalModifier.updateLibraryState(libraryState);
+        this.libraryModalModifier.updateLibraryState(libraryState);
     }
 
     updateLinkedArticles(linkedArticles: LibraryArticle[]) {
@@ -506,7 +506,7 @@ export default class OverlayManager implements PageModifier {
         this.topleftSvelteComponent?.$set({
             darkModeEnabled: this.darkModeEnabled,
         });
-        this.graphModalModifier.setDarkMode(darkModeEnabled);
+        this.libraryModalModifier.setDarkMode(darkModeEnabled);
     }
 }
 

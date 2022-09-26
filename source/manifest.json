@@ -45,6 +45,11 @@
                 "sidebar/dark.css",
                 "sidebar/index.js",
                 "sidebar/messaging.js",
+                "modal/index.html",
+                "modal/index.css",
+                "modal/dark.css",
+                "modal/index.js",
+                "modal/messaging.js",
                 "settings-page/indexFirefoxOverride.css",
                 "assets/**"
             ],

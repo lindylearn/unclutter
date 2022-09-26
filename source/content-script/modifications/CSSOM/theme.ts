@@ -20,13 +20,10 @@ import {
     parse,
     rgbToHSL,
 } from "../../../common/util/color";
-import {
-    getBottomIframe,
-    getOutlineIframe,
-} from "../../../overlay/outline/components/common";
 import AnnotationsModifier from "../annotations/annotationsModifier";
 import BodyStyleModifier from "../bodyStyle";
 import TextContainerModifier from "../DOM/textContainer";
+import LibraryModalModifier from "../libraryModal";
 import type OverlayManager from "../overlay";
 import { PageModifier, trackModifierExecution } from "../_interface";
 import CSSOMProvider, { isMediaRule, isStyleRule } from "./_provider";
@@ -39,6 +36,7 @@ export default class ThemeModifier implements PageModifier {
     private textContainerModifier: TextContainerModifier;
     private bodyStyleModifier: BodyStyleModifier;
     private overlayModifier: OverlayManager;
+    private libraryModalModifier: LibraryModalModifier;
 
     public theme: UserTheme;
     private darkModeActive = false; // seperate from theme -- auto theme enables and disable dark mode
@@ -50,12 +48,14 @@ export default class ThemeModifier implements PageModifier {
         cssomProvider: CSSOMProvider,
         annotationsModifer: AnnotationsModifier,
         textContainerModifier: TextContainerModifier,
-        bodyStyleModifier: BodyStyleModifier
+        bodyStyleModifier: BodyStyleModifier,
+        libraryModalModifier: LibraryModalModifier
     ) {
         this.cssomProvider = cssomProvider;
         this.annotationsModifer = annotationsModifer;
         this.textContainerModifier = textContainerModifier;
         this.bodyStyleModifier = bodyStyleModifier;
+        this.libraryModalModifier = libraryModalModifier;
     }
 
     setCyclicDependencies(overlayModifier: OverlayManager) {
@@ -70,7 +70,7 @@ export default class ThemeModifier implements PageModifier {
         this.theme = await getUserTheme();
         this.activeColorTheme = this.theme.colorTheme;
 
-        setCssThemeVariable(pageWidthThemeVariable, this.theme.pageWidth);
+        this.setCssThemeVariable(pageWidthThemeVariable, this.theme.pageWidth);
 
         // Listen to system dark mode preference
         this.systemDarkModeQuery = window.matchMedia(
@@ -105,10 +105,16 @@ export default class ThemeModifier implements PageModifier {
         // look at background color and modify if necessary
         // do now to avoid visible changes later
         this.processBackgroundColor();
-        setCssThemeVariable(backgroundColorThemeVariable, this.backgroundColor);
+        this.setCssThemeVariable(
+            backgroundColorThemeVariable,
+            this.backgroundColor
+        );
 
         if (this.theme.fontSize) {
-            setCssThemeVariable(fontSizeThemeVariable, this.theme.fontSize);
+            this.setCssThemeVariable(
+                fontSizeThemeVariable,
+                this.theme.fontSize
+            );
         }
     }
 
@@ -181,7 +187,10 @@ export default class ThemeModifier implements PageModifier {
 
     applyActiveColorTheme(): boolean {
         // State for UI switch
-        setCssThemeVariable(activeColorThemeVariable, this.activeColorTheme);
+        this.setCssThemeVariable(
+            activeColorThemeVariable,
+            this.activeColorTheme
+        );
         this.activeColorThemeListeners.map((listener) =>
             listener(this.activeColorTheme)
         );
@@ -215,8 +224,7 @@ export default class ThemeModifier implements PageModifier {
                     this.activeColorTheme
                 );
             }
-            setCssThemeVariable(backgroundColorThemeVariable, concreteColor);
-            this.annotationsModifer.setSidebarCssVariable(
+            this.setCssThemeVariable(
                 backgroundColorThemeVariable,
                 concreteColor
             );
@@ -232,9 +240,9 @@ export default class ThemeModifier implements PageModifier {
     private updateAutoModeColor() {
         if (this.systemDarkModeQuery.matches) {
             const darkColor = colorThemeToBackgroundColor("dark");
-            setCssThemeVariable(autoBackgroundThemeVariable, darkColor);
+            this.setCssThemeVariable(autoBackgroundThemeVariable, darkColor);
         } else {
-            setCssThemeVariable(
+            this.setCssThemeVariable(
                 autoBackgroundThemeVariable,
                 this.backgroundColor
             );
@@ -259,6 +267,7 @@ export default class ThemeModifier implements PageModifier {
 
         this.overlayModifier.setOverlayDarkMode(true);
         this.annotationsModifer.setSidebarDarkMode(true);
+        this.libraryModalModifier.setDarkMode(true);
 
         // enable site dark mode styles if present, but always run our css tweaks too
         this.detectSiteDarkMode(true);
@@ -270,11 +279,7 @@ export default class ThemeModifier implements PageModifier {
 
         if (this.siteUsesDefaultDarkMode) {
             // use default background elsewhere
-            setCssThemeVariable(
-                backgroundColorThemeVariable,
-                this.backgroundColor
-            );
-            this.annotationsModifer.setSidebarCssVariable(
+            this.setCssThemeVariable(
                 backgroundColorThemeVariable,
                 this.backgroundColor
             );
@@ -300,14 +305,13 @@ export default class ThemeModifier implements PageModifier {
                 backgroundColor = colorThemeToBackgroundColor("dark");
             }
 
-            setCssThemeVariable(backgroundColorThemeVariable, backgroundColor);
-            this.annotationsModifer.setSidebarCssVariable(
+            this.setCssThemeVariable(
                 backgroundColorThemeVariable,
                 backgroundColor
             );
 
             if (this.activeColorTheme === "auto") {
-                setCssThemeVariable(
+                this.setCssThemeVariable(
                     autoBackgroundThemeVariable,
                     backgroundColor
                 );
@@ -318,8 +322,7 @@ export default class ThemeModifier implements PageModifier {
         } else {
             // Background color
             const concreteColor = colorThemeToBackgroundColor("dark");
-            setCssThemeVariable(backgroundColorThemeVariable, concreteColor);
-            this.annotationsModifer.setSidebarCssVariable(
+            this.setCssThemeVariable(
                 backgroundColorThemeVariable,
                 concreteColor
             );
@@ -332,11 +335,13 @@ export default class ThemeModifier implements PageModifier {
 
         // always dark text color for ui elements
         const darkTextColor = "rgb(232, 230, 227)";
-        setCssThemeVariable(darkThemeTextColor, darkTextColor);
-        this.annotationsModifer.setSidebarCssVariable(
-            darkThemeTextColor,
-            darkTextColor
-        );
+        this.setCssThemeVariable(darkThemeTextColor, darkTextColor);
+    }
+
+    private setCssThemeVariable(variableName: string, value: string) {
+        setCssThemeVariable(variableName, value);
+        this.annotationsModifer.setSidebarCssVariable(variableName, value);
+        this.libraryModalModifier.setCssVariable(variableName, value);
     }
 
     private disableDarkMode() {

@@ -16,11 +16,11 @@
     } from "../../../content-script/messaging";
     import { getRelativeTime } from "../../../common/time";
     import { updateLibraryArticle } from "../../../common/api";
-    import GraphModalModifier from "../../../content-script/modifications/graphModal";
+    import LibraryModalModifier from "../../../content-script/modifications/libraryModal";
 
     export let libraryState: LibraryState;
     export let darkModeEnabled: boolean;
-    export let graphModalModifier: GraphModalModifier;
+    export let libraryModalModifier: LibraryModalModifier;
 
     let isExpanded: boolean = false;
 
@@ -239,25 +239,18 @@
     }
 
     function openModal(e) {
-        graphModalModifier.showModal();
+        libraryModalModifier.showModal();
         e.stopPropagation();
     }
 </script>
 
 <div
     class={clsx(
-        "library-message relative max-w-full rounded-lg text-sm shadow h-20",
-        isExpanded && "is-expanded",
-        !isExpanded &&
-            libraryState.graph &&
-            libraryState.graph.links.length !== 0 &&
-            "cursor-pointer hover:scale-[99%]"
+        "library-message relative max-w-full rounded-lg text-sm shadow h-20 cursor-pointer hover:scale-[99%]",
+        isExpanded && "is-expanded"
     )}
     on:click={(e) => {
         openModal(e);
-        // if (!isExpanded && libraryState.graph.links.length !== 0) {
-        //     toggleExpanded(e);
-        // }
     }}
 >
     {#if libraryState.graph}

@@ -12,7 +12,7 @@ import LinkAnnotationsModifier from "./modifications/DOM/linksAnnotations";
 import ReadingTimeModifier from "./modifications/DOM/readingTime";
 import TextContainerModifier from "./modifications/DOM/textContainer";
 import ElementPickerModifier from "./modifications/elementPicker";
-import GraphModalModifier from "./modifications/graphModal";
+import LibraryModalModifier from "./modifications/libraryModal";
 import LibraryModifier from "./modifications/library";
 import OverlayManager from "./modifications/overlay";
 import {
@@ -37,22 +37,23 @@ export default class TransitionManager implements PageModifier {
         this.domain,
         this.textContainerModifier
     );
+    private libraryModalModifier = new LibraryModalModifier();
     private themeModifier = new ThemeModifier(
         this.cssomProvider,
         this.annotationsModifier,
         this.textContainerModifier,
-        this.bodyStyleModifier
+        this.bodyStyleModifier,
+        this.libraryModalModifier
     );
     private backgroundModifier = new BackgroundModifier(this.themeModifier);
     private elementPickerModifier = new ElementPickerModifier(this.domain);
-    private graphModalModifier = new GraphModalModifier(this.themeModifier);
     private overlayManager = new OverlayManager(
         this.domain,
         this.themeModifier,
         this.annotationsModifier,
         this.textContainerModifier,
         this.elementPickerModifier,
-        this.graphModalModifier
+        this.libraryModalModifier
     );
     private libraryModifier = new LibraryModifier(
         this.url,

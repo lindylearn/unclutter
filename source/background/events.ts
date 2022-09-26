@@ -180,7 +180,6 @@ browser.runtime.onMessageExternal.addListener(
                 );
             }
         } else if (message.event === "setLibraryAuth") {
-            // console.log("setLibraryAuth", message);
             setLibraryUser(message.userId, message.webJwt).then(() => {
                 initReplicache();
             });
@@ -248,6 +247,6 @@ async function initializeServiceWorker() {
     }
 }
 
-// setupWithPermissions();
-// initializeServiceWorker();
+initializeServiceWorker();
 initReplicache();
+setupWithPermissions(); // should be called last (permissions error may throw exception)

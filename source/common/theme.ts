@@ -1,6 +1,5 @@
 import {
     getBottomIframe,
-    getGraphModalIframe,
     getOutlineIframe,
 } from "../overlay/outline/components/common";
 import { mergeUserTheme } from "./storage";
@@ -53,8 +52,7 @@ export function setCssThemeVariable(varName, value, params = {}) {
 
         getOutlineIframe()?.body.style.setProperty(varName, value);
         getBottomIframe()?.body.style.setProperty(varName, value);
-        getGraphModalIframe()?.body.style.setProperty(varName, value);
-        // set on annotation sidebar via modifier method
+        // set on react iframes via modifier methods
     } else if (
         varName === autoBackgroundThemeVariable ||
         varName === activeColorThemeVariable
@@ -69,8 +67,7 @@ export function setCssThemeVariable(varName, value, params = {}) {
 
         getOutlineIframe()?.body.style.setProperty(varName, value);
         getBottomIframe()?.body.style.setProperty(varName, value);
-        getGraphModalIframe()?.body.style.setProperty(varName, value);
-        // set on annotation sidebar via modifier method
+        // set on react iframes via modifier methods
     } else {
         document.documentElement.style.setProperty(varName, value);
     }
