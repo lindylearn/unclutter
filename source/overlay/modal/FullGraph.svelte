@@ -17,6 +17,7 @@
     import { getRelativeTime } from "../../common/time";
     import { updateLibraryArticle } from "../../common/api";
     import GraphModalModifier from "../../content-script/modifications/graphModal";
+    import { readingProgressFullClamp } from "../../library-store";
 
     export let libraryState: LibraryState;
     export let darkModeEnabled: boolean;
@@ -50,6 +51,10 @@
         const height = graphContainer.clientHeight;
         const NODE_R = 3;
 
+        function byDepth(values: any[]) {
+            return (item) => values[item.depth] || values[values.length - 1];
+        }
+
         let hoverNode: NodeObject | null = null;
         let forceGraph = ForceGraph()(graphContainer)
             // layout
@@ -60,12 +65,12 @@
             .d3AlphaDecay(0.01)
             .d3VelocityDecay(0.08)
             .warmupTicks(100)
-            .cooldownTime(2000)
+            .cooldownTicks(0)
             .d3Force("center", (alpha) => {
                 nodes.forEach((node) => {
                     // different strengths for x and y
-                    node.vy -= node.y * alpha * 0.02;
-                    node.vx -= node.x * alpha * 0.02;
+                    node.vy -= node.y * alpha * 0.05;
+                    node.vx -= node.x * alpha * 0.05;
                 });
             })
             // .d3Force("charge", forceManyBody().strength(byDepth([-30, -40, -20])))
@@ -87,7 +92,7 @@
             // })
             // node styling
             .nodeRelSize(NODE_R)
-            .nodeVal((n) => 1 + n.linkCount * 0.25)
+            // .nodeVal((n) => 1 + n.linkCount * 0.25)
             // .nodeColor((n) => {
             //     if (darkModeEnabled) {
             //         return n.reading_progress >= 0.7
@@ -97,7 +102,9 @@
             //         return n.reading_progress >= 0.7 ? "#9ca3af" : "#374151";
             //     }
             // })
-            .nodeColor((n) => (n.depth !== undefined ? "#374151" : "#9ca3af"))
+            .nodeColor((n) =>
+                n.depth !== undefined && n.depth <= 1 ? "#374151" : "#9ca3af"
+            )
             // .nodeColor(
             //     (n) => `rgba(55, 65, 81, ${Math.max(10, 30 - n.days_ago) / 30})`
             // )
@@ -111,6 +118,13 @@
                     return;
                 }
 
+                if (node.reading_progress < readingProgressFullClamp) {
+                    ctx.beginPath();
+                    ctx.arc(node.x, node.y, NODE_R * 0.6, 0, 2 * Math.PI);
+                    ctx.fillStyle = darkModeEnabled ? "black" : "white";
+
+                    ctx.fill();
+                }
                 // if (node.id === hoverNode?.id) {
                 //     ctx.beginPath();
                 //     ctx.arc(node.x, node.y, NODE_R, 0, 2 * Math.PI);
@@ -133,8 +147,8 @@
                     globalScale >= 3.5
                 ) {
                     // title label
-                    let label = node.title?.slice(0, 50);
-                    if (node.title?.length > 50) {
+                    let label = node.title?.slice(0, 30);
+                    if (node.title?.length > 30) {
                         label = label.concat("…");
                     }
                     const fontSize = 12 / globalScale;
@@ -143,13 +157,16 @@
                     ctx.textAlign = "center";
                     ctx.textBaseline = "middle";
                     ctx.fillStyle = darkModeEnabled ? "#d6d3d1" : "#4b5563";
-                    ctx.fillText(label, node.x, node.y + 10);
+                    ctx.fillText(label, node.x, node.y + 5);
                 }
             })
             .nodeCanvasObjectMode(() => "after")
             // link styling
             .linkLabel("score")
-            .linkColor((l) => (l.depth !== undefined ? "#374151" : "#9ca3af"));
+            .linkWidth(byDepth([null, 3, 1]))
+            .linkColor((l) =>
+                l.depth !== undefined && l.depth <= 1 ? "#374151" : "#9ca3af"
+            );
 
         // forceGraph.d3Force(
         //     "link",
@@ -189,8 +206,8 @@
             .onEngineStop(() => {
                 if (!initialZoomDone) {
                     forceGraph.zoomToFit(
+                        0,
                         200,
-                        50,
                         (node) => node.depth !== undefined
                     );
                     forceGraph.cooldownTicks(Infinity);
