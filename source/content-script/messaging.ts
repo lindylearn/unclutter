@@ -1,4 +1,5 @@
 import browser from "../common/polyfill";
+import { accessors, M, mutators } from "../library-store";
 
 export async function reportEventContentScript(name: string, data = {}) {
     browser.runtime.sendMessage(null, {
@@ -42,4 +43,20 @@ export async function processReplicacheMutator(
         methodName,
         args,
     });
+}
+
+export class ReplicacheProxy {
+    query: any = Object.entries(accessors).reduce((obj, [fnName, fn]) => {
+        obj[fnName] = (...args) => {
+            return processReplicacheAccessor(fnName, args);
+        };
+        return obj;
+    }, {});
+
+    mutate: any = Object.entries(mutators).reduce((obj, [fnName, fn]) => {
+        obj[fnName] = (args) => {
+            return processReplicacheMutator(fnName, args);
+        };
+        return obj;
+    }, {});
 }

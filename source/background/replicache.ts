@@ -1,6 +1,6 @@
 import { Replicache } from "replicache";
 import { getLibraryUser, getLibraryUserJwt } from "../common/storage";
-import { accessors, Article, getArticle, mutators } from "../library-store";
+import { accessors, Article, getArticle, M, mutators } from "../library-store";
 
 // const apiHost = "http://localhost:3000"
 const apiHost = "https://library.lindylearn.io";
@@ -18,7 +18,7 @@ export async function initReplicache(): Promise<Replicache> {
     }
 
     console.log("Initializing replicache...");
-    rep = new Replicache({
+    rep = new Replicache<M>({
         licenseKey: "l83e0df86778d44fba2909e3618d7965f",
         pushURL: `${apiHost || ""}/api/replicache/push?spaceID=${userId}`,
         pullURL: `${apiHost || ""}/api/replicache/pull?spaceID=${userId}`,

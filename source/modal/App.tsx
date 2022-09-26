@@ -1,12 +1,15 @@
 import clsx from "clsx";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import { Replicache } from "replicache";
 import { LibraryState } from "../common/schema";
+import { ReplicacheProxy } from "../content-script/messaging";
 
 export default function App({
     darkModeEnabled = false,
 }: {
     darkModeEnabled?: boolean;
 }) {
+    const rep = useMemo<ReplicacheProxy>(() => new ReplicacheProxy(), []);
     const [libraryState, setLibraryState] = useState<LibraryState | null>(null);
     useEffect(() => {
         window.addEventListener("message", ({ data }) => {
@@ -21,6 +24,14 @@ export default function App({
 
         window.top.postMessage({ event: "modalAppReady" }, "*");
     }, []);
+
+    // useEffect(async () => {
+    //     if (rep) {
+    //         const start = new Date();
+    //         start.setDate(start.getDate() - 90);
+    //         console.log(await rep.query.listRecentArticles(start));
+    //     }
+    // }, [rep]);
 
     function closeModal() {
         window.top.postMessage({ event: "closeLibraryModal" }, "*");
