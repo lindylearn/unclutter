@@ -1,7 +1,7 @@
 // TODO: re-add types
 
 import type { GraphData } from "force-graph";
-import { Article } from "@unclutter/library-components/dist/store";
+import { Article } from "@unclutter/library-components/dist/store/_schema";
 
 // const lindyApiUrl = "http://localhost:8000";
 const lindyApiUrl = "https://api2.lindylearn.io";

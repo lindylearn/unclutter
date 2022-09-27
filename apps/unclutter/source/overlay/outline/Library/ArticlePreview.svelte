@@ -2,7 +2,7 @@
     import clsx from "clsx";
 
     import browser from "../../../common/polyfill";
-    import { Article } from "@unclutter/library-components/dist/store";
+    import { Article } from "@unclutter/library-components/dist/store/_schema";
     import {
         openArticle,
         reportEventContentScript,

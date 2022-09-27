@@ -8,7 +8,10 @@ import {
 } from "../../common/api";
 import { showLibrarySignupFlag } from "../../common/featureFlags";
 import { LibraryState } from "../../common/schema";
-import { Article } from "@unclutter/library-components/dist/store";
+import {
+    Article,
+    ArticleLink,
+} from "@unclutter/library-components/dist/store/_schema";
 import { getLibraryUser } from "../../common/storage";
 import {
     getRemoteFeatureFlag,
@@ -18,7 +21,6 @@ import {
 import OverlayManager from "./overlay";
 import { PageModifier, trackModifierExecution } from "./_interface";
 import { GraphData } from "force-graph";
-import { ArticleLink } from "@unclutter/library-components/dist/store";
 
 @trackModifierExecution
 export default class LibraryModifier implements PageModifier {

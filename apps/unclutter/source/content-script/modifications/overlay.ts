@@ -6,7 +6,7 @@ import {
 } from "../../common/featureFlags";
 import browser, { BrowserType, getBrowserType } from "../../common/polyfill";
 import { LibraryState } from "../../common/schema";
-import { Article } from "@unclutter/library-components/dist/store";
+import { Article } from "@unclutter/library-components/dist/store/_schema";
 import { getLibraryUser } from "../../common/storage";
 import {
     createStylesheetLink,

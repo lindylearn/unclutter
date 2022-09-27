@@ -8,7 +8,7 @@ import { getNodeOffset } from "../../../common/annotations/offset";
 import AnnotationsModifier from "../annotations/annotationsModifier";
 import { createScreenshots, getLinkedArticles } from "../../../common/api";
 import LibraryModifier from "../library";
-import { Article } from "@unclutter/library-components/dist/store";
+import { Article } from "@unclutter/library-components/dist/store/_schema";
 import { openArticle } from "../../messaging";
 import OverlayManager from "../overlay";
 import {

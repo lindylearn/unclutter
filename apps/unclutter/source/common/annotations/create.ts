@@ -1,4 +1,4 @@
-import { Article } from "@unclutter/library-components/dist/store";
+import { Article } from "@unclutter/library-components/dist/store/_schema";
 
 export function createDraftAnnotation(
     url: string,

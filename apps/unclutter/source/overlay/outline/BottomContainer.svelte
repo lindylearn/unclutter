@@ -3,7 +3,7 @@
     import { fade } from "svelte/transition";
 
     import { LibraryState } from "../../common/schema";
-    import { Article } from "@unclutter/library-components/dist/store";
+    import { Article } from "@unclutter/library-components/dist/store/_schema";
     import StaticArticleList from "./Library/StaticArticleList.svelte";
     import StackedArticleList from "./Library/StackedArticleList.svelte";
     import { getRandomColor } from "../../common/annotations/styling";

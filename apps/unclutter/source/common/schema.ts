@@ -3,7 +3,7 @@ import {
     Article,
     Topic,
     ArticleLink,
-} from "@unclutter/library-components/dist/store";
+} from "@unclutter/library-components/dist/store/_schema";
 
 export type LibraryState = {
     libraryUser?: string;
