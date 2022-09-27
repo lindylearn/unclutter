@@ -1,4 +1,4 @@
-import browser from "../../common/polyfill";
+import browser from "../polyfill";
 
 export async function getHypothesisToken() {
     return (await getUserInfo())["hypothesis-api-token"];

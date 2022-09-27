@@ -1,4 +1,4 @@
-import browser from "../common/polyfill";
+import browser from "./polyfill";
 
 export async function reportEventContentScript(name: string, data = {}) {
     browser.runtime.sendMessage(null, {
