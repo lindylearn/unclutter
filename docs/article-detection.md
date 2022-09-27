@@ -2,7 +2,7 @@
 
 You can configure Unclutter to automatically activate on certain domains by clicking the "flash" icon next to each article:
 
-![](../source/../media/clips/automatic.gif)
+![](./media/clips/automatic.gif)
 
 This avoids having to click the extension icon each time you're on a certain blog. In the settings you can also configure this automatic activation to be created each time you click the extension icon -- this saves the click on the "flash" icon.
 
@@ -10,7 +10,7 @@ This avoids having to click the extension icon each time you're on a certain blo
 
 Another related feature shows a timed button in the top right of all article pages you visit. This is also meant to make it easier to activate Unclutter, but you'll have to manually activate it in the extension settings.
 
-![](../source/../media/clips/reminder.png)
+![](./media/clips/reminder.png)
 
 ## Detecting non-leaf pages
 

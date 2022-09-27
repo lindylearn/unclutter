@@ -6,10 +6,10 @@ Here's the otherwise excellent and indispensable Firefox reader mode vs Unclutte
 
 | Firefox                                          | Unclutter                                          |
 | ------------------------------------------------ | -------------------------------------------------- |
-| ![](../source/../media/comparison/firefox/1.png) | ![](../source/../media/comparison/unclutter/1.png) |
-| ![](../source/../media/comparison/firefox/2.png) | ![](../source/../media/comparison/unclutter/2.png) |
-| ![](../source/../media/comparison/firefox/3.png) | ![](../source/../media/comparison/unclutter/3.png) |
-| ![](../source/../media/comparison/firefox/4.png) | ![](../source/../media/comparison/unclutter/4.png) |
+| ![](./media/comparison/firefox/1.png) | ![](./media/comparison/unclutter/1.png) |
+| ![](./media/comparison/firefox/2.png) | ![](./media/comparison/unclutter/2.png) |
+| ![](./media/comparison/firefox/3.png) | ![](./media/comparison/unclutter/3.png) |
+| ![](./media/comparison/firefox/4.png) | ![](./media/comparison/unclutter/4.png) |
 
 In addition to keeping the original website styles, Unclutter also supports many more features likes [page outlines](https://github.com/lindylearn/unclutter/blob/main/docs/outline.md), [social highlights](https://github.com/lindylearn/unclutter/blob/main/docs/social-highlights.md), or [automatic activation](https://github.com/lindylearn/unclutter/blob/main/docs/article-detection.md).
 

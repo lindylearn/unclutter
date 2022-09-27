@@ -2,14 +2,14 @@
 
 A new kind of reader mode to remove distractions from web articles.
 
-![intro](./media/intro2.gif)
+![intro](./docs/media/intro2.gif)
 
 ## Installation
 
 Try out the browser extension from the Chrome or Firefox extension stores ([or build it yourself](https://github.com/lindylearn/unclutter#development)):
 
-[<img src="./media/chrome-badge.png" height="70">](https://chrome.google.com/webstore/detail/ibckhpijbdmdobhhhodkceffdngnglpk)
-[<img src="./media/firefox-badge.png" height="55">](https://addons.mozilla.org/en-GB/firefox/addon/lindylearn)
+[<img src="./docs/media/chrome-badge.png" height="70">](https://chrome.google.com/webstore/detail/ibckhpijbdmdobhhhodkceffdngnglpk)
+[<img src="./docs/media/firefox-badge.png" height="55">](https://addons.mozilla.org/en-GB/firefox/addon/lindylearn)
 
 ## Features
 
@@ -17,7 +17,7 @@ The main difference between Unclutter and other "reader modes" is that it keeps 
 
 | Firefox reader mode                           | Unclutter                                       |
 | --------------------------------------------- | ----------------------------------------------- |
-| ![](source/../media/comparison/firefox/4.png) | ![](source/../media/comparison/unclutter/4.png) |
+| ![](docs/media/comparison/firefox/4.png) | ![](docs/media/comparison/unclutter/4.png) |
 
 Unclutter also supports:
 

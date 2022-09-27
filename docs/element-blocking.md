@@ -12,7 +12,7 @@ Both options make the extension better for everyone! Reporting a page creates a 
 
 After enabling the element blocking mode via the button in the "bug" popup, simply select the page elements you want to remove.
 
-![](../source/../media/clips/element-blocking.gif)
+![](./media/clips/element-blocking.gif)
 
 `Reset` undos all your changes, whereas `Save selectors` from then on applies them to all pages you visit on this website domain. You can exit the element blocking mode by clicking the `Report page` button again or pressing `Esc`.
 

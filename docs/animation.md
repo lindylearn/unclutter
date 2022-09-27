@@ -2,7 +2,7 @@
 
 Unclutter animates the page changes it performs when you activate it:
 
-![](../source/../media/clips/distractions.gif)
+![](./media/clips/distractions.gif)
 
 This works by carefully ordering the fade-out of noisy elements, parsing of website text, transition into the final position, and other feature activations into multiple animation phases in [transitions.ts](https://github.com/lindylearn/unclutter/blob/main/source/content-script/modifications/CSSOM/theme.ts). Plus a few other tricks.
 

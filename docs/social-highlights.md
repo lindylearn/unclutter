@@ -2,7 +2,7 @@
 
 Unclutter shows related social conversations for 85,643+ articles directly within the extension:
 
-![](../source/../media/clips/social.gif)
+![](./media/clips/social.gif)
 
 The idea is to make it easy to find the important quotes of each article.
 

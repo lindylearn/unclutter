@@ -7,7 +7,7 @@ You can manually trigger the extension to update if you want new features to wor
 
 ## For Chrome
 
-![](../source/../media/chrome-update.png)
+![](./media/chrome-update.png)
 
 1. Go to the extension settings page by right-clicking the Unclutter extension icon and selecting "Manage extension". Or enter `chrome://extensions/?id=ibckhpijbdmdobhhhodkceffdngnglpk` in the URL bar.
 2. Enable "Developer mode" in the top right of the screen.
@@ -17,7 +17,7 @@ You can manually trigger the extension to update if you want new features to wor
 
 ## For Firefox
 
-![](../source/../media/firefox-update.png)
+![](./media/firefox-update.png)
 
 1. Go to the extension settings page by right-clicking the Unclutter extension icon and selecting "Manage extension".
 2. Click on the settings icon in the top right of the page.

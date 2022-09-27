@@ -2,7 +2,7 @@
 
 Unclutter supports changing the appearance of articles, including changing the font size, page width, and color scheme.
 
-![](../source/../media/clips/theme.gif)
+![](./media/clips/theme.gif)
 
 ## Font customization
 

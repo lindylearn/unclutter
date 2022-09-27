@@ -2,7 +2,7 @@
 
 With Unclutter you can easily save highlights and create notes by selecting any article text:
 
-![](../source/../media/clips/annotations.gif)
+![](./media/clips/annotations.gif)
 
 To enable the feature, click on the "pen" icon in the top right of the article view. All of your notes are saved in the local browser storage and appear every time you open an article.
 

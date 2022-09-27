@@ -2,7 +2,7 @@
 
 Unclutter parses articles chapters and lists them in the interactive page outline.
 
-![](../source/../media/clips/outline.gif)
+![](./media/clips/outline.gif)
 
 ## Outline headings
 
