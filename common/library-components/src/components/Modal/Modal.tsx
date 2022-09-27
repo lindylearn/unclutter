@@ -1,32 +1,22 @@
-import {
-    LindyIcon,
-    ActivityCalendar,
-    useTabInfos,
-    useArticleGroups,
-    DraggableArticleList,
-    ProgressCircle,
-} from "@unclutter/library-components/dist/components";
+import React from "react";
 import {
     getArticlesCount,
     listRecentArticles,
     ReplicacheContext,
-    StateFilter,
-} from "@unclutter/library-components/dist/store";
-import { getRandomColor } from "@unclutter/library-components/dist/common";
+} from "../../store";
+import { getRandomColor } from "../../common";
 import clsx from "clsx";
 import { useContext, useEffect, useState } from "react";
 import { useSubscribe } from "replicache-react";
 import RecentModalTab from "./Recent";
 
-import dynamic from "next/dynamic";
 import StatsModalTab from "./Stats";
-import ProgressSteps from "./ProgressSteps";
+import ProgressSteps from "../Charts/ProgressSteps";
 import Sidebar from "./Sidebar";
-const GraphModalTab = dynamic(() => import("./Graph"), {
-    ssr: false,
-});
+import { LindyIcon } from "../Icons";
+import GraphModalTab from "./Graph";
 
-export default function ModalPage({
+export function LibraryModalPage({
     darkModeEnabled = false,
     articleUrl = undefined,
 }: {
@@ -148,13 +138,12 @@ function ModalContent({
             </aside>
             <div className="ml-32 max-h-full w-full overflow-auto pl-4 pt-1">
                 {currentTab === "recent" && <RecentModalTab />}
-                {currentTab === "graph" && (
-                    // @ts-ignore
+                {/* {currentTab === "graph" && (
                     <GraphModalTab
                         articleUrl={articleUrl}
                         darkModeEnabled={darkModeEnabled}
                     />
-                )}
+                )} */}
                 {currentTab === "stats" && (
                     <StatsModalTab darkModeEnabled={darkModeEnabled} />
                 )}

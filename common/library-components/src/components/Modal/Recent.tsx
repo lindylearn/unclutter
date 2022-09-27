@@ -1,14 +1,11 @@
-import {
-    DraggableArticleList,
-    StaticArticleList,
-} from "@unclutter/library-components/dist/components";
+import { DraggableArticleList, StaticArticleList } from "../../components";
 import {
     Article,
     ArticleBucketMap,
     groupRecentArticles,
     listRecentArticles,
     ReplicacheContext,
-} from "@unclutter/library-components/dist/store";
+} from "../../store";
 import React, { useContext, useEffect } from "react";
 
 export default function RecentModalTab({}) {

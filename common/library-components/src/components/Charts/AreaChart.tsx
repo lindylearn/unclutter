@@ -1,8 +1,7 @@
 import React, { useMemo } from "react";
 import { ResponsiveStream, StreamDatum } from "@nivo/stream";
-
-import { getWeekNumber } from "@unclutter/library-components/dist/common";
-import { Article } from "@unclutter/library-components/dist/store";
+import { Article } from "../../store";
+import { getWeekNumber } from "../../common";
 
 export function AreaChart({
     darkModeEnabled,

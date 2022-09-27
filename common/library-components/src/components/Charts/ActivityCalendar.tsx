@@ -5,7 +5,7 @@ import ActivityCalendarModule, {
 } from "react-activity-calendar";
 import { eachDayOfInterval, subYears } from "date-fns";
 
-import { Article } from "../store";
+import { Article } from "../../store";
 
 export function ActivityCalendar({
     darkModeEnabled,

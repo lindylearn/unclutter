@@ -1,4 +1,4 @@
-import { openArticle } from "@unclutter/library-components/dist/common";
+import { openArticle } from "../../common";
 import {
     Article,
     ArticleLink,
@@ -6,7 +6,7 @@ import {
     listRecentArticles,
     readingProgressFullClamp,
     ReplicacheContext,
-} from "@unclutter/library-components/dist/store";
+} from "../../store";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import ForceGraph, { NodeObject, LinkObject } from "force-graph";
 import { Replicache } from "replicache";

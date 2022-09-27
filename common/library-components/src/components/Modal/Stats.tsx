@@ -1,13 +1,8 @@
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { subYears, subMonths, subWeeks } from "date-fns";
-import {
-    Article,
-    listRecentArticles,
-    ReplicacheContext,
-} from "@unclutter/library-components/dist/store";
-import { AreaChart } from "./AreaChart";
-import { ActivityCalendar } from "@unclutter/library-components/dist/components";
-import { getWeekNumber } from "@unclutter/library-components/dist/common";
+import { Article, listRecentArticles, ReplicacheContext } from "../../store";
+import { ActivityCalendar } from "../Charts";
+import { getWeekNumber } from "../../common";
 
 export default function StatsModalTab({ darkModeEnabled }) {
     const rep = useContext(ReplicacheContext);
