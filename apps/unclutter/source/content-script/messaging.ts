@@ -1,5 +1,5 @@
 import browser from "../common/polyfill";
-import { accessors, M, mutators } from "../library-store";
+import { accessors, mutators } from "@unclutter/library-components/dist/store";
 
 export async function reportEventContentScript(name: string, data = {}) {
     browser.runtime.sendMessage(null, {

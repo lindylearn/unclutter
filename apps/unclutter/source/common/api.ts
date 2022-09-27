@@ -1,8 +1,7 @@
 // TODO: re-add types
 
 import type { GraphData } from "force-graph";
-import { LindyAnnotation } from "./annotations/create";
-import { LibraryArticle } from "./schema";
+import { Article } from "@unclutter/library-components/dist/store";
 
 // const lindyApiUrl = "http://localhost:8000";
 const lindyApiUrl = "https://api2.lindylearn.io";
@@ -115,7 +114,7 @@ export async function getRelatedArticles(url, user_id) {
 export async function getLinkedArticles(
     urls: string[],
     user_id: string
-): Promise<(LibraryArticle | null)[]> {
+): Promise<(Article | null)[]> {
     const response = await fetch(
         `${lindyApiUrl}/library/linked_article_info?${new URLSearchParams({
             user_id,

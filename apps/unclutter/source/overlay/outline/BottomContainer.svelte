@@ -2,7 +2,8 @@
     import browser from "../../common/polyfill";
     import { fade } from "svelte/transition";
 
-    import { LibraryArticle, LibraryState } from "../../common/schema";
+    import { LibraryState } from "../../common/schema";
+    import { Article } from "@unclutter/library-components/dist/store";
     import StaticArticleList from "./Library/StaticArticleList.svelte";
     import StackedArticleList from "./Library/StackedArticleList.svelte";
     import { getRandomColor } from "../../common/annotations/styling";
@@ -13,10 +14,9 @@
         getFeatureFlag,
         setFeatureFlag,
     } from "../../common/featureFlags";
-    import { createEventDispatcher } from "svelte";
 
     export let libraryState: LibraryState | null = null;
-    export let linkedArticles: LibraryArticle[] | null = null;
+    export let linkedArticles: Article[] | null = null;
 
     let topicColor: string = null;
     $: topicColor = libraryState?.libraryInfo?.topic?.group_id
@@ -47,7 +47,7 @@
     {#if linkedArticles?.length > 0}
         <!-- solid background for transparent topic color -->
         <div
-            class="related-container m-[5px] font-paragraph text-gray-700"
+            class="related-container font-paragraph m-[5px] text-gray-700"
             in:fade
         >
             <div
@@ -79,7 +79,7 @@
     {/if}
 {:else if libraryState?.showLibrarySignup && libraryState?.relatedArticles && !dismissedSignupMessage}
     <div
-        class="signup-container relative m-[5px] rounded-lg bg-lindy p-4 pr-6 font-paragraph text-gray-800 shadow"
+        class="signup-container bg-lindy font-paragraph relative m-[5px] rounded-lg p-4 pr-6 text-gray-800 shadow"
         in:fade
     >
         <div class="flex items-start gap-3">
@@ -95,7 +95,7 @@
             <div class="flex-grow">
                 <span
                     ><a
-                        class="inline-block cursor-pointer font-header font-bold transition-all hover:rotate-1"
+                        class="font-header inline-block cursor-pointer font-bold transition-all hover:rotate-1"
                         href="https://library.lindylearn.io/signup"
                         target="_blank"
                         rel="noreferrer"
@@ -106,7 +106,7 @@
                     </a>
                     for the
                     <a
-                        class="inline-block cursor-pointer font-header font-bold transition-all hover:rotate-1"
+                        class="font-header inline-block cursor-pointer font-bold transition-all hover:rotate-1"
                         href="https://library.lindylearn.io/signup"
                         target="_blank"
                         rel="noreferrer"

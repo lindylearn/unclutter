@@ -1,6 +1,7 @@
 import clsx from "clsx";
 import React, { useEffect, useMemo, useState } from "react";
-import { Replicache } from "replicache";
+import { LindyIcon } from "@unclutter/library-components/dist/components";
+
 import { LibraryState } from "../common/schema";
 import { ReplicacheProxy } from "../content-script/messaging";
 
@@ -38,7 +39,7 @@ export default function App({
     }
 
     return (
-        <div className="modal relative h-screen w-screen pt-5 font-paragraph text-base text-gray-700">
+        <div className="modal font-paragraph relative h-screen w-screen pt-5 text-base text-gray-700">
             <div
                 className={clsx(
                     "modal-background absolute top-0 left-0 h-full w-full cursor-zoom-out",
@@ -49,6 +50,7 @@ export default function App({
                 onClick={closeModal}
             />
             <div className="modal-content relative z-10 mx-auto h-4/6 w-4/6 rounded-lg p-5 shadow">
+                <LindyIcon />
                 {libraryState?.libraryInfo?.article.title}
             </div>
         </div>

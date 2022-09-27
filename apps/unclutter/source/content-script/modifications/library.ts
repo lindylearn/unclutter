@@ -4,12 +4,11 @@ import browser from "../../common/polyfill";
 import {
     addArticleToLibrary,
     checkArticleInLibrary,
-    getArticleGraph,
-    getRelatedArticles,
     updateLibraryArticle,
 } from "../../common/api";
 import { showLibrarySignupFlag } from "../../common/featureFlags";
-import { LibraryArticle, LibraryState } from "../../common/schema";
+import { LibraryState } from "../../common/schema";
+import { Article } from "@unclutter/library-components/dist/store";
 import { getLibraryUser } from "../../common/storage";
 import {
     getRemoteFeatureFlag,
@@ -19,7 +18,7 @@ import {
 import OverlayManager from "./overlay";
 import { PageModifier, trackModifierExecution } from "./_interface";
 import { GraphData } from "force-graph";
-import { ArticleLink } from "../../library-store";
+import { ArticleLink } from "@unclutter/library-components/dist/store";
 
 @trackModifierExecution
 export default class LibraryModifier implements PageModifier {
@@ -222,7 +221,7 @@ export default class LibraryModifier implements PageModifier {
         // fetch filtered data
         const start = new Date();
         start.setDate(start.getDate() - 90);
-        let nodes: LibraryArticle[] = await processReplicacheAccessor(
+        let nodes: Article[] = await processReplicacheAccessor(
             "listRecentArticles",
             [start]
         );
@@ -332,7 +331,7 @@ export default class LibraryModifier implements PageModifier {
     }
 }
 
-const librarySignupStaticArticles: LibraryArticle[] = [
+const librarySignupStaticArticles: Article[] = [
     {
         id: "21d298cc3c10aae89d9507eb5f7e6ffb98c263a3c345b5e6442f3aea32015a79",
         url: "https://bigthink.com/neuropsych/do-i-own-too-many-books/",

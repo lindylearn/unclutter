@@ -1,4 +1,4 @@
-import { LibraryArticle } from "../schema";
+import { Article } from "@unclutter/library-components/dist/store";
 
 export function createDraftAnnotation(
     url: string,
@@ -16,7 +16,7 @@ export function createDraftAnnotation(
 export function createLinkAnnotation(
     page_url: string,
     selector: object,
-    article: LibraryArticle
+    article: Article
 ): LindyAnnotation {
     return createAnnotation(page_url, selector, {
         id: generateId(),
@@ -86,7 +86,7 @@ export interface LindyAnnotation {
     focused?: boolean; // should only be set for one annotation
 
     // only for info annotations
-    article?: LibraryArticle;
+    article?: Article;
 }
 
 export function hypothesisToLindyFormat(

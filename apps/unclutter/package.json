@@ -3,6 +3,7 @@
     "version": "0.1.0",
     "private": true,
     "dependencies": {
+        "@unclutter/library-components": "*",
         "@rocicorp/rails": "^0.2.2",
         "approx-string-match": "^2.0.0",
         "clsx": "^1.2.1",

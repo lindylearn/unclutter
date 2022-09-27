@@ -5,13 +5,10 @@ import {
     LindyAnnotation,
 } from "../../../common/annotations/create";
 import { getNodeOffset } from "../../../common/annotations/offset";
-import { sendSidebarEvent } from "../annotations/annotationsListener";
 import AnnotationsModifier from "../annotations/annotationsModifier";
-import { highlightRange } from "../../../common/annotator/highlighter";
 import { createScreenshots, getLinkedArticles } from "../../../common/api";
 import LibraryModifier from "../library";
-import { LibraryArticle } from "../../../common/schema";
-import { insertMarginBar } from "../annotations/highlightsApi";
+import { Article } from "@unclutter/library-components/dist/store";
 import { openArticle } from "../../messaging";
 import OverlayManager from "../overlay";
 import {
@@ -87,7 +84,7 @@ export default class LinkAnnotationsModifier implements PageModifier {
         }
 
         // run article & screenshots fetch in parallel, to show results faster & re-render once screenshots complete
-        let articles: LibraryArticle[] = [];
+        let articles: Article[] = [];
         getLinkedArticles(
             hrefs,
             this.libraryModifier.libraryState.libraryUser
@@ -133,7 +130,7 @@ export default class LinkAnnotationsModifier implements PageModifier {
 
     private createAnnotationFromLink(
         link: HTMLAnchorElement,
-        article: LibraryArticle
+        article: Article
     ): LindyAnnotation | null {
         const range = document.createRange();
         range.selectNode(link);
@@ -156,7 +153,7 @@ export default class LinkAnnotationsModifier implements PageModifier {
     private wrapLink(
         annotationId: string,
         link: HTMLAnchorElement,
-        article: LibraryArticle
+        article: Article
     ) {
         // set id & class to update display offsets on resize
         // wrapping with custom <lindy-highlight> elem seems to not work

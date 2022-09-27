@@ -1,6 +1,10 @@
 import { Replicache } from "replicache";
 import { getLibraryUser, getLibraryUserJwt } from "../common/storage";
-import { accessors, Article, getArticle, M, mutators } from "../library-store";
+import {
+    accessors,
+    M,
+    mutators,
+} from "@unclutter/library-components/dist/store";
 
 // const apiHost = "http://localhost:3000"
 const apiHost = "https://library.lindylearn.io";

@@ -1,10 +1,10 @@
 <script lang="ts">
     import { fade } from "svelte/transition";
 
-    import { LibraryArticle } from "../../../common/schema";
+    import { Article } from "@unclutter/library-components/dist/store";
     import ArticlePreview from "./ArticlePreview.svelte";
 
-    export let articles: LibraryArticle[];
+    export let articles: Article[];
     export let libraryUser: string;
 
     const articleScale = 0.65;

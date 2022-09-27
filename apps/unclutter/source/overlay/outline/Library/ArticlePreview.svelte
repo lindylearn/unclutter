@@ -2,13 +2,13 @@
     import clsx from "clsx";
 
     import browser from "../../../common/polyfill";
-    import { LibraryArticle } from "../../../common/schema";
+    import { Article } from "@unclutter/library-components/dist/store";
     import {
         openArticle,
         reportEventContentScript,
     } from "../../../content-script/messaging";
 
-    export let article: LibraryArticle;
+    export let article: Article;
     export let index: number;
     export let libraryUser: string;
     export let className: string = "";
@@ -67,7 +67,7 @@
     <div
         class="absolute top-0 left-0 h-full w-full rounded-lg bg-cover"
         style={`background-image: url(${imageUrl}${
-            article.bust_image_cache ? "?" : ""
+            article["bust_image_cache"] ? "?" : ""
         });`}
     />
 
@@ -86,7 +86,7 @@
 
     {#if publishYear}
         <div
-            class="publish-year absolute bottom-2 left-2 select-none rounded-lg bg-lindy px-1.5 text-sm font-medium text-stone-800"
+            class="publish-year bg-lindy absolute bottom-2 left-2 select-none rounded-lg px-1.5 text-sm font-medium text-stone-800"
         >
             {publishYear}
         </div>

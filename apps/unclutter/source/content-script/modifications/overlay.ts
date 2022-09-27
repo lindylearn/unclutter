@@ -5,7 +5,8 @@ import {
     getFeatureFlag,
 } from "../../common/featureFlags";
 import browser, { BrowserType, getBrowserType } from "../../common/polyfill";
-import { LibraryArticle, LibraryState } from "../../common/schema";
+import { LibraryState } from "../../common/schema";
+import { Article } from "@unclutter/library-components/dist/store";
 import { getLibraryUser } from "../../common/storage";
 import {
     createStylesheetLink,
@@ -464,7 +465,7 @@ export default class OverlayManager implements PageModifier {
         this.libraryModalModifier.updateLibraryState(libraryState);
     }
 
-    updateLinkedArticles(linkedArticles: LibraryArticle[]) {
+    updateLinkedArticles(linkedArticles: Article[]) {
         this.bottomSvelteComponent?.$set({
             linkedArticles,
         });

@@ -320,3 +320,25 @@ export async function getSettings(tx: ReadTransaction): Promise<Settings> {
     const savedValue = (await tx.get("settings")) as Settings | undefined;
     return savedValue || {};
 }
+
+export const accessors = {
+    getArticle,
+    listArticles,
+    getArticleText,
+    listArticleTexts,
+    listArticleLinks,
+    getArticlesCount,
+    listRecentArticles,
+    groupRecentArticles,
+    listFavoriteArticles,
+    listTopicArticles,
+    listTopicArticlesServer,
+    getSafeArticleSortPosition,
+    sortArticlesPosition,
+    getTopicArticlesCount,
+    getTopic,
+    getTopicIdMap,
+    groupTopics,
+    getGroupTopicChildren,
+    getSettings,
+};
