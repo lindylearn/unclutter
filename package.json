@@ -1,17 +1,17 @@
 {
     "name": "unclutter-library",
+    "description": "Monorepo for the Unclutter open-source project",
     "private": true,
     "workspaces": [
         "common/*",
-        "newtab",
-        "web"
+        "apps/*"
     ],
     "scripts": {
         "dev:components": "yarn --cwd common/library-components watch",
         "dev:replicache": "yarn --cwd common/replicache-nextjs watch",
+        "dev": "npm-run-all --parallel dev:*",
         "build:components": "yarn --cwd common/library-components build",
         "build:replicache": "yarn --cwd common/replicache-nextjs build",
-        "dev": "npm-run-all --parallel dev:*",
         "build": "npm-run-all build:*",
         "postinstall": "patch-package"
     },

@@ -1,4 +1,4 @@
-const template = require("../tailwind.template.cjs");
+const template = require("../../tailwind.template.cjs");
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -6,6 +6,6 @@ module.exports = {
     content: [
         "./pages/**/*.{js,ts,jsx,tsx}",
         "./src/**/*.{js,ts,jsx,tsx}",
-        "../common/library-components/dist/**/*.js",
+        "../../common/library-components/dist/**/*.js",
     ],
 };
