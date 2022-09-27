@@ -1,5 +1,6 @@
 {
-    "name": "unclutter",
+    "name": "@unclutter/unclutter",
+    "version": "0.1.0",
     "private": true,
     "dependencies": {
         "@rocicorp/rails": "^0.2.2",
@@ -101,5 +102,10 @@
     "type": "module",
     "engines": {
         "node": ">=16.x"
+    },
+    "workspaces": {
+        "nohoist": [
+            "**"
+        ]
     }
 }
