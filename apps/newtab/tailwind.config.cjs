@@ -7,6 +7,6 @@ module.exports = {
         "./source/**/*.html",
         "./source/**/*.tsx",
         "./source/**/*.svelte",
-        "../common/library-components/dist/**/*.js",
+        "../../common/library-components/dist/**/*.js",
     ],
 };
