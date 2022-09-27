@@ -1,0 +1,78 @@
+.article-container.article-static > .article-fallback {
+    animation: fadeInArticleFallback 0.1s ease-in 0.3s;
+    animation-fill-mode: both;
+}
+@keyframes fadeInArticleFallback {
+    from {
+        visibility: hidden;
+        opacity: 0;
+    }
+    to {
+        visibility: visible;
+        opacity: 1;
+    }
+}
+
+/* animations sometimes skip when using transition */
+.article-static.is-hover {
+    animation: rotateArticle 0.2s ease-in-out;
+    animation-fill-mode: forwards;
+}
+.article-static.is-hover.rotate-neg {
+    animation-name: rotateArticleNeg;
+}
+@keyframes rotateArticle {
+    to {
+        transform: rotate(1.5deg);
+    }
+}
+@keyframes rotateArticleNeg {
+    to {
+        transform: rotate(-1.5deg);
+    }
+}
+.article-static.hover-leave {
+    animation: rotateArticleReverse 0.2s ease-in-out;
+}
+.article-static.hover-leave.rotate-neg {
+    animation-name: rotateArticleReverseNeg;
+}
+@keyframes rotateArticleReverse {
+    from {
+        transform: rotate(1.5deg);
+    }
+    to {
+        transform: rotate(0);
+    }
+}
+@keyframes rotateArticleReverseNeg {
+    from {
+        transform: rotate(-1.5deg);
+    }
+    to {
+        transform: rotate(0);
+    }
+}
+
+.article-gradient {
+    backdrop-filter: blur(10px);
+
+    /* gradient & backdrop-filter only seem to work together using mask-image */
+    background-image: inherit;
+    background-size: cover;
+    mask-image: linear-gradient(
+        180deg,
+        rgba(0, 0, 0, 1) 0%,
+        rgba(0, 0, 0, 1) 85%,
+        rgba(0, 0, 0, 0) 95%
+    );
+}
+
+.article-gradient.with-quotes {
+    mask-image: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 1) 0%,
+        rgba(0, 0, 0, 1) 40%,
+        rgba(0, 0, 0, 0) 60%
+    );
+}

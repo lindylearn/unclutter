@@ -1,0 +1,13 @@
+diff --git a/node_modules/@supabase/auth-helpers-shared/dist/index.js b/node_modules/@supabase/auth-helpers-shared/dist/index.js
+index cda1ff3..1dcd2c7 100644
+--- a/node_modules/@supabase/auth-helpers-shared/dist/index.js
++++ b/node_modules/@supabase/auth-helpers-shared/dist/index.js
+@@ -236,7 +236,7 @@ function serializeCookie(cookie, secure) {
+   return serialize(cookie.name, cookie.value, {
+     maxAge: cookie.maxAge,
+     expires: new Date(Date.now() + cookie.maxAge * 1e3),
+-    httpOnly: true,
++    httpOnly: false,
+     secure,
+     path: (_a = cookie.path) != null ? _a : "/",
+     domain: (_b = cookie.domain) != null ? _b : "",

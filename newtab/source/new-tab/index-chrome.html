@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>New Tab</title>
+    <link rel="icon" href="../assets/chrome-icon.png" type="image/x-icon" media="(prefers-color-scheme: light)"/>
+    <link rel="icon" href="../assets/chrome-icon-dark.png" type="image/x-icon" media="(prefers-color-scheme: dark)"/>
+
+    <script src="./index.js" type="module"></script>
+    <link rel="stylesheet" href="../assets/fonts/fontface.css"></script>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: system-ui, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        #bookmarks {
+            height: 32px;
+            border-bottom: 1px solid rgb(97, 97, 97);
+        }
+        #content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 56px;
+        }
+        #logo-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            width: 272px;
+            margin-bottom: 38px;
+            height: 200px;
+        }
+        #logo {
+            height: 92px;
+            width: 272px;
+            background-image: url(../assets/google-logo.svg);
+        }
+        #search {
+            margin-bottom: 16px;
+            width: 561px;
+            height: 44px;
+            position: relative;
+            color: black;
+        }
+        #search-input {
+            width: 100%;
+            height: 100%;
+            padding-left: 44px;
+            border-radius: 9999px;
+            box-shadow: 0 1px 6px 0 rgb(32 33 36 / 28%);
+            outline: none;
+            border: none;
+            font-size: 16px;
+            font-family: inherit;
+        }
+        #search-input::placeholder {
+            color: rgb(97, 97, 97);
+        }
+        input[type="search"]::-webkit-search-decoration,
+        input[type="search"]::-webkit-search-cancel-button,
+        input[type="search"]::-webkit-search-results-button,
+        input[type="search"]::-webkit-search-results-decoration {
+            -webkit-appearance:none;
+        }
+        #search-icon {
+            position: absolute;
+            left: 12px;
+            top: 0;
+            height: 100%;
+            width: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgb(97, 97, 97);
+        }
+        #search-icon > svg {
+            width: 16px;
+        }
+        #unclutter-content {
+            width: 90%;
+            margin-top: 60px;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                color-scheme: dark;
+                background-color: rgb(53, 54, 58);
+            }
+            #logo {
+                background: rgba(255, 255, 255, 90%);
+                mask-image: url(../assets/google-logo.svg);
+                -webkit-mask-image: url(../assets/google-logo.svg);
+            }
+            #search-input {
+                background-color: rgba(255, 255, 255, 90%);
+            }
+        }
+    </style>
+</head>
+
+<body className="font-chrome">
+    <head>
+        <title>New Tab</title>
+    </head>
+
+    <!-- <div id="bookmarks"></div> -->
+    <div id="content">
+        <div id="logo-container">
+            <div id="logo"></div>
+        </div>
+        <div id="search">
+            <input
+                id="search-input"
+                placeholder="Search Google or type a URL"
+                type="search"
+                autocapitalize="off"
+                spellcheck="false"
+            />
+            <div id="search-icon">
+                <svg viewBox="0 0 20 20">
+                    <path
+                        fill="currentColor"
+                        d="M17.49 16l-3.73-3.73C14.53 11.2 15 9.91 15 8.5 15 4.91 12.09 2 8.5 2S2 4.91 2 8.5 4.91 15 8.5 15c1.41 0 2.7-.47 3.77-1.24L16 17.49 17.49 16zM4 8.5C4 6.01 6.01 4 8.5 4S13 6.01 13 8.5 10.99 13 8.5 13 4 10.99 4 8.5z"
+                    />
+                </svg>
+            </div>
+        </div>
+        <div id="unclutter-content">
+            <div id="react-root"></div>
+        </div>
+    </div>
+</body>

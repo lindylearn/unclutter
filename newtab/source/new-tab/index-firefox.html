@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>New Tab</title>
+    <link rel="icon" href="../assets/firefox-icon.png" type="image/x-icon"/>
+
+    <script src="./index.js" type="module"></script>
+    <link rel="stylesheet" href="../assets/fonts/fontface.css"></script>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 30px 32px 32px;
+            font-family: system-ui, sans-serif;
+            -webkit-font-smoothing: antialiased;
+
+            background-color: #F9F9FB;
+            font-size: 16px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Ubuntu", "Helvetica Neue", sans-serif;
+        }
+        #content {
+            margin-top: 100px;
+        }
+        #logo-search-containe {
+            padding-bottom: 30px;
+            width: 746px;
+            margin: auto;
+        }
+        #logo-container {
+            align-items: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 48px;
+        }
+        #logo {
+            background-image: url(../assets/firefox-logo.png);
+            background-size: 82px;
+            display: inline-block;
+            height: 82px;
+            width: 82px;
+        }
+        #wordmark {
+            margin-left: 16px;
+            width: 134px;
+        }
+        #wordmark > path {
+            fill: #20123A;
+        }
+        #search {
+            cursor: default;
+            display: flex;
+            min-height: 52px;
+            margin: 0 auto;
+            position: relative;
+            width: 600px;
+        }
+        #search-input {
+            padding-left: 52px;
+            padding-right: 15px;
+            width: 100%;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+            border: 1px solid transparent;
+            border-radius: 8px;
+            cursor: text;
+            outline: none;
+            font-size: 15px;
+            background: white url(https://www.google.com/favicon.ico) 16px center no-repeat;
+            background-size: 24px;
+        }
+        #search-input::placeholder {
+            color: #15141a;
+            opacity: 0.54;
+        }
+        #unclutter-content {
+            padding-top: 48px;
+            width: 90%;
+            margin: auto;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                color-scheme: dark;
+            }
+            body {
+                background-color: rgb(43, 42, 51);
+                color: rgba(251, 251, 254, 1);
+            }
+            #wordmark > path {
+                fill: #fbfbfe;
+            }
+            #search-input {
+                background: #42414d url(https://www.google.com/favicon.ico) 16px center no-repeat;
+                background-size: 24px;
+            }
+            #search-input::placeholder {
+                color: rgba(251, 251, 254, 1);
+            }
+        }
+
+        .article-tab {
+            border-radius: 0.375rem !important;
+        }
+    </style>
+</head>
+
+<body className="">
+    <head>
+        <title>New Tab</title>
+    </head>
+
+    <!-- <div id="bookmarks"></div> -->
+    <div id="content">
+        <div id="logo-search-container">
+            <div id="logo-container">
+                <div id="logo"></div>
+                <svg id="wordmark" viewBox="0 0 172 42"><path fill="context-fill #20123a" d="M.19 2.82h25.72v7H7.57v9.43h18.34v6.9H7.57v15.14H.19zM34.65.13a4.14 4.14 0 0 1 4.27 4.33 4.12 4.12 0 0 1-4.32 4.32 4.09 4.09 0 0 1-4.27-4.22A4.27 4.27 0 0 1 34.65.13zM31 12.83h7.27v28.46H31zm28.35 7.91a5.89 5.89 0 0 0-3.53-1.27c-3 0-4.64 1.9-4.64 6.06v15.76H44V12.83h6.9v4.11a6.79 6.79 0 0 1 6.8-4.37A8.69 8.69 0 0 1 62.53 14zm3 6.48c0-8.17 6.06-15 14.65-15s14.59 6.06 14.59 14.49v3H69.48c.79 3.58 3.58 6 7.85 6a7.62 7.62 0 0 0 7.06-4.21l6.06 3.63c-3 4.43-7.27 6.75-13.33 6.75-9.22-.01-14.75-6.18-14.75-14.66zM69.59 24h15c-.79-3.63-3.74-5.63-7.59-5.63A7.31 7.31 0 0 0 69.59 24zM93.4 12.83h5.11v-1.42c0-7.75 3.27-11 10.44-11h2.53v6.31h-2.06c-3.37 0-4.11 1.16-4.11 4.69v1.42h6.17v6.54h-6v21.92h-7V19.37H93.4zm19.45 14.23a14.56 14.56 0 0 1 14.85-14.81 14.81 14.81 0 1 1 0 29.62c-8.85 0-14.85-6.49-14.85-14.81zm22.65 0a7.8 7.8 0 1 0-15.59 0 7.8 7.8 0 1 0 15.59 0zm16.86-.32l-10.27-13.91h8.53l6.06 8.75 6.22-8.75h8.38l-10.43 13.86 11 14.6h-8.49L156.53 32l-6.59 9.28h-8.48z"/></svg>
+            </div>
+        </div>
+        <div id="search">
+            <input
+                id="search-input"
+                placeholder="Search with Google or enter address"
+                type="search"
+                autocapitalize="off"
+                spellcheck="false"
+            />
+        </div>
+        <div id="unclutter-content">
+            <div id="react-root"></div>
+        </div>
+    </div>
+</body>

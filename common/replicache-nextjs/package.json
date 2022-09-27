@@ -1,0 +1,68 @@
+{
+  "name": "@unclutter/replicache-nextjs",
+  "private": true,
+  "version": "0.3.0",
+  "description": "Generic Replicache backend on Next.js",
+  "homepage": "https://github.com/rocicorp/replicache-nextjs",
+  "repository": "github:rocicorp/replicache-nextjs",
+  "license": "Apache-2.0",
+  "scripts": {
+    "format": "prettier --write 'src/*/*.{js,jsx,json,ts,tsx,html,css,md}' '*.{cjs,js,jsx,json,ts,tsx,html,css,md}'",
+    "check-format": "prettier --check 'src/*.{js,jsx,json,ts,tsx,html,css,md}' '*.{cjs,js,jsx,json,ts,tsx,html,css,md}'",
+    "lint": "eslint --ext .ts,.tsx,.js,.jsx src/",
+    "watch": "tsc -w",
+    "build": "rm -rf lib && tsc",
+    "prepack": "npm run lint && npm run build",
+    "pretest": "npm run build",
+    "test": "mocha --ui=tdd 'lib/**/*.test.js'"
+  },
+  "engines": {
+    "//": "npm 7 not strictly *required* but without, you need to manually install the peerDependencies below",
+    "npm": ">=7.0.0"
+  },
+  "peerDependencies": {
+    "@supabase/supabase-js": ">=1.35.3",
+    "next": ">=12.1.6",
+    "pg": ">=8.6.0",
+    "pg-mem": ">=2.5.0",
+    "react": ">=16.0 <19.0",
+    "react-dom": ">=16.0 <19.0",
+    "replicache": ">=11.0.0",
+    "zod": ">=3.17.3"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.3.0",
+    "@types/mocha": "^9.1.0",
+    "@types/node": "^14.14.37",
+    "@types/pg": "^8.6.4",
+    "@types/react": "^17.0.11",
+    "@types/react-dom": "^18.0.5",
+    "@typescript-eslint/eslint-plugin": "^5.3.1",
+    "@typescript-eslint/parser": "^5.18.0",
+    "chai": "^4.3.6",
+    "eslint": "^8.2.0",
+    "mocha": "^9.2.1",
+    "prettier": "^2.2.1",
+    "ts-node": "^10.7.0",
+    "typescript": "^4.7.4"
+  },
+  "type": "module",
+  "files": [
+    "lib/*",
+    "!lib/*.test.*"
+  ],
+  "exports": {
+    "./lib/backend": {
+      "import": {
+        "types": "./lib/backend/index.d.ts",
+        "default": "./lib/backend/index.js"
+      }
+    },
+    "./lib/frontend": {
+      "import": {
+        "types": "./lib/frontend/index.d.ts",
+        "default": "./lib/frontend/index.js"
+      }
+    }
+  }
+}

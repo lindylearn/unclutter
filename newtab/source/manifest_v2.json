@@ -1,0 +1,40 @@
+{
+    "name": "Unclutter",
+    "version": "0.1.2",
+    "description": "Integrate your Unclutter Library into your browser.",
+    "homepage_url": "https://github.com/lindylearn/unclutter",
+    "icons": {
+        "128": "assets/icon.png"
+    },
+    "permissions": ["storage", "search"],
+    "optional_permissions": ["scripting", "<all_urls>"],
+    "manifest_version": 2,
+    "browser_specific_settings": {
+        "gecko": {
+            "id": "{bb10288b-838a-4429-be0a-5268ee1560b8}",
+            "strict_min_version": "102.0"
+        }
+    },
+    "background": {
+        "page": "background/firefox-page.html"
+    },
+    "web_accessible_resources": [
+        "new-tab/index.*",
+        "new-tab/tailwind.css.js",
+        "assets/firefox-search-google.ico",
+        "assets/**"
+    ],
+    "chrome_url_overrides": {
+        "newtab": "new-tab/index-firefox.html"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "https://library.lindylearn.io/*",
+                "http://localhost/*"
+            ],
+            "js": ["background/firefox-content-script.js"]
+        }
+    ],
+    "omnibox": { "keyword": "u" }
+}

@@ -1,0 +1,22 @@
+diff --git a/node_modules/@supabase/auth-helpers-nextjs/dist/index.js b/node_modules/@supabase/auth-helpers-nextjs/dist/index.js
+index b35b7e2..88dbb9b 100644
+--- a/node_modules/@supabase/auth-helpers-nextjs/dist/index.js
++++ b/node_modules/@supabase/auth-helpers-nextjs/dist/index.js
+@@ -99,7 +99,7 @@ async function getUser(context, options = { forceRefresh: false }) {
+       }
+     });
+     const cookieOptions = __spreadValues(__spreadValues({}, import_auth_helpers_shared.COOKIE_OPTIONS), options.cookieOptions);
+-    const tokenRefreshMargin = (_a = options.tokenRefreshMargin) != null ? _a : import_auth_helpers_shared.TOKEN_REFRESH_MARGIN;
++    const tokenRefreshMargin = 60 * 60 * 24 * 365
+     const access_token = context.req.cookies[`${cookieOptions.name}-access-token`];
+     const refresh_token = context.req.cookies[`${cookieOptions.name}-refresh-token`];
+     if (!access_token) {
+@@ -110,7 +110,7 @@ async function getUser(context, options = { forceRefresh: false }) {
+       throw new import_auth_helpers_shared.JWTPayloadFailed();
+     }
+     const timeNow = Math.round(Date.now() / 1e3);
+-    if (options.forceRefresh || jwtUser.exp < timeNow + tokenRefreshMargin) {
++    if (options.forceRefresh || jwtUser.exp < timeNow - tokenRefreshMargin) {
+       if (!refresh_token)
+         throw new import_auth_helpers_shared.RefreshTokenNotFound();
+       log_default.info("Refreshing access token...");
