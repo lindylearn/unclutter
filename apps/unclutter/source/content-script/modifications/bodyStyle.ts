@@ -45,12 +45,7 @@ export default class BodyStyleModifier implements PageModifier {
         this.modifyHtmlStyle();
 
         // re-run on <html> inline style changes (e.g. scroll-locks)
-        this.styleObserver = new MutationObserver((mutations, observer) => {
-            this.modifyHtmlStyle();
-        });
-        this.styleObserver.observe(document.documentElement, {
-            attributeFilter: ["style"],
-        });
+        this.observeStyleChanges();
 
         // watch for screen size changes
         const mediaQueryList = window.matchMedia("(max-width: 1300px)");
@@ -95,7 +90,7 @@ export default class BodyStyleModifier implements PageModifier {
     }
 
     transitionOut() {
-        this.styleObserver.disconnect();
+        this.unObserveStyleChanges();
         this.removeResponsiveStyleListener();
 
         // can't reference the classname variables here for some reason
@@ -113,7 +108,20 @@ export default class BodyStyleModifier implements PageModifier {
         document.body.style.removeProperty("overflow");
     }
 
-    private modifyHtmlStyle() {
+    private observeStyleChanges(skipScrollChanges: boolean = false) {
+        this.styleObserver = new MutationObserver((mutations, observer) => {
+            this.modifyHtmlStyle(skipScrollChanges);
+        });
+        this.styleObserver.observe(document.documentElement, {
+            attributeFilter: ["style"],
+        });
+    }
+    private unObserveStyleChanges() {
+        this.styleObserver?.disconnect();
+        this.styleObserver = null;
+    }
+
+    private modifyHtmlStyle(skipScrollChanges: boolean = false) {
         // html or body tags may have classes with fixed style applied (which we hide via css rewrite)
         document.documentElement.style.setProperty(
             "display",
@@ -122,14 +130,21 @@ export default class BodyStyleModifier implements PageModifier {
         );
 
         // set inline styles to overwrite scroll-locks
-        document.documentElement.style.setProperty(
-            "position",
-            "relative",
-            "important"
-        );
+        if (!skipScrollChanges) {
+            document.documentElement.style.setProperty(
+                "position",
+                "relative",
+                "important"
+            );
+        }
         document.documentElement.style.setProperty(
             "overflow-y",
             "scroll",
+            "important"
+        );
+        document.documentElement.style.setProperty(
+            "width",
+            "100%",
             "important"
         );
         document.documentElement.style.setProperty(
@@ -182,5 +197,38 @@ export default class BodyStyleModifier implements PageModifier {
             `8px ${marginSide} ${marginBottom} ${marginSide}`,
             "important"
         );
+    }
+
+    private scrollLockPos = 0;
+    enableScrollLock() {
+        this.unObserveStyleChanges();
+
+        this.scrollLockPos = window.scrollY;
+        document.documentElement.style.setProperty(
+            "top",
+            `-${this.scrollLockPos}px`,
+            "important"
+        );
+        document.documentElement.style.setProperty(
+            "position",
+            "fixed",
+            "important"
+        );
+
+        this.observeStyleChanges(true);
+    }
+
+    disableScrollLock() {
+        this.unObserveStyleChanges();
+
+        document.documentElement.style.setProperty(
+            "position",
+            "relative",
+            "important"
+        );
+        document.documentElement.style.setProperty("top", "0", "important");
+        window.scrollTo(0, this.scrollLockPos);
+
+        this.observeStyleChanges(true);
     }
 }

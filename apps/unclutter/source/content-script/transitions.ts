@@ -37,7 +37,9 @@ export default class TransitionManager implements PageModifier {
         this.domain,
         this.textContainerModifier
     );
-    private libraryModalModifier = new LibraryModalModifier();
+    private libraryModalModifier = new LibraryModalModifier(
+        this.bodyStyleModifier
+    );
     private themeModifier = new ThemeModifier(
         this.cssomProvider,
         this.annotationsModifier,

@@ -4,10 +4,15 @@ import { createIframeNode } from "./overlay";
 import { PageModifier, trackModifierExecution } from "./_interface";
 
 import { waitUntilIframeLoaded } from "./annotations/injectSidebar";
+import BodyStyleModifier from "./bodyStyle";
 
 @trackModifierExecution
 export default class LibraryModalModifier implements PageModifier {
-    constructor() {}
+    private bodyStyleModifier: BodyStyleModifier;
+
+    constructor(bodyStyleModifier: BodyStyleModifier) {
+        this.bodyStyleModifier = bodyStyleModifier;
+    }
 
     private modalIframe: HTMLIFrameElement;
     private iframeLoaded: boolean = false;
@@ -40,6 +45,8 @@ export default class LibraryModalModifier implements PageModifier {
             event: "setLibraryState",
             libraryState: this.libraryState,
         });
+
+        this.bodyStyleModifier.enableScrollLock();
     }
 
     private createIframe() {
@@ -104,6 +111,8 @@ export default class LibraryModalModifier implements PageModifier {
 
         this.iframeLoaded = false;
         this.appLoaded = false;
+
+        this.bodyStyleModifier.disableScrollLock();
     }
 
     private libraryState: LibraryState = null;
