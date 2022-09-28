@@ -1,15 +1,5 @@
-import dynamic from "next/dynamic";
 import { LibraryModalPage } from "@unclutter/library-components/dist/components";
 import { useEffect, useState } from "react";
-// const LibraryModalPage = dynamic(
-//     () =>
-//         import(
-//             "../../../common/library-components/dist/components/Modal/Modal"
-//         ),
-//     {
-//         ssr: false,
-//     }
-// );
 
 export default function ModalTestTab({}) {
     const [showModal, setShowModal] = useState(false);

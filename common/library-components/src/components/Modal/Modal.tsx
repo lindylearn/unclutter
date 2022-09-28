@@ -9,6 +9,7 @@ import StatsModalTab from "./Stats";
 import ProgressSteps from "../Charts/ProgressSteps";
 import Sidebar from "./Sidebar";
 import { LindyIcon } from "../Icons";
+import GraphModalTab from "./Graph";
 
 export function LibraryModalPage({
     darkModeEnabled = false,
@@ -27,7 +28,7 @@ export function LibraryModalPage({
         rep?.query.getArticlesCount().then(setArticleCount);
     }, [rep]);
 
-    const [currentTab, setCurrentTab] = useState("stats");
+    const [currentTab, setCurrentTab] = useState("graph");
 
     return (
         <div
@@ -126,12 +127,12 @@ function ModalContent({
             </aside>
             <div className="ml-32 max-h-full w-full overflow-auto pl-4 pt-1">
                 {currentTab === "recent" && <RecentModalTab />}
-                {/* {currentTab === "graph" && (
+                {currentTab === "graph" && (
                     <GraphModalTab
                         articleUrl={articleUrl}
                         darkModeEnabled={darkModeEnabled}
                     />
-                )} */}
+                )}
                 {currentTab === "stats" && (
                     <StatsModalTab
                         articleCount={articleCount}

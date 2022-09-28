@@ -1,8 +1,66 @@
 diff --git a/node_modules/force-graph/dist/force-graph.module.js b/node_modules/force-graph/dist/force-graph.module.js
-index c63d5d7..a245d9c 100644
+index c63d5d7..2820e42 100644
 --- a/node_modules/force-graph/dist/force-graph.module.js
 +++ b/node_modules/force-graph/dist/force-graph.module.js
-@@ -1595,12 +1595,10 @@ var forceGraph = Kapsule({
+@@ -13,6 +13,13 @@ import indexBy from 'index-array-by';
+ import { scaleOrdinal } from 'd3-scale';
+ import { schemePaired } from 'd3-scale-chromatic';
+ 
++let window2;
++if (typeof window === "undefined") {
++  window2 = {};
++} else {
++  window2 = window;
++}
++
+ function styleInject(css, ref) {
+   if (ref === void 0) ref = {};
+   var insertAt = ref.insertAt;
+@@ -1034,7 +1041,7 @@ function adjustCanvasSize(state) {
+       curWidth = curHeight = 0;
+     }
+ 
+-    var pxScale = window.devicePixelRatio; // 2 on retina displays
++    var pxScale = window2.devicePixelRatio; // 2 on retina displays
+ 
+     curWidth /= pxScale;
+     curHeight /= pxScale; // Resize canvases
+@@ -1059,7 +1066,7 @@ function adjustCanvasSize(state) {
+ }
+ 
+ function resetTransform(ctx) {
+-  var pxRatio = window.devicePixelRatio;
++  var pxRatio = window2.devicePixelRatio;
+   ctx.setTransform(pxRatio, 0, 0, pxRatio, 0, 0);
+ }
+ 
+@@ -1075,14 +1082,14 @@ function clearCanvas(ctx, width, height) {
+ var forceGraph = Kapsule({
+   props: _objectSpread2({
+     width: {
+-      "default": window.innerWidth,
++      "default": window2.innerWidth,
+       onChange: function onChange(_, state) {
+         return adjustCanvasSize(state);
+       },
+       triggerUpdate: false
+     },
+     height: {
+-      "default": window.innerHeight,
++      "default": window2.innerHeight,
+       onChange: function onChange(_, state) {
+         return adjustCanvasSize(state);
+       },
+@@ -1450,7 +1457,7 @@ var forceGraph = Kapsule({
+ 
+     var getObjUnderPointer = function getObjUnderPointer() {
+       var obj = null;
+-      var pxScale = window.devicePixelRatio;
++      var pxScale = window2.devicePixelRatio;
+       var px = pointerPos.x > 0 && pointerPos.y > 0 ? shadowCtx.getImageData(pointerPos.x * pxScale, pointerPos.y * pxScale, 1, 1) : null; // Lookup object per pixel color
+ 
+       px && (obj = state.colorTracker.lookup(px.data));
+@@ -1595,12 +1602,10 @@ var forceGraph = Kapsule({
          toolTipElem.style.left = "".concat(pointerPos.x, "px"); //
  
          function getOffset(el) {
