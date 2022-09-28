@@ -45,10 +45,7 @@ export function LibraryModalPage({
                 )}
                 onClick={closeModal}
             />
-            <div
-                className="modal-content relative z-10 mx-auto flex h-5/6 max-w-5xl flex-col overflow-hidden rounded-lg bg-white shadow dark:bg-[#212121]"
-                // onMouseLeave={closeModal}
-            >
+            <div className="modal-content relative z-10 mx-auto flex h-5/6 max-w-5xl flex-col overflow-hidden rounded-lg bg-white shadow dark:bg-[#212121]">
                 <ModalHeader
                     articleCount={articleCount}
                     darkModeEnabled={darkModeEnabled}

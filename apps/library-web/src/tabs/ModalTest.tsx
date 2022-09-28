@@ -1,6 +1,6 @@
 import dynamic from "next/dynamic";
 import { LibraryModalPage } from "@unclutter/library-components/dist/components";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 // const LibraryModalPage = dynamic(
 //     () =>
 //         import(
@@ -13,6 +13,11 @@ import { useState } from "react";
 
 export default function ModalTestTab({}) {
     const [showModal, setShowModal] = useState(false);
+    useEffect(() => {
+        setTimeout(() => {
+            setShowModal(true);
+        }, 100);
+    }, []);
 
     return (
         <div className="h-screen w-screen">
