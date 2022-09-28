@@ -44,6 +44,7 @@ export default class LibraryModalModifier implements PageModifier {
 
     private createIframe() {
         const iframeUrl = new URL(browser.runtime.getURL("/modal/index.html"));
+        iframeUrl.searchParams.append("articleUrl", window.location.href);
         iframeUrl.searchParams.append(
             "darkModeEnabled",
             (this.darkModeEnabled || false).toString()

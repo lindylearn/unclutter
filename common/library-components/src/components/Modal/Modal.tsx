@@ -19,24 +19,22 @@ import GraphModalTab from "./Graph";
 export function LibraryModalPage({
     darkModeEnabled = false,
     articleUrl = undefined,
+    closeModal = () => {},
 }: {
     darkModeEnabled?: boolean;
     articleUrl?: string;
+    closeModal?: () => void;
 }) {
     const rep = useContext(ReplicacheContext);
     const [articleCount, setArticleCount] = useState<number | null>(null);
-    useEffect(() => {
-        if (!rep) {
-            return;
-        }
-        rep.query(getArticlesCount).then(setArticleCount);
-    }, [rep]);
+    // useEffect(() => {
+    //     if (!rep) {
+    //         return;
+    //     }
+    //     rep.query(getArticlesCount).then(setArticleCount);
+    // }, [rep]);
 
     const [currentTab, setCurrentTab] = useState("stats");
-
-    darkModeEnabled = false;
-    articleUrl =
-        "https://www.gamesindustry.biz/ubisoft-staff-call-for-more-change-explanations-around-harassment-culture";
 
     return (
         <div className="modal relative h-screen w-screen pt-5 text-stone-800 dark:text-[rgb(232,230,227)]">
@@ -47,9 +45,11 @@ export function LibraryModalPage({
                         ? "bg-[rgb(19,21,22)] opacity-50"
                         : "bg-stone-800 opacity-50"
                 )}
+                onClick={closeModal}
             />
             <div className="modal-content relative z-10 mx-auto flex h-5/6 max-w-5xl flex-col overflow-hidden rounded-lg bg-white shadow dark:bg-[#212121]">
-                <ModalHeader
+                {articleUrl}
+                {/* <ModalHeader
                     articleCount={articleCount}
                     darkModeEnabled={darkModeEnabled}
                     currentTab={currentTab}
@@ -60,7 +60,7 @@ export function LibraryModalPage({
                     darkModeEnabled={darkModeEnabled}
                     currentTab={currentTab}
                     setCurrentTab={setCurrentTab}
-                />
+                /> */}
             </div>
         </div>
     );

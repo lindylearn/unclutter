@@ -6,9 +6,11 @@ import { LibraryState } from "../common/schema";
 import { ReplicacheProxy } from "../content-script/messaging";
 
 export default function App({
-    darkModeEnabled = false,
+    darkModeEnabled,
+    articleUrl
 }: {
-    darkModeEnabled?: boolean;
+    darkModeEnabled: boolean;
+    articleUrl: string;
 }) {
     const rep = useMemo<ReplicacheProxy>(() => new ReplicacheProxy(), []);
     const [libraryState, setLibraryState] = useState<LibraryState | null>(null);
@@ -29,12 +31,11 @@ export default function App({
         window.top.postMessage({ event: "closeLibraryModal" }, "*");
     }
 
-    const articleUrl = null;
-
     return (
         <LibraryModalPage
             darkModeEnabled={darkModeEnabled}
-            articleUrl={articleUrl}
+            articleUrl={libraryState?.libraryInfo.article.url || articleUrl}
+            closeModal={closeModal}
         />
     );
 }
