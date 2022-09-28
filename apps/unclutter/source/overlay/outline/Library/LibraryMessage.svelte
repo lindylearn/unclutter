@@ -73,7 +73,7 @@
                         {#if libraryState.libraryInfo.topic}
                             <span>Saved in</span>
                             <div
-                                class="relative ml-1 inline-block flex-shrink cursor-pointer overflow-hidden overflow-ellipsis rounded-lg px-1 align-middle font-header text-sm font-semibold shadow-sm transition-all hover:scale-95 hover:shadow"
+                                class="font-title relative ml-1 inline-block flex-shrink cursor-pointer overflow-hidden overflow-ellipsis rounded-lg px-1 align-middle text-sm font-semibold shadow-sm transition-all hover:scale-95 hover:shadow"
                                 on:click={() => openLibrary(true)}
                             >
                                 <div

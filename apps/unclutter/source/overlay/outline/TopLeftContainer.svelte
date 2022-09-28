@@ -69,7 +69,7 @@
     });
 </script>
 
-<div id="lindy-info-topleft-content" class="flex flex-col gap-2 font-paragraph">
+<div id="lindy-info-topleft-content" class="font-text flex flex-col gap-2">
     {#if libraryState?.libraryUser && showArticleGraph !== null}
         {#if showArticleGraph}
             <ArticleGraph

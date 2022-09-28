@@ -13,7 +13,7 @@
 </script>
 
 <div
-    class="lindy-tooltp lindy-fade relative cursor-pointer font-header hover:drop-shadow"
+    class="lindy-tooltp lindy-fade font-title relative cursor-pointer hover:drop-shadow"
     data-title={`Created ${totalAnnotationCount} private note${
         totalAnnotationCount !== 1 ? "s" : ""
     }`}

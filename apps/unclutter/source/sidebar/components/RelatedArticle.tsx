@@ -40,7 +40,7 @@ export default function RelatedArticle({
                 style={{ backgroundImage: `url(${imageUrl})` }}
             /> */}
             <div>
-                <div className="font-header font-bold">
+                <div className="font-title font-bold">
                     <svg
                         className="inline-block w-4 shrink-0 grow-0"
                         viewBox="0 0 640 512"

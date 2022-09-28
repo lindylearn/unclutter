@@ -47,7 +47,7 @@
     {#if linkedArticles?.length > 0}
         <!-- solid background for transparent topic color -->
         <div
-            class="related-container font-paragraph m-[5px] text-gray-700"
+            class="related-container font-text m-[5px] text-gray-700"
             in:fade
         >
             <div
@@ -68,7 +68,7 @@
             />
 
             <!-- <div
-                    class="absolute top-3 right-3 flex cursor-pointer items-center gap-1 rounded-lg px-1.5 py-0.5 font-header text-sm font-semibold shadow-sm transition-all hover:scale-95 hover:shadow"
+                    class="absolute top-3 right-3 flex cursor-pointer items-center gap-1 rounded-lg px-1.5 py-0.5 font-title text-sm font-semibold shadow-sm transition-all hover:scale-95 hover:shadow"
                     style={`background-color: ${topicColor}`}
                     on:click={() => openLibrary()}
                 >
@@ -79,7 +79,7 @@
     {/if}
 {:else if libraryState?.showLibrarySignup && libraryState?.relatedArticles && !dismissedSignupMessage}
     <div
-        class="signup-container bg-lindy font-paragraph relative m-[5px] rounded-lg p-4 pr-6 text-gray-800 shadow"
+        class="signup-container bg-lindy font-text relative m-[5px] rounded-lg p-4 pr-6 text-gray-800 shadow"
         in:fade
     >
         <div class="flex items-start gap-3">
@@ -95,7 +95,7 @@
             <div class="flex-grow">
                 <span
                     ><a
-                        class="font-header inline-block cursor-pointer font-bold transition-all hover:rotate-1"
+                        class="font-title inline-block cursor-pointer font-bold transition-all hover:rotate-1"
                         href="https://library.lindylearn.io/signup"
                         target="_blank"
                         rel="noreferrer"
@@ -106,7 +106,7 @@
                     </a>
                     for the
                     <a
-                        class="font-header inline-block cursor-pointer font-bold transition-all hover:rotate-1"
+                        class="font-title inline-block cursor-pointer font-bold transition-all hover:rotate-1"
                         href="https://library.lindylearn.io/signup"
                         target="_blank"
                         rel="noreferrer"

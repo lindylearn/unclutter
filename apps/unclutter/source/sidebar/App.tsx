@@ -68,7 +68,7 @@ export default function App({ url, title }) {
 
     return (
         // x margin to show slight shadow (iframe allows no overflow)
-        <div className="mx-2 font-paragraph text-gray-700">
+        <div className="font-text mx-2 text-gray-700">
             <AnnotationsList
                 groupedAnnotations={groupedAnnotations}
                 hypothesisSyncEnabled={hypothesisSyncEnabled}

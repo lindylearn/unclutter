@@ -19,7 +19,7 @@
     <div>
         <div class="flex justify-between">
             <div
-                class="cursor-pointer select-none font-header text-base font-semibold"
+                class="font-title cursor-pointer select-none text-base font-semibold"
                 on:click={() => scrollToElement(outline[0].element)}
             >
                 {outline[0]?.title}

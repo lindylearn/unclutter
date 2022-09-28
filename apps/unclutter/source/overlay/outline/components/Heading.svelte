@@ -68,13 +68,13 @@
         </svg>
         <div class="title relative flex-grow overflow-hidden whitespace-nowrap">
             <div class="default-title">{title}</div>
-            <div class="active-title absolute top-0 left-0 font-header">
+            <div class="active-title font-title absolute top-0 left-0">
                 {title}
             </div>
         </div>
 
         <div
-            class={"px-1 rounded font-header text-center hidden " +
+            class={"px-1 rounded font-title text-center hidden " +
                 (annotationsEnabled && index !== -1 ? "enabled-icon " : "") +
                 (myAnnotationCount ? "visible-icon " : "")}
             style={`min-width: 1.4em; padding: 0 0.4em; background-color: ${getRandomColor(

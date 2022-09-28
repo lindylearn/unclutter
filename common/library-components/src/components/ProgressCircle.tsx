@@ -11,7 +11,7 @@ export function ProgressCircle({
         288.5 - 288.5 * Math.min(1.0, (current || 0) / target);
 
     return (
-        <div className="font-header relative scale-90 cursor-pointer">
+        <div className="font-title relative scale-90 cursor-pointer">
             <svg viewBox="0 0 100 100" className="progress-circle w-10">
                 <defs>
                     <mask id={`mask_${id}`}>
