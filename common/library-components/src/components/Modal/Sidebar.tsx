@@ -166,7 +166,7 @@ function SidebarFilterOption({
             <div className="flex w-5 justify-center">{svg}</div>
             {label}
             {label === "Related" && (
-                <div className="bg-lindy absolute -top-1 right-1 z-20 rounded-md px-1 text-sm leading-tight">
+                <div className="bg-lindy dark:bg-lindyDark absolute -top-1 right-1 z-20 rounded-md px-1 text-sm leading-tight dark:text-[rgb(232,230,227)]">
                     2+
                 </div>
             )}

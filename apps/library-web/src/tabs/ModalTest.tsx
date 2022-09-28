@@ -29,6 +29,7 @@ export default function ModalTestTab({}) {
             </div>
 
             <LibraryModalPage
+                darkModeEnabled={true}
                 isVisible={showModal}
                 closeModal={() => setShowModal(false)}
             />

@@ -2,13 +2,11 @@ import clsx from "clsx";
 import React from "react";
 
 export default function ProgressSteps({
-    darkModeEnabled,
     isSelected = false,
     onClick,
     current,
     target = 8,
 }: {
-    darkModeEnabled: boolean;
     isSelected?: boolean;
     onClick: () => void;
     current: number;

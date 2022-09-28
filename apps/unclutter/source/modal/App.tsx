@@ -9,7 +9,7 @@ export default function App({
     darkModeEnabled,
     articleUrl,
 }: {
-    darkModeEnabled: boolean;
+    darkModeEnabled: string;
     articleUrl: string;
 }) {
     const rep = useMemo<ReplicacheProxy>(() => new ReplicacheProxy(), []);
@@ -44,7 +44,7 @@ export default function App({
         // @ts-ignore
         <ReplicacheContext.Provider value={rep}>
             <LibraryModalPage
-                darkModeEnabled={darkModeEnabled === true} // convert string to bool
+                darkModeEnabled={darkModeEnabled === "true"} // convert string to bool
                 articleUrl={
                     libraryState?.libraryInfo?.article.url || articleUrl
                 }

@@ -33,22 +33,17 @@ export function LibraryModalPage({
         <div
             className={clsx(
                 "modal fixed top-0 left-0 h-screen w-screen pt-5 text-base text-stone-800 dark:text-[rgb(232,230,227)]",
-                isVisible ? "modal-visible" : "modal-hidden"
+                isVisible ? "modal-visible" : "modal-hidden",
+                darkModeEnabled && "dark"
             )}
         >
             <div
-                className={clsx(
-                    "modal-background absolute top-0 left-0 h-full w-full cursor-zoom-out",
-                    darkModeEnabled
-                        ? "bg-[rgb(19,21,22)] opacity-50"
-                        : "bg-stone-800 opacity-50"
-                )}
+                className="modal-background absolute top-0 left-0 h-full w-full cursor-zoom-out bg-stone-800 opacity-50 dark:bg-[rgb(19,21,22)]"
                 onClick={closeModal}
             />
             <div className="modal-content relative z-10 mx-auto flex h-5/6 max-w-5xl flex-col overflow-hidden rounded-lg bg-white shadow dark:bg-[#212121]">
                 <ModalHeader
                     articleCount={articleCount}
-                    darkModeEnabled={darkModeEnabled}
                     currentTab={currentTab}
                     setCurrentTab={setCurrentTab}
                 />
@@ -64,12 +59,7 @@ export function LibraryModalPage({
     );
 }
 
-function ModalHeader({
-    articleCount,
-    darkModeEnabled,
-    currentTab,
-    setCurrentTab,
-}) {
+function ModalHeader({ articleCount, currentTab, setCurrentTab }) {
     const rep = useContext(ReplicacheContext);
     const [weekArticleCount, setWeekArticleCount] = useState<number | null>(
         null
@@ -107,7 +97,6 @@ function ModalHeader({
             </div>
 
             <ProgressSteps
-                darkModeEnabled={darkModeEnabled}
                 current={weekArticleCount || 0}
                 target={6}
                 // isSelected={currentTab === "stats"}
