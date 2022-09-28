@@ -225,7 +225,7 @@ export default class LibraryModifier implements PageModifier {
         start.setDate(start.getDate() - 90);
         let nodes: Article[] = await processReplicacheAccessor(
             "listRecentArticles",
-            [start]
+            [start.getTime()]
         );
         // let nodes = await processReplicacheAccessor("listArticles");
         let links: ArticleLink[] = await processReplicacheAccessor(

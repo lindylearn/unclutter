@@ -61,7 +61,7 @@ async function getFullGraphData(
     // fetch filtered data
     const start = new Date();
     start.setDate(start.getDate() - 90);
-    let nodes: Article[] = await rep.query.listRecentArticles(start);
+    let nodes: Article[] = await rep.query.listRecentArticles(start.getTime());
     // let nodes = await rep.query(listArticles);
     let links: ArticleLink[] = await rep.query.listArticleLinks();
 

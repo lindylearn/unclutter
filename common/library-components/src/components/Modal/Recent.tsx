@@ -14,7 +14,7 @@ export default function RecentModalTab({}) {
         const start = new Date();
         start.setDate(start.getDate() - 30);
         rep.query
-            .groupRecentArticles(start, undefined, null, false)
+            .groupRecentArticles(start.getTime(), undefined, null, false)
             .then((map: ArticleBucketMap) => setArticleBuckets(map));
     }, [rep]);
 

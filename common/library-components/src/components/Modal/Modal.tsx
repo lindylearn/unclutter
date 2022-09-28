@@ -77,7 +77,7 @@ function ModalHeader({
         start.setDate(diff);
 
         rep.query
-            .listRecentArticles(start)
+            .listRecentArticles(start.getTime())
             .then((articles) => setWeekArticleCount(articles.length));
     }, [rep]);
 

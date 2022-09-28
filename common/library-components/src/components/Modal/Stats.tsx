@@ -13,7 +13,7 @@ export default function StatsModalTab({ darkModeEnabled }) {
             return;
         }
         rep.query
-            .listRecentArticles(subYears(new Date(), 1))
+            .listRecentArticles(subYears(new Date(), 1).getTime())
             .then(setAllArticles);
     }, [rep]);
 

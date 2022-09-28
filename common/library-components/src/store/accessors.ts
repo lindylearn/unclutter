@@ -33,7 +33,7 @@ export async function getArticlesCount(tx: ReadTransaction): Promise<number> {
 export type StateFilter = "all" | "unread" | "read" | "favorite";
 export async function listRecentArticles(
     tx: ReadTransaction,
-    since?: Date,
+    sinceMs?: number,
     stateFilter?: StateFilter,
     selectedTopicId?: string | null
 ): Promise<Article[]> {
@@ -55,7 +55,7 @@ export async function listRecentArticles(
         }
     }
 
-    const sinceSeconds = since ? since.getTime() / 1000 : 0;
+    const sinceSeconds = sinceMs ? sinceMs / 1000 : 0;
     const filteredArticles = allArticles
         .filter((a) => a.time_added >= sinceSeconds)
         .filter(
@@ -85,7 +85,7 @@ export interface ArticleBucketMap {
 
 export async function groupRecentArticles(
     tx: ReadTransaction,
-    since?: Date,
+    sinceMs?: number,
     stateFilter?: StateFilter,
     selectedTopicId?: string | null,
     aggregateYears: boolean = true
@@ -93,7 +93,7 @@ export async function groupRecentArticles(
 ): Promise<object> {
     const recentArticles = await listRecentArticles(
         tx,
-        since,
+        sinceMs,
         stateFilter,
         selectedTopicId
     );

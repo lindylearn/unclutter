@@ -41,14 +41,15 @@ export async function processReplicacheAccessor(
     methodName: string,
     args: any[] = []
 ) {
-    if (methodName === "listRecentArticles") {
-        args[0] = new Date(args[0]);
-    }
+    console.log(methodName, args);
+
     return await rep.query((tx) => accessors[methodName](tx, ...args));
 }
 export async function processReplicacheMutator(
     methodName: string,
     args: object = {}
 ) {
+    console.log(methodName, args);
+
     return await rep.mutate(methodName, args);
 }

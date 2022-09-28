@@ -145,7 +145,7 @@ export function useTabInfos(
     const rep = useContext(ReplicacheContext);
     const allArticles: Article[] = useSubscribe(
         rep,
-        rep?.subscribe.listRecentArticles(start),
+        rep?.subscribe.listRecentArticles(start.getTime()),
         []
     );
     const groups = useArticleGroups(

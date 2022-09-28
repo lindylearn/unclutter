@@ -7,7 +7,7 @@ import { ReplicacheContext } from "@unclutter/library-components/dist/store";
 
 export default function App({
     darkModeEnabled,
-    articleUrl
+    articleUrl,
 }: {
     darkModeEnabled: boolean;
     articleUrl: string;

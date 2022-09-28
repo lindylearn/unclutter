@@ -1,5 +1,11 @@
 import browser from "../common/polyfill";
-import { accessors, mutators } from "@unclutter/library-components/dist/store";
+import {
+    A,
+    M,
+    accessors,
+    mutators,
+    RuntimeReplicache,
+} from "@unclutter/library-components/dist/store";
 
 export async function reportEventContentScript(name: string, data = {}) {
     browser.runtime.sendMessage(null, {
@@ -25,7 +31,7 @@ export async function openArticle(url: string) {
 }
 
 export async function processReplicacheAccessor(
-    methodName: string,
+    methodName: keyof A,
     args: any[] = []
 ) {
     return await browser.runtime.sendMessage(null, {
@@ -35,7 +41,7 @@ export async function processReplicacheAccessor(
     });
 }
 export async function processReplicacheMutator(
-    methodName: string,
+    methodName: keyof M,
     args: object = {}
 ) {
     return await browser.runtime.sendMessage(null, {
@@ -45,16 +51,20 @@ export async function processReplicacheMutator(
     });
 }
 
-export class ReplicacheProxy {
-    query: any = Object.entries(accessors).reduce((obj, [fnName, fn]) => {
-        obj[fnName] = (...args) => {
+export class ReplicacheProxy
+    implements Pick<RuntimeReplicache, "query" | "mutate">
+{
+    // @ts-ignore
+    query = Object.keys(accessors).reduce((obj, fnName: keyof A) => {
+        obj[fnName] = (...args: any[]) => {
             return processReplicacheAccessor(fnName, args);
         };
         return obj;
     }, {});
 
-    mutate: any = Object.entries(mutators).reduce((obj, [fnName, fn]) => {
-        obj[fnName] = (args) => {
+    // @ts-ignore
+    mutate = Object.keys(mutators).reduce((obj, fnName: keyof M) => {
+        obj[fnName] = (args: any) => {
             return processReplicacheMutator(fnName, args);
         };
         return obj;
