@@ -60,6 +60,7 @@
         "typescript": "^4.6.3",
         "url": "^0.11.0",
         "webextension-polyfill": "^0.10.0",
+        "web-ext": "^7.2.0",
         "xo": "^0.44.0"
     },
     "scripts": {
@@ -67,7 +68,7 @@
         "watch": "rollup -c rollup.config.js -w",
         "install-v3-manifest": "cp source/manifest.json distribution/manifest.json",
         "install-v2-manifest": "cp source/manifest_v2.json distribution/manifest.json",
-        "package": "yarn build && npx web-ext build -o -n extension_manifest-v3.zip --ignore-files '!node_modules' '!node_modules/**' && yarn install-v2-manifest && npx web-ext build -o -n extension_manifest-v2.zip --ignore-files '!node_modules' '!node_modules/**' && yarn install-v3-manifest",
+        "package": "yarn build && yarn web-ext build -o -n extension_manifest-v3.zip --ignore-files '!node_modules' '!node_modules/**' && yarn install-v2-manifest && yarn web-ext build -o -n extension_manifest-v2.zip --ignore-files '!node_modules' '!node_modules/**' && yarn install-v3-manifest",
         "test": "npx ts-node-esm test/main.ts"
     },
     "browserslist": "last 1 version",

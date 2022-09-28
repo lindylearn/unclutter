@@ -56,7 +56,7 @@ To build the extension yourself, run:
 
 I run this using node `v16.14.0` on Mac, then upload the bundled code to the Chrome and Mozilla extension stores manually. The bundling uses Rollup to create a somewhat readable output -- so feel free to check the released code in your browser's profile folder if you installed the extension.
 
-For hot reloading during development, run `yarn watch` and `npx web-ext run` in parallel.
+For hot reloading during development, run `yarn watch` and `yarn web-ext run` in parallel.
 
 ## Licence
 
