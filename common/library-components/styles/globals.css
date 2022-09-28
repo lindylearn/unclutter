@@ -43,3 +43,28 @@ body {
     > rect:hover {
     stroke: black !important;
 }
+
+.modal {
+    opacity: 0;
+    visibility: hidden;
+}
+.modal-visible {
+    opacity: 1;
+    visibility: visible;
+
+    transition: all 0.4s cubic-bezier(0.5, 1, 0.89, 1); /* easeOutQuad */
+}
+.modal-hidden {
+    transition: all 0.3s cubic-bezier(0.11, 0, 0.5, 0) 0.1s; /* easeInQuad */
+}
+
+.modal-content {
+    transform: scale(0.9) translateY(20px);
+}
+.modal-visible > .modal-content {
+    transform: scale(1) translateY(0);
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); /* easeOutBack */
+}
+.modal-hidden > .modal-content {
+    transition: transform 0.4s cubic-bezier(0.32, 0, 0.67, 0); /* easeInCubic */
+}

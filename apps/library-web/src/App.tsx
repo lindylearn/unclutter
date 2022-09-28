@@ -19,18 +19,7 @@ import SearchTab from "./tabs/Search";
 import SettingsTab from "./tabs/Settings";
 import TopicsListTab from "./tabs/TopicsList";
 import WelcomeTab from "./tabs/Welcome";
-
-import dynamic from "next/dynamic";
-import { LibraryModalPage } from "@unclutter/library-components/dist/components";
-// const LibraryModalPage = dynamic(
-//     () =>
-//         import(
-//             "../../../common/library-components/dist/components/Modal/Modal"
-//         ),
-//     {
-//         ssr: false,
-//     }
-// );
+import ModalTestTab from "./tabs/ModalTest";
 
 export interface LibraryTab {
     id: string;
@@ -116,7 +105,7 @@ export default function App() {
     const settings = useSubscribe(rep, getSettings, null, [rep]);
 
     if (location === "/modal") {
-        return <LibraryModalPage />;
+        return <ModalTestTab />;
     }
 
     return (

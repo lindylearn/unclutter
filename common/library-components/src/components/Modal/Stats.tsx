@@ -91,7 +91,7 @@ function BigNumber({
     tag: string;
 }) {
     return (
-        <div className="relative flex cursor-pointer flex-col items-center rounded-md bg-stone-100 p-3 transition-all hover:scale-[97%] dark:bg-neutral-800">
+        <div className="relative flex cursor-pointer flex-col items-center rounded-md bg-stone-50 p-3 transition-all hover:scale-[97%] dark:bg-neutral-800">
             {value !== undefined && target !== undefined && (
                 <div
                     className="bg-lindy dark:bg-lindyDark absolute top-0 left-0 h-full w-full rounded-md opacity-90"

@@ -9,15 +9,16 @@ import StatsModalTab from "./Stats";
 import ProgressSteps from "../Charts/ProgressSteps";
 import Sidebar from "./Sidebar";
 import { LindyIcon } from "../Icons";
-import GraphModalTab from "./Graph";
 
 export function LibraryModalPage({
     darkModeEnabled = false,
     articleUrl = undefined,
+    isVisible = true,
     closeModal = () => {},
 }: {
     darkModeEnabled?: boolean;
     articleUrl?: string;
+    isVisible?: boolean;
     closeModal?: () => void;
 }) {
     const rep = useContext(ReplicacheContext);
@@ -29,7 +30,12 @@ export function LibraryModalPage({
     const [currentTab, setCurrentTab] = useState("stats");
 
     return (
-        <div className="modal relative h-screen w-screen pt-5 text-base text-stone-800 dark:text-[rgb(232,230,227)]">
+        <div
+            className={clsx(
+                "modal fixed top-0 left-0 h-screen w-screen pt-5 text-base text-stone-800 dark:text-[rgb(232,230,227)]",
+                isVisible ? "modal-visible" : "modal-hidden"
+            )}
+        >
             <div
                 className={clsx(
                     "modal-background absolute top-0 left-0 h-full w-full cursor-zoom-out",
@@ -39,7 +45,10 @@ export function LibraryModalPage({
                 )}
                 onClick={closeModal}
             />
-            <div className="modal-content relative z-10 mx-auto flex h-5/6 max-w-5xl flex-col overflow-hidden rounded-lg bg-white shadow dark:bg-[#212121]">
+            <div
+                className="modal-content relative z-10 mx-auto flex h-5/6 max-w-5xl flex-col overflow-hidden rounded-lg bg-white shadow dark:bg-[#212121]"
+                // onMouseLeave={closeModal}
+            >
                 <ModalHeader
                     articleCount={articleCount}
                     darkModeEnabled={darkModeEnabled}
