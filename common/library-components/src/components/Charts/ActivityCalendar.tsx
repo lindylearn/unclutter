@@ -28,7 +28,7 @@ export function ActivityCalendar({
                 theme={
                     darkModeEnabled
                         ? {
-                              level0: "#262626", // text-neutral-800
+                              level0: "#262626", // bg-neutral-800
 
                               level1: "rgb(237, 215, 91, 0.1)",
                               level2: "rgb(237, 215, 91, 0.3)",
@@ -36,7 +36,7 @@ export function ActivityCalendar({
                               level4: "rgb(237, 215, 91, 1.0)",
                           }
                         : {
-                              level0: "#fafaf9", // text-stone-50
+                              level0: "#fafaf9", // bg-stone-50
                               level1: "rgb(237, 215, 91, 0.3)",
                               level2: "rgb(237, 215, 91, 0.5)",
                               level3: "rgb(237, 215, 91, 0.7)",

@@ -35,7 +35,7 @@ export default function App({
         // @ts-ignore
         <ReplicacheContext.Provider value={rep}>
             <LibraryModalPage
-                darkModeEnabled={darkModeEnabled}
+                darkModeEnabled={darkModeEnabled === true} // convert string to bool
                 articleUrl={libraryState?.libraryInfo.article.url || articleUrl}
                 closeModal={closeModal}
             />

@@ -13,7 +13,7 @@ import svelte from "rollup-plugin-svelte";
 import sveltePreprocess from "svelte-preprocess";
 import tailwindcss from "tailwindcss";
 
-const isProduction = true; //!process.env.ROLLUP_WATCH;
+const isProduction = !process.env.ROLLUP_WATCH;
 
 // bundle content scripts
 // absolute path imports (starting with "source/") seems to break this.

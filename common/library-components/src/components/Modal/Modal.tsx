@@ -29,7 +29,7 @@ export function LibraryModalPage({
     const [currentTab, setCurrentTab] = useState("stats");
 
     return (
-        <div className="modal relative h-screen w-screen pt-5 text-stone-800 dark:text-[rgb(232,230,227)]">
+        <div className="modal relative h-screen w-screen pt-5 text-base text-stone-800 dark:text-[rgb(232,230,227)]">
             <div
                 className={clsx(
                     "modal-background absolute top-0 left-0 h-full w-full cursor-zoom-out",
