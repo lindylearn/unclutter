@@ -9,8 +9,6 @@ import {
     DraggableArticleList,
 } from "@unclutter/library-components/dist/components";
 import {
-    getGroupTopicChildren,
-    getTopic,
     listTopicArticles,
     Topic,
     ReplicacheContext,
@@ -30,9 +28,9 @@ export default function TopicGroupTab({ group_id }) {
                 group_id = group_id[0] + group_id.slice(1).replaceAll("-", " ");
 
                 // get state
-                const group = await rep.query((tx) => getTopic(tx, group_id));
-                const children = await rep.query(
-                    getGroupTopicChildren(group_id)
+                const group = await rep.query.getTopic(group_id);
+                const children = await rep.query.getGroupTopicChildren(
+                    group_id
                 );
 
                 // redirect cluster ids

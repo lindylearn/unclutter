@@ -52,7 +52,7 @@ export default function SearchTab({ searchQuery }) {
             let hitsWithArticles = await Promise.all(
                 hits.map(async (hit) => ({
                     ...hit,
-                    article: await rep?.query((tx) => getArticle(tx, hit.id)),
+                    article: await rep?.query.getArticle(hit.id),
                 }))
             );
             hitsWithArticles = hitsWithArticles.filter(

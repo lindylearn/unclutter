@@ -8,7 +8,7 @@ import {
 export default function ExportTab({}) {
     const rep = useContext(ReplicacheContext);
     async function generateJSON() {
-        const articles = await rep?.query(listArticles);
+        const articles = await rep?.query.listArticles();
         if (!articles) {
             return;
         }
@@ -20,7 +20,7 @@ export default function ExportTab({}) {
         saveAs(blob, "library.json");
     }
     async function generateCSV() {
-        const articles = await rep?.query(listArticles);
+        const articles = await rep?.query.listArticles();
         if (!articles) {
             return;
         }

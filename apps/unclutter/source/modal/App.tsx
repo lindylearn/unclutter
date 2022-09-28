@@ -1,9 +1,9 @@
-import clsx from "clsx";
 import React, { useEffect, useMemo, useState } from "react";
 import { LibraryModalPage } from "@unclutter/library-components/dist/components/Modal";
 
 import { LibraryState } from "../common/schema";
 import { ReplicacheProxy } from "../content-script/messaging";
+import { ReplicacheContext } from "@unclutter/library-components/dist/store";
 
 export default function App({
     darkModeEnabled,
@@ -32,10 +32,13 @@ export default function App({
     }
 
     return (
-        <LibraryModalPage
-            darkModeEnabled={darkModeEnabled}
-            articleUrl={libraryState?.libraryInfo.article.url || articleUrl}
-            closeModal={closeModal}
-        />
+        // @ts-ignore
+        <ReplicacheContext.Provider value={rep}>
+            <LibraryModalPage
+                darkModeEnabled={darkModeEnabled}
+                articleUrl={libraryState?.libraryInfo.article.url || articleUrl}
+                closeModal={closeModal}
+            />
+        </ReplicacheContext.Provider>
     );
 }

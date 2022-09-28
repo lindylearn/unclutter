@@ -27,7 +27,7 @@ export default function WelcomeTab() {
     const [savedStage, setSavedStage] = useState<number>(0);
     useEffect(() => {
         (async () => {
-            const settings = await rep?.query(getSettings);
+            const settings = await rep?.query.getSettings();
             setStageInternal(settings?.tutorial_stage ?? 0);
             setSavedStage(settings?.tutorial_stage ?? 0);
         })();

@@ -1,12 +1,10 @@
 import { getUser, withPageAuth } from "@supabase/auth-helpers-nextjs";
-import { createContext, useEffect, useRef, useState } from "react";
-import { wrap as wrapWorker, Remote } from "comlink";
-import { Replicache } from "replicache";
+import { createContext, useEffect, useState } from "react";
+import { wrap as wrapWorker } from "comlink";
 import {
     createSpace,
     spaceExists,
 } from "@unclutter/replicache-nextjs/lib/backend";
-
 import {
     useReplicache,
     getPartialSyncState,
@@ -15,6 +13,7 @@ import {
 import App from "../src/App";
 import {
     mutators,
+    accessors,
     ReplicacheContext,
 } from "@unclutter/library-components/dist/store";
 import {
@@ -41,7 +40,11 @@ export default function Index({ spaceID }: { spaceID: string }) {
     }, []);
 
     // Configure Replicache
-    const rep: Replicache | null = useReplicache({ name: spaceID, mutators });
+    const rep = useReplicache({
+        name: spaceID,
+        mutators,
+        accessors,
+    });
     useEffect(() => {
         if (!rep) {
             return;
@@ -82,8 +85,7 @@ export default function Index({ spaceID }: { spaceID: string }) {
         rep,
         async (tx) =>
             (await getPartialSyncState(tx)) || "NOT_RECEIVED_FROM_SERVER",
-        "NOT_RECEIVED_FROM_SERVER",
-        [rep]
+        "NOT_RECEIVED_FROM_SERVER"
     );
 
     useEffect(() => {
