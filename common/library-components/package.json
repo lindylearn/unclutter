@@ -2,9 +2,6 @@
     "name": "@unclutter/library-components",
     "version": "0.1.0",
     "private": true,
-    "exxports": {
-        ".": "dist/"
-    },
     "scripts": {
         "watch": "yarn tsc -w",
         "build": "yarn tsc",

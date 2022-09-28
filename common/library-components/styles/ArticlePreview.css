@@ -1,3 +1,12 @@
+.article-container:hover > .star-icon {
+    visibility: visible;
+    opacity: 1;
+}
+.star-icon:hover > svg {
+    transform: scale(115%);
+    transform-origin: center;
+}
+
 .article-container.article-static > .article-fallback {
     animation: fadeInArticleFallback 0.1s ease-in 0.3s;
     animation-fill-mode: both;
@@ -75,4 +84,44 @@
         rgba(0, 0, 0, 1) 40%,
         rgba(0, 0, 0, 0) 60%
     );
+}
+
+/* stacked list */
+.stacked-articles-list > .article-container {
+    transition: transform 0.3s cubic-bezier(0.33, 1, 0.68, 1);
+}
+.stacked-articles-list:hover > .article-container {
+    transform: translate(0, 0) rotate(0) !important;
+    z-index: 200 !important;
+}
+
+/* dropdown */
+.dropdown-icon[data-state="open"] {
+    transform: scaleY(-1) scale(110%);
+}
+.dropdown-content[data-state="open"] {
+    animation: fadeInDropdown 200ms cubic-bezier(0.33, 1, 0.68, 1); /* easeOutCubic */
+}
+.dropdown-content[data-state="closed"] {
+    animation: fadeOutDropdown 200ms cubic-bezier(0.33, 1, 0.68, 1); /* easeOutCubic */
+}
+@keyframes fadeInDropdown {
+    from {
+        visibility: hidden;
+        opacity: 0;
+        transform: translate3d(0, 15px, 0);
+    }
+    to {
+        visibility: visible;
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+@keyframes fadeOutDropdown {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
 }

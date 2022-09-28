@@ -1,6 +1,6 @@
 import browser from "../../common/polyfill";
 import { LibraryState } from "../../common/schema";
-import { createIframeNode, insertIframeFont } from "./overlay";
+import { createIframeNode } from "./overlay";
 import { PageModifier, trackModifierExecution } from "./_interface";
 
 import { waitUntilIframeLoaded } from "./annotations/injectSidebar";

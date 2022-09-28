@@ -3,9 +3,9 @@ import { UserProvider } from "@supabase/auth-helpers-react";
 import { useEffect } from "react";
 import { initPosthog } from "@unclutter/library-components/dist/common";
 
-import "../styles/ArticleDropdownMenu.css";
-import "../styles/ArticlePreview.css";
-import "../styles/ProgressCircle.css";
+import "@unclutter/library-components/styles/globals.css";
+import "@unclutter/library-components/styles/ArticlePreview.css";
+import "@unclutter/library-components/styles/ProgressCircle.css";
 import "../styles/globals.css";
 
 function MyApp({ Component, pageProps }) {

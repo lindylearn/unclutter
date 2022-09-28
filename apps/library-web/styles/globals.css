@@ -2,30 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-    margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
-        "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
-        "Helvetica Neue", sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
-
-/* .lindy-icon {
-    background-image: conic-gradient(
-        rgba(255, 23, 68, 0.5),
-        rgba(213, 0, 249, 0.5),
-        rgba(61, 90, 254, 0.5),
-        rgba(0, 176, 255, 0.5),
-        rgba(29, 233, 182, 0.5),
-        rgba(118, 255, 3, 0.5),
-        rgba(255, 234, 0, 0.5),
-        rgba(255, 145, 0, 0.5),
-        rgba(255, 23, 68, 0.5)
-    );
-    mask: url(assets/logo.svg);
-} */
-
 .tab-rounded-spacer {
     box-shadow: 0 0 0 40px white; /* theme(colors.background); */
 }
@@ -86,38 +62,7 @@ body {
         transform 0.2s cubic-bezier(0.32, 0, 0.67, 0);
 }
 
-.article-container:hover > .star-icon {
-    visibility: visible;
-    opacity: 1;
-}
-.star-icon:hover > svg {
-    transform: scale(115%);
-    transform-origin: center;
-}
-
-.stacked-articles-list > .article-container {
-    transition: transform 0.3s cubic-bezier(0.33, 1, 0.68, 1);
-}
-.stacked-articles-list:hover > .article-container {
-    transform: translate(0, 0) rotate(0) !important;
-    z-index: 200 !important;
-}
-
-.sbui-btn-primary,
-.sbui-checkbox[type="checkbox"]:checked {
-    background-color: hsl(51, 80%, 64%) !important;
-}
-.sbui-typography-link {
-    color: rgba(75, 85, 99, var(--tw-text-opacity)) !important;
-}
-.sbui-input:focus {
-    box-shadow: 0 0 0 2px rgba(237 215 91 / 10%) !important;
-}
-.sbui-input:focus,
-.sbui-checkbox:hover {
-    border-color: hsl(51, 80%, 64%) !important;
-}
-
+/* chatbox */
 .crisp-client.crisp-client .cc-52lo .cc-1s3d,
 .crisp-client.crisp-client .cc-52lo .cc-1801:before,
 .crisp-client.crisp-client .cc-52lo .cc-1801:after {
@@ -145,33 +90,15 @@ body {
     }
 }
 
-.ui-tag.no-background:not(:hover) {
-    background: none !important;
-}
-.ui-tag.no-background:not(:hover) > .count {
-    opacity: 0 !important;
-}
-
-/* https://github.com/vercel/next.js/issues/18915 */
+/* next.js bug https://github.com/vercel/next.js/issues/18915 */
 .image > span {
     display: block !important;
 }
 
+/* search bar */
 .search-topic:hover > .search-topic-name {
     opacity: 0.5;
 }
 .search-topic:hover > .search-topic-delete {
     opacity: 1;
-}
-
-.react-activity-calendar__calendar
-    > g:not(.react-activity-calendar__legend-month)
-    > rect {
-    stroke: none !important;
-    cursor: pointer;
-}
-.react-activity-calendar__calendar
-    > g:not(.react-activity-calendar__legend-month)
-    > rect:hover {
-    stroke: black !important;
 }

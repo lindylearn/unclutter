@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import {
     LindyIcon,
     TabbedContainer,
@@ -6,23 +6,26 @@ import {
 } from "@unclutter/library-components/dist/components";
 import { useReplicache } from "@unclutter/replicache-nextjs/lib/frontend";
 import {
-    Article,
+    accessors,
     mutators,
     ReplicacheContext,
 } from "@unclutter/library-components/dist/store";
 
 import browser from "../common/polyfill";
-import "./app.css";
-import "./ArticleDropdownMenu.css";
-import "./ArticlePreview.css";
 import { settingsStore, userInfoStore, useSettings } from "../common/settings";
 import { reportEventContentScript } from "../common/messaging";
 import { googleSearchDomains } from "../common/util";
+
+import "@unclutter/library-components/styles/globals.css";
+import "@unclutter/library-components/styles/ArticlePreview.css";
+import "@unclutter/library-components/styles/ProgressCircle.css";
+import "./app.css";
 
 export default function App() {
     const userAuth = useSettings(userInfoStore);
     const rep = useReplicache({
         name: userAuth?.userId,
+        accessors,
         mutators,
         // apiHost: "http://localhost:3000",
         apiHost: "https://library.lindylearn.io",
