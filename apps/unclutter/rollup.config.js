@@ -13,7 +13,7 @@ import svelte from "rollup-plugin-svelte";
 import sveltePreprocess from "svelte-preprocess";
 import tailwindcss from "tailwindcss";
 
-const isProduction = !process.env.ROLLUP_WATCH;
+const isProduction = true; //!process.env.ROLLUP_WATCH;
 
 // bundle content scripts
 // absolute path imports (starting with "source/") seems to break this.
@@ -22,7 +22,6 @@ const contentScriptConfigs = [
     "source/content-script/enhance.ts",
     "source/sidebar/index.tsx",
     "source/sidebar/messaging.ts",
-    "source/modal/index.tsx",
     "source/modal/messaging.ts",
 ].map((entryPoint) => ({
     input: entryPoint,
@@ -82,6 +81,7 @@ const esModuleConfig = {
         // "source/settings-page/index.tsx",
         "source/background/events.ts",
         "source/settings-page/index.tsx",
+        "source/modal/index.tsx",
     ],
     output: {
         dir: "distribution",
@@ -90,6 +90,7 @@ const esModuleConfig = {
         preserveModulesRoot: "source",
     },
     plugins: [
+        nodeResolve({ browser: true }), // run before typescript to use correct browser imports
         typescript(),
         postcss({ plugins: [tailwindcss()] }),
         babel({ babelHelpers: "bundled", presets: ["@babel/preset-react"] }),
@@ -100,7 +101,6 @@ const esModuleConfig = {
                 return `${path.basename(output)}`;
             },
         }),
-        nodeResolve({ browser: true }),
         commonjs({ include: /node_modules/ }),
         moveVirtualFolder,
         replace({
