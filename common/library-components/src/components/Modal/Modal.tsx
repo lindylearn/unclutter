@@ -53,6 +53,7 @@ export function LibraryModalPage({
                     setCurrentTab={setCurrentTab}
                 />
                 <ModalContent
+                    articleCount={articleCount}
                     articleUrl={articleUrl}
                     darkModeEnabled={darkModeEnabled}
                     currentTab={currentTab}
@@ -121,6 +122,7 @@ function ModalHeader({
 
 function ModalContent({
     articleUrl,
+    articleCount,
     darkModeEnabled,
     currentTab,
     setCurrentTab,
@@ -142,7 +144,10 @@ function ModalContent({
                     />
                 )} */}
                 {currentTab === "stats" && (
-                    <StatsModalTab darkModeEnabled={darkModeEnabled} />
+                    <StatsModalTab
+                        articleCount={articleCount}
+                        darkModeEnabled={darkModeEnabled}
+                    />
                 )}
             </div>
         </div>

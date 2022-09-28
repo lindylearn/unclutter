@@ -4,7 +4,7 @@ import { Article, ReplicacheContext } from "../../store";
 import { ActivityCalendar } from "../Charts";
 import { getWeekNumber } from "../../common";
 
-export default function StatsModalTab({ darkModeEnabled }) {
+export default function StatsModalTab({ articleCount, darkModeEnabled }) {
     const rep = useContext(ReplicacheContext);
 
     const [allArticles, setAllArticles] = useState<Article[]>();
@@ -32,7 +32,10 @@ export default function StatsModalTab({ darkModeEnabled }) {
                 Weekly progress
             </h1>
 
-            <NumberStats allArticles={allArticles} />
+            <NumberStats
+                articleCount={articleCount}
+                allArticles={allArticles}
+            />
             {/* <AreaChart
                 darkModeEnabled={darkModeEnabled}
                 articles={allArticles}
@@ -46,7 +49,13 @@ export default function StatsModalTab({ darkModeEnabled }) {
     );
 }
 
-function NumberStats({ allArticles }: { allArticles?: Article[] }) {
+function NumberStats({
+    articleCount,
+    allArticles,
+}: {
+    articleCount: number;
+    allArticles?: Article[];
+}) {
     const [weekArticles, setWeekArticles] = useState<number>();
     useEffect(() => {
         if (!allArticles) {
@@ -69,14 +78,10 @@ function NumberStats({ allArticles }: { allArticles?: Article[] }) {
 
     return (
         <div className="flex gap-3">
-            <BigNumber value={weekArticles} tag="saved articles" />
+            <BigNumber value={articleCount} tag="saved articles" />
             <BigNumber value={0} tag="highlights" />
-            <BigNumber value={2} target={weekArticles} tag="read articles" />
-            <BigNumber
-                value={0}
-                target={weekArticles}
-                tag="highlighted articles"
-            />
+            <BigNumber value={weekArticles} target={7} tag="read this week" />
+            <BigNumber value={0} target={7} tag="highlighted this week" />
         </div>
     );
 }
@@ -95,11 +100,11 @@ function BigNumber({
             {value !== undefined && target !== undefined && (
                 <div
                     className="bg-lindy dark:bg-lindyDark absolute top-0 left-0 h-full w-full rounded-md opacity-90"
-                    style={{ width: `${(value / target) * 100}%` }}
+                    style={{ width: `${Math.min(1, value / target) * 100}%` }}
                 />
             )}
-            <div className="font-title z-10 text-2xl font-bold">
-                <span>{value}</span>
+            <div className="font-title z-10 h-[2rem] text-2xl font-bold">
+                <span className="">{value}</span>
                 {target && (
                     <span className="light:text-gray-400 text-base">
                         {" "}

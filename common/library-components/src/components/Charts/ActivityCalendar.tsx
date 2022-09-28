@@ -21,8 +21,12 @@ export function ActivityCalendar({
         return getActivityData(articles);
     }, [articles]);
 
+    if (data === null) {
+        return <></>;
+    }
+
     return (
-        <div className="mx-auto mt-3 max-w-[860px] pr-2 text-gray-500 dark:text-neutral-600">
+        <div className="animate-fadein mx-auto mt-3 max-w-[860px] pr-2 text-gray-500 dark:text-neutral-600">
             <ActivityCalendarModule
                 data={data || []}
                 theme={
