@@ -34,7 +34,7 @@ export default function GraphModalTab({ articleUrl, darkModeEnabled }) {
 
     return (
         <div
-            className="graph h-full w-full rounded-md dark:bg-neutral-800"
+            className="graph h-full w-full overflow-hidden rounded-md dark:bg-neutral-800"
             ref={ref}
         />
     );
@@ -60,7 +60,7 @@ async function getFullGraphData(
 ): Promise<CustomGraphData> {
     // fetch filtered data
     const start = new Date();
-    start.setDate(start.getDate() - 90);
+    start.setDate(start.getDate() - 180);
     let nodes: Article[] = await rep.query.listRecentArticles(start.getTime());
     // let nodes = await rep.query(listArticles);
     let links: ArticleLink[] = await rep.query.listArticleLinks();

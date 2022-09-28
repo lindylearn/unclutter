@@ -20,6 +20,7 @@ export default function ModalTestTab({}) {
 
             <LibraryModalPage
                 darkModeEnabled={true}
+                articleUrl="https://www.wsj.com/articles/saying-goodbye-to-my-parents-library-11661572861"
                 isVisible={showModal}
                 closeModal={() => setShowModal(false)}
             />
