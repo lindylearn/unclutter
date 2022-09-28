@@ -22,6 +22,7 @@ const contentScriptConfigs = [
     "source/content-script/enhance.ts",
     "source/sidebar/index.tsx",
     "source/sidebar/messaging.ts",
+    "source/modal/index.tsx",
     "source/modal/messaging.ts",
 ].map((entryPoint) => ({
     input: entryPoint,
@@ -81,7 +82,6 @@ const esModuleConfig = {
         // "source/settings-page/index.tsx",
         "source/background/events.ts",
         "source/settings-page/index.tsx",
-        "source/modal/index.tsx",
     ],
     output: {
         dir: "distribution",

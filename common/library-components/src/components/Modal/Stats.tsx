@@ -91,17 +91,20 @@ function BigNumber({
     tag: string;
 }) {
     return (
-        <div className="relative flex cursor-pointer flex-col items-center rounded-md bg-stone-100 p-3 transition-all hover:scale-[97%]">
+        <div className="relative flex cursor-pointer flex-col items-center rounded-md bg-stone-100 p-3 transition-all hover:scale-[97%] dark:bg-neutral-800">
             {value !== undefined && target !== undefined && (
                 <div
-                    className="bg-lindy absolute top-0 left-0 h-full w-full rounded-md opacity-90"
+                    className="bg-lindy dark:bg-lindyDark absolute top-0 left-0 h-full w-full rounded-md opacity-90"
                     style={{ width: `${(value / target) * 100}%` }}
                 />
             )}
             <div className="font-title z-10 text-2xl font-bold">
                 <span>{value}</span>
                 {target && (
-                    <span className="text-base text-gray-400"> / {target}</span>
+                    <span className="light:text-gray-400 text-base">
+                        {" "}
+                        / {target}
+                    </span>
                 )}
             </div>
             <div className="z-10">{tag}</div>
