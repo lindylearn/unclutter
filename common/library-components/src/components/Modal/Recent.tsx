@@ -1,11 +1,5 @@
-import { DraggableArticleList, StaticArticleList } from "../../components";
-import {
-    Article,
-    ArticleBucketMap,
-    groupRecentArticles,
-    listRecentArticles,
-    ReplicacheContext,
-} from "../../store";
+import { StaticArticleList } from "../../components";
+import { ArticleBucketMap, ReplicacheContext } from "../../store";
 import React, { useContext, useEffect } from "react";
 
 export default function RecentModalTab({}) {
@@ -19,9 +13,9 @@ export default function RecentModalTab({}) {
         }
         const start = new Date();
         start.setDate(start.getDate() - 30);
-        rep.query((tx) =>
-            groupRecentArticles(tx, start, undefined, null, false)
-        ).then(setArticleBuckets);
+        rep.query
+            .groupRecentArticles(start, undefined, null, false)
+            .then((map: ArticleBucketMap) => setArticleBuckets(map));
     }, [rep]);
 
     return (

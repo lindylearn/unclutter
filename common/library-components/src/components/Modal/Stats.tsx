@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { subYears, subMonths, subWeeks } from "date-fns";
-import { Article, listRecentArticles, ReplicacheContext } from "../../store";
+import { Article, ReplicacheContext } from "../../store";
 import { ActivityCalendar } from "../Charts";
 import { getWeekNumber } from "../../common";
 
@@ -12,9 +12,9 @@ export default function StatsModalTab({ darkModeEnabled }) {
         if (!rep) {
             return;
         }
-        rep.query((tx) => listRecentArticles(tx, subYears(new Date(), 1))).then(
-            setAllArticles
-        );
+        rep.query
+            .listRecentArticles(subYears(new Date(), 1))
+            .then(setAllArticles);
     }, [rep]);
 
     return (

@@ -2,14 +2,12 @@ import { openArticle } from "../../common";
 import {
     Article,
     ArticleLink,
-    listArticleLinks,
-    listRecentArticles,
+    RuntimeReplicache,
     readingProgressFullClamp,
     ReplicacheContext,
 } from "../../store";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import ForceGraph, { NodeObject, LinkObject } from "force-graph";
-import { Replicache } from "replicache";
 
 export default function GraphModalTab({ articleUrl, darkModeEnabled }) {
     const rep = useContext(ReplicacheContext);
@@ -57,17 +55,15 @@ type CustomGraphLink = LinkObject & {
 };
 
 async function getFullGraphData(
-    rep: Replicache,
+    rep: RuntimeReplicache,
     articleUrl: string
 ): Promise<CustomGraphData> {
     // fetch filtered data
     const start = new Date();
     start.setDate(start.getDate() - 90);
-    let nodes: Article[] = await rep.query((tx) =>
-        listRecentArticles(tx, start)
-    );
+    let nodes: Article[] = await rep.query.listRecentArticles(start);
     // let nodes = await rep.query(listArticles);
-    let links: ArticleLink[] = await rep.query(listArticleLinks);
+    let links: ArticleLink[] = await rep.query.listArticleLinks();
 
     // only consider links of filtered articles
     const nodeIndexById = nodes.reduce((acc, node, index) => {

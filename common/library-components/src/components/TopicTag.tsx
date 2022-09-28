@@ -2,12 +2,10 @@ import React from "react";
 import clsx from "clsx";
 import { useContext } from "react";
 import Twemoji from "react-twemoji";
-import { useSubscribe } from "replicache-react";
 import { Link } from "wouter";
 
-import { ReplicacheContext, Topic } from "../store";
+import { ReplicacheContext, Topic, useSubscribe } from "../store";
 import { getRandomColor } from "../common/styling";
-import { getTopic, getTopicArticlesCount } from "../store/accessors";
 
 export function TopicTag({
     topic_id,
@@ -29,11 +27,13 @@ export function TopicTag({
     className?: string;
 }) {
     const rep = useContext(ReplicacheContext);
-    const topic = useSubscribe(rep, (tx) => getTopic(tx, topic_id), null, [
+    const topic: any = useSubscribe(
         rep,
-    ]);
+        rep?.subscribe.getTopic(topic_id),
+        null
+    );
 
-    let topicColor = getRandomColor(colorSeed || topic?.group_id!);
+    let topicColor = getRandomColor(colorSeed || topic?.group_id);
     if (fadedOut) {
         topicColor = topicColor.replace("0.4)", "0.15)");
     }
@@ -41,9 +41,8 @@ export function TopicTag({
     // TODO optimize performance by batching counting?
     const articleCount = useSubscribe(
         rep,
-        getTopicArticlesCount(topic_id),
-        null,
-        [rep]
+        rep?.subscribe.getTopicArticlesCount(topic_id),
+        null
     );
 
     const innerComponent = (

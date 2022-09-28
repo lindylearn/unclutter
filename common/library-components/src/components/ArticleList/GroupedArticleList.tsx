@@ -2,18 +2,15 @@ import React from "react";
 import clsx from "clsx";
 import partition from "lodash/partition";
 import { useContext, useEffect, useState } from "react";
-import { useSubscribe } from "replicache-react";
 
 import { ReplicacheContext } from "../../store";
 import { getRandomColor } from "../../common/styling";
 import { groupBy } from "../../common/util";
 import {
     getSafeArticleSortPosition,
-    getTopic,
     sortArticlesPosition,
 } from "../../store/accessors";
 import { Article } from "../../store/_schema";
-import { ArticlePreview } from "../Article/ArticlePreview";
 import { TopicTag } from "../TopicTag";
 import { DraggableArticleList } from "./DraggableArticleList";
 
@@ -112,8 +109,8 @@ export function useArticleGroups(
                     const otherArticles = (
                         await Promise.all(
                             singleGroups.map(async ([topic_id, articles]) => {
-                                const topic = await rep?.query((tx) =>
-                                    getTopic(tx, topic_id)
+                                const topic = await rep?.query.getTopic(
+                                    topic_id
                                 );
                                 return articles.map((a) => ({
                                     ...a,

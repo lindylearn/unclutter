@@ -1,11 +1,24 @@
 import { useEffect, useState } from "react";
-import { MutatorDefs, Replicache, ReplicacheOptions } from "replicache";
+import {
+  MutatorDefs,
+  Replicache,
+  ReplicacheOptions,
+  SubscribeOptions,
+} from "replicache";
+import type {
+  CustomReplicache,
+  AccessorDefs,
+} from "@unclutter/library-components/dist/store/replicache";
+
 import { getPokeReceiver } from "./poke.js";
 
-export interface UseReplicacheOptions<M extends MutatorDefs>
-  extends Omit<ReplicacheOptions<M>, "licenseKey" | "name"> {
+export interface UseReplicacheOptions<
+  A extends AccessorDefs,
+  M extends MutatorDefs
+> extends Omit<ReplicacheOptions<M>, "licenseKey" | "name"> {
   name?: string;
   apiHost?: string;
+  accessors: A;
 }
 
 /**
@@ -16,11 +29,11 @@ export interface UseReplicacheOptions<M extends MutatorDefs>
  * Thus it is fine to say `useReplicache({name, mutators})`, as long as name
  * and mutators are stable.
  */
-export function useReplicache<M extends MutatorDefs>({
+export function useReplicache<A extends AccessorDefs, M extends MutatorDefs>({
   name,
   ...options
-}: UseReplicacheOptions<M>) {
-  const [rep, setRep] = useState<Replicache<M> | null>(null);
+}: UseReplicacheOptions<A, M>) {
+  const [rep, setRep] = useState<CustomReplicache<A, M> | null>(null);
 
   useEffect(() => {
     if (!name) {
@@ -33,8 +46,8 @@ export function useReplicache<M extends MutatorDefs>({
       // See https://doc.replicache.dev/licensing for how to get a license key.
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       licenseKey: process.env.NEXT_PUBLIC_REPLICACHE_LICENSE_KEY!,
-      pushURL: `${options.apiHost || ''}/api/replicache/push?spaceID=${name}`,
-      pullURL: `${options.apiHost || ''}/api/replicache/pull?spaceID=${name}`,
+      pushURL: `${options.apiHost || ""}/api/replicache/push?spaceID=${name}`,
+      pullURL: `${options.apiHost || ""}/api/replicache/pull?spaceID=${name}`,
       name,
       ...options,
     });
@@ -50,7 +63,26 @@ export function useReplicache<M extends MutatorDefs>({
     // - https://github.com/supabase/realtime
     // - https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events
     const cancelReceiver = getPokeReceiver()(name, async () => r.pull());
-    setRep(r);
+
+    // add custom query and subscribe interface
+    Object.keys(options.accessors).reduce((obj, fnName: keyof A) => {
+      // @ts-ignore
+      r.query[fnName] = (...args: any[]) =>
+        r?.query((tx) => options.accessors[fnName](tx, ...args));
+
+      // @ts-ignore
+      r.subscribe[fnName] =
+        (...args: any[]) =>
+        (subscribeOptions: SubscribeOptions<any, Error>) =>
+          r?.subscribe(
+            (tx) => options.accessors[fnName](tx, ...args),
+            subscribeOptions
+          );
+
+      return obj;
+    }, {});
+
+    setRep(r as unknown as CustomReplicache<A, M>);
 
     return () => {
       cancelReceiver();

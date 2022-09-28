@@ -1,13 +1,8 @@
 import React from "react";
-import {
-    getArticlesCount,
-    listRecentArticles,
-    ReplicacheContext,
-} from "../../store";
+import { ReplicacheContext } from "../../store";
 import { getRandomColor } from "../../common";
 import clsx from "clsx";
 import { useContext, useEffect, useState } from "react";
-import { useSubscribe } from "replicache-react";
 import RecentModalTab from "./Recent";
 
 import StatsModalTab from "./Stats";
@@ -27,12 +22,9 @@ export function LibraryModalPage({
 }) {
     const rep = useContext(ReplicacheContext);
     const [articleCount, setArticleCount] = useState<number | null>(null);
-    // useEffect(() => {
-    //     if (!rep) {
-    //         return;
-    //     }
-    //     rep.query(getArticlesCount).then(setArticleCount);
-    // }, [rep]);
+    useEffect(() => {
+        rep?.query.getArticlesCount().then(setArticleCount);
+    }, [rep]);
 
     const [currentTab, setCurrentTab] = useState("stats");
 
@@ -48,8 +40,7 @@ export function LibraryModalPage({
                 onClick={closeModal}
             />
             <div className="modal-content relative z-10 mx-auto flex h-5/6 max-w-5xl flex-col overflow-hidden rounded-lg bg-white shadow dark:bg-[#212121]">
-                {articleUrl}
-                {/* <ModalHeader
+                <ModalHeader
                     articleCount={articleCount}
                     darkModeEnabled={darkModeEnabled}
                     currentTab={currentTab}
@@ -60,7 +51,7 @@ export function LibraryModalPage({
                     darkModeEnabled={darkModeEnabled}
                     currentTab={currentTab}
                     setCurrentTab={setCurrentTab}
-                /> */}
+                />
             </div>
         </div>
     );
@@ -85,9 +76,9 @@ function ModalHeader({
             start.getDate() - start.getDay() + (start.getDay() === 0 ? -6 : 1);
         start.setDate(diff);
 
-        rep.query((tx) => listRecentArticles(tx, start)).then((articles) =>
-            setWeekArticleCount(articles.length)
-        );
+        rep.query
+            .listRecentArticles(start)
+            .then((articles) => setWeekArticleCount(articles.length));
     }, [rep]);
 
     return (

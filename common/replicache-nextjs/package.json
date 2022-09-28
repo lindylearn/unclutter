@@ -20,6 +20,9 @@
     "//": "npm 7 not strictly *required* but without, you need to manually install the peerDependencies below",
     "npm": ">=7.0.0"
   },
+  "dependencies": {
+    "@unclutter/library-components": "*"
+  },
   "peerDependencies": {
     "@supabase/supabase-js": ">=1.35.3",
     "next": ">=12.1.6",

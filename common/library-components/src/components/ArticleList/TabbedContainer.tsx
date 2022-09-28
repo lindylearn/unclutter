@@ -1,16 +1,14 @@
 import React, { useContext, useEffect } from "react";
 import clsx from "clsx";
 import { ReactNode, useState } from "react";
-import { useSubscribe } from "replicache-react";
 import useResizeObserver from "use-resize-observer";
 
 import { getRandomColor } from "../../common/styling";
 import { Article, readingProgressFullClamp } from "../../store/_schema";
 import {
-    getTopic,
-    listRecentArticles,
     ReplicacheContext,
     sortArticlesPosition,
+    useSubscribe,
 } from "../../store";
 import { useArticleGroups } from "./GroupedArticleList";
 import { TopicEmoji } from "../TopicTag";
@@ -145,11 +143,10 @@ export function useTabInfos(
     start.setDate(start.getDate() - 30);
 
     const rep = useContext(ReplicacheContext);
-    const allArticles = useSubscribe(
+    const allArticles: Article[] = useSubscribe(
         rep,
-        (tx) => listRecentArticles(tx, start),
-        [],
-        [rep]
+        rep?.subscribe.listRecentArticles(start),
+        []
     );
     const groups = useArticleGroups(
         allArticles,
@@ -197,9 +194,7 @@ export function useTabInfos(
                 groups
                     .slice(0, tabCount - 2)
                     .map(async ([topic_id, articles]) => {
-                        const topic = await rep?.query((tx) =>
-                            getTopic(tx, topic_id)
-                        );
+                        const topic = await rep?.query.getTopic(topic_id);
 
                         return {
                             key: topic_id,
