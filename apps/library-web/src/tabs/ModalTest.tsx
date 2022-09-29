@@ -9,6 +9,15 @@ export default function ModalTestTab({}) {
         }, 100);
     }, []);
 
+    const [darkModeEnabled, setDarkModeEnabled] = useState(false);
+    useEffect(() => {
+        window
+            .matchMedia("(prefers-color-scheme: dark)")
+            .addEventListener("change", (event) => {
+                setDarkModeEnabled(event.matches);
+            });
+    }, []);
+
     return (
         <div className="h-screen w-screen">
             <div
@@ -19,7 +28,7 @@ export default function ModalTestTab({}) {
             </div>
 
             <LibraryModalPage
-                darkModeEnabled={true}
+                darkModeEnabled={darkModeEnabled}
                 articleUrl="https://www.wsj.com/articles/saying-goodbye-to-my-parents-library-11661572861"
                 isVisible={showModal}
                 closeModal={() => setShowModal(false)}

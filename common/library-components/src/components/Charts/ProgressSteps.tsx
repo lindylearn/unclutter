@@ -24,7 +24,7 @@ export default function ProgressSteps({
         >
             {Array.from({ length: target }, (_, i) => (
                 <React.Fragment key={i}>
-                    <Step key={i} completed={i <= current} />
+                    <Step key={i} index={i} completed={i <= current} />
                     {i < target - 1 && <Connection completed={i < current} />}
                 </React.Fragment>
             ))}
@@ -32,16 +32,18 @@ export default function ProgressSteps({
     );
 }
 
-function Step({ completed }: { completed: boolean }) {
+function Step({ index, completed }: { index: number; completed: boolean }) {
     return (
         <div
             className={clsx(
-                "h-4 w-4 rounded-md",
+                "h-4 w-4 rounded-md text-center text-sm leading-none",
                 completed
                     ? "bg-lindy dark:bg-lindyDark"
                     : "bg-neutral-200 dark:bg-neutral-700"
             )}
-        ></div>
+        >
+            {/* {index} */}
+        </div>
     );
 }
 

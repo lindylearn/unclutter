@@ -225,7 +225,7 @@ function renderGraph(
         // })
         // node styling
         .nodeRelSize(NODE_R)
-        .nodeVal((n: RuntimeNode) => (n.depth === 0 ? 3 : 1))
+        .nodeVal((n: RuntimeNode) => (n.depth === 0 ? 2 : 1))
         .nodeColor(
             byDepth(
                 darkModeEnabled
