@@ -16,7 +16,10 @@ export default function GraphModalTab({ graph, darkModeEnabled }) {
             return;
         }
 
-        renderGraph(graph, ref.current, darkModeEnabled, true);
+        // wait until intro animation done for performance
+        setTimeout(() => {
+            renderGraph(graph, ref.current!, darkModeEnabled);
+        }, 200);
     }, [ref, graph]);
 
     return (
@@ -160,10 +163,9 @@ type RuntimeNode = CustomGraphNode & {
 function renderGraph(
     graph: CustomGraphData,
     graphContainer: HTMLDivElement,
-    darkModeEnabled: boolean,
-    isExpanded: boolean
+    darkModeEnabled: boolean
 ) {
-    console.log("render graph");
+    console.log(`rendering graph with ${graph.nodes.length} nodes`);
     const nodes = graph.nodes;
     const links = graph.links;
 
@@ -194,22 +196,6 @@ function renderGraph(
             });
         })
         // .d3Force("charge", forceManyBody().strength(byDepth([-30, -40, -20])))
-        // .onEngineTick(() => {
-        //     // forces nodes inside bounding box
-        //     nodes.forEach((node) => {
-        //         // uses 2x resolution and origin is in center
-        //         const scale = 1;
-
-        //         node.x = Math.max(
-        //             -width / scale - 10,
-        //             Math.min(width / scale + 10, node.x)
-        //         );
-        //         node.y = Math.max(
-        //             -height / scale,
-        //             Math.min(height / scale, node.y)
-        //         );
-        //     });
-        // })
         // node styling
         .nodeRelSize(NODE_R)
         .nodeVal((n: RuntimeNode) => (n.depth === 0 ? 2 : 1))
@@ -226,10 +212,6 @@ function renderGraph(
             graphContainer.style.cursor = node ? "pointer" : "default";
         })
         .nodeCanvasObject((node: RuntimeNode, ctx, globalScale) => {
-            if (!isExpanded) {
-                return;
-            }
-
             if (
                 node.reading_progress < readingProgressFullClamp &&
                 node.depth !== 0
@@ -304,7 +286,6 @@ function renderGraph(
     //     "link",
     //     forceGraph.d3Force("link").distance((l) => l.score * 100)
     // );
-
     // .d3Force(
     //     "link",
     //     forceLink(links)
@@ -313,30 +294,24 @@ function renderGraph(
     // )
 
     // interaction
-    if (isExpanded) {
-        forceGraph
-            // .autoPauseRedraw(false) // re-render nodes on hover
-            .minZoom(0.5)
-            .onNodeClick((node: RuntimeNode, event) => {
-                openArticle(node.url);
-                // reportEventContentScript("clickGraphArticle", {
-                //     libraryUser: libraryState.libraryUser,
-                // });
-            });
-    } else {
-        forceGraph
-            .enableNodeDrag(false)
-            .enableZoomInteraction(false)
-            .enablePanInteraction(false);
-    }
+    forceGraph
+        // .autoPauseRedraw(false) // re-render nodes on hover
+        .minZoom(0.5)
+        .onNodeClick((node: RuntimeNode, event) => {
+            openArticle(node.url);
+            // reportEventContentScript("clickGraphArticle", {
+            //     libraryUser: libraryState.libraryUser,
+            // });
+        });
 
     // zoom
     let initialZoomDone = false;
     let changedZoom = false;
-    let currentZoom;
+    let currentZoom: number;
     forceGraph
         .minZoom(0.5)
-        .maxZoom(isExpanded ? 4 : 2)
+        .maxZoom(4)
+        // .zoomToFit(0, 50, (node: RuntimeNode) => node.depth <= 2)
         .onEngineStop(() => {
             if (!initialZoomDone) {
                 forceGraph.zoomToFit(

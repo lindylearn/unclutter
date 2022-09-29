@@ -33,9 +33,15 @@
         darkModeEnabled: boolean,
         depthLimit = 2
     ) {
-        console.log("render graph");
-        const nodes = graph.nodes.filter((n) => n.depth <= depthLimit);
-        const links = graph.links.filter((n) => n.depth <= depthLimit);
+        console.log("render preview graph");
+
+        // deep copy data to not persist positioning to modal graph
+        const nodes = graph.nodes
+            .filter((n) => n.depth <= depthLimit)
+            .map((n) => ({ ...n }));
+        const links = graph.links
+            .filter((n) => n.depth <= depthLimit)
+            .map((l) => ({ ...l }));
 
         const width = graphContainer.clientWidth;
         const height = 80; // clientHeight doesn't get updated until the first render
