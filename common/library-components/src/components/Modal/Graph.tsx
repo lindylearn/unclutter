@@ -19,12 +19,12 @@ export default function GraphModalTab({ graph, darkModeEnabled }) {
         // wait until intro animation done for performance
         setTimeout(() => {
             renderGraph(graph, ref.current!, darkModeEnabled);
-        }, 200);
+        }, 200); // 400ms animation
     }, [ref, graph]);
 
     return (
         <div
-            className="graph h-full w-full overflow-hidden rounded-md bg-stone-50 dark:bg-neutral-800"
+            className="graph h-full w-full cursor-move overflow-hidden rounded-md bg-stone-50 dark:bg-neutral-800"
             ref={ref}
         />
     );
@@ -209,7 +209,7 @@ function renderGraph(
         .nodeLabel("none")
         .onNodeHover((node) => {
             hoverNode = node || null;
-            graphContainer.style.cursor = node ? "pointer" : "default";
+            graphContainer.style.cursor = node ? "pointer" : "move";
         })
         .nodeCanvasObject((node: RuntimeNode, ctx, globalScale) => {
             if (
@@ -218,7 +218,9 @@ function renderGraph(
             ) {
                 ctx.beginPath();
                 ctx.arc(node.x, node.y, NODE_R * 0.6, 0, 2 * Math.PI);
-                ctx.fillStyle = darkModeEnabled ? "#212121" : "white";
+                ctx.fillStyle = darkModeEnabled
+                    ? "#212121"
+                    : "rgb(250, 250, 249)";
 
                 ctx.fill();
             }
@@ -273,7 +275,7 @@ function renderGraph(
         .nodeCanvasObjectMode(() => "after")
         // link styling
         .linkLabel("score")
-        .linkWidth(byDepth([null, 3, 1]))
+        .linkWidth(byDepth([null, 4, 2]))
         .linkColor(
             byDepth(
                 darkModeEnabled

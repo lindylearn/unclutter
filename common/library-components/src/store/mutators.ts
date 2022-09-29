@@ -96,9 +96,9 @@ async function importArticleLinks(
 ) {
     await Promise.all(
         links.map(async (link: ArticleLink) => {
-            link.id = sha256(
-                `${link.source}-${link.target}-${link.type}`
-            ).toString();
+            // use one entry for both directions
+            const nodeIds = [link.source, link.target].sort();
+            link.id = sha256(`${nodeIds.join("-")}-${link.type}`).toString();
             await putArticleLink(tx, link);
         })
     );

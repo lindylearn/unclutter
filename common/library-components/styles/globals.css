@@ -76,7 +76,8 @@ body {
     transform: scale(99.5%);
 }
 
-.force-graph-container {
+.force-graph-container,
+.force-graph-container > canvas {
     animation: fadein 0.3s ease-out;
 }
 @keyframes fadein {
