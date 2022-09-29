@@ -6,6 +6,7 @@ import {
     mutators,
     RuntimeReplicache,
 } from "@unclutter/library-components/dist/store";
+import { ReplicacheProxyEventTypes } from "../background/replicache";
 
 export async function reportEventContentScript(name: string, data = {}) {
     browser.runtime.sendMessage(null, {
@@ -30,34 +31,26 @@ export async function openArticle(url: string) {
     });
 }
 
-export async function processReplicacheAccessor(
-    methodName: keyof A,
-    args: any[] = []
+export async function processReplicacheContentScript(
+    type: ReplicacheProxyEventTypes,
+    methodName?: string,
+    args?: any
 ) {
     return await browser.runtime.sendMessage(null, {
-        event: "processReplicacheAccessor",
-        methodName,
-        args,
-    });
-}
-export async function processReplicacheMutator(
-    methodName: keyof M,
-    args: object = {}
-) {
-    return await browser.runtime.sendMessage(null, {
-        event: "processReplicacheMutator",
+        event: "processReplicacheMessage",
+        type,
         methodName,
         args,
     });
 }
 
 export class ReplicacheProxy
-    implements Pick<RuntimeReplicache, "query" | "mutate">
+    implements Pick<RuntimeReplicache, "query" | "mutate" | "pull">
 {
     // @ts-ignore
     query = Object.keys(accessors).reduce((obj, fnName: keyof A) => {
         obj[fnName] = (...args: any[]) => {
-            return processReplicacheAccessor(fnName, args);
+            return processReplicacheContentScript("query", fnName, args);
         };
         return obj;
     }, {});
@@ -65,8 +58,12 @@ export class ReplicacheProxy
     // @ts-ignore
     mutate = Object.keys(mutators).reduce((obj, fnName: keyof M) => {
         obj[fnName] = (args: any) => {
-            return processReplicacheMutator(fnName, args);
+            return processReplicacheContentScript("mutate", fnName, args);
         };
         return obj;
     }, {});
+
+    pull = () => {
+        processReplicacheContentScript("pull");
+    };
 }

@@ -37,19 +37,23 @@ export async function initReplicache(): Promise<Replicache> {
     return rep;
 }
 
-export async function processReplicacheAccessor(
-    methodName: string,
-    args: any[] = []
-) {
-    console.log(methodName, args);
+export type ReplicacheProxyEventTypes = "query" | "mutate" | "pull";
+export async function processReplicacheMessage({
+    type,
+    methodName,
+    args,
+}: {
+    type: ReplicacheProxyEventTypes;
+    methodName?: string;
+    args?: any;
+}) {
+    // console.log(methodName, args);
 
-    return await rep.query((tx) => accessors[methodName](tx, ...args));
-}
-export async function processReplicacheMutator(
-    methodName: string,
-    args: object = {}
-) {
-    console.log(methodName, args);
-
-    return await rep.mutate(methodName, args);
+    if (type === "query") {
+        return await rep.query((tx) => accessors[methodName](tx, ...args));
+    } else if (type === "mutate") {
+        return await rep.mutate[methodName](args);
+    } else if (type === "pull") {
+        return rep.pull();
+    }
 }

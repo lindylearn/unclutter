@@ -25,11 +25,7 @@ import {
     reportSettings,
     startMetrics,
 } from "./metrics";
-import {
-    initReplicache,
-    processReplicacheAccessor,
-    processReplicacheMutator,
-} from "./replicache";
+import { initReplicache, processReplicacheMessage } from "./replicache";
 import { TabStateManager } from "./tabs";
 
 const tabsManager = new TabStateManager();
@@ -141,15 +137,8 @@ browser.runtime.onMessage.addListener(
             });
         } else if (message.event === "setLibraryAuth") {
             setLibraryUser(message.userId, message.webJwt);
-        } else if (message.event === "processReplicacheAccessor") {
-            processReplicacheAccessor(message.methodName, message.args).then(
-                sendResponse
-            );
-            return true;
-        } else if (message.event === "processReplicacheMutator") {
-            processReplicacheMutator(message.methodName, message.args).then(
-                sendResponse
-            );
+        } else if (message.event === "processReplicacheMessage") {
+            processReplicacheMessage(message).then(sendResponse);
             return true;
         }
 
@@ -180,6 +169,7 @@ browser.runtime.onMessageExternal.addListener(
                 );
             }
         } else if (message.event === "setLibraryAuth") {
+            // console.log("setLibraryAuth", message.userId);
             setLibraryUser(message.userId, message.webJwt).then(() => {
                 initReplicache();
             });

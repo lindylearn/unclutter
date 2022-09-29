@@ -76,15 +76,6 @@ export default class LibraryModifier implements PageModifier {
                 this.libraryState.libraryUser
             );
 
-            // fetch article graph in parallel to clustering
-            getFullGraphData(
-                rep as RuntimeReplicache,
-                this.libraryState.libraryInfo?.article.url || this.articleUrl
-            ).then((graph) => {
-                this.libraryState.graph = graph;
-                this.overlayManager.updateLibraryState(this.libraryState);
-            });
-
             if (!this.libraryState.libraryInfo) {
                 // run on-demand adding
                 this.libraryState.isClustering = true;
@@ -112,6 +103,14 @@ export default class LibraryModifier implements PageModifier {
                     libraryUser: this.libraryState.libraryUser,
                 });
             }
+
+            // construct article graph from local replicache
+            rep.pull();
+            this.libraryState.graph = await getFullGraphData(
+                rep as RuntimeReplicache,
+                this.libraryState.libraryInfo?.article.url || this.articleUrl
+            );
+            this.overlayManager.updateLibraryState(this.libraryState);
 
             if (this.scrollOnceFetchDone) {
                 this.scrollToLastReadingPosition();
