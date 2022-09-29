@@ -15,12 +15,14 @@ export function LibraryModalPage({
     darkModeEnabled = false,
     articleUrl,
     graph,
+    new_link_count,
     isVisible = true,
     closeModal = () => {},
 }: {
     darkModeEnabled?: boolean;
     articleUrl?: string;
     graph?: CustomGraphData;
+    new_link_count?: number;
     isVisible?: boolean;
     closeModal?: () => void;
 }) {
@@ -55,6 +57,7 @@ export function LibraryModalPage({
                     articleUrl={articleUrl}
                     darkModeEnabled={darkModeEnabled}
                     graph={graph}
+                    new_link_count={new_link_count}
                     currentTab={currentTab}
                     setCurrentTab={setCurrentTab}
                 />
@@ -63,7 +66,15 @@ export function LibraryModalPage({
     );
 }
 
-function ModalHeader({ articleCount, currentTab, setCurrentTab }) {
+function ModalHeader({
+    articleCount,
+    currentTab,
+    setCurrentTab,
+}: {
+    articleCount: number | null;
+    currentTab: string;
+    setCurrentTab: (tab: string) => void;
+}) {
     const rep = useContext(ReplicacheContext);
     const [weekArticleCount, setWeekArticleCount] = useState<number | null>(
         null
@@ -118,8 +129,17 @@ function ModalContent({
     articleCount,
     darkModeEnabled,
     graph,
+    new_link_count,
     currentTab,
     setCurrentTab,
+}: {
+    articleUrl?: string;
+    articleCount: number | null;
+    darkModeEnabled: boolean;
+    graph?: CustomGraphData;
+    new_link_count?: number;
+    currentTab: string;
+    setCurrentTab: (tab: string) => void;
 }) {
     return (
         <div className="font-text relative flex h-full gap-3 overflow-hidden px-4 pb-4 text-base">
@@ -127,6 +147,7 @@ function ModalContent({
                 <Sidebar
                     currentTab={currentTab}
                     setCurrentTab={setCurrentTab}
+                    new_link_count={new_link_count}
                 />
             </aside>
             <div className="ml-32 max-h-full w-full overflow-auto pl-4 pt-1">

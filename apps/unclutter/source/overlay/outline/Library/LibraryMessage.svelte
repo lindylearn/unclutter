@@ -99,10 +99,10 @@
                         Added {getRelativeTime(
                             libraryState.libraryInfo.article.time_added * 1000
                         )}.
-                    {:else if libraryState.relatedArticles?.length > 0}
+                    {:else if libraryState.libraryInfo.new_links?.length}
                         <span in:fade
-                            >Found {libraryState.relatedArticles.length} related
-                            article{libraryState.relatedArticles.length
+                            >Found {libraryState.libraryInfo.new_links.length} related
+                            article{libraryState.libraryInfo.new_links.length
                                 ? "s"
                                 : ""}.</span
                         >

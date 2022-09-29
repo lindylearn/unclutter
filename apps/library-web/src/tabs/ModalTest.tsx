@@ -1,9 +1,13 @@
 import {
     LibraryModalPage,
-    getFullGraphData,
+    constructGraphData,
     CustomGraphData,
 } from "@unclutter/library-components/dist/components";
-import { ReplicacheContext } from "@unclutter/library-components/dist/store";
+import {
+    Article,
+    ArticleLink,
+    ReplicacheContext,
+} from "@unclutter/library-components/dist/store";
 import { useContext, useEffect, useState } from "react";
 
 export default function ModalTestTab({}) {
@@ -16,7 +20,13 @@ export default function ModalTestTab({}) {
         if (!rep) {
             return;
         }
-        getFullGraphData(rep, articleUrl).then(setGraph);
+        (async () => {
+            const nodes: Article[] = await rep.query.listRecentArticles();
+            const links: ArticleLink[] = await rep.query.listArticleLinks();
+
+            const graph = await constructGraphData(nodes, links, articleUrl);
+            setGraph(graph);
+        })();
 
         setTimeout(() => {
             setShowModal(true);
@@ -45,6 +55,7 @@ export default function ModalTestTab({}) {
                 darkModeEnabled={darkModeEnabled}
                 articleUrl={articleUrl}
                 graph={graph}
+                new_link_count={2}
                 isVisible={showModal}
                 closeModal={() => setShowModal(false)}
             />

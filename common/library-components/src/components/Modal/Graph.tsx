@@ -44,17 +44,11 @@ export type CustomGraphLink = LinkObject & {
     depth?: number;
 };
 
-export async function getFullGraphData(
-    rep: RuntimeReplicache,
+export async function constructGraphData(
+    nodes: Article[],
+    links: ArticleLink[],
     articleUrl: string
 ): Promise<CustomGraphData> {
-    // fetch filtered data
-    let nodes: Article[] = await rep.query.listRecentArticles();
-    // let nodes = await rep.query(listArticles);
-    let links: ArticleLink[] = await rep.query.listArticleLinks();
-
-    // nodes = nodes.slice(0, 200);
-
     // only consider links of filtered articles
     const nodeIndexById = nodes.reduce((acc, node, index) => {
         acc[node.id] = index;
@@ -69,6 +63,7 @@ export async function getFullGraphData(
     // save links per node
     const linksPerNode: { [id: string]: ArticleLink[] } = {};
     links.map((l) => {
+        // save both directions to find all connections using linksPerNode
         linksPerNode[l.source] = [...(linksPerNode[l.source] || []), l];
         linksPerNode[l.target] = [...(linksPerNode[l.target] || []), l];
     });
@@ -79,7 +74,9 @@ export async function getFullGraphData(
     for (const [id, ls] of Object.entries(linksPerNode)) {
         const filteredLinks = ls
             .sort((a, b) => (b.score || 0) - (a.score || 0))
-            .slice(0, 3);
+            .slice(0, 2);
+
+        // console.log(filteredLinks);
 
         for (const l of filteredLinks) {
             if (l["_index"] !== undefined) {
@@ -95,7 +92,7 @@ export async function getFullGraphData(
             ];
             filteredLinksPerNode[l.target] = [
                 ...(filteredLinksPerNode[l.target] || []),
-                // reverse link
+                // reverse link for BFS below
                 {
                     ...l,
                     source: l.target,
@@ -187,7 +184,7 @@ function renderGraph(
         .d3AlphaDecay(0.01)
         .d3VelocityDecay(0.08)
         .warmupTicks(100)
-        .cooldownTicks(0)
+        .cooldownTicks(10)
         .d3Force("center", (alpha) => {
             nodes.forEach((node: RuntimeNode) => {
                 // different strengths for x and y

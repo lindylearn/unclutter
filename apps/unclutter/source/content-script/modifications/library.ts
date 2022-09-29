@@ -20,8 +20,7 @@ import {
 } from "../messaging";
 import OverlayManager from "./overlay";
 import { PageModifier, trackModifierExecution } from "./_interface";
-import { getFullGraphData } from "@unclutter/library-components/dist/components/Modal/Graph";
-import { RuntimeReplicache } from "@unclutter/library-components/dist/store";
+import { constructGraphData } from "@unclutter/library-components/dist/components/Modal/Graph";
 
 @trackModifierExecution
 export default class LibraryModifier implements PageModifier {
@@ -104,13 +103,19 @@ export default class LibraryModifier implements PageModifier {
                 });
             }
 
-            // construct article graph from local replicache
-            rep.pull();
-            this.libraryState.graph = await getFullGraphData(
-                rep as RuntimeReplicache,
-                this.libraryState.libraryInfo?.article.url || this.articleUrl
-            );
-            this.overlayManager.updateLibraryState(this.libraryState);
+            if (this.libraryState.libraryInfo) {
+                // construct article graph from local replicache
+                const nodes: Article[] = await rep.query.listRecentArticles();
+                const links: ArticleLink[] = await rep.query.listArticleLinks();
+
+                this.libraryState.graph = await constructGraphData(
+                    // use new node and links immediately
+                    nodes.concat([this.libraryState.libraryInfo.article]),
+                    links.concat(this.libraryState.libraryInfo.new_links),
+                    this.libraryState.libraryInfo.article.url
+                );
+                this.overlayManager.updateLibraryState(this.libraryState);
+            }
 
             if (this.scrollOnceFetchDone) {
                 this.scrollToLastReadingPosition();

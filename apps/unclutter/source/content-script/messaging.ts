@@ -44,26 +44,30 @@ export async function processReplicacheContentScript(
     });
 }
 
-export class ReplicacheProxy
-    implements Pick<RuntimeReplicache, "query" | "mutate" | "pull">
-{
+export class ReplicacheProxy implements RuntimeReplicache {
     // @ts-ignore
-    query = Object.keys(accessors).reduce((obj, fnName: keyof A) => {
-        obj[fnName] = (...args: any[]) => {
-            return processReplicacheContentScript("query", fnName, args);
-        };
-        return obj;
-    }, {});
+    query: RuntimeReplicache["query"] = Object.keys(accessors).reduce(
+        (obj, fnName: keyof A) => {
+            obj[fnName] = (...args: any[]) => {
+                return processReplicacheContentScript("query", fnName, args);
+            };
+            return obj;
+        },
+        {}
+    );
 
     // @ts-ignore
-    mutate = Object.keys(mutators).reduce((obj, fnName: keyof M) => {
-        obj[fnName] = (args: any) => {
-            return processReplicacheContentScript("mutate", fnName, args);
-        };
-        return obj;
-    }, {});
+    mutate: RuntimeReplicache["mutate"] = Object.keys(mutators).reduce(
+        (obj, fnName: keyof M) => {
+            obj[fnName] = (args: any) => {
+                return processReplicacheContentScript("mutate", fnName, args);
+            };
+            return obj;
+        },
+        {}
+    );
 
-    pull = () => {
+    pull: RuntimeReplicache["pull"] = () => {
         processReplicacheContentScript("pull");
     };
 }

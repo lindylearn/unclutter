@@ -1,5 +1,6 @@
 import {
     Article,
+    ArticleLink,
     Topic,
 } from "@unclutter/library-components/dist/store/_schema";
 import { CustomGraphData } from "@unclutter/library-components/dist/components/Modal/Graph";
@@ -23,4 +24,6 @@ export type LibraryInfo = {
     article: Article;
     topic: Topic | null;
     sibling_count: number;
+
+    new_links?: ArticleLink[];
 };

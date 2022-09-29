@@ -2,11 +2,16 @@
 
 import type { GraphData } from "force-graph";
 import { Article } from "@unclutter/library-components/dist/store/_schema";
+import { LibraryInfo } from "./schema";
+import { BookmarkedPage } from "../background/bookmarks";
 
 // const lindyApiUrl = "http://localhost:8000";
 const lindyApiUrl = "https://api2.lindylearn.io";
 
-export async function checkArticleInLibrary(url, user_id) {
+export async function checkArticleInLibrary(
+    url: string,
+    user_id: string
+): Promise<LibraryInfo> {
     const response = await fetch(
         `${lindyApiUrl}/library/check_article?${new URLSearchParams({
             url,
@@ -27,7 +32,10 @@ export async function checkArticleInLibrary(url, user_id) {
     return json;
 }
 
-export async function addArticleToLibrary(url, user_id) {
+export async function addArticleToLibrary(
+    url: string,
+    user_id: string
+): Promise<LibraryInfo> {
     const response = await fetch(
         `${lindyApiUrl}/library/import_articles?${new URLSearchParams({
             user_id,
@@ -45,10 +53,16 @@ export async function addArticleToLibrary(url, user_id) {
     }
 
     const json = await response.json();
-    return json.added?.[0];
+    return {
+        ...json.added?.[0],
+        new_links: json.new_links || [],
+    };
 }
 
-export async function clusterLibraryArticles(articles, user_id) {
+export async function clusterLibraryArticles(
+    articles: BookmarkedPage[],
+    user_id: string
+): Promise<void> {
     // normalize fields to reduce message size
     const importData = {
         urls: articles.map(({ url }) => url),
@@ -70,7 +84,11 @@ export async function clusterLibraryArticles(articles, user_id) {
     );
 }
 
-export async function updateLibraryArticle(url, user_id, diff) {
+export async function updateLibraryArticle(
+    url: string,
+    user_id: string,
+    diff: Partial<Article>
+): Promise<void> {
     const response = await fetch(
         `${lindyApiUrl}/library/update_article?${new URLSearchParams({
             user_id,
@@ -91,7 +109,7 @@ export async function updateLibraryArticle(url, user_id, diff) {
     }
 }
 
-export async function getRelatedArticles(url, user_id) {
+export async function getRelatedArticles(url: string, user_id: string) {
     const response = await fetch(
         `${lindyApiUrl}/library/related_articles?${new URLSearchParams({
             user_id,
