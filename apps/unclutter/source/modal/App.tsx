@@ -45,7 +45,7 @@ export default function App({
         <ReplicacheContext.Provider value={rep}>
             <LibraryModalPage
                 darkModeEnabled={darkModeEnabled === "true"} // convert string to bool
-                new_link_count={libraryState?.libraryInfo?.new_links.length}
+                new_link_count={libraryState?.libraryInfo?.new_links?.length}
                 articleUrl={
                     libraryState?.libraryInfo?.article.url || articleUrl
                 }

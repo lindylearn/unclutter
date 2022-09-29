@@ -105,13 +105,22 @@ export default class LibraryModifier implements PageModifier {
 
             if (this.libraryState.libraryInfo) {
                 // construct article graph from local replicache
-                const nodes: Article[] = await rep.query.listRecentArticles();
-                const links: ArticleLink[] = await rep.query.listArticleLinks();
+                let nodes: Article[] = await rep.query.listRecentArticles();
+                let links: ArticleLink[] = await rep.query.listArticleLinks();
+
+                if (!this.libraryState.wasAlreadyPresent) {
+                    // use new node and links immediately
+                    nodes = nodes.concat([
+                        this.libraryState.libraryInfo.article,
+                    ]);
+                    links = links.concat(
+                        this.libraryState.libraryInfo.new_links || []
+                    );
+                }
 
                 this.libraryState.graph = await constructGraphData(
-                    // use new node and links immediately
-                    nodes.concat([this.libraryState.libraryInfo.article]),
-                    links.concat(this.libraryState.libraryInfo.new_links),
+                    nodes,
+                    links,
                     this.libraryState.libraryInfo.article.url
                 );
                 this.overlayManager.updateLibraryState(this.libraryState);
@@ -120,9 +129,10 @@ export default class LibraryModifier implements PageModifier {
             if (this.scrollOnceFetchDone) {
                 this.scrollToLastReadingPosition();
             }
-        } catch {
+        } catch (err) {
             this.libraryState.error = true;
             this.overlayManager.updateLibraryState(this.libraryState);
+            console.error(err);
         }
 
         // old individual articles fetch

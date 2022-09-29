@@ -93,12 +93,8 @@
             .nodeColor(
                 byDepth(
                     darkModeEnabled
-                        ? [
-                              "rgb(232, 230, 227)",
-                              "rgb(232, 230, 227)",
-                              "#78716c",
-                          ]
-                        : ["#374151", "#374151", "#9ca3af"]
+                        ? ["hsl(51, 80%, 43%)", "hsl(51, 80%, 43%)", "#78716c"]
+                        : ["hsl(51, 80%, 64%)", "hsl(51, 80%, 64%)", "#9ca3af"]
                 )
             )
             .nodeLabel("none")
@@ -111,8 +107,8 @@
             .linkColor(
                 byDepth(
                     darkModeEnabled
-                        ? [null, "rgb(232, 230, 227)", "#78716c"]
-                        : [null, "#374151", "#9ca3af"]
+                        ? [null, "hsl(51, 80%, 43%)", "#78716c"]
+                        : [null, "hsl(51, 80%, 64%)", "#9ca3af"]
                 )
             )
             .linkWidth(byDepth([null, 2, 1]))
