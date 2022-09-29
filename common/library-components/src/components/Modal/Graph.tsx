@@ -1,30 +1,46 @@
-import { openArticle } from "../../common";
-import {
-    Article,
-    ArticleLink,
-    RuntimeReplicache,
-    readingProgressFullClamp,
-    ReplicacheContext,
-} from "../../store";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ForceGraph, { NodeObject, LinkObject } from "force-graph";
+import clsx from "clsx";
 
-export default function GraphModalTab({ graph, darkModeEnabled }) {
+import { openArticle } from "../../common";
+import { Article, ArticleLink, readingProgressFullClamp } from "../../store";
+
+export default function GraphModalTab({
+    graph,
+    darkModeEnabled,
+}: {
+    graph?: CustomGraphData;
+    darkModeEnabled: boolean;
+}) {
+    const [renderDone, setRenderDone] = useState(false);
+
     const ref = useRef<HTMLDivElement>(null);
     useEffect(() => {
         if (!ref.current || !graph) {
             return;
         }
 
-        // wait until intro animation done for performance
-        setTimeout(() => {
-            renderGraph(graph, ref.current!, darkModeEnabled);
-        }, 200); // 400ms animation
+        // wait a bit during intro animation for performance
+        const isInitialRender = graph.nodes[0].x === undefined;
+        setTimeout(
+            () => {
+                renderGraph(
+                    graph,
+                    ref.current!,
+                    darkModeEnabled,
+                    setRenderDone
+                );
+            },
+            isInitialRender ? 50 : 0
+        );
     }, [ref, graph]);
 
     return (
         <div
-            className="graph h-full w-full cursor-move overflow-hidden rounded-md bg-stone-50 dark:bg-neutral-800"
+            className={clsx(
+                "graph h-full w-full cursor-move overflow-hidden rounded-md bg-stone-50 dark:bg-neutral-800",
+                renderDone && "render-done"
+            )}
             ref={ref}
         />
     );
@@ -160,7 +176,8 @@ type RuntimeNode = CustomGraphNode & {
 function renderGraph(
     graph: CustomGraphData,
     graphContainer: HTMLDivElement,
-    darkModeEnabled: boolean
+    darkModeEnabled: boolean,
+    setRenderDone: (done: boolean) => void
 ) {
     console.log(`rendering graph with ${graph.nodes.length} nodes`);
     const nodes = graph.nodes;
@@ -183,8 +200,8 @@ function renderGraph(
         // simulation props
         .d3AlphaDecay(0.01)
         .d3VelocityDecay(0.08)
-        .warmupTicks(100)
-        .cooldownTicks(10)
+        .warmupTicks(nodes[0].x === undefined ? 100 : 0) // use previous positions if available
+        .cooldownTicks(0)
         .d3Force("center", (alpha) => {
             nodes.forEach((node: RuntimeNode) => {
                 // different strengths for x and y
@@ -310,7 +327,6 @@ function renderGraph(
     forceGraph
         .minZoom(0.5)
         .maxZoom(4)
-        // .zoomToFit(0, 50, (node: RuntimeNode) => node.depth <= 2)
         .onEngineStop(() => {
             if (!initialZoomDone) {
                 forceGraph.zoomToFit(
@@ -325,6 +341,8 @@ function renderGraph(
                 forceGraph.onZoom((zoom) => {
                     changedZoom = true;
                 });
+
+                setRenderDone(true);
             }
         });
 

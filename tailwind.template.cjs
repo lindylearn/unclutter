@@ -38,7 +38,7 @@ module.exports = {
                 slidein: "slidein 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
                 slideinSlightly:
                     "slideinSlightly 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
-                fadein: "fadein 0.3s ease-out",
+                fadein: "fadein 0.2s ease-out",
             },
             boxShadow: {
                 article:
