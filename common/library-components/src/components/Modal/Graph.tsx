@@ -9,20 +9,7 @@ import {
 import React, { useContext, useEffect, useRef, useState } from "react";
 import ForceGraph, { NodeObject, LinkObject } from "force-graph";
 
-export default function GraphModalTab({ articleUrl, darkModeEnabled }) {
-    const rep = useContext(ReplicacheContext);
-    const [graph, setGraph] = useState<CustomGraphData>();
-    useEffect(() => {
-        if (!rep) {
-            return;
-        }
-
-        (async () => {
-            const graph = await getFullGraphData(rep, articleUrl);
-            setGraph(graph);
-        })();
-    }, [rep]);
-
+export default function GraphModalTab({ graph, darkModeEnabled }) {
     const ref = useRef<HTMLDivElement>(null);
     useEffect(() => {
         if (!ref.current || !graph) {
@@ -34,36 +21,36 @@ export default function GraphModalTab({ articleUrl, darkModeEnabled }) {
 
     return (
         <div
-            className="graph h-full w-full overflow-hidden rounded-md dark:bg-neutral-800"
+            className="graph h-full w-full overflow-hidden rounded-md bg-stone-50 dark:bg-neutral-800"
             ref={ref}
         />
     );
 }
 
-type CustomGraphData = {
+export type CustomGraphData = {
     nodes: CustomGraphNode[];
     links: CustomGraphLink[];
 };
-type CustomGraphNode = NodeObject &
+export type CustomGraphNode = NodeObject &
     Article & {
         depth: number;
         linkCount: number;
         days_ago: number;
     };
-type CustomGraphLink = LinkObject & {
+export type CustomGraphLink = LinkObject & {
     depth?: number;
 };
 
-async function getFullGraphData(
+export async function getFullGraphData(
     rep: RuntimeReplicache,
     articleUrl: string
 ): Promise<CustomGraphData> {
     // fetch filtered data
-    const start = new Date();
-    start.setDate(start.getDate() - 180);
-    let nodes: Article[] = await rep.query.listRecentArticles(start.getTime());
+    let nodes: Article[] = await rep.query.listRecentArticles();
     // let nodes = await rep.query(listArticles);
     let links: ArticleLink[] = await rep.query.listArticleLinks();
+
+    // nodes = nodes.slice(0, 200);
 
     // only consider links of filtered articles
     const nodeIndexById = nodes.reduce((acc, node, index) => {

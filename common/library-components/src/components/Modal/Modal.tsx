@@ -9,16 +9,18 @@ import StatsModalTab from "./Stats";
 import ProgressSteps from "../Charts/ProgressSteps";
 import Sidebar from "./Sidebar";
 import { LindyIcon } from "../Icons";
-import GraphModalTab from "./Graph";
+import GraphModalTab, { CustomGraphData } from "./Graph";
 
 export function LibraryModalPage({
     darkModeEnabled = false,
-    articleUrl = undefined,
+    articleUrl,
+    graph,
     isVisible = true,
     closeModal = () => {},
 }: {
     darkModeEnabled?: boolean;
     articleUrl?: string;
+    graph?: CustomGraphData;
     isVisible?: boolean;
     closeModal?: () => void;
 }) {
@@ -52,6 +54,7 @@ export function LibraryModalPage({
                     articleCount={articleCount}
                     articleUrl={articleUrl}
                     darkModeEnabled={darkModeEnabled}
+                    graph={graph}
                     currentTab={currentTab}
                     setCurrentTab={setCurrentTab}
                 />
@@ -114,6 +117,7 @@ function ModalContent({
     articleUrl,
     articleCount,
     darkModeEnabled,
+    graph,
     currentTab,
     setCurrentTab,
 }) {
@@ -129,7 +133,7 @@ function ModalContent({
                 {currentTab === "recent" && <RecentModalTab />}
                 {currentTab === "graph" && (
                     <GraphModalTab
-                        articleUrl={articleUrl}
+                        graph={graph}
                         darkModeEnabled={darkModeEnabled}
                     />
                 )}

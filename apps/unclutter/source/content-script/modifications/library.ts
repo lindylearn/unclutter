@@ -15,12 +15,13 @@ import {
 import { getLibraryUser } from "../../common/storage";
 import {
     getRemoteFeatureFlag,
-    processReplicacheAccessor,
+    ReplicacheProxy,
     reportEventContentScript,
 } from "../messaging";
 import OverlayManager from "./overlay";
 import { PageModifier, trackModifierExecution } from "./_interface";
-import { GraphData } from "force-graph";
+import { getFullGraphData } from "@unclutter/library-components/dist/components/Modal/Graph";
+import { RuntimeReplicache } from "@unclutter/library-components/dist/store";
 
 @trackModifierExecution
 export default class LibraryModifier implements PageModifier {
@@ -66,6 +67,8 @@ export default class LibraryModifier implements PageModifier {
     }
 
     async fetchLibraryState() {
+        const rep = new ReplicacheProxy();
+
         try {
             // get library state
             this.libraryState.libraryInfo = await checkArticleInLibrary(
@@ -74,11 +77,10 @@ export default class LibraryModifier implements PageModifier {
             );
 
             // fetch article graph in parallel to clustering
-            // getArticleGraph(
-            //     this.articleUrl,
-            //     this.libraryState.libraryUser
-            // )
-            this.getFullGraphData().then((graph) => {
+            getFullGraphData(
+                rep as RuntimeReplicache,
+                this.libraryState.libraryInfo?.article.url || this.articleUrl
+            ).then((graph) => {
                 this.libraryState.graph = graph;
                 this.overlayManager.updateLibraryState(this.libraryState);
             });
@@ -218,119 +220,6 @@ export default class LibraryModifier implements PageModifier {
         this.sendProgressUpdate.bind(this),
         this.readingProgressSyncIntervalSeconds * 1000
     );
-
-    private async getFullGraphData(): Promise<GraphData> {
-        // fetch filtered data
-        const start = new Date();
-        start.setDate(start.getDate() - 90);
-        let nodes: Article[] = await processReplicacheAccessor(
-            "listRecentArticles",
-            [start.getTime()]
-        );
-        // let nodes = await processReplicacheAccessor("listArticles");
-        let links: ArticleLink[] = await processReplicacheAccessor(
-            "listArticleLinks"
-        );
-
-        // only consider links of filtered articles
-        const nodeIndexById = nodes.reduce((acc, node, index) => {
-            acc[node.id] = index;
-            return acc;
-        }, {});
-        links = links.filter(
-            (l) =>
-                nodeIndexById[l.source] !== undefined &&
-                nodeIndexById[l.target] !== undefined
-        );
-
-        // save links per node
-        const linksPerNode: { [id: string]: ArticleLink[] } = {};
-        links
-            .sort((a, b) => a.weight - b.weight)
-            .map((l) => {
-                linksPerNode[l.source] = [...(linksPerNode[l.source] || []), l];
-                linksPerNode[l.target] = [...(linksPerNode[l.target] || []), l];
-            });
-
-        // filter number of links per node
-        links = [];
-        const filteredLinksPerNode: { [id: string]: ArticleLink[] } = {};
-        for (const [id, ls] of Object.entries(linksPerNode)) {
-            const filteredLinks = ls
-                .sort((a, b) => b.score - a.score)
-                .slice(0, 3);
-
-            for (const l of filteredLinks) {
-                if (l["_index"] !== undefined) {
-                    // skip duplicate links
-                    continue;
-                }
-                l["_index"] = links.length;
-                links.push(l);
-
-                filteredLinksPerNode[l.source] = [
-                    ...(filteredLinksPerNode[l.source] || []),
-                    l,
-                ];
-                filteredLinksPerNode[l.target] = [
-                    ...(filteredLinksPerNode[l.target] || []),
-                    // reverse link
-                    {
-                        ...l,
-                        source: l.target,
-                        target: l.source,
-                    },
-                ];
-            }
-        }
-
-        nodes = nodes.map((node, index) => {
-            return {
-                ...node,
-                linkCount: filteredLinksPerNode[node.id]?.length || 0,
-                days_ago: (Date.now() - node.time_added * 1000) / 86400000,
-            };
-        });
-
-        // spanning tree
-        // const mstLinks = kruskal(
-        //     links.map((l) => ({
-        //         ...l,
-        //         from: l.source,
-        //         to: l.target,
-        //         weight: 1 - l.score!,
-        //     }))
-        // );
-        // setGraph({ nodes, links: mstLinks });
-
-        // add depth from current url
-        const startNode = nodes.find((n) => n.url === this.articleUrl);
-        if (startNode) {
-            startNode.depth = 0;
-            const queue = [startNode];
-            while (queue.length > 0) {
-                const node = queue.shift();
-                if (node.depth >= 2) {
-                    break;
-                }
-
-                const adjacentLinks = filteredLinksPerNode[node.id] || [];
-                // console.log(node, links);
-
-                adjacentLinks.map((l) => {
-                    const targetNode = nodes[nodeIndexById[l.target]];
-                    if (targetNode && targetNode.depth === undefined) {
-                        targetNode.depth = node.depth + 1;
-                        links[l["_index"]].depth = node.depth + 1;
-
-                        queue.push(targetNode);
-                    }
-                });
-            }
-        }
-
-        return { nodes, links };
-    }
 }
 
 const librarySignupStaticArticles: Article[] = [

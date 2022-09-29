@@ -2,6 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-.modal-content {
+/* .modal-content {
     background-color: var(--lindy-background-color);
-}
+} */

@@ -1,9 +1,23 @@
-import { LibraryModalPage } from "@unclutter/library-components/dist/components";
-import { useEffect, useState } from "react";
+import {
+    LibraryModalPage,
+    getFullGraphData,
+    CustomGraphData,
+} from "@unclutter/library-components/dist/components";
+import { ReplicacheContext } from "@unclutter/library-components/dist/store";
+import { useContext, useEffect, useState } from "react";
 
 export default function ModalTestTab({}) {
+    const articleUrl = "https://developer.chrome.com/blog/mv2-transition/";
+
+    const rep = useContext(ReplicacheContext);
+    const [graph, setGraph] = useState<CustomGraphData>();
     const [showModal, setShowModal] = useState(false);
     useEffect(() => {
+        if (!rep) {
+            return;
+        }
+        getFullGraphData(rep, articleUrl).then(setGraph);
+
         setTimeout(() => {
             setShowModal(true);
         }, 100);
@@ -22,14 +36,15 @@ export default function ModalTestTab({}) {
         <div className="h-screen w-screen">
             <div
                 className="bg-lindy m-20 mx-auto max-w-md cursor-pointer rounded-lg p-2"
-                onMouseEnter={() => setShowModal(true)}
+                onClick={() => setShowModal(true)}
             >
                 Open Library
             </div>
 
             <LibraryModalPage
                 darkModeEnabled={darkModeEnabled}
-                articleUrl="https://www.wsj.com/articles/saying-goodbye-to-my-parents-library-11661572861"
+                articleUrl={articleUrl}
+                graph={graph}
                 isVisible={showModal}
                 closeModal={() => setShowModal(false)}
             />

@@ -75,3 +75,15 @@ body {
 .modal-visible > .modal-content:not(:hover) {
     transform: scale(99.5%);
 }
+
+.force-graph-container {
+    animation: fadein 0.3s ease-out;
+}
+@keyframes fadein {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}

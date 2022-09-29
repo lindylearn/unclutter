@@ -1,9 +1,8 @@
-import type { GraphData } from "force-graph";
 import {
     Article,
     Topic,
-    ArticleLink,
 } from "@unclutter/library-components/dist/store/_schema";
+import { CustomGraphData } from "@unclutter/library-components/dist/components/Modal/Graph";
 
 export type LibraryState = {
     libraryUser?: string;
@@ -16,7 +15,7 @@ export type LibraryState = {
     error: boolean;
 
     relatedArticles?: Article[];
-    graph: GraphData;
+    graph: CustomGraphData;
 };
 
 // returned from API

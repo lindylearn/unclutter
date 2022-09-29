@@ -2,11 +2,7 @@
     import { fly, fade } from "svelte/transition";
     import { cubicOut } from "svelte/easing";
     import clsx from "clsx";
-    import ForceGraph, {
-        ForceGraphInstance,
-        GraphData,
-        NodeObject,
-    } from "force-graph";
+    import ForceGraph, { ForceGraphInstance } from "force-graph";
     import { forceManyBody } from "d3-force";
 
     import { LibraryState } from "../../../common/schema";
@@ -17,6 +13,11 @@
     import { getRelativeTime } from "../../../common/time";
     import { updateLibraryArticle } from "../../../common/api";
     import LibraryModalModifier from "../../../content-script/modifications/libraryModal";
+    import {
+        CustomGraphData,
+        CustomGraphLink,
+        CustomGraphNode,
+    } from "@unclutter/library-components/dist/components/Modal/Graph";
 
     export let libraryState: LibraryState;
     export let darkModeEnabled: boolean;
@@ -37,14 +38,15 @@
         );
     }
     function renderGraph(
-        graph: GraphData,
+        graph: CustomGraphData,
         graphContainer: HTMLDivElement,
         darkModeEnabled: boolean,
-        isExpanded: boolean
+        isExpanded: boolean,
+        depthLimit = 2
     ) {
         console.log("render graph");
-        const nodes = graph.nodes;
-        const links = graph.links;
+        const nodes = graph.nodes.filter((n) => n.depth <= depthLimit);
+        const links = graph.links.filter((n) => n.depth <= depthLimit);
 
         const width = graphContainer.clientWidth;
         const height = isExpanded ? 208 : 80; // clientHeight doesn't get updated until the first render
@@ -54,7 +56,7 @@
             return (item) => values[item.depth] || values[values.length - 1];
         }
 
-        let hoverNode: NodeObject | null = null;
+        let hoverNode: CustomGraphNode | null = null;
         forceGraph = ForceGraph()(graphContainer)
             // layout
             .graphData({ nodes, links })
@@ -105,11 +107,11 @@
                 )
             )
             .nodeLabel("none")
-            .onNodeHover((node) => {
+            .onNodeHover((node: CustomGraphNode) => {
                 hoverNode = node || null;
                 graphContainer.style.cursor = node ? "pointer" : null;
             })
-            .nodeCanvasObject((node, ctx, globalScale) => {
+            .nodeCanvasObject((node: CustomGraphNode, ctx, globalScale) => {
                 if (!isExpanded) {
                     return;
                 }
@@ -135,8 +137,8 @@
                     (node.depth === 3 && globalScale >= 3.5)
                 ) {
                     // title label
-                    let label = node.name.slice(0, 30);
-                    if (node.name.length > 30) {
+                    let label = node.title.slice(0, 30);
+                    if (node.title.length > 30) {
                         label = label.concat("…");
                     }
                     const fontSize = 11 / globalScale;
@@ -187,7 +189,8 @@
                     forceGraph.zoomToFit(
                         0,
                         12,
-                        (node) => node.depth <= (isExpanded ? 2 : 1)
+                        (node: CustomGraphNode) =>
+                            node.depth <= (isExpanded ? 2 : 1)
                     );
                     forceGraph.cooldownTicks(Infinity);
                     initialZoomDone = true;

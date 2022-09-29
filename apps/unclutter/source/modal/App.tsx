@@ -48,6 +48,7 @@ export default function App({
                 articleUrl={
                     libraryState?.libraryInfo?.article.url || articleUrl
                 }
+                graph={libraryState?.graph}
                 isVisible={showModal}
                 closeModal={closeModal}
             />
