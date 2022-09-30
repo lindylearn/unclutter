@@ -87,3 +87,19 @@ body {
 /* .topic-stat:not(:hover) {
     background: rgb(250 250 249) !important;
 } */
+
+.calendar text {
+    fill: currentColor;
+}
+
+@keyframes calendarLoadingAnimation {
+    0% {
+        fill: var(--react-activity-calendar-loading);
+    }
+    50% {
+        fill: var(--react-activity-calendar-loading-active);
+    }
+    100% {
+        fill: var(--react-activity-calendar-loading);
+    }
+}

@@ -1,14 +1,15 @@
 import React, { useMemo } from "react";
-import ActivityCalendarModule, {
+import {
+    ActivityCalendar,
     CalendarData,
     Level,
     Theme,
-} from "react-activity-calendar";
+} from "./ActivityCalendar";
 import { eachDayOfInterval, subYears } from "date-fns";
 
 import { Article } from "../../store";
 
-export function ActivityCalendar({
+export function ArticleActivityCalendar({
     darkModeEnabled,
     articles,
     onSelectDate,
@@ -30,7 +31,7 @@ export function ActivityCalendar({
 
     return (
         <div className="animate-fadein my-2 mr-2 max-w-[860px] text-stone-500 dark:text-neutral-600">
-            <ActivityCalendarModule
+            <ActivityCalendar
                 data={data || []}
                 theme={getColorLevels(darkModeEnabled)}
                 labels={{

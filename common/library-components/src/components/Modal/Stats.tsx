@@ -2,7 +2,7 @@ import React, { ReactNode, useContext, useEffect, useState } from "react";
 import { subYears } from "date-fns";
 import { Article, ReplicacheContext, Topic } from "../../store";
 import {
-    ActivityCalendar,
+    ArticleActivityCalendar,
     getActivityColor,
     getActivityLevel,
 } from "../Charts";
@@ -36,7 +36,7 @@ export default function StatsModalTab({
                 allArticles={allArticles}
                 darkModeEnabled={darkModeEnabled}
             />
-            <ActivityCalendar
+            <ArticleActivityCalendar
                 articles={allArticles}
                 onSelectDate={setSelectedDate}
                 darkModeEnabled={darkModeEnabled}
@@ -265,12 +265,8 @@ function BigNumber({
                 <div
                     className="absolute top-0 left-0 h-full w-full opacity-90"
                     style={{
-                        // background: colorOverride || "rgb(237, 215, 91, 0.6)",
-                        // width: `${Math.min(1, value / target) * 100}%`,
-                        background: getActivityColor(
-                            value,
-                            darkModeEnabled || false
-                        ),
+                        background: colorOverride || "rgb(237, 215, 91, 0.6)",
+                        width: `${Math.min(1, value / target) * 100}%`,
                     }}
                 />
             )}
