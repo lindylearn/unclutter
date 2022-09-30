@@ -26,7 +26,7 @@ export function LibraryModalPage({
     closeModal?: () => void;
 }) {
     const rep = useContext(ReplicacheContext);
-    const [articleCount, setArticleCount] = useState<number | null>(null);
+    const [articleCount, setArticleCount] = useState<number>();
     useEffect(() => {
         rep?.query.getArticlesCount().then(setArticleCount);
     }, [rep]);
@@ -70,7 +70,7 @@ function ModalContent({
     setCurrentTab,
 }: {
     articleUrl?: string;
-    articleCount: number | null;
+    articleCount?: number;
     darkModeEnabled: boolean;
     graph?: CustomGraphData;
     new_link_count?: number;

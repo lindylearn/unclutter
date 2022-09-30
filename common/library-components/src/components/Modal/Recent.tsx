@@ -20,7 +20,6 @@ export default function RecentModalTab({}) {
                         </h2>
                         <div className="stats font-medium text-stone-300">
                             <InlineProgressCircle
-                                id={key}
                                 current={articles.length}
                                 target={10}
                             />

@@ -15,10 +15,10 @@ export default function ProgressSteps({
     return (
         <div
             className={clsx(
-                "flex items-center justify-end gap-2 rounded-md px-2 transition-all hover:scale-x-[99%] hover:scale-y-[97%] hover:cursor-pointer",
+                "flex items-center justify-end gap-1.5 rounded-md px-2 transition-all hover:scale-x-[99%] hover:scale-y-[97%] hover:cursor-pointer",
                 isSelected
-                    ? "bg-stone-100 dark:bg-neutral-800"
-                    : "hover:bg-stone-100 dark:hover:bg-neutral-800"
+                    ? "bg-stone-50 dark:bg-neutral-800"
+                    : "hover:bg-stone-50 dark:hover:bg-neutral-800"
             )}
             onClick={onClick}
         >
@@ -39,7 +39,7 @@ function Step({ index, completed }: { index: number; completed: boolean }) {
                 "h-4 w-4 rounded-md text-center text-sm leading-none",
                 completed
                     ? "bg-lindy dark:bg-lindyDark"
-                    : "bg-neutral-200 dark:bg-neutral-700"
+                    : "bg-stone-100 dark:bg-neutral-700"
             )}
         >
             {/* {index} */}
@@ -54,7 +54,7 @@ function Connection({ completed }: { completed: boolean }) {
                 "h-1 w-8 rounded-md",
                 completed
                     ? "bg-lindy dark:bg-lindyDark opacity-80"
-                    : "bg-neutral-200 dark:bg-neutral-700"
+                    : "bg-stone-100 dark:bg-neutral-700"
             )}
         ></div>
     );

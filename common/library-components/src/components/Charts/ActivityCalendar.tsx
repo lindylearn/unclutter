@@ -28,7 +28,7 @@ export function ActivityCalendar({
     }
 
     return (
-        <div className="animate-fadein mx-auto max-w-[860px] text-stone-500 dark:text-neutral-600">
+        <div className="animate-fadein my-2 mr-2 max-w-[860px] text-stone-500 dark:text-neutral-600">
             <ActivityCalendarModule
                 data={data || []}
                 theme={
@@ -55,7 +55,7 @@ export function ActivityCalendar({
                 blockRadius={3}
                 hideTotalCount
                 loading={data === null}
-                // hideColorLegend
+                hideColorLegend
                 // hideMonthLabels
                 // showWeekdayLabels
                 eventHandlers={{
