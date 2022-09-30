@@ -135,17 +135,20 @@ function WeekDetails({
             return;
         }
 
-        const start = getWeekStart(selectedDate || new Date());
-        const end = new Date(start.getTime() + 7 * 24 * 60 * 60 * 1000);
-        setStart(start);
-        setEnd(end);
+        setWeekArticles(allArticles);
+        return;
 
-        const weekArticles = allArticles.filter(
-            (a) =>
-                a.time_added * 1000 >= start.getTime() &&
-                a.time_added * 1000 < end.getTime()
-        );
-        setWeekArticles(weekArticles);
+        // const start = getWeekStart(selectedDate || new Date());
+        // const end = new Date(start.getTime() + 7 * 24 * 60 * 60 * 1000);
+        // setStart(start);
+        // setEnd(end);
+
+        // const weekArticles = allArticles.filter(
+        //     (a) =>
+        //         a.time_added * 1000 >= start.getTime() &&
+        //         a.time_added * 1000 < end.getTime()
+        // );
+        // setWeekArticles(weekArticles);
     }, [selectedDate, allArticles]);
 
     const groups = useArticleGroups(
@@ -157,9 +160,9 @@ function WeekDetails({
     );
     // console.log(groups);
 
-    if (!start || !end || !groups) {
-        return <></>;
-    }
+    // if (!start || !end || !groups) {
+    //     return <></>;
+    // }
 
     return (
         <div className="animate-fadein">
@@ -219,7 +222,7 @@ function TopicStat({
     return (
         <div
             className={clsx(
-                "flex cursor-pointer flex-col items-center gap-1 overflow-hidden rounded-md bg-stone-50 p-3 transition-all hover:scale-[97%] dark:bg-neutral-800",
+                "flex cursor-pointer select-none flex-col items-center gap-1 overflow-hidden rounded-md bg-stone-50 p-3 transition-all hover:scale-[97%] dark:bg-neutral-800",
                 activityLevel === 4 && "dark:text-stone-800"
             )}
             style={{
@@ -260,7 +263,7 @@ function BigNumber({
     darkModeEnabled?: boolean;
 }) {
     return (
-        <div className="relative flex cursor-pointer flex-col items-center overflow-hidden rounded-md bg-stone-50 p-3 transition-all hover:scale-[97%] dark:bg-neutral-800">
+        <div className="relative flex cursor-pointer select-none flex-col items-center overflow-hidden rounded-md bg-stone-50 p-3 transition-all hover:scale-[97%] dark:bg-neutral-800">
             {value !== undefined && target !== undefined && (
                 <div
                     className="absolute top-0 left-0 h-full w-full opacity-90"

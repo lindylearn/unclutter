@@ -43,13 +43,15 @@ export function ArticleActivityCalendar({
                 hideColorLegend
                 // hideMonthLabels
                 // showWeekdayLabels
-                eventHandlers={{
-                    onClick: (event) => (data) => {
-                        onSelectDate(new Date(data.date));
-                    },
-                    // onMouseEnter: (event) => (data) =>
-                    //     console.log("mouseEnter"),
-                }}
+                eventHandlers={
+                    {
+                        // onClick: (event) => (data) => {
+                        //     onSelectDate(new Date(data.date));
+                        // },
+                        // onMouseEnter: (event) => (data) =>
+                        //     console.log("mouseEnter"),
+                    }
+                }
             />
         </div>
     );

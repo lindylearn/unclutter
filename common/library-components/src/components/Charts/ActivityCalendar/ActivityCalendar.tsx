@@ -1,4 +1,11 @@
-import React, { FunctionComponent, CSSProperties, ReactNode } from "react";
+import React, {
+    FunctionComponent,
+    CSSProperties,
+    ReactNode,
+    useRef,
+    useEffect,
+    useState,
+} from "react";
 import tinycolor, { ColorInput } from "tinycolor2";
 import format from "date-fns/format";
 import getYear from "date-fns/getYear";
@@ -271,6 +278,7 @@ export function ActivityCalendar({
 
                     return (
                         <rect
+                            className="day stroke-0"
                             {...getEventHandlers(day)}
                             x={0}
                             y={
@@ -280,6 +288,7 @@ export function ActivityCalendar({
                             width={blockSize}
                             height={blockSize}
                             fill={theme[`level${day.level}` as keyof Theme]}
+                            stroke={theme[`level${day.level}` as keyof Theme]}
                             rx={blockRadius}
                             ry={blockRadius}
                             data-date={day.date}
@@ -303,6 +312,83 @@ export function ActivityCalendar({
                     {week}
                 </g>
             ));
+    }
+
+    const [startWeekIndex, setStartWeekIndex] = useState<number>(30);
+
+    const [diffX, setDiffX] = useState(0);
+    const overlayHandleRef = useRef<SVGRectElement>(null);
+    useEffect(() => {
+        if (!overlayHandleRef.current) {
+            return;
+        }
+
+        let start: number;
+        let diffX: number; // local var to avoid state stale closure
+        const moveListener = (e: MouseEvent) => {
+            const diff = e.x - start;
+            diffX = Math.round(diff / (blockSize + blockMargin));
+            setDiffX(diffX);
+        };
+        overlayHandleRef.current.addEventListener("mousedown", (e) => {
+            start = e.x;
+            // console.log("mousedown", start);
+            window.addEventListener("mousemove", moveListener);
+        });
+
+        window.addEventListener("mouseup", (e) => {
+            window.removeEventListener("mousemove", moveListener);
+
+            setStartWeekIndex((startWeekIndex) => startWeekIndex + diffX);
+            diffX = 0;
+            setDiffX(0);
+        });
+    }, [overlayHandleRef]);
+
+    function renderOverlay() {
+        const endWeek = weeks.length;
+
+        return (
+            <>
+                <rect
+                    className="overlay opacity-10"
+                    x={
+                        (blockSize + blockMargin) * (startWeekIndex + diffX) -
+                        blockMargin
+                    }
+                    y={textHeight - blockMargin}
+                    width={
+                        (blockSize + blockMargin) *
+                            (endWeek - startWeekIndex - diffX) +
+                        blockMargin
+                    }
+                    height={(blockSize + blockMargin) * 7 + blockMargin}
+                    fill="rgb(232 230 227)"
+                    rx={5}
+                    ry={5}
+                    style={{
+                        shapeRendering: "geometricPrecision",
+                    }}
+                />
+                <rect
+                    ref={overlayHandleRef}
+                    className="overlay-drag-handle cursor-pointer opacity-90"
+                    x={
+                        (blockSize + blockMargin) * (startWeekIndex + diffX) -
+                        blockMargin
+                    }
+                    y={textHeight - blockMargin}
+                    width={4}
+                    height={(blockSize + blockMargin) * 7 + blockMargin}
+                    fill="rgb(232 230 227)"
+                    // rx={5}
+                    // ry={5}
+                    style={{
+                        shapeRendering: "geometricPrecision",
+                    }}
+                />
+            </>
+        );
     }
 
     function renderFooter() {
@@ -386,6 +472,7 @@ export function ActivityCalendar({
             >
                 {!loading && renderLabels()}
                 {renderBlocks()}
+                {renderOverlay()}
             </svg>
             {renderFooter()}
             {children}

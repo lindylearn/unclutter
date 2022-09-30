@@ -90,7 +90,12 @@ body {
 
 .calendar text {
     fill: currentColor;
+    user-select: none;
 }
+
+/* .calendar rect.day:hover {
+    stroke-width: 2px;
+} */
 
 @keyframes calendarLoadingAnimation {
     0% {
