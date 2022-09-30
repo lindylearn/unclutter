@@ -80,7 +80,7 @@ function ModalContent({
     return (
         <div className="font-text flex h-full overflow-hidden text-base">
             <aside className="left-side p-4">
-                <div className="h-full w-32">
+                <div className="flex h-full w-32 flex-col">
                     <div
                         className="mb-4 flex w-full cursor-pointer items-center gap-1.5 transition-all hover:scale-[97%]"
                         onClick={() => setCurrentTab("stats")}
