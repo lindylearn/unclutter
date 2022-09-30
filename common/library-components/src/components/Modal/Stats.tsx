@@ -2,10 +2,13 @@ import React, { useContext, useEffect, useMemo, useState } from "react";
 import { subYears, subMonths, subWeeks } from "date-fns";
 import { Article, ReplicacheContext } from "../../store";
 import { ActivityCalendar } from "../Charts";
-import { getWeekNumber } from "../../common";
+import { getWeekNumber, getWeekStart } from "../../common";
+import { StaticArticleList } from "../ArticleList";
 
 export default function StatsModalTab({ articleCount, darkModeEnabled }) {
     const rep = useContext(ReplicacheContext);
+
+    const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
     const [allArticles, setAllArticles] = useState<Article[]>();
     useEffect(() => {
@@ -23,14 +26,14 @@ export default function StatsModalTab({ articleCount, darkModeEnabled }) {
                 articleCount={articleCount}
                 allArticles={allArticles}
             />
-            {/* <AreaChart
-                darkModeEnabled={darkModeEnabled}
-                articles={allArticles}
-            /> */}
-
             <ActivityCalendar
                 darkModeEnabled={darkModeEnabled}
                 articles={allArticles}
+                onSelectDate={setSelectedDate}
+            />
+            <WeekDetails
+                allArticles={allArticles}
+                selectedDate={selectedDate}
             />
         </div>
     );
@@ -102,4 +105,55 @@ function BigNumber({
             <div className="z-10">{tag}</div>
         </div>
     );
+}
+
+function WeekDetails({
+    selectedDate,
+    allArticles,
+}: {
+    selectedDate: Date;
+    allArticles?: Article[];
+}) {
+    const [weekArticles, setWeekArticles] = useState<Article[]>([]);
+    useEffect(() => {
+        if (!allArticles) {
+            return;
+        }
+
+        const start = getWeekStart(selectedDate || new Date());
+        const end = new Date(start.getTime() + 7 * 24 * 60 * 60 * 1000);
+
+        const weekArticles = allArticles.filter(
+            (a) =>
+                a.time_added * 1000 >= start.getTime() &&
+                a.time_added * 1000 < end.getTime()
+        );
+        setWeekArticles(weekArticles);
+    }, [selectedDate, allArticles]);
+
+    return (
+        <div className="">
+            {/* <h2 className="mb-3">Sep 26 to now:</h2> */}
+
+            <div className="rounded-md bg-stone-50 p-3">
+                <StaticArticleList articles={weekArticles} small />
+            </div>
+
+            {/* <div className="grid grid-cols-6 rounded-md bg-stone-50 p-3">
+                {weekArticles?.map((a) => (
+                    <>
+                        <div className="text-stone-500">{getDomain(a.url)}</div>
+                        <div className="col-span-4">{a.title}</div>
+                        <div className="text-stone-500">
+                            {a.reading_progress * 100}%
+                        </div>
+                    </>
+                ))}
+            </div> */}
+        </div>
+    );
+}
+
+function getDomain(url: string): string {
+    return new URL(url).hostname.replace("www.", "");
 }

@@ -16,3 +16,10 @@ export function getWeekNumber(date: Date): number {
         ((date - onejan) / millisecsInDay + onejan.getDay() + 1) / 7
     );
 }
+
+export function getWeekStart(start: Date = new Date()): Date {
+    const diff =
+        start.getDate() - start.getDay() + (start.getDay() === 0 ? -6 : 1);
+    start.setDate(diff);
+    return start;
+}

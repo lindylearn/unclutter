@@ -1,6 +1,6 @@
 import React from "react";
 import { ReplicacheContext } from "../../store";
-import { getRandomColor } from "../../common";
+import { getRandomColor, getWeekStart } from "../../common";
 import clsx from "clsx";
 import { useContext, useEffect, useState } from "react";
 import RecentModalTab from "./Recent";
@@ -32,7 +32,7 @@ export function LibraryModalPage({
         rep?.query.getArticlesCount().then(setArticleCount);
     }, [rep]);
 
-    const [currentTab, setCurrentTab] = useState("graph");
+    const [currentTab, setCurrentTab] = useState("stats");
 
     return (
         <div
@@ -83,13 +83,9 @@ function ModalHeader({
         if (!rep) {
             return;
         }
-        const start = new Date();
-        const diff =
-            start.getDate() - start.getDay() + (start.getDay() === 0 ? -6 : 1);
-        start.setDate(diff);
 
         rep.query
-            .listRecentArticles(start.getTime())
+            .listRecentArticles(getWeekStart().getTime())
             .then((articles) => setWeekArticleCount(articles.length));
     }, [rep]);
 

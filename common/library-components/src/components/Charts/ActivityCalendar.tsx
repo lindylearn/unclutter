@@ -10,9 +10,11 @@ import { Article } from "../../store";
 export function ActivityCalendar({
     darkModeEnabled,
     articles,
+    onSelectDate,
 }: {
     darkModeEnabled: boolean;
     articles?: Article[];
+    onSelectDate: (date: Date) => void;
 }) {
     const data = useMemo(() => {
         if (!articles) {
@@ -56,6 +58,13 @@ export function ActivityCalendar({
                 // hideColorLegend
                 // hideMonthLabels
                 // showWeekdayLabels
+                eventHandlers={{
+                    onClick: (event) => (data) => {
+                        onSelectDate(new Date(data.date));
+                    },
+                    // onMouseEnter: (event) => (data) =>
+                    //     console.log("mouseEnter"),
+                }}
             />
         </div>
     );
