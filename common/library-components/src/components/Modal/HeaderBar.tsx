@@ -30,7 +30,7 @@ export default function HeaderBar({
     }, [rep]);
 
     return (
-        <div className="header-bar mt-4 mb-4 flex w-full gap-4 rounded-t-lg">
+        <div className="header-bar mb-4 flex w-full gap-4 rounded-t-lg">
             <div className="flex-grow">
                 <input
                     className="font-text w-full max-w-sm rounded-md bg-stone-100 px-3 py-1.5 font-medium leading-none placeholder-stone-300 outline-none dark:bg-neutral-800 dark:placeholder-neutral-600"

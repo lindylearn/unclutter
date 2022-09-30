@@ -78,25 +78,27 @@ function ModalContent({
     setCurrentTab: (tab: string) => void;
 }) {
     return (
-        <div className="font-text relative flex h-full gap-3 overflow-hidden text-base">
-            <aside className="left-side absolute m-4 mt-0 h-full w-32">
-                <div
-                    className="mt-4 mb-4 flex w-full cursor-pointer items-center gap-2 transition-all hover:scale-[97%]"
-                    onClick={() => setCurrentTab("stats")}
-                >
-                    <LindyIcon className="w-8" />
-                    <span className="font-title text-2xl font-bold">
-                        Library
-                    </span>
-                </div>
+        <div className="font-text flex h-full overflow-hidden text-base">
+            <aside className="left-side p-4">
+                <div className="h-full w-32">
+                    <div
+                        className="mb-4 flex w-full cursor-pointer items-center gap-1.5 transition-all hover:scale-[97%]"
+                        onClick={() => setCurrentTab("stats")}
+                    >
+                        <LindyIcon className="w-8" />
+                        <span className="font-title text-2xl font-bold">
+                            Library
+                        </span>
+                    </div>
 
-                <Sidebar
-                    currentTab={currentTab}
-                    setCurrentTab={setCurrentTab}
-                    new_link_count={new_link_count}
-                />
+                    <Sidebar
+                        currentTab={currentTab}
+                        setCurrentTab={setCurrentTab}
+                        new_link_count={new_link_count}
+                    />
+                </div>
             </aside>
-            <div className="right-side ml-32 flex max-h-full w-full flex-col overflow-auto p-4 pl-8 pt-0">
+            <div className="right-side flex max-h-full w-full flex-col overflow-auto p-4 pl-0">
                 <HeaderBar
                     articleCount={articleCount}
                     currentTab={currentTab}
