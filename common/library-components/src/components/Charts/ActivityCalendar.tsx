@@ -81,16 +81,18 @@ export function getActivityData(articles: Article[]): CalendarData {
     return Object.entries(dateCounts).map(([date, count]) => ({
         date,
         count,
-        level: getLevelForValue(count),
+        level: getActivityLevel(count),
     }));
 }
 
-export function getActivityColor(value: number, darkModeEnabled: boolean) {
-    const level = getLevelForValue(value);
-    return getColorLevels(darkModeEnabled)[`level${level}`];
+export function getActivityColor(
+    activityLevel: Level,
+    darkModeEnabled: boolean
+) {
+    return getColorLevels(darkModeEnabled)[`level${activityLevel}`];
 }
 
-function getLevelForValue(value: number): Level {
+export function getActivityLevel(value: number): Level {
     if (value === 0) {
         return 0;
     } else if (value <= 2) {

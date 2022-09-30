@@ -1,7 +1,11 @@
 import React, { ReactNode, useContext, useEffect, useState } from "react";
 import { subYears } from "date-fns";
 import { Article, ReplicacheContext, Topic } from "../../store";
-import { ActivityCalendar, getActivityColor } from "../Charts";
+import {
+    ActivityCalendar,
+    getActivityColor,
+    getActivityLevel,
+} from "../Charts";
 import { getRandomLightColor, getWeekNumber, getWeekStart } from "../../common";
 import { useArticleGroups } from "../ArticleList";
 import { TopicEmoji } from "../TopicTag";
@@ -210,21 +214,33 @@ function TopicStat({
         rep?.query.getTopic(topic_id).then(setTopic);
     }, [rep, topic_id]);
 
+    const activityLevel = getActivityLevel(selectedArticles.length);
+
     return (
-        <BigNumber
-            value={selectedArticles.length}
-            target={totalArticleCount}
-            tag={
-                <div className="flex items-center overflow-hidden">
-                    <TopicEmoji emoji={topic?.emoji!} className="w-4" />
-                    <div className="overflow-hidden overflow-ellipsis whitespace-nowrap">
-                        {topic?.name}
-                    </div>
+        <div
+            className={clsx(
+                "flex cursor-pointer flex-col items-center gap-1 overflow-hidden rounded-md bg-stone-50 p-3 transition-all hover:scale-[97%] dark:bg-neutral-800",
+                activityLevel === 4 && "dark:text-stone-800"
+            )}
+            style={{
+                background: getActivityColor(
+                    activityLevel,
+                    darkModeEnabled || false
+                ),
+            }}
+        >
+            <div className="flex max-w-full items-center overflow-hidden">
+                <TopicEmoji emoji={topic?.emoji!} className="w-4" />
+                <div className="overflow-hidden overflow-ellipsis whitespace-nowrap">
+                    {topic?.name}
                 </div>
-            }
-            // colorOverride={getRandomLightColor(topic_id)}
-            darkModeEnabled={darkModeEnabled}
-        />
+            </div>
+
+            <div className="flex gap-3">
+                <ResourceStat type="articles" value={selectedArticles.length} />
+                <ResourceStat type="highlights" value={0} />
+            </div>
+        </div>
     );
 }
 
