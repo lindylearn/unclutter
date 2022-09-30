@@ -8,13 +8,13 @@ import { getRandomColor, getRandomLightColor } from "../../common";
 import { Article, ReplicacheContext } from "../../store";
 import { ResourceStat } from "./Stats";
 
-export default function RecentModalTab({}) {
+export default function RecentModalTab({ darkModeEnabled }) {
     const [tabInfos, unreadArticlesCount] = useTabInfos(10, true);
 
     return (
         <div className="flex flex-col gap-4 pt-1">
             {tabInfos?.map((tabInfo, index) => (
-                <TopicGroup {...tabInfo} />
+                <TopicGroup darkModeEnabled={darkModeEnabled} {...tabInfo} />
             ))}
         </div>
     );
@@ -24,11 +24,13 @@ function TopicGroup({
     title,
     icon,
     articles,
+    darkModeEnabled,
 }: {
     key: string;
     title: string;
     icon?: ReactNode;
     articles: Article[];
+    darkModeEnabled: boolean;
 }) {
     const topic_id = articles[0].topic_id!;
 
@@ -63,7 +65,7 @@ function TopicGroup({
                 className="topic-articles rounded-md p-3"
                 style={{
                     height: "11.5rem", // article height + padding to prevent size change
-                    background: getRandomLightColor(topic_id),
+                    background: getRandomLightColor(topic_id, darkModeEnabled),
                 }}
             >
                 <DraggableArticleList

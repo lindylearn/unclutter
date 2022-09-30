@@ -91,7 +91,6 @@ function NumberStats({
                     </svg>
                 }
             />
-            {/* <BigNumber value={topicsCount} tag="article topics" /> */}
             <BigNumber
                 value={0}
                 tag="highlights"
@@ -104,6 +103,7 @@ function NumberStats({
                     </svg>
                 }
             />
+            <BigNumber value={topicsCount} tag="article topics" />
             {/* <BigNumber value={weekArticles} target={7} tag="read this week" />
             <BigNumber value={0} target={7} tag="highlighted this week" /> */}
         </div>

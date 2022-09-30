@@ -33,7 +33,9 @@ export default function ModalTestTab({}) {
         }, 100);
     }, []);
 
-    const [darkModeEnabled, setDarkModeEnabled] = useState(false);
+    const [darkModeEnabled, setDarkModeEnabled] = useState(
+        window.matchMedia("(prefers-color-scheme: dark)").matches
+    );
     useEffect(() => {
         window
             .matchMedia("(prefers-color-scheme: dark)")

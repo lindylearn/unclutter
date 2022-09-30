@@ -105,7 +105,9 @@ function ModalContent({
                     setCurrentTab={setCurrentTab}
                 />
 
-                {currentTab === "recent" && <RecentModalTab />}
+                {currentTab === "recent" && (
+                    <RecentModalTab darkModeEnabled={darkModeEnabled} />
+                )}
                 {currentTab === "graph" && (
                     <GraphModalTab
                         graph={graph}

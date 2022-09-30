@@ -22,30 +22,34 @@ export const colors = [
 
 // material UI colors A1XX from https://materialui.co/colors/
 export const lightColors = [
-    "hsl(4.72, 100.00%, 75.10%)",
-    "hsl(339.69, 100.00%, 75.10%)",
-    "hsl(291.29, 95.38%, 74.51%)",
-    "hsl(261.68, 100.00%, 76.67%)",
-    "hsl(230.61, 100.00%, 77.45%)",
-    "hsl(217.44, 100.00%, 75.49%)",
-    "hsl(198.43, 100.00%, 75.10%)",
-    "hsl(180.00, 100.00%, 75.88%)",
-    "hsl(166.36, 100.00%, 82.75%)",
-    "hsl(136.72, 77.22%, 84.51%)",
-    "hsl(87.57, 100.00%, 78.24%)",
-    "hsl(65.24, 100.00%, 75.29%)",
-    "hsl(60.00, 100.00%, 77.65%)",
-    "hsl(47.81, 100.00%, 74.90%)",
-    "hsl(38.27, 100.00%, 75.10%)",
-    "hsl(14.17, 100.00%, 75.10%)",
+    "rgba(255, 138, 128, 1.0)",
+    "rgba(255, 128, 171, 1.0)",
+    "rgba(234, 128, 252, 1.0)",
+    "rgba(179, 136, 255, 1.0)",
+    "rgba(140, 158, 255, 1.0)",
+    "rgba(130, 177, 255, 1.0)",
+    "rgba(128, 216, 255, 1.0)",
+    "rgba(132, 255, 255, 1.0)",
+    "rgba(167, 255, 235, 1.0)",
+    "rgba(185, 246, 202, 1.0)",
+    "rgba(204, 255, 144, 1.0)",
+    "rgba(244, 255, 129, 1.0)",
+    "rgba(255, 255, 141, 1.0)",
+    "rgba(255, 229, 127, 1.0)",
+    "rgba(255, 209, 128, 1.0)",
+    "rgba(255, 158, 128, 1.0)",
 ];
 
 export function getRandomColor(seed: string): string {
     return _drawFromArray(seed, colors);
 }
 
-export function getRandomLightColor(seed: string): string {
-    return _drawFromArray(seed, lightColors);
+export function getRandomLightColor(
+    seed: string,
+    darkModeEnabled: boolean = false
+): string {
+    const color = _drawFromArray(seed, lightColors);
+    return darkModeEnabled ? color.replace("1.0", "0.5") : color;
 }
 
 // *** helpers ***
