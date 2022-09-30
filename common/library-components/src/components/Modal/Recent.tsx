@@ -12,7 +12,7 @@ export default function RecentModalTab({}) {
     return (
         <div className="flex flex-col gap-4 pt-1">
             {tabInfos?.map(({ key, title, icon, articles }, index) => (
-                <div key={key} className="topic">
+                <div key={key} className="topic animate-fadein">
                     <div className="topic-header mx-0.5 flex justify-between">
                         <h2 className="title mb-2 flex items-center gap-2 font-medium">
                             {icon}
@@ -32,6 +32,7 @@ export default function RecentModalTab({}) {
                     <div
                         className="topic-articles rounded-md p-3"
                         style={{
+                            height: "11.5rem", // article height + padding to prevent size change
                             background:
                                 key !== "continue"
                                     ? getRandomLightColor(key)

@@ -101,7 +101,7 @@ export function DraggableArticleList({
     return (
         <div
             className={clsx(
-                "flex flex-wrap gap-3",
+                "animate-fadein flex flex-wrap  gap-3",
                 centerGrid ? "justify-center" : ""
             )}
         >
