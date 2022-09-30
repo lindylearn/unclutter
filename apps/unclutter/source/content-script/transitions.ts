@@ -19,6 +19,7 @@ import {
     PageModifier,
     trackModifierExecution,
 } from "./modifications/_interface";
+import KeyboardModifier from "./modifications/keyboard";
 
 @trackModifierExecution
 export default class TransitionManager implements PageModifier {
@@ -70,6 +71,7 @@ export default class TransitionManager implements PageModifier {
         this.overlayManager,
         this.libraryModifier
     );
+    private keyboardModifier = new KeyboardModifier(this.libraryModalModifier);
 
     async prepare() {
         // *** read DOM phase ***
@@ -170,6 +172,7 @@ export default class TransitionManager implements PageModifier {
         // insert iframes & render UI
         this.overlayManager.createIframes();
         this.overlayManager.renderUi();
+        this.keyboardModifier.observeShortcuts();
 
         // wait until ui fade-in done
         await new Promise((r) => setTimeout(r, 300));
@@ -231,6 +234,7 @@ export default class TransitionManager implements PageModifier {
     transitionOut() {
         // remove faded-out UI components
         this.overlayManager.removeUi();
+        this.keyboardModifier.unObserveShortcuts();
 
         // disable text container styles
         this.textContainerModifier.removeContainerStyles();

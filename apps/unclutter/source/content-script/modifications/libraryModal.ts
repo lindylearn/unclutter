@@ -27,8 +27,8 @@ export default class LibraryModalModifier implements PageModifier {
             } else if (data.event === "modalAppReady") {
                 // react app loaded, can now handle events
                 this.appLoaded = true;
-            } else if (data.event === "closeLibraryModal") {
-                this.closeModal();
+            } else if (data.event === "destroyLibraryModal") {
+                this.destroyIframe();
             }
         });
 
@@ -61,6 +61,16 @@ export default class LibraryModalModifier implements PageModifier {
         this.modalIframe.src = iframeUrl.toString();
         this.modalIframe.style.position = "fixed"; // put on new layer
         document.documentElement.appendChild(this.modalIframe);
+    }
+
+    private destroyIframe() {
+        this.modalIframe?.remove();
+        this.modalIframe = null;
+
+        this.iframeLoaded = false;
+        this.appLoaded = false;
+
+        this.bodyStyleModifier.disableScrollLock();
     }
 
     private sendModalEvent(event: object) {
@@ -106,13 +116,18 @@ export default class LibraryModalModifier implements PageModifier {
     }
 
     closeModal() {
-        this.modalIframe?.remove();
-        this.modalIframe = null;
+        // send eevent to modal to gracefully close, will then send this event back
+        this.sendModalEvent({
+            event: "closeLibraryModal",
+        });
+    }
 
-        this.iframeLoaded = false;
-        this.appLoaded = false;
-
-        this.bodyStyleModifier.disableScrollLock();
+    toggleModal() {
+        if (this.modalIframe) {
+            this.closeModal();
+        } else {
+            this.showModal();
+        }
     }
 
     private libraryState: LibraryState = null;

@@ -18,6 +18,13 @@ export default function App({
         window.addEventListener("message", ({ data }) => {
             if (data.event === "setLibraryState") {
                 setLibraryState(data.libraryState);
+            } else if (data.event === "closeLibraryModal") {
+                closeModal();
+            }
+        });
+        window.addEventListener("keydown", (e: KeyboardEvent) => {
+            if (e.key === "Tab") {
+                closeModal();
             }
         });
 
@@ -33,10 +40,10 @@ export default function App({
         setShowModal(true);
     }, []);
     function closeModal() {
-        // play out-animation before destroying iframe
         setShowModal(false);
+        // play out-animation before destroying iframe
         setTimeout(() => {
-            window.top.postMessage({ event: "closeLibraryModal" }, "*");
+            window.top.postMessage({ event: "destroyLibraryModal" }, "*");
         }, 300);
     }
 
