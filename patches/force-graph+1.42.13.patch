@@ -76,3 +76,17 @@ index c63d5d7..2820e42 100644
            };
          }
        }, {
+diff --git a/node_modules/force-graph/package.json b/node_modules/force-graph/package.json
+index 7c4e08e..840bd64 100644
+--- a/node_modules/force-graph/package.json
++++ b/node_modules/force-graph/package.json
+@@ -3,7 +3,8 @@
+   "version": "1.42.13",
+   "description": "2D force-directed graph rendered on HTML5 canvas",
+   "unpkg": "dist/force-graph.min.js",
+-  "main": "dist/force-graph.common.js",
++  "main": "dist/force-graph.module.js",
++  "type": "module",
+   "module": "dist/force-graph.module.js",
+   "types": "src/index.d.ts",
+   "sideEffects": [
