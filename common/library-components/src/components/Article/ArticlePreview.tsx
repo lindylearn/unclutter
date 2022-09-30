@@ -79,7 +79,7 @@ export function ArticlePreview({
             className={clsx(
                 "article-container relative block flex-shrink-0 cursor-pointer overflow-hidden bg-white transition-shadow dark:text-black dark:brightness-90",
                 small
-                    ? "hover:shadow-articleSmallHover shadow-articleSmall h-36 w-32 rounded-md"
+                    ? "hover:shadow-articleSmallHover shadow-articleSmall h-40 w-36 rounded-md"
                     : "hover:shadow-articleHover shadow-article h-52 w-44 rounded-lg",
                 listState === "static" && "article-static",
                 listState === "active" &&

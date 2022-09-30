@@ -114,6 +114,8 @@ function WeekDetails({
     selectedDate: Date;
     allArticles?: Article[];
 }) {
+    const [start, setStart] = useState<Date>();
+    const [end, setEnd] = useState<Date>();
     const [weekArticles, setWeekArticles] = useState<Article[]>([]);
     useEffect(() => {
         if (!allArticles) {
@@ -122,6 +124,8 @@ function WeekDetails({
 
         const start = getWeekStart(selectedDate || new Date());
         const end = new Date(start.getTime() + 7 * 24 * 60 * 60 * 1000);
+        setStart(start);
+        setEnd(end);
 
         const weekArticles = allArticles.filter(
             (a) =>
@@ -133,22 +137,16 @@ function WeekDetails({
 
     return (
         <div className="">
-            {/* <h2 className="mb-3">Sep 26 to now:</h2> */}
+            <h2 className="mb-3">
+                {start && end && (
+                    <span>
+                        {formatDate(start)} to {formatDate(end)}
+                    </span>
+                )}
+            </h2>
 
-            <div className="rounded-md bg-stone-50 p-3">
+            {/* <div className="rounded-md bg-stone-50 p-3">
                 <StaticArticleList articles={weekArticles} small />
-            </div>
-
-            {/* <div className="grid grid-cols-6 rounded-md bg-stone-50 p-3">
-                {weekArticles?.map((a) => (
-                    <>
-                        <div className="text-stone-500">{getDomain(a.url)}</div>
-                        <div className="col-span-4">{a.title}</div>
-                        <div className="text-stone-500">
-                            {a.reading_progress * 100}%
-                        </div>
-                    </>
-                ))}
             </div> */}
         </div>
     );
@@ -156,4 +154,8 @@ function WeekDetails({
 
 function getDomain(url: string): string {
     return new URL(url).hostname.replace("www.", "");
+}
+
+function formatDate(date: Date): string {
+    return date?.toDateString().split(" ").slice(1, 3).join(" ");
 }

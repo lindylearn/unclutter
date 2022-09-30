@@ -137,7 +137,8 @@ export function TabbedContainer({
 }
 
 export function useTabInfos(
-    tabCount: number = 9
+    tabCount: number = 9,
+    onlyUnread: boolean = false
 ): [TabInfo[] | undefined, number] {
     const start = new Date();
     start.setDate(start.getDate() - 30);
@@ -145,7 +146,10 @@ export function useTabInfos(
     const rep = useContext(ReplicacheContext);
     const allArticles: Article[] = useSubscribe(
         rep,
-        rep?.subscribe.listRecentArticles(start.getTime()),
+        rep?.subscribe.listRecentArticles(
+            start.getTime(),
+            onlyUnread ? "unread" : "all"
+        ),
         []
     );
     const groups = useArticleGroups(

@@ -26,7 +26,6 @@ import { reportEventPosthog } from "../../common/metrics";
 
 interface ArticleListProps {
     articles: Article[];
-    showTopics?: boolean;
     sortPosition: ArticleSortPosition;
     disableFavoriteShadow?: boolean;
     small?: boolean;
@@ -37,7 +36,6 @@ interface ArticleListProps {
 
 export function DraggableArticleList({
     articles,
-    showTopics = false,
     sortPosition,
     disableFavoriteShadow = false,
     small = false,
@@ -126,14 +124,19 @@ export function DraggableArticleList({
                             article={article}
                             listIndex={listIndex}
                             disableFavoriteShadow={disableFavoriteShadow}
+                            small={small}
                             reportEvent={reportEvent}
                         />
                     ))}
-                    {Array(Math.max(0, articlesToShow - articlesCache.length))
-                        .fill(0)
-                        .map((_, index) => (
-                            <div key={index} className="h-52 w-44" />
-                        ))}
+                    {centerGrid &&
+                        !small &&
+                        Array(
+                            Math.max(0, articlesToShow - articlesCache.length)
+                        )
+                            .fill(0)
+                            .map((_, index) => (
+                                <div key={index} className="h-52 w-44" />
+                            ))}
                 </SortableContext>
                 <DragOverlay
                     dropAnimation={{

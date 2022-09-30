@@ -32,7 +32,7 @@ export function LibraryModalPage({
         rep?.query.getArticlesCount().then(setArticleCount);
     }, [rep]);
 
-    const [currentTab, setCurrentTab] = useState("stats");
+    const [currentTab, setCurrentTab] = useState("recent");
 
     return (
         <div
@@ -138,15 +138,15 @@ function ModalContent({
     setCurrentTab: (tab: string) => void;
 }) {
     return (
-        <div className="font-text relative flex h-full gap-3 overflow-hidden px-4 pb-4 text-base">
-            <aside className="absolute h-full w-32 pt-1 pb-3">
+        <div className="font-text relative flex h-full gap-3 overflow-hidden text-base">
+            <aside className="absolute mx-4 h-full w-32 pt-1">
                 <Sidebar
                     currentTab={currentTab}
                     setCurrentTab={setCurrentTab}
                     new_link_count={new_link_count}
                 />
             </aside>
-            <div className="ml-32 max-h-full w-full overflow-auto pl-4 pt-1">
+            <div className="ml-32 max-h-full w-full overflow-auto p-4 pl-8 pt-1">
                 {currentTab === "recent" && <RecentModalTab />}
                 {currentTab === "graph" && (
                     <GraphModalTab
