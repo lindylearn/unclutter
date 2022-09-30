@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 import ActivityCalendarModule, {
     CalendarData,
     Level,
+    Theme,
 } from "react-activity-calendar";
 import { eachDayOfInterval, subYears } from "date-fns";
 
@@ -31,24 +32,7 @@ export function ActivityCalendar({
         <div className="animate-fadein my-2 mr-2 max-w-[860px] text-stone-500 dark:text-neutral-600">
             <ActivityCalendarModule
                 data={data || []}
-                theme={
-                    darkModeEnabled
-                        ? {
-                              level0: "#262626", // bg-neutral-800
-
-                              level1: "rgb(237, 215, 91, 0.1)",
-                              level2: "rgb(237, 215, 91, 0.3)",
-                              level3: "rgb(237, 215, 91, 0.6)",
-                              level4: "rgb(237, 215, 91, 1.0)",
-                          }
-                        : {
-                              level0: "#fafaf9", // bg-stone-50
-                              level1: "rgb(237, 215, 91, 0.3)",
-                              level2: "rgb(237, 215, 91, 0.5)",
-                              level3: "rgb(237, 215, 91, 0.7)",
-                              level4: "rgb(237, 215, 91, 1.0)",
-                          }
-                }
+                theme={getColorLevels(darkModeEnabled)}
                 labels={{
                     legend: { less: "Fewer articles read", more: "More" },
                 }}
@@ -97,6 +81,44 @@ export function getActivityData(articles: Article[]): CalendarData {
     return Object.entries(dateCounts).map(([date, count]) => ({
         date,
         count,
-        level: Math.min(4, count) as Level,
+        level: getLevelForValue(count),
     }));
+}
+
+export function getActivityColor(value: number, darkModeEnabled: boolean) {
+    const level = getLevelForValue(value);
+    return getColorLevels(darkModeEnabled)[`level${level}`];
+}
+
+function getLevelForValue(value: number): Level {
+    if (value === 0) {
+        return 0;
+    } else if (value <= 2) {
+        return 1;
+    } else if (value <= 4) {
+        return 2;
+    } else if (value <= 6) {
+        return 3;
+    } else {
+        return 4;
+    }
+}
+
+function getColorLevels(darkModeEnabled: boolean): Theme {
+    return darkModeEnabled
+        ? {
+              level0: "#262626", // bg-neutral-800
+
+              level1: "rgb(237, 215, 91, 0.1)",
+              level2: "rgb(237, 215, 91, 0.3)",
+              level3: "rgb(237, 215, 91, 0.6)",
+              level4: "rgb(237, 215, 91, 1.0)",
+          }
+        : {
+              level0: "#fafaf9", // bg-stone-50
+              level1: "rgb(237, 215, 91, 0.3)",
+              level2: "rgb(237, 215, 91, 0.5)",
+              level3: "rgb(237, 215, 91, 0.7)",
+              level4: "rgb(237, 215, 91, 1.0)",
+          };
 }

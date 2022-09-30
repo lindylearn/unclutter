@@ -1,7 +1,7 @@
 import React, { ReactNode, useContext, useEffect, useState } from "react";
 import { subYears } from "date-fns";
 import { Article, ReplicacheContext, Topic } from "../../store";
-import { ActivityCalendar } from "../Charts";
+import { ActivityCalendar, getActivityColor } from "../Charts";
 import { getRandomLightColor, getWeekNumber, getWeekStart } from "../../common";
 import { useArticleGroups } from "../ArticleList";
 import { TopicEmoji } from "../TopicTag";
@@ -16,7 +16,7 @@ export default function StatsModalTab({
 }) {
     const rep = useContext(ReplicacheContext);
 
-    const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+    const [selectedDate, setSelectedDate] = useState<Date>();
     const [allArticles, setAllArticles] = useState<Article[]>();
     useEffect(() => {
         if (!rep) {
@@ -30,15 +30,17 @@ export default function StatsModalTab({
             <NumberStats
                 articleCount={articleCount}
                 allArticles={allArticles}
+                darkModeEnabled={darkModeEnabled}
             />
             <ActivityCalendar
-                darkModeEnabled={darkModeEnabled}
                 articles={allArticles}
                 onSelectDate={setSelectedDate}
+                darkModeEnabled={darkModeEnabled}
             />
             <WeekDetails
                 allArticles={allArticles}
                 selectedDate={selectedDate}
+                darkModeEnabled={darkModeEnabled}
             />
         </div>
     );
@@ -47,9 +49,11 @@ export default function StatsModalTab({
 function NumberStats({
     articleCount,
     allArticles,
+    darkModeEnabled,
 }: {
     articleCount?: number;
     allArticles?: Article[];
+    darkModeEnabled: boolean;
 }) {
     // const [weekArticles, setWeekArticles] = useState<number>();
     // useEffect(() => {
@@ -113,9 +117,11 @@ function NumberStats({
 function WeekDetails({
     selectedDate,
     allArticles,
+    darkModeEnabled,
 }: {
-    selectedDate: Date;
+    selectedDate?: Date;
     allArticles?: Article[];
+    darkModeEnabled: boolean;
 }) {
     const [start, setStart] = useState<Date>();
     const [end, setEnd] = useState<Date>();
@@ -175,6 +181,7 @@ function WeekDetails({
                             allArticles?.filter((a) => a.topic_id === topic_id)
                                 .length
                         }
+                        darkModeEnabled={darkModeEnabled}
                     />
                 ))}
             </div>
@@ -190,10 +197,12 @@ function TopicStat({
     topic_id,
     selectedArticles,
     totalArticleCount,
+    darkModeEnabled,
 }: {
     topic_id: string;
     selectedArticles: Article[];
     totalArticleCount?: number;
+    darkModeEnabled: boolean;
 }) {
     const [topic, setTopic] = useState<Topic>();
     const rep = useContext(ReplicacheContext);
@@ -214,6 +223,7 @@ function TopicStat({
                 </div>
             }
             // colorOverride={getRandomLightColor(topic_id)}
+            darkModeEnabled={darkModeEnabled}
         />
     );
 }
@@ -224,12 +234,14 @@ function BigNumber({
     tag,
     colorOverride,
     icon,
+    darkModeEnabled,
 }: {
     value?: number;
     target?: number;
     tag: ReactNode;
     colorOverride?: string;
     icon?: ReactNode;
+    darkModeEnabled?: boolean;
 }) {
     return (
         <div className="relative flex cursor-pointer flex-col items-center overflow-hidden rounded-md bg-stone-50 p-3 transition-all hover:scale-[97%] dark:bg-neutral-800">
@@ -237,8 +249,12 @@ function BigNumber({
                 <div
                     className="absolute top-0 left-0 h-full w-full opacity-90"
                     style={{
-                        background: colorOverride || "rgb(237, 215, 91, 0.6)",
-                        width: `${Math.min(1, value / target) * 100}%`,
+                        // background: colorOverride || "rgb(237, 215, 91, 0.6)",
+                        // width: `${Math.min(1, value / target) * 100}%`,
+                        background: getActivityColor(
+                            value,
+                            darkModeEnabled || false
+                        ),
                     }}
                 />
             )}
