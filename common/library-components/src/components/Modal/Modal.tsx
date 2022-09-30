@@ -1,15 +1,14 @@
 import React from "react";
-import { ReplicacheContext } from "../../store";
-import { getRandomColor, getWeekStart } from "../../common";
 import clsx from "clsx";
 import { useContext, useEffect, useState } from "react";
-import RecentModalTab from "./Recent";
 
 import StatsModalTab from "./Stats";
-import ProgressSteps from "../Charts/ProgressSteps";
 import Sidebar from "./Sidebar";
-import { LindyIcon } from "../Icons";
 import GraphModalTab, { CustomGraphData } from "./Graph";
+import HeaderBar from "./HeaderBar";
+import { ReplicacheContext } from "../../store";
+import RecentModalTab from "./Recent";
+import { LindyIcon } from "../Icons";
 
 export function LibraryModalPage({
     darkModeEnabled = false,
@@ -47,11 +46,6 @@ export function LibraryModalPage({
                 onClick={closeModal}
             />
             <div className="modal-content relative z-10 mx-auto flex h-5/6 max-w-5xl flex-col overflow-hidden rounded-lg bg-white shadow dark:bg-[#212121]">
-                <ModalHeader
-                    articleCount={articleCount}
-                    currentTab={currentTab}
-                    setCurrentTab={setCurrentTab}
-                />
                 <ModalContent
                     articleCount={articleCount}
                     articleUrl={articleUrl}
@@ -62,60 +56,6 @@ export function LibraryModalPage({
                     setCurrentTab={setCurrentTab}
                 />
             </div>
-        </div>
-    );
-}
-
-function ModalHeader({
-    articleCount,
-    currentTab,
-    setCurrentTab,
-}: {
-    articleCount: number | null;
-    currentTab: string;
-    setCurrentTab: (tab: string) => void;
-}) {
-    const rep = useContext(ReplicacheContext);
-    const [weekArticleCount, setWeekArticleCount] = useState<number | null>(
-        null
-    );
-    useEffect(() => {
-        if (!rep) {
-            return;
-        }
-
-        rep.query
-            .listRecentArticles(getWeekStart().getTime())
-            .then((articles) => setWeekArticleCount(articles.length));
-    }, [rep]);
-
-    return (
-        <div className="flex w-full gap-4 rounded-t-lg py-3 px-4">
-            <div
-                className="flex w-32 cursor-pointer items-center gap-2 transition-all hover:scale-[97%]"
-                onClick={() => setCurrentTab("stats")}
-            >
-                <LindyIcon className="w-8" />
-                <span className="font-title text-2xl font-bold">Library</span>
-            </div>
-            <div className="flex-grow">
-                <input
-                    className="font-text w-full max-w-sm rounded-md bg-stone-100 px-3 py-1.5 font-medium leading-none placeholder-stone-300 outline-none dark:bg-neutral-800 dark:placeholder-neutral-600"
-                    spellCheck="false"
-                    autoFocus
-                    placeholder={`Search across ${articleCount} articles...`}
-                />
-            </div>
-
-            <ProgressSteps
-                current={weekArticleCount || 0}
-                target={6}
-                // isSelected={currentTab === "stats"}
-                onClick={() => setCurrentTab("stats")}
-            />
-            {/* <div className="h-0">
-                <ProgressCircle id="1" current={1} />
-            </div> */}
         </div>
     );
 }
@@ -139,14 +79,30 @@ function ModalContent({
 }) {
     return (
         <div className="font-text relative flex h-full gap-3 overflow-hidden text-base">
-            <aside className="absolute mx-4 h-full w-32 pt-1">
+            <aside className="left-side absolute m-4 mt-0 h-full w-32">
+                <div
+                    className="mt-4 mb-4 flex w-full cursor-pointer items-center gap-2 transition-all hover:scale-[97%]"
+                    onClick={() => setCurrentTab("stats")}
+                >
+                    <LindyIcon className="w-8" />
+                    <span className="font-title text-2xl font-bold">
+                        Library
+                    </span>
+                </div>
+
                 <Sidebar
                     currentTab={currentTab}
                     setCurrentTab={setCurrentTab}
                     new_link_count={new_link_count}
                 />
             </aside>
-            <div className="ml-32 max-h-full w-full overflow-auto p-4 pl-8 pt-1">
+            <div className="right-side ml-32 flex max-h-full w-full flex-col overflow-auto p-4 pl-8 pt-0">
+                <HeaderBar
+                    articleCount={articleCount}
+                    currentTab={currentTab}
+                    setCurrentTab={setCurrentTab}
+                />
+
                 {currentTab === "recent" && <RecentModalTab />}
                 {currentTab === "graph" && (
                     <GraphModalTab

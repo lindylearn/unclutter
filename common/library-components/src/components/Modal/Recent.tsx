@@ -10,7 +10,7 @@ export default function RecentModalTab({}) {
     const [tabInfos, allArticlesCount] = useTabInfos(10, true);
 
     return (
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 pt-1">
             {tabInfos?.map(({ key, title, icon, articles }, index) => (
                 <div key={key}>
                     <h2 className="mb-2 ml-0.5 flex items-center gap-2 font-medium">

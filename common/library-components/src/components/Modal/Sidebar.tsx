@@ -1,5 +1,6 @@
 import React from "react";
 import clsx from "clsx";
+import { LindyIcon } from "../Icons";
 
 export default function Sidebar({
     currentTab,
