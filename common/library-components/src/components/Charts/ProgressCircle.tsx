@@ -6,8 +6,7 @@ export function ProgressCircle({
     target = 6,
     showCelebration = false,
 }) {
-    let strokeDashoffset: number;
-    $: strokeDashoffset =
+    let strokeDashoffset =
         288.5 - 288.5 * Math.min(1.0, (current || 0) / target);
 
     return (
@@ -16,6 +15,8 @@ export function ProgressCircle({
                 <defs>
                     <mask id={`mask_${id}`}>
                         <path
+                            stroke="white"
+                            strokeWidth={12}
                             className="logoPath"
                             id="logo-path"
                             style={{

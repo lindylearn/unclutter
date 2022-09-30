@@ -30,8 +30,6 @@
 }
 
 .logoPath {
-    stroke: white;
-    stroke-width: 12;
     stroke-linecap: round;
     fill: none;
     transform-origin: 50px 50px;

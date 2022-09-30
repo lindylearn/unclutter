@@ -98,7 +98,7 @@ function ModalContent({
                     />
                 </div>
             </aside>
-            <div className="right-side flex max-h-full w-full flex-col overflow-auto p-4 pl-0">
+            <div className="right-side flex max-h-full w-full flex-col overflow-auto p-4">
                 <HeaderBar
                     articleCount={articleCount}
                     currentTab={currentTab}
