@@ -33,20 +33,13 @@ export default function RecentModalTab({}) {
                         className="topic-articles rounded-md p-3"
                         style={{
                             height: "11.5rem", // article height + padding to prevent size change
-                            background:
-                                key !== "continue"
-                                    ? getRandomLightColor(key)
-                                    : "hsl(51, 80%, 64%)",
+                            background: getRandomLightColor(key),
                         }}
                     >
                         <DraggableArticleList
                             articles={articles}
                             articlesToShow={5}
-                            sortPosition={
-                                index === 0
-                                    ? "recency_sort_position"
-                                    : "topic_sort_position"
-                            }
+                            sortPosition="topic_sort_position"
                             small
                             // reportEvent={reportEvent}
                         />

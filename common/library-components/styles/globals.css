@@ -83,3 +83,7 @@ body {
 .render-done > .force-graph-container {
     opacity: 1;
 }
+
+/* .topic-stat:not(:hover) {
+    background: rgb(250 250 249) !important;
+} */

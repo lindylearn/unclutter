@@ -28,7 +28,7 @@ export function ActivityCalendar({
     }
 
     return (
-        <div className="animate-fadein mx-auto max-w-[860px] pr-2 text-gray-500 dark:text-neutral-600">
+        <div className="animate-fadein mx-auto max-w-[860px] py-3 text-gray-500 dark:text-neutral-600">
             <ActivityCalendarModule
                 data={data || []}
                 theme={

@@ -31,7 +31,7 @@ export function LibraryModalPage({
         rep?.query.getArticlesCount().then(setArticleCount);
     }, [rep]);
 
-    const [currentTab, setCurrentTab] = useState("recent");
+    const [currentTab, setCurrentTab] = useState("stats");
 
     return (
         <div
