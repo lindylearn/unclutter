@@ -55,7 +55,7 @@ export default function App() {
 }
 
 function ArticleSection({}) {
-    const [tabInfos, allArticlesCount] = useTabInfos(7);
+    const [tabInfos, allArticlesCount] = useTabInfos(7 - 1); // leave space for 'hide' button
 
     const settings = useSettings(settingsStore);
     const [initialIndex, setInitialIndex] = useState<number | null>();

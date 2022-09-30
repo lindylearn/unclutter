@@ -10,11 +10,6 @@ export default function Sidebar({
     setCurrentTab: (tab: string) => void;
     new_link_count?: number;
 }) {
-    // const rep = useContext(ReplicacheContext);
-    // const start = new Date();
-    // start.setDate(start.getDate() - 30);
-    // const [tabInfos, allArticlesCount] = useTabInfos(7);
-
     const modalTabs = getModalTabOptions(new_link_count);
 
     return (

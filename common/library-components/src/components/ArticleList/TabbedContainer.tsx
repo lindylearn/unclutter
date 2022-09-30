@@ -63,12 +63,12 @@ export function TabbedContainer({
                             index !== activeIndex &&
                                 index === 0 &&
                                 "dark:opacity-50",
-                            index === 0 &&
+                            key === "continue" &&
                                 "bg-lindy dark:bg-lindyDark dark:text-black"
                         )}
                         style={{
                             background:
-                                index > 0
+                                key !== "continue"
                                     ? getRandomColor(key).replace(
                                           "0.4)",
                                           index === activeIndex
@@ -141,7 +141,7 @@ export function useTabInfos(
     onlyUnread: boolean = false
 ): [TabInfo[] | undefined, number] {
     const start = new Date();
-    start.setDate(start.getDate() - 30);
+    start.setDate(start.getDate() - 60);
 
     const rep = useContext(ReplicacheContext);
     const allArticles: Article[] = useSubscribe(
@@ -155,9 +155,9 @@ export function useTabInfos(
     const groups = useArticleGroups(
         allArticles,
         true,
-        "recency",
+        "recency_position", // TODO: fix reordering after enabling subscribe()
         "recency_order",
-        tabCount - 2
+        tabCount
     );
 
     const [tabInfos, setTabInfos] = useState<TabInfo[]>();
@@ -171,12 +171,12 @@ export function useTabInfos(
                 (a) => a.reading_progress < readingProgressFullClamp
             );
             const staticTabInfos: TabInfo[] = [
-                {
-                    key: "unread",
-                    title: "Continue reading",
-                    icon: <LindyIcon className="-mr-0.5 w-6" />,
-                    articles: unreadArticles,
-                },
+                // {
+                //     key: "continue",
+                //     title: onlyUnread ? "Last saved" : "Continue reading",
+                //     icon: <LindyIcon className="-mr-0.5 w-6" />,
+                //     articles: unreadArticles,
+                // },
                 // {
                 //     key: "favorite",
                 //     title: "Favorites",
@@ -196,7 +196,7 @@ export function useTabInfos(
             ];
             const groupTabInfos: TabInfo[] = await Promise.all(
                 groups
-                    .slice(0, tabCount - 2)
+                    .slice(0, tabCount - staticTabInfos.length)
                     .map(async ([topic_id, articles]) => {
                         const topic = await rep?.query.getTopic(topic_id);
 
