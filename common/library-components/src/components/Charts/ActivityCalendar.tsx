@@ -28,7 +28,7 @@ export function ActivityCalendar({
     }
 
     return (
-        <div className="animate-fadein mx-auto max-w-[860px] py-3 text-gray-500 dark:text-neutral-600">
+        <div className="animate-fadein mx-auto max-w-[860px] text-stone-500 dark:text-neutral-600">
             <ActivityCalendarModule
                 data={data || []}
                 theme={
@@ -84,11 +84,15 @@ export function getActivityData(articles: Article[]): CalendarData {
             dateCounts[dateStr] = 0;
         });
 
-    articles.forEach((a) => {
-        const date = new Date(a.time_added * 1000).toISOString().split("T")[0];
+    articles
+        .filter((a) => a.time_added * 1000 >= since.getTime())
+        .forEach((a) => {
+            const date = new Date(a.time_added * 1000)
+                .toISOString()
+                .split("T")[0];
 
-        dateCounts[date] += 1;
-    });
+            dateCounts[date] += 1;
+        });
 
     return Object.entries(dateCounts).map(([date, count]) => ({
         date,

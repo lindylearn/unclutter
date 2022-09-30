@@ -10,15 +10,12 @@ export default function StatsModalTab({ articleCount, darkModeEnabled }) {
     const rep = useContext(ReplicacheContext);
 
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-
     const [allArticles, setAllArticles] = useState<Article[]>();
     useEffect(() => {
         if (!rep) {
             return;
         }
-        rep.query
-            .listRecentArticles(subYears(new Date(), 1).getTime())
-            .then(setAllArticles);
+        rep.query.listRecentArticles().then(setAllArticles);
     }, [rep]);
 
     return (
@@ -47,32 +44,39 @@ function NumberStats({
     articleCount: number;
     allArticles?: Article[];
 }) {
-    const [weekArticles, setWeekArticles] = useState<number>();
+    // const [weekArticles, setWeekArticles] = useState<number>();
+    // useEffect(() => {
+    //     if (!allArticles) {
+    //         return;
+    //     }
+
+    //     const currentWeek = getWeekNumber(new Date());
+
+    //     let weekArticles = 0;
+    //     allArticles?.map((a) => {
+    //         const date = new Date(a.time_added * 1000);
+
+    //         if (getWeekNumber(date) === currentWeek) {
+    //             weekArticles += 1;
+    //         }
+    //     });
+
+    //     setWeekArticles(weekArticles);
+    // }, [allArticles]);
+
+    const rep = useContext(ReplicacheContext);
+    const [topicsCount, setTopicsCount] = useState<number>();
     useEffect(() => {
-        if (!allArticles) {
-            return;
-        }
-
-        const currentWeek = getWeekNumber(new Date());
-
-        let weekArticles = 0;
-        allArticles?.map((a) => {
-            const date = new Date(a.time_added * 1000);
-
-            if (getWeekNumber(date) === currentWeek) {
-                weekArticles += 1;
-            }
-        });
-
-        setWeekArticles(weekArticles);
-    }, [allArticles]);
+        rep?.query.listTopics().then((topics) => setTopicsCount(topics.length));
+    }, [rep]);
 
     return (
-        <div className="flex gap-3">
+        <div className="grid grid-cols-5 gap-3">
             <BigNumber value={articleCount} tag="saved articles" />
+            <BigNumber value={topicsCount} tag="article topics" />
             <BigNumber value={0} tag="highlights" />
-            <BigNumber value={weekArticles} target={7} tag="read this week" />
-            <BigNumber value={0} target={7} tag="highlighted this week" />
+            {/* <BigNumber value={weekArticles} target={7} tag="read this week" />
+            <BigNumber value={0} target={7} tag="highlighted this week" /> */}
         </div>
     );
 }
@@ -92,9 +96,9 @@ function BigNumber({
         <div className="relative flex cursor-pointer flex-col items-center overflow-hidden rounded-md bg-stone-50 p-3 transition-all hover:scale-[97%] dark:bg-neutral-800">
             {value !== undefined && target !== undefined && (
                 <div
-                    className="bg-lindy dark:bg-lindyDark absolute top-0 left-0 h-full w-full opacity-90"
+                    className="absolute top-0 left-0 h-full w-full opacity-90"
                     style={{
-                        background: colorOverride,
+                        background: colorOverride || "rgb(237, 215, 91, 0.6)",
                         width: `${Math.min(1, value / target) * 100}%`,
                     }}
                 />
@@ -102,13 +106,10 @@ function BigNumber({
             <div className="font-title z-10 h-[2rem] text-2xl font-bold">
                 <span className="">{value}</span>
                 {target && (
-                    <span className="light:text-gray-400 text-base">
-                        {" "}
-                        / {target}
-                    </span>
+                    <span className="text-base opacity-20"> / {target}</span>
                 )}
             </div>
-            <div className="z-10">{tag}</div>
+            <div className="z-10 max-w-full overflow-hidden">{tag}</div>
         </div>
     );
 }
@@ -210,12 +211,14 @@ function TopicStat({
             value={selectedArticles.length}
             target={totalArticleCount}
             tag={
-                <div className="z-10 flex items-center">
+                <div className="flex items-center overflow-hidden">
                     <TopicEmoji emoji={topic?.emoji!} className="w-4" />
-                    <span>{topic?.name}</span>
+                    <div className="overflow-hidden overflow-ellipsis whitespace-nowrap">
+                        {topic?.name}
+                    </div>
                 </div>
             }
-            colorOverride={getRandomLightColor(topic_id)}
+            // colorOverride={getRandomLightColor(topic_id)}
         />
     );
 }

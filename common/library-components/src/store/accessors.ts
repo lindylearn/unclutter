@@ -334,6 +334,7 @@ export const accessors = {
     listTopicArticlesServer,
     getTopicArticlesCount,
     getTopic,
+    listTopics,
     getTopicIdMap,
     groupTopics,
     getGroupTopicChildren,
