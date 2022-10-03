@@ -32,9 +32,10 @@ export function renderNodeObject(darkModeEnabled: boolean, NODE_R: number) {
             const dimensions = ctx.measureText("5");
 
             // const svgSize = 4;
+            // const middleOffset = svgSize / 2 - 0.25;
             // ctx.drawImage(
             //     highlightsIcon,
-            //     node.x - svgSize / 2,
+            //     node.x - svgSize / 2 - middleOffset,
             //     node.y - svgSize / 2,
             //     svgSize,
             //     svgSize
@@ -51,13 +52,14 @@ export function renderNodeObject(darkModeEnabled: boolean, NODE_R: number) {
 
         // description
         if (
-            node.depth <= 1 &&
-            globalScale >= 2
+            (node.depth <= 1 && globalScale >= 2) ||
+            (node.reading_progress >= readingProgressFullClamp &&
+                globalScale >= 2)
             // (node.depth <= 2 && globalScale >= 3) ||
             // globalScale >= 5
         ) {
             // title label
-            if (!node.title) {
+            if (node.depth === 0 || !node.title) {
                 return;
             }
 

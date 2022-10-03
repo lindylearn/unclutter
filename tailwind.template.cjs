@@ -32,6 +32,10 @@ module.exports = {
                     "0%": { opacity: "0" },
                     "100%": { opacity: "1" },
                 },
+                bouncein: {
+                    "0%": { opacity: "0", transform: "scale(0.8)" },
+                    "100%": { opacity: "1", transform: "scale(1.0)" },
+                },
             },
             animation: {
                 wiggle: "wiggle 0.5s ease-in-out",
@@ -39,6 +43,7 @@ module.exports = {
                 slideinSlightly:
                     "slideinSlightly 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
                 fadein: "fadein 0.2s ease-out",
+                bouncein: "bouncein 0.2s cubic-bezier(0.34, 1.56, 0.64, 1)",
             },
             boxShadow: {
                 article:

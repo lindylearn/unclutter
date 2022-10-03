@@ -174,7 +174,7 @@ function renderGraph(
             if (!initialZoomDone) {
                 forceGraph.zoomToFit(
                     0,
-                    50,
+                    100,
                     (node: RuntimeNode) => node.depth <= 1
                 );
                 forceGraph.cooldownTicks(Infinity);

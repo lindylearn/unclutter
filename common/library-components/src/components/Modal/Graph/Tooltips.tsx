@@ -4,6 +4,7 @@ import { ForceGraphInstance } from "force-graph";
 import { getDomain, openArticle } from "../../../common";
 import { ResourceStat } from "../Stats";
 import { CustomGraphNode } from "./data";
+import { readingProgressFullClamp } from "../../../store";
 
 export function NodeTooltip({
     x,
@@ -11,25 +12,46 @@ export function NodeTooltip({
     title,
     url,
     reading_progress,
+    word_count,
     forceGraph,
 }: CustomGraphNode & { forceGraph: ForceGraphInstance }) {
     const coords = forceGraph.graph2ScreenCoords(x!, y!);
 
+    let readingProgress = reading_progress;
+    if (readingProgress > readingProgressFullClamp) {
+        readingProgress = 1;
+    }
+
+    const domain = getDomain(url);
+
     return (
         <div
-            className="node-tooltip absolute w-60 cursor-pointer overflow-hidden rounded-md bg-white px-3 py-2 text-sm shadow transition-transform hover:scale-[98%]"
+            className="node-tooltip animate-bouncein absolute w-60 cursor-pointer overflow-hidden rounded-md bg-white px-3 py-2 text-sm shadow transition-transform hover:scale-[98%]"
             style={{ left: coords.x - 240 / 2, top: coords.y + 10 }}
             onClick={() => openArticle(url)}
         >
-            <div className="font-title my-0.5 font-bold">{title}</div>
-            <div className="flex justify-between text-stone-500">
-                <div>{getDomain(url)}</div>
-                <ResourceStat type="highlights" value={2} />
+            <div className="font-title font-bold">{title}</div>
+            <div className="mt-0.5 mb-1 flex justify-between">
+                <div className="text-stone-500">{domain}</div>
+                {readingProgress !== 1 &&
+                    word_count >= 200 &&
+                    domain.length < 20 && (
+                        <div className="text-stone-500">
+                            {Math.round(
+                                (word_count / 200) * (1 - readingProgress)
+                            )}{" "}
+                            min left
+                        </div>
+                    )}
+
+                {readingProgress === 1 && (
+                    <ResourceStat type="highlights" value={2} />
+                )}
             </div>
 
             <div
                 className="progress bg-lindy dark:bg-lindyDark absolute bottom-0 left-0 h-[7px] w-full rounded-r transition-all"
-                style={{ width: `${reading_progress * 100}%` }}
+                style={{ width: `${Math.max(reading_progress, 0.05) * 100}%` }}
             />
         </div>
     );
