@@ -4,22 +4,23 @@
     import { cubicOut } from "svelte/easing";
     import twemojiSvelte from "../components/twemoji-svelte";
     import clsx from "clsx";
+    import { getRandomLightColor } from "@unclutter/library-components/dist/common/styling";
 
     import { reportEventContentScript } from "source/content-script/messaging";
     import { LibraryState } from "../../../common/schema";
     import { getRelativeTime } from "../../../common/time";
-    import { getRandomColor } from "../../../common/annotations/styling";
     import { updateLibraryArticle } from "../../../common/api";
     import LindyIcon from "./LindyIcon.svelte";
-    // import LibraryDropdown from "./LibraryDropdown.svelte";
-    // import LoadingAnimation from "./LoadingAnimation.svelte";
+    import LibraryModalModifier from "../../../content-script/modifications/libraryModal";
+    import ResourceStat from "./ResourceStat.svelte";
 
     export let libraryState: LibraryState;
+    export let libraryModalModifier: LibraryModalModifier;
 
     // local UI state
     let topicColor: string = null;
     $: topicColor = libraryState.libraryInfo?.topic?.group_id
-        ? getRandomColor(libraryState.libraryInfo?.topic?.group_id)
+        ? getRandomLightColor(libraryState.libraryInfo?.topic?.group_id)
         : "";
 
     let isFavorite: boolean = null;
@@ -51,108 +52,64 @@
     }
 </script>
 
-<div class="library-message relative max-w-full rounded-lg shadow">
+<div
+    class="library-message relative max-w-full cursor-pointer rounded-lg text-gray-800 shadow transition-transform hover:scale-[98%]"
+    on:click={() => libraryModalModifier.showModal()}
+>
     <div
-        class="flex items-center gap-2 rounded-lg p-2"
+        class="flex justify-between gap-3 rounded-lg p-3"
         style={`background-color: ${topicColor}`}
     >
         <div
-            class="w-8 flex-shrink-0 cursor-pointer transition-transform hover:scale-95"
-            on:click={() => openLibrary()}
+            class="main-content whitespace-nowrap text-sm"
+            in:fly={{ y: 10, duration: 300, easing: cubicOut }}
         >
-            <LindyIcon />
+            <div class="top-row flex">
+                {#if libraryState?.libraryInfo?.topic}
+                    <div
+                        class="font-title relative inline-block flex-shrink overflow-ellipsis text-base font-semibold"
+                        on:click={() => openLibrary(true)}
+                    >
+                        <div
+                            class="absolute left-0 top-0 z-0 h-full w-full dark:brightness-50"
+                        />
+                        <div class="relative z-10 leading-none">
+                            <span
+                                class="inline-block h-[1em] w-5 align-baseline drop-shadow-sm"
+                                use:twemojiSvelte
+                            >
+                                {libraryState.libraryInfo.topic.emoji}
+                            </span>
+                            {libraryState.libraryInfo.topic.name}
+                        </div>
+                    </div>
+                {/if}
+            </div>
+
+            <div class="bottom-row mt-1">
+                <svg
+                    class="mr-0.5 inline-block w-4 align-middle"
+                    viewBox="0 0 640 512"
+                    ><path
+                        fill="currentColor"
+                        d="M288 64C288 80.85 281.5 96.18 270.8 107.6L297.7 165.2C309.9 161.8 322.7 160 336 160C374.1 160 410.4 175.5 436.3 200.7L513.9 143.7C512.7 138.7 512 133.4 512 128C512 92.65 540.7 64 576 64C611.3 64 640 92.65 640 128C640 163.3 611.3 192 576 192C563.7 192 552.1 188.5 542.3 182.4L464.7 239.4C474.5 258.8 480 280.8 480 304C480 322.5 476.5 340.2 470.1 356.5L537.5 396.9C548.2 388.8 561.5 384 576 384C611.3 384 640 412.7 640 448C640 483.3 611.3 512 576 512C540.7 512 512 483.3 512 448C512 444.6 512.3 441.3 512.8 438.1L445.4 397.6C418.1 428.5 379.8 448 336 448C264.6 448 205.4 396.1 193.1 328H123.3C113.9 351.5 90.86 368 64 368C28.65 368 0 339.3 0 304C0 268.7 28.65 240 64 240C90.86 240 113.9 256.5 123.3 280H193.1C200.6 240.9 222.9 207.1 254.2 185.5L227.3 127.9C226.2 127.1 225.1 128 224 128C188.7 128 160 99.35 160 64C160 28.65 188.7 0 224 0C259.3 0 288 28.65 288 64V64zM336 400C389 400 432 357 432 304C432 250.1 389 208 336 208C282.1 208 240 250.1 240 304C240 357 282.1 400 336 400z"
+                    /></svg
+                >
+                3+ related articles
+            </div>
         </div>
 
-        <div class="h-10 flex-shrink flex-grow overflow-hidden text-sm">
-            {#if libraryState.libraryInfo}
-                <div
-                    class="mr-6 overflow-hidden whitespace-nowrap"
-                    in:fly={{ y: 10, duration: 300, easing: cubicOut }}
-                >
-                    <div class="flex">
-                        {#if libraryState.libraryInfo.topic}
-                            <span>Saved in</span>
-                            <div
-                                class="font-title relative ml-1 inline-block flex-shrink cursor-pointer overflow-hidden overflow-ellipsis rounded-lg px-1 align-middle text-sm font-semibold shadow-sm transition-all hover:scale-95 hover:shadow"
-                                on:click={() => openLibrary(true)}
-                            >
-                                <div
-                                    class="absolute left-0 top-0 z-0 h-full w-full dark:brightness-50"
-                                    style={`background-color: ${topicColor}`}
-                                />
-                                <div class="relative z-10">
-                                    <span
-                                        class="inline-block w-5 align-top drop-shadow-sm"
-                                        use:twemojiSvelte
-                                    >
-                                        {libraryState.libraryInfo.topic.emoji}
-                                    </span>
-                                    {libraryState.libraryInfo.topic.name}
-                                </div>
-                            </div>
-                        {:else}
-                            <span>Saved in your Library.</span>
-                        {/if}
-                    </div>
-
-                    {#if libraryState.wasAlreadyPresent && libraryState.libraryInfo.article.time_added}
-                        Added {getRelativeTime(
-                            libraryState.libraryInfo.article.time_added * 1000
-                        )}.
-                    {:else if libraryState.libraryInfo.new_links?.length}
-                        <span in:fade
-                            >Found {libraryState.libraryInfo.new_links.length} related
-                            article{libraryState.libraryInfo.new_links.length
-                                ? "s"
-                                : ""}.</span
-                        >
-                    {/if}
-                </div>
-
-                <!-- <LibraryDropdown /> -->
-                <div
-                    class={"star-icon absolute top-2 right-2 drop-shadow-sm cursor-pointer"}
-                    on:click={toggleFavorite}
-                >
-                    <svg
-                        viewBox="0 0 576 512"
-                        class={clsx(
-                            "absolute top-0 right-0 w-[18px] transition-all hover:scale-95",
-                            isFavorite ? "opacity-1" : "opacity-0"
-                        )}
-                    >
-                        <path
-                            fill="currentColor"
-                            d="M381.2 150.3L524.9 171.5C536.8 173.2 546.8 181.6 550.6 193.1C554.4 204.7 551.3 217.3 542.7 225.9L438.5 328.1L463.1 474.7C465.1 486.7 460.2 498.9 450.2 506C440.3 513.1 427.2 514 416.5 508.3L288.1 439.8L159.8 508.3C149 514 135.9 513.1 126 506C116.1 498.9 111.1 486.7 113.2 474.7L137.8 328.1L33.58 225.9C24.97 217.3 21.91 204.7 25.69 193.1C29.46 181.6 39.43 173.2 51.42 171.5L195 150.3L259.4 17.97C264.7 6.954 275.9-.0391 288.1-.0391C300.4-.0391 311.6 6.954 316.9 17.97L381.2 150.3z"
-                        />
-                    </svg>
-                    <svg
-                        viewBox="0 0 576 512"
-                        class={clsx(
-                            "absolute top-0 right-0 w-[18px] transition-all hover:scale-95",
-                            !isFavorite ? "opacity-1" : "opacity-0"
-                        )}
-                    >
-                        <path
-                            fill="currentColor"
-                            d="M287.9 0C297.1 0 305.5 5.25 309.5 13.52L378.1 154.8L531.4 177.5C540.4 178.8 547.8 185.1 550.7 193.7C553.5 202.4 551.2 211.9 544.8 218.2L433.6 328.4L459.9 483.9C461.4 492.9 457.7 502.1 450.2 507.4C442.8 512.7 432.1 513.4 424.9 509.1L287.9 435.9L150.1 509.1C142.9 513.4 133.1 512.7 125.6 507.4C118.2 502.1 114.5 492.9 115.1 483.9L142.2 328.4L31.11 218.2C24.65 211.9 22.36 202.4 25.2 193.7C28.03 185.1 35.5 178.8 44.49 177.5L197.7 154.8L266.3 13.52C270.4 5.249 278.7 0 287.9 0L287.9 0zM287.9 78.95L235.4 187.2C231.9 194.3 225.1 199.3 217.3 200.5L98.98 217.9L184.9 303C190.4 308.5 192.9 316.4 191.6 324.1L171.4 443.7L276.6 387.5C283.7 383.7 292.2 383.7 299.2 387.5L404.4 443.7L384.2 324.1C382.9 316.4 385.5 308.5 391 303L476.9 217.9L358.6 200.5C350.7 199.3 343.9 194.3 340.5 187.2L287.9 78.95z"
-                        />
-                    </svg>
-                </div>
-            {:else if libraryState.error}
-                Error adding article :(
-            {:else if libraryState.isClustering}
-                <div
-                    class="flex h-full flex-grow justify-between"
-                    in:fly={{ y: 10, duration: 300, easing: cubicOut }}
-                >
-                    <div>Adding to your library...</div>
-                    <!-- <LoadingAnimation class="self-center" /> -->
-                </div>
-            {/if}
+        <div class="absolute top-3 right-3 flex items-start gap-2">
+            <ResourceStat type="articles" value={3} />
+            <ResourceStat type="highlights" value={0} />
         </div>
     </div>
 </div>
 
-<style lang="postcss" global>
+<style lang="postcss">
+    .library-message {
+        /* background transition overrides transform otherwise */
+        transition: background 0.3s ease-in-out 0.1s,
+            transform 150ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+    }
 </style>

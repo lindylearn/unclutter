@@ -71,15 +71,7 @@
 
 <div id="lindy-info-topleft-content" class="font-text flex flex-col gap-2">
     {#if libraryState?.libraryUser && showArticleGraph !== null}
-        {#if showArticleGraph}
-            <ArticleGraph
-                {libraryState}
-                {darkModeEnabled}
-                {libraryModalModifier}
-            />
-        {:else}
-            <LibraryMessage {libraryState} />
-        {/if}
+        <LibraryMessage {libraryState} {libraryModalModifier} />
     {/if}
 
     <Outline
