@@ -53,9 +53,10 @@ export default function App({
             <LibraryModalPage
                 darkModeEnabled={darkModeEnabled === "true"} // convert string to bool
                 new_link_count={libraryState?.libraryInfo?.new_links?.length}
-                articleUrl={
+                currentArticle={
                     libraryState?.libraryInfo?.article.url || articleUrl
                 }
+                currentTopic={libraryState?.libraryInfo?.topic?.id}
                 graph={libraryState?.graph}
                 isVisible={showModal}
                 closeModal={closeModal}

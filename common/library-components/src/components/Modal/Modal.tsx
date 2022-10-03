@@ -12,14 +12,16 @@ import { LindyIcon } from "../Icons";
 
 export function LibraryModalPage({
     darkModeEnabled = false,
-    articleUrl,
+    currentArticle,
+    currentTopic,
     graph,
     new_link_count,
     isVisible = true,
     closeModal = () => {},
 }: {
     darkModeEnabled?: boolean;
-    articleUrl?: string;
+    currentArticle?: string;
+    currentTopic?: string;
     graph?: CustomGraphData;
     new_link_count?: number;
     isVisible?: boolean;
@@ -31,7 +33,7 @@ export function LibraryModalPage({
         rep?.query.getArticlesCount().then(setArticleCount);
     }, [rep]);
 
-    const [currentTab, setCurrentTab] = useState("stats");
+    const [currentTab, setCurrentTab] = useState("graph");
 
     return (
         <div
@@ -48,7 +50,8 @@ export function LibraryModalPage({
             <div className="modal-content relative z-10 mx-auto flex h-5/6 max-w-5xl flex-col overflow-hidden rounded-lg bg-white shadow dark:bg-[#212121]">
                 <ModalContent
                     articleCount={articleCount}
-                    articleUrl={articleUrl}
+                    currentArticle={currentArticle}
+                    currentTopic={currentTopic}
                     darkModeEnabled={darkModeEnabled}
                     graph={graph}
                     new_link_count={new_link_count}
@@ -61,7 +64,8 @@ export function LibraryModalPage({
 }
 
 function ModalContent({
-    articleUrl,
+    currentArticle,
+    currentTopic,
     articleCount,
     darkModeEnabled,
     graph,
@@ -69,7 +73,8 @@ function ModalContent({
     currentTab,
     setCurrentTab,
 }: {
-    articleUrl?: string;
+    currentArticle?: string;
+    currentTopic?: string;
     articleCount?: number;
     darkModeEnabled: boolean;
     graph?: CustomGraphData;
@@ -98,7 +103,14 @@ function ModalContent({
                     />
                 </div>
             </aside>
-            <div className="right-side flex max-h-full w-full flex-col overflow-y-scroll p-4">
+            <div
+                className={clsx(
+                    "right-side flex max-h-full w-full flex-col p-4",
+                    currentTab === "stats"
+                        ? "overflow-y-scroll"
+                        : "overflow-y-auto"
+                )}
+            >
                 <HeaderBar
                     articleCount={articleCount}
                     currentTab={currentTab}
@@ -106,7 +118,10 @@ function ModalContent({
                 />
 
                 {currentTab === "recent" && (
-                    <RecentModalTab darkModeEnabled={darkModeEnabled} />
+                    <RecentModalTab
+                        currentTopic={currentTopic}
+                        darkModeEnabled={darkModeEnabled}
+                    />
                 )}
                 {currentTab === "graph" && (
                     <GraphModalTab

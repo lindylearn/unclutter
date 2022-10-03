@@ -16,11 +16,15 @@
 
     export let libraryState: LibraryState;
     export let libraryModalModifier: LibraryModalModifier;
+    export let darkModeEnabled: boolean;
 
     // local UI state
     let topicColor: string = null;
-    $: topicColor = libraryState.libraryInfo?.topic?.group_id
-        ? getRandomLightColor(libraryState.libraryInfo?.topic?.group_id)
+    $: topicColor = libraryState.libraryInfo?.topic?.id
+        ? getRandomLightColor(
+              libraryState.libraryInfo.topic.id,
+              darkModeEnabled
+          )
         : "";
 
     let isFavorite: boolean = null;
@@ -73,14 +77,16 @@
                         <div
                             class="absolute left-0 top-0 z-0 h-full w-full dark:brightness-50"
                         />
-                        <div class="relative z-10 leading-none">
-                            <span
-                                class="inline-block h-[1em] w-5 align-baseline drop-shadow-sm"
-                                use:twemojiSvelte
-                            >
-                                {libraryState.libraryInfo.topic.emoji}
-                            </span>
-                            {libraryState.libraryInfo.topic.name}
+                        <div class="relative z-10 flex gap-1 leading-none">
+                            <div class="flex h-[1em] items-end">
+                                <div
+                                    class="w-5 drop-shadow-sm"
+                                    use:twemojiSvelte
+                                >
+                                    {libraryState.libraryInfo.topic.emoji}
+                                </div>
+                            </div>
+                            <div>{libraryState.libraryInfo.topic.name}</div>
                         </div>
                     </div>
                 {/if}
@@ -110,6 +116,6 @@
     .library-message {
         /* background transition overrides transform otherwise */
         transition: background 0.3s ease-in-out 0.1s,
-            transform 150ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+            transform 150ms cubic-bezier(0.34, 1.56, 0.64, 1) !important;
     }
 </style>

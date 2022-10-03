@@ -8,8 +8,16 @@ import { getRandomColor, getRandomLightColor } from "../../common";
 import { Article, ReplicacheContext } from "../../store";
 import { ResourceStat } from "./Stats";
 
-export default function RecentModalTab({ darkModeEnabled }) {
+export default function RecentModalTab({
+    currentTopic,
+    darkModeEnabled,
+}: {
+    currentTopic?: string;
+    darkModeEnabled: boolean;
+}) {
     const [tabInfos, unreadArticlesCount] = useTabInfos(10, true);
+
+    // TODO ensure currentTopic is present and first in list
 
     return (
         <div className="flex flex-col gap-4 pt-1">

@@ -144,14 +144,13 @@ export function useTabInfos(
     start.setDate(start.getDate() - 60);
 
     const rep = useContext(ReplicacheContext);
-    const allArticles: Article[] = useSubscribe(
-        rep,
-        rep?.subscribe.listRecentArticles(
-            start.getTime(),
-            onlyUnread ? "unread" : "all"
-        ),
-        []
-    );
+    const [allArticles, setAllArticles] = useState<Article[]>([]);
+    useEffect(() => {
+        rep?.query
+            .listRecentArticles(start.getTime(), onlyUnread ? "unread" : "all")
+            .then(setAllArticles);
+    }, []);
+
     const groups = useArticleGroups(
         allArticles,
         true,
