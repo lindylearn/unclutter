@@ -16,12 +16,14 @@ export function ArticleActivityCalendar({
     onSelectDate,
     start,
     setStart,
+    defaultWeekOverlay,
 }: {
     darkModeEnabled: boolean;
     articles?: Article[];
     onSelectDate: (date: Date) => void;
     start: Date;
     setStart: (date: Date) => void;
+    defaultWeekOverlay: number;
 }) {
     const data = useMemo(() => {
         if (!articles) {
@@ -32,7 +34,7 @@ export function ArticleActivityCalendar({
 
     function onChangeWeekOffset(offset: number) {
         const end = getWeekStart(new Date());
-        const start = subtractWeeks(end, -offset);
+        const start = subtractWeeks(end, -offset - 1);
         setStart(start);
     }
 
@@ -44,7 +46,7 @@ export function ArticleActivityCalendar({
         <div className="animate-fadein my-2 mr-2 max-w-[860px]">
             <ActivityCalendar
                 data={data || []}
-                startWeekOffset={-2}
+                startWeekOffset={-defaultWeekOverlay - 1}
                 onChangeWeekOffset={onChangeWeekOffset}
                 theme={getColorLevels(darkModeEnabled)}
                 overlayColor={

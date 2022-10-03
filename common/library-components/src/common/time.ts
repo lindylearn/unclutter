@@ -19,13 +19,15 @@ export function getWeekNumber(date: Date): number {
 
 export function getWeekStart(start: Date = new Date()): Date {
     const diff =
-        start.getDate() - start.getDay() + (start.getDay() === 0 ? -6 : 1);
+        start.getDate() - start.getDay() + (start.getDay() === 0 ? -7 : 0);
     start.setDate(diff);
+    start.setHours(0);
+    start.setMinutes(0);
+    start.setSeconds(0);
+    start.setMilliseconds(0);
     return start;
 }
 
 export function subtractWeeks(date: Date, weeks: number): Date {
-    const newDate = new Date(date);
-    newDate.setDate(date.getDate() - weeks * 7);
-    return newDate;
+    return new Date(date.getTime() - weeks * 7 * 24 * 60 * 60 * 1000);
 }

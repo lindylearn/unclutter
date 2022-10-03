@@ -19,9 +19,11 @@ import clsx from "clsx";
 export default function StatsModalTab({
     articleCount,
     darkModeEnabled,
+    defaultWeekOverlay = 1,
 }: {
     articleCount?: number;
     darkModeEnabled: boolean;
+    defaultWeekOverlay?: number;
 }) {
     const rep = useContext(ReplicacheContext);
 
@@ -34,10 +36,10 @@ export default function StatsModalTab({
         rep.query.listRecentArticles().then(setAllArticles);
     }, [rep]);
 
-    const [end, setEnd] = useState<Date>(
-        getWeekStart(selectedDate || new Date())
+    const [end, setEnd] = useState<Date>(new Date());
+    const [start, setStart] = useState<Date>(
+        subtractWeeks(getWeekStart(new Date()), defaultWeekOverlay)
     );
-    const [start, setStart] = useState<Date>(subtractWeeks(end, 2));
 
     return (
         <div className="animate-fadein flex flex-col gap-4">
@@ -52,6 +54,7 @@ export default function StatsModalTab({
                 darkModeEnabled={darkModeEnabled}
                 start={start}
                 setStart={setStart}
+                defaultWeekOverlay={defaultWeekOverlay}
             />
             <WeekDetails
                 start={start}
@@ -161,12 +164,11 @@ function WeekDetails({
 
     const groups = useArticleGroups(
         weekArticles,
-        false,
+        true,
         "topic_size",
         "recency_order",
         undefined
     );
-    // console.log(groups);
 
     // if (!start || !end || !groups) {
     //     return <></>;
@@ -238,12 +240,15 @@ function TopicStat({
                     activityLevel,
                     darkModeEnabled || false
                 ),
+                // background: getRandomLightColor(topic_id),
             }}
         >
             <div className="flex max-w-full items-center overflow-hidden">
-                <TopicEmoji emoji={topic?.emoji!} className="w-4" />
+                {topic?.emoji && (
+                    <TopicEmoji emoji={topic?.emoji} className="w-4" />
+                )}
                 <div className="overflow-hidden overflow-ellipsis whitespace-nowrap">
-                    {topic?.name}
+                    {topic?.name || topic_id}
                 </div>
             </div>
 
