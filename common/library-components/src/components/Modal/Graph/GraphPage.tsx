@@ -1,16 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
-import ForceGraph, {
-    NodeObject,
-    LinkObject,
-    ForceGraphInstance,
-} from "force-graph";
+import ForceGraph, { ForceGraphInstance } from "force-graph";
 import { forceManyBody } from "d3-force";
 import clsx from "clsx";
 
 import { openArticle } from "../../../common";
-import { CustomGraphData, CustomGraphNode } from "./data";
+import { CustomGraphData, CustomGraphLink, CustomGraphNode } from "./data";
 import { renderNodeObject } from "./canvas";
 import { NodeTooltip } from "./Tooltips";
+import { readingProgressFullClamp } from "../../../store";
 
 export function GraphPage({
     graph,
@@ -114,16 +111,17 @@ function renderGraph(
         )
         // node styling
         .nodeRelSize(NODE_R)
-        .nodeVal((n: RuntimeNode) => (n.depth === 0 ? 2 : 1))
-        .nodeColor(
-            byDepth(
-                darkModeEnabled
-                    ? ["hsl(51, 80%, 43%)", "hsl(51, 80%, 43%)", "#78716c"]
-                    : ["hsl(51, 80%, 64%)", "hsl(51, 80%, 64%)", "#d6d3d1"]
-            )
-        )
+        .nodeVal((n: RuntimeNode) => (isLargeNode(n) ? 2 : 1))
+        .nodeColor((n: RuntimeNode) => {
+            if (n.depth <= 1 || n.reading_progress > readingProgressFullClamp) {
+                return darkModeEnabled
+                    ? "hsl(51, 80%, 43%)"
+                    : "hsl(51, 80%, 64%)";
+            }
+            return darkModeEnabled ? "#57534e" : "#e7e5e4";
+        })
         // .nodeAutoColorBy("topic_id")
-        .nodeLabel("none")
+        // .nodeLabel("none")
         .onNodeHover((node: CustomGraphNode) => {
             setHoverNode(node || null);
             graphContainer.style.cursor = node ? "pointer" : "move";
@@ -131,15 +129,16 @@ function renderGraph(
         .nodeCanvasObject(renderNodeObject(darkModeEnabled, NODE_R))
         .nodeCanvasObjectMode(() => "after")
         // link styling
-        .linkLabel("score")
-        .linkWidth(byDepth([null, 4, 2]))
-        .linkColor(
-            byDepth(
-                darkModeEnabled
-                    ? [null, "hsl(51, 80%, 43%)", "#78716c"]
-                    : [null, "hsl(51, 80%, 64%)", "#d6d3d1"]
-            )
-        );
+        // .linkLabel("score")
+        .linkWidth(byDepth([null, 4, 3]))
+        .linkColor((l: CustomGraphLink) => {
+            if (l.depth <= 1) {
+                return darkModeEnabled
+                    ? "hsl(51, 80%, 43%)"
+                    : "hsl(51, 80%, 64%)";
+            }
+            return darkModeEnabled ? "#57534e" : "#e7e5e4";
+        });
 
     // forceGraph.d3Force(
     //     "link",
@@ -194,4 +193,8 @@ function renderGraph(
     });
 
     return forceGraph;
+}
+
+export function isLargeNode(n: RuntimeNode): boolean {
+    return n.depth === 0 || n.reading_progress > readingProgressFullClamp;
 }

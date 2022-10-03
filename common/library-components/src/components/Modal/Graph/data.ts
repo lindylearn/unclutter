@@ -13,7 +13,7 @@ export type CustomGraphNode = NodeObject &
         days_ago: number;
     };
 export type CustomGraphLink = LinkObject & {
-    depth?: number;
+    depth: number;
 };
 
 export async function constructGraphData(
@@ -56,8 +56,9 @@ export async function constructGraphData(
                 continue;
             }
             l["_index"] = customLinks.length;
-            customLinks.push(l);
             l["depth"] = 100;
+            // @ts-ignore
+            customLinks.push(l);
 
             filteredLinksPerNode[l.source] = [
                 ...(filteredLinksPerNode[l.source] || []),

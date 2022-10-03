@@ -1,6 +1,6 @@
 import { getDomain } from "../../../common";
 import { readingProgressFullClamp } from "../../../store";
-import { RuntimeNode } from "./GraphPage";
+import { isLargeNode, RuntimeNode } from "./GraphPage";
 
 export function renderNodeObject(darkModeEnabled: boolean, NODE_R: number) {
     // load icons before render
@@ -12,6 +12,8 @@ export function renderNodeObject(darkModeEnabled: boolean, NODE_R: number) {
         ctx: CanvasRenderingContext2D,
         globalScale: number
     ) => {
+        ctx.shadowColor = "transparent";
+
         // empty circle for unread nodes
         if (
             node.reading_progress < readingProgressFullClamp &&
@@ -19,12 +21,14 @@ export function renderNodeObject(darkModeEnabled: boolean, NODE_R: number) {
         ) {
             ctx.beginPath();
             ctx.arc(node.x, node.y, NODE_R * 0.6, 0, 2 * Math.PI);
-            ctx.fillStyle = darkModeEnabled ? "#212121" : "rgb(250, 250, 249)";
+            ctx.fillStyle = darkModeEnabled
+                ? "rgb(38, 38, 38)"
+                : "rgb(250, 250, 249)";
 
             ctx.fill();
-        } else if (globalScale >= 2) {
+        } else if (globalScale >= 1.5) {
             // annotation count
-            const fontSize = 4;
+            const fontSize = 6;
             ctx.font = `bold ${fontSize}px Poppins, Sans-Serif`;
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
@@ -54,7 +58,7 @@ export function renderNodeObject(darkModeEnabled: boolean, NODE_R: number) {
         if (
             (node.depth <= 1 && globalScale >= 2) ||
             (node.reading_progress >= readingProgressFullClamp &&
-                globalScale >= 2)
+                globalScale >= 2.5)
             // (node.depth <= 2 && globalScale >= 3) ||
             // globalScale >= 5
         ) {
@@ -92,12 +96,17 @@ export function renderNodeObject(darkModeEnabled: boolean, NODE_R: number) {
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
             ctx.fillStyle = darkModeEnabled ? "rgb(232, 230, 227)" : "#374151";
-            ctx.fillText(label, node.x, node.y + 5);
+            ctx.fillText(label, node.x, node.y + (isLargeNode(node) ? 7 : 5));
 
             // ctx.font = `${fontSize}px Poppins, Sans-Serif`;
             // ctx.fillText(getDomain(node.url), node.x, node.y + 20);
             // ctx.fillText(node.publication_date || "", node.x, node.y + 30);
         }
+
+        ctx.shadowColor = "rgba(0, 0, 0, 0.1)";
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 1;
+        ctx.shadowBlur = 10;
     };
 }
 
