@@ -66,7 +66,7 @@ function StatsHeader({ onClick }: { onClick: () => void }) {
 
     return (
         <div
-            className="flex cursor-pointer gap-4 rounded-md px-2 transition-all hover:scale-x-[99%] hover:scale-y-[97%] hover:bg-stone-100 dark:hover:bg-neutral-800"
+            className="flex cursor-pointer gap-3 rounded-md px-2 transition-all hover:scale-x-[99%] hover:scale-y-[97%] hover:bg-stone-100 dark:hover:bg-neutral-800"
             onClick={onClick}
         >
             <ResourceStat value={weekArticleCount} type="articles" large />

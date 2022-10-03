@@ -348,7 +348,7 @@ export function ResourceStat({
             )}
             {type === "highlights" && (
                 <svg
-                    className={clsx(large ? "h-5" : "h-4")}
+                    className={clsx("-mr-0.5", large ? "h-5" : "h-4")}
                     viewBox="0 0 512 512"
                 >
                     <path
@@ -358,10 +358,7 @@ export function ResourceStat({
                 </svg>
             )}
             <div
-                className={clsx(
-                    "font-title font-bold",
-                    large ? "text-2xl" : ""
-                )}
+                className={clsx("font-title font-bold", large ? "text-xl" : "")}
             >
                 {value || 0}
             </div>
