@@ -1,11 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
-import ForceGraph, { NodeObject, LinkObject } from "force-graph";
+import ForceGraph, {
+    NodeObject,
+    LinkObject,
+    ForceGraphInstance,
+} from "force-graph";
 import { forceManyBody } from "d3-force";
 import clsx from "clsx";
 
 import { openArticle } from "../../../common";
 import { CustomGraphData, CustomGraphNode } from "./data";
 import { renderNodeObject } from "./canvas";
+import { NodeTooltip } from "./Tooltips";
 
 export function GraphPage({
     graph,
@@ -15,8 +20,9 @@ export function GraphPage({
     darkModeEnabled: boolean;
 }) {
     const [renderDone, setRenderDone] = useState(false);
-
     const ref = useRef<HTMLDivElement>(null);
+    const forceGraphRef = useRef<ForceGraphInstance>(null);
+    const [hoverNode, setHoverNode] = useState<CustomGraphNode | null>(null);
     useEffect(() => {
         if (!ref.current || !graph) {
             return;
@@ -26,26 +32,35 @@ export function GraphPage({
         const isInitialRender = graph.nodes[0].x === undefined;
         setTimeout(
             () => {
-                renderGraph(
+                const forceGraph = renderGraph(
                     graph,
                     ref.current!,
                     darkModeEnabled,
-                    setRenderDone
+                    setRenderDone,
+                    setHoverNode
                 );
+                // @ts-ignore
+                forceGraphRef.current = forceGraph;
             },
             isInitialRender ? 50 : 0
         );
     }, [ref, graph]);
 
     return (
-        <div
-            className={clsx(
-                "graph h-full w-full cursor-move overflow-hidden rounded-md bg-stone-50 dark:bg-neutral-800",
-                renderDone && "render-done"
+        <div className="relative h-full w-full overflow-hidden">
+            <div
+                className={clsx(
+                    "graph h-full w-full cursor-move rounded-md bg-stone-50 dark:bg-neutral-800",
+                    renderDone && "render-done"
+                )}
+                ref={ref}
+            />
+            {hoverNode && forceGraphRef.current && (
+                <NodeTooltip
+                    {...hoverNode}
+                    forceGraph={forceGraphRef.current}
+                />
             )}
-            ref={ref}
-        >
-            <div className="node-tooltip">Test title</div>
         </div>
     );
 }
@@ -61,11 +76,12 @@ function renderGraph(
     graph: CustomGraphData,
     graphContainer: HTMLDivElement,
     darkModeEnabled: boolean,
-    setRenderDone: (done: boolean) => void
-) {
+    setRenderDone: (done: boolean) => void,
+    setHoverNode: (node: CustomGraphNode | null) => void
+): ForceGraphInstance {
     console.log(`rendering graph with ${graph.nodes.length} nodes`);
-    const nodes = graph.nodes.filter((n) => n.depth !== 100);
-    const links = graph.links.filter((n) => n.depth !== 100);
+    const nodes = graph.nodes; //.filter((n) => n.depth !== 100);
+    const links = graph.links; //.filter((n) => n.depth !== 100);
 
     const width = graphContainer.clientWidth;
     const height = graphContainer.clientHeight;
@@ -75,7 +91,6 @@ function renderGraph(
         return (item) => values[item.depth] || values[values.length - 1];
     }
 
-    let hoverNode: NodeObject | null = null;
     let forceGraph = ForceGraph()(graphContainer)
         // layout
         .graphData({ nodes, links })
@@ -107,9 +122,10 @@ function renderGraph(
                     : ["hsl(51, 80%, 64%)", "hsl(51, 80%, 64%)", "#d6d3d1"]
             )
         )
+        // .nodeAutoColorBy("topic_id")
         .nodeLabel("none")
-        .onNodeHover((node) => {
-            hoverNode = node || null;
+        .onNodeHover((node: CustomGraphNode) => {
+            setHoverNode(node || null);
             graphContainer.style.cursor = node ? "pointer" : "move";
         })
         .nodeCanvasObject(renderNodeObject(darkModeEnabled, NODE_R))
@@ -159,7 +175,7 @@ function renderGraph(
                 forceGraph.zoomToFit(
                     0,
                     50,
-                    (node: RuntimeNode) => node.depth <= 2
+                    (node: RuntimeNode) => node.depth <= 1
                 );
                 forceGraph.cooldownTicks(Infinity);
                 initialZoomDone = true;
@@ -174,7 +190,6 @@ function renderGraph(
         });
 
     forceGraph.onZoom((zoom) => {
-        // console.log(zoom.k);
         currentZoom = zoom.k;
     });
 

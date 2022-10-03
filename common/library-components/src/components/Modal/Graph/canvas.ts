@@ -1,7 +1,12 @@
+import { getDomain } from "../../../common";
 import { readingProgressFullClamp } from "../../../store";
 import { RuntimeNode } from "./GraphPage";
 
 export function renderNodeObject(darkModeEnabled: boolean, NODE_R: number) {
+    // load icons before render
+    // const highlightsIcon = new Image();
+    // highlightsIcon.src = "/highlights.svg";
+
     return (
         node: RuntimeNode,
         ctx: CanvasRenderingContext2D,
@@ -25,6 +30,15 @@ export function renderNodeObject(darkModeEnabled: boolean, NODE_R: number) {
             ctx.textBaseline = "middle";
             ctx.fillStyle = darkModeEnabled ? "rgb(232, 230, 227)" : "#374151";
             const dimensions = ctx.measureText("5");
+
+            // const svgSize = 4;
+            // ctx.drawImage(
+            //     highlightsIcon,
+            //     node.x - svgSize / 2,
+            //     node.y - svgSize / 2,
+            //     svgSize,
+            //     svgSize
+            // );
             ctx.fillText(
                 "5",
                 node.x,
@@ -36,56 +50,52 @@ export function renderNodeObject(darkModeEnabled: boolean, NODE_R: number) {
         }
 
         // description
-        // if (
-        //     // (node.linkCount >= 5 && globalScale >= 1) ||
-        //     node.depth <= 1 &&
-        //     globalScale >= 2
-        //     // (node.depth <= 2 && globalScale >= 2.5)
-        //     // globalScale >= 3.5
-        // ) {
-        //     // title label
-        //     if (!node.title) {
-        //         return;
-        //     }
+        if (
+            (node.linkCount >= 5 && globalScale >= 2) ||
+            (node.depth <= 1 && globalScale >= 2) ||
+            (node.depth <= 2 && globalScale >= 2.5) ||
+            globalScale >= 3.5
+        ) {
+            // title label
+            if (!node.title) {
+                return;
+            }
 
-        //     let label = node.title?.slice(0, 50);
-        //     if (node.title.length > 50) {
-        //         label = label.concat("…");
-        //     }
-        //     const fontSize = 13 / globalScale;
-        //     ctx.font = `bold ${fontSize}px Poppins, Sans-Serif`;
-        //     const titleDimensions = ctx.measureText(label);
+            let label = node.title?.slice(0, 50);
+            if (node.title.length > 50) {
+                label = label.concat("…");
+            }
+            const fontSize = 13 / globalScale;
+            ctx.font = `${fontSize}px Work Sans, Sans-Serif`;
 
-        //     const rectWith = titleDimensions.width + 10;
-        //     const rectHeight = 50;
-        //     ctx.fillStyle = "white";
-        //     roundedRect(
-        //         ctx,
-        //         node.x - rectWith / 2,
-        //         node.y + 5,
-        //         rectWith,
-        //         rectHeight,
-        //         3
-        //     );
-        //     ctx.shadowColor = "rgba(0, 0, 0, 0.1)";
-        //     ctx.shadowOffsetX = 0;
-        //     ctx.shadowOffsetY = 1;
-        //     ctx.shadowBlur = 10;
-        //     ctx.fill();
+            // const titleDimensions = ctx.measureText(label);
+            // const rectWith = titleDimensions.width + 10;
+            // const rectHeight = 50;
+            // ctx.fillStyle = "white";
+            // roundedRect(
+            //     ctx,
+            //     node.x - rectWith / 2,
+            //     node.y + 5,
+            //     rectWith,
+            //     rectHeight,
+            //     3
+            // );
+            // ctx.shadowColor = "rgba(0, 0, 0, 0.1)";
+            // ctx.shadowOffsetX = 0;
+            // ctx.shadowOffsetY = 1;
+            // ctx.shadowBlur = 10;
+            // ctx.fill();
+            // ctx.shadowColor = "transparent";
 
-        //     ctx.shadowColor = "transparent";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillStyle = darkModeEnabled ? "rgb(232, 230, 227)" : "#374151";
+            ctx.fillText(label, node.x, node.y + 5);
 
-        //     ctx.textAlign = "center";
-        //     ctx.textBaseline = "middle";
-        //     ctx.fillStyle = darkModeEnabled
-        //         ? "rgb(232, 230, 227)"
-        //         : "#374151";
-        //     ctx.fillText(label, node.x, node.y + 10);
-
-        //     ctx.font = `${fontSize}px Poppins, Sans-Serif`;
-        //     ctx.fillText(getDomain(node.url), node.x, node.y + 20);
-        //     ctx.fillText(node.publication_date || "", node.x, node.y + 30);
-        // }
+            // ctx.font = `${fontSize}px Poppins, Sans-Serif`;
+            // ctx.fillText(getDomain(node.url), node.x, node.y + 20);
+            // ctx.fillText(node.publication_date || "", node.x, node.y + 30);
+        }
     };
 }
 

@@ -96,7 +96,7 @@ export async function constructGraphData(
     // setGraph({ nodes :customNodes, links: mstLinks });
 
     // add depth from current url
-    const maxDepth = 5;
+    const maxDepth = 6;
     const startNode = customNodes.find((n) => n.url === articleUrl);
     if (startNode) {
         startNode.depth = 0;
