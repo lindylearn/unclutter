@@ -80,8 +80,8 @@ function renderGraph(
     setHoverNode: (node: CustomGraphNode | null) => void
 ): ForceGraphInstance {
     console.log(`rendering graph with ${graph.nodes.length} nodes`);
-    const nodes = graph.nodes; //.filter((n) => n.depth !== 100);
-    const links = graph.links; //.filter((n) => n.depth !== 100);
+    const nodes = graph.nodes.filter((n) => n.depth !== 100);
+    const links = graph.links.filter((n) => n.depth !== 100);
 
     const width = graphContainer.clientWidth;
     const height = graphContainer.clientHeight;
@@ -168,8 +168,8 @@ function renderGraph(
     let changedZoom = false;
     let currentZoom: number;
     forceGraph
-        .minZoom(0.5)
-        .maxZoom(4)
+        .minZoom(1.5)
+        .maxZoom(5)
         .onEngineStop(() => {
             if (!initialZoomDone) {
                 forceGraph.zoomToFit(

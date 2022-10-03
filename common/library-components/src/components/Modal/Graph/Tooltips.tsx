@@ -17,7 +17,7 @@ export function NodeTooltip({
 
     return (
         <div
-            className="node-tooltip absolute w-60 cursor-pointer overflow-hidden rounded-md bg-white p-3 text-sm shadow transition-transform hover:scale-[98%]"
+            className="node-tooltip absolute w-60 cursor-pointer overflow-hidden rounded-md bg-white px-3 py-2 text-sm shadow transition-transform hover:scale-[98%]"
             style={{ left: coords.x - 240 / 2, top: coords.y + 10 }}
             onClick={() => openArticle(url)}
         >

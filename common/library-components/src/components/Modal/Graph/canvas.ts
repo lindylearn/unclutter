@@ -22,7 +22,7 @@ export function renderNodeObject(darkModeEnabled: boolean, NODE_R: number) {
             ctx.fillStyle = darkModeEnabled ? "#212121" : "rgb(250, 250, 249)";
 
             ctx.fill();
-        } else {
+        } else if (globalScale >= 2) {
             // annotation count
             const fontSize = 4;
             ctx.font = `bold ${fontSize}px Poppins, Sans-Serif`;
@@ -51,24 +51,35 @@ export function renderNodeObject(darkModeEnabled: boolean, NODE_R: number) {
 
         // description
         if (
-            (node.linkCount >= 5 && globalScale >= 2) ||
-            (node.depth <= 1 && globalScale >= 2) ||
-            (node.depth <= 2 && globalScale >= 2.5) ||
-            globalScale >= 3.5
+            node.depth <= 1 &&
+            globalScale >= 2
+            // (node.depth <= 2 && globalScale >= 3) ||
+            // globalScale >= 5
         ) {
             // title label
             if (!node.title) {
                 return;
             }
 
-            let label = node.title?.slice(0, 50);
-            if (node.title.length > 50) {
-                label = label.concat("…");
+            const lines: string[] = [];
+            let current = "";
+            for (const word of node.title.split(" ")) {
+                if ((current + word).length < 35) {
+                    current += word + " ";
+                } else {
+                    lines.push(current);
+                    current = word + " ";
+                }
             }
-            const fontSize = 13 / globalScale;
-            ctx.font = `${fontSize}px Work Sans, Sans-Serif`;
+            lines.push(current);
+            // if (node.title.length > 50) {
+            //     label = label.concat("…");
+            // }
 
-            // const titleDimensions = ctx.measureText(label);
+            const fontSize = 13 / globalScale;
+            ctx.font = `bold ${fontSize}px Poppins, Sans-Serif`;
+
+            const titleDimensions = ctx.measureText(lines[0]);
             // const rectWith = titleDimensions.width + 10;
             // const rectHeight = 50;
             // ctx.fillStyle = "white";
@@ -87,10 +98,17 @@ export function renderNodeObject(darkModeEnabled: boolean, NODE_R: number) {
             // ctx.fill();
             // ctx.shadowColor = "transparent";
 
-            ctx.textAlign = "center";
+            ctx.textAlign = "left";
             ctx.textBaseline = "middle";
             ctx.fillStyle = darkModeEnabled ? "rgb(232, 230, 227)" : "#374151";
-            ctx.fillText(label, node.x, node.y + 5);
+
+            lines.map((line, index) => {
+                ctx.fillText(
+                    line,
+                    node.x - titleDimensions.width / 2,
+                    node.y + 5 + index * fontSize * 1.2
+                );
+            });
 
             // ctx.font = `${fontSize}px Poppins, Sans-Serif`;
             // ctx.fillText(getDomain(node.url), node.x, node.y + 20);
