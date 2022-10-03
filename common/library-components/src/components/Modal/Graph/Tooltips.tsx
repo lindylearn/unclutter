@@ -21,7 +21,7 @@ export function NodeTooltip({
             style={{ left: coords.x - 240 / 2, top: coords.y + 10 }}
             onClick={() => openArticle(url)}
         >
-            <div className="font-title mb-0.5 font-bold">{title}</div>
+            <div className="font-title my-0.5 font-bold">{title}</div>
             <div className="flex justify-between text-stone-500">
                 <div>{getDomain(url)}</div>
                 <ResourceStat type="highlights" value={2} />

@@ -61,25 +61,14 @@ export function renderNodeObject(darkModeEnabled: boolean, NODE_R: number) {
                 return;
             }
 
-            const lines: string[] = [];
-            let current = "";
-            for (const word of node.title.split(" ")) {
-                if ((current + word).length < 35) {
-                    current += word + " ";
-                } else {
-                    lines.push(current);
-                    current = word + " ";
-                }
+            let label = node.title?.slice(0, 40);
+            if (node.title.length > 40) {
+                label = label.concat("…");
             }
-            lines.push(current);
-            // if (node.title.length > 50) {
-            //     label = label.concat("…");
-            // }
 
             const fontSize = 13 / globalScale;
             ctx.font = `bold ${fontSize}px Poppins, Sans-Serif`;
 
-            const titleDimensions = ctx.measureText(lines[0]);
             // const rectWith = titleDimensions.width + 10;
             // const rectHeight = 50;
             // ctx.fillStyle = "white";
@@ -98,17 +87,10 @@ export function renderNodeObject(darkModeEnabled: boolean, NODE_R: number) {
             // ctx.fill();
             // ctx.shadowColor = "transparent";
 
-            ctx.textAlign = "left";
+            ctx.textAlign = "center";
             ctx.textBaseline = "middle";
             ctx.fillStyle = darkModeEnabled ? "rgb(232, 230, 227)" : "#374151";
-
-            lines.map((line, index) => {
-                ctx.fillText(
-                    line,
-                    node.x - titleDimensions.width / 2,
-                    node.y + 5 + index * fontSize * 1.2
-                );
-            });
+            ctx.fillText(label, node.x, node.y + 5);
 
             // ctx.font = `${fontSize}px Poppins, Sans-Serif`;
             // ctx.fillText(getDomain(node.url), node.x, node.y + 20);
