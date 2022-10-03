@@ -4,7 +4,8 @@ import { useContext, useEffect, useState } from "react";
 
 import StatsModalTab from "./Stats";
 import Sidebar from "./Sidebar";
-import GraphModalTab, { CustomGraphData } from "./Graph";
+import { GraphPage } from "./Graph/GraphPage";
+import { CustomGraphData } from "./Graph/data";
 import HeaderBar from "./HeaderBar";
 import { ReplicacheContext } from "../../store";
 import RecentModalTab from "./Recent";
@@ -124,7 +125,7 @@ function ModalContent({
                     />
                 )}
                 {currentTab === "graph" && (
-                    <GraphModalTab
+                    <GraphPage
                         graph={graph}
                         darkModeEnabled={darkModeEnabled}
                     />

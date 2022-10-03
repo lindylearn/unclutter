@@ -368,11 +368,3 @@ export function ResourceStat({
         </div>
     );
 }
-
-function getDomain(url: string): string {
-    return new URL(url).hostname.replace("www.", "");
-}
-
-function formatDate(date: Date): string {
-    return date?.toDateString().split(" ").slice(1, 3).join(" ");
-}

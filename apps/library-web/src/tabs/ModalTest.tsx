@@ -11,7 +11,8 @@ import {
 import { useContext, useEffect, useState } from "react";
 
 export default function ModalTestTab({}) {
-    const articleUrl = "https://developer.chrome.com/blog/mv2-transition/";
+    const articleUrl =
+        "https://sariazout.mirror.xyz/7gSSTJ96SEyvXeljymglO3zN4H6DCgVnrNZq8_2NX1A";
 
     const rep = useContext(ReplicacheContext);
     const [graph, setGraph] = useState<CustomGraphData>();
@@ -55,7 +56,7 @@ export default function ModalTestTab({}) {
 
             <LibraryModalPage
                 darkModeEnabled={darkModeEnabled}
-                articleUrl={articleUrl}
+                currentArticle={articleUrl}
                 graph={graph}
                 new_link_count={2}
                 isVisible={showModal}
