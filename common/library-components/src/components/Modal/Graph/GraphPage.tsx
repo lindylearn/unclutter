@@ -168,12 +168,12 @@ function renderGraph(
     let currentZoom: number;
     forceGraph
         .minZoom(1.5)
-        .maxZoom(5)
+        .maxZoom(4)
         .onEngineStop(() => {
             if (!initialZoomDone) {
                 forceGraph.zoomToFit(
                     0,
-                    100,
+                    150,
                     (node: RuntimeNode) => node.depth <= 1
                 );
                 forceGraph.cooldownTicks(Infinity);

@@ -50,7 +50,9 @@ export function ArticleActivityCalendar({
                 onChangeWeekOffset={onChangeWeekOffset}
                 theme={getColorLevels(darkModeEnabled)}
                 overlayColor={
-                    darkModeEnabled ? "rgba(0,0,0,0.5)" : "rgb(28, 25, 23, 0.1)"
+                    darkModeEnabled
+                        ? "rgb(232, 230, 227, 0.1)"
+                        : "rgb(28, 25, 23, 0.1)"
                 }
                 labels={{
                     legend: { less: "Fewer articles read", more: "More" },

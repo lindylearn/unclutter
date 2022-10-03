@@ -39,16 +39,23 @@ export function LibraryModalPage({
     return (
         <div
             className={clsx(
-                "modal fixed top-0 left-0 h-screen w-screen pt-5 text-base text-stone-800 dark:text-[rgb(232,230,227)]",
+                "modal fixed top-0 left-0 h-screen w-screen pt-5 text-base",
                 isVisible ? "modal-visible" : "modal-hidden",
                 darkModeEnabled && "dark"
             )}
+            style={
+                darkModeEnabled
+                    ? {
+                          colorScheme: "dark",
+                      }
+                    : {}
+            }
         >
             <div
                 className="modal-background absolute top-0 left-0 h-full w-full cursor-zoom-out bg-stone-800 opacity-50 dark:bg-[rgb(19,21,22)]"
                 onClick={closeModal}
             />
-            <div className="modal-content relative z-10 mx-auto flex h-5/6 max-w-5xl flex-col overflow-hidden rounded-lg bg-white shadow dark:bg-[#212121]">
+            <div className="modal-content relative z-10 mx-auto flex h-5/6 max-w-5xl flex-col overflow-hidden rounded-lg bg-white text-stone-800 shadow dark:bg-[#212121] dark:text-[rgb(232,230,227)]">
                 <ModalContent
                     articleCount={articleCount}
                     currentArticle={currentArticle}

@@ -28,7 +28,7 @@ export function renderNodeObject(darkModeEnabled: boolean, NODE_R: number) {
             ctx.fill();
         } else if (globalScale >= 1.5) {
             // annotation count
-            const fontSize = 6;
+            const fontSize = 5;
             ctx.font = `bold ${fontSize}px Poppins, Sans-Serif`;
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
