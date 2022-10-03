@@ -23,3 +23,9 @@ export function getWeekStart(start: Date = new Date()): Date {
     start.setDate(diff);
     return start;
 }
+
+export function subtractWeeks(date: Date, weeks: number): Date {
+    const newDate = new Date(date);
+    newDate.setDate(date.getDate() - weeks * 7);
+    return newDate;
+}

@@ -6,7 +6,12 @@ import {
     getActivityColor,
     getActivityLevel,
 } from "../Charts";
-import { getRandomLightColor, getWeekNumber, getWeekStart } from "../../common";
+import {
+    getRandomLightColor,
+    getWeekNumber,
+    getWeekStart,
+    subtractWeeks,
+} from "../../common";
 import { useArticleGroups } from "../ArticleList";
 import { TopicEmoji } from "../TopicTag";
 import clsx from "clsx";
@@ -29,6 +34,11 @@ export default function StatsModalTab({
         rep.query.listRecentArticles().then(setAllArticles);
     }, [rep]);
 
+    const [end, setEnd] = useState<Date>(
+        getWeekStart(selectedDate || new Date())
+    );
+    const [start, setStart] = useState<Date>(subtractWeeks(end, 2));
+
     return (
         <div className="animate-fadein flex flex-col gap-4">
             <NumberStats
@@ -40,8 +50,12 @@ export default function StatsModalTab({
                 articles={allArticles}
                 onSelectDate={setSelectedDate}
                 darkModeEnabled={darkModeEnabled}
+                start={start}
+                setStart={setStart}
             />
             <WeekDetails
+                start={start}
+                end={end}
                 allArticles={allArticles}
                 selectedDate={selectedDate}
                 darkModeEnabled={darkModeEnabled}
@@ -89,7 +103,7 @@ function NumberStats({
         <div className="grid grid-cols-5 gap-4">
             <BigNumber
                 value={articleCount}
-                tag="saved articles"
+                tag="total articles"
                 icon={
                     <svg className="h-5" viewBox="0 0 576 512">
                         <path
@@ -119,37 +133,31 @@ function NumberStats({
 }
 
 function WeekDetails({
+    start,
+    end,
     selectedDate,
     allArticles,
     darkModeEnabled,
 }: {
+    start: Date;
+    end: Date;
     selectedDate?: Date;
     allArticles?: Article[];
     darkModeEnabled: boolean;
 }) {
-    const [start, setStart] = useState<Date>();
-    const [end, setEnd] = useState<Date>();
     const [weekArticles, setWeekArticles] = useState<Article[]>([]);
     useEffect(() => {
         if (!allArticles) {
             return;
         }
 
-        setWeekArticles(allArticles);
-        return;
-
-        // const start = getWeekStart(selectedDate || new Date());
-        // const end = new Date(start.getTime() + 7 * 24 * 60 * 60 * 1000);
-        // setStart(start);
-        // setEnd(end);
-
-        // const weekArticles = allArticles.filter(
-        //     (a) =>
-        //         a.time_added * 1000 >= start.getTime() &&
-        //         a.time_added * 1000 < end.getTime()
-        // );
-        // setWeekArticles(weekArticles);
-    }, [selectedDate, allArticles]);
+        const weekArticles = allArticles.filter(
+            (a) =>
+                a.time_added * 1000 >= start.getTime() &&
+                a.time_added * 1000 < end.getTime()
+        );
+        setWeekArticles(weekArticles);
+    }, [allArticles, start, end]);
 
     const groups = useArticleGroups(
         weekArticles,

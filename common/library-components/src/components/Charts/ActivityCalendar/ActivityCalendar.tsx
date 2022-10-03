@@ -123,6 +123,10 @@ export interface Props {
      * Index of day to be used as start of week. 0 represents Sunday.
      */
     weekStart?: WeekDay;
+
+    overlayColor: string;
+    startWeekOffset: number;
+    onChangeWeekOffset: (offset: number) => void;
 }
 
 export function ActivityCalendar({
@@ -144,6 +148,9 @@ export function ActivityCalendar({
     style = {},
     theme: themeProp,
     weekStart = 0, // Sunday
+    overlayColor = "rgba(0, 0, 0, 0.5)",
+    startWeekOffset,
+    onChangeWeekOffset,
 }: Props) {
     if (loading) {
         data = generateEmptyData();
@@ -314,7 +321,9 @@ export function ActivityCalendar({
             ));
     }
 
-    const [startWeekIndex, setStartWeekIndex] = useState<number>(30);
+    const [startWeekIndex, setStartWeekIndex] = useState<number>(
+        weeks.length + startWeekOffset
+    );
 
     const [diffX, setDiffX] = useState(0);
     const overlayHandleRef = useRef<SVGRectElement>(null);
@@ -323,23 +332,33 @@ export function ActivityCalendar({
             return;
         }
 
-        let start: number;
+        let start: number | null = null;
         let diffX: number; // local var to avoid state stale closure
         const moveListener = (e: MouseEvent) => {
-            const diff = e.x - start;
+            const diff = e.x - start!;
             diffX = Math.round(diff / (blockSize + blockMargin));
             setDiffX(diffX);
         };
         overlayHandleRef.current.addEventListener("mousedown", (e) => {
             start = e.x;
-            // console.log("mousedown", start);
             window.addEventListener("mousemove", moveListener);
+            document.body.style.cursor = "grabbing";
         });
 
         window.addEventListener("mouseup", (e) => {
+            if (start === null) {
+                return;
+            }
             window.removeEventListener("mousemove", moveListener);
+            document.body.style.cursor = "";
 
-            setStartWeekIndex((startWeekIndex) => startWeekIndex + diffX);
+            setStartWeekIndex((startWeekIndex) => {
+                // bypass closure
+                const newIndex = startWeekIndex + diffX;
+                onChangeWeekOffset(newIndex - weeks.length);
+                return newIndex;
+            });
+            start = null;
             diffX = 0;
             setDiffX(0);
         });
@@ -351,7 +370,7 @@ export function ActivityCalendar({
         return (
             <>
                 <rect
-                    className="overlay opacity-10"
+                    className="overlay"
                     x={
                         (blockSize + blockMargin) * (startWeekIndex + diffX) -
                         blockMargin
@@ -363,24 +382,36 @@ export function ActivityCalendar({
                         blockMargin
                     }
                     height={(blockSize + blockMargin) * 7 + blockMargin}
-                    fill="rgb(232 230 227)"
+                    fill={overlayColor}
                     rx={5}
                     ry={5}
                     style={{
                         shapeRendering: "geometricPrecision",
                     }}
                 />
+                <svg
+                    viewBox="0 0 192 512"
+                    x={(blockSize + blockMargin) * (startWeekIndex + diffX)}
+                    y={textHeight - blockMargin}
+                    width={7}
+                    height={(blockSize + blockMargin) * 7 + blockMargin}
+                >
+                    <path
+                        fill="currentColor"
+                        d="M56 56V456C56 469.3 45.25 480 32 480C18.75 480 8 469.3 8 456V56C8 42.75 18.75 32 32 32C45.25 32 56 42.75 56 56zM184 56V456C184 469.3 173.3 480 160 480C146.7 480 136 469.3 136 456V56C136 42.75 146.7 32 160 32C173.3 32 184 42.75 184 56z"
+                    />
+                </svg>
                 <rect
                     ref={overlayHandleRef}
-                    className="overlay-drag-handle cursor-pointer opacity-90"
+                    className="overlay-drag-handle cursor-grab"
                     x={
                         (blockSize + blockMargin) * (startWeekIndex + diffX) -
                         blockMargin
                     }
                     y={textHeight - blockMargin}
-                    width={4}
+                    width={7 + blockMargin * 2}
                     height={(blockSize + blockMargin) * 7 + blockMargin}
-                    fill="rgb(232 230 227)"
+                    fill={"transparent"}
                     // rx={5}
                     // ry={5}
                     style={{

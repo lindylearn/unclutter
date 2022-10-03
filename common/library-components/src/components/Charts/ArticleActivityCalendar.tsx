@@ -8,15 +8,20 @@ import {
 import { eachDayOfInterval, subYears } from "date-fns";
 
 import { Article } from "../../store";
+import { getWeekStart, subtractWeeks } from "../../common";
 
 export function ArticleActivityCalendar({
     darkModeEnabled,
     articles,
     onSelectDate,
+    start,
+    setStart,
 }: {
     darkModeEnabled: boolean;
     articles?: Article[];
     onSelectDate: (date: Date) => void;
+    start: Date;
+    setStart: (date: Date) => void;
 }) {
     const data = useMemo(() => {
         if (!articles) {
@@ -25,15 +30,26 @@ export function ArticleActivityCalendar({
         return getActivityData(articles);
     }, [articles]);
 
+    function onChangeWeekOffset(offset: number) {
+        const end = getWeekStart(new Date());
+        const start = subtractWeeks(end, -offset);
+        setStart(start);
+    }
+
     if (data === null) {
         return <></>;
     }
 
     return (
-        <div className="animate-fadein my-2 mr-2 max-w-[860px] text-stone-500 dark:text-neutral-600">
+        <div className="animate-fadein my-2 mr-2 max-w-[860px]">
             <ActivityCalendar
                 data={data || []}
+                startWeekOffset={-2}
+                onChangeWeekOffset={onChangeWeekOffset}
                 theme={getColorLevels(darkModeEnabled)}
+                overlayColor={
+                    darkModeEnabled ? "rgba(0,0,0,0.5)" : "rgb(28, 25, 23, 0.1)"
+                }
                 labels={{
                     legend: { less: "Fewer articles read", more: "More" },
                 }}
