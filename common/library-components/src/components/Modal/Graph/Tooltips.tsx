@@ -53,7 +53,10 @@ export function NodeTooltip({
 
             <div
                 className="progress bg-lindy dark:bg-lindyDark absolute bottom-0 left-0 h-[7px] w-full rounded-r transition-all"
-                style={{ width: `${Math.max(reading_progress, 0.05) * 100}%` }}
+                style={{
+                    // @ts-ignore
+                    "--progress": `${Math.max(reading_progress, 0.05) * 100}%`,
+                }}
             />
         </div>
     );

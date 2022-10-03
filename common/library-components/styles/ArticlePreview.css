@@ -86,6 +86,19 @@
     );
 }
 
+.progress {
+    animation: expandWidth 100ms ease-out;
+    animation-fill-mode: both;
+}
+@keyframes expandWidth {
+    from {
+        width: 0;
+    }
+    to {
+        width: var(--progress);
+    }
+}
+
 /* stacked list */
 .stacked-articles-list > .article-container {
     transition: transform 0.3s cubic-bezier(0.33, 1, 0.68, 1);
