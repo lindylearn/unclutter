@@ -117,24 +117,31 @@ export default class LibraryModifier implements PageModifier {
 
             // construct article graph from local replicache
             if (this.libraryState.libraryInfo) {
+                let start = performance.now();
                 let nodes: Article[] = await rep.query.listRecentArticles();
                 let links: ArticleLink[] = await rep.query.listArticleLinks();
 
                 if (!this.libraryState.wasAlreadyPresent) {
                     // use new node and links immediately
-                    nodes = nodes.concat([
-                        this.libraryState.libraryInfo.article,
-                    ]);
+                    nodes.push(this.libraryState.libraryInfo.article);
                     links = links.concat(
                         this.libraryState.libraryInfo.new_links || []
                     );
                 }
 
-                this.libraryState.graph = await constructGraphData(
+                [
+                    this.libraryState.graph,
+                    this.libraryState.topicProgress.linkCount,
+                ] = await constructGraphData(
                     nodes,
                     links,
                     this.libraryState.libraryInfo.article.url,
                     this.libraryState.libraryInfo.topic
+                );
+
+                let duration = performance.now() - start;
+                console.log(
+                    `Constructed library graph in ${Math.round(duration)}ms`
                 );
                 this.overlayManager.updateLibraryState(this.libraryState);
             }

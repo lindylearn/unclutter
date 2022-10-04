@@ -17,7 +17,7 @@ export function LibraryModalPage({
     currentArticle,
     initialTopic,
     graph,
-    new_link_count,
+    relatedLinkCount,
     isVisible = true,
     closeModal = () => {},
 }: {
@@ -25,7 +25,7 @@ export function LibraryModalPage({
     currentArticle?: string;
     initialTopic?: Topic;
     graph?: CustomGraphData;
-    new_link_count?: number;
+    relatedLinkCount?: number;
     isVisible?: boolean;
     closeModal?: () => void;
 }) {
@@ -75,7 +75,7 @@ export function LibraryModalPage({
                     changedTopic={currentTopic !== initialTopic}
                     darkModeEnabled={darkModeEnabled}
                     graph={graph}
-                    new_link_count={new_link_count}
+                    relatedLinkCount={relatedLinkCount}
                     currentTab={currentTab}
                     setCurrentTab={setCurrentTab}
                     showTopic={showTopic}
@@ -92,7 +92,7 @@ function ModalContent({
     articleCount,
     darkModeEnabled,
     graph,
-    new_link_count,
+    relatedLinkCount,
     currentTab,
     setCurrentTab,
     showTopic,
@@ -103,7 +103,7 @@ function ModalContent({
     articleCount?: number;
     darkModeEnabled: boolean;
     graph?: CustomGraphData;
-    new_link_count?: number;
+    relatedLinkCount?: number;
     currentTab: string;
     setCurrentTab: (tab: string) => void;
     showTopic: (topic: Topic) => void;
@@ -127,7 +127,7 @@ function ModalContent({
                         currentTopic={currentTopic}
                         changedTopic={changedTopic}
                         setCurrentTab={setCurrentTab}
-                        new_link_count={new_link_count}
+                        relatedLinkCount={relatedLinkCount}
                         darkModeEnabled={darkModeEnabled}
                     />
                 </div>

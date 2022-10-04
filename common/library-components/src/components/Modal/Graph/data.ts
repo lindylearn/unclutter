@@ -29,7 +29,7 @@ export async function constructGraphData(
     links: ArticleLink[],
     articleUrl: string,
     topic: Topic
-): Promise<CustomGraphData> {
+): Promise<[CustomGraphData, number]> {
     // populate custom node data
     const customNodes: CustomGraphNode[] = nodes
         // .filter((n) => !n.topic_id?.startsWith("-"))
@@ -122,7 +122,7 @@ export async function constructGraphData(
     }
 
     // add depth from current url
-    const maxDepth = 6;
+    const maxDepth = 3;
     const startNode = customNodes.find((n) => n.url === articleUrl);
     if (startNode) {
         startNode.depth = 0;
@@ -146,7 +146,7 @@ export async function constructGraphData(
         }
     }
 
-    // remove bidirectional connections (which are used for BFS above)
+    // remove left-over bidirectional connections (which are used for BFS above)
     const seenConnections = new Set<string>();
     const deduplicatedLinks = customLinks.filter((l) => {
         if (seenConnections.has(`${l.target}-${l.source}`)) {
@@ -156,5 +156,18 @@ export async function constructGraphData(
         return true;
     });
 
-    return { nodes: customNodes, links: deduplicatedLinks };
+    // count links shown in the graph (single topic)
+    const activeArticleTopicLinkCount = deduplicatedLinks.filter((l) => {
+        if (l.depth === 1) {
+            const source = nodeById[l.source as string];
+            const target = nodeById[l.target as string];
+            return source.topic_id === target.topic_id;
+        }
+        return false;
+    }).length;
+
+    return [
+        { nodes: customNodes, links: deduplicatedLinks },
+        activeArticleTopicLinkCount,
+    ];
 }

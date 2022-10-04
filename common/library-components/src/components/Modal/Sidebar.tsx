@@ -9,18 +9,18 @@ export default function Sidebar({
     currentTopic,
     changedTopic,
     setCurrentTab,
-    new_link_count,
+    relatedLinkCount,
     darkModeEnabled,
 }: {
     currentTab: string;
     currentTopic?: Topic;
     changedTopic: boolean;
     setCurrentTab: (tab: string) => void;
-    new_link_count?: number;
+    relatedLinkCount?: number;
     darkModeEnabled: boolean;
 }) {
     const modalTabs = getModalTabOptions(
-        changedTopic ? new_link_count : undefined
+        !changedTopic ? relatedLinkCount : undefined
     );
 
     return (

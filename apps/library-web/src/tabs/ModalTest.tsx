@@ -33,7 +33,7 @@ export default function ModalTestTab({}) {
             setArticle(article);
             setTopic(topic);
 
-            const graph = await constructGraphData(
+            const [graph, linkCount] = await constructGraphData(
                 nodes,
                 links,
                 article!.url,

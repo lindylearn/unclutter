@@ -32,4 +32,5 @@ export type LibraryInfo = {
 export type TopicProgress = {
     articleCount: number;
     completedCount: number;
+    linkCount?: number;
 };
