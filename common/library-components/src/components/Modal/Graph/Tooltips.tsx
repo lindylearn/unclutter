@@ -36,14 +36,14 @@ export function NodeTooltip({
             style={{ left: coords.x - 240 / 2, top: coords.y + 12 }}
             onClick={() => openArticle(url)}
         >
-            <div className="font-title font-bold">{title}</div>
+            <div className="font-title font-bold">{title || url}</div>
             <div className="mt-0.5 mb-1 flex justify-between">
                 <div className="text-neutral-500 dark:text-stone-400">
                     {domain}
                 </div>
                 {readingProgress !== 1 &&
                     word_count >= 200 &&
-                    domain.length < 20 && (
+                    domain.length < 19 && (
                         <div className="text-neutral-500 dark:text-stone-400">
                             {Math.round(
                                 (word_count / 200) * (1 - readingProgress)

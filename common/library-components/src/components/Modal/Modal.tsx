@@ -116,8 +116,10 @@ function ModalContent({
 
                     <Sidebar
                         currentTab={currentTab}
+                        currentTopic={currentTopic}
                         setCurrentTab={setCurrentTab}
                         new_link_count={new_link_count}
+                        darkModeEnabled={darkModeEnabled}
                     />
                 </div>
             </aside>

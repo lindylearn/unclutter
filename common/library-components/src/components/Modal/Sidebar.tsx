@@ -1,15 +1,21 @@
 import React from "react";
 import clsx from "clsx";
 import { LindyIcon } from "../Icons";
+import { Topic } from "../../store";
+import { getRandomLightColor } from "../../common";
 
 export default function Sidebar({
     currentTab,
+    currentTopic,
     setCurrentTab,
     new_link_count,
+    darkModeEnabled,
 }: {
     currentTab: string;
+    currentTopic?: Topic;
     setCurrentTab: (tab: string) => void;
     new_link_count?: number;
+    darkModeEnabled: boolean;
 }) {
     const modalTabs = getModalTabOptions(new_link_count);
 
@@ -23,6 +29,8 @@ export default function Sidebar({
                         key={option.value}
                         isActive={currentTab === option.value}
                         onClick={() => setCurrentTab(option.value)}
+                        currentTopic={currentTopic}
+                        darkModeEnabled={darkModeEnabled}
                     />
                 ))}
 
@@ -48,6 +56,8 @@ export default function Sidebar({
                         key={option.value}
                         isActive={currentTab === option.value}
                         onClick={() => setCurrentTab(option.value)}
+                        currentTopic={currentTopic}
+                        darkModeEnabled={darkModeEnabled}
                     />
                 ))}
         </div>
@@ -159,9 +169,13 @@ function SidebarFilterOption({
     tag,
     svg,
     onClick = () => {},
+    currentTopic,
+    darkModeEnabled,
 }: ModalTabOptions & {
     isActive: boolean;
     onClick: () => void;
+    currentTopic?: Topic;
+    darkModeEnabled: boolean;
 }) {
     return (
         <div
@@ -171,13 +185,22 @@ function SidebarFilterOption({
                     ? "bg-stone-100 dark:bg-neutral-800"
                     : "hover:bg-stone-100 dark:text-neutral-500 hover:dark:bg-neutral-800"
             )}
-            // style={{ backgroundColor: color }}
             onClick={onClick}
         >
             <div className="flex w-5 justify-center">{svg}</div>
             {label}
             {tag && (
-                <div className="bg-lindy dark:bg-lindyDark absolute -top-1 right-1 z-20 rounded-md px-1 text-sm leading-tight dark:text-[rgb(232,230,227)]">
+                <div
+                    className="bg-lindy dark:bg-lindyDark absolute -top-1 right-1 z-20 rounded-md px-1 text-sm leading-tight dark:text-[rgb(232,230,227)]"
+                    style={{
+                        background:
+                            currentTopic &&
+                            getRandomLightColor(
+                                currentTopic.id,
+                                darkModeEnabled
+                            ),
+                    }}
+                >
                     {tag}
                 </div>
             )}

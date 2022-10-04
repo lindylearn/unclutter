@@ -103,7 +103,7 @@ export function GraphPage({
                     darkModeEnabled={darkModeEnabled}
                 />
             )}
-            {currentTopic && (
+            {/* {currentTopic && (
                 <div
                     className="absolute top-2 left-2 flex items-center rounded-md px-1 py-0.5"
                     style={{
@@ -121,7 +121,7 @@ export function GraphPage({
                     )}
                     {currentTopic.name}
                 </div>
-            )}
+            )} */}
         </div>
     );
 }
@@ -200,7 +200,7 @@ function renderGraph(
         .nodeCanvasObject(renderNodeObject(darkModeEnabled, NODE_R))
         .nodeCanvasObjectMode(() => "after")
         // link styling
-        .linkLabel("score")
+        // .linkLabel("score")
         .linkWidth(byDepth([null, 4, 3]))
         .linkColor((l: CustomGraphLink) => {
             if (l.depth <= 1 || l.isCompletedAdjacent) {
@@ -236,14 +236,14 @@ function renderGraph(
     let changedZoom = false;
     let currentZoom: number;
     forceGraph
-        .minZoom(1)
-        .maxZoom(4)
+        .minZoom(1.5)
+        .maxZoom(5)
         .onEngineStop(() => {
             if (!initialZoomDone) {
                 forceGraph.zoomToFit(
                     0,
-                    150,
-                    (node: RuntimeNode) => node.depth <= 1
+                    50,
+                    (node: RuntimeNode) => node.isCompleted
                 );
                 forceGraph.cooldownTicks(Infinity);
                 initialZoomDone = true;

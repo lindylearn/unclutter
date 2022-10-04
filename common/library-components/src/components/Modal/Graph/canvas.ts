@@ -21,12 +21,13 @@ export function renderNodeObject(darkModeEnabled: boolean, NODE_R: number) {
         ) {
             ctx.beginPath();
             ctx.arc(node.x, node.y, NODE_R * 0.6, 0, 2 * Math.PI);
-            ctx.fillStyle = darkModeEnabled
-                ? "rgb(38, 38, 38)"
-                : "rgb(250, 250, 249)";
+            // ctx.fillStyle = darkModeEnabled
+            //     ? "rgb(38, 38, 38)"
+            //     : "rgb(250, 250, 249)";
+            ctx.fillStyle = darkModeEnabled ? "rgb(19, 21, 22)" : "white";
 
             ctx.fill();
-        } else if (globalScale >= 1.5) {
+        } else if (false && globalScale >= 1.5) {
             // annotation count
             const fontSize = 5;
             ctx.font = `bold ${fontSize}px Poppins, Sans-Serif`;
@@ -56,11 +57,10 @@ export function renderNodeObject(darkModeEnabled: boolean, NODE_R: number) {
 
         // description
         if (
-            (node.depth <= 1 && globalScale >= 2) ||
-            (node.reading_progress >= readingProgressFullClamp &&
-                globalScale >= 2.5)
-            // (node.depth <= 2 && globalScale >= 3) ||
-            // globalScale >= 5
+            ((node.depth <= 1 || node.isCompleted) && globalScale >= 2) ||
+            ((node.depth <= 2 || node.isCompletedAdjacent) &&
+                globalScale >= 3) ||
+            globalScale >= 5
         ) {
             // title label
             if (node.depth === 0 || !node.title) {
@@ -100,7 +100,9 @@ export function renderNodeObject(darkModeEnabled: boolean, NODE_R: number) {
 
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
-            ctx.fillStyle = darkModeEnabled ? "rgb(232, 230, 227)" : "#374151";
+            ctx.fillStyle = darkModeEnabled
+                ? "rgb(232, 230, 227)"
+                : "rgb(41, 37, 36)";
             ctx.fillText(label, node.x, node.y + (node.isCompleted ? 7 : 5));
 
             // ctx.font = `${fontSize}px Poppins, Sans-Serif`;
@@ -108,7 +110,7 @@ export function renderNodeObject(darkModeEnabled: boolean, NODE_R: number) {
             // ctx.fillText(node.publication_date || "", node.x, node.y + 30);
         }
 
-        ctx.shadowColor = "rgba(0, 0, 0, 0.1)";
+        ctx.shadowColor = "rgba(0, 0, 0, 0.05)";
         ctx.shadowOffsetX = 0;
         ctx.shadowOffsetY = 1;
         ctx.shadowBlur = 5;
