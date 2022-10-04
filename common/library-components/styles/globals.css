@@ -50,8 +50,8 @@ body {
     visibility: hidden;
 }
 .modal-visible {
-    opacity: 1;
-    visibility: visible;
+    opacity: 1 !important;
+    visibility: visible !important;
 
     transition: all 0.4s cubic-bezier(0.5, 1, 0.89, 1); /* easeOutQuad */
 }

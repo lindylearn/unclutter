@@ -299,6 +299,11 @@ function TopicStat({
             </div>
 
             <div className="flex gap-3">
+                {/* <ResourceStat
+                    type="articles_completed"
+                    value={readCount}
+                    showPlus
+                /> */}
                 <ResourceStat type="articles" value={addedCount} showPlus />
                 {/* <ResourceStat type="highlights" value={0} showPlus /> */}
             </div>

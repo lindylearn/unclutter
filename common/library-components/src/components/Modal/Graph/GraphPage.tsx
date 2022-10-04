@@ -35,18 +35,12 @@ export function GraphPage({
     const [activeGraph, setActiveGraph] = useState<CustomGraphData>();
     const [hoverNode, setHoverNode] = useState<CustomGraphNode | null>(null);
     useEffect(() => {
-        if (!ref.current || !graph) {
+        if (!ref.current || !graph || !currentTopic) {
             return;
         }
 
-        // copy to avoid reducing graph size
-        const activeGraph = {
-            nodes: graph.nodes.map((node) => ({ ...node })),
-            links: graph.links.map((link) => ({ ...link })),
-        };
-
         // wait a bit during intro animation for performance
-        const isInitialRender = activeGraph.nodes[0]?.x === undefined;
+        let isInitialRender = true;
         setTimeout(
             async () => {
                 const topics = await rep?.query.listTopics();
@@ -54,6 +48,12 @@ export function GraphPage({
                     acc[topic.id] = topic;
                     return acc;
                 }, {});
+
+                // copy to avoid reducing graph size
+                const activeGraph = {
+                    nodes: graph.nodes.map((node) => ({ ...node })),
+                    links: graph.links.map((link) => ({ ...link })),
+                };
 
                 // filter to topic
                 if (currentTopic) {
@@ -73,7 +73,6 @@ export function GraphPage({
                             nodeSet.has(l.target as string)
                     );
                 }
-                setActiveGraph(activeGraph);
 
                 const forceGraph = renderGraph(
                     activeGraph,
@@ -85,6 +84,8 @@ export function GraphPage({
                 );
                 // @ts-ignore
                 forceGraphRef.current = forceGraph;
+                setActiveGraph(activeGraph);
+                isInitialRender = true;
             },
             isInitialRender ? 50 : 0
         );

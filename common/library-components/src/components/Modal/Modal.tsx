@@ -51,7 +51,7 @@ export function LibraryModalPage({
     return (
         <div
             className={clsx(
-                "modal fixed top-0 left-0 h-screen w-screen text-base",
+                "modal invisible fixed top-0 left-0 h-screen w-screen text-base opacity-0",
                 isVisible ? "modal-visible" : "modal-hidden",
                 darkModeEnabled && "dark"
             )}

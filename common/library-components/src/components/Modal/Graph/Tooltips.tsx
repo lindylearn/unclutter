@@ -52,9 +52,9 @@ export function NodeTooltip({
                         </div>
                     )}
 
-                {readingProgress === 1 && (
+                {/* {readingProgress === 1 && (
                     <ResourceStat type="highlights" value={2} />
-                )}
+                )} */}
             </div>
 
             <div
