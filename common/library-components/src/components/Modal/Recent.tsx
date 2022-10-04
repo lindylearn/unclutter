@@ -5,8 +5,13 @@ import {
 } from "../../components";
 import React, { ReactNode, useContext, useEffect, useState } from "react";
 import { getRandomColor, getRandomLightColor } from "../../common";
-import { Article, ReplicacheContext, Topic } from "../../store";
-import { ResourceProgress } from "./numbers";
+import {
+    Article,
+    readingProgressFullClamp,
+    ReplicacheContext,
+    Topic,
+} from "../../store";
+import { ReadingProgress } from "./numbers";
 
 export default function RecentModalTab({
     currentTopic,
@@ -71,20 +76,18 @@ function TopicGroup({
                     {title}
                 </h2>
                 <div className="stats flex gap-2 font-medium">
-                    {/* <InlineProgressCircle
-                        current={articles.length}
-                        target={10}
-                    />
-                    <span className="">{10 - articles.length} unread</span> */}
-
-                    <ResourceProgress
-                        type="articles"
-                        value={articles.length}
-                        target={allTopicArticles?.length}
+                    <ReadingProgress
+                        className="relative"
+                        articleCount={allTopicArticles?.length}
+                        readCount={
+                            allTopicArticles?.filter(
+                                (a) =>
+                                    a.reading_progress >=
+                                    readingProgressFullClamp
+                            )?.length
+                        }
                         color={color}
                     />
-
-                    {/* <ResourceStat value={0} type="highlights" /> */}
                 </div>
             </div>
             <div

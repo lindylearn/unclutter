@@ -14,7 +14,7 @@ import {
 } from "../../../store";
 import { TopicEmoji } from "../../TopicTag";
 import { InlineProgressCircle } from "../../Charts";
-import { ResourceProgress, ResourceStat } from "../numbers";
+import { ReadingProgress, ResourceStat } from "../numbers";
 
 export function GraphPage({
     graph,
@@ -144,25 +144,18 @@ function GraphStats({
     darkModeEnabled: boolean;
 }) {
     const articleCount = activeGraph.nodes.length;
-    const completedCount = activeGraph?.nodes.filter(
-        (n) => n.isCompleted
-    ).length;
-
+    const readCount = activeGraph?.nodes.filter((n) => n.isCompleted).length;
     const color =
         currentTopic && getRandomLightColor(currentTopic.id, darkModeEnabled);
 
     return (
-        <div className="absolute right-4 top-4 flex gap-3">
-            <ResourceProgress
-                type="articles"
-                value={completedCount}
-                target={articleCount}
-                color={color}
-                large
-            />
-
-            {/* <ResourceStat type="highlights" value={0} large /> */}
-        </div>
+        <ReadingProgress
+            className="absolute right-4 top-4"
+            articleCount={articleCount}
+            readCount={readCount}
+            color={color}
+            large
+        />
     );
 }
 

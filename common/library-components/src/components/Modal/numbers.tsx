@@ -54,18 +54,21 @@ export function ResourceStat({
     type,
     large = false,
     showPlus = false,
+    className,
 }: {
     value?: number;
     type: "articles" | "articles_completed" | "highlights";
     large?: boolean;
     showPlus?: boolean;
+    className?: string;
 }) {
     return (
         <div
             className={clsx(
                 "relative flex items-center transition-opacity",
                 large ? "gap-1.5" : "gap-1",
-                value === undefined && "opacity-0"
+                value === undefined && "opacity-0",
+                className
             )}
         >
             <ResourceIcon type={type} large={large} />
@@ -79,48 +82,46 @@ export function ResourceStat({
     );
 }
 
-export function ResourceProgress({
-    value,
-    target,
-    type,
+export function ReadingProgress({
+    articleCount,
+    readCount,
     large = false,
     color,
+    className,
 }: {
-    value?: number;
-    target?: number;
-    type: "articles" | "articles_completed" | "highlights";
+    articleCount?: number;
+    readCount?: number;
+    unreadCount?: number;
     large?: boolean;
     color?: string;
+    className?: string;
 }) {
+    const unreadCount = (articleCount || 0) - (readCount || 0);
+    const progress =
+        Math.max((readCount || 0) / (articleCount || 1), 0.05) * 100;
+
     return (
         <div
             className={clsx(
-                "relative flex items-center overflow-hidden rounded-md bg-white px-2 py-0.5 transition-opacity dark:bg-[#212121]",
-                large ? "gap-1.5" : "gap-1",
-                value === undefined && "opacity-0"
+                "flex gap-3 overflow-hidden rounded-md transition-opacity",
+                !articleCount && "opacity-0",
+                large ? "px-2 py-0.5" : "px-1.5 py-0",
+                className
             )}
         >
-            {target && (
-                <div
-                    className="bg-lindy dark:bg-lindyDark absolute bottom-0 left-0 h-full w-full transition-all"
-                    style={{
-                        width: `${
-                            Math.max((value || 0) / target, 0.05) * 100
-                        }%`,
-                        background: color,
-                    }}
-                />
-            )}
-            <ResourceIcon type={type} large={large} className="z-10" />
+            <ResourceStat
+                type="articles_completed"
+                value={readCount}
+                large={large}
+            />
+            <ResourceStat type="articles" value={unreadCount} large={large} />
             <div
-                className={clsx(
-                    "font-title z-10 font-bold",
-                    large ? "text-xl" : ""
-                )}
-            >
-                {value || 0}
-                {target && <span className=""> / {target}</span>}
-            </div>
+                className="bg-lindy dark:bg-lindyDark absolute top-0 left-0 h-full"
+                style={{
+                    width: `${progress}%`,
+                    background: color,
+                }}
+            />
         </div>
     );
 }
