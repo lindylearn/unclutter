@@ -103,9 +103,9 @@ export function GraphPage({
                     darkModeEnabled={darkModeEnabled}
                 />
             )}
-            {/* {currentTopic && (
+            {currentTopic && (
                 <div
-                    className="absolute top-2 left-2 flex items-center rounded-md px-1 py-0.5"
+                    className="absolute top-0 left-0 flex items-center rounded-md px-1 py-0.5 font-medium"
                     style={{
                         background: getRandomLightColor(
                             currentTopic.id,
@@ -121,7 +121,7 @@ export function GraphPage({
                     )}
                     {currentTopic.name}
                 </div>
-            )} */}
+            )}
         </div>
     );
 }
@@ -201,7 +201,7 @@ function renderGraph(
         .nodeCanvasObjectMode(() => "after")
         // link styling
         // .linkLabel("score")
-        .linkWidth(byDepth([null, 4, 3]))
+        .linkWidth((l: CustomGraphLink) => (l.isCompletedAdjacent ? 5 : 3))
         .linkColor((l: CustomGraphLink) => {
             if (l.depth <= 1 || l.isCompletedAdjacent) {
                 return themeColor;

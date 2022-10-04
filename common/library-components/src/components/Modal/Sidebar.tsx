@@ -182,8 +182,8 @@ function SidebarFilterOption({
             className={clsx(
                 "relative flex cursor-pointer items-center gap-2 rounded-md px-2 py-1 font-medium outline-none transition-all hover:scale-[97%]",
                 isActive
-                    ? "bg-stone-100 dark:bg-neutral-800"
-                    : "hover:bg-stone-100 dark:text-neutral-500 hover:dark:bg-neutral-800"
+                    ? "bg-stone-50 dark:bg-neutral-800"
+                    : "hover:bg-stone-50 dark:text-neutral-500 hover:dark:bg-neutral-800"
             )}
             onClick={onClick}
         >

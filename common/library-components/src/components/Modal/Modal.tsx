@@ -131,11 +131,11 @@ function ModalContent({
                         : "overflow-y-auto"
                 )}
             >
-                <HeaderBar
+                {/* <HeaderBar
                     articleCount={articleCount}
                     currentTab={currentTab}
                     setCurrentTab={setCurrentTab}
-                />
+                /> */}
 
                 {currentTab === "recent" && (
                     <RecentModalTab

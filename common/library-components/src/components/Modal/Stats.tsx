@@ -45,7 +45,7 @@ export default function StatsModalTab({
 
     return (
         <div className="animate-fadein relative flex flex-col gap-4">
-            <div className="absolute top-0 right-0 flex cursor-pointer items-center gap-2 rounded-md bg-stone-100 px-2 py-1 font-medium dark:bg-neutral-800">
+            <div className="absolute top-0 right-0 flex cursor-pointer items-center gap-2 rounded-md bg-stone-50 px-2 py-1 font-medium dark:bg-neutral-800">
                 <svg className="h-4" viewBox="0 0 512 512">
                     <path
                         fill="currentColor"
@@ -194,7 +194,7 @@ function WeekDetails({
 
     const groups = useArticleGroups(
         weekArticles,
-        true,
+        false,
         "topic_size",
         "recency_order",
         undefined

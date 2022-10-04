@@ -22,7 +22,7 @@ export default function HeaderBar({
         <div className="header-bar mb-4 flex w-full gap-4 rounded-t-lg">
             <div className="flex-grow">
                 <input
-                    className="font-text w-full max-w-md rounded-md bg-stone-50 px-3 py-1.5 font-medium leading-none placeholder-stone-300 outline-none dark:bg-neutral-800 dark:placeholder-neutral-600"
+                    className="font-text w-full max-w-[30.25rem] rounded-md bg-stone-50 px-3 py-1.5 font-medium leading-none placeholder-stone-300 outline-none dark:bg-neutral-800 dark:placeholder-neutral-600"
                     spellCheck="false"
                     autoFocus
                     placeholder={
@@ -66,7 +66,7 @@ function StatsHeader({ onClick }: { onClick: () => void }) {
 
     return (
         <div
-            className="flex cursor-pointer gap-3 rounded-md px-2 transition-all hover:scale-x-[99%] hover:scale-y-[97%] hover:bg-stone-100 dark:hover:bg-neutral-800"
+            className="flex cursor-pointer gap-3 rounded-md px-2 transition-all hover:scale-x-[99%] hover:scale-y-[97%] hover:bg-stone-50 dark:hover:bg-neutral-800"
             onClick={onClick}
         >
             <ResourceStat value={weekArticleCount} type="articles" large />
