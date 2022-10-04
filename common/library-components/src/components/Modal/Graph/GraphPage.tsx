@@ -279,7 +279,7 @@ function renderGraph(
             if (!initialZoomDone) {
                 forceGraph.zoomToFit(
                     0,
-                    50,
+                    150,
                     (node: RuntimeNode) => node.isCompleted
                 );
                 forceGraph.cooldownTicks(Infinity);

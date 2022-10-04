@@ -134,7 +134,7 @@ function ModalContent({
                     currentTab === "stats"
                         ? "overflow-y-scroll"
                         : "overflow-y-auto",
-                    currentTab === "graph" ? "pl-4" : "p-4"
+                    currentTab === "graph" ? "" : "p-4"
                 )}
             >
                 {/* <HeaderBar

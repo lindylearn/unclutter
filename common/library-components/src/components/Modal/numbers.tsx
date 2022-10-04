@@ -95,7 +95,7 @@ export function ResourceProgress({
     return (
         <div
             className={clsx(
-                "relative flex items-center overflow-hidden rounded-md bg-white px-2 py-0.5 transition-opacity",
+                "relative flex items-center overflow-hidden rounded-md bg-white px-2 py-0.5 transition-opacity dark:bg-[#212121]",
                 large ? "gap-1.5" : "gap-1",
                 value === undefined && "opacity-0"
             )}
@@ -172,7 +172,7 @@ export function ResourceIcon({
 export function ProgressBar({ value, target, color }) {
     return (
         <div className="relative h-4 w-52 overflow-hidden rounded-md">
-            <div className="absolute top-0 left-0 h-full w-full bg-white" />
+            <div className="absolute top-0 left-0 h-full w-full bg-white dark:bg-[rgb(19,21,22)]" />
             <div
                 className="bg-lindy dark:bg-lindyDark absolute top-0 left-0 h-full transition-all"
                 style={{
