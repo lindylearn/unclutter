@@ -6,7 +6,6 @@ import {
 import React, { ReactNode, useContext, useEffect, useState } from "react";
 import { getRandomColor, getRandomLightColor } from "../../common";
 import { Article, ReplicacheContext, Topic } from "../../store";
-import { ResourceStat } from "./Stats";
 
 export default function RecentModalTab({
     currentTopic,
@@ -69,17 +68,17 @@ function TopicGroup({
                     {title}
                 </h2>
                 <div className="stats flex gap-2 font-medium text-stone-300">
-                    {/* <InlineProgressCircle
+                    <InlineProgressCircle
                         current={articles.length}
                         target={10}
                     />
-                    <span className="ml-1">{10 - articles.length} unread</span> */}
+                    <span className="">{10 - articles.length} unread</span>
 
-                    <ResourceStat
+                    {/* <ResourceStat
                         value={allTopicArticles?.length}
                         type="articles"
                     />
-                    <ResourceStat value={0} type="highlights" />
+                    <ResourceStat value={0} type="highlights" /> */}
                 </div>
             </div>
             <div

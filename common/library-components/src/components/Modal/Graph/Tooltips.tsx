@@ -2,9 +2,9 @@ import React from "react";
 import { ForceGraphInstance } from "force-graph";
 
 import { getDomain, getRandomLightColor, openArticle } from "../../../common";
-import { ResourceStat } from "../Stats";
 import { CustomGraphNode } from "./data";
 import { readingProgressFullClamp, Topic } from "../../../store";
+import { ResourceStat } from "../numbers";
 
 export function NodeTooltip({
     x,

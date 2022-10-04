@@ -13,6 +13,8 @@ import {
     Topic,
 } from "../../../store";
 import { TopicEmoji } from "../../TopicTag";
+import { InlineProgressCircle } from "../../Charts";
+import { ResourceProgress, ResourceStat } from "../numbers";
 
 export function GraphPage({
     graph,
@@ -30,6 +32,7 @@ export function GraphPage({
 
     const ref = useRef<HTMLDivElement>(null);
     const forceGraphRef = useRef<ForceGraphInstance>(null);
+    const [activeGraph, setActiveGraph] = useState<CustomGraphData>();
     const [hoverNode, setHoverNode] = useState<CustomGraphNode | null>(null);
     useEffect(() => {
         if (!ref.current || !graph) {
@@ -37,13 +40,13 @@ export function GraphPage({
         }
 
         // copy to avoid reducing graph size
-        const graphCopy = {
+        const activeGraph = {
             nodes: graph.nodes.map((node) => ({ ...node })),
             links: graph.links.map((link) => ({ ...link })),
         };
 
         // wait a bit during intro animation for performance
-        const isInitialRender = graphCopy.nodes[0]?.x === undefined;
+        const isInitialRender = activeGraph.nodes[0]?.x === undefined;
         setTimeout(
             async () => {
                 const topics = await rep?.query.listTopics();
@@ -54,25 +57,26 @@ export function GraphPage({
 
                 // filter to topic
                 if (currentTopic) {
-                    graphCopy.nodes = graphCopy.nodes.filter(
+                    activeGraph.nodes = activeGraph.nodes.filter(
                         (n) =>
                             n.topic_id === currentTopic.id ||
                             topicsById[n.topic_id!]?.group_id ===
                                 currentTopic.id
                     );
                     const nodeSet = new Set<string>(
-                        graphCopy.nodes.map((n) => n.id)
+                        activeGraph.nodes.map((n) => n.id)
                     );
 
-                    graphCopy.links = graphCopy.links.filter(
+                    activeGraph.links = activeGraph.links.filter(
                         (l) =>
                             nodeSet.has(l.source as string) &&
                             nodeSet.has(l.target as string)
                     );
                 }
+                setActiveGraph(activeGraph);
 
                 const forceGraph = renderGraph(
-                    graphCopy,
+                    activeGraph,
                     ref.current!,
                     darkModeEnabled,
                     setRenderDone,
@@ -103,9 +107,9 @@ export function GraphPage({
                     darkModeEnabled={darkModeEnabled}
                 />
             )}
-            {currentTopic && (
+            {/* {currentTopic && (
                 <div
-                    className="absolute left-3 right-3 flex items-center rounded-md px-1 py-0.5 font-medium"
+                    className="absolute left-3 top-3 flex items-center rounded-md px-1 py-0.5 font-medium"
                     style={{
                         background: getRandomLightColor(
                             currentTopic.id,
@@ -121,7 +125,47 @@ export function GraphPage({
                     )}
                     {currentTopic.name}
                 </div>
+            )} */}
+
+            {activeGraph && (
+                <GraphStats
+                    activeGraph={activeGraph}
+                    currentTopic={currentTopic}
+                    darkModeEnabled={darkModeEnabled}
+                />
             )}
+        </div>
+    );
+}
+
+function GraphStats({
+    activeGraph,
+    currentTopic,
+    darkModeEnabled,
+}: {
+    activeGraph: CustomGraphData;
+    currentTopic?: Topic;
+    darkModeEnabled: boolean;
+}) {
+    const articleCount = activeGraph.nodes.length;
+    const completedCount = activeGraph?.nodes.filter(
+        (n) => n.isCompleted
+    ).length;
+
+    const color =
+        currentTopic && getRandomLightColor(currentTopic.id, darkModeEnabled);
+
+    return (
+        <div className="absolute right-4 top-4 flex gap-3">
+            <ResourceProgress
+                type="articles"
+                value={completedCount}
+                target={articleCount}
+                color={color}
+                large
+            />
+
+            <ResourceStat type="highlights" value={0} large />
         </div>
     );
 }
