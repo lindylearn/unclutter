@@ -21,10 +21,10 @@ export function renderNodeObject(darkModeEnabled: boolean, NODE_R: number) {
         ) {
             ctx.beginPath();
             ctx.arc(node.x, node.y, NODE_R * 0.6, 0, 2 * Math.PI);
-            // ctx.fillStyle = darkModeEnabled
-            //     ? "rgb(38, 38, 38)"
-            //     : "rgb(250, 250, 249)";
-            ctx.fillStyle = darkModeEnabled ? "rgb(19, 21, 22)" : "white";
+            ctx.fillStyle = darkModeEnabled
+                ? "rgb(38, 38, 38)"
+                : "rgb(250, 250, 249)";
+            // ctx.fillStyle = darkModeEnabled ? "rgb(19, 21, 22)" : "white";
 
             ctx.fill();
         } else if (false && globalScale >= 1.5) {

@@ -10,6 +10,7 @@ import HeaderBar from "./HeaderBar";
 import { ReplicacheContext, Topic } from "../../store";
 import RecentModalTab from "./Recent";
 import { LindyIcon } from "../Icons";
+import HighlightsTab from "./Highlights";
 
 export function LibraryModalPage({
     darkModeEnabled = false,
@@ -35,9 +36,13 @@ export function LibraryModalPage({
     }, [rep]);
 
     const [currentTab, setCurrentTab] = useState("graph");
+
     const [currentTopic, setCurrentTopic] = useState<Topic | undefined>(
         initialTopic
     );
+    useEffect(() => {
+        setCurrentTopic(initialTopic);
+    }, [initialTopic]);
     function showTopic(topic: Topic) {
         setCurrentTopic(topic);
         setCurrentTab("graph");
@@ -46,7 +51,7 @@ export function LibraryModalPage({
     return (
         <div
             className={clsx(
-                "modal fixed top-0 left-0 h-screen w-screen pt-5 text-base",
+                "modal fixed top-0 left-0 h-screen w-screen text-base",
                 isVisible ? "modal-visible" : "modal-hidden",
                 darkModeEnabled && "dark"
             )}
@@ -62,7 +67,7 @@ export function LibraryModalPage({
                 className="modal-background absolute top-0 left-0 h-full w-full cursor-zoom-out bg-stone-800 opacity-50 dark:bg-[rgb(19,21,22)]"
                 onClick={closeModal}
             />
-            <div className="modal-content relative z-10 mx-auto flex h-5/6 max-w-5xl flex-col overflow-hidden rounded-lg bg-white text-stone-800 shadow dark:bg-[#212121] dark:text-[rgb(232,230,227)]">
+            <div className="modal-content relative z-10 mx-auto mt-10 flex h-5/6 max-h-[700px] max-w-5xl flex-col overflow-hidden rounded-lg bg-white text-stone-800 shadow dark:bg-[#212121] dark:text-[rgb(232,230,227)]">
                 <ModalContent
                     articleCount={articleCount}
                     currentArticle={currentArticle}
@@ -125,10 +130,11 @@ function ModalContent({
             </aside>
             <div
                 className={clsx(
-                    "right-side flex max-h-full w-full flex-col p-4",
+                    "right-side flex max-h-full w-full flex-col",
                     currentTab === "stats"
                         ? "overflow-y-scroll"
-                        : "overflow-y-auto"
+                        : "overflow-y-auto",
+                    currentTab === "graph" ? "pl-4" : "p-4"
                 )}
             >
                 {/* <HeaderBar
@@ -159,6 +165,7 @@ function ModalContent({
                         showTopic={showTopic}
                     />
                 )}
+                {currentTab === "highlights" && <HighlightsTab />}
             </div>
         </div>
     );

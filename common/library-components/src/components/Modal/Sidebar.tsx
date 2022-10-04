@@ -124,7 +124,7 @@ function getModalTabOptions(new_link_count?: number): ModalTabOptions[] {
         // },
         {
             label: "Highlights",
-            value: "annotations",
+            value: "highlights",
             svg: (
                 <svg viewBox="0 0 512 512" className="h-4">
                     <path

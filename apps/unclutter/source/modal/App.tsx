@@ -56,7 +56,7 @@ export default function App({
                 currentArticle={
                     libraryState?.libraryInfo?.article.url || articleUrl
                 }
-                currentTopic={libraryState?.libraryInfo?.topic?.id}
+                initialTopic={libraryState?.libraryInfo?.topic}
                 graph={libraryState?.graph}
                 isVisible={showModal}
                 closeModal={closeModal}

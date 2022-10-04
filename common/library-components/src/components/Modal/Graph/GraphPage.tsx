@@ -90,7 +90,7 @@ export function GraphPage({
         <div className="relative h-full w-full overflow-hidden">
             <div
                 className={clsx(
-                    "graph h-full w-full cursor-move rounded-md dark:bg-neutral-800",
+                    "graph h-full w-full cursor-move rounded-md bg-stone-50 dark:bg-neutral-800",
                     renderDone && "render-done"
                 )}
                 ref={ref}
@@ -105,7 +105,7 @@ export function GraphPage({
             )}
             {currentTopic && (
                 <div
-                    className="absolute top-0 left-0 flex items-center rounded-md px-1 py-0.5 font-medium"
+                    className="absolute left-3 right-3 flex items-center rounded-md px-1 py-0.5 font-medium"
                     style={{
                         background: getRandomLightColor(
                             currentTopic.id,
@@ -152,7 +152,7 @@ function renderGraph(
     let themeColor = darkModeEnabled
         ? "hsl(51, 80%, 43%)"
         : "hsl(51, 80%, 64%)";
-    let secondaryColor = darkModeEnabled ? "#57534e" : "#f5f5f5";
+    let secondaryColor = darkModeEnabled ? "#57534e" : "#e5e7eb";
     if (currentTopic) {
         themeColor = getRandomLightColor(currentTopic.id, darkModeEnabled);
     }
