@@ -18,7 +18,7 @@ export function LibraryModalPage({
     initialTopic,
     graph,
     relatedLinkCount,
-    isVisible = true,
+    isVisible,
     closeModal = () => {},
 }: {
     darkModeEnabled?: boolean;
@@ -26,7 +26,7 @@ export function LibraryModalPage({
     initialTopic?: Topic;
     graph?: CustomGraphData;
     relatedLinkCount?: number;
-    isVisible?: boolean;
+    isVisible: boolean | null;
     closeModal?: () => void;
 }) {
     const rep = useContext(ReplicacheContext);
@@ -51,8 +51,9 @@ export function LibraryModalPage({
     return (
         <div
             className={clsx(
-                "modal invisible fixed top-0 left-0 h-screen w-screen text-base opacity-0",
-                isVisible ? "modal-visible" : "modal-hidden",
+                "modal fixed top-0 left-0 h-screen w-screen text-base",
+                isVisible && "modal-visible",
+                isVisible === false && "modal-hidden",
                 darkModeEnabled && "dark"
             )}
             style={

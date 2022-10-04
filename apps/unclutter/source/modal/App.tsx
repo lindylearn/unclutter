@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { LibraryModalPage } from "@unclutter/library-components/dist/components/Modal";
 
 import { LibraryState } from "../common/schema";
@@ -14,7 +14,7 @@ export default function App({
 }) {
     const rep = useMemo<ReplicacheProxy>(() => new ReplicacheProxy(), []);
     const [libraryState, setLibraryState] = useState<LibraryState | null>(null);
-    useEffect(() => {
+    useLayoutEffect(() => {
         window.addEventListener("message", ({ data }) => {
             if (data.event === "setLibraryState") {
                 setLibraryState(data.libraryState);
@@ -34,10 +34,12 @@ export default function App({
         window.top.postMessage({ event: "modalAppReady" }, "*");
     }, []);
 
-    const [showModal, setShowModal] = useState(false);
+    const [showModal, setShowModal] = useState<boolean | null>(null);
     useEffect(() => {
-        // render once before triggering animation
-        setShowModal(true);
+        // leave time to render graph before triggering animation
+        setTimeout(() => {
+            setShowModal(true);
+        }, 50);
     }, []);
     function closeModal() {
         setShowModal(false);

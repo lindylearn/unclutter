@@ -53,7 +53,10 @@
             {/if}
 
             {#if libraryState?.topicProgress?.linkCount}
-                <div class="bottom-row mt-2" in:fade>
+                <div
+                    class="bottom-row mt-2"
+                    in:fly={{ y: 10, duration: 200, easing: cubicOut }}
+                >
                     <svg
                         class="mr-0.5 inline-block w-4 align-middle"
                         viewBox="0 0 640 512"

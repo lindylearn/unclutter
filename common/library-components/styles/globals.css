@@ -45,18 +45,38 @@ body {
 }
 
 /* modal content & background fade-in & out */
+/* use animations for rendering resilience  */
 .modal {
     opacity: 0;
     visibility: hidden;
 }
 .modal-visible {
-    opacity: 1 !important;
-    visibility: visible !important;
-
-    transition: all 0.4s cubic-bezier(0.5, 1, 0.89, 1); /* easeOutQuad */
+    animation: modalFadein 0.4s cubic-bezier(0.5, 1, 0.89, 1); /* easeOutQuad */
+    animation-fill-mode: both;
+}
+@keyframes modalFadein {
+    from {
+        opacity: 0;
+        visibility: hidden;
+    }
+    to {
+        opacity: 1;
+        visibility: visible;
+    }
 }
 .modal-hidden {
-    transition: all 0.4s cubic-bezier(0.5, 1, 0.89, 1); /* easeOutQuad */
+    animation: modalFadeOut 0.4s cubic-bezier(0.5, 1, 0.89, 1); /* easeOutQuad */
+    animation-fill-mode: both;
+}
+@keyframes modalFadeOut {
+    from {
+        opacity: 1;
+        visibility: visible;
+    }
+    to {
+        opacity: 0;
+        visibility: hidden;
+    }
 }
 
 /* modal content scaling */
@@ -64,11 +84,28 @@ body {
     transform: scale(0.9) translateY(20px);
 }
 .modal-visible > .modal-content {
-    transform: scale(1) translateY(0);
-    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); /* easeOutBack */
+    animation: modalContentFadein 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); /* easeOutBack */
+    animation-fill-mode: both;
+}
+@keyframes modalContentFadein {
+    from {
+        transform: scale(0.9) translateY(20px);
+    }
+    to {
+        transform: scale(1) translateY(0);
+    }
 }
 .modal-hidden > .modal-content {
-    transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); /* easeOutQuart */
+    animation: modalContentFadeOut 0.4s cubic-bezier(0.11, 0, 0.5, 0); /* easeInQuad */
+    animation-fill-mode: both;
+}
+@keyframes modalContentFadeOut {
+    from {
+        transform: scale(1) translateY(0);
+    }
+    to {
+        transform: scale(0.9) translateY(20px);
+    }
 }
 
 /* background close hover */
