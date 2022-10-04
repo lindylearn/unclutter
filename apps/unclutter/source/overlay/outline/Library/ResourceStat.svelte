@@ -7,7 +7,7 @@
 
 <div
     class={clsx(
-        "flex items-center transition-opacity gap-1",
+        "flex items-center transition-opacity gap-1.5",
         value === undefined && "opacity-0"
     )}
 >

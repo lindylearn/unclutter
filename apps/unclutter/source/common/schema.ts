@@ -16,7 +16,8 @@ export type LibraryState = {
     error: boolean;
 
     relatedArticles?: Article[];
-    graph: CustomGraphData;
+    graph: CustomGraphData | null;
+    topicProgress: TopicProgress | null;
 };
 
 // returned from API
@@ -26,4 +27,9 @@ export type LibraryInfo = {
     sibling_count: number;
 
     new_links?: ArticleLink[];
+};
+
+export type TopicProgress = {
+    articleCount: number;
+    completedCount: number;
 };

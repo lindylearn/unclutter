@@ -7,10 +7,11 @@ import {
     updateLibraryArticle,
 } from "../../common/api";
 import { showLibrarySignupFlag } from "../../common/featureFlags";
-import { LibraryState } from "../../common/schema";
+import { LibraryState, TopicProgress } from "../../common/schema";
 import {
     Article,
     ArticleLink,
+    readingProgressFullClamp,
 } from "@unclutter/library-components/dist/store/_schema";
 import { getLibraryUser } from "../../common/storage";
 import {
@@ -40,6 +41,7 @@ export default class LibraryModifier implements PageModifier {
 
         relatedArticles: null,
         graph: null,
+        topicProgress: null,
     };
 
     constructor(articleUrl: string, overlayManager: OverlayManager) {
@@ -88,7 +90,6 @@ export default class LibraryModifier implements PageModifier {
                 if (!this.libraryState.libraryInfo) {
                     this.libraryState.error = true;
                 }
-                this.overlayManager.updateLibraryState(this.libraryState);
 
                 reportEventContentScript("addArticle", {
                     libraryUser: this.libraryState.libraryUser,
@@ -96,15 +97,26 @@ export default class LibraryModifier implements PageModifier {
             } else {
                 // show retrieved state
                 this.libraryState.wasAlreadyPresent = true;
-                this.overlayManager.updateLibraryState(this.libraryState);
 
                 reportEventContentScript("visitArticle", {
                     libraryUser: this.libraryState.libraryUser,
                 });
             }
 
+            // fetch topic progress stats
             if (this.libraryState.libraryInfo) {
-                // construct article graph from local replicache
+                this.libraryState.topicProgress =
+                    await this.constructTopicProgress(
+                        rep,
+                        this.libraryState.libraryInfo.topic.id
+                    );
+            }
+
+            // show in UI
+            this.overlayManager.updateLibraryState(this.libraryState);
+
+            // construct article graph from local replicache
+            if (this.libraryState.libraryInfo) {
                 let nodes: Article[] = await rep.query.listRecentArticles();
                 let links: ArticleLink[] = await rep.query.listArticleLinks();
 
@@ -165,6 +177,24 @@ export default class LibraryModifier implements PageModifier {
             );
 
         this.overlayManager.updateLibraryState(this.libraryState);
+    }
+
+    private async constructTopicProgress(
+        rep: ReplicacheProxy,
+        topic_id: string
+    ): Promise<TopicProgress> {
+        const topicArticles = await rep?.query.listTopicArticles(topic_id);
+        if (!this.libraryState.wasAlreadyPresent) {
+            // likely not pulled from replicache yet
+            topicArticles.push(this.libraryState.libraryInfo.article);
+        }
+
+        return {
+            articleCount: topicArticles.length,
+            completedCount: topicArticles.filter(
+                (a) => a.reading_progress >= readingProgressFullClamp
+            ).length,
+        };
     }
 
     private scrollOnceFetchDone = false;

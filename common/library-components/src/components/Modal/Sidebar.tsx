@@ -7,17 +7,21 @@ import { getRandomLightColor } from "../../common";
 export default function Sidebar({
     currentTab,
     currentTopic,
+    changedTopic,
     setCurrentTab,
     new_link_count,
     darkModeEnabled,
 }: {
     currentTab: string;
     currentTopic?: Topic;
+    changedTopic: boolean;
     setCurrentTab: (tab: string) => void;
     new_link_count?: number;
     darkModeEnabled: boolean;
 }) {
-    const modalTabs = getModalTabOptions(new_link_count);
+    const modalTabs = getModalTabOptions(
+        changedTopic ? new_link_count : undefined
+    );
 
     return (
         <div className="flex h-full flex-col items-stretch justify-between gap-1 rounded-lg">

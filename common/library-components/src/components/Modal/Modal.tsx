@@ -72,6 +72,7 @@ export function LibraryModalPage({
                     articleCount={articleCount}
                     currentArticle={currentArticle}
                     currentTopic={currentTopic}
+                    changedTopic={currentTopic !== initialTopic}
                     darkModeEnabled={darkModeEnabled}
                     graph={graph}
                     new_link_count={new_link_count}
@@ -87,6 +88,7 @@ export function LibraryModalPage({
 function ModalContent({
     currentArticle,
     currentTopic,
+    changedTopic,
     articleCount,
     darkModeEnabled,
     graph,
@@ -97,6 +99,7 @@ function ModalContent({
 }: {
     currentArticle?: string;
     currentTopic?: Topic;
+    changedTopic: boolean;
     articleCount?: number;
     darkModeEnabled: boolean;
     graph?: CustomGraphData;
@@ -122,6 +125,7 @@ function ModalContent({
                     <Sidebar
                         currentTab={currentTab}
                         currentTopic={currentTopic}
+                        changedTopic={changedTopic}
                         setCurrentTab={setCurrentTab}
                         new_link_count={new_link_count}
                         darkModeEnabled={darkModeEnabled}
@@ -156,6 +160,7 @@ function ModalContent({
                         darkModeEnabled={darkModeEnabled}
                         currentArticle={currentArticle}
                         currentTopic={currentTopic}
+                        changedTopic={changedTopic}
                     />
                 )}
                 {currentTab === "stats" && (

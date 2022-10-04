@@ -21,11 +21,13 @@ export function GraphPage({
     darkModeEnabled,
     currentArticle,
     currentTopic,
+    changedTopic,
 }: {
     graph?: CustomGraphData;
     darkModeEnabled: boolean;
     currentArticle?: string;
     currentTopic?: Topic;
+    changedTopic: boolean;
 }) {
     const rep = useContext(ReplicacheContext);
     const [renderDone, setRenderDone] = useState(false);
@@ -80,7 +82,8 @@ export function GraphPage({
                     darkModeEnabled,
                     setRenderDone,
                     setHoverNode,
-                    currentTopic
+                    currentTopic,
+                    changedTopic
                 );
                 // @ts-ignore
                 forceGraphRef.current = forceGraph;
@@ -176,7 +179,8 @@ function renderGraph(
     darkModeEnabled: boolean,
     setRenderDone: (done: boolean) => void,
     setHoverNode: (node: CustomGraphNode | null) => void,
-    currentTopic?: Topic
+    currentTopic: Topic,
+    changedTopic: boolean
 ): ForceGraphInstance {
     console.log(`rendering graph with ${graph.nodes.length} nodes`);
     const nodes = graph.nodes;
@@ -190,6 +194,9 @@ function renderGraph(
         ? "hsl(51, 80%, 43%)"
         : "hsl(51, 80%, 64%)";
     let secondaryColor = darkModeEnabled ? "#57534e" : "#e5e7eb";
+    const originColor = darkModeEnabled
+        ? "rgb(232, 230, 227)"
+        : "rgb(41, 37, 36)";
     if (currentTopic) {
         themeColor = getRandomLightColor(currentTopic.id, darkModeEnabled);
     }
@@ -223,7 +230,10 @@ function renderGraph(
         .nodeRelSize(NODE_R)
         .nodeVal((n: RuntimeNode) => (n.isCompleted ? 2 : 1))
         .nodeColor((n: RuntimeNode) => {
-            if (n.depth <= 1 || n.isCompleted || n.isCompletedAdjacent) {
+            if (n.depth <= 1) {
+                return originColor;
+            }
+            if (n.isCompleted || n.isCompletedAdjacent) {
                 return themeColor;
             }
             return secondaryColor;
@@ -240,6 +250,9 @@ function renderGraph(
         // .linkLabel("score")
         .linkWidth((l: CustomGraphLink) => (l.isCompletedAdjacent ? 5 : 3))
         .linkColor((l: CustomGraphLink) => {
+            if (l.depth === 1) {
+                return originColor;
+            }
             if (l.depth <= 1 || l.isCompletedAdjacent) {
                 return themeColor;
             }
@@ -277,11 +290,22 @@ function renderGraph(
         .maxZoom(5)
         .onEngineStop(() => {
             if (!initialZoomDone) {
-                forceGraph.zoomToFit(
-                    0,
-                    150,
-                    (node: RuntimeNode) => node.isCompleted
-                );
+                if (changedTopic) {
+                    // changed topic filter
+                    forceGraph.zoomToFit(
+                        0,
+                        50,
+                        (node: RuntimeNode) => node.isCompleted
+                    );
+                } else {
+                    // initial article
+                    forceGraph.zoomToFit(
+                        0,
+                        150,
+                        (node: RuntimeNode) => node.depth <= 1
+                    );
+                }
+
                 forceGraph.cooldownTicks(Infinity);
                 initialZoomDone = true;
 
