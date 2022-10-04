@@ -289,7 +289,7 @@ function TopicStat({
             }}
             onClick={() => showTopic(topic!)}
         >
-            <div className="flex max-w-full items-center overflow-hidden">
+            <div className="flex max-w-full items-center overflow-hidden font-medium">
                 {topic?.emoji && (
                     <TopicEmoji emoji={topic?.emoji} className="w-4" />
                 )}

@@ -6,6 +6,7 @@ import {
 import React, { ReactNode, useContext, useEffect, useState } from "react";
 import { getRandomColor, getRandomLightColor } from "../../common";
 import { Article, ReplicacheContext, Topic } from "../../store";
+import { ResourceProgress } from "./numbers";
 
 export default function RecentModalTab({
     currentTopic,
@@ -21,7 +22,7 @@ export default function RecentModalTab({
     // TODO ensure currentTopic is present and first in list
 
     return (
-        <div className="flex flex-col gap-4 pt-1">
+        <div className="flex flex-col gap-4">
             {tabInfos?.map((tabInfo, index) => (
                 <TopicGroup
                     darkModeEnabled={darkModeEnabled}
@@ -57,6 +58,8 @@ function TopicGroup({
         rep?.query.getTopic(topic_id).then(setTopic);
     }, [rep]);
 
+    const color = getRandomLightColor(topic_id, darkModeEnabled);
+
     return (
         <div className="topic animate-fadein">
             <div className="topic-header mx-0.5 mb-2 flex justify-between">
@@ -67,25 +70,28 @@ function TopicGroup({
                     {icon}
                     {title}
                 </h2>
-                <div className="stats flex gap-2 font-medium text-stone-300">
-                    <InlineProgressCircle
+                <div className="stats flex gap-2 font-medium">
+                    {/* <InlineProgressCircle
                         current={articles.length}
                         target={10}
                     />
-                    <span className="">{10 - articles.length} unread</span>
+                    <span className="">{10 - articles.length} unread</span> */}
 
-                    {/* <ResourceStat
-                        value={allTopicArticles?.length}
+                    <ResourceProgress
                         type="articles"
+                        value={articles.length}
+                        target={allTopicArticles?.length}
+                        color={color}
                     />
-                    <ResourceStat value={0} type="highlights" /> */}
+
+                    {/* <ResourceStat value={0} type="highlights" /> */}
                 </div>
             </div>
             <div
                 className="topic-articles rounded-md p-3"
                 style={{
                     height: "11.5rem", // article height + padding to prevent size change
-                    background: getRandomLightColor(topic_id, darkModeEnabled),
+                    background: color,
                 }}
             >
                 <DraggableArticleList

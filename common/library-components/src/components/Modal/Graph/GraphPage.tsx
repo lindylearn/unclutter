@@ -107,16 +107,8 @@ export function GraphPage({
                     darkModeEnabled={darkModeEnabled}
                 />
             )}
-            {/* {currentTopic && (
-                <div
-                    className="absolute left-3 top-3 flex items-center rounded-md px-1 py-0.5 font-medium"
-                    style={{
-                        background: getRandomLightColor(
-                            currentTopic.id,
-                            darkModeEnabled
-                        ),
-                    }}
-                >
+            {currentTopic && (
+                <div className="absolute left-4 top-4 flex items-center rounded-md font-medium">
                     {currentTopic.emoji && (
                         <TopicEmoji
                             emoji={currentTopic.emoji}
@@ -125,7 +117,7 @@ export function GraphPage({
                     )}
                     {currentTopic.name}
                 </div>
-            )} */}
+            )}
 
             {activeGraph && (
                 <GraphStats
@@ -165,7 +157,7 @@ function GraphStats({
                 large
             />
 
-            <ResourceStat type="highlights" value={0} large />
+            {/* <ResourceStat type="highlights" value={0} large /> */}
         </div>
     );
 }
