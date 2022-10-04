@@ -5,15 +5,17 @@ import {
 } from "../../components";
 import React, { ReactNode, useContext, useEffect, useState } from "react";
 import { getRandomColor, getRandomLightColor } from "../../common";
-import { Article, ReplicacheContext } from "../../store";
+import { Article, ReplicacheContext, Topic } from "../../store";
 import { ResourceStat } from "./Stats";
 
 export default function RecentModalTab({
     currentTopic,
     darkModeEnabled,
+    showTopic,
 }: {
-    currentTopic?: string;
+    currentTopic?: Topic;
     darkModeEnabled: boolean;
+    showTopic: (topic: Topic) => void;
 }) {
     const [tabInfos, unreadArticlesCount] = useTabInfos(10, true);
 
@@ -22,7 +24,11 @@ export default function RecentModalTab({
     return (
         <div className="flex flex-col gap-4 pt-1">
             {tabInfos?.map((tabInfo, index) => (
-                <TopicGroup darkModeEnabled={darkModeEnabled} {...tabInfo} />
+                <TopicGroup
+                    darkModeEnabled={darkModeEnabled}
+                    {...tabInfo}
+                    showTopic={showTopic}
+                />
             ))}
         </div>
     );
@@ -33,25 +39,32 @@ function TopicGroup({
     icon,
     articles,
     darkModeEnabled,
+    showTopic,
 }: {
     key: string;
     title: string;
     icon?: ReactNode;
     articles: Article[];
     darkModeEnabled: boolean;
+    showTopic: (topic: Topic) => void;
 }) {
     const topic_id = articles[0].topic_id!;
 
     const rep = useContext(ReplicacheContext);
     const [allTopicArticles, setAllTopicArticles] = useState<Article[]>();
+    const [topic, setTopic] = useState<Topic>();
     useEffect(() => {
         rep?.query.listTopicArticles(topic_id).then(setAllTopicArticles);
+        rep?.query.getTopic(topic_id).then(setTopic);
     }, [rep]);
 
     return (
         <div className="topic animate-fadein">
             <div className="topic-header mx-0.5 mb-2 flex justify-between">
-                <h2 className="title flex items-center gap-2 font-medium">
+                <h2
+                    className="title flex cursor-pointer items-center gap-2 font-medium transition-transform hover:scale-[96%]"
+                    onClick={() => showTopic(topic!)}
+                >
                     {icon}
                     {title}
                 </h2>

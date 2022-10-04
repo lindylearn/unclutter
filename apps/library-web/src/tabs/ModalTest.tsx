@@ -7,12 +7,15 @@ import {
     Article,
     ArticleLink,
     ReplicacheContext,
+    Topic,
 } from "@unclutter/library-components/dist/store";
 import { useContext, useEffect, useState } from "react";
 
 export default function ModalTestTab({}) {
-    const articleUrl =
-        "https://sariazout.mirror.xyz/7gSSTJ96SEyvXeljymglO3zN4H6DCgVnrNZq8_2NX1A";
+    const articleId =
+        "9341ef9381119f65b0730c9ffb860ded3771190220a3227273ac3062dbe8334a";
+    const [article, setArticle] = useState<Article>();
+    const [topic, setTopic] = useState<Topic>();
 
     const rep = useContext(ReplicacheContext);
     const [graph, setGraph] = useState<CustomGraphData>();
@@ -25,7 +28,17 @@ export default function ModalTestTab({}) {
             const nodes: Article[] = await rep.query.listRecentArticles();
             const links: ArticleLink[] = await rep.query.listArticleLinks();
 
-            const graph = await constructGraphData(nodes, links, articleUrl);
+            const article = await rep.query.getArticle(articleId);
+            const topic = await rep.query.getTopic(article?.topic_id!);
+            setArticle(article);
+            setTopic(topic);
+
+            const graph = await constructGraphData(
+                nodes,
+                links,
+                article!.url,
+                topic
+            );
             setGraph(graph);
         })();
 
@@ -45,6 +58,10 @@ export default function ModalTestTab({}) {
             });
     }, []);
 
+    if (!article || !topic || !graph) {
+        return;
+    }
+
     return (
         <div className="h-screen w-screen">
             <div
@@ -56,7 +73,8 @@ export default function ModalTestTab({}) {
 
             <LibraryModalPage
                 darkModeEnabled={darkModeEnabled}
-                currentArticle={articleUrl}
+                currentArticle={article?.url}
+                initialTopic={topic}
                 graph={graph}
                 new_link_count={2}
                 isVisible={showModal}

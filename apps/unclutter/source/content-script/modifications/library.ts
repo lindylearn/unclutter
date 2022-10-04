@@ -121,7 +121,8 @@ export default class LibraryModifier implements PageModifier {
                 this.libraryState.graph = await constructGraphData(
                     nodes,
                     links,
-                    this.libraryState.libraryInfo.article.url
+                    this.libraryState.libraryInfo.article.url,
+                    this.libraryState.libraryInfo.topic
                 );
                 this.overlayManager.updateLibraryState(this.libraryState);
             }

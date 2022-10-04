@@ -1,22 +1,33 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import ForceGraph, { ForceGraphInstance } from "force-graph";
 import { forceManyBody } from "d3-force";
 import clsx from "clsx";
 
-import { openArticle } from "../../../common";
+import { getRandomLightColor, openArticle } from "../../../common";
 import { CustomGraphData, CustomGraphLink, CustomGraphNode } from "./data";
 import { renderNodeObject } from "./canvas";
 import { NodeTooltip } from "./Tooltips";
-import { readingProgressFullClamp } from "../../../store";
+import {
+    readingProgressFullClamp,
+    ReplicacheContext,
+    Topic,
+} from "../../../store";
+import { TopicEmoji } from "../../TopicTag";
 
 export function GraphPage({
     graph,
     darkModeEnabled,
+    currentArticle,
+    currentTopic,
 }: {
     graph?: CustomGraphData;
     darkModeEnabled: boolean;
+    currentArticle?: string;
+    currentTopic?: Topic;
 }) {
+    const rep = useContext(ReplicacheContext);
     const [renderDone, setRenderDone] = useState(false);
+
     const ref = useRef<HTMLDivElement>(null);
     const forceGraphRef = useRef<ForceGraphInstance>(null);
     const [hoverNode, setHoverNode] = useState<CustomGraphNode | null>(null);
@@ -25,12 +36,43 @@ export function GraphPage({
             return;
         }
 
+        // copy to avoid reducing graph size
+        const graphCopy = {
+            nodes: graph.nodes.map((node) => ({ ...node })),
+            links: graph.links.map((link) => ({ ...link })),
+        };
+
         // wait a bit during intro animation for performance
-        const isInitialRender = graph.nodes[0].x === undefined;
+        const isInitialRender = graphCopy.nodes[0]?.x === undefined;
         setTimeout(
-            () => {
+            async () => {
+                const topics = await rep?.query.listTopics();
+                const topicsById = (topics || []).reduce((acc, topic) => {
+                    acc[topic.id] = topic;
+                    return acc;
+                }, {});
+
+                // filter to topic
+                if (currentTopic) {
+                    graphCopy.nodes = graphCopy.nodes.filter(
+                        (n) =>
+                            n.topic_id === currentTopic.id ||
+                            topicsById[n.topic_id!]?.group_id ===
+                                currentTopic.id
+                    );
+                    const nodeSet = new Set<string>(
+                        graphCopy.nodes.map((n) => n.id)
+                    );
+
+                    graphCopy.links = graphCopy.links.filter(
+                        (l) =>
+                            nodeSet.has(l.source as string) &&
+                            nodeSet.has(l.target as string)
+                    );
+                }
+
                 const forceGraph = renderGraph(
-                    graph,
+                    graphCopy,
                     ref.current!,
                     darkModeEnabled,
                     setRenderDone,
@@ -41,7 +83,7 @@ export function GraphPage({
             },
             isInitialRender ? 50 : 0
         );
-    }, [ref, graph]);
+    }, [ref, graph, currentTopic]);
 
     return (
         <div className="relative h-full w-full overflow-hidden">
@@ -57,6 +99,25 @@ export function GraphPage({
                     {...hoverNode}
                     forceGraph={forceGraphRef.current}
                 />
+            )}
+            {currentTopic && (
+                <div
+                    className="absolute top-2 left-2 flex items-center rounded-md px-1 py-0.5"
+                    style={{
+                        background: getRandomLightColor(
+                            currentTopic.id,
+                            darkModeEnabled
+                        ),
+                    }}
+                >
+                    {currentTopic.emoji && (
+                        <TopicEmoji
+                            emoji={currentTopic.emoji}
+                            className="w-4"
+                        />
+                    )}
+                    {currentTopic.name}
+                </div>
             )}
         </div>
     );
@@ -77,8 +138,8 @@ function renderGraph(
     setHoverNode: (node: CustomGraphNode | null) => void
 ): ForceGraphInstance {
     console.log(`rendering graph with ${graph.nodes.length} nodes`);
-    const nodes = graph.nodes.filter((n) => n.depth !== 100);
-    const links = graph.links.filter((n) => n.depth !== 100);
+    const nodes = graph.nodes;
+    const links = graph.links;
 
     const width = graphContainer.clientWidth;
     const height = graphContainer.clientHeight;
@@ -96,7 +157,7 @@ function renderGraph(
         // simulation props
         .d3AlphaDecay(0.01)
         .d3VelocityDecay(0.08)
-        .warmupTicks(nodes[0].x === undefined ? 100 : 0) // use previous positions if available
+        .warmupTicks(nodes[0]?.x === undefined ? 100 : 0) // use previous positions if available
         .cooldownTicks(0)
         .d3Force("center", (alpha) => {
             nodes.forEach((node: RuntimeNode) => {
@@ -129,7 +190,7 @@ function renderGraph(
         .nodeCanvasObject(renderNodeObject(darkModeEnabled, NODE_R))
         .nodeCanvasObjectMode(() => "after")
         // link styling
-        // .linkLabel("score")
+        .linkLabel("score")
         .linkWidth(byDepth([null, 4, 3]))
         .linkColor((l: CustomGraphLink) => {
             if (l.depth <= 1) {
@@ -167,7 +228,7 @@ function renderGraph(
     let changedZoom = false;
     let currentZoom: number;
     forceGraph
-        .minZoom(1.5)
+        .minZoom(1)
         .maxZoom(4)
         .onEngineStop(() => {
             if (!initialZoomDone) {

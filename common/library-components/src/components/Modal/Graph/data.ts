@@ -1,6 +1,11 @@
 import { NodeObject, LinkObject } from "force-graph";
 
-import { Article, ArticleLink, readingProgressFullClamp } from "../../../store";
+import {
+    Article,
+    ArticleLink,
+    readingProgressFullClamp,
+    Topic,
+} from "../../../store";
 
 export type CustomGraphData = {
     nodes: CustomGraphNode[];
@@ -19,13 +24,17 @@ export type CustomGraphLink = LinkObject & {
 export async function constructGraphData(
     nodes: Article[],
     links: ArticleLink[],
-    articleUrl: string
+    articleUrl: string,
+    topic: Topic
 ): Promise<CustomGraphData> {
     // only consider links of filtered articles
-    const nodeIndexById = nodes.reduce((acc, node, index) => {
-        acc[node.id] = index;
-        return acc;
-    }, {});
+    const nodeIndexById = nodes
+        // .filter((n) => !n.topic_id?.startsWith("-"))
+        // .filter((n) => n.topic_id === topic.id)
+        .reduce((acc, node, index) => {
+            acc[node.id] = index;
+            return acc;
+        }, {});
     links = links.filter(
         (l) =>
             nodeIndexById[l.source] !== undefined &&
@@ -46,7 +55,7 @@ export async function constructGraphData(
     for (const [id, ls] of Object.entries(linksPerNode)) {
         const filteredLinks = ls
             .sort((a, b) => (b.score || 0) - (a.score || 0))
-            .slice(0, 2);
+            .slice(0, 3);
 
         // console.log(filteredLinks);
 
@@ -76,14 +85,16 @@ export async function constructGraphData(
         }
     }
 
-    const customNodes: CustomGraphNode[] = nodes.map((node, index) => {
-        return {
-            ...node,
-            linkCount: filteredLinksPerNode[node.id]?.length || 0,
-            days_ago: (Date.now() - node.time_added * 1000) / 86400000,
-            depth: 100, // makes depth checks easier
-        };
-    });
+    const customNodes: CustomGraphNode[] = nodes
+        // .filter((n) => filteredLinksPerNode[n.id] !== undefined) // ignore single nodes
+        .map((node, index) => {
+            return {
+                ...node,
+                linkCount: filteredLinksPerNode[node.id]?.length || 0,
+                days_ago: (Date.now() - node.time_added * 1000) / 86400000,
+                depth: 100, // makes depth checks easier
+            };
+        });
 
     // spanning tree
     // const mstLinks = kruskal(

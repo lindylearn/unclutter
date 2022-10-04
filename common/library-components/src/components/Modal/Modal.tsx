@@ -7,14 +7,14 @@ import Sidebar from "./Sidebar";
 import { GraphPage } from "./Graph/GraphPage";
 import { CustomGraphData } from "./Graph/data";
 import HeaderBar from "./HeaderBar";
-import { ReplicacheContext } from "../../store";
+import { ReplicacheContext, Topic } from "../../store";
 import RecentModalTab from "./Recent";
 import { LindyIcon } from "../Icons";
 
 export function LibraryModalPage({
     darkModeEnabled = false,
     currentArticle,
-    currentTopic,
+    initialTopic,
     graph,
     new_link_count,
     isVisible = true,
@@ -22,7 +22,7 @@ export function LibraryModalPage({
 }: {
     darkModeEnabled?: boolean;
     currentArticle?: string;
-    currentTopic?: string;
+    initialTopic?: Topic;
     graph?: CustomGraphData;
     new_link_count?: number;
     isVisible?: boolean;
@@ -35,6 +35,13 @@ export function LibraryModalPage({
     }, [rep]);
 
     const [currentTab, setCurrentTab] = useState("graph");
+    const [currentTopic, setCurrentTopic] = useState<Topic | undefined>(
+        initialTopic
+    );
+    function showTopic(topic: Topic) {
+        setCurrentTopic(topic);
+        setCurrentTab("graph");
+    }
 
     return (
         <div
@@ -65,6 +72,7 @@ export function LibraryModalPage({
                     new_link_count={new_link_count}
                     currentTab={currentTab}
                     setCurrentTab={setCurrentTab}
+                    showTopic={showTopic}
                 />
             </div>
         </div>
@@ -80,15 +88,17 @@ function ModalContent({
     new_link_count,
     currentTab,
     setCurrentTab,
+    showTopic,
 }: {
     currentArticle?: string;
-    currentTopic?: string;
+    currentTopic?: Topic;
     articleCount?: number;
     darkModeEnabled: boolean;
     graph?: CustomGraphData;
     new_link_count?: number;
     currentTab: string;
     setCurrentTab: (tab: string) => void;
+    showTopic: (topic: Topic) => void;
 }) {
     return (
         <div className="font-text flex h-full overflow-hidden text-base">
@@ -129,18 +139,22 @@ function ModalContent({
                     <RecentModalTab
                         currentTopic={currentTopic}
                         darkModeEnabled={darkModeEnabled}
+                        showTopic={showTopic}
                     />
                 )}
                 {currentTab === "graph" && (
                     <GraphPage
                         graph={graph}
                         darkModeEnabled={darkModeEnabled}
+                        currentArticle={currentArticle}
+                        currentTopic={currentTopic}
                     />
                 )}
                 {currentTab === "stats" && (
                     <StatsModalTab
                         articleCount={articleCount}
                         darkModeEnabled={darkModeEnabled}
+                        showTopic={showTopic}
                     />
                 )}
             </div>
