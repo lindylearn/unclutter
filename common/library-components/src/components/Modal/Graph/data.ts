@@ -132,5 +132,15 @@ export async function constructGraphData(
         }
     }
 
-    return { nodes: customNodes, links: customLinks };
+    // remove bidirectional connections (which are used for BFS above)
+    const seenConnections = new Set<string>();
+    const deduplicatedLinks = customLinks.filter((l) => {
+        if (seenConnections.has(`${l.target}-${l.source}`)) {
+            return false;
+        }
+        seenConnections.add(`${l.source}-${l.target}`);
+        return true;
+    });
+
+    return { nodes: customNodes, links: deduplicatedLinks };
 }

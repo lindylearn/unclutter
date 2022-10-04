@@ -76,7 +76,8 @@ export function GraphPage({
                     ref.current!,
                     darkModeEnabled,
                     setRenderDone,
-                    setHoverNode
+                    setHoverNode,
+                    currentTopic
                 );
                 // @ts-ignore
                 forceGraphRef.current = forceGraph;
@@ -89,7 +90,7 @@ export function GraphPage({
         <div className="relative h-full w-full overflow-hidden">
             <div
                 className={clsx(
-                    "graph h-full w-full cursor-move rounded-md bg-stone-50 dark:bg-neutral-800",
+                    "graph h-full w-full cursor-move rounded-md dark:bg-neutral-800",
                     renderDone && "render-done"
                 )}
                 ref={ref}
@@ -98,6 +99,8 @@ export function GraphPage({
                 <NodeTooltip
                     {...hoverNode}
                     forceGraph={forceGraphRef.current}
+                    currentTopic={currentTopic}
+                    darkModeEnabled={darkModeEnabled}
                 />
             )}
             {currentTopic && (
@@ -135,7 +138,8 @@ function renderGraph(
     graphContainer: HTMLDivElement,
     darkModeEnabled: boolean,
     setRenderDone: (done: boolean) => void,
-    setHoverNode: (node: CustomGraphNode | null) => void
+    setHoverNode: (node: CustomGraphNode | null) => void,
+    currentTopic?: Topic
 ): ForceGraphInstance {
     console.log(`rendering graph with ${graph.nodes.length} nodes`);
     const nodes = graph.nodes;
@@ -144,6 +148,14 @@ function renderGraph(
     const width = graphContainer.clientWidth;
     const height = graphContainer.clientHeight;
     const NODE_R = 3;
+
+    let themeColor = darkModeEnabled
+        ? "hsl(51, 80%, 43%)"
+        : "hsl(51, 80%, 64%)";
+    let secondaryColor = darkModeEnabled ? "#57534e" : "#f5f5f5";
+    if (currentTopic) {
+        themeColor = getRandomLightColor(currentTopic.id, darkModeEnabled);
+    }
 
     function byDepth(values: any[]) {
         return (item) => values[item.depth] || values[values.length - 1];
@@ -175,11 +187,9 @@ function renderGraph(
         .nodeVal((n: RuntimeNode) => (isLargeNode(n) ? 2 : 1))
         .nodeColor((n: RuntimeNode) => {
             if (n.depth <= 1 || n.reading_progress > readingProgressFullClamp) {
-                return darkModeEnabled
-                    ? "hsl(51, 80%, 43%)"
-                    : "hsl(51, 80%, 64%)";
+                return themeColor;
             }
-            return darkModeEnabled ? "#57534e" : "#e7e5e4";
+            return secondaryColor;
         })
         // .nodeAutoColorBy("topic_id")
         // .nodeLabel("none")
@@ -194,11 +204,9 @@ function renderGraph(
         .linkWidth(byDepth([null, 4, 3]))
         .linkColor((l: CustomGraphLink) => {
             if (l.depth <= 1) {
-                return darkModeEnabled
-                    ? "hsl(51, 80%, 43%)"
-                    : "hsl(51, 80%, 64%)";
+                return themeColor;
             }
-            return darkModeEnabled ? "#57534e" : "#e7e5e4";
+            return secondaryColor;
         });
 
     // forceGraph.d3Force(

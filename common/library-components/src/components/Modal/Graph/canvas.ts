@@ -1,5 +1,5 @@
 import { getDomain } from "../../../common";
-import { readingProgressFullClamp } from "../../../store";
+import { readingProgressFullClamp, Topic } from "../../../store";
 import { isLargeNode, RuntimeNode } from "./GraphPage";
 
 export function renderNodeObject(darkModeEnabled: boolean, NODE_R: number) {
@@ -72,8 +72,13 @@ export function renderNodeObject(darkModeEnabled: boolean, NODE_R: number) {
                 label = label.concat("…");
             }
 
+            // const topic = topicsById[node.topic_id || ""];
+            // let label = topic.id.startsWith("-")
+            //     ? `${topic.id} ${topic?.name}`
+            //     : topic?.name;
+
             const fontSize = 13 / globalScale;
-            ctx.font = `bold ${fontSize}px Poppins, Sans-Serif`;
+            ctx.font = `${fontSize}px Work Sans, Sans-Serif`;
 
             // const rectWith = titleDimensions.width + 10;
             // const rectHeight = 50;
@@ -106,7 +111,7 @@ export function renderNodeObject(darkModeEnabled: boolean, NODE_R: number) {
         ctx.shadowColor = "rgba(0, 0, 0, 0.1)";
         ctx.shadowOffsetX = 0;
         ctx.shadowOffsetY = 1;
-        ctx.shadowBlur = 10;
+        ctx.shadowBlur = 5;
     };
 }
 

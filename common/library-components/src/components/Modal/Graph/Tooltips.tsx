@@ -1,10 +1,10 @@
 import React from "react";
 import { ForceGraphInstance } from "force-graph";
 
-import { getDomain, openArticle } from "../../../common";
+import { getDomain, getRandomLightColor, openArticle } from "../../../common";
 import { ResourceStat } from "../Stats";
 import { CustomGraphNode } from "./data";
-import { readingProgressFullClamp } from "../../../store";
+import { readingProgressFullClamp, Topic } from "../../../store";
 
 export function NodeTooltip({
     x,
@@ -14,7 +14,13 @@ export function NodeTooltip({
     reading_progress,
     word_count,
     forceGraph,
-}: CustomGraphNode & { forceGraph: ForceGraphInstance }) {
+    currentTopic,
+    darkModeEnabled,
+}: CustomGraphNode & {
+    forceGraph: ForceGraphInstance;
+    currentTopic?: Topic;
+    darkModeEnabled: boolean;
+}) {
     const coords = forceGraph.graph2ScreenCoords(x!, y!);
 
     let readingProgress = reading_progress;
@@ -32,13 +38,13 @@ export function NodeTooltip({
         >
             <div className="font-title font-bold">{title}</div>
             <div className="mt-0.5 mb-1 flex justify-between">
-                <div className="text-stone-500 dark:text-stone-400">
+                <div className="text-neutral-500 dark:text-stone-400">
                     {domain}
                 </div>
                 {readingProgress !== 1 &&
                     word_count >= 200 &&
                     domain.length < 20 && (
-                        <div className="text-stone-500 dark:text-stone-400">
+                        <div className="text-neutral-500 dark:text-stone-400">
                             {Math.round(
                                 (word_count / 200) * (1 - readingProgress)
                             )}{" "}
@@ -56,6 +62,9 @@ export function NodeTooltip({
                 style={{
                     // @ts-ignore
                     "--progress": `${Math.max(reading_progress, 0.05) * 100}%`,
+                    background:
+                        currentTopic &&
+                        getRandomLightColor(currentTopic.id, darkModeEnabled),
                 }}
             />
         </div>
