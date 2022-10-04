@@ -1,6 +1,6 @@
 import { getDomain } from "../../../common";
 import { readingProgressFullClamp, Topic } from "../../../store";
-import { isLargeNode, RuntimeNode } from "./GraphPage";
+import { RuntimeNode } from "./GraphPage";
 
 export function renderNodeObject(darkModeEnabled: boolean, NODE_R: number) {
     // load icons before render
@@ -101,7 +101,7 @@ export function renderNodeObject(darkModeEnabled: boolean, NODE_R: number) {
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
             ctx.fillStyle = darkModeEnabled ? "rgb(232, 230, 227)" : "#374151";
-            ctx.fillText(label, node.x, node.y + (isLargeNode(node) ? 7 : 5));
+            ctx.fillText(label, node.x, node.y + (node.isCompleted ? 7 : 5));
 
             // ctx.font = `${fontSize}px Poppins, Sans-Serif`;
             // ctx.fillText(getDomain(node.url), node.x, node.y + 20);

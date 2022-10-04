@@ -16,9 +16,12 @@ export type CustomGraphNode = NodeObject &
         depth: number;
         linkCount: number;
         days_ago: number;
+        isCompleted: boolean;
+        isCompletedAdjacent: boolean;
     };
 export type CustomGraphLink = LinkObject & {
     depth: number;
+    isCompletedAdjacent: boolean;
 };
 
 export async function constructGraphData(
@@ -27,18 +30,36 @@ export async function constructGraphData(
     articleUrl: string,
     topic: Topic
 ): Promise<CustomGraphData> {
-    // only consider links of filtered articles
-    const nodeIndexById = nodes
+    // populate custom node data
+    const customNodes: CustomGraphNode[] = nodes
         // .filter((n) => !n.topic_id?.startsWith("-"))
         // .filter((n) => n.topic_id === topic.id)
-        .reduce((acc, node, index) => {
-            acc[node.id] = index;
+        .map((node, index) => {
+            return {
+                ...node,
+                days_ago: (Date.now() - node.time_added * 1000) / 86400000,
+                isCompleted:
+                    node.url === articleUrl ||
+                    node.reading_progress > readingProgressFullClamp,
+                // populated later
+                isCompletedAdjacent: false,
+                linkCount: 0,
+                depth: 100, // makes depth checks easier
+            };
+        });
+
+    // only consider links of filtered articles
+    const nodeById: { [nodeId: string]: CustomGraphNode } = customNodes.reduce(
+        (acc, node, index) => {
+            node["_index"] = index;
+            acc[node.id] = node;
             return acc;
-        }, {});
+        },
+        {}
+    );
     links = links.filter(
         (l) =>
-            nodeIndexById[l.source] !== undefined &&
-            nodeIndexById[l.target] !== undefined
+            nodeById[l.source] !== undefined && nodeById[l.target] !== undefined
     );
 
     // save links per node
@@ -52,22 +73,37 @@ export async function constructGraphData(
     // filter number of links per node
     const customLinks: CustomGraphLink[] = [];
     const filteredLinksPerNode: { [id: string]: ArticleLink[] } = {};
-    for (const [id, ls] of Object.entries(linksPerNode)) {
+    for (const [nodeId, ls] of Object.entries(linksPerNode)) {
         const filteredLinks = ls
             .sort((a, b) => (b.score || 0) - (a.score || 0))
             .slice(0, 3);
 
-        // console.log(filteredLinks);
+        nodeById[nodeId].linkCount = filteredLinks.length;
 
         for (const l of filteredLinks) {
             if (l["_index"] !== undefined) {
                 // skip duplicate links
                 continue;
             }
+
+            // save direct adjacency state
+            const source = nodeById[l.source];
+            const target = nodeById[l.target];
+            const isCompletedAdjacent =
+                (source.isCompleted || target.isCompleted) &&
+                source.topic_id === target.topic_id;
+            if (isCompletedAdjacent) {
+                source.isCompletedAdjacent = true;
+                target.isCompletedAdjacent = true;
+            }
+
+            // create custom link object
             l["_index"] = customLinks.length;
-            l["depth"] = 100;
-            // @ts-ignore
-            customLinks.push(l);
+            customLinks.push({
+                ...l,
+                depth: 100,
+                isCompletedAdjacent,
+            });
 
             filteredLinksPerNode[l.source] = [
                 ...(filteredLinksPerNode[l.source] || []),
@@ -85,28 +121,6 @@ export async function constructGraphData(
         }
     }
 
-    const customNodes: CustomGraphNode[] = nodes
-        // .filter((n) => filteredLinksPerNode[n.id] !== undefined) // ignore single nodes
-        .map((node, index) => {
-            return {
-                ...node,
-                linkCount: filteredLinksPerNode[node.id]?.length || 0,
-                days_ago: (Date.now() - node.time_added * 1000) / 86400000,
-                depth: 100, // makes depth checks easier
-            };
-        });
-
-    // spanning tree
-    // const mstLinks = kruskal(
-    //     customLinks.map((l) => ({
-    //         ...l,
-    //         from: l.source,
-    //         to: l.target,
-    //         weight: 1 - l.score!,
-    //     }))
-    // );
-    // setGraph({ nodes :customNodes, links: mstLinks });
-
     // add depth from current url
     const maxDepth = 6;
     const startNode = customNodes.find((n) => n.url === articleUrl);
@@ -121,7 +135,7 @@ export async function constructGraphData(
 
             const adjacentLinks = filteredLinksPerNode[node.id] || [];
             adjacentLinks.map((l) => {
-                const targetNode = customNodes[nodeIndexById[l.target]];
+                const targetNode = nodeById[l.target];
                 if (targetNode && targetNode.depth === 100) {
                     targetNode.depth = node.depth + 1;
                     customLinks[l["_index"]].depth = node.depth + 1;

@@ -184,9 +184,9 @@ function renderGraph(
         )
         // node styling
         .nodeRelSize(NODE_R)
-        .nodeVal((n: RuntimeNode) => (isLargeNode(n) ? 2 : 1))
+        .nodeVal((n: RuntimeNode) => (n.isCompleted ? 2 : 1))
         .nodeColor((n: RuntimeNode) => {
-            if (n.depth <= 1 || n.reading_progress > readingProgressFullClamp) {
+            if (n.depth <= 1 || n.isCompleted || n.isCompletedAdjacent) {
                 return themeColor;
             }
             return secondaryColor;
@@ -203,7 +203,7 @@ function renderGraph(
         .linkLabel("score")
         .linkWidth(byDepth([null, 4, 3]))
         .linkColor((l: CustomGraphLink) => {
-            if (l.depth <= 1) {
+            if (l.depth <= 1 || l.isCompletedAdjacent) {
                 return themeColor;
             }
             return secondaryColor;
@@ -262,8 +262,4 @@ function renderGraph(
     });
 
     return forceGraph;
-}
-
-export function isLargeNode(n: RuntimeNode): boolean {
-    return n.depth === 0 || n.reading_progress > readingProgressFullClamp;
 }
