@@ -2,7 +2,7 @@
     // organize-imports-ignore
     import {
         dismissedFeedbackMessage,
-        showLibraryGraph,
+        showLibraryModal,
     } from "../../common/featureFlags";
     import {
         getFeatureFlag,
@@ -63,19 +63,27 @@
         // event emitted in component
     }
 
-    let showArticleGraph = null;
-    getRemoteFeatureFlag(showLibraryGraph).then((enabled) => {
-        showArticleGraph = enabled || false;
+    let showLibraryModalState = null;
+    getRemoteFeatureFlag(showLibraryModal).then((enabled) => {
+        showLibraryModalState = enabled || false;
     });
 </script>
 
 <div id="lindy-info-topleft-content" class="font-text flex flex-col gap-2">
-    {#if libraryState?.libraryUser && showArticleGraph !== null}
-        <LibraryMessage
-            {libraryState}
-            {libraryModalModifier}
-            {darkModeEnabled}
-        />
+    {#if libraryState?.libraryUser && showLibraryModalState !== null}
+        {#if showLibraryModalState}
+            <LibraryMessage
+                {libraryState}
+                {libraryModalModifier}
+                {darkModeEnabled}
+            />
+        {:else}
+            <ArticleGraph
+                {libraryState}
+                {libraryModalModifier}
+                {darkModeEnabled}
+            />
+        {/if}
     {/if}
 
     <Outline

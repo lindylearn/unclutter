@@ -245,5 +245,4 @@ async function initializeServiceWorker() {
 }
 
 initializeServiceWorker();
-initReplicache();
-setupWithPermissions(); // should be called last (permissions error may throw exception)
+setupWithPermissions(); // needs to run after every reload to configure event handlers

@@ -4,7 +4,7 @@ import {
     getFeatureFlag,
     isDevelopmentFeatureFlag,
     showFeedbackMessage,
-    showLibraryGraph,
+    showLibraryModal,
     showLibrarySignupFlag,
 } from "../common/featureFlags";
 import browser from "../common/polyfill";
@@ -158,7 +158,7 @@ export async function getRemoteFeatureFlags() {
         cachedRemoteFeatureFlags = {
             [showLibrarySignupFlag]: true,
             [showFeedbackMessage]: false,
-            [showLibraryGraph]: true,
+            [showLibraryModal]: true,
         };
         return cachedRemoteFeatureFlags;
     }

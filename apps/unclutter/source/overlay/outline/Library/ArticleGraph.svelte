@@ -153,20 +153,12 @@
             libraryUser: libraryState.libraryUser,
         });
     }
-
-    function openModal(e) {
-        libraryModalModifier.showModal();
-        e.stopPropagation();
-    }
 </script>
 
 <div
     class={clsx(
         "library-message relative max-w-full rounded-lg text-sm shadow h-20 cursor-pointer hover:scale-[98%]"
     )}
-    on:click={(e) => {
-        openModal(e);
-    }}
 >
     {#if libraryState.graph}
         <div

@@ -144,9 +144,9 @@ const staticFilesConfig = {
     },
     plugins: [
         fileWatcher([
-            "package.json",
             "source/assets/**/*.{png,svg,ttf,css,svg}",
-            "source/**/*.{html,css,json,md,csv}",
+            "source/**/*.{html,css,md,csv,json}",
+            "package.json",
         ]),
         {
             writeBundle() {

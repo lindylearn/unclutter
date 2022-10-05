@@ -52,7 +52,7 @@ export const dismissedLibrarySignupMessage = "dismissed-library-signup-message";
 // remote
 export const showFeedbackMessage = "show-feedback-message";
 export const showLibrarySignupFlag = "show-library-signup";
-export const showLibraryGraph = "show-library-graph";
+export const showLibraryModal = "show-library-modal";
 
 export const defaultFeatureFlags = {
     [allowlistDomainOnManualActivationFeatureFlag]: false,

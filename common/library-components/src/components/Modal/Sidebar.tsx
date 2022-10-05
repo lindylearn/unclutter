@@ -80,7 +80,7 @@ function getModalTabOptions(new_link_count?: number): ModalTabOptions[] {
         {
             label: "Related",
             value: "graph",
-            tag: new_link_count ? `${new_link_count}+` : undefined,
+            tag: new_link_count ? `${new_link_count} +` : undefined,
             svg: (
                 <svg className="h-4" viewBox="0 0 640 512">
                     <path
