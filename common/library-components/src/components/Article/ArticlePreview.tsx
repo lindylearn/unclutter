@@ -163,7 +163,10 @@ export function ArticlePreview({
 
             <div
                 className="progress bg-lindy dark:bg-lindyDark absolute bottom-0 left-0 h-[7px] w-full rounded-r transition-all"
-                style={{ width: `${Math.max(readingProgress, 0.1) * 100}%` }}
+                style={{
+                    // @ts-ignore
+                    "--progress": `${Math.max(readingProgress, 0.1) * 100}%`,
+                }}
             />
             {/* {readingProgress < readingProgressFullClamp && (
                 <div className="absolute bottom-0 left-0 w-full pr-2 pb-0.5 text-right text-sm">
