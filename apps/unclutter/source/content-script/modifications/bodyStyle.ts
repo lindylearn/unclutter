@@ -183,9 +183,9 @@ export default class BodyStyleModifier implements PageModifier {
 
     private applyResponsiveStyle(isMobile: boolean) {
         let marginBottom = "20px";
-        if (this.libraryEnabled || this.showLibrarySignup) {
-            marginBottom = "calc(5px + 260px)";
-        }
+        // if (this.libraryEnabled || this.showLibrarySignup) {
+        //     marginBottom = "calc(5px + 260px)";
+        // }
 
         let marginSide = "auto";
         if (isMobile) {

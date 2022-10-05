@@ -154,7 +154,7 @@ export default class LibraryModifier implements PageModifier {
             console.error(err);
         }
 
-        // old individual articles fetch
+        // linked articles fetch
         // this.libraryState.relatedArticles = await getRelatedArticles(
         //     this.articleUrl,
         //     this.libraryState.libraryUser

@@ -86,20 +86,18 @@ export default class OverlayManager implements PageModifier {
         this.topleftIframe.style.position = "fixed"; // put on new layer
         this.topleftIframe.style.maxWidth =
             "calc((100vw - var(--lindy-pagewidth)) / 2 - 7px)"; // prevent initial transition
-
-        this.bottomIframe = createIframeNode("lindy-info-bottom");
-        this.bottomIframe.style.position = "absolute"; // put on new layer
-        this.bottomIframe.style.zIndex = "-101"; // put behind body if library not enabled
-        if (this.libraryEnabled) {
-            // allow overflow to the right
-            this.bottomIframe.style.width = `calc(var(--side-width) + var(--lindy-pagewidth))`;
-        }
-
         document.documentElement.appendChild(this.topleftIframe);
-        document.documentElement.appendChild(this.bottomIframe);
-
         insertIframeFont(this.topleftIframe);
-        insertIframeFont(this.bottomIframe); // TODO run later? need to modify initial dark theme inser then
+
+        // this.bottomIframe = createIframeNode("lindy-info-bottom");
+        // this.bottomIframe.style.position = "absolute"; // put on new layer
+        // this.bottomIframe.style.zIndex = "-101"; // put behind body if library not enabled
+        // if (this.libraryEnabled) {
+        //     // allow overflow to the right
+        //     this.bottomIframe.style.width = `calc(var(--side-width) + var(--lindy-pagewidth))`;
+        // }
+        // document.documentElement.appendChild(this.bottomIframe);
+        // insertIframeFont(this.bottomIframe); // TODO run later? need to modify initial dark theme inser then
     }
 
     renderUi() {
@@ -207,6 +205,8 @@ export default class OverlayManager implements PageModifier {
     }
 
     renderBottomContainer() {
+        return;
+
         const availableSpace = parseFloat(
             window
                 .getComputedStyle(document.body)

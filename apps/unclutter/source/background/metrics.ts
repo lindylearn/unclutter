@@ -168,7 +168,7 @@ export async function getRemoteFeatureFlags() {
     if (isDev) {
         lastFeatureFlagFetch = new Date();
         cachedRemoteFeatureFlags = {
-            [showLibrarySignupFlag]: true,
+            [showLibrarySignupFlag]: false,
             [showFeedbackMessage]: false,
             [showLibraryModal]: true,
         };

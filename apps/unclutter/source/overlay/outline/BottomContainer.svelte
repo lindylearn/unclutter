@@ -30,9 +30,9 @@
         reportEventContentScript("openLibrary");
     }
 
-    let dismissedSignupMessage = false;
+    let dismissedSignupMessage = null;
     getFeatureFlag(dismissedLibrarySignupMessage).then((dismissed) => {
-        dismissedSignupMessage = dismissed;
+        dismissedSignupMessage = dismissed || false;
     });
     function dismissSignupMessage() {
         dismissedSignupMessage = true;
@@ -72,7 +72,7 @@
                 </div> -->
         </div>
     {/if}
-{:else if libraryState?.showLibrarySignup && libraryState?.relatedArticles && !dismissedSignupMessage}
+{:else if libraryState?.showLibrarySignup && libraryState?.relatedArticles && dismissedSignupMessage === false}
     <div
         class="signup-container bg-lindy font-text relative m-[5px] rounded-lg p-4 pr-6 text-gray-800 shadow"
         in:fade
