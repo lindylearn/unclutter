@@ -1,5 +1,5 @@
 // doesn't seem to work on page load
-function getBrowser(): any {
+export function getBrowser(): any {
     // @ts-ignore
     return typeof browser !== "undefined" ? browser : chrome;
 }

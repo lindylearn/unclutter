@@ -55,6 +55,9 @@ export async function processReplicacheMessage({
     methodName?: string;
     args?: any;
 }) {
+    if (!rep) {
+        return;
+    }
     // console.log(methodName, args);
 
     if (type === "query") {

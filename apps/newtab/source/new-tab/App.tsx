@@ -13,13 +13,13 @@ import {
 
 import browser from "../common/polyfill";
 import { settingsStore, userInfoStore, useSettings } from "../common/settings";
-import { reportEventContentScript } from "../common/messaging";
 import { googleSearchDomains } from "../common/util";
 
 import "@unclutter/library-components/styles/globals.css";
 import "@unclutter/library-components/styles/ArticlePreview.css";
 import "@unclutter/library-components/styles/ProgressCircle.css";
 import "./app.css";
+import { reportEventContentScript } from "@unclutter/library-components/dist/common";
 
 export default function App() {
     const userAuth = useSettings(userInfoStore);

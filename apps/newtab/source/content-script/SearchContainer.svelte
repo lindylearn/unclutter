@@ -1,12 +1,14 @@
 <script lang="ts">
     import { fade } from "svelte/transition";
-    import { SearchResult as SearchResultType } from "@unclutter/library-components/dist/common";
+    import {
+        reportEventContentScript,
+        SearchResult as SearchResultType,
+    } from "@unclutter/library-components/dist/common";
 
     import browser from "../common/polyfill";
     import ArticlePreview from "./ArticlePreview.svelte";
     import LindyIcon from "./LindyIcon.svelte";
     import SearchResult from "./SearchResult.svelte";
-    import { reportEventContentScript } from "../common/messaging";
 
     export let query: string;
     export let searchResults: SearchResultType[] | null;

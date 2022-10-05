@@ -1,9 +1,9 @@
 <script lang="ts">
     import {
         openArticle,
+        reportEventContentScript,
         SearchResult,
     } from "@unclutter/library-components/dist/common";
-    import { reportEventContentScript } from "../common/messaging";
     import { highlightExactMatch } from "../common/util";
     import ArticlePreview from "./ArticlePreview.svelte";
 

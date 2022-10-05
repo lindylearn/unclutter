@@ -139,7 +139,7 @@ function NumberStats({
             />
             <BigNumber
                 value={articleCount}
-                tag="saved articles"
+                tag="total articles"
                 icon={<ResourceIcon type="articles" large />}
             />
 

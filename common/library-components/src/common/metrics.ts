@@ -1,4 +1,5 @@
 import posthog from "posthog-js";
+import { getBrowser } from "./extension";
 
 export function initPosthog() {
     posthog.init("phc_fvlWmeHRjWGBHLXEmhtwx8vp5mSNHq63YbvKE1THr2r", {
@@ -16,4 +17,12 @@ export function reportEventPosthog(event: string, properties?: any) {
         return;
     }
     posthog.capture(event, properties);
+}
+
+export async function reportEventContentScript(name: string, data = {}) {
+    getBrowser().runtime.sendMessage(null, {
+        event: "reportEvent",
+        name,
+        data,
+    });
 }

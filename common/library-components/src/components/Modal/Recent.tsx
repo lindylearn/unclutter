@@ -1,10 +1,6 @@
-import {
-    DraggableArticleList,
-    useTabInfos,
-    InlineProgressCircle,
-} from "../../components";
+import { DraggableArticleList, useTabInfos } from "../../components";
 import React, { ReactNode, useContext, useEffect, useState } from "react";
-import { getRandomColor, getRandomLightColor } from "../../common";
+import { getRandomLightColor, reportEventContentScript } from "../../common";
 import {
     Article,
     readingProgressFullClamp,
@@ -102,7 +98,7 @@ function TopicGroup({
                     articlesToShow={5}
                     sortPosition="topic_sort_position"
                     small
-                    // reportEvent={reportEvent}
+                    reportEvent={reportEventContentScript}
                 />
             </div>
         </div>

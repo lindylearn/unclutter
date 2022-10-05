@@ -3,7 +3,12 @@ import ForceGraph, { ForceGraphInstance } from "force-graph";
 import { forceManyBody } from "d3-force";
 import clsx from "clsx";
 
-import { getRandomLightColor, openArticle } from "../../../common";
+import {
+    getRandomLightColor,
+    openArticle,
+    reportEventContentScript,
+    reportEventPosthog,
+} from "../../../common";
 import { CustomGraphData, CustomGraphLink, CustomGraphNode } from "./data";
 import { renderNodeObject } from "./canvas";
 import { NodeTooltip } from "./Tooltips";
@@ -269,9 +274,10 @@ function renderGraph(
         .minZoom(0.5)
         .onNodeClick((node: RuntimeNode, event) => {
             openArticle(node.url);
-            // reportEventContentScript("clickGraphArticle", {
-            //     libraryUser: libraryState.libraryUser,
-            // });
+            reportEventContentScript("clickGraphArticle", {
+                isCompleted: node.isCompleted,
+                isCompletedAdjacent: node.isCompletedAdjacent,
+            });
         });
 
     // zoom
