@@ -11,15 +11,20 @@ export function NodeTooltip({
     y,
     title,
     url,
+    depth,
     reading_progress,
+    isCompleted,
+    isCompletedAdjacent,
     word_count,
     forceGraph,
     currentTopic,
     darkModeEnabled,
+    reportEvent = () => {},
 }: CustomGraphNode & {
     forceGraph: ForceGraphInstance;
     currentTopic?: Topic;
     darkModeEnabled: boolean;
+    reportEvent?: (event: string, data?: any) => void;
 }) {
     const coords = forceGraph.graph2ScreenCoords(x!, y!);
 
@@ -30,11 +35,20 @@ export function NodeTooltip({
 
     const domain = getDomain(url);
 
+    function onClick() {
+        openArticle(url);
+        reportEvent("clickGraphArticle", {
+            depth: depth,
+            isCompleted: isCompleted,
+            isCompletedAdjacent: isCompletedAdjacent,
+        });
+    }
+
     return (
         <div
             className="node-tooltip animate-bouncein absolute w-60 cursor-pointer overflow-hidden rounded-md bg-white px-3 py-2 text-sm shadow transition-transform hover:scale-[98%] dark:bg-[#212121]"
             style={{ left: coords.x - 240 / 2, top: coords.y + 12 }}
-            onClick={() => openArticle(url)}
+            onClick={onClick}
         >
             <div className="font-title font-bold">{title || url}</div>
             <div className="mt-0.5 mb-1 flex justify-between">

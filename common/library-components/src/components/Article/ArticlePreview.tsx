@@ -43,7 +43,7 @@ export function ArticlePreview({
         e.stopPropagation();
         if (listState === "static") {
             openArticle(article.url);
-            reportEvent("clickArticle");
+            reportEvent("clickListArticle");
         }
     }
 

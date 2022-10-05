@@ -3,12 +3,7 @@ import ForceGraph, { ForceGraphInstance } from "force-graph";
 import { forceManyBody } from "d3-force";
 import clsx from "clsx";
 
-import {
-    getRandomLightColor,
-    openArticle,
-    reportEventContentScript,
-    reportEventPosthog,
-} from "../../../common";
+import { getRandomLightColor, openArticle } from "../../../common";
 import { CustomGraphData, CustomGraphLink, CustomGraphNode } from "./data";
 import { renderNodeObject } from "./canvas";
 import { NodeTooltip } from "./Tooltips";
@@ -18,7 +13,6 @@ import {
     Topic,
 } from "../../../store";
 import { TopicEmoji } from "../../TopicTag";
-import { InlineProgressCircle } from "../../Charts";
 import { ReadingProgress, ResourceStat } from "../numbers";
 
 export function GraphPage({
@@ -27,12 +21,14 @@ export function GraphPage({
     currentArticle,
     currentTopic,
     changedTopic,
+    reportEvent = () => {},
 }: {
     graph?: CustomGraphData;
     darkModeEnabled: boolean;
     currentArticle?: string;
     currentTopic?: Topic;
     changedTopic: boolean;
+    reportEvent?: (event: string, data?: any) => void;
 }) {
     const rep = useContext(ReplicacheContext);
     const [renderDone, setRenderDone] = useState(false);
@@ -88,7 +84,8 @@ export function GraphPage({
                     setRenderDone,
                     setHoverNode,
                     currentTopic,
-                    changedTopic
+                    changedTopic,
+                    reportEvent
                 );
                 // @ts-ignore
                 forceGraphRef.current = forceGraph;
@@ -114,6 +111,7 @@ export function GraphPage({
                     forceGraph={forceGraphRef.current}
                     currentTopic={currentTopic}
                     darkModeEnabled={darkModeEnabled}
+                    reportEvent={reportEvent}
                 />
             )}
             {currentTopic && (
@@ -178,7 +176,8 @@ function renderGraph(
     setRenderDone: (done: boolean) => void,
     setHoverNode: (node: CustomGraphNode | null) => void,
     currentTopic: Topic,
-    changedTopic: boolean
+    changedTopic: boolean,
+    reportEvent: (event: string, data?: any) => void = () => {}
 ): ForceGraphInstance {
     console.log(`rendering graph with ${graph.nodes.length} nodes`);
     const nodes = graph.nodes;
@@ -274,7 +273,8 @@ function renderGraph(
         .minZoom(0.5)
         .onNodeClick((node: RuntimeNode, event) => {
             openArticle(node.url);
-            reportEventContentScript("clickGraphArticle", {
+            reportEvent("clickGraphArticle", {
+                depth: node.depth,
                 isCompleted: node.isCompleted,
                 isCompletedAdjacent: node.isCompletedAdjacent,
             });

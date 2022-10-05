@@ -91,16 +91,12 @@ export default class LibraryModifier implements PageModifier {
                     this.libraryState.error = true;
                 }
 
-                reportEventContentScript("addArticle", {
-                    libraryUser: this.libraryState.libraryUser,
-                });
+                reportEventContentScript("addArticle");
             } else {
                 // show retrieved state
                 this.libraryState.wasAlreadyPresent = true;
 
-                reportEventContentScript("visitArticle", {
-                    libraryUser: this.libraryState.libraryUser,
-                });
+                reportEventContentScript("visitArticle");
             }
 
             // fetch topic progress stats

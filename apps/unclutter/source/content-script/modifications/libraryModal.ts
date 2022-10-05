@@ -5,6 +5,7 @@ import { PageModifier, trackModifierExecution } from "./_interface";
 
 import { waitUntilIframeLoaded } from "./annotations/injectSidebar";
 import BodyStyleModifier from "./bodyStyle";
+import { reportEventContentScript } from "../messaging";
 
 @trackModifierExecution
 export default class LibraryModalModifier implements PageModifier {
@@ -61,6 +62,10 @@ export default class LibraryModalModifier implements PageModifier {
         this.modalIframe.src = iframeUrl.toString();
         this.modalIframe.style.position = "fixed"; // put on new layer
         document.documentElement.appendChild(this.modalIframe);
+
+        reportEventContentScript("openLibraryModal", {
+            linkCount: this.libraryState.topicProgress.linkCount,
+        });
     }
 
     private destroyIframe() {
@@ -71,6 +76,8 @@ export default class LibraryModalModifier implements PageModifier {
         this.appLoaded = false;
 
         this.bodyStyleModifier.disableScrollLock();
+
+        reportEventContentScript("closeLibraryModal");
     }
 
     private sendModalEvent(event: object) {

@@ -2,7 +2,10 @@ import React, { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { LibraryModalPage } from "@unclutter/library-components/dist/components/Modal";
 
 import { LibraryState } from "../common/schema";
-import { ReplicacheProxy } from "../content-script/messaging";
+import {
+    ReplicacheProxy,
+    reportEventContentScript,
+} from "../content-script/messaging";
 import { ReplicacheContext } from "@unclutter/library-components/dist/store";
 
 export default function App({
@@ -62,6 +65,7 @@ export default function App({
                 graph={libraryState?.graph}
                 isVisible={showModal}
                 closeModal={closeModal}
+                reportEvent={reportEventContentScript}
             />
         </ReplicacheContext.Provider>
     );

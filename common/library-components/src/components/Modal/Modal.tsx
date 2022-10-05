@@ -20,6 +20,7 @@ export function LibraryModalPage({
     relatedLinkCount,
     isVisible,
     closeModal = () => {},
+    reportEvent = () => {},
 }: {
     darkModeEnabled?: boolean;
     currentArticle?: string;
@@ -28,6 +29,7 @@ export function LibraryModalPage({
     relatedLinkCount?: number;
     isVisible: boolean | null;
     closeModal?: () => void;
+    reportEvent?: (event: string, data?: any) => void;
 }) {
     const rep = useContext(ReplicacheContext);
     const [articleCount, setArticleCount] = useState<number>();
@@ -36,6 +38,9 @@ export function LibraryModalPage({
     }, [rep]);
 
     const [currentTab, setCurrentTab] = useState("stats");
+    useEffect(() => {
+        reportEvent("changeModalTab", { tab: currentTab });
+    }, [currentTab]);
 
     const [currentTopic, setCurrentTopic] = useState<Topic | undefined>(
         initialTopic
@@ -46,6 +51,7 @@ export function LibraryModalPage({
     function showTopic(topic: Topic) {
         setCurrentTopic(topic);
         setCurrentTab("graph");
+        reportEvent("showTopicGraph");
     }
 
     return (
@@ -80,6 +86,7 @@ export function LibraryModalPage({
                     currentTab={currentTab}
                     setCurrentTab={setCurrentTab}
                     showTopic={showTopic}
+                    reportEvent={reportEvent}
                 />
             </div>
         </div>
@@ -97,6 +104,7 @@ function ModalContent({
     currentTab,
     setCurrentTab,
     showTopic,
+    reportEvent = () => {},
 }: {
     currentArticle?: string;
     currentTopic?: Topic;
@@ -108,6 +116,7 @@ function ModalContent({
     currentTab: string;
     setCurrentTab: (tab: string) => void;
     showTopic: (topic: Topic) => void;
+    reportEvent?: (event: string, data?: any) => void;
 }) {
     return (
         <div className="font-text flex h-full overflow-hidden text-base">
@@ -162,6 +171,7 @@ function ModalContent({
                         currentArticle={currentArticle}
                         currentTopic={currentTopic}
                         changedTopic={changedTopic}
+                        reportEvent={reportEvent}
                     />
                 )}
                 {currentTab === "stats" && (
@@ -169,6 +179,7 @@ function ModalContent({
                         articleCount={articleCount}
                         darkModeEnabled={darkModeEnabled}
                         showTopic={showTopic}
+                        reportEvent={reportEvent}
                     />
                 )}
                 {currentTab === "highlights" && <HighlightsTab />}

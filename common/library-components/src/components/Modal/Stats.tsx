@@ -1,5 +1,4 @@
-import React, { ReactNode, useContext, useEffect, useState } from "react";
-import { subYears } from "date-fns";
+import React, { useContext, useEffect, useState } from "react";
 import {
     Article,
     readingProgressFullClamp,
@@ -10,14 +9,8 @@ import {
     ArticleActivityCalendar,
     getActivityColor,
     getActivityLevel,
-    InlineProgressCircle,
 } from "../Charts";
-import {
-    getRandomLightColor,
-    getWeekNumber,
-    getWeekStart,
-    subtractWeeks,
-} from "../../common";
+import { getRandomLightColor, getWeekStart, subtractWeeks } from "../../common";
 import { useArticleGroups } from "../ArticleList";
 import { TopicEmoji } from "../TopicTag";
 import clsx from "clsx";
@@ -28,11 +21,13 @@ export default function StatsModalTab({
     darkModeEnabled,
     defaultWeekOverlay = 1,
     showTopic,
+    reportEvent = () => {},
 }: {
     articleCount?: number;
     darkModeEnabled: boolean;
     defaultWeekOverlay?: number;
     showTopic: (topic: Topic) => void;
+    reportEvent?: (event: string, data?: any) => void;
 }) {
     const rep = useContext(ReplicacheContext);
 
