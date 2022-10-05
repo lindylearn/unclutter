@@ -23,7 +23,7 @@
 }
 
 /* animations sometimes skip when using transition */
-.article-static.is-hover {
+/* .article-static.is-hover {
     animation: rotateArticle 0.2s ease-in-out;
     animation-fill-mode: forwards;
 }
@@ -61,7 +61,7 @@
     to {
         transform: rotate(0);
     }
-}
+} */
 
 .article-gradient {
     backdrop-filter: blur(10px);

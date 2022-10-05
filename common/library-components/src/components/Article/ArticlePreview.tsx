@@ -77,17 +77,17 @@ export function ArticlePreview({
     return (
         <a
             className={clsx(
-                "article-container relative block flex-shrink-0 cursor-pointer overflow-hidden bg-white transition-shadow dark:text-black dark:brightness-90",
+                "article-container relative block flex-shrink-0 cursor-pointer overflow-hidden bg-white text-gray-800 transition-shadow dark:text-black dark:brightness-90",
                 small
                     ? "hover:shadow-articleSmallHover shadow-articleSmall h-40 w-36 rounded-md"
                     : "hover:shadow-articleHover shadow-article h-52 w-44 rounded-lg",
-                listState === "static" && "article-static",
                 listState === "active" &&
                     "article-active opacity-0 transition-none",
-                listState === "dragging" && "article-dragging",
-                listIndex % 3 && "rotate-neg",
-                isHover === true && "is-hover",
-                isHover === false && "hover-leave",
+                // listState === "static" && "article-static",
+                // listState === "dragging" && "article-dragging",
+                // listIndex % 3 && "rotate-neg",
+                // isHover === true && "is-hover",
+                // isHover === false && "hover-leave",
                 className
             )}
             onClick={openPage}
@@ -112,7 +112,7 @@ export function ArticlePreview({
             {...props}
         >
             <div className="article-fallback p-3">
-                <div className="select-none font-bold leading-tight">
+                <div className="font-text select-none font-bold leading-tight">
                     {article.title}
                 </div>
             </div>

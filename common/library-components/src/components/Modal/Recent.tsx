@@ -13,10 +13,12 @@ export default function RecentModalTab({
     currentTopic,
     darkModeEnabled,
     showTopic,
+    reportEvent = () => {},
 }: {
     currentTopic?: Topic;
     darkModeEnabled: boolean;
     showTopic: (topic: Topic) => void;
+    reportEvent?: (event: string, data?: any) => void;
 }) {
     const [tabInfos, unreadArticlesCount] = useTabInfos(10, true);
 
@@ -29,6 +31,7 @@ export default function RecentModalTab({
                     darkModeEnabled={darkModeEnabled}
                     {...tabInfo}
                     showTopic={showTopic}
+                    reportEvent={reportEvent}
                 />
             ))}
         </div>
@@ -41,6 +44,7 @@ function TopicGroup({
     articles,
     darkModeEnabled,
     showTopic,
+    reportEvent = () => {},
 }: {
     key: string;
     title: string;
@@ -48,6 +52,7 @@ function TopicGroup({
     articles: Article[];
     darkModeEnabled: boolean;
     showTopic: (topic: Topic) => void;
+    reportEvent?: (event: string, data?: any) => void;
 }) {
     const topic_id = articles[0].topic_id!;
 
@@ -98,7 +103,7 @@ function TopicGroup({
                     articlesToShow={5}
                     sortPosition="topic_sort_position"
                     small
-                    reportEvent={reportEventContentScript}
+                    reportEvent={reportEvent}
                 />
             </div>
         </div>

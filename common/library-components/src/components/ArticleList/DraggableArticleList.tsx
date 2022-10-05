@@ -1,4 +1,5 @@
 import React from "react";
+import { createPortal } from "react-dom";
 import {
     closestCenter,
     DndContext,
@@ -67,20 +68,19 @@ export function DraggableArticleList({
     }
     function handleDragEnd({ active, over }) {
         if (active.id !== over.id) {
-            const oldIndex = articles.findIndex(
+            const oldIndex = articlesCache.findIndex(
                 (article) => article.id === active.id
             );
-            let newIndex = articles.findIndex(
+            let newIndex = articlesCache.findIndex(
                 (article) => article.id === over.id
             );
             // moving an article to the right shifts successors one index to the left
             const newIndexShifted =
                 oldIndex < newIndex ? newIndex + 1 : newIndex;
 
-            const beforeNewArticle = articles[newIndexShifted - 1];
-            const afterNewArticle = articles[newIndexShifted];
-
             // mutate replicache
+            const beforeNewArticle = articlesCache[newIndexShifted - 1];
+            const afterNewArticle = articlesCache[newIndexShifted];
             rep?.mutate.moveArticlePosition({
                 articleId: active.id,
                 articleIdBeforeNewPosition: beforeNewArticle?.id || null,
@@ -101,7 +101,7 @@ export function DraggableArticleList({
     return (
         <div
             className={clsx(
-                "animate-fadein flex flex-wrap  gap-3",
+                "animate-fadein flex flex-wrap gap-3",
                 centerGrid ? "justify-center" : ""
             )}
         >
@@ -138,23 +138,27 @@ export function DraggableArticleList({
                                 <div key={index} className="h-52 w-44" />
                             ))}
                 </SortableContext>
-                <DragOverlay
-                    dropAnimation={{
-                        duration: 300,
-                        easing: "cubic-bezier(0.65, 0, 0.35, 1)",
-                    }}
-                    className="article-drag-overlay"
-                >
-                    {activeIndex !== null && (
-                        <ArticlePreview
-                            listState="dragging"
-                            article={articlesCache[activeIndex]}
-                            listIndex={activeIndex}
-                            disableFavoriteShadow={disableFavoriteShadow}
-                            small={small}
-                        />
-                    )}
-                </DragOverlay>
+                {/* render inside portal to handle parent margins */}
+                {createPortal(
+                    <DragOverlay
+                        dropAnimation={{
+                            duration: 300,
+                            easing: "cubic-bezier(0.65, 0, 0.35, 1)",
+                        }}
+                        className="article-drag-overlay"
+                    >
+                        {activeIndex !== null && (
+                            <ArticlePreview
+                                listState="dragging"
+                                article={articlesCache[activeIndex]}
+                                listIndex={activeIndex}
+                                disableFavoriteShadow={disableFavoriteShadow}
+                                small={small}
+                            />
+                        )}
+                    </DragOverlay>,
+                    document.body
+                )}
             </DndContext>
         </div>
     );
