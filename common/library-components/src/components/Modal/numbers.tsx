@@ -177,17 +177,19 @@ export function ResourceIcon({
     );
 }
 
-export function ProgressBar({ value, target, color }) {
+export function AnimatedNumber({
+    value,
+    diff,
+}: {
+    value: number;
+    diff: number;
+}) {
     return (
-        <div className="relative h-4 w-52 overflow-hidden rounded-md">
-            <div className="absolute top-0 left-0 h-full w-full bg-white dark:bg-[rgb(19,21,22)]" />
-            <div
-                className="bg-lindy dark:bg-lindyDark absolute top-0 left-0 h-full transition-all"
-                style={{
-                    width: `${Math.max((value || 0) / target, 0.05) * 100}%`,
-                    background: color,
-                }}
-            />
+        <div className="animated-number relative">
+            <div className="after-value">{value}</div>
+            <div className="before-value absolute top-0 left-0 h-full w-full">
+                {value - diff}
+            </div>
         </div>
     );
 }

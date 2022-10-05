@@ -1,8 +1,10 @@
 <script lang="ts">
     import clsx from "clsx";
+    import AnimatedNumber from "./AnimatedNumber.svelte";
 
     export let type: "articles" | "articles_completed" | "highlights" | "links";
     export let value: number;
+    export let diff: number = null;
 </script>
 
 <div
@@ -40,7 +42,11 @@
             /></svg
         >
     {/if}
-    <div class={clsx("font-title font-bold text-base leading-none")}>
-        {value || 0}
+    <div class="font-title text-lg font-bold leading-none">
+        {#if value && diff}
+            <AnimatedNumber {value} {diff} />
+        {:else}
+            {value || 0}
+        {/if}
     </div>
 </div>

@@ -42,6 +42,7 @@ export default class LibraryModifier implements PageModifier {
         relatedArticles: null,
         graph: null,
         topicProgress: null,
+        justCompletedArticle: false,
     };
 
     constructor(articleUrl: string, overlayManager: OverlayManager) {
@@ -239,7 +240,18 @@ export default class LibraryModifier implements PageModifier {
         }
 
         if (this.libraryState.libraryUser) {
-            this.sendProgressUpdateThrottled(readingProgress);
+            if (
+                readingProgress >= 0.95 &&
+                this.libraryState.libraryInfo?.article.reading_progress <
+                    readingProgressFullClamp
+            ) {
+                // just completed this article, immediately update state to show in UI
+                this.libraryState.justCompletedArticle = true;
+                this.sendProgressUpdate(1.0);
+                this.overlayManager.updateLibraryState(this.libraryState);
+            } else {
+                this.sendProgressUpdateThrottled(readingProgress);
+            }
         } else if (
             this.libraryState.showLibrarySignup &&
             readingProgress >= 0.9 &&
@@ -261,6 +273,10 @@ export default class LibraryModifier implements PageModifier {
         if (!this.libraryState.libraryUser || !this.libraryState.libraryInfo) {
             return;
         }
+
+        // don't wait for replicache pull
+        this.libraryState.libraryInfo.article.reading_progress =
+            readingProgress;
 
         updateLibraryArticle(this.articleUrl, this.libraryState.libraryUser, {
             reading_progress: readingProgress,

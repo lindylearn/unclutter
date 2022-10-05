@@ -37,7 +37,7 @@ export function LibraryModalPage({
         rep?.query.getArticlesCount().then(setArticleCount);
     }, [rep]);
 
-    const [currentTab, setCurrentTab] = useState("stats");
+    const [currentTab, setCurrentTab] = useState("graph");
     useEffect(() => {
         reportEvent("changeModalTab", { tab: currentTab });
     }, [currentTab]);

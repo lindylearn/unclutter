@@ -44,7 +44,7 @@ export default class ReadingTimeModifier implements PageModifier {
 
     // todo throttle?
     private scollListener() {
-        // take start of viewport offseet, so will never reach 100%
+        // viewport bottom
         this.pageProgress =
             (window.scrollY + window.innerHeight) /
             document.documentElement.scrollHeight;

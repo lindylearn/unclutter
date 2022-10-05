@@ -78,14 +78,20 @@
         </div>
 
         {#if libraryState?.topicProgress}
-            <div class="absolute top-3 right-3 flex items-start gap-2" in:fade>
+            <div
+                class="absolute top-0 right-0 flex items-start gap-2 overflow-hidden p-3"
+                in:fade
+            >
                 <ResourceStat
                     type="articles_completed"
-                    value={libraryState.topicProgress.completedCount}
+                    value={libraryState.topicProgress.completedCount +
+                        (libraryState.justCompletedArticle ? 1 : 0)}
+                    diff={libraryState.justCompletedArticle ? 1 : null}
                 />
                 <ResourceStat
                     type="articles"
                     value={libraryState.topicProgress.articleCount}
+                    diff={!libraryState.wasAlreadyPresent ? 1 : null}
                 />
             </div>
         {/if}

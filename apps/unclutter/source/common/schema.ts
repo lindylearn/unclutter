@@ -14,6 +14,7 @@ export type LibraryState = {
     isClustering: boolean;
     wasAlreadyPresent: boolean;
     error: boolean;
+    justCompletedArticle: boolean;
 
     relatedArticles?: Article[];
     graph: CustomGraphData | null;
