@@ -15,10 +15,7 @@ export function renderNodeObject(darkModeEnabled: boolean, NODE_R: number) {
         ctx.shadowColor = "transparent";
 
         // empty circle for unread nodes
-        if (
-            node.reading_progress < readingProgressFullClamp &&
-            node.depth !== 0
-        ) {
+        if (node.reading_progress < readingProgressFullClamp) {
             ctx.beginPath();
             ctx.arc(node.x, node.y, NODE_R * 0.6, 0, 2 * Math.PI);
             ctx.fillStyle = darkModeEnabled

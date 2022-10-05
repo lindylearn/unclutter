@@ -21,7 +21,7 @@ import {
 import { useArticleGroups } from "../ArticleList";
 import { TopicEmoji } from "../TopicTag";
 import clsx from "clsx";
-import { BigNumber, ResourceStat } from "./numbers";
+import { BigNumber, ResourceIcon, ResourceStat } from "./numbers";
 
 export default function StatsModalTab({
     articleCount,
@@ -135,31 +135,14 @@ function NumberStats({
                     ).length
                 }
                 tag="read articles"
-                icon={
-                    <svg className="h-5" viewBox="0 0 576 512">
-                        <path
-                            fill="currentColor"
-                            d="M144.3 32.04C106.9 31.29 63.7 41.44 18.6 61.29c-11.42 5.026-18.6 16.67-18.6 29.15l0 357.6c0 11.55 11.99 19.55 22.45 14.65c126.3-59.14 219.8 11 223.8 14.01C249.1 478.9 252.5 480 256 480c12.4 0 16-11.38 16-15.98V80.04c0-5.203-2.531-10.08-6.781-13.08C263.3 65.58 216.7 33.35 144.3 32.04zM557.4 61.29c-45.11-19.79-88.48-29.61-125.7-29.26c-72.44 1.312-118.1 33.55-120.9 34.92C306.5 69.96 304 74.83 304 80.04v383.1C304 468.4 307.5 480 320 480c3.484 0 6.938-1.125 9.781-3.328c3.925-3.018 97.44-73.16 223.8-14c10.46 4.896 22.45-3.105 22.45-14.65l.0001-357.6C575.1 77.97 568.8 66.31 557.4 61.29z"
-                        />
-                    </svg>
-                }
+                icon={<ResourceIcon type="articles_completed" large />}
             />
             <BigNumber
-                value={
-                    allArticles?.filter(
-                        (a) => a.reading_progress < readingProgressFullClamp
-                    ).length
-                }
-                tag="unread articles"
-                icon={
-                    <svg className="h-5" viewBox="0 0 576 512">
-                        <path
-                            fill="currentColor"
-                            d="M540.9 56.77C493.8 39.74 449.6 31.58 410.9 32.02C352.2 32.96 308.3 50 288 59.74C267.7 50 223.9 32.98 165.2 32.04C125.8 31.35 82.18 39.72 35.1 56.77C14.02 64.41 0 84.67 0 107.2v292.1c0 16.61 7.594 31.95 20.84 42.08c13.73 10.53 31.34 13.91 48.2 9.344c118.1-32 202 22.92 205.5 25.2C278.6 478.6 283.3 480 287.1 480s9.37-1.359 13.43-4.078c3.516-2.328 87.59-57.21 205.5-25.25c16.92 4.563 34.5 1.188 48.22-9.344C568.4 431.2 576 415.9 576 399.2V107.2C576 84.67 561.1 64.41 540.9 56.77zM264 416.8c-27.86-11.61-69.84-24.13-121.4-24.13c-26.39 0-55.28 3.281-86.08 11.61C53.19 405.3 50.84 403.9 50 403.2C48 401.7 48 399.8 48 399.2V107.2c0-2.297 1.516-4.531 3.594-5.282c40.95-14.8 79.61-22.36 112.8-21.84C211.3 80.78 246.8 93.75 264 101.5V416.8zM528 399.2c0 .5938 0 2.422-2 3.969c-.8438 .6407-3.141 2.063-6.516 1.109c-90.98-24.6-165.4-5.032-207.5 12.53v-315.3c17.2-7.782 52.69-20.74 99.59-21.47c32.69-.5157 71.88 7.047 112.8 21.84C526.5 102.6 528 104.9 528 107.2V399.2z"
-                        />
-                    </svg>
-                }
+                value={articleCount}
+                tag="saved articles"
+                icon={<ResourceIcon type="articles" large />}
             />
+
             {/* <BigNumber
                 value={0}
                 tag="total highlights"
@@ -175,14 +158,7 @@ function NumberStats({
             <BigNumber
                 value={topicsCount}
                 tag="article topics"
-                icon={
-                    <svg className="h-5" viewBox="0 0 640 512">
-                        <path
-                            fill="currentColor"
-                            d="M288 64C288 80.85 281.5 96.18 270.8 107.6L297.7 165.2C309.9 161.8 322.7 160 336 160C374.1 160 410.4 175.5 436.3 200.7L513.9 143.7C512.7 138.7 512 133.4 512 128C512 92.65 540.7 64 576 64C611.3 64 640 92.65 640 128C640 163.3 611.3 192 576 192C563.7 192 552.1 188.5 542.3 182.4L464.7 239.4C474.5 258.8 480 280.8 480 304C480 322.5 476.5 340.2 470.1 356.5L537.5 396.9C548.2 388.8 561.5 384 576 384C611.3 384 640 412.7 640 448C640 483.3 611.3 512 576 512C540.7 512 512 483.3 512 448C512 444.6 512.3 441.3 512.8 438.1L445.4 397.6C418.1 428.5 379.8 448 336 448C264.6 448 205.4 396.1 193.1 328H123.3C113.9 351.5 90.86 368 64 368C28.65 368 0 339.3 0 304C0 268.7 28.65 240 64 240C90.86 240 113.9 256.5 123.3 280H193.1C200.6 240.9 222.9 207.1 254.2 185.5L227.3 127.9C226.2 127.1 225.1 128 224 128C188.7 128 160 99.35 160 64C160 28.65 188.7 0 224 0C259.3 0 288 28.65 288 64V64zM336 400C389 400 432 357 432 304C432 250.1 389 208 336 208C282.1 208 240 250.1 240 304C240 357 282.1 400 336 400z"
-                        />
-                    </svg>
-                }
+                icon={<ResourceIcon type="links" large />}
             />
             {/* <BigNumber value={weekArticles} target={7} tag="read this week" />
             <BigNumber value={0} target={7} tag="highlighted this week" /> */}
@@ -291,7 +267,7 @@ function TopicStat({
     const readCount = selectedArticles.filter(
         (a) => a.reading_progress >= readingProgressFullClamp
     ).length;
-    const unreadCount = addedCount - readCount;
+    // const unreadCount = addedCount - readCount;
 
     const activityLevel = getActivityLevel(addedCount);
 
@@ -328,9 +304,9 @@ function TopicStat({
                 />
                 <ResourceStat
                     type="articles"
-                    value={unreadCount}
+                    value={addedCount}
                     showPlus
-                    className={clsx(unreadCount === 0 && "opacity-0")}
+                    className={clsx(addedCount === 0 && "opacity-0")}
                 />
                 {/* <ResourceStat type="highlights" value={0} showPlus /> */}
             </div>

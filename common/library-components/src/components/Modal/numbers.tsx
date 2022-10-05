@@ -65,7 +65,7 @@ export function ResourceStat({
     return (
         <div
             className={clsx(
-                "relative flex items-center transition-opacity",
+                "relative z-10 flex items-center transition-opacity",
                 large ? "gap-1.5" : "gap-1",
                 value === undefined && "opacity-0",
                 className
@@ -96,16 +96,15 @@ export function ReadingProgress({
     color?: string;
     className?: string;
 }) {
-    const unreadCount = (articleCount || 0) - (readCount || 0);
-    const progress =
-        Math.max((readCount || 0) / (articleCount || 1), 0.05) * 100;
+    // const unreadCount = (articleCount || 0) - (readCount || 0);
+    const progress = ((readCount || 0) / (articleCount || 1)) * 100;
 
     return (
         <div
             className={clsx(
-                "flex gap-3 overflow-hidden rounded-md transition-opacity",
+                "flex overflow-hidden rounded-md transition-opacity",
                 !articleCount && "opacity-0",
-                large ? "px-2 py-0.5" : "px-1.5 py-0",
+                large ? "gap-3 px-2 py-0.5" : "gap-2 px-1.5 py-0.5",
                 className
             )}
         >
@@ -114,7 +113,7 @@ export function ReadingProgress({
                 value={readCount}
                 large={large}
             />
-            <ResourceStat type="articles" value={unreadCount} large={large} />
+            <ResourceStat type="articles" value={articleCount} large={large} />
             <div
                 className="bg-lindy dark:bg-lindyDark absolute top-0 left-0 h-full"
                 style={{
@@ -131,7 +130,7 @@ export function ResourceIcon({
     large = false,
     className,
 }: {
-    type: "articles" | "articles_completed" | "highlights";
+    type: "articles" | "articles_completed" | "highlights" | "links";
     large?: boolean;
     className?: string;
 }) {
@@ -148,10 +147,10 @@ export function ResourceIcon({
                 </svg>
             )}
             {type === "articles_completed" && (
-                <svg className={innerClass} viewBox="0 0 576 512">
+                <svg className={innerClass} viewBox="0 0 512 512">
                     <path
                         fill="currentColor"
-                        d="M144.3 32.04C106.9 31.29 63.7 41.44 18.6 61.29c-11.42 5.026-18.6 16.67-18.6 29.15l0 357.6c0 11.55 11.99 19.55 22.45 14.65c126.3-59.14 219.8 11 223.8 14.01C249.1 478.9 252.5 480 256 480c12.4 0 16-11.38 16-15.98V80.04c0-5.203-2.531-10.08-6.781-13.08C263.3 65.58 216.7 33.35 144.3 32.04zM557.4 61.29c-45.11-19.79-88.48-29.61-125.7-29.26c-72.44 1.312-118.1 33.55-120.9 34.92C306.5 69.96 304 74.83 304 80.04v383.1C304 468.4 307.5 480 320 480c3.484 0 6.938-1.125 9.781-3.328c3.925-3.018 97.44-73.16 223.8-14c10.46 4.896 22.45-3.105 22.45-14.65l.0001-357.6C575.1 77.97 568.8 66.31 557.4 61.29z"
+                        d="M243.8 339.8C232.9 350.7 215.1 350.7 204.2 339.8L140.2 275.8C129.3 264.9 129.3 247.1 140.2 236.2C151.1 225.3 168.9 225.3 179.8 236.2L224 280.4L332.2 172.2C343.1 161.3 360.9 161.3 371.8 172.2C382.7 183.1 382.7 200.9 371.8 211.8L243.8 339.8zM512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256zM256 48C141.1 48 48 141.1 48 256C48 370.9 141.1 464 256 464C370.9 464 464 370.9 464 256C464 141.1 370.9 48 256 48z"
                     />
                 </svg>
             )}
@@ -163,6 +162,14 @@ export function ResourceIcon({
                     <path
                         fill="currentColor"
                         d="M320 62.06L362.7 19.32C387.7-5.678 428.3-5.678 453.3 19.32L492.7 58.75C517.7 83.74 517.7 124.3 492.7 149.3L229.5 412.5C181.5 460.5 120.3 493.2 53.7 506.5L28.71 511.5C20.84 513.1 12.7 510.6 7.03 504.1C1.356 499.3-1.107 491.2 .4662 483.3L5.465 458.3C18.78 391.7 51.52 330.5 99.54 282.5L286.1 96L272.1 82.91C263.6 73.54 248.4 73.54 239 82.91L136.1 184.1C127.6 194.3 112.4 194.3 103 184.1C93.66 175.6 93.66 160.4 103 151L205.1 48.97C233.2 20.85 278.8 20.85 306.9 48.97L320 62.06zM320 129.9L133.5 316.5C94.71 355.2 67.52 403.1 54.85 457.2C108 444.5 156.8 417.3 195.5 378.5L382.1 192L320 129.9z"
+                    />
+                </svg>
+            )}
+            {type === "links" && (
+                <svg className={innerClass} viewBox="0 0 640 512">
+                    <path
+                        fill="currentColor"
+                        d="M288 64C288 80.85 281.5 96.18 270.8 107.6L297.7 165.2C309.9 161.8 322.7 160 336 160C374.1 160 410.4 175.5 436.3 200.7L513.9 143.7C512.7 138.7 512 133.4 512 128C512 92.65 540.7 64 576 64C611.3 64 640 92.65 640 128C640 163.3 611.3 192 576 192C563.7 192 552.1 188.5 542.3 182.4L464.7 239.4C474.5 258.8 480 280.8 480 304C480 322.5 476.5 340.2 470.1 356.5L537.5 396.9C548.2 388.8 561.5 384 576 384C611.3 384 640 412.7 640 448C640 483.3 611.3 512 576 512C540.7 512 512 483.3 512 448C512 444.6 512.3 441.3 512.8 438.1L445.4 397.6C418.1 428.5 379.8 448 336 448C264.6 448 205.4 396.1 193.1 328H123.3C113.9 351.5 90.86 368 64 368C28.65 368 0 339.3 0 304C0 268.7 28.65 240 64 240C90.86 240 113.9 256.5 123.3 280H193.1C200.6 240.9 222.9 207.1 254.2 185.5L227.3 127.9C226.2 127.1 225.1 128 224 128C188.7 128 160 99.35 160 64C160 28.65 188.7 0 224 0C259.3 0 288 28.65 288 64V64zM336 400C389 400 432 357 432 304C432 250.1 389 208 336 208C282.1 208 240 250.1 240 304C240 357 282.1 400 336 400z"
                     />
                 </svg>
             )}

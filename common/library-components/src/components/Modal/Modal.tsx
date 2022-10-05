@@ -35,7 +35,7 @@ export function LibraryModalPage({
         rep?.query.getArticlesCount().then(setArticleCount);
     }, [rep]);
 
-    const [currentTab, setCurrentTab] = useState("graph");
+    const [currentTab, setCurrentTab] = useState("stats");
 
     const [currentTopic, setCurrentTopic] = useState<Topic | undefined>(
         initialTopic

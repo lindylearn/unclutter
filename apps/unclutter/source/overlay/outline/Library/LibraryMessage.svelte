@@ -30,7 +30,7 @@
     on:click={() => libraryModalModifier.showModal()}
 >
     <div
-        class="flex h-[calc(1rem+0.5rem+1.25rem+0.75rem*2)] justify-between gap-3 rounded-lg p-3 pl-5 transition-colors"
+        class="flex h-[calc(1rem+0.5rem+1.25rem+0.75rem*2)] justify-between gap-3 rounded-lg p-3 transition-colors"
         style={`background-color: ${topicColor}`}
     >
         <div class="main-content whitespace-nowrap text-sm">
@@ -80,10 +80,13 @@
         {#if libraryState?.topicProgress}
             <div class="absolute top-3 right-3 flex items-start gap-2" in:fade>
                 <ResourceStat
+                    type="articles_completed"
+                    value={libraryState.topicProgress.completedCount}
+                />
+                <ResourceStat
                     type="articles"
                     value={libraryState.topicProgress.articleCount}
                 />
-                <!-- <ResourceStat type="highlights" value={0} /> -->
             </div>
         {/if}
     </div>
