@@ -111,7 +111,6 @@ export default function TopicGroupTab({ group_id }) {
                 </div>
 
                 <div className="flex-grow" />
-                {/* <ListFilter /> */}
             </div>
 
             <div className="relative h-full w-full">

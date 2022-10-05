@@ -15,10 +15,6 @@ export default function FavoritesTab({}) {
         <main className="m-3">
             {articles?.length === 0 && <NoFavoritesMessage />}
 
-            {/* <div className="flex justify-end mr-20">
-                <ListFilter />
-            </div> */}
-
             <DraggableArticleList
                 articles={articles || []}
                 sortPosition="favorites_sort_position"

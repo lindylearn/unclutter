@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useLayoutEffect, useState } from "react";
 import {
     Article,
     readingProgressFullClamp,
@@ -11,7 +11,7 @@ import {
     getActivityLevel,
 } from "../Charts";
 import { getRandomLightColor, getWeekStart, subtractWeeks } from "../../common";
-import { useArticleGroups } from "../ArticleList";
+import { ListFilter, TimeFilter, useArticleGroups } from "../ArticleList";
 import { TopicEmoji } from "../TopicTag";
 import clsx from "clsx";
 import { BigNumber, ResourceIcon, ResourceStat } from "./numbers";
@@ -41,20 +41,30 @@ export default function StatsModalTab({
     }, [rep]);
 
     const [end, setEnd] = useState<Date>(new Date());
+    const [startWeeksAgo, setStartWeeksAgo] = useState(defaultWeekOverlay);
     const [start, setStart] = useState<Date>(
         subtractWeeks(getWeekStart(new Date()), defaultWeekOverlay)
     );
+    useEffect(() => {
+        const end = getWeekStart(new Date());
+        const start = subtractWeeks(end, startWeeksAgo - 1);
+        setStart(start);
+    }, [startWeeksAgo]);
 
     return (
         <div className="animate-fadein relative flex flex-col gap-4">
-            <div className="absolute top-0 right-0 flex cursor-pointer items-center gap-2 rounded-md bg-stone-50 px-2 py-1 font-medium dark:bg-neutral-800">
+            {/* <div className="absolute top-0 right-0">
+                <TimeFilter />
+            </div> */}
+            <div className="absolute top-0 right-0 flex cursor-default items-center gap-2 rounded-md bg-stone-50 px-2 py-1 font-medium transition-transform hover:scale-[97%] dark:bg-neutral-800">
                 <svg className="h-4" viewBox="0 0 512 512">
                     <path
                         fill="currentColor"
                         d="M0 73.7C0 50.67 18.67 32 41.7 32H470.3C493.3 32 512 50.67 512 73.7C512 83.3 508.7 92.6 502.6 100L336 304.5V447.7C336 465.5 321.5 480 303.7 480C296.4 480 289.3 477.5 283.6 472.1L191.1 399.6C181.6 392 176 380.5 176 368.3V304.5L9.373 100C3.311 92.6 0 83.3 0 73.7V73.7zM54.96 80L218.6 280.8C222.1 285.1 224 290.5 224 296V364.4L288 415.2V296C288 290.5 289.9 285.1 293.4 280.8L457 80H54.96z"
                     />
                 </svg>
-                Last 2 weeks
+                Last {startWeeksAgo} week
+                {startWeeksAgo !== 1 ? "s" : ""}
             </div>
 
             <NumberStats
@@ -67,7 +77,7 @@ export default function StatsModalTab({
                 onSelectDate={setSelectedDate}
                 darkModeEnabled={darkModeEnabled}
                 start={start}
-                setStart={setStart}
+                setStartWeeksAgo={setStartWeeksAgo}
                 defaultWeekOverlay={defaultWeekOverlay}
             />
             <WeekDetails

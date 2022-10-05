@@ -29,7 +29,7 @@ export function BigNumber({
             )}
             <div
                 className={clsx(
-                    "font-title z-10 flex h-[2rem] items-center gap-1.5 text-2xl font-bold transition-opacity",
+                    "font-title z-10 flex h-[2rem] items-center gap-2 text-2xl font-bold transition-opacity",
                     value === undefined && "opacity-0"
                 )}
             >

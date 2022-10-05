@@ -15,14 +15,14 @@ export function ArticleActivityCalendar({
     articles,
     onSelectDate,
     start,
-    setStart,
+    setStartWeeksAgo,
     defaultWeekOverlay,
 }: {
     darkModeEnabled: boolean;
     articles?: Article[];
     onSelectDate: (date: Date) => void;
     start: Date;
-    setStart: (date: Date) => void;
+    setStartWeeksAgo: (weeksAgo: number) => void;
     defaultWeekOverlay: number;
 }) {
     const data = useMemo(() => {
@@ -31,12 +31,6 @@ export function ArticleActivityCalendar({
         }
         return getActivityData(articles);
     }, [articles]);
-
-    function onChangeWeekOffset(offset: number) {
-        const end = getWeekStart(new Date());
-        const start = subtractWeeks(end, -offset - 1);
-        setStart(start);
-    }
 
     if (data === null) {
         return <></>;
@@ -47,12 +41,12 @@ export function ArticleActivityCalendar({
             <ActivityCalendar
                 data={data || []}
                 startWeekOffset={-defaultWeekOverlay - 1}
-                onChangeWeekOffset={onChangeWeekOffset}
+                onChangeWeekOffset={(offset) => setStartWeeksAgo(-offset)}
                 theme={getColorLevels(darkModeEnabled)}
                 overlayColor={
                     darkModeEnabled
                         ? "rgb(232, 230, 227, 0.1)"
-                        : "rgb(28, 25, 23, 0.1)"
+                        : "rgb(212, 212, 212, 0.3)"
                 }
                 labels={{
                     legend: { less: "Fewer articles read", more: "More" },

@@ -324,6 +324,9 @@ export function ActivityCalendar({
     const [startWeekIndex, setStartWeekIndex] = useState<number>(
         weeks.length + startWeekOffset
     );
+    useEffect(() => {
+        onChangeWeekOffset(startWeekIndex - weeks.length);
+    }, [startWeekIndex]);
 
     const [diffX, setDiffX] = useState(0);
     const overlayHandleRef = useRef<SVGRectElement>(null);
@@ -354,9 +357,7 @@ export function ActivityCalendar({
 
             setStartWeekIndex((startWeekIndex) => {
                 // bypass closure
-                const newIndex = startWeekIndex + diffX;
-                onChangeWeekOffset(newIndex - weeks.length);
-                return newIndex;
+                return startWeekIndex + diffX;
             });
             start = null;
             diffX = 0;
@@ -383,15 +384,18 @@ export function ActivityCalendar({
                     }
                     height={(blockSize + blockMargin) * 7 + blockMargin}
                     fill={overlayColor}
-                    rx={5}
-                    ry={5}
+                    rx={6}
+                    ry={6}
                     style={{
                         shapeRendering: "geometricPrecision",
                     }}
                 />
                 <svg
                     viewBox="0 0 192 512"
-                    x={(blockSize + blockMargin) * (startWeekIndex + diffX)}
+                    x={
+                        (blockSize + blockMargin) * (startWeekIndex + diffX) +
+                        2.5
+                    }
                     y={textHeight - blockMargin}
                     width={7}
                     height={(blockSize + blockMargin) * 7 + blockMargin}

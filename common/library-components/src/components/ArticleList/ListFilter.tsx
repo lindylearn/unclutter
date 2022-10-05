@@ -23,7 +23,7 @@ export function TimeFilter({}: {}) {
         <ListFilter
             options={timeFilters}
             svg={
-                <svg viewBox="0 0 448 512" className="h-5">
+                <svg viewBox="0 0 448 512" className="h-4">
                     <path
                         fill="currentColor"
                         d="M152 64H296V24C296 10.75 306.7 0 320 0C333.3 0 344 10.75 344 24V64H384C419.3 64 448 92.65 448 128V448C448 483.3 419.3 512 384 512H64C28.65 512 0 483.3 0 448V128C0 92.65 28.65 64 64 64H104V24C104 10.75 114.7 0 128 0C141.3 0 152 10.75 152 24V64zM48 448C48 456.8 55.16 464 64 464H384C392.8 464 400 456.8 400 448V192H48V448z"
@@ -59,18 +59,18 @@ export function ListFilter({
 }) {
     return (
         <Select.Root defaultValue={options[0].value} dir="ltr">
-            <Select.Trigger className="font-title flex cursor-pointer items-center gap-1.5 rounded bg-stone-100 px-2 py-0.5 shadow-sm outline-none transition-all hover:scale-[96%] dark:bg-stone-700">
-                {svg}
+            <Select.Trigger className="rounded-md bg-stone-50 px-2 py-1 outline-none dark:bg-neutral-800">
                 <Select.Value />
             </Select.Trigger>
 
             <Select.Portal>
-                <Select.Content className="z-100 z-50 rounded-md bg-white shadow dark:bg-stone-700">
+                <Select.Content className="z-100 z-50 rounded-md bg-stone-50 shadow dark:bg-neutral-800">
                     <Select.ScrollUpButton />
                     <Select.Viewport>
                         {options.map((option, index) => (
                             <SelectOption
                                 key={option.value}
+                                svg={svg}
                                 option={option}
                                 top={index === 0}
                                 bottom={index === options.length - 1}
@@ -84,19 +84,19 @@ export function ListFilter({
     );
 }
 
-function SelectOption({ option, top = false, bottom = false }) {
+function SelectOption({ svg, option, top = false, bottom = false }) {
     return (
         <Select.Item
             value={option.value}
             className={clsx(
-                "font-text text-md cursor-pointer px-2 py-0.5 text-left outline-none transition-all hover:bg-stone-100 dark:hover:bg-stone-600",
+                "font-text cursor-pointer px-2 py-1 text-left text-base outline-none transition-all hover:bg-stone-100 dark:hover:bg-stone-600",
                 top && "rounded-t-md pt-1",
                 bottom && "rounded-b-md pb-1"
             )}
         >
             <Select.ItemText>
-                <div className="flex items-center gap-1">
-                    {option.svg}
+                <div className="flex items-center gap-2">
+                    {svg}
                     {option.label}
                 </div>
             </Select.ItemText>
