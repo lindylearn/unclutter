@@ -1,4 +1,4 @@
-import { reportEvent } from "../background/metrics";
+import { migrateMetricsUser, reportEvent } from "../background/metrics";
 import { pxToNumber } from "./css";
 import { defaultFontSizePx, defaultPageWidth } from "./defaultStorage";
 import browser from "./polyfill";
@@ -136,5 +136,5 @@ export async function setLibraryUser(
 ): Promise<void> {
     await browser.storage.sync.set({ "library-user-id": userId });
     await browser.storage.sync.set({ "library-web-jwt": webJwt });
-    // reportEvent("extensionLibraryLogin", { libraryUser: userId });
+    await migrateMetricsUser();
 }

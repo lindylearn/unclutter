@@ -17,7 +17,7 @@ export async function reportEvent(name: string, data = {}) {
         await fetch(`https://app.posthog.com/capture`, {
             method: "POST",
             body: JSON.stringify({
-                api_key: "phc_fvlWmeHRjWGBHLXEmhtwx8vp5mSNHq63YbvKE1THr2r",
+                api_key: "phc_BQHO9btvNLVEbFC4ihMIS8deK5T6P4d8EF75Ihvkfaw",
                 distinct_id: userInfo?.userId,
                 event: name,
                 properties: {

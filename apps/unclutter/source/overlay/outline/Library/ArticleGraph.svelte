@@ -149,9 +149,7 @@
                 is_favorite: isFavorite,
             }
         );
-        reportEventContentScript("toggleArticleFavorite", {
-            libraryUser: libraryState.libraryUser,
-        });
+        reportEventContentScript("toggleArticleFavorite");
     }
 </script>
 

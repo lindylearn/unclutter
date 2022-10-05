@@ -42,9 +42,7 @@
         e.stopPropagation();
 
         openArticle(article.url);
-        reportEventContentScript("clickRelatedArticle", {
-            libraryUser: libraryUser,
-        });
+        reportEventContentScript("clickRelatedArticle");
     }
 </script>
 

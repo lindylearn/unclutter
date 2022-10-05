@@ -8,6 +8,7 @@ import {
     showLibrarySignupFlag,
 } from "../common/featureFlags";
 import browser from "../common/polyfill";
+import { getLibraryUser } from "../common/storage";
 import { getAllCustomDomainSettings } from "../common/storage2";
 import { getInitialInstallVersion } from "../common/updateMessages";
 
@@ -26,21 +27,13 @@ export async function reportEvent(name: string, data = {}) {
     await sendEvent(name, data, isDev);
 }
 
-async function sendEvent(name, data, isDev) {
-    const libraryUser = data["libraryUser"];
-    if (libraryUser) {
-        delete data["libraryUser"];
-        data["$set"] = { distinctId };
-    }
-
+async function sendEvent(name: string, data: object, isDev: boolean) {
     try {
         await fetch(`https://app.posthog.com/capture`, {
             method: "POST",
             body: JSON.stringify({
-                api_key: !libraryUser
-                    ? "phc_BQHO9btvNLVEbFC4ihMIS8deK5T6P4d8EF75Ihvkfaw"
-                    : "phc_fvlWmeHRjWGBHLXEmhtwx8vp5mSNHq63YbvKE1THr2r",
-                distinct_id: libraryUser || distinctId,
+                api_key: "phc_BQHO9btvNLVEbFC4ihMIS8deK5T6P4d8EF75Ihvkfaw",
+                distinct_id: distinctId,
                 event: name,
                 properties: {
                     $useragent: navigator.userAgent,
@@ -56,7 +49,7 @@ async function sendEvent(name, data, isDev) {
 }
 
 // Report anonymous aggregates on enabled extension features (if the user allowed it)
-export async function reportSettings(version, isNewInstall) {
+export async function reportSettings(version: string, isNewInstall: boolean) {
     // true / false state of enabled features
     const featureFlagSettings = await getAllFeatureFlags();
 
@@ -99,6 +92,7 @@ export async function reportEnablePageView(
 export async function reportDisablePageView(trigger, pageHeightPx) {
     let activeSeconds;
     if (pageViewEnableStartTime) {
+        // @ts-ignore
         activeSeconds = (new Date() - pageViewEnableStartTime) / 1000;
     }
     reportEvent("disablePageview", {
@@ -123,11 +117,28 @@ export async function startMetrics(isDev: boolean) {
     if (isDev) {
         distinctId = "test-user";
     } else {
-        distinctId = await _getDistinctId();
+        distinctId = await _getSavedDistinctId();
+        await migrateMetricsUser();
     }
 }
 
-async function _getDistinctId() {
+export async function migrateMetricsUser() {
+    const libraryUser = await getLibraryUser();
+    if (libraryUser && distinctId !== libraryUser) {
+        // migrate temp user ids to library id
+        reportEvent("$create_alias", {
+            alias: libraryUser, // new
+            distinct_id: distinctId, // old
+        });
+
+        distinctId = libraryUser;
+        await browser.storage.sync.set({
+            distinctId,
+        });
+    }
+}
+
+async function _getSavedDistinctId() {
     const config = await browser.storage.sync.get(["distinctId"]);
     if (config["distinctId"]) {
         return config["distinctId"];
@@ -145,6 +156,7 @@ let cachedRemoteFeatureFlags = null;
 let lastFeatureFlagFetch: Date;
 export async function getRemoteFeatureFlags() {
     if (cachedRemoteFeatureFlags !== null) {
+        // @ts-ignore
         const fetchSecondsAgo = (new Date() - lastFeatureFlagFetch) / 1000;
         // use for 15 minutes
         if (fetchSecondsAgo < 60 * 15) {

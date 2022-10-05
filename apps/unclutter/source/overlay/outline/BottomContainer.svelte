@@ -27,9 +27,7 @@
         browser.runtime.sendMessage(null, {
             event: "openLibrary",
         });
-        reportEventContentScript("openLibrary", {
-            libraryUser: libraryState.libraryUser,
-        });
+        reportEventContentScript("openLibrary");
     }
 
     let dismissedSignupMessage = false;
@@ -46,10 +44,7 @@
 {#if libraryState?.libraryUser}
     {#if linkedArticles?.length > 0}
         <!-- solid background for transparent topic color -->
-        <div
-            class="related-container font-text m-[5px] text-gray-700"
-            in:fade
-        >
+        <div class="related-container font-text m-[5px] text-gray-700" in:fade>
             <div
                 class="related-caption mt-2 mb-2 text-sm tabular-nums text-gray-400"
             >
