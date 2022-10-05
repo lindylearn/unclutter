@@ -223,9 +223,9 @@ function renderGraph(
         .nodeRelSize(NODE_R)
         .nodeVal((n: RuntimeNode) => (n.isCompleted ? 2 : 1))
         .nodeColor((n: RuntimeNode) => {
-            if (n.depth <= 1) {
-                return originColor;
-            }
+            // if (n.depth <= 0) {
+            //     return originColor;
+            // }
             if (n.isCompleted || n.isCompletedAdjacent) {
                 return themeColor;
             }
@@ -243,9 +243,9 @@ function renderGraph(
         // .linkLabel("score")
         .linkWidth((l: CustomGraphLink) => (l.isCompletedAdjacent ? 5 : 3))
         .linkColor((l: CustomGraphLink) => {
-            if (l.depth === 1) {
-                return originColor;
-            }
+            // if (l.depth === 1) {
+            //     return originColor;
+            // }
             if (l.depth <= 1 || l.isCompletedAdjacent) {
                 return themeColor;
             }

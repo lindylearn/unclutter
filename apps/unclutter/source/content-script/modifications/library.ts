@@ -149,6 +149,9 @@ export default class LibraryModifier implements PageModifier {
             if (this.scrollOnceFetchDone) {
                 this.scrollToLastReadingPosition();
             }
+
+            // pull data to show correct stats once user navigates there
+            rep.pull();
         } catch (err) {
             this.libraryState.error = true;
             this.overlayManager.updateLibraryState(this.libraryState);

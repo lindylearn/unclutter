@@ -15,7 +15,10 @@ export function renderNodeObject(darkModeEnabled: boolean, NODE_R: number) {
         ctx.shadowColor = "transparent";
 
         // empty circle for unread nodes
-        if (node.reading_progress < readingProgressFullClamp) {
+        if (
+            node.reading_progress < readingProgressFullClamp &&
+            node.depth !== 0
+        ) {
             ctx.beginPath();
             ctx.arc(node.x, node.y, NODE_R * 0.6, 0, 2 * Math.PI);
             ctx.fillStyle = darkModeEnabled
@@ -59,8 +62,7 @@ export function renderNodeObject(darkModeEnabled: boolean, NODE_R: number) {
                 globalScale >= 3) ||
             globalScale >= 5
         ) {
-            // title label
-            if (node.depth === 0 || !node.title) {
+            if (!node.title) {
                 return;
             }
 
@@ -75,7 +77,11 @@ export function renderNodeObject(darkModeEnabled: boolean, NODE_R: number) {
             //     : topic?.name;
 
             const fontSize = 13 / globalScale;
-            ctx.font = `${fontSize}px Work Sans, Sans-Serif`;
+            if (node.depth === 0) {
+                ctx.font = `bold ${fontSize}px Poppins, Sans-Serif`;
+            } else {
+                ctx.font = `${fontSize}px Work Sans, Sans-Serif`;
+            }
 
             // const rectWith = titleDimensions.width + 10;
             // const rectHeight = 50;
