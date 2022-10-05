@@ -74,9 +74,12 @@
     },
     "scripts": {
         "build": "rm -rf distribution && rollup -c rollup.config.js",
+        "build-v2": "yarn build && yarn install-v2-manifest",
         "watch": "rollup -c rollup.config.js -w",
         "install-v3-manifest": "cp source/manifest.json distribution/manifest.json",
         "install-v2-manifest": "cp source/manifest_v2.json distribution/manifest.json",
+        "run": "yarn web-ext run -t chromium --start-url news.ycombinator.com --watch-file distribution/package.json",
+        "run-v2": "yarn web-ext run -t firefox-desktop --start-url news.ycombinator.com --watch-file distribution/package.json",
         "package": "yarn build && yarn web-ext build -o -n extension_manifest-v3.zip --ignore-files '!node_modules' '!node_modules/**' && yarn install-v2-manifest && yarn web-ext build -o -n extension_manifest-v2.zip --ignore-files '!node_modules' '!node_modules/**' && yarn install-v3-manifest",
         "test": "npx ts-node-esm test/main.ts",
         "postinstall": "patch-package"
