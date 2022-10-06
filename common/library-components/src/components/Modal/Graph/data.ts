@@ -27,8 +27,8 @@ export type CustomGraphLink = LinkObject & {
 export async function constructGraphData(
     nodes: Article[],
     links: ArticleLink[],
-    articleUrl: string,
-    topic: Topic
+    articleUrl?: string,
+    topi?: Topic
 ): Promise<[CustomGraphData, number]> {
     // populate custom node data
     const customNodes: CustomGraphNode[] = nodes

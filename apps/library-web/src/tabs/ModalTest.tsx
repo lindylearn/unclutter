@@ -36,7 +36,7 @@ export default function ModalTestTab({}) {
             const [graph, linkCount] = await constructGraphData(
                 nodes,
                 links,
-                article!.url,
+                article?.url,
                 topic
             );
             setGraph(graph);
@@ -45,7 +45,7 @@ export default function ModalTestTab({}) {
         setTimeout(() => {
             setShowModal(true);
         }, 100);
-    }, []);
+    }, [rep]);
 
     const [darkModeEnabled, setDarkModeEnabled] = useState(
         window.matchMedia("(prefers-color-scheme: dark)").matches
@@ -57,10 +57,6 @@ export default function ModalTestTab({}) {
                 setDarkModeEnabled(event.matches);
             });
     }, []);
-
-    if (!article || !topic || !graph) {
-        return <></>;
-    }
 
     return (
         <div className="h-screen w-screen">
