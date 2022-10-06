@@ -66,7 +66,15 @@ export default function DashboardTab({ selectedTopicId, setSelectedTopicId }) {
         setTimeFilterOptions([allTimeOption].concat(timeFilterOptions));
 
         if (!activeKey) {
-            setActiveKey(timeFilterOptions[0]?.children?.[0].key || null);
+            const firstArticlesCount = timeFilterOptions[0]?.articleCount;
+            const showedFirstChildren =
+                timeFilterOptions[0]?.children &&
+                (!firstArticlesCount || firstArticlesCount > 20);
+            if (showedFirstChildren) {
+                setActiveKey(timeFilterOptions[0]?.children?.[0].key || null);
+            } else {
+                setActiveKey(timeFilterOptions[0]?.key || null);
+            }
         }
     }, [articleGroups]);
 
