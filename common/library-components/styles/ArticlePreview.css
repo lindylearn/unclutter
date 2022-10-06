@@ -87,6 +87,10 @@
 }
 
 .progress {
+    width: var(--progress);
+}
+/* disabled progress animation as it sometimes re-renders during dragging */
+/* .progress {
     animation: expandWidth 100ms ease-out;
     animation-fill-mode: both;
 }
@@ -97,7 +101,7 @@
     to {
         width: var(--progress);
     }
-}
+} */
 
 /* stacked list */
 .stacked-articles-list > .article-container {
