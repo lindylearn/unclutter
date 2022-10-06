@@ -1,15 +1,13 @@
 import Head from "next/head";
 import { cloneElement, useContext, useEffect, useState } from "react";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
-import { useSubscribe } from "replicache-react";
 import { Redirect, Route, Switch, useLocation } from "wouter";
 
 import { reportEventPosthog } from "@unclutter/library-components/dist/common";
 import HeaderBar from "./components/HeaderBar";
 import {
-    getArticlesCount,
-    getSettings,
     ReplicacheContext,
+    useSubscribe,
 } from "@unclutter/library-components/dist/store";
 import DashboardTab from "./tabs/Dashboard";
 import ExportTab from "./tabs/Export";
@@ -66,7 +64,11 @@ export const defaultTabs: LibraryTab[] = [
 
 export default function App() {
     const rep = useContext(ReplicacheContext);
-    const articleCount = useSubscribe(rep, getArticlesCount, null, [rep]);
+    const articleCount = useSubscribe(
+        rep,
+        rep?.subscribe.getArticlesCount(),
+        null
+    );
 
     // location state
     const [lastLocation, setLastLocation] = useState<string>();
@@ -102,7 +104,7 @@ export default function App() {
         }
     }, [location]);
 
-    const settings = useSubscribe(rep, getSettings, null, [rep]);
+    const settings = useSubscribe(rep, rep?.subscribe.getSettings(), null);
 
     if (location === "/modal") {
         return <ModalTestTab />;

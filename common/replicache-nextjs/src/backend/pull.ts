@@ -9,7 +9,7 @@ import {
   PartialSyncState,
   partialSyncStateSchema,
   PARTIAL_SYNC_STATE_KEY,
-} from "../frontend/partial.js";
+} from "@unclutter/library-components/dist/store";
 
 const cookieSchema = z.union([
   z.object({

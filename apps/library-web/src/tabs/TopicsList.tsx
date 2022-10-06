@@ -1,13 +1,12 @@
 import clsx from "clsx";
 import { useContext } from "react";
-import { useSubscribe } from "replicache-react";
 import { NoTopicsMessage } from "../components/EmptyMessages";
 import {
     TopicTag,
     TopicEmoji,
 } from "@unclutter/library-components/dist/components";
 import {
-    groupTopics,
+    useSubscribe,
     ReplicacheContext,
     Topic,
 } from "@unclutter/library-components/dist/store";
@@ -15,7 +14,7 @@ import { useLocation } from "wouter";
 
 export default function TopicsListTab({ setSelectedTopicId }) {
     const rep = useContext(ReplicacheContext);
-    const groups = useSubscribe(rep, groupTopics, null, [rep]);
+    const groups = useSubscribe(rep, rep?.subscribe.groupTopics(), null);
 
     return (
         <div className="grid w-full grid-cols-4 gap-3 p-3 xl:grid-cols-6">

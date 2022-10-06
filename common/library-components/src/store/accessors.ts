@@ -6,6 +6,9 @@ import {
     articleLinkSchema,
     articleSchema,
     articleTextSchema,
+    PartialSyncState,
+    partialSyncStateSchema,
+    PARTIAL_SYNC_STATE_KEY,
     readingProgressFullClamp,
     Settings,
     settingsSchema,
@@ -320,6 +323,16 @@ export async function getSettings(tx: ReadTransaction): Promise<Settings> {
     return savedValue || {};
 }
 
+export async function getPartialSyncState(
+    tx: ReadTransaction
+): Promise<PartialSyncState | undefined> {
+    const val = await tx.get(PARTIAL_SYNC_STATE_KEY);
+    if (val === undefined) {
+        return undefined;
+    }
+    return partialSyncStateSchema.parse(JSON.parse(val?.toString() || "null"));
+}
+
 export const accessors = {
     getArticle,
     listArticles,
@@ -339,5 +352,6 @@ export const accessors = {
     groupTopics,
     getGroupTopicChildren,
     getSettings,
+    getPartialSyncState,
 };
 export type A = typeof accessors;

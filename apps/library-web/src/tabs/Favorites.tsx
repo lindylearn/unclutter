@@ -1,15 +1,18 @@
 import { useContext } from "react";
-import { useSubscribe } from "replicache-react";
 import { DraggableArticleList } from "@unclutter/library-components/dist/components";
 import { NoFavoritesMessage } from "../components/EmptyMessages";
 import {
-    listFavoriteArticles,
+    useSubscribe,
     ReplicacheContext,
 } from "@unclutter/library-components/dist/store";
 
 export default function FavoritesTab({}) {
     const rep = useContext(ReplicacheContext);
-    const articles = useSubscribe(rep, listFavoriteArticles, null, [rep]);
+    const articles = useSubscribe(
+        rep,
+        rep?.subscribe.listFavoriteArticles(),
+        null
+    );
 
     return (
         <main className="m-3">

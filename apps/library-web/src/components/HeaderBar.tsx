@@ -1,13 +1,12 @@
 import clsx from "clsx";
 import { useContext } from "react";
-import { useSubscribe } from "replicache-react";
 import { Link, useLocation } from "wouter";
 
 import { LibraryTab } from "../App";
 import { getRandomColor } from "@unclutter/library-components/dist/common";
 import {
-    getTopic,
     ReplicacheContext,
+    useSubscribe,
 } from "@unclutter/library-components/dist/store";
 import {
     LindyIcon,
@@ -34,9 +33,9 @@ export default function HeaderBar({
     const rep = useContext(ReplicacheContext);
     const topic = useSubscribe(
         rep,
-        (tx) => getTopic(tx, selectedTopicId || ""),
+        rep?.subscribe.getTopic(selectedTopicId || ""),
         null,
-        [rep, selectedTopicId]
+        [selectedTopicId]
     );
     let topicColor = getRandomColor(topic?.id || "");
 

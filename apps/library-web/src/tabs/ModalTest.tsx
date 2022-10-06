@@ -59,7 +59,7 @@ export default function ModalTestTab({}) {
     }, []);
 
     if (!article || !topic || !graph) {
-        return;
+        return <></>;
     }
 
     return (
@@ -76,7 +76,7 @@ export default function ModalTestTab({}) {
                 currentArticle={article?.url}
                 initialTopic={topic}
                 graph={graph}
-                new_link_count={2}
+                relatedLinkCount={2}
                 isVisible={showModal}
                 closeModal={() => setShowModal(false)}
             />

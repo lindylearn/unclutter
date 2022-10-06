@@ -1,7 +1,6 @@
 import Head from "next/head";
 import { cloneElement, useContext, useEffect, useState } from "react";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
-import { useSubscribe } from "replicache-react";
 import { Link } from "wouter";
 import {
     TopicTag,
@@ -9,7 +8,7 @@ import {
     DraggableArticleList,
 } from "@unclutter/library-components/dist/components";
 import {
-    listTopicArticles,
+    useSubscribe,
     Topic,
     ReplicacheContext,
 } from "@unclutter/library-components/dist/store";
@@ -68,7 +67,7 @@ export default function TopicGroupTab({ group_id }) {
 
     const articles = useSubscribe(
         rep,
-        selectedTopic && (listTopicArticles(selectedTopic.id) as any),
+        selectedTopic && rep?.subscribe.listTopicArticles(selectedTopic?.id),
         [],
         [selectedTopic]
     );

@@ -5,22 +5,19 @@ import {
     createSpace,
     spaceExists,
 } from "@unclutter/replicache-nextjs/lib/backend";
-import {
-    useReplicache,
-    getPartialSyncState,
-    PartialSyncState,
-} from "@unclutter/replicache-nextjs/lib/frontend";
+import { useReplicache } from "@unclutter/replicache-nextjs/lib/frontend";
 import App from "../src/App";
 import {
     mutators,
     accessors,
     ReplicacheContext,
+    useSubscribe,
+    PartialSyncState,
 } from "@unclutter/library-components/dist/store";
 import {
     SearchIndex,
     syncSearchIndex,
 } from "@unclutter/library-components/dist/common";
-import { useSubscribe } from "replicache-react";
 
 export const SearchWorkerContent = createContext<MessagePort | null>(null);
 
@@ -79,12 +76,14 @@ export default function Index({ spaceID }: { spaceID: string }) {
         }
     }, [rep, workerIndex]);
 
-    const partialSync = useSubscribe<
-        PartialSyncState | "NOT_RECEIVED_FROM_SERVER"
-    >(
+    // @ts-ignore
+    const partialSync:
+        | PartialSyncState
+        | "NOT_RECEIVED_FROM_SERVER"
+        | undefined = useSubscribe(
         rep,
-        async (tx) =>
-            (await getPartialSyncState(tx)) || "NOT_RECEIVED_FROM_SERVER",
+        // @ts-ignore
+        rep?.subscribe.getPartialSyncState(),
         "NOT_RECEIVED_FROM_SERVER"
     );
 

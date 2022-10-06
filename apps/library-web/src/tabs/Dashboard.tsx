@@ -1,15 +1,13 @@
 import clsx from "clsx";
 import { useContext, useEffect, useState } from "react";
-import { useSubscribe } from "replicache-react";
 import { GroupedArticleList } from "@unclutter/library-components/dist/components";
-import { EmptyLibraryMessage } from "../components/EmptyMessages";
 import {
     ArticleBucket,
     ArticleBucketMap,
-    groupRecentArticles,
     StateFilter,
     ReplicacheContext,
     Article,
+    useSubscribe,
 } from "@unclutter/library-components/dist/store";
 
 export default function DashboardTab({ selectedTopicId, setSelectedTopicId }) {
@@ -23,11 +21,13 @@ export default function DashboardTab({ selectedTopicId, setSelectedTopicId }) {
     const rep = useContext(ReplicacheContext);
     const articleGroups = useSubscribe(
         rep,
-        (tx) =>
-            // @ts-ignore
-            groupRecentArticles(tx, undefined, stateFilter, selectedTopicId),
+        rep?.subscribe.groupRecentArticles(
+            undefined,
+            stateFilter,
+            selectedTopicId
+        ),
         null,
-        [rep, stateFilter, selectedTopicId]
+        [stateFilter, selectedTopicId]
     ) as ArticleBucketMap | null;
 
     // order time buckets for sidebar

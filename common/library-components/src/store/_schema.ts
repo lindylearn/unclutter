@@ -1,6 +1,7 @@
 import { entitySchema } from "@rocicorp/rails";
 import { z } from "zod";
 
+// *** Article ***
 export const articleSchema = entitySchema.extend({
     url: z.string(),
     title: z.nullable(z.string()),
@@ -20,6 +21,7 @@ export const articleSchema = entitySchema.extend({
 export type Article = z.infer<typeof articleSchema>;
 export const readingProgressFullClamp = 0.95;
 
+// *** Topic ***
 export const topicSchema = entitySchema.extend({
     name: z.string(),
     emoji: z.nullable(z.string()),
@@ -28,17 +30,20 @@ export const topicSchema = entitySchema.extend({
 });
 export type Topic = z.infer<typeof topicSchema>;
 
+// *** Setting ***
 export const settingsSchema = z.object({
     tutorial_stage: z.optional(z.number()),
 });
 export type Settings = z.infer<typeof settingsSchema>;
 
+// *** ArticleText ***
 export const articleTextSchema = entitySchema.extend({
     title: z.nullable(z.string()),
     paragraphs: z.array(z.string()),
 });
 export type ArticleText = z.infer<typeof articleTextSchema>;
 
+// *** ArticleLink ***
 export const articleLinkSchema = entitySchema.extend({
     source: z.string(),
     target: z.string(),
@@ -46,3 +51,16 @@ export const articleLinkSchema = entitySchema.extend({
     score: z.optional(z.number()),
 });
 export type ArticleLink = z.infer<typeof articleLinkSchema>;
+
+// *** PartialSyncState ***
+export const PARTIAL_SYNC_STATE_KEY = "control/partialSync";
+export const partialSyncStateSchema = z.union([
+    z.object({
+        // full-text entries may lag behind article version
+        minVersion: z.number(),
+        maxVersion: z.number(),
+        endKey: z.string(),
+    }),
+    z.literal("PARTIAL_SYNC_COMPLETE"),
+]);
+export type PartialSyncState = z.TypeOf<typeof partialSyncStateSchema>;

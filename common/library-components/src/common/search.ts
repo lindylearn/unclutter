@@ -1,8 +1,7 @@
 import { Index, Document } from "flexsearch";
 import { keys, get, set, createStore, UseStore, clear } from "idb-keyval";
-import type { Replicache } from "replicache";
 
-import { Article, ArticleText, listArticleTexts } from "../store";
+import { Article, ArticleText, RuntimeReplicache } from "../store";
 
 export interface SearchResult {
     id: string;
@@ -211,7 +210,7 @@ export class SearchIndex {
 
 // init the search index and watch replicache changes
 export async function syncSearchIndex(
-    rep: Replicache,
+    rep: RuntimeReplicache,
     searchIndex: SearchIndex
 ) {
     let searchIndexInitialized = false;
@@ -248,7 +247,7 @@ export async function syncSearchIndex(
     // backfill entries
     if (isEmpty) {
         // backfill all current enties
-        const articleTexts = await rep.query(listArticleTexts);
+        const articleTexts = await rep.query.listArticleTexts();
         await searchIndex.addToSearchIndex(articleTexts);
     } else {
         // backfill changes during initialization
