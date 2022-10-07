@@ -19,7 +19,7 @@ import { BigNumber, ResourceIcon, ResourceStat } from "./numbers";
 export default function StatsModalTab({
     articleCount,
     darkModeEnabled,
-    defaultWeekOverlay = 1,
+    defaultWeekOverlay = 3,
     showTopic,
     reportEvent = () => {},
 }: {

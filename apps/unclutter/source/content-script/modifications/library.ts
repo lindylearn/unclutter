@@ -101,7 +101,7 @@ export default class LibraryModifier implements PageModifier {
             }
 
             // fetch topic progress stats
-            if (this.libraryState.libraryInfo) {
+            if (this.libraryState.libraryInfo?.topic) {
                 this.libraryState.topicProgress =
                     await this.constructTopicProgress(
                         rep,

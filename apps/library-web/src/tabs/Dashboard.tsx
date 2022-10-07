@@ -66,14 +66,20 @@ export default function DashboardTab({ selectedTopicId, setSelectedTopicId }) {
         setTimeFilterOptions([allTimeOption].concat(timeFilterOptions));
 
         if (!activeKey) {
-            const firstArticlesCount = timeFilterOptions[0]?.articleCount;
-            const showedFirstChildren =
-                timeFilterOptions[0]?.children &&
-                (!firstArticlesCount || firstArticlesCount > 20);
-            if (showedFirstChildren) {
-                setActiveKey(timeFilterOptions[0]?.children?.[0].key || null);
+            if (selectedTopicId) {
+                setActiveKey("all");
             } else {
-                setActiveKey(timeFilterOptions[0]?.key || null);
+                const firstArticlesCount = timeFilterOptions[0]?.articleCount;
+                const showedFirstChildren =
+                    timeFilterOptions[0]?.children &&
+                    (!firstArticlesCount || firstArticlesCount > 20);
+                if (showedFirstChildren) {
+                    setActiveKey(
+                        timeFilterOptions[0]?.children?.[0].key || null
+                    );
+                } else {
+                    setActiveKey(timeFilterOptions[0]?.key || null);
+                }
             }
         }
     }, [articleGroups]);
@@ -153,7 +159,6 @@ export default function DashboardTab({ selectedTopicId, setSelectedTopicId }) {
                         articles={visibleArticles || []}
                         sortGroupsBy="recency_position"
                         setSelectedTopicId={setSelectedTopicId}
-                        combineSmallGroups
                     />
                 </div>
             </main>
