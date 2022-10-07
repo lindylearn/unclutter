@@ -162,10 +162,10 @@ export function ArticlePreview({
             )}
 
             <div
-                className="progress bg-lindy dark:bg-lindyDark absolute bottom-0 left-0 h-[7px] rounded-r transition-all"
+                className="bg-lindy dark:bg-lindyDark absolute bottom-0 left-0 h-[7px] rounded-r transition-all"
                 style={{
-                    // @ts-ignore
-                    "--progress": `${Math.max(readingProgress, 0.1) * 100}%`,
+                    // disabled progress animation as it sometimes re-renders during dragging
+                    width: `${readingProgress * 100}%`,
                 }}
             />
             {/* {readingProgress < readingProgressFullClamp && (
