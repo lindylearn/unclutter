@@ -109,17 +109,6 @@ async function deleteArticle(tx: WriteTransaction, articleId: string) {
     await deleteArticleText(tx, articleId);
 }
 
-async function cleanupLibrary(tx: WriteTransaction) {
-    const articles = await listArticles(tx);
-    const shortPages = articles.filter((a) => a.word_count < 200);
-
-    await Promise.all(
-        shortPages.map((a) => {
-            deleteArticle(tx, a.id);
-        })
-    );
-}
-
 async function articleSetFavorite(
     tx: WriteTransaction,
     { id, is_favorite }: { id: string; is_favorite: boolean }
@@ -244,7 +233,6 @@ export const mutators = {
     articleSetFavorite,
     articleTrackOpened,
     deleteArticle,
-    cleanupLibrary,
     putArticleIfNotExists,
     importArticles,
     importArticleTexts,
