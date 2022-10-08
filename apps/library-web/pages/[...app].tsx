@@ -16,6 +16,7 @@ import {
 } from "@unclutter/library-components/dist/store";
 import {
     SearchIndex,
+    setUnclutterLibraryAuth,
     syncSearchIndex,
 } from "@unclutter/library-components/dist/common";
 
@@ -24,6 +25,8 @@ export const SearchWorkerContent = createContext<MessagePort | null>(null);
 export default function Index({ spaceID }: { spaceID: string }) {
     const [workerIndex, setWorkerIndex] = useState<SharedWorker>();
     useEffect(() => {
+        setUnclutterLibraryAuth(spaceID);
+
         try {
             const worker = new SharedWorker(
                 new URL("../worker.js", import.meta.url),
