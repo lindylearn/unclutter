@@ -191,6 +191,9 @@ export default class LibraryModifier implements PageModifier {
         topic_id: string
     ): Promise<TopicProgress> {
         const topicArticles = await rep?.query.listTopicArticles(topic_id);
+        if (!topicArticles) {
+            return null;
+        }
         if (!this.libraryState.wasAlreadyPresent) {
             // likely not pulled from replicache yet
             topicArticles.push(this.libraryState.libraryInfo.article);
