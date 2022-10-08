@@ -232,16 +232,14 @@ async function initializeServiceWorker() {
     startMetrics(isDev);
 
     if (isDev) {
-        setLibraryUser(
+        await setLibraryUser(
             "020cd243-4aa1-43e6-b83a-536e98bb1a38",
             "sb-access-token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNjY0Nzg4NTUyLCJzdWIiOiIwMjBjZDI0My00YWExLTQzZTYtYjgzYS01MzZlOThiYjFhMzgiLCJlbWFpbCI6InBldGVyK3Rlc3RAbGluZHlsZWFybi5pbyIsInBob25lIjoiIiwiYXBwX21ldGFkYXRhIjp7InByb3ZpZGVyIjoiZW1haWwiLCJwcm92aWRlcnMiOlsiZW1haWwiXX0sInVzZXJfbWV0YWRhdGEiOnt9LCJyb2xlIjoiYXV0aGVudGljYXRlZCIsInNlc3Npb25faWQiOiJlZDhhNjIxNC04YzZhLTQ3YzItYjJkMS1hZjRkOWRmNTBhZDcifQ.BrEwcIp6tGmmMyxz9z5BfgbrSM5Kn9bh40b8qfqyHUw; sb-refresh-token=UwfHlQ4vZV8UA92S8lvTLA"
-        ).then(() => {
-            initReplicache();
-        });
-    } else {
-        // avoid during frequent dev reloads
-        loadAnnotationCountsToMemory();
+        );
     }
+
+    loadAnnotationCountsToMemory();
+    initReplicache();
 }
 
 initializeServiceWorker();
