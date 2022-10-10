@@ -9,6 +9,7 @@ import {
     ReplicacheContext,
     Topic,
 } from "@unclutter/library-components/dist/store";
+import { UserInfo } from "@unclutter/library-components/dist/store/user";
 import { useContext, useEffect, useState } from "react";
 
 export default function ModalTestTab({}) {
@@ -58,6 +59,11 @@ export default function ModalTestTab({}) {
             });
     }, []);
 
+    const userInfo: UserInfo = {
+        accountEnabled: false,
+        topicsEnabled: false,
+    };
+
     return (
         <div className="h-screen w-screen">
             <div
@@ -68,11 +74,12 @@ export default function ModalTestTab({}) {
             </div>
 
             <LibraryModalPage
+                userInfo={userInfo}
                 darkModeEnabled={darkModeEnabled}
                 currentArticle={article?.url}
                 initialTopic={topic}
                 graph={graph}
-                relatedLinkCount={2}
+                // relatedLinkCount={2}
                 isVisible={showModal}
                 closeModal={() => setShowModal(false)}
             />

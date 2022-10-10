@@ -11,8 +11,10 @@ import { ReplicacheContext, Topic } from "../../store";
 import RecentModalTab from "./Recent";
 import { LindyIcon } from "../Icons";
 import HighlightsTab from "./Highlights";
+import { UserInfo } from "../../store/user";
 
 export function LibraryModalPage({
+    userInfo,
     darkModeEnabled = false,
     currentArticle,
     initialTopic,
@@ -22,6 +24,7 @@ export function LibraryModalPage({
     closeModal = () => {},
     reportEvent = () => {},
 }: {
+    userInfo: UserInfo;
     darkModeEnabled?: boolean;
     currentArticle?: string;
     initialTopic?: Topic;
@@ -37,7 +40,9 @@ export function LibraryModalPage({
         rep?.query.getArticlesCount().then(setArticleCount);
     }, [rep]);
 
-    const [currentTab, setCurrentTab] = useState("graph");
+    const [currentTab, setCurrentTab] = useState(
+        userInfo.topicsEnabled ? "graph" : "stats"
+    );
     useEffect(() => {
         reportEvent("changeModalTab", { tab: currentTab });
     }, [currentTab]);
@@ -76,6 +81,7 @@ export function LibraryModalPage({
             />
             <div className="modal-content relative z-10 mx-auto mt-10 flex h-5/6 max-h-[700px] max-w-5xl flex-col overflow-hidden rounded-lg bg-white text-stone-800 shadow dark:bg-[#212121] dark:text-[rgb(232,230,227)]">
                 <ModalContent
+                    userInfo={userInfo}
                     articleCount={articleCount}
                     currentArticle={currentArticle}
                     currentTopic={currentTopic}
@@ -94,6 +100,7 @@ export function LibraryModalPage({
 }
 
 function ModalContent({
+    userInfo,
     currentArticle,
     currentTopic,
     changedTopic,
@@ -106,6 +113,7 @@ function ModalContent({
     showTopic,
     reportEvent = () => {},
 }: {
+    userInfo: UserInfo;
     currentArticle?: string;
     currentTopic?: Topic;
     changedTopic: boolean;
@@ -133,6 +141,7 @@ function ModalContent({
                     </div>
 
                     <Sidebar
+                        userInfo={userInfo}
                         currentTab={currentTab}
                         currentTopic={currentTopic}
                         changedTopic={changedTopic}
@@ -159,6 +168,7 @@ function ModalContent({
 
                 {currentTab === "recent" && (
                     <RecentModalTab
+                        userInfo={userInfo}
                         currentTopic={currentTopic}
                         darkModeEnabled={darkModeEnabled}
                         showTopic={showTopic}
@@ -176,6 +186,7 @@ function ModalContent({
                 )}
                 {currentTab === "stats" && (
                     <StatsModalTab
+                        userInfo={userInfo}
                         articleCount={articleCount}
                         darkModeEnabled={darkModeEnabled}
                         showTopic={showTopic}

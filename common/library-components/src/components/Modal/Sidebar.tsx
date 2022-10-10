@@ -3,8 +3,10 @@ import clsx from "clsx";
 import { LindyIcon } from "../Icons";
 import { Topic } from "../../store";
 import { getRandomLightColor } from "../../common";
+import { UserInfo } from "../../store/user";
 
 export default function Sidebar({
+    userInfo,
     currentTab,
     currentTopic,
     changedTopic,
@@ -12,6 +14,7 @@ export default function Sidebar({
     relatedLinkCount,
     darkModeEnabled,
 }: {
+    userInfo: UserInfo;
     currentTab: string;
     currentTopic?: Topic;
     changedTopic: boolean;
@@ -20,6 +23,7 @@ export default function Sidebar({
     darkModeEnabled: boolean;
 }) {
     const modalTabs = getModalTabOptions(
+        userInfo,
         !changedTopic ? relatedLinkCount : undefined
     );
 
@@ -72,15 +76,20 @@ export interface ModalTabOptions {
     label: string;
     value: string;
     tag?: string;
+    unavailable?: boolean;
     atEnd?: boolean;
     svg: React.ReactNode;
 }
-function getModalTabOptions(new_link_count?: number): ModalTabOptions[] {
+function getModalTabOptions(
+    userInfo: UserInfo,
+    new_link_count?: number
+): ModalTabOptions[] {
     return [
         {
             label: "Related",
             value: "graph",
             tag: new_link_count ? `${new_link_count} +` : undefined,
+            unavailable: !userInfo.topicsEnabled,
             svg: (
                 <svg className="h-4" viewBox="0 0 640 512">
                     <path
@@ -171,6 +180,7 @@ function SidebarFilterOption({
     isActive,
     label,
     tag,
+    unavailable,
     svg,
     onClick = () => {},
     currentTopic,
@@ -187,13 +197,14 @@ function SidebarFilterOption({
                 "relative flex cursor-pointer items-center gap-2 rounded-md px-2 py-1 font-medium outline-none transition-all hover:scale-[97%]",
                 isActive
                     ? "bg-stone-50 dark:bg-neutral-800"
-                    : "hover:bg-stone-50 dark:text-neutral-500 hover:dark:bg-neutral-800"
+                    : "hover:bg-stone-50 dark:text-neutral-500 hover:dark:bg-neutral-800",
+                unavailable && "opacity-30"
             )}
             onClick={onClick}
         >
             <div className="flex w-5 justify-center">{svg}</div>
             {label}
-            {tag && (
+            {!tag && (
                 <div
                     className="bg-lindy dark:bg-lindyDark absolute -top-1 right-1 z-20 rounded-md px-1 text-sm leading-tight dark:text-[rgb(232,230,227)]"
                     style={{

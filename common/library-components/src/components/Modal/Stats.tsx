@@ -10,19 +10,28 @@ import {
     getActivityColor,
     getActivityLevel,
 } from "../Charts";
-import { getRandomLightColor, getWeekStart, subtractWeeks } from "../../common";
+import {
+    getDomain,
+    getRandomLightColor,
+    getWeekStart,
+    groupBy,
+    subtractWeeks,
+} from "../../common";
 import { ListFilter, TimeFilter, useArticleGroups } from "../ArticleList";
 import { TopicEmoji } from "../TopicTag";
 import clsx from "clsx";
 import { BigNumber, ResourceIcon, ResourceStat } from "./numbers";
+import { UserInfo } from "../../store/user";
 
 export default function StatsModalTab({
+    userInfo,
     articleCount,
     darkModeEnabled,
     defaultWeekOverlay = 3,
     showTopic,
     reportEvent = () => {},
 }: {
+    userInfo: UserInfo;
     articleCount?: number;
     darkModeEnabled: boolean;
     defaultWeekOverlay?: number;
@@ -68,6 +77,7 @@ export default function StatsModalTab({
             </div>
 
             <NumberStats
+                userInfo={userInfo}
                 articleCount={articleCount}
                 allArticles={allArticles}
                 darkModeEnabled={darkModeEnabled}
@@ -81,10 +91,10 @@ export default function StatsModalTab({
                 defaultWeekOverlay={defaultWeekOverlay}
             />
             <WeekDetails
+                userInfo={userInfo}
                 start={start}
                 end={end}
                 allArticles={allArticles}
-                selectedDate={selectedDate}
                 darkModeEnabled={darkModeEnabled}
                 showTopic={showTopic}
             />
@@ -93,42 +103,26 @@ export default function StatsModalTab({
 }
 
 function NumberStats({
+    userInfo,
     articleCount,
     allArticles,
     darkModeEnabled,
 }: {
+    userInfo: UserInfo;
     articleCount?: number;
     allArticles?: Article[];
     darkModeEnabled: boolean;
 }) {
-    // const [weekArticles, setWeekArticles] = useState<number>();
-    // useEffect(() => {
-    //     if (!allArticles) {
-    //         return;
-    //     }
-
-    //     const currentWeek = getWeekNumber(new Date());
-
-    //     let weekArticles = 0;
-    //     allArticles?.map((a) => {
-    //         const date = new Date(a.time_added * 1000);
-
-    //         if (getWeekNumber(date) === currentWeek) {
-    //             weekArticles += 1;
-    //         }
-    //     });
-
-    //     setWeekArticles(weekArticles);
-    // }, [allArticles]);
-
     const rep = useContext(ReplicacheContext);
     const [topicsCount, setTopicsCount] = useState<number>();
     useEffect(() => {
-        rep?.query
-            .listTopics()
-            .then((topics) =>
-                setTopicsCount(topics.filter((t) => !!t.group_id).length)
-            );
+        if (userInfo.topicsEnabled) {
+            rep?.query
+                .listTopics()
+                .then((topics) =>
+                    setTopicsCount(topics.filter((t) => !!t.group_id).length)
+                );
+        }
     }, [rep]);
 
     return (
@@ -148,40 +142,28 @@ function NumberStats({
                 icon={<ResourceIcon type="articles" large />}
             />
 
-            {/* <BigNumber
-                value={0}
-                tag="total highlights"
-                icon={
-                    <svg className="h-5" viewBox="0 0 512 512">
-                        <path
-                            fill="currentColor"
-                            d="M320 62.06L362.7 19.32C387.7-5.678 428.3-5.678 453.3 19.32L492.7 58.75C517.7 83.74 517.7 124.3 492.7 149.3L229.5 412.5C181.5 460.5 120.3 493.2 53.7 506.5L28.71 511.5C20.84 513.1 12.7 510.6 7.03 504.1C1.356 499.3-1.107 491.2 .4662 483.3L5.465 458.3C18.78 391.7 51.52 330.5 99.54 282.5L286.1 96L272.1 82.91C263.6 73.54 248.4 73.54 239 82.91L136.1 184.1C127.6 194.3 112.4 194.3 103 184.1C93.66 175.6 93.66 160.4 103 151L205.1 48.97C233.2 20.85 278.8 20.85 306.9 48.97L320 62.06zM320 129.9L133.5 316.5C94.71 355.2 67.52 403.1 54.85 457.2C108 444.5 156.8 417.3 195.5 378.5L382.1 192L320 129.9z"
-                        />
-                    </svg>
-                }
-            /> */}
-            <BigNumber
-                value={topicsCount}
-                tag="article topics"
-                icon={<ResourceIcon type="links" large />}
-            />
-            {/* <BigNumber value={weekArticles} target={7} tag="read this week" />
-            <BigNumber value={0} target={7} tag="highlighted this week" /> */}
+            {userInfo.topicsEnabled && (
+                <BigNumber
+                    value={topicsCount}
+                    tag="article topics"
+                    icon={<ResourceIcon type="links" large />}
+                />
+            )}
         </div>
     );
 }
 
 function WeekDetails({
+    userInfo,
     start,
     end,
-    selectedDate,
     allArticles,
     darkModeEnabled,
     showTopic,
 }: {
+    userInfo: UserInfo;
     start: Date;
     end: Date;
-    selectedDate?: Date;
     allArticles?: Article[];
     darkModeEnabled: boolean;
     showTopic: (topic: Topic) => void;
@@ -200,35 +182,37 @@ function WeekDetails({
         setWeekArticles(weekArticles);
     }, [allArticles, start, end]);
 
-    const groups = useArticleGroups(
-        weekArticles,
-        false,
-        "topic_size",
-        "recency_order",
-        undefined
-    );
-
-    // if (!start || !end || !groups) {
-    //     return <></>;
-    // }
+    let [groups, setGroups] = useState<[string, Article[]][]>();
+    if (userInfo.topicsEnabled) {
+        groups = useArticleGroups(
+            weekArticles,
+            false,
+            "topic_size",
+            "recency_order",
+            undefined
+        );
+    } else {
+        useEffect(() => {
+            const groups: { [domain: string]: Article[] } = groupBy(
+                weekArticles.map((a) => {
+                    // @ts-ignore
+                    a.domain = getDomain(a.url);
+                    return a;
+                }),
+                "domain"
+            );
+            setGroups(
+                Object.entries(groups).sort((a, b) => b[1].length - a[1].length)
+            );
+        }, [weekArticles]);
+    }
 
     return (
         <div className="animate-fadein">
-            {/* <div className="mb-2 ml-0.5 flex items-center gap-2 font-medium">
-                <svg className="w-4" viewBox="0 0 448 512">
-                    <path
-                        fill="currentColor"
-                        d="M152 64H296V24C296 10.75 306.7 0 320 0C333.3 0 344 10.75 344 24V64H384C419.3 64 448 92.65 448 128V448C448 483.3 419.3 512 384 512H64C28.65 512 0 483.3 0 448V128C0 92.65 28.65 64 64 64H104V24C104 10.75 114.7 0 128 0C141.3 0 152 10.75 152 24V64zM48 448C48 456.8 55.16 464 64 464H384C392.8 464 400 456.8 400 448V192H48V448z"
-                    />
-                </svg>
-                <span>
-                    {formatDate(start)} to {formatDate(end)}
-                </span>
-            </div> */}
-
             <div className="grid grid-cols-5 gap-4">
                 {groups?.map(([topic_id, selectedArticles]) => (
-                    <TopicStat
+                    <ArticleGroupStat
+                        userInfo={userInfo}
                         key={topic_id}
                         topic_id={topic_id}
                         selectedArticles={selectedArticles}
@@ -241,21 +225,19 @@ function WeekDetails({
                     />
                 ))}
             </div>
-
-            {/* <div className="rounded-md bg-stone-50 p-3">
-                <StaticArticleList articles={weekArticles} small />
-            </div> */}
         </div>
     );
 }
 
-function TopicStat({
+function ArticleGroupStat({
+    userInfo,
     topic_id,
     selectedArticles,
     totalArticleCount,
     darkModeEnabled,
     showTopic,
 }: {
+    userInfo: UserInfo;
     topic_id: string;
     selectedArticles: Article[];
     totalArticleCount?: number;
@@ -263,16 +245,17 @@ function TopicStat({
     showTopic: (topic: Topic) => void;
 }) {
     const [topic, setTopic] = useState<Topic>();
-    const rep = useContext(ReplicacheContext);
-    useEffect(() => {
-        rep?.query.getTopic(topic_id).then(setTopic);
-    }, [rep, topic_id]);
+    if (userInfo.topicsEnabled) {
+        const rep = useContext(ReplicacheContext);
+        useEffect(() => {
+            rep?.query.getTopic(topic_id).then(setTopic);
+        }, [rep, topic_id]);
+    }
 
     const addedCount = selectedArticles.length;
     const readCount = selectedArticles.filter(
         (a) => a.reading_progress >= readingProgressFullClamp
     ).length;
-    // const unreadCount = addedCount - readCount;
 
     const activityLevel = getActivityLevel(addedCount);
 
@@ -287,9 +270,12 @@ function TopicStat({
                     activityLevel,
                     darkModeEnabled || false
                 ),
-                // background: getRandomLightColor(topic_id),
             }}
-            onClick={() => showTopic(topic!)}
+            onClick={() => {
+                if (userInfo.topicsEnabled) {
+                    showTopic(topic!);
+                }
+            }}
         >
             <div className="flex max-w-full items-center overflow-hidden font-medium">
                 {topic?.emoji && (

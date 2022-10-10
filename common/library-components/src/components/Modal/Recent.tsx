@@ -8,13 +8,16 @@ import {
     Topic,
 } from "../../store";
 import { ReadingProgress } from "./numbers";
+import { UserInfo } from "../../store/user";
 
 export default function RecentModalTab({
+    userInfo,
     currentTopic,
     darkModeEnabled,
     showTopic,
     reportEvent = () => {},
 }: {
+    userInfo: UserInfo;
     currentTopic?: Topic;
     darkModeEnabled: boolean;
     showTopic: (topic: Topic) => void;
