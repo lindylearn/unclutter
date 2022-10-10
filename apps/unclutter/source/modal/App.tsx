@@ -52,10 +52,16 @@ export default function App({
         }, 300);
     }
 
+    // TODO move userInfo to query params to render faster?
+    if (!libraryState?.userInfo) {
+        return <></>;
+    }
+
     return (
         // @ts-ignore
         <ReplicacheContext.Provider value={rep}>
             <LibraryModalPage
+                userInfo={libraryState?.userInfo}
                 darkModeEnabled={darkModeEnabled === "true"} // convert string to bool
                 relatedLinkCount={libraryState?.topicProgress?.linkCount}
                 currentArticle={

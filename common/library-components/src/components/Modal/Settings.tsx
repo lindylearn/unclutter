@@ -3,8 +3,21 @@ import { UserInfo } from "../../store/user";
 
 export default function SettingsModalTab({ userInfo }: { userInfo: UserInfo }) {
     return (
-        <div className="flex flex-col gap-4">
+        <div className="flex max-w-2xl flex-col gap-4">
             <h1 className="py-1 font-medium">Library settings</h1>
+
+            <div>
+                <h2 className="font-medium">About</h2>
+                Every article you open with Unclutter gets automatically saved
+                in your library.
+                <br />
+                See what you've read over the last weeks, get back to articles
+                you didn't finish, or review your highlights. It's all just one{" "}
+                <span className="inline-block rounded-md bg-stone-50 px-1">
+                    TAB
+                </span>{" "}
+                click away.
+            </div>
 
             <div>
                 <h2 className="font-medium">Account</h2>

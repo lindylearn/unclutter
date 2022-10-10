@@ -34,6 +34,7 @@ export default class LibraryModifier implements PageModifier {
     libraryState: LibraryState = {
         libraryUser: undefined,
         libraryInfo: null,
+        userInfo: null,
 
         showLibrarySignup: false,
 
@@ -55,6 +56,11 @@ export default class LibraryModifier implements PageModifier {
 
     async fetchState() {
         this.libraryState.libraryUser = await getLibraryUser();
+        this.libraryState.userInfo = {
+            accountEnabled: false,
+            topicsEnabled: false,
+        };
+
         if (this.libraryState.libraryUser) {
             this.overlayManager.updateLibraryState(this.libraryState);
             this.fetchLibraryState();

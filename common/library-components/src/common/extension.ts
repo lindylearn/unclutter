@@ -15,7 +15,7 @@ function getBrowserType(): BrowserType {
 
 function getUnclutterExtensionId(): any {
     return getBrowserType() === "chromium"
-        ? "fiknonjpeapeidjaaelhihadnodmmmhj"
+        ? "ibckhpijbdmdobhhhodkceffdngnglpk"
         : "{8f8c4c52-216c-4c6f-aae0-c214a870d9d9}";
 }
 function getUnclutterLibraryExtensionId(): any {
