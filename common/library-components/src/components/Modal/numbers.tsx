@@ -73,7 +73,10 @@ export function ResourceStat({
         >
             <ResourceIcon type={type} large={large} />
             <div
-                className={clsx("font-title font-bold", large ? "text-xl" : "")}
+                className={clsx(
+                    "font-title select-none font-bold",
+                    large ? "text-xl" : ""
+                )}
             >
                 {showPlus && "+"}
                 {value || 0}

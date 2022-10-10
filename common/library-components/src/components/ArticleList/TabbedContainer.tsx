@@ -19,6 +19,8 @@ import { subDays } from "date-fns";
 export interface TabInfo {
     key: string;
     title: string;
+    isTopic?: boolean;
+    articleLines?: number;
     icon?: ReactNode;
     articles: Article[];
 }
@@ -207,6 +209,7 @@ export function useTabInfos(
                                     className="mr-0 w-[18px]"
                                 />
                             ),
+                            isTopic: true,
                             articles: sortArticlesPosition(
                                 articles,
                                 "topic_sort_position"
