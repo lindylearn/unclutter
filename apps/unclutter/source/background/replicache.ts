@@ -11,10 +11,6 @@ const apiHost = "https://library.lindylearn.io";
 
 let rep: Replicache = null;
 export async function initReplicache(): Promise<Replicache> {
-    if (rep) {
-        return;
-    }
-
     const userId = await getLibraryUser();
     const jwt = await getLibraryUserJwt();
     if (!userId || !jwt) {

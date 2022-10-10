@@ -169,7 +169,7 @@ browser.runtime.onMessageExternal.addListener(
                 );
             }
         } else if (message.event === "setLibraryAuth") {
-            // console.log("setLibraryAuth", message.userId);
+            console.log("setLibraryAuth", message.userId);
             setLibraryUser(message.userId, message.webJwt).then(() => {
                 initReplicache();
             });
@@ -228,15 +228,11 @@ browser.tabs.onRemoved.addListener((tabId: number) =>
 
 // initialize on every service worker start
 async function initializeServiceWorker() {
-    const isDev = await getFeatureFlag(isDevelopmentFeatureFlag);
-    startMetrics(isDev);
+    // isDevelopmentFeatureFlag not available during initial install yet
+    const extensionInfo = await browser.management.getSelf();
+    const isDev = extensionInfo.installType === "development";
 
-    if (isDev) {
-        await setLibraryUser(
-            "020cd243-4aa1-43e6-b83a-536e98bb1a38",
-            "sb-access-token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNjY0Nzg4NTUyLCJzdWIiOiIwMjBjZDI0My00YWExLTQzZTYtYjgzYS01MzZlOThiYjFhMzgiLCJlbWFpbCI6InBldGVyK3Rlc3RAbGluZHlsZWFybi5pbyIsInBob25lIjoiIiwiYXBwX21ldGFkYXRhIjp7InByb3ZpZGVyIjoiZW1haWwiLCJwcm92aWRlcnMiOlsiZW1haWwiXX0sInVzZXJfbWV0YWRhdGEiOnt9LCJyb2xlIjoiYXV0aGVudGljYXRlZCIsInNlc3Npb25faWQiOiJlZDhhNjIxNC04YzZhLTQ3YzItYjJkMS1hZjRkOWRmNTBhZDcifQ.BrEwcIp6tGmmMyxz9z5BfgbrSM5Kn9bh40b8qfqyHUw; sb-refresh-token=UwfHlQ4vZV8UA92S8lvTLA"
-        );
-    }
+    startMetrics(isDev);
 
     initReplicache();
     loadAnnotationCountsToMemory();
