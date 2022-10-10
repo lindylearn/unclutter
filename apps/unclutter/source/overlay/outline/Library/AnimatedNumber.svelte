@@ -4,7 +4,7 @@
 </script>
 
 <div class="animated-number relative">
-    <div class="after-value min-w-[12px]">{value}</div>
+    <div class="after-value">{value}</div>
     <div class="before-value absolute top-0 left-0 h-full w-full">
         {value - diff}
     </div>
