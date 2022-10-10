@@ -27,6 +27,7 @@ import { getUrlHash } from "@unclutter/library-components/dist/common/url";
 @trackModifierExecution
 export default class LibraryModifier implements PageModifier {
     private articleUrl: string;
+    private articleId: string;
     private overlayManager: OverlayManager;
     private readingProgressSyncIntervalSeconds = 10;
 
@@ -48,6 +49,7 @@ export default class LibraryModifier implements PageModifier {
 
     constructor(articleUrl: string, overlayManager: OverlayManager) {
         this.articleUrl = articleUrl;
+        this.articleId = getUrlHash(articleUrl);
         this.overlayManager = overlayManager;
     }
 
@@ -76,7 +78,7 @@ export default class LibraryModifier implements PageModifier {
             // get library state
             this.libraryState.libraryInfo = await this.constructLibraryInfo(
                 rep,
-                this.articleUrl
+                this.articleId
             );
 
             if (!this.libraryState.libraryInfo) {
@@ -189,9 +191,8 @@ export default class LibraryModifier implements PageModifier {
 
     private async constructLibraryInfo(
         rep: ReplicacheProxy,
-        articleUrl: string
+        articleId: string
     ): Promise<LibraryInfo> {
-        const articleId = getUrlHash(articleUrl);
         const article = await rep.query.getArticle(articleId);
         if (!article) {
             return null;
@@ -262,7 +263,7 @@ export default class LibraryModifier implements PageModifier {
 
         if (this.libraryState.libraryUser) {
             if (
-                readingProgress === 1.0 &&
+                readingProgress >= 0.95 &&
                 this.libraryState.libraryInfo?.article.reading_progress <
                     readingProgressFullClamp
             ) {
@@ -295,11 +296,22 @@ export default class LibraryModifier implements PageModifier {
             return;
         }
 
-        // don't wait for replicache pull
-        this.libraryState.libraryInfo.article.reading_progress =
-            readingProgress;
+        if (this.libraryState.libraryInfo.article) {
+            this.libraryState.libraryInfo.article.reading_progress =
+                readingProgress;
+        }
+        if (this.libraryState.graph) {
+            const currentNode = this.libraryState.graph.nodes.find(
+                (n) => n.depth === 0
+            );
+            currentNode.reading_progress = readingProgress;
+            currentNode.isCompleted =
+                readingProgress >= readingProgressFullClamp;
+        }
 
-        updateLibraryArticle(this.articleUrl, this.libraryState.libraryUser, {
+        const rep = new ReplicacheProxy();
+        rep.mutate.updateArticle({
+            id: this.articleId,
             reading_progress: readingProgress,
         });
     }
