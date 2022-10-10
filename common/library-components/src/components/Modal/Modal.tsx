@@ -12,6 +12,8 @@ import RecentModalTab from "./Recent";
 import { LindyIcon } from "../Icons";
 import HighlightsTab from "./Highlights";
 import { UserInfo } from "../../store/user";
+import UpgradeModalTab from "./Upgrade";
+import SettingsModalTab from "./Settings";
 
 export function LibraryModalPage({
     userInfo,
@@ -41,7 +43,7 @@ export function LibraryModalPage({
     }, [rep]);
 
     const [currentTab, setCurrentTab] = useState(
-        userInfo.topicsEnabled ? "graph" : "recent"
+        userInfo.topicsEnabled ? "graph" : "graph"
     );
     useEffect(() => {
         reportEvent("changeModalTab", { tab: currentTab });
@@ -174,16 +176,19 @@ function ModalContent({
                         showTopic={showTopic}
                     />
                 )}
-                {currentTab === "graph" && (
-                    <GraphPage
-                        graph={graph}
-                        darkModeEnabled={darkModeEnabled}
-                        currentArticle={currentArticle}
-                        currentTopic={currentTopic}
-                        changedTopic={changedTopic}
-                        reportEvent={reportEvent}
-                    />
-                )}
+                {currentTab === "graph" &&
+                    (userInfo.topicsEnabled ? (
+                        <GraphPage
+                            graph={graph}
+                            darkModeEnabled={darkModeEnabled}
+                            currentArticle={currentArticle}
+                            currentTopic={currentTopic}
+                            changedTopic={changedTopic}
+                            reportEvent={reportEvent}
+                        />
+                    ) : (
+                        <UpgradeModalTab darkModeEnabled={darkModeEnabled} />
+                    ))}
                 {currentTab === "stats" && (
                     <StatsModalTab
                         userInfo={userInfo}
@@ -194,6 +199,9 @@ function ModalContent({
                     />
                 )}
                 {currentTab === "highlights" && <HighlightsTab />}
+                {currentTab === "settings" && (
+                    <SettingsModalTab userInfo={userInfo} />
+                )}
             </div>
         </div>
     );
