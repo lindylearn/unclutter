@@ -25,7 +25,6 @@ export type LibraryState = {
 export type LibraryInfo = {
     article: Article;
     topic: Topic | null;
-    sibling_count: number;
 
     new_links?: ArticleLink[];
 };

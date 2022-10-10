@@ -1,4 +1,4 @@
-import { getUrlHash } from "../common/url";
+import { getUrlHash } from "@unclutter/library-components/dist/common/url";
 
 // The extension fetches this remote configuration text record once to display the number
 // of shown social comments per (hashed) URL the user visits.

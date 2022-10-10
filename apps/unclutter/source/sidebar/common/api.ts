@@ -6,7 +6,7 @@ import {
     getHypothesisToken,
     getHypothesisUsername,
 } from "../../common/annotations/storage";
-import { getUrlHash } from "../../common/url";
+import { getUrlHash } from "@unclutter/library-components/dist/common/url";
 
 /**
  * Methods for accessing the remote annotations state (hypothesis and lindy APIs).

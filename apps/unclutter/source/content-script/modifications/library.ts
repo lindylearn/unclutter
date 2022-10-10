@@ -7,7 +7,7 @@ import {
     updateLibraryArticle,
 } from "../../common/api";
 import { showLibrarySignupFlag } from "../../common/featureFlags";
-import { LibraryState, TopicProgress } from "../../common/schema";
+import { LibraryInfo, LibraryState, TopicProgress } from "../../common/schema";
 import {
     Article,
     ArticleLink,
@@ -22,6 +22,7 @@ import {
 import OverlayManager from "./overlay";
 import { PageModifier, trackModifierExecution } from "./_interface";
 import { constructGraphData } from "@unclutter/library-components/dist/components/Modal/Graph";
+import { getUrlHash } from "@unclutter/library-components/dist/common/url";
 
 @trackModifierExecution
 export default class LibraryModifier implements PageModifier {
@@ -58,14 +59,14 @@ export default class LibraryModifier implements PageModifier {
             return;
         }
 
-        this.libraryState.showLibrarySignup = await getRemoteFeatureFlag(
-            showLibrarySignupFlag
-        );
-        if (this.libraryState.showLibrarySignup) {
-            this.overlayManager.updateLibraryState(this.libraryState);
-            this.fetchSignupArticles();
-            return;
-        }
+        // this.libraryState.showLibrarySignup = await getRemoteFeatureFlag(
+        //     showLibrarySignupFlag
+        // );
+        // if (this.libraryState.showLibrarySignup) {
+        //     this.overlayManager.updateLibraryState(this.libraryState);
+        //     this.fetchSignupArticles();
+        //     return;
+        // }
     }
 
     async fetchLibraryState() {
@@ -73,9 +74,9 @@ export default class LibraryModifier implements PageModifier {
 
         try {
             // get library state
-            this.libraryState.libraryInfo = await checkArticleInLibrary(
-                this.articleUrl,
-                this.libraryState.libraryUser
+            this.libraryState.libraryInfo = await this.constructLibraryInfo(
+                rep,
+                this.articleUrl
             );
 
             if (!this.libraryState.libraryInfo) {
@@ -184,6 +185,23 @@ export default class LibraryModifier implements PageModifier {
             );
 
         this.overlayManager.updateLibraryState(this.libraryState);
+    }
+
+    private async constructLibraryInfo(
+        rep: ReplicacheProxy,
+        articleUrl: string
+    ): Promise<LibraryInfo> {
+        const articleId = getUrlHash(articleUrl);
+        const article = await rep.query.getArticle(articleId);
+        if (!article) {
+            return null;
+        }
+
+        const topic = await rep.query.getTopic(article.topic_id);
+        return {
+            article,
+            topic,
+        };
     }
 
     private async constructTopicProgress(
