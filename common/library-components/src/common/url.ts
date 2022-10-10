@@ -19,16 +19,15 @@ export function normalizeUrl(url: string): string {
     // remove url params
     // NOTE: be careful here -- e.g. substack adds ?s=r
     const url_obj = new URL(url);
-    // @ts-ignore
-    for (const [param, _] of url_obj.searchParams.entries()) {
+    Object.entries(url_obj.searchParams).map(([param, _]) => {
         if (param.includes("id")) {
-            continue;
+            return;
         }
         if (["p", "q", "t", "e"].includes(param)) {
-            continue;
+            return;
         }
         delete url_obj.searchParams[param];
-    }
+    });
 
     url_obj.pathname = trimRight(url_obj.pathname, "/");
 

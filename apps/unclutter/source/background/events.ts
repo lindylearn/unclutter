@@ -136,7 +136,10 @@ browser.runtime.onMessage.addListener(
                 active: true,
             });
         } else if (message.event === "setLibraryAuth") {
-            setLibraryUser(message.userId, message.webJwt);
+            console.log("setLibraryAuth", message.userId);
+            setLibraryUser(message.userId, message.webJwt).then(() => {
+                initReplicache();
+            });
         } else if (message.event === "processReplicacheMessage") {
             processReplicacheMessage(message).then(sendResponse);
             return true;
