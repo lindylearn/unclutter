@@ -238,8 +238,8 @@ async function initializeServiceWorker() {
         );
     }
 
-    loadAnnotationCountsToMemory();
     initReplicache();
+    loadAnnotationCountsToMemory();
 }
 
 initializeServiceWorker();

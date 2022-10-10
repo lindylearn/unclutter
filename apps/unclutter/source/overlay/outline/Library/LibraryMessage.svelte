@@ -43,9 +43,14 @@
                         class="font-title relative z-10 flex flex-shrink gap-2 overflow-ellipsis text-base font-semibold leading-none"
                     >
                         <div class="flex h-[1em] items-center">
-                            <div class="w-5 drop-shadow-sm" use:twemojiSvelte>
-                                {libraryState.libraryInfo.topic.emoji}
-                            </div>
+                            {#if libraryState.libraryInfo.topic.emoji}
+                                <div
+                                    class="w-5 drop-shadow-sm"
+                                    use:twemojiSvelte
+                                >
+                                    {libraryState.libraryInfo.topic.emoji}
+                                </div>
+                            {/if}
                         </div>
                         <div>{libraryState.libraryInfo.topic.name}</div>
                     </div>
