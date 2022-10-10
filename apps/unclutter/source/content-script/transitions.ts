@@ -69,7 +69,8 @@ export default class TransitionManager implements PageModifier {
     );
     private readingTimeModifier = new ReadingTimeModifier(
         this.overlayManager,
-        this.libraryModifier
+        this.libraryModifier,
+        this.bodyStyleModifier
     );
     private keyboardModifier = new KeyboardModifier(this.libraryModalModifier);
 

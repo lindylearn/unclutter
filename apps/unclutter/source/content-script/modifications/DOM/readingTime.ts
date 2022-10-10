@@ -1,4 +1,5 @@
 import throttle from "lodash/throttle";
+import BodyStyleModifier from "../bodyStyle";
 import LibraryModifier from "../library";
 import OverlayManager from "../overlay";
 import { PageModifier, trackModifierExecution } from "../_interface";
@@ -14,13 +15,16 @@ export default class ReadingTimeModifier implements PageModifier {
 
     private overlayManager: OverlayManager;
     private libraryModifier: LibraryModifier;
+    private bodyStyleModifier: BodyStyleModifier;
 
     constructor(
         overlayManager: OverlayManager,
-        libraryModifier: LibraryModifier
+        libraryModifier: LibraryModifier,
+        bodyStyleModifier: BodyStyleModifier
     ) {
         this.overlayManager = overlayManager;
         this.libraryModifier = libraryModifier;
+        this.bodyStyleModifier = bodyStyleModifier;
     }
 
     private uninstallScrollListener: () => void;
@@ -44,12 +48,15 @@ export default class ReadingTimeModifier implements PageModifier {
 
     // todo throttle?
     private scollListener() {
+        if (this.bodyStyleModifier.scrollLockEnabled) {
+            return;
+        }
+
         // viewport bottom
         this.pageProgress =
             (window.scrollY + window.innerHeight) /
             document.documentElement.scrollHeight;
 
-        // TODO base on outline headings to be more robust against whitespace?
         const readingTimeLeft = Math.round(
             this.totalReadingTime * (1 - this.pageProgress)
         );

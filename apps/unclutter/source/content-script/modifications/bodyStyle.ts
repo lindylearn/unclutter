@@ -199,14 +199,16 @@ export default class BodyStyleModifier implements PageModifier {
         );
     }
 
-    private scrollLockPos = 0;
+    scrollLockEnabled: boolean;
+    private scrollLockPrevPos = 0;
     enableScrollLock() {
+        this.scrollLockEnabled = true;
         this.unObserveStyleChanges();
 
-        this.scrollLockPos = window.scrollY;
+        this.scrollLockPrevPos = window.scrollY;
         document.documentElement.style.setProperty(
             "top",
-            `-${this.scrollLockPos}px`,
+            `-${this.scrollLockPrevPos}px`,
             "important"
         );
         document.documentElement.style.setProperty(
@@ -227,8 +229,9 @@ export default class BodyStyleModifier implements PageModifier {
             "important"
         );
         document.documentElement.style.setProperty("top", "0", "important");
-        window.scrollTo(0, this.scrollLockPos);
+        window.scrollTo(0, this.scrollLockPrevPos);
 
         this.observeStyleChanges(true);
+        this.scrollLockEnabled = false;
     }
 }
