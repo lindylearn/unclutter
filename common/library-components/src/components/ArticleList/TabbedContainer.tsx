@@ -14,6 +14,7 @@ import { useArticleGroups } from "./GroupedArticleList";
 import { TopicEmoji } from "../TopicTag";
 import { DraggableArticleList } from "./DraggableArticleList";
 import { LindyIcon } from "../Icons";
+import { subDays } from "date-fns";
 
 export interface TabInfo {
     key: string;
@@ -138,16 +139,14 @@ export function TabbedContainer({
 
 export function useTabInfos(
     tabCount: number = 9,
-    onlyUnread: boolean = false
+    onlyUnread: boolean = false,
+    start: Date | null = subDays(new Date(), 90)
 ): [TabInfo[] | undefined, number] {
-    const start = new Date();
-    start.setDate(start.getDate() - 60);
-
     const rep = useContext(ReplicacheContext);
     const [allArticles, setAllArticles] = useState<Article[]>([]);
     useEffect(() => {
         rep?.query
-            .listRecentArticles(start.getTime(), onlyUnread ? "unread" : "all")
+            .listRecentArticles(start?.getTime(), onlyUnread ? "unread" : "all")
             .then(setAllArticles);
     }, []);
 

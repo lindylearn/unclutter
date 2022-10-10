@@ -8,7 +8,6 @@ import {
 import { eachDayOfInterval, subYears } from "date-fns";
 
 import { Article } from "../../store";
-import { getWeekStart, subtractWeeks } from "../../common";
 
 export function ArticleActivityCalendar({
     darkModeEnabled,

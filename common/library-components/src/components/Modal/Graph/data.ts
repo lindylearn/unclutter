@@ -38,9 +38,7 @@ export async function constructGraphData(
             return {
                 ...node,
                 days_ago: (Date.now() - node.time_added * 1000) / 86400000,
-                isCompleted:
-                    node.url === articleUrl ||
-                    node.reading_progress > readingProgressFullClamp,
+                isCompleted: node.reading_progress > readingProgressFullClamp,
                 // populated later
                 isCompletedAdjacent: false,
                 linkCount: 0,

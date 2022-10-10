@@ -225,12 +225,12 @@ function renderGraph(
         )
         // node styling
         .nodeRelSize(NODE_R)
-        .nodeVal((n: RuntimeNode) => (n.isCompleted ? 2 : 1))
+        .nodeVal((n: RuntimeNode) => (n.isCompleted || n.depth === 0 ? 2 : 1))
         .nodeColor((n: RuntimeNode) => {
-            // if (n.depth <= 0) {
+            // if (n.depth === 0) {
             //     return originColor;
             // }
-            if (n.isCompleted || n.isCompletedAdjacent) {
+            if (n.depth <= 2 || n.isCompleted || n.isCompletedAdjacent) {
                 return themeColor;
             }
             return secondaryColor;

@@ -55,6 +55,20 @@
                         <div>{libraryState.libraryInfo.topic.name}</div>
                     </div>
                 </div>
+            {:else if libraryState.isClustering}
+                <div
+                    class="top-row flex"
+                    in:fly={{ y: 10, duration: 300, easing: cubicOut }}
+                >
+                    Adding to your library...
+                </div>
+            {:else if libraryState.error}
+                <div
+                    class="top-row flex"
+                    in:fly={{ y: 10, duration: 300, easing: cubicOut }}
+                >
+                    Error adding article :(
+                </div>
             {/if}
 
             {#if libraryState?.topicProgress?.linkCount}

@@ -20,7 +20,7 @@ export default function RecentModalTab({
     showTopic: (topic: Topic) => void;
     reportEvent?: (event: string, data?: any) => void;
 }) {
-    const [tabInfos, unreadArticlesCount] = useTabInfos(10, true);
+    const [tabInfos, unreadArticlesCount] = useTabInfos(10, true, null);
 
     // TODO ensure currentTopic is present and first in list
 
