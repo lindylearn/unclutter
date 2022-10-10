@@ -281,6 +281,14 @@ function ArticleGroupStat({
                 {topic?.emoji && (
                     <TopicEmoji emoji={topic?.emoji} className="w-4" />
                 )}
+                {!userInfo.topicsEnabled && (
+                    <div className="mr-1 w-4 opacity-90">
+                        <img
+                            className="w-4"
+                            src={`https://www.google.com/s2/favicons?sz=128&domain=https://${topic_id}`}
+                        />
+                    </div>
+                )}
                 <div className="overflow-hidden overflow-ellipsis whitespace-nowrap">
                     {topic?.name || topic_id}
                 </div>

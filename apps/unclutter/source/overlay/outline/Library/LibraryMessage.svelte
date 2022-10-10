@@ -41,7 +41,8 @@
                     class="top-row font-title flex text-base font-semibold leading-none"
                     in:fly={{ y: 10, duration: 300, easing: cubicOut }}
                 >
-                    Saved in your library
+                    Saved in <span class="hide-small">{" your"}</span
+                    >{" "}library
                 </div>
             {:else if libraryState?.libraryInfo?.topic}
                 <div
@@ -141,5 +142,11 @@
     .library-message {
         /* background transition overrides transform otherwise */
         transition: background 0.3s ease-in-out 0.1s, transform 0.2s ease-in-out !important;
+    }
+
+    @media (max-width: 300px) {
+        .hide-small {
+            display: none;
+        }
     }
 </style>

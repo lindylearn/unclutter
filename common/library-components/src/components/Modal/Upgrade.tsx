@@ -70,7 +70,7 @@ export default function UpgradeModalTab({
 
             <div className="mt-4 flex gap-4">
                 <a
-                    className="flex cursor-pointer items-center gap-2 rounded-md bg-stone-50 px-3 py-2 font-medium transition-transform hover:scale-[97%]"
+                    className="flex cursor-pointer items-center gap-2 rounded-md bg-stone-50 px-3 py-2 font-medium transition-transform hover:scale-[97%] dark:bg-neutral-800"
                     href="https://opencollective.com/athens/contribute/user-25523"
                     target="_blank"
                     rel="noopener noreferrer"
@@ -89,8 +89,8 @@ export default function UpgradeModalTab({
                         />
                     </svg>
                 </a>
-                <a
-                    className="flex cursor-pointer items-center gap-2 rounded-md bg-stone-50 px-3 py-2 font-medium transition-transform hover:scale-[97%]"
+                {/* <a
+                    className="flex cursor-pointer items-center gap-2 rounded-md bg-stone-50 px-3 py-2 font-medium transition-transform hover:scale-[97%] dark:bg-neutral-800"
                     href="https://opencollective.com/athens/contribute/user-25523"
                     target="_blank"
                     rel="noopener noreferrer"
@@ -102,7 +102,7 @@ export default function UpgradeModalTab({
                             d="M280 80C266.7 80 256 69.25 256 56C256 42.75 266.7 32 280 32H424C437.3 32 448 42.75 448 56V200C448 213.3 437.3 224 424 224C410.7 224 400 213.3 400 200V113.9L200.1 312.1C191.6 322.3 176.4 322.3 167 312.1C157.7 303.6 157.7 288.4 167 279L366.1 80H280zM0 120C0 89.07 25.07 64 56 64H168C181.3 64 192 74.75 192 88C192 101.3 181.3 112 168 112H56C51.58 112 48 115.6 48 120V424C48 428.4 51.58 432 56 432H360C364.4 432 368 428.4 368 424V312C368 298.7 378.7 288 392 288C405.3 288 416 298.7 416 312V424C416 454.9 390.9 480 360 480H56C25.07 480 0 454.9 0 424V120z"
                         />
                     </svg>
-                </a>
+                </a> */}
             </div>
         </div>
     );
@@ -121,15 +121,15 @@ function FeatureCard({
 }) {
     return (
         <div
-            className="rounded-md bg-stone-50 p-3 transition-transform hover:scale-[99%]"
-            style={{ background: getRandomLightColor(title, false) }}
+            className="rounded-md bg-stone-50 p-3 transition-transform hover:scale-[99%] dark:bg-neutral-800"
+            style={{ background: getRandomLightColor(title, darkModeEnabled) }}
         >
             <h2 className="mb-3 flex items-center gap-2 px-1 font-medium">
                 {icon}
                 {title}
             </h2>
             <img
-                className="h-40 w-full rounded-md object-cover object-left-top"
+                className="h-40 w-full rounded-md object-cover object-left-top dark:brightness-90"
                 src={imgSrc}
             />
         </div>
