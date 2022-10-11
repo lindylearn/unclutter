@@ -81,7 +81,7 @@
                 </div>
             {/if}
 
-            {#if !libraryState.userInfo?.topicsEnabled}
+            {#if !libraryState.userInfo?.topicsEnabled && libraryState.libraryInfo.article}
                 <div
                     class="bottom-row mt-2 flex items-center gap-1"
                     in:fly={{ y: 10, duration: 200, easing: cubicOut }}
