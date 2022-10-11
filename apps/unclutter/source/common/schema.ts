@@ -21,8 +21,9 @@ export type LibraryState = {
     justCompletedArticle: boolean;
 
     relatedArticles?: Article[];
-    graph: CustomGraphData | null;
-    topicProgress: TopicProgress | null;
+    graph?: CustomGraphData;
+    linkCount?: number;
+    readingProgress?: ReadingProgress;
 };
 
 // returned from API
@@ -33,8 +34,7 @@ export type LibraryInfo = {
     new_links?: ArticleLink[];
 };
 
-export type TopicProgress = {
+export type ReadingProgress = {
     articleCount: number;
     completedCount: number;
-    linkCount?: number;
 };

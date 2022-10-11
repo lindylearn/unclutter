@@ -1,23 +1,31 @@
 import throttle from "lodash/throttle";
 
-import { addArticleToLibrary } from "../../common/api";
-import { anonymousLibraryEnabled } from "../../common/featureFlags";
-import { LibraryInfo, LibraryState, TopicProgress } from "../../common/schema";
 import {
     Article,
     ArticleLink,
     readingProgressFullClamp,
 } from "@unclutter/library-components/dist/store/_schema";
+import { constructGraphData } from "@unclutter/library-components/dist/components/Modal/Graph";
+import {
+    getWeekStart,
+    getUrlHash,
+} from "@unclutter/library-components/dist/common";
+
+import OverlayManager from "./overlay";
+import { PageModifier, trackModifierExecution } from "./_interface";
 import { getLibraryUser } from "../../common/storage";
 import {
     getRemoteFeatureFlag,
     ReplicacheProxy,
     reportEventContentScript,
 } from "../messaging";
-import OverlayManager from "./overlay";
-import { PageModifier, trackModifierExecution } from "./_interface";
-import { constructGraphData } from "@unclutter/library-components/dist/components/Modal/Graph";
-import { getUrlHash } from "@unclutter/library-components/dist/common/url";
+import { addArticleToLibrary } from "../../common/api";
+import { anonymousLibraryEnabled } from "../../common/featureFlags";
+import {
+    LibraryInfo,
+    LibraryState,
+    ReadingProgress,
+} from "../../common/schema";
 
 @trackModifierExecution
 export default class LibraryModifier implements PageModifier {
@@ -41,7 +49,8 @@ export default class LibraryModifier implements PageModifier {
 
         relatedArticles: null,
         graph: null,
-        topicProgress: null,
+        linkCount: null,
+        readingProgress: null,
         justCompletedArticle: false,
     };
 
@@ -105,11 +114,14 @@ export default class LibraryModifier implements PageModifier {
 
             // fetch topic progress stats
             if (this.libraryState.libraryInfo?.topic) {
-                this.libraryState.topicProgress =
-                    await this.constructTopicProgress(
+                this.libraryState.readingProgress =
+                    await this.constructTopicReadingProgress(
                         rep,
                         this.libraryState.libraryInfo.topic.id
                     );
+            } else {
+                this.libraryState.readingProgress =
+                    await this.constructGeneralReadingProgress(rep);
             }
 
             // show in UI
@@ -184,10 +196,24 @@ export default class LibraryModifier implements PageModifier {
         }
     }
 
-    private async constructTopicProgress(
+    private async constructGeneralReadingProgress(
+        rep: ReplicacheProxy
+    ): Promise<ReadingProgress> {
+        const start = getWeekStart().getTime();
+        const recentArticles = await rep?.query.listRecentArticles(start);
+
+        return {
+            articleCount: recentArticles.length,
+            completedCount: recentArticles.filter(
+                (a) => a.reading_progress >= readingProgressFullClamp
+            ).length,
+        };
+    }
+
+    private async constructTopicReadingProgress(
         rep: ReplicacheProxy,
         topic_id: string
-    ): Promise<TopicProgress> {
+    ): Promise<ReadingProgress> {
         const topicArticles = await rep?.query.listTopicArticles(topic_id);
         if (!topicArticles) {
             return null;
@@ -206,7 +232,7 @@ export default class LibraryModifier implements PageModifier {
         let nodes: Article[] = await rep.query.listRecentArticles();
         let links: ArticleLink[] = await rep.query.listArticleLinks();
 
-        [this.libraryState.graph, this.libraryState.topicProgress.linkCount] =
+        [this.libraryState.graph, this.libraryState.linkCount] =
             await constructGraphData(
                 nodes,
                 links,

@@ -64,7 +64,7 @@ export default class LibraryModalModifier implements PageModifier {
         document.documentElement.appendChild(this.modalIframe);
 
         reportEventContentScript("openLibraryModal", {
-            linkCount: this.libraryState.topicProgress.linkCount,
+            linkCount: this.libraryState.linkCount,
         });
     }
 
