@@ -43,10 +43,6 @@
         >
     {/if}
     <div class="font-title min-w-[12px] text-lg font-bold leading-none">
-        {#if value && diff}
-            <AnimatedNumber {value} {diff} />
-        {:else}
-            {value || 0}
-        {/if}
+        <AnimatedNumber {value} {diff} />
     </div>
 </div>

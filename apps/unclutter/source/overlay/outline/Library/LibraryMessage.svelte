@@ -123,14 +123,21 @@
             >
                 <ResourceStat
                     type="articles_completed"
-                    value={libraryState.readingProgress.completedCount +
-                        (libraryState.justCompletedArticle ? 1 : 0)}
+                    value={libraryState.readingProgress.completedCount}
                     diff={libraryState.justCompletedArticle ? 1 : null}
                 />
                 <ResourceStat
                     type="articles"
-                    value={libraryState.readingProgress.articleCount}
-                    diff={!libraryState.wasAlreadyPresent ? 1 : null}
+                    value={libraryState.readingProgress.articleCount -
+                        libraryState.readingProgress.completedCount}
+                    diff={libraryState.wasAlreadyPresent &&
+                    !libraryState.justCompletedArticle
+                        ? null
+                        : !libraryState.wasAlreadyPresent &&
+                          libraryState.justCompletedArticle
+                        ? -1
+                        : (!libraryState.wasAlreadyPresent ? 1 : 0) +
+                          (libraryState.justCompletedArticle ? -1 : 0)}
                 />
             </div>
         {/if}

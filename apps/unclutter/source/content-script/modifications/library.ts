@@ -125,16 +125,10 @@ export default class LibraryModifier implements PageModifier {
             }
 
             // fetch topic progress stats
-            if (this.libraryState.libraryInfo?.topic) {
-                this.libraryState.readingProgress =
-                    await this.constructTopicReadingProgress(
-                        rep,
-                        this.libraryState.libraryInfo.topic.id
-                    );
-            } else {
-                this.libraryState.readingProgress =
-                    await this.constructGeneralReadingProgress(rep);
-            }
+            this.lastReadingProgress =
+                this.libraryState.libraryInfo.article.reading_progress;
+            this.libraryState.readingProgress =
+                await this.constructReadingProgress(rep);
 
             // show in UI
             this.overlayManager.updateLibraryState(this.libraryState);
@@ -208,35 +202,34 @@ export default class LibraryModifier implements PageModifier {
         }
     }
 
-    private async constructGeneralReadingProgress(
+    private async constructReadingProgress(
         rep: ReplicacheProxy
     ): Promise<ReadingProgress> {
-        const start = getWeekStart().getTime();
-        const recentArticles = await rep?.query.listRecentArticles(start);
+        if (this.libraryState.libraryInfo?.topic) {
+            const topicArticles = await rep?.query.listTopicArticles(
+                this.libraryState.libraryInfo.topic.id
+            );
+            if (!topicArticles) {
+                return null;
+            }
 
-        return {
-            articleCount: recentArticles.length,
-            completedCount: recentArticles.filter(
-                (a) => a.reading_progress >= readingProgressFullClamp
-            ).length,
-        };
-    }
+            return {
+                articleCount: topicArticles.length,
+                completedCount: topicArticles.filter(
+                    (a) => a.reading_progress >= readingProgressFullClamp
+                ).length,
+            };
+        } else {
+            const start = getWeekStart().getTime();
+            const recentArticles = await rep?.query.listRecentArticles(start);
 
-    private async constructTopicReadingProgress(
-        rep: ReplicacheProxy,
-        topic_id: string
-    ): Promise<ReadingProgress> {
-        const topicArticles = await rep?.query.listTopicArticles(topic_id);
-        if (!topicArticles) {
-            return null;
+            return {
+                articleCount: recentArticles.length,
+                completedCount: recentArticles.filter(
+                    (a) => a.reading_progress >= readingProgressFullClamp
+                ).length,
+            };
         }
-
-        return {
-            articleCount: topicArticles.length,
-            completedCount: topicArticles.filter(
-                (a) => a.reading_progress >= readingProgressFullClamp
-            ).length,
-        };
     }
 
     private async constructArticleGraph(rep: ReplicacheProxy) {
@@ -258,7 +251,7 @@ export default class LibraryModifier implements PageModifier {
 
     private scrollOnceFetchDone = false;
     scrollToLastReadingPosition() {
-        if (!this.libraryState.libraryUser) {
+        if (!this.libraryState.libraryEnabled) {
             return;
         }
         if (!this.libraryState.libraryInfo) {
@@ -285,7 +278,7 @@ export default class LibraryModifier implements PageModifier {
     }
 
     private lastReadingProgress: number;
-    onScrollUpdate(readingProgress: number) {
+    async onScrollUpdate(readingProgress: number) {
         if (readingProgress < this.lastReadingProgress) {
             // track only furthest scroll
             return;
@@ -298,8 +291,13 @@ export default class LibraryModifier implements PageModifier {
                     readingProgressFullClamp
             ) {
                 // immediately update state to show in UI
+                await this.updateReadingProgress(1.0);
+
+                // animate count reduction in LibraryMessage
+                const rep = new ReplicacheProxy();
+                this.libraryState.readingProgress =
+                    await this.constructReadingProgress(rep);
                 this.libraryState.justCompletedArticle = true;
-                this.updateReadingProgress(1.0);
                 this.overlayManager.updateLibraryState(this.libraryState);
             } else {
                 this.updateReadingProgressThrottled(readingProgress);
@@ -311,8 +309,6 @@ export default class LibraryModifier implements PageModifier {
         ) {
             reportEventContentScript("seeLibrarySignup");
         }
-
-        this.lastReadingProgress = readingProgress;
     }
 
     startReadingProgressSync() {
@@ -326,7 +322,14 @@ export default class LibraryModifier implements PageModifier {
         });
     }
 
-    private updateReadingProgress(readingProgress: number) {
+    // can be called sync (to execute on beforeunload), or await result if need mutation to be complete
+    private updateReadingProgress(readingProgress: number = 0.0) {
+        if (readingProgress <= this.lastReadingProgress) {
+            // track only furthest scroll
+            return;
+        }
+        this.lastReadingProgress = readingProgress;
+
         if (
             !this.libraryState.libraryEnabled ||
             !this.libraryState.libraryInfo.article
@@ -348,7 +351,7 @@ export default class LibraryModifier implements PageModifier {
 
         // update data store
         const rep = new ReplicacheProxy();
-        rep.mutate.updateArticle({
+        return rep.mutate.updateArticle({
             id: this.articleId,
             reading_progress: readingProgress,
         });
