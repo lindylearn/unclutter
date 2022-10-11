@@ -6,7 +6,11 @@ import {
     useArticleGroups,
 } from "../../components";
 import React, { ReactNode, useContext, useEffect, useState } from "react";
-import { getRandomLightColor, reportEventContentScript } from "../../common";
+import {
+    getDomain,
+    getRandomLightColor,
+    reportEventContentScript,
+} from "../../common";
 import {
     Article,
     readingProgressFullClamp,
@@ -20,17 +24,21 @@ import clsx from "clsx";
 export default function RecentModalTab({
     userInfo,
     currentTopic,
+    domainFilter,
+    setDomainFilter,
     darkModeEnabled,
     showTopic,
     reportEvent = () => {},
 }: {
     userInfo: UserInfo;
     currentTopic?: Topic;
+    domainFilter: string | null;
+    setDomainFilter: (domain: string | null) => void;
     darkModeEnabled: boolean;
     showTopic: (topic: Topic) => void;
     reportEvent?: (event: string, data?: any) => void;
 }) {
-    const [onlyUnread, setOnlyUnread] = useState(true);
+    const [onlyUnread, setOnlyUnread] = useState(false);
     const [lastFirst, setLastFirst] = useState(true);
 
     let [tabInfos, setTabInfos] = useState<TabInfo[]>();
@@ -42,6 +50,11 @@ export default function RecentModalTab({
             rep?.query
                 .listRecentArticles(undefined, onlyUnread ? "unread" : "all")
                 .then((articles) => {
+                    if (domainFilter) {
+                        articles = articles.filter(
+                            (a) => getDomain(a.url) === domainFilter
+                        );
+                    }
                     if (lastFirst) {
                         articles.reverse();
                     }
@@ -64,7 +77,7 @@ export default function RecentModalTab({
                         },
                     ]);
                 });
-        }, [onlyUnread, lastFirst]);
+        }, [onlyUnread, lastFirst, domainFilter]);
     }
 
     // TODO ensure currentTopic is present and first in list
@@ -76,6 +89,9 @@ export default function RecentModalTab({
                 lastFirst={lastFirst}
                 setOnlyUnread={setOnlyUnread}
                 setLastFirst={setLastFirst}
+                domainFilter={domainFilter}
+                setDomainFilter={setDomainFilter}
+                darkModeEnabled={darkModeEnabled}
             />
 
             {tabInfos?.map((tabInfo) => {
@@ -100,20 +116,33 @@ function PageFilters({
     lastFirst,
     setOnlyUnread,
     setLastFirst,
+    domainFilter,
+    setDomainFilter,
+    darkModeEnabled,
 }: {
     onlyUnread: boolean;
     lastFirst: boolean;
     setOnlyUnread: (state: boolean) => void;
     setLastFirst: (state: boolean) => void;
+    domainFilter: string | null;
+    setDomainFilter: (domain: string | null) => void;
+    darkModeEnabled: boolean;
 }) {
     return (
         <div className="flex justify-start gap-3">
             <FilterButton
-                title={onlyUnread ? "Unread articles" : "Read articles"}
+                title={onlyUnread ? "Unread articles" : "All articles"}
                 icon={
-                    <ResourceIcon
-                        type={onlyUnread ? "articles" : "articles_completed"}
-                    />
+                    onlyUnread ? (
+                        <ResourceIcon type="articles" />
+                    ) : (
+                        <svg className="h-4" viewBox="0 0 448 512">
+                            <path
+                                fill="currentColor"
+                                d="M88 32C110.1 32 128 49.91 128 72V120C128 142.1 110.1 160 88 160H40C17.91 160 0 142.1 0 120V72C0 49.91 17.91 32 40 32H88zM88 72H40V120H88V72zM88 192C110.1 192 128 209.9 128 232V280C128 302.1 110.1 320 88 320H40C17.91 320 0 302.1 0 280V232C0 209.9 17.91 192 40 192H88zM88 232H40V280H88V232zM0 392C0 369.9 17.91 352 40 352H88C110.1 352 128 369.9 128 392V440C128 462.1 110.1 480 88 480H40C17.91 480 0 462.1 0 440V392zM40 440H88V392H40V440zM248 32C270.1 32 288 49.91 288 72V120C288 142.1 270.1 160 248 160H200C177.9 160 160 142.1 160 120V72C160 49.91 177.9 32 200 32H248zM248 72H200V120H248V72zM160 232C160 209.9 177.9 192 200 192H248C270.1 192 288 209.9 288 232V280C288 302.1 270.1 320 248 320H200C177.9 320 160 302.1 160 280V232zM200 280H248V232H200V280zM248 352C270.1 352 288 369.9 288 392V440C288 462.1 270.1 480 248 480H200C177.9 480 160 462.1 160 440V392C160 369.9 177.9 352 200 352H248zM248 392H200V440H248V392zM320 72C320 49.91 337.9 32 360 32H408C430.1 32 448 49.91 448 72V120C448 142.1 430.1 160 408 160H360C337.9 160 320 142.1 320 120V72zM360 120H408V72H360V120zM408 192C430.1 192 448 209.9 448 232V280C448 302.1 430.1 320 408 320H360C337.9 320 320 302.1 320 280V232C320 209.9 337.9 192 360 192H408zM408 232H360V280H408V232zM320 392C320 369.9 337.9 352 360 352H408C430.1 352 448 369.9 448 392V440C448 462.1 430.1 480 408 480H360C337.9 480 320 462.1 320 440V392zM360 440H408V392H360V440z"
+                            />
+                        </svg>
+                    )
                 }
                 onClick={() => setOnlyUnread(!onlyUnread)}
             />
@@ -138,6 +167,21 @@ function PageFilters({
                 }
                 onClick={() => setLastFirst(!lastFirst)}
             />
+            {domainFilter && (
+                <FilterButton
+                    title={domainFilter}
+                    icon={
+                        <svg className="h-4" viewBox="0 0 512 512">
+                            <path
+                                fill="currentColor"
+                                d="M0 73.7C0 50.67 18.67 32 41.7 32H470.3C493.3 32 512 50.67 512 73.7C512 83.3 508.7 92.6 502.6 100L336 304.5V447.7C336 465.5 321.5 480 303.7 480C296.4 480 289.3 477.5 283.6 472.1L191.1 399.6C181.6 392 176 380.5 176 368.3V304.5L9.373 100C3.311 92.6 0 83.3 0 73.7V73.7zM54.96 80L218.6 280.8C222.1 285.1 224 290.5 224 296V364.4L288 415.2V296C288 290.5 289.9 285.1 293.4 280.8L457 80H54.96z"
+                            />
+                        </svg>
+                    }
+                    onClick={() => setDomainFilter(null)}
+                    color={getRandomLightColor(domainFilter, darkModeEnabled)}
+                />
+            )}
         </div>
     );
 }
@@ -146,15 +190,20 @@ function FilterButton({
     title,
     icon,
     onClick,
+    color,
 }: {
     title: string;
     icon: ReactNode;
     onClick: () => void;
+    color?: string;
 }) {
     return (
         <div
             className="flex cursor-pointer select-none items-center gap-2 rounded-md bg-stone-50 px-2 py-1 font-medium transition-transform hover:scale-[97%] dark:bg-neutral-800"
             onClick={onClick}
+            style={{
+                background: color,
+            }}
         >
             {icon}
             {title}

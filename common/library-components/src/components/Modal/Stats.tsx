@@ -29,6 +29,7 @@ export default function StatsModalTab({
     darkModeEnabled,
     defaultWeekOverlay = 3,
     showTopic,
+    showDomain,
     reportEvent = () => {},
 }: {
     userInfo: UserInfo;
@@ -36,6 +37,7 @@ export default function StatsModalTab({
     darkModeEnabled: boolean;
     defaultWeekOverlay?: number;
     showTopic: (topic: Topic) => void;
+    showDomain: (domain: string) => void;
     reportEvent?: (event: string, data?: any) => void;
 }) {
     const rep = useContext(ReplicacheContext);
@@ -97,6 +99,7 @@ export default function StatsModalTab({
                 allArticles={allArticles}
                 darkModeEnabled={darkModeEnabled}
                 showTopic={showTopic}
+                showDomain={showDomain}
             />
         </div>
     );
@@ -165,6 +168,7 @@ function WeekDetails({
     allArticles,
     darkModeEnabled,
     showTopic,
+    showDomain,
 }: {
     userInfo: UserInfo;
     start: Date;
@@ -172,6 +176,7 @@ function WeekDetails({
     allArticles?: Article[];
     darkModeEnabled: boolean;
     showTopic: (topic: Topic) => void;
+    showDomain: (domain: string) => void;
 }) {
     const [weekArticles, setWeekArticles] = useState<Article[]>([]);
     useEffect(() => {
@@ -215,18 +220,19 @@ function WeekDetails({
     return (
         <div className="animate-fadein">
             <div className="grid grid-cols-5 gap-4">
-                {groups?.map(([topic_id, selectedArticles]) => (
+                {groups?.map(([groupKey, selectedArticles]) => (
                     <ArticleGroupStat
                         userInfo={userInfo}
-                        key={topic_id}
-                        topic_id={topic_id}
+                        key={groupKey}
+                        groupKey={groupKey}
                         selectedArticles={selectedArticles}
                         totalArticleCount={
-                            allArticles?.filter((a) => a.topic_id === topic_id)
+                            allArticles?.filter((a) => a.topic_id === groupKey)
                                 .length
                         }
                         darkModeEnabled={darkModeEnabled}
                         showTopic={showTopic}
+                        showDomain={showDomain}
                     />
                 ))}
             </div>
@@ -236,25 +242,27 @@ function WeekDetails({
 
 function ArticleGroupStat({
     userInfo,
-    topic_id,
+    groupKey,
     selectedArticles,
     totalArticleCount,
     darkModeEnabled,
     showTopic,
+    showDomain,
 }: {
     userInfo: UserInfo;
-    topic_id: string;
+    groupKey: string;
     selectedArticles: Article[];
     totalArticleCount?: number;
     darkModeEnabled: boolean;
     showTopic: (topic: Topic) => void;
+    showDomain: (domain: string) => void;
 }) {
     const [topic, setTopic] = useState<Topic>();
     if (userInfo.topicsEnabled) {
         const rep = useContext(ReplicacheContext);
         useEffect(() => {
-            rep?.query.getTopic(topic_id).then(setTopic);
-        }, [rep, topic_id]);
+            rep?.query.getTopic(groupKey).then(setTopic);
+        }, [rep, groupKey]);
     }
 
     const addedCount = selectedArticles.length;
@@ -280,6 +288,8 @@ function ArticleGroupStat({
             onClick={() => {
                 if (userInfo.topicsEnabled) {
                     showTopic(topic!);
+                } else {
+                    showDomain(groupKey);
                 }
             }}
         >
@@ -291,12 +301,12 @@ function ArticleGroupStat({
                     <div className="mr-1 w-4 opacity-90">
                         <img
                             className="w-4"
-                            src={`https://www.google.com/s2/favicons?sz=128&domain=https://${topic_id}`}
+                            src={`https://www.google.com/s2/favicons?sz=128&domain=https://${groupKey}`}
                         />
                     </div>
                 )}
                 <div className="overflow-hidden overflow-ellipsis whitespace-nowrap">
-                    {topic?.name || topic_id}
+                    {topic?.name || groupKey}
                 </div>
             </div>
 

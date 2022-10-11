@@ -52,6 +52,7 @@ export function LibraryModalPage({
     const [currentTopic, setCurrentTopic] = useState<Topic | undefined>(
         initialTopic
     );
+    const [domainFilter, setDomainFilter] = useState<string | null>(null);
     useEffect(() => {
         setCurrentTopic(initialTopic);
     }, [initialTopic]);
@@ -59,6 +60,11 @@ export function LibraryModalPage({
         setCurrentTopic(topic);
         setCurrentTab("graph");
         reportEvent("showTopicGraph");
+    }
+    function showDomain(domain: string) {
+        setDomainFilter(domain);
+        setCurrentTab("recent");
+        reportEvent("showDomainDetails");
     }
 
     return (
@@ -88,12 +94,15 @@ export function LibraryModalPage({
                     currentArticle={currentArticle}
                     currentTopic={currentTopic}
                     changedTopic={currentTopic !== initialTopic}
+                    domainFilter={domainFilter}
+                    setDomainFilter={setDomainFilter}
                     darkModeEnabled={darkModeEnabled}
                     graph={graph}
                     relatedLinkCount={relatedLinkCount}
                     currentTab={currentTab}
                     setCurrentTab={setCurrentTab}
                     showTopic={showTopic}
+                    showDomain={showDomain}
                     reportEvent={reportEvent}
                 />
             </div>
@@ -106,6 +115,8 @@ function ModalContent({
     currentArticle,
     currentTopic,
     changedTopic,
+    domainFilter,
+    setDomainFilter,
     articleCount,
     darkModeEnabled,
     graph,
@@ -113,12 +124,15 @@ function ModalContent({
     currentTab,
     setCurrentTab,
     showTopic,
+    showDomain,
     reportEvent = () => {},
 }: {
     userInfo: UserInfo;
     currentArticle?: string;
     currentTopic?: Topic;
     changedTopic: boolean;
+    domainFilter: string | null;
+    setDomainFilter: (domain: string | null) => void;
     articleCount?: number;
     darkModeEnabled: boolean;
     graph?: CustomGraphData;
@@ -126,6 +140,7 @@ function ModalContent({
     currentTab: string;
     setCurrentTab: (tab: string) => void;
     showTopic: (topic: Topic) => void;
+    showDomain: (domain: string) => void;
     reportEvent?: (event: string, data?: any) => void;
 }) {
     return (
@@ -172,6 +187,8 @@ function ModalContent({
                     <RecentModalTab
                         userInfo={userInfo}
                         currentTopic={currentTopic}
+                        domainFilter={domainFilter}
+                        setDomainFilter={setDomainFilter}
                         darkModeEnabled={darkModeEnabled}
                         showTopic={showTopic}
                     />
@@ -195,6 +212,7 @@ function ModalContent({
                         articleCount={articleCount}
                         darkModeEnabled={darkModeEnabled}
                         showTopic={showTopic}
+                        showDomain={showDomain}
                         reportEvent={reportEvent}
                     />
                 )}
