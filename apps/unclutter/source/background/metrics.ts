@@ -20,7 +20,7 @@ export async function reportEvent(name: string, data = {}) {
     );
     const isDev = await getFeatureFlag(isDevelopmentFeatureFlag);
     if (isDev) {
-        console.log(`Metric ${name}:`, data);
+        // console.log(`Metric ${name}:`, data);
         return;
     }
 

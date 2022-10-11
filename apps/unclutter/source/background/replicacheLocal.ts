@@ -1,7 +1,9 @@
 import {
     AsyncIterableIteratorToArray,
+    JSONValue,
     ReadonlyJSONValue,
     ReadTransaction,
+    ScanNoIndexOptions,
     ScanResult,
     WriteTransaction,
 } from "replicache";
@@ -9,6 +11,7 @@ import { ReplicacheProxyEventTypes } from "./replicache";
 import { accessors, mutators } from "@unclutter/library-components/dist/store";
 import * as idb from "idb-keyval";
 
+// local-only replicache stub
 export async function processLocalReplicacheMessage({
     type,
     methodName,
@@ -18,17 +21,20 @@ export async function processLocalReplicacheMessage({
     methodName?: string;
     args?: any;
 }) {
-    console.log(methodName, args);
-
     if (type === "query") {
         const result = await accessors[methodName](
             new LocalReadTransaction(),
             ...args
         );
-        console.log("result", result);
+        // console.log(methodName, args, result);
         return result;
     } else if (type === "mutate") {
-        return await mutators[methodName](new LocalReadTransaction(), args);
+        const result = await mutators[methodName](
+            new LocalWriteTransaction(),
+            args
+        );
+        // console.log(methodName, args, result);
+        return result;
     }
 }
 
@@ -47,43 +53,114 @@ class LocalReadTransaction implements ReadTransaction {
         return (await idb.keys()).length === 0;
     }
 
-    scan() {
-        return new LocalScanResult();
+    scan(options?: ScanNoIndexOptions) {
+        return new LocalScanResult<ReadonlyJSONValue>(options);
     }
 }
 
-class LocalScanResult implements ScanResult<string, ReadonlyJSONValue> {
-    [Symbol.asyncIterator]() {
-        return this.values();
+class LocalWriteTransaction
+    extends LocalReadTransaction
+    implements WriteTransaction
+{
+    async put(key: string, value: JSONValue): Promise<void> {
+        await idb.set(key, value);
     }
 
-    values() {
-        return new AsyncIteratorToArray<ReadonlyJSONValue>(
-            arrayToAsyncIterator(idb.values())
-        );
+    async del(key: string): Promise<boolean> {
+        const exists = this.has(key);
+        await idb.del(key);
+        return exists;
+    }
+
+    async get(key: string): Promise<JSONValue> {
+        return await idb.get(key);
+    }
+
+    scan(options?: ScanNoIndexOptions) {
+        return new LocalScanResult<JSONValue>(options);
+    }
+}
+
+class LocalScanResult<R> implements ScanResult<string, R> {
+    private options?: ScanNoIndexOptions;
+    constructor(options?: ScanNoIndexOptions) {
+        this.options = options;
     }
 
     keys() {
         return new AsyncIteratorToArray<string>(
-            arrayToAsyncIterator(idb.keys())
+            this.toAsyncIterator(
+                idb
+                    .entries()
+                    .then(async (entries: [string, R][]) =>
+                        this.filterEntries(entries).map((entry) => entry[0])
+                    )
+            )
+        );
+    }
+
+    values() {
+        return new AsyncIteratorToArray<R>(
+            this.toAsyncIterator(
+                idb
+                    .entries()
+                    .then(async (entries: [string, R][]) =>
+                        this.filterEntries(entries).map((entry) => entry[1])
+                    )
+            )
         );
     }
 
     entries() {
-        return new AsyncIteratorToArray<[string, ReadonlyJSONValue]>(
-            arrayToAsyncIterator(idb.entries())
+        return new AsyncIteratorToArray<[string, R]>(
+            this.toAsyncIterator(
+                idb
+                    .entries()
+                    .then(async (entries: [string, R][]) =>
+                        this.filterEntries(entries)
+                    )
+            )
         );
+    }
+
+    [Symbol.asyncIterator]() {
+        return this.values();
     }
 
     toArray() {
         return this.values().toArray();
     }
-}
 
-async function* arrayToAsyncIterator<T>(promise: Promise<T[]>) {
-    const array = await promise;
-    for (let x of array) {
-        yield x;
+    private filterEntries(entries: [string, R][]): [string, R][] {
+        entries.sort((a, b) => (a[0] >= b[0] ? 1 : -1));
+
+        console.log(entries);
+
+        if (this.options.prefix) {
+            entries = entries.filter((e) =>
+                e[0].startsWith(this.options.prefix)
+            );
+        }
+        if (this.options.start) {
+            entries = entries.filter(
+                (e) =>
+                    (e[0] === this.options.start.key &&
+                        !this.options.start.exclusive) ||
+                    e[0] > this.options.start.key
+            );
+        }
+        if (this.options.limit) {
+            entries = entries.slice(0, this.options.limit);
+        }
+
+        return entries;
+    }
+
+    private async *toAsyncIterator<T>(resultsPromise: Promise<T[]>) {
+        let results = await resultsPromise;
+        for (let x of results) {
+            yield x;
+        }
     }
 }
 
