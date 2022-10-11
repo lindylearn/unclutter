@@ -116,7 +116,15 @@ export function ReadingProgress({
                 value={readCount}
                 large={large}
             />
-            <ResourceStat type="articles" value={articleCount} large={large} />
+            <ResourceStat
+                type="articles"
+                value={
+                    articleCount !== undefined && readCount !== undefined
+                        ? articleCount - readCount
+                        : undefined
+                }
+                large={large}
+            />
             <div
                 className="bg-lindy dark:bg-lindyDark absolute top-0 left-0 h-full"
                 style={{
