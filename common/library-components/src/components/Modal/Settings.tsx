@@ -24,8 +24,8 @@ export default function SettingsModalTab({ userInfo }: { userInfo: UserInfo }) {
 
                 <p>
                     See what you've read over the last weeks, get back to
-                    articles you didn't finish yet, or review your highlights.
-                    It's all just one{" "}
+                    articles you didn't finish, or review your highlights. It's
+                    all just one{" "}
                     <span className="inline-block rounded-md bg-stone-200 px-1 dark:bg-neutral-700">
                         TAB
                     </span>{" "}
