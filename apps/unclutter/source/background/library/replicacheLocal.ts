@@ -8,7 +8,7 @@ import {
     ScanResult,
     WriteTransaction,
 } from "replicache";
-import { ReplicacheProxyEventTypes } from "./replicache";
+import { ReplicacheProxyEventTypes } from "./library";
 import { accessors, mutators } from "@unclutter/library-components/dist/store";
 import * as idb from "idb-keyval";
 

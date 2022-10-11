@@ -6,7 +6,7 @@ import {
     mutators,
     RuntimeReplicache,
 } from "@unclutter/library-components/dist/store";
-import { ReplicacheProxyEventTypes } from "../background/replicache";
+import { ReplicacheProxyEventTypes } from "../background/library/library";
 
 export async function reportEventContentScript(name: string, data = {}) {
     browser.runtime.sendMessage(null, {

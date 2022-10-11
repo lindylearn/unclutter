@@ -1,10 +1,11 @@
 import { Replicache } from "replicache";
-import { getLibraryUser, getLibraryUserJwt } from "../common/storage";
+import { getLibraryUser, getLibraryUserJwt } from "../../common/storage";
 import {
     accessors,
     M,
     mutators,
 } from "@unclutter/library-components/dist/store";
+import { ReplicacheProxyEventTypes } from "./library";
 
 // const apiHost = "http://localhost:3000"
 const apiHost = "https://library.lindylearn.io";
@@ -41,8 +42,7 @@ export async function initReplicache(): Promise<Replicache> {
     return rep;
 }
 
-export type ReplicacheProxyEventTypes = "query" | "mutate" | "pull";
-export async function processReplicacheMessage({
+export async function processActualReplicacheMessage({
     type,
     methodName,
     args,

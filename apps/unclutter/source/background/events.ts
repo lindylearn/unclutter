@@ -17,6 +17,7 @@ import { loadAnnotationCountsToMemory } from "./annotationCounts";
 import { getAllBookmarks, requestBookmarksPermission } from "./bookmarks";
 import { enableInTab, injectScript, togglePageViewMessage } from "./inject";
 import { onNewInstall, setupWithPermissions } from "./install";
+import { initLibrary, processReplicacheMessage } from "./library/library";
 import {
     getRemoteFeatureFlags,
     reportDisablePageView,
@@ -25,7 +26,6 @@ import {
     reportSettings,
     startMetrics,
 } from "./metrics";
-import { initReplicache, processReplicacheMessage } from "./replicache";
 import { TabStateManager } from "./tabs";
 
 const tabsManager = new TabStateManager();
@@ -138,7 +138,7 @@ browser.runtime.onMessage.addListener(
         } else if (message.event === "setLibraryAuth") {
             console.log("setLibraryAuth", message.userId);
             setLibraryUser(message.userId, message.webJwt).then(() => {
-                initReplicache();
+                initLibrary();
             });
         } else if (message.event === "processReplicacheMessage") {
             processReplicacheMessage(message).then(sendResponse);
@@ -174,7 +174,7 @@ browser.runtime.onMessageExternal.addListener(
         } else if (message.event === "setLibraryAuth") {
             console.log("setLibraryAuth", message.userId);
             setLibraryUser(message.userId, message.webJwt).then(() => {
-                initReplicache();
+                initLibrary();
             });
         } else if (message.event === "openUnclutterOptionsPage") {
             browser.runtime.openOptionsPage();
@@ -237,7 +237,7 @@ async function initializeServiceWorker() {
 
     startMetrics(isDev);
 
-    initReplicache();
+    initLibrary();
     loadAnnotationCountsToMemory();
 }
 
