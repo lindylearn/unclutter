@@ -1,26 +1,43 @@
+import { ReadonlyJSONValue } from "replicache";
 import { anonymousLibraryEnabled } from "../../common/featureFlags";
 import { getLibraryUser } from "../../common/storage";
-import { getRemoteFeatureFlag } from "../../content-script/messaging";
-import { initReplicache, processActualReplicacheMessage } from "./replicache";
-import { processLocalReplicacheMessage } from "./replicacheLocal";
+import { migrateMetricsUser } from "../metrics";
+import {
+    importEntries,
+    initReplicache,
+    processActualReplicacheMessage,
+} from "./replicache";
+import {
+    LocalWriteTransaction,
+    processLocalReplicacheMessage,
+} from "./replicacheLocal";
 
 let userId: string;
-let libraryEnabled: string;
 export async function initLibrary() {
-    const userId = await getLibraryUser();
-    const anonLibraryEnabled = await getRemoteFeatureFlag(
-        anonymousLibraryEnabled
-    );
-    libraryEnabled = userId || anonLibraryEnabled;
-
+    userId = await getLibraryUser();
     if (userId) {
+        console.log(`Init Library for user ${userId}`);
         await initReplicache();
-    } else if (anonLibraryEnabled) {
+        await checkMigrate();
     }
 }
 
-export async function signUp() {
-    // migrateMetricsUser()
+export async function checkMigrate() {
+    const localTx = new LocalWriteTransaction();
+    const allLocalEntries = await localTx.scan().entries().toArray();
+    if (allLocalEntries.length > 0) {
+        console.log(
+            `Migrating ${allLocalEntries.length} local replicache entries to library account...`
+        );
+        // @ts-ignore
+        await importEntries(allLocalEntries as [string, ReadonlyJSONValue][]);
+
+        await Promise.all(
+            allLocalEntries.map(([key, value]) => localTx.del(key))
+        );
+
+        migrateMetricsUser();
+    }
 }
 
 export type ReplicacheProxyEventTypes = "query" | "mutate" | "pull";

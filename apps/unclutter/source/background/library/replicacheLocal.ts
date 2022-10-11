@@ -39,7 +39,7 @@ export async function processLocalReplicacheMessage({
     }
 }
 
-class LocalReadTransaction implements ReadTransaction {
+export class LocalReadTransaction implements ReadTransaction {
     clientID = "local-replicache";
 
     async get(key: string): Promise<ReadonlyJSONValue> {
@@ -59,7 +59,7 @@ class LocalReadTransaction implements ReadTransaction {
     }
 }
 
-class LocalWriteTransaction
+export class LocalWriteTransaction
     extends LocalReadTransaction
     implements WriteTransaction
 {
@@ -137,18 +137,18 @@ class LocalScanResult<R> implements ScanResult<string, R> {
 
         // stub index implementation
         // @ts-ignore
-        if (this.options.indexName === "articlesByTopic") {
+        if (this.options?.indexName === "articlesByTopic") {
             entries = entries.filter(
                 // @ts-ignore
                 (e) => e[1].topic_id === this.options.prefix
             );
-        } else if (this.options.prefix) {
+        } else if (this.options?.prefix) {
             entries = entries.filter((e) =>
                 e[0].startsWith(this.options.prefix)
             );
         }
 
-        if (this.options.start) {
+        if (this.options?.start) {
             entries = entries.filter(
                 (e) =>
                     (e[0] === this.options.start.key &&
@@ -156,7 +156,7 @@ class LocalScanResult<R> implements ScanResult<string, R> {
                     e[0] > this.options.start.key
             );
         }
-        if (this.options.limit) {
+        if (this.options?.limit) {
             entries = entries.slice(0, this.options.limit);
         }
 

@@ -1,4 +1,4 @@
-import { Replicache } from "replicache";
+import { JSONValue, Replicache } from "replicache";
 import { getLibraryUser, getLibraryUserJwt } from "../../common/storage";
 import {
     accessors,
@@ -10,7 +10,7 @@ import { ReplicacheProxyEventTypes } from "./library";
 // const apiHost = "http://localhost:3000"
 const apiHost = "https://library.lindylearn.io";
 
-let rep: Replicache = null;
+export let rep: Replicache<M> = null;
 export async function initReplicache(): Promise<Replicache> {
     const userId = await getLibraryUser();
     const jwt = await getLibraryUserJwt();
@@ -63,4 +63,8 @@ export async function processActualReplicacheMessage({
     } else if (type === "pull") {
         return rep.pull();
     }
+}
+
+export async function importEntries(entries: [string, JSONValue][]) {
+    rep.mutate.importEntries(entries);
 }

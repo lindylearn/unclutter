@@ -1,4 +1,4 @@
-import { arrayMove } from "@dnd-kit/sortable";
+import { JSONValue } from "replicache";
 import { generate, Update } from "@rocicorp/rails";
 import { WriteTransaction } from "replicache";
 import sha256 from "crypto-js/sha256";
@@ -228,6 +228,13 @@ export async function updateSettings(tx: WriteTransaction, diff: Settings) {
     await tx.put("settings", { ...savedValue, ...diff });
 }
 
+export async function importEntries(
+    tx: WriteTransaction,
+    entries: [string, JSONValue][]
+) {
+    await Promise.all(entries.map(([key, value]) => tx.put(key, value)));
+}
+
 export const mutators = {
     updateArticle,
     articleSetFavorite,
@@ -241,6 +248,7 @@ export const mutators = {
     updateAllTopics,
     moveArticlePosition,
     updateSettings,
+    importEntries,
 };
 export type M = typeof mutators;
 export type ArticleUpdate = Update<Article>;

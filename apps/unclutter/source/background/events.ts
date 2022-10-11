@@ -136,7 +136,6 @@ browser.runtime.onMessage.addListener(
                 active: true,
             });
         } else if (message.event === "setLibraryAuth") {
-            console.log("setLibraryAuth", message.userId);
             setLibraryUser(message.userId, message.webJwt).then(() => {
                 initLibrary();
             });
@@ -172,7 +171,6 @@ browser.runtime.onMessageExternal.addListener(
                 );
             }
         } else if (message.event === "setLibraryAuth") {
-            console.log("setLibraryAuth", message.userId);
             setLibraryUser(message.userId, message.webJwt).then(() => {
                 initLibrary();
             });
