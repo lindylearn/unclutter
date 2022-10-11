@@ -1,9 +1,6 @@
 <script lang="ts">
     // organize-imports-ignore
-    import {
-        dismissedFeedbackMessage,
-        showLibraryModal,
-    } from "../../common/featureFlags";
+    import { dismissedFeedbackMessage } from "../../common/featureFlags";
     import {
         getFeatureFlag,
         setFeatureFlag,
@@ -23,7 +20,6 @@
         getVersionMessagesToShow,
         saveDismissedVersionMessage,
     } from "../../common/updateMessages";
-    import ArticleGraph from "./Library/ArticleGraph.svelte";
     import LibraryModalModifier from "../../content-script/modifications/libraryModal";
 
     export let outline: OutlineItem[];
@@ -62,28 +58,15 @@
         saveDismissedVersionMessage(dismissedVersion);
         // event emitted in component
     }
-
-    let showLibraryModalState = null;
-    getRemoteFeatureFlag(showLibraryModal).then((enabled) => {
-        showLibraryModalState = enabled || false;
-    });
 </script>
 
 <div id="lindy-info-topleft-content" class="font-text flex flex-col gap-2">
-    {#if libraryState?.libraryUser && showLibraryModalState !== null}
-        {#if showLibraryModalState}
-            <LibraryMessage
-                {libraryState}
-                {libraryModalModifier}
-                {darkModeEnabled}
-            />
-        {:else}
-            <ArticleGraph
-                {libraryState}
-                {libraryModalModifier}
-                {darkModeEnabled}
-            />
-        {/if}
+    {#if libraryState?.libraryEnabled}
+        <LibraryMessage
+            {libraryState}
+            {libraryModalModifier}
+            {darkModeEnabled}
+        />
     {/if}
 
     <Outline

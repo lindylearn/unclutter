@@ -52,7 +52,6 @@ export const dismissedLibrarySignupMessage = "dismissed-library-signup-message";
 // remote
 export const showFeedbackMessage = "show-feedback-message";
 export const showLibrarySignupFlag = "show-library-signup";
-export const showLibraryModal = "show-library-modal";
 export const anonymousLibraryEnabled = "anonymous-library-enabled";
 
 export const defaultFeatureFlags = {

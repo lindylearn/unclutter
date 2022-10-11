@@ -10,7 +10,6 @@
 
     export let article: Article;
     export let index: number;
-    export let libraryUser: string;
     export let className: string = "";
     export let transform: string = "";
 

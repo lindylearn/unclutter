@@ -5,11 +5,10 @@
     import ArticlePreview from "./ArticlePreview.svelte";
 
     export let articles: Article[];
-    export let libraryUser: string;
 </script>
 
 <div class="relative flex gap-2 rounded-lg" in:fade>
     {#each articles as article, index}
-        <ArticlePreview {article} {index} {libraryUser} />
+        <ArticlePreview {article} {index} />
     {/each}
 </div>
