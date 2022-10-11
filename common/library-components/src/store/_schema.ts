@@ -5,7 +5,7 @@ import { z } from "zod";
 export const articleSchema = entitySchema.extend({
     url: z.string(),
     title: z.nullable(z.string()),
-    word_count: z.number(),
+    word_count: z.number(), // 0 for unparsed text
     publication_date: z.nullable(z.string()),
 
     time_added: z.number(), // unix seconds, 0 for missing value

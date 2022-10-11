@@ -60,6 +60,7 @@ export default class TransitionManager implements PageModifier {
     );
     private libraryModifier = new LibraryModifier(
         this.url,
+        document.title,
         this.overlayManager
     );
     private linkAnnotationsModifier = new LinkAnnotationsModifier(

@@ -30,6 +30,7 @@ import {
 @trackModifierExecution
 export default class LibraryModifier implements PageModifier {
     private articleUrl: string;
+    private articleTitle: string;
     private articleId: string;
     private overlayManager: OverlayManager;
     private readingProgressSyncIntervalSeconds = 10;
@@ -54,8 +55,13 @@ export default class LibraryModifier implements PageModifier {
         justCompletedArticle: false,
     };
 
-    constructor(articleUrl: string, overlayManager: OverlayManager) {
+    constructor(
+        articleUrl: string,
+        articleTitle: string,
+        overlayManager: OverlayManager
+    ) {
         this.articleUrl = articleUrl;
+        this.articleTitle = articleTitle;
         this.articleId = getUrlHash(articleUrl);
         this.overlayManager = overlayManager;
     }
@@ -180,11 +186,11 @@ export default class LibraryModifier implements PageModifier {
             const article = {
                 id: this.articleId,
                 url: this.articleUrl,
-                title: this.articleUrl,
-                word_count: 13,
-                publication_date: null,
-                time_added: 1661946067,
-                reading_progress: 0,
+                title: this.articleTitle, // TODO clean in frontend
+                word_count: 0, // TODO how to get this in frontend?
+                publication_date: null, // TODO how to get this in frontend?
+                time_added: new Date().getTime() / 1000,
+                reading_progress: this.lastReadingProgress || 0.0,
                 topic_id: null,
                 is_favorite: false,
             };
@@ -279,18 +285,18 @@ export default class LibraryModifier implements PageModifier {
             return;
         }
 
-        if (this.libraryState.libraryUser) {
+        if (this.libraryState.libraryEnabled) {
             if (
                 readingProgress >= 0.95 &&
                 this.libraryState.libraryInfo?.article.reading_progress <
                     readingProgressFullClamp
             ) {
-                // just completed this article, immediately update state to show in UI
+                // immediately update state to show in UI
                 this.libraryState.justCompletedArticle = true;
-                this.sendProgressUpdate(1.0);
+                this.updateReadingProgress(1.0);
                 this.overlayManager.updateLibraryState(this.libraryState);
             } else {
-                this.sendProgressUpdateThrottled(readingProgress);
+                this.updateReadingProgressThrottled(readingProgress);
             }
         } else if (
             this.libraryState.showLibrarySignup &&
@@ -304,20 +310,27 @@ export default class LibraryModifier implements PageModifier {
     }
 
     startReadingProgressSync() {
+        // shortly before leaving page
         window.addEventListener("beforeunload", () => {
-            this.sendProgressUpdate(this.lastReadingProgress);
+            this.updateReadingProgress(this.lastReadingProgress);
+        });
+        // when interacting with unclutter UI (e.g. opening the modal)
+        window.addEventListener("blur", () => {
+            this.updateReadingProgress(this.lastReadingProgress);
         });
     }
 
-    private sendProgressUpdate(readingProgress: number) {
-        if (!this.libraryState.libraryUser || !this.libraryState.libraryInfo) {
+    private updateReadingProgress(readingProgress: number) {
+        if (
+            !this.libraryState.libraryEnabled ||
+            !this.libraryState.libraryInfo.article
+        ) {
             return;
         }
 
-        if (this.libraryState.libraryInfo.article) {
-            this.libraryState.libraryInfo.article.reading_progress =
-                readingProgress;
-        }
+        // update class state
+        this.libraryState.libraryInfo.article.reading_progress =
+            readingProgress;
         if (this.libraryState.graph) {
             const currentNode = this.libraryState.graph.nodes.find(
                 (n) => n.depth === 0
@@ -327,6 +340,7 @@ export default class LibraryModifier implements PageModifier {
                 readingProgress >= readingProgressFullClamp;
         }
 
+        // update data store
         const rep = new ReplicacheProxy();
         rep.mutate.updateArticle({
             id: this.articleId,
@@ -334,8 +348,8 @@ export default class LibraryModifier implements PageModifier {
         });
     }
     // throttle to send updates less often, but do during continous reading scroll
-    private sendProgressUpdateThrottled = throttle(
-        this.sendProgressUpdate.bind(this),
+    private updateReadingProgressThrottled = throttle(
+        this.updateReadingProgress.bind(this),
         this.readingProgressSyncIntervalSeconds * 1000
     );
 }
