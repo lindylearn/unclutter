@@ -10,6 +10,7 @@
         "crypto-js": "^4.1.1",
         "d3-force": "^3.0.0",
         "force-graph": "^1.42.13",
+        "idb-keyval": "^6.2.0",
         "lodash": "^4.17.21",
         "patch-package": "^6.4.7",
         "react": "18.2.0",
