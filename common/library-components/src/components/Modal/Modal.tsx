@@ -43,7 +43,7 @@ export function LibraryModalPage({
     }, [rep]);
 
     const [currentTab, setCurrentTab] = useState(
-        userInfo.topicsEnabled ? "graph" : "stats"
+        userInfo.topicsEnabled ? "graph" : "recent"
     );
     useEffect(() => {
         reportEvent("changeModalTab", { tab: currentTab });

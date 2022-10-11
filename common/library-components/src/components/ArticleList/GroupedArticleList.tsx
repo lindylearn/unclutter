@@ -72,7 +72,7 @@ export function useArticleGroups(
     articles: Article[],
     combineSmallGroups?: boolean,
     sortGroupsBy?: "recency_position" | "recency" | "topic_size",
-    sortArticlesBy?: "recency_order" | "topic_order",
+    sortArticlesBy?: "recency_order" | "reverse_recency_order" | "topic_order",
     maxGroupCount?: number
 ) {
     const rep = useContext(ReplicacheContext);
@@ -164,6 +164,8 @@ export function useArticleGroups(
             groupEntries.map(([topic_id, articles]) => {
                 if (sortArticlesBy === "recency_order") {
                     // passed articles should already be sorted
+                } else if (sortArticlesBy === "reverse_recency_order") {
+                    articles = articles.reverse();
                 } else if (sortArticlesBy === "topic_order") {
                     sortArticlesPosition(articles, "topic_sort_position");
                 }
@@ -171,7 +173,7 @@ export function useArticleGroups(
 
             setGroups(groupEntries);
         })();
-    }, [articles]);
+    }, [articles, sortGroupsBy, sortArticlesBy]);
 
     return groups;
 }
