@@ -1,6 +1,3 @@
-import { showLibrarySignupFlag } from "../../common/featureFlags";
-import { getLibraryUser } from "../../common/storage";
-import { getRemoteFeatureFlag } from "../messaging";
 import { PageModifier, trackModifierExecution } from "./_interface";
 
 // Perform various inline style fixes to overwrite site styles
@@ -12,17 +9,7 @@ export default class BodyStyleModifier implements PageModifier {
     originalBackgroundColor: string;
     private bodyStyleProperties: any;
 
-    private libraryEnabled: boolean = false;
-    private showLibrarySignup: boolean = false;
-
-    constructor() {
-        getLibraryUser().then((user) => {
-            this.libraryEnabled = !!user;
-        });
-        getRemoteFeatureFlag(showLibrarySignupFlag).then((flag: boolean) => {
-            this.showLibrarySignup = flag;
-        });
-    }
+    constructor() {}
 
     prepare() {
         // save before modifications state

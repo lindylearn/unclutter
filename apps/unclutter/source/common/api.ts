@@ -131,7 +131,7 @@ export async function getRelatedArticles(url: string, user_id: string) {
 
 export async function getLinkedArticles(
     urls: string[],
-    user_id: string
+    user_id?: string
 ): Promise<(Article | null)[]> {
     const response = await fetch(
         `${lindyApiUrl}/library/linked_article_info?${new URLSearchParams({

@@ -19,6 +19,10 @@ export async function initLibrary() {
     }
 }
 
+export async function signUp() {
+    // migrateMetricsUser()
+}
+
 export type ReplicacheProxyEventTypes = "query" | "mutate" | "pull";
 export async function processReplicacheMessage(message) {
     if (userId) {

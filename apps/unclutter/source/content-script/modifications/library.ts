@@ -38,7 +38,6 @@ export default class LibraryModifier implements PageModifier {
     libraryState: LibraryState = {
         libraryEnabled: false,
 
-        libraryUser: undefined,
         libraryInfo: null,
         userInfo: null,
 
@@ -68,16 +67,23 @@ export default class LibraryModifier implements PageModifier {
 
     async fetchState() {
         // fetch user info
-        this.libraryState.libraryUser = await getLibraryUser();
-        this.libraryState.userInfo = {
-            accountEnabled: false,
-            topicsEnabled: false,
-        };
-        const anonLibraryEnabled = await getRemoteFeatureFlag(
-            anonymousLibraryEnabled
-        );
-        this.libraryState.libraryEnabled =
-            this.libraryState.libraryUser || anonLibraryEnabled;
+        const libraryUser = await getLibraryUser();
+        if (libraryUser) {
+            this.libraryState.libraryEnabled = true;
+            this.libraryState.userInfo = {
+                id: libraryUser,
+                accountEnabled: true,
+                topicsEnabled: false,
+            };
+        } else {
+            this.libraryState.libraryEnabled = await getRemoteFeatureFlag(
+                anonymousLibraryEnabled
+            );
+            this.libraryState.userInfo = {
+                accountEnabled: false,
+                topicsEnabled: false,
+            };
+        }
 
         // fetch or create article state
         if (this.libraryState.libraryEnabled) {
@@ -174,7 +180,7 @@ export default class LibraryModifier implements PageModifier {
             // TODO remove mutate in backend? just fetch topic?
             this.libraryState.libraryInfo = await addArticleToLibrary(
                 this.articleUrl,
-                this.libraryState.libraryUser
+                this.libraryState.userInfo.id!
             );
 
             // insert immediately

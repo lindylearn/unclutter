@@ -63,11 +63,11 @@ export default class TransitionManager implements PageModifier {
         document.title,
         this.overlayManager
     );
-    private linkAnnotationsModifier = new LinkAnnotationsModifier(
-        this.annotationsModifier,
-        this.libraryModifier,
-        this.overlayManager
-    );
+    // private linkAnnotationsModifier = new LinkAnnotationsModifier(
+    //     this.annotationsModifier,
+    //     this.libraryModifier,
+    //     this.overlayManager
+    // );
     private readingTimeModifier = new ReadingTimeModifier(
         this.overlayManager,
         this.libraryModifier,
@@ -192,7 +192,7 @@ export default class TransitionManager implements PageModifier {
         }
 
         // insert annotations sidebar, start fetch
-        this.linkAnnotationsModifier.parseArticle(); // reads page, wraps link elems
+        // this.linkAnnotationsModifier.parseArticle(); // reads page, wraps link elems
         this.annotationsModifier.afterTransitionIn();
 
         this.overlayManager.insertUiFont(); // causes ~50ms layout reflow

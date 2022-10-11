@@ -37,7 +37,7 @@ export default class LinkAnnotationsModifier implements PageModifier {
 
     annotations: LindyAnnotation[] = [];
     async parseArticle() {
-        if (!this.libraryModifier.libraryState.libraryUser) {
+        if (!this.libraryModifier.libraryState.libraryEnabled) {
             return;
         }
 
@@ -87,7 +87,7 @@ export default class LinkAnnotationsModifier implements PageModifier {
         let articles: Article[] = [];
         getLinkedArticles(
             hrefs,
-            this.libraryModifier.libraryState.libraryUser
+            this.libraryModifier.libraryState.userInfo.id
         ).then((newArticles) => {
             articles = newArticles;
             this.overlayManager.updateLinkedArticles(articles);

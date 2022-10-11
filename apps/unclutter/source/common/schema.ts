@@ -9,7 +9,6 @@ import { UserInfo } from "@unclutter/library-components/dist/store/user";
 export type LibraryState = {
     libraryEnabled: boolean;
 
-    libraryUser?: string;
     libraryInfo?: LibraryInfo;
     userInfo?: UserInfo;
 
