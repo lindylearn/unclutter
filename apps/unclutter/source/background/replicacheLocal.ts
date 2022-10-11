@@ -4,6 +4,7 @@ import {
     ReadonlyJSONValue,
     ReadTransaction,
     ScanNoIndexOptions,
+    ScanOptions,
     ScanResult,
     WriteTransaction,
 } from "replicache";
@@ -76,14 +77,14 @@ class LocalWriteTransaction
         return await idb.get(key);
     }
 
-    scan(options?: ScanNoIndexOptions) {
+    scan(options?: ScanOptions) {
         return new LocalScanResult<JSONValue>(options);
     }
 }
 
 class LocalScanResult<R> implements ScanResult<string, R> {
-    private options?: ScanNoIndexOptions;
-    constructor(options?: ScanNoIndexOptions) {
+    private options?: ScanOptions;
+    constructor(options?: ScanOptions) {
         this.options = options;
     }
 
@@ -134,13 +135,19 @@ class LocalScanResult<R> implements ScanResult<string, R> {
     private filterEntries(entries: [string, R][]): [string, R][] {
         entries.sort((a, b) => (a[0] >= b[0] ? 1 : -1));
 
-        console.log(entries);
-
-        if (this.options.prefix) {
+        // stub index implementation
+        // @ts-ignore
+        if (this.options.indexName === "articlesByTopic") {
+            entries = entries.filter(
+                // @ts-ignore
+                (e) => e[1].topic_id === this.options.prefix
+            );
+        } else if (this.options.prefix) {
             entries = entries.filter((e) =>
                 e[0].startsWith(this.options.prefix)
             );
         }
+
         if (this.options.start) {
             entries = entries.filter(
                 (e) =>

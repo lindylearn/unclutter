@@ -28,7 +28,7 @@ export type LibraryState = {
 // returned from API
 export type LibraryInfo = {
     article: Article;
-    topic: Topic | null;
+    topic?: Topic;
 
     new_links?: ArticleLink[];
 };

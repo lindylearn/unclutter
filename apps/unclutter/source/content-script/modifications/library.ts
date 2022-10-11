@@ -52,6 +52,7 @@ export default class LibraryModifier implements PageModifier {
     }
 
     async fetchState() {
+        // fetch user info
         this.libraryState.libraryUser = await getLibraryUser();
         this.libraryState.userInfo = {
             accountEnabled: false,
@@ -63,6 +64,7 @@ export default class LibraryModifier implements PageModifier {
         this.libraryState.libraryEnabled =
             this.libraryState.libraryUser || anonLibraryEnabled;
 
+        // fetch or create article state
         if (this.libraryState.libraryEnabled) {
             this.overlayManager.updateLibraryState(this.libraryState);
             this.fetchLibraryState();
@@ -74,21 +76,20 @@ export default class LibraryModifier implements PageModifier {
         const rep = new ReplicacheProxy();
 
         try {
-            // get library state
-            this.libraryState.libraryInfo = await this.constructLibraryInfo(
+            // get existing library state
+            this.libraryState.libraryInfo = await this.getLibraryInfo(
                 rep,
                 this.articleId
             );
 
+            // handle retrieved state
             if (!this.libraryState.libraryInfo) {
                 // run on-demand adding
                 this.libraryState.isClustering = true;
                 this.overlayManager.updateLibraryState(this.libraryState);
 
-                this.libraryState.libraryInfo = await addArticleToLibrary(
-                    this.articleUrl,
-                    this.libraryState.libraryUser
-                );
+                await this.insertArticle(rep);
+
                 this.libraryState.isClustering = false;
                 if (!this.libraryState.libraryInfo) {
                     this.libraryState.error = true;
@@ -96,7 +97,7 @@ export default class LibraryModifier implements PageModifier {
 
                 reportEventContentScript("addArticle");
             } else {
-                // show retrieved state
+                // use existing state
                 this.libraryState.wasAlreadyPresent = true;
 
                 reportEventContentScript("visitArticle");
@@ -115,42 +116,17 @@ export default class LibraryModifier implements PageModifier {
             this.overlayManager.updateLibraryState(this.libraryState);
 
             // construct article graph from local replicache
-            if (this.libraryState.libraryInfo) {
-                let start = performance.now();
-                let nodes: Article[] = await rep.query.listRecentArticles();
-                let links: ArticleLink[] = await rep.query.listArticleLinks();
-
-                if (!this.libraryState.wasAlreadyPresent) {
-                    // use new node and links immediately
-                    nodes.push(this.libraryState.libraryInfo.article);
-                    links = links.concat(
-                        this.libraryState.libraryInfo.new_links || []
-                    );
-                }
-
-                [
-                    this.libraryState.graph,
-                    this.libraryState.topicProgress.linkCount,
-                ] = await constructGraphData(
-                    nodes,
-                    links,
-                    this.libraryState.libraryInfo.article.url,
-                    this.libraryState.libraryInfo.topic
-                );
-
-                let duration = performance.now() - start;
-                console.log(
-                    `Constructed library graph in ${Math.round(duration)}ms`
-                );
+            if (
+                this.libraryState.userInfo.topicsEnabled &&
+                this.libraryState.libraryInfo
+            ) {
+                await this.constructArticleGraph(rep);
                 this.overlayManager.updateLibraryState(this.libraryState);
             }
 
             if (this.scrollOnceFetchDone) {
                 this.scrollToLastReadingPosition();
             }
-
-            // pull data to show correct stats once user navigates there
-            rep.pull();
         } catch (err) {
             this.libraryState.error = true;
             this.overlayManager.updateLibraryState(this.libraryState);
@@ -158,7 +134,7 @@ export default class LibraryModifier implements PageModifier {
         }
     }
 
-    private async constructLibraryInfo(
+    private async getLibraryInfo(
         rep: ReplicacheProxy,
         articleId: string
     ): Promise<LibraryInfo> {
@@ -174,6 +150,40 @@ export default class LibraryModifier implements PageModifier {
         };
     }
 
+    private async insertArticle(rep: ReplicacheProxy) {
+        if (this.libraryState.userInfo.topicsEnabled) {
+            // fetch state remotely
+            // TODO remove mutate in backend? just fetch topic?
+            this.libraryState.libraryInfo = await addArticleToLibrary(
+                this.articleUrl,
+                this.libraryState.libraryUser
+            );
+
+            // insert immediately
+            await rep.mutate.putArticleIfNotExists(
+                this.libraryState.libraryInfo.article
+            );
+            await rep.mutate.putTopic(this.libraryState.libraryInfo.topic);
+        } else {
+            const article = {
+                id: this.articleId,
+                url: this.articleUrl,
+                title: this.articleUrl,
+                word_count: 13,
+                publication_date: null,
+                time_added: 1661946067,
+                reading_progress: 0,
+                topic_id: null,
+                is_favorite: false,
+            };
+            this.libraryState.libraryInfo = {
+                article,
+            };
+
+            await rep.mutate.putArticleIfNotExists(article);
+        }
+    }
+
     private async constructTopicProgress(
         rep: ReplicacheProxy,
         topic_id: string
@@ -182,10 +192,6 @@ export default class LibraryModifier implements PageModifier {
         if (!topicArticles) {
             return null;
         }
-        if (!this.libraryState.wasAlreadyPresent) {
-            // likely not pulled from replicache yet
-            topicArticles.push(this.libraryState.libraryInfo.article);
-        }
 
         return {
             articleCount: topicArticles.length,
@@ -193,6 +199,23 @@ export default class LibraryModifier implements PageModifier {
                 (a) => a.reading_progress >= readingProgressFullClamp
             ).length,
         };
+    }
+
+    private async constructArticleGraph(rep: ReplicacheProxy) {
+        let start = performance.now();
+        let nodes: Article[] = await rep.query.listRecentArticles();
+        let links: ArticleLink[] = await rep.query.listArticleLinks();
+
+        [this.libraryState.graph, this.libraryState.topicProgress.linkCount] =
+            await constructGraphData(
+                nodes,
+                links,
+                this.libraryState.libraryInfo.article.url,
+                this.libraryState.libraryInfo.topic
+            );
+
+        let duration = performance.now() - start;
+        console.log(`Constructed library graph in ${Math.round(duration)}ms`);
     }
 
     private scrollOnceFetchDone = false;

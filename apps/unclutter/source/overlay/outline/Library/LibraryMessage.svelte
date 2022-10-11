@@ -38,11 +38,10 @@
         <div class="main-content whitespace-nowrap text-sm">
             {#if !libraryState.userInfo?.topicsEnabled}
                 <div
-                    class="top-row font-title flex text-base font-semibold leading-none"
+                    class="top-row font-title flex whitespace-pre text-base font-semibold leading-none"
                     in:fly={{ y: 10, duration: 300, easing: cubicOut }}
                 >
-                    Saved in <span class="hide-small">{" your"}</span
-                    >{" "}library
+                    Saved in <span class="hide-small">your </span>library
                 </div>
             {:else if libraryState?.libraryInfo?.topic}
                 <div
