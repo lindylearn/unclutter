@@ -1,5 +1,8 @@
 import { useContext } from "react";
-import { DraggableArticleList } from "@unclutter/library-components/dist/components";
+import {
+    DraggableContext,
+    DraggableArticleList,
+} from "@unclutter/library-components/dist/components";
 import { NoFavoritesMessage } from "../components/EmptyMessages";
 import {
     useSubscribe,
@@ -18,11 +21,13 @@ export default function FavoritesTab({}) {
         <main className="m-3">
             {articles?.length === 0 && <NoFavoritesMessage />}
 
-            <DraggableArticleList
-                articles={articles || []}
-                sortPosition="favorites_sort_position"
-                disableFavoriteShadow
-            />
+            <DraggableContext articleLists={{ favorites: articles || [] }}>
+                <DraggableArticleList
+                    listId="favorites"
+                    sortPosition="favorites_sort_position"
+                    disableFavoriteShadow
+                />
+            </DraggableContext>
 
             <div className="mb-5" />
         </main>

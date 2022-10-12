@@ -5,7 +5,7 @@ import { Link } from "wouter";
 import {
     TopicTag,
     TopicEmoji,
-    DraggableArticleList,
+    StaticArticleList,
 } from "@unclutter/library-components/dist/components";
 import {
     useSubscribe,
@@ -145,9 +145,9 @@ export default function TopicGroupTab({ group_id }) {
                         key={selectedTopic?.id}
                     >
                         <div className="">
-                            <DraggableArticleList
+                            <StaticArticleList
                                 articles={articles}
-                                sortPosition="topic_sort_position"
+                                // sortPosition="topic_sort_position"
                             />
                         </div>
                     </CSSTransition>

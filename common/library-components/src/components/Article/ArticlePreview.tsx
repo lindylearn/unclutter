@@ -66,11 +66,10 @@ export function ArticlePreview({
     }
 
     // animate hover via JS & CSS animation because transitions sometimes fail
-    const [isHover, setIsHover] = useState<boolean | null>(null);
-
-    useLayoutEffect(() => {
-        setIsHover(null);
-    }, [listState]);
+    // const [isHover, setIsHover] = useState<boolean | null>(null);
+    // useLayoutEffect(() => {
+    //     setIsHover(null);
+    // }, [listState]);
 
     const [dropdownOpen, setDropdownOpen] = useState(false);
 
@@ -92,13 +91,13 @@ export function ArticlePreview({
             )}
             onClick={openPage}
             href={article.url}
-            onMouseEnter={(el) => {
-                const target = el.target as HTMLElement;
-                if (!target.classList.contains("dropdown-elem")) {
-                    setIsHover(true);
-                }
-            }}
-            onMouseLeave={() => setIsHover(false)}
+            // onMouseEnter={(el) => {
+            //     const target = el.target as HTMLElement;
+            //     if (!target.classList.contains("dropdown-elem")) {
+            //         setIsHover(true);
+            //     }
+            // }}
+            // onMouseLeave={() => setIsHover(false)}
             onContextMenu={(e) => {
                 e.preventDefault();
                 e.stopPropagation();

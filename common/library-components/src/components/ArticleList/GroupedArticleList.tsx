@@ -13,6 +13,7 @@ import {
 import { Article } from "../../store/_schema";
 import { TopicTag } from "../TopicTag";
 import { DraggableArticleList } from "./DraggableArticleList";
+import { StaticArticleList } from "./StaticArticleList";
 
 export function GroupedArticleList({
     articles,
@@ -57,10 +58,7 @@ export function GroupedArticleList({
                                 : "",
                         }}
                     >
-                        <DraggableArticleList
-                            articles={articles}
-                            sortPosition="topic_sort_position"
-                        />
+                        <StaticArticleList articles={articles} />
                     </div>
                 </TopicGroupBackground>
             ))}
