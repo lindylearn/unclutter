@@ -350,11 +350,17 @@ export default class LibraryModifier implements PageModifier {
         }
 
         // update data store
-        const rep = new ReplicacheProxy();
-        return rep.mutate.updateArticle({
+        const diff: Partial<Article> = {
             id: this.articleId,
             reading_progress: readingProgress,
-        });
+        };
+        // de-queue if completed article
+        if (readingProgress >= readingProgressFullClamp) {
+            diff.is_queued = false;
+        }
+
+        const rep = new ReplicacheProxy();
+        return rep.mutate.updateArticle(diff as Article);
     }
     // throttle to send updates less often, but do during continous reading scroll
     private updateReadingProgressThrottled = throttle(

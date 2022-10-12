@@ -452,7 +452,6 @@ export default class OverlayManager implements PageModifier {
 
     private libraryState: LibraryState = null;
     updateLibraryState(libraryState: LibraryState) {
-        console.log(libraryState);
         this.libraryState = libraryState;
 
         this.topleftSvelteComponent?.$set({

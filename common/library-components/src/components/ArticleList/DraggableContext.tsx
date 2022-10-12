@@ -14,7 +14,12 @@ import { sortableKeyboardCoordinates, arrayMove } from "@dnd-kit/sortable";
 import { createPortal } from "react-dom";
 import { DragOverlay } from "@dnd-kit/core";
 import { ArticlePreview } from "../Article/ArticlePreview";
-import { Article, ArticleSortPosition, ReplicacheContext } from "../../store";
+import {
+    Article,
+    ArticleSortPosition,
+    readingProgressFullClamp,
+    ReplicacheContext,
+} from "../../store";
 import { getDomain, reportEventPosthog } from "../../common";
 
 export const CustomDraggableContext = createContext<{
@@ -25,10 +30,12 @@ export const CustomDraggableContext = createContext<{
 
 export default function DraggableContext({
     articleLists,
+    setArticleLists,
     children,
     reportEvent = reportEventPosthog,
 }: {
     articleLists?: { [listId: string]: Article[] };
+    setArticleLists: (articleLists: { [listId: string]: Article[] }) => void;
     children: ReactNode;
     reportEvent?: (event: string, properties?: any) => void;
 }) {
@@ -89,11 +96,19 @@ export default function DraggableContext({
                 return;
             }
             console.log(`move group ${sourceList} -> ${targetList}`);
+
+            // only queue dragging supported for now
             rep?.mutate.updateArticle({
                 id: activeArticle.id,
                 is_queued: targetList === "queue",
+                // // reset reading progress if already read
+                // reading_progress:
+                //     targetList === "queue" &&
+                //     activeArticle.reading_progress > readingProgressFullClamp
+                //         ? 0
+                //         : activeArticle.reading_progress,
             });
-            // TODO handle reorder position immediately?
+            // position reorder handled pretty soon afterwards
 
             const targetIndex = articleLists[targetList].findIndex(
                 (a) => a.id === over.id
@@ -128,10 +143,9 @@ export default function DraggableContext({
             let sortKey: ArticleSortPosition;
             if (activeListId === "list") {
                 sortKey = "recency_sort_position";
-            } else if (
-                activeListId === "queue" ||
-                activeListId === "favorites"
-            ) {
+            } else if (activeListId === "queue") {
+                sortKey = "queue_sort_position";
+            } else if (activeListId === "favorites") {
                 sortKey = "favorites_sort_position";
             } else if (activeListId.endsWith("_")) {
                 sortKey = "topic_sort_position";
@@ -165,6 +179,9 @@ export default function DraggableContext({
                 oldIndex,
                 newIndex
             );
+
+            // update parent articleList once drag done (e.g. updates list counts)
+            setArticleLists({ ...articleLists });
         }
 
         setActiveArticle(null);

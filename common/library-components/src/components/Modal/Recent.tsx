@@ -109,11 +109,12 @@ export default function RecentModalTab({
         <div className="flex flex-col gap-4">
             <DraggableContext
                 articleLists={articleListsCache}
+                setArticleLists={setArticleListsCache}
                 reportEvent={reportEvent}
             >
                 <ArticleGroup
                     key="queue"
-                    articles={tabInfos?.[0].articles || []}
+                    articles={articleListsCache?.["queue"] || []}
                     groupKey="queue"
                     color={getActivityColor(3, darkModeEnabled)}
                     darkModeEnabled={darkModeEnabled}
@@ -137,6 +138,7 @@ export default function RecentModalTab({
                             {...tabInfo}
                             key={tabInfo.key}
                             groupKey={tabInfo.key}
+                            articles={articleListsCache?.[tabInfo.key] || []}
                             darkModeEnabled={darkModeEnabled}
                             // showTopic={showTopic}
                             reportEvent={reportEvent}
@@ -301,8 +303,11 @@ function ArticleGroup({
     onTitleClick?: () => void;
     reportEvent?: (event: string, data?: any) => void;
 }) {
+    color = color || getRandomLightColor(groupKey, darkModeEnabled);
+    const unqueuedArticles = articles.filter((a) => !a.is_queued);
+
     return (
-        <div className="topic animate-fadein">
+        <div className="topic animate-fadein relative">
             {title && (
                 <div className="topic-header mx-0.5 mb-2 flex justify-between">
                     <h2
@@ -316,36 +321,37 @@ function ArticleGroup({
                         {icon}
                         {title}
                     </h2>
-
-                    <div className="stats flex gap-2 font-medium">
-                        <ReadingProgress
-                            className="relative"
-                            articleCount={articles?.length}
-                            readCount={
-                                articles?.filter(
-                                    (a) =>
-                                        a.reading_progress >=
-                                        readingProgressFullClamp
-                                )?.length
-                            }
-                            color={color}
-                        />
-                    </div>
                 </div>
             )}
+
+            <ReadingProgress
+                className="absolute -top-[3rem] right-0"
+                articleCount={articles?.length}
+                readCount={
+                    articles?.filter(
+                        (a) => a.reading_progress >= readingProgressFullClamp
+                    )?.length
+                }
+                color={"transparent"}
+            />
+
             <div
                 className="topic-articles relative rounded-md p-3"
                 style={{
                     height: `${
                         11.5 * articleLines - 0.75 * (articleLines - 1)
                     }rem`, // article height + padding to prevent size change
-                    background:
-                        color || getRandomLightColor(groupKey, darkModeEnabled),
+                    background: color,
                 }}
             >
                 {groupKey === "queue" && articles.length === 0 && (
                     <div className="absolute top-0 left-0 flex h-full w-full select-none items-center justify-center">
-                        Drag articles here to add them to your queue
+                        Drag articles here to add them to your reading queue
+                    </div>
+                )}
+                {groupKey !== "queue" && articles.length === 0 && (
+                    <div className="absolute top-0 left-0 flex h-full w-full select-none items-center justify-center">
+                        All filtered articles are in your reading queue
                     </div>
                 )}
                 <DraggableArticleList
