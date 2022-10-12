@@ -51,12 +51,10 @@ export default function StatsModalTab({
         rep.query.listRecentArticles().then(setAllArticles);
     }, [rep]);
 
+    const [start, setStart] = useState<Date>();
     const [end, setEnd] = useState<Date>(new Date());
     const [startWeeksAgo, setStartWeeksAgo] = useState(defaultWeekOverlay);
-    const [start, setStart] = useState<Date>(
-        subtractWeeks(getWeekStart(new Date()), defaultWeekOverlay)
-    );
-    useEffect(() => {
+    useLayoutEffect(() => {
         const end = getWeekStart(new Date());
         const start = subtractWeeks(end, startWeeksAgo - 1);
         setStart(start);
@@ -86,22 +84,23 @@ export default function StatsModalTab({
             />
             <ArticleActivityCalendar
                 articles={allArticles}
-                onSelectDate={setSelectedDate}
                 darkModeEnabled={darkModeEnabled}
-                start={start}
+                startWeeksAgo={startWeeksAgo}
                 setStartWeeksAgo={setStartWeeksAgo}
                 defaultWeekOverlay={defaultWeekOverlay}
                 reportEvent={reportEvent}
             />
-            <WeekDetails
-                userInfo={userInfo}
-                start={start}
-                end={end}
-                allArticles={allArticles}
-                darkModeEnabled={darkModeEnabled}
-                showTopic={showTopic}
-                showDomain={showDomain}
-            />
+            {start && end && (
+                <WeekDetails
+                    userInfo={userInfo}
+                    start={start}
+                    end={end}
+                    allArticles={allArticles}
+                    darkModeEnabled={darkModeEnabled}
+                    showTopic={showTopic}
+                    showDomain={showDomain}
+                />
+            )}
         </div>
     );
 }
@@ -132,6 +131,10 @@ function NumberStats({
     const readArticlesCount = allArticles?.filter(
         (a) => a.reading_progress >= readingProgressFullClamp
     ).length;
+    const unreadCount =
+        articleCount !== undefined && readArticlesCount !== undefined
+            ? articleCount - readArticlesCount
+            : undefined;
 
     return (
         <div className="grid grid-cols-5 gap-4">
@@ -141,20 +144,15 @@ function NumberStats({
                 icon={<ResourceIcon type="articles_completed" large />}
             />
             <BigNumber
-                value={
-                    articleCount !== undefined &&
-                    readArticlesCount !== undefined
-                        ? articleCount - readArticlesCount
-                        : undefined
-                }
-                tag={`unread article${readArticlesCount !== 1 ? "s" : ""}`}
+                value={unreadCount}
+                tag={`unread article${unreadCount !== 1 ? "s" : ""}`}
                 icon={<ResourceIcon type="articles" large />}
             />
 
             {userInfo.topicsEnabled && (
                 <BigNumber
                     value={topicsCount}
-                    tag={`article topic${readArticlesCount !== 1 ? "s" : ""}`}
+                    tag={`article topic${topicsCount !== 1 ? "s" : ""}`}
                     icon={<ResourceIcon type="links" large />}
                 />
             )}
@@ -204,6 +202,9 @@ function WeekDetails({
         );
     } else {
         useEffect(() => {
+            if (weekArticles.length === 0) {
+                return;
+            }
             const groups: { [domain: string]: Article[] } = groupBy(
                 weekArticles.map((a) => {
                     // @ts-ignore

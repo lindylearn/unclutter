@@ -12,16 +12,14 @@ import { Article } from "../../store";
 export function ArticleActivityCalendar({
     darkModeEnabled,
     articles,
-    onSelectDate,
-    start,
+    startWeeksAgo,
     setStartWeeksAgo,
     defaultWeekOverlay,
     reportEvent = () => {},
 }: {
     darkModeEnabled: boolean;
     articles?: Article[];
-    onSelectDate: (date: Date) => void;
-    start: Date;
+    startWeeksAgo: number;
     setStartWeeksAgo: (weeksAgo: number) => void;
     defaultWeekOverlay: number;
     reportEvent?: (event: string, data?: any) => void;
@@ -34,8 +32,11 @@ export function ArticleActivityCalendar({
     }, [articles]);
 
     function changeWeekOffset(offset) {
-        setStartWeeksAgo(-offset);
-        reportEvent("changeStatsTimeWindow");
+        const newValue = -offset;
+        if (newValue !== startWeeksAgo) {
+            setStartWeeksAgo(startWeeksAgo);
+            reportEvent("changeStatsTimeWindow");
+        }
     }
 
     if (data === null) {

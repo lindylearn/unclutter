@@ -11,7 +11,7 @@ export default function SettingsModalTab({
     darkModeEnabled: boolean;
 }) {
     return (
-        <div className="mt-2 flex max-w-2xl flex-col gap-4">
+        <div className="animate-fadein mt-2 flex max-w-2xl flex-col gap-4">
             <SettingsGroup
                 title="About"
                 icon={

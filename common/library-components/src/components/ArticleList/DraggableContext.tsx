@@ -42,7 +42,7 @@ export default function DraggableContext({
     const rep = useContext(ReplicacheContext);
 
     const sensors = useSensors(
-        useSensor(PointerSensor, { activationConstraint: { distance: 15 } }),
+        useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
         useSensor(KeyboardSensor, {
             coordinateGetter: sortableKeyboardCoordinates,
         })
@@ -95,7 +95,7 @@ export default function DraggableContext({
                 // only allow moving into topic or domain group if article has matching field
                 return;
             }
-            console.log(`move group ${sourceList} -> ${targetList}`);
+            // console.log(`move group ${sourceList} -> ${targetList}`);
 
             // only queue dragging supported for now
             rep?.mutate.updateArticle({

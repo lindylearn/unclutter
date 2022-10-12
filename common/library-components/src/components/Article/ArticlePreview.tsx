@@ -76,7 +76,7 @@ export function ArticlePreview({
     return (
         <a
             className={clsx(
-                "article-container relative block flex-shrink-0 cursor-pointer overflow-hidden bg-white text-gray-800 transition-shadow dark:text-black dark:brightness-90",
+                "article-container relative block flex-shrink-0 cursor-pointer overflow-hidden bg-white text-base text-gray-800 transition-shadow dark:text-black dark:brightness-90",
                 small
                     ? "hover:shadow-articleSmallHover shadow-articleSmall h-40 w-36 rounded-md"
                     : "hover:shadow-articleHover shadow-article h-52 w-44 rounded-lg",
