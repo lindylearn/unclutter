@@ -15,6 +15,7 @@ import {
     Article,
     readingProgressFullClamp,
     ReplicacheContext,
+    sortArticlesPosition,
     Topic,
 } from "../../store";
 import { ReadingProgress, ResourceIcon } from "./numbers";
@@ -53,18 +54,18 @@ export default function RecentModalTab({
         const rep = useContext(ReplicacheContext);
         useEffect(() => {
             (async () => {
-                const queueArticles = await rep?.query.listFavoriteArticles();
+                const queueArticles = await rep?.query.listQueueArticles();
 
                 let listArticles = await rep?.query.listRecentArticles(
                     undefined,
                     onlyUnread ? "unread" : "all"
                 );
-                listArticles =
-                    listArticles?.filter((a) => !a.is_favorite) || [];
+                listArticles = listArticles?.filter((a) => !a.is_queued) || [];
                 if (domainFilter) {
                     listArticles = listArticles.filter(
                         (a) => getDomain(a.url) === domainFilter
                     );
+                    sortArticlesPosition(listArticles, "domain_sort_position");
                 }
                 if (!lastFirst) {
                     listArticles.reverse();

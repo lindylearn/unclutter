@@ -131,6 +131,7 @@ async function articleTrackOpened(tx: WriteTransaction, articleId: string) {
         id: articleId,
         recency_sort_position: timeNow,
         topic_sort_position: timeNow,
+        domain_sort_position: timeNow,
     });
 }
 

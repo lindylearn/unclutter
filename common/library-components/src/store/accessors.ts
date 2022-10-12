@@ -182,6 +182,15 @@ export async function listFavoriteArticles(
     return articles;
 }
 
+export async function listQueueArticles(
+    tx: ReadTransaction
+): Promise<Article[]> {
+    const allArticles = await listArticles(tx);
+    const articles = allArticles.filter((a) => a.is_queued);
+    sortArticlesPosition(articles, "queue_sort_position");
+    return articles;
+}
+
 export async function listTopicArticles(
     tx: ReadTransaction,
     topic_id: string
@@ -212,9 +221,11 @@ export async function listTopicArticlesServer(
 }
 
 export type ArticleSortPosition =
+    | "queue_sort_position"
     | "recency_sort_position"
     | "favorites_sort_position"
-    | "topic_sort_position";
+    | "topic_sort_position"
+    | "domain_sort_position";
 export function getSafeArticleSortPosition(
     article: Article,
     sortPosition: ArticleSortPosition
@@ -343,6 +354,7 @@ export const accessors = {
     listRecentArticles,
     groupRecentArticles,
     listFavoriteArticles,
+    listQueueArticles,
     listTopicArticles,
     listTopicArticlesServer,
     getTopicArticlesCount,

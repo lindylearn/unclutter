@@ -11,11 +11,14 @@ export const articleSchema = entitySchema.extend({
     time_added: z.number(), // unix seconds, 0 for missing value
     reading_progress: z.number(),
     is_favorite: z.boolean(),
+    is_queued: z.optional(z.boolean()),
 
     topic_id: z.nullable(z.string()),
 
+    queue_sort_position: z.optional(z.number()),
     recency_sort_position: z.optional(z.number()),
     topic_sort_position: z.optional(z.number()),
+    domain_sort_position: z.optional(z.number()),
     favorites_sort_position: z.optional(z.nullable(z.number())),
 });
 export type Article = z.infer<typeof articleSchema>;

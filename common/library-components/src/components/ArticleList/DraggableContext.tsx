@@ -15,7 +15,7 @@ import { createPortal } from "react-dom";
 import { DragOverlay } from "@dnd-kit/core";
 import { ArticlePreview } from "../Article/ArticlePreview";
 import { Article, ArticleSortPosition, ReplicacheContext } from "../../store";
-import { reportEventPosthog } from "../../common";
+import { getDomain, reportEventPosthog } from "../../common";
 
 export const CustomDraggableContext = createContext<{
     activeArticle: Article | null;
@@ -75,7 +75,25 @@ export default function DraggableContext({
                   articleLists[listId].some((a) => a.id === over.id)
               );
         if (sourceList && targetList && sourceList !== targetList) {
+            if (sourceList !== "queue" && targetList !== "queue") {
+                // only allow moving from or to the reading queue for now
+                return;
+            }
+            if (
+                (targetList.endsWith("_") &&
+                    activeArticle.topic_id !== targetList) ||
+                (targetList.includes(".") &&
+                    getDomain(activeArticle.url) !== targetList)
+            ) {
+                // only allow moving into topic or domain group if article has matching field
+                return;
+            }
             console.log(`move group ${sourceList} -> ${targetList}`);
+            rep?.mutate.updateArticle({
+                id: activeArticle.id,
+                is_queued: targetList === "queue",
+            });
+            // TODO handle reorder position immediately?
 
             const targetIndex = articleLists[targetList].findIndex(
                 (a) => a.id === over.id
@@ -118,7 +136,7 @@ export default function DraggableContext({
             } else if (activeListId.endsWith("_")) {
                 sortKey = "topic_sort_position";
             } else if (activeListId.includes(".")) {
-                sortKey = "topic_sort_position";
+                sortKey = "domain_sort_position";
             } else {
                 console.error(
                     `Could not determine sort position to reorder for list ${activeListId}`
