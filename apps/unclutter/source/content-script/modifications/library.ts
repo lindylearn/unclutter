@@ -74,7 +74,7 @@ export default class LibraryModifier implements PageModifier {
             this.libraryState.userInfo = {
                 id: libraryUser,
                 accountEnabled: true,
-                topicsEnabled: false,
+                topicsEnabled: true,
             };
         } else {
             this.libraryState.libraryEnabled = await getRemoteFeatureFlag(
