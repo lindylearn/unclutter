@@ -114,7 +114,7 @@ export default function DraggableContext({
                         articleId: activeArticle.id,
                         // assume is first entry, so move to right
                         articleIdBeforeNewPosition:
-                            articleLists[targetList][targetIndex].id,
+                            articleLists[targetList][targetIndex]?.id,
                         articleIdAfterNewPosition:
                             articleLists[targetList][targetIndex + 1]?.id,
                         sortPosition: "queue_sort_position",
@@ -137,17 +137,29 @@ export default function DraggableContext({
     }
     // change position within target list
     function handleDragEnd({ active, over }: DragEndEvent) {
-        if (!over || !articleLists || !activeListId) {
+        if (!over || !articleLists || !activeListId || !activeArticle) {
             return;
         }
+        const oldIndex = articleLists[activeListId].findIndex(
+            (a) => a.id === active.id
+        );
+        const newIndex = articleLists[activeListId].findIndex(
+            (a) => a.id === over.id
+        );
 
-        if (active.id !== over.id) {
-            const oldIndex = articleLists[activeListId].findIndex(
-                (a) => a.id === active.id
-            );
-            const newIndex = articleLists[activeListId].findIndex(
-                (a) => a.id === over.id
-            );
+        if (oldIndex !== -1 && newIndex === -1) {
+            // moved outside container or into unsupported group
+            if (activeListId === "queue") {
+                // in case of the queue, remove articles
+                articleLists[activeListId] = articleLists[activeListId].filter(
+                    (a) => a.id !== activeArticle.id
+                );
+                rep?.mutate.updateArticle({
+                    id: activeArticle.id,
+                    is_queued: false,
+                });
+            }
+        } else if (active.id !== over.id) {
             // console.log(`move position ${oldIndex} -> ${newIndex}`);
 
             // check which sort order to modify
@@ -200,7 +212,6 @@ export default function DraggableContext({
 
         reportEvent("reorderArticles");
     }
-    function moveArticleReplicache() {}
 
     return (
         <DndContext
