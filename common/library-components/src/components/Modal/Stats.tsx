@@ -91,6 +91,7 @@ export default function StatsModalTab({
                 start={start}
                 setStartWeeksAgo={setStartWeeksAgo}
                 defaultWeekOverlay={defaultWeekOverlay}
+                reportEvent={reportEvent}
             />
             <WeekDetails
                 userInfo={userInfo}
@@ -136,7 +137,7 @@ function NumberStats({
         <div className="grid grid-cols-5 gap-4">
             <BigNumber
                 value={readArticlesCount}
-                tag="read articles"
+                tag={`read article${readArticlesCount !== 1 ? "s" : ""}`}
                 icon={<ResourceIcon type="articles_completed" large />}
             />
             <BigNumber
@@ -146,14 +147,14 @@ function NumberStats({
                         ? articleCount - readArticlesCount
                         : undefined
                 }
-                tag="unread articles"
+                tag={`unread article${readArticlesCount !== 1 ? "s" : ""}`}
                 icon={<ResourceIcon type="articles" large />}
             />
 
             {userInfo.topicsEnabled && (
                 <BigNumber
                     value={topicsCount}
-                    tag="article topics"
+                    tag={`article topic${readArticlesCount !== 1 ? "s" : ""}`}
                     icon={<ResourceIcon type="links" large />}
                 />
             )}

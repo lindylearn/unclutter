@@ -9,6 +9,7 @@ import { constructGraphData } from "@unclutter/library-components/dist/component
 import {
     getWeekStart,
     getUrlHash,
+    subtractWeeks,
 } from "@unclutter/library-components/dist/common";
 
 import OverlayManager from "./overlay";
@@ -220,8 +221,10 @@ export default class LibraryModifier implements PageModifier {
                 ).length,
             };
         } else {
-            const start = getWeekStart().getTime();
-            const recentArticles = await rep?.query.listRecentArticles(start);
+            const start = subtractWeeks(getWeekStart(), 3);
+            const recentArticles = await rep?.query.listRecentArticles(
+                start.getTime()
+            );
 
             return {
                 articleCount: recentArticles.length,

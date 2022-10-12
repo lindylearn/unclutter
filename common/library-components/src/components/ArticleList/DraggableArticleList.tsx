@@ -10,9 +10,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { useContext } from "react";
 import { Article } from "../../store/_schema";
 import { ArticlePreview } from "../Article/ArticlePreview";
-import { ArticleSortPosition } from "../../store";
 import clsx from "clsx";
-import { reportEventPosthog } from "../../common/metrics";
 import { CustomDraggableContext } from "./DraggableContext";
 
 export function DraggableArticleList({
@@ -21,7 +19,7 @@ export function DraggableArticleList({
     small = false,
     articlesToShow,
     centerGrid = false,
-    reportEvent = reportEventPosthog,
+    reportEvent = () => {},
 }: {
     listId: string;
     disableFavoriteShadow?: boolean;

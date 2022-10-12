@@ -5,4 +5,6 @@ export interface UserInfo {
 
     accountEnabled: boolean;
     topicsEnabled: boolean;
+
+    showSignup?: boolean;
 }

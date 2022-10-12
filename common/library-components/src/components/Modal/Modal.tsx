@@ -43,7 +43,7 @@ export function LibraryModalPage({
     }, [rep]);
 
     const [currentTab, setCurrentTab] = useState(
-        userInfo.topicsEnabled ? "graph" : "recent"
+        userInfo.topicsEnabled ? "graph" : "settings"
     );
     useEffect(() => {
         reportEvent("changeModalTab", { tab: currentTab });
@@ -63,7 +63,7 @@ export function LibraryModalPage({
     }
     function showDomain(domain: string) {
         setDomainFilter(domain);
-        setCurrentTab("recent");
+        setCurrentTab("list");
         reportEvent("showDomainDetails");
     }
 
@@ -183,7 +183,7 @@ function ModalContent({
                     setCurrentTab={setCurrentTab}
                 /> */}
 
-                {currentTab === "recent" && (
+                {currentTab === "list" && (
                     <RecentModalTab
                         userInfo={userInfo}
                         currentTopic={currentTopic}

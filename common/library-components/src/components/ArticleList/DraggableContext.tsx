@@ -20,7 +20,7 @@ import {
     readingProgressFullClamp,
     ReplicacheContext,
 } from "../../store";
-import { getDomain, reportEventPosthog } from "../../common";
+import { getDomain } from "../../common";
 
 export const CustomDraggableContext = createContext<{
     activeArticle: Article | null;
@@ -32,7 +32,7 @@ export default function DraggableContext({
     articleLists,
     setArticleLists,
     children,
-    reportEvent = reportEventPosthog,
+    reportEvent = () => {},
 }: {
     articleLists?: { [listId: string]: Article[] };
     setArticleLists: (articleLists: { [listId: string]: Article[] }) => void;
@@ -122,6 +122,10 @@ export default function DraggableContext({
                 .concat([activeArticle])
                 .concat(articleLists[targetList].slice(targetIndex));
             setActiveListId(targetList);
+
+            if (targetList === "queue") {
+                reportEvent("addArticleToQueue");
+            }
         }
     }
     // change position within target list

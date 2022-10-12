@@ -129,6 +129,7 @@ export default function RecentModalTab({
                     domainFilter={domainFilter}
                     setDomainFilter={setDomainFilter}
                     darkModeEnabled={darkModeEnabled}
+                    reportEvent={reportEvent}
                 />
 
                 {tabInfos?.slice(1).map((tabInfo) => {
@@ -158,6 +159,7 @@ function PageFilters({
     domainFilter,
     setDomainFilter,
     darkModeEnabled,
+    reportEvent = () => {},
 }: {
     onlyUnread: boolean;
     lastFirst: boolean;
@@ -166,6 +168,7 @@ function PageFilters({
     domainFilter: string | null;
     setDomainFilter: (domain: string | null) => void;
     darkModeEnabled: boolean;
+    reportEvent?: (event: string, data?: any) => void;
 }) {
     return (
         <div className="flex justify-start gap-3">
@@ -183,7 +186,10 @@ function PageFilters({
                         </svg>
                     )
                 }
-                onClick={() => setOnlyUnread(!onlyUnread)}
+                onClick={() => {
+                    setOnlyUnread(!onlyUnread);
+                    reportEvent("changeListFilter", { onlyUnread });
+                }}
             />
             <FilterButton
                 title={lastFirst ? "Last added" : "Oldest first"}
@@ -204,7 +210,10 @@ function PageFilters({
                         </svg>
                     )
                 }
-                onClick={() => setLastFirst(!lastFirst)}
+                onClick={() => {
+                    setLastFirst(!lastFirst);
+                    reportEvent("changeListFilter", { lastFirst });
+                }}
             />
             {domainFilter && (
                 <FilterButton
@@ -217,7 +226,10 @@ function PageFilters({
                             />
                         </svg>
                     }
-                    onClick={() => setDomainFilter(null)}
+                    onClick={() => {
+                        setDomainFilter(null);
+                        reportEvent("changeListFilter", { domainFilter: null });
+                    }}
                     color={getRandomLightColor(domainFilter, darkModeEnabled)}
                 />
             )}
