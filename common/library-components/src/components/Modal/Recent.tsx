@@ -20,6 +20,7 @@ import {
 import { ReadingProgress, ResourceIcon } from "./numbers";
 import { UserInfo } from "../../store/user";
 import clsx from "clsx";
+import DraggableContext from "../ArticleList/DraggableContext";
 
 export default function RecentModalTab({
     userInfo,
@@ -55,58 +56,74 @@ export default function RecentModalTab({
                             (a) => getDomain(a.url) === domainFilter
                         );
                     }
-                    if (lastFirst) {
+                    if (!lastFirst) {
                         articles.reverse();
                     }
-                    // const [readArticles, unreadArticles] = partition(
-                    //     articles,
-                    //     (a) => a.reading_progress >= readingProgressFullClamp
-                    // );
                     setTabInfos([
                         {
                             key: "queue",
-                            title: "Reading queue",
-                            articles: [],
+                            title: "",
+                            articles: articles.slice(0, 3),
                             articleLines: 1,
                         },
                         {
                             key: "unread",
-                            title: "Articles",
-                            articles: articles,
-                            articleLines: 5,
+                            title: "",
+                            articles: articles.slice(3),
+                            articleLines: 3,
                         },
                     ]);
                 });
         }, [onlyUnread, lastFirst, domainFilter]);
     }
 
-    // TODO ensure currentTopic is present and first in list
-
     return (
         <div className="flex flex-col gap-4">
-            <PageFilters
-                onlyUnread={onlyUnread}
-                lastFirst={lastFirst}
-                setOnlyUnread={setOnlyUnread}
-                setLastFirst={setLastFirst}
-                domainFilter={domainFilter}
-                setDomainFilter={setDomainFilter}
-                darkModeEnabled={darkModeEnabled}
-            />
+            <DraggableContext
+                articleLists={tabInfos?.reduce(
+                    (obj, tabInfo) => ({
+                        ...obj,
+                        [tabInfo.key]: tabInfo.articles.slice(
+                            0,
+                            (tabInfo.articleLines || 1) * 5
+                        ),
+                    }),
+                    {}
+                )}
+                reportEvent={reportEvent}
+            >
+                <ArticleGroup
+                    key="queue"
+                    articles={tabInfos?.[0].articles || []}
+                    groupKey="queue"
+                    darkModeEnabled={darkModeEnabled}
+                    reportEvent={reportEvent}
+                />
 
-            {tabInfos?.map((tabInfo) => {
-                return (
-                    // TopicGroup
-                    <ArticleGroup
-                        {...tabInfo}
-                        key={tabInfo.key}
-                        groupKey={tabInfo.key}
-                        darkModeEnabled={darkModeEnabled}
-                        // showTopic={showTopic}
-                        reportEvent={reportEvent}
-                    />
-                );
-            })}
+                <PageFilters
+                    onlyUnread={onlyUnread}
+                    lastFirst={lastFirst}
+                    setOnlyUnread={setOnlyUnread}
+                    setLastFirst={setLastFirst}
+                    domainFilter={domainFilter}
+                    setDomainFilter={setDomainFilter}
+                    darkModeEnabled={darkModeEnabled}
+                />
+
+                {tabInfos?.slice(1).map((tabInfo) => {
+                    return (
+                        // TopicGroup
+                        <ArticleGroup
+                            {...tabInfo}
+                            key={tabInfo.key}
+                            groupKey={tabInfo.key}
+                            darkModeEnabled={darkModeEnabled}
+                            // showTopic={showTopic}
+                            reportEvent={reportEvent}
+                        />
+                    );
+                })}
+            </DraggableContext>
         </div>
     );
 }
@@ -255,7 +272,7 @@ function ArticleGroup({
     reportEvent = () => {},
 }: {
     groupKey: string;
-    title: string;
+    title?: string;
     icon?: ReactNode;
     color?: string;
     articles: Article[];
@@ -266,33 +283,36 @@ function ArticleGroup({
 }) {
     return (
         <div className="topic animate-fadein">
-            <div className="topic-header mx-0.5 mb-2 flex justify-between">
-                <h2
-                    className={clsx(
-                        "title flex select-none items-center gap-2 font-medium",
-                        onTitleClick &&
-                            "cursor-pointer transition-transform hover:scale-[96%]"
-                    )}
-                    onClick={onTitleClick}
-                >
-                    {icon}
-                    {title}
-                </h2>
-                <div className="stats flex gap-2 font-medium">
-                    <ReadingProgress
-                        className="relative"
-                        articleCount={articles?.length}
-                        readCount={
-                            articles?.filter(
-                                (a) =>
-                                    a.reading_progress >=
-                                    readingProgressFullClamp
-                            )?.length
-                        }
-                        color={color}
-                    />
+            {title && (
+                <div className="topic-header mx-0.5 mb-2 flex justify-between">
+                    <h2
+                        className={clsx(
+                            "title flex select-none items-center gap-2 font-medium",
+                            onTitleClick &&
+                                "cursor-pointer transition-transform hover:scale-[96%]"
+                        )}
+                        onClick={onTitleClick}
+                    >
+                        {icon}
+                        {title}
+                    </h2>
+
+                    <div className="stats flex gap-2 font-medium">
+                        <ReadingProgress
+                            className="relative"
+                            articleCount={articles?.length}
+                            readCount={
+                                articles?.filter(
+                                    (a) =>
+                                        a.reading_progress >=
+                                        readingProgressFullClamp
+                                )?.length
+                            }
+                            color={color}
+                        />
+                    </div>
                 </div>
-            </div>
+            )}
             <div
                 className="topic-articles relative rounded-md p-3"
                 style={{
@@ -302,18 +322,18 @@ function ArticleGroup({
                     background: getRandomLightColor(groupKey, darkModeEnabled),
                 }}
             >
+                {groupKey === "queue" && articles.length === 0 && (
+                    <div className="absolute top-0 left-0 flex h-full w-full select-none items-center justify-center">
+                        Drag articles here to add them to your queue
+                    </div>
+                )}
                 <DraggableArticleList
-                    articles={articles}
+                    listId={groupKey}
                     articlesToShow={5 * articleLines}
                     sortPosition="topic_sort_position"
                     small
                     reportEvent={reportEvent}
                 />
-                {title === "Reading queue" && (
-                    <div className="absolute top-0 left-0 flex h-full w-full select-none items-center justify-center">
-                        Drag articles here to add them to your queue
-                    </div>
-                )}
             </div>
         </div>
     );

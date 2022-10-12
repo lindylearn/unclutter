@@ -46,7 +46,7 @@ export function DraggableArticleList({
                 items={articles}
                 strategy={rectSortingStrategy}
             >
-                {articles.map((article, listIndex) => (
+                {articles.slice(0, articlesToShow).map((article, listIndex) => (
                     <SortableItem
                         key={article.id}
                         listState={

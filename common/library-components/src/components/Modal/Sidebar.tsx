@@ -134,7 +134,7 @@ function getModalTabOptions(
             ),
         },
         {
-            label: "Topics",
+            label: userInfo.topicsEnabled ? "Related" : "More",
             value: "graph",
             tag: new_link_count ? `${new_link_count} +` : undefined,
             unavailable: !userInfo.topicsEnabled,
