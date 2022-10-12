@@ -86,7 +86,7 @@ export default function RecentModalTab({
                     true,
                     "recency",
                     "topic_order",
-                    10
+                    5
                 );
                 const topicTabInfos: TabInfo[] = await Promise.all(
                     groupEntries
@@ -126,10 +126,7 @@ export default function RecentModalTab({
                 tabInfos?.reduce(
                     (obj, tabInfo) => ({
                         ...obj,
-                        [tabInfo.key]: tabInfo.articles.slice(
-                            0,
-                            (tabInfo.articleLines || 1) * 5
-                        ),
+                        [tabInfo.key]: tabInfo.articles,
                     }),
                     {}
                 )
@@ -150,6 +147,7 @@ export default function RecentModalTab({
                     groupKey="queue"
                     color={getActivityColor(3, darkModeEnabled)}
                     darkModeEnabled={darkModeEnabled}
+                    showTopic={showTopic}
                     reportEvent={reportEvent}
                 />
 
@@ -343,8 +341,8 @@ function ArticleGroup({
                     <ReadingProgress
                         className={
                             isTopic
-                                ? "relative"
-                                : "absolute -top-[3rem] right-0"
+                                ? "relative px-1.5 py-0.5"
+                                : "absolute -top-[3rem] right-0 px-2 py-1"
                         }
                         articleCount={articles?.length}
                         readCount={

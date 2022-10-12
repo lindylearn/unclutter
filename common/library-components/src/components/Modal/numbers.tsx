@@ -107,7 +107,7 @@ export function ReadingProgress({
             className={clsx(
                 "flex overflow-hidden rounded-md transition-opacity",
                 !articleCount && "opacity-0",
-                large ? "gap-3 px-2 py-0.5" : "gap-2 px-2 py-1",
+                large ? "gap-3" : "gap-2", // padding set via className
                 className
             )}
         >

@@ -153,7 +153,7 @@ function GraphStats({
 
     return (
         <ReadingProgress
-            className="absolute right-4 top-4"
+            className="absolute right-4 top-4 px-2 py-0.5"
             articleCount={articleCount}
             readCount={readCount}
             color={color}
