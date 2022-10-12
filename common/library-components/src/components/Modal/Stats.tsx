@@ -36,7 +36,7 @@ export default function StatsModalTab({
     articleCount?: number;
     darkModeEnabled: boolean;
     defaultWeekOverlay?: number;
-    showTopic: (topic: Topic) => void;
+    showTopic: (topicId: string) => void;
     showDomain: (domain: string) => void;
     reportEvent?: (event: string, data?: any) => void;
 }) {
@@ -174,7 +174,7 @@ function WeekDetails({
     end: Date;
     allArticles?: Article[];
     darkModeEnabled: boolean;
-    showTopic: (topic: Topic) => void;
+    showTopic: (topicId: string) => void;
     showDomain: (domain: string) => void;
 }) {
     const [weekArticles, setWeekArticles] = useState<Article[]>([]);
@@ -256,7 +256,7 @@ function ArticleGroupStat({
     selectedArticles: Article[];
     totalArticleCount?: number;
     darkModeEnabled: boolean;
-    showTopic: (topic: Topic) => void;
+    showTopic: (topicId: string) => void;
     showDomain: (domain: string) => void;
 }) {
     const [topic, setTopic] = useState<Topic>();
@@ -289,7 +289,7 @@ function ArticleGroupStat({
             }}
             onClick={() => {
                 if (userInfo.topicsEnabled) {
-                    showTopic(topic!);
+                    showTopic(topic!.id);
                 } else {
                     showDomain(groupKey);
                 }

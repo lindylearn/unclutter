@@ -3,7 +3,7 @@ import {
     DraggableArticleList,
     useTabInfos,
     TabInfo,
-    useArticleGroups,
+    groupArticlesByTopic,
 } from "../../components";
 import React, { ReactNode, useContext, useEffect, useState } from "react";
 import {
@@ -23,6 +23,7 @@ import { UserInfo } from "../../store/user";
 import clsx from "clsx";
 import DraggableContext from "../ArticleList/DraggableContext";
 import { getActivityColor } from "../Charts";
+import { TopicEmoji } from "../TopicTag";
 
 export default function RecentModalTab({
     userInfo,
@@ -38,7 +39,7 @@ export default function RecentModalTab({
     domainFilter: string | null;
     setDomainFilter: (domain: string | null) => void;
     darkModeEnabled: boolean;
-    showTopic: (topic: Topic) => void;
+    showTopic: (topicId: string) => void;
     reportEvent?: (event: string, data?: any) => void;
 }) {
     const [onlyUnread, setOnlyUnread] = useState(false);
@@ -48,62 +49,93 @@ export default function RecentModalTab({
     let [articleListsCache, setArticleListsCache] = useState<{
         [listId: string]: Article[];
     }>();
-    if (userInfo.topicsEnabled) {
-        tabInfos = useTabInfos(10, onlyUnread, !lastFirst, null)[0];
-    } else {
-        const rep = useContext(ReplicacheContext);
-        useEffect(() => {
-            (async () => {
-                const queueArticles = await rep?.query.listQueueArticles();
+    const rep = useContext(ReplicacheContext);
+    useEffect(() => {
+        (async () => {
+            // keep queue seperate
+            const queueArticles = await rep?.query.listQueueArticles();
 
-                let listArticles = await rep?.query.listRecentArticles(
-                    undefined,
-                    onlyUnread ? "unread" : "all"
+            // filter main articles
+            let listArticles = await rep?.query.listRecentArticles(
+                undefined,
+                onlyUnread ? "unread" : "all"
+            );
+            listArticles = listArticles?.filter((a) => !a.is_queued) || [];
+            if (domainFilter) {
+                listArticles = listArticles.filter(
+                    (a) => getDomain(a.url) === domainFilter
                 );
-                listArticles = listArticles?.filter((a) => !a.is_queued) || [];
-                if (domainFilter) {
-                    listArticles = listArticles.filter(
-                        (a) => getDomain(a.url) === domainFilter
-                    );
-                    sortArticlesPosition(listArticles, "domain_sort_position");
-                }
-                if (!lastFirst) {
-                    listArticles.reverse();
-                }
+                sortArticlesPosition(listArticles, "domain_sort_position");
+            }
+            if (!lastFirst) {
+                listArticles.reverse();
+            }
 
-                const tabInfos = [
-                    {
-                        key: "queue",
-                        title: "",
-                        articles: queueArticles || [],
-                        articleLines: 1,
-                    },
-                    {
-                        key: domainFilter || "list",
-                        title: "",
-                        articles: listArticles,
-                        articleLines: Math.max(
-                            1,
-                            Math.min(5, Math.ceil(listArticles.length / 5))
+            // construct tab infos
+            const tabInfos: TabInfo[] = [
+                {
+                    key: "queue",
+                    title: "",
+                    articles: queueArticles || [],
+                    articleLines: 1,
+                },
+            ];
+            if (userInfo.topicsEnabled) {
+                const groupEntries = await groupArticlesByTopic(
+                    listArticles,
+                    true,
+                    "recency",
+                    "topic_order",
+                    10
+                );
+                const topicTabInfos: TabInfo[] = await Promise.all(
+                    groupEntries
+                        .filter((e) => e[0] !== "Other")
+                        .map(async ([topic_id, articles]) => {
+                            const topic = await rep?.query.getTopic(topic_id);
+                            return {
+                                key: topic_id,
+                                title: topic?.name || topic_id,
+                                icon: topic && (
+                                    <TopicEmoji
+                                        emoji={topic?.emoji!}
+                                        className="mr-0 w-[18px]"
+                                    />
+                                ),
+                                isTopic: true,
+                                articles,
+                            };
+                        })
+                );
+                tabInfos.push(...topicTabInfos);
+            } else {
+                tabInfos.push({
+                    key: domainFilter || "list",
+                    title: "",
+                    articles: listArticles,
+                    articleLines: Math.max(
+                        1,
+                        Math.min(5, Math.ceil(listArticles.length / 5))
+                    ),
+                });
+            }
+
+            // update state
+            setTabInfos(tabInfos);
+            setArticleListsCache(
+                tabInfos?.reduce(
+                    (obj, tabInfo) => ({
+                        ...obj,
+                        [tabInfo.key]: tabInfo.articles.slice(
+                            0,
+                            (tabInfo.articleLines || 1) * 5
                         ),
-                    },
-                ];
-                setTabInfos(tabInfos);
-                setArticleListsCache(
-                    tabInfos?.reduce(
-                        (obj, tabInfo) => ({
-                            ...obj,
-                            [tabInfo.key]: tabInfo.articles.slice(
-                                0,
-                                (tabInfo.articleLines || 1) * 5
-                            ),
-                        }),
-                        {}
-                    )
-                );
-            })();
-        }, [onlyUnread, lastFirst, domainFilter]);
-    }
+                    }),
+                    {}
+                )
+            );
+        })();
+    }, [onlyUnread, lastFirst, domainFilter]);
 
     return (
         <div className="flex flex-col gap-4">
@@ -141,7 +173,7 @@ export default function RecentModalTab({
                             groupKey={tabInfo.key}
                             articles={articleListsCache?.[tabInfo.key] || []}
                             darkModeEnabled={darkModeEnabled}
-                            // showTopic={showTopic}
+                            showTopic={showTopic}
                             reportEvent={reportEvent}
                         />
                     );
@@ -262,38 +294,6 @@ function FilterButton({
     );
 }
 
-function TopicGroup(
-    props: TabInfo & {
-        darkModeEnabled: boolean;
-        showTopic: (topic: Topic) => void;
-        reportEvent?: (event: string, data?: any) => void;
-    }
-) {
-    const rep = useContext(ReplicacheContext);
-
-    const [groupArticles, setGroupArticles] = useState<Article[]>([]);
-    const [topic, setTopic] = useState<Topic>();
-    const [color, setColor] = useState<string>();
-    useEffect(() => {
-        const topic_id = props.articles[0]?.topic_id!;
-        rep?.query.listTopicArticles(topic_id).then(setGroupArticles);
-        rep?.query.getTopic(topic_id).then(setTopic);
-
-        setColor(getRandomLightColor(topic_id, props.darkModeEnabled));
-    }, [rep]);
-
-    return (
-        <ArticleGroup
-            {...props}
-            groupKey={props.key}
-            articles={groupArticles}
-            articleLines={1}
-            color={color}
-            onTitleClick={() => props.showTopic(topic!)}
-        />
-    );
-}
-
 function ArticleGroup({
     groupKey,
     title,
@@ -301,8 +301,9 @@ function ArticleGroup({
     color,
     articles,
     articleLines = 1,
+    isTopic,
     darkModeEnabled,
-    onTitleClick,
+    showTopic,
     reportEvent = () => {},
 }: {
     groupKey: string;
@@ -311,12 +312,13 @@ function ArticleGroup({
     color?: string;
     articles: Article[];
     articleLines?: number;
+    isTopic?: boolean;
     darkModeEnabled: boolean;
-    onTitleClick?: () => void;
+    showTopic: (topicId: string) => void;
     reportEvent?: (event: string, data?: any) => void;
 }) {
     color = color || getRandomLightColor(groupKey, darkModeEnabled);
-    const unqueuedArticles = articles.filter((a) => !a.is_queued);
+    // const unqueuedArticles = articles.filter((a) => !a.is_queued);
 
     return (
         <div className="topic animate-fadein relative">
@@ -325,27 +327,37 @@ function ArticleGroup({
                     <h2
                         className={clsx(
                             "title flex select-none items-center gap-2 font-medium",
-                            onTitleClick &&
+                            isTopic &&
                                 "cursor-pointer transition-transform hover:scale-[96%]"
                         )}
-                        onClick={onTitleClick}
+                        onClick={() => {
+                            if (isTopic) {
+                                showTopic(groupKey);
+                            }
+                        }}
                     >
                         {icon}
                         {title}
                     </h2>
+
+                    <ReadingProgress
+                        className={
+                            isTopic
+                                ? "relative"
+                                : "absolute -top-[3rem] right-0"
+                        }
+                        articleCount={articles?.length}
+                        readCount={
+                            articles?.filter(
+                                (a) =>
+                                    a.reading_progress >=
+                                    readingProgressFullClamp
+                            )?.length
+                        }
+                        color={isTopic ? color : "transparent"}
+                    />
                 </div>
             )}
-
-            <ReadingProgress
-                className="absolute -top-[3rem] right-0"
-                articleCount={articles?.length}
-                readCount={
-                    articles?.filter(
-                        (a) => a.reading_progress >= readingProgressFullClamp
-                    )?.length
-                }
-                color={"transparent"}
-            />
 
             <div
                 className="topic-articles relative rounded-md p-3"

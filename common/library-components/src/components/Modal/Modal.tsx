@@ -43,7 +43,7 @@ export function LibraryModalPage({
     }, [rep]);
 
     const [currentTab, setCurrentTab] = useState(
-        userInfo.topicsEnabled ? "graph" : "stats"
+        userInfo.topicsEnabled ? "list" : "stats"
     );
     useEffect(() => {
         reportEvent("changeModalTab", { tab: currentTab });
@@ -56,7 +56,8 @@ export function LibraryModalPage({
     useEffect(() => {
         setCurrentTopic(initialTopic);
     }, [initialTopic]);
-    function showTopic(topic: Topic) {
+    async function showTopic(topicId: string) {
+        const topic = await rep?.query.getTopic(topicId);
         setCurrentTopic(topic);
         setCurrentTab("graph");
         reportEvent("showTopicGraph");
@@ -93,7 +94,7 @@ export function LibraryModalPage({
                     articleCount={articleCount}
                     currentArticle={currentArticle}
                     currentTopic={currentTopic}
-                    changedTopic={currentTopic !== initialTopic}
+                    changedTopic={currentTopic !== initialTopic?.id}
                     domainFilter={domainFilter}
                     setDomainFilter={setDomainFilter}
                     darkModeEnabled={darkModeEnabled}
@@ -139,7 +140,7 @@ function ModalContent({
     relatedLinkCount?: number;
     currentTab: string;
     setCurrentTab: (tab: string) => void;
-    showTopic: (topic: Topic) => void;
+    showTopic: (topicId: string) => void;
     showDomain: (domain: string) => void;
     reportEvent?: (event: string, data?: any) => void;
 }) {

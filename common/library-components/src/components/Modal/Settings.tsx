@@ -47,7 +47,7 @@ export default function SettingsModalTab({
                 </p>
             </SettingsGroup>
 
-            {(userInfo.accountEnabled || userInfo.showSignup) && (
+            {/* {(userInfo.accountEnabled || userInfo.showSignup) && (
                 <SettingsGroup
                     title="Account"
                     icon={
@@ -62,9 +62,8 @@ export default function SettingsModalTab({
                     {userInfo.accountEnabled ? (
                         <>
                             <p>
-                                You're signed in as{" "}
-                                <span>{userInfo.email}</span>. Your library is
-                                synchronized and available anywhere.
+                                You're signed in. Your library is synchronized
+                                and available anywhere.
                             </p>
                             <div className="flex gap-2">
                                 <Button
@@ -98,7 +97,7 @@ export default function SettingsModalTab({
                         </>
                     )}
                 </SettingsGroup>
-            )}
+            )} */}
 
             {/* {!userInfo.topicsEnabled && (
                 <SettingsGroup
