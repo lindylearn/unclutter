@@ -97,22 +97,29 @@ export default function DraggableContext({
             }
             // console.log(`move group ${sourceList} -> ${targetList}`);
 
-            // only queue dragging supported for now
-            rep?.mutate.updateArticle({
-                id: activeArticle.id,
-                is_queued: targetList === "queue",
-                // // reset reading progress if already read
-                // reading_progress:
-                //     targetList === "queue" &&
-                //     activeArticle.reading_progress > readingProgressFullClamp
-                //         ? 0
-                //         : activeArticle.reading_progress,
-            });
-            // position reorder handled pretty soon afterwards
-
             const targetIndex = articleLists[targetList].findIndex(
                 (a) => a.id === over.id
             );
+
+            // only queue dragging supported for now
+            rep?.mutate
+                .updateArticle({
+                    id: activeArticle.id,
+                    is_queued: targetList === "queue",
+                    queue_sort_position: new Date().getTime(),
+                })
+                .then(() => {
+                    // move to target position to be safe
+                    rep?.mutate.moveArticlePosition({
+                        articleId: activeArticle.id,
+                        // assume is first entry, so move to right
+                        articleIdBeforeNewPosition:
+                            articleLists[targetList][targetIndex].id,
+                        articleIdAfterNewPosition:
+                            articleLists[targetList][targetIndex + 1]?.id,
+                        sortPosition: "queue_sort_position",
+                    });
+                });
 
             articleLists[sourceList] = articleLists[sourceList].filter(
                 (a) => a.id !== activeArticle.id
@@ -193,6 +200,7 @@ export default function DraggableContext({
 
         reportEvent("reorderArticles");
     }
+    function moveArticleReplicache() {}
 
     return (
         <DndContext
