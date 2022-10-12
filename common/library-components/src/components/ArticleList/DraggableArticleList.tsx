@@ -1,4 +1,5 @@
 import React from "react";
+import { useDroppable } from "@dnd-kit/core";
 import {
     rectSortingStrategy,
     SortableContext,
@@ -32,17 +33,23 @@ export function DraggableArticleList({
     const draggableContext = useContext(CustomDraggableContext);
     const articles: Article[] = draggableContext?.articleLists?.[listId] || [];
 
+    // required to drag into empty container
+    const { setNodeRef } = useDroppable({
+        id: listId,
+    });
+
     return (
-        <div
-            className={clsx(
-                "animate-fadein flex flex-wrap gap-3",
-                centerGrid ? "justify-center" : ""
-            )}
+        <SortableContext
+            id={listId}
+            items={articles}
+            strategy={rectSortingStrategy}
         >
-            <SortableContext
-                id={listId}
-                items={articles}
-                strategy={rectSortingStrategy}
+            <div
+                className={clsx(
+                    "animate-fadein flex h-full flex-wrap gap-3",
+                    centerGrid ? "justify-center" : ""
+                )}
+                ref={setNodeRef}
             >
                 {articles.slice(0, articlesToShow).map((article, listIndex) => (
                     <SortableItem
@@ -72,8 +79,8 @@ export function DraggableArticleList({
                         .map((_, index) => (
                             <div key={index} className="h-52 w-44" />
                         ))}
-            </SortableContext>
-        </div>
+            </div>
+        </SortableContext>
     );
 }
 

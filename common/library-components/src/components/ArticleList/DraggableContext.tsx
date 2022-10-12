@@ -69,9 +69,11 @@ export default function DraggableContext({
         const sourceList = Object.keys(articleLists!).find((listId) =>
             articleLists[listId].some((a) => a.id === active.id)
         );
-        const targetList = Object.keys(articleLists!).find((listId) =>
-            articleLists[listId].some((a) => a.id === over.id)
-        );
+        const targetList = !over.data.current
+            ? (over.id as string) // empty container
+            : Object.keys(articleLists!).find((listId) =>
+                  articleLists[listId].some((a) => a.id === over.id)
+              );
         if (sourceList && targetList && sourceList !== targetList) {
             console.log(`move group ${sourceList} -> ${targetList}`);
 
