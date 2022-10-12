@@ -21,6 +21,7 @@ import { ReadingProgress, ResourceIcon } from "./numbers";
 import { UserInfo } from "../../store/user";
 import clsx from "clsx";
 import DraggableContext from "../ArticleList/DraggableContext";
+import { getActivityColor } from "../Charts";
 
 export default function RecentModalTab({
     userInfo,
@@ -67,10 +68,13 @@ export default function RecentModalTab({
                             articleLines: 1,
                         },
                         {
-                            key: "unread",
+                            key: domainFilter || "list",
                             title: "",
                             articles: articles.slice(3),
-                            articleLines: 3,
+                            articleLines: Math.max(
+                                1,
+                                Math.min(5, articles.length / 5)
+                            ),
                         },
                     ]);
                 });
@@ -96,6 +100,7 @@ export default function RecentModalTab({
                     key="queue"
                     articles={tabInfos?.[0].articles || []}
                     groupKey="queue"
+                    color={getActivityColor(3, darkModeEnabled)}
                     darkModeEnabled={darkModeEnabled}
                     reportEvent={reportEvent}
                 />
@@ -319,7 +324,8 @@ function ArticleGroup({
                     height: `${
                         11.5 * articleLines - 0.75 * (articleLines - 1)
                     }rem`, // article height + padding to prevent size change
-                    background: getRandomLightColor(groupKey, darkModeEnabled),
+                    background:
+                        color || getRandomLightColor(groupKey, darkModeEnabled),
                 }}
             >
                 {groupKey === "queue" && articles.length === 0 && (

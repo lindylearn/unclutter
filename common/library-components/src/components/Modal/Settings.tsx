@@ -3,7 +3,13 @@ import { getRandomLightColor } from "../../common";
 import { UserInfo } from "../../store/user";
 import { getActivityColor } from "../Charts";
 
-export default function SettingsModalTab({ userInfo }: { userInfo: UserInfo }) {
+export default function SettingsModalTab({
+    userInfo,
+    darkModeEnabled,
+}: {
+    userInfo: UserInfo;
+    darkModeEnabled: boolean;
+}) {
     return (
         <div className="mt-2 flex max-w-2xl flex-col gap-4">
             <SettingsGroup
@@ -26,7 +32,15 @@ export default function SettingsModalTab({ userInfo }: { userInfo: UserInfo }) {
                     See what you've read over the last weeks, get back to
                     articles you didn't finish, or review your highlights. It's
                     all just one{" "}
-                    <span className="inline-block rounded-md bg-stone-200 px-1 dark:bg-neutral-700">
+                    <span
+                        className="inline-block rounded-md bg-stone-200 px-1 dark:bg-neutral-700"
+                        style={{
+                            backgroundColor: getActivityColor(
+                                3,
+                                darkModeEnabled
+                            ),
+                        }}
+                    >
                         TAB
                     </span>{" "}
                     press away.
@@ -51,8 +65,14 @@ export default function SettingsModalTab({ userInfo }: { userInfo: UserInfo }) {
                             Your library is synchronized and available anywhere.
                         </p>
                         <div className="flex gap-2">
-                            <Button title="Sign out" />
-                            <Button title="Export data" />
+                            <Button
+                                title="Sign out"
+                                darkModeEnabled={darkModeEnabled}
+                            />
+                            <Button
+                                title="Export data"
+                                darkModeEnabled={darkModeEnabled}
+                            />
                         </div>
                     </>
                 ) : (
@@ -63,8 +83,15 @@ export default function SettingsModalTab({ userInfo }: { userInfo: UserInfo }) {
                             your library across devices.
                         </p>
                         <div className="flex gap-2">
-                            <Button title="Create account" primary />
-                            <Button title="Export data" />
+                            <Button
+                                title="Create account"
+                                primary
+                                darkModeEnabled={darkModeEnabled}
+                            />
+                            <Button
+                                title="Export data"
+                                darkModeEnabled={darkModeEnabled}
+                            />
                         </div>
                     </>
                 )}
@@ -113,8 +140,14 @@ export default function SettingsModalTab({ userInfo }: { userInfo: UserInfo }) {
                     Suggest features, report bugs, or contribute on Github.
                 </p>
                 <div className="flex gap-2">
-                    <Button title="Report issue" />
-                    <Button title="View Github" />
+                    <Button
+                        title="Report issue"
+                        darkModeEnabled={darkModeEnabled}
+                    />
+                    <Button
+                        title="View Github"
+                        darkModeEnabled={darkModeEnabled}
+                    />
                 </div>
             </SettingsGroup>
 
@@ -149,15 +182,17 @@ function Button({
     title,
     onClick,
     primary,
+    darkModeEnabled,
 }: {
     title: string;
     onClick?: () => {};
     primary?: boolean;
+    darkModeEnabled: boolean;
 }) {
     return (
         <div
             className="cursor-pointer rounded-md py-1 px-2 font-medium transition-transform hover:scale-[97%]"
-            style={{ background: getActivityColor(primary ? 4 : 1, false) }}
+            style={{ background: getActivityColor(primary ? 3 : 1, false) }}
             onClick={onClick}
         >
             {title}

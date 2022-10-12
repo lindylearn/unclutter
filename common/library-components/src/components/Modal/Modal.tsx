@@ -218,7 +218,10 @@ function ModalContent({
                 )}
                 {currentTab === "highlights" && <HighlightsTab />}
                 {currentTab === "settings" && (
-                    <SettingsModalTab userInfo={userInfo} />
+                    <SettingsModalTab
+                        userInfo={userInfo}
+                        darkModeEnabled={darkModeEnabled}
+                    />
                 )}
             </div>
         </div>
