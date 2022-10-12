@@ -44,56 +44,70 @@ export default function RecentModalTab({
     const [lastFirst, setLastFirst] = useState(true);
 
     let [tabInfos, setTabInfos] = useState<TabInfo[]>();
+    let [articleListsCache, setArticleListsCache] = useState<{
+        [listId: string]: Article[];
+    }>();
     if (userInfo.topicsEnabled) {
         tabInfos = useTabInfos(10, onlyUnread, !lastFirst, null)[0];
     } else {
         const rep = useContext(ReplicacheContext);
         useEffect(() => {
-            rep?.query
-                .listRecentArticles(undefined, onlyUnread ? "unread" : "all")
-                .then((articles) => {
-                    if (domainFilter) {
-                        articles = articles.filter(
-                            (a) => getDomain(a.url) === domainFilter
-                        );
-                    }
-                    if (!lastFirst) {
-                        articles.reverse();
-                    }
-                    setTabInfos([
-                        {
-                            key: "queue",
-                            title: "",
-                            articles: articles.slice(0, 3),
-                            articleLines: 1,
-                        },
-                        {
-                            key: domainFilter || "list",
-                            title: "",
-                            articles: articles.slice(3),
-                            articleLines: Math.max(
-                                1,
-                                Math.min(5, articles.length / 5)
+            (async () => {
+                const queueArticles = await rep?.query.listFavoriteArticles();
+
+                let listArticles = await rep?.query.listRecentArticles(
+                    undefined,
+                    onlyUnread ? "unread" : "all"
+                );
+                listArticles =
+                    listArticles?.filter((a) => !a.is_favorite) || [];
+                if (domainFilter) {
+                    listArticles = listArticles.filter(
+                        (a) => getDomain(a.url) === domainFilter
+                    );
+                }
+                if (!lastFirst) {
+                    listArticles.reverse();
+                }
+
+                const tabInfos = [
+                    {
+                        key: "queue",
+                        title: "",
+                        articles: queueArticles || [],
+                        articleLines: 1,
+                    },
+                    {
+                        key: domainFilter || "list",
+                        title: "",
+                        articles: listArticles,
+                        articleLines: Math.max(
+                            1,
+                            Math.min(5, Math.ceil(listArticles.length / 5))
+                        ),
+                    },
+                ];
+                setTabInfos(tabInfos);
+                setArticleListsCache(
+                    tabInfos?.reduce(
+                        (obj, tabInfo) => ({
+                            ...obj,
+                            [tabInfo.key]: tabInfo.articles.slice(
+                                0,
+                                (tabInfo.articleLines || 1) * 5
                             ),
-                        },
-                    ]);
-                });
+                        }),
+                        {}
+                    )
+                );
+            })();
         }, [onlyUnread, lastFirst, domainFilter]);
     }
 
     return (
         <div className="flex flex-col gap-4">
             <DraggableContext
-                articleLists={tabInfos?.reduce(
-                    (obj, tabInfo) => ({
-                        ...obj,
-                        [tabInfo.key]: tabInfo.articles.slice(
-                            0,
-                            (tabInfo.articleLines || 1) * 5
-                        ),
-                    }),
-                    {}
-                )}
+                articleLists={articleListsCache}
                 reportEvent={reportEvent}
             >
                 <ArticleGroup
@@ -336,7 +350,6 @@ function ArticleGroup({
                 <DraggableArticleList
                     listId={groupKey}
                     articlesToShow={5 * articleLines}
-                    sortPosition="topic_sort_position"
                     small
                     reportEvent={reportEvent}
                 />

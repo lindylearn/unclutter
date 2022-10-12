@@ -24,7 +24,6 @@ export default function FavoritesTab({}) {
             <DraggableContext articleLists={{ favorites: articles || [] }}>
                 <DraggableArticleList
                     listId="favorites"
-                    sortPosition="favorites_sort_position"
                     disableFavoriteShadow
                 />
             </DraggableContext>

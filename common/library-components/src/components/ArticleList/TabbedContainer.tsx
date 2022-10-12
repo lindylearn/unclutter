@@ -16,6 +16,7 @@ import { DraggableArticleList } from "./DraggableArticleList";
 import { LindyIcon } from "../Icons";
 import { subDays } from "date-fns";
 import DraggableContext from "./DraggableContext";
+import { StaticArticleList } from "./StaticArticleList";
 
 export interface TabInfo {
     key: string;
@@ -121,25 +122,28 @@ export function TabbedContainer({
                 {activeIndex !== undefined &&
                     activeIndex !== null &&
                     articlesPerRow !== 0 && (
-                        <DraggableContext
-                            articleLists={{
-                                default: tabInfos[activeIndex].articles || [],
-                            }}
-                        >
-                            <DraggableArticleList
-                                listId="default"
-                                articlesToShow={articlesPerRow * articleRows}
-                                sortPosition={
-                                    tabInfos[activeIndex].key === "favorite"
-                                        ? "favorites_sort_position"
-                                        : tabInfos[activeIndex].key === "unread"
-                                        ? "recency_sort_position"
-                                        : "topic_sort_position"
-                                }
-                                centerGrid
-                                reportEvent={reportEvent}
-                            />
-                        </DraggableContext>
+                        <StaticArticleList
+                            articles={tabInfos[activeIndex].articles || []}
+                        />
+                        // <DraggableContext
+                        //     articleLists={{
+                        //         default: tabInfos[activeIndex].articles || [],
+                        //     }}
+                        // >
+                        //     <DraggableArticleList
+                        //         listId="default"
+                        //         articlesToShow={articlesPerRow * articleRows}
+                        //         // sortPosition={
+                        //         //     tabInfos[activeIndex].key === "favorite"
+                        //         //         ? "favorites_sort_position"
+                        //         //         : tabInfos[activeIndex].key === "unread"
+                        //         //         ? "recency_sort_position"
+                        //         //         : "topic_sort_position"
+                        //         // }
+                        //         centerGrid
+                        //         reportEvent={reportEvent}
+                        //     />
+                        // </DraggableContext>
                     )}
             </div>
         </div>

@@ -16,7 +16,6 @@ import { CustomDraggableContext } from "./DraggableContext";
 
 export function DraggableArticleList({
     listId,
-    sortPosition,
     disableFavoriteShadow = false,
     small = false,
     articlesToShow,
@@ -24,7 +23,6 @@ export function DraggableArticleList({
     reportEvent = reportEventPosthog,
 }: {
     listId: string;
-    sortPosition: ArticleSortPosition;
     disableFavoriteShadow?: boolean;
     small?: boolean;
     articlesToShow?: number;

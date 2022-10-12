@@ -14,7 +14,7 @@ import { sortableKeyboardCoordinates, arrayMove } from "@dnd-kit/sortable";
 import { createPortal } from "react-dom";
 import { DragOverlay } from "@dnd-kit/core";
 import { ArticlePreview } from "../Article/ArticlePreview";
-import { Article, ReplicacheContext } from "../../store";
+import { Article, ArticleSortPosition, ReplicacheContext } from "../../store";
 import { reportEventPosthog } from "../../common";
 
 export const CustomDraggableContext = createContext<{
@@ -104,24 +104,47 @@ export default function DraggableContext({
             );
             // console.log(`move position ${oldIndex} -> ${newIndex}`);
 
+            // check which sort order to modify
+            let sortKey: ArticleSortPosition;
+            if (activeListId === "list") {
+                sortKey = "recency_sort_position";
+            } else if (
+                activeListId === "queue" ||
+                activeListId === "favorites"
+            ) {
+                sortKey = "favorites_sort_position";
+            } else if (activeListId.endsWith("_")) {
+                sortKey = "topic_sort_position";
+            } else if (activeListId.includes(".")) {
+                sortKey = "topic_sort_position";
+            } else {
+                console.error(
+                    `Could not determine sort position to reorder for list ${activeListId}`
+                );
+                return;
+            }
+
+            // mutate replicache
+            // moving an article to the right shifts successors one index to the left
+            const newIndexShifted =
+                oldIndex < newIndex ? newIndex + 1 : newIndex;
+            const beforeNewArticle =
+                articleLists[activeListId][newIndexShifted - 1];
+            const afterNewArticle = articleLists[activeListId][newIndexShifted];
+            rep?.mutate.moveArticlePosition({
+                articleId: active.id as string,
+                articleIdBeforeNewPosition: beforeNewArticle?.id || null,
+                articleIdAfterNewPosition: afterNewArticle?.id || null,
+                sortPosition: sortKey,
+            });
+
             // update cache immediately (using unshifted index)
+            // NOTE: moving this before the index access above breaks the sorting
             articleLists[activeListId] = arrayMove(
                 articleLists[activeListId],
                 oldIndex,
                 newIndex
             );
-
-            // // mutate replicache
-            // // moving an article to the right shifts successors one index to the left
-            // const newIndexShifted = oldIndex < newIndex ? newIndex + 1 : newIndex;
-            // const beforeNewArticle = articlesCache[newIndexShifted - 1];
-            // const afterNewArticle = articlesCache[newIndexShifted];
-            // rep?.mutate.moveArticlePosition({
-            //     articleId: active.id,
-            //     articleIdBeforeNewPosition: beforeNewArticle?.id || null,
-            //     articleIdAfterNewPosition: afterNewArticle?.id || null,
-            //     sortPosition,
-            // });
         }
 
         setActiveArticle(null);
