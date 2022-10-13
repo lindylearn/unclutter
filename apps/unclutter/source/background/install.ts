@@ -55,10 +55,10 @@ function _installContextMenu() {
     if (getBrowserType() === "firefox") {
         context = "browser_action";
     }
-    createOrUpdateContextMenu("open-library", {
-        title: "Open Unclutter Library",
-        contexts: [context],
-    });
+    // createOrUpdateContextMenu("open-library", {
+    //     title: "Open Unclutter Library",
+    //     contexts: [context],
+    // });
 
     // throws error if no permission
     browser.contextMenus.onClicked.addListener((info, tab) => {
