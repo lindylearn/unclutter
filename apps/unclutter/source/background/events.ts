@@ -81,7 +81,11 @@ browser.action.onClicked.addListener((tab: Tabs.Tab) => {
 
 // handle events from content scripts
 browser.runtime.onMessage.addListener(
-    (message: any, sender: Runtime.MessageSender, sendResponse: () => void) => {
+    (
+        message: any,
+        sender: Runtime.MessageSender,
+        sendResponse: (...args: any[]) => void
+    ) => {
         // console.log(`Received '${message.event}' message:`, message);
 
         if (message.event === "disabledPageView") {
@@ -163,7 +167,11 @@ browser.runtime.onMessage.addListener(
 
 // events from seperate Unclutter Library extension
 browser.runtime.onMessageExternal.addListener(
-    (message: any, sender: Runtime.MessageSender, sendResponse: () => void) => {
+    (
+        message: any,
+        sender: Runtime.MessageSender,
+        sendResponse: (...args: any[]) => void
+    ) => {
         if (message.event === "openLinkWithUnclutter") {
             const onTabActive = (tab) => {
                 // need to wait until loaded, as have no permissions on new tab page
@@ -189,6 +197,11 @@ browser.runtime.onMessageExternal.addListener(
             });
         } else if (message.event === "openUnclutterOptionsPage") {
             browser.runtime.openOptionsPage();
+        } else if (message.event === "getUnclutterVersion") {
+            browser.management
+                .getSelf()
+                .then((extensionInfo) => sendResponse(extensionInfo.version));
+            return true;
         }
     }
 );

@@ -31,6 +31,12 @@ export function openArticle(url: string) {
     });
 }
 
+export async function getUnclutterVersion(): Promise<string> {
+    return await browser.runtime.sendMessage(null, {
+        event: "getUnclutterVersion",
+    });
+}
+
 export function captureActiveTabScreenshot(
     articleId: string,
     bodyRect: DOMRect,

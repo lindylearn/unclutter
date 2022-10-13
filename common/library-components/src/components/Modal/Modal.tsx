@@ -43,7 +43,7 @@ export function LibraryModalPage({
     }, [rep]);
 
     const [currentTab, setCurrentTab] = useState(
-        userInfo.topicsEnabled ? "list" : "stats"
+        userInfo.topicsEnabled ? "graph" : "stats"
     );
     useEffect(() => {
         reportEvent("changeModalTab", { tab: currentTab });
@@ -221,6 +221,7 @@ function ModalContent({
                 {currentTab === "settings" && (
                     <SettingsModalTab
                         userInfo={userInfo}
+                        currentArticle={currentArticle}
                         darkModeEnabled={darkModeEnabled}
                     />
                 )}
