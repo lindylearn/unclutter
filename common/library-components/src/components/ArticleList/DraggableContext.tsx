@@ -69,7 +69,7 @@ export default function DraggableContext({
     }
     // move articles between lists
     function handleDragOver({ active, over }: DragOverEvent) {
-        if (!articleLists || !over || !activeArticle || !activeListId) {
+        if (!articleLists || !over || !activeArticle) {
             return;
         }
 
@@ -81,7 +81,7 @@ export default function DraggableContext({
             : Object.keys(articleLists!).find((listId) =>
                   articleLists[listId].some((a) => a.id === over.id)
               );
-        if (sourceList && targetList && sourceList !== targetList) {
+        if (targetList && sourceList !== targetList) {
             if (sourceList !== "queue" && targetList !== "queue") {
                 // only allow moving from or to the reading queue for now
                 return;
@@ -92,7 +92,16 @@ export default function DraggableContext({
                 (targetList.includes(".") &&
                     getDomain(activeArticle.url) !== targetList)
             ) {
-                // only allow moving into topic or domain group if article has matching field
+                // attempted move into non-matching topic or domain group
+
+                if (sourceList) {
+                    // prepare article delete
+                    articleLists[sourceList] = articleLists[sourceList].filter(
+                        (a) => a.id !== activeArticle.id
+                    );
+                    setActiveListId(null);
+                }
+
                 return;
             }
             // console.log(`move group ${sourceList} -> ${targetList}`);
@@ -121,9 +130,11 @@ export default function DraggableContext({
                     });
                 });
 
-            articleLists[sourceList] = articleLists[sourceList].filter(
-                (a) => a.id !== activeArticle.id
-            );
+            if (sourceList) {
+                articleLists[sourceList] = articleLists[sourceList].filter(
+                    (a) => a.id !== activeArticle.id
+                );
+            }
             articleLists[targetList] = articleLists[targetList]
                 .slice(0, targetIndex)
                 .concat([activeArticle])
@@ -137,7 +148,15 @@ export default function DraggableContext({
     }
     // change position within target list
     function handleDragEnd({ active, over }: DragEndEvent) {
-        if (!over || !articleLists || !activeListId) {
+        if (!over || !articleLists) {
+            return;
+        }
+        if (!activeListId) {
+            // remove from queue
+            rep?.mutate.updateArticle({
+                id: active.id as string,
+                is_queued: false,
+            });
             return;
         }
 

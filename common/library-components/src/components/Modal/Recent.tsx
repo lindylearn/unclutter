@@ -86,7 +86,7 @@ export default function RecentModalTab({
                     true,
                     "recency",
                     "topic_order",
-                    5
+                    10
                 );
                 const topicTabInfos: TabInfo[] = await Promise.all(
                     groupEntries
