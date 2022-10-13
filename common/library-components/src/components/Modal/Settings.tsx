@@ -47,25 +47,24 @@ export default function SettingsModalTab({
                 </p>
             </SettingsGroup>
 
-            {/* {(userInfo.accountEnabled || userInfo.showSignup) && (
-                <SettingsGroup
-                    title="Account"
-                    icon={
-                        <svg className="h-4 w-4" viewBox="0 0 448 512">
-                            <path
-                                fill="currentColor"
-                                d="M272 304h-96C78.8 304 0 382.8 0 480c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32C448 382.8 369.2 304 272 304zM48.99 464C56.89 400.9 110.8 352 176 352h96c65.16 0 119.1 48.95 127 112H48.99zM224 256c70.69 0 128-57.31 128-128c0-70.69-57.31-128-128-128S96 57.31 96 128C96 198.7 153.3 256 224 256zM224 48c44.11 0 80 35.89 80 80c0 44.11-35.89 80-80 80S144 172.1 144 128C144 83.89 179.9 48 224 48z"
-                            />
-                        </svg>
-                    }
-                >
-                    {userInfo.accountEnabled ? (
-                        <>
-                            <p>
-                                You're signed in. Your library is synchronized
-                                and available anywhere.
-                            </p>
-                            <div className="flex gap-2">
+            <SettingsGroup
+                title="Account"
+                icon={
+                    <svg className="h-4 w-4" viewBox="0 0 448 512">
+                        <path
+                            fill="currentColor"
+                            d="M272 304h-96C78.8 304 0 382.8 0 480c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32C448 382.8 369.2 304 272 304zM48.99 464C56.89 400.9 110.8 352 176 352h96c65.16 0 119.1 48.95 127 112H48.99zM224 256c70.69 0 128-57.31 128-128c0-70.69-57.31-128-128-128S96 57.31 96 128C96 198.7 153.3 256 224 256zM224 48c44.11 0 80 35.89 80 80c0 44.11-35.89 80-80 80S144 172.1 144 128C144 83.89 179.9 48 224 48z"
+                        />
+                    </svg>
+                }
+            >
+                {userInfo.accountEnabled ? (
+                    <>
+                        <p>
+                            You're signed in. Your library is synchronized and
+                            available everywhere.
+                        </p>
+                        {/* <div className="flex gap-2">
                                 <Button
                                     title="Sign out"
                                     darkModeEnabled={darkModeEnabled}
@@ -74,16 +73,18 @@ export default function SettingsModalTab({
                                     title="Export data"
                                     darkModeEnabled={darkModeEnabled}
                                 />
-                            </div>
-                        </>
-                    ) : (
-                        <>
-                            <p>
-                                Right now, your articles are saved locally in
-                                your browser. Create a free account to back-up
-                                and access your library across devices.
-                            </p>
-                            <div className="flex gap-2">
+                            </div> */}
+                    </>
+                ) : (
+                    <>
+                        <p>
+                            Your articles are saved in your browser and not sent
+                            over the network. Back-up and import functionality
+                            is coming soon!
+                            {/* Create a free account to back-up
+                                and access your library across devices. */}
+                        </p>
+                        {/* <div className="flex gap-2">
                                 <Button
                                     title="Create account"
                                     primary
@@ -93,11 +94,10 @@ export default function SettingsModalTab({
                                     title="Export data"
                                     darkModeEnabled={darkModeEnabled}
                                 />
-                            </div>
-                        </>
-                    )}
-                </SettingsGroup>
-            )} */}
+                            </div> */}
+                    </>
+                )}
+            </SettingsGroup>
 
             {/* {!userInfo.topicsEnabled && (
                 <SettingsGroup
@@ -143,10 +143,10 @@ export default function SettingsModalTab({
                     Suggest features, report bugs, or contribute on Github.
                 </p>
                 <div className="flex gap-2">
-                    <Button
+                    {/* <Button
                         title="Report issue"
                         darkModeEnabled={darkModeEnabled}
-                    />
+                    /> */}
                     <Button
                         title="View Github"
                         darkModeEnabled={darkModeEnabled}
@@ -155,7 +155,7 @@ export default function SettingsModalTab({
                 </div>
             </SettingsGroup>
 
-            <SettingsGroup
+            {/* <SettingsGroup
                 title="Feedback"
                 icon={
                     <svg className="h-4 w-4" viewBox="0 0 512 512">
@@ -172,7 +172,7 @@ export default function SettingsModalTab({
                     Suggest features, report bugs, or contribute on Github.
                 </p>
                 <textarea className="mt-2 h-32 w-full rounded-md dark:bg-[#212121]" />
-            </SettingsGroup>
+            </SettingsGroup> */}
 
             {/* <SettingsGroup title="Updates">
                 Oct 16: Released highlights integration v1

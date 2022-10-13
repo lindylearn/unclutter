@@ -60,8 +60,8 @@ export default function ModalTestTab({}) {
     }, []);
 
     const userInfo: UserInfo = {
-        accountEnabled: true,
-        topicsEnabled: true,
+        accountEnabled: false,
+        topicsEnabled: false,
     };
 
     return (

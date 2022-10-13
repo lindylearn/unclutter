@@ -318,9 +318,13 @@ function ArticleGroup({
     color = color || getRandomLightColor(groupKey, darkModeEnabled);
     // const unqueuedArticles = articles.filter((a) => !a.is_queued);
 
+    const readCount = articles?.filter(
+        (a) => a.reading_progress >= readingProgressFullClamp
+    )?.length;
+
     return (
         <div className="topic animate-fadein relative">
-            {title && (
+            {isTopic ? (
                 <div className="topic-header mx-0.5 mb-2 flex justify-between">
                     <h2
                         className={clsx(
@@ -339,22 +343,21 @@ function ArticleGroup({
                     </h2>
 
                     <ReadingProgress
-                        className={
-                            isTopic
-                                ? "relative px-1.5 py-0.5"
-                                : "absolute -top-[3rem] right-0 px-2 py-1"
-                        }
+                        className="relative px-1.5 py-0.5"
                         articleCount={articles?.length}
-                        readCount={
-                            articles?.filter(
-                                (a) =>
-                                    a.reading_progress >=
-                                    readingProgressFullClamp
-                            )?.length
-                        }
-                        color={isTopic ? color : "transparent"}
+                        readCount={readCount}
+                        color={color}
                     />
                 </div>
+            ) : (
+                <>
+                    <ReadingProgress
+                        className="absolute -top-[3rem] right-0 px-2 py-1"
+                        articleCount={articles?.length}
+                        readCount={readCount}
+                        color={"transparent"}
+                    />
+                </>
             )}
 
             <div
