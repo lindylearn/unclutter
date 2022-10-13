@@ -11,6 +11,7 @@ import {
     LocalWriteTransaction,
     processLocalReplicacheMessage,
 } from "./replicacheLocal";
+import { deleteAllLocalScreenshots } from "./screenshots";
 
 let userId: string;
 export async function initLibrary() {
@@ -36,7 +37,9 @@ export async function checkMigrate() {
             allLocalEntries.map(([key, value]) => localTx.del(key))
         );
 
-        migrateMetricsUser();
+        // other migration tasks
+        await deleteAllLocalScreenshots();
+        await migrateMetricsUser();
     }
 }
 

@@ -180,10 +180,11 @@ export default class TransitionManager implements PageModifier {
         await new Promise((r) => setTimeout(r, 300));
 
         // *** read DOM phase ***
-        // *** write DOM phase ***
+        this.libraryModifier.captureScreenshot(); // TODO move after dark theme handling?
 
-        // apply color theme - iterating CSSOM and re-rendering page is potentially expensive
+        // *** write DOM phase ***
         this.bodyStyleModifier.afterTransitionIn();
+        // apply color theme - iterating CSSOM and re-rendering page is potentially expensive
         const enabledDarkMode = this.themeModifier.applyActiveColorTheme();
 
         if (enabledDarkMode) {

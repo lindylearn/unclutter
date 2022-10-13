@@ -1,4 +1,4 @@
-import React from "react";
+import React, { createContext, useEffect } from "react";
 import clsx from "clsx";
 import { useContext, useLayoutEffect, useState } from "react";
 
@@ -6,6 +6,12 @@ import { ReplicacheContext } from "../../store";
 import { Article, readingProgressFullClamp } from "../../store/_schema";
 import { ArticleDropdownMenu } from "./ArticleDropdownMenu";
 import { openArticle } from "../../common";
+
+export type LocalScreenshotFetcher =
+    | ((articleId: string) => Promise<string | null>)
+    | null;
+export const LocalScreenshotContext =
+    createContext<LocalScreenshotFetcher>(null);
 
 interface ArticlePreviewProps {
     article: Article;
@@ -73,6 +79,22 @@ export function ArticlePreview({
 
     const [dropdownOpen, setDropdownOpen] = useState(false);
 
+    const localScreenshotFetcher = useContext(LocalScreenshotContext);
+    const [backgroundSrc, setBackgroundSrc] = useState<string>(
+        `url(https://storage.googleapis.com/unclutter-screenshots-serverless/articles/current/${encodeURIComponent(
+            article.url
+        ).replaceAll("%", "%25")}.webp)`
+    );
+    useEffect(() => {
+        if (localScreenshotFetcher) {
+            localScreenshotFetcher(article.id).then((base64) => {
+                if (base64) {
+                    setBackgroundSrc(`url(${base64})`);
+                }
+            });
+        }
+    }, [localScreenshotFetcher]);
+
     return (
         <a
             className={clsx(
@@ -110,17 +132,15 @@ export function ArticlePreview({
             style={style}
             {...props}
         >
-            <div className="article-fallback p-3">
+            <div className="article-fallback animate-fadein p-3">
                 <div className="font-text select-none font-bold leading-tight">
                     {article.title}
                 </div>
             </div>
             <div
-                className="article-image absolute top-0 left-0 h-full w-full"
+                className="article-image animate-fadein absolute top-0 left-0 h-full w-full"
                 style={{
-                    backgroundImage: `url(https://storage.googleapis.com/unclutter-screenshots-serverless/articles/current/${encodeURIComponent(
-                        article.url
-                    ).replaceAll("%", "%25")}.webp)`,
+                    backgroundImage: backgroundSrc,
                     backgroundSize: "cover",
                 }}
             ></div>

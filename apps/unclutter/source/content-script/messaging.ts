@@ -23,11 +23,31 @@ export async function getRemoteFeatureFlag(key: string) {
     return featureFlags?.[key];
 }
 
-export async function openArticle(url: string) {
+export function openArticle(url: string) {
     browser.runtime.sendMessage(null, {
         event: "openLinkWithUnclutter",
         url: url,
         newTab: true,
+    });
+}
+
+export function captureActiveTabScreenshot(
+    articleId: string,
+    bodyRect: DOMRect,
+    devicePixelRatio: number
+) {
+    browser.runtime.sendMessage(null, {
+        event: "captureActiveTabScreenshot",
+        articleId,
+        bodyRect,
+        devicePixelRatio,
+    });
+}
+
+export async function getLocalScreenshot(articleId: string) {
+    return await browser.runtime.sendMessage(null, {
+        event: "getLocalScreenshot",
+        articleId,
     });
 }
 

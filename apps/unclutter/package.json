@@ -4,6 +4,7 @@
     "private": true,
     "dependencies": {
         "@rocicorp/rails": "^0.2.2",
+        "@types/offscreencanvas": "^2019.7.0",
         "@unclutter/library-components": "*",
         "approx-string-match": "^2.0.0",
         "clsx": "^1.2.1",

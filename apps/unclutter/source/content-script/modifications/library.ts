@@ -16,6 +16,7 @@ import OverlayManager from "./overlay";
 import { PageModifier, trackModifierExecution } from "./_interface";
 import { getLibraryUser } from "../../common/storage";
 import {
+    captureActiveTabScreenshot,
     getRemoteFeatureFlag,
     ReplicacheProxy,
     reportEventContentScript,
@@ -370,4 +371,20 @@ export default class LibraryModifier implements PageModifier {
         this.updateReadingProgress.bind(this),
         this.readingProgressSyncIntervalSeconds * 1000
     );
+
+    // capture a screenshot of the current article page to display as thumbnail inside the library UI
+    captureScreenshot() {
+        if (this.libraryState.userInfo.accountEnabled) {
+            // can use remote screenshot fetch
+            return;
+        }
+
+        // run in background
+        const bodyRect = document.body.getBoundingClientRect();
+        captureActiveTabScreenshot(
+            this.articleId,
+            bodyRect,
+            window.devicePixelRatio
+        );
+    }
 }

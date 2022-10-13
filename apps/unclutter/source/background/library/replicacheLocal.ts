@@ -39,11 +39,13 @@ export async function processLocalReplicacheMessage({
     }
 }
 
+const idbStore = idb.createStore("replicache-local", "keyval");
+
 export class LocalReadTransaction implements ReadTransaction {
     clientID = "local-replicache";
 
     async get(key: string): Promise<ReadonlyJSONValue> {
-        return await idb.get(key);
+        return await idb.get(key, idbStore);
     }
 
     async has(key: string): Promise<boolean> {
@@ -51,7 +53,7 @@ export class LocalReadTransaction implements ReadTransaction {
     }
 
     async isEmpty(): Promise<boolean> {
-        return (await idb.keys()).length === 0;
+        return (await idb.keys(idbStore)).length === 0;
     }
 
     scan(options?: ScanNoIndexOptions) {
@@ -64,17 +66,17 @@ export class LocalWriteTransaction
     implements WriteTransaction
 {
     async put(key: string, value: JSONValue): Promise<void> {
-        await idb.set(key, value);
+        await idb.set(key, value, idbStore);
     }
 
     async del(key: string): Promise<boolean> {
         const exists = this.has(key);
-        await idb.del(key);
+        await idb.del(key, idbStore);
         return exists;
     }
 
     async get(key: string): Promise<JSONValue> {
-        return await idb.get(key);
+        return await idb.get(key, idbStore);
     }
 
     scan(options?: ScanOptions) {
@@ -92,7 +94,7 @@ class LocalScanResult<R> implements ScanResult<string, R> {
         return new AsyncIteratorToArray<string>(
             this.toAsyncIterator(
                 idb
-                    .entries()
+                    .entries(idbStore)
                     .then(async (entries: [string, R][]) =>
                         this.filterEntries(entries).map((entry) => entry[0])
                     )
@@ -104,7 +106,7 @@ class LocalScanResult<R> implements ScanResult<string, R> {
         return new AsyncIteratorToArray<R>(
             this.toAsyncIterator(
                 idb
-                    .entries()
+                    .entries(idbStore)
                     .then(async (entries: [string, R][]) =>
                         this.filterEntries(entries).map((entry) => entry[1])
                     )
@@ -116,7 +118,7 @@ class LocalScanResult<R> implements ScanResult<string, R> {
         return new AsyncIteratorToArray<[string, R]>(
             this.toAsyncIterator(
                 idb
-                    .entries()
+                    .entries(idbStore)
                     .then(async (entries: [string, R][]) =>
                         this.filterEntries(entries)
                     )

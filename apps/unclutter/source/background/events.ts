@@ -19,6 +19,10 @@ import { enableInTab, injectScript, togglePageViewMessage } from "./inject";
 import { onNewInstall, setupWithPermissions } from "./install";
 import { initLibrary, processReplicacheMessage } from "./library/library";
 import {
+    captureActiveTabScreenshot,
+    getLocalScreenshot,
+} from "./library/screenshots";
+import {
     getRemoteFeatureFlags,
     reportDisablePageView,
     reportEnablePageView,
@@ -141,6 +145,15 @@ browser.runtime.onMessage.addListener(
             });
         } else if (message.event === "processReplicacheMessage") {
             processReplicacheMessage(message).then(sendResponse);
+            return true;
+        } else if (message.event === "captureActiveTabScreenshot") {
+            captureActiveTabScreenshot(
+                message.articleId,
+                message.bodyRect,
+                message.devicePixelRatio
+            );
+        } else if (message.event === "getLocalScreenshot") {
+            getLocalScreenshot(message.articleId).then(sendResponse);
             return true;
         }
 
