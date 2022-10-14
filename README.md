@@ -1,26 +1,18 @@
-<img src="./docs/media/icon.png" align="left" width="40" />
+<img src="./docs/media/icon.png" align="left" width="80" />
 
-# &nbsp;&nbsp;Unclutter — Modern Reader Mode
+# Unclutter — Modern Reader Mode
 
 Unclutter is a modern reader mode and article library for your browser.
 
-[![latest release version](https://img.shields.io/github/v/release/lindylearn/unclutter?color=edd75b)](https://github.com/lindylearn/unclutter/releases)
+[![Latest release](https://img.shields.io/github/v/release/lindylearn/unclutter?color=edd75b)](https://github.com/lindylearn/unclutter/releases)
 [![License](https://img.shields.io/github/license/lindylearn/unclutter?color=edd75b)](https://github.com/lindylearn/unclutter/blob/master/LICENSE.md)
-![GitHub commit activity](https://img.shields.io/github/commit-activity/w/lindylearn/unclutter?label=commits&color=edd75b)
-![Chrome Web Store](https://img.shields.io/chrome-web-store/users/ibckhpijbdmdobhhhodkceffdngnglpk?label=chrome%20installs&color=edd75b)
-![Mozilla Add-on](https://img.shields.io/amo/users/lindylearn?label=firefox%20installs&color=edd75b)
-![Chrome Web Store](https://img.shields.io/chrome-web-store/stars/ibckhpijbdmdobhhhodkceffdngnglpk?label=reviews&color=edd75b)
+![GitHub commits](https://img.shields.io/github/commit-activity/w/lindylearn/unclutter?label=commits&color=edd75b)
+[![Chrome users](https://img.shields.io/chrome-web-store/users/ibckhpijbdmdobhhhodkceffdngnglpk?label=chrome%20installs&color=edd75b)](https://chrome.google.com/webstore/detail/ibckhpijbdmdobhhhodkceffdngnglpk)
+[![Firefox users](https://img.shields.io/amo/users/lindylearn?label=firefox%20installs&color=edd75b)](https://addons.mozilla.org/en-GB/firefox/addon/lindylearn)
+[![Chrome Ratings](https://img.shields.io/chrome-web-store/stars/ibckhpijbdmdobhhhodkceffdngnglpk?label=reviews&color=edd75b)](https://chrome.google.com/webstore/detail/ibckhpijbdmdobhhhodkceffdngnglpk)
 
-<p align="center">
-<img src="./docs/media/intro2.gif" width="600px" />
-</p>
-
-## Try it out
-
-Install the browser extension from the Chrome or Firefox extension store, [or build it yourself](https://github.com/lindylearn/unclutter#development).
-
-[<img src="./docs/media/chrome-badge.png" height="55">](https://chrome.google.com/webstore/detail/ibckhpijbdmdobhhhodkceffdngnglpk)
-[<img src="./docs/media/firefox-badge.png" height="55">](https://addons.mozilla.org/en-GB/firefox/addon/lindylearn)
+[<img src="https://img.shields.io/badge/-Add%20to%20Chrome-test?color=edd75b&logoColor=black&logo=googlechrome" height="30">](https://chrome.google.com/webstore/detail/ibckhpijbdmdobhhhodkceffdngnglpk)
+[<img src="https://img.shields.io/badge/-Add%20to%20Firefox-test?color=edd75b&logoColor=black&logo=firefox" height="30">](https://addons.mozilla.org/en-GB/firefox/addon/lindylearn)
 
 <!-- ## Get involved
 
