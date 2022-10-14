@@ -87,12 +87,13 @@ export default class LibraryModifier implements PageModifier {
             };
         }
 
-        // fetch or create article state
-        if (this.libraryState.libraryEnabled) {
-            this.overlayManager.updateLibraryState(this.libraryState);
-            this.fetchLibraryState();
-            return;
+        if (!this.libraryState.libraryEnabled) {
+            this.scrollOnceFetchDone = false;
         }
+
+        // fetch or create article state (even if library UI not enabled)
+        this.overlayManager.updateLibraryState(this.libraryState);
+        this.fetchLibraryState();
     }
 
     async fetchLibraryState() {
@@ -104,8 +105,6 @@ export default class LibraryModifier implements PageModifier {
                 rep,
                 this.articleId
             );
-
-            // handle retrieved state
             if (!this.libraryState.libraryInfo) {
                 // run on-demand adding
                 this.libraryState.isClustering = true;
@@ -201,6 +200,12 @@ export default class LibraryModifier implements PageModifier {
             };
 
             await rep.mutate.putArticleIfNotExists(article);
+        }
+
+        if (this.libraryState.libraryInfo?.article) {
+            await rep.mutate.articleTrackOpened(
+                this.libraryState.libraryInfo.article.id
+            );
         }
     }
 
