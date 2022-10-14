@@ -9,10 +9,15 @@ Unclutter is a modern reader mode and article library for your browser.
 ![GitHub commits](https://img.shields.io/github/commit-activity/w/lindylearn/unclutter?label=commits&color=edd75b)
 [![Chrome users](https://img.shields.io/chrome-web-store/users/ibckhpijbdmdobhhhodkceffdngnglpk?label=chrome%20installs&color=edd75b)](https://chrome.google.com/webstore/detail/ibckhpijbdmdobhhhodkceffdngnglpk)
 [![Firefox users](https://img.shields.io/amo/users/lindylearn?label=firefox%20installs&color=edd75b)](https://addons.mozilla.org/en-GB/firefox/addon/lindylearn)
-[![Chrome Ratings](https://img.shields.io/chrome-web-store/stars/ibckhpijbdmdobhhhodkceffdngnglpk?label=reviews&color=edd75b)](https://chrome.google.com/webstore/detail/ibckhpijbdmdobhhhodkceffdngnglpk)
+[![Chrome Ratings](https://img.shields.io/chrome-web-store/stars/ibckhpijbdmdobhhhodkceffdngnglpk?label=rating&color=edd75b)](https://chrome.google.com/webstore/detail/ibckhpijbdmdobhhhodkceffdngnglpk)
 
-[<img src="https://img.shields.io/badge/-Add%20to%20Chrome-test?color=edd75b&logoColor=black&logo=googlechrome" height="30">](https://chrome.google.com/webstore/detail/ibckhpijbdmdobhhhodkceffdngnglpk)
-[<img src="https://img.shields.io/badge/-Add%20to%20Firefox-test?color=edd75b&logoColor=black&logo=firefox" height="30">](https://addons.mozilla.org/en-GB/firefox/addon/lindylearn)
+
+<p align="center">
+<img src="./docs/media/intro.png" width="100%" />
+</p>
+
+[<img src="./docs/media/install-chrome.png" height="50">](https://chrome.google.com/webstore/detail/ibckhpijbdmdobhhhodkceffdngnglpk)
+[<img src="./docs/media/install-firefox.png" height="50">](https://addons.mozilla.org/en-GB/firefox/addon/lindylearn)
 
 <!-- ## Get involved
 
