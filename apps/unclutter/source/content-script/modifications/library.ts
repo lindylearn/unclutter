@@ -87,10 +87,6 @@ export default class LibraryModifier implements PageModifier {
             };
         }
 
-        if (!this.libraryState.libraryEnabled) {
-            this.scrollOnceFetchDone = false;
-        }
-
         // fetch or create article state (even if library UI not enabled)
         this.overlayManager.updateLibraryState(this.libraryState);
         this.fetchLibraryState();
@@ -116,13 +112,21 @@ export default class LibraryModifier implements PageModifier {
                 if (!this.libraryState.libraryInfo) {
                     this.libraryState.error = true;
                 }
-
-                reportEventContentScript("addArticle");
             } else {
                 // use existing state
                 this.libraryState.wasAlreadyPresent = true;
+            }
 
+            // skip further processing if library disabled
+            if (!this.libraryState.libraryEnabled) {
+                return;
+            }
+
+            // report library events
+            if (this.libraryState.wasAlreadyPresent) {
                 reportEventContentScript("visitArticle");
+            } else {
+                reportEventContentScript("addArticle");
             }
 
             // fetch topic progress stats
@@ -258,6 +262,7 @@ export default class LibraryModifier implements PageModifier {
         console.log(`Constructed library graph in ${Math.round(duration)}ms`);
     }
 
+    // called from transitions.ts, or again internally once fetch done
     private scrollOnceFetchDone = false;
     scrollToLastReadingPosition() {
         if (!this.libraryState.libraryEnabled) {
@@ -293,30 +298,23 @@ export default class LibraryModifier implements PageModifier {
             return;
         }
 
-        if (this.libraryState.libraryEnabled) {
-            if (
-                readingProgress >= 0.95 &&
-                this.libraryState.libraryInfo?.article.reading_progress <
-                    readingProgressFullClamp
-            ) {
-                // immediately update state to show in UI
-                await this.updateReadingProgress(1.0);
-
-                // animate count reduction in LibraryMessage
-                const rep = new ReplicacheProxy();
-                this.libraryState.readingProgress =
-                    await this.constructReadingProgress(rep);
-                this.libraryState.justCompletedArticle = true;
-                this.overlayManager.updateLibraryState(this.libraryState);
-            } else {
-                this.updateReadingProgressThrottled(readingProgress);
-            }
-        } else if (
-            this.libraryState.showLibrarySignup &&
-            readingProgress >= 0.9 &&
-            this.lastReadingProgress < 0.9
+        if (
+            readingProgress >= 0.95 &&
+            this.libraryState.libraryInfo?.article &&
+            this.libraryState.libraryInfo.article.reading_progress <
+                readingProgressFullClamp
         ) {
-            reportEventContentScript("seeLibrarySignup");
+            // immediately update state to show in UI
+            await this.updateReadingProgress(1.0);
+
+            // animate count reduction in LibraryMessage
+            const rep = new ReplicacheProxy();
+            this.libraryState.readingProgress =
+                await this.constructReadingProgress(rep);
+            this.libraryState.justCompletedArticle = true;
+            this.overlayManager.updateLibraryState(this.libraryState);
+        } else {
+            this.updateReadingProgressThrottled(readingProgress);
         }
     }
 
@@ -339,10 +337,7 @@ export default class LibraryModifier implements PageModifier {
         }
         this.lastReadingProgress = readingProgress;
 
-        if (
-            !this.libraryState.libraryEnabled ||
-            !this.libraryState.libraryInfo.article
-        ) {
+        if (!this.libraryState.libraryInfo.article) {
             return;
         }
 

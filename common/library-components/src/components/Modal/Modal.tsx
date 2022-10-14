@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import clsx from "clsx";
 import { useContext, useEffect, useState } from "react";
 
@@ -42,11 +42,16 @@ export function LibraryModalPage({
         rep?.query.getArticlesCount().then(setArticleCount);
     }, [rep]);
 
+    const initialRender = useRef<boolean>(true);
     const [currentTab, setCurrentTab] = useState(
         userInfo.topicsEnabled ? "graph" : "stats"
     );
     useEffect(() => {
-        reportEvent("changeModalTab", { tab: currentTab });
+        if (initialRender.current) {
+            initialRender.current = false;
+        } else {
+            reportEvent("changeModalTab", { tab: currentTab });
+        }
     }, [currentTab]);
 
     const [currentTopic, setCurrentTopic] = useState<Topic | undefined>(
@@ -192,6 +197,7 @@ function ModalContent({
                         setDomainFilter={setDomainFilter}
                         darkModeEnabled={darkModeEnabled}
                         showTopic={showTopic}
+                        reportEvent={reportEvent}
                     />
                 )}
                 {currentTab === "graph" &&
