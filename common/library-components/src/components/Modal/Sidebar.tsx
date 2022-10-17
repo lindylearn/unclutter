@@ -88,7 +88,7 @@ function getModalTabOptions(
     new_link_count?: number
 ): ModalTabOptions[] {
     const options: (ModalTabOptions | false | undefined)[] = [
-        userInfo.onPaidPlan && {
+        (userInfo.onPaidPlan || userInfo.trialEnabled) && {
             label: "Related",
             value: "graph",
             tag: new_link_count ? `${new_link_count} +` : undefined,

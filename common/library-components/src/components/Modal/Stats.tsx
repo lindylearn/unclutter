@@ -119,7 +119,7 @@ function NumberStats({
     const rep = useContext(ReplicacheContext);
     const [topicsCount, setTopicsCount] = useState<number>();
     useEffect(() => {
-        if (userInfo.onPaidPlan) {
+        if (userInfo.onPaidPlan || userInfo.trialEnabled) {
             rep?.query
                 .listTopics()
                 .then((topics) =>
@@ -149,7 +149,7 @@ function NumberStats({
                 icon={<ResourceIcon type="articles" large />}
             />
 
-            {userInfo.onPaidPlan && (
+            {(userInfo.onPaidPlan || userInfo.trialEnabled) && (
                 <BigNumber
                     value={topicsCount}
                     tag={`article topic${topicsCount !== 1 ? "s" : ""}`}
@@ -192,7 +192,7 @@ function WeekDetails({
     }, [allArticles, start, end]);
 
     let [groups, setGroups] = useState<[string, Article[]][]>();
-    if (userInfo.onPaidPlan) {
+    if (userInfo.onPaidPlan || userInfo.trialEnabled) {
         groups = useArticleGroups(
             weekArticles,
             false,
@@ -260,7 +260,7 @@ function ArticleGroupStat({
     showDomain: (domain: string) => void;
 }) {
     const [topic, setTopic] = useState<Topic>();
-    if (userInfo.onPaidPlan) {
+    if (userInfo.onPaidPlan || userInfo.trialEnabled) {
         const rep = useContext(ReplicacheContext);
         useEffect(() => {
             rep?.query.getTopic(groupKey).then(setTopic);
@@ -288,7 +288,7 @@ function ArticleGroupStat({
                 ),
             }}
             onClick={() => {
-                if (userInfo.onPaidPlan) {
+                if (userInfo.onPaidPlan || userInfo.trialEnabled) {
                     showTopic(topic!.id);
                 } else {
                     showDomain(groupKey);
@@ -299,7 +299,7 @@ function ArticleGroupStat({
                 {topic?.emoji && (
                     <TopicEmoji emoji={topic?.emoji} className="w-4" />
                 )}
-                {!userInfo.onPaidPlan && (
+                {!(userInfo.onPaidPlan || userInfo.trialEnabled) && (
                     <div className="mr-1 w-4 opacity-90">
                         <img
                             className="w-4"

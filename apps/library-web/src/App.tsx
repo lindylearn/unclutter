@@ -125,7 +125,7 @@ export default function App() {
     if (!userInfo) {
         return <></>;
     }
-    if (!userInfo.onPaidPlan) {
+    if (!userInfo.onPaidPlan && !userInfo.trialEnabled) {
         return <Welcome2Tab />;
     }
 

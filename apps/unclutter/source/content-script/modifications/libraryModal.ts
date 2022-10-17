@@ -71,6 +71,7 @@ export default class LibraryModalModifier implements PageModifier {
 
         reportEventContentScript("openLibraryModal", {
             onPaidPlan: this.libraryState.userInfo.onPaidPlan,
+            trialEnabled: this.libraryState.userInfo.trialEnabled,
             linkCount: this.libraryState.linkCount,
             articleCount: this.libraryState.readingProgress.articleCount,
             completedCount: this.libraryState.readingProgress.completedCount,

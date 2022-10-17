@@ -77,5 +77,6 @@ export const userInfoSchema = z.object({
 
     accountEnabled: z.boolean(),
     onPaidPlan: z.boolean(),
+    trialEnabled: z.optional(z.boolean()),
 });
 export type UserInfo = z.infer<typeof userInfoSchema>;

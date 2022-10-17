@@ -146,7 +146,8 @@ export default class LibraryModifier implements PageModifier {
 
             // construct article graph from local replicache
             if (
-                this.libraryState.userInfo.onPaidPlan &&
+                (this.libraryState.userInfo.onPaidPlan ||
+                    this.libraryState.userInfo.trialEnabled) &&
                 this.libraryState.libraryInfo
             ) {
                 await this.constructArticleGraph(rep);
@@ -180,7 +181,10 @@ export default class LibraryModifier implements PageModifier {
     }
 
     private async insertArticle(rep: ReplicacheProxy) {
-        if (this.libraryState.userInfo.onPaidPlan) {
+        if (
+            this.libraryState.userInfo.onPaidPlan ||
+            this.libraryState.userInfo.trialEnabled
+        ) {
             // fetch state remotely
             // TODO remove mutate in backend? just fetch topic?
             this.libraryState.libraryInfo = await addArticleToLibrary(
