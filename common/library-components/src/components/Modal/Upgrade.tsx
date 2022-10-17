@@ -8,7 +8,7 @@ export default function UpgradeModalTab({
     darkModeEnabled: boolean;
 }) {
     return (
-        <div className="flex min-h-full flex-col gap-4 p-4">
+        <div className="flex min-h-full flex-col gap-4">
             <h1 className="flex items-center gap-2 py-1 px-1 font-medium">
                 {/* <svg className="h-4" viewBox="0 0 512 512">
                     <path
@@ -71,7 +71,7 @@ export default function UpgradeModalTab({
             <div className="mt-4 flex gap-4">
                 <a
                     className="flex cursor-pointer items-center gap-2 rounded-md bg-stone-50 px-3 py-2 font-medium transition-transform hover:scale-[97%] dark:bg-neutral-800"
-                    href="https://opencollective.com/athens/contribute/user-25523"
+                    href="https://opencollective.com/unclutter/contribute/supporter-46745"
                     target="_blank"
                     rel="noopener noreferrer"
                 >

@@ -200,19 +200,16 @@ function ModalContent({
                         reportEvent={reportEvent}
                     />
                 )}
-                {currentTab === "graph" &&
-                    (userInfo.topicsEnabled ? (
-                        <GraphPage
-                            graph={graph}
-                            darkModeEnabled={darkModeEnabled}
-                            currentArticle={currentArticle}
-                            currentTopic={currentTopic}
-                            changedTopic={changedTopic}
-                            reportEvent={reportEvent}
-                        />
-                    ) : (
-                        <UpgradeModalTab darkModeEnabled={darkModeEnabled} />
-                    ))}
+                {currentTab === "graph" && (
+                    <GraphPage
+                        graph={graph}
+                        darkModeEnabled={darkModeEnabled}
+                        currentArticle={currentArticle}
+                        currentTopic={currentTopic}
+                        changedTopic={changedTopic}
+                        reportEvent={reportEvent}
+                    />
+                )}
                 {currentTab === "stats" && (
                     <StatsModalTab
                         userInfo={userInfo}
@@ -224,6 +221,9 @@ function ModalContent({
                     />
                 )}
                 {currentTab === "highlights" && <HighlightsTab />}
+                {currentTab === "signup" && (
+                    <UpgradeModalTab darkModeEnabled={darkModeEnabled} />
+                )}
                 {currentTab === "settings" && (
                     <SettingsModalTab
                         userInfo={userInfo}
