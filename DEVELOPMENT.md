@@ -1,4 +1,4 @@
-## Technical things
+## Technical README
 
 ### How this works
 
