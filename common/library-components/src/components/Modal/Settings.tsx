@@ -111,7 +111,7 @@ export default function SettingsModalTab({
                 )}
             </SettingsGroup>
 
-            {/* {!userInfo.topicsEnabled && (
+            {/* {!userInfo.onPaidPlan && (
                 <SettingsGroup
                     title="Features"
                     icon={

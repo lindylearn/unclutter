@@ -4,7 +4,7 @@ export interface UserInfo {
     email?: string;
 
     accountEnabled: boolean;
-    topicsEnabled: boolean;
+    onPaidPlan: boolean;
 
     showSignup?: boolean;
 }

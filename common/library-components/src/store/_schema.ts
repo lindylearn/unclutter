@@ -75,6 +75,6 @@ export const userInfoSchema = z.object({
     email: z.string(),
 
     accountEnabled: z.boolean(),
-    topicsEnabled: z.boolean(),
+    onPaidPlan: z.boolean(),
 });
 export type UserInfo = z.infer<typeof userInfoSchema>;

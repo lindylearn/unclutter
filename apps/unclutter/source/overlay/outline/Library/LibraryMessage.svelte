@@ -18,8 +18,7 @@
     // local UI state
     let topicColor: string = null;
     $: topicColor =
-        libraryState.userInfo?.topicsEnabled &&
-        libraryState.libraryInfo?.topic?.id
+        libraryState.userInfo?.onPaidPlan && libraryState.libraryInfo?.topic?.id
             ? getRandomLightColor(
                   libraryState.libraryInfo.topic.id,
                   darkModeEnabled
@@ -36,7 +35,7 @@
         style={`background-color: ${topicColor}`}
     >
         <div class="main-content whitespace-nowrap text-sm">
-            {#if !libraryState.userInfo?.topicsEnabled}
+            {#if !libraryState.userInfo?.onPaidPlan}
                 <div
                     class="top-row font-title flex whitespace-pre text-base font-semibold leading-none"
                     in:fly={{ y: 10, duration: 300, easing: cubicOut }}
@@ -80,7 +79,7 @@
                 </div>
             {/if}
 
-            {#if !libraryState.userInfo?.topicsEnabled && libraryState.libraryInfo.article}
+            {#if !libraryState.userInfo?.onPaidPlan && libraryState.libraryInfo.article}
                 <div
                     class="bottom-row mt-2 flex items-center gap-1"
                     in:fly={{ y: 10, duration: 200, easing: cubicOut }}

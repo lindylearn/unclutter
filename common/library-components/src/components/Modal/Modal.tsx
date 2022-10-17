@@ -44,7 +44,7 @@ export function LibraryModalPage({
 
     const initialRender = useRef<boolean>(true);
     const [currentTab, setCurrentTab] = useState(
-        userInfo.topicsEnabled ? "graph" : "stats"
+        userInfo.onPaidPlan ? "graph" : "stats"
     );
     useEffect(() => {
         if (initialRender.current) {

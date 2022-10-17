@@ -80,7 +80,7 @@ export default function RecentModalTab({
                     articleLines: 1,
                 },
             ];
-            if (userInfo.topicsEnabled) {
+            if (userInfo.onPaidPlan) {
                 const groupEntries = await groupArticlesByTopic(
                     listArticles,
                     true,

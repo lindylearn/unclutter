@@ -70,7 +70,7 @@ export default class LibraryModalModifier implements PageModifier {
         document.documentElement.appendChild(this.modalIframe);
 
         reportEventContentScript("openLibraryModal", {
-            topicsEnabled: this.libraryState.userInfo.topicsEnabled,
+            onPaidPlan: this.libraryState.userInfo.onPaidPlan,
             linkCount: this.libraryState.linkCount,
             articleCount: this.libraryState.readingProgress.articleCount,
             completedCount: this.libraryState.readingProgress.completedCount,
