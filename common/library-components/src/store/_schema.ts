@@ -71,7 +71,8 @@ export type Settings = z.infer<typeof settingsSchema>;
 // *** UserInfo ***
 export const userInfoSchema = z.object({
     id: z.string(),
-    name: z.string(),
+    name: z.optional(z.string()),
+    signinProvider: z.enum(["email", "google", "github"]),
     email: z.string(),
 
     accountEnabled: z.boolean(),

@@ -18,6 +18,7 @@ import SettingsTab from "./tabs/Settings";
 import TopicsListTab from "./tabs/TopicsList";
 import WelcomeTab from "./tabs/Welcome";
 import ModalTestTab from "./tabs/ModalTest";
+import Welcome2Tab from "./tabs/Welcome2";
 
 export interface LibraryTab {
     id: string;
@@ -106,6 +107,9 @@ export default function App() {
 
     const settings = useSubscribe(rep, rep?.subscribe.getSettings(), null);
 
+    if (location === "/link") {
+        return <Welcome2Tab />;
+    }
     if (location === "/modal") {
         return <ModalTestTab />;
     }

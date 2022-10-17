@@ -91,3 +91,19 @@ export async function searchArticles(
 
     return data.filter((d) => d.sentences?.[0]?.length);
 }
+
+export async function checkHasSubscription(
+    user_id: string,
+    email: string
+): Promise<boolean> {
+    let data: any = await ky
+        .get(`${lindyApiUrl}/subscriptions/check_subscription`, {
+            searchParams: {
+                user_id,
+                email,
+            },
+        })
+        .json();
+
+    return data?.is_subscribed || false;
+}

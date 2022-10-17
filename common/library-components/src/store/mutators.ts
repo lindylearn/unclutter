@@ -226,12 +226,18 @@ async function moveArticlePosition(
     });
 }
 
-export async function updateSettings(tx: WriteTransaction, diff: Settings) {
+export async function updateSettings(
+    tx: WriteTransaction,
+    diff: Partial<Settings>
+) {
     const savedValue = await getSettings(tx);
     await tx.put("settings", { ...savedValue, ...diff });
 }
 
-export async function updateUserInfo(tx: WriteTransaction, diff: UserInfo) {
+export async function updateUserInfo(
+    tx: WriteTransaction,
+    diff: Partial<UserInfo>
+) {
     const savedValue = await getUserInfo(tx);
     await tx.put("userInfo", { ...savedValue, ...diff });
 }
