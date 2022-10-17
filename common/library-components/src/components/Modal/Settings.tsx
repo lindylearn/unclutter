@@ -8,10 +8,12 @@ export default function SettingsModalTab({
     userInfo,
     currentArticle,
     darkModeEnabled,
+    showSignup,
 }: {
     userInfo: UserInfo;
     currentArticle?: string;
     darkModeEnabled: boolean;
+    showSignup: boolean;
 }) {
     const [bugReportOpen, setBugReportOpen] = useState(false);
     const messageRef = useRef<HTMLTextAreaElement>(null);
@@ -151,9 +153,9 @@ export default function SettingsModalTab({
             >
                 <p>
                     Unclutter is open-source
-                    {userInfo.showSignup ? " and funded by the community" : ""}!
-                    Vote on the roadmap, suggest features, or report bugs to
-                    make it better for everyone.
+                    {showSignup ? " and funded by the community" : ""}! Vote on
+                    the roadmap, suggest features, or report bugs to make it
+                    better for everyone.
                 </p>
 
                 <div className="flex gap-2">

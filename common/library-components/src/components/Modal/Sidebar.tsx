@@ -13,6 +13,7 @@ export default function Sidebar({
     setCurrentTab,
     relatedLinkCount,
     darkModeEnabled,
+    showSignup,
 }: {
     userInfo: UserInfo;
     currentTab: string;
@@ -21,9 +22,11 @@ export default function Sidebar({
     setCurrentTab: (tab: string) => void;
     relatedLinkCount?: number;
     darkModeEnabled: boolean;
+    showSignup: boolean;
 }) {
     const modalTabs = getModalTabOptions(
         userInfo,
+        showSignup,
         !changedTopic ? relatedLinkCount : undefined
     );
 
@@ -82,6 +85,7 @@ export interface ModalTabOptions {
 }
 function getModalTabOptions(
     userInfo: UserInfo,
+    showSignup: boolean,
     new_link_count?: number
 ): ModalTabOptions[] {
     const options: (ModalTabOptions | false | undefined)[] = [
@@ -134,7 +138,7 @@ function getModalTabOptions(
                 </svg>
             ),
         },
-        userInfo.showSignup && {
+        showSignup && {
             label: "More",
             value: "signup",
             unavailable: true,

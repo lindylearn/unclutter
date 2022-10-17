@@ -72,6 +72,7 @@ export default function App({
                 <LibraryModalPage
                     userInfo={libraryState?.userInfo}
                     darkModeEnabled={darkModeEnabled === "true"} // convert string to bool
+                    showSignup={libraryState.showLibrarySignup}
                     relatedLinkCount={libraryState?.linkCount}
                     currentArticle={
                         libraryState?.libraryInfo?.article.url || articleUrl

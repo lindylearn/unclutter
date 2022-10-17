@@ -18,6 +18,7 @@ import SettingsModalTab from "./Settings";
 export function LibraryModalPage({
     userInfo,
     darkModeEnabled = false,
+    showSignup = false,
     currentArticle,
     initialTopic,
     graph,
@@ -28,6 +29,7 @@ export function LibraryModalPage({
 }: {
     userInfo: UserInfo;
     darkModeEnabled?: boolean;
+    showSignup?: boolean;
     currentArticle?: string;
     initialTopic?: Topic;
     graph?: CustomGraphData;
@@ -103,6 +105,7 @@ export function LibraryModalPage({
                     domainFilter={domainFilter}
                     setDomainFilter={setDomainFilter}
                     darkModeEnabled={darkModeEnabled}
+                    showSignup={showSignup}
                     graph={graph}
                     relatedLinkCount={relatedLinkCount}
                     currentTab={currentTab}
@@ -124,6 +127,7 @@ function ModalContent({
     domainFilter,
     setDomainFilter,
     articleCount,
+    showSignup,
     darkModeEnabled,
     graph,
     relatedLinkCount,
@@ -141,6 +145,7 @@ function ModalContent({
     setDomainFilter: (domain: string | null) => void;
     articleCount?: number;
     darkModeEnabled: boolean;
+    showSignup: boolean;
     graph?: CustomGraphData;
     relatedLinkCount?: number;
     currentTab: string;
@@ -171,6 +176,7 @@ function ModalContent({
                         setCurrentTab={setCurrentTab}
                         relatedLinkCount={relatedLinkCount}
                         darkModeEnabled={darkModeEnabled}
+                        showSignup={showSignup}
                     />
                 </div>
             </aside>
@@ -229,6 +235,7 @@ function ModalContent({
                         userInfo={userInfo}
                         currentArticle={currentArticle}
                         darkModeEnabled={darkModeEnabled}
+                        showSignup={showSignup}
                     />
                 )}
             </div>

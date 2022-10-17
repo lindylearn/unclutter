@@ -22,7 +22,10 @@ import {
     reportEventContentScript,
 } from "../messaging";
 import { addArticleToLibrary } from "../../common/api";
-import { anonymousLibraryEnabled } from "../../common/featureFlags";
+import {
+    anonymousLibraryEnabled,
+    showLibrarySignupFlag,
+} from "../../common/featureFlags";
 import {
     LibraryInfo,
     LibraryState,
@@ -71,6 +74,7 @@ export default class LibraryModifier implements PageModifier {
         // fetch user info
         const libraryUser = await getLibraryUser();
         if (libraryUser) {
+            // user with account
             this.libraryState.libraryEnabled = true;
             this.libraryState.userInfo = {
                 id: libraryUser,
@@ -80,6 +84,9 @@ export default class LibraryModifier implements PageModifier {
         } else {
             this.libraryState.libraryEnabled = await getRemoteFeatureFlag(
                 anonymousLibraryEnabled
+            );
+            this.libraryState.showLibrarySignup = await getRemoteFeatureFlag(
+                showLibrarySignupFlag
             );
             this.libraryState.userInfo = {
                 accountEnabled: false,
