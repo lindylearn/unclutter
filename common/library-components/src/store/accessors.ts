@@ -14,6 +14,7 @@ import {
     settingsSchema,
     Topic,
     topicSchema,
+    UserInfo,
 } from "./_schema";
 
 /* ***** articles ***** */
@@ -329,10 +330,7 @@ export async function getGroupTopicChildren(
         .sort((a, b) => parseInt(a.id) - parseInt(b.id));
 }
 
-export async function getSettings(tx: ReadTransaction): Promise<Settings> {
-    const savedValue = (await tx.get("settings")) as Settings | undefined;
-    return savedValue || {};
-}
+/* ***** partialSyncState ***** */
 
 export async function getPartialSyncState(
     tx: ReadTransaction
@@ -342,6 +340,22 @@ export async function getPartialSyncState(
         return undefined;
     }
     return partialSyncStateSchema.parse(JSON.parse(val?.toString() || "null"));
+}
+
+/* ***** settings ***** */
+
+export async function getSettings(tx: ReadTransaction): Promise<Settings> {
+    const savedValue = (await tx.get("settings")) as Settings | undefined;
+    return savedValue || {};
+}
+
+/* ***** userInfo ***** */
+
+export async function getUserInfo(
+    tx: ReadTransaction
+): Promise<UserInfo | null> {
+    const savedValue = (await tx.get("userInfo")) as UserInfo | undefined;
+    return savedValue || null;
 }
 
 export const accessors = {
@@ -363,7 +377,8 @@ export const accessors = {
     getTopicIdMap,
     groupTopics,
     getGroupTopicChildren,
-    getSettings,
     getPartialSyncState,
+    getSettings,
+    getUserInfo,
 };
 export type A = typeof accessors;

@@ -33,12 +33,6 @@ export const topicSchema = entitySchema.extend({
 });
 export type Topic = z.infer<typeof topicSchema>;
 
-// *** Setting ***
-export const settingsSchema = z.object({
-    tutorial_stage: z.optional(z.number()),
-});
-export type Settings = z.infer<typeof settingsSchema>;
-
 // *** ArticleText ***
 export const articleTextSchema = entitySchema.extend({
     title: z.nullable(z.string()),
@@ -67,3 +61,20 @@ export const partialSyncStateSchema = z.union([
     z.literal("PARTIAL_SYNC_COMPLETE"),
 ]);
 export type PartialSyncState = z.TypeOf<typeof partialSyncStateSchema>;
+
+// *** Setting ***
+export const settingsSchema = z.object({
+    tutorial_stage: z.optional(z.number()),
+});
+export type Settings = z.infer<typeof settingsSchema>;
+
+// *** UserInfo ***
+export const userInfoSchema = z.object({
+    id: z.string(),
+    name: z.string(),
+    email: z.string(),
+
+    accountEnabled: z.boolean(),
+    topicsEnabled: z.boolean(),
+});
+export type UserInfo = z.infer<typeof userInfoSchema>;

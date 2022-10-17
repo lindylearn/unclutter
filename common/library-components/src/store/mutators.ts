@@ -7,6 +7,7 @@ import {
     ArticleSortPosition,
     getSafeArticleSortPosition,
     getSettings,
+    getUserInfo,
 } from "./accessors";
 import {
     Article,
@@ -18,6 +19,7 @@ import {
     Settings,
     Topic,
     topicSchema,
+    UserInfo,
 } from "./_schema";
 
 const {
@@ -229,6 +231,11 @@ export async function updateSettings(tx: WriteTransaction, diff: Settings) {
     await tx.put("settings", { ...savedValue, ...diff });
 }
 
+export async function updateUserInfo(tx: WriteTransaction, diff: UserInfo) {
+    const savedValue = await getUserInfo(tx);
+    await tx.put("userInfo", { ...savedValue, ...diff });
+}
+
 export async function importEntries(
     tx: WriteTransaction,
     entries: [string, JSONValue][]
@@ -250,6 +257,7 @@ export const mutators = {
     moveArticlePosition,
     updateSettings,
     importEntries,
+    updateUserInfo,
 };
 export type M = typeof mutators;
 export type ArticleUpdate = Update<Article>;
