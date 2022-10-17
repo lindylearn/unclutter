@@ -28,7 +28,7 @@ export const CustomDraggableContext = createContext<{
     articleLists?: { [listId: string]: Article[] };
 } | null>(null);
 
-export default function DraggableContext({
+export function DraggableContext({
     articleLists,
     setArticleLists,
     children,

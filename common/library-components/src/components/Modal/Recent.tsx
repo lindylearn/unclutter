@@ -21,7 +21,7 @@ import {
 } from "../../store";
 import { ReadingProgress, ResourceIcon } from "./numbers";
 import clsx from "clsx";
-import DraggableContext from "../ArticleList/DraggableContext";
+import { DraggableContext } from "../ArticleList/DraggableContext";
 import { getActivityColor } from "../Charts";
 import { TopicEmoji } from "../TopicTag";
 

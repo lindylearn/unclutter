@@ -2,6 +2,7 @@ import { useContext } from "react";
 import {
     DraggableContext,
     DraggableArticleList,
+    StaticArticleList,
 } from "@unclutter/library-components/dist/components";
 import { NoFavoritesMessage } from "../components/EmptyMessages";
 import {
@@ -21,12 +22,7 @@ export default function FavoritesTab({}) {
         <main className="m-3">
             {articles?.length === 0 && <NoFavoritesMessage />}
 
-            <DraggableContext articleLists={{ favorites: articles || [] }}>
-                <DraggableArticleList
-                    listId="favorites"
-                    disableFavoriteShadow
-                />
-            </DraggableContext>
+            <StaticArticleList articles={articles} disableFavoriteShadow />
 
             <div className="mb-5" />
         </main>

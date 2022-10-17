@@ -15,7 +15,7 @@ import { TopicEmoji } from "../TopicTag";
 import { DraggableArticleList } from "./DraggableArticleList";
 import { LindyIcon } from "../Icons";
 import { subDays } from "date-fns";
-import DraggableContext from "./DraggableContext";
+import { DraggableContext } from "./DraggableContext";
 import { StaticArticleList } from "./StaticArticleList";
 
 export interface TabInfo {
