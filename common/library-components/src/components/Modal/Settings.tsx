@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import React, { ReactNode, useRef, useState } from "react";
 import { quickReport } from "../../common";
-import { UserInfo } from "../../store/user";
+import { UserInfo } from "../../store";
 import { getActivityColor } from "../Charts";
 
 export default function SettingsModalTab({

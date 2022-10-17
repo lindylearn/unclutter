@@ -71,16 +71,14 @@ export default class LibraryModifier implements PageModifier {
     }
 
     async fetchState() {
+        const rep = new ReplicacheProxy();
+
         // fetch user info
         const libraryUser = await getLibraryUser();
         if (libraryUser) {
             // user with account
             this.libraryState.libraryEnabled = true;
-            this.libraryState.userInfo = {
-                id: libraryUser,
-                accountEnabled: true,
-                onPaidPlan: true,
-            };
+            this.libraryState.userInfo = await rep.query.getUserInfo();
         } else {
             this.libraryState.libraryEnabled = await getRemoteFeatureFlag(
                 anonymousLibraryEnabled
@@ -89,6 +87,9 @@ export default class LibraryModifier implements PageModifier {
                 showLibrarySignupFlag
             );
             this.libraryState.userInfo = {
+                id: null,
+                email: null,
+                signinProvider: null,
                 accountEnabled: false,
                 onPaidPlan: false,
             };
@@ -96,12 +97,10 @@ export default class LibraryModifier implements PageModifier {
 
         // fetch or create article state (even if library UI not enabled)
         this.overlayManager.updateLibraryState(this.libraryState);
-        this.fetchLibraryState();
+        this.fetchArticleState(rep);
     }
 
-    async fetchLibraryState() {
-        const rep = new ReplicacheProxy();
-
+    async fetchArticleState(rep: ReplicacheProxy) {
         try {
             // get existing library state
             this.libraryState.libraryInfo = await this.getLibraryInfo(

@@ -7,11 +7,10 @@ import Sidebar from "./Sidebar";
 import { GraphPage } from "./Graph/GraphPage";
 import { CustomGraphData } from "./Graph/data";
 import HeaderBar from "./HeaderBar";
-import { ReplicacheContext, Topic } from "../../store";
+import { ReplicacheContext, Topic, UserInfo } from "../../store";
 import RecentModalTab from "./Recent";
 import { LindyIcon } from "../Icons";
 import HighlightsTab from "./Highlights";
-import { UserInfo } from "../../store/user";
 import UpgradeModalTab from "./Upgrade";
 import SettingsModalTab from "./Settings";
 

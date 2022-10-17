@@ -4,6 +4,7 @@ import {
     readingProgressFullClamp,
     ReplicacheContext,
     Topic,
+    UserInfo,
 } from "../../store";
 import {
     ArticleActivityCalendar,
@@ -21,7 +22,6 @@ import { ListFilter, TimeFilter, useArticleGroups } from "../ArticleList";
 import { TopicEmoji } from "../TopicTag";
 import clsx from "clsx";
 import { BigNumber, ResourceIcon, ResourceStat } from "./numbers";
-import { UserInfo } from "../../store/user";
 
 export default function StatsModalTab({
     userInfo,

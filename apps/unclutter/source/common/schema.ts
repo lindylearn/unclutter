@@ -2,9 +2,9 @@ import {
     Article,
     ArticleLink,
     Topic,
+    UserInfo,
 } from "@unclutter/library-components/dist/store/_schema";
 import { CustomGraphData } from "@unclutter/library-components/dist/components/Modal/Graph";
-import { UserInfo } from "@unclutter/library-components/dist/store/user";
 
 export type LibraryState = {
     libraryEnabled: boolean;

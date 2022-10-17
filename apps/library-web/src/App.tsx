@@ -7,6 +7,8 @@ import { reportEventPosthog } from "@unclutter/library-components/dist/common";
 import HeaderBar from "./components/HeaderBar";
 import {
     ReplicacheContext,
+    Settings,
+    UserInfo,
     useSubscribe,
 } from "@unclutter/library-components/dist/store";
 import DashboardTab from "./tabs/Dashboard";
@@ -105,7 +107,27 @@ export default function App() {
         }
     }, [location]);
 
-    const settings = useSubscribe(rep, rep?.subscribe.getSettings(), null);
+    // @ts-ignore
+    const userInfo: UserInfo | undefined | null = useSubscribe(
+        rep,
+        rep?.subscribe.getUserInfo(),
+        // @ts-ignore
+        undefined
+    );
+    // @ts-ignore
+    const settings: Settings | undefined = useSubscribe(
+        rep,
+        rep?.subscribe.getSettings(),
+        // @ts-ignore
+        undefined
+    );
+
+    if (!userInfo) {
+        return <></>;
+    }
+    if (!userInfo.onPaidPlan) {
+        return <Welcome2Tab />;
+    }
 
     if (location === "/link") {
         return <Welcome2Tab />;
@@ -167,7 +189,7 @@ export default function App() {
                 >
                     <Switch location={location}>
                         <Route path="/">
-                            {((settings !== null &&
+                            {((settings &&
                                 settings?.tutorial_stage === undefined) ||
                                 (settings?.tutorial_stage &&
                                     settings?.tutorial_stage < 3)) && (

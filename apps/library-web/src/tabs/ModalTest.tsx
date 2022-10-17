@@ -8,8 +8,8 @@ import {
     ArticleLink,
     ReplicacheContext,
     Topic,
+    useSubscribe,
 } from "@unclutter/library-components/dist/store";
-import { UserInfo } from "@unclutter/library-components/dist/store/user";
 import { useContext, useEffect, useState } from "react";
 
 export default function ModalTestTab({}) {
@@ -59,11 +59,10 @@ export default function ModalTestTab({}) {
             });
     }, []);
 
-    const userInfo: UserInfo = {
-        accountEnabled: false,
-        onPaidPlan: false,
-        showSignup: true,
-    };
+    const userInfo = useSubscribe(rep, rep?.subscribe.getUserInfo(), null);
+    if (!userInfo) {
+        return <></>;
+    }
 
     return (
         <div className="h-screen w-screen">
@@ -77,6 +76,7 @@ export default function ModalTestTab({}) {
             <LibraryModalPage
                 userInfo={userInfo}
                 darkModeEnabled={darkModeEnabled}
+                showSignup={true}
                 currentArticle={article?.url}
                 initialTopic={topic}
                 graph={graph}

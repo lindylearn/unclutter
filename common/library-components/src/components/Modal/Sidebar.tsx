@@ -1,9 +1,8 @@
 import React from "react";
 import clsx from "clsx";
 import { LindyIcon } from "../Icons";
-import { Topic } from "../../store";
+import { Topic, UserInfo } from "../../store";
 import { getRandomLightColor } from "../../common";
-import { UserInfo } from "../../store/user";
 
 export default function Sidebar({
     userInfo,

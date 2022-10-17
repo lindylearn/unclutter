@@ -17,9 +17,9 @@ import {
     ReplicacheContext,
     sortArticlesPosition,
     Topic,
+    UserInfo,
 } from "../../store";
 import { ReadingProgress, ResourceIcon } from "./numbers";
-import { UserInfo } from "../../store/user";
 import clsx from "clsx";
 import DraggableContext from "../ArticleList/DraggableContext";
 import { getActivityColor } from "../Charts";
