@@ -18,8 +18,8 @@ Unclutter is a modern reader mode and article library for your browser.
 
 ## Why does it exist?
 
-While there many other "reader mode" extensions, they all extract article text and re-render it their own format.
-Unclutter "unclutters" the original web pages, leaving the [website styling](docs/comparison.md) and interactive elements intact.
+There many other "reader mode" extensions, but they all extract article text and re-render it their own format.
+Unclutter "unclutters" the original web pages itself, leaving the [website styling](docs/comparison.md) and interactive elements intact.
 
 <!-- Everything happens instantly in your browser, not on a seperate website. -->
 
@@ -48,4 +48,5 @@ See the [docs pages](https://github.com/lindylearn/unclutter/blob/main/docs), or
 
 ## Licence
 
-This project uses the [GNU AGPLv3](https://choosealicense.com/licenses/gpl-3.0/) open-source licence, which requires commercial projects that use it to be open-source as well.
+This project uses [GNU AGPLv3](https://choosealicense.com/licenses/gpl-3.0/), which requires commercial projects that use it to be open-source as well.
+Unclutter exists thanks to everyone who contributes ideas or code, reports bugs, or simply uses the extension.
