@@ -239,7 +239,7 @@ export async function updateUserInfo(
     diff: Partial<UserInfo>
 ) {
     const savedValue = await getUserInfo(tx);
-    await tx.put("userInfo", { ...savedValue, ...diff });
+    await tx.put("userInfo", { ...(savedValue || {}), ...diff });
 }
 
 export async function importEntries(
