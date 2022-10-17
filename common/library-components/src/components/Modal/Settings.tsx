@@ -91,32 +91,22 @@ export default function SettingsModalTab({
                                     title="Sign out"
                                     darkModeEnabled={darkModeEnabled}
                                 />
-                                <Button
-                                    title="Export data"
-                                    darkModeEnabled={darkModeEnabled}
-                                />
                             </div> */}
                     </>
                 ) : (
                     <>
                         <p>
-                            Articles you visit are only saved in your browser
-                            and not sent over the network. Back-up and import
-                            functionality is coming soon!
-                            {/* Create a free account to back-up
-                                and access your library across devices. */}
+                            Right now, articles you visit are only saved in your
+                            browser. Create an account to back-up and access
+                            your library across devices.
                         </p>
-                        {/* <div className="flex gap-2">
-                                <Button
-                                    title="Create account"
-                                    primary
-                                    darkModeEnabled={darkModeEnabled}
-                                />
-                                <Button
-                                    title="Export data"
-                                    darkModeEnabled={darkModeEnabled}
-                                />
-                            </div> */}
+                        <div className="flex gap-2">
+                            <Button
+                                title="Create account"
+                                href="https://library.lindylearn.io/signup"
+                                darkModeEnabled={darkModeEnabled}
+                            />
+                        </div>
                     </>
                 )}
             </SettingsGroup>

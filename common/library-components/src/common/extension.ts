@@ -4,7 +4,7 @@ export function getBrowser(): any {
     return typeof browser !== "undefined" ? browser : chrome;
 }
 type BrowserType = "chromium" | "firefox";
-function getBrowserType(): BrowserType {
+export function getBrowserType(): BrowserType {
     // @ts-ignore
     if (typeof browser !== "undefined") {
         return "firefox";
@@ -25,11 +25,11 @@ function getUnclutterLibraryExtensionId(): any {
 }
 
 // send a message to the Unclutter or Unclutter library extension
-function sendMessage(message: object, toLibrary: boolean = false) {
+export function sendMessage(message: object, toLibrary: boolean = false) {
     try {
         // preferrable send message to extension directly (https://developer.chrome.com/docs/extensions/mv3/messaging/#external-webpage)
         // this is the only way to send data from extension to extension
-        getBrowser().runtime.sendMessage(
+        return getBrowser().runtime.sendMessage(
             toLibrary
                 ? getUnclutterLibraryExtensionId()
                 : getUnclutterExtensionId(),

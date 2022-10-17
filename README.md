@@ -17,11 +17,16 @@ Unclutter is a modern reader mode and article library for your browser.
 
 ## Why does it exist?
 
-There many other "reader modes", but they all extract article text and re-render it their own format. Unclutter "unclutters" the original web pages itself, leaving the [original website styling](docs/comparison.md) and interactive elements intact. 
+There many other "reader modes", but they all extract article text and re-render it their own format. Unclutter "unclutters" the original web pages itself, leaving the [original website styling](docs/comparison.md) and interactive elements intact.
 
-Everything happens instantly in your browser, not on a seperate website.
+<!-- Articles you read are saved and organized automatically, instead of having to maintain bookmark folders, tags, or share links between multiple websites.
+With Unclutter, everything happens instantly in your browser.
 
-Unclutter also supports:
+<p align="center">
+<img src="./docs/media/library.png" width="100%" />
+</p> -->
+
+Other features include:
 -   [Automatically activating](https://github.com/lindylearn/unclutter/blob/main/docs/article-detection.md) the reader mode on certain domains
 -   [A page outline](https://github.com/lindylearn/unclutter/blob/main/docs/outline.md) to navigate long articles
 -   [Integrated social comments](https://github.com/lindylearn/unclutter/blob/main/docs/social-highlights.md) from Hacker News and Hypothes.is
@@ -37,11 +42,9 @@ Try it out for yourself:
 
 All the things above are just a start — the goal of this project is to improve reading on the web for everyone. What if Unclutter could automatically bypass paywalls, connect similar articles across the web, or make quotes easily sharable?
 
-If you'd love to have a specific feature, found an annoying bug, or just want to write down some ideas, suggest them on the [open feedback board](https://unclutter.canny.io/). Or vote on suggestions by other people to prioritize the most important changes:
+If you'd love to have a specific feature, found an annoying bug, or just want to write down some ideas, suggest them on the [open feedback board](https://unclutter.canny.io/). Or vote on existing suggestions to prioritize the most important changes:
 
-<p align="center">
-<img src="./docs/media/canny.png" width="100%" />
-</p>
+[<img src="./docs/media/canny.png">](https://unclutter.canny.io/)
 
 <!-- ## Get involved
 
