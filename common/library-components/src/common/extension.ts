@@ -15,12 +15,12 @@ export function getBrowserType(): BrowserType {
 
 export function getUnclutterExtensionId(): any {
     return getBrowserType() === "chromium"
-        ? "fiknonjpeapeidjaaelhihadnodmmmhj"
+        ? "ibckhpijbdmdobhhhodkceffdngnglpk"
         : "{8f8c4c52-216c-4c6f-aae0-c214a870d9d9}";
 }
 export function getUnclutterLibraryExtensionId(): any {
     return getBrowserType() === "chromium"
-        ? "phbmkedknhjlhoblblkmjpdgpaeiebkk"
+        ? "bghgkooimeljolohebojceacblokenjn"
         : "{bb10288b-838a-4429-be0a-5268ee1560b8}";
 }
 
