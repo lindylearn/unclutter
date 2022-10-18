@@ -1,41 +1,32 @@
-import React, { useLayoutEffect, useState } from "react";
+import React, { useLayoutEffect, useMemo, useState } from "react";
 import {
     LindyIcon,
     TabbedContainer,
     useTabInfos,
 } from "@unclutter/library-components/dist/components";
-import { useReplicache } from "@unclutter/replicache-nextjs/lib/frontend";
+import { ReplicacheContext } from "@unclutter/library-components/dist/store";
 import {
-    accessors,
-    mutators,
-    ReplicacheContext,
-} from "@unclutter/library-components/dist/store";
+    reportEventContentScript,
+    ReplicacheProxy,
+    getUnclutterExtensionId,
+} from "@unclutter/library-components/dist/common";
 
-import browser from "../common/polyfill";
-import { settingsStore, userInfoStore, useSettings } from "../common/settings";
+import { settingsStore, useSettings } from "../common/settings";
 
 import "@unclutter/library-components/styles/globals.css";
 import "@unclutter/library-components/styles/ArticlePreview.css";
 import "@unclutter/library-components/styles/ProgressCircle.css";
 import "./app.css";
-import { reportEventContentScript } from "@unclutter/library-components/dist/common";
 
 export default function App() {
-    const userAuth = useSettings(userInfoStore);
-    const rep = useReplicache({
-        name: userAuth?.userId,
-        accessors,
-        mutators,
-        // apiHost: "http://localhost:3000",
-        apiHost: "https://library.lindylearn.io",
-        auth: userAuth?.webJwt,
-    });
-
-    if (userAuth && Object.keys(userAuth).length === 0) {
-        return <LibraryLoginButton />;
-    }
+    // send messages to main Unclutter extension directly by passing its id
+    const rep = useMemo<ReplicacheProxy>(
+        () => new ReplicacheProxy(getUnclutterExtensionId()),
+        []
+    );
 
     return (
+        // @ts-ignore
         <ReplicacheContext.Provider value={rep}>
             <ArticleSection />
         </ReplicacheContext.Provider>
@@ -76,24 +67,14 @@ function ArticleSection({}) {
                             newtabActiveGroupKey: tabInfos[index]?.key || null,
                         })
                     }
-                    reportEvent={reportEventContentScript}
+                    reportEvent={(...args) =>
+                        reportEventContentScript(
+                            ...args,
+                            getUnclutterExtensionId()
+                        )
+                    }
                 />
             )}
         </div>
-    );
-}
-
-function LibraryLoginButton() {
-    return (
-        <a
-            className="bg-lindy dark:bg-lindyDark mx-auto flex w-max cursor-pointer items-center gap-1.5 rounded-lg px-2 py-1 shadow transition-all hover:scale-95 dark:text-black"
-            href="https://library.lindylearn.io/login"
-            onClick={() => reportEventContentScript("clickLogin")}
-        >
-            <LindyIcon className="w-6" />
-            <span className="font-title text-base leading-none">
-                Login to Unclutter Library
-            </span>
-        </a>
     );
 }
