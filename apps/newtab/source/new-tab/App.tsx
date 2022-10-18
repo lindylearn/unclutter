@@ -63,7 +63,15 @@ export default function App() {
             });
     }, []);
 
-    const [showModal, setShowModal] = useState(false);
+    const [showModal, setShowModal] = useState<boolean | null>(null);
+    useEffect(() => {
+        window.onkeydown = (e: KeyboardEvent) => {
+            if (e.key === "Tab") {
+                setShowModal(!showModal);
+                e.preventDefault();
+            }
+        };
+    }, [showModal]);
 
     if (!userInfo) {
         return <></>;

@@ -19,7 +19,7 @@ export default function NewTabModal({
 }: {
     userInfo: UserInfo;
     darkModeEnabled: boolean;
-    showModal: boolean;
+    showModal: boolean | null;
     setShowModal: (showModal: boolean) => void;
 }) {
     const rep = useContext(ReplicacheContext);
@@ -39,7 +39,8 @@ export default function NewTabModal({
         })();
     }, [rep]);
 
-    if (!showModal) {
+    // prevent initial fade-out animation
+    if (showModal === null) {
         return <></>;
     }
 
