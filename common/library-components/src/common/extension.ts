@@ -53,7 +53,7 @@ export function sendMessage(message: object, toLibrary: boolean = false) {
     }
 }
 
-export function openArticle(url: string, newTab: boolean = true) {
+export function openArticleResilient(url: string, newTab: boolean = true) {
     sendMessage({
         event: "openLinkWithUnclutter",
         url,

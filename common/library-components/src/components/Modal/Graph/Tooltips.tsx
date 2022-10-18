@@ -1,7 +1,11 @@
 import React from "react";
 import { ForceGraphInstance } from "force-graph";
 
-import { getDomain, getRandomLightColor, openArticle } from "../../../common";
+import {
+    getDomain,
+    getRandomLightColor,
+    openArticleResilient,
+} from "../../../common";
 import { CustomGraphNode } from "./data";
 import { readingProgressFullClamp, Topic } from "../../../store";
 import { ResourceStat } from "../numbers";
@@ -36,7 +40,7 @@ export function NodeTooltip({
     const domain = getDomain(url);
 
     function onClick() {
-        openArticle(url);
+        openArticleResilient(url);
         reportEvent("clickGraphArticle", {
             depth: depth,
             isCompleted: isCompleted,

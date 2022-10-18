@@ -3,7 +3,7 @@ import ForceGraph, { ForceGraphInstance } from "force-graph";
 import { forceManyBody } from "d3-force";
 import clsx from "clsx";
 
-import { getRandomLightColor, openArticle } from "../../../common";
+import { getRandomLightColor, openArticleResilient } from "../../../common";
 import { CustomGraphData, CustomGraphLink, CustomGraphNode } from "./data";
 import { renderNodeObject } from "./canvas";
 import { NodeTooltip } from "./Tooltips";
@@ -272,7 +272,7 @@ function renderGraph(
         // .autoPauseRedraw(false) // re-render nodes on hover
         .minZoom(0.5)
         .onNodeClick((node: RuntimeNode, event) => {
-            openArticle(node.url);
+            openArticleResilient(node.url);
             reportEvent("clickGraphArticle", {
                 depth: node.depth,
                 isCompleted: node.isCompleted,

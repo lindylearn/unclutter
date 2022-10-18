@@ -1,7 +1,7 @@
 import { useUser } from "@supabase/auth-helpers-react";
 import {
     setUnclutterLibraryAuth,
-    openArticle,
+    openArticleResilient,
 } from "@unclutter/library-components/dist/common";
 import { getSettings } from "@unclutter/library-components/dist/store";
 import clsx from "clsx";
@@ -78,7 +78,9 @@ export default function WelcomeTab() {
                         <ActionButton
                             title="Try example"
                             onClick={() =>
-                                openArticle("http://paulgraham.com/vb.html")
+                                openArticleResilient(
+                                    "http://paulgraham.com/vb.html"
+                                )
                             }
                         />
                     </>

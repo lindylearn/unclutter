@@ -5,7 +5,7 @@ import { useContext, useLayoutEffect, useState } from "react";
 import { ReplicacheContext } from "../../store";
 import { Article, readingProgressFullClamp } from "../../store/_schema";
 import { ArticleDropdownMenu } from "./ArticleDropdownMenu";
-import { openArticle } from "../../common";
+import { openArticleResilient } from "../../common";
 
 export type LocalScreenshotFetcher =
     | ((articleId: string) => Promise<string | null>)
@@ -48,7 +48,7 @@ export function ArticlePreview({
         e.preventDefault();
         e.stopPropagation();
         if (listState === "static") {
-            openArticle(article.url);
+            openArticleResilient(article.url);
             reportEvent("clickListArticle");
         }
     }
