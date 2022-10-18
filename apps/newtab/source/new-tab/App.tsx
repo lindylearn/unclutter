@@ -173,7 +173,7 @@ function ArticleSection({
         <div className="font-text text-base">
             <div className="mb-2 flex justify-end gap-3">
                 <ReadingProgress
-                    className="relative z-0 cursor-pointer rounded-lg px-2 py-1 hover:scale-[97%] hover:bg-stone-50"
+                    className="relative z-0 cursor-pointer rounded-lg px-2 py-1 hover:scale-[97%]"
                     articleCount={recentArticleCount}
                     readCount={recentReadArticleCount}
                     hideIfZero={false}
