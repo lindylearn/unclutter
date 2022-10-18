@@ -92,7 +92,7 @@ function handleMessage(
     sender: Runtime.MessageSender,
     sendResponse: (...args: any[]) => void
 ) {
-    console.log(`Received '${message.event}' message:`, message);
+    // console.log(`Received '${message.event}' message:`, message);
 
     if (message.event === "disabledPageView") {
         reportDisablePageView(message.trigger, message.pageHeightPx);

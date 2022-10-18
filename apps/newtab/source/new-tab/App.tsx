@@ -1,21 +1,11 @@
-import React, {
-    useContext,
-    useEffect,
-    useLayoutEffect,
-    useMemo,
-    useState,
-} from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import {
-    LindyIcon,
-    TabbedContainer,
-    useTabInfos,
-    useArticleListsCache,
-    StaticArticleList,
     getActivityColor,
     ReadingProgress,
     DraggableArticleList,
     DraggableContext,
     ArticleListsCache,
+    LocalScreenshotContext,
 } from "@unclutter/library-components/dist/components";
 import {
     Article,
@@ -29,6 +19,7 @@ import {
     getUnclutterExtensionId,
     subtractWeeks,
     getWeekStart,
+    getLocalScreenshot,
 } from "@unclutter/library-components/dist/common";
 
 import { settingsStore, useSettings } from "../common/settings";
@@ -49,7 +40,17 @@ export default function App() {
 
     const [userInfo, setUserInfo] = useState<UserInfo>();
     useEffect(() => {
-        rep?.query.getUserInfo().then(setUserInfo);
+        rep?.query.getUserInfo().then((userInfo) => {
+            setUserInfo(
+                userInfo || {
+                    id: null,
+                    email: null,
+                    signinProvider: null,
+                    accountEnabled: false,
+                    onPaidPlan: false,
+                }
+            );
+        });
     }, [rep]);
 
     const [darkModeEnabled, setDarkModeEnabled] = useState(
@@ -83,7 +84,17 @@ export default function App() {
             value={rep}
             darkModeEnabled={darkModeEnabled}
         >
-            <>
+            <LocalScreenshotContext.Provider
+                value={
+                    !userInfo.accountEnabled
+                        ? (articleId) =>
+                              getLocalScreenshot(
+                                  articleId,
+                                  getUnclutterExtensionId()
+                              )
+                        : null
+                }
+            >
                 <ArticleSection
                     userInfo={userInfo}
                     darkModeEnabled={darkModeEnabled}
@@ -95,7 +106,7 @@ export default function App() {
                     showModal={showModal}
                     setShowModal={setShowModal}
                 />
-            </>
+            </LocalScreenshotContext.Provider>
         </ReplicacheContext.Provider>
     );
 }
