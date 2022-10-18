@@ -105,7 +105,7 @@ export function ReadingProgress({
     return (
         <div
             className={clsx(
-                "flex overflow-hidden rounded-md transition-opacity",
+                "flex overflow-hidden rounded-md transition-all",
                 !articleCount && "opacity-0",
                 large ? "gap-3" : "gap-2", // padding set via className
                 className
