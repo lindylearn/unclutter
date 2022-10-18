@@ -128,9 +128,9 @@ export default function SettingsModalTab({
             >
                 <p>
                     Unclutter is open-source
-                    {showSignup ? " and funded by the community" : ""}! Vote on
-                    the roadmap, suggest features, or report bugs to make it
-                    better for everyone.
+                    {showSignup ? " and funded by the community" : ""}! Suggest
+                    features, contribute code, vote on the roadmap, or report
+                    bugs to make it better for everyone.
                 </p>
 
                 <div className="flex gap-2">

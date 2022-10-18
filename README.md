@@ -17,7 +17,9 @@ Unclutter is a modern reader mode and article library for your browser.
 
 ## Why does it exist?
 
-There many other "reader modes", but they all extract article text and re-render it their own format. Unclutter "unclutters" the original web pages itself, leaving the [original website styling](docs/comparison.md) and interactive elements intact.
+There many other "reader modes", but they all extract article text and re-render it their own format. Unclutter "unclutters" the original web pages itself, leaving the [original website styling](docs/comparison.md) and interactive elements intact. 
+
+Adjustments for specific websites are crowdsourced — if you find an annoyance while reading, remove it for everyone!
 
 <!-- Articles you read are saved and organized automatically, instead of having to maintain bookmark folders, tags, or share links between multiple websites.
 With Unclutter, everything happens instantly in your browser.
@@ -38,19 +40,21 @@ Try it out for yourself:
 [<img src="./docs/media/install-firefox.png" height="50">](https://addons.mozilla.org/en-GB/firefox/addon/lindylearn)
 
 
-## Goal & Roadmap
+## Get involved
 
-All the things above are just a start — the goal of this project is to improve reading on the web for everyone. What if Unclutter could automatically bypass paywalls, connect similar articles across the web, or make quotes easily sharable?
+The goal of this project is to improve reading on the web for everyone. You should decide what, when, and how to read articles. What if Unclutter could automatically bypass paywalls, connect similar content across the web, or make quotes easily sharable?
 
-If you'd love to have a specific feature, found an annoying bug, or just want to write down some ideas, suggest them on the [open feedback board](https://unclutter.canny.io/). Or vote on existing suggestions to prioritize the most important changes:
+If you want to contribute ideas or code, [join our Discord server](https://discord.gg/CThpNQjucB)!
 
-[<img src="./docs/media/canny.png">](https://unclutter.canny.io/)
+## Roadmap
 
-<!-- ## Get involved
+We prioritize features to work on via the [open roadmap](https://unclutter.canny.io/). Add your suggestions there or vote on existing features to get them done faster.
 
-If you want to help more, the easiest step is to join our Discord server!
+If you found a bug or want to improve something technical, please open a GitHub issue directly. All feedback from within Unclutter also automatically creates GitHub issues or Pull-Requests.
 
-Also, please consider [supporting the project financially](https://opencollective.com/unclutter) if it is useful to you. All raised money will be split across all open-source contributors, administered by the Open Source Collective. This also unlocks additional features for your article library like AI categorization or a graph view of your captured information.
+<!-- [<img src="./docs/media/canny.png">](https://unclutter.canny.io/) -->
+
+<!-- Also, please consider [supporting the project financially](https://opencollective.com/unclutter) if it is useful to you. All raised money will be split across all open-source contributors, administered by the Open Source Collective. This also unlocks additional features for your article library like AI categorization or a graph view of your captured information.
 
 [![Contributors](https://opencollective.com/unclutter/tiers/sponsors.svg)](https://opencollective.com/unclutter) -->
 
@@ -62,4 +66,5 @@ See the [docs pages](https://github.com/lindylearn/unclutter/blob/main/docs), or
 ## Licence
 
 This project uses [GNU AGPLv3](https://choosealicense.com/licenses/gpl-3.0/), which requires commercial projects that use it to be open-source as well.
-Unclutter exists thanks to everyone who contributes ideas or code, reports bugs, or simply uses the extension.
+
+Unclutter exists thanks to everyone who contributes ideas or code, reports bugs, or simply uses the extension. Thank you from all of us!
