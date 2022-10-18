@@ -5,6 +5,13 @@
     font-display: swap;
     src: local("Work Sans"), url("./WorkSans-Regular.ttf") format("truetype");
 }
+@font-face {
+    font-family: "Work Sans";
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: local("Work Sans"), url("./WorkSans-Medium.ttf") format("truetype");
+}
 
 @font-face {
     font-family: "Poppins";
@@ -13,7 +20,6 @@
     font-display: swap;
     src: local("Poppins"), url("./Poppins-Regular.ttf") format("truetype");
 }
-
 @font-face {
     font-family: "Poppins";
     font-style: normal;
