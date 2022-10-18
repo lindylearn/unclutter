@@ -1,6 +1,6 @@
 <script lang="ts">
     import browser from "../../common/polyfill";
-    import { reportEventContentScript } from "../../content-script/messaging";
+    import { reportEventContentScript } from "@unclutter/library-components/dist/common";
     import UIControl from "./Controls/UIControl.svelte";
     import PrivateNotesControl from "./Controls/PrivateNotesControl.svelte";
     import AnnotationsModifier from "../../content-script/modifications/annotations/annotationsModifier";

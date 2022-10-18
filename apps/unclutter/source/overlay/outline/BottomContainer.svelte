@@ -8,12 +8,12 @@
     import StackedArticleList from "./Library/StackedArticleList.svelte";
     import { getRandomColor } from "../../common/annotations/styling";
     import LindyIcon from "./Library/LindyIcon.svelte";
-    import { reportEventContentScript } from "../../content-script/messaging";
     import {
         dismissedLibrarySignupMessage,
         getFeatureFlag,
         setFeatureFlag,
     } from "../../common/featureFlags";
+    import { reportEventContentScript } from "@unclutter/library-components/dist/common";
 
     export let libraryState: LibraryState | null = null;
     export let linkedArticles: Article[] | null = null;

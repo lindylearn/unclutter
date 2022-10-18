@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { reportEventContentScript } from "../../../content-script/messaging";
+    import { reportEventContentScript } from "../@unclutter/library-components/dist/common";
     import { scrollToElement } from "./common";
     import { OutlineItem } from "./parse";
     import { getRandomColor } from "../../../common/annotations/styling";

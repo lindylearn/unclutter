@@ -5,7 +5,6 @@
     import clsx from "clsx";
     import { getRandomLightColor } from "@unclutter/library-components/dist/common/styling";
 
-    import { reportEventContentScript } from "source/content-script/messaging";
     import { LibraryState } from "../../../common/schema";
     import LibraryModalModifier from "../../../content-script/modifications/libraryModal";
     import ResourceStat from "./ResourceStat.svelte";

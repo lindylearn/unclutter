@@ -1,5 +1,5 @@
 import { LindyAnnotation } from "../../common/annotations/create";
-import { reportEventContentScript } from "../../content-script/messaging";
+import { reportEventContentScript } from "@unclutter/library-components/dist/common/messaging";
 import { createAnnotation } from "../common/CRUD";
 import { groupAnnotations } from "../common/grouping";
 

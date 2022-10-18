@@ -20,7 +20,7 @@ import {
     getRemoteFeatureFlag,
     ReplicacheProxy,
     reportEventContentScript,
-} from "../messaging";
+} from "@unclutter/library-components/dist/common/messaging";
 import { addArticleToLibrary } from "../../common/api";
 import {
     anonymousLibraryEnabled,

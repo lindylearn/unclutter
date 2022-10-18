@@ -5,7 +5,7 @@ import { PageModifier, trackModifierExecution } from "./_interface";
 
 import { waitUntilIframeLoaded } from "./annotations/injectSidebar";
 import BodyStyleModifier from "./bodyStyle";
-import { reportEventContentScript } from "../messaging";
+import { reportEventContentScript } from "@unclutter/library-components/dist/common/messaging";
 
 @trackModifierExecution
 export default class LibraryModalModifier implements PageModifier {

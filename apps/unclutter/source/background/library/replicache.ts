@@ -5,7 +5,7 @@ import {
     M,
     mutators,
 } from "@unclutter/library-components/dist/store";
-import { ReplicacheProxyEventTypes } from "./library";
+import { ReplicacheProxyEventTypes } from "@unclutter/library-components/dist/common";
 
 // const apiHost = "http://localhost:3000"
 const apiHost = "https://library.lindylearn.io";

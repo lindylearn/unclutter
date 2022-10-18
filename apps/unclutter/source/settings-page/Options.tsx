@@ -8,7 +8,7 @@ import {
 } from "../common/featureFlags";
 import browser, { getBrowserType } from "../common/polyfill";
 import { getLibraryUser } from "../common/storage";
-import { reportEventContentScript } from "../content-script/messaging";
+import { reportEventContentScript } from "@unclutter/library-components/dist/common/messaging";
 import ContributionStats from "./ContributionStats";
 import DomainSettingsList from "./DomainSettingsList";
 import FeatureFlagSwitch from "./FeatureFlagSwitch";

@@ -1,5 +1,5 @@
 import { reportEvent } from "../background/metrics";
-import { reportEventContentScript } from "../content-script/messaging";
+import { reportEventContentScript } from "@unclutter/library-components/dist/common/messaging";
 import browser, { getBrowserType } from "./polyfill";
 import { getDomainFrom } from "./util";
 import { ExtensionTypes } from "webextension-polyfill";

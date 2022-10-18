@@ -7,7 +7,7 @@ import {
     getLocalScreenshot,
     ReplicacheProxy,
     reportEventContentScript,
-} from "../content-script/messaging";
+} from "@unclutter/library-components/dist/common/messaging";
 import { ReplicacheContext } from "@unclutter/library-components/dist/store";
 
 export default function App({

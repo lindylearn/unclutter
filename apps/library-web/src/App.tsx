@@ -3,7 +3,6 @@ import { cloneElement, useContext, useEffect, useState } from "react";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import { Redirect, Route, Switch, useLocation } from "wouter";
 
-import { reportEventPosthog } from "@unclutter/library-components/dist/common";
 import HeaderBar from "./components/HeaderBar";
 import {
     ReplicacheContext,
@@ -21,6 +20,7 @@ import TopicsListTab from "./tabs/TopicsList";
 import WelcomeTab from "./tabs/Welcome";
 import ModalTestTab from "./tabs/ModalTest";
 import Welcome2Tab from "./tabs/Welcome2";
+import { reportEventPosthog } from "../common/metrics";
 
 export interface LibraryTab {
     id: string;

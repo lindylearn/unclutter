@@ -1,4 +1,10 @@
-// doesn't seem to work on page load
+// use same api for chromium and firefox
+// @ts-ignore
+export const browserObj = typeof browser !== "undefined" ? browser : chrome;
+// @ts-ignore
+browserObj.action = chrome.action || browserObj.browserAction;
+
+// browser sometimes doesn't seem to work on page load?
 export function getBrowser(): any {
     // @ts-ignore
     return typeof browser !== "undefined" ? browser : chrome;
@@ -13,14 +19,14 @@ export function getBrowserType(): BrowserType {
     }
 }
 
-function getUnclutterExtensionId(): any {
+export function getUnclutterExtensionId(): any {
     return getBrowserType() === "chromium"
-        ? "ibckhpijbdmdobhhhodkceffdngnglpk"
+        ? "fiknonjpeapeidjaaelhihadnodmmmhj"
         : "{8f8c4c52-216c-4c6f-aae0-c214a870d9d9}";
 }
-function getUnclutterLibraryExtensionId(): any {
+export function getUnclutterLibraryExtensionId(): any {
     return getBrowserType() === "chromium"
-        ? "bghgkooimeljolohebojceacblokenjn"
+        ? "phbmkedknhjlhoblblkmjpdgpaeiebkk"
         : "{bb10288b-838a-4429-be0a-5268ee1560b8}";
 }
 

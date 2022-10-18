@@ -5,5 +5,5 @@ export * from "./time";
 export * from "./util";
 export * from "./extension";
 export * from "./search";
-export * from "./metrics";
 export * from "./url";
+export * from "./messaging";

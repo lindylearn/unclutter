@@ -10,7 +10,7 @@
     import {
         getRemoteFeatureFlag,
         reportEventContentScript,
-    } from "../../content-script/messaging";
+    } from "@unclutter/library-components/dist/common";
     import FeedbackMessage from "./components/FeedbackMessage.svelte";
     import LibraryMessage from "./Library/LibraryMessage.svelte";
     import Outline from "./components/Outline.svelte";

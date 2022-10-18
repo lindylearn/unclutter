@@ -43,7 +43,6 @@ export async function checkMigrate() {
     }
 }
 
-export type ReplicacheProxyEventTypes = "query" | "mutate" | "pull";
 export async function processReplicacheMessage(message) {
     if (userId) {
         return await processActualReplicacheMessage(message);
