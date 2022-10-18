@@ -1,10 +1,4 @@
-// use same api for chromium and firefox
-// @ts-ignore
-export const browserObj = typeof browser !== "undefined" ? browser : chrome;
-// @ts-ignore
-browserObj.action = chrome.action || browserObj.browserAction;
-
-// browser sometimes doesn't seem to work on page load?
+// browser is not defined in server-side next.js code
 export function getBrowser(): any {
     // @ts-ignore
     return typeof browser !== "undefined" ? browser : chrome;

@@ -1,14 +1,12 @@
 import { A, M, accessors, mutators, RuntimeReplicache } from "../store";
 import { getBrowser } from "./extension";
 
-const browser = getBrowser();
-
 export async function reportEventContentScript(
     name: string,
     data = {},
     targetExtension: string | null = null
 ) {
-    browser.runtime.sendMessage(targetExtension, {
+    getBrowser().runtime.sendMessage(targetExtension, {
         event: "reportEvent",
         name,
         data,
@@ -19,9 +17,12 @@ export async function getRemoteFeatureFlag(
     key: string,
     targetExtension: string | null = null
 ) {
-    const featureFlags = await browser.runtime.sendMessage(targetExtension, {
-        event: "getRemoteFeatureFlags",
-    });
+    const featureFlags = await getBrowser().runtime.sendMessage(
+        targetExtension,
+        {
+            event: "getRemoteFeatureFlags",
+        }
+    );
     return featureFlags?.[key];
 }
 
@@ -29,7 +30,7 @@ export function openArticle(
     url: string,
     targetExtension: string | null = null
 ) {
-    browser.runtime.sendMessage(targetExtension, {
+    getBrowser().runtime.sendMessage(targetExtension, {
         event: "openLinkWithUnclutter",
         url: url,
         newTab: true,
@@ -39,7 +40,7 @@ export function openArticle(
 export async function getUnclutterVersion(
     targetExtension: string | null = null
 ): Promise<string> {
-    return await browser.runtime.sendMessage(targetExtension, {
+    return await getBrowser().runtime.sendMessage(targetExtension, {
         event: "getUnclutterVersion",
     });
 }
@@ -50,7 +51,7 @@ export function captureActiveTabScreenshot(
     devicePixelRatio: number,
     targetExtension: string | null = null
 ) {
-    browser.runtime.sendMessage(targetExtension, {
+    getBrowser().runtime.sendMessage(targetExtension, {
         event: "captureActiveTabScreenshot",
         articleId,
         bodyRect,
@@ -62,7 +63,7 @@ export async function getLocalScreenshot(
     articleId: string,
     targetExtension: string | null = null
 ) {
-    return await browser.runtime.sendMessage(targetExtension, {
+    return await getBrowser().runtime.sendMessage(targetExtension, {
         event: "getLocalScreenshot",
         articleId,
     });
@@ -75,7 +76,7 @@ export async function processReplicacheContentScript(
     args?: any,
     targetExtension: string | null = null
 ) {
-    return await browser.runtime.sendMessage(targetExtension, {
+    return await getBrowser().runtime.sendMessage(targetExtension, {
         event: "processReplicacheMessage",
         type,
         methodName,

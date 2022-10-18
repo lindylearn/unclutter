@@ -6,7 +6,7 @@
         pageWidthThemeVariable,
         themeName,
     } from "../../../common/theme";
-    import { reportEventContentScript } from "../@unclutter/library-components/dist/common";
+    import { reportEventContentScript } from "@unclutter/library-components/dist/common";
     import ThemeModifier from "../../../content-script/modifications/CSSOM/theme";
     import UiControlWithDialog from "./UIControlWithDialog.svelte";
 
