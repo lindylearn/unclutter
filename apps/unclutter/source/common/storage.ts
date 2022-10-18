@@ -130,7 +130,14 @@ export async function getLibraryUserJwt(): Promise<string | null> {
     return config["library-web-jwt"] || null;
 }
 
-export async function setLibraryUser(
+export async function getLibraryAuth(): Promise<object> {
+    return {
+        userId: await getLibraryUser(),
+        webJwt: await getLibraryUserJwt(),
+    };
+}
+
+export async function setLibraryAuth(
     userId: string,
     webJwt: string
 ): Promise<void> {
