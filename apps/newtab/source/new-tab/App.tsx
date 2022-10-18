@@ -38,6 +38,7 @@ import "@unclutter/library-components/styles/ArticlePreview.css";
 import "@unclutter/library-components/styles/ProgressCircle.css";
 import "./app.css";
 import clsx from "clsx";
+import NewTabModal from "./Modal";
 
 export default function App() {
     // send messages to main Unclutter extension directly by passing its id
@@ -48,16 +49,45 @@ export default function App() {
 
     const [userInfo, setUserInfo] = useState<UserInfo>();
     useEffect(() => {
-        rep.query.getUserInfo().then(setUserInfo);
-    });
+        rep?.query.getUserInfo().then(setUserInfo);
+    }, [rep]);
+
+    const [darkModeEnabled, setDarkModeEnabled] = useState(
+        window.matchMedia("(prefers-color-scheme: dark)").matches
+    );
+    useEffect(() => {
+        window
+            .matchMedia("(prefers-color-scheme: dark)")
+            .addEventListener("change", (event) => {
+                setDarkModeEnabled(event.matches);
+            });
+    }, []);
+
+    const [showModal, setShowModal] = useState(false);
+
     if (!userInfo) {
         return <></>;
     }
 
     return (
         // @ts-ignore
-        <ReplicacheContext.Provider value={rep}>
-            <ArticleSection userInfo={userInfo} />
+        <ReplicacheContext.Provider
+            value={rep}
+            darkModeEnabled={darkModeEnabled}
+        >
+            <>
+                <ArticleSection
+                    userInfo={userInfo}
+                    darkModeEnabled={darkModeEnabled}
+                    setShowModal={setShowModal}
+                />
+                <NewTabModal
+                    userInfo={userInfo}
+                    darkModeEnabled={darkModeEnabled}
+                    showModal={showModal}
+                    setShowModal={setShowModal}
+                />
+            </>
         </ReplicacheContext.Provider>
     );
 }
@@ -65,9 +95,13 @@ export default function App() {
 function ArticleSection({
     userInfo,
     articleLines = 1,
+    darkModeEnabled,
+    setShowModal,
 }: {
     userInfo: UserInfo;
     articleLines?: number;
+    darkModeEnabled: boolean;
+    setShowModal: (showModal: boolean) => void;
 }) {
     // const tabInfos = useTabInfos(10, true, false, null, userInfo);
     // const [articleListsCache, setArticleListsCache] =
@@ -101,6 +135,9 @@ function ArticleSection({
     const [recentReadArticleCount, setReadRecentArticleCount] =
         useState<number>();
     useEffect(() => {
+        if (!rep) {
+            return;
+        }
         (async () => {
             const queuedArticles = await rep.query.listQueueArticles();
             setQueuedArticles(queuedArticles);
@@ -122,17 +159,18 @@ function ArticleSection({
         reportEventContentScript(...args, getUnclutterExtensionId());
     }
 
-    const color = getActivityColor(1, false);
+    const color = getActivityColor(3, darkModeEnabled);
 
     return (
         <div className="font-text text-base">
             <div className="mb-2 flex justify-end gap-3">
                 <ReadingProgress
-                    className="relative cursor-pointer rounded-lg px-2 py-1 hover:scale-[97%] hover:bg-stone-50"
+                    className="relative z-0 cursor-pointer rounded-lg px-2 py-1 hover:scale-[97%] hover:bg-stone-50"
                     articleCount={recentArticleCount}
                     readCount={recentReadArticleCount}
                     hideIfZero={false}
                     color={color}
+                    onClick={() => setShowModal(true)}
                 />
             </div>
             <div

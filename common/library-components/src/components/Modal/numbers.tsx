@@ -92,6 +92,7 @@ export function ReadingProgress({
     hideIfZero = true,
     color,
     className,
+    onClick = () => {},
 }: {
     articleCount?: number;
     readCount?: number;
@@ -100,6 +101,7 @@ export function ReadingProgress({
     hideIfZero?: boolean;
     color?: string;
     className?: string;
+    onClick?: () => void;
 }) {
     // const unreadCount = (articleCount || 0) - (readCount || 0);
     const progress = ((readCount || 0) / (articleCount || 1)) * 100;
@@ -112,6 +114,7 @@ export function ReadingProgress({
                 large ? "gap-3" : "gap-2", // padding set via className
                 className
             )}
+            onClick={onClick}
         >
             <ResourceStat
                 type="articles_completed"
