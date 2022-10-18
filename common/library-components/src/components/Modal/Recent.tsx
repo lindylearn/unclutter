@@ -1,21 +1,13 @@
-import partition from "lodash/partition";
 import {
     DraggableArticleList,
     useTabInfos,
-    TabInfo,
-    groupArticlesByTopic,
+    useArticleListsCache,
 } from "../../components";
-import React, { ReactNode, useContext, useEffect, useState } from "react";
-import {
-    getDomain,
-    getRandomLightColor,
-    reportEventContentScript,
-} from "../../common";
+import React, { ReactNode, useState } from "react";
+import { getRandomLightColor } from "../../common";
 import {
     Article,
     readingProgressFullClamp,
-    ReplicacheContext,
-    sortArticlesPosition,
     Topic,
     UserInfo,
 } from "../../store";
@@ -23,7 +15,6 @@ import { ReadingProgress, ResourceIcon } from "./numbers";
 import clsx from "clsx";
 import { DraggableContext } from "../ArticleList/DraggableContext";
 import { getActivityColor } from "../Charts";
-import { TopicEmoji } from "../TopicTag";
 
 export default function RecentModalTab({
     userInfo,
@@ -45,94 +36,15 @@ export default function RecentModalTab({
     const [onlyUnread, setOnlyUnread] = useState(false);
     const [lastFirst, setLastFirst] = useState(true);
 
-    let [tabInfos, setTabInfos] = useState<TabInfo[]>();
-    let [articleListsCache, setArticleListsCache] = useState<{
-        [listId: string]: Article[];
-    }>();
-    const rep = useContext(ReplicacheContext);
-    useEffect(() => {
-        (async () => {
-            // keep queue seperate
-            const queueArticles = await rep?.query.listQueueArticles();
-
-            // filter main articles
-            let listArticles = await rep?.query.listRecentArticles(
-                undefined,
-                onlyUnread ? "unread" : "all"
-            );
-            listArticles = listArticles?.filter((a) => !a.is_queued) || [];
-            if (domainFilter) {
-                listArticles = listArticles.filter(
-                    (a) => getDomain(a.url) === domainFilter
-                );
-                sortArticlesPosition(listArticles, "domain_sort_position");
-            }
-            if (!lastFirst) {
-                listArticles.reverse();
-            }
-
-            // construct tab infos
-            const tabInfos: TabInfo[] = [
-                {
-                    key: "queue",
-                    title: "",
-                    articles: queueArticles || [],
-                    articleLines: 1,
-                },
-            ];
-            if (userInfo.onPaidPlan || userInfo.trialEnabled) {
-                const groupEntries = await groupArticlesByTopic(
-                    listArticles,
-                    true,
-                    "recency",
-                    "topic_order",
-                    10
-                );
-                const topicTabInfos: TabInfo[] = await Promise.all(
-                    groupEntries
-                        .filter((e) => e[0] !== "Other")
-                        .map(async ([topic_id, articles]) => {
-                            const topic = await rep?.query.getTopic(topic_id);
-                            return {
-                                key: topic_id,
-                                title: topic?.name || topic_id,
-                                icon: topic && (
-                                    <TopicEmoji
-                                        emoji={topic?.emoji!}
-                                        className="mr-0 w-[18px]"
-                                    />
-                                ),
-                                isTopic: true,
-                                articles,
-                            };
-                        })
-                );
-                tabInfos.push(...topicTabInfos);
-            } else {
-                tabInfos.push({
-                    key: domainFilter || "list",
-                    title: "",
-                    articles: listArticles,
-                    articleLines: Math.max(
-                        1,
-                        Math.min(5, Math.ceil(listArticles.length / 5))
-                    ),
-                });
-            }
-
-            // update state
-            setTabInfos(tabInfos);
-            setArticleListsCache(
-                tabInfos?.reduce(
-                    (obj, tabInfo) => ({
-                        ...obj,
-                        [tabInfo.key]: tabInfo.articles,
-                    }),
-                    {}
-                )
-            );
-        })();
-    }, [onlyUnread, lastFirst, domainFilter]);
+    const tabInfos = useTabInfos(
+        10,
+        onlyUnread,
+        lastFirst,
+        domainFilter,
+        userInfo
+    );
+    const [articleListsCache, setArticleListsCache] =
+        useArticleListsCache(tabInfos);
 
     return (
         <div className="flex flex-col gap-4">

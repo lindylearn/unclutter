@@ -1,10 +1,14 @@
-import React, { useLayoutEffect, useMemo, useState } from "react";
+import React, { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import {
     LindyIcon,
     TabbedContainer,
     useTabInfos,
+    useArticleListsCache,
 } from "@unclutter/library-components/dist/components";
-import { ReplicacheContext } from "@unclutter/library-components/dist/store";
+import {
+    ReplicacheContext,
+    UserInfo,
+} from "@unclutter/library-components/dist/store";
 import {
     reportEventContentScript,
     ReplicacheProxy,
@@ -25,21 +29,31 @@ export default function App() {
         []
     );
 
+    const [userInfo, setUserInfo] = useState<UserInfo>();
+    useEffect(() => {
+        rep.query.getUserInfo().then(setUserInfo);
+    });
+    if (!userInfo) {
+        return <></>;
+    }
+
     return (
         // @ts-ignore
         <ReplicacheContext.Provider value={rep}>
-            <ArticleSection />
+            <ArticleSection userInfo={userInfo} />
         </ReplicacheContext.Provider>
     );
 }
 
-function ArticleSection({}) {
-    const [tabInfos, allArticlesCount] = useTabInfos(7 - 1); // leave space for 'hide' button
+function ArticleSection({ userInfo }: { userInfo: UserInfo }) {
+    const tabInfos = useTabInfos(10, true, false, null, userInfo);
+    const [articleListsCache, setArticleListsCache] =
+        useArticleListsCache(tabInfos);
 
     const settings = useSettings(settingsStore);
     const [initialIndex, setInitialIndex] = useState<number | null>();
     useLayoutEffect(() => {
-        if (tabInfos && allArticlesCount > 0 && settings) {
+        if (tabInfos && settings) {
             if (settings.newtabActiveGroupKey === null) {
                 setInitialIndex(null);
                 return;
@@ -57,7 +71,7 @@ function ArticleSection({}) {
 
     return (
         <div className="font-text text-base">
-            {tabInfos && allArticlesCount > 0 && initialIndex !== undefined && (
+            {tabInfos && (
                 <TabbedContainer
                     tabInfos={tabInfos}
                     articleRows={1}

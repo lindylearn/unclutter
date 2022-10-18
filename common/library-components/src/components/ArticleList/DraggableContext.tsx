@@ -22,10 +22,11 @@ import {
 } from "../../store";
 import { getDomain } from "../../common";
 
+export type ArticleListsCache = { [listId: string]: Article[] };
 export const CustomDraggableContext = createContext<{
     activeArticle: Article | null;
     activeListId: string | null;
-    articleLists?: { [listId: string]: Article[] };
+    articleLists?: ArticleListsCache;
 } | null>(null);
 
 export function DraggableContext({
@@ -34,8 +35,8 @@ export function DraggableContext({
     children,
     reportEvent = () => {},
 }: {
-    articleLists?: { [listId: string]: Article[] };
-    setArticleLists: (articleLists: { [listId: string]: Article[] }) => void;
+    articleLists?: ArticleListsCache;
+    setArticleLists: (articleLists: ArticleListsCache) => void;
     children: ReactNode;
     reportEvent?: (event: string, properties?: any) => void;
 }) {

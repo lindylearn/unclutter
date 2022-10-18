@@ -4,19 +4,13 @@ import { ReactNode, useState } from "react";
 import useResizeObserver from "use-resize-observer";
 
 import { getRandomColor } from "../../common/styling";
-import { Article, readingProgressFullClamp } from "../../store/_schema";
-import {
-    ReplicacheContext,
-    sortArticlesPosition,
-    useSubscribe,
-} from "../../store";
-import { useArticleGroups } from "./GroupedArticleList";
+import { Article, UserInfo } from "../../store/_schema";
+import { ReplicacheContext, sortArticlesPosition } from "../../store";
+import { groupArticlesByTopic } from "./GroupedArticleList";
 import { TopicEmoji } from "../TopicTag";
-import { DraggableArticleList } from "./DraggableArticleList";
-import { LindyIcon } from "../Icons";
-import { subDays } from "date-fns";
-import { DraggableContext } from "./DraggableContext";
+import { ArticleListsCache } from "./DraggableContext";
 import { StaticArticleList } from "./StaticArticleList";
+import { getDomain } from "../../common";
 
 export interface TabInfo {
     key: string;
@@ -124,6 +118,7 @@ export function TabbedContainer({
                     articlesPerRow !== 0 && (
                         <StaticArticleList
                             articles={tabInfos[activeIndex].articles || []}
+                            small
                         />
                         // <DraggableContext
                         //     articleLists={{
@@ -151,83 +146,112 @@ export function TabbedContainer({
 }
 
 export function useTabInfos(
-    tabCount: number = 9,
+    tabCount: number = 10,
     onlyUnread: boolean = false,
-    reverseOrder: boolean = false,
-    start: Date | null = subDays(new Date(), 90)
-): [TabInfo[] | undefined, number] {
+    lastFirst: boolean = false,
+    domainFilter: string | null,
+    userInfo: UserInfo
+): TabInfo[] | undefined {
     const rep = useContext(ReplicacheContext);
-    const [allArticles, setAllArticles] = useState<Article[]>([]);
-    useEffect(() => {
-        rep?.query
-            .listRecentArticles(start?.getTime(), onlyUnread ? "unread" : "all")
-            .then(setAllArticles);
-    }, [onlyUnread]);
 
-    const groups = useArticleGroups(
-        allArticles,
-        true,
-        "recency_position", // TODO: fix reordering after enabling subscribe()
-        reverseOrder ? "reverse_recency_order" : "recency_order",
-        tabCount
-    );
-
-    const [tabInfos, setTabInfos] = useState<TabInfo[]>();
+    let [tabInfos, setTabInfos] = useState<TabInfo[]>();
     useEffect(() => {
         (async () => {
-            if (!groups || groups.length === 0) {
-                return;
+            // keep queue seperate
+            const queueArticles = await rep?.query.listQueueArticles();
+
+            // filter main articles
+            let listArticles = await rep?.query.listRecentArticles(
+                undefined,
+                onlyUnread ? "unread" : "all"
+            );
+            listArticles = listArticles?.filter((a) => !a.is_queued) || [];
+            if (domainFilter) {
+                listArticles = listArticles.filter(
+                    (a) => getDomain(a.url) === domainFilter
+                );
+                sortArticlesPosition(listArticles, "domain_sort_position");
+            }
+            if (!lastFirst) {
+                listArticles.reverse();
             }
 
-            // const unreadArticles = allArticles.filter(
-            //     (a) => a.reading_progress < readingProgressFullClamp
-            // );
-            const staticTabInfos: TabInfo[] = [
+            // construct tab infos
+            const tabInfos: TabInfo[] = [
                 {
                     key: "queue",
-                    title: "Reading queue",
-                    articles: [],
+                    title: "Reading Queue",
+                    articles: queueArticles || [],
                     articleLines: 1,
-                    // color={
-                    //     darkModeEnabled
-                    //         ? "hsl(51, 80%, 43%)"
-                    //         : "hsl(51, 80%, 64%)"
-                    // }
                 },
-                // {
-                //     key: "unread",
-                //     title: "Unread articles",
-                //     articles: unreadArticles,
-                //     articleLines: 5,
-                // },
             ];
-            const groupTabInfos: TabInfo[] = await Promise.all(
-                groups
-                    .slice(0, tabCount - staticTabInfos.length)
-                    .map(async ([topic_id, articles]) => {
-                        const topic = await rep?.query.getTopic(topic_id);
-
-                        return {
-                            key: topic_id,
-                            title: topic?.name || topic_id,
-                            icon: topic && (
-                                <TopicEmoji
-                                    emoji={topic?.emoji!}
-                                    className="mr-0 w-[18px]"
-                                />
-                            ),
-                            isTopic: true,
-                            articles: sortArticlesPosition(
+            if (userInfo.onPaidPlan || userInfo.trialEnabled) {
+                const groupEntries = await groupArticlesByTopic(
+                    listArticles,
+                    true,
+                    "recency",
+                    "topic_order",
+                    tabCount
+                );
+                const topicTabInfos: TabInfo[] = await Promise.all(
+                    groupEntries
+                        .filter((e) => e[0] !== "Other")
+                        .map(async ([topic_id, articles]) => {
+                            const topic = await rep?.query.getTopic(topic_id);
+                            return {
+                                key: topic_id,
+                                title: topic?.name || topic_id,
+                                icon: topic && (
+                                    <TopicEmoji
+                                        emoji={topic?.emoji!}
+                                        className="mr-0 w-[18px]"
+                                    />
+                                ),
+                                isTopic: true,
                                 articles,
-                                "topic_sort_position"
-                            ),
-                        };
-                    })
-            );
+                            };
+                        })
+                );
+                tabInfos.push(...topicTabInfos);
+            } else {
+                tabInfos.push({
+                    key: domainFilter || "list",
+                    title: "",
+                    articles: listArticles,
+                    articleLines: Math.max(
+                        1,
+                        Math.min(5, Math.ceil(listArticles.length / 5))
+                    ),
+                });
+            }
 
-            setTabInfos(staticTabInfos.concat(groupTabInfos));
+            // update state
+            setTabInfos(tabInfos);
         })();
-    }, [groups]);
+    }, [onlyUnread, lastFirst, domainFilter]);
 
-    return [tabInfos, allArticles.length];
+    return tabInfos;
+}
+
+export function useArticleListsCache(
+    tabInfos: TabInfo[] | undefined
+): [ArticleListsCache | undefined, (articleLists: ArticleListsCache) => void] {
+    let [articleListsCache, setArticleListsCache] =
+        useState<ArticleListsCache>();
+    useEffect(() => {
+        if (!tabInfos) {
+            return;
+        }
+        setArticleListsCache(
+            tabInfos?.reduce(
+                (obj, tabInfo) => ({
+                    ...obj,
+                    [tabInfo.key]: tabInfo.articles,
+                }),
+                {}
+            )
+        );
+    }, [tabInfos]);
+
+    return [articleListsCache, setArticleListsCache];
 }
