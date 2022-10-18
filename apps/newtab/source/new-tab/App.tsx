@@ -13,7 +13,6 @@ import {
 
 import browser from "../common/polyfill";
 import { settingsStore, userInfoStore, useSettings } from "../common/settings";
-import { googleSearchDomains } from "../common/util";
 
 import "@unclutter/library-components/styles/globals.css";
 import "@unclutter/library-components/styles/ArticlePreview.css";
@@ -32,19 +31,8 @@ export default function App() {
         auth: userAuth?.webJwt,
     });
 
-    const [searchInstalled, setSearchInstalled] = useState(null);
-    browser.runtime
-        .sendMessage({
-            event: "isSearchInstalled",
-        })
-        .then(setSearchInstalled);
-
     if (userAuth && Object.keys(userAuth).length === 0) {
         return <LibraryLoginButton />;
-    }
-
-    if (searchInstalled === false) {
-        return <InstallSearch setSearchInstalled={setSearchInstalled} />;
     }
 
     return (
@@ -107,31 +95,5 @@ function LibraryLoginButton() {
                 Login to Unclutter Library
             </span>
         </a>
-    );
-}
-
-function InstallSearch({ setSearchInstalled }) {
-    async function onClick() {
-        await browser.permissions.request({
-            permissions: ["scripting"],
-            origins: googleSearchDomains,
-        });
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        await browser.runtime.sendMessage({
-            event: "activateSearchIntegration",
-        });
-        setSearchInstalled(true);
-    }
-
-    return (
-        <div
-            className="bg-lindy dark:bg-lindyDark mx-auto flex w-max cursor-pointer items-center gap-1.5 rounded-lg px-2 py-1 shadow transition-all hover:scale-95 dark:text-black"
-            onClick={onClick}
-        >
-            <LindyIcon className="w-6" />
-            <span className="font-title text-base leading-none">
-                Activate Google integration
-            </span>
-        </div>
     );
 }
