@@ -89,6 +89,7 @@ export function ReadingProgress({
     articleCount,
     readCount,
     large = false,
+    hideIfZero = true,
     color,
     className,
 }: {
@@ -96,6 +97,7 @@ export function ReadingProgress({
     readCount?: number;
     unreadCount?: number;
     large?: boolean;
+    hideIfZero?: boolean;
     color?: string;
     className?: string;
 }) {
@@ -106,7 +108,7 @@ export function ReadingProgress({
         <div
             className={clsx(
                 "flex overflow-hidden rounded-md transition-all",
-                !articleCount && "opacity-0",
+                hideIfZero && !articleCount && "opacity-0",
                 large ? "gap-3" : "gap-2", // padding set via className
                 className
             )}
