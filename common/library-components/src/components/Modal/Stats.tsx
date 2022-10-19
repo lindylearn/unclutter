@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useLayoutEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
     Article,
     readingProgressFullClamp,
@@ -18,7 +18,7 @@ import {
     groupBy,
     subtractWeeks,
 } from "../../common";
-import { ListFilter, TimeFilter, useArticleGroups } from "../ArticleList";
+import { useArticleGroups } from "../ArticleList";
 import { TopicEmoji } from "../TopicTag";
 import clsx from "clsx";
 import { BigNumber, ResourceIcon, ResourceStat } from "./numbers";
@@ -42,7 +42,6 @@ export default function StatsModalTab({
 }) {
     const rep = useContext(ReplicacheContext);
 
-    const [selectedDate, setSelectedDate] = useState<Date>();
     const [allArticles, setAllArticles] = useState<Article[]>();
     useEffect(() => {
         if (!rep) {
@@ -54,7 +53,7 @@ export default function StatsModalTab({
     const [start, setStart] = useState<Date>();
     const [end, setEnd] = useState<Date>(new Date());
     const [startWeeksAgo, setStartWeeksAgo] = useState(defaultWeekOverlay);
-    useLayoutEffect(() => {
+    useEffect(() => {
         const end = getWeekStart(new Date());
         const start = subtractWeeks(end, startWeeksAgo - 1);
         setStart(start);
@@ -62,9 +61,6 @@ export default function StatsModalTab({
 
     return (
         <div className="animate-fadein relative flex flex-col gap-4">
-            {/* <div className="absolute top-0 right-0">
-                <TimeFilter />
-            </div> */}
             <div className="absolute top-0 right-0 flex cursor-default items-center gap-2 rounded-md bg-stone-50 px-2 py-1 font-medium transition-transform hover:scale-[97%] dark:bg-neutral-800">
                 <svg className="h-4" viewBox="0 0 512 512">
                     <path

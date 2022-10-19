@@ -34,7 +34,7 @@ export function ArticleActivityCalendar({
     function changeWeekOffset(offset) {
         const newValue = -offset;
         if (newValue !== startWeeksAgo) {
-            setStartWeeksAgo(startWeeksAgo);
+            setStartWeeksAgo(newValue);
             reportEvent("changeStatsTimeWindow", { startWeeksAgo: newValue });
         }
     }
