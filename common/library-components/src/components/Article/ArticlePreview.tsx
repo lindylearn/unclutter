@@ -2,7 +2,6 @@ import React, { createContext, useEffect } from "react";
 import clsx from "clsx";
 import { useContext, useLayoutEffect, useState } from "react";
 
-import { ReplicacheContext } from "../../store";
 import { Article, readingProgressFullClamp } from "../../store/_schema";
 import { ArticleDropdownMenu } from "./ArticleDropdownMenu";
 import { openArticleResilient } from "../../common";
@@ -51,19 +50,6 @@ export function ArticlePreview({
             openArticleResilient(article.url);
             reportEvent("clickListArticle");
         }
-    }
-
-    const rep = useContext(ReplicacheContext);
-    async function toggleFavorite(e) {
-        // e.preventDefault();
-        e.stopPropagation();
-        await rep?.mutate.articleSetFavorite({
-            id: article.id,
-            is_favorite: !article.is_favorite,
-        });
-        reportEvent("toggleArticleFavorite", {
-            newState: !article.is_favorite,
-        });
     }
 
     let publishYear = article.publication_date?.slice(0, 4);
@@ -152,11 +138,9 @@ export function ArticlePreview({
             ></div> */}
 
             <ArticleDropdownMenu
+                article={article}
                 open={dropdownOpen}
                 setOpen={setDropdownOpen}
-                isFavorite={article.is_favorite}
-                toggleFavorite={toggleFavorite}
-                article={article}
                 reportEvent={reportEvent}
                 small={small}
             />

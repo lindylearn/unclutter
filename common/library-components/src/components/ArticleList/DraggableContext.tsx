@@ -210,7 +210,6 @@ export function DraggableContext({
 
         reportEvent("reorderArticles");
     }
-    function moveArticleReplicache() {}
 
     return (
         <DndContext
