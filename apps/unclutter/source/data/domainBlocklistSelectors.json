@@ -261,6 +261,10 @@
         ".pretty-verdict__heading-container",
         ".read-more-container"
     ],
+    "theatlantic.com": [
+        ".ArticleShare_root__BqVqF",
+        ".ArticleHero_articleUtilityBar__OtFEE"
+    ],
     "theblock.co": [".newsletterModal"],
     "theconstructor.org": [".cs-estimated-reading-time", "#toc_container"],
     "theinformation.com": [".ti-awareness-bar"],
