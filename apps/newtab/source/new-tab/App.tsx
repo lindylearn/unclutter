@@ -12,6 +12,7 @@ import {
     readingProgressFullClamp,
     ReplicacheContext,
     UserInfo,
+    useSubscribe,
 } from "@unclutter/library-components/dist/store";
 import {
     reportEventContentScript,
@@ -121,32 +122,22 @@ function ArticleSection({
 }) {
     const rep = useContext(ReplicacheContext);
 
-    const [queuedArticles, setQueuedArticles] = useState<Article[]>([]);
+    const queuedArticles = useSubscribe(
+        rep,
+        rep?.subscribe.listQueueArticles(),
+        []
+    );
     let [articleListsCache, setArticleListsCache] =
         useState<ArticleListsCache>();
-    const [recentArticleCount, setRecentArticleCount] = useState<number>();
-    const [recentReadArticleCount, setReadRecentArticleCount] =
-        useState<number>();
     useEffect(() => {
-        if (!rep) {
-            return;
-        }
-        (async () => {
-            const queuedArticles = await rep.query.listQueueArticles();
-            setQueuedArticles(queuedArticles);
-            setArticleListsCache({ queue: queuedArticles });
+        setArticleListsCache({ queue: queuedArticles });
+    }, [queuedArticles]);
 
-            const start = subtractWeeks(getWeekStart(), 3);
-            const recentArticles = await rep.query.listRecentArticles(
-                start.getTime()
-            );
-            const readArticles = recentArticles.filter(
-                (a) => a.reading_progress >= readingProgressFullClamp
-            );
-            setRecentArticleCount(recentArticles.length);
-            setReadRecentArticleCount(readArticles.length);
-        })();
-    }, [rep]);
+    const readingProgress = useSubscribe(
+        rep,
+        rep.subscribe.getReadingProgress(),
+        null
+    );
 
     function reportEvent(...args: any[]) {
         reportEventContentScript(...args, getUnclutterExtensionId());
@@ -157,14 +148,16 @@ function ArticleSection({
     return (
         <div className="font-text text-base">
             <div className="mb-2 flex justify-end gap-3">
-                <ReadingProgress
-                    className="relative z-0 cursor-pointer rounded-lg px-2 py-1 hover:scale-[97%]"
-                    articleCount={recentArticleCount}
-                    readCount={recentReadArticleCount}
-                    hideIfZero={false}
-                    color={color}
-                    onClick={() => setShowModal(true)}
-                />
+                {readingProgress && (
+                    <ReadingProgress
+                        className="relative z-0 cursor-pointer rounded-lg px-2 py-1 hover:scale-[97%]"
+                        articleCount={readingProgress.articleCount}
+                        readCount={readingProgress.completedCount}
+                        hideIfZero={false}
+                        color={color}
+                        onClick={() => setShowModal(true)}
+                    />
+                )}
             </div>
             <div
                 className="topic-articles animate-fadein relative rounded-lg p-3"
@@ -190,7 +183,7 @@ function ArticleSection({
                     )}
 
                     {queuedArticles.length === 0 && (
-                        <div className="absolute top-0 left-0 flex h-full w-full select-none items-center justify-center">
+                        <div className="animate-fadein absolute top-0 left-0 flex h-full w-full select-none items-center justify-center">
                             <svg className="mr-2 h-4" viewBox="0 0 640 512">
                                 <path
                                     fill="currentColor"

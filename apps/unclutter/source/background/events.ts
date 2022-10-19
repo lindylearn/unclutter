@@ -90,7 +90,6 @@ browser.action.onClicked.addListener((tab: Tabs.Tab) => {
 // handle events from content scripts and seperate Unclutter New Tab extension
 browser.runtime.onMessage.addListener(handleMessage);
 browser.runtime.onMessageExternal.addListener(handleMessage);
-
 function handleMessage(
     message: any,
     sender: Runtime.MessageSender,
@@ -190,12 +189,15 @@ function handleMessage(
     return false;
 }
 
-browser.runtime.onConnect.addListener((port: Runtime.Port) => {
+// handle long-lived connections e.g. for replicache data change subscribes
+browser.runtime.onConnect.addListener(handleConnect);
+browser.runtime.onConnectExternal.addListener(handleConnect);
+function handleConnect(port: Runtime.Port) {
     if (port.name === "replicache-subscribe") {
         processReplicacheSubscribe(port);
     }
     // ports will be disconnected when the modal iframe is closed
-});
+}
 
 // run on install, extension update, or browser update
 browser.runtime.onInstalled.addListener(async ({ reason }) => {

@@ -4,6 +4,7 @@ import {
     Topic,
     UserInfo,
 } from "@unclutter/library-components/dist/store/_schema";
+import { ReadingProgress } from "@unclutter/library-components/dist/store/accessors";
 import { CustomGraphData } from "@unclutter/library-components/dist/components/Modal/Graph";
 
 export type LibraryState = {
@@ -31,9 +32,4 @@ export type LibraryInfo = {
     topic?: Topic;
 
     new_links?: ArticleLink[];
-};
-
-export type ReadingProgress = {
-    articleCount: number;
-    completedCount: number;
 };

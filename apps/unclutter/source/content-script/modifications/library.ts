@@ -139,7 +139,9 @@ export default class LibraryModifier implements PageModifier {
             this.lastReadingProgress =
                 this.libraryState.libraryInfo.article.reading_progress;
             this.libraryState.readingProgress =
-                await this.constructReadingProgress(rep);
+                await rep.query.getReadingProgress(
+                    this.libraryState.libraryInfo.topic?.id
+                );
 
             // show in UI
             this.overlayManager.updateLibraryState(this.libraryState);
@@ -223,38 +225,6 @@ export default class LibraryModifier implements PageModifier {
         }
     }
 
-    private async constructReadingProgress(
-        rep: ReplicacheProxy
-    ): Promise<ReadingProgress> {
-        if (this.libraryState.libraryInfo?.topic) {
-            const topicArticles = await rep?.query.listTopicArticles(
-                this.libraryState.libraryInfo.topic.id
-            );
-            if (!topicArticles) {
-                return null;
-            }
-
-            return {
-                articleCount: topicArticles.length,
-                completedCount: topicArticles.filter(
-                    (a) => a.reading_progress >= readingProgressFullClamp
-                ).length,
-            };
-        } else {
-            const start = subtractWeeks(getWeekStart(), 3);
-            const recentArticles = await rep?.query.listRecentArticles(
-                start.getTime()
-            );
-
-            return {
-                articleCount: recentArticles.length,
-                completedCount: recentArticles.filter(
-                    (a) => a.reading_progress >= readingProgressFullClamp
-                ).length,
-            };
-        }
-    }
-
     private async constructArticleGraph(rep: ReplicacheProxy) {
         let start = performance.now();
         let nodes: Article[] = await rep.query.listRecentArticles();
@@ -320,7 +290,9 @@ export default class LibraryModifier implements PageModifier {
             // animate count reduction in LibraryMessage
             const rep = new ReplicacheProxy();
             this.libraryState.readingProgress =
-                await this.constructReadingProgress(rep);
+                await rep.query.getReadingProgress(
+                    this.libraryState.libraryInfo.topic?.id
+                );
             this.libraryState.justCompletedArticle = true;
             this.overlayManager.updateLibraryState(this.libraryState);
         } else {

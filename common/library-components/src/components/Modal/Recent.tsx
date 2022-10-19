@@ -282,12 +282,12 @@ function ArticleGroup({
                 }}
             >
                 {groupKey === "queue" && articles.length === 0 && (
-                    <div className="absolute top-0 left-0 flex h-full w-full select-none items-center justify-center">
+                    <div className="animate-fadein absolute top-0 left-0 flex h-full w-full select-none items-center justify-center">
                         Drag articles here to add them to your reading queue
                     </div>
                 )}
                 {groupKey !== "queue" && articles.length === 0 && (
-                    <div className="absolute top-0 left-0 flex h-full w-full select-none items-center justify-center">
+                    <div className="animate-fadein absolute top-0 left-0 flex h-full w-full select-none items-center justify-center">
                         All filtered articles are in your reading queue
                     </div>
                 )}

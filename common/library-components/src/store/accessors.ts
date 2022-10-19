@@ -1,6 +1,6 @@
 import { generate } from "@rocicorp/rails";
 import { ReadTransaction } from "replicache";
-import { getWeekNumber } from "../common/time";
+import { getWeekNumber, getWeekStart, subtractWeeks } from "../common/time";
 import {
     Article,
     articleLinkSchema,
@@ -267,6 +267,33 @@ export async function getTopicArticlesCount(
     return articles.length;
 }
 
+export type ReadingProgress = {
+    articleCount: number;
+    completedCount: number;
+};
+export async function getReadingProgress(
+    tx: ReadTransaction,
+    forTopicId: string | null = null
+): Promise<ReadingProgress> {
+    let articles: Article[];
+    if (forTopicId) {
+        articles = await listTopicArticles(tx, forTopicId);
+        if (!articles) {
+            articles = [];
+        }
+    } else {
+        const start = subtractWeeks(getWeekStart(), 3);
+        articles = await listRecentArticles(tx, start.getTime());
+    }
+
+    return {
+        articleCount: articles.length,
+        completedCount: articles.filter(
+            (a) => a.reading_progress >= readingProgressFullClamp
+        ).length,
+    };
+}
+
 /* ***** topics ***** */
 
 const { get: getTopicRaw, list: listTopics } = generate("topics", topicSchema);
@@ -372,6 +399,7 @@ export const accessors = {
     listTopicArticles,
     listTopicArticlesServer,
     getTopicArticlesCount,
+    getReadingProgress,
     getTopic,
     listTopics,
     getTopicIdMap,
