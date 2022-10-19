@@ -17,6 +17,7 @@ import {
     ReplicacheProxy,
     getUnclutterExtensionId,
     getLocalScreenshot,
+    useAutoDarkMode,
 } from "@unclutter/library-components/dist/common";
 import NewTabModal from "./Modal";
 
@@ -47,16 +48,7 @@ export default function App() {
         });
     }, [rep]);
 
-    const [darkModeEnabled, setDarkModeEnabled] = useState(
-        window.matchMedia("(prefers-color-scheme: dark)").matches
-    );
-    useEffect(() => {
-        window
-            .matchMedia("(prefers-color-scheme: dark)")
-            .addEventListener("change", (event) => {
-                setDarkModeEnabled(event.matches);
-            });
-    }, []);
+    const darkModeEnabled = useAutoDarkMode();
 
     const [showModal, setShowModal] = useState<boolean | null>(null);
     useEffect(() => {

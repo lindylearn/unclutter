@@ -7,3 +7,4 @@ export * from "./extension";
 export * from "./search";
 export * from "./url";
 export * from "./messaging";
+export * from "./hooks";

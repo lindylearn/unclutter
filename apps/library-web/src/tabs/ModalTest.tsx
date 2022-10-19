@@ -1,3 +1,4 @@
+import { useAutoDarkMode } from "@unclutter/library-components/dist/common";
 import {
     LibraryModalPage,
     constructGraphData,
@@ -48,16 +49,7 @@ export default function ModalTestTab({}) {
         }, 100);
     }, [rep]);
 
-    const [darkModeEnabled, setDarkModeEnabled] = useState(
-        window.matchMedia("(prefers-color-scheme: dark)").matches
-    );
-    useEffect(() => {
-        window
-            .matchMedia("(prefers-color-scheme: dark)")
-            .addEventListener("change", (event) => {
-                setDarkModeEnabled(event.matches);
-            });
-    }, []);
+    const darkModeEnabled = useAutoDarkMode();
 
     const userInfo = useSubscribe(rep, rep?.subscribe.getUserInfo(), null);
     if (!userInfo) {
