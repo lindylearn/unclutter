@@ -3,7 +3,7 @@ import {
     createDraftAnnotation,
     LindyAnnotation,
 } from "../../common/annotations/create";
-import { reportEventContentScript } from "../../content-script/messaging";
+import { reportEventContentScript } from "@unclutter/library-components/dist/common/messaging";
 import { createRemoteAnnotation } from "../common/api";
 import { deleteAnnotation, getAnnotations } from "../common/CRUD";
 import { hideAnnotationLocally } from "../common/local";

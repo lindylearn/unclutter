@@ -73,7 +73,10 @@ export function ResourceStat({
         >
             <ResourceIcon type={type} large={large} />
             <div
-                className={clsx("font-title font-bold", large ? "text-xl" : "")}
+                className={clsx(
+                    "font-title select-none font-bold",
+                    large ? "text-xl" : ""
+                )}
             >
                 {showPlus && "+"}
                 {value || 0}
@@ -86,15 +89,19 @@ export function ReadingProgress({
     articleCount,
     readCount,
     large = false,
+    hideIfZero = true,
     color,
     className,
+    onClick = () => {},
 }: {
     articleCount?: number;
     readCount?: number;
     unreadCount?: number;
     large?: boolean;
+    hideIfZero?: boolean;
     color?: string;
     className?: string;
+    onClick?: () => void;
 }) {
     // const unreadCount = (articleCount || 0) - (readCount || 0);
     const progress = ((readCount || 0) / (articleCount || 1)) * 100;
@@ -102,18 +109,27 @@ export function ReadingProgress({
     return (
         <div
             className={clsx(
-                "flex overflow-hidden rounded-md transition-opacity",
-                !articleCount && "opacity-0",
-                large ? "gap-3 px-2 py-0.5" : "gap-2 px-1.5 py-0.5",
+                "flex overflow-hidden rounded-md transition-all",
+                hideIfZero && !articleCount && "opacity-0",
+                large ? "gap-3" : "gap-2", // padding set via className
                 className
             )}
+            onClick={onClick}
         >
             <ResourceStat
                 type="articles_completed"
                 value={readCount}
                 large={large}
             />
-            <ResourceStat type="articles" value={articleCount} large={large} />
+            <ResourceStat
+                type="articles"
+                value={
+                    articleCount !== undefined && readCount !== undefined
+                        ? articleCount - readCount
+                        : undefined
+                }
+                large={large}
+            />
             <div
                 className="bg-lindy dark:bg-lindyDark absolute top-0 left-0 h-full"
                 style={{

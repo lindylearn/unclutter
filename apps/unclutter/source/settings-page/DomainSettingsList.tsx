@@ -1,7 +1,7 @@
 import React, { useLayoutEffect, useRef } from "react";
 import { setUserSettingsForDomain } from "../common/storage";
 import { getAllCustomDomainSettings } from "../common/storage2";
-import { reportEventContentScript } from "../content-script/messaging";
+import { reportEventContentScript } from "@unclutter/library-components/dist/common/messaging";
 
 export default function DomainSettingsList({}) {
     const [overrideList, setOverrideList] = React.useState(null);

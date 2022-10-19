@@ -2,12 +2,16 @@ import {
     Article,
     ArticleLink,
     Topic,
+    UserInfo,
 } from "@unclutter/library-components/dist/store/_schema";
+import { ReadingProgress } from "@unclutter/library-components/dist/store/accessors";
 import { CustomGraphData } from "@unclutter/library-components/dist/components/Modal/Graph";
 
 export type LibraryState = {
-    libraryUser?: string;
+    libraryEnabled: boolean;
+
     libraryInfo?: LibraryInfo;
+    userInfo?: UserInfo;
 
     showLibrarySignup: boolean;
 
@@ -17,21 +21,15 @@ export type LibraryState = {
     justCompletedArticle: boolean;
 
     relatedArticles?: Article[];
-    graph: CustomGraphData | null;
-    topicProgress: TopicProgress | null;
+    graph?: CustomGraphData;
+    linkCount?: number;
+    readingProgress?: ReadingProgress;
 };
 
 // returned from API
 export type LibraryInfo = {
     article: Article;
-    topic: Topic | null;
-    sibling_count: number;
+    topic?: Topic;
 
     new_links?: ArticleLink[];
-};
-
-export type TopicProgress = {
-    articleCount: number;
-    completedCount: number;
-    linkCount?: number;
 };

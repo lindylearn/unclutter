@@ -8,7 +8,7 @@ export function getUrlHash(url: string): string {
 }
 
 // NOTE: Keep in sync with backend WebpageConstuctor.normalize_url()
-export function normalizeUrl(url: string) {
+export function normalizeUrl(url: string): string {
     // remove protocol
     url = url
         .toLowerCase()
@@ -19,15 +19,15 @@ export function normalizeUrl(url: string) {
     // remove url params
     // NOTE: be careful here -- e.g. substack adds ?s=r
     const url_obj = new URL(url);
-    for (const [param, _] of url_obj.searchParams.entries()) {
+    Object.entries(url_obj.searchParams).map(([param, _]) => {
         if (param.includes("id")) {
-            continue;
+            return;
         }
         if (["p", "q", "t", "e"].includes(param)) {
-            continue;
+            return;
         }
         delete url_obj.searchParams[param];
-    }
+    });
 
     url_obj.pathname = trimRight(url_obj.pathname, "/");
 
@@ -37,7 +37,7 @@ export function normalizeUrl(url: string) {
     return url;
 }
 
-function trimRight(s: string, chars: string) {
+function trimRight(s: string, chars: string): string {
     let r = s.length - 1;
     while (chars.indexOf(s[r]) >= 0 && r >= 0) {
         r--;

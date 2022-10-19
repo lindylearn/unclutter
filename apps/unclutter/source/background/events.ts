@@ -1,4 +1,4 @@
-import { Runtime, Tabs } from "webextension-polyfill";
+import type { Runtime, Tabs } from "webextension-polyfill";
 import { clusterLibraryArticles } from "../common/api";
 import { extensionSupportsUrl } from "../common/articleDetection";
 import { handleReportBrokenPage } from "../common/bugReport";
@@ -9,7 +9,11 @@ import {
     setFeatureFlag,
 } from "../common/featureFlags";
 import browser from "../common/polyfill";
-import { getLibraryUser, setLibraryUser } from "../common/storage";
+import {
+    getLibraryAuth,
+    getLibraryUser,
+    setLibraryAuth,
+} from "../common/storage";
 import { saveInitialInstallVersionIfMissing } from "../common/updateMessages";
 import { migrateAnnotationStorage } from "../sidebar/common/local";
 import { fetchCss } from "./actions";
@@ -18,6 +22,15 @@ import { getAllBookmarks, requestBookmarksPermission } from "./bookmarks";
 import { enableInTab, injectScript, togglePageViewMessage } from "./inject";
 import { onNewInstall, setupWithPermissions } from "./install";
 import {
+    initLibrary,
+    processReplicacheMessage,
+    processReplicacheSubscribe,
+} from "./library/library";
+import {
+    captureActiveTabScreenshot,
+    getLocalScreenshot,
+} from "./library/screenshots";
+import {
     getRemoteFeatureFlags,
     reportDisablePageView,
     reportEnablePageView,
@@ -25,7 +38,6 @@ import {
     reportSettings,
     startMetrics,
 } from "./metrics";
-import { initReplicache, processReplicacheMessage } from "./replicache";
 import { TabStateManager } from "./tabs";
 
 const tabsManager = new TabStateManager();
@@ -75,109 +87,117 @@ browser.action.onClicked.addListener((tab: Tabs.Tab) => {
     setupWithPermissions();
 });
 
-// handle events from content scripts
-browser.runtime.onMessage.addListener(
-    (message: any, sender: Runtime.MessageSender, sendResponse: () => void) => {
-        // console.log(`Received '${message.event}' message:`, message);
+// handle events from content scripts and seperate Unclutter New Tab extension
+browser.runtime.onMessage.addListener(handleMessage);
+browser.runtime.onMessageExternal.addListener(handleMessage);
+function handleMessage(
+    message: any,
+    sender: Runtime.MessageSender,
+    sendResponse: (...args: any[]) => void
+) {
+    // console.log(`Received '${message.event}' message:`, message);
 
-        if (message.event === "disabledPageView") {
-            reportDisablePageView(message.trigger, message.pageHeightPx);
-        } else if (message.event === "requestEnhance") {
-            // event sent from boot.js to inject additional functionality
-            // browser apis are only available in scripts injected from background scripts or manifest.json
-            console.log("boot.js requested injection into tab");
-            injectScript(sender.tab.id, "content-script/enhance.js");
+    if (message.event === "disabledPageView") {
+        reportDisablePageView(message.trigger, message.pageHeightPx);
+    } else if (message.event === "requestEnhance") {
+        // event sent from boot.js to inject additional functionality
+        // browser apis are only available in scripts injected from background scripts or manifest.json
+        console.log("boot.js requested injection into tab");
+        injectScript(sender.tab.id, "content-script/enhance.js");
 
-            tabsManager
-                .getSocialAnnotationsCount(sender.tab.id, sender.url)
-                .then((socialCommentsCount) =>
-                    reportEnablePageView(message.trigger, socialCommentsCount)
-                );
-        } else if (message.event === "openOptionsPage") {
-            browser.runtime.openOptionsPage();
-        } else if (message.event === "fetchCss") {
-            fetchCss(message.url).then(sendResponse);
-            return true;
-        } else if (message.event === "reportEvent") {
-            reportEvent(message.name, message.data);
-        } else if (message.event === "getRemoteFeatureFlags") {
-            getRemoteFeatureFlags().then(sendResponse);
-            return true;
-        } else if (message.event === "checkLocalAnnotationCount") {
-            // trigger from boot.js because we don't have tabs permissions
-            tabsManager
-                .checkIsArticle(sender.tab.id, sender.url)
-                .then(sendResponse);
-            return true;
-        } else if (message.event === "getSocialAnnotationsCount") {
-            tabsManager
-                .getSocialAnnotationsCount(sender.tab.id, sender.url)
-                .then(sendResponse);
-            return true;
-        } else if (message.event === "setSocialAnnotationsCount") {
-            tabsManager.setSocialAnnotationsCount(sender.tab.id, message.count);
-        } else if (message.event === "reportBrokenPage") {
-            handleReportBrokenPage(message.data);
-        } else if (message.event === "openLinkWithUnclutter") {
-            browser.tabs.create({ url: message.url, active: true }, (tab) => {
-                // need to wait until loaded, as have no permissions on new tab page
-                setTimeout(() => {
-                    injectScript(tab.id, "content-script/enhance.js");
-                }, 1000);
-            });
-        } else if (message.event === "openLibrary") {
-            let urlToOpen = `https://library.lindylearn.io/`;
-            if (message.topicId !== undefined) {
-                urlToOpen = `https://library.lindylearn.io/topics/${message.topicId}`;
-            }
-
-            browser.tabs.create({
-                url: urlToOpen,
-                active: true,
-            });
-        } else if (message.event === "setLibraryAuth") {
-            setLibraryUser(message.userId, message.webJwt);
-        } else if (message.event === "processReplicacheMessage") {
-            processReplicacheMessage(message).then(sendResponse);
-            return true;
+        tabsManager
+            .getSocialAnnotationsCount(sender.tab.id, sender.url)
+            .then((socialCommentsCount) =>
+                reportEnablePageView(message.trigger, socialCommentsCount)
+            );
+    } else if (message.event === "openOptionsPage") {
+        browser.runtime.openOptionsPage();
+    } else if (message.event === "fetchCss") {
+        fetchCss(message.url).then(sendResponse);
+        return true;
+    } else if (message.event === "reportEvent") {
+        reportEvent(message.name, message.data);
+    } else if (message.event === "getRemoteFeatureFlags") {
+        getRemoteFeatureFlags().then(sendResponse);
+        return true;
+    } else if (message.event === "checkLocalAnnotationCount") {
+        // trigger from boot.js because we don't have tabs permissions
+        tabsManager
+            .checkIsArticle(sender.tab.id, sender.url)
+            .then(sendResponse);
+        return true;
+    } else if (message.event === "getSocialAnnotationsCount") {
+        tabsManager
+            .getSocialAnnotationsCount(sender.tab.id, sender.url)
+            .then(sendResponse);
+        return true;
+    } else if (message.event === "setSocialAnnotationsCount") {
+        tabsManager.setSocialAnnotationsCount(sender.tab.id, message.count);
+    } else if (message.event === "reportBrokenPage") {
+        handleReportBrokenPage(message.data);
+    } else if (message.event === "openLinkWithUnclutter") {
+        const onTabActive = (tab) => {
+            // need to wait until loaded, as have no permissions on new tab page
+            setTimeout(() => {
+                injectScript(tab.id, "content-script/enhance.js");
+            }, 1000);
+        };
+        if (message.newTab) {
+            browser.tabs.create(
+                { url: message.url, active: true },
+                onTabActive
+            );
+        } else {
+            browser.tabs.update(undefined, { url: message.url }, onTabActive);
+        }
+    } else if (message.event === "openLibrary") {
+        let urlToOpen = `https://library.lindylearn.io/`;
+        if (message.topicId !== undefined) {
+            urlToOpen = `https://library.lindylearn.io/topics/${message.topicId}`;
         }
 
-        return false;
+        browser.tabs.create({
+            url: urlToOpen,
+            active: true,
+        });
+    } else if (message.event === "setLibraryAuth") {
+        setLibraryAuth(message.userId, message.webJwt).then(() => {
+            initLibrary();
+        });
+    } else if (message.event === "getLibraryAuth") {
+        getLibraryAuth().then(sendResponse);
+        return true;
+    } else if (message.event === "processReplicacheMessage") {
+        processReplicacheMessage(message).then(sendResponse);
+        return true;
+    } else if (message.event === "captureActiveTabScreenshot") {
+        captureActiveTabScreenshot(
+            message.articleId,
+            message.bodyRect,
+            message.devicePixelRatio
+        );
+    } else if (message.event === "getLocalScreenshot") {
+        getLocalScreenshot(message.articleId).then(sendResponse);
+        return true;
+    } else if (message.event === "getUnclutterVersion") {
+        browser.management
+            .getSelf()
+            .then((extensionInfo) => sendResponse(extensionInfo.version));
+        return true;
     }
-);
 
-// events from seperate Unclutter Library extension
-browser.runtime.onMessageExternal.addListener(
-    (message: any, sender: Runtime.MessageSender, sendResponse: () => void) => {
-        if (message.event === "openLinkWithUnclutter") {
-            const onTabActive = (tab) => {
-                // need to wait until loaded, as have no permissions on new tab page
-                setTimeout(() => {
-                    injectScript(tab.id, "content-script/enhance.js");
-                }, 1000);
-            };
-            if (message.newTab) {
-                browser.tabs.create(
-                    { url: message.url, active: true },
-                    onTabActive
-                );
-            } else {
-                browser.tabs.update(
-                    undefined,
-                    { url: message.url },
-                    onTabActive
-                );
-            }
-        } else if (message.event === "setLibraryAuth") {
-            // console.log("setLibraryAuth", message.userId);
-            setLibraryUser(message.userId, message.webJwt).then(() => {
-                initReplicache();
-            });
-        } else if (message.event === "openUnclutterOptionsPage") {
-            browser.runtime.openOptionsPage();
-        }
+    return false;
+}
+
+// handle long-lived connections e.g. for replicache data change subscribes
+browser.runtime.onConnect.addListener(handleConnect);
+browser.runtime.onConnectExternal.addListener(handleConnect);
+function handleConnect(port: Runtime.Port) {
+    if (port.name === "replicache-subscribe") {
+        processReplicacheSubscribe(port);
     }
-);
+    // ports will be disconnected when the modal iframe is closed
+}
 
 // run on install, extension update, or browser update
 browser.runtime.onInstalled.addListener(async ({ reason }) => {
@@ -228,20 +248,14 @@ browser.tabs.onRemoved.addListener((tabId: number) =>
 
 // initialize on every service worker start
 async function initializeServiceWorker() {
-    const isDev = await getFeatureFlag(isDevelopmentFeatureFlag);
+    // isDevelopmentFeatureFlag not available during initial install yet
+    const extensionInfo = await browser.management.getSelf();
+    const isDev = extensionInfo.installType === "development";
+
     startMetrics(isDev);
 
-    if (isDev) {
-        setLibraryUser(
-            "020cd243-4aa1-43e6-b83a-536e98bb1a38",
-            "sb-access-token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNjY0Nzg4NTUyLCJzdWIiOiIwMjBjZDI0My00YWExLTQzZTYtYjgzYS01MzZlOThiYjFhMzgiLCJlbWFpbCI6InBldGVyK3Rlc3RAbGluZHlsZWFybi5pbyIsInBob25lIjoiIiwiYXBwX21ldGFkYXRhIjp7InByb3ZpZGVyIjoiZW1haWwiLCJwcm92aWRlcnMiOlsiZW1haWwiXX0sInVzZXJfbWV0YWRhdGEiOnt9LCJyb2xlIjoiYXV0aGVudGljYXRlZCIsInNlc3Npb25faWQiOiJlZDhhNjIxNC04YzZhLTQ3YzItYjJkMS1hZjRkOWRmNTBhZDcifQ.BrEwcIp6tGmmMyxz9z5BfgbrSM5Kn9bh40b8qfqyHUw; sb-refresh-token=UwfHlQ4vZV8UA92S8lvTLA"
-        ).then(() => {
-            initReplicache();
-        });
-    } else {
-        // avoid during frequent dev reloads
-        loadAnnotationCountsToMemory();
-    }
+    initLibrary();
+    loadAnnotationCountsToMemory();
 }
 
 initializeServiceWorker();

@@ -4,7 +4,7 @@ import {
     getFeatureFlag,
     setFeatureFlag,
 } from "../common/featureFlags";
-import { reportEventContentScript } from "../content-script/messaging";
+import { reportEventContentScript } from "@unclutter/library-components/dist/common/messaging";
 
 // there's a weird bundling error on firefox when importing React, {useState}
 // so use React.useState

@@ -1,5 +1,5 @@
 {
-    "name": "Unclutter",
+    "name": "Unclutter New Tab",
     "version": "0.1.2",
     "description": "Integrate your Unclutter Library into your browser.",
     "homepage_url": "https://github.com/lindylearn/unclutter",
@@ -7,7 +7,6 @@
         "128": "assets/icon.png"
     },
     "permissions": ["storage", "search"],
-    "optional_permissions": ["scripting", "<all_urls>"],
     "manifest_version": 2,
     "browser_specific_settings": {
         "gecko": {

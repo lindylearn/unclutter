@@ -5,26 +5,45 @@ import { useContext } from "react";
 
 import { ReplicacheContext } from "../../store";
 import { reportBrokenPage } from "../../common/api";
-import { readingProgressFullClamp } from "../../store/_schema";
+import { Article, readingProgressFullClamp } from "../../store/_schema";
 
 export function ArticleDropdownMenu({
+    article,
     open,
     setOpen,
-    article,
-    isFavorite,
-    toggleFavorite,
-    reportEvent,
+    reportEvent = () => {},
     small = false,
+}: {
+    article: Article;
+    open: boolean;
+    setOpen: (open: boolean) => void;
+    reportEvent?: (event: string, properties?: any) => void;
+    small?: boolean;
 }) {
     const rep = useContext(ReplicacheContext);
 
-    async function deleteArticle() {
-        await rep?.mutate.deleteArticle(article.id);
-        reportEvent("deleteArticle");
+    async function toggleFavorite(e) {
+        e.stopPropagation();
+        await rep?.mutate.articleSetFavorite({
+            id: article.id,
+            is_favorite: !article.is_favorite,
+        });
+        reportEvent("toggleArticleFavorite", {
+            newState: !article.is_favorite,
+        });
     }
-    async function reportPage() {
-        await reportBrokenPage(article.url);
-        reportEvent("reportArticle");
+
+    async function toggleQueued(e) {
+        await rep?.mutate.updateArticle({
+            id: article.id,
+            is_queued: !article.is_queued,
+            queue_sort_position: !article.is_queued
+                ? new Date().getTime()
+                : undefined,
+        });
+        if (!article.is_queued) {
+            reportEvent("addArticleToQueue");
+        }
     }
 
     const completed = article.reading_progress > readingProgressFullClamp;
@@ -35,6 +54,15 @@ export function ArticleDropdownMenu({
             reading_progress: newProgress,
         });
         reportEvent("toggleArticleCompleted", { newProgress });
+    }
+
+    async function deleteArticle() {
+        await rep?.mutate.deleteArticle(article.id);
+        reportEvent("deleteArticle");
+    }
+    async function reportPage() {
+        await reportBrokenPage(article.url);
+        reportEvent("reportArticle");
     }
 
     return (
@@ -59,14 +87,14 @@ export function ArticleDropdownMenu({
 
                 <DropdownMenu.Portal>
                     <DropdownMenu.Content
-                        className="dropdown-content z-100 font-title z-50 cursor-pointer rounded bg-white text-sm text-stone-800 drop-shadow dark:bg-stone-700 dark:text-stone-300"
+                        className="dropdown-content z-100 font-text z-50 cursor-pointer rounded bg-white text-sm font-medium text-stone-800 drop-shadow dark:bg-stone-700 dark:text-stone-300"
                         side="right"
                         align="start"
                         sideOffset={6}
                     >
                         <DropdownMenu.Arrow className="dropdown-elem fill-white dark:fill-stone-700" />
 
-                        <DropdownItem
+                        {/* <DropdownItem
                             // padding: "    "
                             title={isFavorite ? "Unfavorite" : "Favorite"}
                             svg={
@@ -89,6 +117,25 @@ export function ArticleDropdownMenu({
                             }
                             onSelect={toggleFavorite}
                             top
+                        /> */}
+                        <DropdownItem
+                            title={
+                                article.is_queued
+                                    ? "Read later"
+                                    : "Add to Queue"
+                            }
+                            svg={
+                                <svg
+                                    className="mr-1.5 inline-block h-4 w-4"
+                                    viewBox="0 0 640 512"
+                                >
+                                    <path
+                                        fill="currentColor"
+                                        d="M443.5 17.94C409.8 5.608 375.3 0 341.4 0C250.1 0 164.6 41.44 107.1 112.1c-6.752 8.349-2.752 21.07 7.375 24.68C303.1 203.8 447.4 258.3 618.4 319.1c1.75 .623 3.623 .9969 5.5 .9969c8.25 0 15.88-6.355 16-15.08C643 180.7 567.2 62.8 443.5 17.94zM177.1 108.4c42.88-36.51 97.76-58.07 154.5-60.19c-4.5 3.738-36.88 28.41-70.25 90.72L177.1 108.4zM452.6 208.1L307.4 155.4c14.25-25.17 30.63-47.23 48.13-63.8c25.38-23.93 50.13-34.02 67.51-27.66c17.5 6.355 29.75 29.78 33.75 64.42C459.6 152.4 457.9 179.6 452.6 208.1zM497.8 224.4c7.375-34.89 12.13-76.76 4.125-117.9c45.75 38.13 77.13 91.34 86.88 150.9L497.8 224.4zM576 488.1C576 501.3 565.3 512 552 512L23.99 510.4c-13.25 0-24-10.72-24-23.93c0-13.21 10.75-23.93 24-23.93l228 .6892l78.35-214.8l45.06 16.5l-72.38 198.4l248.1 .7516C565.3 464.1 576 474.9 576 488.1z"
+                                    />
+                                </svg>
+                            }
+                            onSelect={toggleQueued}
                         />
                         <DropdownItem
                             title={completed ? "Mark unread" : "Mark read"}

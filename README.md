@@ -1,65 +1,70 @@
-# Unclutter - Immersive Reading Mode
+<img src="./docs/media/icon.png" align="left" width="80" />
 
-A new kind of reader mode to remove distractions from web articles.
+# Unclutter — Modern Reader Mode
 
-![intro](./docs/media/intro2.gif)
+Unclutter is a modern reader mode and article library for your browser.
 
-## Installation
+[![Latest release](https://img.shields.io/github/v/release/lindylearn/unclutter?color=edd75b)](https://github.com/lindylearn/unclutter/releases)
+![GitHub commits](https://img.shields.io/github/commit-activity/w/lindylearn/unclutter?label=commits&color=edd75b)
+[![Chrome users](https://img.shields.io/chrome-web-store/users/ibckhpijbdmdobhhhodkceffdngnglpk?label=chrome%20installs&color=edd75b)](https://chrome.google.com/webstore/detail/ibckhpijbdmdobhhhodkceffdngnglpk)
+[![Firefox users](https://img.shields.io/amo/users/lindylearn?label=firefox%20installs&color=edd75b)](https://addons.mozilla.org/en-GB/firefox/addon/lindylearn)
+[![Chrome Ratings](https://img.shields.io/chrome-web-store/stars/ibckhpijbdmdobhhhodkceffdngnglpk?label=rating&color=edd75b)](https://chrome.google.com/webstore/detail/ibckhpijbdmdobhhhodkceffdngnglpk)
 
-Try out the browser extension from the Chrome or Firefox extension stores ([or build it yourself](https://github.com/lindylearn/unclutter#development)):
 
-[<img src="./docs/media/chrome-badge.png" height="70">](https://chrome.google.com/webstore/detail/ibckhpijbdmdobhhhodkceffdngnglpk)
-[<img src="./docs/media/firefox-badge.png" height="55">](https://addons.mozilla.org/en-GB/firefox/addon/lindylearn)
+<p align="center">
+<img src="./docs/media/intro.png" width="100%" />
+</p>
 
-## Features
+## Why does it exist?
 
-The main difference between Unclutter and other "reader modes" is that it keeps the original style of websites intact ([see more here](docs/comparison.md)):
+There many other "reader modes", but they all extract article text and re-render it their own format. Unclutter "unclutters" the original web pages itself, leaving the [original website styling](docs/comparison.md) and interactive elements intact. 
 
-| Firefox reader mode                           | Unclutter                                       |
-| --------------------------------------------- | ----------------------------------------------- |
-| ![](docs/media/comparison/firefox/4.png) | ![](docs/media/comparison/unclutter/4.png) |
+Adjustments for specific websites are crowdsourced — if you find an annoyance while reading, remove it for everyone!
 
-Unclutter also supports:
+<!-- Articles you read are saved and organized automatically, instead of having to maintain bookmark folders, tags, or share links between multiple websites.
+With Unclutter, everything happens instantly in your browser.
 
--   Theme settings including a [dynamic dark mode](https://github.com/lindylearn/unclutter/blob/main/docs/theme.md).
--   [Automatically activating](https://github.com/lindylearn/unclutter/blob/main/docs/article-detection.md) the extension on a per-domain basis.
--   An interactive [page outline](https://github.com/lindylearn/unclutter/blob/main/docs/outline.md) to navigate long articles.
--   Showing [social highlights](https://github.com/lindylearn/unclutter/blob/main/docs/social-highlights.md) from Hacker News and Hypothes.is.
--   Taking [private notes](https://github.com/lindylearn/unclutter/blob/main/docs/annotations.md) by simply selecting text.
+<p align="center">
+<img src="./docs/media/library.png" width="100%" />
+</p> -->
 
-## How this works
+Other features include:
+-   [Automatically activating](https://github.com/lindylearn/unclutter/blob/main/docs/article-detection.md) the reader mode on certain domains
+-   [A page outline](https://github.com/lindylearn/unclutter/blob/main/docs/outline.md) to navigate long articles
+-   [Integrated social comments](https://github.com/lindylearn/unclutter/blob/main/docs/social-highlights.md) from Hacker News and Hypothes.is
+-   [Easily saving highlights](https://github.com/lindylearn/unclutter/blob/main/docs/annotations.md) by simply selecting text
 
-The main "trick" is to use a website's responsive style to hide non-essential page elements for us (by [parsing & applying these rules in the CSSOM](source/content-script/modifications/CSSOM/responsiveStyle.ts)).
-For other annoyances there are [global](source/content-script/modifications/contentBlock.ts) and [site-specific](source/content-script/pageview/manualContentBlock.css) blocklists based on CSS class naming.
+Try it out for yourself:
 
-To standardize margins, background colors, and font-sizes, the extension also [applies custom CSS](source/content-script/modifications/DOM/textContainer.ts) to text elements it finds in the DOM (with logic to detect what's the main article text). The dark mode feature uses a combination of [DOM and CSSOM iterations](source/content-script/modifications/CSSOM/theme.ts) to darken colors, change the background, or enable a website's native dark mode styles if present.
+[<img src="./docs/media/install-chrome.png" height="50">](https://chrome.google.com/webstore/detail/ibckhpijbdmdobhhhodkceffdngnglpk)
+[<img src="./docs/media/install-firefox.png" height="50">](https://addons.mozilla.org/en-GB/firefox/addon/lindylearn)
 
-To tie these (and many more) page modifications together, they each hook into 8 lifecycle phases coordinated from [transitions.ts](source/content-script/transitions.ts). The major concern here is performance -- minimizing reflows while performing changes stepwise so that they look nice when animated.
 
-Beyond this core functionality there are embedded React iframes to power the [social highlights & private notes features](source/sidebar/App.tsx) and the [extension settings page](source/settings-page/Options.tsx), Svelte components for the [UI controls](source/overlay) including the page outline, and [background event handling code](source/background/events.ts) to inject scripts into visited pages and handle events.
+## Get involved
 
-**For documentation on individual features see the [docs pages](https://github.com/lindylearn/unclutter/blob/main/docs).**
+The goal of this project is to improve reading on the web for everyone. You should decide what, when, and how to read articles. What if Unclutter could automatically bypass paywalls, connect similar content across the web, or make quotes easily sharable?
 
-## Contributing
+If you want to contribute ideas or code, [join our Discord server](https://discord.gg/CThpNQjucB)!
 
-The main way you can help is to report bugs, broken articles pages, UI inconsistencies, or ideas on how to improve the extension by creating an [issue](https://github.com/lindylearn/unclutter/issues).
+## Roadmap
 
-If you want something to be fixed faster (like a CSS bug), it may help to do it yourself. Please let me know if the docs pages and inline comments are not sufficient. Thank you in advance!
+We prioritize features to work on via the [open roadmap](https://unclutter.canny.io/). Add your suggestions there or vote on existing features to get them done faster.
 
-## Development
+If you found a bug or want to improve something technical, please open a GitHub issue directly. All feedback from within Unclutter also automatically creates GitHub issues or Pull-Requests.
 
-To build the extension yourself, run:
+<!-- [<img src="./docs/media/canny.png">](https://unclutter.canny.io/) -->
 
-1. `yarn install && yarn build`
-2. `yarn package`
-3. Find the bundled extension code in `/web-ext-artifacts`. `_manifest-v2` is for Firefox, `_manifest-v3` for Chromium browsers.
+<!-- Also, please consider [supporting the project financially](https://opencollective.com/unclutter) if it is useful to you. All raised money will be split across all open-source contributors, administered by the Open Source Collective. This also unlocks additional features for your article library like AI categorization or a graph view of your captured information.
 
-I run this using node `v16.14.0` on Mac, then upload the bundled code to the Chrome and Mozilla extension stores manually. The bundling uses Rollup to create a somewhat readable output -- so feel free to check the released code in your browser's profile folder if you installed the extension.
+[![Contributors](https://opencollective.com/unclutter/tiers/sponsors.svg)](https://opencollective.com/unclutter) -->
 
-For hot reloading during development, run `yarn watch` and `yarn web-ext run` in parallel.
+## Documentation
+
+See the [docs pages](https://github.com/lindylearn/unclutter/blob/main/docs), or the [technical README](DEVELOPMENT.md). Please open an issue for any question you have!
+
 
 ## Licence
 
-This code is released under the [GNU GPLv3 License](https://choosealicense.com/licenses/gpl-3.0/), which requires commercial projects that build upon it to be open-source as well. The project is part of the [LindyLearn](http://lindylearn.io/) suite of free tools.
+This project uses [GNU AGPLv3](https://choosealicense.com/licenses/gpl-3.0/), which requires commercial projects that use it to be open-source as well.
 
-The private notes and social highlights feature uses code from the annotator subcomponent of [hypothesis/client](https://github.com/hypothesis/client) to anchor text fragments. See [LICENCE](https://github.com/lindylearn/annotations/blob/main/LICENCE) for the legal boilerplate.
+Unclutter exists thanks to everyone who contributes ideas or code, reports bugs, or simply uses the extension. Thank you from all of us!

@@ -1,16 +1,13 @@
 <script lang="ts">
     import clsx from "clsx";
-
-    import browser from "../../../common/polyfill";
     import { Article } from "@unclutter/library-components/dist/store/_schema";
     import {
-        openArticle,
+        openArticleResilient,
         reportEventContentScript,
-    } from "../../../content-script/messaging";
+    } from "@unclutter/library-components/dist/common";
 
     export let article: Article;
     export let index: number;
-    export let libraryUser: string;
     export let className: string = "";
     export let transform: string = "";
 
@@ -41,7 +38,7 @@
         e.preventDefault();
         e.stopPropagation();
 
-        openArticle(article.url);
+        openArticleResilient(article.url);
         reportEventContentScript("clickRelatedArticle");
     }
 </script>

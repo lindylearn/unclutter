@@ -5,7 +5,7 @@
         getUserSettingForDomain,
         setUserSettingsForDomain,
     } from "../..//../common/storage";
-    import { reportEventContentScript } from "../..//../content-script/messaging";
+    import { reportEventContentScript } from "@unclutter/library-components/dist/common";
     import UIControl from "./UIControl.svelte";
     import { togglePageView } from "../..//../content-script/enhance";
     import {

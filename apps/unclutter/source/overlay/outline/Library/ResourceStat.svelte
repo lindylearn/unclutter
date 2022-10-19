@@ -42,11 +42,7 @@
             /></svg
         >
     {/if}
-    <div class="font-title text-lg font-bold leading-none">
-        {#if value && diff}
-            <AnimatedNumber {value} {diff} />
-        {:else}
-            {value || 0}
-        {/if}
+    <div class="font-title min-w-[12px] text-lg font-bold leading-none">
+        <AnimatedNumber {value} {diff} />
     </div>
 </div>

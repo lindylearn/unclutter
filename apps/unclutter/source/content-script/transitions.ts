@@ -60,16 +60,18 @@ export default class TransitionManager implements PageModifier {
     );
     private libraryModifier = new LibraryModifier(
         this.url,
+        document.title,
         this.overlayManager
     );
-    private linkAnnotationsModifier = new LinkAnnotationsModifier(
-        this.annotationsModifier,
-        this.libraryModifier,
-        this.overlayManager
-    );
+    // private linkAnnotationsModifier = new LinkAnnotationsModifier(
+    //     this.annotationsModifier,
+    //     this.libraryModifier,
+    //     this.overlayManager
+    // );
     private readingTimeModifier = new ReadingTimeModifier(
         this.overlayManager,
-        this.libraryModifier
+        this.libraryModifier,
+        this.bodyStyleModifier
     );
     private keyboardModifier = new KeyboardModifier(this.libraryModalModifier);
 
@@ -178,10 +180,11 @@ export default class TransitionManager implements PageModifier {
         await new Promise((r) => setTimeout(r, 300));
 
         // *** read DOM phase ***
-        // *** write DOM phase ***
+        this.libraryModifier.captureScreenshot(); // TODO move after dark theme handling?
 
-        // apply color theme - iterating CSSOM and re-rendering page is potentially expensive
+        // *** write DOM phase ***
         this.bodyStyleModifier.afterTransitionIn();
+        // apply color theme - iterating CSSOM and re-rendering page is potentially expensive
         const enabledDarkMode = this.themeModifier.applyActiveColorTheme();
 
         if (enabledDarkMode) {
@@ -190,7 +193,7 @@ export default class TransitionManager implements PageModifier {
         }
 
         // insert annotations sidebar, start fetch
-        this.linkAnnotationsModifier.parseArticle(); // reads page, wraps link elems
+        // this.linkAnnotationsModifier.parseArticle(); // reads page, wraps link elems
         this.annotationsModifier.afterTransitionIn();
 
         this.overlayManager.insertUiFont(); // causes ~50ms layout reflow

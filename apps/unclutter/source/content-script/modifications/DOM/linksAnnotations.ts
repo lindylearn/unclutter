@@ -9,7 +9,7 @@ import AnnotationsModifier from "../annotations/annotationsModifier";
 import { createScreenshots, getLinkedArticles } from "../../../common/api";
 import LibraryModifier from "../library";
 import { Article } from "@unclutter/library-components/dist/store/_schema";
-import { openArticle } from "../../messaging";
+import { openArticle } from "@unclutter/library-components/dist/common/messaging";
 import OverlayManager from "../overlay";
 import {
     extensionSupportsUrl,
@@ -37,7 +37,7 @@ export default class LinkAnnotationsModifier implements PageModifier {
 
     annotations: LindyAnnotation[] = [];
     async parseArticle() {
-        if (!this.libraryModifier.libraryState.libraryUser) {
+        if (!this.libraryModifier.libraryState.libraryEnabled) {
             return;
         }
 
@@ -87,7 +87,7 @@ export default class LinkAnnotationsModifier implements PageModifier {
         let articles: Article[] = [];
         getLinkedArticles(
             hrefs,
-            this.libraryModifier.libraryState.libraryUser
+            this.libraryModifier.libraryState.userInfo.id
         ).then((newArticles) => {
             articles = newArticles;
             this.overlayManager.updateLinkedArticles(articles);

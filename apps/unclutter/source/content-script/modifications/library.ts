@@ -1,37 +1,50 @@
 import throttle from "lodash/throttle";
-import browser from "../../common/polyfill";
 
-import {
-    addArticleToLibrary,
-    checkArticleInLibrary,
-    updateLibraryArticle,
-} from "../../common/api";
-import { showLibrarySignupFlag } from "../../common/featureFlags";
-import { LibraryState, TopicProgress } from "../../common/schema";
 import {
     Article,
     ArticleLink,
     readingProgressFullClamp,
 } from "@unclutter/library-components/dist/store/_schema";
+import { constructGraphData } from "@unclutter/library-components/dist/components/Modal/Graph";
+import {
+    getWeekStart,
+    getUrlHash,
+    subtractWeeks,
+} from "@unclutter/library-components/dist/common";
+
+import OverlayManager from "./overlay";
+import { PageModifier, trackModifierExecution } from "./_interface";
 import { getLibraryUser } from "../../common/storage";
 import {
+    captureActiveTabScreenshot,
     getRemoteFeatureFlag,
     ReplicacheProxy,
     reportEventContentScript,
-} from "../messaging";
-import OverlayManager from "./overlay";
-import { PageModifier, trackModifierExecution } from "./_interface";
-import { constructGraphData } from "@unclutter/library-components/dist/components/Modal/Graph";
+} from "@unclutter/library-components/dist/common/messaging";
+import { addArticleToLibrary } from "../../common/api";
+import {
+    anonymousLibraryEnabled,
+    showLibrarySignupFlag,
+} from "../../common/featureFlags";
+import {
+    LibraryInfo,
+    LibraryState,
+    ReadingProgress,
+} from "../../common/schema";
 
 @trackModifierExecution
 export default class LibraryModifier implements PageModifier {
     private articleUrl: string;
+    private articleTitle: string;
+    private articleId: string;
     private overlayManager: OverlayManager;
     private readingProgressSyncIntervalSeconds = 10;
 
     libraryState: LibraryState = {
-        libraryUser: undefined,
+        libraryEnabled: false,
+
         libraryInfo: null,
+        userInfo: null,
 
         showLibrarySignup: false,
 
@@ -41,172 +54,198 @@ export default class LibraryModifier implements PageModifier {
 
         relatedArticles: null,
         graph: null,
-        topicProgress: null,
+        linkCount: null,
+        readingProgress: null,
         justCompletedArticle: false,
     };
 
-    constructor(articleUrl: string, overlayManager: OverlayManager) {
+    constructor(
+        articleUrl: string,
+        articleTitle: string,
+        overlayManager: OverlayManager
+    ) {
         this.articleUrl = articleUrl;
+        this.articleTitle = articleTitle;
+        this.articleId = getUrlHash(articleUrl);
         this.overlayManager = overlayManager;
     }
 
     async fetchState() {
-        this.libraryState.libraryUser = await getLibraryUser();
-        if (this.libraryState.libraryUser) {
-            this.overlayManager.updateLibraryState(this.libraryState);
-            this.fetchLibraryState();
-            return;
-        }
-
-        this.libraryState.showLibrarySignup = await getRemoteFeatureFlag(
-            showLibrarySignupFlag
-        );
-        if (this.libraryState.showLibrarySignup) {
-            this.overlayManager.updateLibraryState(this.libraryState);
-            this.fetchSignupArticles();
-            return;
-        }
-    }
-
-    async fetchLibraryState() {
         const rep = new ReplicacheProxy();
 
-        try {
-            // get library state
-            this.libraryState.libraryInfo = await checkArticleInLibrary(
-                this.articleUrl,
-                this.libraryState.libraryUser
+        // fetch user info
+        const libraryUser = await getLibraryUser();
+        if (libraryUser) {
+            // user with account
+            this.libraryState.libraryEnabled = true;
+            this.libraryState.userInfo = await rep.query.getUserInfo();
+        } else {
+            this.libraryState.libraryEnabled = await getRemoteFeatureFlag(
+                anonymousLibraryEnabled
             );
+            this.libraryState.showLibrarySignup = await getRemoteFeatureFlag(
+                showLibrarySignupFlag
+            );
+            this.libraryState.userInfo = {
+                id: null,
+                email: null,
+                signinProvider: null,
+                accountEnabled: false,
+                onPaidPlan: false,
+            };
+        }
 
+        // fetch or create article state (even if library UI not enabled)
+        this.overlayManager.updateLibraryState(this.libraryState);
+        this.fetchArticleState(rep);
+    }
+
+    async fetchArticleState(rep: ReplicacheProxy) {
+        try {
+            // get existing library state
+            this.libraryState.libraryInfo = await this.getLibraryInfo(
+                rep,
+                this.articleId
+            );
             if (!this.libraryState.libraryInfo) {
                 // run on-demand adding
                 this.libraryState.isClustering = true;
                 this.overlayManager.updateLibraryState(this.libraryState);
 
-                this.libraryState.libraryInfo = await addArticleToLibrary(
-                    this.articleUrl,
-                    this.libraryState.libraryUser
-                );
+                await this.insertArticle(rep);
+
                 this.libraryState.isClustering = false;
                 if (!this.libraryState.libraryInfo) {
                     this.libraryState.error = true;
                 }
-
-                reportEventContentScript("addArticle");
             } else {
-                // show retrieved state
+                // use existing state
                 this.libraryState.wasAlreadyPresent = true;
+            }
 
+            // skip further processing if library disabled
+            if (!this.libraryState.libraryEnabled) {
+                return;
+            }
+
+            // report library events
+            if (this.libraryState.wasAlreadyPresent) {
                 reportEventContentScript("visitArticle");
+            } else {
+                reportEventContentScript("addArticle");
             }
 
             // fetch topic progress stats
-            if (this.libraryState.libraryInfo) {
-                this.libraryState.topicProgress =
-                    await this.constructTopicProgress(
-                        rep,
-                        this.libraryState.libraryInfo.topic.id
-                    );
-            }
+            this.lastReadingProgress =
+                this.libraryState.libraryInfo.article.reading_progress;
+            this.libraryState.readingProgress =
+                await rep.query.getReadingProgress(
+                    this.libraryState.libraryInfo.topic?.id
+                );
 
             // show in UI
             this.overlayManager.updateLibraryState(this.libraryState);
 
             // construct article graph from local replicache
-            if (this.libraryState.libraryInfo) {
-                let start = performance.now();
-                let nodes: Article[] = await rep.query.listRecentArticles();
-                let links: ArticleLink[] = await rep.query.listArticleLinks();
-
-                if (!this.libraryState.wasAlreadyPresent) {
-                    // use new node and links immediately
-                    nodes.push(this.libraryState.libraryInfo.article);
-                    links = links.concat(
-                        this.libraryState.libraryInfo.new_links || []
-                    );
-                }
-
-                [
-                    this.libraryState.graph,
-                    this.libraryState.topicProgress.linkCount,
-                ] = await constructGraphData(
-                    nodes,
-                    links,
-                    this.libraryState.libraryInfo.article.url,
-                    this.libraryState.libraryInfo.topic
-                );
-
-                let duration = performance.now() - start;
-                console.log(
-                    `Constructed library graph in ${Math.round(duration)}ms`
-                );
+            if (
+                (this.libraryState.userInfo.onPaidPlan ||
+                    this.libraryState.userInfo.trialEnabled) &&
+                this.libraryState.libraryInfo
+            ) {
+                await this.constructArticleGraph(rep);
                 this.overlayManager.updateLibraryState(this.libraryState);
             }
 
             if (this.scrollOnceFetchDone) {
                 this.scrollToLastReadingPosition();
             }
-
-            // pull data to show correct stats once user navigates there
-            rep.pull();
         } catch (err) {
             this.libraryState.error = true;
             this.overlayManager.updateLibraryState(this.libraryState);
             console.error(err);
         }
-
-        // linked articles fetch
-        // this.libraryState.relatedArticles = await getRelatedArticles(
-        //     this.articleUrl,
-        //     this.libraryState.libraryUser
-        // );
-        // if (this.libraryState.relatedArticles.length === 0) {
-        //     console.error("No related articles found");
-        // }
-        // this.overlayManager.updateLibraryState(this.libraryState);
     }
 
-    async fetchSignupArticles() {
-        // try {
-        //     this.libraryState.relatedArticles = await getRelatedArticles(
-        //         this.articleUrl,
-        //         "e2318252-3ff0-4345-9283-56597525e099"
-        //     );
-        // } catch {
-        //     this.libraryState.relatedArticles = [];
-        // }
-        this.libraryState.relatedArticles = [];
-
-        // fill missing slots with static articles
-        this.libraryState.relatedArticles =
-            this.libraryState.relatedArticles.concat(
-                librarySignupStaticArticles
-            );
-
-        this.overlayManager.updateLibraryState(this.libraryState);
-    }
-
-    private async constructTopicProgress(
+    private async getLibraryInfo(
         rep: ReplicacheProxy,
-        topic_id: string
-    ): Promise<TopicProgress> {
-        const topicArticles = await rep?.query.listTopicArticles(topic_id);
-        if (!this.libraryState.wasAlreadyPresent) {
-            // likely not pulled from replicache yet
-            topicArticles.push(this.libraryState.libraryInfo.article);
+        articleId: string
+    ): Promise<LibraryInfo> {
+        const article = await rep.query.getArticle(articleId);
+        if (!article) {
+            return null;
         }
 
+        const topic = await rep.query.getTopic(article.topic_id);
         return {
-            articleCount: topicArticles.length,
-            completedCount: topicArticles.filter(
-                (a) => a.reading_progress >= readingProgressFullClamp
-            ).length,
+            article,
+            topic,
         };
     }
 
+    private async insertArticle(rep: ReplicacheProxy) {
+        if (
+            this.libraryState.userInfo.onPaidPlan ||
+            this.libraryState.userInfo.trialEnabled
+        ) {
+            // fetch state remotely
+            // TODO remove mutate in backend? just fetch topic?
+            this.libraryState.libraryInfo = await addArticleToLibrary(
+                this.articleUrl,
+                this.libraryState.userInfo.id!
+            );
+
+            // insert immediately
+            await rep.mutate.putArticleIfNotExists(
+                this.libraryState.libraryInfo.article
+            );
+            await rep.mutate.putTopic(this.libraryState.libraryInfo.topic);
+        } else {
+            const article = {
+                id: this.articleId,
+                url: this.articleUrl,
+                title: this.articleTitle, // TODO clean in frontend
+                word_count: 0, // TODO how to get this in frontend?
+                publication_date: null, // TODO how to get this in frontend?
+                time_added: new Date().getTime() / 1000,
+                reading_progress: this.lastReadingProgress || 0.0,
+                topic_id: null,
+                is_favorite: false,
+            };
+            this.libraryState.libraryInfo = {
+                article,
+            };
+
+            await rep.mutate.putArticleIfNotExists(article);
+        }
+
+        if (this.libraryState.libraryInfo?.article) {
+            await rep.mutate.articleTrackOpened(
+                this.libraryState.libraryInfo.article.id
+            );
+        }
+    }
+
+    private async constructArticleGraph(rep: ReplicacheProxy) {
+        let start = performance.now();
+        let nodes: Article[] = await rep.query.listRecentArticles();
+        let links: ArticleLink[] = await rep.query.listArticleLinks();
+
+        [this.libraryState.graph, this.libraryState.linkCount] =
+            await constructGraphData(
+                nodes,
+                links,
+                this.libraryState.libraryInfo.article.url,
+                this.libraryState.libraryInfo.topic
+            );
+
+        let duration = performance.now() - start;
+        console.log(`Constructed library graph in ${Math.round(duration)}ms`);
+    }
+
+    // called from transitions.ts, or again internally once fetch done
     private scrollOnceFetchDone = false;
     scrollToLastReadingPosition() {
-        if (!this.libraryState.libraryUser) {
+        if (!this.libraryState.libraryEnabled) {
             return;
         }
         if (!this.libraryState.libraryInfo) {
@@ -233,95 +272,101 @@ export default class LibraryModifier implements PageModifier {
     }
 
     private lastReadingProgress: number;
-    onScrollUpdate(readingProgress: number) {
+    async onScrollUpdate(readingProgress: number) {
         if (readingProgress < this.lastReadingProgress) {
             // track only furthest scroll
             return;
         }
 
-        if (this.libraryState.libraryUser) {
-            if (
-                readingProgress >= 0.95 &&
-                this.libraryState.libraryInfo?.article.reading_progress <
-                    readingProgressFullClamp
-            ) {
-                // just completed this article, immediately update state to show in UI
-                this.libraryState.justCompletedArticle = true;
-                this.sendProgressUpdate(1.0);
-                this.overlayManager.updateLibraryState(this.libraryState);
-            } else {
-                this.sendProgressUpdateThrottled(readingProgress);
-            }
-        } else if (
-            this.libraryState.showLibrarySignup &&
-            readingProgress >= 0.9 &&
-            this.lastReadingProgress < 0.9
+        if (
+            readingProgress >= 0.95 &&
+            this.libraryState.libraryInfo?.article &&
+            this.libraryState.libraryInfo.article.reading_progress <
+                readingProgressFullClamp
         ) {
-            reportEventContentScript("seeLibrarySignup");
-        }
+            // immediately update state to show in UI
+            await this.updateReadingProgress(1.0);
 
-        this.lastReadingProgress = readingProgress;
+            // animate count reduction in LibraryMessage
+            const rep = new ReplicacheProxy();
+            this.libraryState.readingProgress =
+                await rep.query.getReadingProgress(
+                    this.libraryState.libraryInfo.topic?.id
+                );
+            this.libraryState.justCompletedArticle = true;
+            this.overlayManager.updateLibraryState(this.libraryState);
+        } else {
+            this.updateReadingProgressThrottled(readingProgress);
+        }
     }
 
     startReadingProgressSync() {
+        // shortly before leaving page
         window.addEventListener("beforeunload", () => {
-            this.sendProgressUpdate(this.lastReadingProgress);
+            this.updateReadingProgress(this.lastReadingProgress);
+        });
+        // when interacting with unclutter UI (e.g. opening the modal)
+        window.addEventListener("blur", () => {
+            this.updateReadingProgress(this.lastReadingProgress);
         });
     }
 
-    private sendProgressUpdate(readingProgress: number) {
-        if (!this.libraryState.libraryUser || !this.libraryState.libraryInfo) {
+    // can be called sync (to execute on beforeunload), or await result if need mutation to be complete
+    private updateReadingProgress(readingProgress: number = 0.0) {
+        if (readingProgress <= this.lastReadingProgress) {
+            // track only furthest scroll
+            return;
+        }
+        this.lastReadingProgress = readingProgress;
+
+        if (!this.libraryState.libraryInfo.article) {
             return;
         }
 
-        // don't wait for replicache pull
+        // update class state
         this.libraryState.libraryInfo.article.reading_progress =
             readingProgress;
+        if (this.libraryState.graph) {
+            const currentNode = this.libraryState.graph.nodes.find(
+                (n) => n.depth === 0
+            );
+            currentNode.reading_progress = readingProgress;
+            currentNode.isCompleted =
+                readingProgress >= readingProgressFullClamp;
+        }
 
-        updateLibraryArticle(this.articleUrl, this.libraryState.libraryUser, {
+        // update data store
+        const diff: Partial<Article> = {
+            id: this.articleId,
             reading_progress: readingProgress,
-        });
+        };
+        // de-queue if completed article
+        if (readingProgress >= readingProgressFullClamp) {
+            diff.is_queued = false;
+        }
+
+        const rep = new ReplicacheProxy();
+        return rep.mutate.updateArticle(diff as Article);
     }
     // throttle to send updates less often, but do during continous reading scroll
-    private sendProgressUpdateThrottled = throttle(
-        this.sendProgressUpdate.bind(this),
+    private updateReadingProgressThrottled = throttle(
+        this.updateReadingProgress.bind(this),
         this.readingProgressSyncIntervalSeconds * 1000
     );
-}
 
-const librarySignupStaticArticles: Article[] = [
-    {
-        id: "21d298cc3c10aae89d9507eb5f7e6ffb98c263a3c345b5e6442f3aea32015a79",
-        url: "https://bigthink.com/neuropsych/do-i-own-too-many-books/",
-        title: "The value of owning more books than you can read - Big Think",
-        word_count: 13,
-        publication_date: null,
-        time_added: 1661946067,
-        reading_progress: 0,
-        topic_id: "7_",
-        is_favorite: false,
-    },
-    {
-        id: "732814a768b75aecfc665bd75fba6530704fae3264b95d6363953460b6230aa4",
-        url: "https://fs.blog/too-busy/",
-        title: "Too Busy to Pay Attention - Farnam Street",
-        word_count: 1501,
-        publication_date: null,
-        time_added: 1661945871,
-        reading_progress: 0,
-        topic_id: "-23_",
-        is_favorite: false,
-    },
-    {
-        id: "83c366a3ad7f968b2a54677f27e5d15d78250753bacff18413a8846f3e05bb18",
-        url: "https://www.theatlantic.com/science/archive/2019/07/we-need-new-science-progress/594946/",
-        title: "We Need a New Science of Progress - The Atlantic",
-        word_count: 2054,
-        publication_date: null,
-        time_added: null,
-        reading_progress: 0,
-        topic_id: "5_",
-        is_favorite: false,
-        topic_sort_position: 0,
-    },
-];
+    // capture a screenshot of the current article page to display as thumbnail inside the library UI
+    captureScreenshot() {
+        if (this.libraryState.userInfo.accountEnabled) {
+            // can use remote screenshot fetch
+            return;
+        }
+
+        // run in background
+        const bodyRect = document.body.getBoundingClientRect();
+        captureActiveTabScreenshot(
+            this.articleId,
+            bodyRect,
+            window.devicePixelRatio
+        );
+    }
+}

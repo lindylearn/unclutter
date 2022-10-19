@@ -1,4 +1,4 @@
-import { arrayMove } from "@dnd-kit/sortable";
+import { JSONValue } from "replicache";
 import { generate, Update } from "@rocicorp/rails";
 import { WriteTransaction } from "replicache";
 import sha256 from "crypto-js/sha256";
@@ -7,6 +7,7 @@ import {
     ArticleSortPosition,
     getSafeArticleSortPosition,
     getSettings,
+    getUserInfo,
 } from "./accessors";
 import {
     Article,
@@ -18,6 +19,7 @@ import {
     Settings,
     Topic,
     topicSchema,
+    UserInfo,
 } from "./_schema";
 
 const {
@@ -131,6 +133,7 @@ async function articleTrackOpened(tx: WriteTransaction, articleId: string) {
         id: articleId,
         recency_sort_position: timeNow,
         topic_sort_position: timeNow,
+        domain_sort_position: timeNow,
     });
 }
 
@@ -223,9 +226,57 @@ async function moveArticlePosition(
     });
 }
 
-export async function updateSettings(tx: WriteTransaction, diff: Settings) {
+// combine queue status update & move within a single mutation (to prevent UI flicker)
+async function articleAddMoveToQueue(
+    tx: WriteTransaction,
+    {
+        articleId,
+        isQueued,
+        articleIdBeforeNewPosition,
+        articleIdAfterNewPosition,
+        sortPosition,
+    }: {
+        articleId: string;
+        isQueued: boolean;
+        articleIdBeforeNewPosition: string | null;
+        articleIdAfterNewPosition: string | null;
+        sortPosition: ArticleSortPosition;
+    }
+) {
+    await updateArticle(tx, {
+        id: articleId,
+        is_queued: isQueued,
+        queue_sort_position: new Date().getTime(),
+    });
+    await moveArticlePosition(tx, {
+        articleId,
+        articleIdBeforeNewPosition,
+        articleIdAfterNewPosition,
+        sortPosition,
+    });
+}
+
+export async function updateSettings(
+    tx: WriteTransaction,
+    diff: Partial<Settings>
+) {
     const savedValue = await getSettings(tx);
     await tx.put("settings", { ...savedValue, ...diff });
+}
+
+export async function updateUserInfo(
+    tx: WriteTransaction,
+    diff: Partial<UserInfo>
+) {
+    const savedValue = await getUserInfo(tx);
+    await tx.put("userInfo", { ...(savedValue || {}), ...diff });
+}
+
+export async function importEntries(
+    tx: WriteTransaction,
+    entries: [string, JSONValue][]
+) {
+    await Promise.all(entries.map(([key, value]) => tx.put(key, value)));
 }
 
 export const mutators = {
@@ -240,7 +291,10 @@ export const mutators = {
     putTopic,
     updateAllTopics,
     moveArticlePosition,
+    articleAddMoveToQueue,
     updateSettings,
+    importEntries,
+    updateUserInfo,
 };
 export type M = typeof mutators;
 export type ArticleUpdate = Update<Article>;

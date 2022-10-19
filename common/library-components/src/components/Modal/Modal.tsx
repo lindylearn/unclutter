@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import clsx from "clsx";
 import { useContext, useEffect, useState } from "react";
 
@@ -7,13 +7,17 @@ import Sidebar from "./Sidebar";
 import { GraphPage } from "./Graph/GraphPage";
 import { CustomGraphData } from "./Graph/data";
 import HeaderBar from "./HeaderBar";
-import { ReplicacheContext, Topic } from "../../store";
+import { ReplicacheContext, Topic, UserInfo } from "../../store";
 import RecentModalTab from "./Recent";
 import { LindyIcon } from "../Icons";
 import HighlightsTab from "./Highlights";
+import UpgradeModalTab from "./Upgrade";
+import SettingsModalTab from "./Settings";
 
 export function LibraryModalPage({
+    userInfo,
     darkModeEnabled = false,
+    showSignup = false,
     currentArticle,
     initialTopic,
     graph,
@@ -22,7 +26,9 @@ export function LibraryModalPage({
     closeModal = () => {},
     reportEvent = () => {},
 }: {
+    userInfo: UserInfo;
     darkModeEnabled?: boolean;
+    showSignup?: boolean;
     currentArticle?: string;
     initialTopic?: Topic;
     graph?: CustomGraphData;
@@ -37,21 +43,37 @@ export function LibraryModalPage({
         rep?.query.getArticlesCount().then(setArticleCount);
     }, [rep]);
 
-    const [currentTab, setCurrentTab] = useState("graph");
+    const initialRender = useRef<boolean>(true);
+    const [currentTab, setCurrentTab] = useState(
+        currentArticle && (userInfo.onPaidPlan || userInfo.trialEnabled)
+            ? "graph"
+            : "stats"
+    );
     useEffect(() => {
-        reportEvent("changeModalTab", { tab: currentTab });
+        if (initialRender.current) {
+            initialRender.current = false;
+        } else {
+            reportEvent("changeModalTab", { tab: currentTab });
+        }
     }, [currentTab]);
 
     const [currentTopic, setCurrentTopic] = useState<Topic | undefined>(
         initialTopic
     );
+    const [domainFilter, setDomainFilter] = useState<string | null>(null);
     useEffect(() => {
         setCurrentTopic(initialTopic);
     }, [initialTopic]);
-    function showTopic(topic: Topic) {
+    async function showTopic(topicId: string) {
+        const topic = await rep?.query.getTopic(topicId);
         setCurrentTopic(topic);
         setCurrentTab("graph");
         reportEvent("showTopicGraph");
+    }
+    function showDomain(domain: string) {
+        setDomainFilter(domain);
+        setCurrentTab("list");
+        reportEvent("showDomainDetails");
     }
 
     return (
@@ -76,16 +98,21 @@ export function LibraryModalPage({
             />
             <div className="modal-content relative z-10 mx-auto mt-10 flex h-5/6 max-h-[700px] max-w-5xl flex-col overflow-hidden rounded-lg bg-white text-stone-800 shadow dark:bg-[#212121] dark:text-[rgb(232,230,227)]">
                 <ModalContent
+                    userInfo={userInfo}
                     articleCount={articleCount}
                     currentArticle={currentArticle}
                     currentTopic={currentTopic}
-                    changedTopic={currentTopic !== initialTopic}
+                    changedTopic={currentTopic !== initialTopic?.id}
+                    domainFilter={domainFilter}
+                    setDomainFilter={setDomainFilter}
                     darkModeEnabled={darkModeEnabled}
+                    showSignup={showSignup}
                     graph={graph}
                     relatedLinkCount={relatedLinkCount}
                     currentTab={currentTab}
                     setCurrentTab={setCurrentTab}
                     showTopic={showTopic}
+                    showDomain={showDomain}
                     reportEvent={reportEvent}
                 />
             </div>
@@ -94,28 +121,38 @@ export function LibraryModalPage({
 }
 
 function ModalContent({
+    userInfo,
     currentArticle,
     currentTopic,
     changedTopic,
+    domainFilter,
+    setDomainFilter,
     articleCount,
+    showSignup,
     darkModeEnabled,
     graph,
     relatedLinkCount,
     currentTab,
     setCurrentTab,
     showTopic,
+    showDomain,
     reportEvent = () => {},
 }: {
+    userInfo: UserInfo;
     currentArticle?: string;
     currentTopic?: Topic;
     changedTopic: boolean;
+    domainFilter: string | null;
+    setDomainFilter: (domain: string | null) => void;
     articleCount?: number;
     darkModeEnabled: boolean;
+    showSignup: boolean;
     graph?: CustomGraphData;
     relatedLinkCount?: number;
     currentTab: string;
     setCurrentTab: (tab: string) => void;
-    showTopic: (topic: Topic) => void;
+    showTopic: (topicId: string) => void;
+    showDomain: (domain: string) => void;
     reportEvent?: (event: string, data?: any) => void;
 }) {
     return (
@@ -133,12 +170,14 @@ function ModalContent({
                     </div>
 
                     <Sidebar
+                        userInfo={userInfo}
                         currentTab={currentTab}
                         currentTopic={currentTopic}
                         changedTopic={changedTopic}
                         setCurrentTab={setCurrentTab}
                         relatedLinkCount={relatedLinkCount}
                         darkModeEnabled={darkModeEnabled}
+                        showSignup={showSignup}
                     />
                 </div>
             </aside>
@@ -157,11 +196,15 @@ function ModalContent({
                     setCurrentTab={setCurrentTab}
                 /> */}
 
-                {currentTab === "recent" && (
+                {currentTab === "list" && (
                     <RecentModalTab
+                        userInfo={userInfo}
                         currentTopic={currentTopic}
+                        domainFilter={domainFilter}
+                        setDomainFilter={setDomainFilter}
                         darkModeEnabled={darkModeEnabled}
                         showTopic={showTopic}
+                        reportEvent={reportEvent}
                     />
                 )}
                 {currentTab === "graph" && (
@@ -176,13 +219,26 @@ function ModalContent({
                 )}
                 {currentTab === "stats" && (
                     <StatsModalTab
+                        userInfo={userInfo}
                         articleCount={articleCount}
                         darkModeEnabled={darkModeEnabled}
                         showTopic={showTopic}
+                        showDomain={showDomain}
                         reportEvent={reportEvent}
                     />
                 )}
                 {currentTab === "highlights" && <HighlightsTab />}
+                {currentTab === "signup" && (
+                    <UpgradeModalTab darkModeEnabled={darkModeEnabled} />
+                )}
+                {currentTab === "settings" && (
+                    <SettingsModalTab
+                        userInfo={userInfo}
+                        currentArticle={currentArticle}
+                        darkModeEnabled={darkModeEnabled}
+                        showSignup={showSignup}
+                    />
+                )}
             </div>
         </div>
     );

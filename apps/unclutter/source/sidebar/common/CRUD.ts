@@ -7,7 +7,7 @@ import {
     getFeatureFlag,
     hypothesisSyncFeatureFlag,
 } from "../../common/featureFlags";
-import { reportEventContentScript } from "../../content-script/messaging";
+import { reportEventContentScript } from "@unclutter/library-components/dist/common/messaging";
 import {
     createRemoteAnnotation,
     deleteRemoteAnnotation,

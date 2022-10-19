@@ -1,6 +1,6 @@
 import { generate } from "@rocicorp/rails";
 import { ReadTransaction } from "replicache";
-import { getWeekNumber } from "../common/time";
+import { getWeekNumber, getWeekStart, subtractWeeks } from "../common/time";
 import {
     Article,
     articleLinkSchema,
@@ -14,6 +14,7 @@ import {
     settingsSchema,
     Topic,
     topicSchema,
+    UserInfo,
 } from "./_schema";
 
 /* ***** articles ***** */
@@ -182,6 +183,15 @@ export async function listFavoriteArticles(
     return articles;
 }
 
+export async function listQueueArticles(
+    tx: ReadTransaction
+): Promise<Article[]> {
+    const allArticles = await listArticles(tx);
+    const articles = allArticles.filter((a) => a.is_queued);
+    sortArticlesPosition(articles, "queue_sort_position");
+    return articles;
+}
+
 export async function listTopicArticles(
     tx: ReadTransaction,
     topic_id: string
@@ -212,9 +222,11 @@ export async function listTopicArticlesServer(
 }
 
 export type ArticleSortPosition =
+    | "queue_sort_position"
     | "recency_sort_position"
     | "favorites_sort_position"
-    | "topic_sort_position";
+    | "topic_sort_position"
+    | "domain_sort_position";
 export function getSafeArticleSortPosition(
     article: Article,
     sortPosition: ArticleSortPosition
@@ -253,6 +265,33 @@ export async function getTopicArticlesCount(
 ): Promise<number> {
     const articles = await listTopicArticles(tx, topic_id);
     return articles.length;
+}
+
+export type ReadingProgress = {
+    articleCount: number;
+    completedCount: number;
+};
+export async function getReadingProgress(
+    tx: ReadTransaction,
+    forTopicId: string | null = null
+): Promise<ReadingProgress> {
+    let articles: Article[];
+    if (forTopicId) {
+        articles = await listTopicArticles(tx, forTopicId);
+        if (!articles) {
+            articles = [];
+        }
+    } else {
+        const start = subtractWeeks(getWeekStart(), 3);
+        articles = await listRecentArticles(tx, start.getTime());
+    }
+
+    return {
+        articleCount: articles.length,
+        completedCount: articles.filter(
+            (a) => a.reading_progress >= readingProgressFullClamp
+        ).length,
+    };
 }
 
 /* ***** topics ***** */
@@ -318,10 +357,7 @@ export async function getGroupTopicChildren(
         .sort((a, b) => parseInt(a.id) - parseInt(b.id));
 }
 
-export async function getSettings(tx: ReadTransaction): Promise<Settings> {
-    const savedValue = (await tx.get("settings")) as Settings | undefined;
-    return savedValue || {};
-}
+/* ***** partialSyncState ***** */
 
 export async function getPartialSyncState(
     tx: ReadTransaction
@@ -331,6 +367,22 @@ export async function getPartialSyncState(
         return undefined;
     }
     return partialSyncStateSchema.parse(JSON.parse(val?.toString() || "null"));
+}
+
+/* ***** settings ***** */
+
+export async function getSettings(tx: ReadTransaction): Promise<Settings> {
+    const savedValue = (await tx.get("settings")) as Settings | undefined;
+    return savedValue || {};
+}
+
+/* ***** userInfo ***** */
+
+export async function getUserInfo(
+    tx: ReadTransaction
+): Promise<UserInfo | null> {
+    const savedValue = (await tx.get("userInfo")) as UserInfo | undefined;
+    return savedValue || null;
 }
 
 export const accessors = {
@@ -343,15 +395,18 @@ export const accessors = {
     listRecentArticles,
     groupRecentArticles,
     listFavoriteArticles,
+    listQueueArticles,
     listTopicArticles,
     listTopicArticlesServer,
     getTopicArticlesCount,
+    getReadingProgress,
     getTopic,
     listTopics,
     getTopicIdMap,
     groupTopics,
     getGroupTopicChildren,
-    getSettings,
     getPartialSyncState,
+    getSettings,
+    getUserInfo,
 };
 export type A = typeof accessors;

@@ -5,7 +5,6 @@
     import ArticlePreview from "./ArticlePreview.svelte";
 
     export let articles: Article[];
-    export let libraryUser: string;
 
     const articleScale = 0.65;
     const articleOverlay = 0.7;
@@ -23,7 +22,6 @@
         <ArticlePreview
             {article}
             {index}
-            {libraryUser}
             className="absolute origin-top-left"
             transform={`scale(${articleScale}) translate(${
                 articleOverlay * 100 * index

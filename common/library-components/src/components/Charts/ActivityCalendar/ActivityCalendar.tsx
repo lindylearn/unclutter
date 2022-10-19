@@ -321,11 +321,16 @@ export function ActivityCalendar({
             ));
     }
 
+    const initialRender = useRef<boolean>(true);
     const [startWeekIndex, setStartWeekIndex] = useState<number>(
         weeks.length + startWeekOffset
     );
     useEffect(() => {
-        onChangeWeekOffset(startWeekIndex - weeks.length);
+        if (initialRender.current) {
+            initialRender.current = false;
+        } else {
+            onChangeWeekOffset(startWeekIndex - weeks.length);
+        }
     }, [startWeekIndex]);
 
     const [diffX, setDiffX] = useState(0);

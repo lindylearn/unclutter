@@ -8,12 +8,12 @@
     import StackedArticleList from "./Library/StackedArticleList.svelte";
     import { getRandomColor } from "../../common/annotations/styling";
     import LindyIcon from "./Library/LindyIcon.svelte";
-    import { reportEventContentScript } from "../../content-script/messaging";
     import {
         dismissedLibrarySignupMessage,
         getFeatureFlag,
         setFeatureFlag,
     } from "../../common/featureFlags";
+    import { reportEventContentScript } from "@unclutter/library-components/dist/common";
 
     export let libraryState: LibraryState | null = null;
     export let linkedArticles: Article[] | null = null;
@@ -41,7 +41,7 @@
     }
 </script>
 
-{#if libraryState?.libraryUser}
+{#if libraryState?.libraryEnabled}
     {#if linkedArticles?.length > 0}
         <!-- solid background for transparent topic color -->
         <div class="related-container font-text m-[5px] text-gray-700" in:fade>
@@ -57,10 +57,7 @@
                 Linked articles
             </div>
 
-            <StaticArticleList
-                articles={linkedArticles.slice(0, 5)}
-                libraryUser={libraryState.libraryUser}
-            />
+            <StaticArticleList articles={linkedArticles.slice(0, 5)} />
 
             <!-- <div
                     class="absolute top-3 right-3 flex cursor-pointer items-center gap-1 rounded-lg px-1.5 py-0.5 font-title text-sm font-semibold shadow-sm transition-all hover:scale-95 hover:shadow"
@@ -124,7 +121,6 @@
                     articles={libraryState.relatedArticles
                         .slice(0, 3)
                         .reverse()}
-                    libraryUser={libraryState.libraryUser}
                 />
             {/if}
         </div>

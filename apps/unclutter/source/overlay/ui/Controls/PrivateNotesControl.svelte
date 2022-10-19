@@ -4,7 +4,7 @@
         getFeatureFlag,
         setFeatureFlag,
     } from "../../../common/featureFlags";
-    import { reportEventContentScript } from "../../../content-script/messaging";
+    import { reportEventContentScript } from "@unclutter/library-components/dist/common";
     import AnnotationsModifier from "../../../content-script/modifications/annotations/annotationsModifier";
     import OverlayManager from "../../../content-script/modifications/overlay";
     import UiControl from "./UIControl.svelte";

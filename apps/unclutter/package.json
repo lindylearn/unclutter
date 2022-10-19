@@ -4,12 +4,14 @@
     "private": true,
     "dependencies": {
         "@rocicorp/rails": "^0.2.2",
+        "@types/offscreencanvas": "^2019.7.0",
         "@unclutter/library-components": "*",
         "approx-string-match": "^2.0.0",
         "clsx": "^1.2.1",
         "crypto-js": "^4.1.1",
         "d3-force": "^3.0.0",
         "force-graph": "^1.42.13",
+        "idb-keyval": "^6.2.0",
         "lodash": "^4.17.21",
         "patch-package": "^6.4.7",
         "react": "18.2.0",
@@ -81,7 +83,6 @@
         "run": "yarn web-ext run -t chromium --start-url news.ycombinator.com --watch-file distribution/package.json",
         "run-v2": "yarn web-ext run -t firefox-desktop --start-url news.ycombinator.com --watch-file distribution/package.json",
         "package": "yarn build && yarn web-ext build -o -n extension_manifest-v3.zip --ignore-files '!node_modules' '!node_modules/**' && yarn install-v2-manifest && yarn web-ext build -o -n extension_manifest-v2.zip --ignore-files '!node_modules' '!node_modules/**' && yarn install-v3-manifest",
-        "test": "npx ts-node-esm test/main.ts",
         "postinstall": "patch-package"
     },
     "browserslist": "last 1 version",

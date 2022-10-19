@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { reportEventContentScript } from "source/content-script/messaging";
+    import { reportEventContentScript } from "@unclutter/library-components/dist/common";
     import { createEventDispatcher } from "svelte";
 
     const dispatch = createEventDispatcher();

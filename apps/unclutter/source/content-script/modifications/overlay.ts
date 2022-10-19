@@ -7,7 +7,6 @@ import {
 import browser, { BrowserType, getBrowserType } from "../../common/polyfill";
 import { LibraryState } from "../../common/schema";
 import { Article } from "@unclutter/library-components/dist/store/_schema";
-import { getLibraryUser } from "../../common/storage";
 import {
     createStylesheetLink,
     overrideClassname,
@@ -75,7 +74,7 @@ export default class OverlayManager implements PageModifier {
             this.annotationsEnabled = await getFeatureFlag(
                 enableAnnotationsFeatureFlag
             );
-            this.libraryEnabled = !!(await getLibraryUser());
+            // this.libraryEnabled = true // TODO check libraryEnabled properly
         })();
     }
 

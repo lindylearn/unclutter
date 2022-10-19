@@ -8,22 +8,21 @@ import {
 import { eachDayOfInterval, subYears } from "date-fns";
 
 import { Article } from "../../store";
-import { getWeekStart, subtractWeeks } from "../../common";
 
 export function ArticleActivityCalendar({
     darkModeEnabled,
     articles,
-    onSelectDate,
-    start,
+    startWeeksAgo,
     setStartWeeksAgo,
     defaultWeekOverlay,
+    reportEvent = () => {},
 }: {
     darkModeEnabled: boolean;
     articles?: Article[];
-    onSelectDate: (date: Date) => void;
-    start: Date;
+    startWeeksAgo: number;
     setStartWeeksAgo: (weeksAgo: number) => void;
     defaultWeekOverlay: number;
+    reportEvent?: (event: string, data?: any) => void;
 }) {
     const data = useMemo(() => {
         if (!articles) {
@@ -31,6 +30,14 @@ export function ArticleActivityCalendar({
         }
         return getActivityData(articles);
     }, [articles]);
+
+    function changeWeekOffset(offset) {
+        const newValue = -offset;
+        if (newValue !== startWeeksAgo) {
+            setStartWeeksAgo(newValue);
+            reportEvent("changeStatsTimeWindow", { startWeeksAgo: newValue });
+        }
+    }
 
     if (data === null) {
         return <></>;
@@ -41,7 +48,7 @@ export function ArticleActivityCalendar({
             <ActivityCalendar
                 data={data || []}
                 startWeekOffset={-defaultWeekOverlay - 1}
-                onChangeWeekOffset={(offset) => setStartWeeksAgo(-offset)}
+                onChangeWeekOffset={changeWeekOffset}
                 theme={getColorLevels(darkModeEnabled)}
                 overlayColor={
                     darkModeEnabled

@@ -1,3 +1,4 @@
+import { useAutoDarkMode } from "@unclutter/library-components/dist/common";
 import {
     LibraryModalPage,
     constructGraphData,
@@ -8,6 +9,7 @@ import {
     ArticleLink,
     ReplicacheContext,
     Topic,
+    useSubscribe,
 } from "@unclutter/library-components/dist/store";
 import { useContext, useEffect, useState } from "react";
 
@@ -47,19 +49,15 @@ export default function ModalTestTab({}) {
         }, 100);
     }, [rep]);
 
-    const [darkModeEnabled, setDarkModeEnabled] = useState(
-        window.matchMedia("(prefers-color-scheme: dark)").matches
-    );
-    useEffect(() => {
-        window
-            .matchMedia("(prefers-color-scheme: dark)")
-            .addEventListener("change", (event) => {
-                setDarkModeEnabled(event.matches);
-            });
-    }, []);
+    const darkModeEnabled = useAutoDarkMode();
+
+    const userInfo = useSubscribe(rep, rep?.subscribe.getUserInfo(), null);
+    if (!userInfo) {
+        return <></>;
+    }
 
     return (
-        <div className="h-screen w-screen">
+        <div className="h-screen w-screen p-1">
             <div
                 className="bg-lindy m-20 mx-auto max-w-md cursor-pointer rounded-lg p-2"
                 onClick={() => setShowModal(true)}
@@ -68,11 +66,13 @@ export default function ModalTestTab({}) {
             </div>
 
             <LibraryModalPage
+                userInfo={userInfo}
                 darkModeEnabled={darkModeEnabled}
+                showSignup={true}
                 currentArticle={article?.url}
                 initialTopic={topic}
                 graph={graph}
-                relatedLinkCount={2}
+                // relatedLinkCount={2}
                 isVisible={showModal}
                 closeModal={() => setShowModal(false)}
             />

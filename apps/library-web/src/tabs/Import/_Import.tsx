@@ -8,8 +8,8 @@ import BrowserBookmarksImportSettings from "./Bookmarks";
 import CSVImportSettings from "./CSV";
 import PocketImportSettings from "./Pocket";
 import RaindropImportSettings from "./Raindrop";
-import { reportEventPosthog } from "@unclutter/library-components/dist/common";
 import InstapaperImportSettings from "./Instapaper";
+import { reportEventPosthog } from "../../../common/metrics";
 
 const websocketUrl = "wss://api2.lindylearn.io:444/ws/clustering_results";
 // const websocketUrl = "ws://localhost:8000/ws/clustering_results";

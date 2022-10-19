@@ -3,10 +3,11 @@ import { cloneElement, useContext, useEffect, useState } from "react";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import { Redirect, Route, Switch, useLocation } from "wouter";
 
-import { reportEventPosthog } from "@unclutter/library-components/dist/common";
 import HeaderBar from "./components/HeaderBar";
 import {
     ReplicacheContext,
+    Settings,
+    UserInfo,
     useSubscribe,
 } from "@unclutter/library-components/dist/store";
 import DashboardTab from "./tabs/Dashboard";
@@ -18,6 +19,8 @@ import SettingsTab from "./tabs/Settings";
 import TopicsListTab from "./tabs/TopicsList";
 import WelcomeTab from "./tabs/Welcome";
 import ModalTestTab from "./tabs/ModalTest";
+import Welcome2Tab from "./tabs/Welcome2";
+import { reportEventPosthog } from "../common/metrics";
 
 export interface LibraryTab {
     id: string;
@@ -104,8 +107,31 @@ export default function App() {
         }
     }, [location]);
 
-    const settings = useSubscribe(rep, rep?.subscribe.getSettings(), null);
+    // @ts-ignore
+    const userInfo: UserInfo | undefined | null = useSubscribe(
+        rep,
+        rep?.subscribe.getUserInfo(),
+        // @ts-ignore
+        undefined
+    );
+    // @ts-ignore
+    const settings: Settings | undefined = useSubscribe(
+        rep,
+        rep?.subscribe.getSettings(),
+        // @ts-ignore
+        undefined
+    );
 
+    if (!userInfo) {
+        return <></>;
+    }
+    if (!userInfo.onPaidPlan && !userInfo.trialEnabled) {
+        return <Welcome2Tab />;
+    }
+
+    if (location === "/link") {
+        return <Welcome2Tab />;
+    }
     if (location === "/modal") {
         return <ModalTestTab />;
     }
@@ -163,7 +189,7 @@ export default function App() {
                 >
                     <Switch location={location}>
                         <Route path="/">
-                            {((settings !== null &&
+                            {((settings &&
                                 settings?.tutorial_stage === undefined) ||
                                 (settings?.tutorial_stage &&
                                     settings?.tutorial_stage < 3)) && (

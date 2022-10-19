@@ -1,10 +1,10 @@
 import {
+    anonymousLibraryEnabled,
     collectAnonymousMetricsFeatureFlag,
     getAllFeatureFlags,
     getFeatureFlag,
     isDevelopmentFeatureFlag,
     showFeedbackMessage,
-    showLibraryModal,
     showLibrarySignupFlag,
 } from "../common/featureFlags";
 import browser from "../common/polyfill";
@@ -20,7 +20,7 @@ export async function reportEvent(name: string, data = {}) {
     );
     const isDev = await getFeatureFlag(isDevelopmentFeatureFlag);
     if (isDev) {
-        console.log(`Metric ${name}:`, data);
+        // console.log(`Metric ${name}:`, data);
         return;
     }
 
@@ -170,7 +170,7 @@ export async function getRemoteFeatureFlags() {
         cachedRemoteFeatureFlags = {
             [showLibrarySignupFlag]: false,
             [showFeedbackMessage]: false,
-            [showLibraryModal]: true,
+            [anonymousLibraryEnabled]: true,
         };
         return cachedRemoteFeatureFlags;
     }

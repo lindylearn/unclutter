@@ -1,11 +1,13 @@
 import React, { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { LibraryModalPage } from "@unclutter/library-components/dist/components/Modal";
+import { LocalScreenshotContext } from "@unclutter/library-components/dist/components/Article";
 
 import { LibraryState } from "../common/schema";
 import {
+    getLocalScreenshot,
     ReplicacheProxy,
     reportEventContentScript,
-} from "../content-script/messaging";
+} from "@unclutter/library-components/dist/common/messaging";
 import { ReplicacheContext } from "@unclutter/library-components/dist/store";
 
 export default function App({
@@ -52,21 +54,36 @@ export default function App({
         }, 300);
     }
 
+    // TODO move userInfo to query params to render faster?
+    if (!libraryState?.userInfo) {
+        return <></>;
+    }
+
     return (
         // @ts-ignore
         <ReplicacheContext.Provider value={rep}>
-            <LibraryModalPage
-                darkModeEnabled={darkModeEnabled === "true"} // convert string to bool
-                relatedLinkCount={libraryState?.topicProgress?.linkCount}
-                currentArticle={
-                    libraryState?.libraryInfo?.article.url || articleUrl
+            <LocalScreenshotContext.Provider
+                value={
+                    !libraryState.userInfo.accountEnabled
+                        ? getLocalScreenshot
+                        : null
                 }
-                initialTopic={libraryState?.libraryInfo?.topic}
-                graph={libraryState?.graph}
-                isVisible={showModal}
-                closeModal={closeModal}
-                reportEvent={reportEventContentScript}
-            />
+            >
+                <LibraryModalPage
+                    userInfo={libraryState?.userInfo}
+                    darkModeEnabled={darkModeEnabled === "true"} // convert string to bool
+                    showSignup={libraryState.showLibrarySignup}
+                    relatedLinkCount={libraryState?.linkCount}
+                    currentArticle={
+                        libraryState?.libraryInfo?.article.url || articleUrl
+                    }
+                    initialTopic={libraryState?.libraryInfo?.topic}
+                    graph={libraryState?.graph}
+                    isVisible={showModal}
+                    closeModal={closeModal}
+                    reportEvent={reportEventContentScript}
+                />
+            </LocalScreenshotContext.Provider>
         </ReplicacheContext.Provider>
     );
 }

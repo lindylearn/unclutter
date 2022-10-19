@@ -13,6 +13,7 @@ import {
 import { Article } from "../../store/_schema";
 import { TopicTag } from "../TopicTag";
 import { DraggableArticleList } from "./DraggableArticleList";
+import { StaticArticleList } from "./StaticArticleList";
 
 export function GroupedArticleList({
     articles,
@@ -57,10 +58,7 @@ export function GroupedArticleList({
                                 : "",
                         }}
                     >
-                        <DraggableArticleList
-                            articles={articles}
-                            sortPosition="topic_sort_position"
-                        />
+                        <StaticArticleList articles={articles} />
                     </div>
                 </TopicGroupBackground>
             ))}
@@ -72,108 +70,78 @@ export function useArticleGroups(
     articles: Article[],
     combineSmallGroups?: boolean,
     sortGroupsBy?: "recency_position" | "recency" | "topic_size",
-    sortArticlesBy?: "recency_order" | "topic_order",
+    sortArticlesBy?: "recency_order" | "reverse_recency_order" | "topic_order",
     maxGroupCount?: number
 ) {
-    const rep = useContext(ReplicacheContext);
-
     const [groups, setGroups] = useState<[string, Article[]][]>();
     useEffect(() => {
         (async () => {
-            const groupsMap: { [topic_id: string]: Article[] } = groupBy(
+            const groupEntries = await groupArticlesByTopic(
                 articles,
-                "topic_id"
+                combineSmallGroups,
+                sortGroupsBy,
+                sortArticlesBy,
+                maxGroupCount
             );
-            let groupEntries = Object.entries(groupsMap);
-
-            if (combineSmallGroups) {
-                const [largeGroups, singleGroups] = partition(
-                    groupEntries,
-                    ([_, articles]) => articles.length > 1
-                );
-                groupEntries = largeGroups;
-
-                if (
-                    maxGroupCount === undefined ||
-                    largeGroups.length < maxGroupCount
-                ) {
-                    // only group if need more topics
-
-                    // if (singleGroups.length > 0) {
-                    //     groupEntries.push([
-                    //         "Other",
-                    //         singleGroups.flatMap(([_, articles]) => articles),
-                    //     ]);
-                    // }
-
-                    const otherArticles = (
-                        await Promise.all(
-                            singleGroups.map(async ([topic_id, articles]) => {
-                                const topic = await rep?.query.getTopic(
-                                    topic_id
-                                );
-                                return articles.map((a) => ({
-                                    ...a,
-                                    group_id: topic?.group_id,
-                                }));
-                            })
-                        )
-                    ).flat();
-
-                    const [groupGroupEntries, uncategorizedEntries] = partition(
-                        Object.entries(groupBy(otherArticles, "group_id")),
-                        // @ts-ignore
-                        ([_, articles]) => articles.length > 1
-                    );
-                    // @ts-ignore
-                    groupEntries = groupEntries.concat(groupGroupEntries);
-                    if (uncategorizedEntries.length > 0) {
-                        groupEntries.push([
-                            "Other",
-                            // @ts-ignore
-                            uncategorizedEntries.flatMap(
-                                ([_, articles]) => articles
-                            ),
-                        ]);
-                    }
-                }
-            }
-
-            if (sortGroupsBy === "recency_position") {
-                // combineSmallGroups requires re-sort
-                groupEntries.sort(
-                    (a, b) =>
-                        getSafeArticleSortPosition(
-                            b[1][0],
-                            "recency_sort_position"
-                        ) -
-                        getSafeArticleSortPosition(
-                            a[1][0],
-                            "recency_sort_position"
-                        )
-                );
-            } else if (sortGroupsBy === "recency") {
-                // sort by recently added groups, not recency positioning (e.g to keep stable during reorders)
-                groupEntries.sort(
-                    (a, b) => b[1][0].time_added - a[1][0].time_added
-                );
-            } else if (sortGroupsBy === "topic_size") {
-                groupEntries.sort((a, b) => b[1].length - a[1].length);
-            }
-
-            groupEntries.map(([topic_id, articles]) => {
-                if (sortArticlesBy === "recency_order") {
-                    // passed articles should already be sorted
-                } else if (sortArticlesBy === "topic_order") {
-                    sortArticlesPosition(articles, "topic_sort_position");
-                }
-            });
 
             setGroups(groupEntries);
         })();
-    }, [articles]);
+    }, [articles, sortGroupsBy, sortArticlesBy]);
 
     return groups;
+}
+
+export async function groupArticlesByTopic(
+    articles: Article[],
+    combineSmallGroups?: boolean,
+    sortGroupsBy?: "recency_position" | "recency" | "topic_size",
+    sortArticlesBy?: "recency_order" | "reverse_recency_order" | "topic_order",
+    maxGroupCount?: number
+): Promise<[string, Article[]][]> {
+    const groupsMap: { [topic_id: string]: Article[] } = groupBy(
+        articles,
+        "topic_id"
+    );
+    let groupEntries = Object.entries(groupsMap);
+
+    if (combineSmallGroups) {
+        const [largeGroups, singleGroups] = partition(
+            groupEntries,
+            ([_, articles]) => articles.length > 1
+        );
+        groupEntries = largeGroups;
+        if (singleGroups.length > 0) {
+            groupEntries.push([
+                "Other",
+                singleGroups.flatMap(([_, articles]) => articles),
+            ]);
+        }
+    }
+
+    if (sortGroupsBy === "recency_position") {
+        // combineSmallGroups requires re-sort
+        groupEntries.sort(
+            (a, b) =>
+                getSafeArticleSortPosition(b[1][0], "recency_sort_position") -
+                getSafeArticleSortPosition(a[1][0], "recency_sort_position")
+        );
+    } else if (sortGroupsBy === "recency") {
+        // sort by recently added groups, not recency positioning (e.g to keep stable during reorders)
+        groupEntries.sort((a, b) => b[1][0].time_added - a[1][0].time_added);
+    } else if (sortGroupsBy === "topic_size") {
+        groupEntries.sort((a, b) => b[1].length - a[1].length);
+    }
+
+    groupEntries.forEach(([topic_id, articles]) => {
+        if (sortArticlesBy === "recency_order") {
+            // passed articles should already be sorted
+        } else if (sortArticlesBy === "reverse_recency_order") {
+            articles = articles.reverse();
+        } else if (sortArticlesBy === "topic_order") {
+            sortArticlesPosition(articles, "topic_sort_position");
+        }
+    });
+    return groupEntries.slice(0, maxGroupCount);
 }
 
 export function TopicGroupBackground({

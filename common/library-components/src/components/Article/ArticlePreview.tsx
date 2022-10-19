@@ -1,11 +1,16 @@
-import React from "react";
+import React, { createContext, useEffect } from "react";
 import clsx from "clsx";
 import { useContext, useLayoutEffect, useState } from "react";
 
-import { ReplicacheContext } from "../../store";
 import { Article, readingProgressFullClamp } from "../../store/_schema";
 import { ArticleDropdownMenu } from "./ArticleDropdownMenu";
-import { openArticle } from "../../common";
+import { openArticleResilient } from "../../common";
+
+export type LocalScreenshotFetcher =
+    | ((articleId: string) => Promise<string | null>)
+    | null;
+export const LocalScreenshotContext =
+    createContext<LocalScreenshotFetcher>(null);
 
 interface ArticlePreviewProps {
     article: Article;
@@ -42,22 +47,9 @@ export function ArticlePreview({
         e.preventDefault();
         e.stopPropagation();
         if (listState === "static") {
-            openArticle(article.url);
+            openArticleResilient(article.url);
             reportEvent("clickListArticle");
         }
-    }
-
-    const rep = useContext(ReplicacheContext);
-    async function toggleFavorite(e) {
-        // e.preventDefault();
-        e.stopPropagation();
-        await rep?.mutate.articleSetFavorite({
-            id: article.id,
-            is_favorite: !article.is_favorite,
-        });
-        reportEvent("toggleArticleFavorite", {
-            newState: !article.is_favorite,
-        });
     }
 
     let publishYear = article.publication_date?.slice(0, 4);
@@ -66,18 +58,33 @@ export function ArticlePreview({
     }
 
     // animate hover via JS & CSS animation because transitions sometimes fail
-    const [isHover, setIsHover] = useState<boolean | null>(null);
-
-    useLayoutEffect(() => {
-        setIsHover(null);
-    }, [listState]);
+    // const [isHover, setIsHover] = useState<boolean | null>(null);
+    // useLayoutEffect(() => {
+    //     setIsHover(null);
+    // }, [listState]);
 
     const [dropdownOpen, setDropdownOpen] = useState(false);
+
+    const localScreenshotFetcher = useContext(LocalScreenshotContext);
+    const [backgroundSrc, setBackgroundSrc] = useState<string>(
+        `url(https://storage.googleapis.com/unclutter-screenshots-serverless/articles/current/${encodeURIComponent(
+            article.url
+        ).replaceAll("%", "%25")}.webp)`
+    );
+    useEffect(() => {
+        if (localScreenshotFetcher) {
+            localScreenshotFetcher(article.id).then((base64) => {
+                if (base64) {
+                    setBackgroundSrc(`url(${base64})`);
+                }
+            });
+        }
+    }, [localScreenshotFetcher]);
 
     return (
         <a
             className={clsx(
-                "article-container relative block flex-shrink-0 cursor-pointer overflow-hidden bg-white text-gray-800 transition-shadow dark:text-black dark:brightness-90",
+                "article-container relative block flex-shrink-0 cursor-pointer overflow-hidden bg-white text-base text-gray-800 transition-shadow dark:text-black dark:brightness-90",
                 small
                     ? "hover:shadow-articleSmallHover shadow-articleSmall h-40 w-36 rounded-md"
                     : "hover:shadow-articleHover shadow-article h-52 w-44 rounded-lg",
@@ -92,13 +99,13 @@ export function ArticlePreview({
             )}
             onClick={openPage}
             href={article.url}
-            onMouseEnter={(el) => {
-                const target = el.target as HTMLElement;
-                if (!target.classList.contains("dropdown-elem")) {
-                    setIsHover(true);
-                }
-            }}
-            onMouseLeave={() => setIsHover(false)}
+            // onMouseEnter={(el) => {
+            //     const target = el.target as HTMLElement;
+            //     if (!target.classList.contains("dropdown-elem")) {
+            //         setIsHover(true);
+            //     }
+            // }}
+            // onMouseLeave={() => setIsHover(false)}
             onContextMenu={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
@@ -119,9 +126,7 @@ export function ArticlePreview({
             <div
                 className="article-image absolute top-0 left-0 h-full w-full"
                 style={{
-                    backgroundImage: `url(https://storage.googleapis.com/unclutter-screenshots-serverless/articles/current/${encodeURIComponent(
-                        article.url
-                    ).replaceAll("%", "%25")}.webp)`,
+                    backgroundImage: backgroundSrc,
                     backgroundSize: "cover",
                 }}
             ></div>
@@ -133,11 +138,9 @@ export function ArticlePreview({
             ></div> */}
 
             <ArticleDropdownMenu
+                article={article}
                 open={dropdownOpen}
                 setOpen={setDropdownOpen}
-                isFavorite={article.is_favorite}
-                toggleFavorite={toggleFavorite}
-                article={article}
                 reportEvent={reportEvent}
                 small={small}
             />
@@ -162,10 +165,10 @@ export function ArticlePreview({
             )}
 
             <div
-                className="progress bg-lindy dark:bg-lindyDark absolute bottom-0 left-0 h-[7px] rounded-r transition-all"
+                className="bg-lindy dark:bg-lindyDark absolute bottom-0 left-0 h-[7px] rounded-r transition-all"
                 style={{
-                    // @ts-ignore
-                    "--progress": `${Math.max(readingProgress, 0.1) * 100}%`,
+                    // disabled progress animation as it sometimes re-renders during dragging
+                    width: `${readingProgress * 100}%`,
                 }}
             />
             {/* {readingProgress < readingProgressFullClamp && (

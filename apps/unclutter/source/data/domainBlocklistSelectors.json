@@ -146,6 +146,7 @@
         ".hz-editorial-gallery-side-bar__ads",
         ".hz-editorial-gallery-side-bar__section"
     ],
+    "independent.co.uk": [".Header__AuthorImage-sc-mqbe6u-4.bEMDmP"],
     "jamesclear.com": [".post__next"],
     "kdd.org": [
         ".btn.u-btn-primary.g-brd-2.g-brd-white.g-font-size-13.g-rounded-50.g-pl-20.g-mb-20.g-pr-15.g-py-9",
@@ -290,6 +291,12 @@
         "#tdi_59"
     ],
     "thewalrus.ca": ["._form-content", ".code-block.code-block-4"],
+    "tienphong.vn": [
+        ".article__story.cms-relate",
+        ".box-heading",
+        ".story",
+        ".article__tag"
+    ],
     "tinhte.vn": [
         ".jsx-3147581474.info-block--right",
         ".jsx-3569995709.main",

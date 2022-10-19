@@ -3,7 +3,7 @@ import ForceGraph, { ForceGraphInstance } from "force-graph";
 import { forceManyBody } from "d3-force";
 import clsx from "clsx";
 
-import { getRandomLightColor, openArticle } from "../../../common";
+import { getRandomLightColor, openArticleResilient } from "../../../common";
 import { CustomGraphData, CustomGraphLink, CustomGraphNode } from "./data";
 import { renderNodeObject } from "./canvas";
 import { NodeTooltip } from "./Tooltips";
@@ -153,7 +153,7 @@ function GraphStats({
 
     return (
         <ReadingProgress
-            className="absolute right-4 top-4"
+            className="absolute right-4 top-4 px-2 py-0.5"
             articleCount={articleCount}
             readCount={readCount}
             color={color}
@@ -225,12 +225,12 @@ function renderGraph(
         )
         // node styling
         .nodeRelSize(NODE_R)
-        .nodeVal((n: RuntimeNode) => (n.isCompleted ? 2 : 1))
+        .nodeVal((n: RuntimeNode) => (n.isCompleted || n.depth === 0 ? 2 : 1))
         .nodeColor((n: RuntimeNode) => {
-            // if (n.depth <= 0) {
+            // if (n.depth === 0) {
             //     return originColor;
             // }
-            if (n.isCompleted || n.isCompletedAdjacent) {
+            if (n.depth <= 2 || n.isCompleted || n.isCompletedAdjacent) {
                 return themeColor;
             }
             return secondaryColor;
@@ -272,7 +272,7 @@ function renderGraph(
         // .autoPauseRedraw(false) // re-render nodes on hover
         .minZoom(0.5)
         .onNodeClick((node: RuntimeNode, event) => {
-            openArticle(node.url);
+            openArticleResilient(node.url);
             reportEvent("clickGraphArticle", {
                 depth: node.depth,
                 isCompleted: node.isCompleted,

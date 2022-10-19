@@ -2,7 +2,7 @@ import clsx from "clsx";
 import React, { useEffect, useRef } from "react";
 import { LindyAnnotation } from "../../common/annotations/create";
 import { getAnnotationColor } from "../../common/annotations/styling";
-import { reportEventContentScript } from "../../content-script/messaging";
+import { reportEventContentScript } from "@unclutter/library-components/dist/common/messaging";
 
 interface RelatedArticleProps {
     annotation: LindyAnnotation;

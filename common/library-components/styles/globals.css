@@ -145,3 +145,38 @@ body {
         fill: var(--react-activity-calendar-loading);
     }
 }
+
+@keyframes easeOutBounce {
+    0% {
+        transform: translateY(0%);
+        opacity: 0;
+    }
+    12% {
+        transform: translateY(10.89%);
+    }
+    24% {
+        transform: translateY(43.56%);
+    }
+    36% {
+        transform: translateY(98.01%);
+    }
+    54% {
+        transform: translateY(75.02%);
+    }
+    74% {
+        transform: translateY(98.37%);
+    }
+    82% {
+        transform: translateY(93.75%);
+    }
+    92% {
+        transform: translateY(99.34%);
+    }
+    96% {
+        transform: translateY(98.46%);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(100%);
+    }
+}

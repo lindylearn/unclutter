@@ -1,7 +1,4 @@
 <script lang="ts">
-    import { reportEventContentScript } from "source/content-script/messaging";
-    import { createEventDispatcher } from "svelte";
-
     export let totalAnnotationCount: number;
     const goalAnnotationCount = 6;
 

@@ -5,7 +5,7 @@ import { PageModifier, trackModifierExecution } from "./_interface";
 
 import { waitUntilIframeLoaded } from "./annotations/injectSidebar";
 import BodyStyleModifier from "./bodyStyle";
-import { reportEventContentScript } from "../messaging";
+import { reportEventContentScript } from "@unclutter/library-components/dist/common/messaging";
 
 @trackModifierExecution
 export default class LibraryModalModifier implements PageModifier {
@@ -13,15 +13,13 @@ export default class LibraryModalModifier implements PageModifier {
 
     constructor(bodyStyleModifier: BodyStyleModifier) {
         this.bodyStyleModifier = bodyStyleModifier;
-    }
 
-    private modalIframe: HTMLIFrameElement;
-    private iframeLoaded: boolean = false;
-    private appLoaded: boolean = false;
-    async showModal() {
-        // create iframe on demand
-        this.createIframe();
+        // set up event handlers once
         window.addEventListener("message", ({ data }) => {
+            if (!this.modalIframe) {
+                return;
+            }
+
             if (data.event === "modalIframeLoaded") {
                 // ready for css inject
                 this.iframeLoaded = true;
@@ -32,6 +30,14 @@ export default class LibraryModalModifier implements PageModifier {
                 this.destroyIframe();
             }
         });
+    }
+
+    private modalIframe: HTMLIFrameElement;
+    private iframeLoaded: boolean = false;
+    private appLoaded: boolean = false;
+    async showModal() {
+        // create iframe on demand
+        this.createIframe();
 
         // set theme variables once html ready, before react rendered
         await waitUntilIframeLoaded(this.modalIframe);
@@ -64,12 +70,19 @@ export default class LibraryModalModifier implements PageModifier {
         document.documentElement.appendChild(this.modalIframe);
 
         reportEventContentScript("openLibraryModal", {
-            linkCount: this.libraryState.topicProgress.linkCount,
+            onPaidPlan: this.libraryState.userInfo.onPaidPlan,
+            trialEnabled: this.libraryState.userInfo.trialEnabled,
+            linkCount: this.libraryState.linkCount,
+            articleCount: this.libraryState.readingProgress.articleCount,
+            completedCount: this.libraryState.readingProgress.completedCount,
         });
     }
 
     private destroyIframe() {
-        this.modalIframe?.remove();
+        if (!this.modalIframe) {
+            return;
+        }
+        this.modalIframe.remove();
         this.modalIframe = null;
 
         this.iframeLoaded = false;
@@ -123,7 +136,7 @@ export default class LibraryModalModifier implements PageModifier {
     }
 
     closeModal() {
-        // send eevent to modal to gracefully close, will then send this event back
+        // send event to modal to gracefully close, will then send this event back
         this.sendModalEvent({
             event: "closeLibraryModal",
         });
