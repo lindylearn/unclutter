@@ -65,7 +65,7 @@ export default function ModalTestTab({}) {
     }
 
     return (
-        <div className="h-screen w-screen">
+        <div className="h-screen w-screen p-1">
             <div
                 className="bg-lindy m-20 mx-auto max-w-md cursor-pointer rounded-lg p-2"
                 onClick={() => setShowModal(true)}

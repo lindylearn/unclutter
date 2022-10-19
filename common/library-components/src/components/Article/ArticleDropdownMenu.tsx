@@ -122,7 +122,7 @@ export function ArticleDropdownMenu({
                             title={
                                 article.is_queued
                                     ? "Read later"
-                                    : "Add to queue"
+                                    : "Add to Queue"
                             }
                             svg={
                                 <svg
