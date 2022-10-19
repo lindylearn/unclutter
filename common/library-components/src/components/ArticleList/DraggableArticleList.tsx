@@ -44,7 +44,7 @@ export function DraggableArticleList({
         >
             <div
                 className={clsx(
-                    "animate-fadein flex h-full flex-wrap content-start gap-3",
+                    "article-list animate-fadein flex h-full flex-wrap content-start gap-3",
                     centerGrid ? "justify-center" : ""
                 )}
                 ref={setNodeRef}

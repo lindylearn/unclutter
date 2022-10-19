@@ -229,7 +229,9 @@ export function useTabInfos(
                             };
                         })
                 );
-                tabInfos.push(...topicTabInfos);
+                tabInfos.push(
+                    ...topicTabInfos.filter((t) => t.articles.length > 0)
+                );
             } else {
                 tabInfos.push({
                     key: domainFilter || "list",

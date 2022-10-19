@@ -107,31 +107,50 @@ export function DraggableContext({
             }
             // console.log(`move group ${sourceList} -> ${targetList}`);
 
-            const targetIndex = articleLists[targetList].findIndex(
+            const targetArticles = articleLists[targetList];
+            const targetIndex = targetArticles.findIndex(
                 (a) => a.id === over.id
             );
+
+            // remote update
+            let articleIdBeforeNewPosition: string | null;
+            let articleIdAfterNewPosition: string | null;
+            if (targetIndex !== -1) {
+                // assume is first entry intitially, so move to right
+                articleIdBeforeNewPosition = targetArticles[targetIndex]?.id;
+                articleIdAfterNewPosition = targetArticles[targetIndex + 1]?.id;
+            } else {
+                articleIdBeforeNewPosition =
+                    targetArticles[targetArticles.length - 1]?.id || null;
+                articleIdAfterNewPosition = null;
+            }
 
             // only queue dragging supported for now
             rep?.mutate.articleAddMoveToQueue({
                 articleId: activeArticle.id,
                 isQueued: targetList === "queue",
-                // assume is first entry, so move to right
-                articleIdBeforeNewPosition:
-                    articleLists[targetList][targetIndex]?.id,
-                articleIdAfterNewPosition:
-                    articleLists[targetList][targetIndex + 1]?.id,
+                articleIdBeforeNewPosition,
+                articleIdAfterNewPosition,
                 sortPosition: "queue_sort_position",
             });
 
+            // immediate local update
             if (sourceList) {
                 articleLists[sourceList] = articleLists[sourceList].filter(
                     (a) => a.id !== activeArticle.id
                 );
             }
-            articleLists[targetList] = articleLists[targetList]
-                .slice(0, targetIndex)
-                .concat([activeArticle])
-                .concat(articleLists[targetList].slice(targetIndex));
+            if (targetIndex !== -1) {
+                articleLists[targetList] = targetArticles
+                    .slice(0, targetIndex)
+                    .concat([activeArticle])
+                    .concat(targetArticles.slice(targetIndex));
+            } else {
+                articleLists[targetList] = targetArticles.concat([
+                    activeArticle,
+                ]);
+            }
+
             setActiveListId(targetList);
 
             if (targetList === "queue") {
