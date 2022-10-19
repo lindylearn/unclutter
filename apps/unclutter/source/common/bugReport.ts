@@ -2,7 +2,7 @@ import { reportEvent } from "../background/metrics";
 import { reportEventContentScript } from "@unclutter/library-components/dist/common/messaging";
 import browser, { getBrowserType } from "./polyfill";
 import { getDomainFrom } from "./util";
-import { ExtensionTypes } from "webextension-polyfill";
+import type { ExtensionTypes } from "webextension-polyfill";
 import { getPageReportCount, incrementPageReportCount } from "./storage";
 
 // gather info from the page to report, and send event to background script (where we know the extension version)

@@ -1,3 +1,5 @@
+import { SubscribeOptions } from "replicache";
+import type { Runtime } from "webextension-polyfill";
 import { A, M, accessors, mutators, RuntimeReplicache } from "../store";
 import { getBrowser } from "./extension";
 
@@ -69,7 +71,11 @@ export async function getLocalScreenshot(
     });
 }
 
-export type ReplicacheProxyEventTypes = "query" | "mutate" | "pull";
+export type ReplicacheProxyEventTypes =
+    | "query"
+    | "mutate"
+    | "subscribe"
+    | "pull";
 export async function processReplicacheContentScript(
     type: ReplicacheProxyEventTypes,
     methodName?: string,
@@ -94,14 +100,14 @@ export class ReplicacheProxy implements RuntimeReplicache {
     // @ts-ignore
     query: RuntimeReplicache["query"] = Object.keys(accessors).reduce(
         (obj, fnName: keyof A) => {
-            obj[fnName] = (...args: any[]) => {
-                return processReplicacheContentScript(
+            obj[fnName] = (...args: any[]) =>
+                processReplicacheContentScript(
                     "query",
                     fnName,
                     args,
                     this.targetExtension
                 );
-            };
+
             return obj;
         },
         {}
@@ -110,14 +116,40 @@ export class ReplicacheProxy implements RuntimeReplicache {
     // @ts-ignore
     mutate: RuntimeReplicache["mutate"] = Object.keys(mutators).reduce(
         (obj, fnName: keyof M) => {
-            obj[fnName] = (args: any) => {
-                return processReplicacheContentScript(
+            obj[fnName] = (args: any) =>
+                processReplicacheContentScript(
                     "mutate",
                     fnName,
                     args,
                     this.targetExtension
                 );
-            };
+
+            return obj;
+        },
+        {}
+    );
+
+    // @ts-ignore
+    subscribe: RuntimeReplicache["subscribe"] = Object.keys(accessors).reduce(
+        (obj, fnName: keyof A) => {
+            obj[fnName] =
+                (...args: any[]) =>
+                (subscribeOptions: SubscribeOptions<any, Error>) => {
+                    const port: Runtime.Port = getBrowser().runtime.connect(
+                        this.targetExtension,
+                        { name: `replicache-subscribe` }
+                    );
+                    port.onMessage.addListener((message) => {
+                        console.log("onData", fnName, message);
+                        subscribeOptions.onData(message);
+                    });
+                    port.onDisconnect.addListener(() =>
+                        subscribeOptions.onDone?.()
+                    );
+
+                    port.postMessage({ methodName: fnName, args });
+                };
+
             return obj;
         },
         {}

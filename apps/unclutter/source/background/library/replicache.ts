@@ -6,6 +6,7 @@ import {
     mutators,
 } from "@unclutter/library-components/dist/store";
 import { ReplicacheProxyEventTypes } from "@unclutter/library-components/dist/common";
+import type { Runtime } from "webextension-polyfill";
 
 // const apiHost = "http://localhost:3000"
 const apiHost = "https://library.lindylearn.io";
@@ -63,6 +64,25 @@ export async function processActualReplicacheMessage({
     } else if (type === "pull") {
         return rep.pull();
     }
+}
+
+export async function processActualReplicacheSubscribe(port: Runtime.Port) {
+    port.onMessage.addListener((msg) => {
+        const { methodName, args } = msg;
+
+        rep.subscribe((tx) => accessors[methodName](tx, ...args), {
+            onData: (data: JSONValue) => {
+                port.postMessage(data);
+            },
+            onDone: () => {
+                port.disconnect();
+            },
+            onError: (err: Error) => {
+                console.error(err);
+                port.disconnect();
+            },
+        });
+    });
 }
 
 export async function importEntries(entries: [string, JSONValue][]) {

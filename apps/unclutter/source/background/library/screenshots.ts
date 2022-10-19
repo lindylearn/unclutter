@@ -1,4 +1,4 @@
-import { ExtensionTypes } from "webextension-polyfill";
+import type { ExtensionTypes } from "webextension-polyfill";
 import * as idb from "idb-keyval";
 import browser from "../../common/polyfill";
 

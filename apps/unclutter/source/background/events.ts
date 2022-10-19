@@ -1,4 +1,4 @@
-import { Runtime, Tabs } from "webextension-polyfill";
+import type { Runtime, Tabs } from "webextension-polyfill";
 import { clusterLibraryArticles } from "../common/api";
 import { extensionSupportsUrl } from "../common/articleDetection";
 import { handleReportBrokenPage } from "../common/bugReport";
@@ -21,7 +21,11 @@ import { loadAnnotationCountsToMemory } from "./annotationCounts";
 import { getAllBookmarks, requestBookmarksPermission } from "./bookmarks";
 import { enableInTab, injectScript, togglePageViewMessage } from "./inject";
 import { onNewInstall, setupWithPermissions } from "./install";
-import { initLibrary, processReplicacheMessage } from "./library/library";
+import {
+    initLibrary,
+    processReplicacheMessage,
+    processReplicacheSubscribe,
+} from "./library/library";
 import {
     captureActiveTabScreenshot,
     getLocalScreenshot,
@@ -185,6 +189,13 @@ function handleMessage(
 
     return false;
 }
+
+browser.runtime.onConnect.addListener((port: Runtime.Port) => {
+    if (port.name === "replicache-subscribe") {
+        processReplicacheSubscribe(port);
+    }
+    // ports will be disconnected when the modal iframe is closed
+});
 
 // run on install, extension update, or browser update
 browser.runtime.onInstalled.addListener(async ({ reason }) => {

@@ -6,10 +6,12 @@ import {
     importEntries,
     initReplicache,
     processActualReplicacheMessage,
+    processActualReplicacheSubscribe,
 } from "./replicache";
 import {
     LocalWriteTransaction,
     processLocalReplicacheMessage,
+    processLocalReplicacheSubscribe,
 } from "./replicacheLocal";
 import { deleteAllLocalScreenshots } from "./screenshots";
 
@@ -48,5 +50,13 @@ export async function processReplicacheMessage(message) {
         return await processActualReplicacheMessage(message);
     } else {
         return await processLocalReplicacheMessage(message);
+    }
+}
+
+export async function processReplicacheSubscribe(port) {
+    if (userId) {
+        await processActualReplicacheSubscribe(port);
+    } else {
+        await processLocalReplicacheSubscribe(port);
     }
 }

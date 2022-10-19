@@ -11,6 +11,7 @@ import {
 import { accessors, mutators } from "@unclutter/library-components/dist/store";
 import * as idb from "idb-keyval";
 import { ReplicacheProxyEventTypes } from "@unclutter/library-components/dist/common/messaging";
+import type { Runtime } from "webextension-polyfill";
 
 // local-only replicache stub
 export async function processLocalReplicacheMessage({
@@ -37,6 +38,25 @@ export async function processLocalReplicacheMessage({
         // console.log(methodName, args, result);
         return result;
     }
+}
+
+export async function processLocalReplicacheSubscribe(port: Runtime.Port) {
+    port.onMessage.addListener((msg) => {
+        const { methodName, args } = msg;
+
+        // rep.subscribe((tx) => accessors[methodName](tx, ...args), {
+        //     onData: (data: JSONValue) => {
+        //         port.postMessage(data);
+        //     },
+        //     onDone: () => {
+        //         port.disconnect();
+        //     },
+        //     onError: (err: Error) => {
+        //         console.error(err);
+        //         port.disconnect();
+        //     },
+        // });
+    });
 }
 
 const idbStore = idb.createStore("replicache-local", "keyval");

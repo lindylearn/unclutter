@@ -1,5 +1,5 @@
 import browser from "../common/polyfill";
-import { Bookmarks } from "webextension-polyfill";
+import type { Bookmarks } from "webextension-polyfill";
 import { getDomainFrom } from "../common/util";
 
 export function requestBookmarksPermission() {
