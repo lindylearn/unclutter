@@ -2,10 +2,19 @@ import React, { useContext, useEffect } from "react";
 import clsx from "clsx";
 import { ReactNode, useState } from "react";
 import useResizeObserver from "use-resize-observer";
+import partition from "lodash/partition";
 
 import { getRandomColor } from "../../common/styling";
-import { Article, UserInfo } from "../../store/_schema";
-import { ReplicacheContext, sortArticlesPosition } from "../../store";
+import {
+    Article,
+    readingProgressFullClamp,
+    UserInfo,
+} from "../../store/_schema";
+import {
+    ReplicacheContext,
+    sortArticlesPosition,
+    useSubscribe,
+} from "../../store";
 import { groupArticlesByTopic } from "./GroupedArticleList";
 import { TopicEmoji } from "../TopicTag";
 import { ArticleListsCache } from "./DraggableContext";
@@ -154,18 +163,31 @@ export function useTabInfos(
 ): TabInfo[] | undefined {
     const rep = useContext(ReplicacheContext);
 
+    const articles = useSubscribe(
+        rep,
+        rep?.subscribe.listRecentArticles(),
+        null
+    );
+
     let [tabInfos, setTabInfos] = useState<TabInfo[]>();
     useEffect(() => {
+        if (!articles) {
+            return;
+        }
         (async () => {
-            // keep queue seperate
-            const queueArticles = await rep?.query.listQueueArticles();
-
-            // filter main articles
-            let listArticles = await rep?.query.listRecentArticles(
-                undefined,
-                onlyUnread ? "unread" : "all"
+            console.log("update");
+            // let articles = await rep?.query.listRecentArticles();
+            let [queueArticles, listArticles] = partition(
+                articles,
+                (a) => a.is_queued
             );
-            listArticles = listArticles?.filter((a) => !a.is_queued) || [];
+            sortArticlesPosition(queueArticles, "queue_sort_position");
+
+            if (onlyUnread) {
+                listArticles = listArticles.filter(
+                    (a) => a.reading_progress < readingProgressFullClamp
+                );
+            }
             if (domainFilter) {
                 listArticles = listArticles.filter(
                     (a) => getDomain(a.url) === domainFilter
@@ -228,7 +250,7 @@ export function useTabInfos(
             // update state
             setTabInfos(tabInfos);
         })();
-    }, [onlyUnread, lastFirst, domainFilter]);
+    }, [articles, onlyUnread, lastFirst, domainFilter]);
 
     return tabInfos;
 }
