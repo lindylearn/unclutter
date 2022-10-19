@@ -36,14 +36,7 @@
         style={`background-color: ${topicColor}`}
     >
         <div class="main-content whitespace-nowrap text-sm">
-            {#if !(libraryState.userInfo?.onPaidPlan || libraryState.userInfo?.trialEnabled)}
-                <div
-                    class="top-row font-title flex whitespace-pre text-base font-semibold leading-none"
-                    in:fly={{ y: 10, duration: 300, easing: cubicOut }}
-                >
-                    Saved in <span class="hide-small">your </span>library
-                </div>
-            {:else if libraryState?.libraryInfo?.topic}
+            {#if libraryState?.libraryInfo?.topic}
                 <div
                     class="top-row flex"
                     in:fly={{ y: 10, duration: 300, easing: cubicOut }}
@@ -77,6 +70,13 @@
                     in:fly={{ y: 10, duration: 300, easing: cubicOut }}
                 >
                     Error adding article :(
+                </div>
+            {:else}
+                <div
+                    class="top-row font-title flex whitespace-pre text-base font-semibold leading-none"
+                    in:fly={{ y: 10, duration: 300, easing: cubicOut }}
+                >
+                    Saved in <span class="hide-small">your </span>library
                 </div>
             {/if}
 
