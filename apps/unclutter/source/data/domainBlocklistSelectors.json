@@ -191,7 +191,11 @@
         ".ns.nt.l",
         ".nr.l",
         ".nq.sl.l",
-        ".l.ln"
+        ".l.ln",
+        ".rn.l",
+        ".ws.hr.l.bl",
+        ".o.ao",
+        ".nh.ni.nj.nk.l"
     ],
     "meduza.io": [".Layout-bannerTop"],
     "mmazurek.dev": [
