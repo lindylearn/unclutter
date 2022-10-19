@@ -2,7 +2,6 @@ import React, { useContext, useEffect } from "react";
 import clsx from "clsx";
 import { ReactNode, useState } from "react";
 import useResizeObserver from "use-resize-observer";
-import partition from "lodash/partition";
 
 import { getRandomColor } from "../../common/styling";
 import {
@@ -175,12 +174,8 @@ export function useTabInfos(
             return;
         }
         (async () => {
-            console.log("update");
-            // let articles = await rep?.query.listRecentArticles();
-            let [queueArticles, listArticles] = partition(
-                articles,
-                (a) => a.is_queued
-            );
+            const queueArticles = articles.filter((a) => a.is_queued);
+            let listArticles = articles; // filtered after topic grouping to keep ordering stable
             sortArticlesPosition(queueArticles, "queue_sort_position");
 
             if (onlyUnread) {
@@ -230,7 +225,7 @@ export function useTabInfos(
                                     />
                                 ),
                                 isTopic: true,
-                                articles,
+                                articles: articles.filter((a) => !a.is_queued),
                             };
                         })
                 );
