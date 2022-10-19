@@ -233,6 +233,8 @@ export function useTabInfos(
                     ...topicTabInfos.filter((t) => t.articles.length > 0)
                 );
             } else {
+                listArticles = listArticles.filter((a) => !a.is_queued);
+
                 tabInfos.push({
                     key: domainFilter || "list",
                     title: "",
