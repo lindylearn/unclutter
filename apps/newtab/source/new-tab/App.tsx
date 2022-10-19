@@ -8,8 +8,6 @@ import {
     LocalScreenshotContext,
 } from "@unclutter/library-components/dist/components";
 import {
-    Article,
-    readingProgressFullClamp,
     ReplicacheContext,
     UserInfo,
     useSubscribe,
@@ -18,8 +16,6 @@ import {
     reportEventContentScript,
     ReplicacheProxy,
     getUnclutterExtensionId,
-    subtractWeeks,
-    getWeekStart,
     getLocalScreenshot,
 } from "@unclutter/library-components/dist/common";
 import NewTabModal from "./Modal";

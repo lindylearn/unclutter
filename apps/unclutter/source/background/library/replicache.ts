@@ -67,21 +67,32 @@ export async function processActualReplicacheMessage({
 }
 
 export async function processActualReplicacheSubscribe(port: Runtime.Port) {
+    if (!rep) {
+        return;
+    }
     port.onMessage.addListener((msg) => {
         const { methodName, args } = msg;
+        // console.log("subscribe", methodName);
+        // port.onDisconnect.addListener(() => {
+        //     console.log("subscribe disconnect", methodName);
+        // });
 
-        rep.subscribe((tx) => accessors[methodName](tx, ...args), {
-            onData: (data: JSONValue) => {
-                port.postMessage(data);
-            },
-            onDone: () => {
-                port.disconnect();
-            },
-            onError: (err: Error) => {
-                console.error(err);
-                port.disconnect();
-            },
-        });
+        const cancel = rep.subscribe(
+            (tx) => accessors[methodName](tx, ...args),
+            {
+                onData: (data: JSONValue) => {
+                    port.postMessage(data);
+                },
+                onDone: () => {
+                    port.disconnect();
+                },
+                onError: (err: Error) => {
+                    console.error(err);
+                    port.disconnect();
+                },
+            }
+        );
+        port.onDisconnect.addListener(cancel);
     });
 }
 

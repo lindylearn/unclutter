@@ -29,6 +29,7 @@ export async function processLocalReplicacheMessage({
             ...args
         );
         // console.log(methodName, args, result);
+
         return result;
     } else if (type === "mutate") {
         const result = await mutators[methodName](
@@ -36,26 +37,48 @@ export async function processLocalReplicacheMessage({
             args
         );
         // console.log(methodName, args, result);
+
+        // notify data subscribers
+        Object.values(dataSubscribers).forEach((fn) => fn());
+
         return result;
     }
 }
 
+const dataSubscribers: { [id: string]: () => void } = {};
+const prevResults: { [id: string]: any } = {};
 export async function processLocalReplicacheSubscribe(port: Runtime.Port) {
     port.onMessage.addListener((msg) => {
         const { methodName, args } = msg;
-
-        // rep.subscribe((tx) => accessors[methodName](tx, ...args), {
-        //     onData: (data: JSONValue) => {
-        //         port.postMessage(data);
-        //     },
-        //     onDone: () => {
-        //         port.disconnect();
-        //     },
-        //     onError: (err: Error) => {
-        //         console.error(err);
-        //         port.disconnect();
-        //     },
+        // console.log("subscribe", methodName);
+        // port.onDisconnect.addListener(() => {
+        //     console.log("subscribe disconnect", methodName);
         // });
+
+        const subscriberId = `${methodName}-${Date.now()}`;
+        dataSubscribers[subscriberId] = async () => {
+            const newResult = await accessors[methodName](
+                new LocalReadTransaction(),
+                ...args
+            );
+
+            // skip if no change
+            const prevResult = prevResults[subscriberId];
+            if (
+                prevResult &&
+                JSON.stringify(prevResult) === JSON.stringify(newResult)
+            ) {
+                return;
+            }
+            prevResults[subscriberId] = newResult;
+
+            port.postMessage(newResult);
+        };
+        dataSubscribers[subscriberId](); // called once immediately
+
+        port.onDisconnect.addListener(() => {
+            delete dataSubscribers[subscriberId];
+        });
     });
 }
 

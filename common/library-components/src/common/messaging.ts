@@ -140,7 +140,6 @@ export class ReplicacheProxy implements RuntimeReplicache {
                         { name: `replicache-subscribe` }
                     );
                     port.onMessage.addListener((message) => {
-                        console.log("onData", fnName, message);
                         subscribeOptions.onData(message);
                     });
                     port.onDisconnect.addListener(() =>
@@ -148,6 +147,8 @@ export class ReplicacheProxy implements RuntimeReplicache {
                     );
 
                     port.postMessage({ methodName: fnName, args });
+
+                    return () => port.disconnect();
                 };
 
             return obj;
