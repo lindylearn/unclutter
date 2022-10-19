@@ -112,24 +112,16 @@ export function DraggableContext({
             );
 
             // only queue dragging supported for now
-            rep?.mutate
-                .updateArticle({
-                    id: activeArticle.id,
-                    is_queued: targetList === "queue",
-                    queue_sort_position: new Date().getTime(),
-                })
-                .then(() => {
-                    // move to target position to be safe
-                    rep?.mutate.moveArticlePosition({
-                        articleId: activeArticle.id,
-                        // assume is first entry, so move to right
-                        articleIdBeforeNewPosition:
-                            articleLists[targetList][targetIndex]?.id,
-                        articleIdAfterNewPosition:
-                            articleLists[targetList][targetIndex + 1]?.id,
-                        sortPosition: "queue_sort_position",
-                    });
-                });
+            rep?.mutate.articleAddMoveToQueue({
+                articleId: activeArticle.id,
+                isQueued: targetList === "queue",
+                // assume is first entry, so move to right
+                articleIdBeforeNewPosition:
+                    articleLists[targetList][targetIndex]?.id,
+                articleIdAfterNewPosition:
+                    articleLists[targetList][targetIndex + 1]?.id,
+                sortPosition: "queue_sort_position",
+            });
 
             if (sourceList) {
                 articleLists[sourceList] = articleLists[sourceList].filter(
@@ -147,7 +139,7 @@ export function DraggableContext({
             }
         }
     }
-    // change position within target list
+
     function handleDragEnd({ active, over }: DragEndEvent) {
         if (!over || !articleLists) {
             return;
@@ -158,10 +150,8 @@ export function DraggableContext({
                 id: active.id as string,
                 is_queued: false,
             });
-            return;
-        }
-
-        if (active.id !== over.id) {
+        } else if (active.id !== over.id) {
+            // change position within list
             const oldIndex = articleLists[activeListId].findIndex(
                 (a) => a.id === active.id
             );
@@ -186,7 +176,7 @@ export function DraggableContext({
                 console.error(
                     `Could not determine sort position to reorder for list ${activeListId}`
                 );
-                return;
+                sortKey = "recency_sort_position";
             }
 
             // mutate replicache

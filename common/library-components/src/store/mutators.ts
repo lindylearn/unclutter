@@ -226,6 +226,36 @@ async function moveArticlePosition(
     });
 }
 
+// combine queue status update & move within a single mutation (to prevent UI flicker)
+async function articleAddMoveToQueue(
+    tx: WriteTransaction,
+    {
+        articleId,
+        isQueued,
+        articleIdBeforeNewPosition,
+        articleIdAfterNewPosition,
+        sortPosition,
+    }: {
+        articleId: string;
+        isQueued: boolean;
+        articleIdBeforeNewPosition: string | null;
+        articleIdAfterNewPosition: string | null;
+        sortPosition: ArticleSortPosition;
+    }
+) {
+    await updateArticle(tx, {
+        id: articleId,
+        is_queued: isQueued,
+        queue_sort_position: new Date().getTime(),
+    });
+    await moveArticlePosition(tx, {
+        articleId,
+        articleIdBeforeNewPosition,
+        articleIdAfterNewPosition,
+        sortPosition,
+    });
+}
+
 export async function updateSettings(
     tx: WriteTransaction,
     diff: Partial<Settings>
@@ -261,6 +291,7 @@ export const mutators = {
     putTopic,
     updateAllTopics,
     moveArticlePosition,
+    articleAddMoveToQueue,
     updateSettings,
     importEntries,
     updateUserInfo,

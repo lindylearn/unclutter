@@ -132,13 +132,13 @@ export function ArticlePreview({
             style={style}
             {...props}
         >
-            <div className="article-fallback animate-fadein p-3">
+            <div className="article-fallback p-3">
                 <div className="font-text select-none font-bold leading-tight">
                     {article.title}
                 </div>
             </div>
             <div
-                className="article-image animate-fadein absolute top-0 left-0 h-full w-full"
+                className="article-image absolute top-0 left-0 h-full w-full"
                 style={{
                     backgroundImage: backgroundSrc,
                     backgroundSize: "cover",
