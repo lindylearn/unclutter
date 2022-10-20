@@ -166,9 +166,9 @@ export default class ElementPickerModifier implements PageModifier {
             return true;
         }
 
-        if (node.clientHeight >= window.innerHeight) {
-            return true;
-        }
+        // if (node.clientHeight >= window.innerHeight) {
+        //     return true;
+        // }
 
         return false;
     }
