@@ -1,7 +1,7 @@
 {
     "name": "Unclutter New Tab",
-    "version": "0.1.2",
-    "description": "Integrate your Unclutter Library into your browser.",
+    "version": "0.2.0",
+    "description": "Access your Unclutter library from your new tab page.",
     "homepage_url": "https://github.com/lindylearn/unclutter",
     "manifest_version": 3,
     "icons": {
