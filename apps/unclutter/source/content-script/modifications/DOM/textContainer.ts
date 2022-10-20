@@ -295,7 +295,9 @@ export default class TextContainerModifier implements PageModifier {
                     this.firstMainHeaderCandidates.push(startElem);
                 }
             } else if (stackType === "image") {
-                if (!isOnFirstPage || pos.height < 250) {
+                // only tweak large header images
+                if (!isOnFirstPage || pos.height < 250 || pos.width < 0.4 * window.innerWidth) {
+                    // e.g. wikipedia side images https://en.wikipedia.org/wiki/Tree_(data_structure)
                     return false;
                 }
             }
