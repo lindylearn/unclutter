@@ -39,7 +39,7 @@
             {/if}
 
             {#if outline.length > 1}
-                <div class="spacer-line -mx-5 mb-2 mt-1 border-b-2 border-gray-100" />
+                <div class="spacer-line -mx-4 mb-2 mt-1 border-b-2 border-gray-100" />
             {/if}
         </div>
 

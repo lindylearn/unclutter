@@ -11,6 +11,7 @@
     min-width: 0 !important;
     border: none !important;
     box-shadow: none !important;
+    color-scheme: auto !important;
 }
 .lindy-page-settings-toprght {
     all: revert;
