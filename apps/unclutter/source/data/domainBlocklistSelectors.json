@@ -271,7 +271,14 @@
         ".getsocial",
         "[id*='like-post-wrapper-']"
     ],
-    "sueddeutsche.de": [".css-wlr69t", ".css-1t38pmg"],
+    "sueddeutsche.de": [
+        ".css-wlr69t",
+        ".css-1t38pmg",
+        ".css-1gql5uu",
+        ".pay-furtherreading-element",
+        ".paybox",
+        ".pay-furtherreading"
+    ],
     "tarjomaan.com": ["#head_div1", "#header"],
     "technologyreview.com": [
         "#piano__post_body-desktop-1",
