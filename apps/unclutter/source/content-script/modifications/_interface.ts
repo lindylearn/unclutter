@@ -20,17 +20,18 @@ export interface PageModifier {
 // wrap class
 const trackedMethods = new Set([
     "prepare",
-    "fadeOutNoise",
     "transitionIn",
+    "prepareAnimation",
+    "executeAnimation",
     "afterTransitionIn",
+    "beforeTransitionOut",
+    "executeReverseAnimation",
     "transitionOut",
-    "fadeInNoise",
+    "afterTransitionOut",
 ]);
 
+// TODO catch async errors?
 export function trackModifierExecution(target: Function) {
-    // TODO disable in prod
-    return;
-
     const className = target.name;
     const descriptors = Object.getOwnPropertyDescriptors(target.prototype);
     for (const [propName, descriptor] of Object.entries(descriptors)) {
@@ -40,25 +41,13 @@ export function trackModifierExecution(target: Function) {
         if (!trackedMethods.has(propName)) continue;
 
         const originalMethod = descriptor.value;
-        descriptor.value = async function (...args: any[]) {
-            if (className === "TransitionManager") {
-                console.log(`.${propName}()`);
+        descriptor.value = function (...args: any[]) {
+            try {
+                return originalMethod.apply(this, args);
+            } catch (error) {
+                console.error(error);
+                return undefined;
             }
-
-            const start = performance.now();
-            const result = await originalMethod.apply(this, args);
-
-            await new Promise((r) => setTimeout(r, 0));
-
-            const duration = performance.now() - start;
-
-            if (className === "TransitionManager") {
-                console.log(`${Math.round(duration)}ms`);
-            } else {
-                console.log(`    ${className.padEnd(25)} ${Math.round(duration)}ms`);
-            }
-
-            return result;
         };
 
         Object.defineProperty(target.prototype, propName, descriptor);
