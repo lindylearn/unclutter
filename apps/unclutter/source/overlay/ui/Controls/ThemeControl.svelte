@@ -77,14 +77,9 @@
     <div class="lindy-plusminus">
         <div
             id="lindy-pagewidth-decrease"
-            on:click={() =>
-                changeCssPixelVariable(pageWidthThemeVariable, -100)}
+            on:click={() => changeCssPixelVariable(pageWidthThemeVariable, -100)}
         >
-            <svg
-                class="lindy-ui-icon"
-                viewBox="0 0 512 512"
-                style="transform: rotate(45deg);"
-            >
+            <svg class="lindy-ui-icon" viewBox="0 0 512 512" style="transform: rotate(45deg);">
                 <path
                     fill="currentColor"
                     d="M54.63 502.6L176 381.3V432c0 17.69 14.31 32 32 32s32-14.31 32-32v-128c0-4.164-.8477-8.312-2.465-12.22C234.3 283.9 228.1 277.7 220.2 274.5C216.3 272.8 212.2 272 208 272h-128c-17.69 0-32 14.31-32 32s14.31 32 32 32h50.75l-121.4 121.4c-12.5 12.5-12.5 32.75 0 45.25S42.13 515.1 54.63 502.6zM274.5 220.2c3.242 7.84 9.479 14.08 17.32 17.32C295.7 239.2 299.8 240 304 240h128c17.69 0 32-14.31 32-32s-14.31-32-32-32h-50.75l121.4-121.4c12.5-12.5 12.5-32.75 0-45.25c-12.49-12.49-32.74-12.51-45.25 0L336 130.8V80c0-17.69-14.31-32-32-32s-32 14.31-32 32v127.1C272 212.2 272.8 216.3 274.5 220.2z"
@@ -95,11 +90,7 @@
             id="lindy-pagewidth-increase"
             on:click={() => changeCssPixelVariable(pageWidthThemeVariable, 100)}
         >
-            <svg
-                class="lindy-ui-icon"
-                viewBox="0 0 512 512"
-                style="transform: rotate(45deg);"
-            >
+            <svg class="lindy-ui-icon" viewBox="0 0 512 512" style="transform: rotate(45deg);">
                 <path
                     fill="currentColor"
                     d="M177.4 289.4L64 402.8V352c0-17.69-14.31-32-32-32s-32 14.31-32 32v128c0 4.164 .8477 8.312 2.465 12.22c3.24 7.832 9.479 14.07 17.31 17.31C23.69 511.2 27.84 512 32 512h128c17.69 0 32-14.31 32-32s-14.31-32-32-32H109.3l113.4-113.4c12.5-12.5 12.5-32.75 0-45.25S189.9 276.9 177.4 289.4zM509.5 19.78c-3.242-7.84-9.479-14.08-17.32-17.32C488.3 .8477 484.2 0 480 0h-128c-17.69 0-32 14.31-32 32s14.31 32 32 32h50.75l-113.4 113.4c-12.5 12.5-12.5 32.75 0 45.25c12.49 12.49 32.74 12.51 45.25 0L448 109.3V160c0 17.69 14.31 32 32 32s32-14.31 32-32V32C512 27.84 511.2 23.69 509.5 19.78z"
@@ -211,8 +202,7 @@
         cursor: pointer;
     }
     .lindy-theme-button:hover {
-        box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1),
-            0 1px 2px -1px rgb(0 0 0 / 0.1);
+        box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
     }
     .lindy-active-theme {
         border: 2.5px solid var(--color-muted);

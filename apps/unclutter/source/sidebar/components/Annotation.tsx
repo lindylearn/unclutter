@@ -33,9 +33,7 @@ function Annotation({
 
     const textLines = text.split("\n").filter((line) => line.trim() != "");
 
-    const [upvoteCount, setLocalUpvoteCount] = React.useState(
-        annotation.upvote_count || 0
-    );
+    const [upvoteCount, setLocalUpvoteCount] = React.useState(annotation.upvote_count || 0);
     // function toggleUpvoteAnnotationLocalFirst() {
     //     const newCount = upvoteCount + (upvoted ? -1 : 1);
     //     upvoteAnnotation(!upvoted);
@@ -68,9 +66,7 @@ function Annotation({
                     // restrict text height by whole lines
                     // assumes 20px font size and py-1.5 padding
                     WebkitLineClamp: Math.min(
-                        heightLimitPx
-                            ? Math.floor((heightLimitPx - 6 * 2 - 20) / 20)
-                            : Infinity,
+                        heightLimitPx ? Math.floor((heightLimitPx - 6 * 2 - 20) / 20) : Infinity,
                         isReply ? 3 : 5
                     ),
                     WebkitBoxOrient: "vertical",
@@ -94,16 +90,12 @@ function Annotation({
                         .split(/<a>|<code>/)
                         .map((token) => {
                             if (token.startsWith("http")) {
-                                return (
-                                    <AbbreviatedLink key={token} href={token} />
-                                );
+                                return <AbbreviatedLink key={token} href={token} />;
                             }
                             if (token.startsWith("  ")) {
                                 return (
                                     <>
-                                        <code className="bg-gray-100 text-sm">
-                                            {token}
-                                        </code>
+                                        <code className="bg-gray-100 text-sm">{token}</code>
                                         <br />
                                     </>
                                 );
@@ -171,9 +163,7 @@ function Annotation({
                         </svg>
                         <span>
                             {annotation.reply_count}
-                            {annotation.reply_count === 1
-                                ? " reply"
-                                : " replies"}
+                            {annotation.reply_count === 1 ? " reply" : " replies"}
                         </span>
                     </a>
                 )}
@@ -183,11 +173,7 @@ function Annotation({
                     hypothesisSyncEnabled && (
                         <a
                             className="reply-button invisible cursor-pointer select-none transition-all hover:scale-110 hover:pl-0.5 hover:text-gray-700"
-                            onClick={
-                                showingReplies
-                                    ? createReply
-                                    : () => onExpand(annotation)
-                            }
+                            onClick={showingReplies ? createReply : () => onExpand(annotation)}
                             href={!showingReplies ? link : undefined}
                             target="_blank"
                             rel="noreferrer"
@@ -214,10 +200,7 @@ function Annotation({
                     href={
                         platform === "h"
                             ? `https://annotations.lindylearn.io/@${author}`
-                            : `https://news.ycombinator.com/user?id=${author.replace(
-                                  "_hn",
-                                  ""
-                              )}`
+                            : `https://news.ycombinator.com/user?id=${author.replace("_hn", "")}`
                     }
                     target="_blank"
                     rel="noreferrer"
@@ -247,12 +230,7 @@ export default Annotation;
 
 function AbbreviatedLink({ href }) {
     return (
-        <a
-            className="text-blue-400 hover:underline"
-            href={href}
-            target="_blank"
-            rel="noreferrer"
-        >
+        <a className="text-blue-400 hover:underline" href={href} target="_blank" rel="noreferrer">
             {getDomain(href)}/...
         </a>
     );

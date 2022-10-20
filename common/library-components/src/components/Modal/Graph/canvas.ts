@@ -5,11 +5,7 @@ export function renderNodeObject(darkModeEnabled: boolean, NODE_R: number) {
     // const highlightsIcon = new Image();
     // highlightsIcon.src = "/highlights.svg";
 
-    return (
-        node: RuntimeNode,
-        ctx: CanvasRenderingContext2D,
-        globalScale: number
-    ) => {
+    return (node: RuntimeNode, ctx: CanvasRenderingContext2D, globalScale: number) => {
         ctx.shadowColor = "transparent";
 
         // empty circle for unread nodes
@@ -17,9 +13,7 @@ export function renderNodeObject(darkModeEnabled: boolean, NODE_R: number) {
             ctx.beginPath();
             const nodeValMod = node.depth === 0 ? 1.5 : 1;
             ctx.arc(node.x, node.y, NODE_R * 0.6 * nodeValMod, 0, 2 * Math.PI);
-            ctx.fillStyle = darkModeEnabled
-                ? "rgb(38, 38, 38)"
-                : "rgb(250, 250, 249)";
+            ctx.fillStyle = darkModeEnabled ? "rgb(38, 38, 38)" : "rgb(250, 250, 249)";
             // ctx.fillStyle = darkModeEnabled ? "rgb(19, 21, 22)" : "white";
 
             ctx.fill();
@@ -45,17 +39,14 @@ export function renderNodeObject(darkModeEnabled: boolean, NODE_R: number) {
                 "5",
                 node.x,
                 node.y +
-                    (dimensions.actualBoundingBoxAscent -
-                        dimensions.actualBoundingBoxDescent) /
-                        2
+                    (dimensions.actualBoundingBoxAscent - dimensions.actualBoundingBoxDescent) / 2
             );
         }
 
         // description
         if (
             ((node.depth <= 1 || node.isCompleted) && globalScale >= 2) ||
-            ((node.depth <= 2 || node.isCompletedAdjacent) &&
-                globalScale >= 3) ||
+            ((node.depth <= 2 || node.isCompletedAdjacent) && globalScale >= 3) ||
             globalScale >= 5
         ) {
             if (!node.title) {
@@ -99,9 +90,7 @@ export function renderNodeObject(darkModeEnabled: boolean, NODE_R: number) {
 
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
-            ctx.fillStyle = darkModeEnabled
-                ? "rgb(232, 230, 227)"
-                : "rgb(41, 37, 36)";
+            ctx.fillStyle = darkModeEnabled ? "rgb(232, 230, 227)" : "rgb(41, 37, 36)";
             ctx.fillText(label, node.x, node.y + (node.isCompleted ? 7 : 5));
 
             // ctx.font = `${fontSize}px Poppins, Sans-Serif`;

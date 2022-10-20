@@ -8,9 +8,7 @@ export function onNewInstall(version: string) {
         active: true,
     });
 
-    browser.runtime.setUninstallURL(
-        "https://unclutter.lindylearn.io/uninstalled"
-    );
+    browser.runtime.setUninstallURL("https://unclutter.lindylearn.io/uninstalled");
 }
 
 // only run one time after each update

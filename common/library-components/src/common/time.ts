@@ -18,8 +18,7 @@ export function getWeekNumber(date: Date): number {
 }
 
 export function getWeekStart(start: Date = new Date()): Date {
-    const diff =
-        start.getDate() - start.getDay() + (start.getDay() === 0 ? -7 : 0);
+    const diff = start.getDate() - start.getDay() + (start.getDay() === 0 ? -7 : 0);
     start.setDate(diff);
     start.setHours(0);
     start.setMinutes(0);

@@ -6,10 +6,7 @@ export async function getFeatureFlag(key) {
     }
 
     const config = await browser.storage.sync.get([key]);
-    return (
-        (config[key] !== undefined ? config[key] : defaultFeatureFlags[key]) ||
-        false
-    );
+    return (config[key] !== undefined ? config[key] : defaultFeatureFlags[key]) || false;
 }
 export async function setFeatureFlag(key, status) {
     await browser.storage.sync.set({ [key]: status });
@@ -33,14 +30,12 @@ export async function getAllFeatureFlags() {
     return config;
 }
 
-export const allowlistDomainOnManualActivationFeatureFlag =
-    "allowlist-domain-manual-activation";
+export const allowlistDomainOnManualActivationFeatureFlag = "allowlist-domain-manual-activation";
 export const collectAnonymousMetricsFeatureFlag = "collect-anonymous-metrics";
 export const enableBootUnclutterMessage = "enable-boot-unclutter-message";
 export const isDevelopmentFeatureFlag = "is-dev";
 export const hypothesisSyncFeatureFlag = "hypothesis-sync";
-export const enableSocialCountsFeatureFlag =
-    "social-annotations-counts-enabled";
+export const enableSocialCountsFeatureFlag = "social-annotations-counts-enabled";
 
 // sticky user setting
 export const enableAnnotationsFeatureFlag = "annotations-enabled";

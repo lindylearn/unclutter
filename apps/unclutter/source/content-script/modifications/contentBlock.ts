@@ -1,8 +1,5 @@
 import browser from "../../common/polyfill";
-import {
-    createStylesheetLink,
-    createStylesheetText,
-} from "../../common/stylesheets";
+import { createStylesheetLink, createStylesheetText } from "../../common/stylesheets";
 import domainBlocklistSelectors from "../../data/domainBlocklistSelectors.json";
 import TextContainerModifier, {
     lindyContainerClass,
@@ -32,9 +29,7 @@ export default class ContentBlockModifier implements PageModifier {
             !this.textContainerModifier.foundMainContentElement &&
             !this.textContainerModifier.foundMainHeadingElement
         ) {
-            this.selectors = blockedTags.concat(
-                domainBlocklistSelectors[this.domain] || []
-            );
+            this.selectors = blockedTags.concat(domainBlocklistSelectors[this.domain] || []);
             return;
         }
 
@@ -67,9 +62,7 @@ export default class ContentBlockModifier implements PageModifier {
                 `[style*='sticky']`,
             ])
             .concat(blockedSpecificSelectors)
-            .map(
-                (selector) => `${selector}:not(${excludedSelectors.join(", ")})`
-            );
+            .map((selector) => `${selector}:not(${excludedSelectors.join(", ")})`);
 
         this.selectors = blockedTags
             .concat(wordSelectors)
@@ -80,9 +73,7 @@ export default class ContentBlockModifier implements PageModifier {
     transitionIn() {
         // completely hide blocked elements to reduce their render cost
         // e.g. this improves performance significantly on https://sherylcanter.com/wordpress/2010/01/a-science-based-technique-for-seasoning-cast-iron/
-        const css = `${this.selectors.join(
-            ", "
-        )} { display: none !important; }`;
+        const css = `${this.selectors.join(", ")} { display: none !important; }`;
         createStylesheetText(css, "content-block-hide");
 
         createStylesheetLink(
@@ -112,9 +103,7 @@ export default class ContentBlockModifier implements PageModifier {
         createStylesheetText(css, "content-block-fade-in");
 
         document
-            .querySelectorAll(
-                "#content-block-hide, #content-block-custom-sites"
-            )
+            .querySelectorAll("#content-block-hide, #content-block-custom-sites")
             .forEach((e) => e.remove());
     }
 

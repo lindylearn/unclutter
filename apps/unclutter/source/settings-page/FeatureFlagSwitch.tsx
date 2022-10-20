@@ -29,10 +29,7 @@ export default function FeatureFlagSwitch({
             flag: featureFlagKey,
             state: newState ? "enabled" : "disabled",
         });
-        if (
-            featureFlagKey === collectAnonymousMetricsFeatureFlag &&
-            !newState
-        ) {
+        if (featureFlagKey === collectAnonymousMetricsFeatureFlag && !newState) {
             // report that metrics were disabled before applying new config (after that reportEvent no-nops)
             await reportEventContentScript("disableMetrics");
         }
@@ -53,10 +50,7 @@ export default function FeatureFlagSwitch({
                     checked={state}
                     onChange={toggleStateLocalFirst}
                 />
-                <label
-                    htmlFor={featureFlagKey}
-                    className="switch__label"
-                ></label>
+                <label htmlFor={featureFlagKey} className="switch__label"></label>
             </div>
         </div>
     );

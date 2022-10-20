@@ -7,18 +7,11 @@ import {
 import browser, { BrowserType, getBrowserType } from "../../common/polyfill";
 import { LibraryState } from "../../common/schema";
 import { Article } from "@unclutter/library-components/dist/store/_schema";
-import {
-    createStylesheetLink,
-    overrideClassname,
-} from "../../common/stylesheets";
+import { createStylesheetLink, overrideClassname } from "../../common/stylesheets";
 import { backgroundColorThemeVariable } from "../../common/theme";
 import BottomContainerSvelte from "../../overlay/outline/BottomContainer.svelte";
 import { getElementYOffset } from "../../overlay/outline/components/common";
-import {
-    createRootItem,
-    getOutline,
-    OutlineItem,
-} from "../../overlay/outline/components/parse";
+import { createRootItem, getOutline, OutlineItem } from "../../overlay/outline/components/parse";
 import TopLeftContainer from "../../overlay/outline/TopLeftContainer.svelte";
 import PageAdjacentContainerSvelte from "../../overlay/ui/PageAdjacentContainer.svelte";
 import TopRightContainerSvelte from "../../overlay/ui/TopRightContainer.svelte";
@@ -65,15 +58,11 @@ export default class OverlayManager implements PageModifier {
         this.elementPickerModifier = elementPickerModifier;
         this.libraryModalModifier = libraryModalModifier;
 
-        this.annotationsModifer.annotationListeners.push(
-            this.onAnnotationUpdate.bind(this)
-        );
+        this.annotationsModifer.annotationListeners.push(this.onAnnotationUpdate.bind(this));
 
         // fetch users settings to run code synchronously later
         (async () => {
-            this.annotationsEnabled = await getFeatureFlag(
-                enableAnnotationsFeatureFlag
-            );
+            this.annotationsEnabled = await getFeatureFlag(enableAnnotationsFeatureFlag);
             // this.libraryEnabled = true // TODO check libraryEnabled properly
         })();
     }
@@ -83,8 +72,7 @@ export default class OverlayManager implements PageModifier {
     createIframes() {
         this.topleftIframe = createIframeNode("lindy-info-topleft");
         this.topleftIframe.style.position = "fixed"; // put on new layer
-        this.topleftIframe.style.maxWidth =
-            "calc((100vw - var(--lindy-pagewidth)) / 2 - 7px)"; // prevent initial transition
+        this.topleftIframe.style.maxWidth = "calc((100vw - var(--lindy-pagewidth)) / 2 - 7px)"; // prevent initial transition
         document.documentElement.appendChild(this.topleftIframe);
         insertIframeFont(this.topleftIframe);
 
@@ -101,10 +89,7 @@ export default class OverlayManager implements PageModifier {
 
     renderUi() {
         // insert styles and font definition
-        createStylesheetLink(
-            browser.runtime.getURL("overlay/index.css"),
-            "lindy-switch-style"
-        );
+        createStylesheetLink(browser.runtime.getURL("overlay/index.css"), "lindy-switch-style");
 
         this.renderTopLeftContainer();
         this.renderUiContainers();
@@ -172,12 +157,8 @@ export default class OverlayManager implements PageModifier {
         // render UI into main page to prevent overlaps with sidebar iframe
 
         // create DOM container nodes
-        const topRightContainer = this.createUiContainer(
-            "lindy-page-settings-toprght"
-        );
-        const pageAdjacentContainer = this.createUiContainer(
-            "lindy-page-settings-pageadjacent"
-        );
+        const topRightContainer = this.createUiContainer("lindy-page-settings-toprght");
+        const pageAdjacentContainer = this.createUiContainer("lindy-page-settings-pageadjacent");
 
         // render svelte component
         this.toprightSvelteComponent = new TopRightContainerSvelte({
@@ -207,9 +188,7 @@ export default class OverlayManager implements PageModifier {
         return;
 
         const availableSpace = parseFloat(
-            window
-                .getComputedStyle(document.body)
-                .marginBottom.replace("px", "")
+            window.getComputedStyle(document.body).marginBottom.replace("px", "")
         );
         if (availableSpace < 100) {
             // BodyStyleModifier did not add margin (e.g. feature flag fetching took longer)
@@ -253,10 +232,7 @@ export default class OverlayManager implements PageModifier {
 
         const updateTresholds = () => {
             const margin = 20; // a bit more than the auto scroll margin
-            lowTheshold = getElementYOffset(
-                this.flatOutline[currentOutlineIndex].element,
-                margin
-            );
+            lowTheshold = getElementYOffset(this.flatOutline[currentOutlineIndex].element, margin);
             if (currentOutlineIndex + 1 < this.flatOutline.length) {
                 highTheshold = getElementYOffset(
                     this.flatOutline[currentOutlineIndex + 1].element,
@@ -280,10 +256,7 @@ export default class OverlayManager implements PageModifier {
                 // end of document
                 currentOutlineIndex = this.flatOutline.length - 1;
                 updateTresholds();
-            } else if (
-                currentOutlineIndex > 0 &&
-                window.scrollY < lowTheshold
-            ) {
+            } else if (currentOutlineIndex > 0 && window.scrollY < lowTheshold) {
                 // scrolled up
                 currentOutlineIndex -= 1;
                 updateTresholds();
@@ -309,8 +282,7 @@ export default class OverlayManager implements PageModifier {
 
         const scrollListener = () => handleScroll();
         document.addEventListener("scroll", scrollListener);
-        this.uninstallScrollListener = () =>
-            document.removeEventListener("scroll", scrollListener);
+        this.uninstallScrollListener = () => document.removeEventListener("scroll", scrollListener);
     }
 
     fadeOutUi() {
@@ -391,9 +363,7 @@ export default class OverlayManager implements PageModifier {
         });
 
         if (this.totalSocialCommentsCount === 0) {
-            const socialAnnotationsEnabled = await getFeatureFlag(
-                enableSocialCommentsFeatureFlag
-            );
+            const socialAnnotationsEnabled = await getFeatureFlag(enableSocialCommentsFeatureFlag);
             if (!socialAnnotationsEnabled) {
                 // expected to find 0 displayed social annotations
                 // don't update counts, we might still want to show them
@@ -482,19 +452,15 @@ export default class OverlayManager implements PageModifier {
             createStylesheetLink(
                 browser.runtime.getURL("overlay/outline/outlineDark.css"),
                 "dark-mode-ui-style",
-                this.topleftIframe.contentDocument?.head
-                    .lastChild as HTMLElement
+                this.topleftIframe.contentDocument?.head.lastChild as HTMLElement
             );
             createStylesheetLink(
                 browser.runtime.getURL("overlay/outline/bottomDark.css"),
                 "dark-mode-ui-style",
-                this.bottomIframe?.contentDocument?.head
-                    .lastChild as HTMLElement
+                this.bottomIframe?.contentDocument?.head.lastChild as HTMLElement
             );
         } else {
-            document
-                .querySelectorAll(".dark-mode-ui-style")
-                .forEach((e) => e.remove());
+            document.querySelectorAll(".dark-mode-ui-style").forEach((e) => e.remove());
             this.topleftIframe.contentDocument?.head
                 ?.querySelectorAll(".dark-mode-ui-style")
                 .forEach((e) => e.remove());

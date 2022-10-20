@@ -56,7 +56,7 @@ export default function CSVImportSettings({
             })}
         >
             <input {...getInputProps()} disabled={disabled} />
-            <p className="bg-white dark:bg-backgroundDark text-center p-5 h-full rounded-lg shadow-sm hover:scale-[98%] transition-all">
+            <p className="dark:bg-backgroundDark h-full rounded-lg bg-white p-5 text-center shadow-sm transition-all hover:scale-[98%]">
                 {text}
             </p>
         </div>
@@ -64,9 +64,7 @@ export default function CSVImportSettings({
 }
 
 function defaultRowTransform(rows: string[]): ArticleImportSchema {
-    const urls = rows
-        .map((line) => line.split(",")[0])
-        .filter((url) => url.startsWith("http"));
+    const urls = rows.map((line) => line.split(",")[0]).filter((url) => url.startsWith("http"));
 
     return { urls };
 }

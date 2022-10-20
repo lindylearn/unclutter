@@ -1,11 +1,6 @@
 import { NodeObject, LinkObject } from "force-graph";
 
-import {
-    Article,
-    ArticleLink,
-    readingProgressFullClamp,
-    Topic,
-} from "../../../store";
+import { Article, ArticleLink, readingProgressFullClamp, Topic } from "../../../store";
 
 export type CustomGraphData = {
     nodes: CustomGraphNode[];
@@ -56,8 +51,7 @@ export async function constructGraphData(
         {}
     );
     links = links.filter(
-        (l) =>
-            nodeById[l.source] !== undefined && nodeById[l.target] !== undefined
+        (l) => nodeById[l.source] !== undefined && nodeById[l.target] !== undefined
     );
 
     // save links per node
@@ -72,9 +66,7 @@ export async function constructGraphData(
     const customLinks: CustomGraphLink[] = [];
     const filteredLinksPerNode: { [id: string]: ArticleLink[] } = {};
     for (const [nodeId, ls] of Object.entries(linksPerNode)) {
-        const filteredLinks = ls
-            .sort((a, b) => (b.score || 0) - (a.score || 0))
-            .slice(0, 3);
+        const filteredLinks = ls.sort((a, b) => (b.score || 0) - (a.score || 0)).slice(0, 3);
 
         nodeById[nodeId].linkCount = filteredLinks.length;
 
@@ -88,8 +80,7 @@ export async function constructGraphData(
             const source = nodeById[l.source];
             const target = nodeById[l.target];
             const isCompletedAdjacent =
-                (source.isCompleted || target.isCompleted) &&
-                source.topic_id === target.topic_id;
+                (source.isCompleted || target.isCompleted) && source.topic_id === target.topic_id;
             if (isCompletedAdjacent) {
                 source.isCompletedAdjacent = true;
                 target.isCompletedAdjacent = true;
@@ -103,10 +94,7 @@ export async function constructGraphData(
                 isCompletedAdjacent,
             });
 
-            filteredLinksPerNode[l.source] = [
-                ...(filteredLinksPerNode[l.source] || []),
-                l,
-            ];
+            filteredLinksPerNode[l.source] = [...(filteredLinksPerNode[l.source] || []), l];
             filteredLinksPerNode[l.target] = [
                 ...(filteredLinksPerNode[l.target] || []),
                 // reverse link for BFS below
@@ -164,8 +152,5 @@ export async function constructGraphData(
         return false;
     }).length;
 
-    return [
-        { nodes: customNodes, links: deduplicatedLinks },
-        activeArticleTopicLinkCount,
-    ];
+    return [{ nodes: customNodes, links: deduplicatedLinks }, activeArticleTopicLinkCount];
 }

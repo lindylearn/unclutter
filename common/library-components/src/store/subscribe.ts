@@ -1,8 +1,4 @@
-import type {
-    ReadonlyJSONValue,
-    ReadTransaction,
-    SubscribeOptions,
-} from "replicache";
+import type { ReadonlyJSONValue, ReadTransaction, SubscribeOptions } from "replicache";
 import { useEffect, useState } from "react";
 import { unstable_batchedUpdates } from "react-dom";
 import { RuntimeReplicache } from "./replicache";

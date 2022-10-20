@@ -13,9 +13,7 @@
 <div
     class="relative flex-shrink-0"
     style:height={`${208 * articleScale}px`}
-    style:width={`${
-        176 * articleScale * (1 + (articles.length - 1) * articleOverlay)
-    }px`}
+    style:width={`${176 * articleScale * (1 + (articles.length - 1) * articleOverlay)}px`}
     in:fade
 >
     {#each articles as article, index}

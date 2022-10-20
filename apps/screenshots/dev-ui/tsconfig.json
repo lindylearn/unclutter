@@ -1,37 +1,24 @@
 {
-  "compilerOptions": {
-    "target": "ES2019",
-    "baseUrl": ".",
-    "module": "esnext",
-    "moduleResolution": "node",
-    "lib": [
-      "ES2015",
-      "ES2017",
-      "Dom",
-      "DOM.Iterable"
-    ],
-    "types": [
-      "chrome"
-    ],
-    "allowJs": true,
-    "downlevelIteration": true,
-    "jsx": "preserve",
-    "experimentalDecorators": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "strict": false,
-    "forceConsistentCasingInFileNames": true,
-    "noEmit": true,
-    "incremental": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true
-  },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+    "compilerOptions": {
+        "target": "ES2019",
+        "baseUrl": ".",
+        "module": "esnext",
+        "moduleResolution": "node",
+        "lib": ["ES2015", "ES2017", "Dom", "DOM.Iterable"],
+        "types": ["chrome"],
+        "allowJs": true,
+        "downlevelIteration": true,
+        "jsx": "preserve",
+        "experimentalDecorators": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "strict": false,
+        "forceConsistentCasingInFileNames": true,
+        "noEmit": true,
+        "incremental": true,
+        "resolveJsonModule": true,
+        "isolatedModules": true
+    },
+    "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+    "exclude": ["node_modules"]
 }

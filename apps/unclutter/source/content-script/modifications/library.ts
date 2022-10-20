@@ -6,11 +6,7 @@ import {
     readingProgressFullClamp,
 } from "@unclutter/library-components/dist/store/_schema";
 import { constructGraphData } from "@unclutter/library-components/dist/components/Modal/Graph";
-import {
-    getWeekStart,
-    getUrlHash,
-    subtractWeeks,
-} from "@unclutter/library-components/dist/common";
+import { getWeekStart, getUrlHash, subtractWeeks } from "@unclutter/library-components/dist/common";
 
 import OverlayManager from "./overlay";
 import { PageModifier, trackModifierExecution } from "./_interface";
@@ -22,15 +18,8 @@ import {
     reportEventContentScript,
 } from "@unclutter/library-components/dist/common/messaging";
 import { addArticleToLibrary } from "../../common/api";
-import {
-    anonymousLibraryEnabled,
-    showLibrarySignupFlag,
-} from "../../common/featureFlags";
-import {
-    LibraryInfo,
-    LibraryState,
-    ReadingProgress,
-} from "../../common/schema";
+import { anonymousLibraryEnabled, showLibrarySignupFlag } from "../../common/featureFlags";
+import { LibraryInfo, LibraryState, ReadingProgress } from "../../common/schema";
 
 @trackModifierExecution
 export default class LibraryModifier implements PageModifier {
@@ -59,11 +48,7 @@ export default class LibraryModifier implements PageModifier {
         justCompletedArticle: false,
     };
 
-    constructor(
-        articleUrl: string,
-        articleTitle: string,
-        overlayManager: OverlayManager
-    ) {
+    constructor(articleUrl: string, articleTitle: string, overlayManager: OverlayManager) {
         this.articleUrl = articleUrl;
         this.articleTitle = articleTitle;
         this.articleId = getUrlHash(articleUrl);
@@ -80,12 +65,8 @@ export default class LibraryModifier implements PageModifier {
             this.libraryState.libraryEnabled = true;
             this.libraryState.userInfo = await rep.query.getUserInfo();
         } else {
-            this.libraryState.libraryEnabled = await getRemoteFeatureFlag(
-                anonymousLibraryEnabled
-            );
-            this.libraryState.showLibrarySignup = await getRemoteFeatureFlag(
-                showLibrarySignupFlag
-            );
+            this.libraryState.libraryEnabled = await getRemoteFeatureFlag(anonymousLibraryEnabled);
+            this.libraryState.showLibrarySignup = await getRemoteFeatureFlag(showLibrarySignupFlag);
             this.libraryState.userInfo = {
                 id: null,
                 email: null,
@@ -103,10 +84,7 @@ export default class LibraryModifier implements PageModifier {
     async fetchArticleState(rep: ReplicacheProxy) {
         try {
             // get existing library state
-            this.libraryState.libraryInfo = await this.getLibraryInfo(
-                rep,
-                this.articleId
-            );
+            this.libraryState.libraryInfo = await this.getLibraryInfo(rep, this.articleId);
             if (!this.libraryState.libraryInfo) {
                 // run on-demand adding
                 this.libraryState.isClustering = true;
@@ -136,12 +114,10 @@ export default class LibraryModifier implements PageModifier {
             }
 
             // fetch topic progress stats
-            this.lastReadingProgress =
-                this.libraryState.libraryInfo.article.reading_progress;
-            this.libraryState.readingProgress =
-                await rep.query.getReadingProgress(
-                    this.libraryState.libraryInfo.topic?.id
-                );
+            this.lastReadingProgress = this.libraryState.libraryInfo.article.reading_progress;
+            this.libraryState.readingProgress = await rep.query.getReadingProgress(
+                this.libraryState.libraryInfo.topic?.id
+            );
 
             // show in UI
             this.overlayManager.updateLibraryState(this.libraryState);
@@ -166,10 +142,7 @@ export default class LibraryModifier implements PageModifier {
         }
     }
 
-    private async getLibraryInfo(
-        rep: ReplicacheProxy,
-        articleId: string
-    ): Promise<LibraryInfo> {
+    private async getLibraryInfo(rep: ReplicacheProxy, articleId: string): Promise<LibraryInfo> {
         const article = await rep.query.getArticle(articleId);
         if (!article) {
             return null;
@@ -183,10 +156,7 @@ export default class LibraryModifier implements PageModifier {
     }
 
     private async insertArticle(rep: ReplicacheProxy) {
-        if (
-            this.libraryState.userInfo.onPaidPlan ||
-            this.libraryState.userInfo.trialEnabled
-        ) {
+        if (this.libraryState.userInfo.onPaidPlan || this.libraryState.userInfo.trialEnabled) {
             // fetch state remotely
             // TODO remove mutate in backend? just fetch topic?
             this.libraryState.libraryInfo = await addArticleToLibrary(
@@ -195,9 +165,7 @@ export default class LibraryModifier implements PageModifier {
             );
 
             // insert immediately
-            await rep.mutate.putArticleIfNotExists(
-                this.libraryState.libraryInfo.article
-            );
+            await rep.mutate.putArticleIfNotExists(this.libraryState.libraryInfo.article);
             await rep.mutate.putTopic(this.libraryState.libraryInfo.topic);
         } else {
             const article = {
@@ -219,9 +187,7 @@ export default class LibraryModifier implements PageModifier {
         }
 
         if (this.libraryState.libraryInfo?.article) {
-            await rep.mutate.articleTrackOpened(
-                this.libraryState.libraryInfo.article.id
-            );
+            await rep.mutate.articleTrackOpened(this.libraryState.libraryInfo.article.id);
         }
     }
 
@@ -230,13 +196,12 @@ export default class LibraryModifier implements PageModifier {
         let nodes: Article[] = await rep.query.listRecentArticles();
         let links: ArticleLink[] = await rep.query.listArticleLinks();
 
-        [this.libraryState.graph, this.libraryState.linkCount] =
-            await constructGraphData(
-                nodes,
-                links,
-                this.libraryState.libraryInfo.article.url,
-                this.libraryState.libraryInfo.topic
-            );
+        [this.libraryState.graph, this.libraryState.linkCount] = await constructGraphData(
+            nodes,
+            links,
+            this.libraryState.libraryInfo.article.url,
+            this.libraryState.libraryInfo.topic
+        );
 
         let duration = performance.now() - start;
         console.log(`Constructed library graph in ${Math.round(duration)}ms`);
@@ -253,20 +218,13 @@ export default class LibraryModifier implements PageModifier {
             return;
         }
 
-        const readingProgress =
-            this.libraryState.libraryInfo.article.reading_progress;
-        if (
-            !this.libraryState.wasAlreadyPresent ||
-            !readingProgress ||
-            readingProgress >= 0.8
-        ) {
+        const readingProgress = this.libraryState.libraryInfo.article.reading_progress;
+        if (!this.libraryState.wasAlreadyPresent || !readingProgress || readingProgress >= 0.8) {
             return;
         }
 
         window.scrollTo({
-            top:
-                readingProgress * document.body.scrollHeight -
-                window.innerHeight,
+            top: readingProgress * document.body.scrollHeight - window.innerHeight,
             behavior: "smooth",
         });
     }
@@ -281,18 +239,16 @@ export default class LibraryModifier implements PageModifier {
         if (
             readingProgress >= 0.95 &&
             this.libraryState.libraryInfo?.article &&
-            this.libraryState.libraryInfo.article.reading_progress <
-                readingProgressFullClamp
+            this.libraryState.libraryInfo.article.reading_progress < readingProgressFullClamp
         ) {
             // immediately update state to show in UI
             await this.updateReadingProgress(1.0);
 
             // animate count reduction in LibraryMessage
             const rep = new ReplicacheProxy();
-            this.libraryState.readingProgress =
-                await rep.query.getReadingProgress(
-                    this.libraryState.libraryInfo.topic?.id
-                );
+            this.libraryState.readingProgress = await rep.query.getReadingProgress(
+                this.libraryState.libraryInfo.topic?.id
+            );
             this.libraryState.justCompletedArticle = true;
             this.overlayManager.updateLibraryState(this.libraryState);
         } else {
@@ -324,15 +280,11 @@ export default class LibraryModifier implements PageModifier {
         }
 
         // update class state
-        this.libraryState.libraryInfo.article.reading_progress =
-            readingProgress;
+        this.libraryState.libraryInfo.article.reading_progress = readingProgress;
         if (this.libraryState.graph) {
-            const currentNode = this.libraryState.graph.nodes.find(
-                (n) => n.depth === 0
-            );
+            const currentNode = this.libraryState.graph.nodes.find((n) => n.depth === 0);
             currentNode.reading_progress = readingProgress;
-            currentNode.isCompleted =
-                readingProgress >= readingProgressFullClamp;
+            currentNode.isCompleted = readingProgress >= readingProgressFullClamp;
         }
 
         // update data store
@@ -363,10 +315,6 @@ export default class LibraryModifier implements PageModifier {
 
         // run in background
         const bodyRect = document.body.getBoundingClientRect();
-        captureActiveTabScreenshot(
-            this.articleId,
-            bodyRect,
-            window.devicePixelRatio
-        );
+        captureActiveTabScreenshot(this.articleId, bodyRect, window.devicePixelRatio);
     }
 }

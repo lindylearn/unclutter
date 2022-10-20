@@ -1,16 +1,7 @@
-import {
-    DraggableArticleList,
-    useTabInfos,
-    useArticleListsCache,
-} from "../../components";
+import { DraggableArticleList, useTabInfos, useArticleListsCache } from "../../components";
 import React, { ReactNode, useState } from "react";
 import { getRandomLightColor } from "../../common";
-import {
-    Article,
-    readingProgressFullClamp,
-    Topic,
-    UserInfo,
-} from "../../store";
+import { Article, readingProgressFullClamp, Topic, UserInfo } from "../../store";
 import { ReadingProgress, ResourceIcon } from "./numbers";
 import clsx from "clsx";
 import { DraggableContext } from "../ArticleList/DraggableContext";
@@ -36,15 +27,8 @@ export default function RecentModalTab({
     const [onlyUnread, setOnlyUnread] = useState(false);
     const [lastFirst, setLastFirst] = useState(true);
 
-    const tabInfos = useTabInfos(
-        10,
-        onlyUnread,
-        lastFirst,
-        domainFilter,
-        userInfo
-    );
-    const [articleListsCache, setArticleListsCache] =
-        useArticleListsCache(tabInfos);
+    const tabInfos = useTabInfos(10, onlyUnread, lastFirst, domainFilter, userInfo);
+    const [articleListsCache, setArticleListsCache] = useArticleListsCache(tabInfos);
 
     return (
         <div className="flex flex-col gap-4">
@@ -241,8 +225,7 @@ function ArticleGroup({
                     <h2
                         className={clsx(
                             "title flex select-none items-center gap-2 font-medium",
-                            isTopic &&
-                                "cursor-pointer transition-transform hover:scale-[96%]"
+                            isTopic && "cursor-pointer transition-transform hover:scale-[96%]"
                         )}
                         onClick={() => {
                             if (isTopic) {
@@ -275,9 +258,7 @@ function ArticleGroup({
             <div
                 className="topic-articles relative rounded-md p-3"
                 style={{
-                    height: `${
-                        11.5 * articleLines - 0.75 * (articleLines - 1)
-                    }rem`, // article height + padding to prevent size change
+                    height: `${11.5 * articleLines - 0.75 * (articleLines - 1)}rem`, // article height + padding to prevent size change
                     background: color,
                 }}
             >

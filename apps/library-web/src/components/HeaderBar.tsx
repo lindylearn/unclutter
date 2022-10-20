@@ -4,14 +4,8 @@ import { Link, useLocation } from "wouter";
 
 import { LibraryTab } from "../App";
 import { getRandomColor } from "@unclutter/library-components/dist/common";
-import {
-    ReplicacheContext,
-    useSubscribe,
-} from "@unclutter/library-components/dist/store";
-import {
-    LindyIcon,
-    TopicEmoji,
-} from "@unclutter/library-components/dist/components";
+import { ReplicacheContext, useSubscribe } from "@unclutter/library-components/dist/store";
+import { LindyIcon, TopicEmoji } from "@unclutter/library-components/dist/components";
 
 export default function HeaderBar({
     tabs,
@@ -31,12 +25,9 @@ export default function HeaderBar({
     const [location, _] = useLocation();
 
     const rep = useContext(ReplicacheContext);
-    const topic = useSubscribe(
-        rep,
-        rep?.subscribe.getTopic(selectedTopicId || ""),
-        null,
-        [selectedTopicId]
-    );
+    const topic = useSubscribe(rep, rep?.subscribe.getTopic(selectedTopicId || ""), null, [
+        selectedTopicId,
+    ]);
     let topicColor = getRandomColor(topic?.id || "");
 
     return (
@@ -119,10 +110,7 @@ function Tab({ id }) {
 
     return (
         <div
-            className={clsx(
-                "relative rounded-t-lg",
-                isActive && "dark:bg-backgroundDark bg-white"
-            )}
+            className={clsx("relative rounded-t-lg", isActive && "dark:bg-backgroundDark bg-white")}
         >
             <Link href={`/${id}`.replace("/:topic_id", "")}>
                 <button

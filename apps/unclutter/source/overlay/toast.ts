@@ -1,9 +1,6 @@
 import { insertHtml } from "../common/html";
 
-export async function displayToast(
-    message: string,
-    onClick: () => void = () => {}
-) {
+export async function displayToast(message: string, onClick: () => void = () => {}) {
     if (document.getElementById("lindy-toast")) {
         return;
     }

@@ -23,12 +23,7 @@ export default function PageNotesList({
     );
 }
 
-export function PageNote({
-    url,
-    annotation,
-    createAnnotation,
-    deleteHideAnnotation,
-}) {
+export function PageNote({ url, annotation, createAnnotation, deleteHideAnnotation }) {
     const Component = annotation.isMyAnnotation ? AnnotationDraft : Annotation;
 
     return (

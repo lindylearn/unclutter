@@ -5,9 +5,7 @@ const extensionPath = path.resolve("./extension");
 // const screenshotsPath = path.resolve("./test-artifacts/screenshots");
 // const videosPath = path.resolve("./test-artifacts/videos");
 
-export async function startBrowser(): Promise<
-    [puppeteer.Browser, puppeteer.WebWorker]
-> {
+export async function startBrowser(): Promise<[puppeteer.Browser, puppeteer.WebWorker]> {
     const browser = await puppeteer.launch({
         headless: false, // extension are allowed only in head-full mode
         defaultViewport: { width: 1920, height: 1080 },
@@ -30,9 +28,7 @@ export async function startBrowser(): Promise<
         dumpio: true,
     });
 
-    const extBackgroundTarget = await browser.waitForTarget(
-        (t) => t.type() === "service_worker"
-    );
+    const extBackgroundTarget = await browser.waitForTarget((t) => t.type() === "service_worker");
     const extWorker = await extBackgroundTarget.worker();
 
     return [browser, extWorker!];

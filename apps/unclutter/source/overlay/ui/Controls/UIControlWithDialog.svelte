@@ -5,10 +5,7 @@
     export let defaultOpen: boolean = false;
 </script>
 
-<div
-    class={"lindy-ui-dialog-container " +
-        (defaultOpen ? "lindy-default-open" : "")}
->
+<div class={"lindy-ui-dialog-container " + (defaultOpen ? "lindy-default-open" : "")}>
     <Icon {iconName} />
     <div class="lindy-ui-dialog"><slot /></div>
 </div>
@@ -30,8 +27,7 @@
         background-color: var(--background-color);
         color: #9ca3af;
         border-radius: 5px;
-        filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.06))
-            drop-shadow(0 1px 2px rgb(0 0 0 / 0.05)); /* custom shadow, lighter than tw 'drop-shadow' */
+        filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.06)) drop-shadow(0 1px 2px rgb(0 0 0 / 0.05)); /* custom shadow, lighter than tw 'drop-shadow' */
 
         cursor: auto;
 

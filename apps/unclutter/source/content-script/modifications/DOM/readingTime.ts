@@ -37,10 +37,7 @@ export default class ReadingTimeModifier implements PageModifier {
 
         // Don't re-render outline on every scroll update (might trigger <100ms)
         // throttle instead of debounce to update during continous scrolls
-        const scrollListenerThrottled = throttle(
-            this.scollListener.bind(this),
-            200
-        );
+        const scrollListenerThrottled = throttle(this.scollListener.bind(this), 200);
         document.addEventListener("scroll", scrollListenerThrottled);
         this.uninstallScrollListener = () =>
             document.removeEventListener("scroll", scrollListenerThrottled);
@@ -54,12 +51,9 @@ export default class ReadingTimeModifier implements PageModifier {
 
         // viewport bottom
         this.pageProgress =
-            (window.scrollY + window.innerHeight) /
-            document.documentElement.scrollHeight;
+            (window.scrollY + window.innerHeight) / document.documentElement.scrollHeight;
 
-        const readingTimeLeft = Math.round(
-            this.totalReadingTime * (1 - this.pageProgress)
-        );
+        const readingTimeLeft = Math.round(this.totalReadingTime * (1 - this.pageProgress));
         this.overlayManager.updateReadingTimeLeft(readingTimeLeft);
         this.libraryModifier.onScrollUpdate(this.pageProgress);
     }

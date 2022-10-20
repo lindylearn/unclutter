@@ -14,8 +14,7 @@ import {
 import { useContext, useEffect, useState } from "react";
 
 export default function ModalTestTab({}) {
-    const articleId =
-        "7e265e0ad2f1585e0268181143260537597756925ba18d05772322224a44ecb6";
+    const articleId = "7e265e0ad2f1585e0268181143260537597756925ba18d05772322224a44ecb6";
     const [article, setArticle] = useState<Article>();
     const [topic, setTopic] = useState<Topic>();
 
@@ -35,12 +34,7 @@ export default function ModalTestTab({}) {
             setArticle(article);
             setTopic(topic);
 
-            const [graph, linkCount] = await constructGraphData(
-                nodes,
-                links,
-                article?.url,
-                topic
-            );
+            const [graph, linkCount] = await constructGraphData(nodes, links, article?.url, topic);
             setGraph(graph);
         })();
 

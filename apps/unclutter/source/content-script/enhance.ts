@@ -12,8 +12,7 @@ import TransitionManager from "./transitions";
 browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.event === "ping") {
         // respond that extension is active in this tab
-        const pageViewEnabled =
-            document.documentElement.classList.contains("pageview");
+        const pageViewEnabled = document.documentElement.classList.contains("pageview");
         sendResponse({ pageViewEnabled });
         return true;
     } else if (message.event === "togglePageView") {
@@ -39,8 +38,7 @@ let preparedPage = false;
 export async function togglePageView() {
     // manually toggle pageview status in this tab
 
-    const alreadyEnabled =
-        document.documentElement.classList.contains("pageview");
+    const alreadyEnabled = document.documentElement.classList.contains("pageview");
 
     if (!alreadyEnabled) {
         // enable extension
@@ -98,8 +96,7 @@ export async function togglePageView() {
 
 // perform style changes if pageview was already triggered by boot.js
 async function enhance() {
-    const pageViewEnabled =
-        document.documentElement.classList.contains("pageview");
+    const pageViewEnabled = document.documentElement.classList.contains("pageview");
 
     if (!pageViewEnabled) {
         removeToast();

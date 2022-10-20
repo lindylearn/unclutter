@@ -101,15 +101,9 @@ export default function PocketImportSettings({
                         .json()) as ArticleImportSchema;
 
                     import_data.urls = import_data.urls.concat(batch.urls);
-                    import_data.time_added = import_data.time_added!.concat(
-                        batch.time_added!
-                    );
-                    import_data.status = import_data.status!.concat(
-                        batch.status!
-                    );
-                    import_data.favorite = import_data.favorite!.concat(
-                        batch.favorite!
-                    );
+                    import_data.time_added = import_data.time_added!.concat(batch.time_added!);
+                    import_data.status = import_data.status!.concat(batch.status!);
+                    import_data.favorite = import_data.favorite!.concat(batch.favorite!);
 
                     hasMore = batch.urls.length > 0;
                 }
@@ -125,7 +119,7 @@ export default function PocketImportSettings({
     return (
         <div className="flex justify-center p-3">
             <button
-                className="bg-background dark:bg-backgroundDark rounded-lg shadow-sm px-2 py-0.5 disabled:cursor-not-allowed hover:scale-95 transition-all"
+                className="bg-background dark:bg-backgroundDark rounded-lg px-2 py-0.5 shadow-sm transition-all hover:scale-95 disabled:cursor-not-allowed"
                 onClick={login}
                 disabled={disabled}
             >

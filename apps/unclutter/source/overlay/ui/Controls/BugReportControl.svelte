@@ -69,10 +69,7 @@
     }
 </script>
 
-<UiControlWithDialog
-    iconName="bug"
-    defaultOpen={defaultOpen || activeElementBlocker}
->
+<UiControlWithDialog iconName="bug" defaultOpen={defaultOpen || activeElementBlocker}>
     <div class="lindy-bugreport-content" bind:this={containerElement}>
         <div class="lindy-bugreport-caption">{captionMessage}</div>
         <div class="lindy-bugreport-buttons">
@@ -94,9 +91,7 @@
             >
                 <Icon iconName="flag" />
                 <div style="position: relative;">
-                    <span style={reportedPage ? "visibility: hidden;" : ""}
-                        >Report page</span
-                    >
+                    <span style={reportedPage ? "visibility: hidden;" : ""}>Report page</span>
                     <div
                         style={"position: absolute; top: 0; left: 0;" +
                             (reportedPage ? "" : "display: none;")}
@@ -108,10 +103,7 @@
         </div>
     </div>
     {#if activeElementBlocker}
-        <ElementPickerModifierDialog
-            {elementPickerModifier}
-            on:save={toggleElementBlocker}
-        />
+        <ElementPickerModifierDialog {elementPickerModifier} on:save={toggleElementBlocker} />
     {/if}
 </UiControlWithDialog>
 
@@ -150,8 +142,7 @@
         cursor: pointer;
         border: none;
         border-radius: 5px;
-        box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1),
-            0 1px 2px -1px rgb(0 0 0 / 0.1);
+        box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
         background-color: #f3f4f6;
         user-select: none;
 
@@ -166,8 +157,7 @@
     }
 
     .lindy-bugreport-button:not(.lindy-pressed):hover {
-        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1),
-            0 2px 4px -2px rgb(0 0 0 / 0.1);
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
         filter: brightness(95%);
     }
     .lindy-bugreport-button.lindy-pressed {

@@ -30,9 +30,7 @@
     all: revert;
     position: absolute !important;
     top: 7px;
-    left: calc(
-        (100vw - var(--lindy-pagewidth)) / 2 + var(--lindy-pagewidth) - 5px
-    );
+    left: calc((100vw - var(--lindy-pagewidth)) / 2 + var(--lindy-pagewidth) - 5px);
     z-index: 2000;
     padding: 10px;
     contain: layout style;
@@ -135,8 +133,8 @@
     border-radius: 5px;
     cursor: pointer;
 
-    transition: opacity 0.1s ease-in-out, top 0.1s ease-in-out,
-        left 0.1s ease-in-out, height 0.1s ease-in-out;
+    transition: opacity 0.1s ease-in-out, top 0.1s ease-in-out, left 0.1s ease-in-out,
+        height 0.1s ease-in-out;
 }
 .lindy-element-spotlght.lindy-is-shrinking {
     height: 0 !important;

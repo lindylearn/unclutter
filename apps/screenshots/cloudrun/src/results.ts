@@ -22,15 +22,10 @@ async function createEmptyDir(path: string) {
     await fs.mkdir(path, { recursive: true });
 }
 
-export async function downloadPreviousUrlScreenshot(
-    url: string,
-    prefix: string
-) {
+export async function downloadPreviousUrlScreenshot(url: string, prefix: string) {
     const fileName = getUrlFilename(url);
 
-    const file = storage
-        .bucket(bucketName)
-        .file(`${prefix}/current/${fileName}`);
+    const file = storage.bucket(bucketName).file(`${prefix}/current/${fileName}`);
 
     try {
         await file.download({
@@ -48,28 +43,24 @@ export async function uploadResults(prefix: string) {
     const currentFiles = await fs.readdir(localScreenshotsPath);
     await Promise.all(
         currentFiles.map(async (file) => {
-            await storage
-                .bucket(bucketName)
-                .upload(`${localScreenshotsPath}/${file}`, {
-                    destination: `${prefix}/current/${file}`,
-                    metadata: {
-                        cacheControl: "no-store",
-                    },
-                });
+            await storage.bucket(bucketName).upload(`${localScreenshotsPath}/${file}`, {
+                destination: `${prefix}/current/${file}`,
+                metadata: {
+                    cacheControl: "no-store",
+                },
+            });
         })
     );
 
     const diffFiles = await fs.readdir(diffScreenshotsPath);
     await Promise.all(
         diffFiles.map(async (file) => {
-            await storage
-                .bucket(bucketName)
-                .upload(`${diffScreenshotsPath}/${file}`, {
-                    destination: `${prefix}/diff/${file}`,
-                    metadata: {
-                        cacheControl: "no-store",
-                    },
-                });
+            await storage.bucket(bucketName).upload(`${diffScreenshotsPath}/${file}`, {
+                destination: `${prefix}/diff/${file}`,
+                metadata: {
+                    cacheControl: "no-store",
+                },
+            });
         })
     );
 }

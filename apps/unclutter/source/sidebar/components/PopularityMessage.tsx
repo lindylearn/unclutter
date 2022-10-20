@@ -20,10 +20,7 @@ export function PopularityMessage({ annotations, url, onClick }) {
     }
 
     return (
-        <div
-            className="overflow-hidden rounded-lg bg-white drop-shadow-sm"
-            onClick={onClick}
-        >
+        <div className="overflow-hidden rounded-lg bg-white drop-shadow-sm" onClick={onClick}>
             {/* <div className="text-xs md:text-sm text-gray-400 text-right font-mono py-1 px-2 z-10 absolute">
 				Article popularity
 			</div> */}
@@ -42,10 +39,7 @@ export function PopularityMessage({ annotations, url, onClick }) {
                         >
                             <XAxis
                                 dataKey="year"
-                                interval={Math.max(
-                                    Math.ceil(data.length / 6),
-                                    6
-                                )}
+                                interval={Math.max(Math.ceil(data.length / 6), 6)}
                                 // minTickGap={20}
                                 tick={CustomizedAxisTick}
                             />
@@ -68,12 +62,7 @@ export function PopularityMessage({ annotations, url, onClick }) {
 function CustomizedAxisTick({ x, y, payload }) {
     return (
         <g transform={`translate(${x},${y})`}>
-            <text
-                x={0}
-                y={0}
-                textAnchor="start"
-                className="text-sm md:text-base"
-            >
+            <text x={0} y={0} textAnchor="start" className="text-sm md:text-base">
                 {payload.value}
             </text>
         </g>

@@ -31,10 +31,8 @@ function AccountSettings({ user }) {
         <div className="flex flex-col gap-2 text-sm md:text-base">
             <p>
                 You're signed in as{" "}
-                <span className="">
-                    {user.user_metadata.name || user.email}
-                </span>{" "}
-                via {user.app_metadata.provider} login.{" "}
+                <span className="">{user.user_metadata.name || user.email}</span> via{" "}
+                {user.app_metadata.provider} login.{" "}
                 <a
                     className="inline-block cursor-pointer font-bold transition-all hover:rotate-2"
                     onClick={async () => {
@@ -67,8 +65,8 @@ function AccountSettings({ user }) {
                 .
             </p>
             <p>
-                Thank you for trying out the private beta! Please tell me what
-                to improve via the chat bubble in the bottom right.
+                Thank you for trying out the private beta! Please tell me what to improve via the
+                chat bubble in the bottom right.
             </p>
         </div>
     );

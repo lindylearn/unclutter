@@ -75,19 +75,16 @@ export class SearchIndex {
                 // using numeric ids reduces memory usage significantly
                 // 0.1% collision chance for 10k articles
                 // allows up to 300 paragraphs per article
-                const articleId =
-                    Math.floor(Math.random() * 1000 * 10000) * 300;
+                const articleId = Math.floor(Math.random() * 1000 * 10000) * 300;
 
                 await Promise.all(
-                    doc.paragraphs
-                        .slice(0, 300)
-                        .map((paragraph, paragraphIndex) =>
-                            this.index.addAsync(articleId + paragraphIndex, {
-                                articleId: doc.id,
-                                title: doc.title || "",
-                                paragraph,
-                            })
-                        )
+                    doc.paragraphs.slice(0, 300).map((paragraph, paragraphIndex) =>
+                        this.index.addAsync(articleId + paragraphIndex, {
+                            articleId: doc.id,
+                            title: doc.title || "",
+                            paragraph,
+                        })
+                    )
                 );
 
                 await set(doc.id, articleId, indexStore);
@@ -190,9 +187,7 @@ export class SearchIndex {
                     bidirectional: true,
                 },
             });
-            sentences.map((sentence, index) =>
-                sentenceIndex.add(index, sentence)
-            );
+            sentences.map((sentence, index) => sentenceIndex.add(index, sentence));
             const relevanceOrder = sentenceIndex.search(query);
 
             return {
@@ -209,10 +204,7 @@ export class SearchIndex {
 }
 
 // init the search index and watch replicache changes
-export async function syncSearchIndex(
-    rep: RuntimeReplicache,
-    searchIndex: SearchIndex
-) {
+export async function syncSearchIndex(rep: RuntimeReplicache, searchIndex: SearchIndex) {
     let searchIndexInitialized = false;
 
     // watch replicache changes
@@ -223,9 +215,7 @@ export async function syncSearchIndex(
             const added = diff
                 .filter((op) => op.op === "add" || op.op === "change")
                 .map((e: any) => e.newValue);
-            const removed = diff
-                .filter((op) => op.op === "del")
-                .map((e: any) => e.oldValue);
+            const removed = diff.filter((op) => op.op === "del").map((e: any) => e.oldValue);
 
             if (!searchIndexInitialized) {
                 addedQueue.push(...added);

@@ -1,15 +1,8 @@
 import clsx from "clsx";
 import { useContext } from "react";
 import { NoTopicsMessage } from "../components/EmptyMessages";
-import {
-    TopicTag,
-    TopicEmoji,
-} from "@unclutter/library-components/dist/components";
-import {
-    useSubscribe,
-    ReplicacheContext,
-    Topic,
-} from "@unclutter/library-components/dist/store";
+import { TopicTag, TopicEmoji } from "@unclutter/library-components/dist/components";
+import { useSubscribe, ReplicacheContext, Topic } from "@unclutter/library-components/dist/store";
 import { useLocation } from "wouter";
 
 export default function TopicsListTab({ setSelectedTopicId }) {

@@ -34,8 +34,7 @@ export function trackModifierExecution(target: Function) {
     const className = target.name;
     const descriptors = Object.getOwnPropertyDescriptors(target.prototype);
     for (const [propName, descriptor] of Object.entries(descriptors)) {
-        const isMethod =
-            typeof descriptor.value == "function" && propName != "constructor";
+        const isMethod = typeof descriptor.value == "function" && propName != "constructor";
 
         if (!isMethod) continue;
         if (!trackedMethods.has(propName)) continue;
@@ -56,9 +55,7 @@ export function trackModifierExecution(target: Function) {
             if (className === "TransitionManager") {
                 console.log(`${Math.round(duration)}ms`);
             } else {
-                console.log(
-                    `    ${className.padEnd(25)} ${Math.round(duration)}ms`
-                );
+                console.log(`    ${className.padEnd(25)} ${Math.round(duration)}ms`);
             }
 
             return result;

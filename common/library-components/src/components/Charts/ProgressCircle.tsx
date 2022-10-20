@@ -1,13 +1,7 @@
 import React from "react";
 
-export function ProgressCircle({
-    id,
-    current,
-    target = 6,
-    showCelebration = false,
-}) {
-    let strokeDashoffset =
-        288.5 - 288.5 * Math.min(1.0, (current || 0) / target);
+export function ProgressCircle({ id, current, target = 6, showCelebration = false }) {
+    let strokeDashoffset = 288.5 - 288.5 * Math.min(1.0, (current || 0) / target);
 
     return (
         <div className="font-title relative scale-90 cursor-pointer">
@@ -27,10 +21,7 @@ export function ProgressCircle({
                     </mask>
                 </defs>
 
-                <path
-                    className="placeholder"
-                    d="M 50 96 a 46 46 0 0 1 0 -92 46 46 0 0 1 0 92"
-                />
+                <path className="placeholder" d="M 50 96 a 46 46 0 0 1 0 -92 46 46 0 0 1 0 92" />
 
                 <foreignObject
                     className="logoWrap"

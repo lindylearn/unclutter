@@ -18,21 +18,14 @@ export function useFeatureFlag(featureFlag: string): boolean {
 }
 
 export function useAnnotationSettings() {
-    const [personalAnnotationsEnabled, setPersonalAnnotationsEnabled] =
-        useState(false);
-    const [enableSocialAnnotations, setEnableSocialAnnotations] =
-        useState(false);
-    const [showAllSocialAnnotations, setShowAllSocialAnnotations] =
-        useState(false);
+    const [personalAnnotationsEnabled, setPersonalAnnotationsEnabled] = useState(false);
+    const [enableSocialAnnotations, setEnableSocialAnnotations] = useState(false);
+    const [showAllSocialAnnotations, setShowAllSocialAnnotations] = useState(false);
     useEffect(() => {
         (async function () {
-            const personalAnnotationsEnabled = await getFeatureFlag(
-                enableAnnotationsFeatureFlag
-            );
+            const personalAnnotationsEnabled = await getFeatureFlag(enableAnnotationsFeatureFlag);
 
-            const enableSocialAnnotations = await getFeatureFlag(
-                enableSocialCommentsFeatureFlag
-            );
+            const enableSocialAnnotations = await getFeatureFlag(enableSocialCommentsFeatureFlag);
 
             // batch changes
             setPersonalAnnotationsEnabled(personalAnnotationsEnabled);

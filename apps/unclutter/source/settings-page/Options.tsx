@@ -70,8 +70,7 @@ function OptionsPage({}) {
                     }
                 >
                     <p>
-                        Unclutter articles by clicking the extension icon or
-                        pressing{" "}
+                        Unclutter articles by clicking the extension icon or pressing{" "}
                         <div
                             className="inline-block px-1 py-0.5 text-gray-600 shadow-inner dark:text-gray-300"
                             style={{ background: "var(--embedded-background)" }}
@@ -94,9 +93,7 @@ function OptionsPage({}) {
                         </a>
                         )
                     </p>
-                    <FeatureFlagSwitch
-                        featureFlagKey={enableBootUnclutterMessage}
-                    >
+                    <FeatureFlagSwitch featureFlagKey={enableBootUnclutterMessage}>
                         Show unclutter button on web pages{" "}
                         <a
                             href="https://github.com/lindylearn/unclutter/blob/main/docs/article-detection.md#unclutter-reminder"
@@ -182,12 +179,9 @@ function OptionsPage({}) {
                     </p>
 
                     <FeatureFlagSwitch
-                        featureFlagKey={
-                            allowlistDomainOnManualActivationFeatureFlag
-                        }
+                        featureFlagKey={allowlistDomainOnManualActivationFeatureFlag}
                     >
-                        Enable automatic activation for pages you unclutter
-                        manually
+                        Enable automatic activation for pages you unclutter manually
                     </FeatureFlagSwitch>
                     <DomainSettingsList />
                 </OptionsGroup>
@@ -213,8 +207,7 @@ function OptionsPage({}) {
                         >
                             private note
                         </a>{" "}
-                        saved in your browser. Toggle the feature via the "pen"
-                        toolbar icon.
+                        saved in your browser. Toggle the feature via the "pen" toolbar icon.
                     </p>
                     <FeatureFlagSwitch
                         featureFlagKey={hypothesisSyncFeatureFlag}
@@ -246,8 +239,7 @@ function OptionsPage({}) {
                     }
                 >
                     <p>
-                        Click the underlined quotes on 86,457+ supported
-                        articles to show{" "}
+                        Click the underlined quotes on 86,457+ supported articles to show{" "}
                         <a
                             href="https://github.com/lindylearn/unclutter/blob/main/docs/social-highlights.md"
                             className="underline"
@@ -258,11 +250,8 @@ function OptionsPage({}) {
                         </a>{" "}
                         from Hacker News and Hypothes.is.
                     </p>
-                    <FeatureFlagSwitch
-                        featureFlagKey={enableSocialCountsFeatureFlag}
-                    >
-                        Show number of available social highlights on the
-                        extension icon
+                    <FeatureFlagSwitch featureFlagKey={enableSocialCountsFeatureFlag}>
+                        Show number of available social highlights on the extension icon
                     </FeatureFlagSwitch>
                 </OptionsGroup>
 
@@ -279,8 +268,8 @@ function OptionsPage({}) {
                 >
                     <ContributionStats />
                     <div className="">
-                        This project is open source! Suggest features,
-                        contribute code, vote on the roadmap, or report bugs{" "}
+                        This project is open source! Suggest features, contribute code, vote on the
+                        roadmap, or report bugs{" "}
                         <a
                             href="https://github.com/lindylearn/unclutter/issues"
                             target="_blank"
@@ -305,16 +294,8 @@ function OptionsGroup({ headerText, iconSvg, children, docsLink = null }) {
                 <div className="group-icon mr-1 w-7">{iconSvg}</div>
                 <div className="group-title">{headerText}</div>
                 {docsLink && (
-                    <a
-                        href={docsLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="ml-5"
-                    >
-                        <svg
-                            className="h-4 text-gray-400"
-                            viewBox="0 0 320 512"
-                        >
+                    <a href={docsLink} target="_blank" rel="noopener noreferrer" className="ml-5">
+                        <svg className="h-4 text-gray-400" viewBox="0 0 320 512">
                             <path
                                 fill="currentColor"
                                 d="M144 416c-17.67 0-32 14.33-32 32s14.33 32.01 32 32.01s32-14.34 32-32.01S161.7 416 144 416zM211.2 32H104C46.66 32 0 78.66 0 136v16C0 165.3 10.75 176 24 176S48 165.3 48 152v-16c0-30.88 25.12-56 56-56h107.2C244.7 80 272 107.3 272 140.8c0 22.66-12.44 43.27-32.5 53.81L167 232.8C137.1 248 120 277.9 120 310.6V328c0 13.25 10.75 24.01 24 24.01S168 341.3 168 328V310.6c0-14.89 8.188-28.47 21.38-35.41l72.47-38.14C297.7 218.2 320 181.3 320 140.8C320 80.81 271.2 32 211.2 32z"

@@ -9,10 +9,7 @@ export async function getHypothesisUsername() {
 }
 
 export async function getUserInfo() {
-    return await browser.storage.sync.get([
-        "hypothesis-api-token",
-        "hypothesis-username",
-    ]);
+    return await browser.storage.sync.get(["hypothesis-api-token", "hypothesis-username"]);
 }
 
 // validate token and save if valid

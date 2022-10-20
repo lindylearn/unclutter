@@ -8,10 +8,7 @@ import { BookmarkedPage } from "../background/bookmarks";
 // const lindyApiUrl = "http://localhost:8000";
 const lindyApiUrl = "https://api2.lindylearn.io";
 
-export async function checkArticleInLibrary(
-    url: string,
-    user_id: string
-): Promise<LibraryInfo> {
+export async function checkArticleInLibrary(url: string, user_id: string): Promise<LibraryInfo> {
     const response = await fetch(
         `${lindyApiUrl}/library/check_article?${new URLSearchParams({
             url,
@@ -32,10 +29,7 @@ export async function checkArticleInLibrary(
     return json;
 }
 
-export async function addArticleToLibrary(
-    url: string,
-    user_id: string
-): Promise<LibraryInfo> {
+export async function addArticleToLibrary(url: string, user_id: string): Promise<LibraryInfo> {
     const response = await fetch(
         `${lindyApiUrl}/library/import_articles?${new URLSearchParams({
             user_id,
@@ -164,10 +158,7 @@ export async function createScreenshots(urls: string[]): Promise<string[]> {
     return await response.json(); // returns new urls
 }
 
-export async function getArticleGraph(
-    url: string,
-    user_id: string
-): Promise<GraphData | null> {
+export async function getArticleGraph(url: string, user_id: string): Promise<GraphData | null> {
     const response = await fetch(
         `${lindyApiUrl}/library_graph/fetch?${new URLSearchParams({
             url,

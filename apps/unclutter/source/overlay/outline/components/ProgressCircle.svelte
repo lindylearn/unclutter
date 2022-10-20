@@ -4,9 +4,7 @@
 
     let strokeDashoffset: number;
     $: strokeDashoffset =
-        288.5 -
-        288.5 *
-            Math.min(1.0, (totalAnnotationCount || 0) / goalAnnotationCount);
+        288.5 - 288.5 * Math.min(1.0, (totalAnnotationCount || 0) / goalAnnotationCount);
 </script>
 
 <div
@@ -27,19 +25,9 @@
             </mask>
         </defs>
 
-        <path
-            class="placeholder"
-            d="M 50 96 a 46 46 0 0 1 0 -92 46 46 0 0 1 0 92"
-        />
+        <path class="placeholder" d="M 50 96 a 46 46 0 0 1 0 -92 46 46 0 0 1 0 92" />
 
-        <foreignObject
-            class="logoWrap"
-            mask="url(#mask)"
-            x="0"
-            y="0"
-            width="100"
-            height="100"
-        >
+        <foreignObject class="logoWrap" mask="url(#mask)" x="0" y="0" width="100" height="100">
             <div class="logoGradient" />
         </foreignObject>
     </svg>
@@ -112,16 +100,14 @@
         animation-name: fadeOut, fadeIn;
         animation-delay: 0s, 1.65s;
         animation-duration: 0.5s, 0.5s;
-        animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1),
-            cubic-bezier(0.16, 1, 0.3, 1);
+        animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1), cubic-bezier(0.16, 1, 0.3, 1);
         animation-fill-mode: forwards, forwards;
     }
     .caption.goal-reached > .celebration-icon {
         animation-name: fadeIn, fadeOut;
         animation-delay: 0.15s, 1.5s;
         animation-duration: 0.5s, 0.5s;
-        animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1),
-            cubic-bezier(0.16, 1, 0.3, 1);
+        animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1), cubic-bezier(0.16, 1, 0.3, 1);
         animation-fill-mode: forwards, forwards;
     }
 

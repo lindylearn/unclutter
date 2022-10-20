@@ -63,20 +63,14 @@ export default function App({
         // @ts-ignore
         <ReplicacheContext.Provider value={rep}>
             <LocalScreenshotContext.Provider
-                value={
-                    !libraryState.userInfo.accountEnabled
-                        ? getLocalScreenshot
-                        : null
-                }
+                value={!libraryState.userInfo.accountEnabled ? getLocalScreenshot : null}
             >
                 <LibraryModalPage
                     userInfo={libraryState?.userInfo}
                     darkModeEnabled={darkModeEnabled === "true"} // convert string to bool
                     showSignup={libraryState.showLibrarySignup}
                     relatedLinkCount={libraryState?.linkCount}
-                    currentArticle={
-                        libraryState?.libraryInfo?.article.url || articleUrl
-                    }
+                    currentArticle={libraryState?.libraryInfo?.article.url || articleUrl}
                     initialTopic={libraryState?.libraryInfo?.topic}
                     graph={libraryState?.graph}
                     isVisible={showModal}

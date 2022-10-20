@@ -1,23 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
-import {
-    Article,
-    readingProgressFullClamp,
-    ReplicacheContext,
-    Topic,
-    UserInfo,
-} from "../../store";
-import {
-    ArticleActivityCalendar,
-    getActivityColor,
-    getActivityLevel,
-} from "../Charts";
-import {
-    getDomain,
-    getRandomLightColor,
-    getWeekStart,
-    groupBy,
-    subtractWeeks,
-} from "../../common";
+import { Article, readingProgressFullClamp, ReplicacheContext, Topic, UserInfo } from "../../store";
+import { ArticleActivityCalendar, getActivityColor, getActivityLevel } from "../Charts";
+import { getDomain, getRandomLightColor, getWeekStart, groupBy, subtractWeeks } from "../../common";
 import { useArticleGroups } from "../ArticleList";
 import { TopicEmoji } from "../TopicTag";
 import clsx from "clsx";
@@ -118,9 +102,7 @@ function NumberStats({
         if (userInfo.onPaidPlan || userInfo.trialEnabled) {
             rep?.query
                 .listTopics()
-                .then((topics) =>
-                    setTopicsCount(topics.filter((t) => !!t.group_id).length)
-                );
+                .then((topics) => setTopicsCount(topics.filter((t) => !!t.group_id).length));
         }
     }, [rep]);
 
@@ -180,22 +162,14 @@ function WeekDetails({
         }
 
         const weekArticles = allArticles.filter(
-            (a) =>
-                a.time_added * 1000 >= start.getTime() &&
-                a.time_added * 1000 < end.getTime()
+            (a) => a.time_added * 1000 >= start.getTime() && a.time_added * 1000 < end.getTime()
         );
         setWeekArticles(weekArticles);
     }, [allArticles, start, end]);
 
     let [groups, setGroups] = useState<[string, Article[]][]>();
     if (userInfo.onPaidPlan || userInfo.trialEnabled) {
-        groups = useArticleGroups(
-            weekArticles,
-            false,
-            "topic_size",
-            "recency_order",
-            undefined
-        );
+        groups = useArticleGroups(weekArticles, false, "topic_size", "recency_order", undefined);
     } else {
         useEffect(() => {
             if (weekArticles.length === 0) {
@@ -209,9 +183,7 @@ function WeekDetails({
                 }),
                 "domain"
             );
-            setGroups(
-                Object.entries(groups).sort((a, b) => b[1].length - a[1].length)
-            );
+            setGroups(Object.entries(groups).sort((a, b) => b[1].length - a[1].length));
         }, [weekArticles]);
     }
 
@@ -225,8 +197,7 @@ function WeekDetails({
                         groupKey={groupKey}
                         selectedArticles={selectedArticles}
                         totalArticleCount={
-                            allArticles?.filter((a) => a.topic_id === groupKey)
-                                .length
+                            allArticles?.filter((a) => a.topic_id === groupKey).length
                         }
                         darkModeEnabled={darkModeEnabled}
                         showTopic={showTopic}
@@ -278,10 +249,7 @@ function ArticleGroupStat({
                 activityLevel === 4 && "dark:text-stone-800"
             )}
             style={{
-                background: getActivityColor(
-                    activityLevel,
-                    darkModeEnabled || false
-                ),
+                background: getActivityColor(activityLevel, darkModeEnabled || false),
             }}
             onClick={() => {
                 if (userInfo.onPaidPlan || userInfo.trialEnabled) {
@@ -292,9 +260,7 @@ function ArticleGroupStat({
             }}
         >
             <div className="flex max-w-full items-center overflow-hidden font-medium">
-                {topic?.emoji && (
-                    <TopicEmoji emoji={topic?.emoji} className="w-4" />
-                )}
+                {topic?.emoji && <TopicEmoji emoji={topic?.emoji} className="w-4" />}
                 {!(userInfo.onPaidPlan || userInfo.trialEnabled) && (
                     <div className="mr-1 w-4 opacity-90">
                         <img

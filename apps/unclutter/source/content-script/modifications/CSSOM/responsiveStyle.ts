@@ -1,10 +1,6 @@
 import { pxToNumber } from "../../../common/css";
 import { PageModifier, trackModifierExecution } from "../_interface";
-import CSSOMProvider, {
-    isMediaRule,
-    isStyleRule,
-    isSupportsRule,
-} from "./_provider";
+import CSSOMProvider, { isMediaRule, isStyleRule, isSupportsRule } from "./_provider";
 
 @trackModifierExecution
 export default class ResponsiveStyleModifier implements PageModifier {
@@ -38,15 +34,9 @@ export default class ResponsiveStyleModifier implements PageModifier {
         for (let rule of aggregationNode.cssRules) {
             if (isStyleRule(rule)) {
                 const position = rule.style.position;
-                if (
-                    position &&
-                    (position === "fixed" || position === "sticky")
-                ) {
+                if (position && (position === "fixed" || position === "sticky")) {
                     // allow full-page containers, e.g. https://developer.android.com/codelabs/basic-android-kotlin-training-shared-viewmodel?continue=https%3A%2F%2Fdeveloper.android.com%2Fcourses%2Fpathways%2Fandroid-basics-kotlin-unit-3-pathway-4%23codelab-https%3A%2F%2Fdeveloper.android.com%2Fcodelabs%2Fbasic-android-kotlin-training-shared-viewmodel#5
-                    if (
-                        pxToNumber(rule.style.top) === 0 &&
-                        pxToNumber(rule.style.bottom) === 0
-                    ) {
+                    if (pxToNumber(rule.style.top) === 0 && pxToNumber(rule.style.bottom) === 0) {
                         continue;
                     }
 
@@ -66,24 +56,19 @@ export default class ResponsiveStyleModifier implements PageModifier {
                 );
                 if (appliedBefore && !appliesNow) {
                     this.expiredRules.push(
-                        ...[...rule.cssRules].filter(
-                            (rule) => isStyleRule(rule) && !!rule.style
-                        )
+                        ...[...rule.cssRules].filter((rule) => isStyleRule(rule) && !!rule.style)
                     );
                 }
                 if (!appliedBefore && appliesNow) {
                     this.newRules.push(
-                        ...[...rule.cssRules].filter(
-                            (rule) => isStyleRule(rule) && !!rule.style
-                        )
+                        ...[...rule.cssRules].filter((rule) => isStyleRule(rule) && !!rule.style)
                     );
                 }
             }
         }
     }
 
-    private expiredRulesOriginalStyles: { [key: string]: [string, boolean] }[] =
-        [];
+    private expiredRulesOriginalStyles: { [key: string]: [string, boolean] }[] = [];
     private addedRules: CSSStyleRule[] = [];
     enableResponsiveStyles() {
         // disable desktop-only styles
@@ -112,9 +97,7 @@ export default class ResponsiveStyleModifier implements PageModifier {
                 rule.cssText,
                 rule.parentStyleSheet.cssRules.length
             );
-            const newRule = rule.parentStyleSheet.cssRules[
-                newIndex
-            ] as CSSStyleRule;
+            const newRule = rule.parentStyleSheet.cssRules[newIndex] as CSSStyleRule;
 
             this.addedRules.push(newRule);
         });
@@ -125,11 +108,7 @@ export default class ResponsiveStyleModifier implements PageModifier {
             for (const [key, [value, isImportant]] of Object.entries(
                 this.expiredRulesOriginalStyles[index]
             )) {
-                rule.style.setProperty(
-                    key,
-                    value,
-                    isImportant ? "important" : ""
-                );
+                rule.style.setProperty(key, value, isImportant ? "important" : "");
             }
         });
 
@@ -142,15 +121,13 @@ export default class ResponsiveStyleModifier implements PageModifier {
     private fixedElementsOriginalDisplay: string[] = [];
     blockFixedElements() {
         // completely remove fade-out elements (shifts layout)
-        this.fixedElementsOriginalDisplay = this.fixedPositionRules.map(
-            (rule) => {
-                const originalValue = rule.style.getPropertyValue("display");
+        this.fixedElementsOriginalDisplay = this.fixedPositionRules.map((rule) => {
+            const originalValue = rule.style.getPropertyValue("display");
 
-                rule.style.setProperty("display", "none", "important");
+            rule.style.setProperty("display", "none", "important");
 
-                return originalValue;
-            }
-        );
+            return originalValue;
+        });
     }
 
     unblockFixedElements() {
@@ -160,11 +137,7 @@ export default class ResponsiveStyleModifier implements PageModifier {
         });
     }
 
-    private parseMediaCondition(
-        rule: CSSMediaRule,
-        oldWidth: number,
-        newWidth: number
-    ) {
+    private parseMediaCondition(rule: CSSMediaRule, oldWidth: number, newWidth: number) {
         // TODO ideally, iterate the media list
         const condition = rule.media[0];
 
@@ -192,10 +165,7 @@ export default class ResponsiveStyleModifier implements PageModifier {
         } else if (unit === "em" || unit === "rem") {
             return value * this.rootFontSizePx;
         } else {
-            console.error(
-                `Unexpected media query breakpoint unit ${unit}:`,
-                value
-            );
+            console.error(`Unexpected media query breakpoint unit ${unit}:`, value);
             return 1000000;
         }
     }

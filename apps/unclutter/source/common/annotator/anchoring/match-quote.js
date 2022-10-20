@@ -1,4 +1,4 @@
-import approxSearch from 'approx-string-match';
+import approxSearch from "approx-string-match";
 
 /**
  * @typedef {import('approx-string-match').Match} StringMatch
@@ -109,7 +109,7 @@ export function matchQuote(text, quote, context = {}) {
    *
    * @param {StringMatch} match
    */
-  const scoreMatch = match => {
+  const scoreMatch = (match) => {
     const quoteWeight = 50; // Similarity of matched text to quote.
     const prefixWeight = 20; // Similarity of text before matched text to `context.prefix`.
     const suffixWeight = 20; // Similarity of text after matched text to `context.suffix`.
@@ -134,7 +134,7 @@ export function matchQuote(text, quote, context = {}) {
       : 1.0;
 
     let posScore = 1.0;
-    if (typeof context.hint === 'number') {
+    if (typeof context.hint === "number") {
       const offset = Math.abs(match.start - context.hint);
       posScore = 1.0 - offset / text.length;
     }
@@ -152,7 +152,7 @@ export function matchQuote(text, quote, context = {}) {
 
   // Rank matches based on similarity of actual and expected surrounding text
   // and actual/expected offset in the document text.
-  const scoredMatches = matches.map(m => ({
+  const scoredMatches = matches.map((m) => ({
     start: m.start,
     end: m.end,
     score: scoreMatch(m),

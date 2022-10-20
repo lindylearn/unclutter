@@ -4,9 +4,7 @@ import fetch from "node-fetch";
 const excludedDomains = ["twitter.com"];
 
 async function getHnTopLinks(limit = 30) {
-    const topResponse = await fetch(
-        "https://hacker-news.firebaseio.com/v0/topstories.json"
-    );
+    const topResponse = await fetch("https://hacker-news.firebaseio.com/v0/topstories.json");
     const idList = await topResponse.json();
 
     const itemDetails = await Promise.all(
@@ -27,9 +25,7 @@ async function getHnTopLinks(limit = 30) {
         .map((detail) => detail?.url)
         .filter(
             (url) =>
-                url &&
-                new URL(url).pathname !== "/" &&
-                !excludedDomains.includes(new URL(url).host)
+                url && new URL(url).pathname !== "/" && !excludedDomains.includes(new URL(url).host)
         );
 }
 
@@ -44,9 +40,7 @@ async function getRedditTopLinks(subreddit, limit = 30) {
             )
         ).json();
 
-        const newUrls = topResponse.data.children.map(
-            (details) => details.data.url
-        );
+        const newUrls = topResponse.data.children.map((details) => details.data.url);
         urls = urls.concat(newUrls);
 
         nextToken = topResponse.data.after;
@@ -55,9 +49,7 @@ async function getRedditTopLinks(subreddit, limit = 30) {
     return urls
         .filter(
             (url) =>
-                url &&
-                new URL(url).pathname !== "/" &&
-                !excludedDomains.includes(new URL(url).host)
+                url && new URL(url).pathname !== "/" && !excludedDomains.includes(new URL(url).host)
         )
         .slice(0, limit);
 }
@@ -84,12 +76,7 @@ async function fetchReddit() {
     await fs.writeFile("./urls/reddit.csv", ["url"].concat(urls).join("\n"));
 }
 
-async function convertCSV(
-    fileBase,
-    dropFirstLine = true,
-    column = 0,
-    columnSep = ","
-) {
+async function convertCSV(fileBase, dropFirstLine = true, column = 0, columnSep = ",") {
     const content = await fs.readFile(`./urls/${fileBase}.csv`, "utf8");
     const urls = content
         .split("\n")

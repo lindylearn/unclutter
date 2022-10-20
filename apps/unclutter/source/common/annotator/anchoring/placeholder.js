@@ -1,7 +1,7 @@
 /**
  * CSS selector that will match the placeholder within a page/tile container.
  */
-const placeholderSelector = '.annotator-placeholder';
+const placeholderSelector = ".annotator-placeholder";
 
 /**
  * Create or return a placeholder element for anchoring.
@@ -24,9 +24,9 @@ export function createPlaceholder(container) {
   if (placeholder) {
     return placeholder;
   }
-  placeholder = document.createElement('span');
-  placeholder.classList.add('annotator-placeholder');
-  placeholder.textContent = 'Loading annotations...';
+  placeholder = document.createElement("span");
+  placeholder.classList.add("annotator-placeholder");
+  placeholder.textContent = "Loading annotations...";
   container.appendChild(placeholder);
   return placeholder;
 }

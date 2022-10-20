@@ -216,11 +216,7 @@ function SidebarFilterOption({
                     className="bg-lindy dark:bg-lindyDark absolute -top-1 right-1 z-20 rounded-md px-1 text-sm leading-tight dark:text-[rgb(232,230,227)]"
                     style={{
                         background:
-                            currentTopic &&
-                            getRandomLightColor(
-                                currentTopic.id,
-                                darkModeEnabled
-                            ),
+                            currentTopic && getRandomLightColor(currentTopic.id, darkModeEnabled),
                     }}
                 >
                     {tag}

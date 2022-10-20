@@ -50,15 +50,10 @@ export default function App({ url, title }) {
     }, []);
 
     // group and filter annotations on every local state change (e.g. added, focused)
-    const [groupedAnnotations, setGroupedAnnotations] = useState<
-        LindyAnnotation[][]
-    >([]);
+    const [groupedAnnotations, setGroupedAnnotations] = useState<LindyAnnotation[][]>([]);
     React.useEffect(() => {
         const visibleAnnotations = annotations.filter(
-            (a) =>
-                a.focused ||
-                (a.isMyAnnotation && a.text) ||
-                a.platform === "info"
+            (a) => a.focused || (a.isMyAnnotation && a.text) || a.platform === "info"
         );
 
         // use large grouping margin to display every annotation properly

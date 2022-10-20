@@ -37,9 +37,7 @@ function Step({ index, completed }: { index: number; completed: boolean }) {
         <div
             className={clsx(
                 "h-4 w-4 rounded-md text-center text-sm leading-none",
-                completed
-                    ? "bg-lindy dark:bg-lindyDark"
-                    : "bg-stone-100 dark:bg-neutral-700"
+                completed ? "bg-lindy dark:bg-lindyDark" : "bg-stone-100 dark:bg-neutral-700"
             )}
         >
             {/* {index} */}

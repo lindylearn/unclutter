@@ -5,18 +5,12 @@ import process from "process";
 import { handleRequest } from "@unclutter/replicache-nextjs/lib/backend";
 import { mutators } from "@unclutter/library-components/dist/store";
 
-async function handler(
-    req: NextApiRequest,
-    res: NextApiResponse
-): Promise<void> {
+async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
     // handle CORS
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader("Access-Control-Allow-Headers", "*");
     if (req.method === "OPTIONS") {
-        res.setHeader(
-            "Access-Control-Allow-Methods",
-            "PUT, POST, PATCH, DELETE, GET"
-        );
+        res.setHeader("Access-Control-Allow-Methods", "PUT, POST, PATCH, DELETE, GET");
         return res.status(200).json({});
     }
 

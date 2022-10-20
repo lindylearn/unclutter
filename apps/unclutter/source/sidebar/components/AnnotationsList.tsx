@@ -10,19 +10,10 @@ interface AnnotationsListProps {
     groupedAnnotations: LindyAnnotation[][];
     hypothesisSyncEnabled: boolean;
     showAllSocialAnnotations: boolean;
-    deleteHideAnnotation: (
-        annotation: LindyAnnotation,
-        threadStart: LindyAnnotation
-    ) => void;
-    onAnnotationHoverUpdate: (
-        annotation: LindyAnnotation,
-        hoverActive: boolean
-    ) => void;
+    deleteHideAnnotation: (annotation: LindyAnnotation, threadStart: LindyAnnotation) => void;
+    onAnnotationHoverUpdate: (annotation: LindyAnnotation, hoverActive: boolean) => void;
     unfocusAnnotation: (annotation: LindyAnnotation) => void;
-    createReply: (
-        parent: LindyAnnotation,
-        threadStart: LindyAnnotation
-    ) => void;
+    createReply: (parent: LindyAnnotation, threadStart: LindyAnnotation) => void;
     updateAnnotation: (annotation: LindyAnnotation) => void;
 }
 
@@ -93,8 +84,7 @@ function AnnotationsList({
                 //     group[0].displayOffset -
                 //     annotationMarginPx;
 
-                const groupTopOffset =
-                    group[0].displayOffset - sidebarOffsetTopPx;
+                const groupTopOffset = group[0].displayOffset - sidebarOffsetTopPx;
 
                 return group.map((annotation, i) => {
                     // items are in flat list, so must track previous group items for correct absolute position
@@ -116,11 +106,7 @@ function AnnotationsList({
                         // sum them up to get correct offset inside group
                         innerGroupOffset = prevSiblingsRefs
                             .map((ref) => ref.clientHeight)
-                            .reduce(
-                                (sum, height) =>
-                                    sum + height + annotationMarginPx,
-                                0
-                            );
+                            .reduce((sum, height) => sum + height + annotationMarginPx, 0);
                     }
 
                     return (
@@ -138,12 +124,9 @@ function AnnotationsList({
                                 }}
                                 ref={(el) => {
                                     if (el) {
-                                        itemsRef.current[annotation.localId] =
-                                            el;
+                                        itemsRef.current[annotation.localId] = el;
                                     } else {
-                                        delete itemsRef.current[
-                                            annotation.localId
-                                        ];
+                                        delete itemsRef.current[annotation.localId];
                                     }
                                 }}
                             >
@@ -155,15 +138,10 @@ function AnnotationsList({
                                     // } // give each item equal share -- always avoids overflows
                                     onHoverUpdate={(hoverActive: boolean) =>
                                         // call hover on top level annotation
-                                        onAnnotationHoverUpdate(
-                                            annotation,
-                                            hoverActive
-                                        )
+                                        onAnnotationHoverUpdate(annotation, hoverActive)
                                     }
                                     unfocusAnnotation={unfocusAnnotation}
-                                    hypothesisSyncEnabled={
-                                        hypothesisSyncEnabled
-                                    }
+                                    hypothesisSyncEnabled={hypothesisSyncEnabled}
                                     createReply={createReply}
                                     updateAnnotation={updateAnnotation}
                                 />

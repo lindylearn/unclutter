@@ -67,18 +67,12 @@ export const defaultTabs: LibraryTab[] = [
 
 export default function App() {
     const rep = useContext(ReplicacheContext);
-    const articleCount = useSubscribe(
-        rep,
-        rep?.subscribe.getArticlesCount(),
-        null
-    );
+    const articleCount = useSubscribe(rep, rep?.subscribe.getArticlesCount(), null);
 
     // location state
     const [lastLocation, setLastLocation] = useState<string>();
     const [location, setLocation] = useLocation();
-    const activeTab = defaultTabs.find(
-        (tab) => tab.id === location?.slice(1).split("/")[0]
-    );
+    const activeTab = defaultTabs.find((tab) => tab.id === location?.slice(1).split("/")[0]);
     useEffect(() => {
         reportEventPosthog("$pageview");
     }, [location]);
@@ -161,8 +155,7 @@ export default function App() {
 
                         // determine animation direction
                         const lastTabIndex = defaultTabs.findIndex(
-                            (tab) =>
-                                tab.id === lastLocation?.slice(1).split("/")[0]
+                            (tab) => tab.id === lastLocation?.slice(1).split("/")[0]
                         );
                         const newTabIndex = defaultTabs.findIndex(
                             (tab) => tab.id === location?.slice(1).split("/")[0]
@@ -173,35 +166,26 @@ export default function App() {
                         }
 
                         return cloneElement(child, {
-                            classNames: moveToLeft
-                                ? "move-tab-left"
-                                : "move-tab-right",
+                            classNames: moveToLeft ? "move-tab-left" : "move-tab-right",
                         });
                     }
 
                     return child;
                 }}
             >
-                <CSSTransition
-                    timeout={500}
-                    classNames="tab-page"
-                    key={location}
-                >
+                <CSSTransition timeout={500} classNames="tab-page" key={location}>
                     <Switch location={location}>
                         <Route path="/">
-                            {((settings &&
-                                settings?.tutorial_stage === undefined) ||
-                                (settings?.tutorial_stage &&
-                                    settings?.tutorial_stage < 3)) && (
+                            {((settings && settings?.tutorial_stage === undefined) ||
+                                (settings?.tutorial_stage && settings?.tutorial_stage < 3)) && (
                                 <Redirect to="/welcome" />
                             )}
-                            {settings?.tutorial_stage &&
-                                settings?.tutorial_stage >= 3 && (
-                                    <DashboardTab
-                                        selectedTopicId={selectedTopicId}
-                                        setSelectedTopicId={setSelectedTopicId}
-                                    />
-                                )}
+                            {settings?.tutorial_stage && settings?.tutorial_stage >= 3 && (
+                                <DashboardTab
+                                    selectedTopicId={selectedTopicId}
+                                    setSelectedTopicId={setSelectedTopicId}
+                                />
+                            )}
                         </Route>
 
                         <Route path="/filter">
@@ -219,9 +203,7 @@ export default function App() {
                             <SearchTab searchQuery={searchQuery} />
                         </Route>
                         <Route path="/topics">
-                            <TopicsListTab
-                                setSelectedTopicId={setSelectedTopicId}
-                            />
+                            <TopicsListTab setSelectedTopicId={setSelectedTopicId} />
                         </Route>
                         {/* <Route path="/topics/:group_id">
                             {(params) => (

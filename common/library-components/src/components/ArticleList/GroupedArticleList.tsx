@@ -6,10 +6,7 @@ import { useContext, useEffect, useState } from "react";
 import { ReplicacheContext } from "../../store";
 import { getRandomColor } from "../../common/styling";
 import { groupBy } from "../../common/util";
-import {
-    getSafeArticleSortPosition,
-    sortArticlesPosition,
-} from "../../store/accessors";
+import { getSafeArticleSortPosition, sortArticlesPosition } from "../../store/accessors";
 import { Article } from "../../store/_schema";
 import { TopicTag } from "../TopicTag";
 import { DraggableArticleList } from "./DraggableArticleList";
@@ -30,12 +27,7 @@ export function GroupedArticleList({
     sortGroupsBy?: "recency_position" | "recency" | "topic_size";
     sortArticlesBy?: "recency_order" | "topic_order";
 }) {
-    const groups = useArticleGroups(
-        articles,
-        combineSmallGroups,
-        sortGroupsBy,
-        sortArticlesBy
-    );
+    const groups = useArticleGroups(articles, combineSmallGroups, sortGroupsBy, sortArticlesBy);
 
     return (
         <div className="flex flex-col gap-3">
@@ -48,9 +40,7 @@ export function GroupedArticleList({
                     <div
                         className={clsx(
                             "flex flex-wrap gap-2",
-                            enableArticleStacks &&
-                                articles.length > 1 &&
-                                "stacked-articles-list"
+                            enableArticleStacks && articles.length > 1 && "stacked-articles-list"
                         )}
                         style={{
                             marginRight: enableArticleStacks
@@ -98,10 +88,7 @@ export async function groupArticlesByTopic(
     sortArticlesBy?: "recency_order" | "reverse_recency_order" | "topic_order",
     maxGroupCount?: number
 ): Promise<[string, Article[]][]> {
-    const groupsMap: { [topic_id: string]: Article[] } = groupBy(
-        articles,
-        "topic_id"
-    );
+    const groupsMap: { [topic_id: string]: Article[] } = groupBy(articles, "topic_id");
     let groupEntries = Object.entries(groupsMap);
 
     if (combineSmallGroups) {
@@ -111,10 +98,7 @@ export async function groupArticlesByTopic(
         );
         groupEntries = largeGroups;
         if (singleGroups.length > 0) {
-            groupEntries.push([
-                "Other",
-                singleGroups.flatMap(([_, articles]) => articles),
-            ]);
+            groupEntries.push(["Other", singleGroups.flatMap(([_, articles]) => articles)]);
         }
     }
 
@@ -158,14 +142,8 @@ export function TopicGroupBackground({
     const topicColor = getRandomColor(topic_id).replace("0.4)", "0.15)");
 
     return (
-        <div
-            key={topic_id}
-            className={clsx("article-group animate-fadein relative", className)}
-        >
-            <div
-                className="rounded-lg p-2.5 shadow"
-                style={{ background: topicColor }}
-            >
+        <div key={topic_id} className={clsx("article-group animate-fadein relative", className)}>
+            <div className="rounded-lg p-2.5 shadow" style={{ background: topicColor }}>
                 {children}
             </div>
 
@@ -175,10 +153,7 @@ export function TopicGroupBackground({
                         topic_id={topic_id}
                         className="relative left-0.5"
                         colorSeed={topic_id}
-                        onClick={
-                            setSelectedTopicId &&
-                            (() => setSelectedTopicId(topic_id))
-                        }
+                        onClick={setSelectedTopicId && (() => setSelectedTopicId(topic_id))}
                         noBackground
                         large
                     />

@@ -17,9 +17,7 @@ const isProduction = !process.env.ROLLUP_WATCH;
 
 // bundle content scripts
 // absolute path imports (starting with "source/") seems to break this.
-const contentScriptConfigs = [
-    "source/background/firefox-content-script.ts",
-].map((entryPoint) => ({
+const contentScriptConfigs = ["source/background/firefox-content-script.ts"].map((entryPoint) => ({
     input: entryPoint,
     output: {
         file: entryPoint
@@ -43,9 +41,7 @@ const contentScriptConfigs = [
         typescript(),
         replace({
             preventAssignment: true,
-            "process.env.NODE_ENV": JSON.stringify(
-                isProduction ? "production" : "development"
-            ),
+            "process.env.NODE_ENV": JSON.stringify(isProduction ? "production" : "development"),
         }),
         json(),
     ],
@@ -59,16 +55,10 @@ const moveVirtualFolder = {
         const files = Object.entries(bundle);
         for (const [key, file] of files) {
             if (file.fileName.startsWith("_virtual/")) {
-                file.fileName = file.fileName.replace(
-                    "_virtual",
-                    "node_modules/_virtual"
-                );
+                file.fileName = file.fileName.replace("_virtual", "node_modules/_virtual");
                 file.code = file.code.replaceAll("../node_modules/", "../");
             }
-            file.code = file.code.replaceAll(
-                "/_virtual/",
-                "/node_modules/_virtual/"
-            );
+            file.code = file.code.replaceAll("/_virtual/", "/node_modules/_virtual/");
         }
     },
 };
@@ -101,13 +91,9 @@ const esModuleConfig = {
         moveVirtualFolder,
         replace({
             preventAssignment: true,
-            "process.env.NODE_ENV": JSON.stringify(
-                isProduction ? "production" : "development"
-            ),
-            "process.env.NEXT_PUBLIC_REPLICACHE_LICENSE_KEY":
-                '"l83e0df86778d44fba2909e3618d7965f"',
-            "process.env.NEXT_PUBLIC_SUPABASE_URL":
-                '"https://lihxtjeacthcjhstkqll.supabase.co"',
+            "process.env.NODE_ENV": JSON.stringify(isProduction ? "production" : "development"),
+            "process.env.NEXT_PUBLIC_REPLICACHE_LICENSE_KEY": '"l83e0df86778d44fba2909e3618d7965f"',
+            "process.env.NEXT_PUBLIC_SUPABASE_URL": '"https://lihxtjeacthcjhstkqll.supabase.co"',
             "process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY":
                 '"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxpaHh0amVhY3RoY2poc3RrcWxsIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NTgwNjQ5MzgsImV4cCI6MTk3MzY0MDkzOH0.4I8bHJIAxNxJ7Gpy0-QIiF-EECpOaN3_3D6449X83Gs"',
             "process.env.SUPABASE_DATABASE_PASSWORD": '"NOT_SET"',
@@ -130,9 +116,7 @@ const fileWatcher = (globs) => ({
             glob.sync(path.resolve(item)).forEach((filename) => {
                 this.emitFile({
                     type: "asset",
-                    fileName: path
-                        .relative(process.cwd(), filename)
-                        .replace("source/", ""),
+                    fileName: path.relative(process.cwd(), filename).replace("source/", ""),
                     source: fs.readFileSync(filename),
                 });
             });
@@ -160,6 +144,4 @@ const staticFilesConfig = {
     ],
 };
 
-export default contentScriptConfigs
-    .concat([esModuleConfig])
-    .concat([staticFilesConfig]);
+export default contentScriptConfigs.concat([esModuleConfig]).concat([staticFilesConfig]);

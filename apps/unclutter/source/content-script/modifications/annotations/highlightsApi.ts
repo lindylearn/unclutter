@@ -22,10 +22,7 @@ export async function anchorAnnotations(
     await Promise.all(
         annotations.map(async (annotation) => {
             try {
-                const range = await anchorHTML(
-                    body,
-                    annotation.quote_html_selector as any[]
-                );
+                const range = await anchorHTML(body, annotation.quote_html_selector as any[]);
                 if (!range) {
                     // e.g. selection removed?
                     return;
@@ -34,9 +31,7 @@ export async function anchorAnnotations(
                 const highlightedNodes = highlightRange(
                     annotation.localId,
                     range,
-                    annotation.isMyAnnotation
-                        ? "lindy-highlight"
-                        : "lindy-crowd-highlight"
+                    annotation.isMyAnnotation ? "lindy-highlight" : "lindy-crowd-highlight"
                 );
                 if (highlightedNodes.length === 0) {
                     throw Error("Includes no highlighted nodes");
@@ -55,10 +50,7 @@ export async function anchorAnnotations(
                     displayOffsetEnd,
                 });
             } catch (err) {
-                console.error(
-                    `Could not anchor annotation with id`,
-                    annotation.id
-                );
+                console.error(`Could not anchor annotation with id`, annotation.id);
             }
         })
     );
@@ -85,17 +77,12 @@ export function paintHighlight(
         darkerAnnotationColor = annotationColor.replace("0.3", "0.5");
     } else {
         annotationColor =
-            annotation.platform === "hn"
-                ? "rgba(255, 102, 0, 0.5)"
-                : "rgba(189, 28, 43, 0.5)";
+            annotation.platform === "hn" ? "rgba(255, 102, 0, 0.5)" : "rgba(189, 28, 43, 0.5)";
         darkerAnnotationColor = annotationColor.replace("0.5", "0.8");
     }
     highlightedNodes.map((node) => {
         node.style.setProperty("--annotation-color", annotationColor);
-        node.style.setProperty(
-            "--darker-annotation-color",
-            darkerAnnotationColor
-        );
+        node.style.setProperty("--darker-annotation-color", darkerAnnotationColor);
     });
 
     // handle onclick
@@ -159,14 +146,9 @@ export function insertMarginBar(
         barElement.appendChild(img);
 
         const annotationColor =
-            annotation.platform === "hn"
-                ? "rgba(255, 102, 0, 0.5)"
-                : "rgba(189, 28, 43, 0.5)";
+            annotation.platform === "hn" ? "rgba(255, 102, 0, 0.5)" : "rgba(189, 28, 43, 0.5)";
         const darkerAnnotationColor = annotationColor.replace("0.5", "0.8");
-        barElement.style.setProperty(
-            "--darker-annotation-color",
-            darkerAnnotationColor
-        );
+        barElement.style.setProperty("--darker-annotation-color", darkerAnnotationColor);
 
         barElement.onmouseenter = () => {
             hoverUpdateHighlight(annotation, true);
@@ -183,27 +165,21 @@ export function insertMarginBar(
 
 // remove all text highlighting
 export function removeAllHighlights() {
-    [...document.querySelectorAll(".lindy-highlight-dot")].map((node) =>
-        node.remove()
-    );
+    [...document.querySelectorAll(".lindy-highlight-dot")].map((node) => node.remove());
 
     removeAllHighlightsApi(document.body);
 }
 
 // a highlight may comprise multiple text nodes
 function getAnnotationNodes(annotation): HTMLElement[] {
-    const nodeList = document.querySelectorAll(
-        `lindy-highlight[id="${annotation.localId}"]`
-    );
+    const nodeList = document.querySelectorAll(`lindy-highlight[id="${annotation.localId}"]`);
     return [...nodeList] as HTMLElement[];
 }
 
 // remove a specific text highlighting
 export function removeHighlight(annotation) {
     document
-        .querySelector(
-            `lindy-highlight[id="${annotation.localId}"] > .lindy-highlight-dot`
-        )
+        .querySelector(`lindy-highlight[id="${annotation.localId}"] > .lindy-highlight-dot`)
         ?.remove();
 
     const nodes = getAnnotationNodes(annotation);
@@ -229,10 +205,7 @@ export function getHighlightOffsets(highlightNodes: Element[]) {
     return [offsetById, offsetEndById];
 }
 
-export function hoverUpdateHighlight(
-    annotation: LindyAnnotation,
-    hoverActive: boolean
-) {
+export function hoverUpdateHighlight(annotation: LindyAnnotation, hoverActive: boolean) {
     const nodes = getAnnotationNodes(annotation);
 
     if (hoverActive) {
@@ -246,10 +219,7 @@ export function hoverUpdateHighlight(
     }
 }
 
-export function addHighlightDot(
-    annotation: LindyAnnotation,
-    sidebarIframe: HTMLIFrameElement
-) {
+export function addHighlightDot(annotation: LindyAnnotation, sidebarIframe: HTMLIFrameElement) {
     const nodes = getAnnotationNodes(annotation);
     const anchorNode = nodes[nodes.length - 1];
 

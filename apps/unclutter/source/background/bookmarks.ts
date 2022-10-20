@@ -16,14 +16,11 @@ export interface BookmarkedPage {
 
 const excludedDomains = ["mozilla.org", "support.mozilla.org"]; // ignore default bookmark on Firefox
 export async function getAllBookmarks(): Promise<BookmarkedPage[]> {
-    const bookmarks: Bookmarks.BookmarkTreeNode[] =
-        await browser.bookmarks.search({});
+    const bookmarks: Bookmarks.BookmarkTreeNode[] = await browser.bookmarks.search({});
 
     return bookmarks
         .filter(
-            (b) =>
-                b.url !== undefined &&
-                !excludedDomains.includes(getDomainFrom(new URL(b.url)))
+            (b) => b.url !== undefined && !excludedDomains.includes(getDomainFrom(new URL(b.url)))
         )
         .map((b) => ({
             url: b.url,

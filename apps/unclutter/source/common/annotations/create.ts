@@ -89,10 +89,7 @@ export interface LindyAnnotation {
     article?: Article;
 }
 
-export function hypothesisToLindyFormat(
-    annotation: any,
-    currentUsername: string
-): LindyAnnotation {
+export function hypothesisToLindyFormat(annotation: any, currentUsername: string): LindyAnnotation {
     const author: string = annotation.user.match(/([^:]+)@/)[1];
     return {
         id: annotation.id,
@@ -104,9 +101,8 @@ export function hypothesisToLindyFormat(
         link: `https://hypothes.is/a/${annotation.id}`,
         created_at: annotation.created,
         reply_count: 0,
-        quote_text: annotation.target?.[0].selector?.filter(
-            (s) => s.type == "TextQuoteSelector"
-        )[0].exact,
+        quote_text: annotation.target?.[0].selector?.filter((s) => s.type == "TextQuoteSelector")[0]
+            .exact,
         text: annotation.text,
         replies: [],
         upvote_count: 0,
@@ -129,9 +125,7 @@ export interface PickledAnnotation {
 }
 
 // strip locally saved annotation from unneccessary state, to reduce used storage
-export function pickleLocalAnnotation(
-    annotation: LindyAnnotation
-): PickledAnnotation {
+export function pickleLocalAnnotation(annotation: LindyAnnotation): PickledAnnotation {
     return {
         url: annotation.url,
         id: annotation.id,
@@ -142,9 +136,7 @@ export function pickleLocalAnnotation(
         quote_html_selector: annotation.quote_html_selector,
     };
 }
-export function unpickleLocalAnnotation(
-    annotation: PickledAnnotation
-): LindyAnnotation {
+export function unpickleLocalAnnotation(annotation: PickledAnnotation): LindyAnnotation {
     return createAnnotation(annotation.url, annotation.quote_html_selector, {
         ...annotation,
         isMyAnnotation: true,

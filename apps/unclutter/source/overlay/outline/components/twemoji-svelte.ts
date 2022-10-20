@@ -9,9 +9,7 @@ export default function twemojiSvelte(node, how = {}) {
     });
     return {
         update() {
-            console.warn(
-                "Changing twemoji options after the action was mounted is not possible."
-            );
+            console.warn("Changing twemoji options after the action was mounted is not possible.");
         },
     };
 }

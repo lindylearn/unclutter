@@ -48,9 +48,7 @@ const contentScriptConfigs = [
         typescript(),
         replace({
             preventAssignment: true,
-            "process.env.NODE_ENV": JSON.stringify(
-                isProduction ? "production" : "development"
-            ),
+            "process.env.NODE_ENV": JSON.stringify(isProduction ? "production" : "development"),
         }),
         json(),
     ],
@@ -64,15 +62,9 @@ const moveVirtualFolder = {
         const files = Object.entries(bundle);
         for (const [key, file] of files) {
             if (file.fileName.startsWith("_virtual/")) {
-                file.fileName = file.fileName.replace(
-                    "_virtual",
-                    "node_modules/_virtual"
-                );
+                file.fileName = file.fileName.replace("_virtual", "node_modules/_virtual");
             }
-            file.code = file.code.replaceAll(
-                "/_virtual/",
-                "/node_modules/_virtual/"
-            );
+            file.code = file.code.replaceAll("/_virtual/", "/node_modules/_virtual/");
         }
     },
 };
@@ -105,9 +97,7 @@ const esModuleConfig = {
         moveVirtualFolder,
         replace({
             preventAssignment: true,
-            "process.env.NODE_ENV": JSON.stringify(
-                isProduction ? "production" : "development"
-            ),
+            "process.env.NODE_ENV": JSON.stringify(isProduction ? "production" : "development"),
         }),
         json(),
     ],
@@ -127,9 +117,7 @@ const fileWatcher = (globs) => ({
             glob.sync(path.resolve(item)).forEach((filename) => {
                 this.emitFile({
                     type: "asset",
-                    fileName: path
-                        .relative(process.cwd(), filename)
-                        .replace("source/", ""),
+                    fileName: path.relative(process.cwd(), filename).replace("source/", ""),
                     source: fs.readFileSync(filename),
                 });
             });
@@ -156,6 +144,4 @@ const staticFilesConfig = {
     ],
 };
 
-export default contentScriptConfigs
-    .concat([esModuleConfig])
-    .concat([staticFilesConfig]);
+export default contentScriptConfigs.concat([esModuleConfig]).concat([staticFilesConfig]);

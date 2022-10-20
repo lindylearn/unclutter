@@ -18,11 +18,9 @@ export default function DomainSettingsList({}) {
                 status: "deny",
             }));
 
-            const completeList = allowedDomains
-                .concat(blockedDomains)
-                .map((obj) => ({
-                    ...obj,
-                }));
+            const completeList = allowedDomains.concat(blockedDomains).map((obj) => ({
+                ...obj,
+            }));
 
             setOverrideList(completeList);
         })();
@@ -33,13 +31,11 @@ export default function DomainSettingsList({}) {
         setUserSettingsForDomain(domain, newStatus);
 
         // Patch locally to retain current list order
-        const updatedList = overrideList.map(
-            ({ domain: innerDomain, status, ...rest }) => ({
-                ...rest,
-                domain: innerDomain,
-                status: innerDomain === domain ? newStatus : status,
-            })
-        );
+        const updatedList = overrideList.map(({ domain: innerDomain, status, ...rest }) => ({
+            ...rest,
+            domain: innerDomain,
+            status: innerDomain === domain ? newStatus : status,
+        }));
 
         reportEventContentScript("changeDomainSetting", {
             newState: newStatus,
@@ -105,23 +101,16 @@ export default function DomainSettingsList({}) {
                 {overrideList?.map(({ domain, status }) => (
                     <li className="flex items-center justify-between gap-3">
                         <div className="flex-grow underline">
-                            <a
-                                href={`https://${domain}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
+                            <a href={`https://${domain}`} target="_blank" rel="noopener noreferrer">
                                 {domain}
                             </a>
                         </div>
 
                         <select
                             value={status}
-                            onChange={(e) =>
-                                updateDomainStatus(domain, e.target.value)
-                            }
+                            onChange={(e) => updateDomainStatus(domain, e.target.value)}
                             className={
-                                "rounded-sm p-1 outline-none " +
-                                getDomainStatusStyle(status)
+                                "rounded-sm p-1 outline-none " + getDomainStatusStyle(status)
                             }
                         >
                             <option value="allow" className="bg-white">
@@ -161,8 +150,7 @@ export default function DomainSettingsList({}) {
                         value={adderStatus}
                         onChange={(e) => setAdderStatus(e.target.value)}
                         className={
-                            "rounded-sm p-1 outline-none " +
-                            getDomainStatusStyle(adderStatus)
+                            "rounded-sm p-1 outline-none " + getDomainStatusStyle(adderStatus)
                         }
                     >
                         <option value="allow" className="bg-white">

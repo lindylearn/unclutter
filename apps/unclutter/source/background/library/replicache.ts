@@ -1,10 +1,6 @@
 import { JSONValue, Replicache } from "replicache";
 import { getLibraryUser, getLibraryUserJwt } from "../../common/storage";
-import {
-    accessors,
-    M,
-    mutators,
-} from "@unclutter/library-components/dist/store";
+import { accessors, M, mutators } from "@unclutter/library-components/dist/store";
 import { ReplicacheProxyEventTypes } from "@unclutter/library-components/dist/common";
 import type { Runtime } from "webextension-polyfill";
 
@@ -77,21 +73,18 @@ export async function processActualReplicacheSubscribe(port: Runtime.Port) {
         //     console.log("subscribe disconnect", methodName);
         // });
 
-        const cancel = rep.subscribe(
-            (tx) => accessors[methodName](tx, ...args),
-            {
-                onData: (data: JSONValue) => {
-                    port.postMessage(data);
-                },
-                onDone: () => {
-                    port.disconnect();
-                },
-                onError: (err: Error) => {
-                    console.error(err);
-                    port.disconnect();
-                },
-            }
-        );
+        const cancel = rep.subscribe((tx) => accessors[methodName](tx, ...args), {
+            onData: (data: JSONValue) => {
+                port.postMessage(data);
+            },
+            onDone: () => {
+                port.disconnect();
+            },
+            onError: (err: Error) => {
+                console.error(err);
+                port.disconnect();
+            },
+        });
         port.onDisconnect.addListener(cancel);
     });
 }

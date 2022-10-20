@@ -12,14 +12,7 @@ import getYear from "date-fns/getYear";
 import parseISO from "date-fns/parseISO";
 import type { Day as WeekDay } from "date-fns";
 
-import {
-    Day,
-    EventHandlerMap,
-    Labels,
-    ReactEvent,
-    SVGRectEventHandler,
-    Theme,
-} from "./types";
+import { Day, EventHandlerMap, Labels, ReactEvent, SVGRectEventHandler, Theme } from "./types";
 import {
     generateEmptyData,
     getClassName,
@@ -190,8 +183,7 @@ export function ActivityCalendar({
         ).reduce<SVGRectEventHandler>(
             (handlers, key) => ({
                 ...handlers,
-                [key]: (event: ReactEvent<SVGRectElement>) =>
-                    eventHandlers[key]?.(event)(data),
+                [key]: (event: ReactEvent<SVGRectElement>) => eventHandlers[key]?.(event)(data),
             }),
             {}
         );
@@ -238,28 +230,26 @@ export function ActivityCalendar({
                 )}
                 {!hideMonthLabels && (
                     <g className={getClassName("legend-month")} style={style}>
-                        {getMonthLabels(weeks, labels.months).map(
-                            ({ text, x }, index, labels) => {
-                                // Skip the first month label if there's not enough space to the next one
-                                if (
-                                    index === 0 &&
-                                    labels[1] &&
-                                    labels[1].x - x <= MIN_DISTANCE_MONTH_LABELS
-                                ) {
-                                    return null;
-                                }
-
-                                return (
-                                    <text
-                                        x={(blockSize + blockMargin) * x}
-                                        alignmentBaseline="hanging"
-                                        key={x}
-                                    >
-                                        {text}
-                                    </text>
-                                );
+                        {getMonthLabels(weeks, labels.months).map(({ text, x }, index, labels) => {
+                            // Skip the first month label if there's not enough space to the next one
+                            if (
+                                index === 0 &&
+                                labels[1] &&
+                                labels[1].x - x <= MIN_DISTANCE_MONTH_LABELS
+                            ) {
+                                return null;
                             }
-                        )}
+
+                            return (
+                                <text
+                                    x={(blockSize + blockMargin) * x}
+                                    alignmentBaseline="hanging"
+                                    key={x}
+                                >
+                                    {text}
+                                </text>
+                            );
+                        })}
                     </g>
                 )}
             </>
@@ -277,9 +267,7 @@ export function ActivityCalendar({
                     const style = loading
                         ? {
                               animation: `calendarLoadingAnimation 1.5s ease-in-out infinite`,
-                              animationDelay: `${
-                                  weekIndex * 20 + dayIndex * 20
-                              }ms`,
+                              animationDelay: `${weekIndex * 20 + dayIndex * 20}ms`,
                           }
                         : undefined;
 
@@ -288,10 +276,7 @@ export function ActivityCalendar({
                             className="day stroke-0"
                             {...getEventHandlers(day)}
                             x={0}
-                            y={
-                                textHeight +
-                                (blockSize + blockMargin) * dayIndex
-                            }
+                            y={textHeight + (blockSize + blockMargin) * dayIndex}
                             width={blockSize}
                             height={blockSize}
                             fill={theme[`level${day.level}` as keyof Theme]}
@@ -299,9 +284,7 @@ export function ActivityCalendar({
                             rx={blockRadius}
                             ry={blockRadius}
                             data-date={day.date}
-                            data-tip={
-                                children ? getTooltipMessage(day) : undefined
-                            }
+                            data-tip={children ? getTooltipMessage(day) : undefined}
                             key={day.date}
                             style={{
                                 ...style,
@@ -312,19 +295,14 @@ export function ActivityCalendar({
                 })
             )
             .map((week, x) => (
-                <g
-                    key={x}
-                    transform={`translate(${(blockSize + blockMargin) * x}, 0)`}
-                >
+                <g key={x} transform={`translate(${(blockSize + blockMargin) * x}, 0)`}>
                     {week}
                 </g>
             ));
     }
 
     const initialRender = useRef<boolean>(true);
-    const [startWeekIndex, setStartWeekIndex] = useState<number>(
-        weeks.length + startWeekOffset
-    );
+    const [startWeekIndex, setStartWeekIndex] = useState<number>(weeks.length + startWeekOffset);
     useEffect(() => {
         if (initialRender.current) {
             initialRender.current = false;
@@ -377,15 +355,10 @@ export function ActivityCalendar({
             <>
                 <rect
                     className="overlay"
-                    x={
-                        (blockSize + blockMargin) * (startWeekIndex + diffX) -
-                        blockMargin
-                    }
+                    x={(blockSize + blockMargin) * (startWeekIndex + diffX) - blockMargin}
                     y={textHeight - blockMargin}
                     width={
-                        (blockSize + blockMargin) *
-                            (endWeek - startWeekIndex - diffX) +
-                        blockMargin
+                        (blockSize + blockMargin) * (endWeek - startWeekIndex - diffX) + blockMargin
                     }
                     height={(blockSize + blockMargin) * 7 + blockMargin}
                     fill={overlayColor}
@@ -397,10 +370,7 @@ export function ActivityCalendar({
                 />
                 <svg
                     viewBox="0 0 192 512"
-                    x={
-                        (blockSize + blockMargin) * (startWeekIndex + diffX) +
-                        2.5
-                    }
+                    x={(blockSize + blockMargin) * (startWeekIndex + diffX) + 2.5}
                     y={textHeight - blockMargin}
                     width={7}
                     height={(blockSize + blockMargin) * 7 + blockMargin}
@@ -413,10 +383,7 @@ export function ActivityCalendar({
                 <rect
                     ref={overlayHandleRef}
                     className="overlay-drag-handle cursor-grab"
-                    x={
-                        (blockSize + blockMargin) * (startWeekIndex + diffX) -
-                        blockMargin
-                    }
+                    x={(blockSize + blockMargin) * (startWeekIndex + diffX) - blockMargin}
                     y={textHeight - blockMargin}
                     width={7 + blockMargin * 2}
                     height={(blockSize + blockMargin) * 7 + blockMargin}
@@ -437,10 +404,7 @@ export function ActivityCalendar({
         }
 
         return (
-            <footer
-                className="flex"
-                style={{ marginTop: 2 * blockMargin, fontSize }}
-            >
+            <footer className="flex" style={{ marginTop: 2 * blockMargin, fontSize }}>
                 {/* Placeholder */}
                 {loading && <div>&nbsp;</div>}
 
@@ -462,19 +426,11 @@ export function ActivityCalendar({
                         {Array(5)
                             .fill(undefined)
                             .map((_, index) => (
-                                <svg
-                                    width={blockSize}
-                                    height={blockSize}
-                                    key={index}
-                                >
+                                <svg width={blockSize} height={blockSize} key={index}>
                                     <rect
                                         width={blockSize}
                                         height={blockSize}
-                                        fill={
-                                            theme[
-                                                `level${index}` as keyof Theme
-                                            ]
-                                        }
+                                        fill={theme[`level${index}` as keyof Theme]}
                                         rx={blockRadius}
                                         ry={blockRadius}
                                     />
@@ -494,16 +450,11 @@ export function ActivityCalendar({
         maxWidth: width,
         // Required for correct colors in CSS loading animation
         [`--${NAMESPACE}-loading`]: theme.level0,
-        [`--${NAMESPACE}-loading-active`]: tinycolor(theme.level0)
-            .darken(8)
-            .toString(),
+        [`--${NAMESPACE}-loading-active`]: tinycolor(theme.level0).darken(8).toString(),
     };
 
     return (
-        <article
-            className={NAMESPACE}
-            style={{ ...style, ...additionalStyles }}
-        >
+        <article className={NAMESPACE} style={{ ...style, ...additionalStyles }}>
             <svg
                 width={width}
                 height={height}

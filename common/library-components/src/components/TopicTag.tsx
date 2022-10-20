@@ -27,11 +27,7 @@ export function TopicTag({
     className?: string;
 }) {
     const rep = useContext(ReplicacheContext);
-    const topic: any = useSubscribe(
-        rep,
-        rep?.subscribe.getTopic(topic_id),
-        null
-    );
+    const topic: any = useSubscribe(rep, rep?.subscribe.getTopic(topic_id), null);
 
     let topicColor = getRandomColor(colorSeed || topic?.group_id);
     if (fadedOut) {
@@ -39,11 +35,7 @@ export function TopicTag({
     }
 
     // TODO optimize performance by batching counting?
-    const articleCount = useSubscribe(
-        rep,
-        rep?.subscribe.getTopicArticlesCount(topic_id),
-        null
-    );
+    const articleCount = useSubscribe(rep, rep?.subscribe.getTopicArticlesCount(topic_id), null);
 
     const innerComponent = (
         <UITag
@@ -52,9 +44,7 @@ export function TopicTag({
             noBackground={noBackground}
             color={topicColor}
             large={large}
-            IconComponent={
-                <TopicEmoji emoji={topic?.emoji || ""} large={large} />
-            }
+            IconComponent={<TopicEmoji emoji={topic?.emoji || ""} large={large} />}
             title={topic?.name}
             count={(articleCount || null) as any}
             onClick={onClick || (() => {})}
@@ -66,9 +56,7 @@ export function TopicTag({
     } else {
         return (
             <Link href={getTopicUrl(topic) || ""}>
-                <div className={clsx("w-max max-w-full", className)}>
-                    {innerComponent}
-                </div>
+                <div className={clsx("w-max max-w-full", className)}>{innerComponent}</div>
             </Link>
         );
     }

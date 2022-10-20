@@ -12,11 +12,9 @@ export function getElementYOffset(element, margin = 15) {
 }
 
 export function getOutlineIframe(): Document | undefined {
-    return (document.getElementById("lindy-info-topleft") as HTMLIFrameElement)
-        ?.contentDocument;
+    return (document.getElementById("lindy-info-topleft") as HTMLIFrameElement)?.contentDocument;
 }
 
 export function getBottomIframe(): Document | undefined {
-    return (document.getElementById("lindy-info-bottom") as HTMLIFrameElement)
-        ?.contentDocument;
+    return (document.getElementById("lindy-info-bottom") as HTMLIFrameElement)?.contentDocument;
 }

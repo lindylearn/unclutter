@@ -13,13 +13,7 @@ import {
     setCssThemeVariable,
     themeName,
 } from "../../../common/theme";
-import {
-    getBrightness,
-    HSLA,
-    hslToString,
-    parse,
-    rgbToHSL,
-} from "../../../common/util/color";
+import { getBrightness, HSLA, hslToString, parse, rgbToHSL } from "../../../common/util/color";
 import AnnotationsModifier from "../annotations/annotationsModifier";
 import BodyStyleModifier from "../bodyStyle";
 import TextContainerModifier from "../DOM/textContainer";
@@ -73,9 +67,7 @@ export default class ThemeModifier implements PageModifier {
         this.setCssThemeVariable(pageWidthThemeVariable, this.theme.pageWidth);
 
         // Listen to system dark mode preference
-        this.systemDarkModeQuery = window.matchMedia(
-            "(prefers-color-scheme: dark)"
-        );
+        this.systemDarkModeQuery = window.matchMedia("(prefers-color-scheme: dark)");
         this.systemDarkModeQuery.addEventListener(
             "change",
             this.onSystemDarkThemeChange.bind(this)
@@ -105,16 +97,10 @@ export default class ThemeModifier implements PageModifier {
         // look at background color and modify if necessary
         // do now to avoid visible changes later
         this.processBackgroundColor();
-        this.setCssThemeVariable(
-            backgroundColorThemeVariable,
-            this.backgroundColor
-        );
+        this.setCssThemeVariable(backgroundColorThemeVariable, this.backgroundColor);
 
         if (this.theme.fontSize) {
-            this.setCssThemeVariable(
-                fontSizeThemeVariable,
-                this.theme.fontSize
-            );
+            this.setCssThemeVariable(fontSizeThemeVariable, this.theme.fontSize);
         }
     }
 
@@ -178,22 +164,13 @@ export default class ThemeModifier implements PageModifier {
         this.applyActiveColorTheme();
 
         // save in storage
-        applySaveThemeOverride(
-            this.domain,
-            activeColorThemeVariable,
-            newColorThemeName
-        );
+        applySaveThemeOverride(this.domain, activeColorThemeVariable, newColorThemeName);
     }
 
     applyActiveColorTheme(): boolean {
         // State for UI switch
-        this.setCssThemeVariable(
-            activeColorThemeVariable,
-            this.activeColorTheme
-        );
-        this.activeColorThemeListeners.map((listener) =>
-            listener(this.activeColorTheme)
-        );
+        this.setCssThemeVariable(activeColorThemeVariable, this.activeColorTheme);
+        this.activeColorThemeListeners.map((listener) => listener(this.activeColorTheme));
 
         // Determine if should use dark mode
         const prevDarkModeState = this.darkModeActive;
@@ -220,14 +197,9 @@ export default class ThemeModifier implements PageModifier {
             if (this.activeColorTheme === "auto") {
                 concreteColor = this.backgroundColor;
             } else {
-                concreteColor = colorThemeToBackgroundColor(
-                    this.activeColorTheme
-                );
+                concreteColor = colorThemeToBackgroundColor(this.activeColorTheme);
             }
-            this.setCssThemeVariable(
-                backgroundColorThemeVariable,
-                concreteColor
-            );
+            this.setCssThemeVariable(backgroundColorThemeVariable, concreteColor);
         }
 
         this.updateAutoModeColor();
@@ -242,20 +214,13 @@ export default class ThemeModifier implements PageModifier {
             const darkColor = colorThemeToBackgroundColor("dark");
             this.setCssThemeVariable(autoBackgroundThemeVariable, darkColor);
         } else {
-            this.setCssThemeVariable(
-                autoBackgroundThemeVariable,
-                this.backgroundColor
-            );
+            this.setCssThemeVariable(autoBackgroundThemeVariable, this.backgroundColor);
         }
     }
 
     private enableDarkMode() {
         // trigger html background change immediately (loading css takes time)
-        document.documentElement.style.setProperty(
-            "background",
-            "#131516",
-            "important"
-        );
+        document.documentElement.style.setProperty("background", "#131516", "important");
 
         // global tweaks (not used right now)
         // createStylesheetLink(
@@ -279,10 +244,7 @@ export default class ThemeModifier implements PageModifier {
 
         if (this.siteUsesDefaultDarkMode) {
             // use default background elsewhere
-            this.setCssThemeVariable(
-                backgroundColorThemeVariable,
-                this.backgroundColor
-            );
+            this.setCssThemeVariable(backgroundColorThemeVariable, this.backgroundColor);
         } else if (siteSupportsDarkMode) {
             // parse background color from site dark mode styles
             let backgroundColor: string;
@@ -305,24 +267,15 @@ export default class ThemeModifier implements PageModifier {
                 backgroundColor = colorThemeToBackgroundColor("dark");
             }
 
-            this.setCssThemeVariable(
-                backgroundColorThemeVariable,
-                backgroundColor
-            );
+            this.setCssThemeVariable(backgroundColorThemeVariable, backgroundColor);
 
             if (this.activeColorTheme === "auto") {
-                this.setCssThemeVariable(
-                    autoBackgroundThemeVariable,
-                    backgroundColor
-                );
+                this.setCssThemeVariable(autoBackgroundThemeVariable, backgroundColor);
             }
         } else {
             // Background color
             const concreteColor = colorThemeToBackgroundColor("dark");
-            this.setCssThemeVariable(
-                backgroundColorThemeVariable,
-                concreteColor
-            );
+            this.setCssThemeVariable(backgroundColorThemeVariable, concreteColor);
 
             this.enableDarkModeStyleTweaks();
         }
@@ -370,9 +323,7 @@ export default class ThemeModifier implements PageModifier {
                     continue;
                 }
                 if (
-                    !rule.media.mediaText.includes(
-                        "prefers-color-scheme: dark"
-                    ) ||
+                    !rule.media.mediaText.includes("prefers-color-scheme: dark") ||
                     rule.media.mediaText.includes("prefers-color-scheme: light")
                 ) {
                     continue;
@@ -382,10 +333,7 @@ export default class ThemeModifier implements PageModifier {
 
                 if (enableIfFound) {
                     // insert rule copy that's always active
-                    const newCssText = `@media screen ${rule.cssText.replace(
-                        /@media[^{]*/,
-                        ""
-                    )}`;
+                    const newCssText = `@media screen ${rule.cssText.replace(/@media[^{]*/, "")}`;
                     const newIndex = rule.parentStyleSheet.insertRule(
                         newCssText,
                         rule.parentStyleSheet.cssRules.length
@@ -399,10 +347,7 @@ export default class ThemeModifier implements PageModifier {
         return siteSupportsDarkMode;
     }
 
-    private activeDarkModeStyleTweaks: [
-        CSSStyleRule,
-        { [key: string]: string }
-    ][] = [];
+    private activeDarkModeStyleTweaks: [CSSStyleRule, { [key: string]: string }][] = [];
     private enableDarkModeStyleTweaks() {
         // patch site stylesheet colors
         this.cssomProvider.iterateRules((rule) => {
@@ -424,11 +369,7 @@ export default class ThemeModifier implements PageModifier {
 
                 // apply modifications
                 for (const [key, val] of Object.entries(modifications)) {
-                    rule.style.setProperty(
-                        key,
-                        val,
-                        rule.style.getPropertyPriority(key)
-                    );
+                    rule.style.setProperty(key, val, rule.style.getPropertyPriority(key));
                 }
             }
         });
@@ -436,14 +377,8 @@ export default class ThemeModifier implements PageModifier {
 
     private disableDarkModeStyleTweaks() {
         this.activeDarkModeStyleTweaks.map(([rule, originalStyle]) => {
-            for (const [key, [value, isImportant]] of Object.entries(
-                originalStyle
-            )) {
-                rule.style.setProperty(
-                    key,
-                    value,
-                    isImportant ? "important" : ""
-                );
+            for (const [key, [value, isImportant]] of Object.entries(originalStyle)) {
+                rule.style.setProperty(key, value, isImportant ? "important" : "");
             }
         });
         this.activeDarkModeStyleTweaks = [];
@@ -461,10 +396,7 @@ function darkModeStyleRuleMap(rule: CSSStyleRule): object {
     const modifications = {};
 
     if (rule.style.color) {
-        modifications["color"] = changeTextColor(
-            rule.style.color,
-            rule.selectorText
-        );
+        modifications["color"] = changeTextColor(rule.style.color, rule.selectorText);
     }
     if (rule.style.backgroundColor) {
         modifications["background-color"] = changeBackgroundColor(
@@ -488,15 +420,9 @@ function darkModeStyleRuleMap(rule: CSSStyleRule): object {
 
                 // ideally transform the variables where used
                 if (key.includes("background")) {
-                    modifications[key] = changeBackgroundColor(
-                        value,
-                        rule.selectorText
-                    );
+                    modifications[key] = changeBackgroundColor(value, rule.selectorText);
                 } else {
-                    modifications[key] = changeTextColor(
-                        value,
-                        rule.selectorText
-                    );
+                    modifications[key] = changeTextColor(value, rule.selectorText);
                 }
             }
         }

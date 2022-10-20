@@ -33,20 +33,13 @@
 
         <div class="">
             {#if readingTimeLeft !== null}
-                <div
-                    class="reading-time mt-1 text-sm tabular-nums text-gray-400"
-                >
-                    <span
-                        class="reading-time-count"
-                        style={`--num: ${readingTimeLeft}`}
-                    /> min left
+                <div class="reading-time mt-1 text-sm tabular-nums text-gray-400">
+                    <span class="reading-time-count" style={`--num: ${readingTimeLeft}`} /> min left
                 </div>
             {/if}
 
             {#if outline.length > 1}
-                <div
-                    class="spacer-line -mx-5 mb-2 mt-1 border-b-2 border-gray-100"
-                />
+                <div class="spacer-line -mx-5 mb-2 mt-1 border-b-2 border-gray-100" />
             {/if}
         </div>
 
@@ -56,9 +49,7 @@
                     {...child}
                     {activeOutlineIndex}
                     {annotationsEnabled}
-                    socialAnnotationsEnabled={outline
-                        .slice(1)
-                        .some((h) => h.socialCommentsCount)}
+                    socialAnnotationsEnabled={outline.slice(1).some((h) => h.socialCommentsCount)}
                 />
             {/each}
         </ul>

@@ -67,7 +67,7 @@ export function forEachNodeInRange(range, callback) {
 export function getTextBoundingBoxes(range) {
   const whitespaceOnly = /^\s*$/;
   const textNodes = [];
-  forEachNodeInRange(range, node => {
+  forEachNodeInRange(range, (node) => {
     if (
       node.nodeType === Node.TEXT_NODE &&
       !(/** @type {string} */ (node.textContent).match(whitespaceOnly))
@@ -77,7 +77,7 @@ export function getTextBoundingBoxes(range) {
   });
 
   let rects = [];
-  textNodes.forEach(node => {
+  textNodes.forEach((node) => {
     const nodeRange = node.ownerDocument.createRange();
     nodeRange.selectNodeContents(node);
     if (node === range.startContainer) {
@@ -140,7 +140,7 @@ export function itemsForRange(range, itemForNode) {
   const checkedNodes = new Set();
   const items = new Set();
 
-  forEachNodeInRange(range, node => {
+  forEachNodeInRange(range, (node) => {
     /** @type {Node|null} */
     let current = node;
     while (current) {

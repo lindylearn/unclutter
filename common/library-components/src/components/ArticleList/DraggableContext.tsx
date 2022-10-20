@@ -62,9 +62,7 @@ export function DraggableContext({
         );
         setActiveListId(sourceList || null);
         if (sourceList) {
-            const article = articleLists[sourceList].find(
-                (a) => a.id === active.id
-            );
+            const article = articleLists[sourceList].find((a) => a.id === active.id);
             setActiveArticle(article || null);
         }
     }
@@ -88,10 +86,8 @@ export function DraggableContext({
                 return;
             }
             if (
-                (targetList.endsWith("_") &&
-                    activeArticle.topic_id !== targetList) ||
-                (targetList.includes(".") &&
-                    getDomain(activeArticle.url) !== targetList)
+                (targetList.endsWith("_") && activeArticle.topic_id !== targetList) ||
+                (targetList.includes(".") && getDomain(activeArticle.url) !== targetList)
             ) {
                 // attempted move into non-matching topic or domain group
 
@@ -108,9 +104,7 @@ export function DraggableContext({
             // console.log(`move group ${sourceList} -> ${targetList}`);
 
             const targetArticles = articleLists[targetList];
-            const targetIndex = targetArticles.findIndex(
-                (a) => a.id === over.id
-            );
+            const targetIndex = targetArticles.findIndex((a) => a.id === over.id);
 
             // remote update
             let articleIdBeforeNewPosition: string | null;
@@ -120,8 +114,7 @@ export function DraggableContext({
                 articleIdBeforeNewPosition = targetArticles[targetIndex]?.id;
                 articleIdAfterNewPosition = targetArticles[targetIndex + 1]?.id;
             } else {
-                articleIdBeforeNewPosition =
-                    targetArticles[targetArticles.length - 1]?.id || null;
+                articleIdBeforeNewPosition = targetArticles[targetArticles.length - 1]?.id || null;
                 articleIdAfterNewPosition = null;
             }
 
@@ -146,9 +139,7 @@ export function DraggableContext({
                     .concat([activeArticle])
                     .concat(targetArticles.slice(targetIndex));
             } else {
-                articleLists[targetList] = targetArticles.concat([
-                    activeArticle,
-                ]);
+                articleLists[targetList] = targetArticles.concat([activeArticle]);
             }
 
             setActiveListId(targetList);
@@ -171,12 +162,8 @@ export function DraggableContext({
             });
         } else if (active.id !== over.id) {
             // change position within list
-            const oldIndex = articleLists[activeListId].findIndex(
-                (a) => a.id === active.id
-            );
-            const newIndex = articleLists[activeListId].findIndex(
-                (a) => a.id === over.id
-            );
+            const oldIndex = articleLists[activeListId].findIndex((a) => a.id === active.id);
+            const newIndex = articleLists[activeListId].findIndex((a) => a.id === over.id);
             // console.log(`move position ${oldIndex} -> ${newIndex}`);
 
             // check which sort order to modify
@@ -200,10 +187,8 @@ export function DraggableContext({
 
             // mutate replicache
             // moving an article to the right shifts successors one index to the left
-            const newIndexShifted =
-                oldIndex < newIndex ? newIndex + 1 : newIndex;
-            const beforeNewArticle =
-                articleLists[activeListId][newIndexShifted - 1];
+            const newIndexShifted = oldIndex < newIndex ? newIndex + 1 : newIndex;
+            const beforeNewArticle = articleLists[activeListId][newIndexShifted - 1];
             const afterNewArticle = articleLists[activeListId][newIndexShifted];
             rep?.mutate.moveArticlePosition({
                 articleId: active.id as string,
@@ -214,11 +199,7 @@ export function DraggableContext({
 
             // update cache immediately (using unshifted index)
             // NOTE: moving this before the index access above breaks the sorting
-            articleLists[activeListId] = arrayMove(
-                articleLists[activeListId],
-                oldIndex,
-                newIndex
-            );
+            articleLists[activeListId] = arrayMove(articleLists[activeListId], oldIndex, newIndex);
 
             // update parent articleList once drag done (e.g. updates list counts)
             setArticleLists({ ...articleLists });
@@ -256,11 +237,7 @@ export function DraggableContext({
                         className="article-drag-overlay"
                     >
                         {activeArticle && (
-                            <ArticlePreview
-                                listState="dragging"
-                                article={activeArticle}
-                                small
-                            />
+                            <ArticlePreview listState="dragging" article={activeArticle} small />
                         )}
                     </DragOverlay>,
                     document.body

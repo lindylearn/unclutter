@@ -18,18 +18,9 @@ TODO: should not be enabled here:
 export function extensionSupportsUrl(url) {
     const fileExtension = url.pathname.split(".").pop();
     // Can't easily detect blank html path, so blocklist unsupported instead
-    return ![
-        "pdf",
-        "png",
-        "gif",
-        "jpg",
-        "jpeg",
-        "webp",
-        "mp3",
-        "mp4",
-        "css",
-        "js",
-    ].includes(fileExtension);
+    return !["pdf", "png", "gif", "jpg", "jpeg", "webp", "mp3", "mp4", "css", "js"].includes(
+        fileExtension
+    );
 }
 
 // Exclude non-leaf directory pages like bbc.com or bcc.com/news.
@@ -48,11 +39,7 @@ export function isNonLeafPage(url) {
         https://www.atlasobscura.com/articles/what-is-tomato-soup-cake
         https://www.moderndescartes.com/essays/deep_learning_emr/
     */
-    if (
-        url.pathname.match(
-            /\/(post|posts|wiki|blog|article|articles|essays|doi|papers)\//
-        )
-    ) {
+    if (url.pathname.match(/\/(post|posts|wiki|blog|article|articles|essays|doi|papers)\//)) {
         return false;
     }
     /*
@@ -100,9 +87,7 @@ export function isNonLeafPage(url) {
 
 export async function isDeniedForDomain(domain) {
     const domainUserSetting = await getUserSettingForDomain(domain);
-    return (
-        domainUserSetting === "deny" || defaultExcludedDomains.includes(domain)
-    );
+    return domainUserSetting === "deny" || defaultExcludedDomains.includes(domain);
 }
 
 // Determine whether to unclutter a specific web page

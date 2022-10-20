@@ -5,13 +5,7 @@
     export let diff: number | null;
 </script>
 
-<div
-    class={clsx(
-        "animated-number relative",
-        diff !== null && "animate",
-        diff < 0 && "reverse"
-    )}
->
+<div class={clsx("animated-number relative", diff !== null && "animate", diff < 0 && "reverse")}>
     <div class="after-value">{value}</div>
     <div class="before-value absolute top-0 left-0 h-full w-full">
         {value - (diff || 0)}

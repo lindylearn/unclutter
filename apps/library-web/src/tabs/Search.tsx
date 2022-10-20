@@ -4,18 +4,12 @@ import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { useDebounce } from "usehooks-ts";
 import { wrap as wrapWorker, Remote } from "comlink";
 
-import {
-    SearchIndex,
-    SearchResult,
-} from "@unclutter/library-components/dist/common";
+import { SearchIndex, SearchResult } from "@unclutter/library-components/dist/common";
 import {
     ArticlePreview,
     TopicGroupBackground,
 } from "@unclutter/library-components/dist/components";
-import {
-    getArticle,
-    ReplicacheContext,
-} from "@unclutter/library-components/dist/store";
+import { getArticle, ReplicacheContext } from "@unclutter/library-components/dist/store";
 import { SearchWorkerContent } from "../../pages/[...app]";
 
 export default function SearchTab({ searchQuery }) {
@@ -33,8 +27,7 @@ export default function SearchTab({ searchQuery }) {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
-    const [hitsPerTopic, setHitsPerTopic] =
-        useState<[string, SearchResult[]][]>();
+    const [hitsPerTopic, setHitsPerTopic] = useState<[string, SearchResult[]][]>();
     async function search(query: string) {
         if (!user || !query || !workerPort) {
             setIsLoading(false);
@@ -55,19 +48,19 @@ export default function SearchTab({ searchQuery }) {
                     article: await rep?.query.getArticle(hit.id),
                 }))
             );
-            hitsWithArticles = hitsWithArticles.filter(
-                (hit) => hit.article !== undefined
-            );
+            hitsWithArticles = hitsWithArticles.filter((hit) => hit.article !== undefined);
 
-            const groupsMap: { [topic_id: string]: SearchResult[] } =
-                hitsWithArticles.reduce((acc, hit) => {
+            const groupsMap: { [topic_id: string]: SearchResult[] } = hitsWithArticles.reduce(
+                (acc, hit) => {
                     const topic_id = hit.article?.topic_id!;
                     if (!acc[topic_id]) {
                         acc[topic_id] = [];
                     }
                     acc[topic_id].push(hit);
                     return acc;
-                }, {});
+                },
+                {}
+            );
             const groups = Object.entries(groupsMap);
 
             if (query !== latestSearchQuery.current) {
@@ -105,17 +98,9 @@ export default function SearchTab({ searchQuery }) {
                 {hitsPerTopic?.map(([topic_id, hits]) => (
                     <TopicGroupBackground
                         topic_id={topic_id}
-                        className={clsx(
-                            "max-w-max",
-                            hits.length > 1 && "col-span-2"
-                        )}
+                        className={clsx("max-w-max", hits.length > 1 && "col-span-2")}
                     >
-                        <div
-                            className={clsx(
-                                "grid gap-10 ",
-                                hits.length > 1 && "grid-cols-2"
-                            )}
-                        >
+                        <div className={clsx("grid gap-10 ", hits.length > 1 && "grid-cols-2")}>
                             {hits.map((hit, index) => (
                                 <div className="animate-fadein flex h-56 gap-3">
                                     {/* <div className="origin-top-left scale-75 hover:scale-100 transition-transform w-36"> */}
@@ -139,21 +124,18 @@ export default function SearchTab({ searchQuery }) {
                                         }}
                                     >
                                         {/* {`${hit.score}`.slice(0, 8)}{" "} */}
-                                        {hit.sentences.map(
-                                            (sentence, sentenceIndex) => (
-                                                <span
-                                                    className={clsx(
-                                                        "",
-                                                        sentenceIndex ===
-                                                            hit.main_sentence
-                                                            ? "font-bold dark:text-stone-200"
-                                                            : "opacity-90"
-                                                    )}
-                                                >
-                                                    {sentence}{" "}
-                                                </span>
-                                            )
-                                        )}
+                                        {hit.sentences.map((sentence, sentenceIndex) => (
+                                            <span
+                                                className={clsx(
+                                                    "",
+                                                    sentenceIndex === hit.main_sentence
+                                                        ? "font-bold dark:text-stone-200"
+                                                        : "opacity-90"
+                                                )}
+                                            >
+                                                {sentence}{" "}
+                                            </span>
+                                        ))}
                                     </div>
                                 </div>
                             ))}

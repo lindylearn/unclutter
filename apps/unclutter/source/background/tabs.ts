@@ -1,7 +1,4 @@
-import {
-    enableSocialCountsFeatureFlag,
-    getFeatureFlag,
-} from "../common/featureFlags";
+import { enableSocialCountsFeatureFlag, getFeatureFlag } from "../common/featureFlags";
 import browser from "../common/polyfill";
 import { getSocialCommentsCount } from "./annotationCounts";
 
@@ -37,10 +34,7 @@ export class TabStateManager {
         return !!this.annotationCounts[tabId];
     }
 
-    async getSocialAnnotationsCount(
-        tabId: number,
-        url: string
-    ): Promise<number> {
+    async getSocialAnnotationsCount(tabId: number, url: string): Promise<number> {
         // use cached value if present -- is more accurate as updated by anchoring
         if (this.annotationCounts[tabId]) {
             return this.annotationCounts[tabId];
@@ -72,9 +66,7 @@ export class TabStateManager {
 
     // check settings every time in case user changed it
     private async isCountEnabled(): Promise<boolean> {
-        const showAnnotationCount = await getFeatureFlag(
-            enableSocialCountsFeatureFlag
-        );
+        const showAnnotationCount = await getFeatureFlag(enableSocialCountsFeatureFlag);
         return showAnnotationCount;
     }
 }

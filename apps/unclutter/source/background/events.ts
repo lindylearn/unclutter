@@ -9,11 +9,7 @@ import {
     setFeatureFlag,
 } from "../common/featureFlags";
 import browser from "../common/polyfill";
-import {
-    getLibraryAuth,
-    getLibraryUser,
-    setLibraryAuth,
-} from "../common/storage";
+import { getLibraryAuth, getLibraryUser, setLibraryAuth } from "../common/storage";
 import { saveInitialInstallVersionIfMissing } from "../common/updateMessages";
 import { migrateAnnotationStorage } from "../sidebar/common/local";
 import { fetchCss } from "./actions";
@@ -26,10 +22,7 @@ import {
     processReplicacheMessage,
     processReplicacheSubscribe,
 } from "./library/library";
-import {
-    captureActiveTabScreenshot,
-    getLocalScreenshot,
-} from "./library/screenshots";
+import { captureActiveTabScreenshot, getLocalScreenshot } from "./library/screenshots";
 import {
     getRemoteFeatureFlags,
     reportDisablePageView,
@@ -46,9 +39,7 @@ const tabsManager = new TabStateManager();
 browser.action.onClicked.addListener((tab: Tabs.Tab) => {
     const url = new URL(tab.url);
 
-    if (
-        url.href === "https://library.lindylearn.io/import?provider=bookmarks"
-    ) {
+    if (url.href === "https://library.lindylearn.io/import?provider=bookmarks") {
         // Support importing browser bookmarks into the extension companion website (which allows the user to organize & easily open articles with the extension).
         // This code only runs if the user explicitly triggered it: they selected the browser import on the companion website, clicked the extension icon as stated in the instructions, then granted the optional bookmarks permission.
         // lindylearn.io is the official publisher domain for this browser extension.
@@ -122,14 +113,10 @@ function handleMessage(
         return true;
     } else if (message.event === "checkLocalAnnotationCount") {
         // trigger from boot.js because we don't have tabs permissions
-        tabsManager
-            .checkIsArticle(sender.tab.id, sender.url)
-            .then(sendResponse);
+        tabsManager.checkIsArticle(sender.tab.id, sender.url).then(sendResponse);
         return true;
     } else if (message.event === "getSocialAnnotationsCount") {
-        tabsManager
-            .getSocialAnnotationsCount(sender.tab.id, sender.url)
-            .then(sendResponse);
+        tabsManager.getSocialAnnotationsCount(sender.tab.id, sender.url).then(sendResponse);
         return true;
     } else if (message.event === "setSocialAnnotationsCount") {
         tabsManager.setSocialAnnotationsCount(sender.tab.id, message.count);
@@ -143,10 +130,7 @@ function handleMessage(
             }, 1000);
         };
         if (message.newTab) {
-            browser.tabs.create(
-                { url: message.url, active: true },
-                onTabActive
-            );
+            browser.tabs.create({ url: message.url, active: true }, onTabActive);
         } else {
             browser.tabs.update(undefined, { url: message.url }, onTabActive);
         }
@@ -171,18 +155,12 @@ function handleMessage(
         processReplicacheMessage(message).then(sendResponse);
         return true;
     } else if (message.event === "captureActiveTabScreenshot") {
-        captureActiveTabScreenshot(
-            message.articleId,
-            message.bodyRect,
-            message.devicePixelRatio
-        );
+        captureActiveTabScreenshot(message.articleId, message.bodyRect, message.devicePixelRatio);
     } else if (message.event === "getLocalScreenshot") {
         getLocalScreenshot(message.articleId).then(sendResponse);
         return true;
     } else if (message.event === "getUnclutterVersion") {
-        browser.management
-            .getSelf()
-            .then((extensionInfo) => sendResponse(extensionInfo.version));
+        browser.management.getSelf().then((extensionInfo) => sendResponse(extensionInfo.version));
         return true;
     }
 
@@ -234,17 +212,13 @@ browser.runtime.onInstalled.addListener(async ({ reason }) => {
 browser.tabs.onActivated.addListener((info: Tabs.OnActivatedActiveInfoType) =>
     tabsManager.onChangeActiveTab(info.tabId)
 );
-browser.tabs.onUpdated.addListener(
-    (tabId: number, change: Tabs.OnUpdatedChangeInfoType) => {
-        if (change.url) {
-            // clear state for old url, checkLocalAnnotationCount will be sent for likely articles again
-            tabsManager.onCloseTab(tabId);
-        }
+browser.tabs.onUpdated.addListener((tabId: number, change: Tabs.OnUpdatedChangeInfoType) => {
+    if (change.url) {
+        // clear state for old url, checkLocalAnnotationCount will be sent for likely articles again
+        tabsManager.onCloseTab(tabId);
     }
-);
-browser.tabs.onRemoved.addListener((tabId: number) =>
-    tabsManager.onCloseTab(tabId)
-);
+});
+browser.tabs.onRemoved.addListener((tabId: number) => tabsManager.onCloseTab(tabId));
 
 // initialize on every service worker start
 async function initializeServiceWorker() {

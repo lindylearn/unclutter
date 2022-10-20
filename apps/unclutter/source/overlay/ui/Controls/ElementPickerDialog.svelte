@@ -32,9 +32,7 @@
             showSaveMessage = true;
 
             // submit to github, but keep local state
-            submitElementBlocklistContentScript(
-                elementPickerModifier.pageSelectors
-            );
+            submitElementBlocklistContentScript(elementPickerModifier.pageSelectors);
             await new Promise((r) => setTimeout(r, 600));
         }
 
@@ -53,25 +51,21 @@
     </div>
     <div class="lindy-bugreport-buttons">
         <div
-            class={"lindy-bugreport-button " +
-                (isResetDelay ? "lindy-pressed" : "")}
+            class={"lindy-bugreport-button " + (isResetDelay ? "lindy-pressed" : "")}
             on:click={reset}
         >
             <Icon iconName="reset" />
             <div>Reset</div>
         </div>
         <div
-            class={"lindy-bugreport-button " +
-                (showSaveMessage ? "lindy-pressed" : "")}
+            class={"lindy-bugreport-button " + (showSaveMessage ? "lindy-pressed" : "")}
             on:click={save}
         >
             <Icon iconName="save" />
             <div style="position: relative;">
                 <span style={showSaveMessage ? "visibility: hidden;" : ""}
                     >Save <span class="lindy-counter-num">{elementCount}</span>
-                    selector<span
-                        style={elementCount !== 1 ? "" : "visibility: hidden;"}
-                        >s</span
+                    selector<span style={elementCount !== 1 ? "" : "visibility: hidden;"}>s</span
                     ></span
                 >
                 <div

@@ -13,8 +13,7 @@ import { reportEventPosthog } from "../../../common/metrics";
 
 const websocketUrl = "wss://api2.lindylearn.io:444/ws/clustering_results";
 // const websocketUrl = "ws://localhost:8000/ws/clustering_results";
-export const oauthRedirectUrl =
-    "https://library.lindylearn.io/import?auth_redirect";
+export const oauthRedirectUrl = "https://library.lindylearn.io/import?auth_redirect";
 // export const oauthRedirectUrl = "http://localhost:3000/import?auth_redirect";
 
 type ImportOption = {
@@ -74,8 +73,7 @@ export default function ImportTab({}) {
         if (!isChrome) {
             // assume firefox
             importOptions["bookmarks"].iconFile = "firefox.svg";
-            importOptions["bookmarks"].backgroundColor =
-                "bg-orange-100 dark:bg-orange-900";
+            importOptions["bookmarks"].backgroundColor = "bg-orange-100 dark:bg-orange-900";
         }
     }, []);
 
@@ -88,25 +86,20 @@ export default function ImportTab({}) {
     }, [user]);
 
     // local state
-    const [activeOption, setActiveOption] =
-        useState<keyof typeof importOptions>();
+    const [activeOption, setActiveOption] = useState<keyof typeof importOptions>();
     const [lastProgress, setLastProgress] = useState<ProgressState>();
 
     // handle url params
     const [isRedirect, setIsRedirect] = useState(false);
     useEffect(() => {
-        const provider = new URLSearchParams(window.location.search).get(
-            "provider"
-        );
+        const provider = new URLSearchParams(window.location.search).get("provider");
         if (provider) {
             setActiveOption(provider);
         } else {
             setActiveOption(Object.keys(importOptions)[0]);
         }
 
-        const isRedirect = new URLSearchParams(window.location.search).has(
-            "auth_redirect"
-        );
+        const isRedirect = new URLSearchParams(window.location.search).has("auth_redirect");
         if (isRedirect) {
             setIsRedirect(isRedirect);
             history.replaceState({}, "", `/import?provider=${activeOption}`);
@@ -186,10 +179,7 @@ export default function ImportTab({}) {
                 ws.current!.send(JSON.stringify({ event: "ping" }));
 
                 setLastProgress((lastProgress) => {
-                    if (
-                        !lastProgress?.time ||
-                        !lastProgress?.minutesRemainingMessage
-                    ) {
+                    if (!lastProgress?.time || !lastProgress?.minutesRemainingMessage) {
                         return lastProgress;
                     }
 
@@ -197,8 +187,7 @@ export default function ImportTab({}) {
                         ...lastProgress,
                         minutesRemaining: Math.max(
                             0,
-                            lastProgress.minutesRemainingMessage -
-                                getMinutesAgo(lastProgress.time)
+                            lastProgress.minutesRemainingMessage - getMinutesAgo(lastProgress.time)
                         ),
                     });
                 });
@@ -245,37 +234,30 @@ export default function ImportTab({}) {
     return (
         <div className="flex w-full max-w-4xl flex-col gap-3 p-5">
             <p>
-                Below you can import articles from read-it-later lists or
-                bookmarking apps.
+                Below you can import articles from read-it-later lists or bookmarking apps.
                 <br /> This also improves the quality of the generated topics.
             </p>
             <ul className="flex gap-3">
-                {Object.entries(importOptions).map(
-                    ([id, { name, iconFile, backgroundColor }]) => (
-                        // @ts-ignore
-                        <UITag
-                            key={id}
-                            title={name}
-                            IconComponent={
-                                <img
-                                    className="mr-2 inline-block h-5 w-5"
-                                    src={`/logos/${iconFile}`}
-                                />
-                            }
-                            className={backgroundColor}
-                            focused={id === activeOption}
-                            fadedOut={id !== activeOption}
-                            onClick={() => setActiveOption(id)}
-                        />
-                    )
-                )}
+                {Object.entries(importOptions).map(([id, { name, iconFile, backgroundColor }]) => (
+                    // @ts-ignore
+                    <UITag
+                        key={id}
+                        title={name}
+                        IconComponent={
+                            <img className="mr-2 inline-block h-5 w-5" src={`/logos/${iconFile}`} />
+                        }
+                        className={backgroundColor}
+                        focused={id === activeOption}
+                        fadedOut={id !== activeOption}
+                        onClick={() => setActiveOption(id)}
+                    />
+                ))}
             </ul>
             <div>
                 <div
                     className={clsx(
                         "flex h-32 flex-col justify-between gap-2 rounded-lg p-3 shadow-inner transition-all",
-                        activeOption &&
-                            importOptions[activeOption].backgroundColor
+                        activeOption && importOptions[activeOption].backgroundColor
                     )}
                 >
                     {activeOption === "pocket" && (
@@ -294,9 +276,7 @@ export default function ImportTab({}) {
                             disabled={disabled}
                         />
                     )}
-                    {activeOption === "bookmarks" && (
-                        <BrowserBookmarksImportSettings />
-                    )}
+                    {activeOption === "bookmarks" && <BrowserBookmarksImportSettings />}
                     {activeOption === "raindrop" && (
                         <RaindropImportSettings
                             onError={onError}
@@ -330,12 +310,8 @@ export default function ImportTab({}) {
                         </div>
                         <div>
                             {lastProgress?.minutesRemaining
-                                ? `about ${
-                                      lastProgress?.minutesRemaining
-                                  } minute${
-                                      lastProgress?.minutesRemaining !== 1
-                                          ? "s"
-                                          : ""
+                                ? `about ${lastProgress?.minutesRemaining} minute${
+                                      lastProgress?.minutesRemaining !== 1 ? "s" : ""
                                   } left`
                                 : ""}
                         </div>
@@ -343,16 +319,13 @@ export default function ImportTab({}) {
                     <div
                         className={clsx(
                             "dark:bg-backgroundDark h-2 w-full rounded-lg bg-white",
-                            (!lastProgress || lastProgress?.progress == 0) &&
-                                "opacity-0"
+                            (!lastProgress || lastProgress?.progress == 0) && "opacity-0"
                         )}
                     >
                         <div
                             className="bg-lindy dark:bg-lindyDark h-full rounded-lg shadow-sm transition-all"
                             style={{
-                                width: `${
-                                    (lastProgress?.progress || 0) * 100
-                                }%`,
+                                width: `${(lastProgress?.progress || 0) * 100}%`,
                             }}
                         />
                     </div>

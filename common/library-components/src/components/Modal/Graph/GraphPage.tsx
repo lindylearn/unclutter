@@ -7,11 +7,7 @@ import { getRandomLightColor, openArticleResilient } from "../../../common";
 import { CustomGraphData, CustomGraphLink, CustomGraphNode } from "./data";
 import { renderNodeObject } from "./canvas";
 import { NodeTooltip } from "./Tooltips";
-import {
-    readingProgressFullClamp,
-    ReplicacheContext,
-    Topic,
-} from "../../../store";
+import { readingProgressFullClamp, ReplicacheContext, Topic } from "../../../store";
 import { TopicEmoji } from "../../TopicTag";
 import { ReadingProgress, ResourceStat } from "../numbers";
 
@@ -63,17 +59,12 @@ export function GraphPage({
                     activeGraph.nodes = activeGraph.nodes.filter(
                         (n) =>
                             n.topic_id === currentTopic.id ||
-                            topicsById[n.topic_id!]?.group_id ===
-                                currentTopic.id
+                            topicsById[n.topic_id!]?.group_id === currentTopic.id
                     );
-                    const nodeSet = new Set<string>(
-                        activeGraph.nodes.map((n) => n.id)
-                    );
+                    const nodeSet = new Set<string>(activeGraph.nodes.map((n) => n.id));
 
                     activeGraph.links = activeGraph.links.filter(
-                        (l) =>
-                            nodeSet.has(l.source as string) &&
-                            nodeSet.has(l.target as string)
+                        (l) => nodeSet.has(l.source as string) && nodeSet.has(l.target as string)
                     );
                 }
 
@@ -117,10 +108,7 @@ export function GraphPage({
             {currentTopic && (
                 <div className="absolute left-4 top-4 flex items-center rounded-md font-medium">
                     {currentTopic.emoji && (
-                        <TopicEmoji
-                            emoji={currentTopic.emoji}
-                            className="w-4"
-                        />
+                        <TopicEmoji emoji={currentTopic.emoji} className="w-4" />
                     )}
                     {currentTopic.name}
                 </div>
@@ -148,8 +136,7 @@ function GraphStats({
 }) {
     const articleCount = activeGraph.nodes.length;
     const readCount = activeGraph?.nodes.filter((n) => n.isCompleted).length;
-    const color =
-        currentTopic && getRandomLightColor(currentTopic.id, darkModeEnabled);
+    const color = currentTopic && getRandomLightColor(currentTopic.id, darkModeEnabled);
 
     return (
         <ReadingProgress
@@ -187,13 +174,9 @@ function renderGraph(
     const height = graphContainer.clientHeight;
     const NODE_R = 3;
 
-    let themeColor = darkModeEnabled
-        ? "hsl(51, 80%, 43%)"
-        : "hsl(51, 80%, 64%)";
+    let themeColor = darkModeEnabled ? "hsl(51, 80%, 43%)" : "hsl(51, 80%, 64%)";
     let secondaryColor = darkModeEnabled ? "#57534e" : "#e5e7eb";
-    const originColor = darkModeEnabled
-        ? "rgb(232, 230, 227)"
-        : "rgb(41, 37, 36)";
+    const originColor = darkModeEnabled ? "rgb(232, 230, 227)" : "rgb(41, 37, 36)";
     if (currentTopic) {
         themeColor = getRandomLightColor(currentTopic.id, darkModeEnabled);
     }
@@ -219,10 +202,7 @@ function renderGraph(
                 node.vx -= node.x * alpha * 0.05;
             });
         })
-        .d3Force(
-            "charge",
-            forceManyBody().strength(byDepth([-50, -50, -40, -20]))
-        )
+        .d3Force("charge", forceManyBody().strength(byDepth([-50, -50, -40, -20])))
         // node styling
         .nodeRelSize(NODE_R)
         .nodeVal((n: RuntimeNode) => (n.isCompleted || n.depth === 0 ? 2 : 1))
@@ -291,18 +271,10 @@ function renderGraph(
             if (!initialZoomDone) {
                 if (changedTopic) {
                     // changed topic filter
-                    forceGraph.zoomToFit(
-                        0,
-                        50,
-                        (node: RuntimeNode) => node.isCompleted
-                    );
+                    forceGraph.zoomToFit(0, 50, (node: RuntimeNode) => node.isCompleted);
                 } else {
                     // initial article
-                    forceGraph.zoomToFit(
-                        0,
-                        150,
-                        (node: RuntimeNode) => node.depth <= 1
-                    );
+                    forceGraph.zoomToFit(0, 150, (node: RuntimeNode) => node.depth <= 1);
                 }
 
                 forceGraph.cooldownTicks(Infinity);

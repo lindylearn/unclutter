@@ -35,9 +35,7 @@ export async function checkMigrate() {
         // @ts-ignore
         await importEntries(allLocalEntries as [string, ReadonlyJSONValue][]);
 
-        await Promise.all(
-            allLocalEntries.map(([key, value]) => localTx.del(key))
-        );
+        await Promise.all(allLocalEntries.map(([key, value]) => localTx.del(key)));
 
         // other migration tasks
         await deleteAllLocalScreenshots();

@@ -10,14 +10,10 @@ export function InlineProgressCircle({
     target?: number;
     className?: string;
 }) {
-    let strokeDashoffset =
-        288.5 - 288.5 * Math.min(1.0, (current || 0) / target);
+    let strokeDashoffset = 288.5 - 288.5 * Math.min(1.0, (current || 0) / target);
 
     return (
-        <svg
-            viewBox="-10 -10 120 120"
-            className={clsx("inline-block w-4", className)}
-        >
+        <svg viewBox="-10 -10 120 120" className={clsx("inline-block w-4", className)}>
             {/* <path
                 className="placeholder"
                 d="M 50 96 a 46 46 0 0 1 0 -92 46 46 0 0 1 0 92"

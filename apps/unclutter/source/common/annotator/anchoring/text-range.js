@@ -70,7 +70,7 @@ function resolveOffsets(element, ...offsets) {
   }
 
   if (nextOffset !== undefined) {
-    throw new RangeError('Offset exceeds text length');
+    throw new RangeError("Offset exceeds text length");
   }
 
   return results;
@@ -95,7 +95,7 @@ export class TextPosition {
    */
   constructor(element, offset) {
     if (offset < 0) {
-      throw new Error('Offset is invalid');
+      throw new Error("Offset is invalid");
     }
 
     /** Element that `offset` is relative to. */
@@ -114,7 +114,7 @@ export class TextPosition {
    */
   relativeTo(parent) {
     if (!parent.contains(this.element)) {
-      throw new Error('Parent is not an ancestor of current element');
+      throw new Error("Parent is not an ancestor of current element");
     }
 
     let el = this.element;
@@ -184,7 +184,7 @@ export class TextPosition {
       case Node.ELEMENT_NODE:
         return new TextPosition(/** @type {Element} */ (node), offset);
       default:
-        throw new Error('Node is not an element or text node');
+        throw new Error("Node is not an element or text node");
     }
   }
 
@@ -199,11 +199,11 @@ export class TextPosition {
     switch (node.nodeType) {
       case Node.TEXT_NODE: {
         if (offset < 0 || offset > /** @type {Text} */ (node).data.length) {
-          throw new Error('Text node offset is out of range');
+          throw new Error("Text node offset is out of range");
         }
 
         if (!node.parentElement) {
-          throw new Error('Text node has no parent');
+          throw new Error("Text node has no parent");
         }
 
         // Get the offset from the start of the parent element.
@@ -213,7 +213,7 @@ export class TextPosition {
       }
       case Node.ELEMENT_NODE: {
         if (offset < 0 || offset > node.childNodes.length) {
-          throw new Error('Child node offset is out of range');
+          throw new Error("Child node offset is out of range");
         }
 
         // Get the text length before the `offset`th child of element.
@@ -225,7 +225,7 @@ export class TextPosition {
         return new TextPosition(/** @type {Element} */ (node), textOffset);
       }
       default:
-        throw new Error('Point is not in an element or text node');
+        throw new Error("Point is not in an element or text node");
     }
   }
 }

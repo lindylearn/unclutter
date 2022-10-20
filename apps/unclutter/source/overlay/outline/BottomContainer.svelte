@@ -45,9 +45,7 @@
     {#if linkedArticles?.length > 0}
         <!-- solid background for transparent topic color -->
         <div class="related-container font-text m-[5px] text-gray-700" in:fade>
-            <div
-                class="related-caption mt-2 mb-2 text-sm tabular-nums text-gray-400"
-            >
+            <div class="related-caption mt-2 mb-2 text-sm tabular-nums text-gray-400">
                 <svg class="inline-block w-4" viewBox="0 0 640 512"
                     ><path
                         fill="currentColor"
@@ -91,8 +89,7 @@
                         href="https://library.lindylearn.io/signup"
                         target="_blank"
                         rel="noreferrer"
-                        on:click={() =>
-                            reportEventContentScript("clickLibrarySignup")}
+                        on:click={() => reportEventContentScript("clickLibrarySignup")}
                     >
                         Sign up
                     </a>
@@ -102,8 +99,7 @@
                         href="https://library.lindylearn.io/signup"
                         target="_blank"
                         rel="noreferrer"
-                        on:click={() =>
-                            reportEventContentScript("clickLibrarySignup")}
+                        on:click={() => reportEventContentScript("clickLibrarySignup")}
                     >
                         Unclutter Library
                     </a>
@@ -117,11 +113,7 @@
                 </ul>
             </div>
             {#if libraryState.relatedArticles}
-                <StackedArticleList
-                    articles={libraryState.relatedArticles
-                        .slice(0, 3)
-                        .reverse()}
-                />
+                <StackedArticleList articles={libraryState.relatedArticles.slice(0, 3).reverse()} />
             {/if}
         </div>
         <svg

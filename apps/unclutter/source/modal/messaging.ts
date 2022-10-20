@@ -14,9 +14,7 @@ window.addEventListener("message", ({ data }) => {
             );
         } else {
             document.body.classList.remove("dark");
-            document
-                ?.querySelectorAll(".dark-mode-ui-style")
-                .forEach((e) => e.remove());
+            document?.querySelectorAll(".dark-mode-ui-style").forEach((e) => e.remove());
         }
     } else if (data.event === "setLibraryState") {
         // save global variable accessed during initial app render

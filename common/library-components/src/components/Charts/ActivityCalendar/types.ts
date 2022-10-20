@@ -37,9 +37,7 @@ export type SVGRectEventHandler = Omit<
 
 export type EventHandlerMap = {
     [key in keyof SVGRectEventHandler]: (
-        ...event: Parameters<
-            NonNullable<SVGRectEventHandler[keyof SVGRectEventHandler]>
-        >
+        ...event: Parameters<NonNullable<SVGRectEventHandler[keyof SVGRectEventHandler]>>
     ) => (data: Day) => void;
 };
 

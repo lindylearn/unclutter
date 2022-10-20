@@ -1,8 +1,7 @@
 body {
     margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
-        "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
-        "Helvetica Neue", sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
+        "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
@@ -32,15 +31,11 @@ body {
 }
 
 /* stats calendar */
-.react-activity-calendar__calendar
-    > g:not(.react-activity-calendar__legend-month)
-    > rect {
+.react-activity-calendar__calendar > g:not(.react-activity-calendar__legend-month) > rect {
     stroke: none !important;
     cursor: pointer;
 }
-.react-activity-calendar__calendar
-    > g:not(.react-activity-calendar__legend-month)
-    > rect:hover {
+.react-activity-calendar__calendar > g:not(.react-activity-calendar__legend-month) > rect:hover {
     stroke: black !important;
 }
 

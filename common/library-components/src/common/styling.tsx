@@ -44,10 +44,7 @@ export function getRandomColor(seed: string): string {
     return _drawFromArray(seed, colors);
 }
 
-export function getRandomLightColor(
-    seed: string,
-    darkModeEnabled: boolean = false
-): string {
+export function getRandomLightColor(seed: string, darkModeEnabled: boolean = false): string {
     const color = _drawFromArray(seed, lightColors);
     return darkModeEnabled ? color.replace("1.0", "0.5") : color;
 }

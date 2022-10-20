@@ -21,11 +21,7 @@ export default function SettingsModalTab({
         if (!messageRef.current?.value) {
             return;
         }
-        const issueUrl = await quickReport(
-            messageRef.current.value,
-            currentArticle,
-            userInfo.id
-        );
+        const issueUrl = await quickReport(messageRef.current.value, currentArticle, userInfo.id);
 
         if (issueUrl) {
             window.open(issueUrl, "_blank")?.focus();
@@ -54,21 +50,16 @@ export default function SettingsModalTab({
                 }
             >
                 <p>
-                    Every article you open with Unclutter gets automatically
-                    saved in your library.
+                    Every article you open with Unclutter gets automatically saved in your library.
                 </p>
 
                 <p>
-                    See what you've read over the last weeks, get back to
-                    articles you didn't finish, or review your highlights. It's
-                    all just one{" "}
+                    See what you've read over the last weeks, get back to articles you didn't
+                    finish, or review your highlights. It's all just one{" "}
                     <span
                         className="inline-block rounded-md bg-stone-200 px-1 dark:bg-neutral-700"
                         style={{
-                            backgroundColor: getActivityColor(
-                                1,
-                                darkModeEnabled
-                            ),
+                            backgroundColor: getActivityColor(1, darkModeEnabled),
                         }}
                     >
                         TAB
@@ -100,9 +91,8 @@ export default function SettingsModalTab({
                 ) : (
                     <>
                         <p>
-                            Right now, articles you visit are only saved in your
-                            browser. Create an account to back-up and access
-                            your library across devices.
+                            Right now, articles you visit are only saved in your browser. Create an
+                            account to back-up and access your library across devices.
                         </p>
                         <div className="flex gap-2">
                             <Button
@@ -152,9 +142,8 @@ export default function SettingsModalTab({
             >
                 <p>
                     Unclutter is open-source
-                    {showSignup ? " and funded by the community" : ""}! Suggest
-                    features, contribute code, vote on the roadmap, or report
-                    bugs to make it better for everyone.
+                    {showSignup ? " and funded by the community" : ""}! Suggest features, contribute
+                    code, vote on the roadmap, or report bugs to make it better for everyone.
                 </p>
 
                 <div className="flex gap-2">
@@ -222,10 +211,7 @@ function SettingsGroup({
 }) {
     return (
         <div
-            className={clsx(
-                "z-20 rounded-md bg-stone-50 p-3 px-4 dark:bg-neutral-800",
-                className
-            )}
+            className={clsx("z-20 rounded-md bg-stone-50 p-3 px-4 dark:bg-neutral-800", className)}
         >
             <h2 className="mb-2 flex items-center gap-2 font-medium">
                 {icon}

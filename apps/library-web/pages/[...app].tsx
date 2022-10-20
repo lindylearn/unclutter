@@ -1,10 +1,7 @@
 import { getUser, withPageAuth } from "@supabase/auth-helpers-nextjs";
 import { createContext, useEffect, useState } from "react";
 import { wrap as wrapWorker } from "comlink";
-import {
-    createSpace,
-    spaceExists,
-} from "@unclutter/replicache-nextjs/lib/backend";
+import { createSpace, spaceExists } from "@unclutter/replicache-nextjs/lib/backend";
 import { useReplicache } from "@unclutter/replicache-nextjs/lib/frontend";
 import App from "../src/App";
 import {
@@ -65,13 +62,8 @@ export default function Index({ spaceID }: { spaceID: string }) {
             if (rep && workerIndex) {
                 (async () => {
                     console.log("Setting up search index...");
-                    const searchIndex = wrapWorker<SearchIndex>(
-                        workerIndex.port
-                    );
-                    await syncSearchIndex(
-                        rep,
-                        searchIndex as unknown as SearchIndex
-                    );
+                    const searchIndex = wrapWorker<SearchIndex>(workerIndex.port);
+                    await syncSearchIndex(rep, searchIndex as unknown as SearchIndex);
                 })();
             }
         } catch (err) {
@@ -80,10 +72,7 @@ export default function Index({ spaceID }: { spaceID: string }) {
     }, [rep, workerIndex]);
 
     // @ts-ignore
-    const partialSync:
-        | PartialSyncState
-        | "NOT_RECEIVED_FROM_SERVER"
-        | undefined = useSubscribe(
+    const partialSync: PartialSyncState | "NOT_RECEIVED_FROM_SERVER" | undefined = useSubscribe(
         rep,
         // @ts-ignore
         rep?.subscribe.getPartialSyncState(),

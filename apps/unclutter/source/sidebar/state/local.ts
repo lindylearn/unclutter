@@ -4,13 +4,7 @@ import { createAnnotation } from "../common/CRUD";
 import { groupAnnotations } from "../common/grouping";
 
 export interface AnnotationMutation {
-    action:
-        | "set"
-        | "add"
-        | "remove"
-        | "update"
-        | "changeDisplayOffsets"
-        | "focusAnnotation";
+    action: "set" | "add" | "remove" | "update" | "changeDisplayOffsets" | "focusAnnotation";
 
     annotation?: LindyAnnotation;
     annotations?: LindyAnnotation[];
@@ -36,15 +30,10 @@ export function annotationReducer(
                 return [...existingAnnotations, { ...mutation.annotation }];
             } else if (mutation.annotations) {
                 // multiple
-                return [
-                    ...existingAnnotations,
-                    ...(mutation.annotations || []),
-                ];
+                return [...existingAnnotations, ...(mutation.annotations || [])];
             }
         case "remove":
-            return annotations.filter(
-                (a) => a.localId !== mutation.annotation.localId
-            );
+            return annotations.filter((a) => a.localId !== mutation.annotation.localId);
         case "update":
             return annotations.map((a) => {
                 if (a.localId !== mutation.annotation.localId) {
@@ -84,10 +73,7 @@ export function handleWindowEventFactory(
             mutateAnnotations({ action: "add", annotation: data.annotation });
 
             // update remotely, then replace local state
-            const remoteAnnotation = await createAnnotation(
-                data.annotation,
-                page_title
-            );
+            const remoteAnnotation = await createAnnotation(data.annotation, page_title);
             mutateAnnotations({
                 action: "update",
                 annotation: remoteAnnotation,
@@ -106,18 +92,14 @@ export function handleWindowEventFactory(
             // use small margin to just detect overlaps in quotes
             const groupedAnnotations = groupAnnotations(data.annotations, 10);
 
-            const displayedAnnotations = groupedAnnotations.flatMap(
-                (group) => group
-            );
+            const displayedAnnotations = groupedAnnotations.flatMap((group) => group);
             const displayedAnnotationsSet = new Set(displayedAnnotations);
             const droppedAnnotations = data.annotations.filter(
                 (a) => !displayedAnnotationsSet.has(a)
             );
 
             // remove overlapping annotations
-            console.log(
-                `Ignoring ${droppedAnnotations.length} overlapping annotations`
-            );
+            console.log(`Ignoring ${droppedAnnotations.length} overlapping annotations`);
             window.top.postMessage(
                 { event: "removeHighlights", annotations: droppedAnnotations },
                 "*"

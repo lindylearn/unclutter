@@ -1,13 +1,7 @@
 import React from "react";
-import {
-    getHypothesisToken,
-    validateSaveToken,
-} from "../common/annotations/storage";
+import { getHypothesisToken, validateSaveToken } from "../common/annotations/storage";
 import { createRemoteAnnotation } from "../sidebar/common/api";
-import {
-    deleteAllLocalAnnotations,
-    getAllLocalAnnotations,
-} from "../sidebar/common/local";
+import { deleteAllLocalAnnotations, getAllLocalAnnotations } from "../sidebar/common/local";
 
 export default function HypothesisConfig() {
     const [token, setToken] = React.useState("");
@@ -44,9 +38,7 @@ export default function HypothesisConfig() {
                 return;
             }
 
-            console.log(
-                `Uploading ${localAnnotations.length} local annotations...`
-            );
+            console.log(`Uploading ${localAnnotations.length} local annotations...`);
             await Promise.all(localAnnotations.map(createRemoteAnnotation));
 
             await deleteAllLocalAnnotations();

@@ -28,10 +28,7 @@ import "./app.css";
 
 export default function App() {
     // send messages to main Unclutter extension directly by passing its id
-    const rep = useMemo<ReplicacheProxy>(
-        () => new ReplicacheProxy(getUnclutterExtensionId()),
-        []
-    );
+    const rep = useMemo<ReplicacheProxy>(() => new ReplicacheProxy(getUnclutterExtensionId()), []);
 
     const [userInfo, setUserInfo] = useState<UserInfo>();
     useEffect(() => {
@@ -66,18 +63,11 @@ export default function App() {
 
     return (
         // @ts-ignore
-        <ReplicacheContext.Provider
-            value={rep}
-            darkModeEnabled={darkModeEnabled}
-        >
+        <ReplicacheContext.Provider value={rep} darkModeEnabled={darkModeEnabled}>
             <LocalScreenshotContext.Provider
                 value={
                     !userInfo.accountEnabled
-                        ? (articleId) =>
-                              getLocalScreenshot(
-                                  articleId,
-                                  getUnclutterExtensionId()
-                              )
+                        ? (articleId) => getLocalScreenshot(articleId, getUnclutterExtensionId())
                         : null
                 }
             >
@@ -110,22 +100,13 @@ function ArticleSection({
 }) {
     const rep = useContext(ReplicacheContext);
 
-    const queuedArticles = useSubscribe(
-        rep,
-        rep?.subscribe.listQueueArticles(),
-        []
-    );
-    let [articleListsCache, setArticleListsCache] =
-        useState<ArticleListsCache>();
+    const queuedArticles = useSubscribe(rep, rep?.subscribe.listQueueArticles(), []);
+    let [articleListsCache, setArticleListsCache] = useState<ArticleListsCache>();
     useEffect(() => {
         setArticleListsCache({ queue: queuedArticles });
     }, [queuedArticles]);
 
-    const readingProgress = useSubscribe(
-        rep,
-        rep.subscribe.getReadingProgress(),
-        null
-    );
+    const readingProgress = useSubscribe(rep, rep.subscribe.getReadingProgress(), null);
 
     function reportEvent(...args: any[]) {
         reportEventContentScript(...args, getUnclutterExtensionId());
@@ -150,9 +131,7 @@ function ArticleSection({
             <div
                 className="topic-articles animate-fadein relative rounded-lg p-3"
                 style={{
-                    height: `${
-                        11.5 * articleLines - 0.75 * (articleLines - 1)
-                    }rem`, // article height + padding to prevent size change
+                    height: `${11.5 * articleLines - 0.75 * (articleLines - 1)}rem`, // article height + padding to prevent size change
                     background: color,
                 }}
             >

@@ -12,9 +12,7 @@ window.addEventListener("message", ({ data }) => {
                 document?.head.lastChild as HTMLElement
             );
         } else {
-            document
-                ?.querySelectorAll(".dark-mode-ui-style")
-                .forEach((e) => e.remove());
+            document?.querySelectorAll(".dark-mode-ui-style").forEach((e) => e.remove());
         }
     }
 });

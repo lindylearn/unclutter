@@ -10,10 +10,7 @@ export default class StylePatchesModifier implements PageModifier {
     }
 
     private styleRuleTweaks: [CSSStyleRule, { [key: string]: string }][] = [];
-    private originalStyleValues: [
-        CSSStyleRule,
-        { [key: string]: [string, boolean] }
-    ][] = [];
+    private originalStyleValues: [CSSStyleRule, { [key: string]: [string, boolean] }][] = [];
     async prepare() {
         // iterating the CSSOM can take time -- so run outside transitionIn()
         // TODO maybe do in afterTransitionIn()?
@@ -34,14 +31,8 @@ export default class StylePatchesModifier implements PageModifier {
 
     transitionOut() {
         this.originalStyleValues.forEach(([rule, propertiesToSet]) => {
-            for (const [key, [value, isImportant]] of Object.entries(
-                propertiesToSet
-            )) {
-                rule.style.setProperty(
-                    key,
-                    value,
-                    isImportant ? "important" : ""
-                );
+            for (const [key, [value, isImportant]] of Object.entries(propertiesToSet)) {
+                rule.style.setProperty(key, value, isImportant ? "important" : "");
             }
         });
     }

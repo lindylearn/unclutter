@@ -50,16 +50,14 @@
     animation-name: fadeOutProgress, fadeInProgress;
     animation-delay: 0s, 1.65s;
     animation-duration: 0.5s, 0.5s;
-    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1),
-        cubic-bezier(0.16, 1, 0.3, 1);
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1), cubic-bezier(0.16, 1, 0.3, 1);
     animation-fill-mode: forwards, forwards;
 }
 .caption.goal-reached > .celebration-icon {
     animation-name: fadeInProgress, fadeOutProgress;
     animation-delay: 0.15s, 1.5s;
     animation-duration: 0.5s, 0.5s;
-    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1),
-        cubic-bezier(0.16, 1, 0.3, 1);
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1), cubic-bezier(0.16, 1, 0.3, 1);
     animation-fill-mode: forwards, forwards;
 }
 

@@ -5,13 +5,8 @@ import browser from "./polyfill";
 import { themeName } from "./theme";
 
 export type domainUserSetting = "allow" | "deny" | null;
-export async function getUserSettingForDomain(
-    domain: string
-): Promise<domainUserSetting> {
-    const config = await browser.storage.sync.get([
-        "domain-allowlist",
-        "domain-denylist",
-    ]);
+export async function getUserSettingForDomain(domain: string): Promise<domainUserSetting> {
+    const config = await browser.storage.sync.get(["domain-allowlist", "domain-denylist"]);
 
     if (config["domain-allowlist"]?.[domain]) {
         return "allow";
@@ -23,10 +18,7 @@ export async function getUserSettingForDomain(
 }
 
 export async function setUserSettingsForDomain(domain, status) {
-    const config = await browser.storage.sync.get([
-        "domain-allowlist",
-        "domain-denylist",
-    ]);
+    const config = await browser.storage.sync.get(["domain-allowlist", "domain-denylist"]);
     if (!config["domain-allowlist"]) {
         config["domain-allowlist"] = {};
     }
@@ -62,10 +54,7 @@ export async function getUserTheme(): Promise<UserTheme> {
     const theme = config["custom-global-theme"] || {};
 
     let fontSize = theme.fontSize;
-    if (
-        !theme.fontSize ||
-        (theme.fontSize && isNaN(pxToNumber(theme.fontSize)))
-    ) {
+    if (!theme.fontSize || (theme.fontSize && isNaN(pxToNumber(theme.fontSize)))) {
         fontSize = defaultFontSizePx;
     }
 
@@ -96,12 +85,8 @@ export async function incrementPageReportCount(): Promise<void> {
     });
 }
 
-export async function getBlockedElementSelectors(
-    domain: string
-): Promise<string[]> {
-    const config = await browser.storage.sync.get([
-        "blocked-element-selectors",
-    ]);
+export async function getBlockedElementSelectors(domain: string): Promise<string[]> {
+    const config = await browser.storage.sync.get(["blocked-element-selectors"]);
     const selectorsPerDomain = config["blocked-element-selectors"] || {};
     return selectorsPerDomain[domain] || [];
 }
@@ -109,9 +94,7 @@ export async function setBlockedElementSelectors(
     domain: string,
     selectors: string[]
 ): Promise<void> {
-    const config = await browser.storage.sync.get([
-        "blocked-element-selectors",
-    ]);
+    const config = await browser.storage.sync.get(["blocked-element-selectors"]);
     await browser.storage.sync.set({
         "blocked-element-selectors": {
             ...config["blocked-element-selectors"],
@@ -137,10 +120,7 @@ export async function getLibraryAuth(): Promise<object> {
     };
 }
 
-export async function setLibraryAuth(
-    userId: string,
-    webJwt: string
-): Promise<void> {
+export async function setLibraryAuth(userId: string, webJwt: string): Promise<void> {
     await browser.storage.sync.set({ "library-user-id": userId });
     await browser.storage.sync.set({ "library-web-jwt": webJwt });
     await migrateMetricsUser();

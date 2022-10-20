@@ -1,10 +1,5 @@
 import React, { useMemo } from "react";
-import {
-    ActivityCalendar,
-    CalendarData,
-    Level,
-    Theme,
-} from "./ActivityCalendar";
+import { ActivityCalendar, CalendarData, Level, Theme } from "./ActivityCalendar";
 import { eachDayOfInterval, subYears } from "date-fns";
 
 import { Article } from "../../store";
@@ -51,9 +46,7 @@ export function ArticleActivityCalendar({
                 onChangeWeekOffset={changeWeekOffset}
                 theme={getColorLevels(darkModeEnabled)}
                 overlayColor={
-                    darkModeEnabled
-                        ? "rgb(232, 230, 227, 0.1)"
-                        : "rgb(212, 212, 212, 0.3)"
+                    darkModeEnabled ? "rgb(232, 230, 227, 0.1)" : "rgb(212, 212, 212, 0.3)"
                 }
                 labels={{
                     legend: { less: "Fewer articles read", more: "More" },
@@ -95,9 +88,7 @@ export function getActivityData(articles: Article[]): CalendarData {
     articles
         .filter((a) => a.time_added * 1000 >= since.getTime())
         .forEach((a) => {
-            const date = new Date(a.time_added * 1000)
-                .toISOString()
-                .split("T")[0];
+            const date = new Date(a.time_added * 1000).toISOString().split("T")[0];
 
             dateCounts[date] += 1;
         });
@@ -109,10 +100,7 @@ export function getActivityData(articles: Article[]): CalendarData {
     }));
 }
 
-export function getActivityColor(
-    activityLevel: Level,
-    darkModeEnabled: boolean
-) {
+export function getActivityColor(activityLevel: Level, darkModeEnabled: boolean) {
     return getColorLevels(darkModeEnabled)[`level${activityLevel}`];
 }
 

@@ -1,8 +1,4 @@
-export async function triggerScreenshots(
-    urls: string[],
-    prefix: string,
-    urlsPerWorker = 5
-) {
+export async function triggerScreenshots(urls: string[], prefix: string, urlsPerWorker = 5) {
     const urlChunks = urls.reduce((all, one, i) => {
         const ch = Math.floor(i / urlsPerWorker);
         all[ch] = [].concat(all[ch] || [], one);

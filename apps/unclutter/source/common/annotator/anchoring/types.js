@@ -8,9 +8,9 @@
  *     libraries.
  */
 
-import { matchQuote } from './match-quote';
-import { TextRange, TextPosition } from './text-range';
-import { nodeFromXPath, xpathFromNode } from './xpath';
+import { matchQuote } from "./match-quote";
+import { TextRange, TextPosition } from "./text-range";
+import { nodeFromXPath, xpathFromNode } from "./xpath";
 
 /**
  * @typedef {import('../../types/api').RangeSelector} RangeSelector
@@ -48,12 +48,12 @@ export class RangeAnchor {
   static fromSelector(root, selector) {
     const startContainer = nodeFromXPath(selector.startContainer, root);
     if (!startContainer) {
-      throw new Error('Failed to resolve startContainer XPath');
+      throw new Error("Failed to resolve startContainer XPath");
     }
 
     const endContainer = nodeFromXPath(selector.endContainer, root);
     if (!endContainer) {
-      throw new Error('Failed to resolve endContainer XPath');
+      throw new Error("Failed to resolve endContainer XPath");
     }
 
     const startPos = TextPosition.fromCharOffset(
@@ -86,7 +86,7 @@ export class RangeAnchor {
     const endContainer = xpathFromNode(textRange.end.element, this.root);
 
     return {
-      type: 'RangeSelector',
+      type: "RangeSelector",
       startContainer,
       startOffset: textRange.start.offset,
       endContainer,
@@ -135,7 +135,7 @@ export class TextPositionAnchor {
    */
   toSelector() {
     return {
-      type: 'TextPositionSelector',
+      type: "TextPositionSelector",
       start: this.start,
       end: this.end,
     };
@@ -214,7 +214,7 @@ export class TextQuoteAnchor {
    */
   toSelector() {
     return {
-      type: 'TextQuoteSelector',
+      type: "TextQuoteSelector",
       exact: this.exact,
       prefix: this.context.prefix,
       suffix: this.context.suffix,
@@ -238,7 +238,7 @@ export class TextQuoteAnchor {
       hint: options.hint,
     });
     if (!match) {
-      throw new Error('Quote not found');
+      throw new Error("Quote not found");
     }
     return new TextPositionAnchor(this.root, match.start, match.end);
   }

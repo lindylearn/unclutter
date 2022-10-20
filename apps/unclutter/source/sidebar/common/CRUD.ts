@@ -3,10 +3,7 @@
  */
 
 import { LindyAnnotation } from "../../common/annotations/create";
-import {
-    getFeatureFlag,
-    hypothesisSyncFeatureFlag,
-} from "../../common/featureFlags";
+import { getFeatureFlag, hypothesisSyncFeatureFlag } from "../../common/featureFlags";
 import { reportEventContentScript } from "@unclutter/library-components/dist/common/messaging";
 import {
     createRemoteAnnotation,
@@ -32,17 +29,13 @@ export async function getAnnotations(
         return [];
     }
 
-    const hypothesisSyncEnabled = await getFeatureFlag(
-        hypothesisSyncFeatureFlag
-    );
+    const hypothesisSyncEnabled = await getFeatureFlag(hypothesisSyncFeatureFlag);
 
     const start = performance.now();
 
     // fetch annotations from configured sources
     const [personalAnnotations, publicAnnotations] = await Promise.all([
-        personalAnnotationsEnabled
-            ? getPersonalAnnotations(url, hypothesisSyncEnabled)
-            : [],
+        personalAnnotationsEnabled ? getPersonalAnnotations(url, hypothesisSyncEnabled) : [],
         enableSocialAnnotations ? getLindyAnnotations(url) : [],
     ]);
 
@@ -75,9 +68,7 @@ export async function getAnnotations(
     // remove annotations hidden by the user
     const hiddenAnnotations = await getHiddenAnnotations();
     function hideAnnotationsDfs(current: LindyAnnotation) {
-        current.replies = current.replies.filter(
-            (r) => !hiddenAnnotations[r.id]
-        );
+        current.replies = current.replies.filter((r) => !hiddenAnnotations[r.id]);
         current.replies.map(hideAnnotationsDfs);
     }
     annotations = annotations.filter((a) => !hiddenAnnotations[a.id]);
@@ -94,14 +85,8 @@ export async function getAnnotations(
     const duration = performance.now() - start;
     console.log(
         `Fetched annotations (${
-            personalAnnotationsEnabled
-                ? hypothesisSyncEnabled
-                    ? "hypothesis, "
-                    : "local, "
-                : ""
-        }${enableSocialAnnotations ? "lindy" : ""}) in ${Math.round(
-            duration
-        )}ms`
+            personalAnnotationsEnabled ? (hypothesisSyncEnabled ? "hypothesis, " : "local, ") : ""
+        }${enableSocialAnnotations ? "lindy" : ""}) in ${Math.round(duration)}ms`
     );
 
     return annotations;
@@ -122,16 +107,11 @@ export async function createAnnotation(
     annotation: LindyAnnotation,
     page_title: string
 ): Promise<LindyAnnotation> {
-    const hypothesisSyncEnabled = await getFeatureFlag(
-        hypothesisSyncFeatureFlag
-    );
+    const hypothesisSyncEnabled = await getFeatureFlag(hypothesisSyncFeatureFlag);
 
     let createdAnnotation: LindyAnnotation;
     if (hypothesisSyncEnabled) {
-        createdAnnotation = await createRemoteAnnotation(
-            annotation,
-            page_title
-        );
+        createdAnnotation = await createRemoteAnnotation(annotation, page_title);
     } else {
         createdAnnotation = await createLocalAnnotation(annotation);
     }
@@ -141,12 +121,8 @@ export async function createAnnotation(
     return createdAnnotation;
 }
 
-export async function updateAnnotation(
-    annotation: LindyAnnotation
-): Promise<LindyAnnotation> {
-    const hypothesisSyncEnabled = await getFeatureFlag(
-        hypothesisSyncFeatureFlag
-    );
+export async function updateAnnotation(annotation: LindyAnnotation): Promise<LindyAnnotation> {
+    const hypothesisSyncEnabled = await getFeatureFlag(hypothesisSyncFeatureFlag);
 
     if (hypothesisSyncEnabled) {
         await updateRemoteAnnotation(annotation);
@@ -157,12 +133,8 @@ export async function updateAnnotation(
     return annotation;
 }
 
-export async function deleteAnnotation(
-    annotation: LindyAnnotation
-): Promise<void> {
-    const hypothesisSyncEnabled = await getFeatureFlag(
-        hypothesisSyncFeatureFlag
-    );
+export async function deleteAnnotation(annotation: LindyAnnotation): Promise<void> {
+    const hypothesisSyncEnabled = await getFeatureFlag(hypothesisSyncFeatureFlag);
 
     reportEventContentScript("deleteAnnotation", { hypothesisSyncEnabled });
 

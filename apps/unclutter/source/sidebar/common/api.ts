@@ -1,11 +1,5 @@
-import {
-    hypothesisToLindyFormat,
-    LindyAnnotation,
-} from "../../common/annotations/create";
-import {
-    getHypothesisToken,
-    getHypothesisUsername,
-} from "../../common/annotations/storage";
+import { hypothesisToLindyFormat, LindyAnnotation } from "../../common/annotations/create";
+import { getHypothesisToken, getHypothesisUsername } from "../../common/annotations/storage";
 import { getUrlHash } from "@unclutter/library-components/dist/common/url";
 
 /**
@@ -19,9 +13,7 @@ const hypothesisApi = "https://api.hypothes.is/api";
 // --- global fetching
 
 // public annotations via lindy api
-export async function getLindyAnnotations(
-    url: string
-): Promise<LindyAnnotation[]> {
+export async function getLindyAnnotations(url: string): Promise<LindyAnnotation[]> {
     // query API with hash of normalized url to not leak visited articles
     const url_hash = getUrlHash(url);
 
@@ -53,9 +45,7 @@ export async function getLindyAnnotations(
 }
 
 // private annotations directly from hypothesis
-export async function getPersonalHypothesisAnnotations(
-    url: string
-): Promise<LindyAnnotation[]> {
+export async function getPersonalHypothesisAnnotations(url: string): Promise<LindyAnnotation[]> {
     const username = await getHypothesisUsername();
     const response = await fetch(
         `${hypothesisApi}/search?${new URLSearchParams({
@@ -112,14 +102,10 @@ export async function createRemoteAnnotation(
             tags: localAnnotation.tags,
             permissions: {
                 read: [
-                    localAnnotation.isPublic
-                        ? "group:__world__"
-                        : `acct:${username}@hypothes.is`,
+                    localAnnotation.isPublic ? "group:__world__" : `acct:${username}@hypothes.is`,
                 ],
             },
-            references: localAnnotation.reply_to
-                ? [localAnnotation.reply_to]
-                : [],
+            references: localAnnotation.reply_to ? [localAnnotation.reply_to] : [],
         }),
     });
     const json = await response.json();
@@ -133,37 +119,26 @@ export async function createRemoteAnnotation(
     };
 }
 
-export async function deleteRemoteAnnotation(
-    annotation: LindyAnnotation
-): Promise<void> {
+export async function deleteRemoteAnnotation(annotation: LindyAnnotation): Promise<void> {
     await fetch(`${hypothesisApi}/annotations/${annotation.id}`, {
         ...(await _getConfig()),
         method: "DELETE",
     });
 }
 
-export async function updateRemoteAnnotation(
-    annotation: LindyAnnotation
-): Promise<void> {
+export async function updateRemoteAnnotation(annotation: LindyAnnotation): Promise<void> {
     const username = await getHypothesisUsername();
-    const response = await fetch(
-        `${hypothesisApi}/annotations/${annotation.id}`,
-        {
-            ...(await _getConfig()),
-            method: "PATCH",
-            body: JSON.stringify({
-                text: annotation.text,
-                tags: annotation.tags,
-                permissions: {
-                    read: [
-                        annotation.isPublic
-                            ? "group:__world__"
-                            : `acct:${username}@hypothes.is`,
-                    ],
-                },
-            }),
-        }
-    );
+    const response = await fetch(`${hypothesisApi}/annotations/${annotation.id}`, {
+        ...(await _getConfig()),
+        method: "PATCH",
+        body: JSON.stringify({
+            text: annotation.text,
+            tags: annotation.tags,
+            permissions: {
+                read: [annotation.isPublic ? "group:__world__" : `acct:${username}@hypothes.is`],
+            },
+        }),
+    });
     const json = await response.json();
 
     return json;
@@ -184,9 +159,7 @@ export async function upvoteRemoteAnnotation(pageUrl, annotationId, isUpvote) {
     });
 }
 
-export async function hideRemoteAnnotation(
-    annotation: LindyAnnotation
-): Promise<void> {
+export async function hideRemoteAnnotation(annotation: LindyAnnotation): Promise<void> {
     await fetch(`${lindyApiUrl}/annotations/hide`, {
         ...(await _getConfig()),
         method: "POST",

@@ -13,8 +13,7 @@ export const lindyMainHeaderContainerClass = "lindy-main-header-container";
 export const lindyFirstMainContainerClass = "lindy-first-main-container";
 
 const globalTextElementSelector = "p, font";
-const globalHeadingSelector =
-    "h1, h2, h3, h4, header, [class*='head' i], [class*='title' i]";
+const globalHeadingSelector = "h1, h2, h3, h4, header, [class*='head' i], [class*='title' i]";
 const headingClassWordlist = ["header", "heading", "title", "article-details"]; // be careful here
 const globalImageSelector = "img, picture, figure, video";
 const textContainerExcludedTags = ["blockquote", "code", "pre"];
@@ -44,8 +43,7 @@ export default class TextContainerModifier implements PageModifier {
 
     private usedTextElementSelector: string = globalTextElementSelector; // may get updated if page uses different html elements
 
-    private inlineStyleTweaks: [HTMLElement, Partial<CSSStyleDeclaration>][] =
-        [];
+    private inlineStyleTweaks: [HTMLElement, Partial<CSSStyleDeclaration>][] = [];
 
     // Remember background colors on text containers
     private backgroundColors = [];
@@ -68,60 +66,48 @@ export default class TextContainerModifier implements PageModifier {
 
         // Apply to text nodes
         let validTextNodeCount = 0;
-        document.body
-            .querySelectorAll(globalTextElementSelector)
-            .forEach((elem: HTMLElement) => {
-                if (this.processElement(elem, "text")) {
-                    validTextNodeCount += 1;
-                }
-            });
+        document.body.querySelectorAll(globalTextElementSelector).forEach((elem: HTMLElement) => {
+            if (this.processElement(elem, "text")) {
+                validTextNodeCount += 1;
+            }
+        });
 
         // try with div fallback selector (more performance intensive)
         if (validTextNodeCount < 5) {
             // e.g. using div as text containers on https://www.apple.com/newsroom/2022/06/apple-unveils-all-new-macbook-air-supercharged-by-the-new-m2-chip/
             console.log("Using div as text elem selector");
 
-            document.body
-                .querySelectorAll("div")
-                .forEach((elem: HTMLElement) => {
-                    this.processElement(elem, "text");
-                });
+            document.body.querySelectorAll("div").forEach((elem: HTMLElement) => {
+                this.processElement(elem, "text");
+            });
             this.usedTextElementSelector = `${globalTextElementSelector}, div`;
         }
 
         // Apply to heading nodes
         this.validatedNodes = new Set(); // reset phase-internal state
-        document.body
-            .querySelectorAll(globalHeadingSelector)
-            .forEach((elem: HTMLElement) => {
-                this.processElement(elem, "header");
-            });
+        document.body.querySelectorAll(globalHeadingSelector).forEach((elem: HTMLElement) => {
+            this.processElement(elem, "header");
+        });
         this.headingParagraphNodes.forEach((elem: HTMLElement) => {
             this.processElement(elem, "header");
         });
 
         // search images inside header
         this.validatedNodes = new Set();
-        document.body
-            .querySelectorAll(globalImageSelector)
-            .forEach((elem: HTMLElement) => {
-                this.processElement(elem, "image");
-            });
+        document.body.querySelectorAll(globalImageSelector).forEach((elem: HTMLElement) => {
+            this.processElement(elem, "image");
+        });
 
         // Just use the most common font size for now
         // Note that the actual font size might be changed by responsive styles
         // @ts-ignore
         this.mainFontSize = Object.keys(this.paragraphFontSizes).reduce(
-            (a, b) =>
-                this.paragraphFontSizes[a] > this.paragraphFontSizes[b] ? a : b,
+            (a, b) => (this.paragraphFontSizes[a] > this.paragraphFontSizes[b] ? a : b),
             0
         );
-        this.exampleMainFontSizeElement =
-            this.exampleNodePerFontSize[this.mainFontSize];
+        this.exampleMainFontSizeElement = this.exampleNodePerFontSize[this.mainFontSize];
         if (this.exampleMainFontSizeElement) {
-            this.mainTextColor = window.getComputedStyle(
-                this.exampleMainFontSizeElement
-            ).color;
+            this.mainTextColor = window.getComputedStyle(this.exampleMainFontSizeElement).color;
         }
 
         this.animationLayerCandidates.push([
@@ -155,10 +141,7 @@ export default class TextContainerModifier implements PageModifier {
     // Process text or heading elements and iterate upwards
     private paragraphFontSizes: { [size: number]: number } = {};
     private exampleNodePerFontSize: { [size: number]: HTMLElement } = {};
-    private processElement(
-        elem: HTMLElement,
-        elementType: "text" | "header" | "image"
-    ): boolean {
+    private processElement(elem: HTMLElement, elementType: "text" | "header" | "image"): boolean {
         // Ignore invisible nodes
         // Note: iterateDOM is called before content block, so may not catch all hidden nodes (e.g. in footer)
         if (elem.offsetHeight === 0) {
@@ -190,8 +173,7 @@ export default class TextContainerModifier implements PageModifier {
 
                 // Save largest element as example (small paragraphs might have header-specific line height)
                 if (
-                    elem.innerText.length >
-                    this.exampleNodePerFontSize[fontSize].innerText.length
+                    elem.innerText.length > this.exampleNodePerFontSize[fontSize].innerText.length
                 ) {
                     this.exampleNodePerFontSize[fontSize] = elem;
                 }
@@ -203,13 +185,8 @@ export default class TextContainerModifier implements PageModifier {
 
         // iterate parent containers (don't start with elem for text containers)
         const iterationStart =
-            elementType === "header" || elementType === "image"
-                ? elem
-                : elem.parentElement;
-        const hasValidTextChain = this.prepareIterateParents(
-            iterationStart,
-            elementType
-        );
+            elementType === "header" || elementType === "image" ? elem : elem.parentElement;
+        const hasValidTextChain = this.prepareIterateParents(iterationStart, elementType);
 
         // check all leaf nodes if should create layer
         const nodeBox = elem.getBoundingClientRect();
@@ -248,19 +225,13 @@ export default class TextContainerModifier implements PageModifier {
                 break;
             }
 
-            if (
-                stackType === "text" &&
-                this.shouldExcludeAsTextContainer(currentElem)
-            ) {
+            if (stackType === "text" && this.shouldExcludeAsTextContainer(currentElem)) {
                 // remove entire current stack
                 return false;
             }
 
             // exclude image captions
-            if (
-                stackType !== "image" &&
-                ["FIGURE", "PICTURE"].includes(currentElem.tagName)
-            ) {
+            if (stackType !== "image" && ["FIGURE", "PICTURE"].includes(currentElem.tagName)) {
                 return false;
             }
 
@@ -293,10 +264,7 @@ export default class TextContainerModifier implements PageModifier {
         let isMainStack = false; // main stack determined based on leaf elements for headings, based on intermediate parent size for text elements
 
         // check element position
-        if (
-            (stackType === "header" || stackType === "image") &&
-            currentStack.length > 0
-        ) {
+        if ((stackType === "header" || stackType === "image") && currentStack.length > 0) {
             // for headings check tagName, content & if on first page
             // this should exclude heading elements that are part of "related articles" sections
             const pos = startElem.getBoundingClientRect(); // TODO measure performance
@@ -315,10 +283,8 @@ export default class TextContainerModifier implements PageModifier {
                 // main stack state determined by leaf element
                 isMainStack =
                     isOnFirstPage &&
-                    (linkElem?.tagName !== "A" ||
-                        linkElem.href === window.location.href) &&
-                    ((startElem.tagName === "H1" &&
-                        startElem.innerText?.length >= 15) ||
+                    (linkElem?.tagName !== "A" || linkElem.href === window.location.href) &&
+                    ((startElem.tagName === "H1" && startElem.innerText?.length >= 15) ||
                         startElem.innerText
                             ?.slice(0, 30)
                             .toLowerCase()
@@ -340,26 +306,17 @@ export default class TextContainerModifier implements PageModifier {
             const activeStyle = window.getComputedStyle(currentElem);
 
             // abort based on activeStyle (leaves children behind, but better than nothing)
-            if (
-                activeStyle.visibility === "hidden" ||
-                activeStyle.opacity === "0"
-            ) {
+            if (activeStyle.visibility === "hidden" || activeStyle.opacity === "0") {
                 return false;
             }
 
             // check if text element starts a main text container
             // it should not be part of another main stack already since that would abort the iteration
-            if (
-                stackType === "text" &&
-                !isMainStack &&
-                currentElem !== document.body
-            ) {
+            if (stackType === "text" && !isMainStack && currentElem !== document.body) {
                 // for text containers, consider the fraction of the page text
-                const pageContentFraction =
-                    currentElem.innerText.length / this.bodyContentLength;
+                const pageContentFraction = currentElem.innerText.length / this.bodyContentLength;
 
-                isMainStack =
-                    pageContentFraction > mainContentFractionThreshold;
+                isMainStack = pageContentFraction > mainContentFractionThreshold;
                 if (isMainStack) {
                     this.foundMainContentElement = true;
 
@@ -435,12 +392,7 @@ export default class TextContainerModifier implements PageModifier {
             this.prepareInlineStyleTweaks(currentElem, stackType, nodeBox);
 
             // creating layers for some container elements creates better results in case we don't detect all content elements
-            this.checkShouldCreateAnimationLayer(
-                currentElem,
-                stackType,
-                nodeBox,
-                false
-            );
+            this.checkShouldCreateAnimationLayer(currentElem, stackType, nodeBox, false);
 
             this.validatedNodes.add(currentElem); // add during second iteration to ignore aborted stacks
             if (isMainStack) {
@@ -454,10 +406,7 @@ export default class TextContainerModifier implements PageModifier {
 
     applyContainerStyles() {
         // Removing margin and cleaning up background, shadows etc
-        createStylesheetText(
-            this.getTextElementChainOverrideStyle(),
-            "lindy-text-chain-override"
-        );
+        createStylesheetText(this.getTextElementChainOverrideStyle(), "lindy-text-chain-override");
 
         this.inlineStyleTweaks.forEach(([elem, style]) => {
             for (const [key, value] of Object.entries(style)) {
@@ -466,18 +415,13 @@ export default class TextContainerModifier implements PageModifier {
         });
 
         // Display fixes with visible layout shift (e.g. removing horizontal partitioning)
-        createStylesheetText(
-            this.overrideCssDeclarations.join("\n"),
-            "lindy-text-node-overrides"
-        );
+        createStylesheetText(this.overrideCssDeclarations.join("\n"), "lindy-text-node-overrides");
     }
 
     // remove container styles that don't break the layout faster
     removeOverrideStyles() {
         document
-            .querySelectorAll(
-                "#lindy-text-node-overrides, #lindy-font-size, #lindy-dark-mode-text"
-            )
+            .querySelectorAll("#lindy-text-node-overrides, #lindy-font-size, #lindy-dark-mode-text")
             .forEach((e) => e.remove());
 
         this.inlineStyleTweaks.forEach(([elem, style]) => {
@@ -490,9 +434,7 @@ export default class TextContainerModifier implements PageModifier {
     removeContainerStyles() {
         this.classNamesObserver.disconnect();
 
-        document
-            .querySelectorAll("#lindy-text-chain-override")
-            .forEach((e) => e.remove());
+        document.querySelectorAll("#lindy-text-chain-override").forEach((e) => e.remove());
 
         this.animationLayerTransforms.map(([node, { scaleX }]) => {
             node.style.removeProperty("transition");
@@ -642,17 +584,13 @@ export default class TextContainerModifier implements PageModifier {
         }`;
         createStylesheetText(css, "lindy-text-sibling-fade-in");
 
-        document
-            .querySelectorAll("#lindy-text-sibling-block")
-            .forEach((e) => e.remove());
+        document.querySelectorAll("#lindy-text-sibling-block").forEach((e) => e.remove());
     }
 
     // set text color variable only when dark mode enabled, otherwise overwrites color (even if css var not set)
     setTextDarkModeVariable(darkModeEnabled: boolean) {
         if (!darkModeEnabled) {
-            document
-                .querySelectorAll(".lindy-dark-mode-text")
-                .forEach((e) => e.remove());
+            document.querySelectorAll(".lindy-dark-mode-text").forEach((e) => e.remove());
             return;
         }
 
@@ -677,15 +615,12 @@ export default class TextContainerModifier implements PageModifier {
             return;
         }
 
-        const activeStyle = window.getComputedStyle(
-            this.exampleMainFontSizeElement
-        );
+        const activeStyle = window.getComputedStyle(this.exampleMainFontSizeElement);
 
         // Convert line-height to relative and specify override in case it was set as px
         if (activeStyle.lineHeight.includes("px")) {
             this.relativeLineHeight = (
-                pxToNumber(activeStyle.lineHeight) /
-                pxToNumber(activeStyle.fontSize)
+                pxToNumber(activeStyle.lineHeight) / pxToNumber(activeStyle.fontSize)
             ).toFixed(2);
         } else {
             this.relativeLineHeight = activeStyle.lineHeight;
@@ -732,10 +667,7 @@ export default class TextContainerModifier implements PageModifier {
 
     public originalBackgroundColor: string;
     processBackgroundColors() {
-        if (
-            this.backgroundColors.length > 0 &&
-            this.backgroundColors[0] !== "rgba(0, 0, 0, 0)"
-        ) {
+        if (this.backgroundColors.length > 0 && this.backgroundColors[0] !== "rgba(0, 0, 0, 0)") {
             this.originalBackgroundColor = this.backgroundColors[0];
         }
     }
@@ -759,9 +691,7 @@ export default class TextContainerModifier implements PageModifier {
             line-height: 1em !important;
         }`,
         ...["margin-top", "margin-bottom", "padding-top", "padding-bottom"].map(
-            (
-                property
-            ) => `.lindy-clean-${property}:not(#fakeID#fakeID#fakeID#fakeID) {
+            (property) => `.lindy-clean-${property}:not(#fakeID#fakeID#fakeID#fakeID) {
             ${property}: 10px !important;
         }`
         ),
@@ -792,12 +722,7 @@ export default class TextContainerModifier implements PageModifier {
         }
 
         if (stackType === "header" || stackType === "image") {
-            [
-                "margin-top",
-                "margin-bottom",
-                "padding-top",
-                "padding-bottom",
-            ].map((property) => {
+            ["margin-top", "margin-bottom", "padding-top", "padding-bottom"].map((property) => {
                 const value = activeStyle.getPropertyValue(property);
                 const valueFloat = parseFloat(value.replace("px", ""));
 
@@ -809,8 +734,7 @@ export default class TextContainerModifier implements PageModifier {
 
                 if (
                     valueFloat >= 60 &&
-                    (stackType !== "image" ||
-                        valueFloat < node.scrollHeight * 0.9)
+                    (stackType !== "image" || valueFloat < node.scrollHeight * 0.9)
                 ) {
                     // remove large margins (e.g. on https://progressive.org/magazine/bipartisan-rejection-school-choice-bryant/)
                     // skip this if margin contributes >= 90% of an image's height (e.g. on https://www.cnbc.com/2022/06/20/what-is-staked-ether-steth-and-why-is-it-causing-havoc-in-crypto.html)
@@ -828,11 +752,7 @@ export default class TextContainerModifier implements PageModifier {
         return classes;
     }
 
-    private prepareInlineStyleTweaks(
-        node: HTMLElement,
-        stackType: string,
-        nodeBox: DOMRect
-    ) {
+    private prepareInlineStyleTweaks(node: HTMLElement, stackType: string, nodeBox: DOMRect) {
         const styleTweaks: Partial<CSSStyleDeclaration> = {};
         const parentStyle = window.getComputedStyle(node.parentElement);
 
@@ -853,10 +773,7 @@ export default class TextContainerModifier implements PageModifier {
 
     // stage elements to put on animation layers, with their original page position
     // know actual parent layers for each layer only once content block done
-    private animationLayerCandidates: [
-        HTMLElement,
-        { stackType: string; nodeBox: DOMRect }
-    ][] = [];
+    private animationLayerCandidates: [HTMLElement, { stackType: string; nodeBox: DOMRect }][] = [];
     private checkShouldCreateAnimationLayer(
         node: HTMLElement,
         stackType: string,
@@ -914,28 +831,26 @@ export default class TextContainerModifier implements PageModifier {
                 parentLayer: HTMLElement;
             }
         > = new Map();
-        this.animationLayerCandidates.forEach(
-            ([node, { stackType, nodeBox }]) => {
-                const afterNodeBox = node.getBoundingClientRect();
-                if (afterNodeBox.height === 0) {
-                    // ignore blocked elements
-                    return;
-                }
-
-                const afterStyle = window.getComputedStyle(node);
-                const afterMarginLeft = pxToNumber(afterStyle.marginLeft);
-                const afterMarginTop = pxToNumber(afterStyle.marginTop);
-
-                layerElements.set(node, {
-                    stackType,
-                    nodeBox,
-                    afterNodeBox,
-                    afterMarginLeft,
-                    afterMarginTop,
-                    parentLayer: null, // set below
-                });
+        this.animationLayerCandidates.forEach(([node, { stackType, nodeBox }]) => {
+            const afterNodeBox = node.getBoundingClientRect();
+            if (afterNodeBox.height === 0) {
+                // ignore blocked elements
+                return;
             }
-        );
+
+            const afterStyle = window.getComputedStyle(node);
+            const afterMarginLeft = pxToNumber(afterStyle.marginLeft);
+            const afterMarginTop = pxToNumber(afterStyle.marginTop);
+
+            layerElements.set(node, {
+                stackType,
+                nodeBox,
+                afterNodeBox,
+                afterMarginLeft,
+                afterMarginTop,
+                parentLayer: null, // set below
+            });
+        });
 
         // populate parent layer for each layer
         layerElements.forEach((properties, node) => {
@@ -952,10 +867,7 @@ export default class TextContainerModifier implements PageModifier {
 
         // remove unnecessary layers from map
         layerElements.forEach((properties, node) => {
-            if (
-                node === document.body ||
-                properties.parentLayer === document.body
-            ) {
+            if (node === document.body || properties.parentLayer === document.body) {
                 // allow all top-level layers
                 return;
             }
@@ -967,10 +879,7 @@ export default class TextContainerModifier implements PageModifier {
             }
 
             // only keep one layer per image chain (often matches containers by classname)
-            if (
-                properties.stackType === "image" &&
-                parentLayerProps.stackType === "image"
-            ) {
+            if (properties.stackType === "image" && parentLayerProps.stackType === "image") {
                 layerElements.delete(node);
                 return;
             }
@@ -978,10 +887,8 @@ export default class TextContainerModifier implements PageModifier {
             // container styles collapsed layers (parent has no other content)
             // e.g. on https://www.nbcnews.com/business/business-news/tesla-racism-lawsuit-worker-rejects-15-million-payout-rcna34655
             if (
-                properties.afterNodeBox.top ===
-                    parentLayerProps?.afterNodeBox.top &&
-                properties.afterNodeBox.height ===
-                    parentLayerProps?.afterNodeBox.height
+                properties.afterNodeBox.top === parentLayerProps?.afterNodeBox.top &&
+                properties.afterNodeBox.height === parentLayerProps?.afterNodeBox.height
             ) {
                 // console.log("delete", properties.parentLayer);
 
@@ -998,9 +905,7 @@ export default class TextContainerModifier implements PageModifier {
         this.animationLayerTransforms = [...layerElements.entries()]
             .filter(([node]) => node !== document.body)
             .map(([node, layerProps]) => {
-                const parentLayerProps = layerElements.get(
-                    layerProps.parentLayer
-                );
+                const parentLayerProps = layerElements.get(layerProps.parentLayer);
                 if (!parentLayerProps) {
                     // console.log("no valid parent", node);
                     return;
@@ -1014,32 +919,22 @@ export default class TextContainerModifier implements PageModifier {
 
                 // get x and y transforms
                 // allow negative e.g. on https://www.statnews.com/2019/06/25/alzheimers-cabal-thwarted-progress-toward-cure/
-                const beforeLeftOffset =
-                    layerProps.nodeBox.left - parentLayerProps.nodeBox.left;
+                const beforeLeftOffset = layerProps.nodeBox.left - parentLayerProps.nodeBox.left;
                 const afterLeftOffset =
-                    layerProps.afterNodeBox.left -
-                    parentLayerProps.afterNodeBox.left;
+                    layerProps.afterNodeBox.left - parentLayerProps.afterNodeBox.left;
                 const translateX =
-                    beforeLeftOffset -
-                    afterLeftOffset -
-                    parentLayerProps.afterMarginLeft; // only after margins are relevant, since transform() is relative to it
+                    beforeLeftOffset - afterLeftOffset - parentLayerProps.afterMarginLeft; // only after margins are relevant, since transform() is relative to it
 
-                const beforeTopOffset =
-                    layerProps.nodeBox.top - parentLayerProps.nodeBox.top;
+                const beforeTopOffset = layerProps.nodeBox.top - parentLayerProps.nodeBox.top;
                 const afterTopOffset =
-                    layerProps.afterNodeBox.top -
-                    parentLayerProps.afterNodeBox.top;
+                    layerProps.afterNodeBox.top - parentLayerProps.afterNodeBox.top;
                 const translateY =
-                    beforeTopOffset -
-                    afterTopOffset -
-                    parentLayerProps.afterMarginTop;
+                    beforeTopOffset - afterTopOffset - parentLayerProps.afterMarginTop;
 
                 let scaleX = null;
                 // animate header image width (not for text elements for performance)
                 if (layerProps.stackType === "image") {
-                    scaleX =
-                        layerProps.nodeBox.width /
-                        layerProps.afterNodeBox.width;
+                    scaleX = layerProps.nodeBox.width / layerProps.afterNodeBox.width;
                 }
 
                 return [
@@ -1064,25 +959,23 @@ export default class TextContainerModifier implements PageModifier {
             return;
         }
 
-        this.animationLayerTransforms.map(
-            ([node, { translateX, translateY, scaleX }]) => {
-                let transform = `translate(${translateX}px, ${translateY}px)`;
-                if (scaleX) {
-                    transform += ` scale(${scaleX})`;
-                    node.style.setProperty("transform-origin", "top left");
-                }
-                node.style.setProperty("transform", transform, "important");
-
-                node.style.setProperty("left", "0", "important"); // e.g. xkcd.com
-
-                // need this?
-                // node.style.setProperty("display", "block", "important");
-
-                // will-change sometimes causes blur after transition done (e.g. on https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Your_first_WebExtension)
-                // transform alone should already trigger layer creation
-                // node.style.setProperty("will-change", "transform");
+        this.animationLayerTransforms.map(([node, { translateX, translateY, scaleX }]) => {
+            let transform = `translate(${translateX}px, ${translateY}px)`;
+            if (scaleX) {
+                transform += ` scale(${scaleX})`;
+                node.style.setProperty("transform-origin", "top left");
             }
-        );
+            node.style.setProperty("transform", transform, "important");
+
+            node.style.setProperty("left", "0", "important"); // e.g. xkcd.com
+
+            // need this?
+            // node.style.setProperty("display", "block", "important");
+
+            // will-change sometimes causes blur after transition done (e.g. on https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Your_first_WebExtension)
+            // transform alone should already trigger layer creation
+            // node.style.setProperty("will-change", "transform");
+        });
     }
 
     private executedAnimation = false;
@@ -1116,10 +1009,7 @@ export default class TextContainerModifier implements PageModifier {
             return true;
         }
 
-        if (
-            node.tagName.toLowerCase() === "tbody" &&
-            node.childElementCount >= 4
-        ) {
+        if (node.tagName.toLowerCase() === "tbody" && node.childElementCount >= 4) {
             // leave actual tables in original formatting, e.g. https://developers.facebook.com/docs/meta-pixel/reference#standard-events
             // but try to process tables used for layout, e.g. http://www.paulgraham.com/weird.html
             return true;
@@ -1158,9 +1048,7 @@ export default class TextContainerModifier implements PageModifier {
                 if (this.nodeClasses.has(target)) {
                     const removedClasses = this.nodeClasses
                         .get(target)
-                        .filter(
-                            (className) => !target.classList.contains(className)
-                        );
+                        .filter((className) => !target.classList.contains(className));
 
                     if (removedClasses.length > 0) {
                         target.classList.add(...removedClasses);

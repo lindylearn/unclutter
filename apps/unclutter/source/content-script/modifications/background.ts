@@ -48,8 +48,7 @@ export default class BackgroundModifier implements PageModifier {
 
     // scale-up background to entire screen width using transform (performant to animate)
     private scaleUpWidthToPage() {
-        const initialScale =
-            window.innerWidth / pxToNumber(this.themeModifier.theme.pageWidth);
+        const initialScale = window.innerWidth / pxToNumber(this.themeModifier.theme.pageWidth);
         this.backgroundElement.style.setProperty(
             "transform",
             `scaleX(${initialScale}) translateY(-10px)`,
@@ -74,9 +73,7 @@ export default class BackgroundModifier implements PageModifier {
         this.resizeObserver = new ResizeObserver(() => {
             this.updateBackgroundHeight();
         });
-        [...document.body.children].map((node) =>
-            this.resizeObserver.observe(node)
-        );
+        [...document.body.children].map((node) => this.resizeObserver.observe(node));
     }
 
     unObserveHeightChanges() {
@@ -90,15 +87,8 @@ export default class BackgroundModifier implements PageModifier {
             .filter((node) => node.id !== "lindy-body-background")
             .map((node) => node.scrollHeight);
 
-        const bodyHeigth = childHeights.reduce(
-            (sum, height) => sum + height,
-            0
-        );
+        const bodyHeigth = childHeights.reduce((sum, height) => sum + height, 0);
 
-        this.backgroundElement?.style.setProperty(
-            "min-height",
-            `${bodyHeigth}px`,
-            "important"
-        );
+        this.backgroundElement?.style.setProperty("min-height", `${bodyHeigth}px`, "important");
     }
 }

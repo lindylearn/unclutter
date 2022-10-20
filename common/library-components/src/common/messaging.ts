@@ -15,23 +15,14 @@ export async function reportEventContentScript(
     });
 }
 
-export async function getRemoteFeatureFlag(
-    key: string,
-    targetExtension: string | null = null
-) {
-    const featureFlags = await getBrowser().runtime.sendMessage(
-        targetExtension,
-        {
-            event: "getRemoteFeatureFlags",
-        }
-    );
+export async function getRemoteFeatureFlag(key: string, targetExtension: string | null = null) {
+    const featureFlags = await getBrowser().runtime.sendMessage(targetExtension, {
+        event: "getRemoteFeatureFlags",
+    });
     return featureFlags?.[key];
 }
 
-export function openArticle(
-    url: string,
-    targetExtension: string | null = null
-) {
+export function openArticle(url: string, targetExtension: string | null = null) {
     getBrowser().runtime.sendMessage(targetExtension, {
         event: "openLinkWithUnclutter",
         url: url,
@@ -39,9 +30,7 @@ export function openArticle(
     });
 }
 
-export async function getUnclutterVersion(
-    targetExtension: string | null = null
-): Promise<string> {
+export async function getUnclutterVersion(targetExtension: string | null = null): Promise<string> {
     return await getBrowser().runtime.sendMessage(targetExtension, {
         event: "getUnclutterVersion",
     });
@@ -61,21 +50,14 @@ export function captureActiveTabScreenshot(
     });
 }
 
-export async function getLocalScreenshot(
-    articleId: string,
-    targetExtension: string | null = null
-) {
+export async function getLocalScreenshot(articleId: string, targetExtension: string | null = null) {
     return await getBrowser().runtime.sendMessage(targetExtension, {
         event: "getLocalScreenshot",
         articleId,
     });
 }
 
-export type ReplicacheProxyEventTypes =
-    | "query"
-    | "mutate"
-    | "subscribe"
-    | "pull";
+export type ReplicacheProxyEventTypes = "query" | "mutate" | "subscribe" | "pull";
 export async function processReplicacheContentScript(
     type: ReplicacheProxyEventTypes,
     methodName?: string,
@@ -98,36 +80,20 @@ export class ReplicacheProxy implements RuntimeReplicache {
     }
 
     // @ts-ignore
-    query: RuntimeReplicache["query"] = Object.keys(accessors).reduce(
-        (obj, fnName: keyof A) => {
-            obj[fnName] = (...args: any[]) =>
-                processReplicacheContentScript(
-                    "query",
-                    fnName,
-                    args,
-                    this.targetExtension
-                );
+    query: RuntimeReplicache["query"] = Object.keys(accessors).reduce((obj, fnName: keyof A) => {
+        obj[fnName] = (...args: any[]) =>
+            processReplicacheContentScript("query", fnName, args, this.targetExtension);
 
-            return obj;
-        },
-        {}
-    );
+        return obj;
+    }, {});
 
     // @ts-ignore
-    mutate: RuntimeReplicache["mutate"] = Object.keys(mutators).reduce(
-        (obj, fnName: keyof M) => {
-            obj[fnName] = (args: any) =>
-                processReplicacheContentScript(
-                    "mutate",
-                    fnName,
-                    args,
-                    this.targetExtension
-                );
+    mutate: RuntimeReplicache["mutate"] = Object.keys(mutators).reduce((obj, fnName: keyof M) => {
+        obj[fnName] = (args: any) =>
+            processReplicacheContentScript("mutate", fnName, args, this.targetExtension);
 
-            return obj;
-        },
-        {}
-    );
+        return obj;
+    }, {});
 
     // @ts-ignore
     subscribe: RuntimeReplicache["subscribe"] = Object.keys(accessors).reduce(
@@ -135,16 +101,13 @@ export class ReplicacheProxy implements RuntimeReplicache {
             obj[fnName] =
                 (...args: any[]) =>
                 (subscribeOptions: SubscribeOptions<any, Error>) => {
-                    const port: Runtime.Port = getBrowser().runtime.connect(
-                        this.targetExtension,
-                        { name: `replicache-subscribe` }
-                    );
+                    const port: Runtime.Port = getBrowser().runtime.connect(this.targetExtension, {
+                        name: `replicache-subscribe`,
+                    });
                     port.onMessage.addListener((message) => {
                         subscribeOptions.onData(message);
                     });
-                    port.onDisconnect.addListener(() =>
-                        subscribeOptions.onDone?.()
-                    );
+                    port.onDisconnect.addListener(() => subscribeOptions.onDone?.());
 
                     port.postMessage({ methodName: fnName, args });
 
@@ -157,11 +120,6 @@ export class ReplicacheProxy implements RuntimeReplicache {
     );
 
     pull: RuntimeReplicache["pull"] = () => {
-        processReplicacheContentScript(
-            "pull",
-            undefined,
-            undefined,
-            this.targetExtension
-        );
+        processReplicacheContentScript("pull", undefined, undefined, this.targetExtension);
     };
 }

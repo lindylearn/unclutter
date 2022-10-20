@@ -27,16 +27,13 @@ export function createAnnotationListener(
 
             // anchor only called with all complete annotations
             removeAllHighlights();
-            const anchoredAnnotations = await anchorAnnotations(
-                data.annotations,
-                sidebarIframe
-            );
+            const anchoredAnnotations = await anchorAnnotations(data.annotations, sidebarIframe);
 
             const duration = performance.now() - start;
             console.info(
-                `anchored ${
-                    data.annotations.length
-                } annotations on page in ${Math.round(duration)}ms`
+                `anchored ${data.annotations.length} annotations on page in ${Math.round(
+                    duration
+                )}ms`
             );
 
             // send response
@@ -78,9 +75,7 @@ export function updateOffsetsOnHeightChange(
         console.info(`page resized, recalculating annotation offsets...`);
 
         const highlightNodes = [
-            ...document.body.querySelectorAll(
-                "lindy-highlight, a.lindy-link-info"
-            ),
+            ...document.body.querySelectorAll("lindy-highlight, a.lindy-link-info"),
         ];
 
         const [offsetById, offsetEndById] = getHighlightOffsets(highlightNodes);
@@ -115,9 +110,6 @@ function _observeHeightChange(
     return resizeObserver;
 }
 
-export function sendSidebarEvent(
-    sidebarIframe: HTMLIFrameElement,
-    event: object
-) {
+export function sendSidebarEvent(sidebarIframe: HTMLIFrameElement, event: object) {
     sidebarIframe.contentWindow?.postMessage(event, "*");
 }

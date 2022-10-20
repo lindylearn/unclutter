@@ -1,11 +1,7 @@
 import CSVImportSettings from "./CSV";
 import { ArticleImportSchema } from "./_Import";
 
-export default function InstapaperImportSettings({
-    onError,
-    startImport,
-    disabled,
-}) {
+export default function InstapaperImportSettings({ onError, startImport, disabled }) {
     return (
         <div className="px-3">
             <div className="mb-3">

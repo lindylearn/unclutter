@@ -15,10 +15,7 @@ import ElementPickerModifier from "./modifications/elementPicker";
 import LibraryModalModifier from "./modifications/libraryModal";
 import LibraryModifier from "./modifications/library";
 import OverlayManager from "./modifications/overlay";
-import {
-    PageModifier,
-    trackModifierExecution,
-} from "./modifications/_interface";
+import { PageModifier, trackModifierExecution } from "./modifications/_interface";
 import KeyboardModifier from "./modifications/keyboard";
 
 @trackModifierExecution
@@ -28,9 +25,7 @@ export default class TransitionManager implements PageModifier {
 
     private bodyStyleModifier = new BodyStyleModifier();
     private cssomProvider = new CSSOMProvider();
-    private responsiveStyleModifier = new ResponsiveStyleModifier(
-        this.cssomProvider
-    );
+    private responsiveStyleModifier = new ResponsiveStyleModifier(this.cssomProvider);
     private stylePatchesModifier = new StylePatchesModifier(this.cssomProvider);
     private annotationsModifier = new AnnotationsModifier();
     private textContainerModifier = new TextContainerModifier();
@@ -38,9 +33,7 @@ export default class TransitionManager implements PageModifier {
         this.domain,
         this.textContainerModifier
     );
-    private libraryModalModifier = new LibraryModalModifier(
-        this.bodyStyleModifier
-    );
+    private libraryModalModifier = new LibraryModalModifier(this.bodyStyleModifier);
     private themeModifier = new ThemeModifier(
         this.cssomProvider,
         this.annotationsModifier,
@@ -58,11 +51,7 @@ export default class TransitionManager implements PageModifier {
         this.elementPickerModifier,
         this.libraryModalModifier
     );
-    private libraryModifier = new LibraryModifier(
-        this.url,
-        document.title,
-        this.overlayManager
-    );
+    private libraryModifier = new LibraryModifier(this.url, document.title, this.overlayManager);
     // private linkAnnotationsModifier = new LinkAnnotationsModifier(
     //     this.annotationsModifier,
     //     this.libraryModifier,

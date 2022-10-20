@@ -50,13 +50,7 @@ export function StateFilter({}: {}) {
     );
 }
 
-export function ListFilter({
-    options,
-    svg,
-}: {
-    options: FilterOption[];
-    svg: ReactNode;
-}) {
+export function ListFilter({ options, svg }: { options: FilterOption[]; svg: ReactNode }) {
     return (
         <Select.Root defaultValue={options[0].value} dir="ltr">
             <Select.Trigger className="rounded-md bg-stone-50 px-2 py-1 outline-none dark:bg-neutral-800">

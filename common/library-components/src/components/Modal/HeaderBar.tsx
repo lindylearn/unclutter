@@ -25,11 +25,7 @@ export default function HeaderBar({
                     className="font-text w-full max-w-[30.25rem] rounded-md bg-stone-50 px-3 py-1.5 font-medium leading-none placeholder-stone-300 outline-none dark:bg-neutral-800 dark:placeholder-neutral-600"
                     spellCheck="false"
                     autoFocus
-                    placeholder={
-                        articleCount
-                            ? `Search across ${articleCount} articles...`
-                            : ""
-                    }
+                    placeholder={articleCount ? `Search across ${articleCount} articles...` : ""}
                 />
             </div>
 

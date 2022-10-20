@@ -52,17 +52,11 @@ export default function WelcomeTab() {
 
     return (
         <div className=" font-text mb-10 flex flex-col gap-10 p-5 text-stone-900 dark:text-stone-200">
-            <TutorialMessage
-                index={0}
-                stage={stage}
-                savedStage={savedStage}
-                setStage={setStage}
-            >
+            <TutorialMessage index={0} stage={stage} savedStage={savedStage} setStage={setStage}>
                 <h1 className="font-bold">Welcome to Unclutter Library!</h1>
                 <p>
-                    Your Library automatically organizes knowledge you read
-                    about for you. You won't loose any links nor have to
-                    manually manage bookmark folders.
+                    Your Library automatically organizes knowledge you read about for you. You won't
+                    loose any links nor have to manually manage bookmark folders.
                 </p>
                 <p>There are 3 components to this:</p>
             </TutorialMessage>
@@ -77,11 +71,7 @@ export default function WelcomeTab() {
                     <>
                         <ActionButton
                             title="Try example"
-                            onClick={() =>
-                                openArticleResilient(
-                                    "http://paulgraham.com/vb.html"
-                                )
-                            }
+                            onClick={() => openArticleResilient("http://paulgraham.com/vb.html")}
                         />
                     </>
                 }
@@ -96,17 +86,11 @@ export default function WelcomeTab() {
                     >
                         Unclutter extension
                     </a>{" "}
-                    will be automatically saved and categorized. There's a new
-                    UI element for this above the outline in the top left.
+                    will be automatically saved and categorized. There's a new UI element for this
+                    above the outline in the top left.
                 </p>
-                <p>
-                    At the end of each page you'll see related articles from
-                    your library.
-                </p>
-                <p>
-                    If you have Unclutter installed, your account has been
-                    linked already.
-                </p>
+                <p>At the end of each page you'll see related articles from your library.</p>
+                <p>If you have Unclutter installed, your account has been linked already.</p>
             </TutorialMessage>
 
             <TutorialMessage
@@ -134,14 +118,13 @@ export default function WelcomeTab() {
                     >
                         Unclutter Library extension
                     </a>{" "}
-                    to show your reading list on your new tab page, and matching
-                    articles from your library on Google Search.
+                    to show your reading list on your new tab page, and matching articles from your
+                    library on Google Search.
                 </p>
                 <p>
-                    This downloads the full text of all your articles to your
-                    browser, so no queries are sent over the network. You can
-                    also type "u " (for unclutter) in your browser address bar
-                    to quickly find any saved article or reference within your
+                    This downloads the full text of all your articles to your browser, so no queries
+                    are sent over the network. You can also type "u " (for unclutter) in your
+                    browser address bar to quickly find any saved article or reference within your
                     articles.
                 </p>
             </TutorialMessage>
@@ -155,31 +138,22 @@ export default function WelcomeTab() {
                 actionButtons={
                     <>
                         <ActionButton title="Browse library" internalPath="/" />
-                        <ActionButton
-                            title="Import articles"
-                            internalPath="/import"
-                            primary
-                        />
+                        <ActionButton title="Import articles" internalPath="/import" primary />
                     </>
                 }
             >
                 <p>
-                    Finally,{" "}
-                    <b className="inline-block font-bold">
-                        library.lindylearn.io
-                    </b>{" "}
-                    allows you to browse and filter across your entire library.
-                    The topics used to group articles are AI-generated
-                    specifically for you.
+                    Finally, <b className="inline-block font-bold">library.lindylearn.io</b> allows
+                    you to browse and filter across your entire library. The topics used to group
+                    articles are AI-generated specifically for you.
                 </p>
                 <p>
-                    Right-click any article to add it to your favorites, or
-                    reorder lists with drag &amp; drop. The yellow progress bars
-                    show how far you scrolled on each page.
+                    Right-click any article to add it to your favorites, or reorder lists with drag
+                    &amp; drop. The yellow progress bars show how far you scrolled on each page.
                 </p>
                 <p>
-                    You can also easily import articles from your browser
-                    bookmarks and Pocket, Instapaper, or Raindrop account.
+                    You can also easily import articles from your browser bookmarks and Pocket,
+                    Instapaper, or Raindrop account.
                 </p>
             </TutorialMessage>
         </div>
@@ -211,10 +185,7 @@ function TutorialMessage({
 
     return (
         <div
-            className={clsx(
-                "flex gap-5",
-                index > savedStage && "animate-slidein"
-            )}
+            className={clsx("flex gap-5", index > savedStage && "animate-slidein")}
             style={{
                 animationDelay: `0`,
                 animationFillMode: "both",
@@ -226,12 +197,7 @@ function TutorialMessage({
                         className="image h-max rounded-lg leading-none shadow dark:brightness-90"
                         // style={{ background: topicColor }}
                     >
-                        <Image
-                            priority
-                            objectFit="contain"
-                            src={image}
-                            className="rounded-lg"
-                        />
+                        <Image priority objectFit="contain" src={image} className="rounded-lg" />
                     </div>
                 )}
             </div>
@@ -243,13 +209,9 @@ function TutorialMessage({
                     )}
                     // style={{ background: topicColor }}
                 >
-                    <div className="w-5 font-bold">
-                        {index > 0 && `${index}.`}
-                    </div>
+                    <div className="w-5 font-bold">{index > 0 && `${index}.`}</div>
 
-                    <div className="relative flex flex-col gap-2">
-                        {children}
-                    </div>
+                    <div className="relative flex flex-col gap-2">{children}</div>
                 </div>
                 {(actionButtons || (index === stage && stage < 3)) && (
                     <div className="mt-2 flex justify-start gap-2">

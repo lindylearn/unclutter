@@ -1,11 +1,5 @@
 import { createContext } from "react";
-import {
-    JSONValue,
-    MutatorDefs,
-    Replicache,
-    ReadTransaction,
-    SubscribeOptions,
-} from "replicache";
+import { JSONValue, MutatorDefs, Replicache, ReadTransaction, SubscribeOptions } from "replicache";
 
 import { A } from "./accessors";
 import { M } from "./mutators";

@@ -2,11 +2,7 @@ import React, { ReactNode } from "react";
 import { getRandomLightColor } from "../../common";
 import { ResourceIcon } from "./numbers";
 
-export default function UpgradeModalTab({
-    darkModeEnabled,
-}: {
-    darkModeEnabled: boolean;
-}) {
+export default function UpgradeModalTab({ darkModeEnabled }: { darkModeEnabled: boolean }) {
     return (
         <div className="flex min-h-full flex-col gap-4">
             <h1 className="flex items-center gap-2 py-1 px-1 font-medium">

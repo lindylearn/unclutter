@@ -6,11 +6,8 @@ import { Article, readingProgressFullClamp } from "../../store/_schema";
 import { ArticleDropdownMenu } from "./ArticleDropdownMenu";
 import { openArticleResilient } from "../../common";
 
-export type LocalScreenshotFetcher =
-    | ((articleId: string) => Promise<string | null>)
-    | null;
-export const LocalScreenshotContext =
-    createContext<LocalScreenshotFetcher>(null);
+export type LocalScreenshotFetcher = ((articleId: string) => Promise<string | null>) | null;
+export const LocalScreenshotContext = createContext<LocalScreenshotFetcher>(null);
 
 interface ArticlePreviewProps {
     article: Article;
@@ -88,8 +85,7 @@ export function ArticlePreview({
                 small
                     ? "hover:shadow-articleSmallHover shadow-articleSmall h-40 w-36 rounded-md"
                     : "hover:shadow-articleHover shadow-article h-52 w-44 rounded-lg",
-                listState === "active" &&
-                    "article-active opacity-0 transition-none",
+                listState === "active" && "article-active opacity-0 transition-none",
                 // listState === "static" && "article-static",
                 // listState === "dragging" && "article-dragging",
                 // listIndex % 3 && "rotate-neg",
@@ -119,9 +115,7 @@ export function ArticlePreview({
             {...props}
         >
             <div className="article-fallback p-3">
-                <div className="font-text select-none font-bold leading-tight">
-                    {article.title}
-                </div>
+                <div className="font-text select-none font-bold leading-tight">{article.title}</div>
             </div>
             <div
                 className="article-image absolute top-0 left-0 h-full w-full"

@@ -1,12 +1,6 @@
 import { pxToNumber } from "../../common/css";
-import {
-    getBlockedElementSelectors,
-    setBlockedElementSelectors,
-} from "../../common/storage";
-import {
-    createStylesheetText,
-    overrideClassname,
-} from "../../common/stylesheets";
+import { getBlockedElementSelectors, setBlockedElementSelectors } from "../../common/storage";
+import { createStylesheetText, overrideClassname } from "../../common/stylesheets";
 import {
     lindyContainerClass,
     lindyFirstMainContainerClass,
@@ -49,9 +43,7 @@ export default class ElementPickerModifier implements PageModifier {
     }
 
     transitionOut() {
-        document
-            .querySelectorAll("#element-picker-block")
-            .forEach((e) => e.remove());
+        document.querySelectorAll("#element-picker-block").forEach((e) => e.remove());
     }
 
     enable() {
@@ -62,18 +54,12 @@ export default class ElementPickerModifier implements PageModifier {
 
         this.spotlight.onclick = this.onFinishSelection.bind(this);
 
-        document.body.addEventListener(
-            "mouseover",
-            this.onMouseOver.bind(this)
-        );
+        document.body.addEventListener("mouseover", this.onMouseOver.bind(this));
     }
 
     disable() {
         // clean up DOM
-        document.body.removeEventListener(
-            "mouseover",
-            this.onMouseOver.bind(this)
-        );
+        document.body.removeEventListener("mouseover", this.onMouseOver.bind(this));
         this.spotlight.remove();
 
         getBlockedElementSelectors(this.domain).then((selectors) => {
@@ -87,9 +73,7 @@ export default class ElementPickerModifier implements PageModifier {
         try {
             document
                 .querySelectorAll(`.${pendingBlockedElement}`)
-                .forEach((node) =>
-                    node.classList.remove(pendingBlockedElement)
-                );
+                .forEach((node) => node.classList.remove(pendingBlockedElement));
         } catch {}
 
         document.getElementById("element-picker-block")?.remove();
@@ -152,10 +136,8 @@ export default class ElementPickerModifier implements PageModifier {
                 break;
             }
             if (
-                currentNode.clientHeight + 20 <=
-                    currentNode.parentElement.clientHeight ||
-                currentNode.clientWidth >
-                    currentNode.parentElement.clientWidth + 20
+                currentNode.clientHeight + 20 <= currentNode.parentElement.clientHeight ||
+                currentNode.clientWidth > currentNode.parentElement.clientWidth + 20
             ) {
                 // significant height difference to parent -- give user the choice
                 break;
@@ -177,10 +159,9 @@ export default class ElementPickerModifier implements PageModifier {
         }
 
         if (
-            [
-                lindyMainContentContainerClass,
-                lindyMainHeaderContainerClass,
-            ].some((className) => node.classList.contains(className))
+            [lindyMainContentContainerClass, lindyMainHeaderContainerClass].some((className) =>
+                node.classList.contains(className)
+            )
         ) {
             return true;
         }

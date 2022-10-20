@@ -13,9 +13,7 @@ export default class BodyStyleModifier implements PageModifier {
 
     prepare() {
         // save before modifications state
-        const activeHtmlStyles = window.getComputedStyle(
-            document.documentElement
-        );
+        const activeHtmlStyles = window.getComputedStyle(document.documentElement);
         const activeBodyStyles = window.getComputedStyle(document.body);
 
         if (activeHtmlStyles.backgroundColor !== "rgba(0, 0, 0, 0)") {
@@ -110,40 +108,16 @@ export default class BodyStyleModifier implements PageModifier {
 
     private modifyHtmlStyle(skipScrollChanges: boolean = false) {
         // html or body tags may have classes with fixed style applied (which we hide via css rewrite)
-        document.documentElement.style.setProperty(
-            "display",
-            "block",
-            "important"
-        );
+        document.documentElement.style.setProperty("display", "block", "important");
 
         // set inline styles to overwrite scroll-locks
         if (!skipScrollChanges) {
-            document.documentElement.style.setProperty(
-                "position",
-                "relative",
-                "important"
-            );
+            document.documentElement.style.setProperty("position", "relative", "important");
         }
-        document.documentElement.style.setProperty(
-            "overflow-y",
-            "scroll",
-            "important"
-        );
-        document.documentElement.style.setProperty(
-            "width",
-            "100%",
-            "important"
-        );
-        document.documentElement.style.setProperty(
-            "height",
-            "auto",
-            "important"
-        );
-        document.documentElement.style.setProperty(
-            "max-width",
-            "none",
-            "important"
-        );
+        document.documentElement.style.setProperty("overflow-y", "scroll", "important");
+        document.documentElement.style.setProperty("width", "100%", "important");
+        document.documentElement.style.setProperty("height", "auto", "important");
+        document.documentElement.style.setProperty("max-width", "none", "important");
         document.documentElement.style.setProperty("margin", "0", "important");
         document.documentElement.style.setProperty("padding", "0", "important");
     }
@@ -157,11 +131,7 @@ export default class BodyStyleModifier implements PageModifier {
 
         document.body.style.setProperty("padding", "30px 50px", "important");
         document.body.style.setProperty("min-width", "0", "important");
-        document.body.style.setProperty(
-            "max-width",
-            "var(--lindy-pagewidth)",
-            "important"
-        );
+        document.body.style.setProperty("max-width", "var(--lindy-pagewidth)", "important");
         document.body.style.setProperty("display", "block", "important");
         document.body.style.setProperty("height", "auto", "important");
 
@@ -198,11 +168,7 @@ export default class BodyStyleModifier implements PageModifier {
             `-${this.scrollLockPrevPos}px`,
             "important"
         );
-        document.documentElement.style.setProperty(
-            "position",
-            "fixed",
-            "important"
-        );
+        document.documentElement.style.setProperty("position", "fixed", "important");
 
         this.observeStyleChanges(true);
     }
@@ -210,11 +176,7 @@ export default class BodyStyleModifier implements PageModifier {
     disableScrollLock() {
         this.unObserveStyleChanges();
 
-        document.documentElement.style.setProperty(
-            "position",
-            "relative",
-            "important"
-        );
+        document.documentElement.style.setProperty("position", "relative", "important");
         document.documentElement.style.setProperty("top", "0", "important");
         window.scrollTo(0, this.scrollLockPrevPos);
 

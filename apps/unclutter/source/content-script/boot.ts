@@ -4,10 +4,7 @@ import {
     isDeniedForDomain,
     isNonLeafPage,
 } from "../common/articleDetection";
-import {
-    enableBootUnclutterMessage,
-    getFeatureFlag,
-} from "../common/featureFlags";
+import { enableBootUnclutterMessage, getFeatureFlag } from "../common/featureFlags";
 import browser from "../common/polyfill";
 import { getDomainFrom } from "../common/util";
 import { displayToast } from "../overlay/toast";
@@ -44,22 +41,14 @@ async function boot() {
         isLikelyArticle(domain);
     }
 
-    if (
-        [
-            "unclutter.lindylearn.io",
-            "library.lindylearn.io",
-            "localhost",
-        ].includes(domain)
-    ) {
+    if (["unclutter.lindylearn.io", "library.lindylearn.io", "localhost"].includes(domain)) {
         listenForPageEvents();
     }
 }
 
 async function isLikelyArticle(domain: string) {
     const configuredEnable = await isConfiguredToEnable(domain);
-    const enableUnclutterMessage = await getFeatureFlag(
-        enableBootUnclutterMessage
-    );
+    const enableUnclutterMessage = await getFeatureFlag(enableBootUnclutterMessage);
     if (configuredEnable) {
         enablePageView("allowlisted");
     } else if (enableUnclutterMessage) {
@@ -69,9 +58,7 @@ async function isLikelyArticle(domain: string) {
 
 async function showUnclutterMessage() {
     if (document.readyState !== "complete") {
-        await new Promise((resolve) =>
-            window.addEventListener("load", resolve)
-        );
+        await new Promise((resolve) => window.addEventListener("load", resolve));
     }
 
     displayToast("Unclutter article", () => {
@@ -92,11 +79,9 @@ function enablePageView(trigger) {
 function listenForPageEvents() {
     window.addEventListener("message", function (event) {
         if (
-            [
-                "openOptionsPage",
-                "openLinkWithUnclutter",
-                "setLibraryAuth",
-            ].includes(event.data.event)
+            ["openOptionsPage", "openLinkWithUnclutter", "setLibraryAuth"].includes(
+                event.data.event
+            )
         ) {
             browser.runtime.sendMessage(event.data);
         }

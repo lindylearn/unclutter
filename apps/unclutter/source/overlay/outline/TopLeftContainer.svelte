@@ -1,11 +1,7 @@
 <script lang="ts">
     // organize-imports-ignore
     import { dismissedFeedbackMessage } from "../../common/featureFlags";
-    import {
-        getFeatureFlag,
-        setFeatureFlag,
-        showFeedbackMessage,
-    } from "../../common/featureFlags";
+    import { getFeatureFlag, setFeatureFlag, showFeedbackMessage } from "../../common/featureFlags";
     import { LibraryState } from "../../common/schema";
     import {
         getRemoteFeatureFlag,
@@ -52,9 +48,7 @@
         updateMessages = messages;
     });
     function dismissUpdateMessage(dismissedVersion: string) {
-        updateMessages = updateMessages.filter(
-            ({ version }) => version !== dismissedVersion
-        );
+        updateMessages = updateMessages.filter(({ version }) => version !== dismissedVersion);
         saveDismissedVersionMessage(dismissedVersion);
         // event emitted in component
     }
@@ -62,11 +56,7 @@
 
 <div id="lindy-info-topleft-content" class="font-text flex flex-col gap-2">
     {#if libraryState?.libraryEnabled}
-        <LibraryMessage
-            {libraryState}
-            {libraryModalModifier}
-            {darkModeEnabled}
-        />
+        <LibraryMessage {libraryState} {libraryModalModifier} {darkModeEnabled} />
     {/if}
 
     <Outline

@@ -26,19 +26,9 @@ export async function captureUrl(
     // clean up page for screenshot
     await page.evaluate(() => {
         console.log("patching!");
-        document.documentElement.style.setProperty(
-            "background",
-            "transparent",
-            "important"
-        );
-        document.documentElement.style.setProperty(
-            "--lindy-active-font-size",
-            "20px"
-        );
-        document.documentElement.style.setProperty(
-            "--lindy-pagewidth",
-            "750px"
-        );
+        document.documentElement.style.setProperty("background", "transparent", "important");
+        document.documentElement.style.setProperty("--lindy-active-font-size", "20px");
+        document.documentElement.style.setProperty("--lindy-pagewidth", "750px");
         document.body.style.removeProperty("box-shadow");
 
         document.getElementById("lindy-page-settings-pageadjacent")?.remove();
@@ -53,9 +43,7 @@ export async function captureUrl(
         console.error(`Error: no body tag`);
         return;
     }
-    const textContent = await body.evaluate(
-        (el: HTMLBodyElement) => el.innerText
-    );
+    const textContent = await body.evaluate((el: HTMLBodyElement) => el.innerText);
     const wordCount = textContent.trim().split(/\s+/).length;
     if (wordCount < 250) {
         console.error(`Error: page contains less than 250 words`);

@@ -1,11 +1,7 @@
 import React, { useState } from "react";
 import { ForceGraphInstance } from "force-graph";
 
-import {
-    getDomain,
-    getRandomLightColor,
-    openArticleResilient,
-} from "../../../common";
+import { getDomain, getRandomLightColor, openArticleResilient } from "../../../common";
 import { CustomGraphNode } from "./data";
 import { readingProgressFullClamp, Topic } from "../../../store";
 import { ResourceStat } from "../numbers";
@@ -77,19 +73,12 @@ export function NodeTooltip({
                     </div> */}
                 </div>
                 <div className="mt-0.5 mb-1 flex justify-between">
-                    <div className="text-neutral-500 dark:text-stone-400">
-                        {domain}
-                    </div>
-                    {readingProgress !== 1 &&
-                        word_count >= 200 &&
-                        domain.length < 19 && (
-                            <div className="text-neutral-500 dark:text-stone-400">
-                                {Math.round(
-                                    (word_count / 200) * (1 - readingProgress)
-                                )}{" "}
-                                min left
-                            </div>
-                        )}
+                    <div className="text-neutral-500 dark:text-stone-400">{domain}</div>
+                    {readingProgress !== 1 && word_count >= 200 && domain.length < 19 && (
+                        <div className="text-neutral-500 dark:text-stone-400">
+                            {Math.round((word_count / 200) * (1 - readingProgress))} min left
+                        </div>
+                    )}
 
                     {/* {readingProgress === 1 && (
                     <ResourceStat type="highlights" value={2} />
@@ -100,15 +89,9 @@ export function NodeTooltip({
                     className="progress bg-lindy dark:bg-lindyDark absolute bottom-0 left-0 h-[7px] w-full rounded-r transition-all"
                     style={{
                         // @ts-ignore
-                        "--progress": `${
-                            Math.max(reading_progress, 0.05) * 100
-                        }%`,
+                        "--progress": `${Math.max(reading_progress, 0.05) * 100}%`,
                         background:
-                            currentTopic &&
-                            getRandomLightColor(
-                                currentTopic.id,
-                                darkModeEnabled
-                            ),
+                            currentTopic && getRandomLightColor(currentTopic.id, darkModeEnabled),
                     }}
                 />
             </div>

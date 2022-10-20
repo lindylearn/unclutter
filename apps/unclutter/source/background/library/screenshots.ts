@@ -29,11 +29,7 @@ export async function captureActiveTabScreenshot(
 
     await new Promise((resolve) => setTimeout(resolve, 1000)); // wait a bit
     start = performance.now();
-    base64Screenshot = await scaleImage(
-        base64Screenshot,
-        bodyRect,
-        devicePixelRatio
-    );
+    base64Screenshot = await scaleImage(base64Screenshot, bodyRect, devicePixelRatio);
     duration = Math.round(performance.now() - start);
     console.log(`Cropped article screenshot in ${duration}ms.`);
 
@@ -52,10 +48,7 @@ async function scaleImage(
     const targetHeight = 160 * devicePixelRatio;
 
     // @ts-ignore
-    const canvas: OffscreenCanvas = new OffscreenCanvas(
-        targetWidth,
-        targetHeight
-    );
+    const canvas: OffscreenCanvas = new OffscreenCanvas(targetWidth, targetHeight);
     const context: CanvasRenderingContext2D = canvas.getContext("2d");
 
     // Image() not accessible in workers

@@ -1,8 +1,5 @@
 import { useCallback, useEffect } from "react";
-import {
-    createDraftAnnotation,
-    LindyAnnotation,
-} from "../../common/annotations/create";
+import { createDraftAnnotation, LindyAnnotation } from "../../common/annotations/create";
 import { reportEventContentScript } from "@unclutter/library-components/dist/common/messaging";
 import { createRemoteAnnotation } from "../common/api";
 import { deleteAnnotation, getAnnotations } from "../common/CRUD";
@@ -28,8 +25,7 @@ export function useFetchAnnotations(
             );
 
             annotations = annotations.filter(
-                (a) =>
-                    !a.quote_text || a.quote_text.length < maxSocialQuoteLength
+                (a) => !a.quote_text || a.quote_text.length < maxSocialQuoteLength
             );
 
             // send anchor event even for empty list in order to remove annotations later
@@ -43,35 +39,23 @@ export function useFetchAnnotations(
             // mutateAnnotations({ action: "set", annotations: pageNotes });
 
             // local state is set in handleWindowEventFactory() once anchored on page
-            window.top.postMessage(
-                { event: "anchorAnnotations", annotations },
-                "*"
-            );
+            window.top.postMessage({ event: "anchorAnnotations", annotations }, "*");
         })();
     }, [personalAnnotationsEnabled, enableSocialAnnotations]);
 }
 
-export function useAnnotationModifiers(
-    mutateAnnotations: React.Dispatch<AnnotationMutation>
-) {
+export function useAnnotationModifiers(mutateAnnotations: React.Dispatch<AnnotationMutation>) {
     const createReply = useCallback(createReplyFactory(mutateAnnotations), []);
-    const deleteHideAnnotation = useCallback(
-        deleteHideAnnotationFactory(mutateAnnotations),
-        []
-    );
+    const deleteHideAnnotation = useCallback(deleteHideAnnotationFactory(mutateAnnotations), []);
     const updateAnnotation = useCallback(
-        (annotation: LindyAnnotation) =>
-            mutateAnnotations({ action: "update", annotation }),
+        (annotation: LindyAnnotation) => mutateAnnotations({ action: "update", annotation }),
         []
     );
     const onAnnotationHoverUpdate = useCallback(
         onAnnotationHoverUpdateFactory(mutateAnnotations),
         []
     );
-    const unfocusAnnotation = useCallback(
-        unfocusAnnotationFactory(mutateAnnotations),
-        []
-    );
+    const unfocusAnnotation = useCallback(unfocusAnnotationFactory(mutateAnnotations), []);
 
     return {
         createReply,
@@ -82,13 +66,8 @@ export function useAnnotationModifiers(
     };
 }
 
-function createReplyFactory(
-    mutateAnnotations: React.Dispatch<AnnotationMutation>
-) {
-    return async function (
-        parent: LindyAnnotation,
-        threadStart: LindyAnnotation
-    ) {
+function createReplyFactory(mutateAnnotations: React.Dispatch<AnnotationMutation>) {
+    return async function (parent: LindyAnnotation, threadStart: LindyAnnotation) {
         const reply = createDraftAnnotation(parent.url, null, parent.id);
 
         // dfs as there may be arbitrary nesting
@@ -119,13 +98,8 @@ function createReplyFactory(
     };
 }
 
-function deleteHideAnnotationFactory(
-    mutateAnnotations: React.Dispatch<AnnotationMutation>
-) {
-    return function (
-        annotation: LindyAnnotation,
-        threadStart?: LindyAnnotation
-    ) {
+function deleteHideAnnotationFactory(mutateAnnotations: React.Dispatch<AnnotationMutation>) {
+    return function (annotation: LindyAnnotation, threadStart?: LindyAnnotation) {
         // delete from local state first
         if (threadStart) {
             // remove just this reply
@@ -134,9 +108,7 @@ function deleteHideAnnotationFactory(
             function removeReplyDfs(current: LindyAnnotation) {
                 if (current.replies.some((a) => a.id === annotation.id)) {
                     // found reply, modify reference
-                    current.replies = current.replies.filter(
-                        (a) => a.id !== annotation.id
-                    );
+                    current.replies = current.replies.filter((a) => a.id !== annotation.id);
                     return;
                 }
 
@@ -173,24 +145,14 @@ function deleteHideAnnotationFactory(
     };
 }
 
-function onAnnotationHoverUpdateFactory(
-    mutateAnnotations: React.Dispatch<AnnotationMutation>
-) {
-    return function onAnnotationHoverUpdate(
-        annotation: LindyAnnotation,
-        hoverActive: boolean
-    ) {
-        window.top.postMessage(
-            { event: "onAnnotationHoverUpdate", annotation, hoverActive },
-            "*"
-        );
+function onAnnotationHoverUpdateFactory(mutateAnnotations: React.Dispatch<AnnotationMutation>) {
+    return function onAnnotationHoverUpdate(annotation: LindyAnnotation, hoverActive: boolean) {
+        window.top.postMessage({ event: "onAnnotationHoverUpdate", annotation, hoverActive }, "*");
     };
 }
 
 // unfocus used for hiding social annotations
-function unfocusAnnotationFactory(
-    mutateAnnotations: React.Dispatch<AnnotationMutation>
-) {
+function unfocusAnnotationFactory(mutateAnnotations: React.Dispatch<AnnotationMutation>) {
     return function unfocusAnnotation(annotation: LindyAnnotation) {
         mutateAnnotations({
             action: "focusAnnotation",

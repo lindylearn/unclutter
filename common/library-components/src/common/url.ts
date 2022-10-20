@@ -10,11 +10,7 @@ export function getUrlHash(url: string): string {
 // NOTE: Keep in sync with backend WebpageConstuctor.normalize_url()
 export function normalizeUrl(url: string): string {
     // remove protocol
-    url = url
-        .toLowerCase()
-        .replace("www.", "")
-        .replace(".html", "")
-        .replace(".htm", "");
+    url = url.toLowerCase().replace("www.", "").replace(".html", "").replace(".htm", "");
 
     // remove url params
     // NOTE: be careful here -- e.g. substack adds ?s=r

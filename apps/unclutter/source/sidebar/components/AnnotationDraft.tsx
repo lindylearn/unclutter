@@ -46,15 +46,14 @@ function AnnotationDraft({
 
     // debounce local state and remote updates
     // debounce instead of throttle so that newest call eventually runs
-    const debouncedUpdateApi: (
-        annotation: LindyAnnotation
-    ) => Promise<LindyAnnotation> = useCallback(
-        debounce((a) => {
-            updateAnnotation(a); // update app root state
-            updateAnnotationApi(a);
-        }, 1000),
-        []
-    );
+    const debouncedUpdateApi: (annotation: LindyAnnotation) => Promise<LindyAnnotation> =
+        useCallback(
+            debounce((a) => {
+                updateAnnotation(a); // update app root state
+                updateAnnotationApi(a);
+            }, 1000),
+            []
+        );
 
     // keep local state
     const [localAnnotation, setLocalAnnotation] = React.useState(annotation);
@@ -140,9 +139,7 @@ function AnnotationDraft({
                     className="lindy-tooltp lindy-fade cursor-pointer transition-all hover:text-gray-600 hover:drop-shadow-md"
                     onClick={deleteWithConfirmStep}
                     data-title={
-                        showDeleteConfirmation
-                            ? "Click again to confirm"
-                            : "Delete annotation"
+                        showDeleteConfirmation ? "Click again to confirm" : "Delete annotation"
                     }
                     onMouseLeave={() =>
                         // timout to fade-out tooltip first
@@ -161,9 +158,7 @@ function AnnotationDraft({
                     <div
                         className={
                             "public-toggle lindy-tooltp lindy-fade cursor-pointer transition-all hover:text-gray-600 hover:drop-shadow-md " +
-                            (localAnnotation.isPublic
-                                ? "is-public visible text-gray-600"
-                                : "")
+                            (localAnnotation.isPublic ? "is-public visible text-gray-600" : "")
                         }
                         onClick={() =>
                             updateAnnotationLocalFirst({
@@ -171,11 +166,7 @@ function AnnotationDraft({
                                 isPublic: !localAnnotation.isPublic,
                             })
                         }
-                        data-title={
-                            localAnnotation.isPublic
-                                ? "Set private"
-                                : "Set public"
-                        }
+                        data-title={localAnnotation.isPublic ? "Set private" : "Set public"}
                     >
                         <svg className="h-3.5" viewBox="0 0 512 512">
                             <path

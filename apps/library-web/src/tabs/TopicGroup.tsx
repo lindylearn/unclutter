@@ -7,11 +7,7 @@ import {
     TopicEmoji,
     StaticArticleList,
 } from "@unclutter/library-components/dist/components";
-import {
-    useSubscribe,
-    Topic,
-    ReplicacheContext,
-} from "@unclutter/library-components/dist/store";
+import { useSubscribe, Topic, ReplicacheContext } from "@unclutter/library-components/dist/store";
 
 export default function TopicGroupTab({ group_id }) {
     const rep = useContext(ReplicacheContext);
@@ -28,9 +24,7 @@ export default function TopicGroupTab({ group_id }) {
 
                 // get state
                 const group = await rep.query.getTopic(group_id);
-                const children = await rep.query.getGroupTopicChildren(
-                    group_id
-                );
+                const children = await rep.query.getGroupTopicChildren(group_id);
 
                 // redirect cluster ids
                 if (group_id.endsWith("_")) {
@@ -43,9 +37,8 @@ export default function TopicGroupTab({ group_id }) {
                 let selectedTopicName = window.location.hash.slice(1);
                 if (selectedTopicName) {
                     selectedTopic =
-                        children.find(
-                            (c) => topicNameToUrl(c.name) == selectedTopicName
-                        ) || children[0];
+                        children.find((c) => topicNameToUrl(c.name) == selectedTopicName) ||
+                        children[0];
                 } else {
                     selectedTopic = children[0];
                 }
@@ -87,11 +80,7 @@ export default function TopicGroupTab({ group_id }) {
                     </h2>
                 </Link>
 
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 256 512"
-                    className="w-2"
-                >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512" className="w-2">
                     <path
                         fill="currentColor"
                         d="M64 448c-8.188 0-16.38-3.125-22.62-9.375c-12.5-12.5-12.5-32.75 0-45.25L178.8 256L41.38 118.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l160 160c12.5 12.5 12.5 32.75 0 45.25l-160 160C80.38 444.9 72.19 448 64 448z"
@@ -130,20 +119,14 @@ export default function TopicGroupTab({ group_id }) {
                                 parseInt(selectedTopic.id.slice(0, -1))!;
 
                             return cloneElement(child, {
-                                classNames: moveToLeft
-                                    ? "move-tab-left"
-                                    : "move-tab-right",
+                                classNames: moveToLeft ? "move-tab-left" : "move-tab-right",
                             });
                         }
 
                         return child;
                     }}
                 >
-                    <CSSTransition
-                        timeout={500}
-                        classNames="tab-page"
-                        key={selectedTopic?.id}
-                    >
+                    <CSSTransition timeout={500} classNames="tab-page" key={selectedTopic?.id}>
                         <div className="">
                             <StaticArticleList
                                 articles={articles}

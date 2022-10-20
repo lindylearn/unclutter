@@ -29,9 +29,7 @@ export default class CSSOMProvider {
 
                 // Ignore extension overrides, but re-process stylesheets proxied in boot.js
                 if (
-                    ownerNode?.classList.contains(
-                        "lindylearn-document-override"
-                    ) &&
+                    ownerNode?.classList.contains("lindylearn-document-override") &&
                     !ownerNode?.classList.contains("lindy-stylesheet-proxy")
                 ) {
                     return;
@@ -40,18 +38,10 @@ export default class CSSOMProvider {
                 // Exclude font stylesheets
                 if (sheet.href) {
                     const url = new URL(sheet.href);
-                    if (
-                        [
-                            "fonts.googleapis.com",
-                            "pro.fontawesome.com",
-                        ].includes(url.hostname)
-                    ) {
+                    if (["fonts.googleapis.com", "pro.fontawesome.com"].includes(url.hostname)) {
                         return;
                     }
-                    if (
-                        url.pathname.includes("font") ||
-                        url.pathname.endsWith(".woff2")
-                    ) {
+                    if (url.pathname.includes("font") || url.pathname.endsWith(".woff2")) {
                         return;
                     }
                 }
@@ -108,9 +98,7 @@ export default class CSSOMProvider {
             }
         }
 
-        this.stylesheets.map((sheet) =>
-            processGroupRule(sheet as unknown as CSSGroupingRule)
-        );
+        this.stylesheets.map((sheet) => processGroupRule(sheet as unknown as CSSGroupingRule));
     }
 
     async reenableOriginalStylesheets() {
@@ -119,9 +107,7 @@ export default class CSSOMProvider {
             elem.disabled = false;
         });
 
-        document
-            .querySelectorAll(".lindy-stylesheet-proxy")
-            .forEach((e) => e.remove());
+        document.querySelectorAll(".lindy-stylesheet-proxy").forEach((e) => e.remove());
     }
 }
 
@@ -154,27 +140,21 @@ function transformProxyCssText(cssText, baseUrl) {
 
     // New inline style will have different base ref than imported stylesheets, so replace relative file references
     // e.g. https://arstechnica.com/science/2022/03/plant-based-nanocrystals-could-be-the-secret-to-preventing-crunchy-ice-cream/
-    cssText = cssText.replace(
-        /url\((('.+?')|(".+?")|([^\)]*?))\)/g,
-        (match) => {
-            try {
-                const relativeUrl = match
-                    .replace(/^url\((.*)\)$/, "$1")
-                    .trim()
-                    .replace(/^"(.*)"$/, "$1")
-                    .replace(/^'(.*)'$/, "$1");
-                const absoluteUrl = new URL(relativeUrl, baseUrl);
+    cssText = cssText.replace(/url\((('.+?')|(".+?")|([^\)]*?))\)/g, (match) => {
+        try {
+            const relativeUrl = match
+                .replace(/^url\((.*)\)$/, "$1")
+                .trim()
+                .replace(/^"(.*)"$/, "$1")
+                .replace(/^'(.*)'$/, "$1");
+            const absoluteUrl = new URL(relativeUrl, baseUrl);
 
-                return `url("${absoluteUrl}")`;
-            } catch (err) {
-                console.error(
-                    "Not able to replace relative URL with Absolute URL, skipping",
-                    err
-                );
-                return match;
-            }
+            return `url("${absoluteUrl}")`;
+        } catch (err) {
+            console.error("Not able to replace relative URL with Absolute URL, skipping", err);
+            return match;
         }
-    );
+    });
 
     // TODO parse imported sheets as well? or get notified through listener?
     // TODO find example site for import rules

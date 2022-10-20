@@ -61,12 +61,7 @@ export function rgbToHSL({ r: r255, g: g255, b: b255, a = 1 }: RGBA): HSLA {
         return { h: 0, s: 0, l, a };
     }
 
-    let h =
-        (max === r
-            ? ((g - b) / c) % 6
-            : max === g
-            ? (b - r) / c + 2
-            : (r - g) / c + 4) * 60;
+    let h = (max === r ? ((g - b) / c) % 6 : max === g ? (b - r) / c + 2 : (r - g) / c + 4) * 60;
     if (h < 0) {
         h += 360;
     }
@@ -97,10 +92,7 @@ function toFixed(n: number, digits = 0) {
 export function rgbToString(rgb: RGBA) {
     const { r, g, b, a } = rgb;
     if (a != null && a < 1) {
-        return `rgba(${toFixed(r)}, ${toFixed(g)}, ${toFixed(b)}, ${toFixed(
-            a,
-            2
-        )})`;
+        return `rgba(${toFixed(r)}, ${toFixed(g)}, ${toFixed(b)}, ${toFixed(a, 2)})`;
     }
     return `rgb(${toFixed(r)}, ${toFixed(g)}, ${toFixed(b)})`;
 }
@@ -116,9 +108,7 @@ export function rgbToHexString({ r, g, b, a }: RGBA) {
 export function hslToString(hsl: HSLA) {
     const { h, s, l, a } = hsl;
     if (a != null && a < 1) {
-        return `hsla(${toFixed(h)}, ${toFixed(s * 100)}%, ${toFixed(
-            l * 100
-        )}%, ${toFixed(a, 2)})`;
+        return `hsla(${toFixed(h)}, ${toFixed(s * 100)}%, ${toFixed(l * 100)}%, ${toFixed(a, 2)})`;
     }
     return `hsl(${toFixed(h)}, ${toFixed(s * 100)}%, ${toFixed(l * 100)}%)`;
 }
@@ -191,11 +181,7 @@ function getNumbers($color: string) {
     return numbers;
 }
 
-function getNumbersFromString(
-    str: string,
-    range: number[],
-    units: { [unit: string]: number }
-) {
+function getNumbersFromString(str: string, range: number[], units: { [unit: string]: number }) {
     const raw = getNumbers(str);
     const unitsList = Object.entries(units);
     const numbers = raw
@@ -204,10 +190,7 @@ function getNumbersFromString(
             let n: number;
             const unit = unitsList.find(([u]) => r.endsWith(u));
             if (unit) {
-                n =
-                    (parseFloat(r.substring(0, r.length - unit[0].length)) /
-                        unit[1]) *
-                    range[i];
+                n = (parseFloat(r.substring(0, r.length - unit[0].length)) / unit[1]) * range[i];
             } else {
                 n = parseFloat(r);
             }
@@ -240,19 +223,14 @@ function parseHex($hex: string) {
     switch (h.length) {
         case 3:
         case 4: {
-            const [r, g, b] = [0, 1, 2].map((i) =>
-                parseInt(`${h[i]}${h[i]}`, 16)
-            );
+            const [r, g, b] = [0, 1, 2].map((i) => parseInt(`${h[i]}${h[i]}`, 16));
             const a = h.length === 3 ? 1 : parseInt(`${h[3]}${h[3]}`, 16) / 255;
             return { r, g, b, a };
         }
         case 6:
         case 8: {
-            const [r, g, b] = [0, 2, 4].map((i) =>
-                parseInt(h.substring(i, i + 2), 16)
-            );
-            const a =
-                h.length === 6 ? 1 : parseInt(h.substring(6, 8), 16) / 255;
+            const [r, g, b] = [0, 2, 4].map((i) => parseInt(h.substring(i, i + 2), 16));
+            const a = h.length === 6 ? 1 : parseInt(h.substring(6, 8), 16) / 255;
             return { r, g, b, a };
         }
     }
@@ -286,8 +264,7 @@ const isCharDigit = (char: string) => char >= "0" && char <= "9";
 // f(5) => 1
 // f(123) => 3
 // f(912412) => 6
-const getAmountOfDigits = (number: number) =>
-    Math.floor(Math.log10(number)) + 1;
+const getAmountOfDigits = (number: number) => Math.floor(Math.log10(number)) + 1;
 
 // lowerCalcExpression is a helper function that tries to remove `calc(...)`
 // expressions from the given string. It can only lower expressions to a certain
@@ -297,11 +274,7 @@ export function lowerCalcExpression(color: string): string {
     // the calc(...) expression.
     let searchIndex = 0;
 
-    const replaceBetweenIndices = (
-        start: number,
-        end: number,
-        replacement: string
-    ) => {
+    const replaceBetweenIndices = (start: number, end: number, replacement: string) => {
         color = color.substring(0, start) + replacement + color.substring(end);
     };
 

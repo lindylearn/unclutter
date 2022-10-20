@@ -88,9 +88,7 @@
     tooltip={getTooltip(currentUserSetting)}
     tooltipReverse
     onClick={toggleState}
-    className={(currentUserSetting === "allow"
-        ? "lindy-domain-switch-wiggle "
-        : " ") +
+    className={(currentUserSetting === "allow" ? "lindy-domain-switch-wiggle " : " ") +
         (isInitialSetting && currentUserSetting === "allow"
             ? "lindy-domain-switch-wiggle-initial-delay"
             : "")}

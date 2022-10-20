@@ -23,10 +23,7 @@
         socialHighlightsEnabled = !socialHighlightsEnabled;
 
         annotationsModifer.setShowSocialAnnotations(socialHighlightsEnabled);
-        setFeatureFlag(
-            enableSocialCommentsFeatureFlag,
-            socialHighlightsEnabled
-        );
+        setFeatureFlag(enableSocialCommentsFeatureFlag, socialHighlightsEnabled);
         if (socialHighlightsEnabled) {
             browser.runtime.sendMessage(null, {
                 event: "showAnnotationsCount",

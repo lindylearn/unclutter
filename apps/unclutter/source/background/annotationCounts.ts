@@ -21,17 +21,13 @@ export async function loadAnnotationCountsToMemory() {
         });
 
         let duration = Math.round(performance.now() - start);
-        console.log(
-            `Loaded ${lines.length} annotation counts to memory in ${duration}ms`
-        );
+        console.log(`Loaded ${lines.length} annotation counts to memory in ${duration}ms`);
     } catch (err) {
         console.error(`Failed to load URL counts:`, err);
     }
 }
 
-export async function getSocialCommentsCount(
-    url: string
-): Promise<number | null> {
+export async function getSocialCommentsCount(url: string): Promise<number | null> {
     const hash = getUrlHash(url).slice(0, 32);
     return annotationCounts[hash] || null;
 }

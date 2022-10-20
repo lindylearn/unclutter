@@ -1,10 +1,6 @@
 import React from "react";
 import { useDroppable } from "@dnd-kit/core";
-import {
-    rectSortingStrategy,
-    SortableContext,
-    useSortable,
-} from "@dnd-kit/sortable";
+import { rectSortingStrategy, SortableContext, useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
 import { useContext } from "react";
@@ -37,11 +33,7 @@ export function DraggableArticleList({
     });
 
     return (
-        <SortableContext
-            id={listId}
-            items={articles}
-            strategy={rectSortingStrategy}
-        >
+        <SortableContext id={listId} items={articles} strategy={rectSortingStrategy}>
             <div
                 className={clsx(
                     "article-list animate-fadein flex h-full flex-wrap content-start gap-3",
@@ -53,9 +45,7 @@ export function DraggableArticleList({
                     <SortableItem
                         key={article.id}
                         listState={
-                            draggableContext?.activeArticle?.id === article.id
-                                ? "active"
-                                : "static"
+                            draggableContext?.activeArticle?.id === article.id ? "active" : "static"
                         }
                         article={article}
                         listIndex={listIndex}
@@ -66,25 +56,18 @@ export function DraggableArticleList({
                 ))}
                 {centerGrid &&
                     !small &&
-                    Array(
-                        Math.max(
-                            0,
-                            (articlesToShow || articles.length) -
-                                articles.length
-                        )
-                    )
+                    Array(Math.max(0, (articlesToShow || articles.length) - articles.length))
                         .fill(0)
-                        .map((_, index) => (
-                            <div key={index} className="h-52 w-44" />
-                        ))}
+                        .map((_, index) => <div key={index} className="h-52 w-44" />)}
             </div>
         </SortableContext>
     );
 }
 
 function SortableItem(props) {
-    const { attributes, listeners, setNodeRef, transform, transition } =
-        useSortable({ id: props.article.id });
+    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
+        id: props.article.id,
+    });
 
     const style = {
         transform: CSS.Transform.toString(transform),

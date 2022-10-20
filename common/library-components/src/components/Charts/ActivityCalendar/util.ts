@@ -38,24 +38,18 @@ export function groupByWeeks(
     // not the specified weekday, the desired day one week earlier is selected.
     const firstDate = parseISO(normalizedDays[0].date);
     const firstCalendarDate =
-        getDay(firstDate) === weekStart
-            ? firstDate
-            : subWeeks(nextDay(firstDate, weekStart), 1);
+        getDay(firstDate) === weekStart ? firstDate : subWeeks(nextDay(firstDate, weekStart), 1);
 
     // To correctly group contributions by week, it is necessary to left pad the
     // list because the first date might not be desired weekday.
     const paddedDays = [
-        ...Array(differenceInCalendarDays(firstDate, firstCalendarDate)).fill(
-            undefined
-        ),
+        ...Array(differenceInCalendarDays(firstDate, firstCalendarDate)).fill(undefined),
         ...normalizedDays,
     ];
 
     return Array(Math.ceil(paddedDays.length / 7))
         .fill(undefined)
-        .map((_, calendarWeek) =>
-            paddedDays.slice(calendarWeek * 7, calendarWeek * 7 + 7)
-        );
+        .map((_, calendarWeek) => paddedDays.slice(calendarWeek * 7, calendarWeek * 7 + 7));
 }
 
 function normalizeCalendarDays(days: Array<Day>): Array<Day> {
@@ -112,10 +106,7 @@ export function getMonthLabels(
         }, [])
         .filter((label, index, labels) => {
             if (index === 0) {
-                return (
-                    labels[1] &&
-                    labels[1].x - label.x > MIN_DISTANCE_MONTH_LABELS
-                );
+                return labels[1] && labels[1].x - label.x > MIN_DISTANCE_MONTH_LABELS;
             }
 
             return true;
@@ -190,15 +181,7 @@ export const DEFAULT_MONTH_LABELS = [
     "Dec",
 ];
 
-export const DEFAULT_WEEKDAY_LABELS = [
-    "Sun",
-    "Mon",
-    "Tue",
-    "Wed",
-    "Thu",
-    "Fri",
-    "Sat",
-];
+export const DEFAULT_WEEKDAY_LABELS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 export const DEFAULT_LABELS = {
     months: DEFAULT_MONTH_LABELS,

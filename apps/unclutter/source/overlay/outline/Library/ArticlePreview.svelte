@@ -61,9 +61,7 @@
     </div>
     <div
         class="absolute top-0 left-0 h-full w-full rounded-lg bg-cover"
-        style={`background-image: url(${imageUrl}${
-            article["bust_image_cache"] ? "?" : ""
-        });`}
+        style={`background-image: url(${imageUrl}${article["bust_image_cache"] ? "?" : ""});`}
     />
 
     <svg

@@ -5,7 +5,7 @@ export function EmptyLibraryMessage() {
         <div>
             To add articles to your library, activate{" "}
             <a
-                className="inline-block font-bold cursor-pointer hover:rotate-1 transition-all"
+                className="inline-block cursor-pointer font-bold transition-all hover:rotate-1"
                 href="https://unclutter.lindylearn.io"
                 target="_blank"
                 rel="noreferrer"
@@ -14,7 +14,7 @@ export function EmptyLibraryMessage() {
             </a>{" "}
             on web pages or{" "}
             <Link to="/import">
-                <a className="inline-block font-bold cursor-pointer hover:rotate-1 transition-all">
+                <a className="inline-block cursor-pointer font-bold transition-all hover:rotate-1">
                     manually import articles
                 </a>
             </Link>
@@ -26,8 +26,7 @@ export function EmptyLibraryMessage() {
 export function NoTopicsMessage() {
     return (
         <div className="col-span-6">
-            Library topics become available once you import at least 20
-            articles.
+            Library topics become available once you import at least 20 articles.
         </div>
     );
 }

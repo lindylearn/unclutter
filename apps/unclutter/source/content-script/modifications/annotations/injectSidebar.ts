@@ -23,14 +23,10 @@ export function removeSidebar() {
     existingSidebar?.parentNode.removeChild(existingSidebar);
 }
 
-export async function waitUntilIframeLoaded(
-    iframe: HTMLIFrameElement
-): Promise<void> {
+export async function waitUntilIframeLoaded(iframe: HTMLIFrameElement): Promise<void> {
     await new Promise((resolve) => iframe.addEventListener("load", resolve));
 }
 
 function getSidebarIframe(): HTMLIFrameElement {
-    return document.getElementById(
-        "lindy-annotations-bar"
-    ) as HTMLIFrameElement;
+    return document.getElementById("lindy-annotations-bar") as HTMLIFrameElement;
 }

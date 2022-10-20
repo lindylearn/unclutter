@@ -140,10 +140,7 @@ function getHeadingItems(): OutlineItem[] {
         let headingItem: OutlineItem;
         if (node.tagName.length === 2 && node.tagName[0] == "H") {
             headingItem = getHeadingNodeItem(node, index);
-        } else if (
-            node.className.includes("dropcap") ||
-            node.className.includes("drop-cap")
-        ) {
+        } else if (node.className.includes("dropcap") || node.className.includes("drop-cap")) {
             headingItem = getDropcapNodeItem(node);
         } else if (node.tagName === "STRONG" || node.tagName === "B") {
             headingItem = getSoftNodeItem(node);
@@ -154,9 +151,7 @@ function getHeadingItems(): OutlineItem[] {
         }
 
         const linkElem = (
-            node.parentElement.tagName === "A"
-                ? node.parentElement
-                : node.firstElementChild
+            node.parentElement.tagName === "A" ? node.parentElement : node.firstElementChild
         ) as HTMLAnchorElement | null;
         if (linkElem?.tagName === "A") {
             // often related link, e.g. https://www.worksinprogress.co/issue/womb-for-improvement/, https://www.propublica.org/article/filing-taxes-could-be-free-simple-hr-block-intuit-lobbying-against-it
@@ -191,11 +186,7 @@ function getHeadingItems(): OutlineItem[] {
         // ) {
         //     continue;
         // }
-        if (
-            endBlocklist.some((word) =>
-                headingItem.title.toLowerCase().includes(word)
-            )
-        ) {
+        if (endBlocklist.some((word) => headingItem.title.toLowerCase().includes(word))) {
             break;
         }
         // exclude numbers, e.g. https://www.henricodolfing.com/2019/06/project-failure-case-study-knight-capital.html
@@ -213,10 +204,7 @@ function getHeadingItems(): OutlineItem[] {
     return outline;
 }
 
-function getHeadingNodeItem(
-    node: Element,
-    headingIndex: number
-): OutlineItem | null {
+function getHeadingNodeItem(node: Element, headingIndex: number): OutlineItem | null {
     // Ignore specific words & css classes
     const text = node.textContent;
     if (text.startsWith("By ")) {
@@ -248,10 +236,7 @@ function getHeadingNodeItem(
 
 // Paragraphs that highlight the first letter
 // e.g. https://www.newyorker.com/magazine/2022/04/11/the-unravelling-of-an-expert-on-serial-killers
-function getDropcapNodeItem(
-    node: Element,
-    recursion: number = 0
-): OutlineItem | null {
+function getDropcapNodeItem(node: Element, recursion: number = 0): OutlineItem | null {
     let text = node.textContent; // only visible text
 
     if (node?.getAttribute("aria-hidden") === "true") {
@@ -293,10 +278,7 @@ function getSoftNodeItem(node: Element): OutlineItem | null {
     // easier to match for true headings than to exclude non-matches here
     let isHeading = false;
 
-    if (
-        node.parentElement.childNodes.length === 1 &&
-        node.parentElement.tagName === "P"
-    ) {
+    if (node.parentElement.childNodes.length === 1 && node.parentElement.tagName === "P") {
         // single child of <p>
         // e.g. https://www.cadosecurity.com/cado-discovers-denonia-the-first-malware-specifically-targeting-lambda/
         isHeading = true;
@@ -323,9 +305,7 @@ function getSoftNodeItem(node: Element): OutlineItem | null {
 
     // infer heading level from font size (the larger the lower the level)
     // e.g. for https://waitbutwhy.com/2014/10/religion-for-the-nonreligious.html
-    const fontSizeLevel =
-        100 -
-        parseInt(window.getComputedStyle(node).fontSize.replace("px", ""));
+    const fontSizeLevel = 100 - parseInt(window.getComputedStyle(node).fontSize.replace("px", ""));
     // but keep them within bounds (explicit heading rank higher, dropcaps lower)
     const level = parseFloat(`8.${fontSizeLevel}`);
 
@@ -382,17 +362,14 @@ function collapseItems(headingItems: OutlineItem[]): OutlineItem[] {
             // stack items with the same or higher nesting level are complete now
             while (item.level <= currentStack[currentStack.length - 1].level) {
                 const completeItem = currentStack.pop();
-                currentStack[currentStack.length - 1].children.push(
-                    completeItem
-                );
+                currentStack[currentStack.length - 1].children.push(completeItem);
             }
             currentStack.push(item);
         }
     }
     while (
         currentStack.length >= 2 &&
-        currentStack[currentStack.length - 2].level <=
-            currentStack[currentStack.length - 1].level
+        currentStack[currentStack.length - 2].level <= currentStack[currentStack.length - 1].level
     ) {
         const completeItem = currentStack.pop();
         currentStack[currentStack.length - 1].children.push(completeItem);
@@ -410,16 +387,11 @@ export function createRootItem(): OutlineItem {
     };
 }
 
-function normalizeItemLevel(
-    item: OutlineItem,
-    currentLevel: number = 0
-): OutlineItem {
+function normalizeItemLevel(item: OutlineItem, currentLevel: number = 0): OutlineItem {
     return {
         ...item,
         level: currentLevel,
-        children: item.children.map((child) =>
-            normalizeItemLevel(child, currentLevel + 1)
-        ),
+        children: item.children.map((child) => normalizeItemLevel(child, currentLevel + 1)),
     };
 }
 

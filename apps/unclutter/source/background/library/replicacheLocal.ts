@@ -24,18 +24,12 @@ export async function processLocalReplicacheMessage({
     args?: any;
 }) {
     if (type === "query") {
-        const result = await accessors[methodName](
-            new LocalReadTransaction(),
-            ...args
-        );
+        const result = await accessors[methodName](new LocalReadTransaction(), ...args);
         // console.log(methodName, args, result);
 
         return result;
     } else if (type === "mutate") {
-        const result = await mutators[methodName](
-            new LocalWriteTransaction(),
-            args
-        );
+        const result = await mutators[methodName](new LocalWriteTransaction(), args);
         // console.log(methodName, args, result);
 
         // notify data subscribers
@@ -57,17 +51,11 @@ export async function processLocalReplicacheSubscribe(port: Runtime.Port) {
 
         const subscriberId = `${methodName}-${Date.now()}`;
         dataSubscribers[subscriberId] = async () => {
-            const newResult = await accessors[methodName](
-                new LocalReadTransaction(),
-                ...args
-            );
+            const newResult = await accessors[methodName](new LocalReadTransaction(), ...args);
 
             // skip if no change
             const prevResult = prevResults[subscriberId];
-            if (
-                prevResult &&
-                JSON.stringify(prevResult) === JSON.stringify(newResult)
-            ) {
+            if (prevResult && JSON.stringify(prevResult) === JSON.stringify(newResult)) {
                 return;
             }
             prevResults[subscriberId] = newResult;
@@ -104,10 +92,7 @@ export class LocalReadTransaction implements ReadTransaction {
     }
 }
 
-export class LocalWriteTransaction
-    extends LocalReadTransaction
-    implements WriteTransaction
-{
+export class LocalWriteTransaction extends LocalReadTransaction implements WriteTransaction {
     async put(key: string, value: JSONValue): Promise<void> {
         await idb.set(key, value, idbStore);
     }
@@ -162,9 +147,7 @@ class LocalScanResult<R> implements ScanResult<string, R> {
             this.toAsyncIterator(
                 idb
                     .entries(idbStore)
-                    .then(async (entries: [string, R][]) =>
-                        this.filterEntries(entries)
-                    )
+                    .then(async (entries: [string, R][]) => this.filterEntries(entries))
             )
         );
     }
@@ -188,16 +171,13 @@ class LocalScanResult<R> implements ScanResult<string, R> {
                 (e) => e[1].topic_id === this.options.prefix
             );
         } else if (this.options?.prefix) {
-            entries = entries.filter((e) =>
-                e[0].startsWith(this.options.prefix)
-            );
+            entries = entries.filter((e) => e[0].startsWith(this.options.prefix));
         }
 
         if (this.options?.start) {
             entries = entries.filter(
                 (e) =>
-                    (e[0] === this.options.start.key &&
-                        !this.options.start.exclusive) ||
+                    (e[0] === this.options.start.key && !this.options.start.exclusive) ||
                     e[0] > this.options.start.key
             );
         }

@@ -1,8 +1,5 @@
 import { LindyAnnotation } from "../../../common/annotations/create";
-import {
-    enableAnnotationsFeatureFlag,
-    getFeatureFlag,
-} from "../../../common/featureFlags";
+import { enableAnnotationsFeatureFlag, getFeatureFlag } from "../../../common/featureFlags";
 import LinkAnnotationsModifier from "../DOM/linksAnnotations";
 import { PageModifier, trackModifierExecution } from "../_interface";
 import {
@@ -12,15 +9,8 @@ import {
     updateOffsetsOnHeightChange,
 } from "./annotationsListener";
 import { removeAllHighlights } from "./highlightsApi";
-import {
-    injectSidebar,
-    removeSidebar,
-    waitUntilIframeLoaded,
-} from "./injectSidebar";
-import {
-    createSelectionListener,
-    removeSelectionListener,
-} from "./selectionListener";
+import { injectSidebar, removeSidebar, waitUntilIframeLoaded } from "./injectSidebar";
+import { createSelectionListener, removeSelectionListener } from "./selectionListener";
 
 @trackModifierExecution
 export default class AnnotationsModifier implements PageModifier {
@@ -51,19 +41,14 @@ export default class AnnotationsModifier implements PageModifier {
         });
 
         // always created anchor listener to handle social comments
-        createAnnotationListener(
-            this.sidebarIframe,
-            this.onAnnotationUpdate.bind(this)
-        );
+        createAnnotationListener(this.sidebarIframe, this.onAnnotationUpdate.bind(this));
         this.pageResizeObserver = updateOffsetsOnHeightChange(
             this.sidebarIframe,
             this.initialScollHeight
         );
 
         // annotations may be toggled independently
-        const annotationsEnabled = await getFeatureFlag(
-            enableAnnotationsFeatureFlag
-        );
+        const annotationsEnabled = await getFeatureFlag(enableAnnotationsFeatureFlag);
         if (annotationsEnabled) {
             this.enableAnnotations();
         }
@@ -100,10 +85,7 @@ export default class AnnotationsModifier implements PageModifier {
         // listeners need to be configured before rendering iframe to anchor annotations?
 
         // selection is only user interface for annotations
-        createSelectionListener(
-            this.sidebarIframe,
-            this.onAnnotationUpdate.bind(this)
-        );
+        createSelectionListener(this.sidebarIframe, this.onAnnotationUpdate.bind(this));
 
         sendSidebarEvent(this.sidebarIframe, {
             event: "setEnablePersonalAnnotations",
@@ -176,14 +158,9 @@ export default class AnnotationsModifier implements PageModifier {
     public annotationListeners: AnnotationListener[] = [];
 
     // private fn passed to selection listener (added) and annotations side events listener (anchored, removed)
-    private onAnnotationUpdate(
-        action: "set" | "add" | "remove",
-        annotations: LindyAnnotation[]
-    ) {
+    private onAnnotationUpdate(action: "set" | "add" | "remove", annotations: LindyAnnotation[]) {
         // console.log(action, annotations);
-        this.annotationListeners.map((listener) =>
-            listener(action, annotations)
-        );
+        this.annotationListeners.map((listener) => listener(action, annotations));
     }
 }
 

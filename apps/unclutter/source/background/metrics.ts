@@ -15,9 +15,7 @@ import { getInitialInstallVersion } from "../common/updateMessages";
 // Anonymously report usage events (if the user allowed it)
 // See https://github.com/lindylearn/unclutter/blob/main/docs/metrics.md
 export async function reportEvent(name: string, data = {}) {
-    const metricsEnabled = await getFeatureFlag(
-        collectAnonymousMetricsFeatureFlag
-    );
+    const metricsEnabled = await getFeatureFlag(collectAnonymousMetricsFeatureFlag);
     const isDev = await getFeatureFlag(isDevelopmentFeatureFlag);
     if (isDev) {
         // console.log(`Metric ${name}:`, data);
@@ -79,10 +77,7 @@ export async function reportSettings(version: string, isNewInstall: boolean) {
 
 let pageViewEnableTrigger;
 let pageViewEnableStartTime: Date;
-export async function reportEnablePageView(
-    trigger: string,
-    socialCommentsCount?: number
-) {
+export async function reportEnablePageView(trigger: string, socialCommentsCount?: number) {
     reportEvent("enablePageview", { trigger, socialCommentsCount });
 
     pageViewEnableTrigger = trigger;
@@ -184,8 +179,7 @@ export async function getRemoteFeatureFlags() {
             }),
         });
 
-        const enabledFeatureFlags: string[] = (await response.json())
-            .featureFlags;
+        const enabledFeatureFlags: string[] = (await response.json()).featureFlags;
         cachedRemoteFeatureFlags = enabledFeatureFlags.reduce(
             (obj, flag) => ({ ...obj, [flag]: true }),
             {}

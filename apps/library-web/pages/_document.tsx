@@ -9,10 +9,7 @@ class Document extends NextDocument {
                     <link rel="icon" sizes="192x192" href="/logo192.png" />
                     <link rel="manifest" href="/manifest.json" />
 
-                    <link
-                        rel="preconnect"
-                        href="https://fonts.googleapis.com"
-                    />
+                    <link rel="preconnect" href="https://fonts.googleapis.com" />
                     <link
                         href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500&display=swap"
                         rel="stylesheet"

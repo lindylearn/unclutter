@@ -22,18 +22,7 @@ export function AreaChart({
             {/* see https://nivo.rocks/stream/ */}
             <ResponsiveStream
                 data={data || []}
-                keys={[
-                    "0_",
-                    "1_",
-                    "2_",
-                    "3_",
-                    "4_",
-                    "5_",
-                    "6_",
-                    "7_",
-                    "8_",
-                    "9_",
-                ]}
+                keys={["0_", "1_", "2_", "3_", "4_", "5_", "6_", "7_", "8_", "9_"]}
                 margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
                 axisTop={null}
                 axisRight={null}
@@ -85,8 +74,7 @@ function createTopicStreamData(articles: Article[]): StreamDatum[] {
         }
 
         if (article.topic_id) {
-            weekBuckets[week][article.topic_id] =
-                (weekBuckets[week][article.topic_id] || 0) + 1;
+            weekBuckets[week][article.topic_id] = (weekBuckets[week][article.topic_id] || 0) + 1;
             seenTopics.add(article.topic_id);
         }
     });

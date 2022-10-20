@@ -5,25 +5,22 @@ async function handler(req, res) {
     const { method } = req.query;
 
     try {
-        const response = await ky.post(
-            `https://getpocket.com/v3/${method.join("/")}`,
-            {
-                json: req.body,
-                headers: {
-                    "Content-Type": "application/json; charset=UTF-8",
-                    "X-Accept": "application/json",
-                },
-                timeout: 10 * 1000,
-                retry: 0,
-            }
-        );
+        const response = await ky.post(`https://getpocket.com/v3/${method.join("/")}`, {
+            json: req.body,
+            headers: {
+                "Content-Type": "application/json; charset=UTF-8",
+                "X-Accept": "application/json",
+            },
+            timeout: 10 * 1000,
+            retry: 0,
+        });
         const json = await response.json();
         res.status(200).json(json);
     } catch (err) {
         console.error(
-            `Error for pocket request /${method.join("/")} ${JSON.stringify(
-                req.body
-            )}: ${err.message}`
+            `Error for pocket request /${method.join("/")} ${JSON.stringify(req.body)}: ${
+                err.message
+            }`
         );
         console.error(err);
         res.status(err.response?.status || 500).send(err.response?.statusText);

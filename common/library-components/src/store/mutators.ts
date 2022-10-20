@@ -35,11 +35,7 @@ const {
     delete: deleteArticleText,
 } = generate("text", articleTextSchema);
 const { put: putArticleLink } = generate("link", articleLinkSchema);
-const {
-    put: putTopic,
-    list: listTopics,
-    delete: deleteTopic,
-} = generate("topics", topicSchema);
+const { put: putTopic, list: listTopics, delete: deleteTopic } = generate("topics", topicSchema);
 
 async function putArticleIfNotExists(
     tx: WriteTransaction,
@@ -161,9 +157,7 @@ async function updateAllTopics(
     const articleTopicEntries = Object.entries(articleTopics);
     // read before write
     const existingArticles = await Promise.all(
-        articleTopicEntries.map(([articleId, topicId]) =>
-            getArticle(tx, articleId)
-        )
+        articleTopicEntries.map(([articleId, topicId]) => getArticle(tx, articleId))
     );
     await Promise.all(
         articleTopicEntries.map(async ([articleId, topicId], index) => {
@@ -205,11 +199,8 @@ async function moveArticlePosition(
     }
 
     // higest indexes first
-    let newUpperBound =
-        beforeArticle &&
-        getSafeArticleSortPosition(beforeArticle, sortPosition);
-    let newLowerBound =
-        afterArticle && getSafeArticleSortPosition(afterArticle, sortPosition);
+    let newUpperBound = beforeArticle && getSafeArticleSortPosition(beforeArticle, sortPosition);
+    let newLowerBound = afterArticle && getSafeArticleSortPosition(afterArticle, sortPosition);
     // don't floor to 0 or present in case of reordering on sliced / filtered list
     if (!newUpperBound) {
         newUpperBound = newLowerBound! + 1000;
@@ -256,26 +247,17 @@ async function articleAddMoveToQueue(
     });
 }
 
-export async function updateSettings(
-    tx: WriteTransaction,
-    diff: Partial<Settings>
-) {
+export async function updateSettings(tx: WriteTransaction, diff: Partial<Settings>) {
     const savedValue = await getSettings(tx);
     await tx.put("settings", { ...savedValue, ...diff });
 }
 
-export async function updateUserInfo(
-    tx: WriteTransaction,
-    diff: Partial<UserInfo>
-) {
+export async function updateUserInfo(tx: WriteTransaction, diff: Partial<UserInfo>) {
     const savedValue = await getUserInfo(tx);
     await tx.put("userInfo", { ...(savedValue || {}), ...diff });
 }
 
-export async function importEntries(
-    tx: WriteTransaction,
-    entries: [string, JSONValue][]
-) {
+export async function importEntries(tx: WriteTransaction, entries: [string, JSONValue][]) {
     await Promise.all(entries.map(([key, value]) => tx.put(key, value)));
 }
 

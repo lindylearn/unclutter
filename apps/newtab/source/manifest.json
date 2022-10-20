@@ -16,11 +16,7 @@
     },
     "web_accessible_resources": [
         {
-            "resources": [
-                "new-tab/index.*",
-                "new-tab/tailwind.css.js",
-                "assets/**"
-            ],
+            "resources": ["new-tab/index.*", "new-tab/tailwind.css.js", "assets/**"],
             "matches": ["<all_urls>"]
         }
     ],
@@ -29,10 +25,7 @@
     },
     "externally_connectable": {
         "ids": ["*"],
-        "matches": [
-            "https://library.lindylearn.io/*",
-            "http://localhost:3000/*"
-        ]
+        "matches": ["https://library.lindylearn.io/*", "http://localhost:3000/*"]
     },
     "omnibox": { "keyword": "u" }
 }

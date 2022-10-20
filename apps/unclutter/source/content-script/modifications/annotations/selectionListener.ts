@@ -1,7 +1,4 @@
-import {
-    createDraftAnnotation,
-    LindyAnnotation,
-} from "../../../common/annotations/create";
+import { createDraftAnnotation, LindyAnnotation } from "../../../common/annotations/create";
 import { describe as describeAnnotation } from "../../../common/annotator/anchoring/html";
 import { sendSidebarEvent } from "./annotationsListener";
 import { AnnotationListener } from "./annotationsModifier";
@@ -35,10 +32,7 @@ export function createSelectionListener(
             const selectionBackwards = _isSelectionBackwards(selection);
             if (!selectionBackwards) {
                 // expanding end does not seem to work for backwards ranges initially
-                _expandRangeToWordBoundary(
-                    range,
-                    selectionBackwards ? "forwards" : "backwards"
-                );
+                _expandRangeToWordBoundary(range, selectionBackwards ? "forwards" : "backwards");
             }
         }
     }
@@ -53,10 +47,7 @@ export function createSelectionListener(
 
         const range = selection.getRangeAt(0);
         const selectionBackwards = _isSelectionBackwards(selection);
-        _expandRangeToWordBoundary(
-            range,
-            selectionBackwards ? "backwards" : "forwards"
-        );
+        _expandRangeToWordBoundary(range, selectionBackwards ? "backwards" : "forwards");
         if (selectionBackwards) {
             // also adjust end since we couldn't on selection start (see above)
             _expandRangeToWordBoundary(range, "forwards");
@@ -73,15 +64,11 @@ export function createSelectionListener(
     listeners.push(["mouseup", onmouseup]);
 
     // register listeners
-    listeners.map(([event, handler]) =>
-        document.addEventListener(event, handler)
-    );
+    listeners.map(([event, handler]) => document.addEventListener(event, handler));
 }
 
 export function removeSelectionListener() {
-    listeners.map(([event, handler]) =>
-        document.removeEventListener(event, handler)
-    );
+    listeners.map(([event, handler]) => document.removeEventListener(event, handler));
 }
 
 function _isSelectionBackwards(sel: Selection) {
@@ -95,10 +82,7 @@ function _isSelectionBackwards(sel: Selection) {
     return backwards;
 }
 
-function _expandRangeToWordBoundary(
-    range: Range,
-    direction: "forwards" | "backwards"
-) {
+function _expandRangeToWordBoundary(range: Range, direction: "forwards" | "backwards") {
     if (direction === "forwards") {
         let wordEnd = range.endOffset; // exclusive
         const nodeValue = range.endContainer.nodeValue;
@@ -151,10 +135,7 @@ async function _createAnnotationFromSelection(
     }
 
     // create highlight
-    let annotation = createDraftAnnotation(
-        window.location.href,
-        annotationSelector
-    );
+    let annotation = createDraftAnnotation(window.location.href, annotationSelector);
     const offsets = await anchorAnnotations([annotation], sidebarIframe);
     paintHighlight(annotation, sidebarIframe);
     annotation = {

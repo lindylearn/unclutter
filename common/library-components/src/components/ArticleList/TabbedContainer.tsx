@@ -4,16 +4,8 @@ import { ReactNode, useState } from "react";
 import useResizeObserver from "use-resize-observer";
 
 import { getRandomColor } from "../../common/styling";
-import {
-    Article,
-    readingProgressFullClamp,
-    UserInfo,
-} from "../../store/_schema";
-import {
-    ReplicacheContext,
-    sortArticlesPosition,
-    useSubscribe,
-} from "../../store";
+import { Article, readingProgressFullClamp, UserInfo } from "../../store/_schema";
+import { ReplicacheContext, sortArticlesPosition, useSubscribe } from "../../store";
 import { groupArticlesByTopic } from "./GroupedArticleList";
 import { TopicEmoji } from "../TopicTag";
 import { ArticleListsCache } from "./DraggableContext";
@@ -49,8 +41,7 @@ export function TabbedContainer({
         }
     }, [activeIndex]);
 
-    const { ref: listRef, width: listWidth = 0 } =
-        useResizeObserver<HTMLDivElement>();
+    const { ref: listRef, width: listWidth = 0 } = useResizeObserver<HTMLDivElement>();
     const articlesPerRow = Math.floor((listWidth + 12) / (176 + 12));
 
     return (
@@ -64,23 +55,16 @@ export function TabbedContainer({
                             index === activeIndex
                                 ? "shadow"
                                 : "text-gray-600 opacity-90 hover:scale-95 dark:opacity-70",
-                            index !== activeIndex &&
-                                index > 0 &&
-                                "dark:text-gray-200",
-                            index !== activeIndex &&
-                                index === 0 &&
-                                "dark:opacity-50",
-                            key === "continue" &&
-                                "bg-lindy dark:bg-lindyDark dark:text-black"
+                            index !== activeIndex && index > 0 && "dark:text-gray-200",
+                            index !== activeIndex && index === 0 && "dark:opacity-50",
+                            key === "continue" && "bg-lindy dark:bg-lindyDark dark:text-black"
                         )}
                         style={{
                             background:
                                 key !== "continue"
                                     ? getRandomColor(key).replace(
                                           "0.4)",
-                                          index === activeIndex
-                                              ? "0.3)"
-                                              : "0.1)"
+                                          index === activeIndex ? "0.3)" : "0.1)"
                                       )
                                     : undefined,
                         }}
@@ -121,33 +105,28 @@ export function TabbedContainer({
                 style={{ maxHeight: `${articleRows * (208 + 12) + 40}px` }}
                 ref={listRef}
             >
-                {activeIndex !== undefined &&
-                    activeIndex !== null &&
-                    articlesPerRow !== 0 && (
-                        <StaticArticleList
-                            articles={tabInfos[activeIndex].articles || []}
-                            small
-                        />
-                        // <DraggableContext
-                        //     articleLists={{
-                        //         default: tabInfos[activeIndex].articles || [],
-                        //     }}
-                        // >
-                        //     <DraggableArticleList
-                        //         listId="default"
-                        //         articlesToShow={articlesPerRow * articleRows}
-                        //         // sortPosition={
-                        //         //     tabInfos[activeIndex].key === "favorite"
-                        //         //         ? "favorites_sort_position"
-                        //         //         : tabInfos[activeIndex].key === "unread"
-                        //         //         ? "recency_sort_position"
-                        //         //         : "topic_sort_position"
-                        //         // }
-                        //         centerGrid
-                        //         reportEvent={reportEvent}
-                        //     />
-                        // </DraggableContext>
-                    )}
+                {activeIndex !== undefined && activeIndex !== null && articlesPerRow !== 0 && (
+                    <StaticArticleList articles={tabInfos[activeIndex].articles || []} small />
+                    // <DraggableContext
+                    //     articleLists={{
+                    //         default: tabInfos[activeIndex].articles || [],
+                    //     }}
+                    // >
+                    //     <DraggableArticleList
+                    //         listId="default"
+                    //         articlesToShow={articlesPerRow * articleRows}
+                    //         // sortPosition={
+                    //         //     tabInfos[activeIndex].key === "favorite"
+                    //         //         ? "favorites_sort_position"
+                    //         //         : tabInfos[activeIndex].key === "unread"
+                    //         //         ? "recency_sort_position"
+                    //         //         : "topic_sort_position"
+                    //         // }
+                    //         centerGrid
+                    //         reportEvent={reportEvent}
+                    //     />
+                    // </DraggableContext>
+                )}
             </div>
         </div>
     );
@@ -162,11 +141,7 @@ export function useTabInfos(
 ): TabInfo[] | undefined {
     const rep = useContext(ReplicacheContext);
 
-    const articles = useSubscribe(
-        rep,
-        rep?.subscribe.listRecentArticles(),
-        null
-    );
+    const articles = useSubscribe(rep, rep?.subscribe.listRecentArticles(), null);
 
     let [tabInfos, setTabInfos] = useState<TabInfo[]>();
     useEffect(() => {
@@ -184,9 +159,7 @@ export function useTabInfos(
                 );
             }
             if (domainFilter) {
-                listArticles = listArticles.filter(
-                    (a) => getDomain(a.url) === domainFilter
-                );
+                listArticles = listArticles.filter((a) => getDomain(a.url) === domainFilter);
                 sortArticlesPosition(listArticles, "domain_sort_position");
             }
             if (!lastFirst) {
@@ -219,19 +192,14 @@ export function useTabInfos(
                                 key: topic_id,
                                 title: topic?.name || topic_id,
                                 icon: topic && (
-                                    <TopicEmoji
-                                        emoji={topic?.emoji!}
-                                        className="mr-0 w-[18px]"
-                                    />
+                                    <TopicEmoji emoji={topic?.emoji!} className="mr-0 w-[18px]" />
                                 ),
                                 isTopic: true,
                                 articles: articles.filter((a) => !a.is_queued),
                             };
                         })
                 );
-                tabInfos.push(
-                    ...topicTabInfos.filter((t) => t.articles.length > 0)
-                );
+                tabInfos.push(...topicTabInfos.filter((t) => t.articles.length > 0));
             } else {
                 listArticles = listArticles.filter((a) => !a.is_queued);
 
@@ -239,10 +207,7 @@ export function useTabInfos(
                     key: domainFilter || "list",
                     title: "",
                     articles: listArticles,
-                    articleLines: Math.max(
-                        1,
-                        Math.min(5, Math.ceil(listArticles.length / 5))
-                    ),
+                    articleLines: Math.max(1, Math.min(5, Math.ceil(listArticles.length / 5))),
                 });
             }
 
@@ -257,8 +222,7 @@ export function useTabInfos(
 export function useArticleListsCache(
     tabInfos: TabInfo[] | undefined
 ): [ArticleListsCache | undefined, (articleLists: ArticleListsCache) => void] {
-    let [articleListsCache, setArticleListsCache] =
-        useState<ArticleListsCache>();
+    let [articleListsCache, setArticleListsCache] = useState<ArticleListsCache>();
     useEffect(() => {
         if (!tabInfos) {
             return;

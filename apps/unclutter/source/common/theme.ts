@@ -1,7 +1,4 @@
-import {
-    getBottomIframe,
-    getOutlineIframe,
-} from "../overlay/outline/components/common";
+import { getBottomIframe, getOutlineIframe } from "../overlay/outline/components/common";
 import { mergeUserTheme } from "./storage";
 
 export type themeName = "auto" | "white" | "sepia" | "dark";
@@ -33,10 +30,7 @@ export function applySaveThemeOverride(domain, varName, value) {
 }
 
 export function getThemeValue(varName) {
-    return window
-        .getComputedStyle(document.documentElement)
-        .getPropertyValue(varName)
-        .trim();
+    return window.getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
 }
 
 export function setCssThemeVariable(varName, value, params = {}) {
@@ -53,10 +47,7 @@ export function setCssThemeVariable(varName, value, params = {}) {
         getOutlineIframe()?.body.style.setProperty(varName, value);
         getBottomIframe()?.body.style.setProperty(varName, value);
         // set on react iframes via modifier methods
-    } else if (
-        varName === autoBackgroundThemeVariable ||
-        varName === activeColorThemeVariable
-    ) {
+    } else if (varName === autoBackgroundThemeVariable || varName === activeColorThemeVariable) {
         document
             .getElementById("lindy-page-settings-toprght")
             ?.style.setProperty(autoBackgroundThemeVariable, value);

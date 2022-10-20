@@ -5,10 +5,7 @@ import {
 } from "@unclutter/library-components/dist/common";
 import { useContext, useEffect, useState } from "react";
 
-import {
-    ReplicacheContext,
-    useSubscribe,
-} from "@unclutter/library-components/dist/store";
+import { ReplicacheContext, useSubscribe } from "@unclutter/library-components/dist/store";
 
 export default function Welcome2Tab() {
     const rep = useContext(ReplicacheContext);
@@ -20,10 +17,7 @@ export default function Welcome2Tab() {
                 console.log(user);
 
                 // fetch email subscription status
-                const onPaidPlan = await checkHasSubscription(
-                    user.id,
-                    user.email
-                );
+                const onPaidPlan = await checkHasSubscription(user.id, user.email);
 
                 // create userInfo
                 await rep?.mutate.updateUserInfo({

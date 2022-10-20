@@ -12,27 +12,20 @@ import {
 
 export default function DashboardTab({ selectedTopicId, setSelectedTopicId }) {
     // list filters
-    const [stateFilter, setStateFilter] = useState<StateFilter>(
-        stateFilters[0].value
-    );
+    const [stateFilter, setStateFilter] = useState<StateFilter>(stateFilters[0].value);
     const [activeKey, setActiveKey] = useState<string | null>(null);
 
     // fetch articles to local state using filters
     const rep = useContext(ReplicacheContext);
     const articleGroups = useSubscribe(
         rep,
-        rep?.subscribe.groupRecentArticles(
-            undefined,
-            stateFilter,
-            selectedTopicId
-        ),
+        rep?.subscribe.groupRecentArticles(undefined, stateFilter, selectedTopicId),
         null,
         [stateFilter, selectedTopicId]
     ) as ArticleBucketMap | null;
 
     // order time buckets for sidebar
-    const [timeFilterOptions, setTimeFilterOptions] =
-        useState<TimeFilterOptions[]>();
+    const [timeFilterOptions, setTimeFilterOptions] = useState<TimeFilterOptions[]>();
     useEffect(() => {
         if (!articleGroups) {
             return;
@@ -43,10 +36,7 @@ export default function DashboardTab({ selectedTopicId, setSelectedTopicId }) {
                 ...bucket,
                 articleCount:
                     bucket.articles?.length ||
-                    children?.reduce(
-                        (acc, cur) => acc + cur.articleCount!,
-                        0
-                    ) ||
+                    children?.reduce((acc, cur) => acc + cur.articleCount!, 0) ||
                     0,
                 children,
             };
@@ -74,9 +64,7 @@ export default function DashboardTab({ selectedTopicId, setSelectedTopicId }) {
                     timeFilterOptions[0]?.children &&
                     (!firstArticlesCount || firstArticlesCount > 20);
                 if (showedFirstChildren) {
-                    setActiveKey(
-                        timeFilterOptions[0]?.children?.[0].key || null
-                    );
+                    setActiveKey(timeFilterOptions[0]?.children?.[0].key || null);
                 } else {
                     setActiveKey(timeFilterOptions[0]?.key || null);
                 }
@@ -92,9 +80,7 @@ export default function DashboardTab({ selectedTopicId, setSelectedTopicId }) {
                 setVisibleArticles(
                     Object.values(articleGroups).flatMap((bucket) =>
                         (bucket.articles || []).concat(
-                            bucket.children?.flatMap(
-                                (child) => child.articles || []
-                            ) || []
+                            bucket.children?.flatMap((child) => child.articles || []) || []
                         )
                     )
                 );
@@ -103,16 +89,12 @@ export default function DashboardTab({ selectedTopicId, setSelectedTopicId }) {
             } else if (!activeKey.includes("-")) {
                 // year bucket
                 setVisibleArticles(
-                    articleGroups[activeKey]?.children?.flatMap(
-                        (b) => b.articles || []
-                    ) || null
+                    articleGroups[activeKey]?.children?.flatMap((b) => b.articles || []) || null
                 );
                 return;
             } else {
                 const year = activeKey.split("-")[0];
-                let bucket = articleGroups[year]?.children?.find(
-                    (c) => c.key === activeKey
-                );
+                let bucket = articleGroups[year]?.children?.find((c) => c.key === activeKey);
                 if (!bucket) {
                     setVisibleArticles(null);
                     return;
@@ -134,10 +116,7 @@ export default function DashboardTab({ selectedTopicId, setSelectedTopicId }) {
             )} */}
 
             <aside className="fixed flex h-full w-44 flex-col gap-3">
-                <SidebarFilterList
-                    stateFilter={stateFilter}
-                    setStateFilter={setStateFilter}
-                />
+                <SidebarFilterList stateFilter={stateFilter} setStateFilter={setStateFilter} />
                 {timeFilterOptions && (
                     <div className="animate-fadein flex flex-col items-stretch gap-1 rounded-lg bg-white p-2.5 shadow dark:bg-stone-800">
                         {timeFilterOptions.map((bucket) => (
@@ -224,19 +203,12 @@ export function SidebarFilterList({ stateFilter, setStateFilter }) {
     );
 }
 
-function SidebarFilterOption({
-    label,
-    svg,
-    isActive = false,
-    onClick = () => {},
-}) {
+function SidebarFilterOption({ label, svg, isActive = false, onClick = () => {} }) {
     return (
         <div
             className={clsx(
                 "font-title flex cursor-pointer items-center gap-1 rounded px-2 py-0.5 shadow-sm outline-none transition-all hover:scale-[96%]",
-                isActive
-                    ? "bg-stone-200 dark:bg-stone-700"
-                    : "bg-stone-100 dark:bg-stone-800"
+                isActive ? "bg-stone-200 dark:bg-stone-700" : "bg-stone-100 dark:bg-stone-800"
             )}
             onClick={onClick}
         >
@@ -313,10 +285,7 @@ function SidebarBucketGroup({
                 {showChildren ? (
                     <div className="absolute right-2 flex h-full w-7 items-center justify-end">
                         <svg
-                            className={clsx(
-                                "w-3",
-                                !isCollapsed && "rotate-180"
-                            )}
+                            className={clsx("w-3", !isCollapsed && "rotate-180")}
                             viewBox="0 0 384 512"
                             onClick={(e) => {
                                 e.stopPropagation();

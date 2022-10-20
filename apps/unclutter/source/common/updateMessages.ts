@@ -28,9 +28,7 @@ export async function getInitialInstallVersion(): Promise<string> {
 }
 
 // introduced with 0.12.0
-export async function saveInitialInstallVersionIfMissing(
-    version: string
-): Promise<void> {
+export async function saveInitialInstallVersionIfMissing(version: string): Promise<void> {
     const savedVersion = await getInitialInstallVersion();
     if (!savedVersion) {
         await browser.storage.sync.set({ "initial-install-version": version });

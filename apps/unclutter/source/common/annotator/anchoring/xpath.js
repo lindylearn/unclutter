@@ -6,8 +6,8 @@
 function getNodeName(node) {
   const nodeName = node.nodeName.toLowerCase();
   let result = nodeName;
-  if (nodeName === '#text') {
-    result = 'text()';
+  if (nodeName === "#text") {
+    result = "text()";
   }
   return result;
 }
@@ -44,19 +44,19 @@ function getPathSegment(node) {
  * @param {Node} root - Root node to which the returned path is relative
  */
 export function xpathFromNode(node, root) {
-  let xpath = '';
+  let xpath = "";
 
   /** @type {Node|null} */
   let elem = node;
   while (elem !== root) {
     if (!elem) {
-      throw new Error('Node is not a descendant of root');
+      throw new Error("Node is not a descendant of root");
     }
-    xpath = getPathSegment(elem) + '/' + xpath;
+    xpath = getPathSegment(elem) + "/" + xpath;
     elem = elem.parentNode;
   }
-  xpath = '/' + xpath;
-  xpath = xpath.replace(/\/$/, ''); // Remove trailing slash
+  xpath = "/" + xpath;
+  xpath = xpath.replace(/\/$/, ""); // Remove trailing slash
 
   return xpath;
 }
@@ -111,10 +111,10 @@ function evaluateSimpleXPath(xpath, root) {
   const isSimpleXPath =
     xpath.match(/^(\/[A-Za-z0-9-]+(\[[0-9]+\])?)+$/) !== null;
   if (!isSimpleXPath) {
-    throw new Error('Expression is not a simple XPath');
+    throw new Error("Expression is not a simple XPath");
   }
 
-  const segments = xpath.split('/');
+  const segments = xpath.split("/");
   let element = root;
 
   // Remove leading empty segment. The regex above validates that the XPath
@@ -125,11 +125,11 @@ function evaluateSimpleXPath(xpath, root) {
     let elementName;
     let elementIndex;
 
-    const separatorPos = segment.indexOf('[');
+    const separatorPos = segment.indexOf("[");
     if (separatorPos !== -1) {
       elementName = segment.slice(0, separatorPos);
 
-      const indexStr = segment.slice(separatorPos + 1, segment.indexOf(']'));
+      const indexStr = segment.slice(separatorPos + 1, segment.indexOf("]"));
       elementIndex = parseInt(indexStr) - 1;
       if (elementIndex < 0) {
         return null;
@@ -165,7 +165,7 @@ export function nodeFromXPath(xpath, root = document.body) {
     return evaluateSimpleXPath(xpath, root);
   } catch (err) {
     return document.evaluate(
-      '.' + xpath,
+      "." + xpath,
       root,
 
       // nb. The `namespaceResolver` and `result` arguments are optional in the spec

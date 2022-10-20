@@ -44,9 +44,7 @@ export default class LibraryModalModifier implements PageModifier {
         if (this.darkModeEnabled !== null) {
             this.setDarkMode(this.darkModeEnabled);
         }
-        Object.entries(this.cssVariables).map(([key, value]) =>
-            this.setCssVariable(key, value)
-        );
+        Object.entries(this.cssVariables).map(([key, value]) => this.setCssVariable(key, value));
         // set initial library state
         this.sendModalEvent({
             event: "setLibraryState",

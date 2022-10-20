@@ -45,9 +45,7 @@ export function LibraryModalPage({
 
     const initialRender = useRef<boolean>(true);
     const [currentTab, setCurrentTab] = useState(
-        currentArticle && (userInfo.onPaidPlan || userInfo.trialEnabled)
-            ? "graph"
-            : "stats"
+        currentArticle && (userInfo.onPaidPlan || userInfo.trialEnabled) ? "graph" : "stats"
     );
     useEffect(() => {
         if (initialRender.current) {
@@ -57,9 +55,7 @@ export function LibraryModalPage({
         }
     }, [currentTab]);
 
-    const [currentTopic, setCurrentTopic] = useState<Topic | undefined>(
-        initialTopic
-    );
+    const [currentTopic, setCurrentTopic] = useState<Topic | undefined>(initialTopic);
     const [domainFilter, setDomainFilter] = useState<string | null>(null);
     useEffect(() => {
         setCurrentTopic(initialTopic);
@@ -164,9 +160,7 @@ function ModalContent({
                         onClick={() => setCurrentTab("stats")}
                     >
                         <LindyIcon className="w-8" />
-                        <span className="font-title text-2xl font-bold">
-                            Library
-                        </span>
+                        <span className="font-title text-2xl font-bold">Library</span>
                     </div>
 
                     <Sidebar
@@ -184,9 +178,7 @@ function ModalContent({
             <div
                 className={clsx(
                     "right-side flex max-h-full w-full flex-col",
-                    currentTab === "stats"
-                        ? "overflow-y-scroll"
-                        : "overflow-y-auto",
+                    currentTab === "stats" ? "overflow-y-scroll" : "overflow-y-auto",
                     currentTab === "graph" ? "" : "p-4"
                 )}
             >
@@ -228,9 +220,7 @@ function ModalContent({
                     />
                 )}
                 {currentTab === "highlights" && <HighlightsTab />}
-                {currentTab === "signup" && (
-                    <UpgradeModalTab darkModeEnabled={darkModeEnabled} />
-                )}
+                {currentTab === "signup" && <UpgradeModalTab darkModeEnabled={darkModeEnabled} />}
                 {currentTab === "settings" && (
                     <SettingsModalTab
                         userInfo={userInfo}

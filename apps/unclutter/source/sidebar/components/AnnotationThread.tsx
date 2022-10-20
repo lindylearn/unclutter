@@ -11,16 +11,10 @@ interface AnnotationThreadProps {
     heightLimitPx?: number;
 
     hypothesisSyncEnabled: boolean;
-    deleteHideAnnotation: (
-        annotation: LindyAnnotation,
-        threadStart: LindyAnnotation
-    ) => void;
+    deleteHideAnnotation: (annotation: LindyAnnotation, threadStart: LindyAnnotation) => void;
     onHoverUpdate: (hoverActive: boolean) => void;
     unfocusAnnotation: (annotation: LindyAnnotation) => void;
-    createReply: (
-        parent: LindyAnnotation,
-        threadStart: LindyAnnotation
-    ) => void;
+    createReply: (parent: LindyAnnotation, threadStart: LindyAnnotation) => void;
     updateAnnotation: (annotation: LindyAnnotation) => void;
 
     replyLevel?: number;
@@ -47,12 +41,8 @@ function AnnotationThread(props: AnnotationThreadProps) {
         <>
             <Component
                 {...props}
-                deleteHide={() =>
-                    props.deleteHideAnnotation(props.annotation, null)
-                }
-                createReply={() =>
-                    props.createReply(props.annotation, props.annotation)
-                }
+                deleteHide={() => props.deleteHideAnnotation(props.annotation, null)}
+                createReply={() => props.createReply(props.annotation, props.annotation)}
                 showingReplies={showReplies}
                 isReply={replyLevel !== 0}
             />
@@ -76,10 +66,7 @@ function AnnotationThread(props: AnnotationThreadProps) {
                             createReply={
                                 replyLevel === 0
                                     ? (nestedAnnotation: LindyAnnotation) =>
-                                          props.createReply(
-                                              nestedAnnotation,
-                                              props.annotation
-                                          )
+                                          props.createReply(nestedAnnotation, props.annotation)
                                     : props.createReply
                             }
                         />

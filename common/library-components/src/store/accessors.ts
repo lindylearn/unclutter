@@ -19,14 +19,8 @@ import {
 
 /* ***** articles ***** */
 
-export const { get: getArticle, list: listArticles } = generate(
-    "articles",
-    articleSchema
-);
-export const { get: getArticleText, list: listArticleTexts } = generate(
-    "text",
-    articleTextSchema
-);
+export const { get: getArticle, list: listArticles } = generate("articles", articleSchema);
+export const { get: getArticleText, list: listArticleTexts } = generate("text", articleTextSchema);
 export const { list: listArticleLinks } = generate("link", articleLinkSchema);
 
 export async function getArticlesCount(tx: ReadTransaction): Promise<number> {
@@ -51,10 +45,7 @@ export async function listRecentArticles(
             allowedTopicIds = new Set([selectedTopicId]);
         } else {
             // selected group
-            const topicChildren = await getGroupTopicChildren(
-                tx,
-                selectedTopicId
-            );
+            const topicChildren = await getGroupTopicChildren(tx, selectedTopicId);
             allowedTopicIds = new Set(topicChildren.map((t) => t.id));
         }
     }
@@ -62,15 +53,11 @@ export async function listRecentArticles(
     const sinceSeconds = sinceMs ? sinceMs / 1000 : 0;
     const filteredArticles = allArticles
         .filter((a) => a.time_added >= sinceSeconds)
-        .filter(
-            (a) => allowedTopicIds === null || allowedTopicIds.has(a.topic_id!)
-        )
+        .filter((a) => allowedTopicIds === null || allowedTopicIds.has(a.topic_id!))
         .filter(
             (a) =>
-                (stateFilter !== "unread" ||
-                    a.reading_progress < readingProgressFullClamp) &&
-                (stateFilter !== "read" ||
-                    a.reading_progress >= readingProgressFullClamp)
+                (stateFilter !== "unread" || a.reading_progress < readingProgressFullClamp) &&
+                (stateFilter !== "read" || a.reading_progress >= readingProgressFullClamp)
         )
         .filter((a) => stateFilter !== "favorite" || a.is_favorite);
 
@@ -95,12 +82,7 @@ export async function groupRecentArticles(
     aggregateYears: boolean = true
     // returning 'object' due to replicache type issues
 ): Promise<object> {
-    const recentArticles = await listRecentArticles(
-        tx,
-        sinceMs,
-        stateFilter,
-        selectedTopicId
-    );
+    const recentArticles = await listRecentArticles(tx, sinceMs, stateFilter, selectedTopicId);
 
     const currentYear = new Date().getFullYear();
     const currentWeek = `${currentYear}-99${getWeekNumber(new Date())}`;
@@ -145,9 +127,7 @@ export async function groupRecentArticles(
     if (aggregateYears) {
         const yearBuckets: ArticleBucketMap = {};
         Object.values(monthBuckets)
-            .sort((a, b) =>
-                parseInt(b.key.slice(5)) > parseInt(a.key.slice(5)) ? 1 : -1
-            ) // newest month first
+            .sort((a, b) => (parseInt(b.key.slice(5)) > parseInt(a.key.slice(5)) ? 1 : -1)) // newest month first
             .forEach((monthBucket) => {
                 const [year, month] = monthBucket.key.split("-");
 
@@ -174,28 +154,21 @@ export async function groupRecentArticles(
     }
 }
 
-export async function listFavoriteArticles(
-    tx: ReadTransaction
-): Promise<Article[]> {
+export async function listFavoriteArticles(tx: ReadTransaction): Promise<Article[]> {
     const allArticles = await listArticles(tx);
     const articles = allArticles.filter((a) => a.is_favorite);
     sortArticlesPosition(articles, "favorites_sort_position");
     return articles;
 }
 
-export async function listQueueArticles(
-    tx: ReadTransaction
-): Promise<Article[]> {
+export async function listQueueArticles(tx: ReadTransaction): Promise<Article[]> {
     const allArticles = await listArticles(tx);
     const articles = allArticles.filter((a) => a.is_queued);
     sortArticlesPosition(articles, "queue_sort_position");
     return articles;
 }
 
-export async function listTopicArticles(
-    tx: ReadTransaction,
-    topic_id: string
-): Promise<Article[]> {
+export async function listTopicArticles(tx: ReadTransaction, topic_id: string): Promise<Article[]> {
     if (!topic_id) {
         return [];
     }
@@ -244,17 +217,11 @@ export function getSafeArticleSortPosition(
     // @ts-ignore
     return article[sortPosition];
 }
-export function sortArticlesPosition(
-    articles: Article[],
-    key: ArticleSortPosition
-) {
+export function sortArticlesPosition(articles: Article[], key: ArticleSortPosition) {
     // sort reverse to easily append items in front
     articles.sort((a, b) => {
         // highest indexes first
-        return (
-            getSafeArticleSortPosition(b, key) -
-            getSafeArticleSortPosition(a, key)
-        );
+        return getSafeArticleSortPosition(b, key) - getSafeArticleSortPosition(a, key);
     });
     return articles;
 }
@@ -288,9 +255,8 @@ export async function getReadingProgress(
 
     return {
         articleCount: articles.length,
-        completedCount: articles.filter(
-            (a) => a.reading_progress >= readingProgressFullClamp
-        ).length,
+        completedCount: articles.filter((a) => a.reading_progress >= readingProgressFullClamp)
+            .length,
     };
 }
 
@@ -298,16 +264,11 @@ export async function getReadingProgress(
 
 const { get: getTopicRaw, list: listTopics } = generate("topics", topicSchema);
 
-export async function getTopic(
-    tx: ReadTransaction,
-    topic_id: string
-): Promise<Topic> {
+export async function getTopic(tx: ReadTransaction, topic_id: string): Promise<Topic> {
     return (await getTopicRaw(tx, topic_id)) as Topic;
 }
 
-export async function getTopicIdMap(
-    tx: ReadTransaction
-): Promise<{ [topic_id: string]: Topic }> {
+export async function getTopicIdMap(tx: ReadTransaction): Promise<{ [topic_id: string]: Topic }> {
     const allTopics = await listTopics(tx);
 
     const idMap = {};
@@ -339,9 +300,7 @@ export async function groupTopics(
     return groupTopics
         .map((groupTopic) => ({
             groupTopic,
-            children: topicChildren[groupTopic.id].sort(
-                (a, b) => parseInt(a.id) - parseInt(b.id)
-            ),
+            children: topicChildren[groupTopic.id].sort((a, b) => parseInt(a.id) - parseInt(b.id)),
         }))
         .filter((group) => group.children.length > 0)
         .sort((a, b) => b.children.length - a.children.length);
@@ -378,9 +337,7 @@ export async function getSettings(tx: ReadTransaction): Promise<Settings> {
 
 /* ***** userInfo ***** */
 
-export async function getUserInfo(
-    tx: ReadTransaction
-): Promise<UserInfo | null> {
+export async function getUserInfo(tx: ReadTransaction): Promise<UserInfo | null> {
     const savedValue = (await tx.get("userInfo")) as UserInfo | undefined;
     return savedValue || null;
 }

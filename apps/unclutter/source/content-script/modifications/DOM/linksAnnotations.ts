@@ -1,9 +1,6 @@
 import { PageModifier, trackModifierExecution } from "../_interface";
 import { describe as describeAnnotation } from "../../../common/annotator/anchoring/html";
-import {
-    createLinkAnnotation,
-    LindyAnnotation,
-} from "../../../common/annotations/create";
+import { createLinkAnnotation, LindyAnnotation } from "../../../common/annotations/create";
 import { getNodeOffset } from "../../../common/annotations/offset";
 import AnnotationsModifier from "../annotations/annotationsModifier";
 import { createScreenshots, getLinkedArticles } from "../../../common/api";
@@ -11,10 +8,7 @@ import LibraryModifier from "../library";
 import { Article } from "@unclutter/library-components/dist/store/_schema";
 import { openArticle } from "@unclutter/library-components/dist/common/messaging";
 import OverlayManager from "../overlay";
-import {
-    extensionSupportsUrl,
-    isNonLeafPage,
-} from "../../../common/articleDetection";
+import { extensionSupportsUrl, isNonLeafPage } from "../../../common/articleDetection";
 
 /*
     Parse links inside the article text and create annotations for them.
@@ -85,13 +79,12 @@ export default class LinkAnnotationsModifier implements PageModifier {
 
         // run article & screenshots fetch in parallel, to show results faster & re-render once screenshots complete
         let articles: Article[] = [];
-        getLinkedArticles(
-            hrefs,
-            this.libraryModifier.libraryState.userInfo.id
-        ).then((newArticles) => {
-            articles = newArticles;
-            this.overlayManager.updateLinkedArticles(articles);
-        });
+        getLinkedArticles(hrefs, this.libraryModifier.libraryState.userInfo.id).then(
+            (newArticles) => {
+                articles = newArticles;
+                this.overlayManager.updateLinkedArticles(articles);
+            }
+        );
         createScreenshots(hrefs).then(async (newUrls: string[]) => {
             if (articles.length > 0 && newUrls.length > 0) {
                 // needs some time to propagate
@@ -150,11 +143,7 @@ export default class LinkAnnotationsModifier implements PageModifier {
         return annotation;
     }
 
-    private wrapLink(
-        annotationId: string,
-        link: HTMLAnchorElement,
-        article: Article
-    ) {
+    private wrapLink(annotationId: string, link: HTMLAnchorElement, article: Article) {
         // set id & class to update display offsets on resize
         // wrapping with custom <lindy-highlight> elem seems to not work
         link.id = annotationId;

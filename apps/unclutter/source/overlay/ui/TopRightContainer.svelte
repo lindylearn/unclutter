@@ -30,11 +30,7 @@
 <BugReportControl {domain} {textContainerModifier} {elementPickerModifier} />
 <ThemeControl {domain} {themeModifier} />
 <PrivateNotesControl {annotationsModifer} {overlayModifier} />
-<SocialHighlightsControl
-    {annotationsModifer}
-    {overlayModifier}
-    {anchoredSocialHighlightsCount}
-/>
+<SocialHighlightsControl {annotationsModifer} {overlayModifier} {anchoredSocialHighlightsCount} />
 
 <style global lang="postcss">
     .lindy-page-settings-toprght > * {

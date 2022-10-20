@@ -30,9 +30,7 @@ export function sendMessage(message: object, toLibrary: boolean = false) {
         // preferrable send message to extension directly (https://developer.chrome.com/docs/extensions/mv3/messaging/#external-webpage)
         // this is the only way to send data from extension to extension
         return getBrowser().runtime.sendMessage(
-            toLibrary
-                ? getUnclutterLibraryExtensionId()
-                : getUnclutterExtensionId(),
+            toLibrary ? getUnclutterLibraryExtensionId() : getUnclutterExtensionId(),
             message
         );
     } catch (err) {

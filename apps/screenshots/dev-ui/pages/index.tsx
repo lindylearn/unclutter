@@ -97,9 +97,7 @@ function Home() {
     return (
         <div className="">
             <header className="mt-5 flex items-center justify-center gap-5">
-                <div className="text-center text-2xl font-bold">
-                    Unclutter Screenshot Tester
-                </div>
+                <div className="text-center text-2xl font-bold">Unclutter Screenshot Tester</div>
                 <div className="flex items-center gap-2">
                     <input
                         className="w-20 rounded px-1 py-0.5 shadow"
@@ -161,11 +159,7 @@ function Screenshot({ name }) {
     const url = decodeURIComponent(fileName);
 
     return (
-        <a
-            className="cursor-pointer transition-all hover:shadow-xl"
-            href={url}
-            target="_blank"
-        >
+        <a className="cursor-pointer transition-all hover:shadow-xl" href={url} target="_blank">
             <img
                 className="w-72"
                 src={`https://storage.googleapis.com/unclutter-screenshots-serverless/${name.replaceAll(

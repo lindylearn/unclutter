@@ -5,11 +5,9 @@ export function useAutoDarkMode(): boolean {
         window.matchMedia("(prefers-color-scheme: dark)").matches
     );
     useEffect(() => {
-        window
-            .matchMedia("(prefers-color-scheme: dark)")
-            .addEventListener("change", (event) => {
-                setDarkModeEnabled(event.matches);
-            });
+        window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (event) => {
+            setDarkModeEnabled(event.matches);
+        });
     }, []);
 
     return darkModeEnabled;
