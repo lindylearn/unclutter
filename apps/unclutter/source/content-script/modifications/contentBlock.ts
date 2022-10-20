@@ -264,7 +264,6 @@ export const blockedSpecificSelectors = [
     "[class$='-nav' i]", // https://fly.io/blog/a-foolish-consistency/
 
     // header
-    `header:not(.${lindyMainHeaderContainerClass})`, // https://www.abc.net.au/news/2022-06-14/xi-jinping-expands-china-military-influence-abroad/101152154
     ".global-header",
     ".Page-header",
     ".site-header",

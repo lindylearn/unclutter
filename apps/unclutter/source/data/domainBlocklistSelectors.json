@@ -62,7 +62,13 @@
         ".section-wrapper.hilight-career",
         ".career-wraper"
     ],
-    "dailymail.co.uk": [".debate.item", ".wocc"],
+    "dailymail.co.uk": [
+        ".debate.item",
+        ".wocc",
+        ".beta",
+        ".column-content.cleared.narrow",
+        ".column-content.cleared"
+    ],
     "denizlihaber.com": [
         "#topbtns",
         ".combox",
@@ -138,6 +144,7 @@
         ".sc-1wkneyl-0.hxLRyg.video-html5-playlist",
         ".bxm4mm-3.eCMXYG"
     ],
+    "grammarly.com": [".F0u0G-container", "._16iRt-container"],
     "hdvietnam.org": ["#likes-post-10851880", ".sharePage"],
     "hope-rehab-center-thailand.com": [
         ".perfmatters-lazy.entered.pmloaded",

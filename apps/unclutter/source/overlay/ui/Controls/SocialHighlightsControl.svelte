@@ -79,7 +79,7 @@
         filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.05));
         cursor: pointer;
 
-        color: var(--text-color);
+        color: var(--text-color) !important;
         font-family: Poppins, sans-serif;
         font-weight: 600;
         font-size: 11px;

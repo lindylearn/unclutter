@@ -49,8 +49,8 @@ export default class ElementPickerModifier implements PageModifier {
     }
 
     afterTransitionIn() {
-        this.likelyMainTextMissing =
-            document.body.scrollHeight < 500 || this.readingTimeModifier?.totalReadingTime < 2;
+        this.likelyMainTextMissing = false;
+        // document.body.scrollHeight < 500 || this.readingTimeModifier?.totalReadingTime < 2;
     }
 
     transitionOut() {

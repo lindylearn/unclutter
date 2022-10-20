@@ -131,7 +131,7 @@
     visibility: hidden;
     opacity: 0;
 
-    background-color: red;
+    background-color: red !important;
     border-radius: 5px;
     cursor: pointer;
 

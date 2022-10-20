@@ -8,7 +8,7 @@
     filter: brightness(90%);
 }
 .article-container > .star-icon {
-    color: hsl(51, 80%, 43%); /* lindyDark */
+    color: hsl(51, 80%, 43%) !important; /* lindyDark */
 }
 .article-container > .publish-year,
 .article-container > .progress-bar {

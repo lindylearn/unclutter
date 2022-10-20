@@ -177,7 +177,7 @@
         color: #4b5563 !important;
     }
     .lindy-plusminus > div:hover {
-        background-color: #f9fafb;
+        background-color: #f9fafb !important;
     }
 
     .lindy-theme-row {
@@ -219,9 +219,9 @@
         width: 14px;
     }
     #lindy-white-theme-button {
-        background-color: white;
+        background-color: white !important;
     }
     #lindy-dark-theme-button {
-        background-color: #212121;
+        background-color: #212121 !important;
     }
 </style>
