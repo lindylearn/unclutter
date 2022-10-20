@@ -77,10 +77,7 @@ export default class ContentBlockModifier implements PageModifier {
         const css = `${this.selectors.join(", ")} { display: none !important; }`;
         createStylesheetText(css, "content-block-hide");
 
-        createStylesheetLink(
-            browser.runtime.getURL("data/manualContentBlock.css"),
-            "content-block-custom-sites"
-        );
+        createStylesheetLink(browser.runtime.getURL("data/siteTweaks.css"), "site-tweaks");
     }
 
     fadeInNoise() {
@@ -103,16 +100,12 @@ export default class ContentBlockModifier implements PageModifier {
         `;
         createStylesheetText(css, "content-block-fade-in");
 
-        document
-            .querySelectorAll("#content-block-hide, #content-block-custom-sites")
-            .forEach((e) => e.remove());
+        document.querySelectorAll("#content-block-hide, #site-tweaks").forEach((e) => e.remove());
     }
 
     transitionOut() {
         document
-            .querySelectorAll(
-                "#content-block-hide, #content-block-custom-sites, #content-block-fade-in"
-            )
+            .querySelectorAll("#content-block-hide, #site-tweaks, #content-block-fade-in")
             .forEach((e) => e.remove());
     }
 }

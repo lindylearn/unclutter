@@ -1,0 +1,9 @@
+img {
+    mix-blend-mode: difference !important;
+    /* filter: brightness(80%) !important; */
+}
+
+/* https://en.wikipedia.org/wiki/Secretary_problem */
+.mwe-math-fallback-image-inline {
+    filter: invert(1);
+}

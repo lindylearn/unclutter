@@ -222,14 +222,6 @@ export default class ThemeModifier implements PageModifier {
         // trigger html background change immediately (loading css takes time)
         document.documentElement.style.setProperty("background", "#131516", "important");
 
-        // global tweaks (not used right now)
-        // createStylesheetLink(
-        //     browser.runtime.getURL("content-script/pageview/contentDark.css"),
-        //     "dark-mode-ui-style",
-        //     // insert at beginning of header to not override site dark styles
-        //     document.head.firstChild as HTMLElement
-        // );
-
         this.overlayModifier.setOverlayDarkMode(true);
         this.annotationsModifer.setSidebarDarkMode(true);
         this.libraryModalModifier.setDarkMode(true);
@@ -285,6 +277,13 @@ export default class ThemeModifier implements PageModifier {
         // always dark text color for ui elements
         const darkTextColor = "rgb(232, 230, 227)";
         this.setCssThemeVariable(darkThemeTextColor, darkTextColor);
+
+        createStylesheetLink(
+            browser.runtime.getURL("data/siteTweaksDark.css"),
+            "site-tweaks-dark",
+            // insert at beginning of header to not override site dark styles
+            document.head.firstChild as HTMLElement
+        );
     }
 
     private setCssThemeVariable(variableName: string, value: string) {
@@ -294,6 +293,8 @@ export default class ThemeModifier implements PageModifier {
     }
 
     private disableDarkMode() {
+        document.querySelectorAll("#site-tweaks-dark").forEach((e) => e.remove());
+
         document.documentElement.style.removeProperty("color");
         document.documentElement.style.removeProperty("background");
         document.documentElement.style.removeProperty(darkThemeTextColor);

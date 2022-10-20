@@ -34,11 +34,11 @@
     ],
     "web_accessible_resources": [
         "content-script/pageview/content.css",
-        "content-script/pageview/contentDark.css",
         "overlay/index.css",
         "overlay/indexDark.css",
         "overlay/outline/outlineDark.css",
-        "data/manualContentBlock.css",
+        "data/siteTweaks.css",
+        "data/siteTweaksDark.css",
         "sidebar/index.html",
         "sidebar/index.css",
         "sidebar/dark.css",
