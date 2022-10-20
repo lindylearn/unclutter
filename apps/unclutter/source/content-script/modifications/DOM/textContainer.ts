@@ -468,12 +468,15 @@ export default class TextContainerModifier implements PageModifier {
                 margin-right: 0 !important;
                 padding-left: 0 !important;
                 padding-right: 0 !important;
+                top: 0 !important;
+                left: 0 !important;
                 border: none !important;
                 background: none !important;
                 box-shadow: none !important;
                 z-index: 1000 !important;
                 overflow: visible !important;
                 float: none !important;
+                transform: none !important;
             }
             /* more strict cleanup for main text containers */
             .${lindyMainContentContainerClass}:not(#fakeID#fakeID#fakeID):not(body) {

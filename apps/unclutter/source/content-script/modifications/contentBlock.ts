@@ -203,6 +203,7 @@ export const blockedWords = [
     "mostRead", // https://english.alarabiya.net/News/world/2022/06/09/Berlin-driver-s-confused-statements-under-investigation
     "favorites", // https://fortune.com/2022/06/12/if-you-thought-the-tech-rout-was-bad-spare-a-dime-for-retailers/
     "social-icon", // https://devblogs.microsoft.com/oldnewthing/20220608-00/?p=106727
+    "actions", // https://www.quantamagazine.org/why-is-inflammation-a-dangerous-necessity-20220420/
 
     // cookies
     "cookie",
@@ -242,6 +243,7 @@ export const blockedSpecificSelectors = [
     "[class$='-ads']",
     "[class*='-ads ']",
     "[class*='-ad-']",
+    "[class*='_ad_']", // https://kotaku.com/nintendo-of-america-sexual-harassment-sexism-aerotek-1849414921
     "[id^='ad-']",
     "[id*=' ad-']",
     "[id$='-ad']",
