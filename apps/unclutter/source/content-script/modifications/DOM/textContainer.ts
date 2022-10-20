@@ -730,19 +730,18 @@ export default class TextContainerModifier implements PageModifier {
                 const value = activeStyle.getPropertyValue(property);
                 const valueFloat = parseFloat(value.replace("px", ""));
 
+                // always remove negative margins
                 if (value.startsWith("-")) {
-                    // always remove negative margins
                     classes.push(`lindy-clean-${property}`);
                     return;
                 }
 
+                // remove large margins (e.g. on https://progressive.org/magazine/bipartisan-rejection-school-choice-bryant/)
+                // skip this if margin contributes >= 90% of an image's height (e.g. on https://www.cnbc.com/2022/06/20/what-is-staked-ether-steth-and-why-is-it-causing-havoc-in-crypto.html)
                 if (
                     valueFloat >= 60 &&
                     (stackType !== "image" || valueFloat < node.scrollHeight * 0.9)
                 ) {
-                    // remove large margins (e.g. on https://progressive.org/magazine/bipartisan-rejection-school-choice-bryant/)
-                    // skip this if margin contributes >= 90% of an image's height (e.g. on https://www.cnbc.com/2022/06/20/what-is-staked-ether-steth-and-why-is-it-causing-havoc-in-crypto.html)
-
                     classes.push(`lindy-clean-${property}`);
                     return;
                 }

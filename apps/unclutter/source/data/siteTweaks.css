@@ -928,3 +928,8 @@ iframe:not(.lindy-allowed-elem) {
 hypothesis-highlight {
     background: none !important;
 }
+
+/* https://theintercept.com/2022/07/29/bank-of-america-worker-conditions-worse/ */
+.Post-header.lindy-main-header-container {
+    padding-bottom: 0 !important;
+}

@@ -1,4 +1,5 @@
 <script lang="ts">
+    import clsx from "clsx";
     import Icon from "../Icon.svelte";
 
     export let iconName: string;
@@ -6,8 +7,10 @@
 </script>
 
 <div
-    class={"lindy-ui-dialog-container lindy-allowed-elem" +
-        (defaultOpen ? "lindy-default-open" : "")}
+    class={clsx(
+        "lindy-ui-dialog-container lindy-allowed-elem",
+        defaultOpen && "lindy-default-open"
+    )}
 >
     <Icon {iconName} />
     <div class="lindy-ui-dialog lindy-allowed-elem"><slot /></div>
