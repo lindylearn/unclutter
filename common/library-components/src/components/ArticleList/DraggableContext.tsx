@@ -118,7 +118,7 @@ export function DraggableContext({
                 articleIdAfterNewPosition = null;
             }
 
-            // only queue dragging supported for now
+            // only allow moving from or to the reading queue for now
             rep?.mutate.articleAddMoveToQueue({
                 articleId: activeArticle.id,
                 isQueued: targetList === "queue",

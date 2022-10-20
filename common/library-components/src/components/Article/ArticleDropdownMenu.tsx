@@ -34,10 +34,14 @@ export function ArticleDropdownMenu({
     }
 
     async function toggleQueued(e) {
-        await rep?.mutate.updateArticle({
-            id: article.id,
-            is_queued: !article.is_queued,
-            queue_sort_position: !article.is_queued ? new Date().getTime() : undefined,
+        // use articleAddMoveToQueue for reading progress handling
+        await rep?.mutate.articleAddMoveToQueue({
+            articleId: article.id,
+            isQueued: !article.is_queued,
+            // add to front of queue
+            articleIdBeforeNewPosition: null,
+            articleIdAfterNewPosition: null,
+            sortPosition: "queue_sort_position",
         });
         if (!article.is_queued) {
             reportEvent("addArticleToQueue");
@@ -45,11 +49,11 @@ export function ArticleDropdownMenu({
     }
 
     const completed = article.reading_progress > readingProgressFullClamp;
-    async function toggleCompleted() {
+    function toggleCompleted() {
         const newProgress = completed ? 0 : 1;
-        await rep?.mutate.updateArticle({
-            id: article.id,
-            reading_progress: newProgress,
+        rep?.mutate.updateArticleReadingProgress({
+            articleId: article.id,
+            readingProgress: newProgress,
         });
         reportEvent("toggleArticleCompleted", { newProgress });
     }
@@ -113,6 +117,7 @@ export function ArticleDropdownMenu({
                             onSelect={toggleFavorite}
                             top
                         /> */}
+
                         <DropdownItem
                             title={article.is_queued ? "Read later" : "Add to Queue"}
                             svg={
@@ -125,8 +130,9 @@ export function ArticleDropdownMenu({
                             }
                             onSelect={toggleQueued}
                         />
+
                         <DropdownItem
-                            title={completed ? "Mark unread" : "Mark read"}
+                            title={completed ? "Set unread" : "Set read"}
                             svg={
                                 <svg
                                     viewBox="0 0 576 512"

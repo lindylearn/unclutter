@@ -16,6 +16,7 @@ import {
     articleSchema,
     ArticleText,
     articleTextSchema,
+    readingProgressFullClamp,
     Settings,
     Topic,
     topicSchema,
@@ -105,6 +106,22 @@ async function importArticleLinks(
 async function deleteArticle(tx: WriteTransaction, articleId: string) {
     await deleteArticleRaw(tx, articleId);
     await deleteArticleText(tx, articleId);
+}
+
+async function updateArticleReadingProgress(
+    tx: WriteTransaction,
+    { articleId, readingProgress }: { articleId: string; readingProgress: number }
+) {
+    const diff: Partial<Article> = {
+        id: articleId,
+        reading_progress: readingProgress,
+    };
+    // dequeue if completed article
+    if (readingProgress >= readingProgressFullClamp) {
+        diff.is_queued = false;
+    }
+
+    return updateArticle(tx, diff as Article);
 }
 
 async function articleSetFavorite(
@@ -234,11 +251,20 @@ async function articleAddMoveToQueue(
         sortPosition: ArticleSortPosition;
     }
 ) {
-    await updateArticle(tx, {
+    const articleDiff: Partial<Article> = {
         id: articleId,
         is_queued: isQueued,
-        queue_sort_position: new Date().getTime(),
-    });
+        queue_sort_position: isQueued ? new Date().getTime() : undefined,
+    };
+    if (isQueued) {
+        // reset reading progress if completed article is queued
+        const article = await getArticle(tx, articleId);
+        if (article && article.reading_progress >= readingProgressFullClamp) {
+            articleDiff.reading_progress = 0;
+        }
+    }
+
+    await updateArticle(tx, articleDiff as Article);
     await moveArticlePosition(tx, {
         articleId,
         articleIdBeforeNewPosition,
@@ -266,6 +292,7 @@ export const mutators = {
     articleSetFavorite,
     articleTrackOpened,
     deleteArticle,
+    updateArticleReadingProgress,
     putArticleIfNotExists,
     importArticles,
     importArticleTexts,
