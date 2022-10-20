@@ -1,6 +1,7 @@
 import { pxToNumber } from "../../common/css";
 import { getBlockedElementSelectors, setBlockedElementSelectors } from "../../common/storage";
 import { createStylesheetText, overrideClassname } from "../../common/stylesheets";
+import ReadingTimeModifier from "./DOM/readingTime";
 import {
     lindyContainerClass,
     lindyFirstMainContainerClass,
@@ -19,14 +20,19 @@ export default class ElementPickerModifier implements PageModifier {
     private spotlight: HTMLElement;
     private currentSelection: HTMLElement;
 
-    public pageSelectors: string[] = [];
-    public pickedElementListener: (() => void)[] = [];
+    private readingTimeModifier: ReadingTimeModifier;
 
-    constructor(domain: string) {
+    likelyMainTextMissing: boolean;
+    pageSelectors: string[] = [];
+    pickedElementListener: (() => void)[] = [];
+
+    constructor(domain: string, readingTimeModifier: ReadingTimeModifier) {
         this.domain = domain;
+        this.readingTimeModifier = readingTimeModifier;
     }
 
     async prepare() {
+        // save created selectors locally to apply them regardless of extension updates
         this.pageSelectors = await getBlockedElementSelectors(this.domain);
     }
 
@@ -40,6 +46,11 @@ export default class ElementPickerModifier implements PageModifier {
             ", "
         )}:not(#fakeID#fakeID#fakeID#fakeID#fakeID) { display: none !important; }`;
         createStylesheetText(css, "element-picker-block");
+    }
+
+    afterTransitionIn() {
+        this.likelyMainTextMissing =
+            document.body.scrollHeight < 500 || this.readingTimeModifier?.totalReadingTime < 2;
     }
 
     transitionOut() {

@@ -15,8 +15,8 @@
     let supportElementBlocker: boolean = true;
     let activeElementBlocker: boolean = false;
     let captionMessage: string = `Is there an issue with this article?`;
-    if (document.body.scrollHeight < 500) {
-        captionMessage = `Sorry this article doesn't work.`;
+    if (elementPickerModifier.likelyMainTextMissing) {
+        captionMessage = `Sorry this article doesn't work well.`;
         setDefaultOpen();
     }
 

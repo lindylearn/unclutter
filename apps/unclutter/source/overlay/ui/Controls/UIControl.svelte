@@ -2,7 +2,7 @@
     import Icon from "../Icon.svelte";
 
     export let iconName: string;
-    export let iconNameOnHover: string;
+    // export let iconNameOnHover: string;
     export let tooltip: string;
     export let tooltipReverse: boolean = false;
     export let className: string = "";
@@ -12,15 +12,15 @@
 <div
     class={"lindy-tooltp lindy-fade " +
         (tooltipReverse ? "lindy-tooltp-reverse " : "") +
-        (iconNameOnHover ? "hover-icon-change " : "") +
+        // (iconNameOnHover ? "hover-icon-change " : "") +
         className}
     data-title={tooltip}
     on:click={onClick}
 >
     <Icon {iconName} />
-    {#if iconNameOnHover}
+    <!-- {#if iconNameOnHover}
         <Icon iconName={iconNameOnHover} />
-    {/if}
+    {/if} -->
 
     <slot />
 </div>

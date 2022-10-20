@@ -42,26 +42,32 @@ export default class TransitionManager implements PageModifier {
         this.libraryModalModifier
     );
     private backgroundModifier = new BackgroundModifier(this.themeModifier);
-    private elementPickerModifier = new ElementPickerModifier(this.domain);
+    private readingTimeModifier = new ReadingTimeModifier(this.bodyStyleModifier);
+    private elementPickerModifier = new ElementPickerModifier(
+        this.domain,
+        this.readingTimeModifier
+    );
     private overlayManager = new OverlayManager(
         this.domain,
         this.themeModifier,
         this.annotationsModifier,
         this.textContainerModifier,
         this.elementPickerModifier,
-        this.libraryModalModifier
+        this.libraryModalModifier,
+        this.readingTimeModifier
     );
-    private libraryModifier = new LibraryModifier(this.url, document.title, this.overlayManager);
+    private libraryModifier = new LibraryModifier(
+        this.url,
+        document.title,
+        this.overlayManager,
+        this.readingTimeModifier
+    );
     // private linkAnnotationsModifier = new LinkAnnotationsModifier(
     //     this.annotationsModifier,
     //     this.libraryModifier,
     //     this.overlayManager
     // );
-    private readingTimeModifier = new ReadingTimeModifier(
-        this.overlayManager,
-        this.libraryModifier,
-        this.bodyStyleModifier
-    );
+
     private keyboardModifier = new KeyboardModifier(this.libraryModalModifier);
 
     async prepare() {
@@ -120,7 +126,7 @@ export default class TransitionManager implements PageModifier {
             this.textContainerModifier.enableSiblingBlock();
         }
         this.contentBlockModifier.transitionIn(); // uses softer blocking if no text elements found
-        this.elementPickerModifier.transitionIn();
+        this.elementPickerModifier.transitionIn(); // applies local block rules
 
         // enable mobile styles & style patches (this may shift layout in various ways)
         this.responsiveStyleModifier.enableResponsiveStyles();
@@ -155,6 +161,7 @@ export default class TransitionManager implements PageModifier {
         // *** read DOM phase ***
         // read DOM after content block
         this.readingTimeModifier.afterTransitionIn();
+        this.elementPickerModifier.afterTransitionIn();
         this.annotationsModifier.readPageHeight();
         this.overlayManager.parseOutline();
         this.backgroundModifier.observeHeightChanges();
