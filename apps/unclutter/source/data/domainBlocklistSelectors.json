@@ -252,6 +252,7 @@
         "#article-end"
     ],
     "theverge.com": [".duet--article--lede-background"],
+    "sandboxx.us": [".content#genesis-content::before"],
     "theblock.co": [".newsletterModal"],
     "theconstructor.org": [".cs-estimated-reading-time", "#toc_container"],
     "theinformation.com": [".ti-awareness-bar"],
