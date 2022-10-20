@@ -541,8 +541,10 @@ export default class TextContainerModifier implements PageModifier {
 
     // block siblings of main text containers
     enableSiblingBlock() {
-        /* hide sidebar siblings, e.g. on https://www.thespacereview.com/article/4384/1 or http://www.paulgraham.com/think.html */
+        // hide main text siblings, e.g. on https://www.thespacereview.com/article/4384/1 or http://www.paulgraham.com/think.html
+        // sometimes this blocks legitimate text nodes for nested containers, e.g. https://dkb.show/post/creativity-requires-solitude
         const css = `.${lindyMainContentContainerClass}:not(.${lindyFirstMainContainerClass}, body) > :not(
+            ${globalTextElementSelector},
             .${lindyMainContentContainerClass}, 
             .${lindyImageContainerClass}, 
             .${
