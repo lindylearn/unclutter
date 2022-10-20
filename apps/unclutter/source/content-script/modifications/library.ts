@@ -20,14 +20,17 @@ import {
 import { addArticleToLibrary } from "../../common/api";
 import { anonymousLibraryEnabled, showLibrarySignupFlag } from "../../common/featureFlags";
 import { LibraryInfo, LibraryState, ReadingProgress } from "../../common/schema";
+import ReadingTimeModifier from "./DOM/readingTime";
 
 @trackModifierExecution
 export default class LibraryModifier implements PageModifier {
+    private readingProgressSyncIntervalSeconds = 10;
+
     private articleUrl: string;
     private articleTitle: string;
     private articleId: string;
+
     private overlayManager: OverlayManager;
-    private readingProgressSyncIntervalSeconds = 10;
 
     libraryState: LibraryState = {
         libraryEnabled: false,
@@ -48,11 +51,18 @@ export default class LibraryModifier implements PageModifier {
         justCompletedArticle: false,
     };
 
-    constructor(articleUrl: string, articleTitle: string, overlayManager: OverlayManager) {
+    constructor(
+        articleUrl: string,
+        articleTitle: string,
+        overlayManager: OverlayManager,
+        readingTimeModifier: ReadingTimeModifier
+    ) {
         this.articleUrl = articleUrl;
         this.articleTitle = articleTitle;
         this.articleId = getUrlHash(articleUrl);
         this.overlayManager = overlayManager;
+
+        readingTimeModifier.readingTimeLeftListeners.push(this.onScrollUpdate.bind(this));
     }
 
     async fetchState() {
@@ -230,14 +240,14 @@ export default class LibraryModifier implements PageModifier {
     }
 
     private lastReadingProgress: number;
-    async onScrollUpdate(readingProgress: number) {
-        if (readingProgress < this.lastReadingProgress) {
+    async onScrollUpdate(pageProgress: number, readingTimeLeft: number) {
+        if (pageProgress < this.lastReadingProgress) {
             // track only furthest scroll
             return;
         }
 
         if (
-            readingProgress >= 0.95 &&
+            pageProgress >= 0.95 &&
             this.libraryState.libraryInfo?.article &&
             this.libraryState.libraryInfo.article.reading_progress < readingProgressFullClamp
         ) {
@@ -252,7 +262,7 @@ export default class LibraryModifier implements PageModifier {
             this.libraryState.justCompletedArticle = true;
             this.overlayManager.updateLibraryState(this.libraryState);
         } else {
-            this.updateReadingProgressThrottled(readingProgress);
+            this.updateReadingProgressThrottled(pageProgress);
         }
     }
 

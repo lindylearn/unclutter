@@ -21,6 +21,7 @@ import TextContainerModifier from "./DOM/textContainer";
 import ElementPickerModifier from "./elementPicker";
 import LibraryModalModifier from "./libraryModal";
 import { PageModifier, trackModifierExecution } from "./_interface";
+import ReadingTimeModifier from "./DOM/readingTime";
 
 @trackModifierExecution
 export default class OverlayManager implements PageModifier {
@@ -48,7 +49,8 @@ export default class OverlayManager implements PageModifier {
         annotationsModifer: AnnotationsModifier,
         textContainerModifier: TextContainerModifier,
         elementPickerModifier: ElementPickerModifier,
-        libraryModalModifier: LibraryModalModifier
+        libraryModalModifier: LibraryModalModifier,
+        readingTimeModifier: ReadingTimeModifier
     ) {
         this.domain = domain;
         this.browserType = getBrowserType();
@@ -59,6 +61,7 @@ export default class OverlayManager implements PageModifier {
         this.libraryModalModifier = libraryModalModifier;
 
         this.annotationsModifer.annotationListeners.push(this.onAnnotationUpdate.bind(this));
+        readingTimeModifier.readingTimeLeftListeners.push(this.onReadingTimeUpdate.bind(this));
 
         // fetch users settings to run code synchronously later
         (async () => {
@@ -413,10 +416,10 @@ export default class OverlayManager implements PageModifier {
     }
 
     private readingTimeLeft: number = null;
-    updateReadingTimeLeft(minutes: number) {
-        this.readingTimeLeft = minutes;
+    onReadingTimeUpdate(pageProgress: number, readingTimeLeft: number) {
+        this.readingTimeLeft = readingTimeLeft;
         this.topleftSvelteComponent?.$set({
-            readingTimeLeft: minutes,
+            readingTimeLeft,
         });
     }
 

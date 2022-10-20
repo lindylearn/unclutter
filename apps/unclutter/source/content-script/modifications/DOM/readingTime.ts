@@ -1,7 +1,5 @@
 import throttle from "lodash/throttle";
 import BodyStyleModifier from "../bodyStyle";
-import LibraryModifier from "../library";
-import OverlayManager from "../overlay";
 import { PageModifier, trackModifierExecution } from "../_interface";
 
 /*
@@ -10,20 +8,14 @@ import { PageModifier, trackModifierExecution } from "../_interface";
 @trackModifierExecution
 export default class ReadingTimeModifier implements PageModifier {
     private wpm = 200;
-    private pageProgress: number;
-    private totalReadingTime: number = null;
 
-    private overlayManager: OverlayManager;
-    private libraryModifier: LibraryModifier;
     private bodyStyleModifier: BodyStyleModifier;
 
-    constructor(
-        overlayManager: OverlayManager,
-        libraryModifier: LibraryModifier,
-        bodyStyleModifier: BodyStyleModifier
-    ) {
-        this.overlayManager = overlayManager;
-        this.libraryModifier = libraryModifier;
+    totalReadingTime: number = null;
+    pageProgress: number;
+    readingTimeLeftListeners: ((pageProgress: number, readingTimeLeft: number) => void)[] = [];
+
+    constructor(bodyStyleModifier: BodyStyleModifier) {
         this.bodyStyleModifier = bodyStyleModifier;
     }
 
@@ -31,9 +23,7 @@ export default class ReadingTimeModifier implements PageModifier {
     async afterTransitionIn() {
         // getting all text is fine since we block most non-text elements?
         const wordCount = document.body.innerText.trim().split(/\s+/).length;
-
         this.totalReadingTime = Math.round(wordCount / this.wpm);
-        this.overlayManager.updateReadingTimeLeft(this.totalReadingTime);
 
         // Don't re-render outline on every scroll update (might trigger <100ms)
         // throttle instead of debounce to update during continous scrolls
@@ -41,6 +31,9 @@ export default class ReadingTimeModifier implements PageModifier {
         document.addEventListener("scroll", scrollListenerThrottled);
         this.uninstallScrollListener = () =>
             document.removeEventListener("scroll", scrollListenerThrottled);
+
+        // call with initial values
+        this.scollListener();
     }
 
     // todo throttle?
@@ -52,10 +45,11 @@ export default class ReadingTimeModifier implements PageModifier {
         // viewport bottom
         this.pageProgress =
             (window.scrollY + window.innerHeight) / document.documentElement.scrollHeight;
-
         const readingTimeLeft = Math.round(this.totalReadingTime * (1 - this.pageProgress));
-        this.overlayManager.updateReadingTimeLeft(readingTimeLeft);
-        this.libraryModifier.onScrollUpdate(this.pageProgress);
+
+        this.readingTimeLeftListeners.forEach((listener) =>
+            listener(this.pageProgress, readingTimeLeft)
+        );
     }
 
     async beforeTransitionOut() {
