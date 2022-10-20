@@ -285,7 +285,7 @@ export default class LibraryModifier implements PageModifier {
         }
         this.lastReadingProgress = readingProgress;
 
-        if (!this.libraryState.libraryInfo.article) {
+        if (!this.libraryState.libraryInfo?.article) {
             return;
         }
 
