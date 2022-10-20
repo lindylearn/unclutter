@@ -740,7 +740,7 @@ export default class TextContainerModifier implements PageModifier {
                 // skip this if margin contributes >= 90% of an image's height (e.g. on https://www.cnbc.com/2022/06/20/what-is-staked-ether-steth-and-why-is-it-causing-havoc-in-crypto.html)
                 if (
                     valueFloat >= 60 &&
-                    (stackType !== "image" || valueFloat < node.scrollHeight * 0.9)
+                    (stackType !== "image" || valueFloat < node.offsetHeight * 0.8)
                 ) {
                     classes.push(`lindy-clean-${property}`);
                     return;
