@@ -57,13 +57,10 @@ const monthNames = [
     "december",
 ];
 
-export function getOutline(): OutlineItem[] {
-    // List raw DOM nodes and filter to likely headings
-    const headingItems = getHeadingItems();
+// parse outline chapters from the page
+// this always returns a root item with the page title
+export function getOutline(headingItems: OutlineItem[]): OutlineItem[] {
     const filteredHeadings = headingItems; // filterWithDisplayOffsets(headingItems);
-    if (filteredHeadings.length === 0) {
-        return [];
-    }
 
     // Construct hierarchy based on heading level
     const collapsedItems = collapseItems(filteredHeadings);
@@ -118,7 +115,7 @@ export function getOutline(): OutlineItem[] {
     return squashedOutline;
 }
 
-function getHeadingItems(): OutlineItem[] {
+export function getHeadingItems(): OutlineItem[] {
     const outline: OutlineItem[] = [];
 
     // Get all heading elements from DOM in one go to keep serial order
@@ -351,7 +348,7 @@ function restrictTitleLength(title: string, maxLength: number = 29): string {
 }
 
 function collapseItems(headingItems: OutlineItem[]): OutlineItem[] {
-    const currentStack: OutlineItem[] = [createRootItem()];
+    const currentStack: OutlineItem[] = [createRootItem(headingItems)];
     for (const item of headingItems) {
         const parentElement = currentStack[currentStack.length - 1];
 
@@ -377,11 +374,12 @@ function collapseItems(headingItems: OutlineItem[]): OutlineItem[] {
 
     return currentStack;
 }
-export function createRootItem(): OutlineItem {
+export function createRootItem(headingItems: OutlineItem[]): OutlineItem {
     return {
         index: -1,
         level: 0,
-        title: cleanTitle(document.title),
+        // document.title not set e.g. on https://newrepublic.com/maz/article/167263/amazons-global-quest-crush-unions
+        title: cleanTitle(document.title) || cleanTitle(headingItems?.[0]?.title || ""),
         element: document.body,
         children: [],
     };

@@ -11,7 +11,12 @@ import { createStylesheetLink, overrideClassname } from "../../common/stylesheet
 import { backgroundColorThemeVariable } from "../../common/theme";
 import BottomContainerSvelte from "../../overlay/outline/BottomContainer.svelte";
 import { getElementYOffset } from "../../overlay/outline/components/common";
-import { createRootItem, getOutline, OutlineItem } from "../../overlay/outline/components/parse";
+import {
+    createRootItem,
+    getHeadingItems,
+    getOutline,
+    OutlineItem,
+} from "../../overlay/outline/components/parse";
 import TopLeftContainer from "../../overlay/outline/TopLeftContainer.svelte";
 import PageAdjacentContainerSvelte from "../../overlay/ui/PageAdjacentContainer.svelte";
 import TopRightContainerSvelte from "../../overlay/ui/TopRightContainer.svelte";
@@ -105,11 +110,12 @@ export default class OverlayManager implements PageModifier {
     }
 
     parseOutline() {
-        this.outline = getOutline();
+        const headingItems = getHeadingItems(); // List raw DOM nodes and filter to likely headings
+        this.outline = getOutline(headingItems);
         if (this.outline.length <= 3) {
-            // note that 'Introduction' heading always exists
             // Use just article title, as outline likely not useful or invalid
-            this.outline = [createRootItem()];
+            // taking the first outline entry sometimes doesn't work, e.g. on https://newrepublic.com/maz/article/167263/amazons-global-quest-crush-unions
+            this.outline = [createRootItem(headingItems)];
         }
 
         function flatten(item: OutlineItem): OutlineItem[] {

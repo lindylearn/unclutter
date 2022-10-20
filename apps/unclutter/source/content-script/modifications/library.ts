@@ -21,6 +21,7 @@ import { addArticleToLibrary } from "../../common/api";
 import { anonymousLibraryEnabled, showLibrarySignupFlag } from "../../common/featureFlags";
 import { LibraryInfo, LibraryState, ReadingProgress } from "../../common/schema";
 import ReadingTimeModifier from "./DOM/readingTime";
+import { cleanTitle } from "../../overlay/outline/components/parse";
 
 @trackModifierExecution
 export default class LibraryModifier implements PageModifier {
@@ -181,7 +182,7 @@ export default class LibraryModifier implements PageModifier {
             const article = {
                 id: this.articleId,
                 url: this.articleUrl,
-                title: this.articleTitle, // TODO clean in frontend
+                title: cleanTitle(this.articleTitle),
                 word_count: 0, // TODO how to get this in frontend?
                 publication_date: null, // TODO how to get this in frontend?
                 time_added: new Date().getTime() / 1000,
