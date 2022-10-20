@@ -46,9 +46,8 @@ export default class BodyStyleModifier implements PageModifier {
 
     // set styles after pageview animation done
     afterTransitionIn() {
-        // need overflow to animate page elements
-        document.body.style.setProperty("overflow", "visible", "important"); // allow overflow-y for body background
-        // overflow: hidden hides background element shadow
+        // need overflow during fade-in to animate page elements
+        document.body.style.setProperty("overflow", "hidden", "important");
         document.body.style.setProperty(
             "box-shadow",
             "0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)",
