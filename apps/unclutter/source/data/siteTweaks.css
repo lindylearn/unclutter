@@ -923,3 +923,8 @@ iframe:not(.lindy-allowed-elem) {
 #mvp-post-add-box {
     display: none !important;
 }
+
+/* https://web.hypothes.is/blog/say-hello-to-anno/ */
+hypothesis-highlight {
+    background: none !important;
+}

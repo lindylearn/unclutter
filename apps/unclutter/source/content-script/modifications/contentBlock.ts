@@ -109,7 +109,7 @@ export default class ContentBlockModifier implements PageModifier {
     }
 }
 
-const blockedTags = ["footer", "aside", "nav", "gpt-ad"];
+const blockedTags = ["footer", "aside", "nav", "gpt-ad", "hypothesis-sidebar"];
 
 // words just blocked, but considered if matched text container
 export const blockedWords = [
