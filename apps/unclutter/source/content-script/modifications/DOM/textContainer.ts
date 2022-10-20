@@ -1025,6 +1025,7 @@ export default class TextContainerModifier implements PageModifier {
             ].includes(node.id) ||
             [
                 "notecard", // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Your_first_WebExtension
+                "docsanddownloads", // https://www.apple.com/newsroom/2022/08/shazam-turns-20/
             ].some((className) => node.classList.contains(className)) ||
             node.getAttribute("aria-hidden") === "true"
         ) {
