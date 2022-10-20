@@ -49,7 +49,7 @@ html.pageview.pageview > body {
     right: 10px;
     z-index: 9999999999;
     border-radius: 7px 7px 7px;
-    background-color: #edd75b;
+    background-color: #edd75b !important;
     box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
     cursor: pointer;
     overflow: hidden;
@@ -99,13 +99,13 @@ html.pageview.pageview > body {
 }
 .lindy-toast-icon {
     width: 32px;
-    color: #1f2937;
+    color: #1f2937 !important;
 }
 .lindy-toast-message {
     font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto !important;
     font-size: 15px;
     font-weight: 600;
-    color: #1f2937;
+    color: #1f2937 !important;
     margin: 0 6px;
     margin-top: -3px;
 }
@@ -113,7 +113,7 @@ html.pageview.pageview > body {
 .lindy-toast-progressbar {
     width: 100%;
     height: 3px;
-    background-color: #faf3ce;
+    background-color: #faf3ce !important;
 }
 .lindy-toast-progressbar {
     animation: toastProgressBar 5s linear;
@@ -151,7 +151,7 @@ html.pageview.pageview > body {
     right: 15px;
 
     font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto !important;
-    color: #374151;
+    color: #374151 !important;
 }
 #lindy-annotations-marginbar > div {
     position: absolute;
@@ -166,7 +166,7 @@ html.pageview.pageview > body {
     /* border-radius: 5px; */
     border-radius: 50%;
     filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.05));
-    background-color: var(--darker-annotation-color);
+    background-color: var(--darker-annotation-color) !important;
 
     cursor: pointer;
     animation: fadeInDot 0.15s linear;
@@ -174,11 +174,11 @@ html.pageview.pageview > body {
 
 .lindy-highlight {
     cursor: pointer;
-    background-color: var(--annotation-color);
+    background-color: var(--annotation-color) !important;
     transition: background-color 0.15s linear;
 }
 .lindy-highlight.lindy-hover {
-    background-color: var(--darker-annotation-color);
+    background-color: var(--darker-annotation-color) !important;
 }
 
 .lindy-crowd-highlight {
@@ -191,7 +191,7 @@ html.pageview.pageview > body {
     cursor: pointer;
 }
 .lindy-crowd-highlight.lindy-hover {
-    background-color: var(--annotation-color);
+    background-color: var(--annotation-color) !important;
     text-decoration-color: transparent;
 }
 
@@ -206,7 +206,7 @@ html.pageview.pageview > body {
     height: 10px;
     border-radius: 50%;
     filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.05));
-    background-color: var(--darker-annotation-color);
+    background-color: var(--darker-annotation-color) !important;
 
     cursor: pointer;
     animation: fadeInDot 0.15s linear;

@@ -26,7 +26,7 @@
     color: #d1d5db !important;
 }
 .lindy-plusminus.lindy-plusminus > div:hover {
-    background-color: #262626;
+    background-color: #262626 !important;
 }
 .lindy-theme-ui-row-spacer {
     border-top: 2px solid #262626;

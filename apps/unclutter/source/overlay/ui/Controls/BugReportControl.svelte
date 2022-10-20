@@ -114,7 +114,7 @@
         width: max-content;
         z-index: 3001;
 
-        color: var(--text-color);
+        color: var(--text-color) !important;
         font-family: Poppins, sans-serif;
     }
 
@@ -137,13 +137,13 @@
 
         font-size: 13px;
         font-weight: 600;
-        color: var(--text-color);
+        color: var(--text-color) !important;
 
         cursor: pointer;
         border: none;
         border-radius: 5px;
         box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-        background-color: #f3f4f6;
+        background-color: #f3f4f6 !important;
         user-select: none;
 
         transform: scale(100%);
@@ -166,7 +166,7 @@
     }
 
     .lindy-bugreport-flag {
-        background-color: #edd75b;
+        background-color: #edd75b !important;
     }
     .lindy-bugreport-flag.lindy-pressed {
         cursor: default;

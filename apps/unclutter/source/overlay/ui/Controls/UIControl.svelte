@@ -51,7 +51,7 @@
         font-size: 14px;
 
         background: var(--background-color);
-        color: var(--text-color);
+        color: var(--text-color) !important;
         border-radius: 5px;
         white-space: nowrap;
 
