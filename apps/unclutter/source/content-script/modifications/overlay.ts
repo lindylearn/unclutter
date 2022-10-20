@@ -487,7 +487,7 @@ export default class OverlayManager implements PageModifier {
 
 export function createIframeNode(id: string) {
     const iframe = document.createElement("iframe");
-    iframe.classList.add("lindy-allowed-iframe");
+    iframe.classList.add("lindy-allowed-elem");
     iframe.id = id;
 
     iframe.setAttribute("scrolling", "no");

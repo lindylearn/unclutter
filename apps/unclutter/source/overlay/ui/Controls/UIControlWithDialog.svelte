@@ -5,9 +5,12 @@
     export let defaultOpen: boolean = false;
 </script>
 
-<div class={"lindy-ui-dialog-container " + (defaultOpen ? "lindy-default-open" : "")}>
+<div
+    class={"lindy-ui-dialog-container lindy-allowed-elem" +
+        (defaultOpen ? "lindy-default-open" : "")}
+>
     <Icon {iconName} />
-    <div class="lindy-ui-dialog"><slot /></div>
+    <div class="lindy-ui-dialog lindy-allowed-elem"><slot /></div>
 </div>
 
 <style lang="postcss">

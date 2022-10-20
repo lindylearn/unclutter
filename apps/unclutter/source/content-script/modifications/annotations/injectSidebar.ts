@@ -8,7 +8,7 @@ export function injectSidebar() {
     iframeUrl.searchParams.append("title", document.title);
 
     const sidebarIframe = document.createElement("iframe");
-    sidebarIframe.classList.add("lindy-allowed-iframe");
+    sidebarIframe.classList.add("lindy-allowed-elem");
     sidebarIframe.src = iframeUrl.toString();
     sidebarIframe.id = "lindy-annotations-bar";
     sidebarIframe.setAttribute("scrolling", "no");

@@ -35,7 +35,7 @@ export default class ContentBlockModifier implements PageModifier {
 
         const excludedSelectors = [
             `.${lindyImageContainerClass}`,
-            `.lindy-allowed-iframe`,
+            `.lindy-allowed-elem`,
             `svg`, // <svg> e.g. on https://garymarcus.substack.com/p/what-does-it-mean-when-an-ai-fails?s=r
         ];
 
@@ -210,6 +210,7 @@ export const blockedWords = [
     "privacy",
     "consent",
     "disclaimer", // https://www.rockpapershotgun.com/the-lord-of-the-rings-gollum-preview-may-miss-a-precious-opportunity
+    "dialog", // https://diit.cz/clanek/recenze-intel-core-i5-12400f-asus-rog-strix-b660-g-gaming-wifi
 
     // noisy elements
     "follow", // https://english.alarabiya.net/News/world/2022/06/09/Berlin-driver-s-confused-statements-under-investigation

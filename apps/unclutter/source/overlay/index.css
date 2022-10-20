@@ -7,7 +7,7 @@
     visibility: visible !important; /* show only once CSS applies */
 }
 
-.lindy-allowed-iframe {
+.lindy-allowed-elem {
     min-width: 0 !important;
     border: none !important;
     box-shadow: none !important;
