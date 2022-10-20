@@ -89,8 +89,8 @@
         box-sizing: border-box;
         padding: 10px;
 
-        background-color: var(--background-color);
-        color: var(--text-color);
+        background-color: var(--background-color) !important;
+        color: var(--text-color) !important;
         font-weight: 600;
         font-family: Poppins, sans-serif;
 

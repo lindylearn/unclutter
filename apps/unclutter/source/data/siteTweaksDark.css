@@ -7,3 +7,9 @@ img {
 .mwe-math-fallback-image-inline {
     filter: invert(1);
 }
+
+/* https://www.vladionescu.me/posts/scaling-containers-on-aws-in-2022/ */
+* {
+    color: unset !important;
+    background-color: unset !important;
+}

@@ -18,8 +18,8 @@
 
 <style lang="postcss">
     .lindy-ui-dialog-container {
-        position: relative;
-        z-index: 3000;
+        position: relative !important;
+        z-index: 3000 !important;
     }
 
     /* dialog box */
@@ -30,8 +30,8 @@
         right: calc(100% + 10px);
         z-index: 3000;
 
-        background-color: var(--background-color);
-        color: #9ca3af;
+        background-color: var(--background-color) !important;
+        color: #9ca3af !important;
         border-radius: 5px;
         filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.06)) drop-shadow(0 1px 2px rgb(0 0 0 / 0.05)); /* custom shadow, lighter than tw 'drop-shadow' */
 

@@ -468,12 +468,15 @@ export default class TextContainerModifier implements PageModifier {
                 margin-right: 0 !important;
                 padding-left: 0 !important;
                 padding-right: 0 !important;
+                top: 0 !important;
+                left: 0 !important;
                 border: none !important;
                 background: none !important;
                 box-shadow: none !important;
                 z-index: 1000 !important;
                 overflow: visible !important;
                 float: none !important;
+                transform: none !important;
             }
             /* more strict cleanup for main text containers */
             .${lindyMainContentContainerClass}:not(#fakeID#fakeID#fakeID):not(body) {
@@ -740,7 +743,7 @@ export default class TextContainerModifier implements PageModifier {
                 // skip this if margin contributes >= 90% of an image's height (e.g. on https://www.cnbc.com/2022/06/20/what-is-staked-ether-steth-and-why-is-it-causing-havoc-in-crypto.html)
                 if (
                     valueFloat >= 60 &&
-                    (stackType !== "image" || valueFloat < node.scrollHeight * 0.9)
+                    (stackType !== "image" || valueFloat < node.offsetHeight * 0.8)
                 ) {
                     classes.push(`lindy-clean-${property}`);
                     return;
@@ -1025,6 +1028,7 @@ export default class TextContainerModifier implements PageModifier {
             ].includes(node.id) ||
             [
                 "notecard", // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Your_first_WebExtension
+                "docsanddownloads", // https://www.apple.com/newsroom/2022/08/shazam-turns-20/
             ].some((className) => node.classList.contains(className)) ||
             node.getAttribute("aria-hidden") === "true"
         ) {
