@@ -37,6 +37,7 @@ export default class ContentBlockModifier implements PageModifier {
             `.${lindyImageContainerClass}`,
             `.lindy-allowed-iframe`,
             `svg`, // <svg> e.g. on https://garymarcus.substack.com/p/what-does-it-mean-when-an-ai-fails?s=r
+            `[data-observe-resizes]`, // https://edition.cnn.com/2022/09/22/europe/russia-mobilization-logistics-analysis-intl-hnk-ml/index.html
         ];
 
         // be less strict if no main text or header found respectively
@@ -167,6 +168,7 @@ export const blockedWords = [
     "banner", // https://nautil.us/why-people-feel-like-victims-9728/
     "alert",
     "modal", // https://www.fugue.co/blog/2015-11-11-guide-to-emacs.html
+    "prompt", // https://edition.cnn.com/cnn-underscored/reviews/best-rain-jackets?iid=CNNUnderscoredHPcontainer
     "overlay",
     // "sticky", // https://news.yahoo.com/exclusive-secret-cia-training-program-in-ukraine-helped-kyiv-prepare-for-russian-invasion-090052743.html?guccounter=2
     "aside",
@@ -233,7 +235,7 @@ export const blockedWords = [
     "extra", // https://arxiv.org/abs/2206.02871
     "contacts", // https://www.europarl.europa.eu/news/en/press-room/20220613IPR32838/eu-covid-certificate-meps-and-council-agree-to-extend-rules-for-another-year
     "home", // https://blog.cryptographyengineering.com/2022/06/09/in-defense-of-cryptocurrency/
-
+    "playlist", // https://edition.cnn.com/2022/09/22/europe/russia-mobilization-logistics-analysis-intl-hnk-ml/index.html
     "search", // https://blog.thunderbird.net/2022/06/thunderbird-102-released-a-serious-upgrade-to-your-communication/
 ];
 export const blockedSpecificSelectors = [
