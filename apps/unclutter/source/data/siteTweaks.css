@@ -915,3 +915,11 @@ iframe:not(.lindy-allowed-iframe) {
 .ob-has-background-overlay.ob-has-background-overlay {
     display: block !important;
 }
+
+/* https://www.visualcapitalist.com/10-cognitive-razors-to-help-simplify-decision-making/?ref=refind */
+#mvp-content-wrap#mvp-content-wrap {
+    display: block !important;
+}
+#mvp-post-add-box {
+    display: none !important;
+}
