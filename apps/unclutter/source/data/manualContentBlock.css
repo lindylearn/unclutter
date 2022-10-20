@@ -242,6 +242,13 @@ div[data-gu-name="body"] > div:first-child {
 body.mediawiki {
     background-color: white !important;
 }
+.mw-editsection,
+.infobox.vcard {
+    display: none !important;
+}
+#External_links#External_links {
+    display: block !important;
+}
 
 /* https://arstechnica.com/tech-policy/2022/03/google-hijacked-millions-of-customers-and-orders-from-restaurants-lawsuit-says/ */
 .ad.ad.ad.ad {
