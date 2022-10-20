@@ -14,7 +14,7 @@
 
 <div
     id="outline"
-    class="relative max-w-full cursor-auto rounded-lg bg-white px-5 py-4 shadow transition-all"
+    class="relative max-w-full cursor-auto rounded-lg bg-white p-3 px-4 shadow transition-all"
 >
     <div>
         <div class="flex justify-between">
@@ -43,7 +43,7 @@
             {/if}
         </div>
 
-        <ul class="m-0 flex list-none flex-col gap-1 p-0">
+        <ul class="flex list-none flex-col gap-1">
             {#each outline.slice(1) as child, i}
                 <Heading
                     {...child}

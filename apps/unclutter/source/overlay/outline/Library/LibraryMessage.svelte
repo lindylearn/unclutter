@@ -28,7 +28,7 @@
     on:click={() => libraryModalModifier.showModal()}
 >
     <div
-        class="flex h-[calc(1rem+0.5rem+1.25rem+0.75rem*2)] justify-between gap-3 rounded-lg p-3 transition-colors"
+        class="flex h-[calc(1rem+0.5rem+1.25rem+0.75rem*2)] justify-between gap-3 rounded-lg p-3 px-4 transition-colors"
         style={`background-color: ${topicColor}`}
     >
         <div class="main-content whitespace-nowrap text-sm">
