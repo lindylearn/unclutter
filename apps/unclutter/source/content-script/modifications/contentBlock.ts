@@ -184,7 +184,7 @@ export const blockedWords = [
     "notification", // https://garymarcus.substack.com/p/nonsense-on-stilts?s=r
     "ticker", // https://edition.cnn.com/2022/06/19/energy/germany-russia-gas-supplies-winter-intl/index.html
     "ribbon", // https://edition.cnn.com/2022/06/19/energy/germany-russia-gas-supplies-winter-intl/index.html
-    "widget", // https://www.sciencehistory.org/distillations/mouse-heaven-or-mouse-hell
+    // "widget", // https://www.hope-rehab-center-thailand.com/blog/personal-development/how-selfishness-ruins-everything-but-kindness-heals/
     "backdrop", // https://review.firstround.com/how-superhuman-built-an-engine-to-find-product-market-fit
 
     // related articles

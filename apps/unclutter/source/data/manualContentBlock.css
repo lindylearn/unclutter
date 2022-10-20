@@ -892,3 +892,9 @@ iframe:not(.lindy-allowed-iframe) {
 .lindy-image-container > figcaption {
     display: block !important;
 }
+
+/* https://www.hope-rehab-center-thailand.com/blog/personal-development/how-selfishness-ruins-everything-but-kindness-heals/ */
+.elementor-widget-container::before,
+.elementor-widget-container::after {
+    display: none !important;
+}
