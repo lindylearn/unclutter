@@ -1022,14 +1022,20 @@ export default class TextContainerModifier implements PageModifier {
         }
 
         if (
+            // id selector
             [
                 "module-moreStories", // https://news.yahoo.com/thailand-legalizes-growing-consumption-marijuana-135808124.html
                 "comments", // https://leslefts.blogspot.com/2013/11/the-great-medieval-water-myth.html
             ].includes(node.id) ||
+            // class selector
             [
                 "notecard", // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Your_first_WebExtension
                 "docsanddownloads", // https://www.apple.com/newsroom/2022/08/shazam-turns-20/
             ].some((className) => node.classList.contains(className)) ||
+            // class word contains
+            [
+                "comments", // https://www.lesswrong.com/posts/KTbGuLTnycA6wKBza/what-would-a-fight-between-humanity-and-agi-look-like
+            ].some((className) => node.className.toLowerCase().includes(className)) ||
             node.getAttribute("aria-hidden") === "true"
         ) {
             return true;

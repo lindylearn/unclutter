@@ -316,6 +316,7 @@ export const blockedSpecificSelectors = [
     ".highwire-cite-authors", // https://www.biorxiv.org/content/10.1101/2022.05.15.491973v1
     "#_fbn_", // https://www.geeksforgeeks.org/fasttext-working-and-implementation/
     ".lightbox-target", // https://www.geeksforgeeks.org/fasttext-working-and-implementation/
+    ".neo-spacer-open", // https://www.unix.com/shell-programming-and-scripting/179639-shell-script-epoch-time-conversion.html
 
     // term of contents (Unclutter shows its own outline)
     ".toc",
