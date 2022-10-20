@@ -7,6 +7,8 @@ interface VersionMessage {
 }
 
 export async function getVersionMessagesToShow(): Promise<VersionMessage[]> {
+    return [];
+
     // show messsage for every version since user installed the extension
     const initialVersion = getMainVersion(await getInitialInstallVersion());
     const newMessages: VersionMessage[] = updateMessages
