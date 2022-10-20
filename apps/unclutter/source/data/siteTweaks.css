@@ -415,6 +415,10 @@ html.flexbox.flexboxlegacy > body {
 .zn-body-text ~ * {
     display: none !important;
 }
+/* https://edition.cnn.com/2022/09/22/europe/russia-mobilization-logistics-analysis-intl-hnk-ml/index.html */
+[data-observe-resizes]:not(#fakeId) {
+    display: block !important;
+}
 
 /* https://www.independent.co.uk/news/world/europe/mcdonalds-russia-fast-food-trademark-b2037987.html */
 .sc-jcZdLI {
@@ -904,4 +908,10 @@ iframe:not(.lindy-allowed-iframe) {
 .elementor-widget-container::before,
 .elementor-widget-container::after {
     display: none !important;
+}
+
+/* https://pureinsights.com/blog/2021/elasticsearch-vs-opensearch-user-point-of-view-part-1-of-3/ */
+.ob-is-breaking-bad.ob-is-breaking-bad,
+.ob-has-background-overlay.ob-has-background-overlay {
+    display: block !important;
 }

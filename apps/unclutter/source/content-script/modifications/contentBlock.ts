@@ -37,7 +37,6 @@ export default class ContentBlockModifier implements PageModifier {
             `.${lindyImageContainerClass}`,
             `.lindy-allowed-iframe`,
             `svg`, // <svg> e.g. on https://garymarcus.substack.com/p/what-does-it-mean-when-an-ai-fails?s=r
-            `[data-observe-resizes]`, // https://edition.cnn.com/2022/09/22/europe/russia-mobilization-logistics-analysis-intl-hnk-ml/index.html
         ];
 
         // be less strict if no main text or header found respectively
@@ -257,6 +256,7 @@ export const blockedSpecificSelectors = [
     "[data-google-query-id]", // https://www.romania-insider.com/unidentified-plane-ro-airspace-jun-2022
     "#ad_before_header",
     ".billboard-container", // https://www.dailymail.co.uk/tvshowbiz/article-10913383/Hugh-Jackman-tests-positive-COVID-19-just-one-day-Tony-Awards.html
+    ".adsninja-ad-zone", // https://www.makeuseof.com/android-security-codes-you-need-to-know/?utm_source=MUO-NL-RP&utm_medium=newsletter
 
     "[class$='-nav' i]", // https://fly.io/blog/a-foolish-consistency/
 
