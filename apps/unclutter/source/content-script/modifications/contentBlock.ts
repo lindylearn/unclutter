@@ -3,6 +3,7 @@ import { createStylesheetLink, createStylesheetText } from "../../common/stylesh
 import domainBlocklistSelectors from "../../data/domainBlocklistSelectors.json";
 import TextContainerModifier, {
     lindyContainerClass,
+    lindyHeadingContainerClass,
     lindyImageContainerClass,
     lindyMainContentContainerClass,
     lindyMainHeaderContainerClass,
@@ -48,7 +49,9 @@ export default class ContentBlockModifier implements PageModifier {
         if (this.textContainerModifier.foundMainHeadingElement) {
             excludedSelectors.push(`.${lindyMainHeaderContainerClass}`);
         } else {
-            // excludedSelectors.push(`.${lindyHeadingContainerClass}`);
+            // avoid hiding main header
+            // e.g. on https://www.sueddeutsche.de/kultur/herr-der-ringe-game-of-thrones-serien-analyse-1.5632806?reduced=true
+            excludedSelectors.push(`.${lindyHeadingContainerClass}`);
         }
 
         const wordSelectors = blockedWords
@@ -264,6 +267,7 @@ export const blockedSpecificSelectors = [
     "[class$='-nav' i]", // https://fly.io/blog/a-foolish-consistency/
 
     // header
+    `header:not(.${lindyMainHeaderContainerClass})`, // https://bezprawnik.pl/deflacja-w-polsce/
     ".global-header",
     ".Page-header",
     ".site-header",

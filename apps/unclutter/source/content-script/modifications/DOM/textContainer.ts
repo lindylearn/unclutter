@@ -283,7 +283,11 @@ export default class TextContainerModifier implements PageModifier {
                 // main stack state determined by leaf element
                 isMainStack =
                     isOnFirstPage &&
+                    // exclude links
                     (linkElem?.tagName !== "A" || linkElem.href === window.location.href) &&
+                    // ignore visually small sub-headings, e.g. on https://www.sueddeutsche.de/kultur/herr-der-ringe-game-of-thrones-serien-analyse-1.5632806?reduced=true
+                    pos.height >= 25 &&
+                    // allow long H1s or if contains document title
                     ((startElem.tagName === "H1" && startElem.innerText?.length >= 15) ||
                         startElem.innerText
                             ?.slice(0, 30)
