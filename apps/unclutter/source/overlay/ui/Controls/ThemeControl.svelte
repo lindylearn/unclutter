@@ -195,6 +195,7 @@
     .lindy-theme-button {
         display: block !important;
         height: 20px !important;
+        width: auto !important;
 
         border: 2.5px solid #f3f4f6 !important;
         border-radius: 5px !important;

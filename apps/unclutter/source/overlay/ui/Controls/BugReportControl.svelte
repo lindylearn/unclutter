@@ -134,6 +134,7 @@
         padding: 2px 8px !important;
         display: flex !important;
         align-items: center !important;
+        width: auto !important;
 
         font-size: 13px !important;
         font-weight: 600 !important;

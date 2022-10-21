@@ -164,10 +164,9 @@ export default class TransitionManager implements PageModifier {
         // undo content block in stages if small reading time detected
         this.readingTimeModifier.afterTransitionIn();
         if (this.readingTimeModifier.likelyMainTextMissing) {
-            console.log("Main text likely missing, undoing content block");
-
             // try undoing just main text sibling block
             if (this.textContainerModifier.foundMainContentElement) {
+                console.log("Undoing main text sibling block");
                 this.textContainerModifier.disableSiblingBlock();
 
                 // check if works now
@@ -175,6 +174,7 @@ export default class TransitionManager implements PageModifier {
             }
             // undo entire content block
             if (this.readingTimeModifier.likelyMainTextMissing) {
+                console.log("Undoing content block");
                 this.contentBlockModifier.transitionOut();
 
                 // check if works now

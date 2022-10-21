@@ -461,6 +461,7 @@ export default class TextContainerModifier implements PageModifier {
             .${lindyHeadingContainerClass}:not(#fakeID#fakeID#fakeID),
             .${lindyContainerClass}:not(#fakeID#fakeID#fakeID) > :is(
                 ${this.usedTextElementSelector}, 
+                div,
                 ${globalHeadingSelector}
             ) {
                 width: 100% !important;
