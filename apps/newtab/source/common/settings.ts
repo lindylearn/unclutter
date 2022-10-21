@@ -17,7 +17,7 @@ export const settingsStore = getBucket<Settings>("settings", "sync");
 export function useSettings<T extends object>(bucket: Bucket<T>): T {
     const [settings, setSettings] = useState<T>();
     useEffect(() => {
-        // wrapper around chrome.storage.sync
+        // uses @extend-chrome/storage wrapper library around chrome.storage.sync
         bucket.get().then(setSettings);
     }, []);
 

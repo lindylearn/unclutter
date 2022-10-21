@@ -19,6 +19,7 @@ import {
     getLocalScreenshot,
     useAutoDarkMode,
 } from "@unclutter/library-components/dist/common";
+import { settingsStore, useSettings } from "../common/settings";
 import NewTabModal from "./Modal";
 
 import "@unclutter/library-components/styles/globals.css";
@@ -56,6 +57,8 @@ export default function App() {
             }
         };
     }, [showModal]);
+
+    const settings = useSettings(settingsStore);
 
     if (!userInfo) {
         return <></>;
