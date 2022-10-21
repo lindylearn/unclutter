@@ -248,7 +248,7 @@ export default class LibraryModifier implements PageModifier {
         }
 
         if (
-            pageProgress >= 0.95 &&
+            pageProgress >= 0.99 &&
             this.libraryState.libraryInfo?.article &&
             this.libraryState.libraryInfo.article.reading_progress < readingProgressFullClamp
         ) {
