@@ -175,13 +175,7 @@
     "independent.co.uk": [".Header__AuthorImage-sc-mqbe6u-4.bEMDmP"],
     "info.blackswanltd.com": [
         ".span6.widget-span.widget-type-linked_image",
-        ".row-fluid-wrapper.row-depth-1.row-number-6",
-        ".row-fluid-wrapper.row-depth-1.row-number-12",
-        ".row-fluid-wrapper.row-depth-1.row-number-10",
-        ".row-fluid-wrapper.row-depth-1.row-number-9",
-        ".row-fluid-wrapper.row-depth-1.row-number-5",
-        ".row-fluid-wrapper.row-depth-1.row-number-17",
-        ".row-fluid-wrapper.row-depth-1.row-number-15"
+        "[href='#intro']",
     ],
     "investor.vanguard.com": [".cmp-articleaspot__pills"],
     "jamesclear.com": [".post__next"],
