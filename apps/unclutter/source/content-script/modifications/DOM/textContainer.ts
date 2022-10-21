@@ -16,7 +16,7 @@ const globalTextElementSelector = "p, font, ul";
 const globalHeadingSelector = "h1, h2, h3, h4, header, [class*='head' i], [class*='title' i]";
 const headingClassWordlist = ["header", "heading", "title", "article-details"]; // be careful here
 const globalImageSelector = "img, picture, figure, video";
-const textContainerExcludedTags = ["blockquote", "code", "pre"];
+const quoteContainerTags = ["blockquote", "code", "pre"];
 
 const headingTags = globalHeadingSelector.split(", ");
 
@@ -492,6 +492,13 @@ export default class TextContainerModifier implements PageModifier {
             .${lindyContainerClass}:after,
             .${lindyHeadingContainerClass}:after {
                 display: none !important;
+            }
+            ${quoteContainerTags.join(", ")} {
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+                max-width: 100% !important;
             }
             /* more strict cleanup for main text containers */
             .${lindyMainContentContainerClass}:not(#fakeID#fakeID#fakeID):not(body) {
@@ -1031,7 +1038,7 @@ export default class TextContainerModifier implements PageModifier {
     // very carefully exclude elements as text containers to avoid incorrect main container selection for small articles
     // this doesn't mean these elements will be removed, but they might
     private shouldExcludeAsTextContainer(node: HTMLElement) {
-        if (textContainerExcludedTags.includes(node.tagName.toLowerCase())) {
+        if (quoteContainerTags.includes(node.tagName.toLowerCase())) {
             // leave style of quotes intact
             // e.g. https://knowledge.wharton.upenn.edu/article/how-price-shocks-in-formative-years-scar-consumption-for-life/
             return true;

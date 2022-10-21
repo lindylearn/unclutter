@@ -387,6 +387,7 @@
         ".aligncenter.size-full.wp-image-6800.entered.lazyloaded"
     ],
     "vancouversun.com": [".more-topic", ".visually-hidden", ".cat-head.short"],
+    "shopify.com": ["#GlobalIconSymbols", "#SiteNavContainer"],
     "vnexpress.net": [
         ".section.page-detail.bottom-detail",
         ".width_common.box-tinlienquanv2",
