@@ -511,6 +511,7 @@ export default class TextContainerModifier implements PageModifier {
                 padding-left: 0 !important;
                 padding-right: 0 !important;
                 height: auto !important;
+                min-height: auto !important;
             }
             /* heading style tweaks */
             .${lindyHeadingContainerClass}:before, 
