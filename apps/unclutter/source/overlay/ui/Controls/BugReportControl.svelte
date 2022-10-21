@@ -12,11 +12,10 @@
     // export let textContainerModifier: TextContainerModifier;
 
     let defaultOpen: boolean = false;
-    let supportElementBlocker: boolean = true;
     let activeElementBlocker: boolean = false;
     let captionMessage: string = `Is there an issue with this article?`;
     if (elementPickerModifier.readingTimeModifier.likelyMainTextMissing) {
-        captionMessage = `Sorry this article doesn't work well.`;
+        captionMessage = `Sorry if this article doesn't work well.`;
         setDefaultOpen();
     }
 
@@ -36,7 +35,6 @@
         window.addEventListener("blur", onInteraction); // iframe click
         containerElement.addEventListener("mouseenter", onInteraction);
 
-        supportElementBlocker = false;
         defaultOpen = true;
     }
 
@@ -73,16 +71,14 @@
     <div class="lindy-bugreport-content" bind:this={containerElement}>
         <div class="lindy-bugreport-caption">{captionMessage}</div>
         <div class="lindy-bugreport-buttons">
-            {#if supportElementBlocker}
-                <div
-                    class={"lindy-bugreport-button lindy-bugreport-block " +
-                        (activeElementBlocker ? "lindy-pressed" : "")}
-                    on:click={toggleElementBlocker}
-                >
-                    <Icon iconName="selector" />
-                    <div>Block elements</div>
-                </div>
-            {/if}
+            <div
+                class={"lindy-bugreport-button lindy-bugreport-block " +
+                    (activeElementBlocker ? "lindy-pressed" : "")}
+                on:click={toggleElementBlocker}
+            >
+                <Icon iconName="selector" />
+                <div>Block elements</div>
+            </div>
 
             <div
                 class={"lindy-bugreport-button lindy-bugreport-flag " +

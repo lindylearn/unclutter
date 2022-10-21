@@ -177,8 +177,7 @@ export default class TransitionManager implements PageModifier {
                 console.log("Undoing content block");
                 this.contentBlockModifier.transitionOut();
 
-                // check if works now
-                this.readingTimeModifier.afterTransitionIn();
+                // keep likelyMainTextMissing state to show bug report message
             }
         }
 
