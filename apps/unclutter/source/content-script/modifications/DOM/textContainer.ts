@@ -670,7 +670,11 @@ export default class TextContainerModifier implements PageModifier {
         const fontSize = `calc(var(${fontSizeThemeVariable}) * ${this.fontSizeNormalizationScale.toFixed(
             2
         )})`;
-        const fontSizeStyle = `.${lindyContainerClass}, .${lindyContainerClass} > :is(${this.usedTextElementSelector}, a, ol, ul) {
+        const fontSizeStyle = `
+        .${lindyContainerClass}, 
+        .${lindyContainerClass} > :is(${this.usedTextElementSelector}, a, ol, ul),
+        blockquote,
+        blockquote > * {
             position: relative !important;
             font-size: ${fontSize} !important;
             line-height: ${this.relativeLineHeight} !important;
@@ -730,8 +734,9 @@ export default class TextContainerModifier implements PageModifier {
             classes.push("lindy-text-remove-horizontal-flex");
         }
 
+        // put maximum on header font size
         if (stackType === "header" && activeStyle.fontSize > "50px") {
-            // put maximum on header font size
+            // ideally need to normalize font size first
             // e.g. WP template uses 6em on https://blog.relyabilit.ie/the-curse-of-systems-thinkers/
             classes.push("lindy-header-font-size-max");
         }

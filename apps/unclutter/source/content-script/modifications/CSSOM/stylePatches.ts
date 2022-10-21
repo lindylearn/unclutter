@@ -56,6 +56,7 @@ export default class StylePatchesModifier implements PageModifier {
 
         // hack: remove vw and vh rules for now (mostly used to add margin, which we already add elsewhere)
         // conditionScale is not neccessarily equal to actual pageview with, so cannot easily get correct margin
+        // but using correct values would help with many cases, e.g. https://www.twinview.com/insights/ai-putting-the-smart-in-smart-buildings
         if (
             rule.style.getPropertyValue("width")?.includes("vw") ||
             rule.style.getPropertyValue("min-width")?.includes("vw")
@@ -75,7 +76,12 @@ export default class StylePatchesModifier implements PageModifier {
 
         if (rule.style.getPropertyValue("margin")?.includes("vw")) {
             override = true;
-            propertiesToSet["margin"] = "0";
+            propertiesToSet["margin"] = "20px";
+        }
+        if (rule.style.getPropertyValue("padding")?.includes("vw")) {
+            // e.g. https://www.twinview.com/insights/ai-putting-the-smart-in-smart-buildings
+            override = true;
+            propertiesToSet["padding"] = "20px";
         }
         if (rule.style.getPropertyValue("left")?.includes("vw")) {
             override = true;
