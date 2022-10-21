@@ -483,7 +483,9 @@ export default class TextContainerModifier implements PageModifier {
                 transform: none !important;
             }
             .${lindyContainerClass}:before, 
-            .${lindyContainerClass}:after {
+            .${lindyHeadingContainerClass}:before, 
+            .${lindyContainerClass}:after,
+            .${lindyHeadingContainerClass}:after {
                 display: none !important;
             }
             /* more strict cleanup for main text containers */
