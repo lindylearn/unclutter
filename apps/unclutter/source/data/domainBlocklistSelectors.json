@@ -176,6 +176,7 @@
     "info.blackswanltd.com": [
         ".span6.widget-span.widget-type-linked_image",
         "[href='#intro']",
+        ".widget-type-cell"
     ],
     "investor.vanguard.com": [".cmp-articleaspot__pills"],
     "jamesclear.com": [".post__next"],
