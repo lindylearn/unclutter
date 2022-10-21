@@ -26,7 +26,12 @@
         ".sc-1wkneyl-0.hxLRyg.video-html5-playlist",
         ".bxm4mm-2.hKBnez"
     ],
-    "beautifulracket.com": [".sidebar.has_form", ".nav-left", ".nav-right", ".copy-button"],
+    "beautifulracket.com": [
+        ".sidebar.has_form",
+        ".nav-left",
+        ".nav-right",
+        ".copy-button"
+    ],
     "bezprawnik.pl": [
         ".ad_slot_height_manager_wrapper_bp_sdh2",
         "#oa-360-1666305713099_aa6xa65xr",
@@ -37,6 +42,24 @@
         ".heading-bezprawnik-thumbnail__outer",
         ".partners-top__title",
         ".partners-top__outer-wrapper"
+    ],
+    "biobiochile.cl": [
+        ".ad-aside.bbcl-app",
+        ".post-aside",
+        ".realtime-article",
+        ".bbcl-app.infinite-scroll",
+        ".section.section-realtime.bbcl-app",
+        ".nav-item",
+        ".facebook-comments.bbcl-app",
+        ".alliances-container",
+        ".footer-top",
+        ".navbar-bottom",
+        "#uid-69-ad",
+        ".navbar.navbar-top",
+        "#header",
+        "#slot_box1_esc_5368045",
+        "#slot_box2_esc_5368045",
+        "#slot_box3_esc_5368045"
     ],
     "blog.csdn.net": [
         ".article-bar-top",
