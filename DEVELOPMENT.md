@@ -1,6 +1,8 @@
-## Technical README
+# Unclutter Development
 
-### How this works
+Thank you for the interest in contributing! This project is open-source because no single person or company can build a reader that works for everyone. If you want a some new feature, the surest way is to implement it yourself :)
+
+## How Unclutter works
 
 The main "trick" is to use a website's responsive style to hide non-essential page elements for us (by [parsing & applying these rules in the CSSOM](source/content-script/modifications/CSSOM/responsiveStyle.ts)).
 For other annoyances there are [global](source/content-script/modifications/contentBlock.ts) and [site-specific](source/content-script/pageview/siteTweaks.css) blocklists based on CSS class naming.
@@ -13,20 +15,23 @@ Beyond this core functionality there are embedded React iframes to power the [so
 
 **For documentation on individual features see the [docs pages](https://github.com/lindylearn/unclutter/blob/main/docs).**
 
-## Contributing
+## Project structure
 
-The main way you can help is to report bugs, broken articles pages, UI inconsistencies, or ideas on how to improve the extension by creating an [issue](https://github.com/lindylearn/unclutter/issues).
+Besides the Unclutter reader mode extension, this repo also contains code for the Unclutter New Tab extension, a semi-deprecated website for the Unclutter article library, and a serverless Node.js service to generate article screenshots. See the different subfolders of `apps`.
 
-If you want something to be fixed faster (like a CSS bug), it may help to do it yourself. Please let me know if the docs pages and inline comments are not sufficient. Thank you in advance!
+`common` contains code shared by two or more of theses apps, notably `library-components` for UI elements of the Unclutter library, and `replicache-nextjs` the server-side code to synchronize the library via [Replicache](https://replicache.dev).
 
 ## Development
 
-To build the extension yourself, run:
+Install all monorepo dependencies by running `yarn install` and `yarn build` at the root of the project.
 
-1. `yarn install && yarn build`
-2. `yarn package`
-3. Find the bundled extension code in `/web-ext-artifacts`. `_manifest-v2` is for Firefox, `_manifest-v3` for Chromium browsers.
+To develop the Unclutter extension, `cd` into `apps/unclutter` and run `yarn build` to build your code changes. You can then run `yarn chrome` to start a Chromium window that reloads the extension code every time you build the code (use `yarn firefox` for Firefox).
 
-I run this using node `v16.14.0` on Mac, then upload the bundled code to the Chrome and Mozilla extension stores manually. The bundling uses Rollup to create a somewhat readable output -- so feel free to check the released code in your browser's profile folder if you installed the extension.
+For hot reloading of the `common` packages during development, run `yarn dev` at the root of the project.
 
-For hot reloading during development, run `yarn watch` and `yarn web-ext run` in parallel.
+## Release process
+
+`yarn package` inside any of the extension folders generates the bundled `.zip` extension files.
+These need to be manually uploaded to the Chrome and Firefox extension stores by @phgn0. For Chrome, extension releases usually take 1-4 days to be approved due to their review process.
+
+The `apps/library-web` website and `apps/screenshots` service are infrequently deployed on demand.
