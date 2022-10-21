@@ -230,7 +230,7 @@ export default class TextContainerModifier implements PageModifier {
                 return false;
             }
 
-            // exclude image captions
+            // exclude image captions in text stack
             if (stackType !== "image" && ["FIGURE", "PICTURE"].includes(currentElem.tagName)) {
                 return false;
             }
@@ -529,8 +529,11 @@ export default class TextContainerModifier implements PageModifier {
             }
 
             /* image container cleanup */
-            .${lindyImageContainerClass}:not(#fakeID#fakeID#fakeID) {
+            .${lindyImageContainerClass}:not(#fakeID#fakeID#fakeID),
+            .${lindyImageContainerClass}:not(#fakeID#fakeID#fakeID) > * {
                 width: 100% !important;
+                top: 0 !important;
+                left: 0 !important;
                 margin-left: 0 !important;
                 margin-right: 0 !important;
                 padding-left: 0 !important;
@@ -538,11 +541,9 @@ export default class TextContainerModifier implements PageModifier {
                 border: none !important;
                 /* y padding often used to make space for images, e.g. on theintercept or variety.com */
                 /* height causes issues for image spacers, e.g. on arstechnica.com */
+
                 backdrop-filter: none !important; /* prevent implicit GPU layer */
                 transform: none !important;
-
-                top: 0 !important;
-                left: 0 !important;
             }
         `;
     }
