@@ -167,19 +167,23 @@ export default class TextContainerModifier implements PageModifier {
             }
 
             // parse text element font size
-            const fontSize = parseFloat(activeStyle.fontSize);
-            if (this.paragraphFontSizes[fontSize]) {
-                this.paragraphFontSizes[fontSize] += 1;
+            // exclude <ul>, e.g. on https://arstechnica.com/information-technology/2022/10/how-vice-society-got-away-with-a-global-ransomware-spree/
+            if (elem.tagName !== "UL") {
+                const fontSize = parseFloat(activeStyle.fontSize);
+                if (this.paragraphFontSizes[fontSize]) {
+                    this.paragraphFontSizes[fontSize] += 1;
 
-                // Save largest element as example (small paragraphs might have header-specific line height)
-                if (
-                    elem.innerText.length > this.exampleNodePerFontSize[fontSize].innerText.length
-                ) {
+                    // Save largest element as example (small paragraphs might have header-specific line height)
+                    if (
+                        elem.innerText.length >
+                        this.exampleNodePerFontSize[fontSize].innerText.length
+                    ) {
+                        this.exampleNodePerFontSize[fontSize] = elem;
+                    }
+                } else {
+                    this.paragraphFontSizes[fontSize] = 1;
                     this.exampleNodePerFontSize[fontSize] = elem;
                 }
-            } else {
-                this.paragraphFontSizes[fontSize] = 1;
-                this.exampleNodePerFontSize[fontSize] = elem;
             }
         }
 
