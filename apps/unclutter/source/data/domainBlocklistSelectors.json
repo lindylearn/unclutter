@@ -34,7 +34,9 @@
         "#oa-360-1666305715648_y73sptyaj",
         "#oa-360-1666305715654_rpu8wg13h",
         ".extend-critical-column-outer-wrapper",
-        ".heading-bezprawnik-thumbnail__outer"
+        ".heading-bezprawnik-thumbnail__outer",
+        ".partners-top__title",
+        ".partners-top__outer-wrapper"
     ],
     "blog.csdn.net": [
         ".article-bar-top",
