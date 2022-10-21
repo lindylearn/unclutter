@@ -227,6 +227,15 @@
         ".meta.meta__social.old__meta-social",
         ".article__status"
     ],
+    "lesswrong.com": [
+        ".PostsPagePostHeader-headerVote",
+        ".FooterTag-root.FooterTag-core",
+        ".LWTooltip-root",
+        ".Header-root",
+        ".PostsPagePostFooter-footerSection",
+        ".Footer-root",
+        ".PingbacksList-root"
+    ],
     "leveragethoughts.substack.com": [".button-wrapper"],
     "litreactor.com": [
         ".imagecache.imagecache-header-square-tiny.imagecache-default.imagecache-header-square-tiny_default",
