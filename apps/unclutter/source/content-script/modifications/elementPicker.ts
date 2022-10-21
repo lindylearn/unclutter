@@ -54,7 +54,6 @@ export default class ElementPickerModifier implements PageModifier {
     enable() {
         this.spotlight = document.createElement("div");
         this.spotlight.className = `${overrideClassname} lindy-overlay-elem lindy-element-spotlght`;
-        // this.spotlight.style.contain = "strict";
         document.documentElement.appendChild(this.spotlight);
 
         this.spotlight.onclick = this.onFinishSelection.bind(this);
@@ -115,19 +114,19 @@ export default class ElementPickerModifier implements PageModifier {
             );
         } else {
             rect = new DOMRect(0, 0, 0, 0);
-            this.spotlight.style.visibility = "hidden";
-            this.spotlight.style.opacity = "0";
-            this.spotlight.style.zIndex = "0";
+            this.spotlight.style.setProperty("visibility", "hidden", "important");
+            this.spotlight.style.setProperty("opacity", "0", "important");
+            this.spotlight.style.setProperty("z-index", "0", "important");
             return;
         }
-        this.spotlight.style.top = `${rect.top}px`;
-        this.spotlight.style.left = `${rect.left}px`;
-        this.spotlight.style.height = `${rect.height}px`;
-        this.spotlight.style.width = `${rect.width}px`;
+        this.spotlight.style.setProperty("top", `${rect.top}px`, "important");
+        this.spotlight.style.setProperty("left", `${rect.left}px`, "important");
+        this.spotlight.style.setProperty("height", `${rect.height}px`, "important");
+        this.spotlight.style.setProperty("width", `${rect.width}px`, "important");
 
-        this.spotlight.style.visibility = "visible";
-        this.spotlight.style.opacity = "0.4";
-        this.spotlight.style.zIndex = "10000";
+        this.spotlight.style.setProperty("visibility", "visible", "important");
+        this.spotlight.style.setProperty("opacity", "0.4", "important");
+        this.spotlight.style.setProperty("z-index", "10000", "important");
     }
 
     private iterateParents(startNode: HTMLElement) {
