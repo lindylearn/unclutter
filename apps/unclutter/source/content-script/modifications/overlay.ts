@@ -79,8 +79,12 @@ export default class OverlayManager implements PageModifier {
     private bottomIframe: HTMLIFrameElement;
     createIframes() {
         this.topleftIframe = createIframeNode("lindy-info-topleft");
-        this.topleftIframe.style.position = "fixed"; // put on new layer
-        this.topleftIframe.style.maxWidth = "calc((100vw - var(--lindy-pagewidth)) / 2 - 7px)"; // prevent initial transition
+        this.topleftIframe.style.setProperty("position", "fixed", "important"); // put on new layer
+        this.topleftIframe.style.setProperty(
+            "max-width",
+            "calc((100vw - var(--lindy-pagewidth)) / 2 - 7px)",
+            "important"
+        ); // prevent initial transition
         document.documentElement.appendChild(this.topleftIframe);
         insertIframeFont(this.topleftIframe);
 
@@ -226,7 +230,7 @@ export default class OverlayManager implements PageModifier {
         container.id = id;
         container.className = `${overrideClassname} lindy-overlay-elem ${id}`;
         container.style.contain = "layout style";
-        container.style.visibility = "hidden"; // hide until overlay/index.css applied
+        container.style.visibility = "hidden"; // hide until overlay/index.css applied (so don't set importance)
         container.style.willChange = "opacity";
 
         return container;
@@ -492,8 +496,8 @@ export function createIframeNode(id: string) {
 
     iframe.setAttribute("scrolling", "no");
     iframe.setAttribute("frameBorder", "0");
-    iframe.style.contain = "strict";
-    iframe.style.zIndex = "3000";
+    iframe.style.setProperty("contain", "strict", "important");
+    iframe.style.setProperty("z-index", "3000", "important");
 
     return iframe;
 }
