@@ -12,7 +12,7 @@ export const lindyMainContentContainerClass = "lindy-main-text-container";
 export const lindyMainHeaderContainerClass = "lindy-main-header-container";
 export const lindyFirstMainContainerClass = "lindy-first-main-container";
 
-const globalTextElementSelector = "p, font";
+const globalTextElementSelector = "p, font, ul";
 const globalHeadingSelector = "h1, h2, h3, h4, header, [class*='head' i], [class*='title' i]";
 const headingClassWordlist = ["header", "heading", "title", "article-details"]; // be careful here
 const globalImageSelector = "img, picture, figure, video";
