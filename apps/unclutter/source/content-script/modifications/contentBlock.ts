@@ -321,6 +321,7 @@ export const blockedSpecificSelectors = [
     "#_fbn_", // https://www.geeksforgeeks.org/fasttext-working-and-implementation/
     ".lightbox-target", // https://www.geeksforgeeks.org/fasttext-working-and-implementation/
     ".neo-spacer-open", // https://www.unix.com/shell-programming-and-scripting/179639-shell-script-epoch-time-conversion.html
+    ".scrolltop", // https://www.scientificamerican.com/article/the-elusive-origin-of-zero1/
 
     // term of contents (Unclutter shows its own outline)
     ".toc",

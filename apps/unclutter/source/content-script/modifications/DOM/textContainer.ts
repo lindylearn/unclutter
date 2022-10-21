@@ -482,6 +482,10 @@ export default class TextContainerModifier implements PageModifier {
                 float: none !important;
                 transform: none !important;
             }
+            .${lindyContainerClass}:before, 
+            .${lindyContainerClass}:after {
+                display: none !important;
+            }
             /* more strict cleanup for main text containers */
             .${lindyMainContentContainerClass}:not(#fakeID#fakeID#fakeID):not(body) {
                 position: relative !important;
@@ -514,10 +518,6 @@ export default class TextContainerModifier implements PageModifier {
                 min-height: auto !important;
             }
             /* heading style tweaks */
-            .${lindyHeadingContainerClass}:before, 
-            .${lindyHeadingContainerClass}:after {
-                display: none !important;
-            }
             .${lindyHeadingContainerClass}:first-child, .${lindyMainHeaderContainerClass} {
                 margin-top: 0 !important;
                 padding-top: 0 !important;
