@@ -34,7 +34,7 @@
 
 <style global lang="postcss">
     .lindy-page-settings-toprght > * {
-        all: revert;
+        all: revert !important;
     }
     .lindy-page-settings-toprght > a {
         text-decoration: none !important;

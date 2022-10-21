@@ -81,25 +81,25 @@
 
 <style global lang="postcss">
     .lindy-element-picker-dialog {
-        position: absolute;
-        top: 10px;
-        left: 0;
-        z-index: 3000;
-        width: 100%;
-        box-sizing: border-box;
-        padding: 10px;
+        position: absolute !important;
+        top: 10px !important;
+        left: 0 !important;
+        z-index: 3000 !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        padding: 10px !important;
 
         background-color: var(--background-color) !important;
         color: var(--text-color) !important;
-        font-weight: 600;
-        font-family: Poppins, sans-serif;
+        font-weight: 600 !important;
+        font-family: Poppins, sans-serif !important;
 
-        border-radius: 5px;
+        border-radius: 5px !important;
         /* shadow already set in parent */
-        cursor: auto;
+        cursor: auto !important;
 
-        animation: easeOutBounce 0.75s;
-        animation-fill-mode: both;
+        animation: easeOutBounce 0.75s !important;
+        animation-fill-mode: both !important;
     }
     @keyframes easeOutBounce {
         0% {
@@ -138,18 +138,18 @@
 
     .lindy-element-picker-caption,
     .lindy-element-picker-caption-link {
-        text-align: right;
-        margin-bottom: 10px;
+        text-align: right !important;
+        margin-bottom: 10px !important;
 
         color: var(--color-muted) !important;
         font-size: 11px !important;
     }
     .lindy-element-picker-caption-link {
-        text-decoration: underline;
+        text-decoration: underline !important;
     }
 
     .lindy-counter-num {
-        display: inline-block;
-        min-width: 0.5em;
+        display: inline-block !important;
+        min-width: 0.5em !important;
     }
 </style>

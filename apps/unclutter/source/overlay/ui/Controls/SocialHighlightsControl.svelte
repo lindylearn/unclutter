@@ -68,20 +68,20 @@
 
 <style lang="postcss">
     #lindy-crowd-count-label {
-        all: revert;
-        position: absolute;
-        top: 68%;
-        left: 56%;
-        padding: 2px 4px;
+        all: revert !important;
+        position: absolute !important;
+        top: 68% !important;
+        left: 56% !important;
+        padding: 2px 4px !important;
 
-        background: var(--background-color);
-        border-radius: 4px;
-        filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.05));
-        cursor: pointer;
+        background: var(--background-color) !important;
+        border-radius: 4px !important;
+        filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.05)) !important;
+        cursor: pointer !important;
 
         color: var(--text-color) !important;
-        font-family: Poppins, sans-serif;
-        font-weight: 600;
-        font-size: 11px;
+        font-family: Poppins, sans-serif !important;
+        font-weight: 600 !important;
+        font-size: 11px !important;
     }
 </style>

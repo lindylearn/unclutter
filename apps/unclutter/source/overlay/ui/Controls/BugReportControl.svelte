@@ -109,66 +109,66 @@
 
 <style global lang="postcss">
     .lindy-bugreport-content {
-        position: relative;
-        padding: 10px;
-        width: max-content;
-        z-index: 3001;
+        position: relative !important;
+        padding: 10px !important;
+        width: max-content !important;
+        z-index: 3001 !important;
 
         color: var(--text-color) !important;
-        font-family: Poppins, sans-serif;
+        font-family: Poppins, sans-serif !important;
     }
 
     .lindy-bugreport-caption {
-        margin-bottom: 10px;
+        margin-bottom: 10px !important;
 
-        font-size: 14px;
-        font-weight: 600;
+        font-size: 14px !important;
+        font-weight: 600 !important;
     }
 
     .lindy-bugreport-buttons {
-        display: flex;
-        justify-content: end;
-        gap: 10px;
+        display: flex !important;
+        justify-content: end !important;
+        gap: 10px !important;
     }
     .lindy-bugreport-button {
-        padding: 2px 8px;
-        display: flex;
-        align-items: center;
+        padding: 2px 8px !important;
+        display: flex !important;
+        align-items: center !important;
 
-        font-size: 13px;
-        font-weight: 600;
+        font-size: 13px !important;
+        font-weight: 600 !important;
         color: var(--text-color) !important;
 
-        cursor: pointer;
-        border: none;
-        border-radius: 5px;
-        box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+        cursor: pointer !important;
+        border: none !important;
+        border-radius: 5px !important;
+        box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1) !important;
         background-color: #f3f4f6 !important;
-        user-select: none;
+        user-select: none !important;
 
-        transform: scale(100%);
-        filter: brightness(100%);
-        transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        transform: scale(100%) !important;
+        filter: brightness(100%) !important;
+        transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
     }
     .lindy-bugreport-button > .lindy-ui-icon {
         color: var(--text-color) !important;
         width: 1em !important;
-        margin-right: 3px;
+        margin-right: 3px !important;
     }
 
     .lindy-bugreport-button:not(.lindy-pressed):hover {
-        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-        filter: brightness(95%);
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1) !important;
+        filter: brightness(95%) !important;
     }
     .lindy-bugreport-button.lindy-pressed {
-        transform: scale(95%);
-        box-shadow: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
+        transform: scale(95%) !important;
+        box-shadow: inset 0 2px 4px 0 rgb(0 0 0 / 0.05) !important;
     }
 
     .lindy-bugreport-flag {
         background-color: #edd75b !important;
     }
     .lindy-bugreport-flag.lindy-pressed {
-        cursor: default;
+        cursor: default !important;
     }
 </style>

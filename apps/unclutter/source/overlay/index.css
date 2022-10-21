@@ -4,145 +4,146 @@
     border: none !important;
     box-shadow: none !important;
     color-scheme: auto !important;
+    width: auto !important;
 }
 
 .lindy-page-settings-toprght,
 .lindy-page-settings-pageadjacent {
-    --background-color: white;
-    --text-color: #374151;
-    --color-muted: #9ca3af;
+    --background-color: white !important;
+    --text-color: #374151 !important;
+    --color-muted: #9ca3af !important;
 
     visibility: visible !important; /* show only once CSS applies */
 }
 
 .lindy-page-settings-toprght {
-    all: revert;
+    all: revert !important;
     position: fixed !important;
-    top: 0;
-    right: 0;
-    z-index: 3000;
-    padding: 9px;
-    contain: layout style;
+    top: 0 !important;
+    right: 0 !important;
+    z-index: 3000 !important;
+    padding: 9px !important;
+    contain: layout style !important;
 
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    line-height: 1;
-    gap: 5px;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-end !important;
+    line-height: 1 !important;
+    gap: 5px !important;
 }
 .lindy-page-settings-pageadjacent {
-    all: revert;
+    all: revert !important;
     position: absolute !important;
-    top: 7px;
-    left: calc((100vw - var(--lindy-pagewidth)) / 2 + var(--lindy-pagewidth) - 5px);
-    z-index: 2000;
-    padding: 10px;
-    contain: layout style;
+    top: 7px !important;
+    left: calc((100vw - var(--lindy-pagewidth)) / 2 + var(--lindy-pagewidth) - 5px) !important;
+    z-index: 2000 !important;
+    padding: 10px !important;
+    contain: layout style !important;
 
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 5px;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-end !important;
+    gap: 5px !important;
 
-    transition: left 0.2s ease-in-out;
+    transition: left 0.2s ease-in-out !important;
 }
 .lindy-page-settings-toprght,
 .lindy-page-settings-pageadjacent {
-    animation: fadeInUi 0.2s cubic-bezier(0.33, 1, 0.68, 1);
-    animation-fill-mode: both;
+    animation: fadeInUi 0.2s cubic-bezier(0.33, 1, 0.68, 1) !important;
+    animation-fill-mode: both !important;
 }
 @keyframes fadeInUi {
     from {
-        visibility: hidden;
-        opacity: 0;
+        visibility: hidden !important;
+        opacity: 0 !important;
     }
     to {
-        visibility: visible;
-        opacity: 1;
+        visibility: visible !important;
+        opacity: 1 !important;
     }
 }
 .lindy-page-settings-toprght.lindy-ui-fadeout,
 .lindy-page-settings-pageadjacent.lindy-ui-fadeout {
-    animation: fadeOutUi 0.2s cubic-bezier(0.33, 1, 0.68, 1);
-    animation-fill-mode: both;
+    animation: fadeOutUi 0.2s cubic-bezier(0.33, 1, 0.68, 1) !important;
+    animation-fill-mode: both !important;
 }
 @keyframes fadeOutUi {
     from {
-        visibility: visible;
-        opacity: 1;
+        visibility: visible !important;
+        opacity: 1 !important;
     }
     to {
-        visibility: hidden;
-        opacity: 0;
+        visibility: hidden !important;
+        opacity: 0 !important;
     }
 }
 
 #lindy-info-topleft {
-    all: initial;
-    position: fixed;
-    top: 0;
-    left: 0;
+    all: initial !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
     /* margin inside iframe to render shadow */
-    height: calc(100vh - 10px);
-    user-select: none;
-    contain: strict;
-    z-index: 3000;
-    will-change: transform;
+    height: calc(100vh - 10px) !important;
+    user-select: none !important;
+    contain: strict !important;
+    z-index: 3000 !important;
+    will-change: transform !important;
 
-    width: 400px;
+    width: 400px !important;
     max-width: calc(
         (100vw - var(--lindy-pagewidth)) / 2 - 7px
-    ); /* also set via inline styles to prevent initial transition */
+    ) !important; /* also set via inline styles to prevent initial transition */
 
-    transition: max-width 0.2s cubic-bezier(0.33, 1, 0.68, 1);
-    animation: fadeInOutline 0.2s cubic-bezier(0.33, 1, 0.68, 1);
-    animation-fill-mode: both;
+    transition: max-width 0.2s cubic-bezier(0.33, 1, 0.68, 1) !important;
+    animation: fadeInOutline 0.2s cubic-bezier(0.33, 1, 0.68, 1) !important;
+    animation-fill-mode: both !important;
 }
 @keyframes fadeInOutline {
     from {
-        visibility: hidden;
-        opacity: 0;
-        transform: translate3d(-200px, 0, 0);
+        visibility: hidden !important;
+        opacity: 0 !important;
+        transform: translate3d(-200px, 0, 0) !important;
     }
     to {
-        visibility: visible;
-        opacity: 1;
-        transform: translate3d(0, 0, 0);
+        visibility: visible !important;
+        opacity: 1 !important;
+        transform: translate3d(0, 0, 0) !important;
     }
 }
 #lindy-info-topleft.lindy-ui-fadeout {
-    animation: fadeOutOutline 0.2s cubic-bezier(0.33, 1, 0.68, 1);
-    animation-fill-mode: both;
+    animation: fadeOutOutline 0.2s cubic-bezier(0.33, 1, 0.68, 1) !important;
+    animation-fill-mode: both !important;
 }
 @keyframes fadeOutOutline {
     from {
-        visibility: visible;
-        opacity: 1;
-        transform: translate3d(0, 0, 0);
+        visibility: visible !important;
+        opacity: 1 !important;
+        transform: translate3d(0, 0, 0) !important;
     }
     to {
-        visibility: hidden;
-        opacity: 0;
-        transform: translate3d(-200px, 0, 0);
+        visibility: hidden !important;
+        opacity: 0 !important;
+        transform: translate3d(-200px, 0, 0) !important;
     }
 }
 
 .lindy-element-spotlght {
-    position: absolute;
-    z-index: 10000;
-    visibility: hidden;
-    opacity: 0;
+    position: absolute !important;
+    z-index: 10000 !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
 
     background-color: red !important;
-    border-radius: 5px;
-    cursor: pointer;
+    border-radius: 5px !important;
+    cursor: pointer !important;
 
     transition: opacity 0.1s ease-in-out, top 0.1s ease-in-out, left 0.1s ease-in-out,
-        height 0.1s ease-in-out;
+        height 0.1s ease-in-out !important;
 }
 .lindy-element-spotlght.lindy-is-shrinking {
     height: 0 !important;
-    transition: height 0.3s ease-in-out;
+    transition: height 0.3s ease-in-out !important;
 }
 .lindy-just-blocked-element:not(#fakeID#fakeID#fakeID#fakeID) {
     display: block !important;
@@ -158,34 +159,34 @@
 
     opacity: 0 !important;
 
-    transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out !important;
 }
 
 #lindy-info-bottom {
-    all: initial;
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 260px;
-    margin: 0;
-    --side-width: calc((100vw - var(--lindy-pagewidth)) / 2 - 12px);
-    margin-left: var(--side-width);
-    width: calc(var(--lindy-pagewidth) + 12px);
+    all: initial !important;
+    position: absolute !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    height: 260px !important;
+    margin: 0 !important;
+    --side-width: calc((100vw - var(--lindy-pagewidth)) / 2 - 12px) !important;
+    margin-left: var(--side-width) !important;
+    width: calc(var(--lindy-pagewidth) + 12px) !important;
 
-    user-select: none;
-    contain: strict;
-    z-index: -101; /* put behind body if library not enabled */
-    will-change: transform;
+    user-select: none !important;
+    contain: strict !important;
+    z-index: -101 !important; /* put behind body if library not enabled */
+    will-change: transform !important;
 }
 
 #lindy-library-modal {
-    all: initial;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
+    all: initial !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
 }
 
 @media (max-width: 1300px) {
@@ -193,14 +194,14 @@
         display: none !important;
     }
     #lindy-annotations-bar {
-        left: calc(var(--lindy-pagewidth) + 20px + 5px);
-        width: calc(100vw - (var(--lindy-pagewidth) + 20px + 5px) - 50px);
+        left: calc(var(--lindy-pagewidth) + 20px + 5px) !important;
+        width: calc(100vw - (var(--lindy-pagewidth) + 20px + 5px) - 50px) !important;
     }
     .lindy-page-settings-pageadjacent {
         left: calc(var(--lindy-pagewidth) + 20px + 0px) !important;
     }
     #lindy-info-bottom {
-        margin-left: 15px;
-        max-width: calc(100% - 15px);
+        margin-left: 15px !important;
+        max-width: calc(100% - 15px) !important;
     }
 }

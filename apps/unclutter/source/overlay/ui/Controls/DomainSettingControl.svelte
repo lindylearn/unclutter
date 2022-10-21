@@ -96,10 +96,10 @@
 
 <style global lang="postcss">
     .lindy-domain-switch-wiggle > svg {
-        animation: wiggle 0.6s ease-in-out;
+        animation: wiggle 0.6s ease-in-out !important;
     }
     .lindy-domain-switch-wiggle-initial-delay > svg {
-        animation-delay: 0.6s;
+        animation-delay: 0.6s !important;
     }
     @keyframes wiggle {
         0% {

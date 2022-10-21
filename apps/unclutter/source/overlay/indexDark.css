@@ -1,25 +1,25 @@
 :root {
-    color-scheme: dark;
+    color-scheme: dark !important;
 }
 
 .lindy-page-settings-toprght,
 .lindy-page-settings-pageadjacent {
-    --background-color: rgb(33, 33, 33);
-    --text-color: #bdbdbd;
-    --color-muted: #525252;
+    --background-color: rgb(33, 33, 33) !important;
+    --text-color: #bdbdbd !important;
+    --color-muted: #525252 !important;
 }
 
 .lindy-tooltp.lindy-tooltp:hover > .lindy-ui-icon,
 .lindy-theme-container.lindy-theme-container:hover > .lindy-ui-icon {
-    filter: none;
+    filter: none !important;
 }
 
 .lindy-tooltp.lindy-tooltp:before {
-    filter: none;
+    filter: none !important;
 }
 
 .lindy-theme-ui.lindy-theme-ui {
-    filter: none;
+    filter: none !important;
 }
 
 .lindy-plusminus.lindy-plusminus > div:hover > svg {
@@ -29,13 +29,13 @@
     background-color: #262626 !important;
 }
 .lindy-theme-ui-row-spacer {
-    border-top: 2px solid #262626;
+    border-top: 2px solid #262626 !important;
 }
 .lindy-theme-button {
-    border: 2.5px solid #525252;
+    border: 2.5px solid #525252 !important;
 }
 .lindy-active-theme {
-    border: 2.5px solid var(--text-color);
+    border: 2.5px solid var(--text-color) !important;
 }
 
 .lindy-bugreport-button {
@@ -47,7 +47,7 @@
     color: #374151 !important;
 }
 .lindy-bugreport-button:not(.lindy-pressed):hover {
-    filter: brightness(120%);
+    filter: brightness(120%) !important;
 }
 
 .library-message.library-message {

@@ -24,60 +24,60 @@
 
     /* dialog box */
     .lindy-ui-dialog {
-        all: revert;
-        position: absolute;
-        top: -5px;
-        right: calc(100% + 10px);
-        z-index: 3000;
+        all: revert !important;
+        position: absolute !important;
+        top: -5px !important;
+        right: calc(100% + 10px) !important;
+        z-index: 3000 !important;
 
         background-color: var(--background-color) !important;
         color: #9ca3af !important;
-        border-radius: 5px;
-        filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.06)) drop-shadow(0 1px 2px rgb(0 0 0 / 0.05)); /* custom shadow, lighter than tw 'drop-shadow' */
+        border-radius: 5px !important;
+        filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.06)) drop-shadow(0 1px 2px rgb(0 0 0 / 0.05)) !important; /* custom shadow, lighter than tw 'drop-shadow' */
 
-        cursor: auto;
+        cursor: auto !important;
 
-        visibility: hidden;
-        opacity: 0;
-        transform: translate3d(10px, 0, 0);
-        transition: all 0.15s ease-out;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        transform: translate3d(10px, 0, 0) !important;
+        transition: all 0.15s ease-out !important;
     }
     .lindy-ui-dialog-container:hover > .lindy-ui-dialog {
-        visibility: visible;
-        opacity: 1;
-        transform: translate3d(0, 0, 0);
+        visibility: visible !important;
+        opacity: 1 !important;
+        transform: translate3d(0, 0, 0) !important;
     }
     .lindy-default-open > .lindy-ui-dialog {
-        visibility: visible;
-        opacity: 1;
-        transform: translate3d(0, 0, 0);
+        visibility: visible !important;
+        opacity: 1 !important;
+        transform: translate3d(0, 0, 0) !important;
     }
 
     /* popup arrow */
     .lindy-ui-dialog:before {
         /* arrow */
-        position: absolute;
-        top: 10px;
-        right: -8px;
-        height: 0;
-        width: 0;
-        content: "";
-        z-index: 2999;
+        position: absolute !important;
+        top: 10px !important;
+        right: -8px !important;
+        height: 0 !important;
+        width: 0 !important;
+        content: "" !important;
+        z-index: 2999 !important;
 
-        border-top: 8px solid transparent;
-        border-bottom: 8px solid transparent;
-        border-left: 8px solid var(--background-color);
+        border-top: 8px solid transparent !important;
+        border-bottom: 8px solid transparent !important;
+        border-left: 8px solid var(--background-color) !important;
     }
     /* spacer under arrow to avoid breaking hover state */
     .lindy-ui-dialog-container:hover:before {
-        position: absolute;
-        top: 0;
-        right: 0;
+        position: absolute !important;
+        top: 0 !important;
+        right: 0 !important;
 
-        display: block;
-        content: "";
-        width: 200%;
-        height: 150%;
-        cursor: auto;
+        display: block !important;
+        content: "" !important;
+        width: 200% !important;
+        height: 150% !important;
+        cursor: auto !important;
     }
 </style>

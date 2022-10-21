@@ -137,41 +137,41 @@
 <style global lang="postcss">
     /* row with plus and minus buttons */
     .lindy-plusminus {
-        display: flex;
-        width: 130px;
+        display: flex !important;
+        width: 130px !important;
     }
     .lindy-plusminus > div {
-        all: revert;
+        all: revert !important;
     }
     .lindy-theme-ui-row-spacer {
         display: block !important;
-        border-top: 2px solid #f3f4f6;
+        border-top: 2px solid #f3f4f6 !important;
     }
 
     /* individual buttons */
     .lindy-plusminus > div {
-        width: 100%;
-        height: 40px;
+        width: 100% !important;
+        height: 40px !important;
 
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        cursor: pointer;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        cursor: pointer !important;
 
-        font-size: 20px;
-        font-weight: 700;
+        font-size: 20px !important;
+        font-weight: 700 !important;
     }
     .lindy-plusminus:first-child > div:first-child {
-        border-top-left-radius: 5px;
+        border-top-left-radius: 5px !important;
     }
     .lindy-plusminus:first-child > div:last-child {
-        border-top-right-radius: 5px;
+        border-top-right-radius: 5px !important;
     }
     .lindy-plusminus:last-child > div:first-child {
-        border-bottom-left-radius: 5px;
+        border-bottom-left-radius: 5px !important;
     }
     .lindy-plusminus:last-child > div:last-child {
-        border-bottom-right-radius: 5px;
+        border-bottom-right-radius: 5px !important;
     }
     .lindy-plusminus > div:hover > svg {
         color: #4b5563 !important;
@@ -181,42 +181,42 @@
     }
 
     .lindy-theme-row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
 
-        height: 40px;
-        gap: 8px;
-        margin: 0 8px;
+        height: 40px !important;
+        gap: 8px !important;
+        margin: 0 8px !important;
     }
     .lindy-theme-row > div {
-        flex-grow: 1;
+        flex-grow: 1 !important;
     }
     .lindy-theme-button {
         display: block !important;
-        height: 20px;
+        height: 20px !important;
 
-        border: 2.5px solid #f3f4f6;
-        border-radius: 5px;
+        border: 2.5px solid #f3f4f6 !important;
+        border-radius: 5px !important;
         box-sizing: content-box !important;
-        cursor: pointer;
+        cursor: pointer !important;
     }
     .lindy-theme-button:hover {
-        box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+        box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1) !important;
     }
     .lindy-active-theme {
-        border: 2.5px solid var(--color-muted);
+        border: 2.5px solid var(--color-muted) !important;
     }
     #lindy-auto-theme-button {
-        background: var(--lindy-auto-background-color);
-        position: relative;
+        background: var(--lindy-auto-background-color) !important;
+        position: relative !important;
     }
     #lindy-auto-theme-button > svg {
-        position: absolute;
-        top: 3px;
-        left: 6px;
+        position: absolute !important;
+        top: 3px !important;
+        left: 6px !important;
 
-        width: 14px;
+        width: 14px !important;
     }
     #lindy-white-theme-button {
         background-color: white !important;
