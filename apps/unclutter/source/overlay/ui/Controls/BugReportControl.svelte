@@ -15,7 +15,7 @@
     let supportElementBlocker: boolean = true;
     let activeElementBlocker: boolean = false;
     let captionMessage: string = `Is there an issue with this article?`;
-    if (elementPickerModifier.likelyMainTextMissing) {
+    if (elementPickerModifier.readingTimeModifier.likelyMainTextMissing) {
         captionMessage = `Sorry this article doesn't work well.`;
         setDefaultOpen();
     }

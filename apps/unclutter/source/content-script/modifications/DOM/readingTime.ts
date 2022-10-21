@@ -14,6 +14,7 @@ export default class ReadingTimeModifier implements PageModifier {
     totalReadingTime: number = null;
     pageProgress: number;
     readingTimeLeftListeners: ((pageProgress: number, readingTimeLeft: number) => void)[] = [];
+    likelyMainTextMissing: boolean;
 
     constructor(bodyStyleModifier: BodyStyleModifier) {
         this.bodyStyleModifier = bodyStyleModifier;
@@ -24,6 +25,8 @@ export default class ReadingTimeModifier implements PageModifier {
         // getting all text is fine since we block most non-text elements?
         const wordCount = document.body.innerText.trim().split(/\s+/).length;
         this.totalReadingTime = Math.round(wordCount / this.wpm);
+
+        this.likelyMainTextMissing = document.body.scrollHeight < 500 || this.totalReadingTime < 2;
 
         // Don't re-render outline on every scroll update (might trigger <100ms)
         // throttle instead of debounce to update during continous scrolls

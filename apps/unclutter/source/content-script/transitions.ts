@@ -160,8 +160,29 @@ export default class TransitionManager implements PageModifier {
     async afterTransitionIn() {
         // *** read DOM phase ***
         // read DOM after content block
+
+        // undo content block in stages if small reading time detected
         this.readingTimeModifier.afterTransitionIn();
-        this.elementPickerModifier.afterTransitionIn();
+        if (this.readingTimeModifier.likelyMainTextMissing) {
+            console.log("Main text likely missing, undoing content block");
+
+            // try undoing just main text sibling block
+            if (this.textContainerModifier.foundMainContentElement) {
+                this.textContainerModifier.disableSiblingBlock();
+
+                // check if works now
+                this.readingTimeModifier.afterTransitionIn();
+            }
+            // undo entire content block
+            if (this.readingTimeModifier.likelyMainTextMissing) {
+                this.contentBlockModifier.transitionOut();
+
+                // check if works now
+                this.readingTimeModifier.afterTransitionIn();
+            }
+        }
+
+        // *** read DOM phase ***
         this.annotationsModifier.readPageHeight();
         this.overlayManager.parseOutline();
         this.backgroundModifier.observeHeightChanges();

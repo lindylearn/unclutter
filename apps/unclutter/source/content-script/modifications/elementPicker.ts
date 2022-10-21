@@ -20,9 +20,8 @@ export default class ElementPickerModifier implements PageModifier {
     private spotlight: HTMLElement;
     private currentSelection: HTMLElement;
 
-    private readingTimeModifier: ReadingTimeModifier;
+    readingTimeModifier: ReadingTimeModifier;
 
-    likelyMainTextMissing: boolean;
     pageSelectors: string[] = [];
     pickedElementListener: (() => void)[] = [];
 
@@ -46,11 +45,6 @@ export default class ElementPickerModifier implements PageModifier {
             ", "
         )}:not(#fakeID#fakeID#fakeID#fakeID#fakeID) { display: none !important; }`;
         createStylesheetText(css, "element-picker-block");
-    }
-
-    afterTransitionIn() {
-        this.likelyMainTextMissing = false;
-        // document.body.scrollHeight < 500 || this.readingTimeModifier?.totalReadingTime < 2;
     }
 
     transitionOut() {

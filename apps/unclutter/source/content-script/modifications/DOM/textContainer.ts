@@ -573,6 +573,10 @@ export default class TextContainerModifier implements PageModifier {
         createStylesheetText(css, "lindy-text-sibling-block");
     }
 
+    disableSiblingBlock() {
+        document.querySelectorAll("#lindy-text-sibling-block").forEach((e) => e.remove());
+    }
+
     fadeInSiblings() {
         const css = `.${lindyMainContentContainerClass}:not(.${lindyFirstMainContainerClass}) > :not(
             .${lindyMainContentContainerClass}, 
@@ -599,7 +603,7 @@ export default class TextContainerModifier implements PageModifier {
         }`;
         createStylesheetText(css, "lindy-text-sibling-fade-in");
 
-        document.querySelectorAll("#lindy-text-sibling-block").forEach((e) => e.remove());
+        this.disableSiblingBlock();
     }
 
     // set text color variable only when dark mode enabled, otherwise overwrites color (even if css var not set)
