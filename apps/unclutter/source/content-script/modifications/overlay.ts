@@ -224,7 +224,7 @@ export default class OverlayManager implements PageModifier {
         // create container DOM element
         const container = document.createElement("div");
         container.id = id;
-        container.className = `${overrideClassname} ${id}`;
+        container.className = `${overrideClassname} lindy-overlay-elem ${id}`;
         container.style.contain = "layout style";
         container.style.visibility = "hidden"; // hide until overlay/index.css applied
         container.style.willChange = "opacity";
@@ -487,7 +487,7 @@ export default class OverlayManager implements PageModifier {
 
 export function createIframeNode(id: string) {
     const iframe = document.createElement("iframe");
-    iframe.classList.add("lindy-allowed-elem");
+    iframe.classList.add("lindy-overlay-elem");
     iframe.id = id;
 
     iframe.setAttribute("scrolling", "no");

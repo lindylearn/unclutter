@@ -8,12 +8,12 @@
 
 <div
     class={clsx(
-        "lindy-ui-dialog-container lindy-allowed-elem",
+        "lindy-ui-dialog-container lindy-overlay-elem",
         defaultOpen && "lindy-default-open"
     )}
 >
     <Icon {iconName} />
-    <div class="lindy-ui-dialog lindy-allowed-elem"><slot /></div>
+    <div class="lindy-ui-dialog lindy-overlay-elem"><slot /></div>
 </div>
 
 <style lang="postcss">

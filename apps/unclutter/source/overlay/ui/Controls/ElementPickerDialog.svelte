@@ -40,7 +40,7 @@
     }
 </script>
 
-<div class="lindy-element-picker-dialog lindy-allowed-elem">
+<div class="lindy-element-picker-dialog lindy-overlay-elem">
     <div class="lindy-element-picker-caption">
         <a
             class="lindy-element-picker-caption-link"

@@ -1,3 +1,11 @@
+.lindy-overlay-elem {
+    display: block !important;
+    min-width: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    color-scheme: auto !important;
+}
+
 .lindy-page-settings-toprght,
 .lindy-page-settings-pageadjacent {
     --background-color: white;
@@ -7,12 +15,6 @@
     visibility: visible !important; /* show only once CSS applies */
 }
 
-.lindy-allowed-elem {
-    min-width: 0 !important;
-    border: none !important;
-    box-shadow: none !important;
-    color-scheme: auto !important;
-}
 .lindy-page-settings-toprght {
     all: revert;
     position: fixed !important;
