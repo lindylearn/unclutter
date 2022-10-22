@@ -135,8 +135,8 @@ export default class LibraryModifier implements PageModifier {
 
             // construct article graph from local replicache
             if (
-                (this.libraryState.userInfo.onPaidPlan ||
-                    this.libraryState.userInfo.trialEnabled) &&
+                (this.libraryState.userInfo?.onPaidPlan ||
+                    this.libraryState.userInfo?.trialEnabled) &&
                 this.libraryState.libraryInfo
             ) {
                 await this.constructArticleGraph(rep);
