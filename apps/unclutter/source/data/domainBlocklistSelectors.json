@@ -22,7 +22,6 @@
         ".class__active-el",
         ".visually-hidden.focusable"
     ],
-    "majorgeeks.com": [".centerborder", ".alford", "[data-ref='vm-preloader']"],
     "bezprawnik.pl": [
         ".ad_slot_height_manager_wrapper_bp_sdh2",
         "#oa-360-1666305713099_aa6xa65xr",
@@ -234,6 +233,7 @@
         "#preface-top-wrapper"
     ],
     "lwn.net": [".FeatureByline", ".IndexEntries"],
+    "majorgeeks.com": [".centerborder", ".alford", "[data-ref='vm-preloader']"],
     "makandracards.com": ["#tail", ".text_ad__more"],
     "makeuseof.com": [".a__sc-np32r2-0.dLwzoc.using-keyboard"],
     "markmanson.net": [".mf-monday-opt-in"],
@@ -288,7 +288,9 @@
     "osrp.lanl.gov": ["#backband", "#backband2", "#lanlbar", "#toolbar"],
     "radreads.co": [".tcb-flex-col"],
     "realpython.com": [".small.text-muted"],
+    "reddit.com": ["._23h0-EcaBUorIHC-JZyh6J"],
     "sandboxx.us": [".content#genesis-content::before"],
+    "shopify.com": ["#GlobalIconSymbols", "#SiteNavContainer"],
     "snclavalin.com": [".top-content-item.read-time", ".top-content-item"],
     "speckle.systems": [
         ".mt-0.w-full.h-20",
@@ -387,7 +389,6 @@
         ".aligncenter.size-full.wp-image-6800.entered.lazyloaded"
     ],
     "vancouversun.com": [".more-topic", ".visually-hidden", ".cat-head.short"],
-    "shopify.com": ["#GlobalIconSymbols", "#SiteNavContainer"],
     "vnexpress.net": [
         ".section.page-detail.bottom-detail",
         ".width_common.box-tinlienquanv2",
