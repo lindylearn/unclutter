@@ -6,7 +6,7 @@ import {
     readingProgressFullClamp,
 } from "@unclutter/library-components/dist/store/_schema";
 import { constructGraphData } from "@unclutter/library-components/dist/components/Modal/Graph";
-import { getWeekStart, getUrlHash, subtractWeeks } from "@unclutter/library-components/dist/common";
+import { getUrlHash } from "@unclutter/library-components/dist/common";
 
 import OverlayManager from "./overlay";
 import { PageModifier, trackModifierExecution } from "./_interface";
@@ -17,11 +17,14 @@ import {
     ReplicacheProxy,
     reportEventContentScript,
 } from "@unclutter/library-components/dist/common/messaging";
-import { addArticleToLibrary } from "../../common/api";
 import { showLibrarySignupFlag } from "../../common/featureFlags";
-import { LibraryInfo, LibraryState } from "../../common/schema";
+import {
+    constructArticleInfo,
+    LibraryInfo,
+    LibraryState,
+    saveArticleInfo,
+} from "../../common/schema";
 import ReadingTimeModifier from "./DOM/readingTime";
-import { cleanTitle } from "../../overlay/outline/components/parse";
 
 @trackModifierExecution
 export default class LibraryModifier implements PageModifier {
@@ -102,7 +105,12 @@ export default class LibraryModifier implements PageModifier {
                 this.libraryState.isClustering = true;
                 this.overlayManager.updateLibraryState(this.libraryState);
 
-                this.libraryState.libraryInfo = await this.constructArticle(rep);
+                this.libraryState.libraryInfo = await constructArticleInfo(
+                    this.articleUrl,
+                    this.articleId,
+                    this.articleTitle,
+                    this.libraryState.userInfo
+                );
                 this.libraryState.isClustering = false;
             } else {
                 // use existing state
@@ -132,16 +140,8 @@ export default class LibraryModifier implements PageModifier {
 
             // insert new article after initial UI render
             if (!this.libraryState.wasAlreadyPresent) {
-                setTimeout(async () => {
-                    if (this.libraryState.libraryInfo.topic) {
-                        await rep.mutate.putTopic(this.libraryState.libraryInfo.topic);
-                    }
-                    await rep.mutate.putArticleIfNotExists(this.libraryState.libraryInfo.article);
-                    if (this.libraryState.libraryInfo.new_links) {
-                        await rep.mutate.importArticleLinks({
-                            links: this.libraryState.libraryInfo.new_links,
-                        });
-                    }
+                setTimeout(() => {
+                    saveArticleInfo(rep, this.libraryState.libraryInfo);
                 }, 1000);
             }
 
@@ -183,28 +183,6 @@ export default class LibraryModifier implements PageModifier {
             article,
             topic,
         };
-    }
-
-    private async constructArticle(rep: ReplicacheProxy): Promise<LibraryInfo> {
-        if (this.libraryState.userInfo.onPaidPlan || this.libraryState.userInfo.trialEnabled) {
-            // fetch state remotely
-            // TODO remove mutate in backend? just fetch topic?
-            return await addArticleToLibrary(this.articleUrl, this.libraryState.userInfo.id!);
-        } else {
-            return {
-                article: {
-                    id: this.articleId,
-                    url: this.articleUrl,
-                    title: cleanTitle(this.articleTitle),
-                    word_count: 0, // TODO how to get this in frontend?
-                    publication_date: null, // TODO how to get this in frontend?
-                    time_added: new Date().getTime() / 1000,
-                    reading_progress: this.lastReadingProgress || 0.0,
-                    topic_id: null,
-                    is_favorite: false,
-                },
-            };
-        }
     }
 
     private async constructArticleGraph(rep: ReplicacheProxy) {

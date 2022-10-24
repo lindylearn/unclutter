@@ -1,6 +1,7 @@
 import { hypothesisToLindyFormat, LindyAnnotation } from "../../common/annotations/create";
 import { getHypothesisToken, getHypothesisUsername } from "../../common/annotations/storage";
 import { getUrlHash } from "@unclutter/library-components/dist/common/url";
+import ky from "ky";
 
 /**
  * Methods for accessing the remote annotations state (hypothesis and lindy APIs).
@@ -71,6 +72,47 @@ export async function getPageHistory(url) {
     const json = await response.json();
 
     return json;
+}
+
+// from https://github.com/lindylearn/obsidian-annotations/blob/master/src/api/api.ts
+export async function getHypothesisAnnotationsSince(
+    lastSyncDate?: Date,
+    limit = 5000
+): Promise<LindyAnnotation[]> {
+    const username = await getHypothesisUsername();
+    let annotations = [];
+
+    try {
+        // Paginate API calls via search_after param
+        // search_after=null starts with the earliest annotations
+        let newestTimestamp = lastSyncDate?.toUTCString() || "1970-01-01";
+        while (annotations.length < limit) {
+            const response: any = await ky
+                .get(`${hypothesisApi}/search`, {
+                    ...(await _getConfig()),
+                    searchParams: {
+                        limit: 200, // Max pagination size
+                        sort: "updated",
+                        order: "asc", // Get all annotations since search_after
+                        search_after: newestTimestamp,
+                        user: `acct:${username}@hypothes.is`,
+                    },
+                })
+                .json();
+            const newAnnotations = response.rows;
+            if (!newAnnotations.length) {
+                // No more annotations
+                break;
+            }
+
+            annotations = [...annotations, ...newAnnotations];
+            newestTimestamp = newAnnotations[newAnnotations.length - 1].updated;
+        }
+    } catch (e) {
+        console.error(e);
+    }
+
+    return annotations.map((a) => hypothesisToLindyFormat(a, username));
 }
 
 // --- user actions

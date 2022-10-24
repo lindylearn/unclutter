@@ -1,7 +1,11 @@
 import { getUrlHash } from "@unclutter/library-components/dist/common";
 import { Annotation } from "@unclutter/library-components/dist/store";
+import groupBy from "lodash/groupBy";
 import { ReadonlyJSONValue } from "replicache";
+import { getFeatureFlag, hypothesisSyncFeatureFlag } from "../../common/featureFlags";
+import { constructArticleInfo, LibraryInfo } from "../../common/schema";
 import { getLibraryUser } from "../../common/storage";
+import { getHypothesisAnnotationsSince } from "../../sidebar/common/api";
 import { deleteAllLegacyAnnotations, getAllLegacyAnnotations } from "../../sidebar/common/legacy";
 import { migrateMetricsUser } from "../metrics";
 import {
@@ -19,23 +23,62 @@ import { deleteAllLocalScreenshots } from "./screenshots";
 
 let userId: string;
 export async function initLibrary() {
-    await importLegacyAnnotations();
-
     userId = await getLibraryUser();
     if (userId) {
         console.log(`Init Library for user ${userId}`);
         await initReplicache();
         await migrateToAccount();
     }
+
+    try {
+        await importLegacyAnnotations();
+    } catch (err) {
+        console.error(err);
+    }
 }
 
 async function importLegacyAnnotations() {
     const annotations = await getAllLegacyAnnotations();
+
+    const hypothesisSyncEnabled = await getFeatureFlag(hypothesisSyncFeatureFlag);
+    if (hypothesisSyncEnabled) {
+        const remoteAnnotations = await getHypothesisAnnotationsSince(undefined, 200);
+        annotations.push(...remoteAnnotations);
+    }
+
     if (annotations.length === 0) {
         return;
     }
-
     console.log(`Migrating ${annotations.length} legacy annotations to replicache...`);
+
+    const userInfo = await processReplicacheMessage({
+        type: "query",
+        methodName: "getUserInfo",
+        args: [],
+    });
+
+    // fetch article state
+    const articleUrls = Object.keys(groupBy(annotations, (a) => a.url));
+    const articleInfos: LibraryInfo[] = await Promise.all(
+        articleUrls.map(async (url) => {
+            const articleInfo = await constructArticleInfo(url, getUrlHash(url), url, userInfo);
+            articleInfo.article.reading_progress = 1.0;
+            return articleInfo;
+        })
+    );
+
+    // insert articles
+    await Promise.all(
+        articleInfos.map((articleInfo) => {
+            processReplicacheMessage({
+                type: "mutate",
+                methodName: "putArticleIfNotExists",
+                args: articleInfo.article,
+            });
+        })
+    );
+
+    // insert annotations
     await Promise.all(
         annotations.map((a) => {
             processReplicacheMessage({

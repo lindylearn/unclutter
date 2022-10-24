@@ -52,8 +52,8 @@ export type ArticleLink = z.infer<typeof articleLinkSchema>;
 // *** Annotation ***
 export const annotationSchema = entitySchema.extend({
     article_id: z.string(),
-    quote_text: z.string(),
-    quote_html_selector: z.any(),
+    quote_text: z.optional(z.string()),
+    quote_html_selector: z.optional(z.any()),
     created_at: z.number(), // unix seconds, 0 for missing value
 
     text: z.optional(z.string()),
