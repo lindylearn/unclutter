@@ -175,28 +175,41 @@ function WeekDetails({
     showTopic: (topicId: string) => void;
     showDomain: (domain: string) => void;
 }) {
-    const [weekArticles, setWeekArticles] = useState<Article[]>([]);
+    const [selectedArticles, setSelectedArticles] = useState<Article[]>([]);
+    const [selectedAnnotations, setSelectedAnnotations] = useState<Annotation[]>([]);
     useEffect(() => {
-        if (!allArticles) {
+        if (!allArticles || !allAnnotations) {
             return;
         }
 
-        const weekArticles = allArticles.filter(
-            (a) => a.time_added * 1000 >= start.getTime() && a.time_added * 1000 < end.getTime()
+        setSelectedArticles(
+            allArticles.filter(
+                (a) => a.time_added * 1000 >= start.getTime() && a.time_added * 1000 < end.getTime()
+            )
         );
-        setWeekArticles(weekArticles);
-    }, [allArticles, start, end]);
+        setSelectedAnnotations(
+            allAnnotations.filter(
+                (a) => a.created_at * 1000 >= start.getTime() && a.created_at * 1000 < end.getTime()
+            )
+        );
+    }, [allArticles, allAnnotations, start, end]);
 
     let [groups, setGroups] = useState<[string, Article[]][]>();
     if (userInfo.onPaidPlan || userInfo.trialEnabled) {
-        groups = useArticleGroups(weekArticles, false, "topic_size", "recency_order", undefined);
+        groups = useArticleGroups(
+            selectedArticles,
+            false,
+            "topic_size",
+            "recency_order",
+            undefined
+        );
     } else {
         useEffect(() => {
-            if (weekArticles.length === 0) {
+            if (selectedArticles.length === 0) {
                 return;
             }
             const groups: { [domain: string]: Article[] } = groupBy(
-                weekArticles.map((a) => {
+                selectedArticles.map((a) => {
                     // @ts-ignore
                     a.domain = getDomain(a.url);
                     return a;
@@ -204,21 +217,34 @@ function WeekDetails({
                 "domain"
             );
             setGroups(Object.entries(groups).sort((a, b) => b[1].length - a[1].length));
-        }, [weekArticles]);
+        }, [selectedArticles]);
     }
+
+    const [annotationGroups, setAnnotationGroups] = useState<{ [key: string]: Annotation[] }>({});
+    useEffect(() => {
+        if (!groups || !selectedAnnotations) {
+            return;
+        }
+        const annotationGroups = {};
+        groups.map(([groupKey, articles]) => {
+            const articleIds = new Set(articles.map((a) => a.id));
+            const annotations = selectedAnnotations.filter((a) => articleIds.has(a.article_id));
+
+            annotationGroups[groupKey] = annotations;
+        });
+        setAnnotationGroups(annotationGroups);
+    }, [groups, selectedAnnotations]);
 
     return (
         <div className="animate-fadein">
             <div className="grid grid-cols-5 gap-4">
-                {groups?.map(([groupKey, selectedArticles]) => (
+                {groups?.map(([groupKey, groupArticles]) => (
                     <ArticleGroupStat
                         userInfo={userInfo}
                         key={groupKey}
                         groupKey={groupKey}
-                        selectedArticles={selectedArticles}
-                        totalArticleCount={
-                            allArticles?.filter((a) => a.topic_id === groupKey).length
-                        }
+                        selectedArticles={groupArticles}
+                        annotationsCount={annotationGroups[groupKey]?.length}
                         darkModeEnabled={darkModeEnabled}
                         showTopic={showTopic}
                         showDomain={showDomain}
@@ -233,7 +259,7 @@ function ArticleGroupStat({
     userInfo,
     groupKey,
     selectedArticles,
-    totalArticleCount,
+    annotationsCount,
     darkModeEnabled,
     showTopic,
     showDomain,
@@ -241,7 +267,7 @@ function ArticleGroupStat({
     userInfo: UserInfo;
     groupKey: string;
     selectedArticles: Article[];
-    totalArticleCount?: number;
+    annotationsCount: number;
     darkModeEnabled: boolean;
     showTopic: (topicId: string) => void;
     showDomain: (domain: string) => void;
@@ -303,15 +329,15 @@ function ArticleGroupStat({
                 /> */}
                 <ResourceStat
                     type="articles"
-                    value={unreadCount}
+                    value={addedCount}
                     showPlus
-                    className={clsx(unreadCount === 0 && "opacity-0")}
+                    className={clsx(addedCount === 0 && "opacity-0")}
                 />
                 <ResourceStat
                     type="highlights"
-                    value={0}
+                    value={annotationsCount}
                     showPlus
-                    className={clsx(unreadCount === 0 && "opacity-0")}
+                    className={clsx(annotationsCount === 0 && "opacity-0")}
                 />
             </div>
         </div>

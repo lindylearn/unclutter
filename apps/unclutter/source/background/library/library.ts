@@ -58,11 +58,11 @@ async function importLegacyAnnotations() {
     });
 
     // fetch article state
-    const articleUrls = Object.keys(groupBy(annotations, (a) => a.url));
     const articleInfos: LibraryInfo[] = await Promise.all(
-        articleUrls.map(async (url) => {
+        Object.entries(groupBy(annotations, (a) => a.url)).map(async ([url, annotations]) => {
             const articleInfo = await constructArticleInfo(url, getUrlHash(url), url, userInfo);
             articleInfo.article.reading_progress = 1.0;
+            articleInfo.article.time_added = new Date(annotations[0].created_at).getTime() / 1000;
             return articleInfo;
         })
     );
