@@ -6,7 +6,7 @@ html.pageview.pageview > body {
     /* animation properties are set inline */
     position: relative !important;
 
-    width: 100%;
+    width: 100% !important;
     min-width: 0 !important;
     max-width: var(--lindy-pagewidth) !important;
     margin: 8px auto !important;
@@ -18,11 +18,11 @@ html.pageview.pageview > body {
     /* margins are also set inline in body.js for higher specifity */
     padding: 30px 50px !important;
 
-    cursor: auto;
+    cursor: auto !important;
     left: 0 !important;
     top: 0 !important;
 
-    transition: background 0.3s ease-in-out;
+    transition: background 0.3s ease-in-out !important;
 }
 
 /* needs to override text container children selector */
@@ -43,46 +43,46 @@ html.pageview.pageview > body {
 }
 
 .lindy-toast {
-    position: fixed;
-    contain: strict;
-    top: 10px;
-    right: 10px;
-    z-index: 9999999999;
-    border-radius: 7px 7px 7px;
+    position: fixed !important;
+    contain: strict !important;
+    top: 10px !important;
+    right: 10px !important;
+    z-index: 9999999999 !important;
+    border-radius: 7px 7px 7px !important;
     background-color: #edd75b !important;
-    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-    cursor: pointer;
-    overflow: hidden;
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1) !important;
+    cursor: pointer !important;
+    overflow: hidden !important;
 
-    animation: toastTimeout 5s;
-    animation-delay: 0.5s;
-    animation-fill-mode: both;
+    animation: toastTimeout 5s !important;
+    animation-delay: 0.5s !important;
+    animation-fill-mode: both !important;
 }
 @keyframes toastTimeout {
     0% {
-        visibility: hidden;
-        opacity: 0;
-        transform: translate3d(200px, 0, 0);
+        visibility: hidden !important;
+        opacity: 0 !important;
+        transform: translate3d(200px, 0, 0) !important;
     }
     5% {
-        visibility: visible;
-        opacity: 1;
-        transform: translate3d(0, 0, 0);
+        visibility: visible !important;
+        opacity: 1 !important;
+        transform: translate3d(0, 0, 0) !important;
     }
     95% {
-        visibility: visible;
-        opacity: 1;
-        transform: translate3d(0, 0, 0);
+        visibility: visible !important;
+        opacity: 1 !important;
+        transform: translate3d(0, 0, 0) !important;
     }
     100% {
-        visibility: hidden;
-        opacity: 0;
-        transform: translate3d(10px, 0, 0);
+        visibility: hidden !important;
+        opacity: 0 !important;
+        transform: translate3d(10px, 0, 0) !important;
     }
 }
 .lindy-toast:hover {
-    animation-play-state: paused;
-    box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    animation-play-state: paused !important;
+    box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1) !important;
 }
 .lindy-toast.lindy-toast-dismissed {
     visibility: hidden !important;
@@ -92,135 +92,135 @@ html.pageview.pageview > body {
 }
 
 .lindy-toast-content {
-    padding: 3px;
-    padding-bottom: 0;
-    display: flex;
-    align-items: center;
+    padding: 3px !important;
+    padding-bottom: 0 !important;
+    display: flex !important;
+    align-items: center !important;
 }
 .lindy-toast-icon {
-    width: 32px;
+    width: 32px !important;
     color: #1f2937 !important;
 }
 .lindy-toast-message {
     font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto !important;
-    font-size: 15px;
-    font-weight: 600;
+    font-size: 15px !important;
+    font-weight: 600 !important;
     color: #1f2937 !important;
-    margin: 0 6px;
-    margin-top: -3px;
+    margin: 0 6px !important;
+    margin-top: -3px !important;
 }
 
 .lindy-toast-progressbar {
-    width: 100%;
-    height: 3px;
+    width: 100% !important;
+    height: 3px !important;
     background-color: #faf3ce !important;
 }
 .lindy-toast-progressbar {
-    animation: toastProgressBar 5s linear;
-    animation-delay: 0.5s;
-    animation-fill-mode: both;
+    animation: toastProgressBar 5s linear !important;
+    animation-delay: 0.5s !important;
+    animation-fill-mode: both !important;
 }
 .lindy-toast:hover > .lindy-toast-progressbar {
-    animation-play-state: paused;
+    animation-play-state: paused !important;
 }
 @keyframes toastProgressBar {
     0% {
-        width: 0;
+        width: 0 !important;
     }
     100% {
-        width: 100%;
+        width: 100% !important;
     }
 }
 
 #lindy-annotations-bar {
-    position: absolute;
-    top: 50px;
-    left: calc((100vw - var(--lindy-pagewidth)) / 2 + var(--lindy-pagewidth) - 5px);
-    width: calc((100vw - var(--lindy-pagewidth)) / 2 - 50px);
-    height: calc(100% - 50px - 50px);
-    user-select: none;
-    contain: strict style;
-    z-index: 1000;
+    position: absolute !important;
+    top: 50px !important;
+    left: calc((100vw - var(--lindy-pagewidth)) / 2 + var(--lindy-pagewidth) - 5px) !important;
+    width: calc((100vw - var(--lindy-pagewidth)) / 2 - 50px) !important;
+    height: calc(100% - 50px - 50px) !important;
+    user-select: none !important;
+    contain: strict style !important;
+    z-index: 1000 !important;
 }
 
 #lindy-annotations-marginbar {
-    position: absolute;
-    top: 0;
-    height: 100%;
+    position: absolute !important;
+    top: 0 !important;
+    height: 100% !important;
 
-    right: 15px;
+    right: 15px !important;
 
     font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto !important;
     color: #374151 !important;
 }
 #lindy-annotations-marginbar > div {
-    position: absolute;
-    right: 0;
+    position: absolute !important;
+    right: 0 !important;
     /* top and height set via JS */
 }
 .lindy-marginbar-dot {
-    content: "";
-    display: block;
-    width: 10px;
-    height: 10px;
-    /* border-radius: 5px; */
-    border-radius: 50%;
-    filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.05));
+    content: "" !important;
+    display: block !important;
+    width: 10px !important;
+    height: 10px !important;
+    /* border-radius: 5px !important; */
+    border-radius: 50% !important;
+    filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.05)) !important;
     background-color: var(--darker-annotation-color) !important;
 
-    cursor: pointer;
-    animation: fadeInDot 0.15s linear;
+    cursor: pointer !important;
+    animation: fadeInDot 0.15s linear !important;
 }
 
 .lindy-highlight {
-    cursor: pointer;
+    cursor: pointer !important;
     background-color: var(--annotation-color) !important;
-    transition: background-color 0.15s linear;
+    transition: background-color 0.15s linear !important;
 }
 .lindy-highlight.lindy-hover {
     background-color: var(--darker-annotation-color) !important;
 }
 
 .lindy-crowd-highlight {
-    transition: background-color 0.15s linear, text-decoration 0.15s linear;
+    transition: background-color 0.15s linear, text-decoration 0.15s linear !important;
 
-    --annotation-color: transparent;
-    text-decoration: underline solid var(--annotation-color) 0.15em;
-    text-underline-offset: 0.05em;
-    text-decoration-skip-ink: none;
-    cursor: pointer;
+    --annotation-color: transparent !important;
+    text-decoration: underline solid var(--annotation-color) 0.15em !important;
+    text-underline-offset: 0.05em !important;
+    text-decoration-skip-ink: none !important;
+    cursor: pointer !important;
 }
 .lindy-crowd-highlight.lindy-hover {
     background-color: var(--annotation-color) !important;
-    text-decoration-color: transparent;
+    text-decoration-color: transparent !important;
 }
 
 .lindy-highlight-dot {
-    position: relative;
-    top: -0.3em;
-    left: 0.1em;
+    position: relative !important;
+    top: -0.3em !important;
+    left: 0.1em !important;
 
-    content: "";
-    display: inline-block;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.05));
+    content: "" !important;
+    display: inline-block !important;
+    width: 10px !important;
+    height: 10px !important;
+    border-radius: 50% !important;
+    filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.05)) !important;
     background-color: var(--darker-annotation-color) !important;
 
-    cursor: pointer;
-    animation: fadeInDot 0.15s linear;
+    cursor: pointer !important;
+    animation: fadeInDot 0.15s linear !important;
 }
 @keyframes fadeInDot {
     from {
-        opacity: 0;
-        width: 0px;
-        height: 0px;
+        opacity: 0 !important;
+        width: 0px !important;
+        height: 0px !important;
     }
     to {
-        opacity: 1;
-        width: 10px;
-        height: 10px;
+        opacity: 1 !important;
+        width: 10px !important;
+        height: 10px !important;
     }
 }
 
