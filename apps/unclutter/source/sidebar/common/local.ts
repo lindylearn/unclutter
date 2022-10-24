@@ -87,25 +87,6 @@ async function _setPageStorage(
     });
 }
 
-// migrate annotations saved in browser.storage.sync to browser.storage.local, as the former has very low storage quotas
-export async function migrateAnnotationStorage() {
-    const localStorage = await browser.storage.local.get(null);
-    if (Object.keys(localStorage).length !== 0) {
-        // already migrated, or sync == local storage
-        return;
-    }
-
-    const allStorage = await browser.storage.sync.get(null);
-    const annotationStorage = Object.entries(allStorage)
-        .filter(([pageKey, _]) => pageKey.startsWith("local-annotations_"))
-        .reduce((obj, [key, val]) => ({ ...obj, [key]: val }), {});
-
-    console.log("migrating sync annotations:", annotationStorage);
-
-    await browser.storage.local.set(annotationStorage);
-    await deleteAllLocalAnnotations("sync");
-}
-
 export async function getHiddenAnnotations() {
     const storage = await browser.storage.local.get("hidden-social-annotations");
     return storage["hidden-social-annotations"] || {};

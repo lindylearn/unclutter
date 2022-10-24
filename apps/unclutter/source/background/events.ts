@@ -11,7 +11,6 @@ import {
 import browser from "../common/polyfill";
 import { getLibraryAuth, getLibraryUser, setLibraryAuth } from "../common/storage";
 import { saveInitialInstallVersionIfMissing } from "../common/updateMessages";
-import { migrateAnnotationStorage } from "../sidebar/common/local";
 import { fetchCss } from "./actions";
 import { loadAnnotationCountsToMemory } from "./annotationCounts";
 import { getAllBookmarks, requestBookmarksPermission } from "./bookmarks";
@@ -198,7 +197,6 @@ browser.runtime.onInstalled.addListener(async ({ reason }) => {
     }
 
     saveInitialInstallVersionIfMissing(extensionInfo.version);
-    await migrateAnnotationStorage();
 
     // show opt shortcut icon on mac
     browser.runtime.getPlatformInfo().then(({ os }) =>

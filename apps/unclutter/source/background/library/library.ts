@@ -1,5 +1,8 @@
+import { getUrlHash } from "@unclutter/library-components/dist/common";
+import { Annotation } from "@unclutter/library-components/dist/store";
 import { ReadonlyJSONValue } from "replicache";
 import { getLibraryUser } from "../../common/storage";
+import { deleteAllLocalAnnotations, getAllLocalAnnotations } from "../../sidebar/common/local";
 import { migrateMetricsUser } from "../metrics";
 import {
     importEntries,
@@ -16,15 +19,41 @@ import { deleteAllLocalScreenshots } from "./screenshots";
 
 let userId: string;
 export async function initLibrary() {
+    await importLegacyAnnotations();
+
     userId = await getLibraryUser();
     if (userId) {
         console.log(`Init Library for user ${userId}`);
         await initReplicache();
-        await checkMigrate();
+        await migrateToAccount();
     }
 }
 
-export async function checkMigrate() {
+async function importLegacyAnnotations() {
+    const annotations = await getAllLocalAnnotations();
+    if (annotations.length === 0) {
+        return;
+    }
+
+    console.log(`Migrating ${annotations.length} legacy annotations to replicache...`);
+    await Promise.all(
+        annotations.map((a) => {
+            processReplicacheMessage({
+                type: "mutate",
+                methodName: "putAnnotation",
+                args: {
+                    ...a,
+                    articleId: getUrlHash(a.url),
+                    created_at: new Date(a.created_at).getTime() / 1000,
+                } as Annotation,
+            });
+        })
+    );
+
+    await deleteAllLocalAnnotations();
+}
+
+async function migrateToAccount() {
     const localTx = new LocalWriteTransaction();
     const allLocalEntries = await localTx.scan().entries().toArray();
     if (allLocalEntries.length > 0) {
