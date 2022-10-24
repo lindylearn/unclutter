@@ -49,6 +49,18 @@ export const articleLinkSchema = entitySchema.extend({
 });
 export type ArticleLink = z.infer<typeof articleLinkSchema>;
 
+// *** Annotation ***
+export const annotationSchema = entitySchema.extend({
+    articleId: z.string(),
+    quote_text: z.string(),
+    quote_html_selector: z.any(),
+    created_at: z.number(), // unix seconds, 0 for missing value
+
+    text: z.optional(z.string()),
+    tags: z.optional(z.array(z.string())),
+});
+export type Annotation = z.infer<typeof annotationSchema>;
+
 // *** PartialSyncState ***
 export const PARTIAL_SYNC_STATE_KEY = "control/partialSync";
 export const partialSyncStateSchema = z.union([

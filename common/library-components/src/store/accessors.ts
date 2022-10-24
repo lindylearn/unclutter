@@ -2,6 +2,8 @@ import { generate } from "@rocicorp/rails";
 import { ReadTransaction } from "replicache";
 import { getWeekNumber, getWeekStart, subtractWeeks } from "../common/time";
 import {
+    Annotation,
+    annotationSchema,
     Article,
     articleLinkSchema,
     articleSchema,
@@ -316,6 +318,20 @@ export async function getGroupTopicChildren(
         .sort((a, b) => parseInt(a.id) - parseInt(b.id));
 }
 
+/* ***** annotations ***** */
+
+export const { get: getAnnotation, list: listAnnotations } = generate(
+    "annotation",
+    annotationSchema
+);
+async function listTopicAnnotations(tx: ReadTransaction, topic_id: string): Promise<Annotation[]> {
+    const selectedArticles = await listTopicArticles(tx, topic_id);
+    const selectedArticleIds = new Set(selectedArticles.map((a) => a.id));
+
+    const annotations = await listAnnotations(tx);
+    return annotations.filter((a) => selectedArticleIds.has(a.articleId));
+}
+
 /* ***** partialSyncState ***** */
 
 export async function getPartialSyncState(
@@ -362,6 +378,9 @@ export const accessors = {
     getTopicIdMap,
     groupTopics,
     getGroupTopicChildren,
+    getAnnotation,
+    listAnnotations,
+    listTopicAnnotations,
     getPartialSyncState,
     getSettings,
     getUserInfo,

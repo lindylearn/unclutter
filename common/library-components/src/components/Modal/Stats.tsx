@@ -1,5 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Article, readingProgressFullClamp, ReplicacheContext, Topic, UserInfo } from "../../store";
+import {
+    Annotation,
+    Article,
+    readingProgressFullClamp,
+    ReplicacheContext,
+    Topic,
+    UserInfo,
+} from "../../store";
 import { ArticleActivityCalendar, getActivityColor, getActivityLevel } from "../Charts";
 import { getDomain, getRandomLightColor, getWeekStart, groupBy, subtractWeeks } from "../../common";
 import { useArticleGroups } from "../ArticleList";
@@ -27,11 +34,13 @@ export default function StatsModalTab({
     const rep = useContext(ReplicacheContext);
 
     const [allArticles, setAllArticles] = useState<Article[]>();
+    const [allAnnotations, setAllAnnotations] = useState<Annotation[]>();
     useEffect(() => {
         if (!rep) {
             return;
         }
         rep.query.listRecentArticles().then(setAllArticles);
+        rep.query.listAnnotations().then(setAllAnnotations);
     }, [rep]);
 
     const [start, setStart] = useState<Date>();
@@ -60,6 +69,7 @@ export default function StatsModalTab({
                 userInfo={userInfo}
                 articleCount={articleCount}
                 allArticles={allArticles}
+                allAnnotations={allAnnotations}
                 darkModeEnabled={darkModeEnabled}
             />
             <ArticleActivityCalendar
@@ -76,6 +86,7 @@ export default function StatsModalTab({
                     start={start}
                     end={end}
                     allArticles={allArticles}
+                    allAnnotations={allAnnotations}
                     darkModeEnabled={darkModeEnabled}
                     showTopic={showTopic}
                     showDomain={showDomain}
@@ -89,11 +100,13 @@ function NumberStats({
     userInfo,
     articleCount,
     allArticles,
+    allAnnotations,
     darkModeEnabled,
 }: {
     userInfo: UserInfo;
     articleCount?: number;
     allArticles?: Article[];
+    allAnnotations?: Annotation[];
     darkModeEnabled: boolean;
 }) {
     const rep = useContext(ReplicacheContext);
@@ -126,6 +139,11 @@ function NumberStats({
                 tag={`unread article${unreadCount !== 1 ? "s" : ""}`}
                 icon={<ResourceIcon type="articles" large />}
             />
+            <BigNumber
+                value={allAnnotations?.length}
+                tag={`highlight${allAnnotations?.length !== 1 ? "s" : ""}`}
+                icon={<ResourceIcon type="highlights" large />}
+            />
 
             {(userInfo.onPaidPlan || userInfo.trialEnabled) && (
                 <BigNumber
@@ -143,6 +161,7 @@ function WeekDetails({
     start,
     end,
     allArticles,
+    allAnnotations,
     darkModeEnabled,
     showTopic,
     showDomain,
@@ -151,6 +170,7 @@ function WeekDetails({
     start: Date;
     end: Date;
     allArticles?: Article[];
+    allAnnotations?: Annotation[];
     darkModeEnabled: boolean;
     showTopic: (topicId: string) => void;
     showDomain: (domain: string) => void;
@@ -274,20 +294,25 @@ function ArticleGroupStat({
                 </div>
             </div>
 
-            <div className="flex gap-3">
-                <ResourceStat
+            <div className="flex gap-2">
+                {/* <ResourceStat
                     type="articles_completed"
                     value={readCount}
                     showPlus
                     className={clsx(readCount === 0 && "opacity-0")}
-                />
+                /> */}
                 <ResourceStat
                     type="articles"
                     value={unreadCount}
                     showPlus
                     className={clsx(unreadCount === 0 && "opacity-0")}
                 />
-                {/* <ResourceStat type="highlights" value={0} showPlus /> */}
+                <ResourceStat
+                    type="highlights"
+                    value={0}
+                    showPlus
+                    className={clsx(unreadCount === 0 && "opacity-0")}
+                />
             </div>
         </div>
     );

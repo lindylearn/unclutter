@@ -10,6 +10,7 @@ import {
     getUserInfo,
 } from "./accessors";
 import {
+    annotationSchema,
     Article,
     ArticleLink,
     articleLinkSchema,
@@ -22,6 +23,8 @@ import {
     topicSchema,
     UserInfo,
 } from "./_schema";
+
+/* ***** articles & topics ***** */
 
 const {
     get: getArticle,
@@ -273,6 +276,18 @@ async function articleAddMoveToQueue(
     });
 }
 
+/* ***** annotations ***** */
+
+const {
+    get: getAnnotation,
+    list: listAnnotations,
+    put: putAnnotation,
+    update: updateAnnotation,
+    delete: deleteAnnotation,
+} = generate("annotation", annotationSchema);
+
+/* ***** settings & useInfo ***** */
+
 export async function updateSettings(tx: WriteTransaction, diff: Partial<Settings>) {
     const savedValue = await getSettings(tx);
     await tx.put("settings", { ...savedValue, ...diff });
@@ -301,6 +316,9 @@ export const mutators = {
     updateAllTopics,
     moveArticlePosition,
     articleAddMoveToQueue,
+    putAnnotation,
+    updateAnnotation,
+    deleteAnnotation,
     updateSettings,
     importEntries,
     updateUserInfo,
