@@ -119,7 +119,7 @@ export default function SettingsModalTab({
                 </SettingsGroup>
             )}
 
-            {/* <SettingsGroup
+            <SettingsGroup
                 title="Customization"
                 icon={
                     <svg className="h-4 w-4" viewBox="0 0 512 512">
@@ -130,10 +130,7 @@ export default function SettingsModalTab({
                     </svg>
                 }
             >
-                <p>
-                    Do you want to access your library from your browser's new
-                    tab page?
-                </p>
+                <p>Do you want to access your library from your browser's new tab page?</p>
                 <div className="flex gap-2">
                     <Button
                         title="Install New Tab"
@@ -141,7 +138,7 @@ export default function SettingsModalTab({
                         darkModeEnabled={darkModeEnabled}
                     />
                 </div>
-            </SettingsGroup> */}
+            </SettingsGroup>
 
             <SettingsGroup
                 title="Open-source"
