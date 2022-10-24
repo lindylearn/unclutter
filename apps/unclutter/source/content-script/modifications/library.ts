@@ -137,6 +137,11 @@ export default class LibraryModifier implements PageModifier {
                         await rep.mutate.putTopic(this.libraryState.libraryInfo.topic);
                     }
                     await rep.mutate.putArticleIfNotExists(this.libraryState.libraryInfo.article);
+                    if (this.libraryState.libraryInfo.new_links) {
+                        await rep.mutate.importArticleLinks({
+                            links: this.libraryState.libraryInfo.new_links,
+                        });
+                    }
                 }, 1000);
             }
 
