@@ -19,18 +19,17 @@ Unclutter is a modern reader mode and article library for your browser.
 
 There many other "reader modes", but they all extract article text and re-render it their own format. Unclutter "unclutters" the original web pages itself, leaving the [original website styling](docs/comparison.md) and interactive elements intact. 
 
-Adjustments for specific websites are crowdsourced — if you find an annoyance while reading, remove it for everyone!
-
-<!-- Articles you read are saved and organized automatically, instead of having to maintain bookmark folders, tags, or share links between multiple websites.
+Articles you read are automatically saved and organized in your library, instead of having to maintain bookmark folders or manual tags.
 With Unclutter, everything happens instantly in your browser.
 
 <p align="center">
 <img src="./docs/media/library.png" width="100%" />
-</p> -->
+</p>
 
 Other features include:
--   [Automatically activating](https://github.com/lindylearn/unclutter/blob/main/docs/article-detection.md) the reader mode on certain domains
--   [A page outline](https://github.com/lindylearn/unclutter/blob/main/docs/outline.md) to navigate long articles
+-   [Crowdsourced blocklists](https://github.com/lindylearn/unclutter/blob/main/docs/element-blocking.md) for annoyances on specific websites
+-   [Automatically activating](https://github.com/lindylearn/unclutter/blob/main/docs/article-detection.md) the reader mode
+-   [Showing page chapters](https://github.com/lindylearn/unclutter/blob/main/docs/outline.md) to navigate long articles
 -   [Integrated social comments](https://github.com/lindylearn/unclutter/blob/main/docs/social-highlights.md) from Hacker News and Hypothes.is
 -   [Easily saving highlights](https://github.com/lindylearn/unclutter/blob/main/docs/annotations.md) by simply selecting text
 
@@ -42,15 +41,12 @@ Try it out for yourself:
 
 ## Get involved
 
-The goal of this project is to improve reading on the web for everyone. You should decide what, when, and how to read articles. What if Unclutter could automatically bypass paywalls, connect similar content across the web, or make quotes easily sharable?
+The mission of Unclutter is to improve reading on the web for everyone. You should decide what, when, and how to read. What if you could automatically bypass paywalls or connect similar content across the web?
 
-If you want to contribute ideas or code, [join our Discord server](https://discord.gg/CThpNQjucB)!
-
-## Roadmap
-
-We prioritize features to work on via the [open roadmap](https://unclutter.canny.io/). Add your suggestions there or vote on existing features to get them done faster.
-
-If you found a bug or want to improve something technical, please open a GitHub issue directly. All feedback from within Unclutter also automatically creates GitHub issues or Pull-Requests.
+Here's how you can help:
+- Use the [open roadmap](https://unclutter.canny.io/) to suggest new features for Unclutter or to vote on existing ideas.
+- Open GitHub issues for bugs you find or for technical things to improve. All feedback from within the extension also automatically creates GitHub issues or Pull-Requests.
+- [Join our Discord server](https://discord.gg/CThpNQjucB) if you want to contribute code!
 
 <!-- [<img src="./docs/media/canny.png">](https://unclutter.canny.io/) -->
 
@@ -67,4 +63,4 @@ See the [docs pages](https://github.com/lindylearn/unclutter/blob/main/docs), or
 
 This project uses [GNU AGPLv3](https://choosealicense.com/licenses/gpl-3.0/), which requires commercial projects that use it to be open-source as well.
 
-Unclutter exists thanks to everyone who contributes ideas or code, reports bugs, or simply uses the extension. Thank you from all of us!
+Unclutter exists thanks to everyone who contributes ideas or code, reports bugs, or simply uses the extension. Thank you!
