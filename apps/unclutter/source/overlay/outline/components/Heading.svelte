@@ -6,6 +6,7 @@
     import clsx from "clsx";
 
     export let annotationsEnabled: boolean;
+    export let totalAnnotationCount: number;
     export let socialAnnotationsEnabled: boolean;
     export let activeOutlineIndex: number;
 
@@ -87,7 +88,11 @@
         <div
             class={clsx(
                 "hidden px-1 rounded font-title text-center",
-                annotationsEnabled && socialCommentsCount && index !== -1 && "icon-padding",
+                annotationsEnabled &&
+                    totalAnnotationCount &&
+                    socialCommentsCount &&
+                    index !== -1 &&
+                    "icon-padding",
                 myAnnotationCount && "visible-icon"
             )}
             style={`min-width: 1.4em; padding: 0 0.4em; background-color: ${getRandomColor(
