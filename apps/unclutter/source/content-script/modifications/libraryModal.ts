@@ -64,7 +64,7 @@ export default class LibraryModalModifier implements PageModifier {
 
         this.modalIframe = createIframeNode("lindy-library-modal");
         this.modalIframe.src = iframeUrl.toString();
-        this.modalIframe.style.position = "fixed"; // put on new layer
+        this.modalIframe.style.setProperty("position", "fixed", "important"); // put on new layer
         document.documentElement.appendChild(this.modalIframe);
 
         reportEventContentScript("openLibraryModal", {
