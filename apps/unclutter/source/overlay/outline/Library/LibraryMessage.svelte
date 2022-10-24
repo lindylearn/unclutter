@@ -99,21 +99,18 @@
 
         {#if libraryState?.readingProgress}
             <div class="absolute top-0 right-0 flex items-start gap-2 overflow-hidden p-3" in:fade>
-                <ResourceStat
+                <!-- <ResourceStat
                     type="articles_completed"
                     value={libraryState.readingProgress.completedCount}
-                    diff={libraryState.justCompletedArticle ? 1 : null}
-                />
+                /> -->
                 <ResourceStat
                     type="articles"
                     value={libraryState.readingProgress.articleCount -
                         libraryState.readingProgress.completedCount}
-                    diff={libraryState.wasAlreadyPresent && !libraryState.justCompletedArticle
-                        ? null
-                        : !libraryState.wasAlreadyPresent && libraryState.justCompletedArticle
-                        ? -1
-                        : (!libraryState.wasAlreadyPresent ? 1 : 0) +
-                          (libraryState.justCompletedArticle ? -1 : 0)}
+                />
+                <ResourceStat
+                    type="highlights"
+                    value={libraryState.readingProgress.annotationCount}
                 />
             </div>
         {/if}

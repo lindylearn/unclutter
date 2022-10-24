@@ -49,7 +49,6 @@ export default class LibraryModifier implements PageModifier {
         graph: null,
         linkCount: null,
         readingProgress: null,
-        justCompletedArticle: false,
     };
 
     constructor(
@@ -96,44 +95,53 @@ export default class LibraryModifier implements PageModifier {
         try {
             // get existing library state
             this.libraryState.libraryInfo = await this.getLibraryInfo(rep, this.articleId);
+
+            // add article to library if required
             if (!this.libraryState.libraryInfo) {
                 // run on-demand adding
                 this.libraryState.isClustering = true;
                 this.overlayManager.updateLibraryState(this.libraryState);
 
-                await this.insertArticle(rep);
-
+                this.libraryState.libraryInfo = await this.constructArticle(rep);
                 this.libraryState.isClustering = false;
-                if (!this.libraryState.libraryInfo) {
-                    this.libraryState.error = true;
-                }
             } else {
                 // use existing state
                 this.libraryState.wasAlreadyPresent = true;
+
+                if (this.libraryState.libraryInfo?.article) {
+                    await rep.mutate.articleTrackOpened(this.libraryState.libraryInfo.article.id);
+                }
             }
 
-            // skip further processing if library disabled
-            if (!this.libraryState.libraryEnabled) {
+            // skip further processing if library disabled or error
+            if (!this.libraryState.libraryInfo?.article) {
+                this.libraryState.error = true;
+            }
+            if (!this.libraryState.libraryEnabled || this.libraryState.error) {
                 return;
             }
 
-            // report library events
-            if (this.libraryState.wasAlreadyPresent) {
-                reportEventContentScript("visitArticle");
-            } else {
-                reportEventContentScript("addArticle");
+            // subscribe to reading progress updates before mutating data store
+            this.lastReadingProgress = this.libraryState.libraryInfo.article.reading_progress;
+            rep.subscribe.getReadingProgress(this.libraryState.libraryInfo.topic?.id)({
+                onData: (readingProgress) => {
+                    console.log("readingProgress", readingProgress);
+                    this.libraryState.readingProgress = readingProgress;
+                    this.overlayManager.updateLibraryState(this.libraryState);
+                },
+            });
+
+            // insert new article after initial UI render
+            if (!this.libraryState.wasAlreadyPresent) {
+                setTimeout(async () => {
+                    if (this.libraryState.libraryInfo.topic) {
+                        await rep.mutate.putTopic(this.libraryState.libraryInfo.topic);
+                    }
+                    await rep.mutate.putArticleIfNotExists(this.libraryState.libraryInfo.article);
+                }, 500);
             }
 
-            // fetch topic progress stats
-            this.lastReadingProgress = this.libraryState.libraryInfo.article.reading_progress;
-            this.libraryState.readingProgress = await rep.query.getReadingProgress(
-                this.libraryState.libraryInfo.topic?.id
-            );
-
-            // show in UI
-            this.overlayManager.updateLibraryState(this.libraryState);
-
-            // construct article graph from local replicache
+            // construct article graph
             if (
                 (this.libraryState.userInfo?.onPaidPlan ||
                     this.libraryState.userInfo?.trialEnabled) &&
@@ -145,6 +153,13 @@ export default class LibraryModifier implements PageModifier {
 
             if (this.scrollOnceFetchDone) {
                 this.scrollToLastReadingPosition();
+            }
+
+            // report library events
+            if (this.libraryState.wasAlreadyPresent) {
+                reportEventContentScript("visitArticle");
+            } else {
+                reportEventContentScript("addArticle");
             }
         } catch (err) {
             this.libraryState.error = true;
@@ -166,39 +181,25 @@ export default class LibraryModifier implements PageModifier {
         };
     }
 
-    private async insertArticle(rep: ReplicacheProxy) {
+    private async constructArticle(rep: ReplicacheProxy): Promise<LibraryInfo> {
         if (this.libraryState.userInfo.onPaidPlan || this.libraryState.userInfo.trialEnabled) {
             // fetch state remotely
             // TODO remove mutate in backend? just fetch topic?
-            this.libraryState.libraryInfo = await addArticleToLibrary(
-                this.articleUrl,
-                this.libraryState.userInfo.id!
-            );
-
-            // insert immediately
-            await rep.mutate.putArticleIfNotExists(this.libraryState.libraryInfo.article);
-            await rep.mutate.putTopic(this.libraryState.libraryInfo.topic);
+            return await addArticleToLibrary(this.articleUrl, this.libraryState.userInfo.id!);
         } else {
-            const article = {
-                id: this.articleId,
-                url: this.articleUrl,
-                title: cleanTitle(this.articleTitle),
-                word_count: 0, // TODO how to get this in frontend?
-                publication_date: null, // TODO how to get this in frontend?
-                time_added: new Date().getTime() / 1000,
-                reading_progress: this.lastReadingProgress || 0.0,
-                topic_id: null,
-                is_favorite: false,
+            return {
+                article: {
+                    id: this.articleId,
+                    url: this.articleUrl,
+                    title: cleanTitle(this.articleTitle),
+                    word_count: 0, // TODO how to get this in frontend?
+                    publication_date: null, // TODO how to get this in frontend?
+                    time_added: new Date().getTime() / 1000,
+                    reading_progress: this.lastReadingProgress || 0.0,
+                    topic_id: null,
+                    is_favorite: false,
+                },
             };
-            this.libraryState.libraryInfo = {
-                article,
-            };
-
-            await rep.mutate.putArticleIfNotExists(article);
-        }
-
-        if (this.libraryState.libraryInfo?.article) {
-            await rep.mutate.articleTrackOpened(this.libraryState.libraryInfo.article.id);
         }
     }
 
@@ -252,16 +253,8 @@ export default class LibraryModifier implements PageModifier {
             this.libraryState.libraryInfo?.article &&
             this.libraryState.libraryInfo.article.reading_progress < readingProgressFullClamp
         ) {
-            // immediately update state to show in UI
+            // immediately update state to show change in UI
             await this.updateReadingProgress(1.0);
-
-            // animate count reduction in LibraryMessage
-            const rep = new ReplicacheProxy();
-            this.libraryState.readingProgress = await rep.query.getReadingProgress(
-                this.libraryState.libraryInfo.topic?.id
-            );
-            this.libraryState.justCompletedArticle = true;
-            this.overlayManager.updateLibraryState(this.libraryState);
         } else {
             this.updateReadingProgressThrottled(pageProgress);
         }
