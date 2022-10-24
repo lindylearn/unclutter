@@ -1,14 +1,12 @@
 <script lang="ts">
     // organize-imports-ignore
     import Heading from "./Heading.svelte";
-    import ProgressCircle from "./ProgressCircle.svelte";
     import { OutlineItem } from "./parse";
     import { scrollToElement } from "./common";
 
     export let outline: OutlineItem[];
     export let activeOutlineIndex: number;
     export let annotationsEnabled: boolean;
-    export let totalAnnotationCount: number;
     export let readingTimeLeft: number = null;
 </script>
 
@@ -24,11 +22,6 @@
             >
                 {outline[0]?.title}
             </div>
-            {#if annotationsEnabled}
-                <div class="progress-container -mr-1 -mt-0.5 h-0">
-                    <ProgressCircle {totalAnnotationCount} />
-                </div>
-            {/if}
         </div>
 
         <div class="">

@@ -21,7 +21,6 @@
     export let outline: OutlineItem[];
     export let activeOutlineIndex: number;
     export let annotationsEnabled: boolean;
-    export let totalAnnotationCount: number = 0;
     export let readingTimeLeft: number = null;
     export let libraryState: LibraryState;
     export let darkModeEnabled: boolean;
@@ -59,13 +58,7 @@
         <LibraryMessage {libraryState} {libraryModalModifier} {darkModeEnabled} />
     {/if}
 
-    <Outline
-        {outline}
-        {activeOutlineIndex}
-        {annotationsEnabled}
-        {totalAnnotationCount}
-        {readingTimeLeft}
-    />
+    <Outline {outline} {activeOutlineIndex} {annotationsEnabled} {readingTimeLeft} />
 
     {#each updateMessages as { version, updateMessage }}
         <UpdateMessage

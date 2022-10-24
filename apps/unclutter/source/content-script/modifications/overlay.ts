@@ -369,7 +369,6 @@ export default class OverlayManager implements PageModifier {
         });
 
         this.topleftSvelteComponent?.$set({
-            totalAnnotationCount: this.totalAnnotationCount,
             outline: this.outline,
         });
 
@@ -397,7 +396,6 @@ export default class OverlayManager implements PageModifier {
             this.flatOutline[index].socialCommentsCount = 0;
         });
         this.topleftSvelteComponent?.$set({
-            totalAnnotationCount: this.totalAnnotationCount,
             outline: this.outline,
         });
     }
