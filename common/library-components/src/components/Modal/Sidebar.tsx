@@ -1,8 +1,13 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import clsx from "clsx";
-import { LindyIcon } from "../Icons";
-import { Topic, UserInfo } from "../../store";
-import { getRandomLightColor } from "../../common";
+import {
+    latestSettingsVersion,
+    ReplicacheContext,
+    Settings,
+    Topic,
+    UserInfo,
+    useSubscribe,
+} from "../../store";
 
 export default function Sidebar({
     userInfo,
@@ -23,8 +28,22 @@ export default function Sidebar({
     darkModeEnabled: boolean;
     showSignup: boolean;
 }) {
+    const rep = useContext(ReplicacheContext);
+
+    // fetch settings initially and after changing tab away
+    const [settings, setSettings] = useState<Settings | null>(null);
+    useEffect(() => {
+        rep?.query.getSettings().then(setSettings);
+    }, [rep]);
+    function updateTab(id: string) {
+        setCurrentTab(id);
+
+        rep?.query.getSettings().then(setSettings);
+    }
+
     const modalTabs = getModalTabOptions(
         userInfo,
+        settings,
         showSignup,
         !changedTopic ? relatedLinkCount : undefined
     );
@@ -38,7 +57,7 @@ export default function Sidebar({
                         {...option}
                         key={option.value}
                         isActive={currentTab === option.value}
-                        onClick={() => setCurrentTab(option.value)}
+                        onClick={() => updateTab(option.value)}
                         currentTopic={currentTopic}
                         darkModeEnabled={darkModeEnabled}
                     />
@@ -65,7 +84,7 @@ export default function Sidebar({
                         {...option}
                         key={option.value}
                         isActive={currentTab === option.value}
-                        onClick={() => setCurrentTab(option.value)}
+                        onClick={() => updateTab(option.value)}
                         currentTopic={currentTopic}
                         darkModeEnabled={darkModeEnabled}
                     />
@@ -77,13 +96,14 @@ export default function Sidebar({
 export interface ModalTabOptions {
     label: string;
     value: string;
-    tag?: string;
+    tag?: string | false;
     unavailable?: boolean;
     atEnd?: boolean;
     svg: React.ReactNode;
 }
 function getModalTabOptions(
     userInfo: UserInfo,
+    settings: Settings | null,
     showSignup: boolean,
     new_link_count?: number
 ): ModalTabOptions[] {
@@ -166,6 +186,7 @@ function getModalTabOptions(
         {
             label: "Settings",
             value: "settings",
+            tag: (settings?.seen_settings_version || 0) < latestSettingsVersion && "New",
             atEnd: true,
             svg: (
                 <svg viewBox="0 0 512 512" className="h-4">
@@ -210,18 +231,14 @@ function SidebarFilterOption({
             onClick={onClick}
         >
             <div className="flex w-5 justify-center">{svg}</div>
-            {label}
-            {!tag && (
-                <div
-                    className="bg-lindy dark:bg-lindyDark absolute -top-1 right-1 z-20 rounded-md px-1 text-sm leading-tight dark:text-[rgb(232,230,227)]"
-                    style={{
-                        background:
-                            currentTopic && getRandomLightColor(currentTopic.id, darkModeEnabled),
-                    }}
-                >
-                    {tag}
-                </div>
-            )}
+            <div className="relative">
+                {label}
+                {tag && (
+                    <div className="bg-lindy dark:bg-lindyDark absolute -top-1 left-[calc(100%+0.25rem)] z-20 w-max rounded-md px-1 text-sm leading-tight dark:text-[rgb(232,230,227)]">
+                        {tag}
+                    </div>
+                )}
+            </div>
         </div>
     );
 }

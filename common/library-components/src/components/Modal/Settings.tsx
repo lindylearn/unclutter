@@ -1,7 +1,7 @@
 import clsx from "clsx";
-import React, { ReactNode, useRef, useState } from "react";
+import React, { ReactNode, useContext, useEffect, useRef, useState } from "react";
 import { quickReport } from "../../common";
-import { UserInfo } from "../../store";
+import { latestSettingsVersion, ReplicacheContext, Settings, UserInfo } from "../../store";
 import { getActivityColor } from "../Charts";
 
 export default function SettingsModalTab({
@@ -15,6 +15,22 @@ export default function SettingsModalTab({
     darkModeEnabled: boolean;
     showSignup: boolean;
 }) {
+    const rep = useContext(ReplicacheContext);
+    const [settings, setSettings] = useState<Settings>();
+    useEffect(() => {
+        if (!rep) {
+            return;
+        }
+        (async () => {
+            // fetch previous settings version without subscribe
+            const settings = await rep?.query.getSettings();
+            setSettings(settings);
+
+            // update version for next visit
+            rep.mutate.updateSettings({ seen_settings_version: latestSettingsVersion });
+        })();
+    }, [rep]);
+
     const [bugReportOpen, setBugReportOpen] = useState(false);
     const messageRef = useRef<HTMLTextAreaElement>(null);
     async function submitReport() {
@@ -91,7 +107,7 @@ export default function SettingsModalTab({
                 </SettingsGroup>
             )}
 
-            {showSignup && (
+            {!userInfo.accountEnabled && showSignup && (
                 <SettingsGroup
                     title="Account"
                     icon={
@@ -136,6 +152,7 @@ export default function SettingsModalTab({
                         title="Install New Tab"
                         href={unclutterLibraryLink}
                         darkModeEnabled={darkModeEnabled}
+                        isNew={(settings?.seen_settings_version || 0) < 1}
                     />
                 </div>
             </SettingsGroup>
@@ -222,7 +239,10 @@ function SettingsGroup({
 }) {
     return (
         <div
-            className={clsx("z-20 rounded-md bg-stone-50 p-3 px-4 dark:bg-neutral-800", className)}
+            className={clsx(
+                "relative z-20 rounded-md bg-stone-50 p-3 px-4 dark:bg-neutral-800",
+                className
+            )}
         >
             <h2 className="mb-2 flex items-center gap-2 font-medium">
                 {icon}
@@ -239,17 +259,19 @@ function Button({
     onClick,
     primary,
     darkModeEnabled,
+    isNew,
 }: {
     title: string;
     href?: string;
     onClick?: () => void;
     primary?: boolean;
     darkModeEnabled: boolean;
+    isNew?: boolean;
 }) {
     return (
         <a
             className={clsx(
-                "cursor-pointer select-none rounded-md py-1 px-2 font-medium transition-transform hover:scale-[97%]",
+                "relative cursor-pointer select-none rounded-md py-1 px-2 font-medium transition-transform hover:scale-[97%]",
                 primary && "dark:text-stone-800"
             )}
             style={{ background: getActivityColor(primary ? 4 : 1, false) }}
@@ -259,6 +281,12 @@ function Button({
             rel="noopener noreferrer"
         >
             {title}
+
+            {isNew && (
+                <div className="bg-lindy dark:bg-lindyDark absolute -top-2 -right-5 z-20 rounded-md px-1 text-sm leading-tight dark:text-[rgb(232,230,227)]">
+                    New
+                </div>
+            )}
         </a>
     );
 }
