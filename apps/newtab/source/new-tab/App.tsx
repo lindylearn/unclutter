@@ -26,6 +26,7 @@ import "@unclutter/library-components/styles/globals.css";
 import "@unclutter/library-components/styles/ArticlePreview.css";
 import "@unclutter/library-components/styles/ProgressCircle.css";
 import "./app.css";
+import clsx from "clsx";
 
 export default function App() {
     // send messages to main Unclutter extension directly by passing its id
@@ -132,10 +133,19 @@ function ArticleSection({
                 )}
             </div>
             <div
-                className="topic-articles animate-fadein relative rounded-lg p-3"
+                className={clsx(
+                    "topic-articles animate-fadein relative rounded-lg p-3",
+                    queuedArticles.length === 0 &&
+                        "cursor-pointer transition-transform hover:scale-x-[99.5%] hover:scale-y-[99%]"
+                )}
                 style={{
                     height: `${11.5 * articleLines - 0.75 * (articleLines - 1)}rem`, // article height + padding to prevent size change
                     background: color,
+                }}
+                onClick={() => {
+                    if (queuedArticles.length === 0) {
+                        setShowModal(true);
+                    }
                 }}
             >
                 <DraggableContext
