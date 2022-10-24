@@ -293,6 +293,16 @@
     "sandboxx.us": [".content#genesis-content::before"],
     "shopify.com": ["#GlobalIconSymbols", "#SiteNavContainer"],
     "snclavalin.com": [".top-content-item.read-time", ".top-content-item"],
+    "sozcu.com.tr": [
+        ".content-meta.author-img._1x1",
+        ".reading-options.mb-4",
+        ".mb-4.gunun-mansetleri",
+        ".img-holder",
+        "#newsBreakVideo_7436674",
+        "#newsbreak_7436674",
+        ".tags.mb-4",
+        "._gm-title"
+    ],
     "speckle.systems": [
         ".mt-0.w-full.h-20",
         ".text-gray-500.text-xs.mt-10",
