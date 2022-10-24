@@ -17,14 +17,14 @@ Unclutter is a modern reader mode and article library for your browser.
 
 ## Why does it exist?
 
-There many other "reader modes", but they all extract article text and re-render it their own format. Unclutter "unclutters" the original web pages itself, leaving the [original website styling](docs/comparison.md) and interactive elements intact. 
+There many other "reader modes", but they all extract article text and re-render it their own format. Unclutter "unclutters" the original web pages itself, leaving the [original website styling](docs/comparison.md) and interactive elements intact.
 
-Articles you read are automatically saved and organized in your library, instead of having to maintain bookmark folders or manual tags.
-With Unclutter, everything happens instantly in your browser.
+Articles you read are automatically saved and organized in your Unclutter library, instead of having to maintain bookmark folders or manual tags.
+Everything happens instantly in your browser.
 
-<p align="center">
+<!-- <p align="center">
 <img src="./docs/media/library.png" width="100%" />
-</p>
+</p> -->
 
 Other features include:
 -   [Crowdsourced blocklists](https://github.com/lindylearn/unclutter/blob/main/docs/element-blocking.md) for annoyances on specific websites
@@ -44,8 +44,8 @@ Try it out for yourself:
 The mission of Unclutter is to improve reading on the web for everyone. You should decide what, when, and how to read. What if you could automatically bypass paywalls or connect similar content across the web?
 
 Here's how you can help:
-- Use the [open roadmap](https://unclutter.canny.io/) to suggest new features for Unclutter or to vote on existing ideas.
-- Open GitHub issues for bugs you find or for technical things to improve. All feedback from within the extension also automatically creates GitHub issues or Pull-Requests.
+- [Use the open roadmap](https://unclutter.canny.io/) to suggest new features for Unclutter or to vote on existing ideas.
+- [Open GitHub issues](https://github.com/lindylearn/unclutter/issues) for bugs you find or for technical things to improve. All feedback from within the extension also automatically creates issues or Pull-Requests.
 - [Join our Discord server](https://discord.gg/CThpNQjucB) if you want to contribute code!
 
 <!-- [<img src="./docs/media/canny.png">](https://unclutter.canny.io/) -->
