@@ -106,7 +106,7 @@ export function ReadingProgress({
             )}
             onClick={onClick}
         >
-            <ResourceStat type="articles_completed" value={readCount} large={large} />
+            {/* <ResourceStat type="articles_completed" value={readCount} large={large} /> */}
             <ResourceStat
                 type="articles"
                 value={
@@ -116,6 +116,7 @@ export function ReadingProgress({
                 }
                 large={large}
             />
+            <ResourceStat type="highlights" value={0} large={large} />
             <div
                 className="bg-lindy dark:bg-lindyDark absolute top-0 left-0 h-full"
                 style={{
