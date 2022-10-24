@@ -1,5 +1,4 @@
 import {
-    anonymousLibraryEnabled,
     collectAnonymousMetricsFeatureFlag,
     getAllFeatureFlags,
     getFeatureFlag,
@@ -165,7 +164,6 @@ export async function getRemoteFeatureFlags() {
         cachedRemoteFeatureFlags = {
             [showLibrarySignupFlag]: false,
             [showFeedbackMessage]: false,
-            [anonymousLibraryEnabled]: true,
         };
         return cachedRemoteFeatureFlags;
     }

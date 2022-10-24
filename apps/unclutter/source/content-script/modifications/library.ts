@@ -18,8 +18,8 @@ import {
     reportEventContentScript,
 } from "@unclutter/library-components/dist/common/messaging";
 import { addArticleToLibrary } from "../../common/api";
-import { anonymousLibraryEnabled, showLibrarySignupFlag } from "../../common/featureFlags";
-import { LibraryInfo, LibraryState, ReadingProgress } from "../../common/schema";
+import { showLibrarySignupFlag } from "../../common/featureFlags";
+import { LibraryInfo, LibraryState } from "../../common/schema";
 import ReadingTimeModifier from "./DOM/readingTime";
 import { cleanTitle } from "../../overlay/outline/components/parse";
 
@@ -76,7 +76,7 @@ export default class LibraryModifier implements PageModifier {
             this.libraryState.libraryEnabled = true;
             this.libraryState.userInfo = await rep.query.getUserInfo();
         } else {
-            this.libraryState.libraryEnabled = await getRemoteFeatureFlag(anonymousLibraryEnabled);
+            this.libraryState.libraryEnabled = true;
             this.libraryState.showLibrarySignup = await getRemoteFeatureFlag(showLibrarySignupFlag);
             this.libraryState.userInfo = {
                 id: null,

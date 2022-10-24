@@ -1,5 +1,4 @@
 import { ReadonlyJSONValue } from "replicache";
-import { anonymousLibraryEnabled } from "../../common/featureFlags";
 import { getLibraryUser } from "../../common/storage";
 import { migrateMetricsUser } from "../metrics";
 import {
