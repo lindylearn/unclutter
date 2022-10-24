@@ -68,7 +68,7 @@
 
             {#if !(libraryState.userInfo?.onPaidPlan || libraryState.userInfo?.trialEnabled) && libraryState.libraryInfo?.article}
                 <div
-                    class="bottom-row mt-2 flex items-center gap-1 text-gray-400"
+                    class="bottom-row mt-2 flex items-center gap-1 text-gray-400 dark:text-stone-600"
                     in:fly={{ y: 10, duration: 200, easing: cubicOut }}
                 >
                     <!-- <svg class="h-4 w-4" viewBox="0 0 448 512"

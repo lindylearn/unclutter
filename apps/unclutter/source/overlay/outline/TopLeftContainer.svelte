@@ -17,6 +17,7 @@
         saveDismissedVersionMessage,
     } from "../../common/updateMessages";
     import LibraryModalModifier from "../../content-script/modifications/libraryModal";
+    import clsx from "clsx";
 
     export let outline: OutlineItem[];
     export let activeOutlineIndex: number;
@@ -54,7 +55,10 @@
     }
 </script>
 
-<div id="lindy-info-topleft-content" class="font-text flex flex-col gap-2">
+<div
+    id="lindy-info-topleft-content"
+    class={clsx("font-text flex flex-col gap-2", darkModeEnabled && "dark")}
+>
     {#if libraryState?.libraryEnabled}
         <LibraryMessage {libraryState} {libraryModalModifier} {darkModeEnabled} />
     {/if}

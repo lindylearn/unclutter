@@ -239,6 +239,7 @@ export async function getTopicArticlesCount(
 export type ReadingProgress = {
     articleCount: number;
     completedCount: number;
+    annotationCount: number;
 };
 export async function getReadingProgress(
     tx: ReadTransaction,
@@ -255,10 +256,14 @@ export async function getReadingProgress(
         articles = await listRecentArticles(tx, start.getTime());
     }
 
+    const articleIds = new Set(articles.map((a) => a.id));
+    const annotations = (await listAnnotations(tx)).filter((a) => articleIds.has(a.article_id));
+
     return {
         articleCount: articles.length,
         completedCount: articles.filter((a) => a.reading_progress >= readingProgressFullClamp)
             .length,
+        annotationCount: annotations.length,
     };
 }
 
