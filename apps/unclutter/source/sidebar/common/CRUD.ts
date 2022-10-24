@@ -15,10 +15,10 @@ import {
 import {
     createLocalAnnotation,
     deleteLocalAnnotation,
-    getHiddenAnnotations,
     getLocalAnnotations,
     updateLocalAnnotation,
 } from "./local";
+import { getHiddenAnnotations } from "./legacy";
 
 export async function getAnnotations(
     url: string,

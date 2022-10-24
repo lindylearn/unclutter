@@ -2,7 +2,7 @@ import { getUrlHash } from "@unclutter/library-components/dist/common";
 import { Annotation } from "@unclutter/library-components/dist/store";
 import { ReadonlyJSONValue } from "replicache";
 import { getLibraryUser } from "../../common/storage";
-import { deleteAllLocalAnnotations, getAllLocalAnnotations } from "../../sidebar/common/local";
+import { deleteAllLegacyAnnotations, getAllLegacyAnnotations } from "../../sidebar/common/legacy";
 import { migrateMetricsUser } from "../metrics";
 import {
     importEntries,
@@ -30,7 +30,7 @@ export async function initLibrary() {
 }
 
 async function importLegacyAnnotations() {
-    const annotations = await getAllLocalAnnotations();
+    const annotations = await getAllLegacyAnnotations();
     if (annotations.length === 0) {
         return;
     }
@@ -43,14 +43,14 @@ async function importLegacyAnnotations() {
                 methodName: "putAnnotation",
                 args: {
                     ...a,
-                    articleId: getUrlHash(a.url),
+                    article_id: getUrlHash(a.url),
                     created_at: new Date(a.created_at).getTime() / 1000,
                 } as Annotation,
             });
         })
     );
 
-    await deleteAllLocalAnnotations();
+    await deleteAllLegacyAnnotations();
 }
 
 async function migrateToAccount() {

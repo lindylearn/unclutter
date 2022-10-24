@@ -1,4 +1,5 @@
-import { Article } from "@unclutter/library-components/dist/store/_schema";
+import { getUrlHash } from "@unclutter/library-components/dist/common";
+import { Annotation, Article } from "@unclutter/library-components/dist/store/_schema";
 
 export function createDraftAnnotation(
     url: string,
@@ -25,7 +26,7 @@ export function createLinkAnnotation(
     });
 }
 
-function createAnnotation(
+export function createAnnotation(
     url: string,
     selector: object,
     partial: Partial<LindyAnnotation> = {}
@@ -114,31 +115,22 @@ export function hypothesisToLindyFormat(annotation: any, currentUsername: string
     };
 }
 
-export interface PickledAnnotation {
-    url: string;
-    id: string;
-    created_at: string;
-    quote_text: string;
-    text: string;
-    tags: string[];
-    quote_html_selector: object;
-}
-
 // strip locally saved annotation from unneccessary state, to reduce used storage
-export function pickleLocalAnnotation(annotation: LindyAnnotation): PickledAnnotation {
+export function pickleLocalAnnotation(annotation: LindyAnnotation): Annotation {
     return {
-        url: annotation.url,
         id: annotation.id,
-        created_at: annotation.created_at,
+        article_id: getUrlHash(annotation.url),
+        created_at: new Date(annotation.created_at).getTime() / 1000,
         quote_text: annotation.quote_text,
         text: annotation.text,
         tags: annotation.tags,
         quote_html_selector: annotation.quote_html_selector,
     };
 }
-export function unpickleLocalAnnotation(annotation: PickledAnnotation): LindyAnnotation {
-    return createAnnotation(annotation.url, annotation.quote_html_selector, {
+export function unpickleLocalAnnotation(annotation: Annotation): LindyAnnotation {
+    return createAnnotation(annotation.article_id, annotation.quote_html_selector, {
         ...annotation,
+        created_at: new Date(annotation.created_at * 1000).toISOString(),
         isMyAnnotation: true,
     });
 }

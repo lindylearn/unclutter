@@ -3,7 +3,7 @@ import { createDraftAnnotation, LindyAnnotation } from "../../common/annotations
 import { reportEventContentScript } from "@unclutter/library-components/dist/common/messaging";
 import { createRemoteAnnotation } from "../common/api";
 import { deleteAnnotation, getAnnotations } from "../common/CRUD";
-import { hideAnnotationLocally } from "../common/local";
+import { hideAnnotationLocally } from "../common/legacy";
 import { AnnotationMutation } from "./local";
 
 // don't show large social highlights as they are distracting
