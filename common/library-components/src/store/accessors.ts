@@ -321,15 +321,26 @@ export async function getGroupTopicChildren(
 /* ***** annotations ***** */
 
 export const { get: getAnnotation, list: listAnnotations } = generate(
-    "annotation",
+    "annotations",
     annotationSchema
 );
+
+async function listArticleAnnotations(
+    tx: ReadTransaction,
+    articleId: string
+): Promise<Annotation[]> {
+    const result = tx.scan({
+        indexName: "annotationsPerArticle",
+        prefix: articleId,
+    });
+    return (await result.values().toArray()) as Annotation[];
+}
 async function listTopicAnnotations(tx: ReadTransaction, topic_id: string): Promise<Annotation[]> {
     const selectedArticles = await listTopicArticles(tx, topic_id);
     const selectedArticleIds = new Set(selectedArticles.map((a) => a.id));
 
     const annotations = await listAnnotations(tx);
-    return annotations.filter((a) => selectedArticleIds.has(a.articleId));
+    return annotations.filter((a) => selectedArticleIds.has(a.article_id));
 }
 
 /* ***** partialSyncState ***** */
@@ -380,6 +391,7 @@ export const accessors = {
     getGroupTopicChildren,
     getAnnotation,
     listAnnotations,
+    listArticleAnnotations,
     listTopicAnnotations,
     getPartialSyncState,
     getSettings,

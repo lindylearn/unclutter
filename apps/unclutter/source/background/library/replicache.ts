@@ -32,6 +32,13 @@ export async function initReplicache(): Promise<Replicache> {
         jsonPointer: "/topic_id",
         allowEmpty: true,
     });
+    rep.createIndex({
+        name: "annotationsPerArticle",
+        // @ts-ignore
+        keyPrefix: "/annotations/",
+        jsonPointer: "/article_id",
+        allowEmpty: true,
+    });
 
     // TODO sync full-text search & enable poke
     // use common package to avoid dealing with bundling issues again

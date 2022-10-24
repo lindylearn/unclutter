@@ -54,6 +54,13 @@ export default function Index({ spaceID }: { spaceID: string }) {
             jsonPointer: "/topic_id",
             allowEmpty: true,
         });
+        rep.createIndex({
+            name: "annotationsPerArticle",
+            // @ts-ignore
+            keyPrefix: "/annotations/",
+            jsonPointer: "/article_id",
+            allowEmpty: true,
+        });
     }, [rep]);
 
     // Init search index

@@ -284,7 +284,7 @@ const {
     put: putAnnotation,
     update: updateAnnotation,
     delete: deleteAnnotation,
-} = generate("annotation", annotationSchema);
+} = generate("annotations", annotationSchema);
 
 /* ***** settings & useInfo ***** */
 

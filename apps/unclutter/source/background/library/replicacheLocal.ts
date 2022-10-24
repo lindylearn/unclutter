@@ -168,7 +168,13 @@ class LocalScanResult<R> implements ScanResult<string, R> {
         if (this.options?.indexName === "articlesByTopic") {
             entries = entries.filter(
                 // @ts-ignore
-                (e) => e[1].topic_id === this.options.prefix
+                (e) => e[0].startsWith("articles/") && e[1].topic_id === this.options.prefix
+            );
+            // @ts-ignore
+        } else if (this.options?.indexName === "annotationsPerArticle") {
+            entries = entries.filter(
+                // @ts-ignore
+                (e) => e[0].startsWith("annotations/") && e[1].article_id === this.options.prefix
             );
         } else if (this.options?.prefix) {
             entries = entries.filter((e) => e[0].startsWith(this.options.prefix));
