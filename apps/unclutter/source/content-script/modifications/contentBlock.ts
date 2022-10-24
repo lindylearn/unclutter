@@ -220,6 +220,7 @@ export const blockedWords = [
     "follow", // https://english.alarabiya.net/News/world/2022/06/09/Berlin-driver-s-confused-statements-under-investigation
     "download", // https://www.globalwitness.org/en/campaigns/digital-threats/ethiopia-hate-speech/
     "disqus", // also may include ads, e.g. https://david-codes.hatanian.com/2019/06/09/aws-costs-every-programmer-should-now.html
+    "intercom", // https://airbyte.com/blog/data-engineering-past-present-and-future
     // "share", // blocks images e.g. on https://spectrum.ieee.org/commodore-64
     "-share-", // https://www.bbc.com/worklife/article/20220525-how-self-deception-allows-people-to-lie
     "share-icons", // https://asia.nikkei.com/Business/Business-trends/Japan-to-fine-Meta-Twitter-if-they-keep-neglecting-domestic-registry
