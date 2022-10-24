@@ -224,7 +224,7 @@ html.pageview.pageview > body {
     }
 }
 
-@media (max-width: 1300px) {
+@media (max-width: 1200px) {
     html.pageview > body {
         margin-left: 20px !important; /* also set via inline styles */
     }

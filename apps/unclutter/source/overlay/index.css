@@ -189,7 +189,7 @@
     height: 100vh !important;
 }
 
-@media (max-width: 1300px) {
+@media (max-width: 1200px) {
     #lindy-info-topleft {
         display: none !important;
     }

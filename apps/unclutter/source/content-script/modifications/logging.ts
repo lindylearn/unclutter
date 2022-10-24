@@ -23,7 +23,7 @@ export default class LoggingManager implements PageModifier {
         const enableMs = Math.round(performance.now() - this.start);
         reportEventContentScript("logPageviewProperties", {
             enableMs,
-            outlineVisible: window.innerWidth > 1300,
+            outlineVisible: window.innerWidth > 1200,
             outlineItems: this.overlayManager.outline.length,
             readingTime: this.readingTimeModifier.totalReadingTime,
         });
