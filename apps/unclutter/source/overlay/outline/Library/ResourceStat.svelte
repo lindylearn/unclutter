@@ -4,7 +4,6 @@
 
     export let type: "articles" | "articles_completed" | "highlights" | "links";
     export let value: number;
-    export let diff: number = null;
 </script>
 
 <div class={clsx("flex items-center transition-opacity gap-1", value === undefined && "opacity-0")}>
@@ -37,7 +36,7 @@
             /></svg
         >
     {/if}
-    <div class="font-title min-w-[12px] text-lg font-bold leading-none">
-        <AnimatedNumber {value} {diff} />
+    <div class="font-title min-w-[12px] text-center text-lg font-semibold leading-none">
+        <AnimatedNumber {value} />
     </div>
 </div>

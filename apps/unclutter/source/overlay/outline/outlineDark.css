@@ -7,6 +7,10 @@
     --text-color: var(--lindy-dark-theme-text-color) !important;
 }
 
+.heading-text.visited > .title {
+    color: #57534e !important; /* text-stone-600 */
+}
+
 svg.message-icon {
     color: #e5e7eb !important; /* text-gray-200 */
 }

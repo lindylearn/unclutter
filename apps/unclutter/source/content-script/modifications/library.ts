@@ -125,7 +125,6 @@ export default class LibraryModifier implements PageModifier {
             this.lastReadingProgress = this.libraryState.libraryInfo.article.reading_progress;
             rep.subscribe.getReadingProgress(this.libraryState.libraryInfo.topic?.id)({
                 onData: (readingProgress) => {
-                    console.log("readingProgress", readingProgress);
                     this.libraryState.readingProgress = readingProgress;
                     this.overlayManager.updateLibraryState(this.libraryState);
                 },
@@ -138,7 +137,7 @@ export default class LibraryModifier implements PageModifier {
                         await rep.mutate.putTopic(this.libraryState.libraryInfo.topic);
                     }
                     await rep.mutate.putArticleIfNotExists(this.libraryState.libraryInfo.article);
-                }, 500);
+                }, 1000);
             }
 
             // construct article graph

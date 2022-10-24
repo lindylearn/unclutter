@@ -5,5 +5,5 @@ export function getRelativeTime(timestamp: number): string {
     // See https://stackoverflow.com/questions/6427204/date-parsing-in-javascript-is-different-between-safari-and-chrome
 
     const date = new Date(timestamp);
-    return formatRelativeTime(date);
+    return formatRelativeTime(date, "en_US", { minInterval: 60 });
 }
