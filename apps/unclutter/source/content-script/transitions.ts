@@ -17,6 +17,7 @@ import LibraryModifier from "./modifications/library";
 import OverlayManager from "./modifications/overlay";
 import { PageModifier, trackModifierExecution } from "./modifications/_interface";
 import KeyboardModifier from "./modifications/keyboard";
+import LoggingManager from "./modifications/logging";
 
 @trackModifierExecution
 export default class TransitionManager implements PageModifier {
@@ -62,6 +63,7 @@ export default class TransitionManager implements PageModifier {
         this.overlayManager,
         this.readingTimeModifier
     );
+    private loggingModifier = new LoggingManager(this.overlayManager, this.readingTimeModifier);
     // private linkAnnotationsModifier = new LinkAnnotationsModifier(
     //     this.annotationsModifier,
     //     this.libraryModifier,
@@ -71,6 +73,8 @@ export default class TransitionManager implements PageModifier {
     private keyboardModifier = new KeyboardModifier(this.libraryModalModifier);
 
     async prepare() {
+        this.loggingModifier.prepare();
+
         // *** read DOM phase ***
 
         this.themeModifier.setCyclicDependencies(this.overlayManager);
@@ -217,9 +221,7 @@ export default class TransitionManager implements PageModifier {
         this.libraryModifier.startReadingProgressSync();
         this.libraryModifier.scrollToLastReadingPosition();
 
-        // insert UI at bottom of article later
-        await new Promise((r) => setTimeout(r, 1000));
-        this.overlayManager.renderBottomContainer();
+        this.loggingModifier.afterTransitionInDone();
     }
 
     beforeTransitionOut() {

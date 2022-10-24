@@ -38,7 +38,7 @@ export default class OverlayManager implements PageModifier {
     private elementPickerModifier: ElementPickerModifier;
     private libraryModalModifier: LibraryModalModifier;
 
-    private outline: OutlineItem[];
+    outline: OutlineItem[];
     private flatOutline: OutlineItem[];
     private topleftSvelteComponent: TopLeftContainer;
     private toprightSvelteComponent: TopRightContainerSvelte;
@@ -46,7 +46,6 @@ export default class OverlayManager implements PageModifier {
     private bottomSvelteComponent: BottomContainerSvelte;
 
     private annotationsEnabled: boolean;
-    private libraryEnabled: boolean = false;
 
     constructor(
         domain: string,
@@ -71,7 +70,6 @@ export default class OverlayManager implements PageModifier {
         // fetch users settings to run code synchronously later
         (async () => {
             this.annotationsEnabled = await getFeatureFlag(enableAnnotationsFeatureFlag);
-            // this.libraryEnabled = true // TODO check libraryEnabled properly
         })();
     }
 
