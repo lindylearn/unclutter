@@ -13,6 +13,7 @@ import { LindyIcon } from "../Icons";
 import HighlightsTab from "./Highlights";
 import UpgradeModalTab from "./Upgrade";
 import SettingsModalTab from "./Settings";
+import SyncTab from "./Sync";
 
 export function LibraryModalPage({
     userInfo,
@@ -227,6 +228,7 @@ function ModalContent({
                     />
                 )}
                 {currentTab === "signup" && <UpgradeModalTab darkModeEnabled={darkModeEnabled} />}
+                {currentTab === "sync" && <SyncTab />}
                 {currentTab === "settings" && (
                     <SettingsModalTab
                         userInfo={userInfo}
