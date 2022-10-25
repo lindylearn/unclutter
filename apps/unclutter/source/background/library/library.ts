@@ -2,8 +2,9 @@ import { getUrlHash } from "@unclutter/library-components/dist/common";
 import { Annotation } from "@unclutter/library-components/dist/store";
 import groupBy from "lodash/groupBy";
 import { ReadonlyJSONValue } from "replicache";
+import { addArticlesToLibrary } from "../../common/api";
 import { getFeatureFlag, hypothesisSyncFeatureFlag } from "../../common/featureFlags";
-import { constructArticleInfo, LibraryInfo } from "../../common/schema";
+import { constructLocalArticleInfo, LibraryInfo } from "../../common/schema";
 import { getLibraryUser } from "../../common/storage";
 import { getHypothesisAnnotationsSince } from "../../sidebar/common/api";
 import { deleteAllLegacyAnnotations, getAllLegacyAnnotations } from "../../sidebar/common/legacy";
@@ -42,7 +43,7 @@ async function importLegacyAnnotations() {
 
     const hypothesisSyncEnabled = await getFeatureFlag(hypothesisSyncFeatureFlag);
     if (hypothesisSyncEnabled) {
-        const remoteAnnotations = await getHypothesisAnnotationsSince(undefined);
+        const remoteAnnotations = await getHypothesisAnnotationsSince(undefined, 200);
         annotations.push(...remoteAnnotations);
     }
 
@@ -58,16 +59,27 @@ async function importLegacyAnnotations() {
     });
 
     // fetch article state
-    const articleInfos: LibraryInfo[] = await Promise.all(
-        Object.entries(groupBy(annotations, (a) => a.url)).map(async ([url, annotations]) => {
-            const articleInfo = await constructArticleInfo(url, getUrlHash(url), url, userInfo);
-            articleInfo.article.reading_progress = 1.0;
+    const annotationsPerArticle = groupBy(annotations, (a) => a.url);
+    const urls = Object.entries(annotationsPerArticle).map(([url]) => url);
+
+    let articleInfos: LibraryInfo[];
+    if (userInfo?.onPaidPlan || userInfo?.trialEnabled) {
+        articleInfos = await addArticlesToLibrary(urls, userInfo?.id);
+    } else {
+        articleInfos = urls.map((url) => constructLocalArticleInfo(url, getUrlHash(url), url));
+    }
+    articleInfos = articleInfos.map((articleInfo) => {
+        articleInfo.article.reading_progress = 1.0;
+
+        const articleAnnotations = annotationsPerArticle[articleInfo.article.url];
+        if (articleAnnotations.length > 0) {
             articleInfo.article.time_added = Math.round(
-                new Date(annotations[0].created_at).getTime() / 1000
+                new Date(articleAnnotations[0].created_at).getTime() / 1000
             );
-            return articleInfo;
-        })
-    );
+        }
+
+        return articleInfo;
+    });
 
     // insert articles
     await Promise.all(

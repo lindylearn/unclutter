@@ -29,7 +29,10 @@ export async function checkArticleInLibrary(url: string, user_id: string): Promi
     return json;
 }
 
-export async function addArticleToLibrary(url: string, user_id: string): Promise<LibraryInfo> {
+export async function addArticlesToLibrary(
+    urls: string[],
+    user_id: string
+): Promise<LibraryInfo[]> {
     const response = await fetch(
         `${lindyApiUrl}/library/import_articles?${new URLSearchParams({
             user_id,
@@ -39,18 +42,19 @@ export async function addArticleToLibrary(url: string, user_id: string): Promise
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify([{ url }]),
+            body: JSON.stringify(
+                urls.map((url) => {
+                    url;
+                })
+            ),
         }
     );
     if (!response.ok) {
-        return null;
+        return Array(urls.length).fill(null);
     }
 
     const json = await response.json();
-    return {
-        ...json.added?.[0],
-        new_links: json.new_links || [],
-    };
+    return json.added;
 }
 
 export async function clusterLibraryArticles(

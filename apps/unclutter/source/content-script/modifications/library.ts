@@ -18,13 +18,9 @@ import {
     reportEventContentScript,
 } from "@unclutter/library-components/dist/common/messaging";
 import { showLibrarySignupFlag } from "../../common/featureFlags";
-import {
-    constructArticleInfo,
-    LibraryInfo,
-    LibraryState,
-    saveArticleInfo,
-} from "../../common/schema";
+import { constructLocalArticleInfo, LibraryInfo, LibraryState } from "../../common/schema";
 import ReadingTimeModifier from "./DOM/readingTime";
+import { addArticlesToLibrary } from "../../common/api";
 
 @trackModifierExecution
 export default class LibraryModifier implements PageModifier {
@@ -105,12 +101,22 @@ export default class LibraryModifier implements PageModifier {
                 this.libraryState.isClustering = true;
                 this.overlayManager.updateLibraryState(this.libraryState);
 
-                this.libraryState.libraryInfo = await constructArticleInfo(
-                    this.articleUrl,
-                    this.articleId,
-                    this.articleTitle,
-                    this.libraryState.userInfo
-                );
+                if (
+                    this.libraryState.userInfo?.onPaidPlan ||
+                    this.libraryState.userInfo?.trialEnabled
+                ) {
+                    this.libraryState.libraryInfo = await addArticlesToLibrary(
+                        [this.articleUrl],
+                        this.libraryState.userInfo?.id
+                    )[0];
+                } else {
+                    this.libraryState.libraryInfo = constructLocalArticleInfo(
+                        this.articleUrl,
+                        this.articleId,
+                        this.articleTitle
+                    );
+                }
+
                 this.libraryState.isClustering = false;
             } else {
                 // use existing state
@@ -140,8 +146,16 @@ export default class LibraryModifier implements PageModifier {
 
             // insert new article after initial UI render
             if (!this.libraryState.wasAlreadyPresent) {
-                setTimeout(() => {
-                    saveArticleInfo(rep, this.libraryState.libraryInfo);
+                setTimeout(async () => {
+                    if (this.libraryState.libraryInfo.topic) {
+                        await rep.mutate.putTopic(this.libraryState.libraryInfo.topic);
+                    }
+                    await rep.mutate.putArticleIfNotExists(this.libraryState.libraryInfo.article);
+                    if (this.libraryState.libraryInfo.new_links) {
+                        await rep.mutate.importArticleLinks({
+                            links: this.libraryState.libraryInfo.new_links,
+                        });
+                    }
                 }, 1000);
             }
 
