@@ -42,7 +42,7 @@ async function importLegacyAnnotations() {
 
     const hypothesisSyncEnabled = await getFeatureFlag(hypothesisSyncFeatureFlag);
     if (hypothesisSyncEnabled) {
-        const remoteAnnotations = await getHypothesisAnnotationsSince(undefined, 200);
+        const remoteAnnotations = await getHypothesisAnnotationsSince(undefined);
         annotations.push(...remoteAnnotations);
     }
 
@@ -62,7 +62,9 @@ async function importLegacyAnnotations() {
         Object.entries(groupBy(annotations, (a) => a.url)).map(async ([url, annotations]) => {
             const articleInfo = await constructArticleInfo(url, getUrlHash(url), url, userInfo);
             articleInfo.article.reading_progress = 1.0;
-            articleInfo.article.time_added = new Date(annotations[0].created_at).getTime() / 1000;
+            articleInfo.article.time_added = Math.round(
+                new Date(annotations[0].created_at).getTime() / 1000
+            );
             return articleInfo;
         })
     );
@@ -87,7 +89,7 @@ async function importLegacyAnnotations() {
                 args: {
                     ...a,
                     article_id: getUrlHash(a.url),
-                    created_at: new Date(a.created_at).getTime() / 1000,
+                    created_at: Math.round(new Date(a.created_at).getTime() / 1000),
                 } as Annotation,
             });
         })

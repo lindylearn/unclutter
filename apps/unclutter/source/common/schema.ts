@@ -54,7 +54,7 @@ export async function constructArticleInfo(
                 title: cleanTitle(articleTitle),
                 word_count: 0, // TODO how to get this in frontend?
                 publication_date: null, // TODO how to get this in frontend?
-                time_added: new Date().getTime() / 1000,
+                time_added: Math.round(new Date().getTime() / 1000),
                 reading_progress: 0.0,
                 topic_id: null,
                 is_favorite: false,

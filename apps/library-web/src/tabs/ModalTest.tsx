@@ -46,6 +46,10 @@ export default function ModalTestTab({}) {
     const darkModeEnabled = useAutoDarkMode();
 
     const userInfo = useSubscribe(rep, rep?.subscribe.getUserInfo(), null);
+    if (userInfo) {
+        userInfo.trialEnabled = false;
+    }
+
     if (!userInfo) {
         return <></>;
     }
