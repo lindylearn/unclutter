@@ -116,10 +116,11 @@ export default function App() {
         undefined
     );
 
-    if (!userInfo) {
-        return <></>;
+    if (!userInfo === undefined) {
+        // still fetching
+        return;
     }
-    if (!userInfo.onPaidPlan && !userInfo.trialEnabled) {
+    if (!userInfo || (!userInfo.onPaidPlan && !userInfo.trialEnabled)) {
         return <Welcome2Tab />;
     }
 

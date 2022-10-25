@@ -26,6 +26,7 @@ export default function Welcome2Tab() {
                     signinProvider: user.app_metadata.provider as any,
                     email: user.email,
                     accountEnabled: true,
+                    trialEnabled: true,
                     onPaidPlan,
                 });
 
@@ -40,7 +41,6 @@ export default function Welcome2Tab() {
     return (
         <div className="font-text mb-10 flex flex-col gap-10 p-5 text-stone-900 dark:text-stone-200">
             You successfully created an account!
-            {JSON.stringify(userInfo)}
         </div>
     );
 }
