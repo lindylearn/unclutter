@@ -136,8 +136,8 @@ export function ArticlePreview({
                 article={article}
                 open={dropdownOpen}
                 setOpen={setDropdownOpen}
-                reportEvent={reportEvent}
                 small={small}
+                reportEvent={reportEvent}
             />
 
             <svg

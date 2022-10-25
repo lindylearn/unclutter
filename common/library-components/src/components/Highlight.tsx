@@ -1,20 +1,25 @@
-import React from "react";
+import React, { useState } from "react";
 import { getRandomLightColor, openArticleResilient } from "../common";
 import { Annotation, Article } from "../store";
+import { HighlightDropdown } from "./Dropdown/HighlightDowndown";
 import { ResourceIcon } from "./Modal";
 
 export function Highlight({
     annotation,
     article,
     darkModeEnabled,
+    reportEvent = () => {},
 }: {
     annotation: Annotation;
     article: Article | undefined;
     darkModeEnabled: boolean;
+    reportEvent?: (event: string, properties?: any) => void;
 }) {
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+
     return (
         <a
-            className="animate-fadein relative flex cursor-pointer select-none flex-col justify-between gap-3 overflow-hidden rounded-md p-3 text-sm text-stone-900 transition-all hover:scale-[99%]"
+            className="animate-fadein relative flex cursor-pointer select-none flex-col justify-between gap-3 overflow-hidden rounded-md p-3 text-sm text-stone-900 transition-all hover:shadow-lg"
             style={{
                 background: getRandomLightColor(annotation.article_id, darkModeEnabled),
             }}
@@ -26,7 +31,19 @@ export function Highlight({
                     openArticleResilient(article.url, true, annotation.id);
                 }
             }}
+            onContextMenu={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setDropdownOpen(true);
+            }}
         >
+            <HighlightDropdown
+                annotation={annotation}
+                open={dropdownOpen}
+                setOpen={setDropdownOpen}
+                reportEvent={reportEvent}
+            />
+
             <QuoteText quote_text={annotation.quote_text} />
 
             {/* <textarea className="h-20 w-full rounded-md bg-stone-50 p-2" value={annotation.text} /> */}
@@ -44,15 +61,6 @@ export function Highlight({
             ) : (
                 <div className="text-base"> </div>
             )}
-
-            <div className="dropdown-icon absolute top-0 right-0.5 cursor-pointer p-1.5 outline-none transition-all hover:scale-110">
-                <svg className="w-3" viewBox="0 0 384 512">
-                    <path
-                        fill="currentColor"
-                        d="M360.5 217.5l-152 143.1C203.9 365.8 197.9 368 192 368s-11.88-2.188-16.5-6.562L23.5 217.5C13.87 208.3 13.47 193.1 22.56 183.5C31.69 173.8 46.94 173.5 56.5 182.6L192 310.9l135.5-128.4c9.562-9.094 24.75-8.75 33.94 .9375C370.5 193.1 370.1 208.3 360.5 217.5z"
-                    />
-                </svg>
-            </div>
         </a>
     );
 }

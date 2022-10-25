@@ -79,6 +79,7 @@ export default function HighlightsTab({
                         annotation={annotation}
                         article={articlesMap[annotation.article_id]}
                         darkModeEnabled={darkModeEnabled}
+                        reportEvent={reportEvent}
                     />
                 ))}
             </div>
