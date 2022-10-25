@@ -324,6 +324,7 @@ export const blockedSpecificSelectors = [
     ".neo-spacer-open", // https://www.unix.com/shell-programming-and-scripting/179639-shell-script-epoch-time-conversion.html
     ".scrolltop", // https://www.scientificamerican.com/article/the-elusive-origin-of-zero1/
     ".scrolly-instance-1", // https://www.nytimes.com/2022/08/18/technology/dan-price-resign-social-media.html
+    "#qc-cmp2-container", // https://consumer.healthday.com/marijuana-users-more-prone-to-infections-after-knee-shoulder-surgeries-2658453251.html
 
     // term of contents (Unclutter shows its own outline)
     ".toc",
