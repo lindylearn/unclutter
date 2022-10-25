@@ -176,7 +176,7 @@ export function FilterButton({
 }) {
     return (
         <div
-            className="flex cursor-pointer select-none items-center gap-2 rounded-md bg-stone-50 px-2 py-1 font-medium transition-transform hover:scale-[97%] dark:bg-neutral-800"
+            className="flex flex-shrink-0 cursor-pointer select-none items-center gap-2 rounded-md bg-stone-50 px-2 py-1 font-medium transition-transform hover:scale-[97%] dark:bg-neutral-800"
             onClick={onClick}
             style={{
                 background: color,

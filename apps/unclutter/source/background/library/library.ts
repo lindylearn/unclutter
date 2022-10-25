@@ -64,7 +64,7 @@ async function importLegacyAnnotations() {
 
     // fetch article state
     const annotationsPerArticle = groupBy(annotations, (a) => a.url);
-    const urls = Object.entries(annotationsPerArticle).map(([url]) => url);
+    const urls = Object.keys(annotationsPerArticle);
 
     let articleInfos: LibraryInfo[];
     if (userInfo?.onPaidPlan || userInfo?.trialEnabled) {

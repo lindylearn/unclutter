@@ -1,15 +1,24 @@
 import clsx from "clsx";
-import React, { useContext, useEffect, useState } from "react";
+import groupBy from "lodash/groupBy";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { FilterButton } from "./Recent";
-import { getRandomLightColor, getRelativeTime } from "../../common";
-import { Annotation, ReplicacheContext, UserInfo, useSubscribe } from "../../store";
+import { getRandomLightColor, getRelativeTime, openArticleResilient } from "../../common";
+import { Annotation, Article, ReplicacheContext, Topic, UserInfo, useSubscribe } from "../../store";
 import { ReadingProgress, ResourceIcon } from "./numbers";
 
 export default function HighlightsTab({
+    currentArticle,
+    currentTopic,
+    domainFilter,
+    setDomainFilter,
     userInfo,
     darkModeEnabled,
     reportEvent = () => {},
 }: {
+    currentArticle?: string;
+    currentTopic?: Topic;
+    domainFilter: string | null;
+    setDomainFilter: (domain: string | null) => void;
     userInfo: UserInfo;
     darkModeEnabled: boolean;
     reportEvent?: (event: string, data?: any) => void;
@@ -17,17 +26,39 @@ export default function HighlightsTab({
     const rep = useContext(ReplicacheContext);
     const annotations = useSubscribe(rep, rep?.subscribe.listAnnotations(), []);
 
-    const [domainFilter, setDomainFilter] = useState<string | null>(null);
     const [onlyUnread, setOnlyUnread] = useState(false);
     const [lastFirst, setLastFirst] = useState(true);
     const [filteredAnnotations, setFilteredAnnotations] = useState<Annotation[]>([]);
     useEffect(() => {
+        // filter
         let filteredAnnotations = [...annotations];
+        if (currentArticle) {
+            filteredAnnotations = filteredAnnotations.filter(
+                (a) => a.article_id === currentArticle
+            );
+        }
+
+        // sort
         filteredAnnotations.sort((a, b) =>
             lastFirst ? b.created_at - a.created_at : a.created_at - b.created_at
         );
         setFilteredAnnotations(filteredAnnotations);
-    }, [annotations, lastFirst]);
+    }, [annotations, currentArticle, currentTopic, domainFilter, lastFirst]);
+
+    const [articlesMap, setArticlesMap] = useState<{ [article_id: string]: Article }>({});
+    useEffect(() => {
+        const annotationsPerArticle = groupBy(annotations, (a) => a.article_id);
+
+        const articles = {};
+        Promise.all(
+            Object.keys(annotationsPerArticle).map(async (article_id) => {
+                const article = await rep?.query.getArticle(article_id);
+                if (article) {
+                    articles[article_id] = article;
+                }
+            })
+        ).then(() => setArticlesMap(articles));
+    }, [filteredAnnotations]);
 
     return (
         <div className="flex flex-col gap-4">
@@ -47,6 +78,7 @@ export default function HighlightsTab({
                     <Highlight
                         key={annotation.id}
                         annotation={annotation}
+                        article={articlesMap[annotation.article_id]}
                         darkModeEnabled={darkModeEnabled}
                     />
                 ))}
@@ -77,10 +109,15 @@ function PageFilters({
     return (
         <div className="flex justify-start gap-3">
             <FilterButton
-                title={onlyUnread ? "Unread articles" : "All articles"}
+                title={onlyUnread ? "Favorites" : "All highlights"}
                 icon={
                     onlyUnread ? (
-                        <ResourceIcon type="articles" />
+                        <svg className="h-4" viewBox="0 0 576 512">
+                            <path
+                                fill="currentColor"
+                                d="M287.9 0C297.1 0 305.5 5.25 309.5 13.52L378.1 154.8L531.4 177.5C540.4 178.8 547.8 185.1 550.7 193.7C553.5 202.4 551.2 211.9 544.8 218.2L433.6 328.4L459.9 483.9C461.4 492.9 457.7 502.1 450.2 507.4C442.8 512.7 432.1 513.4 424.9 509.1L287.9 435.9L150.1 509.1C142.9 513.4 133.1 512.7 125.6 507.4C118.2 502.1 114.5 492.9 115.1 483.9L142.2 328.4L31.11 218.2C24.65 211.9 22.36 202.4 25.2 193.7C28.03 185.1 35.5 178.8 44.49 177.5L197.7 154.8L266.3 13.52C270.4 5.249 278.7 0 287.9 0L287.9 0zM287.9 78.95L235.4 187.2C231.9 194.3 225.1 199.3 217.3 200.5L98.98 217.9L184.9 303C190.4 308.5 192.9 316.4 191.6 324.1L171.4 443.7L276.6 387.5C283.7 383.7 292.2 383.7 299.2 387.5L404.4 443.7L384.2 324.1C382.9 316.4 385.5 308.5 391 303L476.9 217.9L358.6 200.5C350.7 199.3 343.9 194.3 340.5 187.2L287.9 78.95z"
+                            />
+                        </svg>
                     ) : (
                         <svg className="h-4" viewBox="0 0 448 512">
                             <path
@@ -95,6 +132,7 @@ function PageFilters({
                     reportEvent("changeListFilter", { onlyUnread });
                 }}
             />
+
             <FilterButton
                 title={lastFirst ? "Last added" : "Oldest first"}
                 icon={
@@ -119,7 +157,8 @@ function PageFilters({
                     reportEvent("changeListFilter", { lastFirst });
                 }}
             />
-            {/* {domainFilter && (
+
+            {domainFilter && (
                 <FilterButton
                     title={domainFilter}
                     icon={
@@ -136,28 +175,45 @@ function PageFilters({
                     }}
                     color={getRandomLightColor(domainFilter, darkModeEnabled)}
                 />
-            )} */}
+            )}
+
+            <input
+                className="font-text w-full rounded-md bg-stone-50 px-3 py-1.5 font-medium leading-none placeholder-stone-300 outline-none dark:bg-neutral-800 dark:placeholder-neutral-600"
+                spellCheck="false"
+                autoFocus
+                placeholder={`Search across 500 highlights...`}
+            />
         </div>
     );
 }
 
 function Highlight({
     annotation,
+    article,
     darkModeEnabled,
 }: {
     annotation: Annotation;
+    article: Article | undefined;
     darkModeEnabled: boolean;
 }) {
     return (
         <div
-            className="relative flex select-none flex-col justify-between gap-3 overflow-hidden rounded-md p-3 text-sm transition-all hover:scale-[99%]"
+            className="relative flex cursor-pointer select-none flex-col justify-between gap-3 overflow-hidden rounded-md p-3 text-sm text-stone-900 transition-all hover:scale-[99%]"
             style={{
-                background: getRandomLightColor(annotation.id, darkModeEnabled),
+                background: getRandomLightColor(annotation.article_id, darkModeEnabled),
             }}
+            onClick={() => article?.url && openArticleResilient(article.url)}
         >
-            <div>{annotation.quote_text}</div>
+            <QuoteText quote_text={annotation.quote_text} />
 
-            <div className="text-stone-600">{getRelativeTime(annotation.created_at * 1000)}</div>
+            {/* <textarea className="h-20 w-full rounded-md bg-stone-50 p-2" value={annotation.text} /> */}
+
+            <div className="flex justify-between gap-2 whitespace-nowrap">
+                <div className="text-medium overflow-hidden text-ellipsis">{article?.title}</div>
+                {/* <div className="text-stone-600">
+                    {getRelativeTime(annotation.created_at * 1000)}
+                </div> */}
+            </div>
 
             <div className="dropdown-icon absolute top-0 right-0.5 cursor-pointer p-1.5 outline-none transition-all hover:scale-110">
                 <svg className="w-3" viewBox="0 0 384 512">
@@ -167,6 +223,34 @@ function Highlight({
                     />
                 </svg>
             </div>
+        </div>
+    );
+}
+
+export function QuoteText({ quote_text }) {
+    // const lines: string[] = useMemo(() => {
+    //     if (!quote_text) {
+    //         return [];
+    //     }
+    //     let text = quote_text?.length > 500 ? `${quote_text.slice(0, 500)} [...]` : quote_text;
+    //     // text = `"${text}"`;
+
+    //     return text
+    //         .replace(/(\n)+/g, "\n")
+    //         .split("\n")
+    //         .filter((line) => line.trim() != "");
+    // }, [quote_text]);
+
+    return (
+        <div
+            className="flex-grow overflow-hidden text-ellipsis leading-normal"
+            style={{
+                display: "-webkit-box",
+                WebkitBoxOrient: "vertical",
+                WebkitLineClamp: 6,
+            }}
+        >
+            {quote_text}
         </div>
     );
 }

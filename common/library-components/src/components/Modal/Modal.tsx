@@ -222,6 +222,10 @@ function ModalContent({
                 )}
                 {currentTab === "highlights" && (
                     <HighlightsTab
+                        currentArticle={currentArticle}
+                        currentTopic={currentTopic}
+                        domainFilter={domainFilter}
+                        setDomainFilter={setDomainFilter}
                         userInfo={userInfo}
                         darkModeEnabled={darkModeEnabled}
                         reportEvent={reportEvent}
