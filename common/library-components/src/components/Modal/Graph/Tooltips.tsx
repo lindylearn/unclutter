@@ -95,14 +95,6 @@ export function NodeTooltip({
                     }}
                 />
             </div>
-
-            {/* <ArticleDropdownMenu
-                article={article}
-                open={dropdownOpen}
-                setOpen={setDropdownOpen}
-                reportEvent={reportEvent}
-                small={small}
-            /> */}
         </div>
     );
 }

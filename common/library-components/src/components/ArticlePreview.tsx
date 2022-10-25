@@ -2,10 +2,10 @@ import React, { createContext, useEffect } from "react";
 import clsx from "clsx";
 import { useContext, useLayoutEffect, useState } from "react";
 
-import { Article, readingProgressFullClamp } from "../../store/_schema";
-import { ArticleDropdownMenu } from "./ArticleDropdownMenu";
-import { openArticleResilient } from "../../common";
-import { ResourceIcon } from "../Modal";
+import { Article, readingProgressFullClamp } from "../store/_schema";
+import { ArticleDropdown } from "./Dropdown";
+import { openArticleResilient } from "../common";
+import { ResourceIcon } from "./Modal";
 
 export type LocalScreenshotFetcher = ((articleId: string) => Promise<string | null>) | null;
 export const LocalScreenshotContext = createContext<LocalScreenshotFetcher>(null);
@@ -132,7 +132,7 @@ export function ArticlePreview({
                 )}
             ></div> */}
 
-            <ArticleDropdownMenu
+            <ArticleDropdown
                 article={article}
                 open={dropdownOpen}
                 setOpen={setDropdownOpen}

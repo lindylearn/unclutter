@@ -7,7 +7,7 @@ import { ReplicacheContext } from "../../store";
 import { reportBrokenPage } from "../../common/api";
 import { Article, readingProgressFullClamp } from "../../store/_schema";
 
-export function ArticleDropdownMenu({
+export function ArticleDropdown({
     article,
     open,
     setOpen,

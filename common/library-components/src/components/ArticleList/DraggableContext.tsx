@@ -13,7 +13,7 @@ import {
 import { sortableKeyboardCoordinates, arrayMove } from "@dnd-kit/sortable";
 import { createPortal } from "react-dom";
 import { DragOverlay } from "@dnd-kit/core";
-import { ArticlePreview } from "../Article/ArticlePreview";
+import { ArticlePreview } from "../ArticlePreview";
 import {
     Article,
     ArticleSortPosition,

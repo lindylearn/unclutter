@@ -1,5 +1,5 @@
 import React from "react";
-import { ArticlePreview } from "../Article/ArticlePreview";
+import { ArticlePreview } from "../ArticlePreview";
 
 export function StaticArticleList({
     articles,

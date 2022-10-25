@@ -5,7 +5,7 @@ import { CSS } from "@dnd-kit/utilities";
 
 import { useContext } from "react";
 import { Article } from "../../store/_schema";
-import { ArticlePreview } from "../Article/ArticlePreview";
+import { ArticlePreview } from "../ArticlePreview";
 import clsx from "clsx";
 import { CustomDraggableContext } from "./DraggableContext";
 
