@@ -25,7 +25,7 @@ export default function HighlightsTab({
     const rep = useContext(ReplicacheContext);
     const annotations = useSubscribe(rep, rep?.subscribe.listAnnotations(), []);
 
-    const [onlyUnread, setOnlyUnread] = useState(false);
+    const [onlyFavorites, setOnlyFavorites] = useState(false);
     const [lastFirst, setLastFirst] = useState(true);
     const [filteredAnnotations, setFilteredAnnotations] = useState<Annotation[]>([]);
     useEffect(() => {
@@ -36,13 +36,16 @@ export default function HighlightsTab({
                 (a) => a.article_id === currentArticle
             );
         }
+        if (onlyFavorites) {
+            filteredAnnotations = filteredAnnotations.filter((a) => a.is_favorite);
+        }
 
         // sort
         filteredAnnotations.sort((a, b) =>
             lastFirst ? b.created_at - a.created_at : a.created_at - b.created_at
         );
         setFilteredAnnotations(filteredAnnotations);
-    }, [annotations, currentArticle, currentTopic, domainFilter, lastFirst]);
+    }, [annotations, currentArticle, currentTopic, domainFilter, onlyFavorites, lastFirst]);
 
     const [articlesMap, setArticlesMap] = useState<{ [article_id: string]: Article }>({});
     useEffect(() => {
@@ -62,9 +65,9 @@ export default function HighlightsTab({
     return (
         <div className="flex flex-col gap-4">
             <PageFilters
-                onlyUnread={onlyUnread}
+                onlyFavorites={onlyFavorites}
                 lastFirst={lastFirst}
-                setOnlyUnread={setOnlyUnread}
+                setOnlyFavorites={setOnlyFavorites}
                 setLastFirst={setLastFirst}
                 domainFilter={domainFilter}
                 setDomainFilter={setDomainFilter}
@@ -88,18 +91,18 @@ export default function HighlightsTab({
 }
 
 function PageFilters({
-    onlyUnread,
+    onlyFavorites,
     lastFirst,
-    setOnlyUnread,
+    setOnlyFavorites,
     setLastFirst,
     domainFilter,
     setDomainFilter,
     darkModeEnabled,
     reportEvent = () => {},
 }: {
-    onlyUnread: boolean;
+    onlyFavorites: boolean;
     lastFirst: boolean;
-    setOnlyUnread: (state: boolean) => void;
+    setOnlyFavorites: (state: boolean) => void;
     setLastFirst: (state: boolean) => void;
     domainFilter: string | null;
     setDomainFilter: (domain: string | null) => void;
@@ -109,9 +112,9 @@ function PageFilters({
     return (
         <div className="flex justify-start gap-3">
             <FilterButton
-                title={onlyUnread ? "Favorites" : "All highlights"}
+                title={onlyFavorites ? "Favorites" : "All highlights"}
                 icon={
-                    onlyUnread ? (
+                    onlyFavorites ? (
                         <svg className="h-4" viewBox="0 0 576 512">
                             <path
                                 fill="currentColor"
@@ -128,8 +131,8 @@ function PageFilters({
                     )
                 }
                 onClick={() => {
-                    setOnlyUnread(!onlyUnread);
-                    reportEvent("changeListFilter", { onlyUnread });
+                    setOnlyFavorites(!onlyFavorites);
+                    reportEvent("changeListFilter", { onlyFavorites });
                 }}
             />
 
