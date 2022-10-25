@@ -63,6 +63,17 @@ export async function listRecentArticles(
         )
         .filter((a) => stateFilter !== "favorite" || a.is_favorite);
 
+    // add annotation counts
+    const allAnnotations = await listAnnotations(tx);
+    const annotationsPerArticle = new Map<string, number>();
+    for (const a of allAnnotations) {
+        annotationsPerArticle.set(a.article_id, (annotationsPerArticle.get(a.article_id) || 0) + 1);
+    }
+
+    for (const a of filteredArticles) {
+        a.annotation_count = annotationsPerArticle.get(a.id) || 0;
+    }
+
     return sortArticlesPosition(filteredArticles, "recency_sort_position");
 }
 

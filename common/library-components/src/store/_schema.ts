@@ -20,6 +20,8 @@ export const articleSchema = entitySchema.extend({
     topic_sort_position: z.optional(z.number()),
     domain_sort_position: z.optional(z.number()),
     favorites_sort_position: z.optional(z.nullable(z.number())),
+
+    annotation_count: z.optional(z.number()), // set when querying
 });
 export type Article = z.infer<typeof articleSchema>;
 export const readingProgressFullClamp = 0.95;

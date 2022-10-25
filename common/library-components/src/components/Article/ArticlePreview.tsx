@@ -5,6 +5,7 @@ import { useContext, useLayoutEffect, useState } from "react";
 import { Article, readingProgressFullClamp } from "../../store/_schema";
 import { ArticleDropdownMenu } from "./ArticleDropdownMenu";
 import { openArticleResilient } from "../../common";
+import { ResourceIcon } from "../Modal";
 
 export type LocalScreenshotFetcher = ((articleId: string) => Promise<string | null>) | null;
 export const LocalScreenshotContext = createContext<LocalScreenshotFetcher>(null);
@@ -156,6 +157,15 @@ export function ArticlePreview({
                 <div className="bg-lindy absolute bottom-3 left-2 select-none rounded-lg px-1.5 text-sm font-medium text-stone-800">
                     {publishYear}
                 </div>
+            )}
+
+            {article.annotation_count ? (
+                <div className="font-title absolute bottom-3 right-1 flex select-none items-center gap-1.5 rounded-lg bg-white px-1.5 text-base font-bold text-stone-800">
+                    <ResourceIcon type="highlights" />
+                    {article.annotation_count}
+                </div>
+            ) : (
+                <></>
             )}
 
             <div

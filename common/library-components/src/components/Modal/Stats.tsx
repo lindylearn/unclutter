@@ -187,11 +187,12 @@ function WeekDetails({
                 (a) => a.time_added * 1000 >= start.getTime() && a.time_added * 1000 < end.getTime()
             )
         );
-        setSelectedAnnotations(
-            allAnnotations.filter(
-                (a) => a.created_at * 1000 >= start.getTime() && a.created_at * 1000 < end.getTime()
-            )
-        );
+        // setSelectedAnnotations(
+        //     allAnnotations.filter(
+        //         (a) => a.created_at * 1000 >= start.getTime() && a.created_at * 1000 < end.getTime()
+        //     )
+        // );
+        // TODO fetch older annotated articles?
     }, [allArticles, allAnnotations, start, end]);
 
     let [groups, setGroups] = useState<[string, Article[]][]>();
@@ -220,17 +221,18 @@ function WeekDetails({
         }, [selectedArticles]);
     }
 
-    const [annotationGroups, setAnnotationGroups] = useState<{ [key: string]: Annotation[] }>({});
+    // TODO sum article fields instead for performance?
+    const [annotationGroups, setAnnotationGroups] = useState<{ [key: string]: number }>({});
     useEffect(() => {
         if (!groups || !selectedAnnotations) {
             return;
         }
         const annotationGroups = {};
         groups.map(([groupKey, articles]) => {
-            const articleIds = new Set(articles.map((a) => a.id));
-            const annotations = selectedAnnotations.filter((a) => articleIds.has(a.article_id));
-
-            annotationGroups[groupKey] = annotations;
+            annotationGroups[groupKey] = articles.reduce(
+                (acc, article) => acc + (article.annotation_count || 0),
+                0
+            );
         });
         setAnnotationGroups(annotationGroups);
     }, [groups, selectedAnnotations]);
@@ -244,7 +246,7 @@ function WeekDetails({
                         key={groupKey}
                         groupKey={groupKey}
                         selectedArticles={groupArticles}
-                        annotationsCount={annotationGroups[groupKey]?.length}
+                        annotationsCount={annotationGroups[groupKey]}
                         darkModeEnabled={darkModeEnabled}
                         showTopic={showTopic}
                         showDomain={showDomain}
