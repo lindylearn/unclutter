@@ -160,7 +160,7 @@ export function ArticlePreview({
             )}
 
             {article.annotation_count ? (
-                <div className="font-title absolute bottom-3 right-1 flex select-none items-center gap-1.5 rounded-lg bg-white px-1.5 text-base font-bold text-stone-800">
+                <div className="font-title absolute bottom-2.5 right-0 flex select-none items-center gap-1.5 rounded-lg bg-[rgba(255,255,255,50%)] px-1.5 text-base font-bold text-stone-800">
                     <ResourceIcon type="highlights" />
                     {article.annotation_count}
                 </div>

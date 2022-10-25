@@ -163,7 +163,7 @@ function PageFilters({
     );
 }
 
-function FilterButton({
+export function FilterButton({
     title,
     icon,
     onClick,
