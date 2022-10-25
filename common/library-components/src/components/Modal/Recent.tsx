@@ -250,7 +250,7 @@ function ArticleGroup({
                         className="absolute -top-[3rem] right-0 px-2 py-1"
                         articleCount={articles?.length}
                         readCount={readCount}
-                        color={"transparent"}
+                        color={color}
                     />
                 </>
             )}

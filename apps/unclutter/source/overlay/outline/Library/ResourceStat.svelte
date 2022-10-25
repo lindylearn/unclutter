@@ -36,7 +36,7 @@
             /></svg
         >
     {/if}
-    <div class="font-title min-w-[12px] text-center text-lg font-semibold leading-none">
+    <div class="font-title min-w-[12px] text-left text-lg font-semibold leading-none">
         <AnimatedNumber {value} />
     </div>
 </div>

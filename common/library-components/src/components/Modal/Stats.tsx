@@ -130,14 +130,14 @@ function NumberStats({
     return (
         <div className="grid grid-cols-5 gap-4">
             <BigNumber
-                value={readArticlesCount}
-                tag={`read article${readArticlesCount !== 1 ? "s" : ""}`}
-                icon={<ResourceIcon type="articles_completed" large />}
-            />
-            <BigNumber
                 value={unreadCount}
                 tag={`unread article${unreadCount !== 1 ? "s" : ""}`}
                 icon={<ResourceIcon type="articles" large />}
+            />
+            <BigNumber
+                value={readArticlesCount}
+                tag={`read article${readArticlesCount !== 1 ? "s" : ""}`}
+                icon={<ResourceIcon type="articles_completed" large />}
             />
             <BigNumber
                 value={allAnnotations?.length}
@@ -322,23 +322,20 @@ function ArticleGroupStat({
                 </div>
             </div>
 
-            <div className="flex gap-2">
-                {/* <ResourceStat
-                    type="articles_completed"
-                    value={readCount}
-                    showPlus
-                    className={clsx(readCount === 0 && "opacity-0")}
-                /> */}
+            <div className="flex gap-3">
                 <ResourceStat
                     type="articles"
-                    value={addedCount}
-                    showPlus
-                    className={clsx(addedCount === 0 && "opacity-0")}
+                    value={unreadCount}
+                    className={clsx(unreadCount === 0 && "opacity-0")}
+                />
+                <ResourceStat
+                    type="articles_completed"
+                    value={readCount}
+                    className={clsx(readCount === 0 && "opacity-0")}
                 />
                 <ResourceStat
                     type="highlights"
                     value={annotationsCount}
-                    showPlus
                     className={clsx(annotationsCount === 0 && "opacity-0")}
                 />
             </div>

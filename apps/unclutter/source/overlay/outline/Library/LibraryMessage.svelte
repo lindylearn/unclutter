@@ -99,15 +99,15 @@
 
         {#if libraryState?.readingProgress}
             <div class="absolute top-0 right-0 flex items-start gap-2 overflow-hidden p-3" in:fade>
-                <!-- <ResourceStat
-                    type="articles_completed"
-                    value={libraryState.readingProgress.completedCount}
-                /> -->
                 <ResourceStat
                     type="articles"
                     value={libraryState.readingProgress.articleCount -
                         libraryState.readingProgress.completedCount}
                 />
+                <!-- <ResourceStat
+                    type="articles_completed"
+                    value={libraryState.readingProgress.completedCount}
+                /> -->
                 <ResourceStat
                     type="highlights"
                     value={libraryState.readingProgress.annotationCount}
