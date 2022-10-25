@@ -43,9 +43,9 @@ export async function addArticlesToLibrary(
                 "Content-Type": "application/json",
             },
             body: JSON.stringify(
-                urls.map((url) => {
-                    url;
-                })
+                urls.map((url) => ({
+                    url,
+                }))
             ),
         }
     );

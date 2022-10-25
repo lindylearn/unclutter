@@ -55,7 +55,7 @@ export const defaultFeatureFlags = {
     [isDevelopmentFeatureFlag]: false,
     [enableSocialCountsFeatureFlag]: true,
 
-    [enableAnnotationsFeatureFlag]: false,
+    [enableAnnotationsFeatureFlag]: true,
     [enableSocialCommentsFeatureFlag]: true,
 
     [dismissedFeedbackMessage]: false,

@@ -3,7 +3,11 @@ import { Annotation } from "@unclutter/library-components/dist/store";
 import groupBy from "lodash/groupBy";
 import { ReadonlyJSONValue } from "replicache";
 import { addArticlesToLibrary } from "../../common/api";
-import { getFeatureFlag, hypothesisSyncFeatureFlag } from "../../common/featureFlags";
+import {
+    getFeatureFlag,
+    hypothesisSyncFeatureFlag,
+    setFeatureFlag,
+} from "../../common/featureFlags";
 import { constructLocalArticleInfo, LibraryInfo } from "../../common/schema";
 import { getLibraryUser } from "../../common/storage";
 import { getHypothesisAnnotationsSince } from "../../sidebar/common/api";
@@ -84,11 +88,25 @@ async function importLegacyAnnotations() {
     // insert articles
     await Promise.all(
         articleInfos.map((articleInfo) => {
+            if (articleInfo.topic) {
+                processReplicacheMessage({
+                    type: "mutate",
+                    methodName: "putTopic",
+                    args: articleInfo.topic,
+                });
+            }
             processReplicacheMessage({
                 type: "mutate",
                 methodName: "putArticleIfNotExists",
                 args: articleInfo.article,
             });
+            if (articleInfo.new_links?.length > 0) {
+                processReplicacheMessage({
+                    type: "mutate",
+                    methodName: "importArticleLinks",
+                    args: { links: articleInfo.new_links },
+                });
+            }
         })
     );
 
@@ -108,6 +126,7 @@ async function importLegacyAnnotations() {
     );
 
     await deleteAllLegacyAnnotations();
+    setFeatureFlag(hypothesisSyncFeatureFlag, false); // disable another import
 }
 
 async function migrateToAccount() {
