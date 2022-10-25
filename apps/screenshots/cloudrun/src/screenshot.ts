@@ -27,8 +27,8 @@ export async function captureUrl(
     await page.evaluate(() => {
         console.log("patching!");
         document.documentElement.style.setProperty("background", "transparent", "important");
-        document.documentElement.style.setProperty("--lindy-active-font-size", "20px");
-        document.documentElement.style.setProperty("--lindy-pagewidth", "750px");
+        document.documentElement.style.setProperty("--lindy-active-font-size", "20px", "important");
+        document.documentElement.style.setProperty("--lindy-pagewidth", "750px", "important");
         document.body.style.removeProperty("box-shadow");
 
         document.getElementById("lindy-page-settings-pageadjacent")?.remove();

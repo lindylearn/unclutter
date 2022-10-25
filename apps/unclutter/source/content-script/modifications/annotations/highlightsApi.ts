@@ -81,8 +81,8 @@ export function paintHighlight(
         darkerAnnotationColor = annotationColor.replace("0.5", "0.8");
     }
     highlightedNodes.map((node) => {
-        node.style.setProperty("--annotation-color", annotationColor);
-        node.style.setProperty("--darker-annotation-color", darkerAnnotationColor);
+        node.style.setProperty("--annotation-color", annotationColor, "important");
+        node.style.setProperty("--darker-annotation-color", darkerAnnotationColor, "important");
     });
 
     // handle onclick
@@ -148,7 +148,11 @@ export function insertMarginBar(
         const annotationColor =
             annotation.platform === "hn" ? "rgba(255, 102, 0, 0.5)" : "rgba(189, 28, 43, 0.5)";
         const darkerAnnotationColor = annotationColor.replace("0.5", "0.8");
-        barElement.style.setProperty("--darker-annotation-color", darkerAnnotationColor);
+        barElement.style.setProperty(
+            "--darker-annotation-color",
+            darkerAnnotationColor,
+            "important"
+        );
 
         barElement.onmouseenter = () => {
             hoverUpdateHighlight(annotation, true);

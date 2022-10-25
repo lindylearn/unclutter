@@ -998,7 +998,7 @@ export default class TextContainerModifier implements PageModifier {
             let transform = `translate(${translateX}px, ${translateY}px)`;
             if (scaleX) {
                 transform += ` scale(${scaleX})`;
-                node.style.setProperty("transform-origin", "top left");
+                node.style.setProperty("transform-origin", "top left", "important");
             }
             node.style.setProperty("transform", transform, "important");
 
@@ -1009,7 +1009,7 @@ export default class TextContainerModifier implements PageModifier {
 
             // will-change sometimes causes blur after transition done (e.g. on https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Your_first_WebExtension)
             // transform alone should already trigger layer creation
-            // node.style.setProperty("will-change", "transform");
+            // node.style.setProperty("will-change", "transform", "important");
         });
     }
 
