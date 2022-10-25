@@ -70,7 +70,7 @@ export default function App({
                     darkModeEnabled={darkModeEnabled === "true"} // convert string to bool
                     showSignup={libraryState.showLibrarySignup}
                     relatedLinkCount={libraryState?.linkCount}
-                    currentArticle={libraryState?.libraryInfo?.article.url || articleUrl}
+                    currentArticle={libraryState?.libraryInfo?.article.id}
                     initialTopic={libraryState?.libraryInfo?.topic}
                     graph={libraryState?.graph}
                     isVisible={showModal}

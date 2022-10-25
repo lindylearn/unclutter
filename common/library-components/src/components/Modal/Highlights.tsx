@@ -27,16 +27,25 @@ export default function HighlightsTab({
 
     const [onlyFavorites, setOnlyFavorites] = useState(false);
     const [lastFirst, setLastFirst] = useState(true);
+    const [activeCurrentFilter, setActiveCurrentFilter] = useState<boolean>(true);
+    useEffect(() => {
+        if (currentArticle || currentTopic || domainFilter) {
+            setActiveCurrentFilter(true);
+        }
+    }, [currentArticle, currentTopic, domainFilter]);
+
     const [filteredAnnotations, setFilteredAnnotations] = useState<Annotation[]>([]);
     useEffect(() => {
         // filter
         let filteredAnnotations = [...annotations];
-        if (currentArticle) {
-            filteredAnnotations = filteredAnnotations.filter(
-                (a) => a.article_id === currentArticle
-            );
-        }
-        if (onlyFavorites) {
+        if (activeCurrentFilter) {
+            if (currentArticle) {
+                filteredAnnotations = filteredAnnotations.filter(
+                    (a) => a.article_id === currentArticle
+                );
+            } else if (domainFilter) {
+            }
+        } else if (onlyFavorites) {
             filteredAnnotations = filteredAnnotations.filter((a) => a.is_favorite);
         }
 
@@ -45,7 +54,15 @@ export default function HighlightsTab({
             lastFirst ? b.created_at - a.created_at : a.created_at - b.created_at
         );
         setFilteredAnnotations(filteredAnnotations);
-    }, [annotations, currentArticle, currentTopic, domainFilter, onlyFavorites, lastFirst]);
+    }, [
+        annotations,
+        activeCurrentFilter,
+        currentArticle,
+        currentTopic,
+        domainFilter,
+        onlyFavorites,
+        lastFirst,
+    ]);
 
     const [articlesMap, setArticlesMap] = useState<{ [article_id: string]: Article }>({});
     useEffect(() => {
@@ -69,8 +86,10 @@ export default function HighlightsTab({
                 lastFirst={lastFirst}
                 setOnlyFavorites={setOnlyFavorites}
                 setLastFirst={setLastFirst}
-                domainFilter={domainFilter}
-                setDomainFilter={setDomainFilter}
+                currentFilter={
+                    activeCurrentFilter && (currentArticle ? "Current article" : domainFilter)
+                }
+                setActiveCurrentFilter={setActiveCurrentFilter}
                 darkModeEnabled={darkModeEnabled}
                 reportEvent={reportEvent}
             />
@@ -95,8 +114,8 @@ function PageFilters({
     lastFirst,
     setOnlyFavorites,
     setLastFirst,
-    domainFilter,
-    setDomainFilter,
+    currentFilter,
+    setActiveCurrentFilter,
     darkModeEnabled,
     reportEvent = () => {},
 }: {
@@ -104,37 +123,39 @@ function PageFilters({
     lastFirst: boolean;
     setOnlyFavorites: (state: boolean) => void;
     setLastFirst: (state: boolean) => void;
-    domainFilter: string | null;
-    setDomainFilter: (domain: string | null) => void;
+    currentFilter?: string | false | null;
+    setActiveCurrentFilter: (active: boolean) => void;
     darkModeEnabled: boolean;
     reportEvent?: (event: string, data?: any) => void;
 }) {
     return (
         <div className="flex justify-start gap-3">
-            <FilterButton
-                title={onlyFavorites ? "Favorites" : "All highlights"}
-                icon={
-                    onlyFavorites ? (
-                        <svg className="h-4" viewBox="0 0 576 512">
-                            <path
-                                fill="currentColor"
-                                d="M287.9 0C297.1 0 305.5 5.25 309.5 13.52L378.1 154.8L531.4 177.5C540.4 178.8 547.8 185.1 550.7 193.7C553.5 202.4 551.2 211.9 544.8 218.2L433.6 328.4L459.9 483.9C461.4 492.9 457.7 502.1 450.2 507.4C442.8 512.7 432.1 513.4 424.9 509.1L287.9 435.9L150.1 509.1C142.9 513.4 133.1 512.7 125.6 507.4C118.2 502.1 114.5 492.9 115.1 483.9L142.2 328.4L31.11 218.2C24.65 211.9 22.36 202.4 25.2 193.7C28.03 185.1 35.5 178.8 44.49 177.5L197.7 154.8L266.3 13.52C270.4 5.249 278.7 0 287.9 0L287.9 0zM287.9 78.95L235.4 187.2C231.9 194.3 225.1 199.3 217.3 200.5L98.98 217.9L184.9 303C190.4 308.5 192.9 316.4 191.6 324.1L171.4 443.7L276.6 387.5C283.7 383.7 292.2 383.7 299.2 387.5L404.4 443.7L384.2 324.1C382.9 316.4 385.5 308.5 391 303L476.9 217.9L358.6 200.5C350.7 199.3 343.9 194.3 340.5 187.2L287.9 78.95z"
-                            />
-                        </svg>
-                    ) : (
-                        <svg className="h-4" viewBox="0 0 448 512">
-                            <path
-                                fill="currentColor"
-                                d="M88 32C110.1 32 128 49.91 128 72V120C128 142.1 110.1 160 88 160H40C17.91 160 0 142.1 0 120V72C0 49.91 17.91 32 40 32H88zM88 72H40V120H88V72zM88 192C110.1 192 128 209.9 128 232V280C128 302.1 110.1 320 88 320H40C17.91 320 0 302.1 0 280V232C0 209.9 17.91 192 40 192H88zM88 232H40V280H88V232zM0 392C0 369.9 17.91 352 40 352H88C110.1 352 128 369.9 128 392V440C128 462.1 110.1 480 88 480H40C17.91 480 0 462.1 0 440V392zM40 440H88V392H40V440zM248 32C270.1 32 288 49.91 288 72V120C288 142.1 270.1 160 248 160H200C177.9 160 160 142.1 160 120V72C160 49.91 177.9 32 200 32H248zM248 72H200V120H248V72zM160 232C160 209.9 177.9 192 200 192H248C270.1 192 288 209.9 288 232V280C288 302.1 270.1 320 248 320H200C177.9 320 160 302.1 160 280V232zM200 280H248V232H200V280zM248 352C270.1 352 288 369.9 288 392V440C288 462.1 270.1 480 248 480H200C177.9 480 160 462.1 160 440V392C160 369.9 177.9 352 200 352H248zM248 392H200V440H248V392zM320 72C320 49.91 337.9 32 360 32H408C430.1 32 448 49.91 448 72V120C448 142.1 430.1 160 408 160H360C337.9 160 320 142.1 320 120V72zM360 120H408V72H360V120zM408 192C430.1 192 448 209.9 448 232V280C448 302.1 430.1 320 408 320H360C337.9 320 320 302.1 320 280V232C320 209.9 337.9 192 360 192H408zM408 232H360V280H408V232zM320 392C320 369.9 337.9 352 360 352H408C430.1 352 448 369.9 448 392V440C448 462.1 430.1 480 408 480H360C337.9 480 320 462.1 320 440V392zM360 440H408V392H360V440z"
-                            />
-                        </svg>
-                    )
-                }
-                onClick={() => {
-                    setOnlyFavorites(!onlyFavorites);
-                    reportEvent("changeListFilter", { onlyFavorites });
-                }}
-            />
+            {!currentFilter && (
+                <FilterButton
+                    title={onlyFavorites ? "Favorites" : "All highlights"}
+                    icon={
+                        onlyFavorites ? (
+                            <svg className="h-4" viewBox="0 0 576 512">
+                                <path
+                                    fill="currentColor"
+                                    d="M287.9 0C297.1 0 305.5 5.25 309.5 13.52L378.1 154.8L531.4 177.5C540.4 178.8 547.8 185.1 550.7 193.7C553.5 202.4 551.2 211.9 544.8 218.2L433.6 328.4L459.9 483.9C461.4 492.9 457.7 502.1 450.2 507.4C442.8 512.7 432.1 513.4 424.9 509.1L287.9 435.9L150.1 509.1C142.9 513.4 133.1 512.7 125.6 507.4C118.2 502.1 114.5 492.9 115.1 483.9L142.2 328.4L31.11 218.2C24.65 211.9 22.36 202.4 25.2 193.7C28.03 185.1 35.5 178.8 44.49 177.5L197.7 154.8L266.3 13.52C270.4 5.249 278.7 0 287.9 0L287.9 0zM287.9 78.95L235.4 187.2C231.9 194.3 225.1 199.3 217.3 200.5L98.98 217.9L184.9 303C190.4 308.5 192.9 316.4 191.6 324.1L171.4 443.7L276.6 387.5C283.7 383.7 292.2 383.7 299.2 387.5L404.4 443.7L384.2 324.1C382.9 316.4 385.5 308.5 391 303L476.9 217.9L358.6 200.5C350.7 199.3 343.9 194.3 340.5 187.2L287.9 78.95z"
+                                />
+                            </svg>
+                        ) : (
+                            <svg className="h-4" viewBox="0 0 448 512">
+                                <path
+                                    fill="currentColor"
+                                    d="M88 32C110.1 32 128 49.91 128 72V120C128 142.1 110.1 160 88 160H40C17.91 160 0 142.1 0 120V72C0 49.91 17.91 32 40 32H88zM88 72H40V120H88V72zM88 192C110.1 192 128 209.9 128 232V280C128 302.1 110.1 320 88 320H40C17.91 320 0 302.1 0 280V232C0 209.9 17.91 192 40 192H88zM88 232H40V280H88V232zM0 392C0 369.9 17.91 352 40 352H88C110.1 352 128 369.9 128 392V440C128 462.1 110.1 480 88 480H40C17.91 480 0 462.1 0 440V392zM40 440H88V392H40V440zM248 32C270.1 32 288 49.91 288 72V120C288 142.1 270.1 160 248 160H200C177.9 160 160 142.1 160 120V72C160 49.91 177.9 32 200 32H248zM248 72H200V120H248V72zM160 232C160 209.9 177.9 192 200 192H248C270.1 192 288 209.9 288 232V280C288 302.1 270.1 320 248 320H200C177.9 320 160 302.1 160 280V232zM200 280H248V232H200V280zM248 352C270.1 352 288 369.9 288 392V440C288 462.1 270.1 480 248 480H200C177.9 480 160 462.1 160 440V392C160 369.9 177.9 352 200 352H248zM248 392H200V440H248V392zM320 72C320 49.91 337.9 32 360 32H408C430.1 32 448 49.91 448 72V120C448 142.1 430.1 160 408 160H360C337.9 160 320 142.1 320 120V72zM360 120H408V72H360V120zM408 192C430.1 192 448 209.9 448 232V280C448 302.1 430.1 320 408 320H360C337.9 320 320 302.1 320 280V232C320 209.9 337.9 192 360 192H408zM408 232H360V280H408V232zM320 392C320 369.9 337.9 352 360 352H408C430.1 352 448 369.9 448 392V440C448 462.1 430.1 480 408 480H360C337.9 480 320 462.1 320 440V392zM360 440H408V392H360V440z"
+                                />
+                            </svg>
+                        )
+                    }
+                    onClick={() => {
+                        setOnlyFavorites(!onlyFavorites);
+                        reportEvent("changeListFilter", { onlyFavorites });
+                    }}
+                />
+            )}
 
             <FilterButton
                 title={lastFirst ? "Last added" : "Oldest first"}
@@ -161,9 +182,9 @@ function PageFilters({
                 }}
             />
 
-            {domainFilter && (
+            {currentFilter && (
                 <FilterButton
-                    title={domainFilter}
+                    title={currentFilter}
                     icon={
                         <svg className="h-4" viewBox="0 0 512 512">
                             <path
@@ -173,10 +194,10 @@ function PageFilters({
                         </svg>
                     }
                     onClick={() => {
-                        setDomainFilter(null);
+                        setActiveCurrentFilter(false);
                         reportEvent("changeListFilter", { domainFilter: null });
                     }}
-                    color={getRandomLightColor(domainFilter, darkModeEnabled)}
+                    color={getRandomLightColor(currentFilter, darkModeEnabled)}
                 />
             )}
 
