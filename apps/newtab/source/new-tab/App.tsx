@@ -6,6 +6,7 @@ import {
     DraggableContext,
     ArticleListsCache,
     LocalScreenshotContext,
+    ModalContext,
 } from "@unclutter/library-components/dist/components";
 import {
     ReplicacheContext,
@@ -75,17 +76,16 @@ export default function App() {
                         : null
                 }
             >
-                <ArticleSection
-                    userInfo={userInfo}
-                    darkModeEnabled={darkModeEnabled}
-                    setShowModal={setShowModal}
-                />
-                <NewTabModal
-                    userInfo={userInfo}
-                    darkModeEnabled={darkModeEnabled}
-                    showModal={showModal}
-                    setShowModal={setShowModal}
-                />
+                <ModalContext.Provider
+                    value={{ isVisible: showModal, closeModal: () => setShowModal(false) }}
+                >
+                    <ArticleSection
+                        userInfo={userInfo}
+                        darkModeEnabled={darkModeEnabled}
+                        setShowModal={setShowModal}
+                    />
+                    <NewTabModal userInfo={userInfo} darkModeEnabled={darkModeEnabled} />
+                </ModalContext.Provider>
             </LocalScreenshotContext.Provider>
         </ReplicacheContext.Provider>
     );

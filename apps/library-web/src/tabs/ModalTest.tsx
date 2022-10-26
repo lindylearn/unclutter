@@ -3,6 +3,7 @@ import {
     LibraryModalPage,
     constructGraphData,
     CustomGraphData,
+    ModalContext,
 } from "@unclutter/library-components/dist/components";
 import {
     Article,
@@ -63,17 +64,19 @@ export default function ModalTestTab({}) {
                 Open Library
             </div>
 
-            <LibraryModalPage
-                userInfo={userInfo}
-                darkModeEnabled={darkModeEnabled}
-                showSignup={true}
-                currentArticle={article?.url}
-                initialTopic={topic}
-                graph={graph}
-                // relatedLinkCount={2}
-                isVisible={showModal}
-                closeModal={() => setShowModal(false)}
-            />
+            <ModalContext.Provider
+                value={{ isVisible: showModal, closeModal: () => setShowModal(false) }}
+            >
+                <LibraryModalPage
+                    userInfo={userInfo}
+                    darkModeEnabled={darkModeEnabled}
+                    showSignup={true}
+                    currentArticle={article?.url}
+                    initialTopic={topic}
+                    graph={graph}
+                    // relatedLinkCount={2}
+                />
+            </ModalContext.Provider>
         </div>
     );
 }

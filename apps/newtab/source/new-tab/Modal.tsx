@@ -2,6 +2,7 @@ import {
     constructGraphData,
     CustomGraphData,
     LibraryModalPage,
+    ModalContext,
 } from "@unclutter/library-components/dist/components";
 import {
     Article,
@@ -14,8 +15,6 @@ import React, { useContext, useEffect, useState } from "react";
 export default function NewTabModal({
     userInfo,
     darkModeEnabled,
-    showModal,
-    setShowModal,
 }: {
     userInfo: UserInfo;
     darkModeEnabled: boolean;
@@ -40,7 +39,8 @@ export default function NewTabModal({
     }, [rep]);
 
     // prevent initial fade-out animation
-    if (showModal === null) {
+    const { isVisible } = useContext(ModalContext);
+    if (isVisible === null) {
         return <></>;
     }
 
@@ -50,8 +50,6 @@ export default function NewTabModal({
             darkModeEnabled={darkModeEnabled}
             showSignup={false}
             graph={graph}
-            isVisible={showModal}
-            closeModal={() => setShowModal(false)}
         />
     );
 }
