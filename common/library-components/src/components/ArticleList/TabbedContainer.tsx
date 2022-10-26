@@ -184,20 +184,18 @@ export function useTabInfos(
                     tabCount
                 );
                 const topicTabInfos: TabInfo[] = await Promise.all(
-                    groupEntries
-                        .filter((e) => e[0] !== "Other")
-                        .map(async ([topic_id, articles]) => {
-                            const topic = await rep?.query.getTopic(topic_id);
-                            return {
-                                key: topic_id,
-                                title: topic?.name || topic_id,
-                                icon: topic && (
-                                    <TopicEmoji emoji={topic?.emoji!} className="mr-0 w-[18px]" />
-                                ),
-                                isTopic: true,
-                                articles: articles.filter((a) => !a.is_queued),
-                            };
-                        })
+                    groupEntries.map(async ([topic_id, articles]) => {
+                        const topic = await rep?.query.getTopic(topic_id);
+                        return {
+                            key: topic_id,
+                            title: topic?.name || topic_id,
+                            icon: topic && (
+                                <TopicEmoji emoji={topic?.emoji!} className="mr-0 w-[18px]" />
+                            ),
+                            isTopic: true,
+                            articles: articles.filter((a) => !a.is_queued),
+                        };
+                    })
                 );
                 tabInfos.push(...topicTabInfos.filter((t) => t.articles.length > 0));
             } else {

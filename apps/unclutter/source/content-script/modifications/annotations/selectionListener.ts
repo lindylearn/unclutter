@@ -87,6 +87,7 @@ function _expandRangeToWordBoundary(range: Range, direction: "forwards" | "backw
         let wordEnd = range.endOffset; // exclusive
         const nodeValue = range.endContainer.nodeValue;
         while (
+            nodeValue &&
             wordEnd < nodeValue.length &&
             nodeValue[wordEnd].trim() &&
             nodeValue[wordEnd] !== "—"

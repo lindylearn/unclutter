@@ -89,6 +89,10 @@ export async function groupArticlesByTopic(
     maxGroupCount?: number
 ): Promise<[string, Article[]][]> {
     const groupsMap: { [topic_id: string]: Article[] } = groupBy(articles, "topic_id");
+    if (groupsMap["null"]) {
+        groupsMap["Other"] = (groupsMap["Other"] || []).concat(groupsMap["null"]);
+        delete groupsMap["null"];
+    }
     let groupEntries = Object.entries(groupsMap);
 
     if (combineSmallGroups) {
@@ -98,7 +102,10 @@ export async function groupArticlesByTopic(
         );
         groupEntries = largeGroups;
         if (singleGroups.length > 0) {
-            groupEntries.push(["Other", singleGroups.flatMap(([_, articles]) => articles)]);
+            groupsMap["Other"] = (groupsMap["Other"] || []).concat(
+                singleGroups.flatMap(([_, articles]) => articles)
+            );
+            groupEntries = Object.entries(groupsMap);
         }
     }
 
