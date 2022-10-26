@@ -13,7 +13,7 @@ To standardize margins, background colors, and font-sizes, the extension also [a
 
 To tie these (and many more) page modifications together, they each hook into 8 lifecycle phases coordinated from [transitions.ts](apps/unclutter/source/content-script/transitions.ts). The major concern here is performance -- minimizing reflows while performing changes stepwise so that they look nice when animated.
 
-Beyond this core functionality there are embedded React iframes to power the [social highlights & private notes features](apps/unclutter/source/sidebar/App.tsx) and the [extension settings page](apps/unclutter/source/settings-page/Options.tsx), Svelte components for the [UI controls](apps/unclutter/source/overlay) including the page outline, and [background event handling code](apps/unclutter/source/background/events.ts) to inject scripts into visited pages and handle events.
+Beyond this core functionality there are embedded React iframes to power the [social comments & highlights features](apps/unclutter/source/sidebar/App.tsx) and the [extension settings page](apps/unclutter/source/settings-page/Options.tsx), Svelte components for the [UI controls](apps/unclutter/source/overlay) including the page outline, and [background event handling code](apps/unclutter/source/background/events.ts) to inject scripts into visited pages and handle events.
 
 **For documentation on individual features see the [docs pages](https://github.com/lindylearn/unclutter/blob/main/docs).**
 

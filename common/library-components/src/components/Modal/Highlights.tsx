@@ -162,7 +162,7 @@ export default function HighlightsTab({
                 />
             </div>
 
-            <div className="relative grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-3 gap-4">
                 {filteredAnnotations.map((annotation) => (
                     <Highlight
                         key={annotation.id}
@@ -174,7 +174,7 @@ export default function HighlightsTab({
                     />
                 ))}
                 {annotations.length === 0 && (
-                    <div className="animate-fadein absolute top-0 left-0 flex h-full w-full select-none items-center justify-center">
+                    <div className="animate-fadein w-full select-none items-center ">
                         Select any article text to save highlights
                     </div>
                 )}

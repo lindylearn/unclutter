@@ -18,9 +18,9 @@ Right now this works very simply by calculating the number of words shown on the
 
 This is implemented in [readingTime.ts](https://github.com/lindylearn/unclutter/blob/main/source/content-script/modifications/DOM/readingTime.ts).
 
-## Social Highlights & Private Notes
+## Social Comments & Highlights
 
-The number of [social highlights](https://github.com/lindylearn/unclutter/blob/main/docs/social-highlights.md) or [privates notes](https://github.com/lindylearn/unclutter/blob/main/docs/annotations.md) will also appear next to outline headings if you enabled those features. The "progress ring" next to the title counts the number of private notes you made on the page to incentivize deeper reading (at least, that's the idea).
+The number of [social comments](https://github.com/lindylearn/unclutter/blob/main/docs/social-highlights.md) or [privates notes](https://github.com/lindylearn/unclutter/blob/main/docs/annotations.md) will also appear next to outline headings if you enabled those features. The "progress ring" next to the title counts the number of highlights you made on the page to incentivize deeper reading (at least, that's the idea).
 
 | 🐛     **Is this not working as expected or could be better? Please [open an issue](https://github.com/lindylearn/unclutter/issues/new) for it!** |
 | ------------------------------------------------------------------------------------------------------------------------------------------------- |

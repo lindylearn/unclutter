@@ -9,7 +9,7 @@
     },
     {
         "version": "0.14.0",
-        "updateMessage": "New feature: Showing social highlights from Hacker News and Hypothes.is."
+        "updateMessage": "New feature: Showing social comments from Hacker News and Hypothes.is."
     },
     {
         "version": "0.15.0",

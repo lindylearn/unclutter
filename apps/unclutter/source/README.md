@@ -13,7 +13,7 @@ This web extension uses the following script entry points:
 -   `content-script/boot.js` to boostrap the extension functionality inside a tab if the user configured it as such. This minimal script is injected into every tab before DOM construction.
 -   `content-script/enhance.js` to enable the full extension functionality inside a tab. This script is only injected for URLs the user allowlisted (as determined by `boot.js`).
 -   `overlay/outline/TopLeftContainer.svelte` for the article outline UI.
--   `sidebar/App.tsx` for the sidebar iframe used to display social highlights and private notes.
+-   `sidebar/App.tsx` for the sidebar iframe used to display social comments and highlights.
 -   `settings-page/Options.tsx` for the extension settings page.
 -   `background/events.js` to handle persistent background events like extension icon clicks.
 

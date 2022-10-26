@@ -11,7 +11,7 @@ Here's the otherwise excellent and indispensable Firefox reader mode vs Unclutte
 | ![](./media/comparison/firefox/3.png) | ![](./media/comparison/unclutter/3.png) |
 | ![](./media/comparison/firefox/4.png) | ![](./media/comparison/unclutter/4.png) |
 
-In addition to keeping the original website styles, Unclutter also supports many more features likes [page outlines](https://github.com/lindylearn/unclutter/blob/main/docs/outline.md), [social highlights](https://github.com/lindylearn/unclutter/blob/main/docs/social-highlights.md), or [automatic activation](https://github.com/lindylearn/unclutter/blob/main/docs/article-detection.md).
+In addition to keeping the original website styles, Unclutter also supports many more features likes [page outlines](https://github.com/lindylearn/unclutter/blob/main/docs/outline.md), [social comments](https://github.com/lindylearn/unclutter/blob/main/docs/social-highlights.md), or [automatic activation](https://github.com/lindylearn/unclutter/blob/main/docs/article-detection.md).
 
 For a short intro to how it works technically, see [README.md](https://github.com/lindylearn/unclutter#how-this-works).
 

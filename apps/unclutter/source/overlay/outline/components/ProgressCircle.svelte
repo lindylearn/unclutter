@@ -9,9 +9,7 @@
 
 <div
     class="lindy-tooltp lindy-fade font-title relative cursor-pointer hover:drop-shadow"
-    data-title={`Created ${totalAnnotationCount} private note${
-        totalAnnotationCount !== 1 ? "s" : ""
-    }`}
+    data-title={`Created ${totalAnnotationCount} highlight${totalAnnotationCount !== 1 ? "s" : ""}`}
 >
     <svg viewBox="0 0 100 100" class="progress-circle w-10">
         <defs>

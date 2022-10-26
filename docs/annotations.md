@@ -1,4 +1,4 @@
-# Private Notes
+# Highlights
 
 With Unclutter you can easily save highlights and create notes by selecting any article text:
 

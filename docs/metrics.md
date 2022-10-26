@@ -9,16 +9,16 @@ The extension reports technical usage metrics and error logs in order to underst
 To implement the configurable automatic activation on article domains, Unclutter has the permission to "read and change all your data on websites that you visit" by default. In practice this means [a small script](https://github.com/lindylearn/unclutter/blob/main/source/content-script/boot.ts) locally checks each URL against your settings and optionally triggers the reader mode as if you clicked on the extension icon.
 **If you do not use this feature you can simply revoke the "Site access" permission from the Unclutter extension.**
 
-The optional [social highlights](./social-highlights.md) feature sends a network request to fetch highlights for articles you activate the reader mode on. This network request contains only the SHA256 one-way hash of the normalized page URL, containing no query parameters or user identification.
+The optional [social comments](./social-highlights.md) feature sends a network request to fetch highlights for articles you activate the reader mode on. This network request contains only the SHA256 one-way hash of the normalized page URL, containing no query parameters or user identification.
 
-The number of social highlights on the Unclutter extension icon works without network requests by periodically downloading a [static CSV](./social-highlights.md#privacy) file.
+The number of social comments on the Unclutter extension icon works without network requests by periodically downloading a [static CSV](./social-highlights.md#privacy) file.
 
-If you enable the [Hypothes.is sync](./annotations.md.md) feature after signing up for an account there, your private notes will be uploaded to their service and are subject to their [privacy policy](https://web.hypothes.is/privacy/).
+If you enable the [Hypothes.is sync](./annotations.md.md) feature after signing up for an account there, your highlights will be uploaded to their service and are subject to their [privacy policy](https://web.hypothes.is/privacy/).
 
 ## Unclutter Library
 
 If you sign up for the work-in-progress Unclutter Library beta and connect your account to the Unclutter extension, articles you activate the reader mode on will be saved to your account and categorized per topic.
-Your reading progress and created private notes will also be saved remotely.
+Your reading progress and created highlights will also be saved remotely.
 
 The seperate work-in-progress Unclutter Library extension also does not collect any personal information or information about the web pages you visit.
 It has the permission to access your browser bookmarks and frequently-visited websites solely in order to display them on the New Tab page it replaces, and does not save or send this data anywhere.

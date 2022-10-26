@@ -1,4 +1,4 @@
-# Social Highlights
+# Social Comments
 
 Unclutter shows related social conversations for 85,643+ articles directly within the extension:
 
@@ -14,13 +14,13 @@ I parsed every [Hacker News](https://news.ycombinator.com) comment with a quote 
 
 When you open an article that has social comments like this, Unclutter will underline the related quotes in the article text itself. If a comments looks more like spam than interesting side-note, hover over the comment box and click "Remove comment". Or you can entirely disable the feature via the toolbar in the top right.
 
-The shown social highlights also include web annotations from [Hypothes.is](https://hypothes.is). So if you want to created your own social highlight for other people to see and reply to, configure the [Hypothes.is sync](https://github.com/lindylearn/unclutter/blob/main/docs/annotations.md) within Unclutter.
+The shown social comments also include web annotations from [Hypothes.is](https://hypothes.is). So if you want to created your own comment for other people to see and reply to, configure the [Hypothes.is sync](https://github.com/lindylearn/unclutter/blob/main/docs/annotations.md) within Unclutter.
 
 ## Privacy
 
-Social highlights are fetched from the backend using the SHA256 hash of the normalized article URL, so I do not see which articles you read.
+Social comments are fetched from the backend using the SHA256 hash of the normalized article URL, so I do not see which articles you read.
 
-The number of social highlights for an URL you're visiting also appears on the Unclutter extension icon (which can be turned off in the settings). **This works without any network requests:** Every time Unclutter updates, it downloads the latest list of supported articles and then uses it locally to show the social highlight count (see [annotationCounts.ts](https://github.com/lindylearn/unclutter/blob/main/source/background/annotationCounts.ts)).
+The number of social comments for an URL you're visiting also appears on the Unclutter extension icon (which can be turned off in the settings). **This works without any network requests:** Every time Unclutter updates, it downloads the latest list of supported articles and then uses it locally to show the comment count (see [annotationCounts.ts](https://github.com/lindylearn/unclutter/blob/main/source/background/annotationCounts.ts)).
 
 | 🐛     **Is this not working as expected or could be better? Please [open an issue](https://github.com/lindylearn/unclutter/issues/new) for it!** |
 | ------------------------------------------------------------------------------------------------------------------------------------------------- |

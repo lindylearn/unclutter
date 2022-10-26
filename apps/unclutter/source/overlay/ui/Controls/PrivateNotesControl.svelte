@@ -32,9 +32,7 @@
 
 <UiControl
     iconName={privateNotesEnabled ? "notes_enabled" : "notes_disabled"}
-    tooltip={privateNotesEnabled
-        ? "Click to disable private notes"
-        : "Click to enable private notes"}
+    tooltip={privateNotesEnabled ? "Click to disable highlights" : "Click to enable highlights"}
     onClick={toggleEnabled}
 />
 

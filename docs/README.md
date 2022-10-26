@@ -6,8 +6,8 @@ Here you'll find the semi-technical documentation for most Unclutter features:
 -   [Theme support, including dark mode](theme.md)
 -   [The interactive page outline](outline.md)
 -   [Automatic activation settings](article-detection.md)
--   [Social highlights](social-highlights.md)
--   [Private notes](annotations.md)
+-   [Highlights](annotations.md)
+-   [Social comments](social-highlights.md)
 -   [Element blocking](element-blocking.md)
 
 As well as related topics:

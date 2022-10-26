@@ -168,7 +168,7 @@ function OptionsPage({}) {
                 </OptionsGroup>
 
                 <OptionsGroup
-                    headerText="Private Notes"
+                    headerText="Highlights"
                     iconSvg={
                         <svg className="w-5" viewBox="0 0 512 512">
                             <path
@@ -186,7 +186,7 @@ function OptionsPage({}) {
                             target="_blank"
                             rel="noopener noreferrer"
                         >
-                            private note
+                            highlight
                         </a>{" "}
                         saved in your browser. Toggle the feature via the "pen" toolbar icon.
                     </p>
@@ -209,7 +209,7 @@ function OptionsPage({}) {
                 </OptionsGroup>
 
                 <OptionsGroup
-                    headerText="Social Highlights"
+                    headerText="Social comments"
                     iconSvg={
                         <svg className="w-5" viewBox="0 0 640 512">
                             <path
@@ -232,7 +232,7 @@ function OptionsPage({}) {
                         from Hacker News and Hypothes.is.
                     </p>
                     <FeatureFlagSwitch featureFlagKey={enableSocialCountsFeatureFlag}>
-                        Show number of available social highlights on the extension icon
+                        Show number of available social comments on the extension icon
                     </FeatureFlagSwitch>
                 </OptionsGroup>
 
