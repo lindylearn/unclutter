@@ -21,6 +21,7 @@ import { showLibrarySignupFlag } from "../../common/featureFlags";
 import { constructLocalArticleInfo, LibraryInfo, LibraryState } from "../../common/schema";
 import ReadingTimeModifier from "./DOM/readingTime";
 import { addArticlesToLibrary } from "../../common/api";
+import AnnotationsModifier from "./annotations/annotationsModifier";
 
 @trackModifierExecution
 export default class LibraryModifier implements PageModifier {
@@ -31,6 +32,7 @@ export default class LibraryModifier implements PageModifier {
     private articleId: string;
 
     private overlayManager: OverlayManager;
+    private annotationsModifier: AnnotationsModifier;
 
     libraryState: LibraryState = {
         libraryEnabled: false,
@@ -54,12 +56,14 @@ export default class LibraryModifier implements PageModifier {
         articleUrl: string,
         articleTitle: string,
         overlayManager: OverlayManager,
-        readingTimeModifier: ReadingTimeModifier
+        readingTimeModifier: ReadingTimeModifier,
+        annotationsModifier: AnnotationsModifier
     ) {
         this.articleUrl = articleUrl;
         this.articleTitle = articleTitle;
         this.articleId = getUrlHash(articleUrl);
         this.overlayManager = overlayManager;
+        this.annotationsModifier = annotationsModifier;
 
         readingTimeModifier.readingTimeLeftListeners.push(this.onScrollUpdate.bind(this));
     }
@@ -218,14 +222,16 @@ export default class LibraryModifier implements PageModifier {
     // called from transitions.ts, or again internally once fetch done
     private scrollOnceFetchDone = false;
     scrollToLastReadingPosition() {
-        if (!this.libraryState.libraryEnabled) {
+        if (!this.libraryState.libraryEnabled || this.annotationsModifier.focusedAnnotation) {
             return;
         }
+
         if (!this.libraryState.libraryInfo) {
             this.scrollOnceFetchDone = true;
             return;
         }
 
+        // skip scroll for completed articles
         const readingProgress = this.libraryState.libraryInfo.article.reading_progress;
         if (!this.libraryState.wasAlreadyPresent || !readingProgress || readingProgress >= 0.8) {
             return;

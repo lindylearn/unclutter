@@ -172,7 +172,7 @@ export default class AnnotationsModifier implements PageModifier {
     }
 
     private annotationsVisible: boolean = false;
-    private focusedAnnotation: string | null = null;
+    focusedAnnotation: string | null = null;
     private async onRuntimeMessage(message, sender, sendResponse) {
         if (message.event === "focusAnnotation") {
             if (this.annotationsVisible) {
