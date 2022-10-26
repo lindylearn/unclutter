@@ -1,6 +1,5 @@
 import React, { useMemo, useReducer, useState } from "react";
 import { LindyAnnotation } from "../common/annotations/create";
-import { hypothesisSyncFeatureFlag } from "../common/featureFlags";
 import { groupAnnotations } from "./common/grouping";
 import { useAnnotationSettings, useFeatureFlag } from "./common/hooks";
 import AnnotationsList from "./components/AnnotationsList";
@@ -8,9 +7,6 @@ import { useAnnotationModifiers, useFetchAnnotations } from "./state/actions";
 import { annotationReducer, handleWindowEventFactory } from "./state/local";
 
 export default function App({ url, title }) {
-    // extension settings
-    const hypothesisSyncEnabled = useFeatureFlag(hypothesisSyncFeatureFlag);
-
     // annotation settings (updated through events below)
     const {
         personalAnnotationsEnabled,
@@ -66,7 +62,7 @@ export default function App({ url, title }) {
         <div className="font-text mx-2 text-gray-700">
             <AnnotationsList
                 groupedAnnotations={groupedAnnotations}
-                hypothesisSyncEnabled={hypothesisSyncEnabled}
+                hypothesisSyncEnabled={false}
                 showAllSocialAnnotations={showAllSocialAnnotations}
                 deleteHideAnnotation={deleteHideAnnotation}
                 onAnnotationHoverUpdate={onAnnotationHoverUpdate}
