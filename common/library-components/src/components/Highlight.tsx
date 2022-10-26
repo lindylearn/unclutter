@@ -61,7 +61,7 @@ export function Highlight({
 
             {/* <textarea className="h-20 w-full rounded-md bg-stone-50 p-2" value={annotation.text} /> */}
 
-            {article ? (
+            {/* {article ? (
                 <div className="info-bar flex items-center justify-between gap-1 whitespace-nowrap">
                     <div className="text-medium overflow-hidden text-ellipsis">
                         {article?.title}
@@ -78,16 +78,16 @@ export function Highlight({
                             />
                         </svg>
                     )}
+                </div>
+            ) : (
+                <div className="text-base"> </div>
+            )} */}
 
-                    {/* <div className="flex-grow" />
+            {/* <div className="flex-grow" />
 
                     <div className="time text-stone-600 opacity-0 transition-opacity">
                         {getRelativeTime(annotation.created_at * 1000)}
                     </div> */}
-                </div>
-            ) : (
-                <div className="text-base"> </div>
-            )}
         </a>
     );
 }

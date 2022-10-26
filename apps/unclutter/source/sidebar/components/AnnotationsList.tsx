@@ -17,7 +17,7 @@ interface AnnotationsListProps {
     updateAnnotation: (annotation: LindyAnnotation) => void;
 }
 
-const annotationMarginPx = 4;
+const annotationMarginPx = 8;
 
 function AnnotationsList({
     groupedAnnotations,

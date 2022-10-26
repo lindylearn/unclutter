@@ -101,14 +101,13 @@ function AnnotationDraft({
     return (
         <div
             className={clsx(
-                `annotation relative rounded-l-sm rounded-r bg-white p-1 pl-1.5 text-gray-800 shadow-sm transition-all hover:shadow`,
-                isReply && "rounded-l pl-1",
+                `annotation relative rounded-l rounded-r-md bg-white p-1 pl-1.5 text-gray-800 shadow transition-all hover:shadow-md`,
                 annotation.focused && "focused",
                 className
             )}
             style={{
                 // boxShadow: `-1.5px 0.5px 2px 0 ${color}`,
-                borderLeft: !isReply ? `5px solid ${color}` : "",
+                borderLeft: `8px solid ${color}`,
                 maxHeight: heightLimitPx,
             }}
             onMouseEnter={() => onHoverUpdate(true)}
@@ -116,11 +115,8 @@ function AnnotationDraft({
             ref={ref}
         >
             <TextareaAutosize
-                className="w-full select-none rounded bg-gray-50 py-1 pl-2 pr-6 align-top text-sm placeholder-gray-400 outline-none placeholder:select-none md:text-base"
-                placeholder={
-                    (localAnnotation.isPublic ? "Public " : "Private ") +
-                    (isReply ? "reply" : "note")
-                }
+                className="w-full select-none rounded-md py-1 pl-2 pr-6 align-top text-sm placeholder-gray-400 outline-none placeholder:select-none md:text-base"
+                placeholder={"Note"}
                 value={localAnnotation.text}
                 onChange={(e) =>
                     updateAnnotationLocalFirst({
@@ -134,7 +130,7 @@ function AnnotationDraft({
                 onFocus={() => onHoverUpdate(true)}
                 onBlur={() => onHoverUpdate(false)}
             />
-            <div className="top-icons absolute top-1.5 right-1.5 flex gap-2 p-1 text-gray-400">
+            {/* <div className="top-icons absolute top-1.5 right-1.5 flex gap-2 p-1 text-gray-400">
                 <div
                     className="lindy-tooltp lindy-fade cursor-pointer transition-all hover:text-gray-600 hover:drop-shadow-md"
                     onClick={deleteWithConfirmStep}
@@ -153,30 +149,7 @@ function AnnotationDraft({
                         />
                     </svg>
                 </div>
-
-                {hypothesisSyncEnabled && (
-                    <div
-                        className={
-                            "public-toggle lindy-tooltp lindy-fade cursor-pointer transition-all hover:text-gray-600 hover:drop-shadow-md " +
-                            (localAnnotation.isPublic ? "is-public visible text-gray-600" : "")
-                        }
-                        onClick={() =>
-                            updateAnnotationLocalFirst({
-                                ...localAnnotation,
-                                isPublic: !localAnnotation.isPublic,
-                            })
-                        }
-                        data-title={localAnnotation.isPublic ? "Set private" : "Set public"}
-                    >
-                        <svg className="h-3.5" viewBox="0 0 512 512">
-                            <path
-                                fill="currentColor"
-                                d="M256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256C0 114.6 114.6 0 256 0zM256 464C263.4 464 282.1 456.8 303.6 415.6C312.4 397.9 319.1 376.4 325.6 352H186.4C192 376.4 199.6 397.9 208.4 415.6C229 456.8 248.6 464 256 464zM178.5 304H333.5C335.1 288.7 336 272.6 336 256C336 239.4 335.1 223.3 333.5 208H178.5C176.9 223.3 176 239.4 176 256C176 272.6 176.9 288.7 178.5 304V304zM325.6 160C319.1 135.6 312.4 114.1 303.6 96.45C282.1 55.22 263.4 48 256 48C248.6 48 229 55.22 208.4 96.45C199.6 114.1 192 135.6 186.4 160H325.6zM381.8 208C383.2 223.5 384 239.6 384 256C384 272.4 383.2 288.5 381.8 304H458.4C462.1 288.6 464 272.5 464 256C464 239.5 462.1 223.4 458.4 208H381.8zM342.1 66.61C356.2 92.26 367.4 124.1 374.7 160H440.6C419.2 118.9 384.4 85.88 342.1 66.61zM169.9 66.61C127.6 85.88 92.84 118.9 71.43 160H137.3C144.6 124.1 155.8 92.26 169.9 66.61V66.61zM48 256C48 272.5 49.93 288.6 53.57 304H130.2C128.8 288.5 128 272.4 128 256C128 239.6 128.8 223.5 130.2 208H53.57C49.93 223.4 48 239.5 48 256zM440.6 352H374.7C367.4 387.9 356.2 419.7 342.1 445.4C384.4 426.1 419.2 393.1 440.6 352zM137.3 352H71.43C92.84 393.1 127.6 426.1 169.9 445.4C155.8 419.7 144.6 387.9 137.3 352V352z"
-                            />
-                        </svg>
-                    </div>
-                )}
-            </div>
+            </div> */}
         </div>
     );
 }
