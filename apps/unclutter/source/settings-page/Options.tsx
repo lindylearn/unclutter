@@ -20,16 +20,16 @@ function OptionsPage({}) {
         reportEventContentScript("openSettings");
     }, []);
 
-    const [hypothesisEnabled, setHypothesisEnabled] = React.useState(null);
-    React.useEffect(() => {
-        (async function () {
-            const enabled = await getFeatureFlag(hypothesisSyncFeatureFlag);
-            setHypothesisEnabled(enabled);
-        })();
-    }, []);
-    function onChangeHypothesisSync(enabled) {
-        setHypothesisEnabled(enabled);
-    }
+    // const [hypothesisEnabled, setHypothesisEnabled] = React.useState(null);
+    // React.useEffect(() => {
+    //     (async function () {
+    //         const enabled = await getFeatureFlag(hypothesisSyncFeatureFlag);
+    //         setHypothesisEnabled(enabled);
+    //     })();
+    // }, []);
+    // function onChangeHypothesisSync(enabled) {
+    //     setHypothesisEnabled(enabled);
+    // }
 
     // to get actual the shortcut we'd need to use a custom command other than '_execute_action'
     const [keyboardShortcut, setKeyboardShortcut] = React.useState("");
@@ -190,7 +190,7 @@ function OptionsPage({}) {
                         </a>{" "}
                         saved in your browser. Toggle the feature via the "pen" toolbar icon.
                     </p>
-                    <FeatureFlagSwitch
+                    {/* <FeatureFlagSwitch
                         featureFlagKey={hypothesisSyncFeatureFlag}
                         onChange={onChangeHypothesisSync}
                     >
@@ -205,7 +205,7 @@ function OptionsPage({}) {
                         </a>{" "}
                         account
                     </FeatureFlagSwitch>
-                    {hypothesisEnabled && <HypothesisConfig />}
+                    {hypothesisEnabled && <HypothesisConfig />} */}
                 </OptionsGroup>
 
                 <OptionsGroup

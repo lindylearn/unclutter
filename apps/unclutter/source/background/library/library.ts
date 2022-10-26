@@ -1,4 +1,4 @@
-import { getUrlHash } from "@unclutter/library-components/dist/common";
+import { getUrlHash, normalizeUrl } from "@unclutter/library-components/dist/common";
 import { Annotation } from "@unclutter/library-components/dist/store";
 import groupBy from "lodash/groupBy";
 import { ReadonlyJSONValue } from "replicache";
@@ -45,11 +45,11 @@ export async function initLibrary() {
 async function importLegacyAnnotations() {
     const annotations = await getAllLegacyAnnotations();
 
-    const hypothesisSyncEnabled = await getFeatureFlag(hypothesisSyncFeatureFlag);
-    if (hypothesisSyncEnabled) {
-        const remoteAnnotations = await getHypothesisAnnotationsSince(undefined, 200);
-        annotations.push(...remoteAnnotations);
-    }
+    // const hypothesisSyncEnabled = await getFeatureFlag(hypothesisSyncFeatureFlag);
+    // if (hypothesisSyncEnabled) {
+    //     const remoteAnnotations = await getHypothesisAnnotationsSince(undefined, 200);
+    //     annotations.push(...remoteAnnotations.slice(50));
+    // }
 
     if (annotations.length === 0) {
         return;
@@ -68,9 +68,11 @@ async function importLegacyAnnotations() {
 
     let articleInfos: LibraryInfo[];
     if (userInfo?.onPaidPlan || userInfo?.trialEnabled) {
-        articleInfos = await addArticlesToLibrary(urls, userInfo?.id);
+        articleInfos = await addArticlesToLibrary(urls, userInfo.id);
     } else {
-        articleInfos = urls.map((url) => constructLocalArticleInfo(url, getUrlHash(url), url));
+        articleInfos = urls.map((url) =>
+            constructLocalArticleInfo(url, getUrlHash(url), normalizeUrl(url))
+        );
     }
     articleInfos = articleInfos.map((articleInfo) => {
         articleInfo.article.reading_progress = 1.0;

@@ -155,14 +155,14 @@ export default function HighlightsTab({
                 )}
 
                 <input
-                    className="font-text w-full rounded-md bg-stone-50 px-3 py-1.5 font-medium leading-none placeholder-stone-300 outline-none dark:bg-neutral-800 dark:placeholder-neutral-600"
+                    className="font-text w-full rounded-md bg-stone-50 px-3 py-1.5 font-medium leading-none placeholder-stone-400 outline-none dark:bg-neutral-800 dark:placeholder-neutral-600"
                     spellCheck="false"
                     autoFocus
-                    placeholder={`Search across ${annotations.length} highlights...`}
+                    placeholder={`Search across ${filteredAnnotations.length} highlights...`}
                 />
             </div>
 
-            <div className="grid grid-cols-3 gap-4">
+            <div className="relative grid grid-cols-3 gap-4">
                 {filteredAnnotations.map((annotation) => (
                     <Highlight
                         key={annotation.id}
@@ -173,6 +173,11 @@ export default function HighlightsTab({
                         reportEvent={reportEvent}
                     />
                 ))}
+                {annotations.length === 0 && (
+                    <div className="animate-fadein absolute top-0 left-0 flex h-full w-full select-none items-center justify-center">
+                        Select any article text to save highlights
+                    </div>
+                )}
             </div>
         </div>
     );
