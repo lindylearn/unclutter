@@ -31,6 +31,5 @@
             "matches": ["https://library.lindylearn.io/*", "http://localhost/*"],
             "js": ["background/firefox-content-script.js"]
         }
-    ],
-    "omnibox": { "keyword": "u" }
+    ]
 }

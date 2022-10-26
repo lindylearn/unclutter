@@ -26,6 +26,5 @@
     "externally_connectable": {
         "ids": ["*"],
         "matches": ["https://library.lindylearn.io/*", "http://localhost:3000/*"]
-    },
-    "omnibox": { "keyword": "u" }
+    }
 }
