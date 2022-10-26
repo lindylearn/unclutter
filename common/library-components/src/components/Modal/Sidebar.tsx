@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import clsx from "clsx";
 import {
+    latestHighlightsVersion,
     latestSettingsVersion,
     ReplicacheContext,
     Settings,
@@ -148,6 +149,7 @@ function getModalTabOptions(
         {
             label: "Highlights",
             value: "highlights",
+            tag: (settings?.seen_highlights_version || 0) < latestHighlightsVersion && "New",
             svg: (
                 <svg viewBox="0 0 512 512" className="h-4">
                     <path
@@ -174,6 +176,7 @@ function getModalTabOptions(
             label: "Sync",
             value: "sync",
             atEnd: true,
+            unavailable: true,
             svg: (
                 <svg viewBox="0 0 512 512" className="h-4">
                     <path

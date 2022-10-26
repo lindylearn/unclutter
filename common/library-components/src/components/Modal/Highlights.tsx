@@ -3,6 +3,7 @@ import { FilterButton } from "./Recent";
 import { getDomain, getRandomLightColor } from "../../common";
 import {
     AnnotationWithArticle,
+    latestHighlightsVersion,
     ReplicacheContext,
     Topic,
     UserInfo,
@@ -28,6 +29,10 @@ export default function HighlightsTab({
     reportEvent?: (event: string, data?: any) => void;
 }) {
     const rep = useContext(ReplicacheContext);
+    useEffect(() => {
+        rep?.mutate.updateSettings({ seen_highlights_version: latestHighlightsVersion });
+    }, [rep]);
+
     const annotations = useSubscribe(rep, rep?.subscribe.listAnnotationsWithArticles(), []);
 
     const [onlyFavorites, setOnlyFavorites] = useState(false);
