@@ -1,8 +1,13 @@
-import groupBy from "lodash/groupBy";
 import React, { useContext, useEffect, useState } from "react";
 import { FilterButton } from "./Recent";
-import { getRandomLightColor } from "../../common";
-import { Annotation, Article, ReplicacheContext, Topic, UserInfo, useSubscribe } from "../../store";
+import { getDomain, getRandomLightColor } from "../../common";
+import {
+    AnnotationWithArticle,
+    ReplicacheContext,
+    Topic,
+    UserInfo,
+    useSubscribe,
+} from "../../store";
 import { Highlight } from "../Highlight";
 
 export default function HighlightsTab({
@@ -23,7 +28,7 @@ export default function HighlightsTab({
     reportEvent?: (event: string, data?: any) => void;
 }) {
     const rep = useContext(ReplicacheContext);
-    const annotations = useSubscribe(rep, rep?.subscribe.listAnnotations(), []);
+    const annotations = useSubscribe(rep, rep?.subscribe.listAnnotationsWithArticles(), []);
 
     const [onlyFavorites, setOnlyFavorites] = useState(false);
     const [lastFirst, setLastFirst] = useState(true);
@@ -33,12 +38,15 @@ export default function HighlightsTab({
         !!(currentArticle || currentTopic || domainFilter)
     );
 
-    const [filteredAnnotations, setFilteredAnnotations] = useState<Annotation[]>([]);
+    const [filteredAnnotations, setFilteredAnnotations] = useState<AnnotationWithArticle[]>([]);
     useEffect(() => {
         // filter
         let filteredAnnotations = [...annotations];
         if (activeCurrentFilter) {
             if (domainFilter) {
+                filteredAnnotations = filteredAnnotations.filter(
+                    (a) => getDomain(a.article?.url) === domainFilter
+                );
             } else if (currentArticle) {
                 filteredAnnotations = filteredAnnotations.filter(
                     (a) => a.article_id === currentArticle
@@ -62,21 +70,6 @@ export default function HighlightsTab({
         onlyFavorites,
         lastFirst,
     ]);
-
-    const [articlesMap, setArticlesMap] = useState<{ [article_id: string]: Article }>({});
-    useEffect(() => {
-        const annotationsPerArticle = groupBy(annotations, (a) => a.article_id);
-
-        const articles = {};
-        Promise.all(
-            Object.keys(annotationsPerArticle).map(async (article_id) => {
-                const article = await rep?.query.getArticle(article_id);
-                if (article) {
-                    articles[article_id] = article;
-                }
-            })
-        ).then(() => setArticlesMap(articles));
-    }, [filteredAnnotations]);
 
     return (
         <div className="flex flex-col gap-4">
@@ -169,7 +162,7 @@ export default function HighlightsTab({
                     <Highlight
                         key={annotation.id}
                         annotation={annotation}
-                        article={articlesMap[annotation.article_id]}
+                        article={annotation.article}
                         isCurrentArticle={currentArticle === annotation.article_id}
                         darkModeEnabled={darkModeEnabled}
                         reportEvent={reportEvent}

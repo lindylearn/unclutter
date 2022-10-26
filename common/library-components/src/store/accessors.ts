@@ -341,6 +341,24 @@ export const { get: getAnnotation, list: listAnnotations } = generate(
     annotationSchema
 );
 
+export type AnnotationWithArticle = Annotation & { article: Article };
+async function listAnnotationsWithArticles(tx: ReadTransaction): Promise<AnnotationWithArticle[]> {
+    const annotations = await listAnnotations(tx);
+    const articles = await listArticles(tx);
+
+    const articleMap = {};
+    articles.forEach((article) => {
+        articleMap[article.id] = article;
+    });
+
+    return annotations.map((annotation) => {
+        return {
+            ...annotation,
+            article: articleMap[annotation.article_id],
+        };
+    });
+}
+
 async function listArticleAnnotations(
     tx: ReadTransaction,
     articleId: string
@@ -407,6 +425,7 @@ export const accessors = {
     getGroupTopicChildren,
     getAnnotation,
     listAnnotations,
+    listAnnotationsWithArticles,
     listArticleAnnotations,
     listTopicAnnotations,
     getPartialSyncState,
