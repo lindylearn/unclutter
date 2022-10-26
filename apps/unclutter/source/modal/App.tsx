@@ -1,5 +1,8 @@
 import React, { useEffect, useLayoutEffect, useMemo, useState } from "react";
-import { LibraryModalPage } from "@unclutter/library-components/dist/components/Modal";
+import {
+    LibraryModalPage,
+    ModalContext,
+} from "@unclutter/library-components/dist/components/Modal";
 import { LocalScreenshotContext } from "@unclutter/library-components/dist/components/Article";
 
 import { LibraryState } from "../common/schema";
@@ -48,10 +51,7 @@ export default function App({
     }, []);
     function closeModal() {
         setShowModal(false);
-        // play out-animation before destroying iframe
-        setTimeout(() => {
-            window.top.postMessage({ event: "destroyLibraryModal" }, "*");
-        }, 300);
+        window.top.postMessage({ event: "destroyLibraryModal" }, "*");
     }
 
     // TODO move userInfo to query params to render faster?
@@ -65,18 +65,18 @@ export default function App({
             <LocalScreenshotContext.Provider
                 value={!libraryState.userInfo.accountEnabled ? getLocalScreenshot : null}
             >
-                <LibraryModalPage
-                    userInfo={libraryState?.userInfo}
-                    darkModeEnabled={darkModeEnabled === "true"} // convert string to bool
-                    showSignup={libraryState.showLibrarySignup}
-                    relatedLinkCount={libraryState?.linkCount}
-                    currentArticle={libraryState?.libraryInfo?.article.id}
-                    initialTopic={libraryState?.libraryInfo?.topic}
-                    graph={libraryState?.graph}
-                    isVisible={showModal}
-                    closeModal={closeModal}
-                    reportEvent={reportEventContentScript}
-                />
+                <ModalContext.Provider value={{ isVisible: showModal, closeModal }}>
+                    <LibraryModalPage
+                        userInfo={libraryState?.userInfo}
+                        darkModeEnabled={darkModeEnabled === "true"} // convert string to bool
+                        showSignup={libraryState.showLibrarySignup}
+                        relatedLinkCount={libraryState?.linkCount}
+                        currentArticle={libraryState?.libraryInfo?.article.id}
+                        initialTopic={libraryState?.libraryInfo?.topic}
+                        graph={libraryState?.graph}
+                        reportEvent={reportEventContentScript}
+                    />
+                </ModalContext.Provider>
             </LocalScreenshotContext.Provider>
         </ReplicacheContext.Provider>
     );

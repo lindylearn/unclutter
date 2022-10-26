@@ -1,37 +1,48 @@
 import clsx from "clsx";
-import React, { useState } from "react";
-import { getRandomLightColor, openArticleResilient } from "../common";
+import React, { useContext, useState } from "react";
+import { getRandomLightColor, openArticleResilient, sendMessage } from "../common";
 import { Annotation, Article } from "../store";
 import { HighlightDropdown } from "./Dropdown/HighlightDowndown";
-import { ResourceIcon } from "./Modal";
+import { ModalContext, ResourceIcon } from "./Modal";
 
 export function Highlight({
     annotation,
     article,
+    isCurrentArticle,
     darkModeEnabled,
     reportEvent = () => {},
 }: {
     annotation: Annotation;
     article: Article | undefined;
+    isCurrentArticle: boolean;
     darkModeEnabled: boolean;
     reportEvent?: (event: string, properties?: any) => void;
 }) {
+    const { closeModal } = useContext(ModalContext);
+
     const [dropdownOpen, setDropdownOpen] = useState(false);
+
+    function openHighlight(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (isCurrentArticle) {
+            closeModal?.();
+            sendMessage({ event: "focusAnnotation", focusedAnnotation: annotation.id });
+        } else if (article?.url) {
+            // open new tab & scroll to highlight
+            openArticleResilient(article.url, true, annotation.id);
+        }
+    }
 
     return (
         <a
-            className="animate-fadein relative flex cursor-pointer select-none flex-col justify-between gap-3 overflow-hidden rounded-md p-3 text-sm text-stone-900 transition-all hover:shadow-lg"
+            className="animate-fadein relative flex cursor-pointer select-none flex-col justify-between gap-3 overflow-hidden rounded-md p-3 text-sm text-stone-900 transition-all hover:shadow-md"
             style={{
                 background: getRandomLightColor(annotation.article_id, darkModeEnabled),
             }}
             href={article?.url}
-            onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                if (article?.url) {
-                    openArticleResilient(article.url, true, annotation.id);
-                }
-            }}
+            onClick={openHighlight}
             onContextMenu={(e) => {
                 e.preventDefault();
                 e.stopPropagation();

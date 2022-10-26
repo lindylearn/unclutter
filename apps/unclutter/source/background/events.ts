@@ -122,17 +122,28 @@ function handleMessage(
     } else if (message.event === "reportBrokenPage") {
         handleReportBrokenPage(message.data);
     } else if (message.event === "openLinkWithUnclutter") {
-        const onTabActive = (tab) => {
-            // need to wait until loaded, as have no permissions on new tab page
-            setTimeout(() => {
-                injectScript(tab.id, "content-script/enhance.js");
-            }, 1000);
+        const onTabActive = async (tab: Tabs.Tab) => {
+            // need to wait until site loaded, as have no permissions on new tab page
+            await new Promise((resolve) => setTimeout(resolve, 100));
+
+            await injectScript(tab.id, "content-script/enhance.js");
+
+            if (message.focusedAnnotation) {
+                await new Promise((resolve) => setTimeout(resolve, 500));
+                await browser.tabs.sendMessage(tab.id, {
+                    event: "focusAnnotation",
+                    focusedAnnotation: message.focusedAnnotation,
+                });
+            }
         };
         if (message.newTab) {
             browser.tabs.create({ url: message.url, active: true }, onTabActive);
         } else {
             browser.tabs.update(undefined, { url: message.url }, onTabActive);
         }
+    } else if (message.event === "focusAnnotation") {
+        // direct message back to listeners in same tab
+        browser.tabs.sendMessage(sender.tab.id, message);
     } else if (message.event === "openLibrary") {
         let urlToOpen = `https://library.lindylearn.io/`;
         if (message.topicId !== undefined) {

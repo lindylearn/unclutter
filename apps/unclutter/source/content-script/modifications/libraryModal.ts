@@ -80,15 +80,20 @@ export default class LibraryModalModifier implements PageModifier {
         if (!this.modalIframe) {
             return;
         }
-        this.modalIframe.remove();
-        this.modalIframe = null;
 
-        this.iframeLoaded = false;
-        this.appLoaded = false;
-
+        // immediately disable scroll lock to focus annotations
         this.bodyStyleModifier.disableScrollLock();
 
-        reportEventContentScript("closeLibraryModal");
+        // delay iframe removal to play out animation first
+        setTimeout(() => {
+            this.modalIframe.remove();
+            this.modalIframe = null;
+
+            this.iframeLoaded = false;
+            this.appLoaded = false;
+
+            reportEventContentScript("closeLibraryModal");
+        }, 300);
     }
 
     private sendModalEvent(event: object) {

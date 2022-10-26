@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { createContext, useRef } from "react";
 import clsx from "clsx";
 import { useContext, useEffect, useState } from "react";
 
@@ -6,7 +6,6 @@ import StatsModalTab from "./Stats";
 import Sidebar from "./Sidebar";
 import { GraphPage } from "./Graph/GraphPage";
 import { CustomGraphData } from "./Graph/data";
-import HeaderBar from "./HeaderBar";
 import { ReplicacheContext, Topic, UserInfo } from "../../store";
 import RecentModalTab from "./Recent";
 import { LindyIcon } from "../Icons";
@@ -14,6 +13,14 @@ import HighlightsTab from "./Highlights";
 import UpgradeModalTab from "./Upgrade";
 import SettingsModalTab from "./Settings";
 import SyncTab from "./Sync";
+
+export const ModalContext = createContext<{
+    isVisible: boolean;
+    closeModal?: () => void;
+}>({
+    isVisible: false,
+    closeModal: () => {},
+});
 
 export function LibraryModalPage({
     userInfo,
@@ -23,8 +30,6 @@ export function LibraryModalPage({
     initialTopic,
     graph,
     relatedLinkCount,
-    isVisible,
-    closeModal = () => {},
     reportEvent = () => {},
 }: {
     userInfo: UserInfo;
@@ -34,10 +39,11 @@ export function LibraryModalPage({
     initialTopic?: Topic;
     graph?: CustomGraphData;
     relatedLinkCount?: number;
-    isVisible: boolean | null;
     closeModal?: () => void;
     reportEvent?: (event: string, data?: any) => void;
 }) {
+    const { isVisible, closeModal } = useContext(ModalContext);
+
     const rep = useContext(ReplicacheContext);
     const [articleCount, setArticleCount] = useState<number>();
     useEffect(() => {

@@ -100,6 +100,7 @@ export default function HighlightsTab({
                         key={annotation.id}
                         annotation={annotation}
                         article={articlesMap[annotation.article_id]}
+                        isCurrentArticle={currentArticle === annotation.article_id}
                         darkModeEnabled={darkModeEnabled}
                         reportEvent={reportEvent}
                     />

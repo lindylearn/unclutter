@@ -1,3 +1,4 @@
+import browser from "../../../common/polyfill";
 import { LindyAnnotation } from "../../../common/annotations/create";
 import { enableAnnotationsFeatureFlag, getFeatureFlag } from "../../../common/featureFlags";
 import LinkAnnotationsModifier from "../DOM/linksAnnotations";
@@ -11,6 +12,7 @@ import {
 import { removeAllHighlights } from "./highlightsApi";
 import { injectSidebar, removeSidebar, waitUntilIframeLoaded } from "./injectSidebar";
 import { createSelectionListener, removeSelectionListener } from "./selectionListener";
+import { getNodeOffset } from "../../../common/annotations/offset";
 
 @trackModifierExecution
 export default class AnnotationsModifier implements PageModifier {
@@ -20,7 +22,9 @@ export default class AnnotationsModifier implements PageModifier {
 
     private pageResizeObserver: ResizeObserver;
 
-    constructor() {}
+    constructor() {
+        browser.runtime.onMessage.addListener(this.onRuntimeMessage.bind(this));
+    }
 
     private initialScollHeight: number;
     readPageHeight() {
@@ -159,8 +163,59 @@ export default class AnnotationsModifier implements PageModifier {
 
     // private fn passed to selection listener (added) and annotations side events listener (anchored, removed)
     private onAnnotationUpdate(action: "set" | "add" | "remove", annotations: LindyAnnotation[]) {
-        // console.log(action, annotations);
+        if (action === "set") {
+            // called after paintHighlights event
+            this.onAnnotationsVisible(annotations);
+        }
+
         this.annotationListeners.map((listener) => listener(action, annotations));
+    }
+
+    private annotationsVisible: boolean = false;
+    private focusedAnnotation: string | null = null;
+    private async onRuntimeMessage(message, sender, sendResponse) {
+        if (message.event === "focusAnnotation") {
+            if (this.annotationsVisible) {
+                // only called from libray modal for now
+                // leave time to disable scroll lock
+                await new Promise((resolve) => setTimeout(resolve, 200));
+
+                this.focusAnnotation(message.focusedAnnotation);
+            } else {
+                // scroll to annotation once anchored
+                this.focusedAnnotation = message.focusedAnnotation;
+            }
+        }
+    }
+
+    private onAnnotationsVisible(annotations: LindyAnnotation[]) {
+        if (annotations.length === 0) {
+            // more annotations might get fetched later (and there is nothing to focus anyways)
+            return;
+        }
+
+        if (this.focusedAnnotation) {
+            this.focusAnnotation(this.focusedAnnotation);
+
+            // ignore further repositioning
+            this.focusedAnnotation = null;
+        }
+
+        this.annotationsVisible = true;
+    }
+
+    private focusAnnotation(annotationId: string) {
+        const node = document.getElementById(annotationId);
+        if (!node) {
+            console.log(`Could not find focused annotation ${annotationId}`);
+            return;
+        }
+
+        // node.click(); // seems to break smooth scroll
+        window.scrollTo({
+            top: getNodeOffset(node) - 100,
+            behavior: "smooth",
+        });
     }
 }
 
