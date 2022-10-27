@@ -74,6 +74,7 @@ export function HighlightDropdown({
                     </svg>
                 }
                 onSelect={deleteAnnotation}
+                bottom
             />
         </Dropdown>
     );

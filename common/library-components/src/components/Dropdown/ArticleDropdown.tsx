@@ -105,6 +105,7 @@ export function ArticleDropdown({
                     </svg>
                 }
                 onSelect={toggleQueued}
+                top
             />
 
             <DropdownItem
