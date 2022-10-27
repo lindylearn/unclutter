@@ -38,7 +38,7 @@ export const hypothesisSyncFeatureFlag = "hypothesis-sync";
 export const enableSocialCountsFeatureFlag = "social-annotations-counts-enabled";
 
 // sticky user setting
-export const enableAnnotationsFeatureFlag = "annotations-enabled";
+export const enableAnnotationsFeatureFlag = "annotations-enabled2";
 export const enableSocialCommentsFeatureFlag = "social-annotations-enabled";
 
 export const dismissedFeedbackMessage = "dismissed-feedback-message3";
