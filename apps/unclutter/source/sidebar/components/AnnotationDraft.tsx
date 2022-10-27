@@ -101,7 +101,7 @@ function AnnotationDraft({
     return (
         <div
             className={clsx(
-                `annotation relative rounded-l rounded-r-md bg-white p-1 pl-1.5 text-gray-800 shadow`,
+                `annotation relative rounded-l rounded-r-md bg-white p-1 pl-2 text-gray-800 shadow`,
                 annotation.focused && "focused",
                 className
             )}
@@ -110,13 +110,13 @@ function AnnotationDraft({
                 borderLeft: `8px solid ${color}`,
                 maxHeight: heightLimitPx,
             }}
-            onMouseEnter={() => onHoverUpdate(true)}
-            onMouseLeave={() => onHoverUpdate(false)}
+            // onMouseEnter={() => onHoverUpdate(true)}
+            // onMouseLeave={() => onHoverUpdate(false)}
             ref={ref}
         >
             <TextareaAutosize
-                className="w-full select-none rounded-md py-1 pl-2 align-top text-sm placeholder-gray-400 outline-none placeholder:select-none md:text-base"
-                placeholder={"Press DELETE or write note"}
+                className="w-full select-none rounded-md p-1 align-top text-sm placeholder-gray-400 outline-none placeholder:select-none md:text-base"
+                placeholder={"Press DELETE or write a note"}
                 value={localAnnotation.text}
                 onChange={(e) =>
                     updateAnnotationLocalFirst({

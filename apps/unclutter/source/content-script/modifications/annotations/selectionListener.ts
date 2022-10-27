@@ -40,7 +40,6 @@ export function createSelectionListener(
             processedStart = true;
 
             activeAnnotationId = generateId();
-            console.log("onselectionchange", activeAnnotationId);
             document.documentElement.style.setProperty(
                 "--selection-background",
                 getRandomColor(activeAnnotationId)
@@ -168,6 +167,7 @@ async function _createAnnotationFromSelection(
     // use id created during selection to keep same color
     let annotation = createDraftAnnotation(window.location.href, annotationSelector);
     annotation.localId = activeAnnotationId;
+    annotation.focused = true;
 
     // wrap with custom html node
     const offsets = await anchorAnnotations([annotation], sidebarIframe);
@@ -181,5 +181,5 @@ async function _createAnnotationFromSelection(
     // notify sidebar and upload logic
     callback(annotation);
 
-    // hoverUpdateHighlight(annotation, true, highlightedNodes);
+    hoverUpdateHighlight(annotation, true, highlightedNodes);
 }

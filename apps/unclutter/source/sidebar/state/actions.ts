@@ -55,13 +55,11 @@ export function useAnnotationModifiers(mutateAnnotations: React.Dispatch<Annotat
         onAnnotationHoverUpdateFactory(mutateAnnotations),
         []
     );
-    const unfocusAnnotation = useCallback(unfocusAnnotationFactory(mutateAnnotations), []);
 
     return {
         createReply,
         deleteHideAnnotation,
         onAnnotationHoverUpdate,
-        unfocusAnnotation,
         updateAnnotation,
     };
 }
@@ -146,26 +144,17 @@ function deleteHideAnnotationFactory(mutateAnnotations: React.Dispatch<Annotatio
 }
 
 function onAnnotationHoverUpdateFactory(mutateAnnotations: React.Dispatch<AnnotationMutation>) {
-    return function onAnnotationHoverUpdate(annotation: LindyAnnotation, hoverActive: boolean) {
-        window.top.postMessage({ event: "onAnnotationHoverUpdate", annotation, hoverActive }, "*");
-    };
-}
+    return function onAnnotationHoverUpdate(
+        annotation: LindyAnnotation,
+        hoverActive: boolean = false
+    ) {
+        if (!hoverActive) {
+            mutateAnnotations({
+                action: "focusAnnotation",
+                annotation: { localId: null } as LindyAnnotation,
+            });
+        }
 
-// unfocus used for hiding social annotations
-function unfocusAnnotationFactory(mutateAnnotations: React.Dispatch<AnnotationMutation>) {
-    return function unfocusAnnotation(annotation: LindyAnnotation) {
-        mutateAnnotations({
-            action: "focusAnnotation",
-            annotation: { localId: null } as LindyAnnotation,
-        });
-        // using hover state as highlighting
-        window.top.postMessage(
-            {
-                event: "onAnnotationHoverUpdate",
-                annotation,
-                hoverActive: false,
-            },
-            "*"
-        );
+        window.top.postMessage({ event: "onAnnotationHoverUpdate", annotation, hoverActive }, "*");
     };
 }
