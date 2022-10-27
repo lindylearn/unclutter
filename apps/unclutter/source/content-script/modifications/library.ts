@@ -159,18 +159,22 @@ export default class LibraryModifier implements PageModifier {
                         await rep.mutate.importArticleLinks({
                             links: this.libraryState.libraryInfo.new_links,
                         });
+
+                        // construct article graph
+                        await this.constructArticleGraph(rep);
+                        this.overlayManager.updateLibraryState(this.libraryState);
                     }
                 }, 1000);
-            }
-
-            // construct article graph
-            if (
-                (this.libraryState.userInfo?.onPaidPlan ||
-                    this.libraryState.userInfo?.trialEnabled) &&
-                this.libraryState.libraryInfo
-            ) {
-                await this.constructArticleGraph(rep);
-                this.overlayManager.updateLibraryState(this.libraryState);
+            } else {
+                // construct article graph
+                if (
+                    (this.libraryState.userInfo?.onPaidPlan ||
+                        this.libraryState.userInfo?.trialEnabled) &&
+                    this.libraryState.libraryInfo
+                ) {
+                    await this.constructArticleGraph(rep);
+                    this.overlayManager.updateLibraryState(this.libraryState);
+                }
             }
 
             if (this.scrollOnceFetchDone) {
@@ -289,8 +293,12 @@ export default class LibraryModifier implements PageModifier {
         this.libraryState.libraryInfo.article.reading_progress = readingProgress;
         if (this.libraryState.graph) {
             const currentNode = this.libraryState.graph.nodes.find((n) => n.depth === 0);
-            currentNode.reading_progress = readingProgress;
-            currentNode.isCompleted = readingProgress >= readingProgressFullClamp;
+            if (currentNode) {
+                currentNode.reading_progress = readingProgress;
+                currentNode.isCompleted = readingProgress >= readingProgressFullClamp;
+            } else {
+                console.error("Could not find active node in graph");
+            }
         }
 
         // update data store
