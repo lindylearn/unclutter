@@ -172,9 +172,6 @@ html.pageview.pageview > body {
     animation: fadeInDot 0.15s linear !important;
 }
 
-::selection {
-    background-color: var(--selection-background) !important;
-}
 .lindy-highlight {
     cursor: pointer !important;
     background-color: var(--annotation-color) !important;

@@ -5,6 +5,7 @@ import {
 } from "../../../common/annotations/create";
 import { getRandomColor } from "../../../common/annotations/styling";
 import { describe as describeAnnotation } from "../../../common/annotator/anchoring/html";
+import { createStylesheetText } from "../../../common/stylesheets";
 import { sendSidebarEvent } from "./annotationsListener";
 import { AnnotationListener } from "./annotationsModifier";
 import {
@@ -86,11 +87,20 @@ export function createSelectionListener(
 
     // register listeners
     listeners.map(([event, handler]) => document.addEventListener(event, handler));
+
+    // insert dynamically to not show transparent selection once highlights disabled
+    createStylesheetText(
+        `::selection {
+            background-color: var(--selection-background) !important;
+        }`,
+        "lindy-highlight-selection"
+    );
 }
 
 export function removeSelectionListener() {
     listeners.map(([event, handler]) => document.removeEventListener(event, handler));
 
+    document.getElementById("lindy-highlight-selection")?.remove();
     document.documentElement.style.removeProperty("--selection-background");
 }
 
@@ -181,5 +191,7 @@ async function _createAnnotationFromSelection(
     // notify sidebar and upload logic
     callback(annotation);
 
-    hoverUpdateHighlight(annotation, true, highlightedNodes);
+    selection.removeAllRanges();
+
+    // hoverUpdateHighlight(annotation, true, highlightedNodes);
 }
