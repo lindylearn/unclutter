@@ -1,13 +1,15 @@
 import { Index, Document } from "flexsearch";
 import { keys, get, set, createStore, UseStore, clear } from "idb-keyval";
 
-import { Article, ArticleText, RuntimeReplicache } from "../store";
+import { Annotation, Article, ArticleText, listArticleTexts, RuntimeReplicache } from "../store";
 
 export interface SearchResult {
     id: string;
     sentences: string[];
     main_sentence: number | null;
     score?: number;
+
+    // may be enriched by the caller
     article?: Article;
 }
 
@@ -32,18 +34,19 @@ export class SearchIndex {
     });
     private indexVersion = 1;
 
+    private indexStore: UseStore;
     async initialize(): Promise<boolean> {
         if (this.isLoaded) {
             return false;
         }
 
-        const indexStore = createStore("flexsearch-index", "keyval");
+        this.indexStore = createStore("flexsearch-index", "keyval");
 
-        const savedIndexVersion = await get("indexVersion", indexStore);
-        const savedKeys = await keys(indexStore);
+        const savedIndexVersion = await get("indexVersion", this.indexStore);
+        const savedKeys = await keys(this.indexStore);
         if (savedIndexVersion < this.indexVersion || savedKeys.length === 0) {
             // need to create new index from current data
-            await clear(indexStore);
+            await clear(this.indexStore);
 
             this.isLoaded = true;
             return true;
@@ -52,7 +55,7 @@ export class SearchIndex {
             const start = performance.now();
             await Promise.all(
                 savedKeys.map(async (key: string) => {
-                    this.index.import(key, await get(key, indexStore));
+                    this.index.import(key, await get(key, this.indexStore));
                 })
             );
             const duration = performance.now() - start;
@@ -63,8 +66,7 @@ export class SearchIndex {
         }
     }
 
-    async addToSearchIndex(articleTexts: ArticleText[]) {
-        const indexStore = createStore("flexsearch-index", "keyval");
+    async addArticleTexts(articleTexts: ArticleText[]) {
         if (articleTexts.length === 0) {
             return;
         }
@@ -75,11 +77,11 @@ export class SearchIndex {
                 // using numeric ids reduces memory usage significantly
                 // 0.1% collision chance for 10k articles
                 // allows up to 300 paragraphs per article
-                const articleId = Math.floor(Math.random() * 1000 * 10000) * 300;
+                const numericArticleId = Math.floor(Math.random() * 1000 * 10000) * 300;
 
                 await Promise.all(
                     doc.paragraphs.slice(0, 300).map((paragraph, paragraphIndex) =>
-                        this.index.addAsync(articleId + paragraphIndex, {
+                        this.index.addAsync(numericArticleId + paragraphIndex, {
                             articleId: doc.id,
                             title: doc.title || "",
                             paragraph,
@@ -87,7 +89,7 @@ export class SearchIndex {
                     )
                 );
 
-                await set(doc.id, articleId, indexStore);
+                await set(doc.id, numericArticleId, this.indexStore);
             })
         );
 
@@ -99,18 +101,17 @@ export class SearchIndex {
             `Indexed ${paragraphCount} paragraphs across ${articleTexts.length} documents in ${duration}ms`
         );
 
-        await this.saveIndex(indexStore);
+        await this.saveIndex();
     }
 
-    async removeFromSearchIndex(articleTexts: ArticleText[]) {
-        const indexStore = createStore("flexsearch-index", "keyval");
+    async removeArticleTexts(articleTexts: ArticleText[]) {
         if (articleTexts.length === 0) {
             return;
         }
 
         await Promise.all(
             articleTexts.map(async (doc) => {
-                const articleId = await get<number>(doc.id, indexStore);
+                const articleId = await get<number>(doc.id, this.indexStore);
                 if (articleId === undefined) {
                     return;
                 }
@@ -124,19 +125,23 @@ export class SearchIndex {
         );
     }
 
-    private async saveIndex(indexStore: UseStore) {
+    async addAnnotations(annotations: Annotation[]) {}
+
+    async removeAnnotations(annotations: Annotation[]) {}
+
+    private async saveIndex() {
         const start = performance.now();
 
         await this.index.export(async (key: string, data: string) => {
-            await set(key, data, indexStore);
+            await set(key, data, this.indexStore);
         });
-        await set("indexVersion", this.indexVersion, indexStore);
+        await set("indexVersion", this.indexVersion, this.indexStore);
 
         const duration = performance.now() - start;
         console.log(`Saved search index in ${duration}ms`);
     }
 
-    async search(query: string): Promise<SearchResult[]> {
+    async search(query: string, combineResults = true): Promise<SearchResult[]> {
         // search index
         let start = performance.now();
         const results = await this.index.searchAsync(query, {
@@ -158,16 +163,19 @@ export class SearchIndex {
             main_sentence: null,
         }));
 
-        // take top result per article
-        const seenArticles = new Set<string>();
-        let articleHits: SearchResult[] = paragraphHits.filter((hit) => {
-            if (seenArticles.has(hit.id)) {
-                return false;
-            }
-            seenArticles.add(hit.id);
+        let articleHits: SearchResult[] = paragraphHits;
+        if (combineResults) {
+            // take top result per article
+            const seenArticles = new Set<string>();
+            articleHits = articleHits.filter((hit) => {
+                if (seenArticles.has(hit.id)) {
+                    return false;
+                }
+                seenArticles.add(hit.id);
 
-            return true;
-        });
+                return true;
+            });
+        }
 
         // split sentences
         start = performance.now();
@@ -204,32 +212,39 @@ export class SearchIndex {
 }
 
 // init the search index and watch replicache changes
-export async function syncSearchIndex(rep: RuntimeReplicache, searchIndex: SearchIndex) {
+export async function syncSearchIndex(
+    rep: RuntimeReplicache,
+    searchIndex: SearchIndex,
+    enableArticleTexts = true,
+    enableAnnotations = false
+) {
     let searchIndexInitialized = false;
 
     // watch replicache changes
-    let addedQueue: ArticleText[] = [];
-    let removedQueue: ArticleText[] = [];
-    rep.experimentalWatch(
-        (diff) => {
-            const added = diff
-                .filter((op) => op.op === "add" || op.op === "change")
-                .map((e: any) => e.newValue);
-            const removed = diff.filter((op) => op.op === "del").map((e: any) => e.oldValue);
+    let addedArticleTextsBuffer: ArticleText[] = [];
+    let removedArticleTextsBuffer: ArticleText[] = [];
+    if (enableArticleTexts) {
+        rep.experimentalWatch(
+            (diff) => {
+                const added = diff
+                    .filter((op) => op.op === "add" || op.op === "change")
+                    .map((e: any) => e.newValue);
+                const removed = diff.filter((op) => op.op === "del").map((e: any) => e.oldValue);
 
-            if (!searchIndexInitialized) {
-                addedQueue.push(...added);
-                removedQueue.push(...removed);
-            } else {
-                searchIndex.addToSearchIndex(added);
-                searchIndex.removeFromSearchIndex(removed);
+                if (!searchIndexInitialized) {
+                    addedArticleTextsBuffer.push(...added);
+                    removedArticleTextsBuffer.push(...removed);
+                } else {
+                    searchIndex.addArticleTexts(added);
+                    searchIndex.removeArticleTexts(removed);
+                }
+            },
+            {
+                prefix: "text/",
+                initialValuesInFirstDiff: false,
             }
-        },
-        {
-            prefix: "text/",
-            initialValuesInFirstDiff: false,
-        }
-    );
+        );
+    }
 
     // load index or create new one
     const isEmpty: boolean = await searchIndex.initialize();
@@ -237,12 +252,16 @@ export async function syncSearchIndex(rep: RuntimeReplicache, searchIndex: Searc
     // backfill entries
     if (isEmpty) {
         // backfill all current enties
-        const articleTexts = await rep.query.listArticleTexts();
-        await searchIndex.addToSearchIndex(articleTexts);
+
+        if (enableArticleTexts) {
+            // @ts-ignore
+            const articleTexts = await rep.query(listArticleTexts);
+            await searchIndex.addArticleTexts(articleTexts);
+        }
     } else {
         // backfill changes during initialization
-        searchIndex.addToSearchIndex(addedQueue);
-        searchIndex.removeFromSearchIndex(removedQueue);
+        searchIndex.addArticleTexts(addedArticleTextsBuffer);
+        searchIndex.removeArticleTexts(removedArticleTextsBuffer);
     }
 
     searchIndexInitialized = true;
