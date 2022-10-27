@@ -78,7 +78,7 @@ export default function HighlightsTab({
     ]);
 
     return (
-        <div className="flex h-full flex-col gap-4">
+        <div className="flex flex-col gap-4">
             <div className="filter-list flex justify-start gap-3">
                 {!activeCurrentFilter && (
                     <FilterButton
@@ -174,10 +174,10 @@ export default function HighlightsTab({
                         reportEvent={reportEvent}
                     />
                 ))}
-                {filteredAnnotations.length === 0 && (
-                    <div className="animate-fadein col-span-3 flex w-full select-none items-center justify-center gap-2 font-medium">
-                        <ResourceIcon type="highlights" />
-                        Select any article text to save highlights
+                {annotations.length === 0 && (
+                    <div className="animate-fadein col-span-3 mt-3 flex w-full select-none items-center gap-2">
+                        {/* <ResourceIcon type="highlights" /> */}
+                        Select any article text to create a highlight
                     </div>
                 )}
             </div>
