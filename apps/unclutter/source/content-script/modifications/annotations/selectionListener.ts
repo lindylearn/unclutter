@@ -1,8 +1,18 @@
-import { createDraftAnnotation, LindyAnnotation } from "../../../common/annotations/create";
+import {
+    createDraftAnnotation,
+    generateId,
+    LindyAnnotation,
+} from "../../../common/annotations/create";
+import { getRandomColor } from "../../../common/annotations/styling";
 import { describe as describeAnnotation } from "../../../common/annotator/anchoring/html";
 import { sendSidebarEvent } from "./annotationsListener";
 import { AnnotationListener } from "./annotationsModifier";
-import { anchorAnnotations, getAnnotationNodes, paintHighlight } from "./highlightsApi";
+import {
+    anchorAnnotations,
+    getAnnotationNodes,
+    hoverUpdateHighlight,
+    paintHighlight,
+} from "./highlightsApi";
 
 // send user text selections to the sidebar iframe, in order to create an annotation
 const listeners: [string, () => void][] = [];
@@ -10,7 +20,8 @@ export function createSelectionListener(
     sidebarIframe: HTMLIFrameElement,
     onAnnotationUpdate: AnnotationListener
 ) {
-    // reset state on new user selection
+    // reset state on new user selection / click
+    let activeAnnotationId: string | null = null;
     let processedStart = false;
     function onselectstart() {
         processedStart = false;
@@ -18,7 +29,7 @@ export function createSelectionListener(
     listeners.push(["selectstart", onselectstart]);
 
     // when selection changed, adjust start location to nearest word
-    // can't seem to do this in onselectstart
+    // can't yet do this in onselectstart
     function onselectionchange() {
         const selection = document.getSelection();
         if (!selection.toString()) {
@@ -27,6 +38,13 @@ export function createSelectionListener(
 
         if (!processedStart) {
             processedStart = true;
+
+            activeAnnotationId = generateId();
+            console.log("onselectionchange", activeAnnotationId);
+            document.documentElement.style.setProperty(
+                "--selection-background",
+                getRandomColor(activeAnnotationId)
+            );
 
             const range = selection.getRangeAt(0);
             const selectionBackwards = _isSelectionBackwards(selection);
@@ -53,13 +71,17 @@ export function createSelectionListener(
             _expandRangeToWordBoundary(range, "forwards");
         }
 
-        _createAnnotationFromSelection((annotation) => {
-            sendSidebarEvent(sidebarIframe, {
-                event: "createHighlight",
-                annotation,
-            });
-            onAnnotationUpdate("add", [annotation]);
-        }, sidebarIframe);
+        _createAnnotationFromSelection(
+            (annotation) => {
+                sendSidebarEvent(sidebarIframe, {
+                    event: "createHighlight",
+                    annotation,
+                });
+                onAnnotationUpdate("add", [annotation]);
+            },
+            sidebarIframe,
+            activeAnnotationId
+        );
     }
     listeners.push(["mouseup", onmouseup]);
 
@@ -69,6 +91,8 @@ export function createSelectionListener(
 
 export function removeSelectionListener() {
     listeners.map(([event, handler]) => document.removeEventListener(event, handler));
+
+    document.documentElement.style.removeProperty("--selection-background");
 }
 
 function _isSelectionBackwards(sel: Selection) {
@@ -83,36 +107,40 @@ function _isSelectionBackwards(sel: Selection) {
 }
 
 function _expandRangeToWordBoundary(range: Range, direction: "forwards" | "backwards") {
-    if (direction === "forwards") {
-        let wordEnd = range.endOffset; // exclusive
-        const nodeValue = range.endContainer.nodeValue;
-        while (
-            nodeValue &&
-            wordEnd < nodeValue.length &&
-            nodeValue[wordEnd].trim() &&
-            nodeValue[wordEnd] !== "—"
-        ) {
-            wordEnd += 1;
-        }
+    try {
+        if (direction === "forwards") {
+            let wordEnd = range.endOffset; // exclusive
+            const nodeValue = range.endContainer.nodeValue;
+            while (
+                nodeValue &&
+                wordEnd < nodeValue.length &&
+                nodeValue[wordEnd].trim() &&
+                nodeValue[wordEnd] !== "—"
+            ) {
+                wordEnd += 1;
+            }
 
-        // strip some punctuation
-        if (",:".includes(nodeValue[wordEnd - 1])) {
-            wordEnd -= 1;
-        }
+            // strip some punctuation
+            if (",:".includes(nodeValue[wordEnd - 1])) {
+                wordEnd -= 1;
+            }
 
-        range.setEnd(range.endContainer, wordEnd);
-    } else if (direction === "backwards") {
-        let wordStart = range.startOffset;
-        const nodeValue = range.endContainer.nodeValue;
-        while (
-            wordStart - 1 >= 0 &&
-            nodeValue[wordStart - 1]?.trim() &&
-            nodeValue[wordStart - 1] !== "—"
-        ) {
-            wordStart -= 1;
-        }
+            range.setEnd(range.endContainer, wordEnd);
+        } else if (direction === "backwards") {
+            let wordStart = range.startOffset;
+            const nodeValue = range.endContainer.nodeValue;
+            while (
+                wordStart - 1 >= 0 &&
+                nodeValue[wordStart - 1]?.trim() &&
+                nodeValue[wordStart - 1] !== "—"
+            ) {
+                wordStart -= 1;
+            }
 
-        range.setStart(range.startContainer, wordStart);
+            range.setStart(range.startContainer, wordStart);
+        }
+    } catch (err) {
+        console.error(err);
     }
 
     return range;
@@ -120,8 +148,10 @@ function _expandRangeToWordBoundary(range: Range, direction: "forwards" | "backw
 
 async function _createAnnotationFromSelection(
     callback: (newAnnotation: LindyAnnotation) => void,
-    sidebarIframe: HTMLIFrameElement
+    sidebarIframe: HTMLIFrameElement,
+    activeAnnotationId: string
 ) {
+    console.log("_createAnnotationFromSelection", activeAnnotationId);
     // get mouse selection
     const selection = document.getSelection();
     if (!selection || !selection.toString().trim()) {
@@ -135,28 +165,21 @@ async function _createAnnotationFromSelection(
         return;
     }
 
-    // wrap with custom html node
+    // use id created during selection to keep same color
     let annotation = createDraftAnnotation(window.location.href, annotationSelector);
+    annotation.localId = activeAnnotationId;
+
+    // wrap with custom html node
     const offsets = await anchorAnnotations([annotation], sidebarIframe);
+    annotation.displayOffset = offsets[0].displayOffset;
+    annotation.displayOffsetEnd = offsets[0].displayOffsetEnd;
 
     // add styling
     const highlightedNodes = getAnnotationNodes(annotation);
     paintHighlight(annotation, sidebarIframe, highlightedNodes);
-    annotation = {
-        ...annotation,
-        displayOffset: offsets[0].displayOffset,
-        displayOffsetEnd: offsets[0].displayOffsetEnd,
-    };
 
     // notify sidebar and upload logic
     callback(annotation);
 
-    // create new range as we modifed the old nodes
-    const newRange = new Range();
-    newRange.setStart(highlightedNodes[0], 0);
-    newRange.setEnd(highlightedNodes[highlightedNodes.length - 1], 1);
-
-    // select highlight text so user can interact with it
-    selection.removeAllRanges();
-    selection.addRange(newRange);
+    // hoverUpdateHighlight(annotation, true, highlightedNodes);
 }

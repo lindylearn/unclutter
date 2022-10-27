@@ -101,7 +101,7 @@ function AnnotationDraft({
     return (
         <div
             className={clsx(
-                `annotation relative rounded-l rounded-r-md bg-white p-1 pl-1.5 text-gray-800 shadow transition-all hover:shadow-md`,
+                `annotation relative rounded-l rounded-r-md bg-white p-1 pl-1.5 text-gray-800 shadow`,
                 annotation.focused && "focused",
                 className
             )}
