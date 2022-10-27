@@ -160,7 +160,6 @@ async function _createAnnotationFromSelection(
     sidebarIframe: HTMLIFrameElement,
     activeAnnotationId: string
 ) {
-    console.log("_createAnnotationFromSelection", activeAnnotationId);
     // get mouse selection
     const selection = document.getSelection();
     if (!selection || !selection.toString().trim()) {

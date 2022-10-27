@@ -109,10 +109,10 @@ export default class LibraryModifier implements PageModifier {
                     this.libraryState.userInfo?.onPaidPlan ||
                     this.libraryState.userInfo?.trialEnabled
                 ) {
-                    this.libraryState.libraryInfo = await addArticlesToLibrary(
+                    [this.libraryState.libraryInfo] = await addArticlesToLibrary(
                         [this.articleUrl],
                         this.libraryState.userInfo?.id
-                    )[0];
+                    );
                 } else {
                     this.libraryState.libraryInfo = constructLocalArticleInfo(
                         this.articleUrl,
