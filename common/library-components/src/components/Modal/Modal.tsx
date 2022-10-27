@@ -159,7 +159,7 @@ function ModalContent({
     reportEvent?: (event: string, data?: any) => void;
 }) {
     return (
-        <div className="font-text flex h-full overflow-hidden text-base">
+        <div className="font-text flex h-full items-stretch overflow-hidden text-base">
             <aside className="left-side p-4">
                 <div className="flex h-full w-32 flex-col">
                     <div
@@ -184,7 +184,7 @@ function ModalContent({
             </aside>
             <div
                 className={clsx(
-                    "right-side flex max-h-full w-full flex-col",
+                    "right-side flex h-full max-h-full w-full flex-col",
                     currentTab === "stats" ? "overflow-y-scroll" : "overflow-y-auto",
                     currentTab === "graph" ? "" : "p-4"
                 )}

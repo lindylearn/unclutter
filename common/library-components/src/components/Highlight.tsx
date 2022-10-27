@@ -38,7 +38,7 @@ export function Highlight({
 
     return (
         <a
-            className="highlight animate-fadein relative flex cursor-pointer select-none flex-col justify-between gap-3 overflow-hidden rounded-md p-3 text-sm text-stone-900 transition-all hover:scale-[99%]"
+            className="highlight animate-fadein relative flex cursor-pointer select-none flex-col justify-between gap-3 overflow-hidden rounded-md p-3 px-4 text-sm text-stone-900 transition-all hover:scale-[99%]"
             style={{
                 background: getRandomLightColor(annotation.article_id, darkModeEnabled),
             }}

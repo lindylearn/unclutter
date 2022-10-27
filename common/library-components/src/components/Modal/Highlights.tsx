@@ -10,6 +10,7 @@ import {
     useSubscribe,
 } from "../../store";
 import { Highlight } from "../Highlight";
+import { ResourceIcon } from "./numbers";
 
 export default function HighlightsTab({
     currentArticle,
@@ -77,7 +78,7 @@ export default function HighlightsTab({
     ]);
 
     return (
-        <div className="flex flex-col gap-4">
+        <div className="flex h-full flex-col gap-4">
             <div className="filter-list flex justify-start gap-3">
                 {!activeCurrentFilter && (
                     <FilterButton
@@ -162,7 +163,7 @@ export default function HighlightsTab({
                 />
             </div>
 
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid flex-grow grid-cols-3 gap-4">
                 {filteredAnnotations.map((annotation) => (
                     <Highlight
                         key={annotation.id}
@@ -173,8 +174,9 @@ export default function HighlightsTab({
                         reportEvent={reportEvent}
                     />
                 ))}
-                {annotations.length === 0 && (
-                    <div className="animate-fadein w-full select-none items-center ">
+                {filteredAnnotations.length === 0 && (
+                    <div className="animate-fadein col-span-3 flex w-full select-none items-center justify-center gap-2 font-medium">
+                        <ResourceIcon type="highlights" />
                         Select any article text to save highlights
                     </div>
                 )}
