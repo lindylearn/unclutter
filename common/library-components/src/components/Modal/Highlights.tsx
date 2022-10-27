@@ -15,6 +15,7 @@ import { ResourceIcon } from "./numbers";
 export default function HighlightsTab({
     currentArticle,
     currentTopic,
+    currentAnnotationsCount,
     domainFilter,
     setDomainFilter,
     userInfo,
@@ -23,6 +24,7 @@ export default function HighlightsTab({
 }: {
     currentArticle?: string;
     currentTopic?: Topic;
+    currentAnnotationsCount?: number;
     domainFilter: string | null;
     setDomainFilter: (domain: string | null) => void;
     userInfo: UserInfo;
@@ -34,18 +36,22 @@ export default function HighlightsTab({
         rep?.mutate.updateSettings({ seen_highlights_version: latestHighlightsVersion });
     }, [rep]);
 
-    const annotations = useSubscribe(rep, rep?.subscribe.listAnnotationsWithArticles(), []);
+    const annotations = useSubscribe(rep, rep?.subscribe.listAnnotationsWithArticles(), null);
 
     const [onlyFavorites, setOnlyFavorites] = useState(false);
     const [lastFirst, setLastFirst] = useState(true);
 
     // filter to one of the current objects
     const [activeCurrentFilter, setActiveCurrentFilter] = useState<boolean>(
-        !!(currentArticle || currentTopic || domainFilter)
+        !!((currentArticle && currentAnnotationsCount) || currentTopic || domainFilter)
     );
 
     const [filteredAnnotations, setFilteredAnnotations] = useState<AnnotationWithArticle[]>([]);
     useEffect(() => {
+        if (annotations === null) {
+            return;
+        }
+
         // filter
         let filteredAnnotations = [...annotations];
         if (activeCurrentFilter) {
@@ -53,7 +59,7 @@ export default function HighlightsTab({
                 filteredAnnotations = filteredAnnotations.filter(
                     (a) => getDomain(a.article?.url) === domainFilter
                 );
-            } else if (currentArticle) {
+            } else if (currentArticle && currentAnnotationsCount) {
                 filteredAnnotations = filteredAnnotations.filter(
                     (a) => a.article_id === currentArticle
                 );
@@ -71,6 +77,7 @@ export default function HighlightsTab({
         annotations,
         activeCurrentFilter,
         currentArticle,
+        currentAnnotationsCount,
         currentTopic,
         domainFilter,
         onlyFavorites,
@@ -174,7 +181,7 @@ export default function HighlightsTab({
                         reportEvent={reportEvent}
                     />
                 ))}
-                {annotations.length === 0 && (
+                {annotations !== null && annotations.length === 0 && (
                     <div className="animate-fadein col-span-3 mt-3 flex w-full select-none items-center gap-2">
                         {/* <ResourceIcon type="highlights" /> */}
                         Select any article text to create a highlight

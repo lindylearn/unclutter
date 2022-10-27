@@ -46,15 +46,22 @@ export function LibraryModalPage({
 
     const rep = useContext(ReplicacheContext);
     const [articleCount, setArticleCount] = useState<number>();
+    const [currentAnnotationsCount, setCurrentAnnotationsCount] = useState<number>();
     useEffect(() => {
         rep?.query.getArticlesCount().then(setArticleCount);
+        if (currentArticle) {
+            rep?.query.listArticleAnnotations(currentArticle).then((annotations) => {
+                setCurrentAnnotationsCount(annotations.length);
+                if (annotations.length > 0) {
+                    setCurrentTab("highlights");
+                }
+            });
+        }
     }, [rep]);
 
     const initialRender = useRef<boolean>(true);
     const [currentTab, setCurrentTab] = useState(
-        currentArticle && (userInfo.onPaidPlan || userInfo.trialEnabled)
-            ? "highlights"
-            : "highlights"
+        relatedLinkCount && (userInfo.onPaidPlan || userInfo.trialEnabled) ? "graph" : "stats"
     );
     useEffect(() => {
         if (initialRender.current) {
@@ -114,6 +121,7 @@ export function LibraryModalPage({
                     showSignup={showSignup}
                     graph={graph}
                     relatedLinkCount={relatedLinkCount}
+                    currentAnnotationsCount={currentAnnotationsCount}
                     currentTab={currentTab}
                     setCurrentTab={setCurrentTab}
                     showTopic={showTopic}
@@ -137,6 +145,7 @@ function ModalContent({
     darkModeEnabled,
     graph,
     relatedLinkCount,
+    currentAnnotationsCount,
     currentTab,
     setCurrentTab,
     showTopic,
@@ -154,12 +163,17 @@ function ModalContent({
     showSignup: boolean;
     graph?: CustomGraphData;
     relatedLinkCount?: number;
+    currentAnnotationsCount?: number;
     currentTab: string;
     setCurrentTab: (tab: string) => void;
     showTopic: (topicId: string) => void;
     showDomain: (domain: string) => void;
     reportEvent?: (event: string, data?: any) => void;
 }) {
+    if (currentArticle && currentAnnotationsCount === undefined) {
+        return <></>;
+    }
+
     return (
         <div className="font-text flex h-full items-stretch overflow-hidden text-base">
             <aside className="left-side p-4">
@@ -179,6 +193,7 @@ function ModalContent({
                         changedTopic={changedTopic}
                         setCurrentTab={setCurrentTab}
                         relatedLinkCount={relatedLinkCount}
+                        currentAnnotationsCount={currentAnnotationsCount}
                         darkModeEnabled={darkModeEnabled}
                         showSignup={showSignup}
                     />
@@ -232,6 +247,7 @@ function ModalContent({
                     <HighlightsTab
                         currentArticle={currentArticle}
                         currentTopic={currentTopic}
+                        currentAnnotationsCount={currentAnnotationsCount}
                         domainFilter={domainFilter}
                         setDomainFilter={setDomainFilter}
                         userInfo={userInfo}

@@ -17,6 +17,7 @@ export default function Sidebar({
     changedTopic,
     setCurrentTab,
     relatedLinkCount,
+    currentAnnotationsCount,
     darkModeEnabled,
     showSignup,
 }: {
@@ -26,6 +27,7 @@ export default function Sidebar({
     changedTopic: boolean;
     setCurrentTab: (tab: string) => void;
     relatedLinkCount?: number;
+    currentAnnotationsCount?: number;
     darkModeEnabled: boolean;
     showSignup: boolean;
 }) {
@@ -46,7 +48,8 @@ export default function Sidebar({
         userInfo,
         settings,
         showSignup,
-        !changedTopic ? relatedLinkCount : undefined
+        !changedTopic ? relatedLinkCount : undefined,
+        currentAnnotationsCount
     );
 
     return (
@@ -106,7 +109,8 @@ function getModalTabOptions(
     userInfo: UserInfo,
     settings: Settings | null,
     showSignup: boolean,
-    new_link_count?: number
+    new_link_count?: number,
+    currentAnnotationsCount?: number
 ): ModalTabOptions[] {
     const options: (ModalTabOptions | false | undefined)[] = [
         (userInfo.onPaidPlan || userInfo.trialEnabled) && {
@@ -150,6 +154,8 @@ function getModalTabOptions(
             label: "Highlights",
             value: "highlights",
             tag: (settings?.seen_highlights_version || 0) < latestHighlightsVersion && "New",
+            // need to update count or track visited to show highlights count after delete
+            // || (currentAnnotationsCount ? `${currentAnnotationsCount}` : undefined),
             svg: (
                 <svg viewBox="0 0 512 512" className="h-4">
                     <path
