@@ -120,7 +120,7 @@ function AnnotationsList({
                                 className="annotation-list-item absolute w-full"
                                 style={{
                                     top: groupTopOffset + innerGroupOffset,
-                                    maxWidth: "300px",
+                                    maxWidth: "250px",
                                 }}
                                 ref={(el) => {
                                     if (el) {

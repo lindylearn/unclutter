@@ -47,7 +47,7 @@ function Annotation({
     return (
         <div
             className={
-                "annotation relative rounded bg-white px-2.5 py-1.5 text-gray-800 shadow-sm transition-all hover:shadow " +
+                "annotation relative rounded-md bg-white px-2.5 py-1.5 text-gray-800 shadow-sm transition-all hover:shadow " +
                 className
             }
             style={{
