@@ -141,7 +141,7 @@
 }
 
 /* highlight */
-.highlight:hover > .info-bar > .time {
+/* .highlight:hover > .info-bar > .time {
     visibility: visible;
     opacity: 1;
-}
+} */

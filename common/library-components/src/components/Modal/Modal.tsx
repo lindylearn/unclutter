@@ -52,7 +52,9 @@ export function LibraryModalPage({
 
     const initialRender = useRef<boolean>(true);
     const [currentTab, setCurrentTab] = useState(
-        currentArticle && (userInfo.onPaidPlan || userInfo.trialEnabled) ? "graph" : "highlights"
+        currentArticle && (userInfo.onPaidPlan || userInfo.trialEnabled)
+            ? "highlights"
+            : "highlights"
     );
     useEffect(() => {
         if (initialRender.current) {

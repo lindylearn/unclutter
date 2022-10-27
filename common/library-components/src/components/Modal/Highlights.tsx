@@ -163,7 +163,7 @@ export default function HighlightsTab({
                 />
             </div>
 
-            <div className="grid flex-grow grid-cols-3 gap-4">
+            <div className="grid flex-grow auto-rows-max grid-cols-2 gap-4">
                 {filteredAnnotations.map((annotation) => (
                     <Highlight
                         key={annotation.id}
