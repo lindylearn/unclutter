@@ -95,7 +95,20 @@ export function paintHighlight(
                 annotation,
             });
 
-            // unfocus handled by annotation textarea onBlur
+            // unfocus on next click for social comments
+            // for annotations this is handled without duplicate events by the textarea onBlur
+            if (!annotation.isMyAnnotation) {
+                const onNextClick = () => {
+                    hoverUpdateHighlight(annotation, false);
+                    sendSidebarEvent(sidebarIframe, {
+                        event: "focusAnnotation",
+                        annotation: null,
+                    });
+
+                    document.removeEventListener("click", onNextClick, true);
+                };
+                document.addEventListener("click", onNextClick, true);
+            }
         };
     });
 
