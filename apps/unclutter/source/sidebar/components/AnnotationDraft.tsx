@@ -115,8 +115,8 @@ function AnnotationDraft({
             ref={ref}
         >
             <TextareaAutosize
-                className="w-full select-none rounded-md p-1 align-top text-sm placeholder-gray-400 outline-none placeholder:select-none md:text-base"
-                placeholder={"Press DELETE or write a note"}
+                className="w-full select-none rounded-md bg-transparent p-1 align-top text-sm placeholder-gray-400 outline-none placeholder:select-none md:text-base"
+                placeholder={"Text copied to clipboard. Press DELETE or write a note."}
                 value={localAnnotation.text}
                 onChange={(e) =>
                     updateAnnotationLocalFirst({

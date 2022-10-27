@@ -88,6 +88,10 @@ export function paintHighlight(
     // handle onclick
     highlightedNodes.map((node) => {
         node.onclick = () => {
+            if (annotation.isMyAnnotation) {
+                copyTextToClipboard(annotation.quote_text);
+            }
+
             hoverUpdateHighlight(annotation, true);
 
             sendSidebarEvent(sidebarIframe, {
@@ -257,4 +261,11 @@ export function addHighlightDot(annotation: LindyAnnotation, sidebarIframe: HTML
             localId: annotation.localId,
         });
     };
+}
+
+export function copyTextToClipboard(text: string) {
+    // only works as part of user gesture
+    try {
+        navigator.clipboard.writeText(text);
+    } catch {}
 }

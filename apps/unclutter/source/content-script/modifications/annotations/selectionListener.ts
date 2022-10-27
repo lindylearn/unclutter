@@ -10,8 +10,8 @@ import { sendSidebarEvent } from "./annotationsListener";
 import { AnnotationListener } from "./annotationsModifier";
 import {
     anchorAnnotations,
+    copyTextToClipboard,
     getAnnotationNodes,
-    hoverUpdateHighlight,
     paintHighlight,
 } from "./highlightsApi";
 
@@ -191,7 +191,6 @@ async function _createAnnotationFromSelection(
     // notify sidebar and upload logic
     callback(annotation);
 
+    copyTextToClipboard(annotation.quote_text);
     selection.removeAllRanges();
-
-    // hoverUpdateHighlight(annotation, true, highlightedNodes);
 }
