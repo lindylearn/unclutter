@@ -19,7 +19,7 @@ export class SearchIndex {
         document: {
             id: "id",
             index: ["paragraph", "title"],
-            store: ["articleId", "paragraph"],
+            store: ["docId", "paragraph"],
         },
         // cache: true,
         optimize: true,
@@ -77,19 +77,19 @@ export class SearchIndex {
                 // using numeric ids reduces memory usage significantly
                 // 0.1% collision chance for 10k articles
                 // allows up to 300 paragraphs per article
-                const numericArticleId = Math.floor(Math.random() * 1000 * 10000) * 300;
+                const numericDocId = Math.floor(Math.random() * 1000 * 10000) * 300;
 
                 await Promise.all(
                     doc.paragraphs.slice(0, 300).map((paragraph, paragraphIndex) =>
-                        this.index.addAsync(numericArticleId + paragraphIndex, {
-                            articleId: doc.id,
+                        this.index.addAsync(numericDocId + paragraphIndex, {
+                            docId: doc.id,
                             title: doc.title || "",
                             paragraph,
                         })
                     )
                 );
 
-                await set(doc.id, numericArticleId, this.indexStore);
+                await set(doc.id, numericDocId, this.indexStore);
             })
         );
 
@@ -111,14 +111,14 @@ export class SearchIndex {
 
         await Promise.all(
             articleTexts.map(async (doc) => {
-                const articleId = await get<number>(doc.id, this.indexStore);
-                if (articleId === undefined) {
+                const docId = await get<number>(doc.id, this.indexStore);
+                if (docId === undefined) {
                     return;
                 }
 
                 await Promise.all(
                     doc.paragraphs.map((paragraph, paragraphIndex) =>
-                        this.index.removeAsync(articleId + paragraphIndex)
+                        this.index.removeAsync(docId + paragraphIndex)
                     )
                 );
             })
@@ -157,7 +157,7 @@ export class SearchIndex {
         // parse data schema
         const paragraphHits = results[0].result.map((item) => ({
             // @ts-ignore
-            id: item.doc.articleId,
+            id: item.doc.docId,
             // @ts-ignore
             sentences: [item.doc.paragraph],
             main_sentence: null,
