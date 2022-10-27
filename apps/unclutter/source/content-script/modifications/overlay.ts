@@ -126,11 +126,15 @@ export default class OverlayManager implements PageModifier {
         this.flatOutline = this.outline.flatMap(flatten);
 
         // Remove outline nesting if too large
-        if (this.flatOutline.length > 20) {
+        if (this.flatOutline.length > 15) {
             this.outline.forEach((_, i) => {
                 this.outline[i].children = [];
             });
             this.flatOutline = this.outline;
+        }
+        if (this.flatOutline.length > 15) {
+            this.outline = [this.outline[0]];
+            this.flatOutline = [this.outline[0]];
         }
 
         this.listenToOutlineScroll();
