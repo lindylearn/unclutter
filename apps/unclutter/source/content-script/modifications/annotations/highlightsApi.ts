@@ -108,6 +108,8 @@ export function paintHighlight(
             document.addEventListener("click", onNextClick, true);
         };
     });
+
+    return highlightedNodes;
 }
 
 export function insertMarginBar(
@@ -175,7 +177,7 @@ export function removeAllHighlights() {
 }
 
 // a highlight may comprise multiple text nodes
-function getAnnotationNodes(annotation): HTMLElement[] {
+export function getAnnotationNodes(annotation): HTMLElement[] {
     const nodeList = document.querySelectorAll(`lindy-highlight[id="${annotation.localId}"]`);
     return [...nodeList] as HTMLElement[];
 }

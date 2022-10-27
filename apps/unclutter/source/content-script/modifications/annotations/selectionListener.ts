@@ -2,7 +2,7 @@ import { createDraftAnnotation, LindyAnnotation } from "../../../common/annotati
 import { describe as describeAnnotation } from "../../../common/annotator/anchoring/html";
 import { sendSidebarEvent } from "./annotationsListener";
 import { AnnotationListener } from "./annotationsModifier";
-import { anchorAnnotations, paintHighlight } from "./highlightsApi";
+import { anchorAnnotations, getAnnotationNodes, paintHighlight } from "./highlightsApi";
 
 // send user text selections to the sidebar iframe, in order to create an annotation
 const listeners: [string, () => void][] = [];
@@ -135,10 +135,13 @@ async function _createAnnotationFromSelection(
         return;
     }
 
-    // create highlight
+    // wrap with custom html node
     let annotation = createDraftAnnotation(window.location.href, annotationSelector);
     const offsets = await anchorAnnotations([annotation], sidebarIframe);
-    paintHighlight(annotation, sidebarIframe);
+
+    // add styling
+    const highlightedNodes = getAnnotationNodes(annotation);
+    paintHighlight(annotation, sidebarIframe, highlightedNodes);
     annotation = {
         ...annotation,
         displayOffset: offsets[0].displayOffset,
@@ -148,5 +151,12 @@ async function _createAnnotationFromSelection(
     // notify sidebar and upload logic
     callback(annotation);
 
-    selection.empty();
+    // create new range as we modifed the old nodes
+    const newRange = new Range();
+    newRange.setStart(highlightedNodes[0], 0);
+    newRange.setEnd(highlightedNodes[highlightedNodes.length - 1], 1);
+
+    // select highlight text so user can interact with it
+    selection.removeAllRanges();
+    selection.addRange(newRange);
 }
