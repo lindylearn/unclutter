@@ -95,17 +95,7 @@ export function paintHighlight(
                 annotation,
             });
 
-            // unfocus on next click (clicks inside annotations sidebar are handled there)
-            const onNextClick = () => {
-                hoverUpdateHighlight(annotation, false);
-                sendSidebarEvent(sidebarIframe, {
-                    event: "focusAnnotation",
-                    annotation: null,
-                });
-
-                document.removeEventListener("click", onNextClick, true);
-            };
-            document.addEventListener("click", onNextClick, true);
+            // unfocus handled by annotation textarea onBlur
         };
     });
 
