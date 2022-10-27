@@ -56,24 +56,20 @@ async function importLegacyAnnotations() {
     }
     console.log(`Migrating ${annotations.length} legacy annotations to replicache...`);
 
-    const userInfo = await processReplicacheMessage({
-        type: "query",
-        methodName: "getUserInfo",
-        args: [],
-    });
+    // const userInfo = await processReplicacheMessage({
+    //     type: "query",
+    //     methodName: "getUserInfo",
+    //     args: [],
+    // });
 
     // fetch article state
     const annotationsPerArticle = groupBy(annotations, (a) => a.url);
     const urls = Object.keys(annotationsPerArticle);
 
-    let articleInfos: LibraryInfo[];
-    if (userInfo?.onPaidPlan || userInfo?.trialEnabled) {
-        articleInfos = await addArticlesToLibrary(urls, userInfo.id);
-    } else {
-        articleInfos = urls.map((url) =>
-            constructLocalArticleInfo(url, getUrlHash(url), normalizeUrl(url))
-        );
-    }
+    let articleInfos = urls.map((url) =>
+        constructLocalArticleInfo(url, getUrlHash(url), normalizeUrl(url))
+    );
+
     articleInfos = articleInfos.map((articleInfo) => {
         articleInfo.article.reading_progress = 1.0;
 
@@ -90,25 +86,25 @@ async function importLegacyAnnotations() {
     // insert articles
     await Promise.all(
         articleInfos.map((articleInfo) => {
-            if (articleInfo.topic) {
-                processReplicacheMessage({
-                    type: "mutate",
-                    methodName: "putTopic",
-                    args: articleInfo.topic,
-                });
-            }
+            // if (articleInfo.topic) {
+            //     processReplicacheMessage({
+            //         type: "mutate",
+            //         methodName: "putTopic",
+            //         args: articleInfo.topic,
+            //     });
+            // }
             processReplicacheMessage({
                 type: "mutate",
                 methodName: "putArticleIfNotExists",
                 args: articleInfo.article,
             });
-            if (articleInfo.new_links?.length > 0) {
-                processReplicacheMessage({
-                    type: "mutate",
-                    methodName: "importArticleLinks",
-                    args: { links: articleInfo.new_links },
-                });
-            }
+            // if (articleInfo.new_links?.length > 0) {
+            //     processReplicacheMessage({
+            //         type: "mutate",
+            //         methodName: "importArticleLinks",
+            //         args: { links: articleInfo.new_links },
+            //     });
+            // }
         })
     );
 
