@@ -11,7 +11,6 @@ body {
 }
 .annotation > textarea {
     color: var(--lindy-dark-theme-text-color) !important;
-    background-color: #262626 !important;
 }
 .annotation > textarea::placeholder {
     color: #757575 !important;
