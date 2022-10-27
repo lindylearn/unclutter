@@ -1,7 +1,14 @@
 import { Index, Document } from "flexsearch";
 import { keys, get, set, createStore, UseStore, clear } from "idb-keyval";
 
-import { Annotation, Article, ArticleText, listArticleTexts, RuntimeReplicache } from "../store";
+import {
+    Annotation,
+    Article,
+    ArticleText,
+    listAnnotations,
+    listArticleTexts,
+    RuntimeReplicache,
+} from "../store";
 
 export interface SearchResult {
     id: string;
@@ -125,9 +132,54 @@ export class SearchIndex {
         );
     }
 
-    async addAnnotations(annotations: Annotation[]) {}
+    async addAnnotations(annotations: Annotation[]) {
+        if (annotations.length === 0) {
+            return;
+        }
 
-    async removeAnnotations(annotations: Annotation[]) {}
+        const start = performance.now();
+        await Promise.all(
+            annotations.map(async (doc, docIndex) => {
+                // using numeric ids reduces memory usage significantly
+                // 0.1% collision chance for 10k articles
+                // allows up to 30 annotations per article
+                const numericDocId = Math.floor(Math.random() * 1000 * 10000) * 30;
+
+                await this.index.addAsync(numericDocId, {
+                    docId: doc.id,
+                    paragraph: doc.quote_text,
+                });
+                // await this.index.addAsync(numericDocId+1, {
+                //     docId: doc.id,
+                //     paragraph: doc.text,
+                // })
+
+                await set(doc.id, numericDocId, this.indexStore);
+            })
+        );
+
+        const duration = performance.now() - start;
+        console.log(`Indexed ${annotations.length} annotations in ${duration}ms`);
+
+        await this.saveIndex();
+    }
+
+    async removeAnnotations(annotations: Annotation[]) {
+        if (annotations.length === 0) {
+            return;
+        }
+
+        await Promise.all(
+            annotations.map(async (doc) => {
+                const docId = await get<number>(doc.id, this.indexStore);
+                if (docId === undefined) {
+                    return;
+                }
+
+                await this.index.removeAsync(docId);
+            })
+        );
+    }
 
     private async saveIndex() {
         const start = performance.now();
@@ -245,6 +297,30 @@ export async function syncSearchIndex(
             }
         );
     }
+    let addedAnnotationsBuffer: Annotation[] = [];
+    let removedAnnotationBuffer: Annotation[] = [];
+    if (enableAnnotations) {
+        rep.experimentalWatch(
+            (diff) => {
+                const added = diff
+                    .filter((op) => op.op === "add" || op.op === "change")
+                    .map((e: any) => e.newValue);
+                const removed = diff.filter((op) => op.op === "del").map((e: any) => e.oldValue);
+
+                if (!searchIndexInitialized) {
+                    addedAnnotationsBuffer.push(...added);
+                    removedAnnotationBuffer.push(...removed);
+                } else {
+                    searchIndex.addAnnotations(added);
+                    searchIndex.removeAnnotations(removed);
+                }
+            },
+            {
+                prefix: "annotations/",
+                initialValuesInFirstDiff: false,
+            }
+        );
+    }
 
     // load index or create new one
     const isEmpty: boolean = await searchIndex.initialize();
@@ -258,10 +334,18 @@ export async function syncSearchIndex(
             const articleTexts = await rep.query(listArticleTexts);
             await searchIndex.addArticleTexts(articleTexts);
         }
+        if (enableAnnotations) {
+            // @ts-ignore
+            const annotations = await rep.query(listAnnotations);
+            await searchIndex.addAnnotations(annotations);
+        }
     } else {
         // backfill changes during initialization
         searchIndex.addArticleTexts(addedArticleTextsBuffer);
         searchIndex.removeArticleTexts(removedArticleTextsBuffer);
+
+        searchIndex.addAnnotations(addedAnnotationsBuffer);
+        searchIndex.removeAnnotations(removedAnnotationBuffer);
     }
 
     searchIndexInitialized = true;
