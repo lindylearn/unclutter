@@ -34,6 +34,8 @@ export function Highlight({
             // open new tab & scroll to highlight
             openArticleResilient(article.url, true, annotation.id);
         }
+
+        reportEvent("openHighlight", { isCurrentArticle });
     }
 
     return (

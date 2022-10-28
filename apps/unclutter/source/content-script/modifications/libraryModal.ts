@@ -73,6 +73,7 @@ export default class LibraryModalModifier implements PageModifier {
             linkCount: this.libraryState.linkCount,
             articleCount: this.libraryState.readingProgress.articleCount,
             completedCount: this.libraryState.readingProgress.completedCount,
+            annotationCount: this.libraryState.readingProgress.annotationCount,
         });
     }
 

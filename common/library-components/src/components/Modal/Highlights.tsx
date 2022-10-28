@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
+import { useDebounce } from "usehooks-ts";
 import { FilterButton } from "./Recent";
 import { getBrowser, getDomain, getRandomLightColor, getUnclutterExtensionId } from "../../common";
 import {
@@ -118,6 +119,11 @@ export default function HighlightsTab({
         searchRef.current?.focus();
     }, [searchRef]);
 
+    const queryDebounced = useDebounce(query, 500);
+    useEffect(() => {
+        reportEvent("highlightsSearch");
+    }, [queryDebounced]);
+
     return (
         <div className="flex flex-col gap-4">
             <div className="filter-list flex justify-start gap-3">
@@ -191,7 +197,7 @@ export default function HighlightsTab({
                         onClick={() => {
                             setActiveCurrentFilter(false);
                             setDomainFilter(null);
-                            reportEvent("changeListFilter", { domainFilter: null });
+                            reportEvent("changeListFilter", { activeCurrentFilter: null });
                         }}
                         color={getRandomLightColor(
                             domainFilter || currentArticle || "",
@@ -204,9 +210,13 @@ export default function HighlightsTab({
                     className="font-text w-full rounded-md bg-stone-50 px-3 py-1.5 font-medium leading-none placeholder-stone-400 outline-none dark:bg-neutral-800 dark:placeholder-neutral-600"
                     spellCheck="false"
                     autoFocus
-                    placeholder={`Search across ${
-                        !annotations ? "your" : annotations.length
-                    } highlights...`}
+                    placeholder={
+                        annotations === null
+                            ? ""
+                            : `Search across ${annotations.length} highlight${
+                                  annotations.length !== 1 ? "s" : ""
+                              }...`
+                    }
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                     ref={searchRef}
