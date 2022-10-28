@@ -8,9 +8,9 @@ export async function getAllLegacyAnnotations(): Promise<LindyAnnotation[]> {
         .filter((pageKey) => pageKey.startsWith("local-annotations_"))
         .reduce((list, pageKey) => [...list, ...Object.values(allStorage[pageKey])], [])
         .map((annotation) => {
-            return createAnnotation(annotation.article_id, annotation.quote_html_selector, {
+            return createAnnotation(annotation.url, annotation.quote_html_selector, {
                 ...annotation,
-                created_at: new Date(annotation.created_at * 1000).toISOString(),
+                created_at: new Date(annotation.created_at).toISOString(),
                 isMyAnnotation: true,
             });
         });
