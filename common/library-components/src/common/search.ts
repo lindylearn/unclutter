@@ -149,10 +149,12 @@ export class SearchIndex {
                     docId: doc.id,
                     paragraph: doc.quote_text,
                 });
-                // await this.index.addAsync(numericDocId+1, {
-                //     docId: doc.id,
-                //     paragraph: doc.text,
-                // })
+                if (doc.text) {
+                    await this.index.addAsync(numericDocId + 1, {
+                        docId: doc.id,
+                        paragraph: doc.text,
+                    });
+                }
 
                 await set(doc.id, numericDocId, this.indexStore);
             })
@@ -177,6 +179,7 @@ export class SearchIndex {
                 }
 
                 await this.index.removeAsync(docId);
+                await this.index.removeAsync(docId + 1);
             })
         );
     }
@@ -221,13 +224,13 @@ export class SearchIndex {
 
         let articleHits: SearchResult[] = paragraphHits;
         if (combineResults) {
-            // take top result per article
-            const seenArticles = new Set<string>();
+            // take only top result per id
+            const seenDoc = new Set<string>();
             articleHits = articleHits.filter((hit) => {
-                if (seenArticles.has(hit.id)) {
+                if (seenDoc.has(hit.id)) {
                     return false;
                 }
-                seenArticles.add(hit.id);
+                seenDoc.add(hit.id);
 
                 return true;
             });

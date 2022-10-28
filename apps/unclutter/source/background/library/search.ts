@@ -13,9 +13,14 @@ export async function initSearchIndex() {
     }
     console.log("Initializing library search index...");
 
-    searchIndex = new SearchIndex();
-    // @ts-ignore
-    await syncSearchIndex(rep, searchIndex as unknown as SearchIndex, false, true);
+    try {
+        searchIndex = new SearchIndex();
+        // @ts-ignore
+        await syncSearchIndex(rep, searchIndex as unknown as SearchIndex, false, true);
+    } catch (err) {
+        console.error(err);
+        searchIndex = null;
+    }
 }
 
 export async function search(query: string): Promise<(SearchResult & { article: Article })[]> {
@@ -23,7 +28,7 @@ export async function search(query: string): Promise<(SearchResult & { article: 
         return;
     }
 
-    const results = await searchIndex.search(query, false, false);
+    const results = await searchIndex.search(query, true, false);
 
     const resultsWithArticles = await Promise.all(
         results.map(async (hit) => {
