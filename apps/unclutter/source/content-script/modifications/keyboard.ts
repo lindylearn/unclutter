@@ -12,7 +12,7 @@ export default class KeyboardModifier implements PageModifier {
     private eventListener;
     observeShortcuts() {
         this.eventListener = (e: KeyboardEvent) => {
-            if (e.key === "Tab") {
+            if (e.key === "Tab" || e.key === "Escape") {
                 this.libraryModalModifier.toggleModal();
                 e.preventDefault();
             }

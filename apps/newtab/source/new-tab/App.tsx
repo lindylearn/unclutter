@@ -59,7 +59,7 @@ export default function App() {
     const [showModal, setShowModal] = useState<boolean | null>(null);
     useEffect(() => {
         window.onkeydown = (e: KeyboardEvent) => {
-            if (e.key === "Tab") {
+            if (e.key === "Tab" || e.key === "Escape") {
                 setShowModal(!showModal);
                 e.preventDefault();
             }

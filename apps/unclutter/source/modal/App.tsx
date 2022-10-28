@@ -31,7 +31,7 @@ export default function App({
             }
         });
         window.addEventListener("keydown", (e: KeyboardEvent) => {
-            if (e.key === "Tab") {
+            if (e.key === "Tab" || e.key === "Escape") {
                 closeModal();
             }
         });
