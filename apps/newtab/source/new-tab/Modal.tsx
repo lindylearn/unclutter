@@ -15,11 +15,13 @@ import React, { useContext, useEffect, useState } from "react";
 export default function NewTabModal({
     userInfo,
     darkModeEnabled,
+    reportEvent = () => {},
 }: {
     userInfo: UserInfo;
     darkModeEnabled: boolean;
     showModal: boolean | null;
     setShowModal: (showModal: boolean) => void;
+    reportEvent?: (event: string, properties?: any) => void;
 }) {
     const rep = useContext(ReplicacheContext);
     const [graph, setGraph] = useState<CustomGraphData>();
@@ -50,6 +52,7 @@ export default function NewTabModal({
             darkModeEnabled={darkModeEnabled}
             showSignup={false}
             graph={graph}
+            reportEvent={reportEvent}
         />
     );
 }

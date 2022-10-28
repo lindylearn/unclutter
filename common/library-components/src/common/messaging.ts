@@ -84,7 +84,7 @@ export class ReplicacheProxy implements RuntimeReplicache {
     constructor(
         targetExtension: string | null = null,
         processMessage = processReplicacheContentScript,
-        processWatch: ReplicacheProxyWatchType
+        processWatch: ReplicacheProxyWatchType = () => {}
     ) {
         this.targetExtension = targetExtension;
         this.processMessage = processMessage;

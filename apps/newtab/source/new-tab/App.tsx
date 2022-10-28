@@ -9,6 +9,7 @@ import {
     ModalContext,
 } from "@unclutter/library-components/dist/components";
 import {
+    ReadingProgress as ReadingProgressType,
     ReplicacheContext,
     UserInfo,
     useSubscribe,
@@ -33,6 +34,10 @@ export default function App() {
     // send messages to main Unclutter extension directly by passing its id
     const rep = useMemo<ReplicacheProxy>(() => new ReplicacheProxy(getUnclutterExtensionId()), []);
 
+    function reportEvent(name: string, data: object = {}) {
+        reportEventContentScript(name, data, getUnclutterExtensionId());
+    }
+
     const [userInfo, setUserInfo] = useState<UserInfo>();
     useEffect(() => {
         rep?.query.getUserInfo().then((userInfo) => {
@@ -47,6 +52,7 @@ export default function App() {
             );
         });
     }, [rep]);
+    const readingProgress = useSubscribe(rep, rep.subscribe.getReadingProgress(), null);
 
     const darkModeEnabled = useAutoDarkMode();
 
@@ -58,6 +64,19 @@ export default function App() {
                 e.preventDefault();
             }
         };
+
+        if (showModal) {
+            reportEvent("openLibraryModal", {
+                onNewTab: true,
+                onPaidPlan: userInfo?.onPaidPlan,
+                trialEnabled: userInfo?.trialEnabled,
+                articleCount: readingProgress?.articleCount,
+                completedCount: readingProgress?.completedCount,
+                annotationCount: readingProgress?.annotationCount,
+            });
+        } else if (showModal === false) {
+            reportEvent("closeLibraryModal");
+        }
     }, [showModal]);
 
     const settings = useSettings(settingsStore);
@@ -81,10 +100,16 @@ export default function App() {
                 >
                     <ArticleSection
                         userInfo={userInfo}
+                        readingProgress={readingProgress}
                         darkModeEnabled={darkModeEnabled}
                         setShowModal={setShowModal}
+                        reportEvent={reportEvent}
                     />
-                    <NewTabModal userInfo={userInfo} darkModeEnabled={darkModeEnabled} />
+                    <NewTabModal
+                        userInfo={userInfo}
+                        darkModeEnabled={darkModeEnabled}
+                        reportEvent={reportEvent}
+                    />
                 </ModalContext.Provider>
             </LocalScreenshotContext.Provider>
         </ReplicacheContext.Provider>
@@ -93,14 +118,18 @@ export default function App() {
 
 function ArticleSection({
     userInfo,
+    readingProgress,
     articleLines = 1,
     darkModeEnabled,
     setShowModal,
+    reportEvent = () => {},
 }: {
     userInfo: UserInfo;
+    readingProgress?: ReadingProgressType;
     articleLines?: number;
     darkModeEnabled: boolean;
     setShowModal: (showModal: boolean) => void;
+    reportEvent?: (event: string, properties?: any) => void;
 }) {
     const rep = useContext(ReplicacheContext);
 
@@ -109,12 +138,6 @@ function ArticleSection({
     useEffect(() => {
         setArticleListsCache({ queue: queuedArticles });
     }, [queuedArticles]);
-
-    const readingProgress = useSubscribe(rep, rep.subscribe.getReadingProgress(), null);
-
-    function reportEvent(...args: any[]) {
-        reportEventContentScript(...args, getUnclutterExtensionId());
-    }
 
     const color = getActivityColor(3, darkModeEnabled);
 
