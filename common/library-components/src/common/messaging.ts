@@ -1,4 +1,4 @@
-import { SubscribeOptions } from "replicache";
+import type { JSONValue, SubscribeOptions } from "replicache";
 import type { Runtime } from "webextension-polyfill";
 import { A, M, accessors, mutators, RuntimeReplicache } from "../store";
 import { getBrowser } from "./extension";
@@ -72,16 +72,23 @@ export async function processReplicacheContentScript(
     });
 }
 
+export type ReplicacheProxyWatchType = (
+    prefix: string,
+    onDataChanged: (added: JSONValue[], removed: JSONValue[]) => void
+) => void;
+
 // @ts-ignore
 export class ReplicacheProxy implements RuntimeReplicache {
     private targetExtension: string | null;
     private processMessage: typeof processReplicacheContentScript = processReplicacheContentScript;
     constructor(
         targetExtension: string | null = null,
-        processMessage = processReplicacheContentScript
+        processMessage = processReplicacheContentScript,
+        processWatch: ReplicacheProxyWatchType
     ) {
         this.targetExtension = targetExtension;
         this.processMessage = processMessage;
+        this.watch = processWatch;
     }
 
     // @ts-ignore
@@ -100,6 +107,7 @@ export class ReplicacheProxy implements RuntimeReplicache {
         return obj;
     }, {});
 
+    // only supported for content scripts
     // @ts-ignore
     subscribe: RuntimeReplicache["subscribe"] = Object.keys(accessors).reduce(
         (obj, fnName: keyof A) => {
@@ -123,6 +131,9 @@ export class ReplicacheProxy implements RuntimeReplicache {
         },
         {}
     );
+
+    // only supported in background
+    watch: ReplicacheProxyWatchType;
 
     pull: RuntimeReplicache["pull"] = () => {
         this.processMessage("pull", undefined, undefined, this.targetExtension);

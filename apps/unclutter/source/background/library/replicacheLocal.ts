@@ -70,6 +70,11 @@ export async function processLocalReplicacheSubscribe(port: Runtime.Port) {
     });
 }
 
+export function processLocalReplicacheWatch(
+    prefix: string,
+    onDataChanged: (added: JSONValue[], removed: JSONValue[]) => void
+) {}
+
 const idbStore = idb.createStore("replicache-local", "keyval");
 
 export class LocalReadTransaction implements ReadTransaction {

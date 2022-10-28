@@ -6,7 +6,7 @@ import {
 } from "@unclutter/library-components/dist/common";
 import { Annotation } from "@unclutter/library-components/dist/store";
 import groupBy from "lodash/groupBy";
-import { ReadonlyJSONValue } from "replicache";
+import { JSONValue, ReadonlyJSONValue } from "replicache";
 import { addArticlesToLibrary } from "../../common/api";
 import {
     getFeatureFlag,
@@ -23,11 +23,13 @@ import {
     initReplicache,
     processActualReplicacheMessage,
     processActualReplicacheSubscribe,
+    processActualReplicacheWatch,
 } from "./replicache";
 import {
     LocalWriteTransaction,
     processLocalReplicacheMessage,
     processLocalReplicacheSubscribe,
+    processLocalReplicacheWatch,
 } from "./replicacheLocal";
 import { deleteAllLocalScreenshots } from "./screenshots";
 import { initSearchIndex } from "./search";
@@ -69,7 +71,8 @@ function getBackgroundReplicacheProxy(): ReplicacheProxy {
                 methodName,
                 args,
             });
-        }
+        },
+        processReplicacheWatch
     );
 }
 
@@ -184,10 +187,23 @@ export async function processReplicacheMessage(message) {
     }
 }
 
+// only supported for content scripts
 export async function processReplicacheSubscribe(port) {
     if (userId) {
         await processActualReplicacheSubscribe(port);
     } else {
         await processLocalReplicacheSubscribe(port);
+    }
+}
+
+// only supported in background
+export function processReplicacheWatch(
+    prefix: string,
+    onDataChanged: (added: JSONValue[], removed: JSONValue[]) => void
+) {
+    if (userId) {
+        return processActualReplicacheWatch(prefix, onDataChanged);
+    } else {
+        return processLocalReplicacheWatch(prefix, onDataChanged);
     }
 }

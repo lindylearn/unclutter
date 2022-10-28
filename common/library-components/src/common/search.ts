@@ -286,48 +286,28 @@ export async function syncSearchIndex(
     let addedArticleTextsBuffer: ArticleText[] = [];
     let removedArticleTextsBuffer: ArticleText[] = [];
     if (enableArticleTexts) {
-        // rep.experimentalWatch(
-        //     (diff) => {
-        //         const added = diff
-        //             .filter((op) => op.op === "add" || op.op === "change")
-        //             .map((e: any) => e.newValue);
-        //         const removed = diff.filter((op) => op.op === "del").map((e: any) => e.oldValue);
-        //         if (!searchIndexInitialized) {
-        //             addedArticleTextsBuffer.push(...added);
-        //             removedArticleTextsBuffer.push(...removed);
-        //         } else {
-        //             searchIndex.addArticleTexts(added);
-        //             searchIndex.removeArticleTexts(removed);
-        //         }
-        //     },
-        //     {
-        //         prefix: "text/",
-        //         initialValuesInFirstDiff: false,
-        //     }
-        // );
+        rep.watch("text/", (added: ArticleText[], removed: ArticleText[]) => {
+            if (!searchIndexInitialized) {
+                addedArticleTextsBuffer.push(...added);
+                removedArticleTextsBuffer.push(...removed);
+            } else {
+                searchIndex.addArticleTexts(added);
+                searchIndex.removeArticleTexts(removed);
+            }
+        });
     }
     let addedAnnotationsBuffer: Annotation[] = [];
     let removedAnnotationBuffer: Annotation[] = [];
     if (enableAnnotations) {
-        // rep.experimentalWatch(
-        //     (diff) => {
-        //         const added = diff
-        //             .filter((op) => op.op === "add" || op.op === "change")
-        //             .map((e: any) => e.newValue);
-        //         const removed = diff.filter((op) => op.op === "del").map((e: any) => e.oldValue);
-        //         if (!searchIndexInitialized) {
-        //             addedAnnotationsBuffer.push(...added);
-        //             removedAnnotationBuffer.push(...removed);
-        //         } else {
-        //             searchIndex.addAnnotations(added);
-        //             searchIndex.removeAnnotations(removed);
-        //         }
-        //     },
-        //     {
-        //         prefix: "annotations/",
-        //         initialValuesInFirstDiff: false,
-        //     }
-        // );
+        rep.watch("annotations/", (added: Annotation[], removed: Annotation[]) => {
+            if (!searchIndexInitialized) {
+                addedAnnotationsBuffer.push(...added);
+                removedAnnotationBuffer.push(...removed);
+            } else {
+                searchIndex.addAnnotations(added);
+                searchIndex.removeAnnotations(removed);
+            }
+        });
     }
 
     // load index or create new one

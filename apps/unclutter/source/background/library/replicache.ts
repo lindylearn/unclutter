@@ -96,6 +96,30 @@ export async function processActualReplicacheSubscribe(port: Runtime.Port) {
     });
 }
 
+export function processActualReplicacheWatch(
+    prefix: string,
+    onDataChanged: (added: JSONValue[], removed: JSONValue[]) => void
+) {
+    if (!rep) {
+        return;
+    }
+
+    rep.experimentalWatch(
+        (diff) => {
+            const added = diff
+                .filter((op) => op.op === "add" || op.op === "change")
+                .map((e: any) => e.newValue);
+            const removed = diff.filter((op) => op.op === "del").map((e: any) => e.oldValue);
+
+            onDataChanged(added, removed);
+        },
+        {
+            prefix: prefix,
+            initialValuesInFirstDiff: false,
+        }
+    );
+}
+
 export async function importEntries(entries: [string, JSONValue][]) {
     rep.mutate.importEntries(entries);
 }
