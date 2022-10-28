@@ -293,6 +293,13 @@
     "radreads.co": [".tcb-flex-col"],
     "realpython.com": [".small.text-muted"],
     "reddit.com": ["._23h0-EcaBUorIHC-JZyh6J"],
+    "reuters.com": [
+        ".base-widget-body__list__22w1C",
+        ".article-body__top-toolbar-container__12IAp",
+        ".context-widget__content__1X4Oq",
+        ".article-body__context_widget__1xxEe.article-body__element__2p5pI",
+        ".article-toolbar__container__FHGRl.article-toolbar__hidden-on-desktop__1yvVL.article-toolbar__align-left__1RG-m"
+    ],
     "sandboxx.us": [".content#genesis-content::before"],
     "shopify.com": ["#GlobalIconSymbols", "#SiteNavContainer"],
     "snclavalin.com": [".top-content-item.read-time", ".top-content-item"],
