@@ -43,7 +43,7 @@ export default function HighlightsTab({
 
     // filter to one of the current objects
     const [activeCurrentFilter, setActiveCurrentFilter] = useState<boolean>(
-        !!((currentArticle && currentAnnotationsCount) || currentTopic || domainFilter)
+        !!((currentArticle && currentAnnotationsCount) || domainFilter)
     );
 
     const [filteredAnnotations, setFilteredAnnotations] = useState<AnnotationWithArticle[]>([]);
@@ -97,14 +97,19 @@ export default function HighlightsTab({
             setActiveCurrentFilter(false);
         }
         (async () => {
-            const hits = await getBrowser().runtime.sendMessage(getUnclutterExtensionId(), {
+            let hits = await getBrowser().runtime.sendMessage(getUnclutterExtensionId(), {
                 event: "searchLibrary",
                 query,
             });
             if (!hits) {
-                return;
+                hits = [];
             }
-            setSearchedAnnotations(hits.map((h) => h.annotation));
+            setSearchedAnnotations(
+                hits.map((h) => {
+                    h.annotation.article = h.article;
+                    return h.annotation;
+                })
+            );
         })();
     }, [query]);
 
@@ -170,7 +175,11 @@ export default function HighlightsTab({
 
                 {activeCurrentFilter && (
                     <FilterButton
-                        title={domainFilter || (currentArticle && "Current article") || ""}
+                        title={
+                            domainFilter ||
+                            (currentArticle && currentAnnotationsCount && "Current article") ||
+                            ""
+                        }
                         icon={
                             <svg className="h-4" viewBox="0 0 512 512">
                                 <path
