@@ -70,10 +70,39 @@ export async function processLocalReplicacheSubscribe(port: Runtime.Port) {
     });
 }
 
-export function processLocalReplicacheWatch(
+export async function processLocalReplicacheWatch(
     prefix: string,
     onDataChanged: (added: JSONValue[], removed: JSONValue[]) => void
-) {}
+) {
+    const tx = new LocalReadTransaction();
+    let previousEntries = (await tx.scan({ prefix }).toArray()) as any[];
+    let previousEntriesObj = previousEntries.reduce((acc, entry) => {
+        acc[entry.id] = entry;
+        return acc;
+    }, {});
+
+    const subscriberId = `watch-${Date.now()}`;
+    dataSubscribers[subscriberId] = async () => {
+        const newEntries = (await tx.scan({ prefix }).toArray()) as any[];
+        const newEntriesObj = newEntries.reduce((acc, entry) => {
+            // @ts-ignore
+            acc[entry.id] = entry;
+            return acc;
+        }, {});
+
+        // get added and removed entries
+        const added = newEntries.filter((entry) => !previousEntriesObj[entry.id]);
+        const removed = previousEntries.filter((entry) => !newEntriesObj[entry.id]);
+
+        if (added.length || removed.length) {
+            // console.log(added, removed);
+            previousEntries = newEntries;
+            previousEntriesObj = newEntriesObj;
+
+            onDataChanged(added, removed);
+        }
+    };
+}
 
 const idbStore = idb.createStore("replicache-local", "keyval");
 
