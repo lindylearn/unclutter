@@ -22,6 +22,7 @@ import {
     processReplicacheSubscribe,
 } from "./library/library";
 import { captureActiveTabScreenshot, getLocalScreenshot } from "./library/screenshots";
+import { search } from "./library/search";
 import {
     getRemoteFeatureFlags,
     reportDisablePageView,
@@ -171,6 +172,9 @@ function handleMessage(
         return true;
     } else if (message.event === "getUnclutterVersion") {
         browser.management.getSelf().then((extensionInfo) => sendResponse(extensionInfo.version));
+        return true;
+    } else if (message.event === "searchLibrary") {
+        search(message.query).then(sendResponse);
         return true;
     }
 

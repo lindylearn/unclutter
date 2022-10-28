@@ -1,6 +1,6 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { FilterButton } from "./Recent";
-import { getDomain, getRandomLightColor } from "../../common";
+import { getBrowser, getDomain, getRandomLightColor, getUnclutterExtensionId } from "../../common";
 import {
     AnnotationWithArticle,
     latestHighlightsVersion,
@@ -84,6 +84,35 @@ export default function HighlightsTab({
         lastFirst,
     ]);
 
+    const [searchedAnnotations, setSearchedAnnotations] = useState<AnnotationWithArticle[] | null>(
+        null
+    );
+    const [query, setQuery] = useState("");
+    useEffect(() => {
+        if (!query) {
+            setSearchedAnnotations(null);
+            return;
+        }
+        if (activeCurrentFilter) {
+            setActiveCurrentFilter(false);
+        }
+        (async () => {
+            const hits = await getBrowser().runtime.sendMessage(getUnclutterExtensionId(), {
+                event: "searchLibrary",
+                query,
+            });
+            if (!hits) {
+                return;
+            }
+            setSearchedAnnotations(hits.map((h) => h.annotation));
+        })();
+    }, [query]);
+
+    const searchRef = useRef<HTMLInputElement>(null);
+    useEffect(() => {
+        searchRef.current?.focus();
+    }, [searchRef]);
+
     return (
         <div className="flex flex-col gap-4">
             <div className="filter-list flex justify-start gap-3">
@@ -166,12 +195,17 @@ export default function HighlightsTab({
                     className="font-text w-full rounded-md bg-stone-50 px-3 py-1.5 font-medium leading-none placeholder-stone-400 outline-none dark:bg-neutral-800 dark:placeholder-neutral-600"
                     spellCheck="false"
                     autoFocus
-                    placeholder={`Search across ${filteredAnnotations.length} highlights...`}
+                    placeholder={`Search across ${
+                        !annotations ? "your" : annotations.length
+                    } highlights...`}
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    ref={searchRef}
                 />
             </div>
 
             <div className="grid flex-grow auto-rows-max grid-cols-2 gap-4">
-                {filteredAnnotations.map((annotation) => (
+                {(searchedAnnotations || filteredAnnotations).map((annotation) => (
                     <Highlight
                         key={annotation.id}
                         annotation={annotation}

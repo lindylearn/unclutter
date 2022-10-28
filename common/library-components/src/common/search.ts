@@ -193,7 +193,11 @@ export class SearchIndex {
         console.log(`Saved search index in ${duration}ms`);
     }
 
-    async search(query: string, combineResults = true): Promise<SearchResult[]> {
+    async search(
+        query: string,
+        combineResults = true,
+        getMainSentence = true
+    ): Promise<SearchResult[]> {
         // search index
         let start = performance.now();
         const results = await this.index.searchAsync(query, {
@@ -230,34 +234,36 @@ export class SearchIndex {
         }
 
         // split sentences
-        start = performance.now();
-        articleHits = articleHits.map((hit) => {
-            const sentences = splitSentences(hit.sentences[0]);
-            if (sentences.length <= 1) {
-                return hit;
-            }
+        if (getMainSentence) {
+            start = performance.now();
+            articleHits = articleHits.map((hit) => {
+                const sentences = splitSentences(hit.sentences[0]);
+                if (sentences.length <= 1) {
+                    return hit;
+                }
 
-            // search for sentence with highest search score
-            const sentenceIndex = new Index({
-                preset: "score",
-                charset: "latin:advanced",
-                context: {
-                    resolution: 5,
-                    depth: 3,
-                    bidirectional: true,
-                },
+                // search for sentence with highest search score
+                const sentenceIndex = new Index({
+                    preset: "score",
+                    charset: "latin:advanced",
+                    context: {
+                        resolution: 5,
+                        depth: 3,
+                        bidirectional: true,
+                    },
+                });
+                sentences.map((sentence, index) => sentenceIndex.add(index, sentence));
+                const relevanceOrder = sentenceIndex.search(query);
+
+                return {
+                    ...hit,
+                    sentences: sentences,
+                    main_sentence: relevanceOrder[0] || 0,
+                } as SearchResult;
             });
-            sentences.map((sentence, index) => sentenceIndex.add(index, sentence));
-            const relevanceOrder = sentenceIndex.search(query);
-
-            return {
-                ...hit,
-                sentences: sentences,
-                main_sentence: relevanceOrder[0] || 0,
-            } as SearchResult;
-        });
-        duration = performance.now() - start;
-        // console.log(`Detected main sentences in ${duration}ms`);
+            duration = performance.now() - start;
+            // console.log(`Detected main sentences in ${duration}ms`);
+        }
 
         return articleHits;
     }

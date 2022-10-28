@@ -25,15 +25,20 @@ import {
     processLocalReplicacheSubscribe,
 } from "./replicacheLocal";
 import { deleteAllLocalScreenshots } from "./screenshots";
+import { initSearchIndex } from "./search";
 
 let userId: string;
 export async function initLibrary() {
     userId = await getLibraryUser();
     if (userId) {
-        console.log(`Init Library for user ${userId}`);
+        console.log(`Init Library for registered user ${userId}`);
         await initReplicache();
         await migrateToAccount();
+    } else {
+        // local replicache mock doesn't need initialization
     }
+
+    await initSearchIndex();
 
     try {
         await importLegacyAnnotations();
