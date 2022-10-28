@@ -24,16 +24,16 @@ export default function Index({ spaceID }: { spaceID: string }) {
     useEffect(() => {
         setUnclutterLibraryAuth(spaceID);
 
-        try {
-            const worker = new SharedWorker(
-                new URL("../worker.js", import.meta.url),
-                "unclutter-library-search"
-            );
-            setWorkerIndex(worker);
-        } catch (err) {
-            // e.g. happens on mobile
-            console.error("SharedWorker not supported", err);
-        }
+        // try {
+        //     const worker = new SharedWorker(
+        //         new URL("../worker.js", import.meta.url),
+        //         "unclutter-library-search"
+        //     );
+        //     setWorkerIndex(worker);
+        // } catch (err) {
+        //     // e.g. happens on mobile
+        //     console.error("SharedWorker not supported", err);
+        // }
     }, []);
 
     // Configure Replicache
@@ -64,19 +64,19 @@ export default function Index({ spaceID }: { spaceID: string }) {
     }, [rep]);
 
     // Init search index
-    useEffect(() => {
-        try {
-            if (rep && workerIndex) {
-                (async () => {
-                    console.log("Setting up search index...");
-                    const searchIndex = wrapWorker<SearchIndex>(workerIndex.port);
-                    await syncSearchIndex(rep, searchIndex as unknown as SearchIndex);
-                })();
-            }
-        } catch (err) {
-            console.error("Error syncing search index", err);
-        }
-    }, [rep, workerIndex]);
+    // useEffect(() => {
+    //     try {
+    //         if (rep && workerIndex) {
+    //             (async () => {
+    //                 console.log("Setting up search index...");
+    //                 const searchIndex = wrapWorker<SearchIndex>(workerIndex.port);
+    //                 await syncSearchIndex(rep, searchIndex as unknown as SearchIndex);
+    //             })();
+    //         }
+    //     } catch (err) {
+    //         console.error("Error syncing search index", err);
+    //     }
+    // }, [rep, workerIndex]);
 
     // @ts-ignore
     const partialSync: PartialSyncState | "NOT_RECEIVED_FROM_SERVER" | undefined = useSubscribe(
