@@ -94,12 +94,18 @@ export async function processLocalReplicacheWatch(
         const added = newEntries.filter((entry) => !previousEntriesObj[entry.id]);
         const removed = previousEntries.filter((entry) => !newEntriesObj[entry.id]);
 
-        if (added.length || removed.length) {
-            // console.log(added, removed);
+        // TODO improve performance of local change detection?
+        const changed = newEntries.filter((entry) => {
+            const prevEntry = previousEntriesObj[entry.id];
+            return prevEntry && JSON.stringify(prevEntry) !== JSON.stringify(entry);
+        });
+
+        if (added.length || removed.length || changed.length) {
+            // console.log(added, removed, changed);
             previousEntries = newEntries;
             previousEntriesObj = newEntriesObj;
 
-            onDataChanged(added, removed);
+            onDataChanged(added.concat(changed), removed);
         }
     };
 }

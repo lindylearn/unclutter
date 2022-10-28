@@ -66,7 +66,7 @@ export class SearchIndex {
                     this.index.import(key, await get(key, this.indexStore));
                 })
             );
-            const duration = performance.now() - start;
+            const duration = Math.round(performance.now() - start);
             console.log(`Loaded search index in ${duration}ms`);
 
             this.isLoaded = true;
@@ -101,7 +101,7 @@ export class SearchIndex {
             })
         );
 
-        const duration = performance.now() - start;
+        const duration = Math.round(performance.now() - start);
         const paragraphCount = articleTexts.reduce((acc, article) => {
             return acc + article.paragraphs.length;
         }, 0);
@@ -161,7 +161,7 @@ export class SearchIndex {
             })
         );
 
-        const duration = performance.now() - start;
+        const duration = Math.round(performance.now() - start);
         console.log(`Indexed ${annotations.length} annotations in ${duration}ms`);
 
         await this.saveIndex();
@@ -193,8 +193,8 @@ export class SearchIndex {
         });
         await set("indexVersion", this.indexVersion, this.indexStore);
 
-        const duration = performance.now() - start;
-        console.log(`Saved search index in ${duration}ms`);
+        // const duration = Math.round(performance.now() - start);
+        // console.log(`Saved search index in ${duration}ms`);
     }
 
     async search(
@@ -207,7 +207,7 @@ export class SearchIndex {
         const results = await this.index.searchAsync(query, {
             enrich: true,
         });
-        let duration = performance.now() - start;
+        // const duration = Math.round(performance.now() - start);
         // console.log(`Searched for "${query}" in ${duration}ms`);
 
         if (!results || results.length === 0) {
@@ -265,7 +265,7 @@ export class SearchIndex {
                     main_sentence: relevanceOrder[0] || 0,
                 } as SearchResult;
             });
-            duration = performance.now() - start;
+            // const duration = Math.round(performance.now() - start);
             // console.log(`Detected main sentences in ${duration}ms`);
         }
 
