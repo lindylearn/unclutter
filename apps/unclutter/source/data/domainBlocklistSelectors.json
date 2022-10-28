@@ -6,9 +6,16 @@
         ".aalto-content-bottom-wrapper.content-container"
     ],
     "about.gitlab.com": ["#on-this-page", ".hidden-md.hidden-lg"],
-    "gitlab.com": [".issuable-discussion"],
-    "aecmag.com": [".relpost-thumb-wrapper", ".size-full.wp-image-5967", ".inarticlead728-end"],
-    "apple.com": ["#ac-localeswitcher", ".sharesheet.component", ".nr-article-share"],
+    "aecmag.com": [
+        ".relpost-thumb-wrapper",
+        ".size-full.wp-image-5967",
+        ".inarticlead728-end"
+    ],
+    "apple.com": [
+        "#ac-localeswitcher",
+        ".sharesheet.component",
+        ".nr-article-share"
+    ],
     "augmentingcognition.com": [".marginnote"],
     "autodesk.com": [
         ".image-style-class-header-1x-desktop.lazyloaded",
@@ -51,7 +58,11 @@
         "#toolBarBox",
         ".template-box"
     ],
-    "blog.jetbrains.com": ["#ez-toc-container", ".content__pagination", ".content__row"],
+    "blog.jetbrains.com": [
+        "#ez-toc-container",
+        ".content__pagination",
+        ".content__row"
+    ],
     "blog.vespa.ai": [
         ".col-xs-12.col-md-9.col-lg-10.text-center.text-md-left",
         ".row.post-top-meta"
@@ -66,6 +77,18 @@
     ],
     "businessinsider.com": [".the-refresh-summary-list"],
     "businessinsider.de": [".tp-container-inner"],
+    "chaincatcher.com": [
+        ".title",
+        ".time",
+        ".item",
+        ".page-spots",
+        ".nav-wrap",
+        ".menu-btn",
+        "#wbMenu",
+        ".menu.share-menu",
+        ".menu.collect-menu",
+        ".menu.search-menu.openSearchMenu"
+    ],
     "christianitytoday.com": [".article-embed"],
     "cloudemployee.co.uk": [
         ".scroll.btn.btn-orange-split",
@@ -83,7 +106,13 @@
         ".column-content.cleared.narrow",
         ".column-content.cleared"
     ],
-    "denizlihaber.com": ["#topbtns", ".combox", ".passbnd", ".ilce_side", ".ap.ap-615.ap-xpe"],
+    "denizlihaber.com": [
+        "#topbtns",
+        ".combox",
+        ".passbnd",
+        ".ilce_side",
+        ".ap.ap-615.ap-xpe"
+    ],
     "diit.cz": [
         "#carodaOutstream992952Container",
         "#carodaOutstream982035Container",
@@ -147,6 +176,7 @@
     ],
     "gist.github.com": [".d-block.d-md-none.px-3.px-md-3.px-lg-5.mb-3"],
     "github.com": [".anchor", ".sr-only"],
+    "gitlab.com": [".issuable-discussion"],
     "gizmodo.com": [
         ".ag987e-0.pxCch.btn.btn-play",
         ".video-html5-player",
@@ -316,8 +346,14 @@
         ".pay-furtherreading"
     ],
     "tarjomaan.com": ["#head_div1", "#header"],
-    "technologyreview.com": ["#piano__post_body-desktop-1", "#piano__post_body-desktop-2"],
-    "techradar.com": [".pretty-verdict__heading-container", ".read-more-container"],
+    "technologyreview.com": [
+        "#piano__post_body-desktop-1",
+        "#piano__post_body-desktop-2"
+    ],
+    "techradar.com": [
+        ".pretty-verdict__heading-container",
+        ".read-more-container"
+    ],
     "theatlantic.com": [
         ".ArticleShare_root__BqVqF",
         ".ArticleHero_articleUtilityBar__OtFEE",
@@ -354,7 +390,12 @@
     ],
     "theverge.com": [".duet--article--lede-background"],
     "thewalrus.ca": ["._form-content", ".code-block.code-block-4"],
-    "tienphong.vn": [".article__story.cms-relate", ".box-heading", ".story", ".article__tag"],
+    "tienphong.vn": [
+        ".article__story.cms-relate",
+        ".box-heading",
+        ".story",
+        ".article__tag"
+    ],
     "tinhte.vn": [
         ".jsx-3147581474.info-block--right",
         ".jsx-3569995709.main",
