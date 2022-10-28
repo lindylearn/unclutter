@@ -2,6 +2,7 @@ import { useUser } from "@supabase/auth-helpers-react";
 import {
     setUnclutterLibraryAuth,
     openArticleResilient,
+    getBrowserType,
 } from "@unclutter/library-components/dist/common";
 import { getSettings } from "@unclutter/library-components/dist/store";
 import clsx from "clsx";
@@ -41,14 +42,14 @@ export default function WelcomeTab() {
         return <></>;
     }
 
-    // @ts-ignore
-    const isChrome = !!window.chrome;
-    const unclutterLink = isChrome
-        ? "https://chrome.google.com/webstore/detail/ibckhpijbdmdobhhhodkceffdngnglpk"
-        : "https://addons.mozilla.org/en-GB/firefox/addon/lindylearn";
-    const unclutterLibraryLink = isChrome
-        ? "https://chrome.google.com/webstore/detail/bghgkooimeljolohebojceacblokenjn"
-        : "https://addons.mozilla.org/en-GB/firefox/addon/unclutter-library";
+    const unclutterLink =
+        getBrowserType() === "firefox"
+            ? "https://addons.mozilla.org/en-GB/firefox/addon/lindylearn"
+            : "https://chrome.google.com/webstore/detail/ibckhpijbdmdobhhhodkceffdngnglpk";
+    const unclutterLibraryLink =
+        getBrowserType() === "firefox"
+            ? "https://addons.mozilla.org/en-GB/firefox/addon/unclutter-library"
+            : "https://chrome.google.com/webstore/detail/bghgkooimeljolohebojceacblokenjn";
 
     return (
         <div className=" font-text mb-10 flex flex-col gap-10 p-5 text-stone-900 dark:text-stone-200">

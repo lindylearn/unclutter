@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import React, { ReactNode, useContext, useEffect, useRef, useState } from "react";
-import { quickReport } from "../../common";
+import { getBrowserType, quickReport } from "../../common";
 import { latestSettingsVersion, ReplicacheContext, Settings, UserInfo } from "../../store";
 import { getActivityColor } from "../Charts";
 
@@ -46,11 +46,10 @@ export default function SettingsModalTab({
         setBugReportOpen(false);
     }
 
-    // @ts-ignore
-    const isChrome = !!window.chrome;
-    const unclutterLibraryLink = isChrome
-        ? "https://chrome.google.com/webstore/detail/bghgkooimeljolohebojceacblokenjn"
-        : "https://addons.mozilla.org/en-GB/firefox/addon/unclutter-library";
+    const unclutterLibraryLink =
+        getBrowserType() === "firefox"
+            ? "https://addons.mozilla.org/en-GB/firefox/addon/unclutter-library"
+            : "https://chrome.google.com/webstore/detail/bghgkooimeljolohebojceacblokenjn";
 
     return (
         <div className="animate-fadein mt-2 flex max-w-2xl flex-col gap-4">

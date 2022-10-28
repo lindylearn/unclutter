@@ -2,7 +2,7 @@ import { useUser } from "@supabase/auth-helpers-react";
 import clsx from "clsx";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "wouter";
-import { setUnclutterLibraryAuth } from "@unclutter/library-components/dist/common";
+import { getBrowserType, setUnclutterLibraryAuth } from "@unclutter/library-components/dist/common";
 import { UITag } from "@unclutter/library-components/dist/components";
 import BrowserBookmarksImportSettings from "./Bookmarks";
 import CSVImportSettings from "./CSV";
@@ -68,10 +68,7 @@ export type ArticleImportSchema = {
 
 export default function ImportTab({}) {
     useEffect(() => {
-        // @ts-ignore
-        const isChrome = !!window.chrome;
-        if (!isChrome) {
-            // assume firefox
+        if (getBrowserType() === "firefox") {
             importOptions["bookmarks"].iconFile = "firefox.svg";
             importOptions["bookmarks"].backgroundColor = "bg-orange-100 dark:bg-orange-900";
         }
