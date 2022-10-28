@@ -9,6 +9,7 @@ import {
     listArticleTexts,
     RuntimeReplicache,
 } from "../store";
+import { ReplicacheProxy } from "./messaging";
 
 export interface SearchResult {
     id: string;
@@ -274,7 +275,7 @@ export class SearchIndex {
 
 // init the search index and watch replicache changes
 export async function syncSearchIndex(
-    rep: RuntimeReplicache,
+    rep: ReplicacheProxy,
     searchIndex: SearchIndex,
     enableArticleTexts = true,
     enableAnnotations = false
@@ -285,50 +286,48 @@ export async function syncSearchIndex(
     let addedArticleTextsBuffer: ArticleText[] = [];
     let removedArticleTextsBuffer: ArticleText[] = [];
     if (enableArticleTexts) {
-        rep.experimentalWatch(
-            (diff) => {
-                const added = diff
-                    .filter((op) => op.op === "add" || op.op === "change")
-                    .map((e: any) => e.newValue);
-                const removed = diff.filter((op) => op.op === "del").map((e: any) => e.oldValue);
-
-                if (!searchIndexInitialized) {
-                    addedArticleTextsBuffer.push(...added);
-                    removedArticleTextsBuffer.push(...removed);
-                } else {
-                    searchIndex.addArticleTexts(added);
-                    searchIndex.removeArticleTexts(removed);
-                }
-            },
-            {
-                prefix: "text/",
-                initialValuesInFirstDiff: false,
-            }
-        );
+        // rep.experimentalWatch(
+        //     (diff) => {
+        //         const added = diff
+        //             .filter((op) => op.op === "add" || op.op === "change")
+        //             .map((e: any) => e.newValue);
+        //         const removed = diff.filter((op) => op.op === "del").map((e: any) => e.oldValue);
+        //         if (!searchIndexInitialized) {
+        //             addedArticleTextsBuffer.push(...added);
+        //             removedArticleTextsBuffer.push(...removed);
+        //         } else {
+        //             searchIndex.addArticleTexts(added);
+        //             searchIndex.removeArticleTexts(removed);
+        //         }
+        //     },
+        //     {
+        //         prefix: "text/",
+        //         initialValuesInFirstDiff: false,
+        //     }
+        // );
     }
     let addedAnnotationsBuffer: Annotation[] = [];
     let removedAnnotationBuffer: Annotation[] = [];
     if (enableAnnotations) {
-        rep.experimentalWatch(
-            (diff) => {
-                const added = diff
-                    .filter((op) => op.op === "add" || op.op === "change")
-                    .map((e: any) => e.newValue);
-                const removed = diff.filter((op) => op.op === "del").map((e: any) => e.oldValue);
-
-                if (!searchIndexInitialized) {
-                    addedAnnotationsBuffer.push(...added);
-                    removedAnnotationBuffer.push(...removed);
-                } else {
-                    searchIndex.addAnnotations(added);
-                    searchIndex.removeAnnotations(removed);
-                }
-            },
-            {
-                prefix: "annotations/",
-                initialValuesInFirstDiff: false,
-            }
-        );
+        // rep.experimentalWatch(
+        //     (diff) => {
+        //         const added = diff
+        //             .filter((op) => op.op === "add" || op.op === "change")
+        //             .map((e: any) => e.newValue);
+        //         const removed = diff.filter((op) => op.op === "del").map((e: any) => e.oldValue);
+        //         if (!searchIndexInitialized) {
+        //             addedAnnotationsBuffer.push(...added);
+        //             removedAnnotationBuffer.push(...removed);
+        //         } else {
+        //             searchIndex.addAnnotations(added);
+        //             searchIndex.removeAnnotations(removed);
+        //         }
+        //     },
+        //     {
+        //         prefix: "annotations/",
+        //         initialValuesInFirstDiff: false,
+        //     }
+        // );
     }
 
     // load index or create new one
@@ -340,12 +339,12 @@ export async function syncSearchIndex(
 
         if (enableArticleTexts) {
             // @ts-ignore
-            const articleTexts = await rep.query(listArticleTexts);
+            const articleTexts = await rep.query.listArticleTexts();
             await searchIndex.addArticleTexts(articleTexts);
         }
         if (enableAnnotations) {
             // @ts-ignore
-            const annotations = await rep.query(listAnnotations);
+            const annotations = await rep.query.listAnnotations();
             await searchIndex.addAnnotations(annotations);
         }
     } else {

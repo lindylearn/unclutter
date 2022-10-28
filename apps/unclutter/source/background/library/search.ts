@@ -1,10 +1,10 @@
-import { Article, getAnnotation, getArticle } from "@unclutter/library-components/dist/store";
+import { Article } from "@unclutter/library-components/dist/store";
 import {
     SearchIndex,
     SearchResult,
     syncSearchIndex,
 } from "@unclutter/library-components/dist/common";
-import { rep } from "./replicache";
+import { rep } from "./library";
 
 let searchIndex: SearchIndex = null;
 export async function initSearchIndex() {
@@ -15,7 +15,6 @@ export async function initSearchIndex() {
 
     try {
         searchIndex = new SearchIndex();
-        // @ts-ignore
         await syncSearchIndex(rep, searchIndex as unknown as SearchIndex, false, true);
     } catch (err) {
         console.error(err);
@@ -32,8 +31,8 @@ export async function search(query: string): Promise<(SearchResult & { article: 
 
     const resultsWithArticles = await Promise.all(
         results.map(async (hit) => {
-            const annotation = await rep.query((tx) => getAnnotation(tx, hit.id));
-            const article = await rep.query((tx) => getArticle(tx, annotation?.article_id));
+            const annotation = await rep.query.getAnnotation(hit.id);
+            const article = await rep.query.getArticle(annotation?.article_id);
             return {
                 ...hit,
                 annotation,

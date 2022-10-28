@@ -75,14 +75,19 @@ export async function processReplicacheContentScript(
 // @ts-ignore
 export class ReplicacheProxy implements RuntimeReplicache {
     private targetExtension: string | null;
-    constructor(targetExtension: string | null = null) {
+    private processMessage: typeof processReplicacheContentScript = processReplicacheContentScript;
+    constructor(
+        targetExtension: string | null = null,
+        processMessage = processReplicacheContentScript
+    ) {
         this.targetExtension = targetExtension;
+        this.processMessage = processMessage;
     }
 
     // @ts-ignore
     query: RuntimeReplicache["query"] = Object.keys(accessors).reduce((obj, fnName: keyof A) => {
         obj[fnName] = (...args: any[]) =>
-            processReplicacheContentScript("query", fnName, args, this.targetExtension);
+            this.processMessage("query", fnName, args, this.targetExtension);
 
         return obj;
     }, {});
@@ -90,7 +95,7 @@ export class ReplicacheProxy implements RuntimeReplicache {
     // @ts-ignore
     mutate: RuntimeReplicache["mutate"] = Object.keys(mutators).reduce((obj, fnName: keyof M) => {
         obj[fnName] = (args: any) =>
-            processReplicacheContentScript("mutate", fnName, args, this.targetExtension);
+            this.processMessage("mutate", fnName, args, this.targetExtension);
 
         return obj;
     }, {});
@@ -120,6 +125,6 @@ export class ReplicacheProxy implements RuntimeReplicache {
     );
 
     pull: RuntimeReplicache["pull"] = () => {
-        processReplicacheContentScript("pull", undefined, undefined, this.targetExtension);
+        this.processMessage("pull", undefined, undefined, this.targetExtension);
     };
 }

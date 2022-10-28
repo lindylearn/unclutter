@@ -1,4 +1,9 @@
-import { getUrlHash, normalizeUrl } from "@unclutter/library-components/dist/common";
+import {
+    getUrlHash,
+    normalizeUrl,
+    ReplicacheProxy,
+    ReplicacheProxyEventTypes,
+} from "@unclutter/library-components/dist/common";
 import { Annotation } from "@unclutter/library-components/dist/store";
 import groupBy from "lodash/groupBy";
 import { ReadonlyJSONValue } from "replicache";
@@ -27,7 +32,8 @@ import {
 import { deleteAllLocalScreenshots } from "./screenshots";
 import { initSearchIndex } from "./search";
 
-let userId: string;
+export let userId: string;
+export let rep: ReplicacheProxy | null = null;
 export async function initLibrary() {
     userId = await getLibraryUser();
     if (userId) {
@@ -38,6 +44,8 @@ export async function initLibrary() {
         // local replicache mock doesn't need initialization
     }
 
+    rep = getBackgroundReplicacheProxy();
+
     await initSearchIndex();
 
     try {
@@ -45,6 +53,24 @@ export async function initLibrary() {
     } catch (err) {
         console.error(err);
     }
+}
+
+function getBackgroundReplicacheProxy(): ReplicacheProxy {
+    return new ReplicacheProxy(
+        null,
+        (
+            type: ReplicacheProxyEventTypes,
+            methodName?: string,
+            args?: any,
+            targetExtension: string | null = null
+        ) => {
+            return processReplicacheMessage({
+                type,
+                methodName,
+                args,
+            });
+        }
+    );
 }
 
 async function importLegacyAnnotations() {
