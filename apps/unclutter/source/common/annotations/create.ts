@@ -85,6 +85,7 @@ export interface LindyAnnotation {
 
     hidden?: boolean;
     focused?: boolean; // should only be set for one annotation
+    listIndex?: number;
 
     // only for info annotations
     article?: Article;

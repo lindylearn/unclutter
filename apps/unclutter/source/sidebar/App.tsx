@@ -43,6 +43,13 @@ export default function App({ url, title }) {
     // group and filter annotations on every local state change (e.g. added, focused)
     const [groupedAnnotations, setGroupedAnnotations] = useState<LindyAnnotation[][]>([]);
     React.useEffect(() => {
+        annotations
+            .filter((a) => a.isMyAnnotation)
+            .sort((a, b) => a.displayOffset - b.displayOffset)
+            .forEach((a, index) => {
+                a.listIndex = index;
+            });
+
         const visibleAnnotations = annotations.filter(
             (a) => a.focused || (a.isMyAnnotation && a.text) || a.platform === "info"
         );
