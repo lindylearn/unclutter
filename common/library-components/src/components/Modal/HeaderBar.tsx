@@ -7,7 +7,7 @@ import ProgressSteps from "../Charts/ProgressSteps";
 import { LindyIcon } from "../Icons";
 import { InlineProgressCircle } from "../Charts";
 import clsx from "clsx";
-import { ResourceStat } from "./numbers";
+import { ResourceStat } from "./components/numbers";
 
 export default function HeaderBar({
     articleCount,

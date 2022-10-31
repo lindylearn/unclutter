@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
 import { getRandomLightColor } from "../../common";
-import { ResourceIcon } from "./numbers";
+import { ResourceIcon } from "./components/numbers";
 
 const screenshotUrlBase = "https://library.lindylearn.io/upgrade/";
 // const screenshotUrlBase = "http://localhost:3000/upgrade/";

@@ -4,7 +4,7 @@ import { ForceGraphInstance } from "force-graph";
 import { getDomain, getRandomLightColor, openArticleResilient } from "../../../common";
 import { CustomGraphNode } from "./data";
 import { readingProgressFullClamp, Topic } from "../../../store";
-import { ResourceStat } from "../numbers";
+import { ResourceStat } from "../components/numbers";
 
 export function NodeTooltip({
     x,

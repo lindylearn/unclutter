@@ -9,7 +9,7 @@ import { renderNodeObject } from "./canvas";
 import { NodeTooltip } from "./Tooltips";
 import { readingProgressFullClamp, ReplicacheContext, Topic } from "../../../store";
 import { TopicEmoji } from "../../TopicTag";
-import { ReadingProgress, ResourceStat } from "../numbers";
+import { ReadingProgress, ResourceStat } from "../components/numbers";
 
 export function GraphPage({
     graph,

@@ -12,7 +12,7 @@ import { getDomain, getRandomLightColor, getWeekStart, groupBy, subtractWeeks } 
 import { useArticleGroups } from "../ArticleList";
 import { TopicEmoji } from "../TopicTag";
 import clsx from "clsx";
-import { BigNumber, ResourceIcon, ResourceStat } from "./numbers";
+import { BigNumber, ResourceIcon, ResourceStat } from "./components/numbers";
 
 export default function StatsModalTab({
     userInfo,

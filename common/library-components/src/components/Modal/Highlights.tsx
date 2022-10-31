@@ -11,7 +11,8 @@ import {
     useSubscribe,
 } from "../../store";
 import { Highlight } from "../Highlight";
-import { ResourceIcon } from "./numbers";
+import { ResourceIcon } from "./components/numbers";
+import { SearchBox } from "./components/search";
 
 export default function HighlightsTab({
     currentArticle,
@@ -113,12 +114,6 @@ export default function HighlightsTab({
             );
         })();
     }, [query]);
-
-    const searchRef = useRef<HTMLInputElement>(null);
-    useEffect(() => {
-        searchRef.current?.focus();
-    }, [searchRef]);
-
     const queryDebounced = useDebounce(query, 500);
     useEffect(() => {
         reportEvent("highlightsSearch");
@@ -206,10 +201,9 @@ export default function HighlightsTab({
                     />
                 )}
 
-                <input
-                    className="font-text w-full rounded-md bg-stone-50 px-3 py-1.5 font-medium leading-none placeholder-stone-400 outline-none dark:bg-neutral-800 dark:placeholder-neutral-600"
-                    spellCheck="false"
-                    autoFocus
+                <SearchBox
+                    query={query}
+                    setQuery={setQuery}
                     placeholder={
                         annotations === null
                             ? ""
@@ -217,9 +211,6 @@ export default function HighlightsTab({
                                   annotations.length !== 1 ? "s" : ""
                               }...`
                     }
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    ref={searchRef}
                 />
             </div>
 

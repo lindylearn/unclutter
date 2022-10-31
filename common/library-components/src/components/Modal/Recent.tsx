@@ -2,7 +2,7 @@ import { DraggableArticleList, useTabInfos, useArticleListsCache } from "../../c
 import React, { ReactNode, useState } from "react";
 import { getRandomLightColor } from "../../common";
 import { Article, readingProgressFullClamp, Topic, UserInfo } from "../../store";
-import { ReadingProgress, ResourceIcon } from "./numbers";
+import { ReadingProgress, ResourceIcon } from "./components/numbers";
 import clsx from "clsx";
 import { DraggableContext } from "../ArticleList/DraggableContext";
 import { getActivityColor } from "../Charts";
