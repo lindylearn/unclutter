@@ -4,7 +4,7 @@ import { ReactNode, useState } from "react";
 import useResizeObserver from "use-resize-observer";
 
 import { getRandomColor } from "../../common/styling";
-import { Article, readingProgressFullClamp, UserInfo } from "../../store/_schema";
+import { Article, readingProgressFullClamp, Topic, UserInfo } from "../../store/_schema";
 import { ReplicacheContext, sortArticlesPosition, useSubscribe } from "../../store";
 import { groupArticlesByTopic } from "./GroupedArticleList";
 import { TopicEmoji } from "../TopicTag";
@@ -183,9 +183,19 @@ export function useTabInfos(
                     "topic_order",
                     tabCount
                 );
+                const otherArticles: Article[] = []; // might be spread across multiple topics, e.g. if combining small groups locally
+                let otherGroupId: string = "other";
                 const topicTabInfos: TabInfo[] = await Promise.all(
                     groupEntries.map(async ([topic_id, articles]) => {
-                        const topic = await rep?.query.getTopic(topic_id);
+                        const topic: Topic | undefined = await rep?.query.getTopic(topic_id);
+                        if (!topic || topic.name === "Other") {
+                            if (topic?.id) {
+                                otherGroupId = topic.id;
+                            }
+                            otherArticles.push(...articles);
+                            articles = [];
+                        }
+
                         return {
                             key: topic_id,
                             title: topic?.name || topic_id,
@@ -198,6 +208,13 @@ export function useTabInfos(
                     })
                 );
                 tabInfos.push(...topicTabInfos.filter((t) => t.articles.length > 0));
+                tabInfos.push({
+                    key: otherGroupId,
+                    title: "Other",
+                    icon: <></>,
+                    isTopic: true,
+                    articles: otherArticles,
+                });
             } else {
                 listArticles = listArticles.filter((a) => !a.is_queued);
 
