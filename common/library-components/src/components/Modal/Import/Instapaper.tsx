@@ -5,23 +5,23 @@ import { ArticleImportSchema } from "./_Import";
 export default function InstapaperImportSettings({ onError, startImport, disabled }) {
     return (
         <div className="px-3">
-            <div className="mb-3">
-                Download your .CSV file export on the{" "}
+            <div className="mb-4 text-center">
+                First, download your .CSV file export on the{" "}
                 <a
-                    className="inline-block cursor-pointer font-bold transition-all hover:rotate-1"
+                    className="inline-block cursor-pointer font-medium transition-all hover:scale-[97%]"
                     href="https://www.instapaper.com/user"
                     target="_blank"
                     rel="noreferrer"
                 >
                     Instapaper settings page
                 </a>
-                , then upload it here.
+                .
             </div>
             <CSVImportSettings
                 onError={onError}
                 startImport={startImport}
                 disabled={disabled}
-                text="Please drop the .csv file here."
+                text="Then drop the .csv file here."
                 transformRows={transformCSVRows}
             />
         </div>

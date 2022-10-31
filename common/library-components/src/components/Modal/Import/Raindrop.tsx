@@ -5,23 +5,23 @@ import { ArticleImportSchema } from "./_Import";
 export default function RaindropImportSettings({ onError, startImport, disabled }) {
     return (
         <div className="px-3">
-            <div className="mb-3">
-                Create a new raindrop.io{" "}
+            <div className="mb-4 text-center">
+                Please start a new raindrop.io{" "}
                 <a
-                    className="inline-block cursor-pointer font-bold transition-all hover:rotate-2"
+                    className="inline-block cursor-pointer font-medium transition-all hover:scale-[97%]"
                     href="https://app.raindrop.io/settings/backups"
                     target="_blank"
                     rel="noreferrer"
                 >
                     file backup
                 </a>
-                , then upload the generated CSV file here once available.
+                .
             </div>
             <CSVImportSettings
                 onError={onError}
                 startImport={startImport}
                 disabled={disabled}
-                text="Please drop the generated .csv file here."
+                text="Then drop the generated .csv file here."
                 transformRows={transformCSVRows}
             />
         </div>

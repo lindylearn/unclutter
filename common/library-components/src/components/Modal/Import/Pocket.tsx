@@ -119,7 +119,7 @@ export default function PocketImportSettings({
     return (
         <div className="flex justify-center p-3">
             <button
-                className="bg-background dark:bg-backgroundDark rounded-lg px-2 py-0.5 shadow-sm transition-all hover:scale-95 disabled:cursor-not-allowed"
+                className="bg-background dark:bg-backgroundDark rounded-md px-3 py-1 shadow-sm transition-all hover:scale-[97%] disabled:cursor-not-allowed"
                 onClick={login}
                 disabled={disabled}
             >

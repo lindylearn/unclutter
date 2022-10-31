@@ -230,7 +230,7 @@ export default function ImportTab({
                 {Object.entries(importOptions).map(([id, { name, iconFile, backgroundColor }]) => (
                     <ImportCard
                         key={id}
-                        className={backgroundColor}
+                        className={clsx(id === activeOption && backgroundColor)}
                         onClick={() => setActiveOption(id)}
                     >
                         <h1
@@ -247,7 +247,7 @@ export default function ImportTab({
 
             <div
                 className={clsx(
-                    "flex h-32 flex-col justify-between gap-3 rounded-lg p-3 transition-all",
+                    "flex h-36 flex-col justify-between gap-3 rounded-lg p-4 transition-all",
                     activeOption && importOptions[activeOption].backgroundColor
                 )}
             >
@@ -284,7 +284,7 @@ export default function ImportTab({
                 )}
             </div>
 
-            <div className=" flex w-full justify-between">
+            <div className="flex w-full justify-between">
                 <div>
                     {lastProgress?.step || " "}
                     {lastProgress?.progress == 1.0 && <span>{" 🎉 "}Done!</span>}
@@ -333,7 +333,7 @@ export function ImportCard({
     return (
         <div
             className={clsx(
-                "cursor-pointer rounded-md bg-stone-50 p-3 transition-transform hover:scale-[99%] dark:bg-neutral-800",
+                "cursor-pointer rounded-md bg-stone-50 p-3 transition-all hover:scale-[98%] dark:bg-neutral-800",
                 className
             )}
             onClick={onClick}
