@@ -51,7 +51,7 @@ export default function UpgradeModalTab({ darkModeEnabled }: { darkModeEnabled: 
                     darkModeEnabled={darkModeEnabled}
                 />
                 <FeatureCard
-                    title="Import from Pocket, Instapaper & more"
+                    title="Back-up your library & import articles"
                     imgSrc="import.png"
                     icon={
                         <svg viewBox="0 0 512 512" className="h-4">

@@ -208,13 +208,15 @@ export function useTabInfos(
                     })
                 );
                 tabInfos.push(...topicTabInfos.filter((t) => t.articles.length > 0));
-                tabInfos.push({
-                    key: otherGroupId,
-                    title: "Other",
-                    icon: <></>,
-                    isTopic: true,
-                    articles: otherArticles,
-                });
+                if (otherArticles.length > 0) {
+                    tabInfos.push({
+                        key: otherGroupId,
+                        title: "Other",
+                        icon: <></>,
+                        isTopic: true,
+                        articles: otherArticles,
+                    });
+                }
             } else {
                 listArticles = listArticles.filter((a) => !a.is_queued);
 

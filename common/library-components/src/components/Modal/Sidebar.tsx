@@ -234,8 +234,7 @@ function SidebarFilterOption({
                 isActive
                     ? "bg-stone-100 dark:bg-neutral-800"
                     : "hover:bg-stone-100 dark:text-neutral-500 hover:dark:bg-neutral-800",
-                unavailable && "opacity-50",
-                unavailable && isActive && "bg-stone-100"
+                unavailable && (isActive ? "bg-stone-100" : "opacity-50")
             )}
             onClick={onClick}
         >
