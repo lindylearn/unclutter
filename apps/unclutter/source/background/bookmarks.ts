@@ -1,17 +1,12 @@
 import browser from "../common/polyfill";
 import type { Bookmarks } from "webextension-polyfill";
 import { getDomainFrom } from "../common/util";
+import { BookmarkedPage } from "@unclutter/library-components/dist/common";
 
 export function requestBookmarksPermission() {
     return browser.permissions.request({
         permissions: ["bookmarks"],
     });
-}
-
-export interface BookmarkedPage {
-    url: string;
-    time_added: number;
-    favorite: boolean;
 }
 
 const excludedDomains = ["mozilla.org", "support.mozilla.org"]; // ignore default bookmark on Firefox

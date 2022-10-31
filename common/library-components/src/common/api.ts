@@ -98,3 +98,33 @@ export async function checkHasSubscription(user_id: string, email: string): Prom
 
     return data?.is_subscribed || false;
 }
+
+export interface BookmarkedPage {
+    url: string;
+    time_added: number;
+    favorite: boolean;
+}
+export async function clusterLibraryArticles(
+    articles: BookmarkedPage[],
+    user_id: string
+): Promise<void> {
+    // normalize fields to reduce message size
+    const importData = {
+        urls: articles.map(({ url }) => url),
+        time_added: articles.map(({ time_added }) => time_added),
+        favorite: articles.map(({ favorite }) => favorite),
+    };
+
+    await fetch(
+        `${lindyApiUrl}/library/cluster_articles?${new URLSearchParams({
+            user_id,
+        })}`,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(importData),
+        }
+    );
+}

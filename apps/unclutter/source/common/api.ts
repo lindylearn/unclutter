@@ -3,7 +3,6 @@
 import type { GraphData } from "force-graph";
 import { Article } from "@unclutter/library-components/dist/store/_schema";
 import { LibraryInfo } from "./schema";
-import { BookmarkedPage } from "../background/bookmarks";
 
 // const lindyApiUrl = "http://localhost:8000";
 const lindyApiUrl = "https://api2.lindylearn.io";
@@ -55,31 +54,6 @@ export async function addArticlesToLibrary(
 
     const json = await response.json();
     return json.added;
-}
-
-export async function clusterLibraryArticles(
-    articles: BookmarkedPage[],
-    user_id: string
-): Promise<void> {
-    // normalize fields to reduce message size
-    const importData = {
-        urls: articles.map(({ url }) => url),
-        time_added: articles.map(({ time_added }) => time_added),
-        favorite: articles.map(({ favorite }) => favorite),
-    };
-
-    await fetch(
-        `${lindyApiUrl}/library/cluster_articles?${new URLSearchParams({
-            user_id,
-        })}`,
-        {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(importData),
-        }
-    );
 }
 
 export async function updateLibraryArticle(

@@ -3,6 +3,7 @@ import {
     setUnclutterLibraryAuth,
     checkHasSubscription,
     sendMessage,
+    clusterLibraryArticles,
 } from "@unclutter/library-components/dist/common";
 import { useContext, useEffect, useState } from "react";
 
@@ -18,33 +19,41 @@ export default function Welcome2Tab() {
 
     useEffect(() => {
         (async () => {
-            if (user && user.email) {
-                console.log(user);
+            if (!rep || !user || !user.email) {
+                return;
+            }
+
+            const userInfo = await rep.query.getUserInfo(); // get latest version
+            if (!userInfo) {
+                // new user signup
+                console.log("new user signup");
 
                 // fetch email subscription status
                 const onPaidPlan = await checkHasSubscription(user.id, user.email);
-
-                // create userInfo
-                await rep?.mutate.updateUserInfo({
+                const trialEnabled = false;
+                await rep.mutate.updateUserInfo({
                     id: user.id,
                     name: undefined,
                     signinProvider: user.app_metadata.provider as any,
                     email: user.email,
                     accountEnabled: true,
-                    trialEnabled: false,
+                    trialEnabled,
                     onPaidPlan,
                 });
 
-                // sendMessage({ event: "requestEnhance" });
-
-                // init extension replicache after insert
-                setUnclutterLibraryAuth(user.id);
+                if (onPaidPlan || trialEnabled) {
+                    await clusterLibraryArticles([], user.id);
+                }
             }
+
+            // sendMessage({ event: "requestEnhance" });
+
+            // init extension replicache after insert
+            setUnclutterLibraryAuth(user.id);
         })();
-    }, [user]);
+    }, [rep, user]);
 
     const userInfo = useSubscribe(rep, rep?.subscribe.getUserInfo(), null);
-
     if (!userInfo) {
         return <></>;
     }
@@ -61,7 +70,7 @@ export default function Welcome2Tab() {
             <h1>You successfully created an Unclutter account!</h1>
             <p>
                 From now on, your articles and highlights are backed-up and synchronized between
-                your devices. You can also now{" "}
+                your devices. You can also{" "}
                 <a
                     className="inline-block cursor-pointer font-medium underline underline-offset-2 transition-all hover:scale-[98%]"
                     href="/import"

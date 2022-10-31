@@ -287,7 +287,7 @@ export function ImportTab({
             <div className="flex w-full justify-between">
                 <div>
                     {lastProgress?.step || " "}
-                    {lastProgress?.progress == 1.0 && <span>{" 🎉 "}Done!</span>}
+                    {lastProgress?.progress == 1.0 && <span>{" 🎉 "}</span>}
                 </div>
                 <div>
                     {lastProgress?.minutesRemaining

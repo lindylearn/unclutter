@@ -1,5 +1,5 @@
+import { clusterLibraryArticles } from "@unclutter/library-components/dist/common";
 import type { Runtime, Tabs } from "webextension-polyfill";
-import { clusterLibraryArticles } from "../common/api";
 import { extensionSupportsUrl } from "../common/articleDetection";
 import { handleReportBrokenPage } from "../common/bugReport";
 import {
