@@ -13,7 +13,6 @@ import {
 import DashboardTab from "./tabs/Dashboard";
 import ExportTab from "./tabs/Export";
 import FavoritesTab from "./tabs/Favorites";
-import ImportTab from "./tabs/Import/_Import";
 import SearchTab from "./tabs/Search";
 import SettingsTab from "./tabs/Settings";
 import TopicsListTab from "./tabs/TopicsList";
@@ -21,6 +20,8 @@ import WelcomeTab from "./tabs/Welcome";
 import ModalTestTab from "./tabs/ModalTest";
 import Welcome2Tab from "./tabs/Welcome2";
 import { reportEventPosthog } from "../common/metrics";
+import Import2Tab from "./tabs/Import2";
+import ImportTab from "./tabs/Import/_Import";
 
 export interface LibraryTab {
     id: string;
@@ -127,6 +128,9 @@ export default function App() {
 
     if (location === "/welcome") {
         return <Welcome2Tab />;
+    }
+    if (location === "/import") {
+        return <Import2Tab />;
     }
 
     return <Redirect to="/welcome" />;

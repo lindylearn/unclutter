@@ -6,3 +6,4 @@ export * from "./Icons";
 export * from "./Charts";
 export * from "./Modal";
 export * from "./Dropdown";
+export * from "./Import";

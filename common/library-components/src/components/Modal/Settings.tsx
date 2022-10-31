@@ -3,6 +3,7 @@ import React, { ReactNode, useContext, useEffect, useRef, useState } from "react
 import { getBrowserType, quickReport } from "../../common";
 import { latestSettingsVersion, ReplicacheContext, Settings, UserInfo } from "../../store";
 import { getActivityColor } from "../Charts";
+import { saveAs } from "file-saver";
 
 export default function SettingsModalTab({
     userInfo,
@@ -50,6 +51,38 @@ export default function SettingsModalTab({
         getBrowserType() === "firefox"
             ? "https://addons.mozilla.org/en-GB/firefox/addon/unclutter-library"
             : "https://chrome.google.com/webstore/detail/bghgkooimeljolohebojceacblokenjn";
+
+    async function generateCSV() {
+        const articles = await rep?.query.listArticles();
+        const annotations = await rep?.query.listAnnotations();
+        if (!articles || !annotations) {
+            return;
+        }
+
+        const header = Object.keys(articles[0]).join(",");
+        const rows = articles.map((article) =>
+            Object.values(article)
+                .map((value) => (value?.toString().includes(",") ? `"${value}"` : value))
+                .join(",")
+        );
+        const bytes = new TextEncoder().encode([header].concat(rows).join("\r\n") + "\r\n");
+        const blob = new Blob([bytes], {
+            type: "data:text/csv;charset=utf-8",
+        });
+        saveAs(blob, "articles.csv");
+
+        const header2 = Object.keys(annotations[0]).join(",");
+        const rows2 = annotations.map((article) =>
+            Object.values(article)
+                .map((value) => (value?.toString().includes(",") ? `"${value}"` : value))
+                .join(",")
+        );
+        const bytes2 = new TextEncoder().encode([header2].concat(rows2).join("\r\n") + "\r\n");
+        const blob2 = new Blob([bytes2], {
+            type: "data:text/csv;charset=utf-8",
+        });
+        saveAs(blob2, "highlights.csv");
+    }
 
     return (
         <div className="animate-fadein mt-2 flex max-w-2xl flex-col gap-4">
@@ -102,6 +135,18 @@ export default function SettingsModalTab({
                                 <span>Thank you for supporting Unclutter!</span>
                             )}
                         </p>
+                        <div className="flex gap-3">
+                            <Button
+                                title="Import articles"
+                                href="https://library.lindylearn.io/import"
+                                darkModeEnabled={darkModeEnabled}
+                            />
+                            <Button
+                                title="Export data"
+                                onClick={generateCSV}
+                                darkModeEnabled={darkModeEnabled}
+                            />
+                        </div>
                     </>
                 </SettingsGroup>
             )}
@@ -121,17 +166,17 @@ export default function SettingsModalTab({
                     <>
                         <p>
                             Articles you visit are only saved in your browser. Create an account to
-                            back-up and sync your library with Pocket, Instaper, Raindrop, and more.
+                            back-up and import articles from Pocket, Instaper, Raindrop, and more.
                         </p>
-                        <div className="flex gap-2">
+                        <div className="flex gap-3">
                             <Button
                                 title="Create account"
                                 href="https://library.lindylearn.io/signup"
                                 darkModeEnabled={darkModeEnabled}
                             />
                             <Button
-                                title="Log in"
-                                href="https://library.lindylearn.io/login"
+                                title="Export data"
+                                onClick={generateCSV}
                                 darkModeEnabled={darkModeEnabled}
                             />
                         </div>
@@ -151,7 +196,7 @@ export default function SettingsModalTab({
                 }
             >
                 <p>Do you want to access your library from your browser's new tab page?</p>
-                <div className="flex gap-2">
+                <div className="flex gap-3">
                     <Button
                         title="Install New Tab"
                         href={unclutterLibraryLink}
@@ -178,7 +223,7 @@ export default function SettingsModalTab({
                     code, vote on the roadmap, or report bugs to make it better for everyone.
                 </p>
 
-                <div className="flex gap-2">
+                <div className="flex gap-3">
                     <Button
                         title="Open GitHub"
                         href="https://github.com/lindylearn/unclutter"
@@ -216,7 +261,7 @@ export default function SettingsModalTab({
                             placeholder="What is wrong or could work better?"
                             ref={messageRef}
                         />
-                        <div className="flex justify-end gap-2">
+                        <div className="flex justify-end gap-3">
                             <Button
                                 title="Send"
                                 darkModeEnabled={darkModeEnabled}
@@ -248,11 +293,11 @@ function SettingsGroup({
                 className
             )}
         >
-            <h2 className="mb-2 flex items-center gap-2 font-medium">
+            <h2 className="mb-2 flex items-center gap-3 font-medium">
                 {icon}
                 {title}
             </h2>
-            <div className="flex flex-col gap-2">{children}</div>
+            <div className="flex flex-col gap-3">{children}</div>
         </div>
     );
 }

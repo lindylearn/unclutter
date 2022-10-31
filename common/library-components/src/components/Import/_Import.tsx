@@ -6,8 +6,8 @@ import CSVImportSettings from "./CSV";
 import PocketImportSettings from "./Pocket";
 import RaindropImportSettings from "./Raindrop";
 import InstapaperImportSettings from "./Instapaper";
-import { UserInfo } from "../../../store";
-import { getBrowserType } from "../../../common";
+import { UserInfo } from "../../store";
+import { getBrowserType } from "../../common";
 
 const websocketUrl = "wss://api2.lindylearn.io:444/ws/clustering_results";
 // const websocketUrl = "ws://localhost:8000/ws/clustering_results";
@@ -64,7 +64,7 @@ export type ArticleImportSchema = {
     favorite?: number[];
 };
 
-export default function ImportTab({
+export function ImportTab({
     userInfo,
     reportEvent = () => {},
 }: {
@@ -100,9 +100,9 @@ export default function ImportTab({
     }, []);
 
     // update url, e.g. for the browser import to work
-    // useEffect(() => {
-    //     history.replaceState({}, "", `/import?provider=${activeOption}`);
-    // }, [activeOption]);
+    useEffect(() => {
+        history.replaceState({}, "", `/import?provider=${activeOption}`);
+    }, [activeOption]);
 
     // setup websocket and join user notifications
     const ws = useRef<WebSocket>();

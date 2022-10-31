@@ -8,6 +8,9 @@ import { useContext, useEffect, useState } from "react";
 
 import { ReplicacheContext, useSubscribe } from "@unclutter/library-components/dist/store";
 import Head from "next/head";
+import { reportEventPosthog } from "../../common/metrics";
+import Link from "next/link";
+import { LindyIcon } from "@unclutter/library-components/dist/components";
 
 export default function Welcome2Tab() {
     const rep = useContext(ReplicacheContext);
@@ -32,7 +35,7 @@ export default function Welcome2Tab() {
                     onPaidPlan,
                 });
 
-                sendMessage({ event: "requestEnhance" });
+                // sendMessage({ event: "requestEnhance" });
 
                 // init extension replicache after insert
                 setUnclutterLibraryAuth(user.id);
@@ -42,16 +45,30 @@ export default function Welcome2Tab() {
 
     const userInfo = useSubscribe(rep, rep?.subscribe.getUserInfo(), null);
 
+    if (!userInfo) {
+        return <></>;
+    }
+
     return (
-        <div className="font-text mb-10 flex flex-col gap-3 p-5 text-stone-900 dark:text-stone-200">
+        <div className="font-text mx-auto mt-5 flex max-w-3xl flex-col gap-4 p-5 text-stone-900 dark:text-stone-200">
             <Head>
                 <title>Your Unclutter Library</title>
             </Head>
+            {/* <header className="font-title fixed top-3 left-3 flex gap-2 text-2xl font-bold">
+                <LindyIcon className="w-8" /> Unclutter
+            </header> */}
 
             <h1>You successfully created an Unclutter account!</h1>
             <p>
                 From now on, your articles and highlights are backed-up and synchronized between
-                your devices. Open your library to import or export articles.
+                your devices. You can also now{" "}
+                <a
+                    className="inline-block cursor-pointer font-medium underline underline-offset-2 transition-all hover:scale-[98%]"
+                    href="/import"
+                >
+                    import articles to your library
+                </a>
+                .
             </p>
         </div>
     );
