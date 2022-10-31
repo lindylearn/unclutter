@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import React, { useEffect, useRef, useState } from "react";
+import React, { ReactNode, useEffect, useRef, useState } from "react";
 
 import BrowserBookmarksImportSettings from "./Bookmarks";
 import CSVImportSettings from "./CSV";
@@ -226,85 +226,90 @@ export default function ImportTab({
 
     return (
         <div className="flex w-full flex-col gap-4">
-            <p>
-                Below you can import articles from read-it-later lists or bookmarking apps.
-                <br /> This also improves the quality of the generated topics.
-            </p>
-            <ul className="flex gap-3">
+            <ul className="grid list-disc grid-cols-3 gap-4">
                 {Object.entries(importOptions).map(([id, { name, iconFile, backgroundColor }]) => (
-                    <h1 key={id} onClick={() => setActiveOption(id)} className={backgroundColor}>
-                        <img className="mr-2 inline-block h-5 w-5" src={`/logos/${iconFile}`} />
-                        {name}
-                    </h1>
+                    <ImportCard
+                        key={id}
+                        className={backgroundColor}
+                        onClick={() => setActiveOption(id)}
+                    >
+                        <h1
+                            key={id}
+                            onClick={() => setActiveOption(id)}
+                            className="flex h-full items-center justify-center font-medium"
+                        >
+                            <img className="mr-2 inline-block h-5 w-5" src={`/logos/${iconFile}`} />
+                            {name}
+                        </h1>
+                    </ImportCard>
                 ))}
             </ul>
-            <div>
+
+            <div
+                className={clsx(
+                    "flex h-32 flex-col justify-between gap-3 rounded-lg p-3 transition-all",
+                    activeOption && importOptions[activeOption].backgroundColor
+                )}
+            >
+                {activeOption === "pocket" && (
+                    <PocketImportSettings
+                        connectionStep={connectionStep}
+                        onError={onError}
+                        startImport={startImport}
+                        isRedirect={isRedirect}
+                        disabled={disabled}
+                    />
+                )}
+                {activeOption === "csv" && (
+                    <CSVImportSettings
+                        onError={onError}
+                        startImport={startImport}
+                        disabled={disabled}
+                    />
+                )}
+                {activeOption === "bookmarks" && <BrowserBookmarksImportSettings />}
+                {activeOption === "raindrop" && (
+                    <RaindropImportSettings
+                        onError={onError}
+                        startImport={startImport}
+                        disabled={disabled}
+                    />
+                )}
+                {activeOption === "instapaper" && (
+                    <InstapaperImportSettings
+                        onError={onError}
+                        startImport={startImport}
+                        disabled={disabled}
+                    />
+                )}
+            </div>
+
+            <div className=" flex w-full justify-between">
+                <div>
+                    {lastProgress?.step || " "}
+                    {lastProgress?.progress == 1.0 && <span>{" 🎉 "}Done!</span>}
+                </div>
+                <div>
+                    {lastProgress?.minutesRemaining
+                        ? `about ${lastProgress?.minutesRemaining} minute${
+                              lastProgress?.minutesRemaining !== 1 ? "s" : ""
+                          } left`
+                        : ""}
+                </div>
+            </div>
+
+            <div
+                className={clsx(
+                    "dark:bg-backgroundDark h-2 w-full rounded-lg bg-white",
+                    (!lastProgress || lastProgress?.progress === 0) && "opacity-0"
+                )}
+            >
                 <div
-                    className={clsx(
-                        "flex h-32 flex-col justify-between gap-2 rounded-lg p-3 shadow-inner transition-all",
-                        activeOption && importOptions[activeOption].backgroundColor
-                    )}
-                >
-                    {activeOption === "pocket" && (
-                        <PocketImportSettings
-                            connectionStep={connectionStep}
-                            onError={onError}
-                            startImport={startImport}
-                            isRedirect={isRedirect}
-                            disabled={disabled}
-                        />
-                    )}
-                    {activeOption === "csv" && (
-                        <CSVImportSettings
-                            onError={onError}
-                            startImport={startImport}
-                            disabled={disabled}
-                        />
-                    )}
-                    {activeOption === "bookmarks" && <BrowserBookmarksImportSettings />}
-                    {activeOption === "raindrop" && (
-                        <RaindropImportSettings
-                            onError={onError}
-                            startImport={startImport}
-                            disabled={disabled}
-                        />
-                    )}
-                    {activeOption === "instapaper" && (
-                        <InstapaperImportSettings
-                            onError={onError}
-                            startImport={startImport}
-                            disabled={disabled}
-                        />
-                    )}
-                </div>
-                <div className="mt-3 mb-5 flex flex-col items-start gap-2">
-                    <div className=" flex w-full justify-between">
-                        <div>
-                            {lastProgress?.step || " "}
-                            {lastProgress?.progress == 1.0 && <span>{" 🎉 "}Done!</span>}
-                        </div>
-                        <div>
-                            {lastProgress?.minutesRemaining
-                                ? `about ${lastProgress?.minutesRemaining} minute${
-                                      lastProgress?.minutesRemaining !== 1 ? "s" : ""
-                                  } left`
-                                : ""}
-                        </div>
-                    </div>
-                    <div
-                        className={clsx(
-                            "dark:bg-backgroundDark h-2 w-full rounded-lg bg-white",
-                            (!lastProgress || lastProgress?.progress == 0) && "opacity-0"
-                        )}
-                    >
-                        <div
-                            className="bg-lindy dark:bg-lindyDark h-full rounded-lg shadow-sm transition-all"
-                            style={{
-                                width: `${(lastProgress?.progress || 0) * 100}%`,
-                            }}
-                        />
-                    </div>
-                </div>
+                    className="bg-lindy dark:bg-lindyDark h-full rounded-lg shadow-sm transition-all"
+                    style={{
+                        width: `${(lastProgress?.progress || 0) * 100}%`,
+                    }}
+                />
             </div>
         </div>
     );
@@ -314,4 +319,26 @@ function getMinutesAgo(time: string): number {
     const now = new Date();
     const diffenceMs = now.getTime() - new Date(time).getTime();
     return Math.round(diffenceMs / (1000 * 60));
+}
+
+export function ImportCard({
+    className,
+    children,
+    onClick,
+}: {
+    className: string;
+    children: ReactNode;
+    onClick: () => void;
+}) {
+    return (
+        <div
+            className={clsx(
+                "cursor-pointer rounded-md bg-stone-50 p-3 transition-transform hover:scale-[99%] dark:bg-neutral-800",
+                className
+            )}
+            onClick={onClick}
+        >
+            {children}
+        </div>
+    );
 }
