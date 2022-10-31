@@ -2,6 +2,9 @@ import React, { ReactNode } from "react";
 import { getRandomLightColor } from "../../common";
 import { ResourceIcon } from "./numbers";
 
+const screenshotUrlBase = "https://library.lindylearn.io/upgrade/";
+// const screenshotUrlBase = "http://localhost:3000/upgrade/";
+
 export default function UpgradeModalTab({ darkModeEnabled }: { darkModeEnabled: boolean }) {
     return (
         <div className="flex min-h-full flex-col gap-4">
@@ -17,7 +20,7 @@ export default function UpgradeModalTab({ darkModeEnabled }: { darkModeEnabled: 
             <div className="grid list-disc grid-cols-2 gap-4">
                 <FeatureCard
                     title="AI organization of your library"
-                    imgSrc="/upgrade/topics.png"
+                    imgSrc="topics.png"
                     icon={
                         <svg className="h-4" viewBox="0 0 448 512">
                             <path
@@ -30,13 +33,13 @@ export default function UpgradeModalTab({ darkModeEnabled }: { darkModeEnabled: 
                 />
                 <FeatureCard
                     title="Graph view of related articles"
-                    imgSrc="/upgrade/graph.png"
+                    imgSrc="graph.png"
                     icon={<ResourceIcon type="links" />}
                     darkModeEnabled={darkModeEnabled}
                 />
                 <FeatureCard
-                    title="Full-text search & Google integration"
-                    imgSrc="/upgrade/google.png"
+                    title="Full-text search across all your articles"
+                    imgSrc="google.png"
                     icon={
                         <svg viewBox="0 0 512 512" className="h-4">
                             <path
@@ -48,8 +51,8 @@ export default function UpgradeModalTab({ darkModeEnabled }: { darkModeEnabled: 
                     darkModeEnabled={darkModeEnabled}
                 />
                 <FeatureCard
-                    title="Sync with Pocket, Instapaper & Readwise"
-                    imgSrc=""
+                    title="Import from Pocket, Instapaper & more"
+                    imgSrc="import.png"
                     icon={
                         <svg viewBox="0 0 512 512" className="h-4">
                             <path
@@ -126,7 +129,7 @@ function FeatureCard({
             </h2>
             <img
                 className="h-40 w-full rounded-md object-cover object-left-top dark:brightness-90"
-                src={imgSrc}
+                src={`${screenshotUrlBase}${imgSrc}`}
             />
         </div>
     );

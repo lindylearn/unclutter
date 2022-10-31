@@ -170,7 +170,7 @@ export default function SettingsModalTab({
                 >
                     <>
                         <p>
-                            Articles you visit are only saved in your browser. Create an account to
+                            Articles you visit are saved in your local browser. Create an account to
                             back-up and import articles from Pocket, Instaper, Raindrop, and more.
                         </p>
                         <div className="flex gap-3">
