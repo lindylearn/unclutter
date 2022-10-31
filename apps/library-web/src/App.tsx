@@ -117,7 +117,7 @@ export default function App() {
         undefined
     );
 
-    if (!userInfo === undefined) {
+    if (!userInfo === undefined || settings === undefined) {
         // still fetching
         return <></>;
     }
@@ -180,7 +180,7 @@ export default function App() {
             >
                 <CSSTransition timeout={500} classNames="tab-page" key={location}>
                     <Switch location={location}>
-                        <Route path="/">
+                        {/* <Route path="/">
                             {((settings && settings?.tutorial_stage === undefined) ||
                                 (settings?.tutorial_stage && settings?.tutorial_stage < 3)) && (
                                 <Redirect to="/welcome" />
@@ -191,7 +191,7 @@ export default function App() {
                                     setSelectedTopicId={setSelectedTopicId}
                                 />
                             )}
-                        </Route>
+                        </Route> */}
 
                         <Route path="/filter">
                             <DashboardTab
