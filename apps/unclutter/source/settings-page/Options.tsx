@@ -167,7 +167,7 @@ function OptionsPage({}) {
                     <DomainSettingsList />
                 </OptionsGroup>
 
-                <OptionsGroup
+                {/* <OptionsGroup
                     headerText="Highlights"
                     iconSvg={
                         <svg className="w-5" viewBox="0 0 512 512">
@@ -190,23 +190,7 @@ function OptionsPage({}) {
                         </a>{" "}
                         saved in your browser. Toggle the feature via the "pen" toolbar icon.
                     </p>
-                    {/* <FeatureFlagSwitch
-                        featureFlagKey={hypothesisSyncFeatureFlag}
-                        onChange={onChangeHypothesisSync}
-                    >
-                        Back-up notes to my{" "}
-                        <a
-                            href="https://web.hypothes.is"
-                            className="underline"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            Hypothes.is
-                        </a>{" "}
-                        account
-                    </FeatureFlagSwitch>
-                    {hypothesisEnabled && <HypothesisConfig />} */}
-                </OptionsGroup>
+                </OptionsGroup> */}
 
                 <OptionsGroup
                     headerText="Social comments"
