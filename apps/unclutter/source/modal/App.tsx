@@ -3,7 +3,7 @@ import {
     LibraryModalPage,
     ModalContext,
 } from "@unclutter/library-components/dist/components/Modal";
-import { LocalScreenshotContext } from "@unclutter/library-components/dist/components/Article";
+import { LocalScreenshotContext } from "@unclutter/library-components/dist/components";
 
 import { LibraryState } from "../common/schema";
 import {
