@@ -12,7 +12,7 @@ import { LindyIcon } from "../Icons";
 import HighlightsTab from "./Highlights";
 import UpgradeModalTab from "./Upgrade";
 import SettingsModalTab from "./Settings";
-import SyncTab from "./Sync";
+import ImportTab from "./Import/_Import";
 
 export const ModalContext = createContext<{
     isVisible: boolean;
@@ -61,7 +61,7 @@ export function LibraryModalPage({
 
     const initialRender = useRef<boolean>(true);
     const [currentTab, setCurrentTab] = useState(
-        relatedLinkCount && (userInfo.onPaidPlan || userInfo.trialEnabled) ? "graph" : "stats"
+        relatedLinkCount && (userInfo.onPaidPlan || userInfo.trialEnabled) ? "graph" : "sync"
     );
     useEffect(() => {
         if (initialRender.current) {
@@ -256,7 +256,9 @@ function ModalContent({
                     />
                 )}
                 {currentTab === "signup" && <UpgradeModalTab darkModeEnabled={darkModeEnabled} />}
-                {currentTab === "sync" && <SyncTab />}
+                {currentTab === "sync" && (
+                    <ImportTab userInfo={userInfo} reportEvent={reportEvent} />
+                )}
                 {currentTab === "settings" && (
                     <SettingsModalTab
                         userInfo={userInfo}
