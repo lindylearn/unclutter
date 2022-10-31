@@ -83,7 +83,7 @@ export const settingsSchema = z.object({
     seen_settings_version: z.optional(z.number()),
     seen_highlights_version: z.optional(z.number()),
 });
-export const latestSettingsVersion = 1;
+export const latestSettingsVersion = 2;
 export const latestHighlightsVersion = 1;
 export type Settings = z.infer<typeof settingsSchema>;
 
