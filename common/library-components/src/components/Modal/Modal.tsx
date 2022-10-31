@@ -60,7 +60,7 @@ export function LibraryModalPage({
 
     const initialRender = useRef<boolean>(true);
     const [currentTab, setCurrentTab] = useState(
-        relatedLinkCount && (userInfo.onPaidPlan || userInfo.trialEnabled) ? "graph" : "sync"
+        relatedLinkCount && (userInfo.onPaidPlan || userInfo.trialEnabled) ? "graph" : "settings"
     );
     useEffect(() => {
         if (initialRender.current) {
@@ -261,6 +261,7 @@ function ModalContent({
                         currentArticle={currentArticle}
                         darkModeEnabled={darkModeEnabled}
                         showSignup={showSignup}
+                        reportEvent={reportEvent}
                     />
                 )}
             </div>

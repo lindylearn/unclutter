@@ -10,11 +10,13 @@ export default function SettingsModalTab({
     currentArticle,
     darkModeEnabled,
     showSignup,
+    reportEvent = () => {},
 }: {
     userInfo: UserInfo;
     currentArticle?: string;
     darkModeEnabled: boolean;
     showSignup: boolean;
+    reportEvent?: (event: string, data?: any) => void;
 }) {
     const rep = useContext(ReplicacheContext);
     const [settings, setSettings] = useState<Settings>();
@@ -105,7 +107,7 @@ export default function SettingsModalTab({
                     See what you've read over the last weeks, get back to articles you didn't
                     finish, or review your highlights. It's all just one{" "}
                     <span
-                        className="inline-block rounded-md bg-stone-200 px-1 dark:bg-neutral-700"
+                        className="inline-block rounded-md bg-stone-200 px-1 font-medium dark:bg-neutral-700"
                         style={{
                             backgroundColor: getActivityColor(1, darkModeEnabled),
                         }}
@@ -140,11 +142,13 @@ export default function SettingsModalTab({
                                 title="Import articles"
                                 href="https://library.lindylearn.io/import"
                                 darkModeEnabled={darkModeEnabled}
+                                reportEvent={reportEvent}
                             />
                             <Button
                                 title="Export data"
                                 onClick={generateCSV}
                                 darkModeEnabled={darkModeEnabled}
+                                reportEvent={reportEvent}
                             />
                         </div>
                     </>
@@ -173,11 +177,13 @@ export default function SettingsModalTab({
                                 title="Create account"
                                 href="https://library.lindylearn.io/signup"
                                 darkModeEnabled={darkModeEnabled}
+                                reportEvent={reportEvent}
                             />
                             <Button
                                 title="Export data"
                                 onClick={generateCSV}
                                 darkModeEnabled={darkModeEnabled}
+                                reportEvent={reportEvent}
                             />
                         </div>
                     </>
@@ -202,6 +208,7 @@ export default function SettingsModalTab({
                         href={unclutterLibraryLink}
                         darkModeEnabled={darkModeEnabled}
                         isNew={(settings?.seen_settings_version || 0) < 1}
+                        reportEvent={reportEvent}
                     />
                 </div>
             </SettingsGroup>
@@ -228,16 +235,19 @@ export default function SettingsModalTab({
                         title="Open GitHub"
                         href="https://github.com/lindylearn/unclutter"
                         darkModeEnabled={darkModeEnabled}
+                        reportEvent={reportEvent}
                     />
                     <Button
                         title="View roadmap"
                         href="https://unclutter.canny.io/"
                         darkModeEnabled={darkModeEnabled}
+                        reportEvent={reportEvent}
                     />
                     <Button
                         title="Report issue"
                         onClick={() => setBugReportOpen(!bugReportOpen)}
                         darkModeEnabled={darkModeEnabled}
+                        reportEvent={reportEvent}
                     />
                 </div>
             </SettingsGroup>
@@ -266,6 +276,7 @@ export default function SettingsModalTab({
                                 title="Send"
                                 darkModeEnabled={darkModeEnabled}
                                 onClick={submitReport}
+                                reportEvent={reportEvent}
                             />
                         </div>
                     </SettingsGroup>
@@ -293,7 +304,7 @@ function SettingsGroup({
                 className
             )}
         >
-            <h2 className="mb-2 flex items-center gap-3 font-medium">
+            <h2 className="mb-2 flex items-center gap-2 font-medium">
                 {icon}
                 {title}
             </h2>
@@ -309,6 +320,7 @@ function Button({
     primary,
     darkModeEnabled,
     isNew,
+    reportEvent,
 }: {
     title: string;
     href?: string;
@@ -316,6 +328,7 @@ function Button({
     primary?: boolean;
     darkModeEnabled: boolean;
     isNew?: boolean;
+    reportEvent: (event: string, data?: any) => void;
 }) {
     return (
         <a
@@ -324,7 +337,10 @@ function Button({
                 primary && "dark:text-stone-800"
             )}
             style={{ background: getActivityColor(primary ? 4 : 1, false) }}
-            onClick={onClick}
+            onClick={() => {
+                onClick?.();
+                reportEvent("clickSettingsButton", { title });
+            }}
             href={href}
             target="_blank"
             rel="noopener noreferrer"
