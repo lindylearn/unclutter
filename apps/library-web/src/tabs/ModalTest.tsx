@@ -48,6 +48,7 @@ export default function ModalTestTab({}) {
 
     const userInfo = useSubscribe(rep, rep?.subscribe.getUserInfo(), null);
     if (userInfo) {
+        userInfo.accountEnabled = false;
         userInfo.trialEnabled = false;
     }
 
@@ -71,7 +72,7 @@ export default function ModalTestTab({}) {
                     userInfo={userInfo}
                     darkModeEnabled={darkModeEnabled}
                     showSignup={true}
-                    currentArticle={article?.url}
+                    // currentArticle={article?.url}
                     initialTopic={topic}
                     graph={graph}
                     // relatedLinkCount={2}

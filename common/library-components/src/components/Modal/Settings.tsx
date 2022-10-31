@@ -120,13 +120,18 @@ export default function SettingsModalTab({
                 >
                     <>
                         <p>
-                            Right now, articles you visit are only saved in your browser. Create an
-                            account to back-up and access your library across devices.
+                            Articles you visit are only saved in your browser. Create an account to
+                            back-up and sync your library with Pocket, Instaper, Raindrop, and more.
                         </p>
                         <div className="flex gap-2">
                             <Button
                                 title="Create account"
                                 href="https://library.lindylearn.io/signup"
+                                darkModeEnabled={darkModeEnabled}
+                            />
+                            <Button
+                                title="Log in"
+                                href="https://library.lindylearn.io/login"
                                 darkModeEnabled={darkModeEnabled}
                             />
                         </div>

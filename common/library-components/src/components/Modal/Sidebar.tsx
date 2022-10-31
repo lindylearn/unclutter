@@ -166,7 +166,7 @@ function getModalTabOptions(
             ),
         },
         showSignup && {
-            label: "More",
+            label: "Sign up",
             value: "signup",
             unavailable: true,
             svg: (

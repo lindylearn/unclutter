@@ -120,16 +120,16 @@ export default function App() {
         // still fetching
         return <></>;
     }
-    if (!userInfo || (!userInfo.onPaidPlan && !userInfo.trialEnabled)) {
-        return <Welcome2Tab />;
-    }
 
-    if (location === "/link") {
-        return <Welcome2Tab />;
-    }
     if (location === "/modal") {
         return <ModalTestTab />;
     }
+
+    if (location === "/welcome") {
+        return <Welcome2Tab />;
+    }
+
+    return <Redirect to="/welcome" />;
 
     return (
         <div className="bg-background dark:bg-backgroundDark font-text h-screen w-screen overflow-hidden pt-12 text-stone-900 dark:text-stone-300">

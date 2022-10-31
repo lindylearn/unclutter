@@ -8,13 +8,17 @@
     import ElementPickerModifierDialog from "./ElementPickerDialog.svelte";
     import UiControlWithDialog from "./UIControlWithDialog.svelte";
 
+    export let domain: string;
     export let elementPickerModifier: ElementPickerModifier;
     // export let textContainerModifier: TextContainerModifier;
 
     let defaultOpen: boolean = false;
     let activeElementBlocker: boolean = false;
     let captionMessage: string = `Is there an issue with this article?`;
-    if (elementPickerModifier.readingTimeModifier.likelyMainTextMissing) {
+    if (
+        elementPickerModifier.readingTimeModifier.likelyMainTextMissing &&
+        !domain.includes("lindylearn.io")
+    ) {
         captionMessage = `Sorry if this article doesn't work well.`;
         setDefaultOpen();
     }
