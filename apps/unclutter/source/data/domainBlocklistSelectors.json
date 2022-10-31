@@ -301,6 +301,7 @@
     ],
     "nytimes.com": [".css-vxcmzt"],
     "observablehq.com": [".mr3.lh-copy", "#showtitlewrapper"],
+    "oglobo.globo.com": [".tp-container-inner"],
     "osrp.lanl.gov": ["#backband", "#backband2", "#lanlbar", "#toolbar"],
     "radreads.co": [".tcb-flex-col"],
     "realpython.com": [".small.text-muted"],
