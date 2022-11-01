@@ -138,10 +138,17 @@ export default function SettingsModalTab({
                             )}
                         </p>
                         <div className="flex gap-3">
+                            {userInfo.onPaidPlan && (
+                                <Button
+                                    title="Manage subscription"
+                                    href="https://billing.stripe.com/p/login/5kA8x62Ap9y26v6144"
+                                    darkModeEnabled={darkModeEnabled}
+                                    reportEvent={reportEvent}
+                                />
+                            )}
                             <Button
                                 title="Import articles"
                                 href="https://library.lindylearn.io/import"
-                                // isNew={(settings?.seen_settings_version || 0) < 2}
                                 darkModeEnabled={darkModeEnabled}
                                 reportEvent={reportEvent}
                             />

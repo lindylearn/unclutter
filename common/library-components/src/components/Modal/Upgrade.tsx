@@ -68,18 +68,12 @@ export default function UpgradeModalTab({ darkModeEnabled }: { darkModeEnabled: 
             {/* <div className="flex-grow" /> */}
 
             <div className="mt-4 flex gap-4">
-                <a
-                    className="flex cursor-pointer items-center gap-2 rounded-md bg-stone-50 px-3 py-2 font-medium transition-transform hover:scale-[97%] dark:bg-neutral-800"
+                {/* <a
+                    className="flex cursor-pointer items-center gap-2 rounded-md bg-stone-50 px-3 py-2 font-medium transition-transform hover:scale-[98%] dark:bg-neutral-800"
                     href="https://opencollective.com/unclutter/contribute/supporter-46745"
                     target="_blank"
                     rel="noopener noreferrer"
                 >
-                    {/* <svg className="h-4" viewBox="0 0 320 512">
-                        <path
-                            fill="currentColor"
-                            d="M184 73.46C211.3 76.26 236.8 81.56 255.5 85.98C268.4 89.03 276.4 101.1 273.4 114.9C270.3 127.8 257.4 135.7 244.5 132.7C213.7 125.4 168.9 117 130.6 120.2C111.6 121.7 96.18 125.1 85.27 132.9C75.19 139.3 67.98 148.5 65.09 163.3C62.82 175 64.4 182.5 67.05 187.9C69.87 193.5 75.14 199.1 84.19 204.7C103.4 216.6 131.1 224.1 165.9 232.7L168.2 233.3C199.2 241.2 234.9 250.3 261.1 266.5C275 275.1 287.9 286.7 295.9 302.7C304 318.1 305.1 337.5 302 357.8C295.1 393.2 269.4 416.3 237.5 428.4C221.4 434.6 203.3 438.2 184 439.4V488C184 501.3 173.3 512 160 512C146.7 512 136 501.3 136 488V438.3C132.7 437.9 129.4 437.5 126.1 437.1L125.1 437C101.1 433.4 57.02 423.2 30.25 411.3C18.14 405.9 12.69 391.7 18.07 379.6C23.45 367.5 37.64 362 49.75 367.4C70.96 376.8 110.2 386.2 132.8 389.5C168.4 394.5 198.8 391.8 220.4 383.6C241.5 375.5 252.1 363.3 254.9 348.7C257.2 336.1 255.6 329.5 252.9 324.1C250.1 318.5 244.9 312.9 235.8 307.3C216.6 295.4 188 287.9 154.1 279.3L151.8 278.7C120.8 270.8 85.09 261.7 58.92 245.5C44.98 236.9 32.13 225.3 24.12 209.3C15.96 193 14.03 174.5 17.98 154.2C23.46 125.1 38.71 105.6 59.54 92.39C79.54 79.68 103.5 74.2 126.7 72.32C129.8 72.07 132.9 71.88 136 71.74V24C136 10.75 146.7 0 160 0C173.3 0 184 10.75 184 24L184 73.46z"
-                        />
-                    </svg> */}
                     Support on OpenCollective
                     <svg className="h-4" viewBox="0 0 448 512">
                         <path
@@ -87,21 +81,22 @@ export default function UpgradeModalTab({ darkModeEnabled }: { darkModeEnabled: 
                             d="M280 80C266.7 80 256 69.25 256 56C256 42.75 266.7 32 280 32H424C437.3 32 448 42.75 448 56V200C448 213.3 437.3 224 424 224C410.7 224 400 213.3 400 200V113.9L200.1 312.1C191.6 322.3 176.4 322.3 167 312.1C157.7 303.6 157.7 288.4 167 279L366.1 80H280zM0 120C0 89.07 25.07 64 56 64H168C181.3 64 192 74.75 192 88C192 101.3 181.3 112 168 112H56C51.58 112 48 115.6 48 120V424C48 428.4 51.58 432 56 432H360C364.4 432 368 428.4 368 424V312C368 298.7 378.7 288 392 288C405.3 288 416 298.7 416 312V424C416 454.9 390.9 480 360 480H56C25.07 480 0 454.9 0 424V120z"
                         />
                     </svg>
-                </a>
-                {/* <a
-                    className="flex cursor-pointer items-center gap-2 rounded-md bg-stone-50 px-3 py-2 font-medium transition-transform hover:scale-[97%] dark:bg-neutral-800"
-                    href="https://opencollective.com/athens/contribute/user-25523"
+                </a> */}
+
+                <a
+                    className="flex cursor-pointer items-center gap-2 rounded-md bg-stone-50 px-3 py-2 font-medium transition-transform hover:scale-[98%] dark:bg-neutral-800"
+                    href="https://buy.stripe.com/6oE4jfeq98Fk3L2bII"
                     target="_blank"
                     rel="noopener noreferrer"
                 >
-                    More information
+                    Support with 5.99€ per month
                     <svg className="h-4" viewBox="0 0 448 512">
                         <path
                             fill="currentColor"
                             d="M280 80C266.7 80 256 69.25 256 56C256 42.75 266.7 32 280 32H424C437.3 32 448 42.75 448 56V200C448 213.3 437.3 224 424 224C410.7 224 400 213.3 400 200V113.9L200.1 312.1C191.6 322.3 176.4 322.3 167 312.1C157.7 303.6 157.7 288.4 167 279L366.1 80H280zM0 120C0 89.07 25.07 64 56 64H168C181.3 64 192 74.75 192 88C192 101.3 181.3 112 168 112H56C51.58 112 48 115.6 48 120V424C48 428.4 51.58 432 56 432H360C364.4 432 368 428.4 368 424V312C368 298.7 378.7 288 392 288C405.3 288 416 298.7 416 312V424C416 454.9 390.9 480 360 480H56C25.07 480 0 454.9 0 424V120z"
                         />
                     </svg>
-                </a> */}
+                </a>
             </div>
         </div>
     );
