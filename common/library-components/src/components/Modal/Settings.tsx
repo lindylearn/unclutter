@@ -156,7 +156,7 @@ export default function SettingsModalTab({
                 </SettingsGroup>
             )}
 
-            {/* {!userInfo.accountEnabled && showSignup && (
+            {!userInfo.accountEnabled && (
                 <SettingsGroup
                     title="Account"
                     icon={
@@ -169,18 +169,15 @@ export default function SettingsModalTab({
                     }
                 >
                     <>
-                        <p>
-                            Articles you visit are saved in your local browser. Create an account to
-                            automatically back-up your library and import articles.
-                        </p>
+                        <p>Your articles and highlights are saved in your local browser.</p>
                         <div className="flex gap-3">
-                            <Button
+                            {/* <Button
                                 title="Create account"
                                 href="https://library.lindylearn.io/signup"
                                 isNew={(settings?.seen_settings_version || 0) < 2}
                                 darkModeEnabled={darkModeEnabled}
                                 reportEvent={reportEvent}
-                            />
+                            /> */}
                             <Button
                                 title="Export data"
                                 onClick={generateCSV}
@@ -190,7 +187,7 @@ export default function SettingsModalTab({
                         </div>
                     </>
                 </SettingsGroup>
-            )} */}
+            )}
 
             <SettingsGroup
                 title="Customization"
