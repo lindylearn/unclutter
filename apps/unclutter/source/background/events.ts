@@ -174,7 +174,7 @@ function handleMessage(
         browser.management.getSelf().then((extensionInfo) => sendResponse(extensionInfo.version));
         return true;
     } else if (message.event === "searchLibrary") {
-        search(message.query).then(sendResponse);
+        search(message.type, message.query).then(sendResponse);
         return true;
     }
 

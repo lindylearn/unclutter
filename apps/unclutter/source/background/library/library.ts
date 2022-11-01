@@ -48,7 +48,8 @@ export async function initLibrary() {
 
     rep = getBackgroundReplicacheProxy();
 
-    await initSearchIndex();
+    const userInfo = await rep.query.getUserInfo();
+    await initSearchIndex(userInfo, !!userId); // rebuild index after replicache migration
 
     try {
         await importLegacyAnnotations();

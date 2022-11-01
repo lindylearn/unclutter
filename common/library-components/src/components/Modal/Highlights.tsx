@@ -101,6 +101,7 @@ export default function HighlightsTab({
         (async () => {
             let hits = await getBrowser().runtime.sendMessage(getUnclutterExtensionId(), {
                 event: "searchLibrary",
+                type: "annotations",
                 query,
             });
             if (!hits) {

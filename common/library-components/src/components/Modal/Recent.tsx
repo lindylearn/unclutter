@@ -1,11 +1,14 @@
 import { DraggableArticleList, useTabInfos, useArticleListsCache } from "../../components";
-import React, { ReactNode, useState } from "react";
-import { getRandomLightColor } from "../../common";
+import React, { ReactNode, useEffect, useState } from "react";
+import { useDebounce } from "usehooks-ts";
+import clsx from "clsx";
+
+import { getBrowser, getRandomLightColor, getUnclutterExtensionId } from "../../common";
 import { Article, readingProgressFullClamp, Topic, UserInfo } from "../../store";
 import { ReadingProgress, ResourceIcon } from "./components/numbers";
-import clsx from "clsx";
 import { DraggableContext } from "../ArticleList/DraggableContext";
 import { getActivityColor } from "../Charts";
+import { SearchBox } from "./components/search";
 
 export default function RecentModalTab({
     userInfo,
@@ -30,17 +33,52 @@ export default function RecentModalTab({
     const tabInfos = useTabInfos(10, onlyUnread, lastFirst, domainFilter, userInfo);
     const [articleListsCache, setArticleListsCache] = useArticleListsCache(tabInfos);
 
+    const [searchedArticles, setSearchedArticles] = useState<Article[] | null>(null);
+    const [query, setQuery] = useState("");
+    useEffect(() => {
+        if (!query) {
+            setSearchedArticles(null);
+            return;
+        }
+        if (domainFilter) {
+            setDomainFilter(null);
+        }
+        (async () => {
+            let hits = await getBrowser().runtime.sendMessage(getUnclutterExtensionId(), {
+                event: "searchLibrary",
+                type: "articles",
+                query,
+            });
+            if (!hits) {
+                hits = [];
+            }
+            setSearchedArticles(
+                hits.map((h) => {
+                    return h.article;
+                })
+            );
+        })();
+    }, [query]);
+    const queryDebounced = useDebounce(query, 500);
+    useEffect(() => {
+        reportEvent("articlesSearch");
+    }, [queryDebounced]);
+
     return (
         <div className="flex flex-col gap-4">
             <DraggableContext
-                articleLists={articleListsCache}
+                articleLists={
+                    searchedArticles !== null
+                        ? { queue: articleListsCache?.["queue"] || [], search: searchedArticles }
+                        : articleListsCache
+                }
                 setArticleLists={setArticleListsCache}
                 reportEvent={reportEvent}
             >
                 <ArticleGroup
                     key="queue"
-                    articles={articleListsCache?.["queue"] || []}
                     groupKey="queue"
+                    articles={articleListsCache?.["queue"] || []}
                     color={getActivityColor(3, darkModeEnabled)}
                     darkModeEnabled={darkModeEnabled}
                     showTopic={showTopic}
@@ -54,24 +92,39 @@ export default function RecentModalTab({
                     setLastFirst={setLastFirst}
                     domainFilter={domainFilter}
                     setDomainFilter={setDomainFilter}
+                    query={query}
+                    setQuery={setQuery}
                     darkModeEnabled={darkModeEnabled}
                     reportEvent={reportEvent}
                 />
 
-                {tabInfos?.slice(1).map((tabInfo) => {
-                    return (
-                        // TopicGroup
-                        <ArticleGroup
-                            {...tabInfo}
-                            key={tabInfo.key}
-                            groupKey={tabInfo.key}
-                            articles={articleListsCache?.[tabInfo.key] || []}
-                            darkModeEnabled={darkModeEnabled}
-                            showTopic={showTopic}
-                            reportEvent={reportEvent}
-                        />
-                    );
-                })}
+                {searchedArticles !== null && (
+                    <ArticleGroup
+                        key="search"
+                        groupKey="search"
+                        articles={searchedArticles}
+                        color={getRandomLightColor("search", darkModeEnabled)}
+                        darkModeEnabled={darkModeEnabled}
+                        showTopic={showTopic}
+                        reportEvent={reportEvent}
+                    />
+                )}
+
+                {searchedArticles === null &&
+                    tabInfos?.slice(1).map((tabInfo) => {
+                        return (
+                            // TopicGroup
+                            <ArticleGroup
+                                {...tabInfo}
+                                key={tabInfo.key}
+                                groupKey={tabInfo.key}
+                                articles={articleListsCache?.[tabInfo.key] || []}
+                                darkModeEnabled={darkModeEnabled}
+                                showTopic={showTopic}
+                                reportEvent={reportEvent}
+                            />
+                        );
+                    })}
             </DraggableContext>
         </div>
     );
@@ -84,6 +137,8 @@ function PageFilters({
     setLastFirst,
     domainFilter,
     setDomainFilter,
+    query,
+    setQuery,
     darkModeEnabled,
     reportEvent = () => {},
 }: {
@@ -93,6 +148,8 @@ function PageFilters({
     setLastFirst: (state: boolean) => void;
     domainFilter: string | null;
     setDomainFilter: (domain: string | null) => void;
+    query;
+    setQuery;
     darkModeEnabled: boolean;
     reportEvent?: (event: string, data?: any) => void;
 }) {
@@ -159,6 +216,12 @@ function PageFilters({
                     color={getRandomLightColor(domainFilter, darkModeEnabled)}
                 />
             )}
+
+            <SearchBox
+                query={query}
+                setQuery={setQuery}
+                placeholder={`Search across your articles...`}
+            />
         </div>
     );
 }
@@ -267,7 +330,7 @@ function ArticleGroup({
                         Drag articles here to add them to your reading queue
                     </div>
                 )}
-                {groupKey !== "queue" && articles.length === 0 && (
+                {groupKey !== "queue" && groupKey !== "search" && articles.length === 0 && (
                     <div className="animate-fadein absolute top-0 left-0 flex h-full w-full select-none items-center justify-center">
                         All filtered articles are in your reading queue
                     </div>

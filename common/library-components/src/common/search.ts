@@ -1,14 +1,7 @@
 import { Index, Document } from "flexsearch";
 import { keys, get, set, createStore, UseStore, clear } from "idb-keyval";
 
-import {
-    Annotation,
-    Article,
-    ArticleText,
-    listAnnotations,
-    listArticleTexts,
-    RuntimeReplicache,
-} from "../store";
+import { Annotation, Article, ArticleText } from "../store";
 import { ReplicacheProxy } from "./messaging";
 
 export interface SearchResult {
@@ -42,13 +35,18 @@ export class SearchIndex {
     });
     private indexVersion = 1;
 
+    private idSuffix: string;
+    constructor(idSuffix: string) {
+        this.idSuffix = idSuffix;
+    }
+
     private indexStore: UseStore;
     async initialize(): Promise<boolean> {
         if (this.isLoaded) {
             return false;
         }
 
-        this.indexStore = createStore("flexsearch-index", "keyval");
+        this.indexStore = createStore(`flexsearch-index${this.idSuffix}`, "keyval");
 
         const savedIndexVersion = await get("indexVersion", this.indexStore);
         const savedKeys = await keys(this.indexStore);

@@ -141,7 +141,7 @@ export default function SettingsModalTab({
                             <Button
                                 title="Import articles"
                                 href="https://library.lindylearn.io/import"
-                                isNew={(settings?.seen_settings_version || 0) < 2}
+                                // isNew={(settings?.seen_settings_version || 0) < 2}
                                 darkModeEnabled={darkModeEnabled}
                                 reportEvent={reportEvent}
                             />
