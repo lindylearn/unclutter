@@ -86,6 +86,7 @@ export default function RecentModalTab({
                 />
 
                 <PageFilters
+                    userInfo={userInfo}
                     onlyUnread={onlyUnread}
                     lastFirst={lastFirst}
                     setOnlyUnread={setOnlyUnread}
@@ -113,7 +114,7 @@ export default function RecentModalTab({
                 )}
 
                 {searchedListCache === null &&
-                    tabInfos?.slice(1).map((tabInfo) => {
+                    tabInfos?.slice(1).map((tabInfo, i) => {
                         return (
                             // TopicGroup
                             <ArticleGroup
@@ -121,6 +122,11 @@ export default function RecentModalTab({
                                 key={tabInfo.key}
                                 groupKey={tabInfo.key}
                                 articles={articleListsCache?.[tabInfo.key] || []}
+                                showReadingProgress={
+                                    i === 0 && (userInfo.onPaidPlan || userInfo.trialEnabled)
+                                        ? false
+                                        : true
+                                }
                                 darkModeEnabled={darkModeEnabled}
                                 showTopic={showTopic}
                                 reportEvent={reportEvent}
@@ -133,6 +139,7 @@ export default function RecentModalTab({
 }
 
 function PageFilters({
+    userInfo,
     onlyUnread,
     lastFirst,
     setOnlyUnread,
@@ -144,6 +151,7 @@ function PageFilters({
     darkModeEnabled,
     reportEvent = () => {},
 }: {
+    userInfo: UserInfo;
     onlyUnread: boolean;
     lastFirst: boolean;
     setOnlyUnread: (state: boolean) => void;
@@ -219,11 +227,13 @@ function PageFilters({
                 />
             )}
 
-            <SearchBox
-                query={query}
-                setQuery={setQuery}
-                placeholder={`Search across your articles...`}
-            />
+            {(userInfo.onPaidPlan || userInfo.trialEnabled) && (
+                <SearchBox
+                    query={query}
+                    setQuery={setQuery}
+                    placeholder={`Search across your articles...`}
+                />
+            )}
         </div>
     );
 }
