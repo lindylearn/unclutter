@@ -7,7 +7,12 @@ import {
 } from "@unclutter/library-components/dist/common";
 import { useContext, useEffect, useState } from "react";
 
-import { ReplicacheContext, useSubscribe } from "@unclutter/library-components/dist/store";
+import {
+    PartialSyncState,
+    ReplicacheContext,
+    UserInfo,
+    useSubscribe,
+} from "@unclutter/library-components/dist/store";
 import Head from "next/head";
 import { reportEventPosthog } from "../../common/metrics";
 import Link from "next/link";
@@ -17,6 +22,21 @@ export default function Welcome2Tab() {
     const rep = useContext(ReplicacheContext);
     const { user } = useUser();
 
+    // @ts-ignore
+    // const partialSync: PartialSyncState | undefined = useSubscribe(
+    //     rep,
+    //     // @ts-ignore
+    //     rep?.subscribe.getPartialSyncState(),
+    //     undefined
+    // );
+
+    const userInfo: UserInfo | undefined = useSubscribe(
+        rep,
+        rep?.subscribe.getUserInfo(),
+        // @ts-ignore
+        undefined
+    );
+
     const [isSignup, setIsSignup] = useState(false);
     useEffect(() => {
         (async () => {
@@ -24,10 +44,11 @@ export default function Welcome2Tab() {
                 return;
             }
 
-            const userInfo = await rep.query.getUserInfo(); // get latest version
-            if (!userInfo) {
+            console.log(userInfo);
+            if (userInfo === null) {
                 // new user signup
                 setIsSignup(true);
+                console.log("new user signup");
 
                 // fetch email subscription status
                 const onPaidPlan = await checkHasSubscription(user.id, user.email);
@@ -52,19 +73,18 @@ export default function Welcome2Tab() {
             // init extension replicache after insert
             setUnclutterLibraryAuth(user.id);
         })();
-    }, [rep, user]);
+    }, [rep, user, userInfo]);
 
-    const userInfo = useSubscribe(rep, rep?.subscribe.getUserInfo(), null);
     if (!userInfo) {
         return <></>;
     }
 
     return (
-        <div className="font-text mx-auto mt-5 flex max-w-3xl flex-col gap-4 p-5 text-stone-900 dark:text-stone-200">
+        <div className="font-text mx-auto mt-3 flex max-w-3xl flex-col gap-4 p-5 text-stone-900 dark:text-stone-200">
             <Head>
                 <title>Your Unclutter Library</title>
             </Head>
-            {/* <header className="font-title fixed top-3 left-3 flex gap-2 text-2xl font-bold">
+            {/* <header className="font-title top-3 left-3 flex gap-2 text-2xl font-bold">
                 <LindyIcon className="w-8" /> Unclutter
             </header> */}
 
@@ -75,16 +95,45 @@ export default function Welcome2Tab() {
             )}
 
             <p>
-                From now on, your articles and highlights are backed-up and synchronized between
-                your devices. You can also{" "}
-                <a
-                    className="inline-block cursor-pointer font-medium underline underline-offset-2 transition-all hover:scale-[98%]"
-                    href="/import"
-                >
-                    import articles to your library
-                </a>
+                From now on, articles you read with Unclutter are available everywhere you sign in
+                to this website.
+            </p>
+
+            <p>
+                Your existing articles are currently being analyzed and categorized, which takes a
+                few minutes. To see the categorization status and import more articles, see the{" "}
+                <Link href="/import">
+                    <a className="inline-block cursor-pointer font-medium underline underline-offset-2 transition-all hover:scale-[98%]">
+                        import page
+                    </a>
+                </Link>
                 .
             </p>
+
+            {userInfo.onPaidPlan && (
+                <p>
+                    Thank you for the financial support! This project wouldn't be possible without
+                    it. For any questions or ideas, please create a{" "}
+                    <a
+                        className="inline-block cursor-pointer font-medium underline underline-offset-2 transition-all hover:scale-[98%]"
+                        href="https://github.com/lindylearn/unclutter/issues"
+                        target="_blank"
+                        rel="noreferrer"
+                    >
+                        GitHub issue
+                    </a>{" "}
+                    or email{" "}
+                    <a
+                        className="inline-block cursor-pointer font-medium underline underline-offset-2 transition-all hover:scale-[98%]"
+                        href="mailto:peter@lindylearn.io"
+                        target="_blank"
+                        rel="noreferrer"
+                    >
+                        peter@lindylearn.io
+                    </a>
+                    .
+                </p>
+            )}
         </div>
     );
 }
