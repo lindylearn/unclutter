@@ -92,6 +92,9 @@ export default class LibraryModifier implements PageModifier {
         // fetch or create article state (even if library UI not enabled)
         this.overlayManager.updateLibraryState(this.libraryState);
         this.fetchArticleState(rep);
+
+        // fetch latest state
+        rep.pull();
     }
 
     async fetchArticleState(rep: ReplicacheProxy) {
