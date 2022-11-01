@@ -17,6 +17,7 @@ export default function Welcome2Tab() {
     const rep = useContext(ReplicacheContext);
     const { user } = useUser();
 
+    const [isSignup, setIsSignup] = useState(false);
     useEffect(() => {
         (async () => {
             if (!rep || !user || !user.email) {
@@ -26,11 +27,11 @@ export default function Welcome2Tab() {
             const userInfo = await rep.query.getUserInfo(); // get latest version
             if (!userInfo) {
                 // new user signup
-                console.log("new user signup");
+                setIsSignup(true);
 
                 // fetch email subscription status
                 const onPaidPlan = await checkHasSubscription(user.id, user.email);
-                const trialEnabled = false;
+                const trialEnabled = true;
                 await rep.mutate.updateUserInfo({
                     id: user.id,
                     name: undefined,
@@ -67,7 +68,12 @@ export default function Welcome2Tab() {
                 <LindyIcon className="w-8" /> Unclutter
             </header> */}
 
-            <h1>You successfully created an Unclutter account!</h1>
+            {isSignup ? (
+                <h1>You successfully created an Unclutter account!</h1>
+            ) : (
+                <h1>You successfully logged in!</h1>
+            )}
+
             <p>
                 From now on, your articles and highlights are backed-up and synchronized between
                 your devices. You can also{" "}

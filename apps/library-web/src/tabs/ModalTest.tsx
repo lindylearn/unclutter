@@ -48,8 +48,8 @@ export default function ModalTestTab({}) {
 
     const userInfo = useSubscribe(rep, rep?.subscribe.getUserInfo(), null);
     if (userInfo) {
-        userInfo.accountEnabled = false;
-        userInfo.trialEnabled = false;
+        userInfo.accountEnabled = true;
+        userInfo.trialEnabled = true;
     }
 
     if (!userInfo) {

@@ -105,7 +105,6 @@ export default function RecentModalTab({
                         groupKey="search"
                         articles={searchedListCache["search"]}
                         articleLines={2}
-                        showReadingProgress={false}
                         color={getRandomLightColor("search", darkModeEnabled)}
                         darkModeEnabled={darkModeEnabled}
                         showTopic={showTopic}
@@ -122,11 +121,6 @@ export default function RecentModalTab({
                                 key={tabInfo.key}
                                 groupKey={tabInfo.key}
                                 articles={articleListsCache?.[tabInfo.key] || []}
-                                showReadingProgress={
-                                    i === 0 && (userInfo.onPaidPlan || userInfo.trialEnabled)
-                                        ? false
-                                        : true
-                                }
                                 darkModeEnabled={darkModeEnabled}
                                 showTopic={showTopic}
                                 reportEvent={reportEvent}
@@ -270,7 +264,6 @@ function ArticleGroup({
     color,
     articles,
     articleLines = 1,
-    showReadingProgress = true,
     isTopic,
     darkModeEnabled,
     showTopic,
@@ -282,7 +275,6 @@ function ArticleGroup({
     color?: string;
     articles: Article[];
     articleLines?: number;
-    showReadingProgress?: boolean;
     isTopic?: boolean;
     darkModeEnabled: boolean;
     showTopic: (topicId: string) => void;
@@ -297,43 +289,38 @@ function ArticleGroup({
 
     return (
         <div className="topic animate-fadein relative">
-            {showReadingProgress && (
-                <>
-                    {isTopic ? (
-                        <div className="topic-header mx-0.5 mb-2 flex justify-between">
-                            <h2
-                                className={clsx(
-                                    "title flex select-none items-center gap-2 font-medium",
-                                    isTopic &&
-                                        "cursor-pointer transition-transform hover:scale-[96%]"
-                                )}
-                                onClick={() => {
-                                    if (isTopic) {
-                                        showTopic(groupKey);
-                                    }
-                                }}
-                            >
-                                {icon}
-                                {title}
-                            </h2>
+            {isTopic ? (
+                <div className="topic-header mx-0.5 mb-2 flex justify-between">
+                    <h2
+                        className={clsx(
+                            "title flex select-none items-center gap-2 font-medium",
+                            isTopic && "cursor-pointer transition-transform hover:scale-[96%]"
+                        )}
+                        onClick={() => {
+                            if (isTopic) {
+                                showTopic(groupKey);
+                            }
+                        }}
+                    >
+                        {icon}
+                        {title}
+                    </h2>
 
-                            <ReadingProgress
-                                className="relative px-1.5 py-0.5"
-                                articleCount={articles?.length}
-                                readCount={readCount}
-                                color={color}
-                            />
-                        </div>
-                    ) : (
-                        <>
-                            <ReadingProgress
-                                className="absolute -top-[3rem] right-0 px-2 py-1"
-                                articleCount={articles?.length}
-                                readCount={readCount}
-                                color={color}
-                            />
-                        </>
-                    )}
+                    <ReadingProgress
+                        className="relative px-1.5 py-0.5"
+                        articleCount={articles?.length}
+                        readCount={readCount}
+                        color={color}
+                    />
+                </div>
+            ) : (
+                <>
+                    <ReadingProgress
+                        className="absolute -top-[3rem] right-0 px-2 py-1"
+                        articleCount={articles?.length}
+                        readCount={readCount}
+                        color={color}
+                    />
                 </>
             )}
 
