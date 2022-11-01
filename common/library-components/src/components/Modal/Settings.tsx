@@ -156,7 +156,7 @@ export default function SettingsModalTab({
                 </SettingsGroup>
             )}
 
-            {!userInfo.accountEnabled && showSignup && (
+            {/* {!userInfo.accountEnabled && showSignup && (
                 <SettingsGroup
                     title="Account"
                     icon={
@@ -190,7 +190,7 @@ export default function SettingsModalTab({
                         </div>
                     </>
                 </SettingsGroup>
-            )}
+            )} */}
 
             <SettingsGroup
                 title="Customization"
