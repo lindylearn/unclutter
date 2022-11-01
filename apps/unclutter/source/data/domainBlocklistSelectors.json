@@ -418,7 +418,10 @@
         "#tdi_99",
         "#tdi_59"
     ],
-    "theverge.com": [".duet--article--lede-background"],
+    "theverge.com": [
+        ".duet--article--lede-background",
+        ".duet--article--article-body-component.block.clear-both"
+    ],
     "thewalrus.ca": ["._form-content", ".code-block.code-block-4"],
     "tienphong.vn": [
         ".article__story.cms-relate",
