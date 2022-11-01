@@ -104,7 +104,10 @@ export default function RecentModalTab({
                         key="search"
                         groupKey="search"
                         articles={searchedListCache["search"]}
-                        articleLines={2}
+                        articleLines={Math.max(
+                            1,
+                            Math.min(5, Math.ceil(searchedListCache["search"].length / 5))
+                        )}
                         color={getRandomLightColor("search", darkModeEnabled)}
                         darkModeEnabled={darkModeEnabled}
                         showTopic={showTopic}
@@ -289,7 +292,7 @@ function ArticleGroup({
 
     return (
         <div className="topic animate-fadein relative">
-            {isTopic ? (
+            {isTopic && (
                 <div className="topic-header mx-0.5 mb-2 flex justify-between">
                     <h2
                         className={clsx(
@@ -313,15 +316,14 @@ function ArticleGroup({
                         color={color}
                     />
                 </div>
-            ) : (
-                <>
-                    <ReadingProgress
-                        className="absolute -top-[3rem] right-0 px-2 py-1"
-                        articleCount={articles?.length}
-                        readCount={readCount}
-                        color={color}
-                    />
-                </>
+            )}
+            {!isTopic && groupKey !== "search" && (
+                <ReadingProgress
+                    className="absolute -top-[3rem] right-0 px-2 py-1"
+                    articleCount={articles?.length}
+                    readCount={readCount}
+                    color={color}
+                />
             )}
 
             <div

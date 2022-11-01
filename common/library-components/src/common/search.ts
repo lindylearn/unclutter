@@ -213,13 +213,15 @@ export class SearchIndex {
         }
 
         // parse data schema
-        const paragraphHits = results[0].result.map((item) => ({
-            // @ts-ignore
-            id: item.doc.docId,
-            // @ts-ignore
-            sentences: [item.doc.paragraph],
-            main_sentence: null,
-        }));
+        const paragraphHits = results[0].result
+            .filter((item) => item.doc)
+            .map((item) => ({
+                // @ts-ignore
+                id: item.doc.docId,
+                // @ts-ignore
+                sentences: [item.doc.paragraph],
+                main_sentence: null,
+            }));
 
         let articleHits: SearchResult[] = paragraphHits;
         if (combineResults) {

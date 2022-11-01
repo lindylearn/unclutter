@@ -39,7 +39,7 @@ export default function UpgradeModalTab({ darkModeEnabled }: { darkModeEnabled: 
                 />
                 <FeatureCard
                     title="Full-text search across all your articles"
-                    imgSrc="google.png"
+                    imgSrc="search.png"
                     icon={
                         <svg viewBox="0 0 512 512" className="h-4">
                             <path
