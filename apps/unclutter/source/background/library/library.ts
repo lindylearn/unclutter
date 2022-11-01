@@ -1,4 +1,5 @@
 import {
+    clusterLibraryArticles,
     getUrlHash,
     normalizeUrl,
     ReplicacheProxy,
@@ -162,22 +163,26 @@ async function importLegacyAnnotations() {
     setFeatureFlag(hypothesisSyncFeatureFlag, false); // disable another import
 }
 
-async function migrateToAccount() {
+async function migrateToAccount(): Promise<boolean> {
     const localTx = new LocalWriteTransaction();
     const allLocalEntries = await localTx.scan().entries().toArray();
-    if (allLocalEntries.length > 0) {
-        console.log(
-            `Migrating ${allLocalEntries.length} local replicache entries to library account...`
-        );
-        // @ts-ignore
-        await importEntries(allLocalEntries as [string, ReadonlyJSONValue][]);
-
-        await Promise.all(allLocalEntries.map(([key, value]) => localTx.del(key)));
-
-        // other migration tasks
-        await deleteAllLocalScreenshots();
-        await migrateMetricsUser();
+    if (allLocalEntries.length === 0) {
+        return false;
     }
+
+    console.log(
+        `Migrating ${allLocalEntries.length} local replicache entries to library account...`
+    );
+    // @ts-ignore
+    await importEntries(allLocalEntries as [string, ReadonlyJSONValue][]);
+
+    await Promise.all(allLocalEntries.map(([key, value]) => localTx.del(key)));
+
+    // other migration tasks
+    await deleteAllLocalScreenshots();
+    await migrateMetricsUser();
+
+    return true;
 }
 
 export async function processReplicacheMessage(message) {

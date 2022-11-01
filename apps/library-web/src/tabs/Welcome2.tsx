@@ -62,16 +62,21 @@ export default function Welcome2Tab() {
                     trialEnabled,
                     onPaidPlan,
                 });
+                await new Promise((resolve) => setTimeout(resolve, 2000));
+
+                setUnclutterLibraryAuth(user.id);
 
                 if (onPaidPlan || trialEnabled) {
+                    // trigger topic clustering after upload
+                    // TODO ideally trigger this from extension
+                    await new Promise((resolve) => setTimeout(resolve, 10000));
                     await clusterLibraryArticles([], user.id);
                 }
+            } else {
+                setUnclutterLibraryAuth(user.id);
             }
 
-            // sendMessage({ event: "requestEnhance" });
-
-            // init extension replicache after insert
-            setUnclutterLibraryAuth(user.id);
+            // sendMessage({ event: "requestEnhance" })
         })();
     }, [rep, user, userInfo]);
 
