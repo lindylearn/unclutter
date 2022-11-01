@@ -44,7 +44,7 @@ function Home() {
     async function trigger() {
         setIsTriggering(true);
 
-        // await fetch("/api/syncExtensionCode");
+        await fetch("/api/syncExtensionCode");
 
         // delete previous state
         // await Promise.all(
@@ -79,11 +79,13 @@ function Home() {
             urls = articles.slice(3000).map((topic) => topic.url);
         }
 
-        await triggerScreenshots(
-            urls.slice(0, countRef.current.value),
-            prefixRef.current.value,
-            10
-        );
+        if (urls) {
+            await triggerScreenshots(
+                urls.slice(0, countRef.current.value),
+                prefixRef.current.value,
+                10
+            );
+        }
 
         setIsTriggering(false);
     }
