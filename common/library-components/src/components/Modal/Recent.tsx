@@ -6,7 +6,7 @@ import clsx from "clsx";
 import { getBrowser, getRandomLightColor, getUnclutterExtensionId } from "../../common";
 import { Article, readingProgressFullClamp, Topic, UserInfo } from "../../store";
 import { ReadingProgress, ResourceIcon } from "./components/numbers";
-import { DraggableContext } from "../ArticleList/DraggableContext";
+import { ArticleListsCache, DraggableContext } from "../ArticleList/DraggableContext";
 import { getActivityColor } from "../Charts";
 import { SearchBox } from "./components/search";
 
@@ -33,11 +33,11 @@ export default function RecentModalTab({
     const tabInfos = useTabInfos(10, onlyUnread, lastFirst, domainFilter, userInfo);
     const [articleListsCache, setArticleListsCache] = useArticleListsCache(tabInfos);
 
-    const [searchedArticles, setSearchedArticles] = useState<Article[] | null>(null);
+    const [searchedListCache, setSearchedListCache] = useState<ArticleListsCache | null>(null);
     const [query, setQuery] = useState("");
     useEffect(() => {
         if (!query) {
-            setSearchedArticles(null);
+            setSearchedListCache(null);
             return;
         }
         if (domainFilter) {
@@ -52,11 +52,15 @@ export default function RecentModalTab({
             if (!hits) {
                 hits = [];
             }
-            setSearchedArticles(
-                hits.map((h) => {
+            const searchedArticles: Article[] = hits
+                .map((h) => {
                     return h.article;
                 })
-            );
+                .filter((a?: Article) => a && !a.is_queued);
+            setSearchedListCache({
+                queue: articleListsCache?.["queue"] || [],
+                search: searchedArticles,
+            });
         })();
     }, [query]);
     const queryDebounced = useDebounce(query, 500);
@@ -67,12 +71,8 @@ export default function RecentModalTab({
     return (
         <div className="flex flex-col gap-4">
             <DraggableContext
-                articleLists={
-                    searchedArticles !== null
-                        ? { queue: articleListsCache?.["queue"] || [], search: searchedArticles }
-                        : articleListsCache
-                }
-                setArticleLists={setArticleListsCache}
+                articleLists={searchedListCache || articleListsCache}
+                setArticleLists={searchedListCache ? setSearchedListCache : setArticleListsCache}
                 reportEvent={reportEvent}
             >
                 <ArticleGroup
@@ -98,11 +98,13 @@ export default function RecentModalTab({
                     reportEvent={reportEvent}
                 />
 
-                {searchedArticles !== null && (
+                {searchedListCache !== null && (
                     <ArticleGroup
                         key="search"
                         groupKey="search"
-                        articles={searchedArticles}
+                        articles={searchedListCache["search"]}
+                        articleLines={2}
+                        showReadingProgress={false}
                         color={getRandomLightColor("search", darkModeEnabled)}
                         darkModeEnabled={darkModeEnabled}
                         showTopic={showTopic}
@@ -110,7 +112,7 @@ export default function RecentModalTab({
                     />
                 )}
 
-                {searchedArticles === null &&
+                {searchedListCache === null &&
                     tabInfos?.slice(1).map((tabInfo) => {
                         return (
                             // TopicGroup
@@ -258,6 +260,7 @@ function ArticleGroup({
     color,
     articles,
     articleLines = 1,
+    showReadingProgress = true,
     isTopic,
     darkModeEnabled,
     showTopic,
@@ -269,6 +272,7 @@ function ArticleGroup({
     color?: string;
     articles: Article[];
     articleLines?: number;
+    showReadingProgress?: boolean;
     isTopic?: boolean;
     darkModeEnabled: boolean;
     showTopic: (topicId: string) => void;
@@ -283,38 +287,43 @@ function ArticleGroup({
 
     return (
         <div className="topic animate-fadein relative">
-            {isTopic ? (
-                <div className="topic-header mx-0.5 mb-2 flex justify-between">
-                    <h2
-                        className={clsx(
-                            "title flex select-none items-center gap-2 font-medium",
-                            isTopic && "cursor-pointer transition-transform hover:scale-[96%]"
-                        )}
-                        onClick={() => {
-                            if (isTopic) {
-                                showTopic(groupKey);
-                            }
-                        }}
-                    >
-                        {icon}
-                        {title}
-                    </h2>
-
-                    <ReadingProgress
-                        className="relative px-1.5 py-0.5"
-                        articleCount={articles?.length}
-                        readCount={readCount}
-                        color={color}
-                    />
-                </div>
-            ) : (
+            {showReadingProgress && (
                 <>
-                    <ReadingProgress
-                        className="absolute -top-[3rem] right-0 px-2 py-1"
-                        articleCount={articles?.length}
-                        readCount={readCount}
-                        color={color}
-                    />
+                    {isTopic ? (
+                        <div className="topic-header mx-0.5 mb-2 flex justify-between">
+                            <h2
+                                className={clsx(
+                                    "title flex select-none items-center gap-2 font-medium",
+                                    isTopic &&
+                                        "cursor-pointer transition-transform hover:scale-[96%]"
+                                )}
+                                onClick={() => {
+                                    if (isTopic) {
+                                        showTopic(groupKey);
+                                    }
+                                }}
+                            >
+                                {icon}
+                                {title}
+                            </h2>
+
+                            <ReadingProgress
+                                className="relative px-1.5 py-0.5"
+                                articleCount={articles?.length}
+                                readCount={readCount}
+                                color={color}
+                            />
+                        </div>
+                    ) : (
+                        <>
+                            <ReadingProgress
+                                className="absolute -top-[3rem] right-0 px-2 py-1"
+                                articleCount={articles?.length}
+                                readCount={readCount}
+                                color={color}
+                            />
+                        </>
+                    )}
                 </>
             )}
 
