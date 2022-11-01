@@ -370,6 +370,23 @@
     ],
     "theblock.co": [".newsletterModal"],
     "theconstructor.org": [".cs-estimated-reading-time", "#toc_container"],
+    "theguardian.com": [
+        "#slot-body-end",
+        ".css-v339xn",
+        ".dcr-1k32900",
+        ".dcr-1ipsmly",
+        ".dcr-ie0ig6",
+        ".dcr-il3bi2",
+        ".dcr-1dptm1y",
+        ".dcr-4zleql",
+        ".css-wjce4j",
+        ".css-612pxb",
+        ".css-va24hr",
+        ".css-1vuhd6w",
+        ".css-7tjxy7",
+        ".css-zguaii",
+        ".css-1d3w5wq"
+    ],
     "theinformation.com": [".ti-awareness-bar"],
     "theleader.vn": [
         ".mangsec-bold",
