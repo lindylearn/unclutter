@@ -60,7 +60,7 @@ export function LibraryModalPage({
 
     const initialRender = useRef<boolean>(true);
     const [currentTab, setCurrentTab] = useState(
-        relatedLinkCount && (userInfo.onPaidPlan || userInfo.trialEnabled) ? "graph" : "list"
+        relatedLinkCount && (userInfo.onPaidPlan || userInfo.trialEnabled) ? "graph" : "stats"
     );
     useEffect(() => {
         if (initialRender.current) {
@@ -254,7 +254,9 @@ function ModalContent({
                         reportEvent={reportEvent}
                     />
                 )}
-                {currentTab === "signup" && <UpgradeModalTab darkModeEnabled={darkModeEnabled} />}
+                {currentTab === "signup" && (
+                    <UpgradeModalTab darkModeEnabled={darkModeEnabled} reportEvent={reportEvent} />
+                )}
                 {currentTab === "settings" && (
                     <SettingsModalTab
                         userInfo={userInfo}

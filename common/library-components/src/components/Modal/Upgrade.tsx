@@ -5,7 +5,13 @@ import { ResourceIcon } from "./components/numbers";
 const screenshotUrlBase = "https://library.lindylearn.io/upgrade/";
 // const screenshotUrlBase = "http://localhost:3000/upgrade/";
 
-export default function UpgradeModalTab({ darkModeEnabled }: { darkModeEnabled: boolean }) {
+export default function UpgradeModalTab({
+    darkModeEnabled,
+    reportEvent = () => {},
+}: {
+    darkModeEnabled: boolean;
+    reportEvent?: (event: string, data?: any) => void;
+}) {
     return (
         <div className="flex min-h-full flex-col gap-4">
             <h1 className="flex items-center gap-2 py-1 px-1 font-medium">
@@ -85,11 +91,12 @@ export default function UpgradeModalTab({ darkModeEnabled }: { darkModeEnabled: 
 
                 <a
                     className="flex cursor-pointer items-center gap-2 rounded-md bg-stone-50 px-3 py-2 font-medium transition-transform hover:scale-[98%] dark:bg-neutral-800"
-                    href="https://buy.stripe.com/6oE4jfeq98Fk3L2bII"
+                    href="https://buy.stripe.com/cN27vr1Dn5t84P6aEF"
                     target="_blank"
                     rel="noopener noreferrer"
+                    onClick={() => reportEvent("clickStripeButton")}
                 >
-                    Support with 5.99€ per month
+                    Support with $5.99 per month
                     <svg className="h-4" viewBox="0 0 448 512">
                         <path
                             fill="currentColor"

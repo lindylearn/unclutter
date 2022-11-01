@@ -95,8 +95,8 @@ export default function Welcome2Tab() {
             )}
 
             <p>
-                From now on, articles you read with Unclutter are available everywhere you sign in
-                to this website.
+                From now on, articles you read with the Unclutter extension are available everywhere
+                you sign in to this website.
             </p>
 
             <p>
@@ -112,8 +112,8 @@ export default function Welcome2Tab() {
 
             {userInfo.onPaidPlan && (
                 <p>
-                    Thank you for the financial support! This project wouldn't be possible without
-                    it. For any questions or ideas, please create a{" "}
+                    Seriously thank you for the financial support! This project wouldn't be possible
+                    without it. For any questions or ideas, just create a{" "}
                     <a
                         className="inline-block cursor-pointer font-medium underline underline-offset-2 transition-all hover:scale-[98%]"
                         href="https://github.com/lindylearn/unclutter/issues"
