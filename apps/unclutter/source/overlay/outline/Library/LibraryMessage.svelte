@@ -60,9 +60,7 @@
                     class="top-row font-title flex whitespace-pre text-base font-semibold leading-none"
                     in:fly={{ y: 10, duration: 300, easing: cubicOut }}
                 >
-                    Saved <span class="hide-tiny"
-                        >in <span class="hide-small">your </span>library</span
-                    >
+                    Saved <span class="hide-tiny">article</span>
                 </div>
             {/if}
 
@@ -123,13 +121,8 @@
         transition: background 0.3s ease-in-out 0.1s, transform 0.2s ease-in-out !important;
     }
 
-    @media (max-width: 250px) {
+    @media (max-width: 230px) {
         .hide-tiny {
-            display: none;
-        }
-    }
-    @media (max-width: 300px) {
-        .hide-small {
             display: none;
         }
     }
