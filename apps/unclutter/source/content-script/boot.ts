@@ -53,7 +53,7 @@ async function onIsLikelyArticle(domain: string) {
     const enableUnclutterMessage = await getFeatureFlag(enableBootUnclutterMessage);
     if (configuredEnable) {
         enablePageView("allowlisted");
-    } else if (enableUnclutterMessage) {
+    } else if (false && enableUnclutterMessage) {
         showUnclutterMessage();
     }
 }
