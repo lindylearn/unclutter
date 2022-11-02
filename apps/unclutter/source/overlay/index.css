@@ -29,6 +29,7 @@
     align-items: center !important;
     line-height: 1 !important;
     gap: 6px !important;
+    width: 26px !important;
 }
 .lindy-page-settings-pageadjacent {
     all: revert !important;
