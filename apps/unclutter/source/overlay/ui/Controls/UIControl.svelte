@@ -28,7 +28,6 @@
 <style global lang="postcss">
     .lindy-tooltp {
         position: relative !important;
-        filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.05)) !important;
 
         cursor: pointer !important;
     }
@@ -42,17 +41,19 @@
     }
     .lindy-tooltp:before {
         /* box */
-        top: 1px !important;
+        top: 0px !important;
         right: calc(100% + 6px) !important;
-        padding: 6px 8px !important;
+        padding: 4px 8px !important;
+        filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.05)) !important; /* drop-shadow-sm */
 
         display: block !important;
         content: attr(data-title) !important;
-        font-size: 14px !important;
+        font-size: 14px !important; /* text-sm */
+        line-height: 20px !important; /* text-sm */
 
         background: var(--background-color) !important;
         color: var(--text-color) !important;
-        border-radius: 5px !important;
+        border-radius: 6px !important;
         white-space: nowrap !important;
 
         font-family: Poppins, sans-serif !important;

@@ -10,9 +10,8 @@
 .lindy-page-settings-toprght,
 .lindy-page-settings-pageadjacent {
     --background-color: white !important;
-    --text-color: #374151 !important;
-    --color-muted: #9ca3af !important;
-
+    --text-color: #1f2937 !important; /* text-gray-800 */
+    --color-muted: #9ca3af !important; /* text-gray-400 */
     visibility: visible !important; /* show only once CSS applies */
 }
 
@@ -27,9 +26,9 @@
 
     display: flex !important;
     flex-direction: column !important;
-    align-items: flex-end !important;
+    align-items: center !important;
     line-height: 1 !important;
-    gap: 5px !important;
+    gap: 6px !important;
 }
 .lindy-page-settings-pageadjacent {
     all: revert !important;

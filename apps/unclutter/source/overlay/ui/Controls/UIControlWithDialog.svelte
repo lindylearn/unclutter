@@ -32,8 +32,8 @@
 
         background-color: var(--background-color) !important;
         color: #9ca3af !important;
-        border-radius: 5px !important;
-        filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.06)) drop-shadow(0 1px 2px rgb(0 0 0 / 0.05)) !important; /* custom shadow, lighter than tw 'drop-shadow' */
+        border-radius: 6px !important;
+        filter: drop-shadow(0 1px 2px rgb(0 0 0 / 0.1)) drop-shadow(0 1px 1px rgb(0 0 0 / 0.06)) !important; /* drop-shadow */
 
         cursor: auto !important;
 

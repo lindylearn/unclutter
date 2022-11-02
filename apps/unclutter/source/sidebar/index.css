@@ -54,7 +54,7 @@ svg.icon > path {
     position: relative;
 
     --background-color: var(--lindy-background-color);
-    --text-color: #374151; /* text-gray-700 */
+    --text-color: #1f2937; /* text-gray-800 */
 }
 .lindy-tooltp:before,
 .lindy-tooltp:after {
