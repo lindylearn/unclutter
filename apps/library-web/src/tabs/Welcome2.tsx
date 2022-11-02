@@ -94,26 +94,43 @@ export default function Welcome2Tab() {
             </header> */}
 
             {isSignup ? (
-                <h1>You successfully created an Unclutter account!</h1>
+                <>
+                    <h1>You successfully created an Unclutter account!</h1>
+
+                    <p>
+                        From now on, articles you read with the Unclutter extension are available
+                        everywhere you sign in to this website.
+                    </p>
+
+                    <p>
+                        Your existing articles are currently being analyzed and categorized, which
+                        takes a few minutes. To see the categorization status and import more
+                        articles, see the{" "}
+                        <Link href="/import">
+                            <a className="inline-block cursor-pointer font-medium underline underline-offset-2 transition-all hover:scale-[98%]">
+                                import page
+                            </a>
+                        </Link>
+                        .
+                    </p>
+                </>
             ) : (
-                <h1>You successfully logged in!</h1>
+                <>
+                    <h1>You successfully logged in!</h1>
+
+                    <p>Access your library from inside the Unclutter extension.</p>
+
+                    <p>
+                        To import more articles, see the{" "}
+                        <Link href="/import">
+                            <a className="inline-block cursor-pointer font-medium underline underline-offset-2 transition-all hover:scale-[98%]">
+                                import page
+                            </a>
+                        </Link>
+                        .
+                    </p>
+                </>
             )}
-
-            <p>
-                From now on, articles you read with the Unclutter extension are available everywhere
-                you sign in to this website.
-            </p>
-
-            <p>
-                Your existing articles are currently being analyzed and categorized, which takes a
-                few minutes. To see the categorization status and import more articles, see the{" "}
-                <Link href="/import">
-                    <a className="inline-block cursor-pointer font-medium underline underline-offset-2 transition-all hover:scale-[98%]">
-                        import page
-                    </a>
-                </Link>
-                .
-            </p>
 
             {userInfo.onPaidPlan && (
                 <p>
