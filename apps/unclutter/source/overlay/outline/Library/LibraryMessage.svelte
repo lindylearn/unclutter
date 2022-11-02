@@ -64,18 +64,21 @@
                 </div>
             {/if}
 
-            {#if !(libraryState.userInfo?.onPaidPlan || libraryState.userInfo?.trialEnabled) && libraryState.libraryInfo?.article}
+            {#if !(libraryState.userInfo?.onPaidPlan || libraryState.userInfo?.trialEnabled) && libraryState.libraryInfo?.article && libraryState?.readingProgress}
                 <div
                     class="bottom-row mt-2 flex items-center gap-1 text-gray-400 dark:text-stone-600"
                     in:fly={{ y: 10, duration: 200, easing: cubicOut }}
                 >
-                    <!-- <svg class="h-4 w-4" viewBox="0 0 448 512"
-                ><path
-                    fill="currentColor"
-                    d="M152 64H296V24C296 10.75 306.7 0 320 0C333.3 0 344 10.75 344 24V64H384C419.3 64 448 92.65 448 128V448C448 483.3 419.3 512 384 512H64C28.65 512 0 483.3 0 448V128C0 92.65 28.65 64 64 64H104V24C104 10.75 114.7 0 128 0C141.3 0 152 10.75 152 24V64zM48 448C48 456.8 55.16 464 64 464H384C392.8 464 400 456.8 400 448V192H48V448z"
-                /></svg
-            > -->
-                    Added {getRelativeTime(libraryState.libraryInfo.article.time_added * 1000)}
+                    <!-- <svg class="h-3" viewBox="0 0 640 512">
+                        <path
+                            fill="currentColor"
+                            d="M443.5 17.94C409.8 5.608 375.3 0 341.4 0C250.1 0 164.6 41.44 107.1 112.1c-6.752 8.349-2.752 21.07 7.375 24.68C303.1 203.8 447.4 258.3 618.4 319.1c1.75 .623 3.623 .9969 5.5 .9969c8.25 0 15.88-6.355 16-15.08C643 180.7 567.2 62.8 443.5 17.94zM177.1 108.4c42.88-36.51 97.76-58.07 154.5-60.19c-4.5 3.738-36.88 28.41-70.25 90.72L177.1 108.4zM452.6 208.1L307.4 155.4c14.25-25.17 30.63-47.23 48.13-63.8c25.38-23.93 50.13-34.02 67.51-27.66c17.5 6.355 29.75 29.78 33.75 64.42C459.6 152.4 457.9 179.6 452.6 208.1zM497.8 224.4c7.375-34.89 12.13-76.76 4.125-117.9c45.75 38.13 77.13 91.34 86.88 150.9L497.8 224.4zM576 488.1C576 501.3 565.3 512 552 512L23.99 510.4c-13.25 0-24-10.72-24-23.93c0-13.21 10.75-23.93 24-23.93l228 .6892l78.35-214.8l45.06 16.5l-72.38 198.4l248.1 .7516C565.3 464.1 576 474.9 576 488.1z"
+                        />
+                    </svg> -->
+                    {libraryState.readingProgress.queueCount} article{libraryState.readingProgress
+                        .queueCount === 1
+                        ? ""
+                        : "s"} in <span class="hide-tiny">reading</span> queue
                 </div>
             {:else if libraryState?.linkCount}
                 <div
@@ -96,7 +99,10 @@
         </div>
 
         {#if libraryState?.readingProgress}
-            <div class="absolute top-0 right-0 flex items-start gap-1 overflow-hidden p-3" in:fade>
+            <div
+                class="absolute top-0 right-0 flex items-start gap-1.5 overflow-hidden p-3"
+                in:fade
+            >
                 <ResourceStat
                     type="articles"
                     value={libraryState.readingProgress.articleCount -

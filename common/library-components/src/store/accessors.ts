@@ -250,6 +250,7 @@ export async function getTopicArticlesCount(
 export type ReadingProgress = {
     articleCount: number;
     completedCount: number;
+    queueCount: number;
     annotationCount: number;
 };
 export async function getReadingProgress(
@@ -274,6 +275,7 @@ export async function getReadingProgress(
         articleCount: articles.length,
         completedCount: articles.filter((a) => a.reading_progress >= readingProgressFullClamp)
             .length,
+        queueCount: articles.filter((a) => a.is_queued).length,
         annotationCount: annotations.length,
     };
 }
