@@ -130,14 +130,14 @@ function NumberStats({
     return (
         <div className="grid grid-cols-5 gap-4">
             <BigNumber
-                value={unreadCount}
-                tag={`unread article${unreadCount !== 1 ? "s" : ""}`}
-                icon={<ResourceIcon type="articles" large />}
-            />
-            <BigNumber
                 value={readArticlesCount}
                 tag={`read article${readArticlesCount !== 1 ? "s" : ""}`}
                 icon={<ResourceIcon type="articles_completed" large />}
+            />
+            <BigNumber
+                value={unreadCount}
+                tag={`unread article${unreadCount !== 1 ? "s" : ""}`}
+                icon={<ResourceIcon type="articles" large />}
             />
             <BigNumber
                 value={allAnnotations?.length}

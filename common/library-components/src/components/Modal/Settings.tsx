@@ -207,7 +207,7 @@ export default function SettingsModalTab({
                     </svg>
                 }
             >
-                <p>Do you want to access your library from your browser's new tab page?</p>
+                <p>Do you want to access your reading queue from your new tab page?</p>
                 <div className="flex gap-3">
                     <Button
                         title="Install New Tab"
@@ -232,20 +232,20 @@ export default function SettingsModalTab({
             >
                 <p>
                     Unclutter is open-source
-                    {showSignup ? " and funded by the community" : ""}! Suggest features, contribute
-                    code, vote on the roadmap, or report bugs to make it better for everyone.
+                    {showSignup ? " and funded by the community" : ""}! Vote on the roadmap, suggest
+                    features, or contribute code to improve reading for everyone.
                 </p>
 
                 <div className="flex gap-3">
                     <Button
-                        title="Open GitHub"
-                        href="https://github.com/lindylearn/unclutter"
+                        title="View roadmap"
+                        href="https://unclutter.canny.io/"
                         darkModeEnabled={darkModeEnabled}
                         reportEvent={reportEvent}
                     />
                     <Button
-                        title="View roadmap"
-                        href="https://unclutter.canny.io/"
+                        title="Open GitHub"
+                        href="https://github.com/lindylearn/unclutter"
                         darkModeEnabled={darkModeEnabled}
                         reportEvent={reportEvent}
                     />
