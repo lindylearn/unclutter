@@ -44,7 +44,7 @@ html.pageview.pageview > body {
 
 .lindy-toast {
     position: fixed !important;
-    contain: strict !important;
+    contain: layout style !important;
     top: 10px !important;
     right: 10px !important;
     z-index: 9999999999 !important;
@@ -60,24 +60,24 @@ html.pageview.pageview > body {
 }
 @keyframes toastTimeout {
     0% {
-        visibility: hidden !important;
-        opacity: 0 !important;
-        transform: translate3d(200px, 0, 0) !important;
+        visibility: hidden;
+        opacity: 0;
+        transform: translate3d(200px, 0, 0);
     }
     5% {
-        visibility: visible !important;
-        opacity: 1 !important;
-        transform: translate3d(0, 0, 0) !important;
+        visibility: visible;
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
     }
     95% {
-        visibility: visible !important;
-        opacity: 1 !important;
-        transform: translate3d(0, 0, 0) !important;
+        visibility: visible;
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
     }
     100% {
-        visibility: hidden !important;
-        opacity: 0 !important;
-        transform: translate3d(10px, 0, 0) !important;
+        visibility: hidden;
+        opacity: 0;
+        transform: translate3d(10px, 0, 0);
     }
 }
 .lindy-toast:hover {
@@ -111,11 +111,9 @@ html.pageview.pageview > body {
 }
 
 .lindy-toast-progressbar {
-    width: 100% !important;
     height: 3px !important;
     background-color: #faf3ce !important;
-}
-.lindy-toast-progressbar {
+
     animation: toastProgressBar 5s linear !important;
     animation-delay: 0.5s !important;
     animation-fill-mode: both !important;
@@ -125,10 +123,10 @@ html.pageview.pageview > body {
 }
 @keyframes toastProgressBar {
     0% {
-        width: 0 !important;
+        width: 0;
     }
     100% {
-        width: 100% !important;
+        width: 100%;
     }
 }
 
@@ -213,14 +211,14 @@ html.pageview.pageview > body {
 }
 @keyframes fadeInDot {
     from {
-        opacity: 0 !important;
-        width: 0px !important;
-        height: 0px !important;
+        opacity: 0;
+        width: 0px;
+        height: 0px;
     }
     to {
-        opacity: 1 !important;
-        width: 10px !important;
-        height: 10px !important;
+        opacity: 1;
+        width: 10px;
+        height: 10px;
     }
 }
 
