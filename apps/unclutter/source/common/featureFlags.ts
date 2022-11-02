@@ -33,6 +33,7 @@ export async function getAllFeatureFlags() {
 export const allowlistDomainOnManualActivationFeatureFlag = "allowlist-domain-manual-activation";
 export const collectAnonymousMetricsFeatureFlag = "collect-anonymous-metrics";
 export const enableBootUnclutterMessage = "enable-boot-unclutter-message";
+export const enableArchiveDetection = "enable-archive-detection";
 export const isDevelopmentFeatureFlag = "is-dev";
 export const hypothesisSyncFeatureFlag = "hypothesis-sync";
 export const enableSocialCountsFeatureFlag = "social-annotations-counts-enabled";

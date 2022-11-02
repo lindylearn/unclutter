@@ -1,6 +1,7 @@
 import React from "react";
 import {
     allowlistDomainOnManualActivationFeatureFlag,
+    enableArchiveDetection,
     enableBootUnclutterMessage,
     enableSocialCountsFeatureFlag,
     getFeatureFlag,
@@ -82,21 +83,36 @@ function OptionsPage({}) {
                         </a>
                         )
                     </p>
-                    <FeatureFlagSwitch featureFlagKey={enableBootUnclutterMessage}>
-                        Show unclutter button on web pages{" "}
-                        <a
-                            href="https://github.com/lindylearn/unclutter/blob/main/docs/article-detection.md#unclutter-reminder"
-                            className="underline"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            that look like articles
-                        </a>
-                    </FeatureFlagSwitch>
+                    {/* <FeatureFlagSwitch featureFlagKey={enableArchiveDetection}>
+                        Use{" "}
+                        <a href="" className="underline" target="_blank" rel="noopener noreferrer">
+                            web archives
+                        </a>{" "}
+                        to show unavailable articles
+                    </FeatureFlagSwitch> */}
                 </OptionsGroup>
 
                 <OptionsGroup
-                    headerText="Article Library"
+                    headerText="Automatic Activation"
+                    iconSvg={
+                        <svg className="ml-0.5 w-5" viewBox="0 0 512 512">
+                            <path
+                                fill="currentColor"
+                                d="M240.5 224H352C365.3 224 377.3 232.3 381.1 244.7C386.6 257.2 383.1 271.3 373.1 280.1L117.1 504.1C105.8 513.9 89.27 514.7 77.19 505.9C65.1 497.1 60.7 481.1 66.59 467.4L143.5 288H31.1C18.67 288 6.733 279.7 2.044 267.3C-2.645 254.8 .8944 240.7 10.93 231.9L266.9 7.918C278.2-1.92 294.7-2.669 306.8 6.114C318.9 14.9 323.3 30.87 317.4 44.61L240.5 224z"
+                            />
+                        </svg>
+                    }
+                >
+                    <FeatureFlagSwitch
+                        featureFlagKey={allowlistDomainOnManualActivationFeatureFlag}
+                    >
+                        Enable automatic activation for pages you unclutter manually
+                    </FeatureFlagSwitch>
+                    <DomainSettingsList />
+                </OptionsGroup>
+
+                <OptionsGroup
+                    headerText="Your Library"
                     iconSvg={
                         <svg className="-ml-1.5 w-7" viewBox="0 0 512 512">
                             <path
@@ -123,74 +139,28 @@ function OptionsPage({}) {
                     }
                 >
                     <p>
-                        Every article you open with Unclutter gets automatically saved in your local
-                        library. Press{" "}
+                        Press{" "}
                         <div
                             className="inline-block px-1 py-0.5 text-gray-600 shadow-inner dark:text-gray-300"
                             style={{ background: "var(--embedded-background)" }}
                         >
                             TAB
                         </div>{" "}
-                        while reading or click the library message in the top left.
+                        while reading to organize your saved articles and highlights.
                     </p>
-                </OptionsGroup>
-
-                <OptionsGroup
-                    headerText="Automatic Activation"
-                    iconSvg={
-                        <svg className="ml-0.5 w-5" viewBox="0 0 512 512">
-                            <path
-                                fill="currentColor"
-                                d="M240.5 224H352C365.3 224 377.3 232.3 381.1 244.7C386.6 257.2 383.1 271.3 373.1 280.1L117.1 504.1C105.8 513.9 89.27 514.7 77.19 505.9C65.1 497.1 60.7 481.1 66.59 467.4L143.5 288H31.1C18.67 288 6.733 279.7 2.044 267.3C-2.645 254.8 .8944 240.7 10.93 231.9L266.9 7.918C278.2-1.92 294.7-2.669 306.8 6.114C318.9 14.9 323.3 30.87 317.4 44.61L240.5 224z"
-                            />
-                        </svg>
-                    }
-                >
-                    <p className="">
-                        Click the "bolt" icon next to each article to{" "}
-                        <a
-                            href="https://github.com/lindylearn/unclutter/tree/main/docs/article-detection.md"
-                            className="underline"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            automatically unclutter
-                        </a>{" "}
-                        all pages on a certain domain.
-                    </p>
-
-                    <FeatureFlagSwitch
-                        featureFlagKey={allowlistDomainOnManualActivationFeatureFlag}
-                    >
-                        Enable automatic activation for pages you unclutter manually
-                    </FeatureFlagSwitch>
-                    <DomainSettingsList />
-                </OptionsGroup>
-
-                {/* <OptionsGroup
-                    headerText="Highlights"
-                    iconSvg={
-                        <svg className="w-5" viewBox="0 0 512 512">
-                            <path
-                                fill="currentColor"
-                                d="M320 62.06L362.7 19.32C387.7-5.678 428.3-5.678 453.3 19.32L492.7 58.75C517.7 83.74 517.7 124.3 492.7 149.3L229.5 412.5C181.5 460.5 120.3 493.2 53.7 506.5L28.71 511.5C20.84 513.1 12.7 510.6 7.03 504.1C1.356 499.3-1.107 491.2 .4662 483.3L5.465 458.3C18.78 391.7 51.52 330.5 99.54 282.5L286.1 96L272.1 82.91C263.6 73.54 248.4 73.54 239 82.91L136.1 184.1C127.6 194.3 112.4 194.3 103 184.1C93.66 175.6 93.66 160.4 103 151L205.1 48.97C233.2 20.85 278.8 20.85 306.9 48.97L320 62.06zM320 129.9L133.5 316.5C94.71 355.2 67.52 403.1 54.85 457.2C108 444.5 156.8 417.3 195.5 378.5L382.1 192L320 129.9z"
-                            />
-                        </svg>
-                    }
-                >
                     <p>
-                        Select any article text to create a{" "}
+                        Install{" "}
                         <a
-                            href="https://github.com/lindylearn/unclutter/blob/main/docs/annotations.md"
+                            href="https://github.com/lindylearn/unclutter/blob/main/docs/social-highlights.md"
                             className="underline"
                             target="_blank"
                             rel="noopener noreferrer"
                         >
-                            highlight
+                            Unclutter New Tab
                         </a>{" "}
-                        saved in your browser. Toggle the feature via the "pen" toolbar icon.
+                        to access your reading queue from your new tab page.
                     </p>
-                </OptionsGroup> */}
+                </OptionsGroup>
 
                 <OptionsGroup
                     headerText="Social comments"
@@ -211,7 +181,7 @@ function OptionsPage({}) {
                             target="_blank"
                             rel="noopener noreferrer"
                         >
-                            related conversations
+                            quote comments
                         </a>{" "}
                         from Hacker News and Hypothes.is.
                     </p>

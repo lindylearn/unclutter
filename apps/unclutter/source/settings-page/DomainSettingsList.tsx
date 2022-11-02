@@ -133,7 +133,7 @@ export default function DomainSettingsList({}) {
                         </svg>
                     </li>
                 ))}
-                <div className="flex-grow"></div>
+                {/* <div className="flex-grow"></div>
                 <div className="mt-0 flex w-full items-center justify-between gap-3">
                     <input
                         placeholder="Enter a new domain..."
@@ -171,7 +171,7 @@ export default function DomainSettingsList({}) {
                             />
                         </svg>
                     </div>
-                </div>
+                </div> */}
             </ul>
         </div>
     );

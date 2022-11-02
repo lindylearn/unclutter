@@ -109,7 +109,7 @@ export default function SettingsModalTab({
                     <span
                         className="inline-block rounded-md bg-stone-200 px-1 font-medium dark:bg-neutral-700"
                         style={{
-                            backgroundColor: getActivityColor(1, darkModeEnabled),
+                            backgroundColor: getActivityColor(3, darkModeEnabled),
                         }}
                     >
                         TAB
@@ -214,6 +214,7 @@ export default function SettingsModalTab({
                         href={unclutterLibraryLink}
                         darkModeEnabled={darkModeEnabled}
                         // isNew={(settings?.seen_settings_version || 0) < 1}
+                        primary
                         reportEvent={reportEvent}
                     />
                 </div>
@@ -241,6 +242,7 @@ export default function SettingsModalTab({
                         title="View roadmap"
                         href="https://unclutter.canny.io/"
                         darkModeEnabled={darkModeEnabled}
+                        primary
                         reportEvent={reportEvent}
                     />
                     <Button
@@ -342,7 +344,7 @@ function Button({
                 "relative cursor-pointer select-none rounded-md py-1 px-2 font-medium transition-transform hover:scale-[97%]",
                 primary && "dark:text-stone-800"
             )}
-            style={{ background: getActivityColor(primary ? 4 : 1, false) }}
+            style={{ background: getActivityColor(primary ? 3 : 3, false) }}
             onClick={() => {
                 onClick?.();
                 reportEvent("clickSettingsButton", { title });

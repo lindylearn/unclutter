@@ -60,7 +60,7 @@ export function LibraryModalPage({
 
     const initialRender = useRef<boolean>(true);
     const [currentTab, setCurrentTab] = useState(
-        relatedLinkCount && (userInfo.onPaidPlan || userInfo.trialEnabled) ? "graph" : "stats"
+        relatedLinkCount && (userInfo.onPaidPlan || userInfo.trialEnabled) ? "graph" : "list"
     );
     useEffect(() => {
         if (initialRender.current) {
