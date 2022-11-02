@@ -317,6 +317,13 @@
         ".sc-c7de6d20-2.hiblGN"
     ],
     "osrp.lanl.gov": ["#backband", "#backband2", "#lanlbar", "#toolbar"],
+    "popsci.com.tr": [
+        ".td-crumb-container",
+        ".td-category",
+        ".td-search-btns-wrap",
+        "#td-header-menu",
+        ".td-pb-span4"
+    ],
     "radreads.co": [".tcb-flex-col"],
     "realpython.com": [".small.text-muted"],
     "reddit.com": ["._23h0-EcaBUorIHC-JZyh6J"],
