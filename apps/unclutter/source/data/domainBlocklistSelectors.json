@@ -157,6 +157,7 @@
         ".most-photo-zone.right-list-zone",
         ".most-news-zone.right-list-zone"
     ],
+    "engadget.com": ["#LB-MULTI_ATF"],
     "euronews.com": [".editor-tv-wrapper.editor-tv-active"],
     "facebook.com": [
         ".rq0escxv.l9j0dhe7.du4w35lb.obtkqiv7.sv5sfqaa.sj5x9vvc.cxgpxx05",
