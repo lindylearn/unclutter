@@ -26,9 +26,11 @@ async function boot() {
 
     let triggeredIsLikelyArticle = false;
 
-    // heuristic check
+    // console.log("isNonLeafPage", isNonLeafPage(url));
+
+    // url heuristic check
     if (!isNonLeafPage(url)) {
-        isLikelyArticle(domain);
+        onIsLikelyArticle(domain);
         triggeredIsLikelyArticle = true;
     }
 
@@ -38,7 +40,7 @@ async function boot() {
     });
     if (foundCount && !triggeredIsLikelyArticle) {
         console.log("Found annotations count, assuming this is an article");
-        isLikelyArticle(domain);
+        onIsLikelyArticle(domain);
     }
 
     if (["unclutter.lindylearn.io", "library.lindylearn.io", "localhost"].includes(domain)) {
@@ -46,7 +48,7 @@ async function boot() {
     }
 }
 
-async function isLikelyArticle(domain: string) {
+async function onIsLikelyArticle(domain: string) {
     const configuredEnable = await isConfiguredToEnable(domain);
     const enableUnclutterMessage = await getFeatureFlag(enableBootUnclutterMessage);
     if (configuredEnable) {
@@ -57,11 +59,13 @@ async function isLikelyArticle(domain: string) {
 }
 
 async function showUnclutterMessage() {
+    // console.log("showUnclutterMessage");
+
     if (document.readyState !== "complete") {
         await new Promise((resolve) => window.addEventListener("load", resolve));
     }
 
-    displayToast("Unclutter article", () => {
+    displayToast("Unclutter article?", () => {
         enablePageView("message");
     });
 }
