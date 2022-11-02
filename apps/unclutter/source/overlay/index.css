@@ -29,6 +29,7 @@
     align-items: center !important;
     line-height: 1 !important;
     gap: 6px !important;
+    width: 26px !important;
 }
 .lindy-page-settings-pageadjacent {
     all: revert !important;
@@ -53,12 +54,12 @@
 }
 @keyframes fadeInUi {
     from {
-        visibility: hidden !important;
-        opacity: 0 !important;
+        visibility: hidden;
+        opacity: 0;
     }
     to {
-        visibility: visible !important;
-        opacity: 1 !important;
+        visibility: visible;
+        opacity: 1;
     }
 }
 .lindy-page-settings-toprght.lindy-ui-fadeout,
@@ -68,17 +69,16 @@
 }
 @keyframes fadeOutUi {
     from {
-        visibility: visible !important;
-        opacity: 1 !important;
+        visibility: visible;
+        opacity: 1;
     }
     to {
-        visibility: hidden !important;
-        opacity: 0 !important;
+        visibility: hidden;
+        opacity: 0;
     }
 }
 
 #lindy-info-topleft {
-    all: initial !important;
     position: fixed !important;
     top: 0 !important;
     left: 0 !important;
@@ -100,14 +100,14 @@
 }
 @keyframes fadeInOutline {
     from {
-        visibility: hidden !important;
-        opacity: 0 !important;
-        transform: translate3d(-200px, 0, 0) !important;
+        visibility: hidden;
+        opacity: 0;
+        transform: translate3d(-200px, 0, 0);
     }
     to {
-        visibility: visible !important;
-        opacity: 1 !important;
-        transform: translate3d(0, 0, 0) !important;
+        visibility: visible;
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
     }
 }
 #lindy-info-topleft.lindy-ui-fadeout {
@@ -116,14 +116,14 @@
 }
 @keyframes fadeOutOutline {
     from {
-        visibility: visible !important;
-        opacity: 1 !important;
-        transform: translate3d(0, 0, 0) !important;
+        visibility: visible;
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
     }
     to {
-        visibility: hidden !important;
-        opacity: 0 !important;
-        transform: translate3d(-200px, 0, 0) !important;
+        visibility: hidden;
+        opacity: 0;
+        transform: translate3d(-200px, 0, 0);
     }
 }
 

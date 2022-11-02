@@ -157,6 +157,7 @@
         ".most-photo-zone.right-list-zone",
         ".most-news-zone.right-list-zone"
     ],
+    "engadget.com": ["#LB-MULTI_ATF"],
     "euronews.com": [".editor-tv-wrapper.editor-tv-active"],
     "facebook.com": [
         ".rq0escxv.l9j0dhe7.du4w35lb.obtkqiv7.sv5sfqaa.sj5x9vvc.cxgpxx05",
@@ -329,6 +330,7 @@
     "sandboxx.us": [".content#genesis-content::before"],
     "semiengineering.com": [".col-xs-12.col-sm-6.col-md-7"],
     "shopify.com": ["#GlobalIconSymbols", "#SiteNavContainer"],
+    "smithsonianmag.com": [".author-headshot.smart-news", ".tag-list"],
     "snclavalin.com": [".top-content-item.read-time", ".top-content-item"],
     "sozcu.com.tr": [
         ".content-meta.author-img._1x1",

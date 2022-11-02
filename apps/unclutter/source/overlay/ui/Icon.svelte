@@ -29,35 +29,40 @@
         />
     </svg>
 {:else if iconName === "theme"}
-    <svg class="lindy-ui-icon" id="lindy-theme-icon" viewBox="0 0 640 512" style="width: 22px;">
+    <svg
+        class="lindy-ui-icon"
+        id="lindy-theme-icon"
+        viewBox="0 0 640 512"
+        style="width: 22px !important;"
+    >
         <path
             fill="currentColor"
             d="M198.4 47.47c-7.094-18.62-37.78-18.62-44.88 0l-152 400c-4.703 12.41 1.516 26.25 13.91 30.97c12.44 4.75 26.28-1.531 30.97-13.91L83.12 368h185.8l36.68 96.53C309.2 474.1 318.3 480 328 480c2.844 0 5.719-.5 8.531-1.562c12.39-4.719 18.61-18.56 13.91-30.97L198.4 47.47zM101.4 320L176 123.6L250.6 320H101.4zM616 160c-13.25 0-24 10.75-24 24v4.889c-21.99-17.79-49.58-28.88-80-28.88c-70.58 0-128 57.41-128 128l.0007 63.93c0 70.59 57.42 128.1 127.1 128.1c30.42 0 58.01-11.11 79.1-28.9V456c0 13.25 10.75 24 24 24S640 469.3 640 456v-272C640 170.8 629.3 160 616 160zM592 352c0 44.13-35.89 80-80 80s-80-35.88-80-80V288c0-44.13 35.89-80 80-80s80 35.88 80 80V352z"
         />
     </svg>
 {:else if iconName === "notes_enabled"}
-    <svg class="lindy-ui-icon" viewBox="0 0 512 512" style="width: 18.5px;">
+    <svg class="lindy-ui-icon" viewBox="0 0 512 512" style="width: 18.5px !important;">
         <path
             fill="currentColor"
             d="M320 62.06L362.7 19.32C387.7-5.678 428.3-5.678 453.3 19.32L492.7 58.75C517.7 83.74 517.7 124.3 492.7 149.3L229.5 412.5C181.5 460.5 120.3 493.2 53.7 506.5L28.71 511.5C20.84 513.1 12.7 510.6 7.03 504.1C1.356 499.3-1.107 491.2 .4662 483.3L5.465 458.3C18.78 391.7 51.52 330.5 99.54 282.5L286.1 96L272.1 82.91C263.6 73.54 248.4 73.54 239 82.91L136.1 184.1C127.6 194.3 112.4 194.3 103 184.1C93.66 175.6 93.66 160.4 103 151L205.1 48.97C233.2 20.85 278.8 20.85 306.9 48.97L320 62.06zM320 129.9L133.5 316.5C94.71 355.2 67.52 403.1 54.85 457.2C108 444.5 156.8 417.3 195.5 378.5L382.1 192L320 129.9z"
         />
     </svg>
 {:else if iconName === "notes_disabled"}
-    <svg class="lindy-ui-icon" viewBox="0 0 640 512" style="width: 23px;">
+    <svg class="lindy-ui-icon" viewBox="0 0 640 512" style="width: 23px !important;">
         <path
             fill="currentColor"
             d="M192.5 125.6L269.1 48.97C297.2 20.85 342.8 20.85 370.9 48.97L384 62.06L426.7 19.32C451.7-5.677 492.3-5.677 517.3 19.32L556.7 58.75C581.7 83.74 581.7 124.3 556.7 149.3L409.9 296L630.8 469.1C641.2 477.3 643.1 492.4 634.9 502.8C626.7 513.2 611.6 515.1 601.2 506.9L9.196 42.89C-1.236 34.71-3.065 19.63 5.112 9.196C13.29-1.236 28.37-3.065 38.81 5.112L192.5 125.6zM230.5 155.4L264.2 181.8L350.1 96L336.1 82.91C327.6 73.54 312.4 73.54 303 82.91L230.5 155.4zM302.3 211.6L371.9 266.2L446.1 192L384 129.9L302.3 211.6zM118.8 457.2C172 444.5 220.8 417.3 259.5 378.5L303.2 334.9L341.2 364.8L293.5 412.5C245.5 460.5 184.3 493.2 117.7 506.5L92.71 511.5C84.84 513.1 76.7 510.6 71.03 504.1C65.35 499.3 62.89 491.2 64.46 483.3L69.46 458.3C82.78 391.7 115.5 330.5 163.5 282.5L195.8 250.3L233.8 280.2L197.5 316.5C158.7 355.2 131.5 403.1 118.8 457.2H118.8z"
         />
     </svg>
 {:else if iconName === "social_enabled"}
-    <svg class="lindy-ui-icon" viewBox="0 0 640 512" style="width: 22px;">
+    <svg class="lindy-ui-icon" viewBox="0 0 640 512" style="width: 22px !important;">
         <path
             fill="currentColor"
             d="M319.9 320c57.41 0 103.1-46.56 103.1-104c0-57.44-46.54-104-103.1-104c-57.41 0-103.1 46.56-103.1 104C215.9 273.4 262.5 320 319.9 320zM319.9 160c30.85 0 55.96 25.12 55.96 56S350.7 272 319.9 272S263.9 246.9 263.9 216S289 160 319.9 160zM512 160c44.18 0 80-35.82 80-80S556.2 0 512 0c-44.18 0-80 35.82-80 80S467.8 160 512 160zM369.9 352H270.1C191.6 352 128 411.7 128 485.3C128 500.1 140.7 512 156.4 512h327.2C499.3 512 512 500.1 512 485.3C512 411.7 448.4 352 369.9 352zM178.1 464c10.47-36.76 47.36-64 91.14-64H369.9c43.77 0 80.66 27.24 91.14 64H178.1zM551.9 192h-61.84c-12.8 0-24.88 3.037-35.86 8.24C454.8 205.5 455.8 210.6 455.8 216c0 33.71-12.78 64.21-33.16 88h199.7C632.1 304 640 295.6 640 285.3C640 233.8 600.6 192 551.9 192zM183.9 216c0-5.449 .9824-10.63 1.609-15.91C174.6 194.1 162.6 192 149.9 192H88.08C39.44 192 0 233.8 0 285.3C0 295.6 7.887 304 17.62 304h199.5C196.7 280.2 183.9 249.7 183.9 216zM128 160c44.18 0 80-35.82 80-80S172.2 0 128 0C83.82 0 48 35.82 48 80S83.82 160 128 160z"
         />
     </svg>
 {:else if iconName === "social_disabled"}
-    <svg class="lindy-ui-icon" viewBox="0 0 640 512" style="width: 22px;">
+    <svg class="lindy-ui-icon" viewBox="0 0 640 512" style="width: 22px !important;">
         <path
             fill="currentColor"
             d="M178.1 464c10.47-36.76 47.36-64 91.14-64H369.9c6.83 0 13.4 .873 19.82 2.133L325.7 352H270.1C191.6 352 128 411.7 128 485.3C128 500.1 140.7 512 156.4 512h327.2c11.62 0 21.54-6.587 25.95-15.96L468.6 464H178.1zM396.6 285.5C413.4 267.2 423.8 242.9 423.8 216c0-57.44-46.54-104-103.1-104c-35.93 0-67.07 18.53-85.59 46.3L193.1 126.1C202.4 113.1 208 97.24 208 80C208 35.82 172.2 0 128 0C103.8 0 82.52 10.97 67.96 27.95L38.81 5.109C34.41 1.672 29.19 0 24.03 0C16.91 0 9.846 3.156 5.127 9.188C-3.061 19.62-1.248 34.72 9.189 42.89l591.1 463.1c10.5 8.203 25.56 6.328 33.69-4.078c8.188-10.44 6.375-25.53-4.062-33.7L396.6 285.5zM358.9 255.1L271.8 187.7C281.6 171.2 299.3 160 319.9 160c30.85 0 55.96 25.12 55.96 56C375.8 231.7 369.3 245.8 358.9 255.1zM512 160c44.18 0 80-35.82 80-80S556.2 0 512 0c-44.18 0-80 35.82-80 80S467.8 160 512 160zM490.1 192c-12.8 0-24.88 3.037-35.86 8.24C454.8 205.5 455.8 210.6 455.8 216c0 33.71-12.78 64.21-33.16 88h199.7C632.1 304 640 295.6 640 285.3C640 233.8 600.6 192 551.9 192H490.1zM186.1 243.2L121.6 192H88.08C39.44 192 0 233.8 0 285.3C0 295.6 7.887 304 17.62 304h199.5C202.4 286.8 191.8 266.1 186.1 243.2z"
@@ -81,7 +86,7 @@
     <svg
         class="lindy-ui-icon"
         viewBox="0 0 512 512"
-        style="overflow: visible; margin-left: -5px; margin-right: 5px;"
+        style="overflow: visible !important; margin-left: -5px !important; margin-right: 5px !important;"
     >
         <path
             fill="currentColor"
@@ -120,31 +125,32 @@
 
 <style global lang="postcss">
     .lindy-ui-icon {
-        width: 20px;
-        height: 20px;
-        padding: 3px;
-        cursor: pointer;
+        display: block !important;
+        width: 20px !important;
+        height: 20px !important;
+        padding: 3px !important;
+        cursor: pointer !important;
         box-sizing: content-box !important;
         color: var(--color-muted) !important;
-        overflow: visible;
-        transition: all 0.15s ease-out;
+        overflow: visible !important;
+        transition: all 0.15s ease-out !important;
     }
     svg.lindy-ui-icon > path {
-        fill: currentColor;
-        stroke: currentColor;
-        stroke-width: 10px;
+        fill: currentColor !important;
+        stroke: currentColor !important;
+        stroke-width: 10px !important;
     }
     svg.lindy-ui-icon#lindy-theme-icon > path,
     svg.lindy-ui-icon#lindy-selector-icon > path {
-        stroke-width: 20px;
+        stroke-width: 20px !important;
     }
     svg.lindy-ui-icon#lindy-flag-icon > path {
-        stroke-width: 25px;
+        stroke-width: 25px !important;
     }
     .lindy-tooltp:hover > .lindy-ui-icon,
     .lindy-ui-dialog-container:hover > .lindy-ui-icon,
     .lindy-ui-dialog-container.lindy-default-open > .lindy-ui-icon {
         color: var(--text-color) !important;
-        /* filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.05)); */
+        /* filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.05)) !important; */
     }
 </style>
