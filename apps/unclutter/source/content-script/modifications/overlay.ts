@@ -1,5 +1,6 @@
 import { LindyAnnotation } from "../../common/annotations/create";
 import {
+    allowlistDomainOnManualActivationFeatureFlag,
     enableAnnotationsFeatureFlag,
     enableSocialCommentsFeatureFlag,
     getFeatureFlag,
@@ -27,6 +28,7 @@ import ElementPickerModifier from "./elementPicker";
 import LibraryModalModifier from "./libraryModal";
 import { PageModifier, trackModifierExecution } from "./_interface";
 import ReadingTimeModifier from "./DOM/readingTime";
+import { setUserSettingsForDomain } from "../../common/storage";
 
 @trackModifierExecution
 export default class OverlayManager implements PageModifier {
@@ -197,6 +199,15 @@ export default class OverlayManager implements PageModifier {
         // insert rendered nodes into document
         document.documentElement.appendChild(topRightContainer);
         // document.documentElement.appendChild(pageAdjacentContainer);
+
+        // handle automatic activation here since pageAdjacentContainer disabled
+        getFeatureFlag(allowlistDomainOnManualActivationFeatureFlag).then(
+            (allowlistOnActivation) => {
+                if (allowlistOnActivation) {
+                    setUserSettingsForDomain(this.domain, "allow");
+                }
+            }
+        );
     }
 
     renderBottomContainer() {
