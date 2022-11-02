@@ -308,7 +308,14 @@
     "nytimes.com": [".css-vxcmzt"],
     "observablehq.com": [".mr3.lh-copy", "#showtitlewrapper"],
     "oglobo.globo.com": [".tp-container-inner"],
-    "ole.com.ar": [".sc-ded1e020-0.gvAvuc", ".sc-638a79c3-0.krJuTq"],
+    "ole.com.ar": [
+        ".sc-ded1e020-0.gvAvuc",
+        ".sc-638a79c3-0.krJuTq",
+        ".sc-da5e879a-0.jjlASR",
+        ".sc-a11128bb-0.iSHpBn",
+        ".sc-1c2a70fc-0.gRjkXN",
+        ".sc-c7de6d20-2.hiblGN"
+    ],
     "osrp.lanl.gov": ["#backband", "#backband2", "#lanlbar", "#toolbar"],
     "radreads.co": [".tcb-flex-col"],
     "realpython.com": [".small.text-muted"],
