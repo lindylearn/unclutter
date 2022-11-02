@@ -38,6 +38,10 @@ function OptionsPage({}) {
         getBrowserType() === "chromium"
             ? "chrome://extensions/shortcuts"
             : "https://support.mozilla.org/en-US/kb/manage-extension-shortcuts-firefox";
+    const unclutterLibraryLink =
+        getBrowserType() === "firefox"
+            ? "https://addons.mozilla.org/en-GB/firefox/addon/unclutter-library"
+            : "https://chrome.google.com/webstore/detail/bghgkooimeljolohebojceacblokenjn";
 
     const darkModeEnabled = useAutoDarkMode();
 
@@ -147,7 +151,7 @@ function OptionsPage({}) {
                     <p>
                         Install{" "}
                         <a
-                            href="https://github.com/lindylearn/unclutter/blob/main/docs/social-highlights.md"
+                            href={unclutterLibraryLink}
                             className="underline"
                             target="_blank"
                             rel="noopener noreferrer"
