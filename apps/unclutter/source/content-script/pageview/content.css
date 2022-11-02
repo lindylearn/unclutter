@@ -48,11 +48,14 @@ html.pageview.pageview > body {
     top: 10px !important;
     right: 10px !important;
     z-index: 9999999999 !important;
-    border-radius: 7px 7px 7px !important;
+    border-radius: 8px !important;
     background-color: #edd75b !important;
-    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1) !important;
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1) !important; /* shadow-lg */
     cursor: pointer !important;
     overflow: hidden !important;
+
+    transform: translate3d(0, 0, 0) scale(100%);
+    transition: transform 0.2s ease-in-out !important;
 
     animation: toastTimeout 5s !important;
     animation-delay: 0.5s !important;
@@ -62,27 +65,28 @@ html.pageview.pageview > body {
     0% {
         visibility: hidden;
         opacity: 0;
-        transform: translate3d(200px, 0, 0);
+        transform: translate3d(200px, 0, 0) scale(100%);
     }
     5% {
         visibility: visible;
         opacity: 1;
-        transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0) scale(100%);
     }
     95% {
         visibility: visible;
         opacity: 1;
-        transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0) scale(100%);
     }
     100% {
         visibility: hidden;
         opacity: 0;
-        transform: translate3d(10px, 0, 0);
+        transform: translate3d(10px, 0, 0) scale(100%);
     }
 }
 .lindy-toast:hover {
     animation-play-state: paused !important;
     box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1) !important;
+    /* transform: translate3d(0, 0, 0) scale(95%) !important; */
 }
 .lindy-toast.lindy-toast-dismissed {
     visibility: hidden !important;
@@ -92,26 +96,26 @@ html.pageview.pageview > body {
 }
 
 .lindy-toast-content {
-    padding: 3px !important;
+    padding: 4px 6px !important;
     padding-bottom: 0 !important;
     display: flex !important;
+    gap: 4px !important;
     align-items: center !important;
 }
 .lindy-toast-icon {
-    width: 32px !important;
-    color: #1f2937 !important;
+    width: 28px !important;
+    color: #1f2937 !important; /* text-gray-800 */
 }
 .lindy-toast-message {
     font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto !important;
     font-size: 15px !important;
     font-weight: 600 !important;
-    color: #1f2937 !important;
-    margin: 0 6px !important;
-    margin-top: -3px !important;
+    color: #1f2937 !important; /* text-gray-800 */
+    margin-top: -4px !important;
 }
 
 .lindy-toast-progressbar {
-    height: 3px !important;
+    height: 4px !important;
     background-color: #faf3ce !important;
 
     animation: toastProgressBar 5s linear !important;
