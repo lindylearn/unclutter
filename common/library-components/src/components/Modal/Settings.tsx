@@ -213,7 +213,7 @@ export default function SettingsModalTab({
                         title="Install New Tab"
                         href={unclutterLibraryLink}
                         darkModeEnabled={darkModeEnabled}
-                        isNew={(settings?.seen_settings_version || 0) < 1}
+                        // isNew={(settings?.seen_settings_version || 0) < 1}
                         reportEvent={reportEvent}
                     />
                 </div>

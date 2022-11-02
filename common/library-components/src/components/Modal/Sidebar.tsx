@@ -153,7 +153,7 @@ function getModalTabOptions(
         {
             label: "Highlights",
             value: "highlights",
-            tag: (settings?.seen_highlights_version || 0) < latestHighlightsVersion && "New",
+            // tag: (settings?.seen_highlights_version || 0) < latestHighlightsVersion && "New",
             // need to update count or track visited to show highlights count after delete
             // || (currentAnnotationsCount ? `${currentAnnotationsCount}` : undefined),
             svg: (
@@ -196,7 +196,7 @@ function getModalTabOptions(
         {
             label: "Settings",
             value: "settings",
-            tag: (settings?.seen_settings_version || 0) < latestSettingsVersion && "New",
+            // tag: (settings?.seen_settings_version || 0) < latestSettingsVersion && "New",
             atEnd: true,
             svg: (
                 <svg viewBox="0 0 512 512" className="h-4">
