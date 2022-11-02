@@ -120,31 +120,32 @@
 
 <style global lang="postcss">
     .lindy-ui-icon {
-        width: 20px;
-        height: 20px;
-        padding: 3px;
-        cursor: pointer;
+        display: block !important;
+        width: 20px !important;
+        height: 20px !important;
+        padding: 3px !important;
+        cursor: pointer !important;
         box-sizing: content-box !important;
         color: var(--color-muted) !important;
-        overflow: visible;
-        transition: all 0.15s ease-out;
+        overflow: visible !important;
+        transition: all 0.15s ease-out !important;
     }
     svg.lindy-ui-icon > path {
-        fill: currentColor;
-        stroke: currentColor;
-        stroke-width: 10px;
+        fill: currentColor !important;
+        stroke: currentColor !important;
+        stroke-width: 10px !important;
     }
     svg.lindy-ui-icon#lindy-theme-icon > path,
     svg.lindy-ui-icon#lindy-selector-icon > path {
-        stroke-width: 20px;
+        stroke-width: 20px !important;
     }
     svg.lindy-ui-icon#lindy-flag-icon > path {
-        stroke-width: 25px;
+        stroke-width: 25px !important;
     }
     .lindy-tooltp:hover > .lindy-ui-icon,
     .lindy-ui-dialog-container:hover > .lindy-ui-icon,
     .lindy-ui-dialog-container.lindy-default-open > .lindy-ui-icon {
         color: var(--text-color) !important;
-        /* filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.05)); */
+        /* filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.05)) !important; */
     }
 </style>
