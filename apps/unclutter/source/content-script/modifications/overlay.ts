@@ -173,7 +173,7 @@ export default class OverlayManager implements PageModifier {
 
         // create DOM container nodes
         const topRightContainer = this.createUiContainer("lindy-page-settings-toprght");
-        const pageAdjacentContainer = this.createUiContainer("lindy-page-settings-pageadjacent");
+        // const pageAdjacentContainer = this.createUiContainer("lindy-page-settings-pageadjacent");
 
         // render svelte component
         this.toprightSvelteComponent = new TopRightContainerSvelte({
@@ -187,16 +187,16 @@ export default class OverlayManager implements PageModifier {
                 elementPickerModifier: this.elementPickerModifier,
             },
         });
-        this.pageAdjacentSvelteComponent = new PageAdjacentContainerSvelte({
-            target: pageAdjacentContainer,
-            props: {
-                domain: this.domain,
-            },
-        });
+        // this.pageAdjacentSvelteComponent = new PageAdjacentContainerSvelte({
+        //     target: pageAdjacentContainer,
+        //     props: {
+        //         domain: this.domain,
+        //     },
+        // });
 
         // insert rendered nodes into document
         document.documentElement.appendChild(topRightContainer);
-        document.documentElement.appendChild(pageAdjacentContainer);
+        // document.documentElement.appendChild(pageAdjacentContainer);
     }
 
     renderBottomContainer() {
