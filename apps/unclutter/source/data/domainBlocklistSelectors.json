@@ -209,6 +209,15 @@
         ".hz-editorial-gallery-side-bar__section"
     ],
     "howtogeek.com": [".header-commission-statement", "#nextuplist", ".nextup"],
+    "hs.fi": [
+        ".text-positive.bg-header-main",
+        "#header",
+        ".ticker.ticker--20",
+        ".ab-test-article-sharing.article-actions.relative.py-16.border-t.border-divider-1.article-tail-action--top",
+        ".mx-16",
+        ".ab-test-teaser-info.flex.items-center.hide-if-empty",
+        ".teaser-title-40"
+    ],
     "independent.co.uk": [".Header__AuthorImage-sc-mqbe6u-4.bEMDmP"],
     "info.blackswanltd.com": [
         ".span6.widget-span.widget-type-linked_image",
