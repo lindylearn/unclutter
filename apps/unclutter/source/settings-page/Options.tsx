@@ -146,7 +146,7 @@ function OptionsPage({}) {
                         >
                             TAB
                         </div>{" "}
-                        while reading to organize your saved articles and highlights.
+                        while reading to browse your saved articles and highlights.
                     </p>
                     <p>
                         Install{" "}
@@ -203,8 +203,16 @@ function OptionsPage({}) {
                 >
                     <ContributionStats />
                     <div className="">
-                        This project is open source! Suggest features, contribute code, vote on the
-                        roadmap, or report bugs{" "}
+                        This project is open source! Add your ideas to our{" "}
+                        <a
+                            href="https://unclutter.canny.io"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="underline"
+                        >
+                            open roadmap
+                        </a>
+                        , or report bugs{" "}
                         <a
                             href="https://github.com/lindylearn/unclutter/issues"
                             target="_blank"
@@ -213,7 +221,7 @@ function OptionsPage({}) {
                         >
                             on GitHub
                         </a>
-                        .
+                        to improve reading on the web for everyone.
                     </div>
                 </OptionsGroup>
             </div>

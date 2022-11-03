@@ -234,7 +234,7 @@ export default function SettingsModalTab({
                 <p>
                     Unclutter is open-source
                     {showSignup ? " and funded by the community" : ""}! Vote on the roadmap, suggest
-                    features, or contribute code to improve reading for everyone.
+                    features, or contribute code to improve reading on the web for everyone.
                 </p>
 
                 <div className="flex gap-3">
@@ -342,7 +342,7 @@ function Button({
         <a
             className={clsx(
                 "relative cursor-pointer select-none rounded-md py-1 px-2 font-medium transition-transform hover:scale-[97%]",
-                primary && "dark:text-stone-800"
+                true && "dark:text-stone-800"
             )}
             style={{ background: getActivityColor(primary ? 3 : 3, false) }}
             onClick={() => {
