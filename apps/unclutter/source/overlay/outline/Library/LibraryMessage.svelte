@@ -81,7 +81,10 @@
                 </div>
             {:else if libraryState.libraryInfo?.article && libraryState?.readingProgress}
                 <div
-                    class="bottom-row mt-2 flex items-center gap-1 text-gray-400 dark:text-stone-600"
+                    class={clsx(
+                        "bottom-row mt-2 flex items-center gap-1",
+                        !libraryState.libraryInfo?.topic && "text-gray-400 dark:text-stone-600"
+                    )}
                     in:fly={{ y: 10, duration: 200, easing: cubicOut }}
                 >
                     <!-- <svg class="h-3" viewBox="0 0 640 512">

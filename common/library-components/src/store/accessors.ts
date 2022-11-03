@@ -271,11 +271,13 @@ export async function getReadingProgress(
     const articleIds = new Set(articles.map((a) => a.id));
     const annotations = (await listAnnotations(tx)).filter((a) => articleIds.has(a.article_id));
 
+    const allArticles = await listArticles(tx);
+
     return {
         articleCount: articles.length,
         completedCount: articles.filter((a) => a.reading_progress >= readingProgressFullClamp)
             .length,
-        queueCount: articles.filter((a) => a.is_queued).length,
+        queueCount: allArticles.filter((a) => a.is_queued).length,
         annotationCount: annotations.length,
     };
 }
