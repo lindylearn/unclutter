@@ -212,7 +212,7 @@ function OptionsPage({}) {
                         >
                             open roadmap
                         </a>
-                        , or report bugs{" "}
+                        or contribute{" "}
                         <a
                             href="https://github.com/lindylearn/unclutter/issues"
                             target="_blank"
@@ -220,7 +220,7 @@ function OptionsPage({}) {
                             className="underline"
                         >
                             on GitHub
-                        </a>
+                        </a>{" "}
                         to improve reading on the web for everyone.
                     </div>
                 </OptionsGroup>

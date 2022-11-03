@@ -324,14 +324,14 @@ function ArticleGroupStat({
 
             <div className="flex gap-3">
                 <ResourceStat
-                    type="articles"
-                    value={unreadCount}
-                    className={clsx(unreadCount === 0 && "opacity-0")}
-                />
-                <ResourceStat
                     type="articles_completed"
                     value={readCount}
                     className={clsx(readCount === 0 && "opacity-0")}
+                />
+                <ResourceStat
+                    type="articles"
+                    value={unreadCount}
+                    className={clsx(unreadCount === 0 && "opacity-0")}
                 />
                 <ResourceStat
                     type="highlights"

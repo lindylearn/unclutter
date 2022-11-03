@@ -118,7 +118,7 @@ function AnnotationDraft({
                 className="w-full select-none rounded-md bg-transparent p-1 align-top text-sm placeholder-gray-400 outline-none placeholder:select-none md:text-base"
                 placeholder={
                     localAnnotation.listIndex === 0
-                        ? "Copied quote. Press DELETE or write a note."
+                        ? "Copied quote. Press DELETE to delete the highlight."
                         : localAnnotation.listIndex === 1
                         ? "Highlight more to grow your library."
                         : ""
