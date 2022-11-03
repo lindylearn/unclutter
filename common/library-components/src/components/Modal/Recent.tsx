@@ -34,7 +34,7 @@ export default function RecentModalTab({
     const [articleListsCache, setArticleListsCache] = useArticleListsCache(tabInfos);
 
     const [searchedListCache, setSearchedListCache] = useState<ArticleListsCache | null>(null);
-    const [query, setQuery] = useState("");
+    const [query, setQuery] = useState<string>();
     useEffect(() => {
         if (!query) {
             setSearchedListCache(null);
@@ -65,7 +65,9 @@ export default function RecentModalTab({
     }, [query]);
     const queryDebounced = useDebounce(query, 500);
     useEffect(() => {
-        reportEvent("articlesSearch");
+        if (queryDebounced) {
+            reportEvent("articlesSearch");
+        }
     }, [queryDebounced]);
 
     return (
@@ -155,8 +157,8 @@ function PageFilters({
     setLastFirst: (state: boolean) => void;
     domainFilter: string | null;
     setDomainFilter: (domain: string | null) => void;
-    query;
-    setQuery;
+    query?: string;
+    setQuery: (query: string) => void;
     darkModeEnabled: boolean;
     reportEvent?: (event: string, data?: any) => void;
 }) {

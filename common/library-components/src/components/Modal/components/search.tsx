@@ -5,7 +5,7 @@ export function SearchBox({
     setQuery,
     placeholder,
 }: {
-    query: string;
+    query?: string;
     setQuery: (query: string) => void;
     placeholder: string;
 }) {

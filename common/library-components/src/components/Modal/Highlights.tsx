@@ -89,7 +89,7 @@ export default function HighlightsTab({
     const [searchedAnnotations, setSearchedAnnotations] = useState<AnnotationWithArticle[] | null>(
         null
     );
-    const [query, setQuery] = useState("");
+    const [query, setQuery] = useState<string>();
     useEffect(() => {
         if (!query) {
             setSearchedAnnotations(null);
@@ -117,7 +117,9 @@ export default function HighlightsTab({
     }, [query]);
     const queryDebounced = useDebounce(query, 500);
     useEffect(() => {
-        reportEvent("highlightsSearch");
+        if (queryDebounced) {
+            reportEvent("highlightsSearch");
+        }
     }, [queryDebounced]);
 
     return (
