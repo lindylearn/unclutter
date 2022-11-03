@@ -146,7 +146,7 @@ function OptionsPage({}) {
                         >
                             TAB
                         </div>{" "}
-                        while reading to browse your saved articles and highlights.
+                        while reading to manage your saved articles and highlights.
                     </p>
                     <p>
                         Install{" "}
@@ -211,7 +211,7 @@ function OptionsPage({}) {
                             className="underline"
                         >
                             open roadmap
-                        </a>
+                        </a>{" "}
                         or contribute{" "}
                         <a
                             href="https://github.com/lindylearn/unclutter/issues"
