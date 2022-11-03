@@ -495,5 +495,6 @@
     ],
     "zdnet.com": [".c-socialSharebar"],
     "zeit.de": [".article-player.article-player--has-player"],
-    "zhuanlan.zhihu.com": [".css-d45dic", ".css-1f4osvg", ".Button.css-1u5s92v"]
+    "zhuanlan.zhihu.com": [".css-d45dic", ".css-1f4osvg", ".Button.css-1u5s92v"],
+    "be.marketscreener.com": ["#myHeader", ".esi_h"]
 }
