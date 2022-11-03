@@ -47,11 +47,11 @@
                         <div>{libraryState.libraryInfo.topic.name}</div>
                     </div>
                 </div>
-            {:else if libraryState.isClustering}
+            {:else if libraryState?.isClustering}
                 <div class="top-row flex" in:fly={{ y: 10, duration: 300, easing: cubicOut }}>
                     Adding to your library...
                 </div>
-            {:else if libraryState.error}
+            {:else if libraryState?.error}
                 <div class="top-row flex" in:fly={{ y: 10, duration: 300, easing: cubicOut }}>
                     Error adding article :(
                 </div>
@@ -79,7 +79,7 @@
                         ? "s"
                         : ""}
                 </div>
-            {:else if libraryState.libraryInfo?.article && libraryState?.readingProgress}
+            {:else if libraryState?.libraryInfo?.article && libraryState?.readingProgress && (!(libraryState?.userInfo?.onPaidPlan || libraryState?.userInfo?.trialEnabled) || libraryState?.linkCount === 0)}
                 <div
                     class={clsx(
                         "bottom-row mt-2 flex items-center gap-1",
