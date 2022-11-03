@@ -239,7 +239,7 @@ export default function SettingsModalTab({
 
                 <div className="flex gap-3">
                     <Button
-                        title="View roadmap"
+                        title="Open roadmap"
                         href="https://unclutter.canny.io/"
                         darkModeEnabled={darkModeEnabled}
                         primary
