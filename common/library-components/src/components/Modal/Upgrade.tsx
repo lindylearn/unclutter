@@ -25,7 +25,7 @@ export default function UpgradeModalTab({
             </h1>
             <div className="grid list-disc grid-cols-2 gap-4">
                 <FeatureCard
-                    title="Back-up & import articles"
+                    title="Automatically back-up & import articles"
                     imgSrc="import.png"
                     icon={
                         <svg viewBox="0 0 512 512" className="h-4">
