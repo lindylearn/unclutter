@@ -317,6 +317,7 @@
         ".sc-c7de6d20-2.hiblGN"
     ],
     "osrp.lanl.gov": ["#backband", "#backband2", "#lanlbar", "#toolbar"],
+    "phoronix.com": [".node", "#about-author", "#sharebar", ".after-article"],
     "radreads.co": [".tcb-flex-col"],
     "realpython.com": [".small.text-muted"],
     "reddit.com": ["._23h0-EcaBUorIHC-JZyh6J"],
