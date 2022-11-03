@@ -209,6 +209,13 @@
         ".hz-editorial-gallery-side-bar__section"
     ],
     "howtogeek.com": [".header-commission-statement", "#nextuplist", ".nextup"],
+    "hs.fi": [
+        ".flex.hide-if-empty.flex-row-reverse.mb-16",
+        ".ticker.ticker--20",
+        ".sr-only",
+        ".text-positive.bg-header-main",
+        "#header"
+    ],
     "independent.co.uk": [".Header__AuthorImage-sc-mqbe6u-4.bEMDmP"],
     "info.blackswanltd.com": [
         ".span6.widget-span.widget-type-linked_image",
