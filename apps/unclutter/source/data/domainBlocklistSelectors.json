@@ -326,6 +326,7 @@
         ".sc-c7de6d20-2.hiblGN"
     ],
     "osrp.lanl.gov": ["#backband", "#backband2", "#lanlbar", "#toolbar"],
+    "phoronix.com": [".node", "#about-author", "#sharebar", ".after-article"],
     "popsci.com.tr": [
         ".td-crumb-container",
         ".td-category",
