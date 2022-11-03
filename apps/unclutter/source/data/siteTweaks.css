@@ -938,3 +938,8 @@ hypothesis-highlight {
 .desktop-block {
     display: block !important;
 }
+
+/* https://news.ycombinator.com */
+#hnmain {
+    background-color: transparent !important;
+}

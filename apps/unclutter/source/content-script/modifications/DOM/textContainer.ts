@@ -233,6 +233,10 @@ export default class TextContainerModifier implements PageModifier {
                 // remove entire current stack
                 return false;
             }
+            if (stackType === "header" && this.shouldExcludeAsHeaderContainer(currentElem)) {
+                // remove entire current stack
+                return false;
+            }
 
             // exclude image captions in text stack
             if (stackType !== "image" && ["FIGURE", "PICTURE"].includes(currentElem.tagName)) {
@@ -1037,7 +1041,7 @@ export default class TextContainerModifier implements PageModifier {
 
     // very carefully exclude elements as text containers to avoid incorrect main container selection for small articles
     // this doesn't mean these elements will be removed, but they might
-    private shouldExcludeAsTextContainer(node: HTMLElement) {
+    private shouldExcludeAsTextContainer(node: HTMLElement): boolean {
         if (quoteContainerTags.includes(node.tagName.toLowerCase())) {
             // leave style of quotes intact
             // e.g. https://knowledge.wharton.upenn.edu/article/how-price-shocks-in-formative-years-scar-consumption-for-life/
@@ -1067,6 +1071,15 @@ export default class TextContainerModifier implements PageModifier {
             ].some((className) => node.className.toLowerCase().includes(className)) ||
             node.getAttribute("aria-hidden") === "true"
         ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private shouldExcludeAsHeaderContainer(node: HTMLElement): boolean {
+        // https://news.ycombinator.com/news
+        if (node.id === "hnmain") {
             return true;
         }
 

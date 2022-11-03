@@ -305,6 +305,7 @@
         ".f-content-column.f-content-column-1"
     ],
     "news.yahoo.com": ["#close-button-section"],
+    "news.ycombinator.com": ["#hnmain > tbody > tr:last-child"],
     "newyorker.com": [".SocialIconsList-Nwcjr.bFHhOT.social-icons__list"],
     "nippon.com": [
         ".c-lang",
