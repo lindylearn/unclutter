@@ -933,3 +933,8 @@ hypothesis-highlight {
 .Post-header.lindy-main-header-container {
     padding-bottom: 0 !important;
 }
+
+/* https://www.farwestcorrosion.com/blog/expert-tip-10 */
+.desktop-block {
+    display: block !important;
+}
