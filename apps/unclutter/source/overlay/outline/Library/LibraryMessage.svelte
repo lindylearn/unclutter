@@ -95,7 +95,7 @@
                     </svg> -->
 
                     {#if libraryState.readingProgress.queueCount === 0}
-                        empty reading queue
+                        reading queue empty
                     {:else}
                         {libraryState.readingProgress.queueCount} article{libraryState
                             .readingProgress.queueCount === 1

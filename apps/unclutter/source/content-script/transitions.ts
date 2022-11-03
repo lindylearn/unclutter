@@ -201,8 +201,6 @@ export default class TransitionManager implements PageModifier {
         await new Promise((r) => setTimeout(r, 300));
 
         // *** read DOM phase ***
-        this.libraryModifier.captureScreenshot(); // TODO move after dark theme handling?
-
         // *** write DOM phase ***
         this.bodyStyleModifier.afterTransitionIn();
         // apply color theme - iterating CSSOM and re-rendering page is potentially expensive
@@ -212,6 +210,10 @@ export default class TransitionManager implements PageModifier {
             // wait until dark mode enabled (perf seems fine, but sidebar immediately shows dark background)
             await new Promise((r) => setTimeout(r, 400));
         }
+
+        // *** read DOM phase ***
+        // *** write DOM phase ***
+        this.libraryModifier.captureScreenshot(); // after dark mode enable
 
         // insert annotations sidebar, start fetch
         // this.linkAnnotationsModifier.parseArticle(); // reads page, wraps link elems

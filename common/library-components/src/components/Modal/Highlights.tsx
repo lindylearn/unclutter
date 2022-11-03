@@ -229,8 +229,7 @@ export default function HighlightsTab({
                     />
                 ))}
                 {annotations !== null && annotations.length === 0 && (
-                    <div className="animate-fadein col-span-3 mt-3 flex w-full select-none items-center gap-2">
-                        {/* <ResourceIcon type="highlights" /> */}
+                    <div className="animate-fadein col-span-3 flex w-full select-none items-center gap-2">
                         Select any article text to create a highlight
                     </div>
                 )}

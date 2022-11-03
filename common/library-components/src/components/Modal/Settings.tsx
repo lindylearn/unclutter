@@ -107,7 +107,7 @@ export default function SettingsModalTab({
                     See what you've read over the last weeks, get back to articles you didn't
                     finish, or review your highlights. It's all just one{" "}
                     <span
-                        className="inline-block rounded-md bg-stone-200 px-1 font-medium dark:bg-neutral-700"
+                        className="inline-block rounded-md bg-stone-200 px-1 font-medium dark:bg-neutral-700 dark:text-stone-800"
                         style={{
                             backgroundColor: getActivityColor(3, darkModeEnabled),
                         }}
