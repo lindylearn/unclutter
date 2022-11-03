@@ -46,7 +46,7 @@ The mission of Unclutter is to improve reading on the web for everyone. You shou
 Here's how you can help:
 - [Use the open roadmap](https://unclutter.canny.io/) to suggest new features for Unclutter or to vote on existing ideas.
 - [Open GitHub issues](https://github.com/lindylearn/unclutter/issues) for bugs you find or for technical things to improve. All feedback from within the extension also automatically creates issues or Pull-Requests.
-- [Join our Discord server](https://discord.gg/CThpNQjucB) if you want to contribute code!
+<!-- - [Join our Discord server](https://discord.gg/CThpNQjucB) if you want to contribute code! -->
 
 <!-- [<img src="./docs/media/canny.png">](https://unclutter.canny.io/) -->
 
