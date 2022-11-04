@@ -28,7 +28,7 @@
     },
     "content_scripts": [
         {
-            "matches": ["https://library.lindylearn.io/*", "http://localhost/*"],
+            "matches": ["https://library.lindylearn.io/*"],
             "js": ["background/firefox-content-script.js"]
         }
     ]
