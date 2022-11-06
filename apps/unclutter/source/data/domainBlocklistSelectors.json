@@ -26,6 +26,7 @@
         ".ssrcss-ab5fd8-StyledFigureContainer.e34k3c21",
         ".ssrcss-2z3pjz-SectionWrapper.e1nh2i2l2"
     ],
+    "be.marketscreener.com": ["#myHeader", ".esi_h"],
     "bezprawnik.pl": [
         ".ad_slot_height_manager_wrapper_bp_sdh2",
         "#oa-360-1666305713099_aa6xa65xr",
@@ -346,6 +347,7 @@
         ".article-body__context_widget__1xxEe.article-body__element__2p5pI",
         ".article-toolbar__container__FHGRl.article-toolbar__hidden-on-desktop__1yvVL.article-toolbar__align-left__1RG-m"
     ],
+    "rha.ole.redhat.com": [".section"],
     "sandboxx.us": [".content#genesis-content::before"],
     "semiengineering.com": [".col-xs-12.col-sm-6.col-md-7"],
     "shopify.com": ["#GlobalIconSymbols", "#SiteNavContainer"],
@@ -496,6 +498,5 @@
     ],
     "zdnet.com": [".c-socialSharebar"],
     "zeit.de": [".article-player.article-player--has-player"],
-    "zhuanlan.zhihu.com": [".css-d45dic", ".css-1f4osvg", ".Button.css-1u5s92v"],
-    "be.marketscreener.com": ["#myHeader", ".esi_h"]
+    "zhuanlan.zhihu.com": [".css-d45dic", ".css-1f4osvg", ".Button.css-1u5s92v"]
 }
