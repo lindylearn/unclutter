@@ -22,6 +22,8 @@ import { constructLocalArticleInfo, LibraryInfo, LibraryState } from "../../comm
 import ReadingTimeModifier from "./DOM/readingTime";
 import { addArticlesToLibrary } from "../../common/api";
 import AnnotationsModifier from "./annotations/annotationsModifier";
+import { discoverFeeds } from "@unclutter/library-components/dist/feeds";
+import browser from "../../common/polyfill";
 
 @trackModifierExecution
 export default class LibraryModifier implements PageModifier {
@@ -71,6 +73,9 @@ export default class LibraryModifier implements PageModifier {
     async fetchState() {
         const rep = new ReplicacheProxy();
 
+        // trigger background fetch
+        rep.pull();
+
         // fetch user info
         const libraryUser = await getLibraryUser();
         if (libraryUser) {
@@ -93,8 +98,24 @@ export default class LibraryModifier implements PageModifier {
         this.overlayManager.updateLibraryState(this.libraryState);
         this.fetchArticleState(rep);
 
-        // fetch latest state
-        rep.pull();
+        // construct feed
+        // TODO check if already subscribed
+        try {
+            // parse DOM
+            // TODO move to different phase
+            const feedUrls = await discoverFeeds(document, this.articleUrl);
+
+            // fetch & parse feed in background
+            this.libraryState.feed = await browser.runtime.sendMessage(null, {
+                event: "parseRssFeeds",
+                sourceUrl: this.articleUrl,
+                feedUrls,
+            });
+            this.overlayManager.updateLibraryState(this.libraryState);
+            console.log(this.libraryState.feed);
+        } catch (err) {
+            console.error(err);
+        }
     }
 
     async fetchArticleState(rep: ReplicacheProxy) {

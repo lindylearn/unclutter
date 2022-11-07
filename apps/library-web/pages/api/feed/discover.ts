@@ -1,5 +1,5 @@
 import { JSDOM } from "jsdom";
-import { getMainFeed } from "@unclutter/library-components/dist/feeds";
+import { discoverFeeds, getMainFeed } from "@unclutter/library-components/dist/feeds";
 
 export default async function handler(req, res) {
     const sourceUrl = req.query.url;
@@ -11,7 +11,8 @@ export default async function handler(req, res) {
         return [];
     }
 
-    const feed = await getMainFeed(document, sourceUrl);
+    const feedUrls = await discoverFeeds(document, sourceUrl);
+    const feed = await getMainFeed(sourceUrl, feedUrls);
 
     res.status(200).json(feed);
 }

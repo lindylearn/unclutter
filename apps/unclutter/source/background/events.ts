@@ -1,4 +1,5 @@
 import { clusterLibraryArticles } from "@unclutter/library-components/dist/common";
+import { getMainFeed } from "@unclutter/library-components/dist/feeds";
 import type { Runtime, Tabs } from "webextension-polyfill";
 import { extensionSupportsUrl } from "../common/articleDetection";
 import { handleReportBrokenPage } from "../common/bugReport";
@@ -175,6 +176,9 @@ function handleMessage(
         return true;
     } else if (message.event === "searchLibrary") {
         search(message.type, message.query).then(sendResponse);
+        return true;
+    } else if (message.event === "parseRssFeeds") {
+        getMainFeed(message.sourceUrl, message.feedUrls).then(sendResponse);
         return true;
     }
 

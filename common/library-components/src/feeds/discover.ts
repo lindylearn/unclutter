@@ -1,8 +1,10 @@
-import Parser from "rss-parser";
-import { getDomain } from "../common";
+import { parseFeed } from "htmlparser2";
+import { getDomain } from "../common/util";
 import ky from "ky";
+import { Feed } from "domutils";
 
-const parser = new Parser();
+// import Parser from "rss-parser";
+// const parser = new Parser();
 
 const FEED_TYPES = [
     "application/atom+xml",
@@ -19,19 +21,16 @@ const FEED_TYPES = [
 ];
 
 export async function getMainFeed(
-    document: Document,
-    sourceUrl: string
+    sourceUrl: string,
+    rssUrls: string[]
 ): Promise<WebsiteFeed | null> {
-    const feeds = await discoverFeeds(document, sourceUrl);
-    console.log(feeds);
-    for (const feedUrl of feeds) {
+    for (const feedUrl of rssUrls) {
         try {
             const html = await ky.get(feedUrl).then((r) => r.text());
-
-            // const feed = await parser.parseString(html);
-            // if (feed.items.length > 0) {
-            //     return constructFeed(sourceUrl, feedUrl, feed);
-            // }
+            const feed = parseFeed(html);
+            if (feed && feed.items.length > 0) {
+                return constructFeed(sourceUrl, feedUrl, feed);
+            }
         } catch (e) {
             console.error(e);
         }
@@ -95,12 +94,33 @@ export async function discoverFeeds(document: Document, sourceUrl: string): Prom
     return feedUrls;
 }
 
-export function getHumanPostFrequency(feed: Parser.Output<{}> | null): string | null {
+export interface WebsiteFeed {
+    rssUrl: string;
+    link: string;
+    domain?: string;
+    title?: string;
+    postFrequency: string | null;
+}
+
+function constructFeed(sourceUrl: string, rssUrl: string, feed: Feed | null): WebsiteFeed | null {
+    if (!feed) {
+        return null;
+    }
+    return {
+        rssUrl,
+        link: feed.link || sourceUrl,
+        domain: getDomain(sourceUrl),
+        title: feed.title,
+        postFrequency: getHumanPostFrequency(feed),
+    };
+}
+
+export function getHumanPostFrequency(feed: Feed | null): string | null {
     if (!feed) {
         return null;
     }
 
-    const start = feed.items[feed.items.length - 1].isoDate;
+    const start = feed.items[feed.items.length - 1].pubDate;
     if (!start) {
         return null;
     }
@@ -125,29 +145,4 @@ export function getHumanPostFrequency(feed: Parser.Output<{}> | null): string | 
     }
 
     return null;
-}
-
-export interface WebsiteFeed {
-    rssUrl: string;
-    link: string;
-    domain?: string;
-    title?: string;
-    postFrequency: string | null;
-}
-
-function constructFeed(
-    sourceUrl: string,
-    rssUrl: string,
-    feed: Parser.Output<{}> | null
-): WebsiteFeed | null {
-    if (!feed) {
-        return null;
-    }
-    return {
-        rssUrl: feed.feedUrl || rssUrl,
-        link: feed.link || sourceUrl,
-        domain: getDomain(sourceUrl),
-        title: feed.title,
-        postFrequency: getHumanPostFrequency(feed),
-    };
 }
