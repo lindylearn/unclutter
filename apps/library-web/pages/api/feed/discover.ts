@@ -1,7 +1,7 @@
-import { discoverRssFeed } from "@unclutter/library-components/dist/feeds";
+import { getMainFeed } from "@unclutter/library-components/dist/feeds";
 
 export default async function handler(req, res) {
-    const feedUrl = await discoverRssFeed(req.query.url);
+    const feed = await getMainFeed(req.query.url);
 
-    res.status(200).json({ feedUrl });
+    res.status(200).json(feed);
 }

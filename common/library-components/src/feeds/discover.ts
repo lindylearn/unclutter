@@ -1,4 +1,6 @@
 import { JSDOM } from "jsdom";
+import Parser from "rss-parser";
+const parser = new Parser();
 
 const FEED_TYPES = [
     "application/atom+xml",
@@ -14,7 +16,22 @@ const FEED_TYPES = [
     "text/xml",
 ];
 
-export async function discoverRssFeed(sourceUrl: string): Promise<string | null> {
+export async function getMainFeed(sourceUrl: string): Promise<Parser.Output<{}> | null> {
+    const feeds = await discoverFeeds(sourceUrl);
+    for (const feedUrl of feeds) {
+        try {
+            const feed = await parser.parseURL(feedUrl);
+            if (feed.items.length > 0) {
+                return feed;
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    }
+    return null;
+}
+
+export async function discoverFeeds(sourceUrl: string): Promise<string[]> {
     // adapted from https://github.com/adbar/trafilatura/blob/aa0f0a55ec40b0d9347a771bbeed9e4f5ef72dd9/trafilatura/feeds.py and https://github.com/DIYgod/RSSHub-Radar/blob/master/src/js/content/utils.js
 
     // not required in content script
@@ -22,7 +39,7 @@ export async function discoverRssFeed(sourceUrl: string): Promise<string | null>
     const document: Document = new JSDOM(html).window.document;
     if (!document) {
         console.error("Invalid HTML");
-        return null;
+        return [];
     }
 
     let feedUrls: string[] = [];
@@ -75,7 +92,5 @@ export async function discoverRssFeed(sourceUrl: string): Promise<string | null>
     // hosted rss-proxy, see https://github.com/damoeb/rss-proxy/
     // Google News search, see trafilatura
 
-    console.log(feedUrls);
-
-    return feedUrls[0];
+    return feedUrls;
 }
