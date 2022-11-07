@@ -1,5 +1,7 @@
-import { JSDOM } from "jsdom";
 import Parser from "rss-parser";
+import { getDomain } from "../common";
+import ky from "ky";
+
 const parser = new Parser();
 
 const FEED_TYPES = [
@@ -16,14 +18,20 @@ const FEED_TYPES = [
     "text/xml",
 ];
 
-export async function getMainFeed(sourceUrl: string): Promise<Parser.Output<{}> | null> {
-    const feeds = await discoverFeeds(sourceUrl);
+export async function getMainFeed(
+    document: Document,
+    sourceUrl: string
+): Promise<WebsiteFeed | null> {
+    const feeds = await discoverFeeds(document, sourceUrl);
+    console.log(feeds);
     for (const feedUrl of feeds) {
         try {
-            const feed = await parser.parseURL(feedUrl);
-            if (feed.items.length > 0) {
-                return feed;
-            }
+            const html = await ky.get(feedUrl).then((r) => r.text());
+
+            // const feed = await parser.parseString(html);
+            // if (feed.items.length > 0) {
+            //     return constructFeed(sourceUrl, feedUrl, feed);
+            // }
         } catch (e) {
             console.error(e);
         }
@@ -31,16 +39,8 @@ export async function getMainFeed(sourceUrl: string): Promise<Parser.Output<{}> 
     return null;
 }
 
-export async function discoverFeeds(sourceUrl: string): Promise<string[]> {
+export async function discoverFeeds(document: Document, sourceUrl: string): Promise<string[]> {
     // adapted from https://github.com/adbar/trafilatura/blob/aa0f0a55ec40b0d9347a771bbeed9e4f5ef72dd9/trafilatura/feeds.py and https://github.com/DIYgod/RSSHub-Radar/blob/master/src/js/content/utils.js
-
-    // not required in content script
-    const html = await fetch(sourceUrl).then((response) => response.text());
-    const document: Document = new JSDOM(html).window.document;
-    if (!document) {
-        console.error("Invalid HTML");
-        return [];
-    }
 
     let feedUrls: string[] = [];
 
@@ -125,4 +125,29 @@ export function getHumanPostFrequency(feed: Parser.Output<{}> | null): string | 
     }
 
     return null;
+}
+
+export interface WebsiteFeed {
+    rssUrl: string;
+    link: string;
+    domain?: string;
+    title?: string;
+    postFrequency: string | null;
+}
+
+function constructFeed(
+    sourceUrl: string,
+    rssUrl: string,
+    feed: Parser.Output<{}> | null
+): WebsiteFeed | null {
+    if (!feed) {
+        return null;
+    }
+    return {
+        rssUrl: feed.feedUrl || rssUrl,
+        link: feed.link || sourceUrl,
+        domain: getDomain(sourceUrl),
+        title: feed.title,
+        postFrequency: getHumanPostFrequency(feed),
+    };
 }
