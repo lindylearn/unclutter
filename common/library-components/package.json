@@ -4,14 +4,14 @@
     "private": true,
     "scripts": {
         "watch": "yarn tsc -w",
-        "build": "yarn tsc",
-        "postinstall": "yarn build"
+        "build": "yarn tsc"
     },
     "dependencies": {
         "@radix-ui/react-dropdown-menu": "^1.0.0",
         "clsx": "^1.2.1",
         "date-fns": "^2.29.3",
         "flexsearch": "^0.7.21",
+        "jsdom": "^20.0.2",
         "use-resize-observer": "^9.0.2"
     },
     "peerDependencies": {

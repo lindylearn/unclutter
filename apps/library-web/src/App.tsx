@@ -22,6 +22,7 @@ import Welcome2Tab from "./tabs/Welcome2";
 import { reportEventPosthog } from "../common/metrics";
 import Import2Tab from "./tabs/Import2";
 import ImportTab from "./tabs/Import/_Import";
+import FeedTest from "./tabs/FeedTest";
 
 export interface LibraryTab {
     id: string;
@@ -124,6 +125,9 @@ export default function App() {
 
     if (location === "/modal") {
         return <ModalTestTab />;
+    }
+    if (location === "/feed") {
+        return <FeedTest />;
     }
 
     if (location === "/welcome") {
