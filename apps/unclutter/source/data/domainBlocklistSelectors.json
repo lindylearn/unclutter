@@ -403,7 +403,9 @@
     "theatlantic.com": [
         ".ArticleShare_root__BqVqF",
         ".ArticleHero_articleUtilityBar__OtFEE",
-        "#article-end"
+        "#article-end",
+        "#gpt-unit-1",
+        "#gpt-unit-2"
     ],
     "theblock.co": [".newsletterModal"],
     "theconstructor.org": [".cs-estimated-reading-time", "#toc_container"],
