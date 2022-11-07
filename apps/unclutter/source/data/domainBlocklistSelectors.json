@@ -147,7 +147,12 @@
         ".mb20.flt",
         ".adBox.custom_ad.nonm.mgid.executed"
     ],
-    "economist.com": [".css-1tllssg.e5tfikp1", ".css-m9rqg4.e5tfikp2"],
+    "economist.com": [
+        ".css-1tllssg.e5tfikp1",
+        ".css-m9rqg4.e5tfikp2",
+        ".css-1brxw25.e5tfikp1",
+        ".css-1hcsrxn.e5tfikp2"
+    ],
     "edition.cnn.com": [".ticker-ribbon"],
     "eff.org": [".element-invisible.element-focusable"],
     "emeatribune.com": ["#vuukle-emote", ".vuukle-powerbar.powerbarBoxDiv"],
