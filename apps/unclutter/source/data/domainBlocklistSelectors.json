@@ -26,6 +26,7 @@
         ".ssrcss-ab5fd8-StyledFigureContainer.e34k3c21",
         ".ssrcss-2z3pjz-SectionWrapper.e1nh2i2l2"
     ],
+    "be.marketscreener.com": ["#myHeader", ".esi_h"],
     "bezprawnik.pl": [
         ".ad_slot_height_manager_wrapper_bp_sdh2",
         "#oa-360-1666305713099_aa6xa65xr",
@@ -478,6 +479,7 @@
         ".aligncenter.size-full.wp-image-6800.entered.lazyloaded"
     ],
     "vancouversun.com": [".more-topic", ".visually-hidden", ".cat-head.short"],
+    "vanitynotes.com": ["#toggle-large-font"],
     "vnexpress.net": [
         ".section.page-detail.bottom-detail",
         ".width_common.box-tinlienquanv2",
@@ -496,6 +498,5 @@
     ],
     "zdnet.com": [".c-socialSharebar"],
     "zeit.de": [".article-player.article-player--has-player"],
-    "zhuanlan.zhihu.com": [".css-d45dic", ".css-1f4osvg", ".Button.css-1u5s92v"],
-    "be.marketscreener.com": ["#myHeader", ".esi_h"]
+    "zhuanlan.zhihu.com": [".css-d45dic", ".css-1f4osvg", ".Button.css-1u5s92v"]
 }
