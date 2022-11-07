@@ -52,19 +52,21 @@ export default function Welcome2Tab() {
 
                 // fetch email subscription status
                 const onPaidPlan = await checkHasSubscription(user.id, user.email);
+                const trialEnabled = true;
                 await rep.mutate.updateUserInfo({
                     id: user.id,
                     name: undefined,
                     signinProvider: user.app_metadata.provider as any,
                     email: user.email,
                     accountEnabled: true,
+                    trialEnabled,
                     onPaidPlan,
                 });
                 await new Promise((resolve) => setTimeout(resolve, 2000));
 
                 setUnclutterLibraryAuth(user.id);
 
-                if (onPaidPlan) {
+                if (onPaidPlan || trialEnabled) {
                     // trigger topic clustering after upload
                     // TODO ideally trigger this from extension
                     await new Promise((resolve) => setTimeout(resolve, 10000));
