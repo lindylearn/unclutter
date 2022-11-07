@@ -94,3 +94,35 @@ export async function discoverFeeds(sourceUrl: string): Promise<string[]> {
 
     return feedUrls;
 }
+
+export function getHumanPostFrequency(feed: Parser.Output<{}> | null): string | null {
+    if (!feed) {
+        return null;
+    }
+
+    const start = feed.items[feed.items.length - 1].isoDate;
+    if (!start) {
+        return null;
+    }
+    const end = new Date();
+    const days = Math.round((end.getTime() - new Date(start).getTime()) / (24 * 60 * 60 * 60));
+
+    const articlesPerDay = Math.round(feed.items.length / days);
+    if (articlesPerDay >= 1) {
+        return `${articlesPerDay} article${articlesPerDay !== 1 ? "s" : ""} per day`;
+    }
+    const articlesPerWeek = Math.round(feed.items.length / (days / 7));
+    if (articlesPerWeek >= 1) {
+        return `${articlesPerWeek} article${articlesPerWeek !== 1 ? "s" : ""} per week`;
+    }
+    const articlesPerMonth = Math.round(feed.items.length / (days / 30));
+    if (articlesPerMonth >= 1) {
+        return `${articlesPerMonth} article${articlesPerMonth !== 1 ? "s" : ""} per month`;
+    }
+    const articlesPerYear = Math.round(feed.items.length / (days / 365));
+    if (articlesPerYear >= 1) {
+        return `${articlesPerYear} article${articlesPerYear !== 1 ? "s" : ""} per year`;
+    }
+
+    return null;
+}
