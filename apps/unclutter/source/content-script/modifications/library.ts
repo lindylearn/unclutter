@@ -222,9 +222,9 @@ export default class LibraryModifier implements PageModifier {
             } else {
                 // fetch & parse feed in background
                 const articleFeed = await browser.runtime.sendMessage(null, {
-                    event: "parseRssFeeds",
+                    event: "discoverRssFeed",
                     sourceUrl: this.articleUrl,
-                    feedUrls,
+                    candidates: feedUrls,
                 });
                 if (articleFeed) {
                     this.libraryState.feed = {

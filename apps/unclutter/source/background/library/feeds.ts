@@ -5,16 +5,16 @@ import {
 } from "@unclutter/library-components/dist/feeds";
 import { FeedSubscription } from "@unclutter/library-components/dist/store";
 
-export async function parseRssFeeds(
+export async function discoverRssFeed(
     sourceUrl: string,
-    feedUrls: string[]
+    candidates: string[]
 ): Promise<FeedSubscription> {
-    if (feedUrls.length === 0) {
-        feedUrls = await discoverDomainFeeds(sourceUrl);
+    if (candidates.length === 0) {
+        candidates = await discoverDomainFeeds(sourceUrl);
     }
-    if (feedUrls.length === 0) {
-        feedUrls = getHeuristicFeedUrls(sourceUrl);
+    if (candidates.length === 0) {
+        candidates = getHeuristicFeedUrls(sourceUrl);
     }
 
-    return await getMainFeed(sourceUrl, feedUrls);
+    return await getMainFeed(sourceUrl, candidates);
 }

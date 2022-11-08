@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { FilterButton, FilterContext } from "..";
 import { getRandomLightColor } from "../../common";
-import { listFeedItems } from "../../feeds/list";
+import { listFeedItemsContentScript } from "../../feeds/list";
 import { Article, FeedSubscription, ReplicacheContext } from "../../store";
 import { StaticArticleList } from "../ArticleList";
 import { ResourceIcon } from "./components/numbers";
@@ -24,7 +24,7 @@ export default function FeedsModalTab({}) {
     const [articles, setArticles] = useState<Article[]>();
     useEffect(() => {
         if (filteredSubscription) {
-            listFeedItems(filteredSubscription).then(setArticles);
+            listFeedItemsContentScript(filteredSubscription).then(setArticles);
         }
     }, [filteredSubscription]);
 
@@ -38,7 +38,7 @@ export default function FeedsModalTab({}) {
                 <div className="info-bar flex justify-start gap-3 font-medium">
                     <div className="flex items-center gap-2">
                         <img
-                            className="h-5 w-5"
+                            className="h-6 w-6"
                             src={`https://www.google.com/s2/favicons?sz=128&domain=https://${filteredSubscription.domain}`}
                         />
                         {filteredSubscription.title}
@@ -50,7 +50,7 @@ export default function FeedsModalTab({}) {
 
             {filteredSubscription.description && <div>{filteredSubscription.description}</div>}
 
-            <div className="filter-list flex justify-start gap-3">
+            {/* <div className="filter-list flex justify-start gap-3">
                 <FilterButton
                     title={false ? "In library" : "All articles"}
                     icon={
@@ -88,7 +88,7 @@ export default function FeedsModalTab({}) {
                     }
                     onClick={() => {}}
                 />
-            </div>
+            </div> */}
 
             <StaticArticleList articles={articles || []} small />
         </div>

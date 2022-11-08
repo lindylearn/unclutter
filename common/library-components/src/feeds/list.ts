@@ -1,17 +1,14 @@
-import { parseFeed } from "htmlparser2";
-import ky from "ky";
-import { getUrlHash } from "../common";
+import { getBrowser, getUnclutterExtensionId, getUrlHash } from "../common";
 
 import { Article, FeedSubscription } from "../store";
 
-export async function listFeedItems(feed: FeedSubscription): Promise<Article[]> {
-    const html = await ky
-        .get(`https://cors-anywhere.herokuapp.com/${feed.rss_url}`)
-        .then((r) => r.text());
-    const rssFeed = parseFeed(html);
-    if (!rssFeed) {
-        return [];
-    }
+export async function listFeedItemsContentScript(feed: FeedSubscription): Promise<Article[]> {
+    // fetch in background to avoid CORS issues
+    const rssFeed = await getBrowser().runtime.sendMessage(getUnclutterExtensionId(), {
+        event: "fetchRssFeed",
+        feedUrl: feed.rss_url,
+    });
+    console.log(rssFeed);
 
     return rssFeed.items.map((item) => ({
         id: getUrlHash(item.link!),
