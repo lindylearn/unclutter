@@ -1,5 +1,4 @@
 import { clusterLibraryArticles } from "@unclutter/library-components/dist/common";
-import { getMainFeed } from "@unclutter/library-components/dist/feeds";
 import type { Runtime, Tabs } from "webextension-polyfill";
 import { extensionSupportsUrl } from "../common/articleDetection";
 import { handleReportBrokenPage } from "../common/bugReport";
@@ -17,6 +16,7 @@ import { loadAnnotationCountsToMemory } from "./annotationCounts";
 import { getAllBookmarks, requestBookmarksPermission } from "./bookmarks";
 import { enableInTab, injectScript, togglePageViewMessage } from "./inject";
 import { onNewInstall, setupWithPermissions } from "./install";
+import { parseRssFeeds } from "./library/feeds";
 import {
     initLibrary,
     processReplicacheMessage,
@@ -178,7 +178,7 @@ function handleMessage(
         search(message.type, message.query).then(sendResponse);
         return true;
     } else if (message.event === "parseRssFeeds") {
-        getMainFeed(message.sourceUrl, message.feedUrls).then(sendResponse);
+        parseRssFeeds(message.sourceUrl, message.feedUrls).then(sendResponse);
         return true;
     }
 

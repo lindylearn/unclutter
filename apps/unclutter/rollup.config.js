@@ -12,6 +12,10 @@ import postcss from "rollup-plugin-postcss";
 import svelte from "rollup-plugin-svelte";
 import sveltePreprocess from "svelte-preprocess";
 import tailwindcss from "tailwindcss";
+// import builtins from "rollup-plugin-node-builtins";
+// import globals from "rollup-plugin-node-globals";
+// import nodePo1lyfills from "rollup-plugin-node-polyfills";
+// import nodePolyfills from "rollup-plugin-polyfill-node";
 
 const isProduction = !process.env.ROLLUP_WATCH;
 
@@ -82,7 +86,10 @@ const esModuleConfig = {
         preserveModulesRoot: "source",
     },
     plugins: [
-        nodeResolve({ browser: true }), // run before typescript to use correct browser imports
+        // globals(),
+        // builtins(),
+        // nodePolyfills(), // before nodeResolve
+        nodeResolve({ browser: true, preferBuiltins: true }), // run before typescript to use correct browser imports
         typescript(),
         postcss({ plugins: [tailwindcss()] }),
         babel({ babelHelpers: "bundled", presets: ["@babel/preset-react"] }),

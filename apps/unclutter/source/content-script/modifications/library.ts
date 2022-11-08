@@ -22,7 +22,7 @@ import { constructLocalArticleInfo, LibraryInfo, LibraryState } from "../../comm
 import ReadingTimeModifier from "./DOM/readingTime";
 import { addArticlesToLibrary } from "../../common/api";
 import AnnotationsModifier from "./annotations/annotationsModifier";
-import { discoverFeeds } from "@unclutter/library-components/dist/feeds";
+import { discoverFeedsInDocument } from "@unclutter/library-components/dist/feeds";
 import browser from "../../common/polyfill";
 
 @trackModifierExecution
@@ -103,7 +103,7 @@ export default class LibraryModifier implements PageModifier {
         try {
             // parse DOM
             // TODO move to different phase
-            const feedUrls = await discoverFeeds(document, this.articleUrl);
+            const feedUrls = await discoverFeedsInDocument(document, this.articleUrl);
 
             // fetch & parse feed in background
             this.libraryState.feed = await browser.runtime.sendMessage(null, {
