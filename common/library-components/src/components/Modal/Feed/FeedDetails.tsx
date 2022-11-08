@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import React, { useContext, useEffect, useState } from "react";
 import { FilterButton, FilterContext } from "../..";
 import { getRandomLightColor } from "../../../common";
@@ -7,7 +8,7 @@ import { StaticArticleList } from "../../ArticleList";
 import { ResourceIcon } from "../components/numbers";
 
 export default function FeedDetailsTab({ darkModeEnabled }) {
-    const { currentSubscription } = useContext(FilterContext);
+    const { currentSubscription, setCurrentSubscription } = useContext(FilterContext);
     const rep = useContext(ReplicacheContext);
 
     const filteredSubscription = useSubscribe(
@@ -35,7 +36,19 @@ export default function FeedDetailsTab({ darkModeEnabled }) {
 
     return (
         <div className="flex flex-col gap-4">
-            <FeedCard subscription={filteredSubscription} darkModeEnabled={darkModeEnabled} />
+            <div className="flex items-center gap-3">
+                <svg
+                    className="h-12 shrink-0 cursor-pointer rounded-md bg-stone-100 p-3 dark:bg-stone-800"
+                    viewBox="0 0 512 512"
+                    onClick={() => setCurrentSubscription()}
+                >
+                    <path
+                        fill="currentColor"
+                        d="M176.1 103C181.7 107.7 184 113.8 184 120S181.7 132.3 176.1 136.1L81.94 232H488C501.3 232 512 242.8 512 256s-10.75 24-24 24H81.94l95.03 95.03c9.375 9.375 9.375 24.56 0 33.94s-24.56 9.375-33.94 0l-136-136c-9.375-9.375-9.375-24.56 0-33.94l136-136C152.4 93.66 167.6 93.66 176.1 103z"
+                    />
+                </svg>
+                <FeedCard subscription={filteredSubscription} darkModeEnabled={darkModeEnabled} />
+            </div>
 
             <div className="filter-list flex justify-start gap-3">
                 <FilterButton
@@ -85,14 +98,24 @@ export default function FeedDetailsTab({ darkModeEnabled }) {
 export function FeedCard({
     subscription,
     darkModeEnabled,
+    isListEntry = false,
+    setCurrentSubscription,
 }: {
     subscription: FeedSubscription;
     darkModeEnabled: boolean;
+    isListEntry?: boolean;
+    setCurrentSubscription?: (subscription: FeedSubscription) => void;
 }) {
     const rep = useContext(ReplicacheContext);
 
     return (
-        <div className="info-box flex justify-start">
+        <div
+            className={clsx(
+                "info-box flex flex-grow justify-start",
+                isListEntry && "cursor-pointer transition-transform hover:scale-[99%]"
+            )}
+            onClick={() => setCurrentSubscription?.(subscription)}
+        >
             <div
                 className="title flex flex-grow items-center gap-3 rounded-l-md bg-stone-50 p-3 dark:bg-neutral-800"
                 style={{
@@ -106,8 +129,11 @@ export function FeedCard({
                 <div className="flex flex-grow flex-col items-start">
                     <h1 className="font-title text-xl font-bold">{subscription.title}</h1>
                     <a
-                        className="block transition-transform hover:scale-[97%]"
-                        href={subscription.link}
+                        className={clsx(
+                            "block",
+                            !isListEntry && "transition-transform hover:scale-[97%]"
+                        )}
+                        href={!isListEntry ? subscription.link : undefined}
                     >
                         {subscription.domain}
                     </a>

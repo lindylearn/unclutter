@@ -1,10 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
-import { FilterButton, FilterContext } from "../..";
-import { getRandomLightColor } from "../../../common";
-import { listFeedItemsContentScript, listFeedItemsWeb } from "../../../feeds/list";
-import { Article, FeedSubscription, ReplicacheContext, useSubscribe } from "../../../store";
-import { StaticArticleList } from "../../ArticleList";
-import { ResourceIcon } from "../components/numbers";
+import { FilterContext } from "../..";
+import { FeedSubscription, ReplicacheContext } from "../../../store";
 import { FeedCard } from "./FeedDetails";
 
 export default function FeedListTab({ darkModeEnabled }) {
@@ -21,7 +17,12 @@ export default function FeedListTab({ darkModeEnabled }) {
     return (
         <div className="flex flex-col gap-4">
             {allSubscriptions?.map((subscription) => (
-                <FeedCard subscription={subscription} darkModeEnabled={darkModeEnabled} />
+                <FeedCard
+                    subscription={subscription}
+                    darkModeEnabled={darkModeEnabled}
+                    isListEntry
+                    setCurrentSubscription={setCurrentSubscription}
+                />
             ))}
         </div>
     );
