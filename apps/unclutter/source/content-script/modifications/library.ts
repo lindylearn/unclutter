@@ -111,7 +111,7 @@ export default class LibraryModifier implements PageModifier {
                 sourceUrl: this.articleUrl,
                 feedUrls,
             });
-            // this.overlayManager.updateLibraryState(this.libraryState);
+            this.overlayManager.updateLibraryState(this.libraryState);
         } catch (err) {
             console.error(err);
         }

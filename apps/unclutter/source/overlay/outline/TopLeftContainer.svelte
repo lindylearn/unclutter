@@ -62,6 +62,8 @@
 >
     {#if libraryState?.libraryEnabled}
         <LibraryMessage {libraryState} {libraryModalModifier} {darkModeEnabled} />
+    {/if}
+    {#if libraryState?.feed}
         <SubscribeMessage {libraryState} {libraryModalModifier} {darkModeEnabled} />
     {/if}
 
