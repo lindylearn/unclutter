@@ -10,9 +10,10 @@ import { FeedSubscription, ReplicacheContext, Topic, UserInfo } from "../../stor
 import RecentModalTab from "./Recent";
 import { LindyIcon } from "../Icons";
 import HighlightsTab from "./Highlights";
-import FeedsModalTab from "./Feeds";
+import FeedsDetailsTab from "./Feed/FeedDetails";
 import UpgradeModalTab from "./Upgrade";
 import SettingsModalTab from "./Settings";
+import FeedListTab from "./Feed/FeedList";
 
 export const ModalContext = createContext<{
     isVisible: boolean;
@@ -183,7 +184,8 @@ function ModalContent({
     setCurrentTab: (tab: string) => void;
     reportEvent?: (event: string, data?: any) => void;
 }) {
-    const { currentArticle, currentAnnotationsCount } = useContext(FilterContext);
+    const { currentArticle, currentAnnotationsCount, currentSubscription } =
+        useContext(FilterContext);
     if (currentArticle && currentAnnotationsCount === undefined) {
         return <></>;
     }
@@ -245,7 +247,12 @@ function ModalContent({
                         reportEvent={reportEvent}
                     />
                 )}
-                {currentTab === "feeds" && <FeedsModalTab darkModeEnabled={darkModeEnabled} />}
+                {currentTab === "feeds" &&
+                    (currentSubscription ? (
+                        <FeedsDetailsTab darkModeEnabled={darkModeEnabled} />
+                    ) : (
+                        <FeedListTab darkModeEnabled={darkModeEnabled} />
+                    ))}
                 {currentTab === "signup" && (
                     <UpgradeModalTab darkModeEnabled={darkModeEnabled} reportEvent={reportEvent} />
                 )}

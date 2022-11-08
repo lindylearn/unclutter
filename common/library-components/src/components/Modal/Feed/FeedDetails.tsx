@@ -1,13 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
-import { FilterButton, FilterContext } from "..";
-import { getRandomLightColor } from "../../common";
-import { listFeedItemsContentScript, listFeedItemsWeb } from "../../feeds/list";
-import { Article, FeedSubscription, ReplicacheContext, useSubscribe } from "../../store";
-import { StaticArticleList } from "../ArticleList";
-import { ResourceIcon } from "./components/numbers";
+import { FilterButton, FilterContext } from "../..";
+import { getRandomLightColor } from "../../../common";
+import { listFeedItemsContentScript, listFeedItemsWeb } from "../../../feeds/list";
+import { Article, FeedSubscription, ReplicacheContext, useSubscribe } from "../../../store";
+import { StaticArticleList } from "../../ArticleList";
+import { ResourceIcon } from "../components/numbers";
 
-export default function FeedsModalTab({ darkModeEnabled }) {
-    const { currentSubscription, setCurrentSubscription } = useContext(FilterContext);
+export default function FeedDetailsTab({ darkModeEnabled }) {
+    const { currentSubscription } = useContext(FilterContext);
     const rep = useContext(ReplicacheContext);
 
     const filteredSubscription = useSubscribe(
@@ -17,16 +17,6 @@ export default function FeedsModalTab({ darkModeEnabled }) {
         null,
         [currentSubscription?.id]
     ) as FeedSubscription;
-    const [allSubscriptions, setAllSubscriptions] = useState<FeedSubscription[]>();
-    useEffect(() => {
-        rep?.query.listSubscriptions().then((subscriptions) => {
-            setAllSubscriptions(subscriptions);
-
-            if (!currentSubscription) {
-                setCurrentSubscription(subscriptions[subscriptions.length - 2]);
-            }
-        });
-    }, [rep]);
 
     const [articles, setArticles] = useState<Article[]>();
     useEffect(() => {
@@ -45,61 +35,7 @@ export default function FeedsModalTab({ darkModeEnabled }) {
 
     return (
         <div className="flex flex-col gap-4">
-            <div className="info-box flex justify-start">
-                <div
-                    className="title flex flex-grow items-center gap-3 rounded-l-md bg-stone-50 p-3 dark:bg-neutral-800"
-                    style={{
-                        background: getRandomLightColor(
-                            filteredSubscription.domain,
-                            darkModeEnabled
-                        ),
-                    }}
-                >
-                    <img
-                        className="h-12 w-12 flex-shrink-0 rounded-md"
-                        src={`https://www.google.com/s2/favicons?sz=128&domain=https://${filteredSubscription.domain}`}
-                    />
-                    <div className="flex flex-grow flex-col items-start">
-                        <h1 className="font-title text-xl font-bold">
-                            {filteredSubscription.title}
-                        </h1>
-                        <a
-                            className="block transition-transform hover:scale-[97%]"
-                            href={filteredSubscription.link}
-                        >
-                            {filteredSubscription.domain}
-                        </a>
-                    </div>
-                </div>
-
-                <div
-                    className="flex flex-shrink-0 origin-left cursor-pointer select-none items-center gap-2 self-stretch rounded-r-md bg-stone-100 px-5 font-medium transition-transform hover:scale-[97%] dark:bg-neutral-800"
-                    onClick={() => {
-                        rep?.mutate.updateSubscription({
-                            id: filteredSubscription.id,
-                            is_subscribed: !filteredSubscription.is_subscribed,
-                        });
-                    }}
-                >
-                    {filteredSubscription.is_subscribed ? (
-                        <svg className="w-5" viewBox="0 0 448 512">
-                            <path
-                                fill="currentColor"
-                                d="M440.1 103C450.3 112.4 450.3 127.6 440.1 136.1L176.1 400.1C167.6 410.3 152.4 410.3 143 400.1L7.029 264.1C-2.343 255.6-2.343 240.4 7.029 231C16.4 221.7 31.6 221.7 40.97 231L160 350.1L407 103C416.4 93.66 431.6 93.66 440.1 103V103z"
-                            />
-                        </svg>
-                    ) : (
-                        <svg className="w-5" viewBox="0 0 448 512">
-                            <path
-                                fill="currentColor"
-                                d="M432 256C432 269.3 421.3 280 408 280h-160v160c0 13.25-10.75 24.01-24 24.01S200 453.3 200 440v-160h-160c-13.25 0-24-10.74-24-23.99C16 242.8 26.75 232 40 232h160v-160c0-13.25 10.75-23.99 24-23.99S248 58.75 248 72v160h160C421.3 232 432 242.8 432 256z"
-                            />
-                        </svg>
-                    )}
-
-                    {filteredSubscription.is_subscribed ? "Unfollow" : "Follow"}
-                </div>
-            </div>
+            <FeedCard subscription={filteredSubscription} darkModeEnabled={darkModeEnabled} />
 
             <div className="filter-list flex justify-start gap-3">
                 <FilterButton
@@ -142,6 +78,69 @@ export default function FeedsModalTab({ darkModeEnabled }) {
             </div>
 
             <StaticArticleList articles={articles || []} small />
+        </div>
+    );
+}
+
+export function FeedCard({
+    subscription,
+    darkModeEnabled,
+}: {
+    subscription: FeedSubscription;
+    darkModeEnabled: boolean;
+}) {
+    const rep = useContext(ReplicacheContext);
+
+    return (
+        <div className="info-box flex justify-start">
+            <div
+                className="title flex flex-grow items-center gap-3 rounded-l-md bg-stone-50 p-3 dark:bg-neutral-800"
+                style={{
+                    background: getRandomLightColor(subscription.domain, darkModeEnabled),
+                }}
+            >
+                <img
+                    className="h-12 w-12 flex-shrink-0 rounded-md"
+                    src={`https://www.google.com/s2/favicons?sz=128&domain=https://${subscription.domain}`}
+                />
+                <div className="flex flex-grow flex-col items-start">
+                    <h1 className="font-title text-xl font-bold">{subscription.title}</h1>
+                    <a
+                        className="block transition-transform hover:scale-[97%]"
+                        href={subscription.link}
+                    >
+                        {subscription.domain}
+                    </a>
+                </div>
+            </div>
+
+            <div
+                className="flex flex-shrink-0 origin-left cursor-pointer select-none items-center gap-2 self-stretch rounded-r-md bg-stone-100 px-5 font-medium transition-transform hover:scale-[97%] dark:bg-neutral-800"
+                onClick={() => {
+                    rep?.mutate.updateSubscription({
+                        id: subscription.id,
+                        is_subscribed: !subscription.is_subscribed,
+                    });
+                }}
+            >
+                {subscription.is_subscribed ? (
+                    <svg className="w-5" viewBox="0 0 448 512">
+                        <path
+                            fill="currentColor"
+                            d="M440.1 103C450.3 112.4 450.3 127.6 440.1 136.1L176.1 400.1C167.6 410.3 152.4 410.3 143 400.1L7.029 264.1C-2.343 255.6-2.343 240.4 7.029 231C16.4 221.7 31.6 221.7 40.97 231L160 350.1L407 103C416.4 93.66 431.6 93.66 440.1 103V103z"
+                        />
+                    </svg>
+                ) : (
+                    <svg className="w-5" viewBox="0 0 448 512">
+                        <path
+                            fill="currentColor"
+                            d="M432 256C432 269.3 421.3 280 408 280h-160v160c0 13.25-10.75 24.01-24 24.01S200 453.3 200 440v-160h-160c-13.25 0-24-10.74-24-23.99C16 242.8 26.75 232 40 232h160v-160c0-13.25 10.75-23.99 24-23.99S248 58.75 248 72v160h160C421.3 232 432 242.8 432 256z"
+                        />
+                    </svg>
+                )}
+
+                {subscription.is_subscribed ? "Unfollow" : "Follow"}
+            </div>
         </div>
     );
 }
