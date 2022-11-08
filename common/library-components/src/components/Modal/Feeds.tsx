@@ -1,30 +1,37 @@
 import React, { useContext, useEffect, useState } from "react";
 import { FilterButton, FilterContext } from "..";
 import { getRandomLightColor } from "../../common";
-import { listFeedItemsContentScript } from "../../feeds/list";
+import { listFeedItemsContentScript, listFeedItemsWeb } from "../../feeds/list";
 import { Article, FeedSubscription, ReplicacheContext } from "../../store";
 import { StaticArticleList } from "../ArticleList";
 import { ResourceIcon } from "./components/numbers";
 
-export default function FeedsModalTab({}) {
+export default function FeedsModalTab({ isDev = true }) {
     const { currentSubscription } = useContext(FilterContext);
     const rep = useContext(ReplicacheContext);
 
     const [filteredSubscription, setFilteredSubscription] = useState<FeedSubscription | undefined>(
         currentSubscription
     );
-    // const [allSubscriptions, setAllSubscriptions] = useState<FeedSubscription[]>();
-    // useEffect(() => {
-    //     rep?.query.listSubscriptions().then((subscriptions) => {
-    //         setAllSubscriptions(subscriptions);
-    //         setFilteredSubscription(subscriptions[0]);
-    //     });
-    // }, [rep]);
+    const [allSubscriptions, setAllSubscriptions] = useState<FeedSubscription[]>();
+    useEffect(() => {
+        rep?.query.listSubscriptions().then((subscriptions) => {
+            setAllSubscriptions(subscriptions);
+
+            if (!currentSubscription) {
+                setFilteredSubscription(subscriptions[0]);
+            }
+        });
+    }, [rep]);
 
     const [articles, setArticles] = useState<Article[]>();
     useEffect(() => {
         if (filteredSubscription) {
-            listFeedItemsContentScript(filteredSubscription).then(setArticles);
+            if (isDev) {
+                listFeedItemsWeb(filteredSubscription).then(setArticles);
+            } else {
+                listFeedItemsContentScript(filteredSubscription).then(setArticles);
+            }
         }
     }, [filteredSubscription]);
 
