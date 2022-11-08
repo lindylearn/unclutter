@@ -1,5 +1,10 @@
-import { DraggableArticleList, useTabInfos, useArticleListsCache } from "../../components";
-import React, { ReactNode, useEffect, useState } from "react";
+import {
+    DraggableArticleList,
+    useTabInfos,
+    useArticleListsCache,
+    FilterContext,
+} from "../../components";
+import React, { ReactNode, useContext, useEffect, useState } from "react";
 import { useDebounce } from "usehooks-ts";
 import clsx from "clsx";
 
@@ -12,21 +17,15 @@ import { SearchBox } from "./components/search";
 
 export default function RecentModalTab({
     userInfo,
-    currentTopic,
-    domainFilter,
-    setDomainFilter,
     darkModeEnabled,
-    showTopic,
     reportEvent = () => {},
 }: {
     userInfo: UserInfo;
-    currentTopic?: Topic;
-    domainFilter: string | null;
-    setDomainFilter: (domain: string | null) => void;
     darkModeEnabled: boolean;
-    showTopic: (topicId: string) => void;
     reportEvent?: (event: string, data?: any) => void;
 }) {
+    const { domainFilter, setDomainFilter, currentTopic, showTopic } = useContext(FilterContext);
+
     const [onlyUnread, setOnlyUnread] = useState(false);
     const [lastFirst, setLastFirst] = useState(true);
 
@@ -41,7 +40,7 @@ export default function RecentModalTab({
             return;
         }
         if (domainFilter) {
-            setDomainFilter(null);
+            setDomainFilter();
         }
         (async () => {
             let hits = await getBrowser().runtime.sendMessage(getUnclutterExtensionId(), {
@@ -155,8 +154,8 @@ function PageFilters({
     lastFirst: boolean;
     setOnlyUnread: (state: boolean) => void;
     setLastFirst: (state: boolean) => void;
-    domainFilter: string | null;
-    setDomainFilter: (domain: string | null) => void;
+    domainFilter?: string;
+    setDomainFilter: (domain?: string) => void;
     query?: string;
     setQuery: (query: string) => void;
     darkModeEnabled: boolean;
@@ -219,7 +218,7 @@ function PageFilters({
                         </svg>
                     }
                     onClick={() => {
-                        setDomainFilter(null);
+                        setDomainFilter();
                         reportEvent("changeListFilter", { domainFilter: null });
                     }}
                     color={getRandomLightColor(domainFilter, darkModeEnabled)}

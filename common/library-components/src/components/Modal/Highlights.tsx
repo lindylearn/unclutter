@@ -13,26 +13,20 @@ import {
 import { Highlight } from "../Highlight";
 import { ResourceIcon } from "./components/numbers";
 import { SearchBox } from "./components/search";
+import { FilterContext } from "..";
 
 export default function HighlightsTab({
-    currentArticle,
-    currentTopic,
-    currentAnnotationsCount,
-    domainFilter,
-    setDomainFilter,
     userInfo,
     darkModeEnabled,
     reportEvent = () => {},
 }: {
-    currentArticle?: string;
-    currentTopic?: Topic;
-    currentAnnotationsCount?: number;
-    domainFilter: string | null;
-    setDomainFilter: (domain: string | null) => void;
     userInfo: UserInfo;
     darkModeEnabled: boolean;
     reportEvent?: (event: string, data?: any) => void;
 }) {
+    const { currentArticle, currentTopic, domainFilter, setDomainFilter, currentAnnotationsCount } =
+        useContext(FilterContext);
+
     const rep = useContext(ReplicacheContext);
     useEffect(() => {
         rep?.mutate.updateSettings({ seen_highlights_version: latestHighlightsVersion });
@@ -194,7 +188,7 @@ export default function HighlightsTab({
                         }
                         onClick={() => {
                             setActiveCurrentFilter(false);
-                            setDomainFilter(null);
+                            setDomainFilter();
                             reportEvent("changeListFilter", { activeCurrentFilter: null });
                         }}
                         color={getRandomLightColor(

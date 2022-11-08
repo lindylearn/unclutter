@@ -21,6 +21,21 @@ export const ModalContext = createContext<{
     isVisible: false,
     closeModal: () => {},
 });
+export const FilterContext = createContext<{
+    currentArticle?: string;
+    currentTopic?: Topic;
+    changedTopic?: boolean;
+    domainFilter?: string;
+    showTopic: (topicId: string) => void;
+    showDomain: (domain: string) => void;
+    setDomainFilter: (domain?: string) => void;
+    relatedLinkCount?: number;
+    currentAnnotationsCount?: number;
+}>({
+    showTopic: () => {},
+    showDomain: () => {},
+    setDomainFilter: () => {},
+});
 
 export function LibraryModalPage({
     userInfo,
@@ -72,7 +87,7 @@ export function LibraryModalPage({
     }, [currentTab]);
 
     const [currentTopic, setCurrentTopic] = useState<Topic | undefined>(initialTopic);
-    const [domainFilter, setDomainFilter] = useState<string | null>(null);
+    const [domainFilter, setDomainFilter] = useState<string>();
     useEffect(() => {
         setCurrentTopic(initialTopic);
     }, [initialTopic]);
@@ -109,25 +124,30 @@ export function LibraryModalPage({
                 onClick={closeModal}
             />
             <div className="modal-content relative z-10 mx-auto mt-10 flex h-5/6 max-h-[700px] max-w-5xl flex-col overflow-hidden rounded-lg bg-white text-stone-800 shadow dark:bg-[#212121] dark:text-[rgb(232,230,227)]">
-                <ModalContent
-                    userInfo={userInfo}
-                    articleCount={articleCount}
-                    currentArticle={currentArticle}
-                    currentTopic={currentTopic}
-                    changedTopic={currentTopic !== initialTopic?.id}
-                    domainFilter={domainFilter}
-                    setDomainFilter={setDomainFilter}
-                    darkModeEnabled={darkModeEnabled}
-                    showSignup={showSignup}
-                    graph={graph}
-                    relatedLinkCount={relatedLinkCount}
-                    currentAnnotationsCount={currentAnnotationsCount}
-                    currentTab={currentTab}
-                    setCurrentTab={setCurrentTab}
-                    showTopic={showTopic}
-                    showDomain={showDomain}
-                    reportEvent={reportEvent}
-                />
+                <FilterContext.Provider
+                    value={{
+                        currentArticle,
+                        currentTopic,
+                        changedTopic: currentTopic !== initialTopic?.id,
+                        domainFilter,
+                        setDomainFilter,
+                        showTopic,
+                        showDomain,
+                        relatedLinkCount,
+                        currentAnnotationsCount,
+                    }}
+                >
+                    <ModalContent
+                        userInfo={userInfo}
+                        articleCount={articleCount}
+                        darkModeEnabled={darkModeEnabled}
+                        showSignup={showSignup}
+                        graph={graph}
+                        currentTab={currentTab}
+                        setCurrentTab={setCurrentTab}
+                        reportEvent={reportEvent}
+                    />
+                </FilterContext.Provider>
             </div>
         </div>
     );
@@ -135,41 +155,24 @@ export function LibraryModalPage({
 
 function ModalContent({
     userInfo,
-    currentArticle,
-    currentTopic,
-    changedTopic,
-    domainFilter,
-    setDomainFilter,
     articleCount,
     showSignup,
     darkModeEnabled,
     graph,
-    relatedLinkCount,
-    currentAnnotationsCount,
     currentTab,
     setCurrentTab,
-    showTopic,
-    showDomain,
     reportEvent = () => {},
 }: {
     userInfo: UserInfo;
-    currentArticle?: string;
-    currentTopic?: Topic;
-    changedTopic: boolean;
-    domainFilter: string | null;
-    setDomainFilter: (domain: string | null) => void;
     articleCount?: number;
     darkModeEnabled: boolean;
     showSignup: boolean;
     graph?: CustomGraphData;
-    relatedLinkCount?: number;
-    currentAnnotationsCount?: number;
     currentTab: string;
     setCurrentTab: (tab: string) => void;
-    showTopic: (topicId: string) => void;
-    showDomain: (domain: string) => void;
     reportEvent?: (event: string, data?: any) => void;
 }) {
+    const { currentArticle, currentAnnotationsCount } = useContext(FilterContext);
     if (currentArticle && currentAnnotationsCount === undefined) {
         return <></>;
     }
@@ -189,11 +192,7 @@ function ModalContent({
                     <Sidebar
                         userInfo={userInfo}
                         currentTab={currentTab}
-                        currentTopic={currentTopic}
-                        changedTopic={changedTopic}
                         setCurrentTab={setCurrentTab}
-                        relatedLinkCount={relatedLinkCount}
-                        currentAnnotationsCount={currentAnnotationsCount}
                         darkModeEnabled={darkModeEnabled}
                         showSignup={showSignup}
                     />
@@ -206,20 +205,10 @@ function ModalContent({
                     currentTab === "graph" ? "" : "p-4"
                 )}
             >
-                {/* <HeaderBar
-                    articleCount={articleCount}
-                    currentTab={currentTab}
-                    setCurrentTab={setCurrentTab}
-                /> */}
-
                 {currentTab === "list" && (
                     <RecentModalTab
                         userInfo={userInfo}
-                        currentTopic={currentTopic}
-                        domainFilter={domainFilter}
-                        setDomainFilter={setDomainFilter}
                         darkModeEnabled={darkModeEnabled}
-                        showTopic={showTopic}
                         reportEvent={reportEvent}
                     />
                 )}
@@ -227,9 +216,6 @@ function ModalContent({
                     <GraphPage
                         graph={graph}
                         darkModeEnabled={darkModeEnabled}
-                        currentArticle={currentArticle}
-                        currentTopic={currentTopic}
-                        changedTopic={changedTopic}
                         reportEvent={reportEvent}
                     />
                 )}
@@ -238,18 +224,11 @@ function ModalContent({
                         userInfo={userInfo}
                         articleCount={articleCount}
                         darkModeEnabled={darkModeEnabled}
-                        showTopic={showTopic}
-                        showDomain={showDomain}
                         reportEvent={reportEvent}
                     />
                 )}
                 {currentTab === "highlights" && (
                     <HighlightsTab
-                        currentArticle={currentArticle}
-                        currentTopic={currentTopic}
-                        currentAnnotationsCount={currentAnnotationsCount}
-                        domainFilter={domainFilter}
-                        setDomainFilter={setDomainFilter}
                         userInfo={userInfo}
                         darkModeEnabled={darkModeEnabled}
                         reportEvent={reportEvent}
@@ -262,7 +241,6 @@ function ModalContent({
                 {currentTab === "settings" && (
                     <SettingsModalTab
                         userInfo={userInfo}
-                        currentArticle={currentArticle}
                         darkModeEnabled={darkModeEnabled}
                         showSignup={showSignup}
                         reportEvent={reportEvent}

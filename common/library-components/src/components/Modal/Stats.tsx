@@ -13,24 +13,23 @@ import { useArticleGroups } from "../ArticleList";
 import { TopicEmoji } from "../TopicTag";
 import clsx from "clsx";
 import { BigNumber, ResourceIcon, ResourceStat } from "./components/numbers";
+import { FilterContext } from "..";
 
 export default function StatsModalTab({
     userInfo,
     articleCount,
     darkModeEnabled,
     defaultWeekOverlay = 3,
-    showTopic,
-    showDomain,
     reportEvent = () => {},
 }: {
     userInfo: UserInfo;
     articleCount?: number;
     darkModeEnabled: boolean;
     defaultWeekOverlay?: number;
-    showTopic: (topicId: string) => void;
-    showDomain: (domain: string) => void;
     reportEvent?: (event: string, data?: any) => void;
 }) {
+    const { showTopic, showDomain } = useContext(FilterContext);
+
     const rep = useContext(ReplicacheContext);
 
     const [allArticles, setAllArticles] = useState<Article[]>();

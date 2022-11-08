@@ -7,25 +7,22 @@ import { getRandomLightColor, openArticleResilient } from "../../../common";
 import { CustomGraphData, CustomGraphLink, CustomGraphNode } from "./data";
 import { renderNodeObject } from "./canvas";
 import { NodeTooltip } from "./Tooltips";
-import { readingProgressFullClamp, ReplicacheContext, Topic } from "../../../store";
+import { ReplicacheContext, Topic } from "../../../store";
 import { TopicEmoji } from "../../TopicTag";
-import { ReadingProgress, ResourceStat } from "../components/numbers";
+import { ReadingProgress } from "../components/numbers";
+import { FilterContext } from "../..";
 
 export function GraphPage({
     graph,
     darkModeEnabled,
-    currentArticle,
-    currentTopic,
-    changedTopic,
     reportEvent = () => {},
 }: {
     graph?: CustomGraphData;
     darkModeEnabled: boolean;
-    currentArticle?: string;
-    currentTopic?: Topic;
-    changedTopic: boolean;
     reportEvent?: (event: string, data?: any) => void;
 }) {
+    const { currentTopic, changedTopic } = useContext(FilterContext);
+
     const rep = useContext(ReplicacheContext);
     const [renderDone, setRenderDone] = useState(false);
 
@@ -75,7 +72,7 @@ export function GraphPage({
                     setRenderDone,
                     setHoverNode,
                     currentTopic,
-                    changedTopic,
+                    !!changedTopic,
                     reportEvent
                 );
                 // @ts-ignore

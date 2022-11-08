@@ -1,36 +1,23 @@
 import React, { useContext, useEffect, useState } from "react";
 import clsx from "clsx";
-import {
-    latestHighlightsVersion,
-    latestSettingsVersion,
-    ReplicacheContext,
-    Settings,
-    Topic,
-    UserInfo,
-    useSubscribe,
-} from "../../store";
+import { ReplicacheContext, Settings, Topic, UserInfo } from "../../store";
+import { FilterContext } from "..";
 
 export default function Sidebar({
     userInfo,
     currentTab,
-    currentTopic,
-    changedTopic,
     setCurrentTab,
-    relatedLinkCount,
-    currentAnnotationsCount,
     darkModeEnabled,
     showSignup,
 }: {
     userInfo: UserInfo;
     currentTab: string;
-    currentTopic?: Topic;
-    changedTopic: boolean;
     setCurrentTab: (tab: string) => void;
-    relatedLinkCount?: number;
-    currentAnnotationsCount?: number;
     darkModeEnabled: boolean;
     showSignup: boolean;
 }) {
+    const { currentTopic, changedTopic, currentAnnotationsCount, relatedLinkCount } =
+        useContext(FilterContext);
     const rep = useContext(ReplicacheContext);
 
     // fetch settings initially and after changing tab away

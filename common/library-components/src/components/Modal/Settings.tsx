@@ -7,13 +7,11 @@ import { saveAs } from "file-saver";
 
 export default function SettingsModalTab({
     userInfo,
-    currentArticle,
     darkModeEnabled,
     showSignup,
     reportEvent = () => {},
 }: {
     userInfo: UserInfo;
-    currentArticle?: string;
     darkModeEnabled: boolean;
     showSignup: boolean;
     reportEvent?: (event: string, data?: any) => void;
@@ -40,7 +38,7 @@ export default function SettingsModalTab({
         if (!messageRef.current?.value) {
             return;
         }
-        const issueUrl = await quickReport(messageRef.current.value, currentArticle, userInfo.id);
+        const issueUrl = await quickReport(messageRef.current.value, undefined, userInfo.id);
 
         if (issueUrl) {
             window.open(issueUrl, "_blank")?.focus();
