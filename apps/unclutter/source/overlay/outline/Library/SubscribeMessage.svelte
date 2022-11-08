@@ -6,6 +6,7 @@
 
     import { LibraryState } from "../../../common/schema";
     import LibraryModalModifier from "../../../content-script/modifications/libraryModal";
+    import LibraryModifier from "../../../content-script/modifications/library";
 
     export let libraryState: LibraryState;
     export let libraryModifier: LibraryModifier;
@@ -26,7 +27,7 @@
                 class="top-row font-title overflow-x-hidden overflow-ellipsis whitespace-pre text-base font-semibold leading-none"
             >
                 <span class="hide-tiny"
-                    >{libraryState.feed?.isSubscribed ? "Following" : "Follow"}</span
+                    >{libraryState.feed.isSubscribed ? "Following" : "Follow"}</span
                 >
                 {libraryState.feed.articleFeed.domain}
             </div>
@@ -37,14 +38,14 @@
                 class="bottom-row mt-1 overflow-x-hidden overflow-ellipsis whitespace-pre text-gray-400 dark:text-stone-600"
             >
                 <span class="hide-tiny">about</span>
-                {libraryState.feed?.articleFeed.post_frequency}
+                {libraryState.feed.articleFeed.post_frequency}
             </div>
         {/if}
     </div>
 
     <div
         class="toggle transition-color flex h-[calc(1rem+0.5rem+1.25rem+0.75rem*2)] shrink-0 items-center rounded-r-lg py-3 px-4"
-        style={`background-color: ${getRandomLightColor(libraryState.feed?.articleFeed.domain)}`}
+        style={`background-color: ${getRandomLightColor(libraryState.feed?.articleFeed?.domain)}`}
         on:click={() => libraryModifier.toggleFeedSubscribed()}
     >
         {#if libraryState.feed?.isSubscribed}

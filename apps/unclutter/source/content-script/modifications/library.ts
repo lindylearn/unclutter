@@ -226,10 +226,12 @@ export default class LibraryModifier implements PageModifier {
                     sourceUrl: this.articleUrl,
                     feedUrls,
                 });
-                this.libraryState.feed = {
-                    articleFeed,
-                    isSubscribed: false,
-                };
+                if (articleFeed) {
+                    this.libraryState.feed = {
+                        articleFeed,
+                        isSubscribed: false,
+                    };
+                }
             }
 
             this.notifyLibraryStateListeners();
