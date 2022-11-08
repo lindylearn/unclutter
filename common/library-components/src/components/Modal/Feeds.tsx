@@ -1,22 +1,25 @@
 import React, { useContext, useEffect, useState } from "react";
-import { FilterButton } from "..";
+import { FilterButton, FilterContext } from "..";
 import { getRandomLightColor } from "../../common";
 import { listFeedItems } from "../../feeds/list";
 import { Article, FeedSubscription, ReplicacheContext } from "../../store";
 import { StaticArticleList } from "../ArticleList";
-import { ReadingProgress, ResourceIcon } from "./components/numbers";
+import { ResourceIcon } from "./components/numbers";
 
 export default function FeedsModalTab({}) {
+    const { currentSubscription } = useContext(FilterContext);
     const rep = useContext(ReplicacheContext);
 
-    const [filteredSubscription, setFilteredSubscription] = useState<FeedSubscription>();
-    const [allSubscriptions, setAllSubscriptions] = useState<FeedSubscription[]>();
-    useEffect(() => {
-        rep?.query.listSubscriptions().then((subscriptions) => {
-            setAllSubscriptions(subscriptions);
-            setFilteredSubscription(subscriptions[2]);
-        });
-    }, [rep]);
+    const [filteredSubscription, setFilteredSubscription] = useState<FeedSubscription | undefined>(
+        currentSubscription
+    );
+    // const [allSubscriptions, setAllSubscriptions] = useState<FeedSubscription[]>();
+    // useEffect(() => {
+    //     rep?.query.listSubscriptions().then((subscriptions) => {
+    //         setAllSubscriptions(subscriptions);
+    //         setFilteredSubscription(subscriptions[2]);
+    //     });
+    // }, [rep]);
 
     const [articles, setArticles] = useState<Article[]>();
     useEffect(() => {
@@ -31,10 +34,6 @@ export default function FeedsModalTab({}) {
 
     return (
         <div className="flex flex-col gap-4">
-            {/* {allSubscriptions?.map((sub) => (
-                <div>{sub.rss_url}</div>
-            ))} */}
-
             <div>
                 <div className="info-bar flex justify-start gap-3 font-medium">
                     <div className="flex items-center gap-2">

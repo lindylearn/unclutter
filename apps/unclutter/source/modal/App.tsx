@@ -72,6 +72,7 @@ export default function App({
                         showSignup={libraryState.showLibrarySignup}
                         relatedLinkCount={libraryState?.linkCount}
                         currentArticle={libraryState?.libraryInfo?.article.id}
+                        currentSubscription={libraryState?.feed.articleFeed}
                         initialTopic={libraryState?.libraryInfo?.topic}
                         graph={libraryState?.graph}
                         reportEvent={reportEventContentScript}

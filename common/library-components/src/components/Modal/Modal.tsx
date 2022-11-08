@@ -6,7 +6,7 @@ import StatsModalTab from "./Stats";
 import Sidebar from "./Sidebar";
 import { GraphPage } from "./Graph/GraphPage";
 import { CustomGraphData } from "./Graph/data";
-import { ReplicacheContext, Topic, UserInfo } from "../../store";
+import { FeedSubscription, ReplicacheContext, Topic, UserInfo } from "../../store";
 import RecentModalTab from "./Recent";
 import { LindyIcon } from "../Icons";
 import HighlightsTab from "./Highlights";
@@ -26,6 +26,7 @@ export const FilterContext = createContext<{
     currentTopic?: Topic;
     changedTopic?: boolean;
     domainFilter?: string;
+    currentSubscription?: FeedSubscription;
     showTopic: (topicId: string) => void;
     showDomain: (domain: string) => void;
     setDomainFilter: (domain?: string) => void;
@@ -42,6 +43,7 @@ export function LibraryModalPage({
     darkModeEnabled = false,
     showSignup = false,
     currentArticle,
+    currentSubscription,
     initialTopic,
     graph,
     relatedLinkCount,
@@ -51,6 +53,7 @@ export function LibraryModalPage({
     darkModeEnabled?: boolean;
     showSignup?: boolean;
     currentArticle?: string;
+    currentSubscription?: FeedSubscription;
     initialTopic?: Topic;
     graph?: CustomGraphData;
     relatedLinkCount?: number;
@@ -127,6 +130,7 @@ export function LibraryModalPage({
                 <FilterContext.Provider
                     value={{
                         currentArticle,
+                        currentSubscription,
                         currentTopic,
                         changedTopic: currentTopic !== initialTopic?.id,
                         domainFilter,
