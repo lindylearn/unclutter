@@ -30,12 +30,14 @@ export const FilterContext = createContext<{
     showTopic: (topicId: string) => void;
     showDomain: (domain: string) => void;
     setDomainFilter: (domain?: string) => void;
+    setCurrentSubscription: (subscription?: FeedSubscription) => void;
     relatedLinkCount?: number;
     currentAnnotationsCount?: number;
 }>({
     showTopic: () => {},
     showDomain: () => {},
     setDomainFilter: () => {},
+    setCurrentSubscription: () => {},
 });
 
 export function LibraryModalPage({
@@ -43,7 +45,7 @@ export function LibraryModalPage({
     darkModeEnabled = false,
     showSignup = false,
     currentArticle,
-    currentSubscription,
+    initialSubscription,
     initialTopic,
     graph,
     relatedLinkCount,
@@ -53,7 +55,7 @@ export function LibraryModalPage({
     darkModeEnabled?: boolean;
     showSignup?: boolean;
     currentArticle?: string;
-    currentSubscription?: FeedSubscription;
+    initialSubscription?: FeedSubscription;
     initialTopic?: Topic;
     graph?: CustomGraphData;
     relatedLinkCount?: number;
@@ -90,10 +92,14 @@ export function LibraryModalPage({
     }, [currentTab]);
 
     const [currentTopic, setCurrentTopic] = useState<Topic | undefined>(initialTopic);
+    const [currentSubscription, setCurrentSubscription] = useState<FeedSubscription | undefined>(
+        initialSubscription
+    );
     const [domainFilter, setDomainFilter] = useState<string>();
     useEffect(() => {
         setCurrentTopic(initialTopic);
     }, [initialTopic]);
+
     async function showTopic(topicId: string) {
         const topic = await rep?.query.getTopic(topicId);
         setCurrentTopic(topic);
@@ -137,6 +143,7 @@ export function LibraryModalPage({
                         setDomainFilter,
                         showTopic,
                         showDomain,
+                        setCurrentSubscription,
                         relatedLinkCount,
                         currentAnnotationsCount,
                     }}

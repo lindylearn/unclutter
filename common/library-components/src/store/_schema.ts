@@ -105,11 +105,12 @@ export const feedSubscriptionSchema = entitySchema.extend({
     // id equal to rss_url
     rss_url: z.string(),
     link: z.string(),
-
     domain: z.string(),
     title: z.optional(z.string()),
     description: z.optional(z.string()),
     author: z.optional(z.string()),
     post_frequency: z.optional(z.string()),
+
+    is_subscribed: z.optional(z.boolean()),
 });
 export type FeedSubscription = z.infer<typeof feedSubscriptionSchema>;

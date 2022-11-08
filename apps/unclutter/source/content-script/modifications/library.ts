@@ -214,24 +214,17 @@ export default class LibraryModifier implements PageModifier {
             subscriptions = subscriptions.filter((s) => s);
 
             if (subscriptions.length > 0) {
-                // already subscribed
-                this.libraryState.feed = {
-                    articleFeed: subscriptions[0],
-                    isSubscribed: true,
-                };
+                // already parsed before
+                this.libraryState.feed = subscriptions[0];
             } else {
                 // fetch & parse feed in background
-                const articleFeed = await browser.runtime.sendMessage(null, {
+                this.libraryState.feed = await browser.runtime.sendMessage(null, {
                     event: "discoverRssFeed",
                     sourceUrl: this.articleUrl,
                     candidates: feedUrls,
                 });
-                if (articleFeed) {
-                    this.libraryState.feed = {
-                        articleFeed,
-                        isSubscribed: false,
-                    };
-                }
+                // insert even if not enabled
+                await rep.mutate.putSubscription(this.libraryState.feed);
             }
 
             this.notifyLibraryStateListeners();
@@ -378,13 +371,12 @@ export default class LibraryModifier implements PageModifier {
         }
 
         const rep = new ReplicacheProxy();
-        if (!this.libraryState.feed.isSubscribed) {
-            rep.mutate.putSubscription(this.libraryState.feed.articleFeed);
-        } else {
-            rep.mutate.deleteSubscription(this.libraryState.feed.articleFeed.id);
-        }
+        rep.mutate.updateSubscription({
+            id: this.libraryState.feed.id,
+            is_subscribed: !this.libraryState.feed.is_subscribed,
+        });
 
-        this.libraryState.feed.isSubscribed = !this.libraryState.feed.isSubscribed;
+        this.libraryState.feed.is_subscribed = !this.libraryState.feed.is_subscribed;
         this.notifyLibraryStateListeners();
     }
 }

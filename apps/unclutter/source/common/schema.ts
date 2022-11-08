@@ -26,10 +26,7 @@ export type LibraryState = {
     linkCount?: number;
     readingProgress?: ReadingProgress;
 
-    feed?: {
-        articleFeed: FeedSubscription;
-        isSubscribed: boolean;
-    };
+    feed?: FeedSubscription;
 };
 
 // returned from API
