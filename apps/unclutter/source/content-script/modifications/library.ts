@@ -204,23 +204,34 @@ export default class LibraryModifier implements PageModifier {
     }
 
     private async fetchFeed(rep: ReplicacheProxy) {
-        // TODO check if already subscribed
-
         try {
             // parse DOM
             // TODO move to different phase
             const feedUrls = await discoverFeedsInDocument(document, this.articleUrl);
+            console.log(feedUrls);
 
-            // fetch & parse feed in background
-            const articleFeed = await browser.runtime.sendMessage(null, {
-                event: "parseRssFeeds",
-                sourceUrl: this.articleUrl,
-                feedUrls,
-            });
-            this.libraryState.feed = {
-                articleFeed,
-                isSubscribed: false,
-            };
+            let subscriptions = await Promise.all(feedUrls.map(rep.query.getSubscription));
+            subscriptions = subscriptions.filter((s) => s);
+
+            if (subscriptions.length > 0) {
+                // already subscribed
+                this.libraryState.feed = {
+                    articleFeed: subscriptions[0],
+                    isSubscribed: true,
+                };
+            } else {
+                // fetch & parse feed in background
+                const articleFeed = await browser.runtime.sendMessage(null, {
+                    event: "parseRssFeeds",
+                    sourceUrl: this.articleUrl,
+                    feedUrls,
+                });
+                this.libraryState.feed = {
+                    articleFeed,
+                    isSubscribed: false,
+                };
+            }
+
             this.notifyLibraryStateListeners();
         } catch (err) {
             console.error(err);
@@ -364,14 +375,14 @@ export default class LibraryModifier implements PageModifier {
             return;
         }
 
+        const rep = new ReplicacheProxy();
+        if (!this.libraryState.feed.isSubscribed) {
+            rep.mutate.putSubscription(this.libraryState.feed.articleFeed);
+        } else {
+            rep.mutate.deleteSubscription(this.libraryState.feed.articleFeed.id);
+        }
+
         this.libraryState.feed.isSubscribed = !this.libraryState.feed.isSubscribed;
         this.notifyLibraryStateListeners();
-
-        // update data store
-        // const rep = new ReplicacheProxy();
-        // rep.mutate.updateFeedSubscribed({
-        //     feedUrl: this.libraryState.feed.articleFeed.feedUrl,
-        //     isSubscribed: this.libraryState.feed.isSubscribed,
-        // });
     }
 }

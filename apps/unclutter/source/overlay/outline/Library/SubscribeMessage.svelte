@@ -23,7 +23,7 @@
     >
         {#if libraryState.feed}
             <div
-                class="top-row font-title overflow-hidden overflow-ellipsis whitespace-pre text-base font-semibold leading-none"
+                class="top-row font-title overflow-x-hidden overflow-ellipsis whitespace-pre text-base font-semibold leading-none"
             >
                 <span class="hide-tiny">Follow</span>
                 {libraryState.feed.articleFeed.domain}
@@ -32,7 +32,7 @@
 
         {#if libraryState.feed?.articleFeed.post_frequency}
             <div
-                class="bottom-row mt-1 overflow-hidden overflow-ellipsis whitespace-pre text-gray-400 dark:text-stone-600"
+                class="bottom-row mt-1 overflow-x-hidden overflow-ellipsis whitespace-pre text-gray-400 dark:text-stone-600"
             >
                 <span class="hide-tiny">about</span>
                 {libraryState.feed?.articleFeed.post_frequency}

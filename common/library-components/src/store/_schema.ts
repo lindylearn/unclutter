@@ -100,6 +100,7 @@ export const userInfoSchema = z.object({
 });
 export type UserInfo = z.infer<typeof userInfoSchema>;
 
+// *** FeedSubscription ***
 export const feedSubscriptionSchema = entitySchema.extend({
     // id equal to rss_url
     rss_url: z.string(),

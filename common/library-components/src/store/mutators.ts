@@ -17,6 +17,7 @@ import {
     articleSchema,
     ArticleText,
     articleTextSchema,
+    feedSubscriptionSchema,
     readingProgressFullClamp,
     Settings,
     Topic,
@@ -302,6 +303,14 @@ export async function importEntries(tx: WriteTransaction, entries: [string, JSON
     await Promise.all(entries.map(([key, value]) => tx.put(key, value)));
 }
 
+/* ***** FeedSubscription ***** */
+
+export const {
+    put: putSubscription,
+    update: updateSubscription,
+    delete: deleteSubscription,
+} = generate("subscription", feedSubscriptionSchema);
+
 export const mutators = {
     updateArticle,
     articleSetFavorite,
@@ -322,6 +331,9 @@ export const mutators = {
     updateSettings,
     importEntries,
     updateUserInfo,
+    putSubscription,
+    updateSubscription,
+    deleteSubscription,
 };
 export type M = typeof mutators;
 export type ArticleUpdate = Update<Article>;

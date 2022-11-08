@@ -8,6 +8,7 @@ import {
     articleLinkSchema,
     articleSchema,
     articleTextSchema,
+    feedSubscriptionSchema,
     PartialSyncState,
     partialSyncStateSchema,
     PARTIAL_SYNC_STATE_KEY,
@@ -407,6 +408,13 @@ export async function getUserInfo(tx: ReadTransaction): Promise<UserInfo | null>
     return savedValue || null;
 }
 
+/* ***** FeedSubscription ***** */
+
+export const { get: getSubscription, list: listSubscriptions } = generate(
+    "subscription",
+    feedSubscriptionSchema
+);
+
 export const accessors = {
     getArticle,
     listArticles,
@@ -435,5 +443,7 @@ export const accessors = {
     getPartialSyncState,
     getSettings,
     getUserInfo,
+    getSubscription,
+    listSubscriptions,
 };
 export type A = typeof accessors;
