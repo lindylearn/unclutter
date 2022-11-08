@@ -23,7 +23,7 @@ export default function FeedsModalTab({ darkModeEnabled }) {
             setAllSubscriptions(subscriptions);
 
             if (!currentSubscription) {
-                setCurrentSubscription(subscriptions[subscriptions.length - 1]);
+                setCurrentSubscription(subscriptions[subscriptions.length - 2]);
             }
         });
     }, [rep]);
@@ -56,7 +56,7 @@ export default function FeedsModalTab({ darkModeEnabled }) {
                     }}
                 >
                     <img
-                        className="h-12 flex-shrink-0 rounded-md"
+                        className="h-12 w-12 flex-shrink-0 rounded-md"
                         src={`https://www.google.com/s2/favicons?sz=128&domain=https://${filteredSubscription.domain}`}
                     />
                     <div className="flex flex-grow flex-col items-start">

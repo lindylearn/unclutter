@@ -12,3 +12,19 @@ export function getDomain(url: string): string {
 export function formatDate(date: Date): string {
     return date?.toDateString().split(" ").slice(1, 3).join(" ");
 }
+
+export function cleanTitle(title: string): string {
+    title = title.trim().split("\n")[0];
+
+    while (title.includes("  ")) {
+        title = title.replace(/  /g, " ");
+    }
+
+    if (title.endsWith(":")) {
+        title = title.slice(0, title.length - 1);
+    }
+
+    title = title.split("|")[0].split(" - ")[0].split("–")[0].trim();
+
+    return title;
+}

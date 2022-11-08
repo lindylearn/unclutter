@@ -1,7 +1,7 @@
 import { pxToNumber } from "../../../common/css";
 import { createStylesheetText } from "../../../common/stylesheets";
 import { fontSizeThemeVariable } from "../../../common/theme";
-import { cleanTitle } from "../../../overlay/outline/components/parse";
+import { cleanTitle } from "@unclutter/library-components/dist/common/util";
 import { PageModifier, trackModifierExecution } from "../_interface";
 
 export const lindyContainerClass = "lindy-text-container";

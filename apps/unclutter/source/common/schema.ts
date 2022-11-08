@@ -7,7 +7,7 @@ import {
 } from "@unclutter/library-components/dist/store/_schema";
 import { ReadingProgress } from "@unclutter/library-components/dist/store/accessors";
 import { CustomGraphData } from "@unclutter/library-components/dist/components/Modal/Graph";
-import { cleanTitle } from "../overlay/outline/components/parse";
+import { cleanTitle } from "@unclutter/library-components/dist/common/util";
 
 export type LibraryState = {
     libraryEnabled: boolean;

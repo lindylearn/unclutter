@@ -1,4 +1,5 @@
 import { scrollToElement } from "./common";
+import { cleanTitle } from "@unclutter/library-components/dist/common/util";
 
 export interface OutlineItem {
     index: number;
@@ -313,22 +314,6 @@ function getSoftNodeItem(node: Element): OutlineItem | null {
         element: node,
         children: [], // populated below
     };
-}
-
-export function cleanTitle(title: string): string {
-    title = title.trim().split("\n").pop();
-
-    while (title.includes("  ")) {
-        title = title.replace(/  /g, " ");
-    }
-
-    if (title.endsWith(":")) {
-        title = title.slice(0, title.length - 1);
-    }
-
-    title = title.split("|")[0].split(" - ")[0].split("–")[0].trim();
-
-    return title;
 }
 
 function restrictTitleLength(title: string, maxLength: number = 29): string {
