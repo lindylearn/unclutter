@@ -24,18 +24,18 @@
     >
         {#if libraryState.feed}
             <div
-                class="top-row font-title overflow-x-hidden overflow-ellipsis whitespace-pre text-base font-semibold leading-none"
+                class="top-row font-title overflow-hidden overflow-ellipsis whitespace-pre text-base font-semibold leading-none"
             >
-                <span class="hide-tiny"
+                <!-- <span class="hide-tiny"
                     >{libraryState.feed.isSubscribed ? "Following" : "Follow"}</span
-                >
-                {libraryState.feed.articleFeed.domain}
+                > -->
+                {libraryState.feed.articleFeed.title || libraryState.feed.articleFeed.domain}
             </div>
         {/if}
 
         {#if libraryState.feed?.articleFeed.post_frequency}
             <div
-                class="bottom-row mt-1 overflow-x-hidden overflow-ellipsis whitespace-pre text-gray-400 dark:text-stone-600"
+                class="bottom-row mt-1 overflow-hidden overflow-ellipsis whitespace-pre text-gray-400 dark:text-stone-600"
             >
                 <span class="hide-tiny">about</span>
                 {libraryState.feed.articleFeed.post_frequency}
@@ -43,9 +43,9 @@
         {/if}
     </div>
 
+    <!-- style={`background-color: ${getRandomLightColor(libraryState.feed?.articleFeed?.domain)}`} -->
     <div
-        class="toggle transition-color flex h-[calc(1rem+0.5rem+1.25rem+0.75rem*2)] shrink-0 items-center rounded-r-lg py-3 px-4"
-        style={`background-color: ${getRandomLightColor(libraryState.feed?.articleFeed?.domain)}`}
+        class="toggle transition-color flex h-[calc(1rem+0.5rem+1.25rem+0.75rem*2)] shrink-0 items-center rounded-r-lg bg-stone-50 py-3 px-4 dark:bg-stone-800"
         on:click={() => libraryModifier.toggleFeedSubscribed()}
     >
         {#if libraryState.feed?.isSubscribed}

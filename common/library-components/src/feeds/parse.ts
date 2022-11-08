@@ -21,7 +21,7 @@ export async function getMainFeed(
     return null;
 }
 
-export async function fetchRssFeed(feedUrl: string) {
+export async function fetchRssFeed(feedUrl: string): Promise<Feed | null> {
     const html = await ky.get(feedUrl).then((r) => r.text());
     return parseFeed(html);
 }

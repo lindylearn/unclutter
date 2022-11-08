@@ -240,24 +240,29 @@ export function FilterButton({
     title,
     icon,
     onClick,
+    href,
     color,
 }: {
     title: string;
-    icon: ReactNode;
-    onClick: () => void;
+    icon?: ReactNode;
+    href?: string;
+    onClick?: () => void;
     color?: string;
 }) {
     return (
-        <div
+        <a
             className="flex flex-shrink-0 cursor-pointer select-none items-center gap-2 rounded-md bg-stone-100 px-2 py-1 font-medium transition-transform hover:scale-[97%] dark:bg-neutral-800"
             onClick={onClick}
+            href={href}
             style={{
                 background: color,
             }}
+            target="_blank"
+            rel="noreferrer"
         >
             {icon}
             {title}
-        </div>
+        </a>
     );
 }
 
