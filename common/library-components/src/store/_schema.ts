@@ -99,3 +99,14 @@ export const userInfoSchema = z.object({
     trialEnabled: z.optional(z.boolean()),
 });
 export type UserInfo = z.infer<typeof userInfoSchema>;
+
+export const feedSubscriptionSchema = entitySchema.extend({
+    // id equal to rss_url
+    rss_url: z.string(),
+    link: z.string(),
+
+    domain: z.string(),
+    title: z.optional(z.string()),
+    post_frequency: z.optional(z.string()),
+});
+export type FeedSubscription = z.infer<typeof feedSubscriptionSchema>;

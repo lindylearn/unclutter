@@ -96,25 +96,9 @@ export default class LibraryModifier implements PageModifier {
 
         // fetch or create article state (even if library UI not enabled)
         this.overlayManager.updateLibraryState(this.libraryState);
+
         this.fetchArticleState(rep);
-
-        // construct feed
-        // TODO check if already subscribed
-        try {
-            // parse DOM
-            // TODO move to different phase
-            const feedUrls = await discoverFeedsInDocument(document, this.articleUrl);
-
-            // fetch & parse feed in background
-            this.libraryState.feed = await browser.runtime.sendMessage(null, {
-                event: "parseRssFeeds",
-                sourceUrl: this.articleUrl,
-                feedUrls,
-            });
-            this.overlayManager.updateLibraryState(this.libraryState);
-        } catch (err) {
-            console.error(err);
-        }
+        this.fetchFeed(rep);
     }
 
     async fetchArticleState(rep: ReplicacheProxy) {
@@ -213,6 +197,30 @@ export default class LibraryModifier implements PageModifier {
         } catch (err) {
             this.libraryState.error = true;
             this.overlayManager.updateLibraryState(this.libraryState);
+            console.error(err);
+        }
+    }
+
+    private async fetchFeed(rep: ReplicacheProxy) {
+        // TODO check if already subscribed
+
+        try {
+            // parse DOM
+            // TODO move to different phase
+            const feedUrls = await discoverFeedsInDocument(document, this.articleUrl);
+
+            // fetch & parse feed in background
+            const articleFeed = await browser.runtime.sendMessage(null, {
+                event: "parseRssFeeds",
+                sourceUrl: this.articleUrl,
+                feedUrls,
+            });
+            this.libraryState.feed = {
+                articleFeed,
+                isSubscribed: false,
+            };
+            this.overlayManager.updateLibraryState(this.libraryState);
+        } catch (err) {
             console.error(err);
         }
     }
@@ -347,5 +355,21 @@ export default class LibraryModifier implements PageModifier {
         // run in background
         const bodyRect = document.body.getBoundingClientRect();
         captureActiveTabScreenshot(this.articleId, bodyRect, window.devicePixelRatio);
+    }
+
+    toggleFeedSubscribed() {
+        if (!this.libraryState.feed) {
+            return;
+        }
+
+        this.libraryState.feed.isSubscribed = !this.libraryState.feed.isSubscribed;
+        this.overlayManager.updateLibraryState(this.libraryState);
+
+        // update data store
+        // const rep = new ReplicacheProxy();
+        // rep.mutate.updateFeedSubscribed({
+        //     feedUrl: this.libraryState.feed.articleFeed.feedUrl,
+        //     isSubscribed: this.libraryState.feed.isSubscribed,
+        // });
     }
 }

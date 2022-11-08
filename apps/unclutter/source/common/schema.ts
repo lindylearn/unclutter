@@ -3,9 +3,9 @@ import {
     ArticleLink,
     Topic,
     UserInfo,
+    FeedSubscription,
 } from "@unclutter/library-components/dist/store/_schema";
 import { ReadingProgress } from "@unclutter/library-components/dist/store/accessors";
-import { WebsiteFeed } from "@unclutter/library-components/dist/feeds";
 import { CustomGraphData } from "@unclutter/library-components/dist/components/Modal/Graph";
 import { cleanTitle } from "../overlay/outline/components/parse";
 
@@ -26,7 +26,10 @@ export type LibraryState = {
     linkCount?: number;
     readingProgress?: ReadingProgress;
 
-    feed?: WebsiteFeed;
+    feed?: {
+        articleFeed: FeedSubscription;
+        isSubscribed: boolean;
+    };
 };
 
 // returned from API
