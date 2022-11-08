@@ -28,6 +28,7 @@ export async function getMainFeed(
         try {
             const html = await ky.get(feedUrl).then((r) => r.text());
             const feed = parseFeed(html);
+            console.log(feed);
             if (feed && feed.items.length > 0) {
                 return constructFeed(sourceUrl, feedUrl, feed);
             }
@@ -120,12 +121,15 @@ export function getHumanPostFrequency(feed: Feed | null): string | null {
         return null;
     }
 
+    // ignore very old feed items, e.g. for https://signal.org/blog/introducing-stories/
+    feed.items = feed.items.slice(0, 10);
+
     const start = feed.items[feed.items.length - 1].pubDate;
     if (!start) {
         return null;
     }
     const end = new Date();
-    const days = Math.round((end.getTime() - new Date(start).getTime()) / (24 * 60 * 60 * 60));
+    const days = Math.round((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
 
     const articlesPerDay = Math.round(feed.items.length / days);
     if (articlesPerDay >= 1) {
