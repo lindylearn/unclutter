@@ -10,6 +10,7 @@ import { ReplicacheContext, Topic, UserInfo } from "../../store";
 import RecentModalTab from "./Recent";
 import { LindyIcon } from "../Icons";
 import HighlightsTab from "./Highlights";
+import FeedsModalTab from "./Feeds";
 import UpgradeModalTab from "./Upgrade";
 import SettingsModalTab from "./Settings";
 
@@ -60,7 +61,7 @@ export function LibraryModalPage({
 
     const initialRender = useRef<boolean>(true);
     const [currentTab, setCurrentTab] = useState(
-        relatedLinkCount && (userInfo.onPaidPlan || userInfo.trialEnabled) ? "graph" : "list"
+        relatedLinkCount && (userInfo.onPaidPlan || userInfo.trialEnabled) ? "graph" : "feeds"
     );
     useEffect(() => {
         if (initialRender.current) {
@@ -254,6 +255,7 @@ function ModalContent({
                         reportEvent={reportEvent}
                     />
                 )}
+                {currentTab === "feeds" && <FeedsModalTab />}
                 {currentTab === "signup" && (
                     <UpgradeModalTab darkModeEnabled={darkModeEnabled} reportEvent={reportEvent} />
                 )}

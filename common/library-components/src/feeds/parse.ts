@@ -42,6 +42,8 @@ function constructFeedSubscription(
         link: feed.link || sourceUrl,
         domain: getDomain(sourceUrl),
         title: feed.title,
+        description: feed.description,
+        author: feed.author,
         post_frequency: postFrequency,
     };
 }

@@ -108,6 +108,8 @@ export const feedSubscriptionSchema = entitySchema.extend({
 
     domain: z.string(),
     title: z.optional(z.string()),
+    description: z.optional(z.string()),
+    author: z.optional(z.string()),
     post_frequency: z.optional(z.string()),
 });
 export type FeedSubscription = z.infer<typeof feedSubscriptionSchema>;

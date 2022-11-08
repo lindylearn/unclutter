@@ -25,7 +25,9 @@
             <div
                 class="top-row font-title overflow-x-hidden overflow-ellipsis whitespace-pre text-base font-semibold leading-none"
             >
-                <span class="hide-tiny">Follow</span>
+                <span class="hide-tiny"
+                    >{libraryState.feed?.isSubscribed ? "Following" : "Follow"}</span
+                >
                 {libraryState.feed.articleFeed.domain}
             </div>
         {/if}
