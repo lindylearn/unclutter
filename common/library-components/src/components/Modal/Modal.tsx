@@ -238,7 +238,7 @@ function ModalContent({
                         reportEvent={reportEvent}
                     />
                 )}
-                {currentTab === "feeds" && <FeedsModalTab />}
+                {currentTab === "feeds" && <FeedsModalTab darkModeEnabled={darkModeEnabled} />}
                 {currentTab === "signup" && (
                     <UpgradeModalTab darkModeEnabled={darkModeEnabled} reportEvent={reportEvent} />
                 )}

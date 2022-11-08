@@ -6,7 +6,7 @@ import { Article, FeedSubscription, ReplicacheContext } from "../../store";
 import { StaticArticleList } from "../ArticleList";
 import { ResourceIcon } from "./components/numbers";
 
-export default function FeedsModalTab({ isDev = true }) {
+export default function FeedsModalTab({ isDev = true, darkModeEnabled }) {
     const { currentSubscription } = useContext(FilterContext);
     const rep = useContext(ReplicacheContext);
 
@@ -16,10 +16,11 @@ export default function FeedsModalTab({ isDev = true }) {
     const [allSubscriptions, setAllSubscriptions] = useState<FeedSubscription[]>();
     useEffect(() => {
         rep?.query.listSubscriptions().then((subscriptions) => {
+            console.log(subscriptions);
             setAllSubscriptions(subscriptions);
 
             if (!currentSubscription) {
-                setFilteredSubscription(subscriptions[0]);
+                setFilteredSubscription(subscriptions[subscriptions.length - 1]);
             }
         });
     }, [rep]);
@@ -41,49 +42,54 @@ export default function FeedsModalTab({ isDev = true }) {
 
     return (
         <div className="flex flex-col gap-4">
-            <div>
-                <div className="info-bar flex justify-start gap-3">
-                    <div className="flex items-center gap-2">
-                        <img
-                            className="h-6 w-6"
-                            src={`https://www.google.com/s2/favicons?sz=128&domain=https://${filteredSubscription.domain}`}
-                        />
-                        <span className="font-title text-2xl font-bold">
+            <div
+                className="info-box flex flex-col justify-start gap-3 rounded-md bg-stone-50 p-3 transition-all dark:bg-neutral-800"
+                style={{
+                    background: getRandomLightColor(filteredSubscription.domain, darkModeEnabled),
+                }}
+            >
+                <div className="title flex items-center gap-3">
+                    <img
+                        className="h-12 flex-shrink-0 rounded-md"
+                        src={`https://www.google.com/s2/favicons?sz=128&domain=https://${filteredSubscription.domain}`}
+                    />
+                    <div className="flex flex-col items-start">
+                        <h1 className="font-title text-xl font-bold">
                             {filteredSubscription.title}
-                        </span>
+                        </h1>
+                        <a
+                            className="block transition-transform hover:scale-[97%]"
+                            href={filteredSubscription.link}
+                        >
+                            {filteredSubscription.domain}
+                        </a>
                     </div>
 
-                    <FilterButton
-                        title={filteredSubscription.domain}
-                        href={filteredSubscription.link}
-                    />
+                    <div className="flex flex-shrink-0 cursor-pointer select-none items-center gap-3 self-stretch rounded-md p-2 font-medium transition-transform hover:scale-[97%]">
+                        {filteredSubscription ? (
+                            <svg className="w-5" viewBox="0 0 448 512">
+                                <path
+                                    fill="currentColor"
+                                    d="M440.1 103C450.3 112.4 450.3 127.6 440.1 136.1L176.1 400.1C167.6 410.3 152.4 410.3 143 400.1L7.029 264.1C-2.343 255.6-2.343 240.4 7.029 231C16.4 221.7 31.6 221.7 40.97 231L160 350.1L407 103C416.4 93.66 431.6 93.66 440.1 103V103z"
+                                />
+                            </svg>
+                        ) : (
+                            <svg className="w-5" viewBox="0 0 448 512">
+                                <path
+                                    fill="currentColor"
+                                    d="M432 256C432 269.3 421.3 280 408 280h-160v160c0 13.25-10.75 24.01-24 24.01S200 453.3 200 440v-160h-160c-13.25 0-24-10.74-24-23.99C16 242.8 26.75 232 40 232h160v-160c0-13.25 10.75-23.99 24-23.99S248 58.75 248 72v160h160C421.3 232 432 242.8 432 256z"
+                                />
+                            </svg>
+                        )}
 
-                    <FilterButton
-                        title={filteredSubscription ? "Unfollow" : "Follow"}
-                        icon={
-                            filteredSubscription ? (
-                                <svg className="w-5" viewBox="0 0 448 512">
-                                    <path
-                                        fill="currentColor"
-                                        d="M440.1 103C450.3 112.4 450.3 127.6 440.1 136.1L176.1 400.1C167.6 410.3 152.4 410.3 143 400.1L7.029 264.1C-2.343 255.6-2.343 240.4 7.029 231C16.4 221.7 31.6 221.7 40.97 231L160 350.1L407 103C416.4 93.66 431.6 93.66 440.1 103V103z"
-                                    />
-                                </svg>
-                            ) : (
-                                <svg className="w-5" viewBox="0 0 448 512">
-                                    <path
-                                        fill="currentColor"
-                                        d="M432 256C432 269.3 421.3 280 408 280h-160v160c0 13.25-10.75 24.01-24 24.01S200 453.3 200 440v-160h-160c-13.25 0-24-10.74-24-23.99C16 242.8 26.75 232 40 232h160v-160c0-13.25 10.75-23.99 24-23.99S248 58.75 248 72v160h160C421.3 232 432 242.8 432 256z"
-                                    />
-                                </svg>
-                            )
-                        }
-                    />
+                        {filteredSubscription ? "Unfollow" : "Follow"}
+                    </div>
                 </div>
+
+                {filteredSubscription.description && <div>{filteredSubscription.description}</div>}
             </div>
 
-            {/* {filteredSubscription.description && <div>{filteredSubscription.description}</div>} */}
-
-            {/* <div className="filter-list flex justify-start gap-3">
+            <div className="filter-list flex justify-start gap-3">
                 <FilterButton
                     title={false ? "In library" : "All articles"}
                     icon={
@@ -121,7 +127,7 @@ export default function FeedsModalTab({ isDev = true }) {
                     }
                     onClick={() => {}}
                 />
-            </div> */}
+            </div>
 
             <StaticArticleList articles={articles || []} small />
         </div>
