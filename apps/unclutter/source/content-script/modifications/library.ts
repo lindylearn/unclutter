@@ -8,7 +8,6 @@ import {
 import { constructGraphData } from "@unclutter/library-components/dist/components/Modal/Graph";
 import { getUrlHash } from "@unclutter/library-components/dist/common";
 
-import OverlayManager from "./overlay";
 import { PageModifier, trackModifierExecution } from "./_interface";
 import { getLibraryUser } from "../../common/storage";
 import {
@@ -33,9 +32,9 @@ export default class LibraryModifier implements PageModifier {
     private articleTitle: string;
     private articleId: string;
 
-    private overlayManager: OverlayManager;
     private annotationsModifier: AnnotationsModifier;
 
+    libraryStateListeners: ((state: LibraryState) => void)[] = [];
     libraryState: LibraryState = {
         libraryEnabled: false,
 
@@ -57,17 +56,20 @@ export default class LibraryModifier implements PageModifier {
     constructor(
         articleUrl: string,
         articleTitle: string,
-        overlayManager: OverlayManager,
         readingTimeModifier: ReadingTimeModifier,
         annotationsModifier: AnnotationsModifier
     ) {
         this.articleUrl = articleUrl;
         this.articleTitle = articleTitle;
         this.articleId = getUrlHash(articleUrl);
-        this.overlayManager = overlayManager;
         this.annotationsModifier = annotationsModifier;
 
         readingTimeModifier.readingTimeLeftListeners.push(this.onScrollUpdate.bind(this));
+    }
+
+    // update UI components when library state changes
+    private notifyLibraryStateListeners() {
+        this.libraryStateListeners.forEach((listener) => listener(this.libraryState));
     }
 
     async fetchState() {
@@ -94,9 +96,9 @@ export default class LibraryModifier implements PageModifier {
             };
         }
 
-        // fetch or create article state (even if library UI not enabled)
-        this.overlayManager.updateLibraryState(this.libraryState);
+        this.notifyLibraryStateListeners();
 
+        // fetch or create article state (even if library UI not enabled)
         this.fetchArticleState(rep);
         this.fetchFeed(rep);
     }
@@ -110,7 +112,7 @@ export default class LibraryModifier implements PageModifier {
             if (!this.libraryState.libraryInfo) {
                 // run on-demand adding
                 this.libraryState.isClustering = true;
-                this.overlayManager.updateLibraryState(this.libraryState);
+                this.notifyLibraryStateListeners();
 
                 if (
                     this.libraryState.userInfo?.onPaidPlan ||
@@ -151,7 +153,7 @@ export default class LibraryModifier implements PageModifier {
             rep.subscribe.getReadingProgress(this.libraryState.libraryInfo.topic?.id)({
                 onData: (readingProgress) => {
                     this.libraryState.readingProgress = readingProgress;
-                    this.overlayManager.updateLibraryState(this.libraryState);
+                    this.notifyLibraryStateListeners();
                 },
             });
 
@@ -169,7 +171,7 @@ export default class LibraryModifier implements PageModifier {
 
                         // construct article graph
                         await this.constructArticleGraph(rep);
-                        this.overlayManager.updateLibraryState(this.libraryState);
+                        this.notifyLibraryStateListeners();
                     }
                 }, 1000);
             } else {
@@ -180,7 +182,7 @@ export default class LibraryModifier implements PageModifier {
                     this.libraryState.libraryInfo
                 ) {
                     await this.constructArticleGraph(rep);
-                    this.overlayManager.updateLibraryState(this.libraryState);
+                    this.notifyLibraryStateListeners();
                 }
             }
 
@@ -196,7 +198,7 @@ export default class LibraryModifier implements PageModifier {
             }
         } catch (err) {
             this.libraryState.error = true;
-            this.overlayManager.updateLibraryState(this.libraryState);
+            this.notifyLibraryStateListeners();
             console.error(err);
         }
     }
@@ -219,7 +221,7 @@ export default class LibraryModifier implements PageModifier {
                 articleFeed,
                 isSubscribed: false,
             };
-            this.overlayManager.updateLibraryState(this.libraryState);
+            this.notifyLibraryStateListeners();
         } catch (err) {
             console.error(err);
         }
@@ -363,7 +365,7 @@ export default class LibraryModifier implements PageModifier {
         }
 
         this.libraryState.feed.isSubscribed = !this.libraryState.feed.isSubscribed;
-        this.overlayManager.updateLibraryState(this.libraryState);
+        this.notifyLibraryStateListeners();
 
         // update data store
         // const rep = new ReplicacheProxy();

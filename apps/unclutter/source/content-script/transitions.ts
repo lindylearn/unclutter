@@ -48,21 +48,21 @@ export default class TransitionManager implements PageModifier {
         this.domain,
         this.readingTimeModifier
     );
+    private libraryModifier = new LibraryModifier(
+        this.url,
+        document.title,
+        this.readingTimeModifier,
+        this.annotationsModifier
+    );
     private overlayManager = new OverlayManager(
         this.domain,
         this.themeModifier,
         this.annotationsModifier,
         this.textContainerModifier,
         this.elementPickerModifier,
+        this.libraryModifier,
         this.libraryModalModifier,
         this.readingTimeModifier
-    );
-    private libraryModifier = new LibraryModifier(
-        this.url,
-        document.title,
-        this.overlayManager,
-        this.readingTimeModifier,
-        this.annotationsModifier
     );
     private loggingModifier = new LoggingManager(this.overlayManager, this.readingTimeModifier);
     // private linkAnnotationsModifier = new LinkAnnotationsModifier(

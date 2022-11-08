@@ -29,6 +29,7 @@ import LibraryModalModifier from "./libraryModal";
 import { PageModifier, trackModifierExecution } from "./_interface";
 import ReadingTimeModifier from "./DOM/readingTime";
 import { setUserSettingsForDomain } from "../../common/storage";
+import LibraryModifier from "./library";
 
 @trackModifierExecution
 export default class OverlayManager implements PageModifier {
@@ -38,6 +39,7 @@ export default class OverlayManager implements PageModifier {
     private annotationsModifer: AnnotationsModifier;
     private textContainerModifier: TextContainerModifier;
     private elementPickerModifier: ElementPickerModifier;
+    private libraryModifier: LibraryModifier;
     private libraryModalModifier: LibraryModalModifier;
 
     outline: OutlineItem[];
@@ -55,6 +57,7 @@ export default class OverlayManager implements PageModifier {
         annotationsModifer: AnnotationsModifier,
         textContainerModifier: TextContainerModifier,
         elementPickerModifier: ElementPickerModifier,
+        libraryModifier: LibraryModifier,
         libraryModalModifier: LibraryModalModifier,
         readingTimeModifier: ReadingTimeModifier
     ) {
@@ -64,10 +67,12 @@ export default class OverlayManager implements PageModifier {
         this.annotationsModifer = annotationsModifer;
         this.textContainerModifier = textContainerModifier;
         this.elementPickerModifier = elementPickerModifier;
+        this.libraryModifier = libraryModifier;
         this.libraryModalModifier = libraryModalModifier;
 
-        this.annotationsModifer.annotationListeners.push(this.onAnnotationUpdate.bind(this));
+        annotationsModifer.annotationListeners.push(this.onAnnotationUpdate.bind(this));
         readingTimeModifier.readingTimeLeftListeners.push(this.onReadingTimeUpdate.bind(this));
+        libraryModifier.libraryStateListeners.push(this.updateLibraryState.bind(this));
 
         // fetch users settings to run code synchronously later
         (async () => {
@@ -163,8 +168,9 @@ export default class OverlayManager implements PageModifier {
                 activeOutlineIndex: this.outline?.[0].index,
                 annotationsEnabled: this.annotationsEnabled,
                 readingTimeLeft: this.readingTimeLeft,
-                libraryState: this.libraryState,
+                libraryState: this.libraryModifier.libraryState,
                 darkModeEnabled: this.darkModeEnabled,
+                libraryModifier: this.libraryModifier,
                 libraryModalModifier: this.libraryModalModifier,
             },
         });
@@ -224,7 +230,7 @@ export default class OverlayManager implements PageModifier {
         this.bottomSvelteComponent = new BottomContainerSvelte({
             target: this.bottomIframe?.contentDocument.body,
             props: {
-                libraryState: this.libraryState,
+                libraryState: this.libraryModifier.libraryState,
             },
         });
     }
@@ -446,10 +452,7 @@ export default class OverlayManager implements PageModifier {
         });
     }
 
-    private libraryState: LibraryState = null;
     updateLibraryState(libraryState: LibraryState) {
-        this.libraryState = libraryState;
-
         this.topleftSvelteComponent?.$set({
             libraryState,
         });

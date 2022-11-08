@@ -19,6 +19,7 @@
     import LibraryModalModifier from "../../content-script/modifications/libraryModal";
     import clsx from "clsx";
     import SubscribeMessage from "./Library/SubscribeMessage.svelte";
+    import LibraryModifier from "../../content-script/modifications/library";
 
     export let outline: OutlineItem[];
     export let activeOutlineIndex: number;
@@ -27,6 +28,7 @@
     export let readingTimeLeft: number = null;
     export let libraryState: LibraryState;
     export let darkModeEnabled: boolean;
+    export let libraryModifier: LibraryModifier;
     export let libraryModalModifier: LibraryModalModifier;
 
     let displayFeedbackMessage = false;
@@ -64,7 +66,12 @@
         <LibraryMessage {libraryState} {libraryModalModifier} {darkModeEnabled} />
     {/if}
     {#if libraryState?.feed}
-        <SubscribeMessage {libraryState} {libraryModalModifier} {darkModeEnabled} />
+        <SubscribeMessage
+            {libraryState}
+            {libraryModifier}
+            {libraryModalModifier}
+            {darkModeEnabled}
+        />
     {/if}
 
     <Outline
