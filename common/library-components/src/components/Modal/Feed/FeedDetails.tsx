@@ -52,7 +52,7 @@ export default function FeedDetailsTab({ darkModeEnabled }) {
 
             <div className="filter-list flex justify-start gap-3">
                 <FilterButton
-                    title={false ? "In library" : "All articles"}
+                    title={false ? "In library" : "Past articles"}
                     icon={
                         false ? (
                             <ResourceIcon type="articles" />
@@ -67,7 +67,7 @@ export default function FeedDetailsTab({ darkModeEnabled }) {
                     }
                     onClick={() => {}}
                 />
-                <FilterButton
+                {/* <FilterButton
                     title={true ? "Newest first" : "Oldest first"}
                     icon={
                         true ? (
@@ -87,7 +87,7 @@ export default function FeedDetailsTab({ darkModeEnabled }) {
                         )
                     }
                     onClick={() => {}}
-                />
+                /> */}
             </div>
 
             <StaticArticleList articles={articles || []} small />
@@ -117,36 +117,45 @@ export function FeedCard({
             onClick={() => setCurrentSubscription?.(subscription)}
         >
             <div
-                className="title flex flex-grow items-center gap-3 rounded-l-md bg-stone-50 p-3 dark:bg-neutral-800"
+                className="title flex flex-grow items-center gap-3 rounded-l-md bg-stone-100 p-3 transition-colors dark:bg-neutral-800"
                 style={{
-                    background: getRandomLightColor(subscription.domain, darkModeEnabled),
+                    background: subscription.is_subscribed
+                        ? getRandomLightColor(subscription.domain, darkModeEnabled)
+                        : undefined,
                 }}
             >
                 <img
-                    className="h-12 w-12 flex-shrink-0 rounded-md"
+                    className={clsx(
+                        "h-12 w-12 flex-shrink-0 rounded-md transition-all",
+                        !subscription.is_subscribed && "grayscale"
+                    )}
                     src={`https://www.google.com/s2/favicons?sz=128&domain=https://${subscription.domain}`}
                 />
                 <div className="flex flex-grow flex-col items-start">
-                    <h1 className="font-title text-xl font-bold">{subscription.title}</h1>
-                    <a
-                        className={clsx(
-                            "block",
-                            !isListEntry && "transition-transform hover:scale-[97%]"
-                        )}
-                        href={!isListEntry ? subscription.link : undefined}
-                    >
-                        {subscription.domain}
-                    </a>
+                    <h1 className="font-title text-lg font-bold">{subscription.title}</h1>
+                    <div className="flex w-full justify-between gap-3 text-base">
+                        <a
+                            className={clsx(
+                                "block",
+                                !isListEntry && "transition-transform hover:scale-[97%]"
+                            )}
+                            href={!isListEntry ? subscription.link : undefined}
+                        >
+                            {subscription.domain}
+                        </a>
+                        <div>{subscription.post_frequency}</div>
+                    </div>
                 </div>
             </div>
 
             <div
                 className="flex flex-shrink-0 origin-left cursor-pointer select-none items-center gap-2 self-stretch rounded-r-md bg-stone-100 px-5 font-medium transition-transform hover:scale-[97%] dark:bg-neutral-800"
-                onClick={() => {
+                onClick={(e) => {
                     rep?.mutate.updateSubscription({
                         id: subscription.id,
                         is_subscribed: !subscription.is_subscribed,
                     });
+                    e.stopPropagation();
                 }}
             >
                 {subscription.is_subscribed ? (

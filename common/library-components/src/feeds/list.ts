@@ -1,8 +1,7 @@
 import { Feed } from "domutils";
 import { parseFeed } from "htmlparser2";
 import ky from "ky";
-import { cleanTitle } from "@unclutter/library-components/dist/common/util";
-import { getBrowser, getUnclutterExtensionId, getUrlHash } from "../common";
+import { getBrowser, getUnclutterExtensionId, getUrlHash, cleanTitle } from "../common";
 import { Article, FeedSubscription } from "../store";
 
 // fetch in background to avoid CORS issues
