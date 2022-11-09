@@ -339,6 +339,9 @@ export default class LibraryModifier implements PageModifier {
                 console.error("Could not find active node in graph");
             }
         }
+        if (this.libraryState.libraryInfo.article.is_queued) {
+            this.toggleArticleInQueue();
+        }
 
         // update data store
         const rep = new ReplicacheProxy();

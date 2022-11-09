@@ -30,10 +30,7 @@
     <div slot="subtitle">
         {#if libraryState.feed?.is_subscribed && libraryState.feed?.time_added}
             <div class="" in:fly={{ y: 10, duration: 200, easing: cubicOut }}>
-                following since {getRelativeTime(libraryState.feed.time_added * 1000).replace(
-                    " ago",
-                    ""
-                )}
+                following since {getRelativeTime(libraryState.feed.time_added * 1000)}
             </div>
         {:else if libraryState.feed?.post_frequency}
             <div class="" in:fly={{ y: 10, duration: 200, easing: cubicOut }}>
