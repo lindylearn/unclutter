@@ -107,9 +107,15 @@ export function LibraryModalPage({
         setCurrentTab("graph");
         reportEvent("showTopicGraph");
     }
-    function showDomain(domain: string) {
-        setDomainFilter(domain);
-        setCurrentTab("list");
+    async function showDomain(domain: string) {
+        const subscriptions = await rep?.query.listSubscriptions();
+        const domainSubscription = subscriptions?.find((s) => s.domain === domain);
+        if (domainSubscription) {
+            setCurrentSubscription(domainSubscription);
+            setCurrentTab("feeds");
+            reportEvent("showDomainFeed");
+        }
+
         reportEvent("showDomainDetails");
     }
 
