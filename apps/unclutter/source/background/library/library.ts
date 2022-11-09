@@ -59,6 +59,10 @@ export async function initLibrary() {
         console.error(err);
     }
 
+    await refreshLibraryFeeds();
+}
+
+export async function refreshLibraryFeeds() {
     await refreshSubscriptions(rep);
 }
 

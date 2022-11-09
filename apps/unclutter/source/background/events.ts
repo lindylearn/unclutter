@@ -1,6 +1,6 @@
 import { clusterLibraryArticles } from "@unclutter/library-components/dist/common";
 import { fetchRssFeed } from "@unclutter/library-components/dist/feeds";
-import type { Runtime, Tabs } from "webextension-polyfill";
+import type { Runtime, Tabs, Alarms } from "webextension-polyfill";
 import { extensionSupportsUrl } from "../common/articleDetection";
 import { handleReportBrokenPage } from "../common/bugReport";
 import {
@@ -16,12 +16,13 @@ import { fetchCss } from "./actions";
 import { loadAnnotationCountsToMemory } from "./annotationCounts";
 import { getAllBookmarks, requestBookmarksPermission } from "./bookmarks";
 import { enableInTab, injectScript, togglePageViewMessage } from "./inject";
-import { onNewInstall, setupWithPermissions } from "./install";
+import { createAlarmListener, onNewInstall, setupWithPermissions } from "./install";
 import { discoverRssFeed } from "./library/feeds";
 import {
     initLibrary,
     processReplicacheMessage,
     processReplicacheSubscribe,
+    refreshLibraryFeeds,
 } from "./library/library";
 import { captureActiveTabScreenshot, getLocalScreenshot } from "./library/screenshots";
 import { search } from "./library/search";
@@ -255,3 +256,4 @@ async function initializeServiceWorker() {
 
 initializeServiceWorker();
 setupWithPermissions(); // needs to run after every reload to configure event handlers
+createAlarmListener();

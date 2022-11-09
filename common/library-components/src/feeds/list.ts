@@ -26,7 +26,7 @@ export async function listFeedItemsWeb(feed: FeedSubscription): Promise<Article[
 export async function refreshSubscriptions(rep: ReplicacheProxy) {
     let subscriptions = await rep.query.listSubscriptions();
     subscriptions = subscriptions.filter((s) => s.is_subscribed);
-    console.log(`Checking ${subscriptions.length} article feeds...`);
+    console.log(`Refreshing ${subscriptions.length} article feeds...`);
 
     const newArticles = (await Promise.all(subscriptions.map(getNewArticles))).flat();
     if (newArticles.length > 0) {

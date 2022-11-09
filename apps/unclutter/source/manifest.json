@@ -11,7 +11,7 @@
         "128": "assets/icon.png"
     },
     "permissions": ["storage", "scripting"],
-    "optional_permissions": ["contextMenus", "bookmarks"],
+    "optional_permissions": ["contextMenus", "bookmarks", "alarms"],
     "host_permissions": ["<all_urls>"],
     "options_ui": {
         "page": "settings-page/index.html"

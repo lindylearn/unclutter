@@ -1,6 +1,8 @@
 import browser, { getBrowserType } from "../common/polyfill";
 import { injectScript } from "./inject";
 import { reportEnablePageView } from "./metrics";
+import type { Alarms } from "webextension-polyfill";
+import { refreshLibraryFeeds } from "./library/library";
 
 export function onNewInstall(version: string) {
     browser.tabs.create({
@@ -20,7 +22,8 @@ export function setupWithPermissions() {
 
     try {
         // test if already have permissions
-        _installContextMenu();
+        installContextMenu();
+        installFeedAlarm();
         installed = true;
         return;
     } catch {}
@@ -30,10 +33,11 @@ export function setupWithPermissions() {
         console.log("Requesting optional permissions ...");
         browser.permissions
             .request({
-                permissions: ["contextMenus"],
+                permissions: ["contextMenus", "alarms"],
             })
             .then(() => {
-                _installContextMenu();
+                installContextMenu();
+                installFeedAlarm();
                 installed = true;
             });
     } catch (err) {
@@ -41,7 +45,7 @@ export function setupWithPermissions() {
     }
 }
 
-function _installContextMenu() {
+function installContextMenu() {
     console.log("Registering context menu ...");
 
     createOrUpdateContextMenu("unclutter-link", {
@@ -88,4 +92,24 @@ function createOrUpdateContextMenu(id, menuOptions) {
     } catch {
         const _ = browser.runtime.lastError;
     }
+}
+
+function installFeedAlarm() {
+    console.log("Registering library feed periodic alarm...");
+
+    // updates alarm if already exists
+    browser.alarms.create("unclutter-library-feed-refresh", {
+        delayInMinutes: 60 * 4,
+        periodInMinutes: 60 * 4,
+    } as Alarms.CreateAlarmInfoType);
+
+    createAlarmListener();
+}
+
+export function createAlarmListener() {
+    browser.alarms?.onAlarm.addListener((alarm: Alarms.Alarm) => {
+        if (alarm.name === "unclutter-library-feed-refresh") {
+            refreshLibraryFeeds();
+        }
+    });
 }

@@ -7,7 +7,7 @@
         "128": "assets/icon.png"
     },
     "permissions": ["storage", "activeTab", "<all_urls>", "contextMenus"],
-    "optional_permissions": ["bookmarks"],
+    "optional_permissions": ["bookmarks", "alarms"],
     "options_ui": {
         "page": "settings-page/index.html"
     },
