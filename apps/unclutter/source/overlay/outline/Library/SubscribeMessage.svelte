@@ -19,6 +19,7 @@
     isActive={libraryState.feed?.is_subscribed}
     onToggle={() => libraryModifier.toggleFeedSubscribed()}
     onClick={() => libraryModalModifier.showModal()}
+    {darkModeEnabled}
 >
     <div slot="title">
         {#if libraryState.feed}

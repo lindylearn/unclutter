@@ -32,6 +32,7 @@
     isActive={libraryState?.libraryInfo?.article.is_queued}
     onToggle={() => libraryModifier.toggleArticleInQueue()}
     onClick={() => libraryModalModifier.showModal()}
+    {darkModeEnabled}
 >
     <div slot="title">
         {#if libraryState?.libraryInfo?.topic}
