@@ -14,19 +14,13 @@ export default function FeedListTab({ darkModeEnabled }) {
         []
     ) as FeedSubscription[];
 
-    // useEffect(() => {
-    //     rep?.query.listSubscriptions().then((subscriptions) => {
-    //         const active = subscriptions.filter((s) => s.is_subscribed);
-    //         const inactive = subscriptions.filter((s) => !s.is_subscribed);
-    //         subscriptions = active.concat(inactive);
-
-    //         setAllSubscriptions(subscriptions);
-    //     });
-    // }, [rep]);
+    const displayedSubscriptions = allSubscriptions?.sort((a, b) => {
+        return a.time_added - b.time_added;
+    });
 
     return (
         <div className="flex flex-col gap-4">
-            {allSubscriptions?.map((subscription) => (
+            {displayedSubscriptions?.map((subscription) => (
                 <FeedCard
                     subscription={subscription}
                     darkModeEnabled={darkModeEnabled}
