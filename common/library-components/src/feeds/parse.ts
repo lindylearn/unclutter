@@ -1,8 +1,9 @@
 import { parseFeed } from "htmlparser2";
-import { getDomain } from "../common/util";
+import { cleanTitle, getDomain } from "../common/util";
 import ky from "ky";
-import { Feed } from "domutils";
-import { FeedSubscription } from "../store";
+import { Feed, FeedItem } from "domutils";
+import { Article, FeedSubscription } from "../store";
+import { getUrlHash } from "../common";
 
 export async function getMainFeed(
     sourceUrl: string,
@@ -84,4 +85,22 @@ export function getPostFrequency(feed: Feed): [number, string | undefined] {
     }
 
     return [articlesPerDay, humanFrequency];
+}
+
+export function getArticles(items?: FeedItem[]): Article[] {
+    if (!items) {
+        return [];
+    }
+    return items.map((item) => ({
+        id: getUrlHash(item.link!),
+        url: item.link!,
+        title: cleanTitle(item.title || "") || item.link!,
+        word_count: 0,
+        publication_date: item.pubDate ? new Date(item.pubDate).toISOString() : null,
+        time_added: 0,
+        reading_progress: 0.0,
+        topic_id: null,
+        is_favorite: false,
+        description: item.description,
+    }));
 }

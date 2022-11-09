@@ -34,6 +34,7 @@ import {
 } from "./replicacheLocal";
 import { deleteAllLocalScreenshots } from "./screenshots";
 import { initSearchIndex } from "./search";
+import { refreshSubscriptions } from "@unclutter/library-components/dist/feeds";
 
 export let userId: string;
 export let rep: ReplicacheProxy | null = null;
@@ -57,6 +58,8 @@ export async function initLibrary() {
     } catch (err) {
         console.error(err);
     }
+
+    await refreshSubscriptions(rep);
 }
 
 function getBackgroundReplicacheProxy(): ReplicacheProxy {

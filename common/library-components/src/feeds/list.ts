@@ -1,8 +1,8 @@
-import { Feed } from "domutils";
 import { parseFeed } from "htmlparser2";
 import ky from "ky";
-import { getBrowser, getUnclutterExtensionId, getUrlHash, cleanTitle } from "../common";
+import { getBrowser, getUnclutterExtensionId, ReplicacheProxy } from "../common";
 import { Article, FeedSubscription } from "../store";
+import { fetchRssFeed, getArticles } from "./parse";
 
 // fetch in background to avoid CORS issues
 export async function listFeedItemsContentScript(feed: FeedSubscription): Promise<Article[]> {
@@ -10,33 +10,53 @@ export async function listFeedItemsContentScript(feed: FeedSubscription): Promis
         event: "fetchRssFeed",
         feedUrl: feed.rss_url,
     });
-    return getArticles(rssFeed);
+    return getArticles(rssFeed?.items);
 }
 
-// can't seem to send responses to web messages, so use proxy in dev
+// hack: can't seem to send responses to web messages, so use proxy in dev
 export async function listFeedItemsWeb(feed: FeedSubscription): Promise<Article[]> {
     const html = await ky
         .get(`https://cors-anywhere.herokuapp.com/${feed.rss_url}`)
         .then((r) => r.text());
     const rssFeed = parseFeed(html);
-    console.log(rssFeed);
-    return getArticles(rssFeed);
+    return getArticles(rssFeed?.items);
 }
 
-function getArticles(rssFeed: Feed | null) {
-    if (!rssFeed) {
+// should be called from background script
+export async function refreshSubscriptions(rep: ReplicacheProxy) {
+    let subscriptions = await rep.query.listSubscriptions();
+    subscriptions = subscriptions.filter((s) => s.is_subscribed);
+    console.log(`Checking ${subscriptions.length} article feeds...`);
+
+    const newArticles = (await Promise.all(subscriptions.map(getNewArticles))).flat();
+    if (newArticles.length > 0) {
+        await rep.mutate.importArticles({ articles: newArticles });
+        console.log(`Imported ${newArticles.length} new feed articles`);
+    }
+
+    await Promise.all(
+        subscriptions.map((s) =>
+            rep.mutate.updateSubscription({
+                id: s.id,
+                last_fetched: Math.round(new Date().getTime() / 1000),
+            })
+        )
+    );
+}
+
+async function getNewArticles(subscription: FeedSubscription): Promise<Article[]> {
+    const feed = await fetchRssFeed(subscription.rss_url);
+    if (!feed) {
         return [];
     }
-    return rssFeed.items.map((item) => ({
-        id: getUrlHash(item.link!),
-        url: item.link!,
-        title: cleanTitle(item.title || "") || item.link!,
-        word_count: 0,
-        publication_date: item.pubDate ? new Date(item.pubDate).toISOString() : null,
-        time_added: 0,
-        reading_progress: 0.0,
-        topic_id: null,
-        is_favorite: false,
-        description: item.description,
-    }));
+
+    if (!subscription.last_fetched) {
+        subscription.last_fetched = 0;
+    }
+
+    const newItems = feed.items.filter(
+        (item) =>
+            item.pubDate && new Date(item.pubDate).getTime() / 1000 > subscription.last_fetched!
+    );
+    return getArticles(newItems);
 }
