@@ -71,15 +71,19 @@ export function getPostFrequency(feed: Feed): [number, string | undefined] {
     const articlesPerMonth = Math.round(feed.items.length / (days / 30));
     const articlesPerYear = Math.round(feed.items.length / (days / 365));
     if (articlesPerDay >= 1) {
-        humanFrequency = `${articlesPerDay} article${articlesPerDay !== 1 ? "s" : ""} per day`;
+        humanFrequency = `${articlesPerDay} new article${articlesPerDay !== 1 ? "s" : ""} per day`;
     } else if (articlesPerWeek >= 1) {
-        humanFrequency = `${articlesPerWeek} article${articlesPerWeek !== 1 ? "s" : ""} per week`;
+        humanFrequency = `${articlesPerWeek} new article${
+            articlesPerWeek !== 1 ? "s" : ""
+        } per week`;
     } else if (articlesPerMonth >= 1) {
-        humanFrequency = `${articlesPerMonth} article${
+        humanFrequency = `${articlesPerMonth} new article${
             articlesPerMonth !== 1 ? "s" : ""
         } per month`;
     } else if (articlesPerYear >= 1) {
-        humanFrequency = `${articlesPerYear} article${articlesPerYear !== 1 ? "s" : ""} per year`;
+        humanFrequency = `${articlesPerYear} new article${
+            articlesPerYear !== 1 ? "s" : ""
+        } per year`;
     } else {
         humanFrequency = `no recent articles`;
     }

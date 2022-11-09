@@ -383,6 +383,9 @@ export default class LibraryModifier implements PageModifier {
         // update local state
         this.libraryState.libraryInfo.article.is_queued =
             !this.libraryState.libraryInfo.article.is_queued;
+        if (this.libraryState.libraryInfo.article.reading_progress >= readingProgressFullClamp) {
+            this.libraryState.libraryInfo.article.reading_progress = 0;
+        }
         this.notifyLibraryStateListeners();
     }
 

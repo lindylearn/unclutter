@@ -63,16 +63,11 @@
     class={clsx("font-text flex flex-col gap-2", darkModeEnabled && "dark")}
 >
     {#if libraryState?.libraryEnabled}
-        <LibraryMessage {libraryState} {libraryModalModifier} {darkModeEnabled} />
+        <LibraryMessage {libraryState} {libraryModifier} {libraryModalModifier} {darkModeEnabled} />
     {/if}
-    {#if libraryState?.feed}
-        <SubscribeMessage
-            {libraryState}
-            {libraryModifier}
-            {libraryModalModifier}
-            {darkModeEnabled}
-        />
-    {/if}
+    <!-- {#if libraryState?.feed} -->
+    <SubscribeMessage {libraryState} {libraryModifier} {libraryModalModifier} {darkModeEnabled} />
+    <!-- {/if} -->
 
     <Outline
         {outline}
