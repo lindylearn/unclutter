@@ -1,12 +1,9 @@
 <script lang="ts">
-    import { fly, fade } from "svelte/transition";
-    import { cubicOut } from "svelte/easing";
-    import clsx from "clsx";
     import { getRandomLightColor } from "@unclutter/library-components/dist/common/styling";
-
     import { LibraryState } from "../../../common/schema";
     import LibraryModalModifier from "../../../content-script/modifications/libraryModal";
     import LibraryModifier from "../../../content-script/modifications/library";
+    import ToggleMessage from "./ToggleMessage.svelte";
 
     export let libraryState: LibraryState;
     export let libraryModifier: LibraryModifier;
@@ -14,42 +11,27 @@
     export let darkModeEnabled: boolean;
 </script>
 
-<div
-    class="library-message relative flex max-w-full cursor-pointer items-center justify-between gap-2 rounded-lg text-gray-800 shadow transition-transform hover:scale-[98%]"
+<ToggleMessage
+    color={getRandomLightColor(libraryState.feed?.domain, darkModeEnabled)}
+    isActive={libraryState.feed?.is_subscribed}
+    onToggle={() => libraryModifier.toggleFeedSubscribed()}
+    onClick={() => libraryModalModifier.showModal()}
 >
-    <div
-        class="content flex h-[calc(1rem+0.5rem+1.25rem+0.75rem*2)] flex-col overflow-hidden whitespace-nowrap py-3 pl-4 text-sm"
-        in:fly={{ y: 10, duration: 300, easing: cubicOut }}
-        on:click={() => libraryModalModifier.showModal()}
-    >
+    <div slot="title">
         {#if libraryState.feed}
-            <div
-                class="top-row font-title overflow-hidden overflow-ellipsis whitespace-pre text-base font-semibold leading-none"
-            >
-                <span class="hide-tiny"
-                    >{libraryState.feed.is_subscribed ? "Following" : "Follow"}</span
-                >
-                {libraryState.feed.title || libraryState.feed.domain}
-            </div>
-        {/if}
-
-        {#if libraryState.feed?.post_frequency}
-            <div
-                class="bottom-row mt-1 overflow-hidden overflow-ellipsis whitespace-pre text-gray-400 dark:text-stone-600"
-            >
-                <span class="hide-tiny">about </span>{libraryState.feed.post_frequency}
-            </div>
+            <!-- <span class="hide-tiny">{libraryState.feed.is_subscribed ? "Following" : "Follow"}</span> -->
+            {libraryState.feed.title || libraryState.feed.domain}
         {/if}
     </div>
 
-    <div
-        class={clsx(
-            "toggle transition-color flex h-[calc(1rem+0.5rem+1.25rem+0.75rem*2)] shrink-0 origin-left items-center rounded-r-lg bg-stone-100 py-3 px-4 dark:bg-stone-800",
-            libraryState.feed?.is_subscribed ? "active" : "inactive"
-        )}
-        style={`background-color: ${getRandomLightColor(libraryState.feed?.domain)}`}
-        on:click={() => libraryModifier.toggleFeedSubscribed()}
-    >
+    <div slot="subtitle">
+        {#if libraryState.feed?.post_frequency}
+            <!-- <span class="hide-tiny">about </span> -->
+            {libraryState.feed.post_frequency}
+        {/if}
+    </div>
+
+    <div slot="toggle-icon">
         {#if libraryState.feed?.is_subscribed}
             <svg class="w-5" viewBox="0 0 448 512"
                 ><path
@@ -66,24 +48,9 @@
             >
         {/if}
     </div>
-</div>
+</ToggleMessage>
 
 <style lang="postcss">
-    .library-message {
-        /* background transition overrides transform otherwise */
-        transition: background 0.3s ease-in-out 0.1s, transform 0.2s ease-in-out !important;
-    }
-
-    .toggle {
-        transition: background 0.1s ease-in-out !important;
-    }
-    .toggle.active:hover {
-        background-color: rgb(245 245 244) !important;
-    }
-    .toggle.inactive:not(:hover) {
-        background-color: rgb(245 245 244) !important;
-    }
-
     @media (max-width: 250px) {
         .hide-tiny {
             display: none;

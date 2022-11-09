@@ -365,6 +365,27 @@ export default class LibraryModifier implements PageModifier {
         captureActiveTabScreenshot(this.articleId, bodyRect, window.devicePixelRatio);
     }
 
+    toggleArticleInQueue() {
+        if (!this.libraryState.libraryInfo.article) {
+            return;
+        }
+
+        const rep = new ReplicacheProxy();
+        rep?.mutate.articleAddMoveToQueue({
+            articleId: this.libraryState.libraryInfo.article.id,
+            isQueued: !this.libraryState.libraryInfo.article.is_queued,
+            // add to front of queue
+            articleIdBeforeNewPosition: null,
+            articleIdAfterNewPosition: null,
+            sortPosition: "queue_sort_position",
+        });
+
+        // update local state
+        this.libraryState.libraryInfo.article.is_queued =
+            !this.libraryState.libraryInfo.article.is_queued;
+        this.notifyLibraryStateListeners();
+    }
+
     toggleFeedSubscribed() {
         if (!this.libraryState.feed) {
             return;
@@ -373,6 +394,7 @@ export default class LibraryModifier implements PageModifier {
         const rep = new ReplicacheProxy();
         rep.mutate.toggleSubscriptionActive(this.libraryState.feed.id);
 
+        // update local state
         this.libraryState.feed.is_subscribed = !this.libraryState.feed.is_subscribed;
         this.notifyLibraryStateListeners();
     }

@@ -3,6 +3,7 @@
     import Heading from "./Heading.svelte";
     import { OutlineItem } from "./parse";
     import { scrollToElement } from "./common";
+    import ResourceStat from "../Library/ResourceStat.svelte";
 
     export let outline: OutlineItem[];
     export let activeOutlineIndex: number;
@@ -18,11 +19,13 @@
     <div>
         <div class="flex justify-between">
             <div
-                class="font-title cursor-pointer select-none text-base font-semibold"
+                class="font-title cursor-pointer select-none text-base font-semibold leading-tight"
                 on:click={() => scrollToElement(outline[0].element)}
             >
                 {outline[0]?.title}
             </div>
+
+            <!-- <ResourceStat type="highlights" value={totalAnnotationCount} /> -->
         </div>
 
         <div class="">

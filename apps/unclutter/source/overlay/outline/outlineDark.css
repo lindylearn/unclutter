@@ -29,7 +29,7 @@ svg.message-icon {
     stroke: #44403c !important; /* text-stone-700 */
 }
 
-.library-message {
+.toggle-message {
     color: var(--lindy-dark-theme-text-color) !important;
 }
 

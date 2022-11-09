@@ -89,7 +89,7 @@
     z-index: 3000 !important;
     will-change: transform !important;
 
-    width: 400px !important;
+    width: 350px !important;
     max-width: calc(
         (100vw - var(--lindy-pagewidth)) / 2 - 7px
     ) !important; /* also set via inline styles to prevent initial transition */
