@@ -55,11 +55,9 @@ export function FeedHeader({
                             {subscription.domain}
                         </a>
 
-                        <div>{subscription.post_frequency}</div>
+                        <div className="">{subscription.post_frequency}</div>
                     </div>
                 </div>
-
-                <div className=" self-start"></div>
             </div>
 
             {/* <div className="flex gap-3">

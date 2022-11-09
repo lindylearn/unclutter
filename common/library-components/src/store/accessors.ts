@@ -1,5 +1,6 @@
 import { generate } from "@rocicorp/rails";
 import { ReadTransaction } from "replicache";
+import { getDomain } from "../common";
 import { getWeekNumber, getWeekStart, subtractWeeks } from "../common/time";
 import {
     Annotation,
@@ -179,6 +180,13 @@ export async function listQueueArticles(tx: ReadTransaction): Promise<Article[]>
     const allArticles = await listArticles(tx);
     const articles = allArticles.filter((a) => a.is_queued);
     sortArticlesPosition(articles, "queue_sort_position");
+    return articles;
+}
+
+export async function listDomainArticles(tx: ReadTransaction, domain: string): Promise<Article[]> {
+    const allArticles = await listArticles(tx);
+    const articles = allArticles.filter((a) => getDomain(a.url) === domain);
+    sortArticlesPosition(articles, "domain_sort_position");
     return articles;
 }
 
@@ -426,6 +434,7 @@ export const accessors = {
     groupRecentArticles,
     listFavoriteArticles,
     listQueueArticles,
+    listDomainArticles,
     listTopicArticles,
     listTopicArticlesServer,
     getTopicArticlesCount,

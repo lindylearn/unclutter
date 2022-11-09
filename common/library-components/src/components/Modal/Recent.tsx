@@ -261,7 +261,7 @@ export function FilterButton({
 }) {
     return (
         <a
-            className="flex flex-shrink-0 cursor-pointer select-none items-center gap-2 rounded-md bg-stone-100 px-2 py-1 font-medium transition-transform hover:scale-[97%] dark:bg-neutral-800"
+            className="flex flex-shrink-0 cursor-pointer select-none items-center gap-2 rounded-md bg-stone-100 px-2 py-1 font-medium transition-all hover:scale-[97%] dark:bg-neutral-800"
             onClick={onClick}
             href={href}
             style={{
@@ -345,7 +345,7 @@ export function ArticleGroup({
             )} */}
 
             <div
-                className="topic-articles relative rounded-md p-3"
+                className="topic-articles relative rounded-md p-3 transition-colors"
                 style={{
                     height: `${11.5 * articleLines - 0.75 * (articleLines - 1)}rem`, // article height + padding to prevent size change
                     background: color,
@@ -361,21 +361,26 @@ export function ArticleGroup({
                         Follow feeds to see their new articles here.
                     </div>
                 )}
-                {groupKey !== "queue" && groupKey !== "search" && articles.length === 0 && (
+                {groupKey === "past" && articles.length === 0 && (
+                    <div className="animate-fadein absolute top-0 left-0 flex h-full w-full select-none items-center justify-center">
+                        No past feed articles found.
+                    </div>
+                )}
+                {/* {groupKey !== "queue" && groupKey !== "search" && articles.length === 0 && (
                     <div className="animate-fadein absolute top-0 left-0 flex h-full w-full select-none items-center justify-center">
                         All filtered articles are in your reading queue.
                     </div>
-                )}
+                )} */}
 
                 {enableDragging ? (
                     <DraggableArticleList
                         listId={groupKey}
-                        articlesToShow={5 * articleLines}
+                        articlesToShow={articleLines * 5}
                         small
                         reportEvent={reportEvent}
                     />
                 ) : (
-                    <StaticArticleList articles={articles} small />
+                    <StaticArticleList articles={articles.slice(0, articleLines * 5)} small />
                 )}
             </div>
         </div>
