@@ -13,6 +13,9 @@ export const articleSchema = entitySchema.extend({
     is_favorite: z.boolean(),
     is_queued: z.optional(z.boolean()),
 
+    is_temporary: z.optional(z.boolean()), // not saved
+    is_new: z.optional(z.boolean()), // added via feed subscription
+
     topic_id: z.nullable(z.string()),
 
     queue_sort_position: z.optional(z.number()),

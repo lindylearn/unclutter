@@ -2,7 +2,7 @@ import { parseFeed } from "htmlparser2";
 import ky from "ky";
 import { getBrowser, getUnclutterExtensionId, ReplicacheProxy } from "../common";
 import { Article, FeedSubscription } from "../store";
-import { fetchRssFeed, getArticles } from "./parse";
+import { fetchRssFeed, parseFeedArticles } from "./parse";
 
 // fetch in background to avoid CORS issues
 export async function listFeedItemsContentScript(feed: FeedSubscription): Promise<Article[]> {
@@ -10,7 +10,7 @@ export async function listFeedItemsContentScript(feed: FeedSubscription): Promis
         event: "fetchRssFeed",
         feedUrl: feed.rss_url,
     });
-    return getArticles(rssFeed?.items);
+    return parseFeedArticles(rssFeed?.items);
 }
 
 // hack: can't seem to send responses to web messages, so use proxy in dev
@@ -19,7 +19,7 @@ export async function listFeedItemsWeb(feed: FeedSubscription): Promise<Article[
         .get(`https://cors-anywhere.herokuapp.com/${feed.rss_url}`)
         .then((r) => r.text());
     const rssFeed = parseFeed(html);
-    return getArticles(rssFeed?.items);
+    return parseFeedArticles(rssFeed?.items);
 }
 
 // should be called from background script
@@ -58,5 +58,5 @@ async function getNewArticles(subscription: FeedSubscription): Promise<Article[]
         (item) =>
             item.pubDate && new Date(item.pubDate).getTime() / 1000 > subscription.last_fetched!
     );
-    return getArticles(newItems);
+    return parseFeedArticles(newItems, false);
 }

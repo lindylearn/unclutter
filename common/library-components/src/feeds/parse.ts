@@ -87,7 +87,7 @@ export function getPostFrequency(feed: Feed): [number, string | undefined] {
     return [articlesPerDay, humanFrequency];
 }
 
-export function getArticles(items?: FeedItem[]): Article[] {
+export function parseFeedArticles(items?: FeedItem[], isTemporary: boolean = true): Article[] {
     if (!items) {
         return [];
     }
@@ -97,10 +97,12 @@ export function getArticles(items?: FeedItem[]): Article[] {
         title: cleanTitle(item.title || "") || item.link!,
         word_count: 0,
         publication_date: item.pubDate ? new Date(item.pubDate).toISOString() : null,
-        time_added: 0,
+        time_added: isTemporary ? 0 : Math.round(new Date(item.pubDate!).getTime() / 1000),
         reading_progress: 0.0,
         topic_id: null,
         is_favorite: false,
-        description: item.description,
+        description: isTemporary ? item.description?.slice(0, 150) : undefined,
+        is_temporary: isTemporary || undefined,
+        is_new: !isTemporary || undefined,
     }));
 }
