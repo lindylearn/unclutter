@@ -56,6 +56,11 @@
         "#slot_box2_esc_5368045",
         "#slot_box3_esc_5368045"
     ],
+    "bioltrop.fr": [
+        "#hc_extension_bkgnd",
+        "#colgauche",
+        ".spip_document_134.spip_documents.spip_documents_right"
+    ],
     "blog.csdn.net": [
         ".article-bar-top",
         ".article-info-box",
