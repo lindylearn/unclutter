@@ -18,7 +18,7 @@
     color={getRandomLightColor(libraryState.feed?.domain, darkModeEnabled)}
     isActive={libraryState.feed?.is_subscribed}
     onToggle={() => libraryModifier.toggleFeedSubscribed()}
-    onClick={() => libraryModalModifier.showModal()}
+    onClick={() => libraryModalModifier.showModal("feeds")}
     {darkModeEnabled}
 >
     <div slot="title">

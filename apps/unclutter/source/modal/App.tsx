@@ -16,9 +16,11 @@ import { ReplicacheContext } from "@unclutter/library-components/dist/store";
 export default function App({
     darkModeEnabled,
     articleUrl,
+    initialTab,
 }: {
     darkModeEnabled: string;
     articleUrl: string;
+    initialTab?: string;
 }) {
     const rep = useMemo<ReplicacheProxy>(() => new ReplicacheProxy(), []);
     const [libraryState, setLibraryState] = useState<LibraryState | null>(null);
@@ -74,6 +76,7 @@ export default function App({
                         currentArticle={libraryState?.libraryInfo?.article.id}
                         initialSubscription={libraryState?.feed}
                         initialTopic={libraryState?.libraryInfo?.topic}
+                        initialTab={initialTab}
                         graph={libraryState?.graph}
                         reportEvent={reportEventContentScript}
                     />

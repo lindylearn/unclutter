@@ -35,9 +35,9 @@ export default class LibraryModalModifier implements PageModifier {
     private modalIframe: HTMLIFrameElement;
     private iframeLoaded: boolean = false;
     private appLoaded: boolean = false;
-    async showModal() {
+    async showModal(initialTab?: string) {
         // create iframe on demand
-        this.createIframe();
+        this.createIframe(initialTab);
 
         // set theme variables once html ready, before react rendered
         await waitUntilIframeLoaded(this.modalIframe);
@@ -54,13 +54,16 @@ export default class LibraryModalModifier implements PageModifier {
         this.bodyStyleModifier.enableScrollLock();
     }
 
-    private createIframe() {
+    private createIframe(initialTab?: string) {
         const iframeUrl = new URL(browser.runtime.getURL("/modal/index.html"));
         iframeUrl.searchParams.append("articleUrl", window.location.href);
         iframeUrl.searchParams.append(
             "darkModeEnabled",
             (this.darkModeEnabled || false).toString()
         );
+        if (initialTab) {
+            iframeUrl.searchParams.append("initialTab", initialTab);
+        }
 
         this.modalIframe = createIframeNode("lindy-library-modal");
         this.modalIframe.src = iframeUrl.toString();

@@ -48,6 +48,7 @@ export function LibraryModalPage({
     currentArticle,
     initialSubscription,
     initialTopic,
+    initialTab,
     graph,
     relatedLinkCount,
     reportEvent = () => {},
@@ -58,6 +59,7 @@ export function LibraryModalPage({
     currentArticle?: string;
     initialSubscription?: FeedSubscription;
     initialTopic?: Topic;
+    initialTab?: string;
     graph?: CustomGraphData;
     relatedLinkCount?: number;
     closeModal?: () => void;
@@ -81,9 +83,7 @@ export function LibraryModalPage({
     }, [rep]);
 
     const initialRender = useRef<boolean>(true);
-    const [currentTab, setCurrentTab] = useState(
-        relatedLinkCount && (userInfo.onPaidPlan || userInfo.trialEnabled) ? "graph" : "feeds"
-    );
+    const [currentTab, setCurrentTab] = useState(initialTab || "list");
     useEffect(() => {
         if (initialRender.current) {
             initialRender.current = false;
