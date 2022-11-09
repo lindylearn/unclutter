@@ -132,6 +132,7 @@ export default function FeedDetailsTab({ darkModeEnabled, reportEvent }) {
                     darkModeEnabled={darkModeEnabled}
                     reportEvent={reportEvent}
                     enableDragging={false}
+                    showProgress={false}
                 />
             )}
         </div>

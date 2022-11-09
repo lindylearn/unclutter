@@ -83,7 +83,7 @@ export function LibraryModalPage({
     }, [rep]);
 
     const initialRender = useRef<boolean>(true);
-    const [currentTab, setCurrentTab] = useState(initialTab || "feeds");
+    const [currentTab, setCurrentTab] = useState(initialTab || "list");
     useEffect(() => {
         if (initialRender.current) {
             initialRender.current = false;

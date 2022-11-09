@@ -65,9 +65,14 @@
     {#if libraryState?.libraryEnabled}
         <LibraryMessage {libraryState} {libraryModifier} {libraryModalModifier} {darkModeEnabled} />
     {/if}
-    <!-- {#if libraryState?.feed} -->
-    <SubscribeMessage {libraryState} {libraryModifier} {libraryModalModifier} {darkModeEnabled} />
-    <!-- {/if} -->
+    {#if libraryState?.feed}
+        <SubscribeMessage
+            {libraryState}
+            {libraryModifier}
+            {libraryModalModifier}
+            {darkModeEnabled}
+        />
+    {/if}
 
     <Outline
         {outline}

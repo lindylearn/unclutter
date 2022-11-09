@@ -288,6 +288,7 @@ export function ArticleGroup({
     showTopic,
     reportEvent = () => {},
     enableDragging = true,
+    showProgress = true,
 }: {
     groupKey: string;
     title?: string;
@@ -300,6 +301,7 @@ export function ArticleGroup({
     showTopic?: (topicId: string) => void;
     reportEvent?: (event: string, data?: any) => void;
     enableDragging?: boolean;
+    showProgress?: boolean;
 }) {
     color = color || getRandomLightColor(groupKey, darkModeEnabled);
     // const unqueuedArticles = articles.filter((a) => !a.is_queued);
@@ -310,7 +312,7 @@ export function ArticleGroup({
 
     return (
         <div className="topic animate-fadein relative">
-            {true && (
+            {showProgress && (
                 <div className="topic-header mx-0.5 mb-2 flex justify-between">
                     <h2
                         className={clsx(

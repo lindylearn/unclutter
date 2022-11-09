@@ -183,7 +183,7 @@ export function useTabInfos(
                 },
                 {
                     key: "new",
-                    title: "Followed feeds",
+                    title: "Your feeds",
                     icon: (
                         <svg className="w-4" viewBox="0 0 448 512">
                             <path
