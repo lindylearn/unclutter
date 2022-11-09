@@ -87,7 +87,8 @@ export function DraggableContext({
             }
             if (
                 (targetList.endsWith("_") && activeArticle.topic_id !== targetList) ||
-                (targetList.includes(".") && getDomain(activeArticle.url) !== targetList)
+                (targetList.includes(".") && getDomain(activeArticle.url) !== targetList) ||
+                (targetList === "new" && !activeArticle.is_new)
             ) {
                 // attempted move into non-matching topic or domain group
 
