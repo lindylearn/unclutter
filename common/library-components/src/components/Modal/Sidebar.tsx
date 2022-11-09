@@ -138,7 +138,7 @@ function getModalTabOptions(
             ),
         },
         {
-            label: "Following",
+            label: "Feeds",
             value: "feeds",
             svg: (
                 <svg className="w-4" viewBox="0 0 448 512">
