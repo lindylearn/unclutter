@@ -1,6 +1,6 @@
 import { parseFeed } from "htmlparser2";
 import ky from "ky";
-import { getBrowser, getUnclutterExtensionId, ReplicacheProxy } from "../common";
+import { createScreenshots, getBrowser, getUnclutterExtensionId, ReplicacheProxy } from "../common";
 import { Article, FeedSubscription } from "../store";
 import { fetchRssFeed, parseFeedArticles } from "./parse";
 
@@ -32,6 +32,9 @@ export async function refreshSubscriptions(rep: ReplicacheProxy) {
     if (newArticles.length > 0) {
         await rep.mutate.importArticles({ articles: newArticles });
         console.log(`Imported ${newArticles.length} new feed articles`);
+
+        // fetch screenshots remotely async
+        createScreenshots(newArticles.map((a) => a.url));
     }
 
     await Promise.all(

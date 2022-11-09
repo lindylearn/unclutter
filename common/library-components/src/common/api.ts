@@ -99,6 +99,17 @@ export async function checkHasSubscription(user_id: string, email: string): Prom
     return data?.is_subscribed || false;
 }
 
+export async function createScreenshots(urls: string[]): Promise<string[]> {
+    const response = await fetch(`${lindyApiUrl}/library/create_screenshots`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ urls }),
+    });
+    return await response.json(); // returns new urls
+}
+
 export interface BookmarkedPage {
     url: string;
     time_added: number;

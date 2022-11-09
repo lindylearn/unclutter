@@ -64,10 +64,12 @@ export function ArticlePreview({
     const [dropdownOpen, setDropdownOpen] = useState(false);
 
     const localScreenshotFetcher = useContext(LocalScreenshotContext);
-    const [backgroundSrc, setBackgroundSrc] = useState<string>(
-        `url(https://storage.googleapis.com/unclutter-screenshots-serverless/articles/current/${encodeURIComponent(
-            article.url
-        ).replaceAll("%", "%25")}.webp)`
+    const [backgroundSrc, setBackgroundSrc] = useState<string | undefined>(
+        !article.is_temporary
+            ? `url(https://storage.googleapis.com/unclutter-screenshots-serverless/articles/current/${encodeURIComponent(
+                  article.url
+              ).replaceAll("%", "%25")}.webp)`
+            : undefined
     );
     useEffect(() => {
         if (localScreenshotFetcher) {

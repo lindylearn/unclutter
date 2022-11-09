@@ -125,17 +125,6 @@ export async function getLinkedArticles(
     return json?.articles || [];
 }
 
-export async function createScreenshots(urls: string[]): Promise<string[]> {
-    const response = await fetch(`${lindyApiUrl}/library/create_screenshots`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ urls }),
-    });
-    return await response.json(); // returns new urls
-}
-
 export async function getArticleGraph(url: string, user_id: string): Promise<GraphData | null> {
     const response = await fetch(
         `${lindyApiUrl}/library_graph/fetch?${new URLSearchParams({

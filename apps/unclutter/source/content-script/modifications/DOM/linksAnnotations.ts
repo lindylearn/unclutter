@@ -3,12 +3,13 @@ import { describe as describeAnnotation } from "../../../common/annotator/anchor
 import { createLinkAnnotation, LindyAnnotation } from "../../../common/annotations/create";
 import { getNodeOffset } from "../../../common/annotations/offset";
 import AnnotationsModifier from "../annotations/annotationsModifier";
-import { createScreenshots, getLinkedArticles } from "../../../common/api";
+import { getLinkedArticles } from "../../../common/api";
 import LibraryModifier from "../library";
 import { Article } from "@unclutter/library-components/dist/store/_schema";
 import { openArticle } from "@unclutter/library-components/dist/common/messaging";
 import OverlayManager from "../overlay";
 import { extensionSupportsUrl, isNonLeafPage } from "../../../common/articleDetection";
+import { createScreenshots } from "@unclutter/library-components/dist/common/api";
 
 /*
     Parse links inside the article text and create annotations for them.
