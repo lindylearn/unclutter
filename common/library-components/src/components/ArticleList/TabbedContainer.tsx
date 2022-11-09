@@ -156,6 +156,9 @@ export function useTabInfos(
 
             let newArticles: Article[];
             [newArticles, listArticles] = partition(listArticles, (a) => a.is_new);
+            newArticles = newArticles
+                .filter((a) => !a.is_queued)
+                .filter((a) => a.reading_progress < readingProgressFullClamp);
 
             if (onlyUnread) {
                 listArticles = listArticles.filter(
@@ -181,8 +184,16 @@ export function useTabInfos(
                 {
                     key: "new",
                     title: "Following",
-                    articles: newArticles.filter((a) => !a.is_queued),
-                    articleLines: 2,
+                    icon: (
+                        <svg className="w-4" viewBox="0 0 448 512">
+                            <path
+                                fill="currentColor"
+                                d="M432 256C432 269.3 421.3 280 408 280h-160v160c0 13.25-10.75 24.01-24 24.01S200 453.3 200 440v-160h-160c-13.25 0-24-10.74-24-23.99C16 242.8 26.75 232 40 232h160v-160c0-13.25 10.75-23.99 24-23.99S248 58.75 248 72v160h160C421.3 232 432 242.8 432 256z"
+                            />
+                        </svg>
+                    ),
+                    articles: newArticles,
+                    articleLines: Math.max(1, Math.min(2, Math.ceil(newArticles.length / 5))),
                 },
             ];
             if (userInfo.onPaidPlan || userInfo.trialEnabled) {
@@ -233,6 +244,14 @@ export function useTabInfos(
                 tabInfos.push({
                     key: domainFilter || "list",
                     title: "Recently opened",
+                    icon: (
+                        <svg className="w-4" viewBox="0 0 512 512">
+                            <path
+                                fill="currentColor"
+                                d="M256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C203.8 512 155.2 496.4 114.7 469.5C103.7 462.2 100.7 447.3 107.1 436.3C115.3 425.2 130.2 422.2 141.3 429.5C174.1 451.3 213.5 464 256 464C370.9 464 464 370.9 464 256C464 141.1 370.9 48 256 48C182.4 48 117.7 86.24 80.69 144H136C149.3 144 160 154.7 160 168C160 181.3 149.3 192 136 192H24C10.75 192 0 181.3 0 168V56C0 42.75 10.75 32 24 32C37.25 32 48 42.75 48 56V106.7C94.45 42.12 170.3 0 256 0H256zM256 128C269.3 128 280 138.7 280 152V246.1L344.1 311C354.3 320.4 354.3 335.6 344.1 344.1C335.6 354.3 320.4 354.3 311 344.1L239 272.1C234.5 268.5 232 262.4 232 256V152C232 138.7 242.7 128 256 128V128z"
+                            />
+                        </svg>
+                    ),
                     articles: listArticles,
                     articleLines: Math.max(1, Math.min(5, Math.ceil(listArticles.length / 5))),
                 });
