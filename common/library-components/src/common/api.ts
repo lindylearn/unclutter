@@ -100,14 +100,18 @@ export async function checkHasSubscription(user_id: string, email: string): Prom
 }
 
 export async function createScreenshots(urls: string[]): Promise<string[]> {
-    const response = await fetch(`${lindyApiUrl}/library/create_screenshots`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ urls }),
-    });
-    return await response.json(); // returns new urls
+    try {
+        const response = await fetch(`${lindyApiUrl}/library/create_screenshots`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ urls }),
+        });
+        return await response.json(); // returns new urls
+    } catch {
+        return [];
+    }
 }
 
 export interface BookmarkedPage {

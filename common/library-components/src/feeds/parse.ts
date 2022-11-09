@@ -91,22 +91,34 @@ export function getPostFrequency(feed: Feed): [number, string | undefined] {
     return [articlesPerDay, humanFrequency];
 }
 
-export function parseFeedArticles(items?: FeedItem[], isTemporary: boolean = true): Article[] {
+export function parseFeedArticles(
+    rssUrl: string,
+    items?: FeedItem[],
+    isTemporary: boolean = true
+): Article[] {
     if (!items) {
         return [];
     }
-    return items.map((item) => ({
-        id: getUrlHash(item.link!),
-        url: item.link!,
-        title: cleanTitle(item.title || "") || item.link!,
-        word_count: 0,
-        publication_date: item.pubDate ? new Date(item.pubDate).toISOString() : null,
-        time_added: isTemporary ? 0 : Math.round(new Date(item.pubDate!).getTime() / 1000),
-        reading_progress: 0.0,
-        topic_id: null,
-        is_favorite: false,
-        description: isTemporary ? item.description?.slice(0, 150) : undefined,
-        is_temporary: isTemporary || undefined,
-        is_new: !isTemporary || undefined,
-    }));
+
+    return items.map((item) => {
+        let url = item.link!;
+        if (url.startsWith("/")) {
+            url = new URL(url, new URL(rssUrl).origin).href;
+        }
+
+        return {
+            id: getUrlHash(url),
+            url,
+            title: cleanTitle(item.title || "") || item.link!,
+            word_count: 0,
+            publication_date: item.pubDate ? new Date(item.pubDate).toISOString() : null,
+            time_added: isTemporary ? 0 : Math.round(new Date(item.pubDate!).getTime() / 1000),
+            reading_progress: 0.0,
+            topic_id: null,
+            is_favorite: false,
+            description: isTemporary ? item.description?.slice(0, 150) : undefined,
+            is_temporary: isTemporary || undefined,
+            is_new: !isTemporary || undefined,
+        };
+    });
 }

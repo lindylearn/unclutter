@@ -10,7 +10,7 @@ export async function listFeedItemsContentScript(feed: FeedSubscription): Promis
         event: "fetchRssFeed",
         feedUrl: feed.rss_url,
     });
-    return parseFeedArticles(rssFeed?.items);
+    return parseFeedArticles(feed.rss_url, rssFeed?.items);
 }
 
 // hack: can't seem to send responses to web messages, so use proxy in dev
@@ -19,7 +19,7 @@ export async function listFeedItemsWeb(feed: FeedSubscription): Promise<Article[
         .get(`https://cors-anywhere.herokuapp.com/${feed.rss_url}`)
         .then((r) => r.text());
     const rssFeed = parseFeed(html);
-    return parseFeedArticles(rssFeed?.items);
+    return parseFeedArticles(feed.rss_url, rssFeed?.items);
 }
 
 // should be called from background script
@@ -61,5 +61,5 @@ async function getNewArticles(subscription: FeedSubscription): Promise<Article[]
         (item) =>
             item.pubDate && new Date(item.pubDate).getTime() / 1000 > subscription.last_fetched!
     );
-    return parseFeedArticles(newItems, false);
+    return parseFeedArticles(subscription.rss_url, newItems, false);
 }
