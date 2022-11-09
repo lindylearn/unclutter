@@ -26,9 +26,9 @@
             <div
                 class="top-row font-title overflow-hidden overflow-ellipsis whitespace-pre text-base font-semibold leading-none"
             >
-                <!-- <span class="hide-tiny"
-                    >{libraryState.feed.isSubscribed ? "Following" : "Follow"}</span
-                > -->
+                <span class="hide-tiny"
+                    >{libraryState.feed.is_subscribed ? "Following" : "Follow"}</span
+                >
                 {libraryState.feed.title || libraryState.feed.domain}
             </div>
         {/if}
@@ -42,9 +42,12 @@
         {/if}
     </div>
 
-    <!-- style={`background-color: ${getRandomLightColor(libraryState.feed?.domain)}`} -->
     <div
-        class="toggle transition-color flex h-[calc(1rem+0.5rem+1.25rem+0.75rem*2)] shrink-0 items-center rounded-r-lg bg-stone-50 py-3 px-4 dark:bg-stone-800"
+        class={clsx(
+            "toggle transition-color flex h-[calc(1rem+0.5rem+1.25rem+0.75rem*2)] shrink-0 origin-left items-center rounded-r-lg bg-stone-100 py-3 px-4 dark:bg-stone-800",
+            libraryState.feed?.is_subscribed ? "active" : "inactive"
+        )}
+        style={`background-color: ${getRandomLightColor(libraryState.feed?.domain)}`}
         on:click={() => libraryModifier.toggleFeedSubscribed()}
     >
         {#if libraryState.feed?.is_subscribed}
@@ -69,6 +72,16 @@
     .library-message {
         /* background transition overrides transform otherwise */
         transition: background 0.3s ease-in-out 0.1s, transform 0.2s ease-in-out !important;
+    }
+
+    .toggle {
+        transition: background 0.1s ease-in-out !important;
+    }
+    .toggle.active:hover {
+        background-color: rgb(245 245 244) !important;
+    }
+    .toggle.inactive:not(:hover) {
+        background-color: rgb(245 245 244) !important;
     }
 
     @media (max-width: 250px) {
