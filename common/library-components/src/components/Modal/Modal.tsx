@@ -83,7 +83,7 @@ export function LibraryModalPage({
     }, [rep]);
 
     const initialRender = useRef<boolean>(true);
-    const [currentTab, setCurrentTab] = useState(initialTab || "list");
+    const [currentTab, setCurrentTab] = useState(initialTab || "feeds");
     useEffect(() => {
         if (initialRender.current) {
             initialRender.current = false;
@@ -255,7 +255,10 @@ function ModalContent({
                 )}
                 {currentTab === "feeds" &&
                     (currentSubscription ? (
-                        <FeedsDetailsTab darkModeEnabled={darkModeEnabled} />
+                        <FeedsDetailsTab
+                            darkModeEnabled={darkModeEnabled}
+                            reportEvent={reportEvent}
+                        />
                     ) : (
                         <FeedListTab darkModeEnabled={darkModeEnabled} />
                     ))}

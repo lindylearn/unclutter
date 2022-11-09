@@ -1,13 +1,12 @@
 import clsx from "clsx";
 import React, { useContext, useEffect, useState } from "react";
-import { FilterButton, FilterContext } from "../..";
+import { ArticleGroup, FilterButton, FilterContext } from "../..";
 import { getRandomLightColor } from "../../../common";
 import { listFeedItemsContentScript, listFeedItemsWeb } from "../../../feeds/list";
 import { Article, FeedSubscription, ReplicacheContext, useSubscribe } from "../../../store";
-import { StaticArticleList } from "../../ArticleList";
-import { ResourceIcon } from "../components/numbers";
+import { FeedHeader } from "./FeedHeader";
 
-export default function FeedDetailsTab({ darkModeEnabled }) {
+export default function FeedDetailsTab({ darkModeEnabled, reportEvent }) {
     const { currentSubscription, setCurrentSubscription } = useContext(FilterContext);
     const rep = useContext(ReplicacheContext);
 
@@ -35,8 +34,8 @@ export default function FeedDetailsTab({ darkModeEnabled }) {
     }
 
     return (
-        <div className="flex flex-col gap-4">
-            <FeedCard subscription={filteredSubscription} darkModeEnabled={darkModeEnabled} />
+        <div className="animate-fadein flex flex-col gap-4">
+            <FeedHeader subscription={filteredSubscription} darkModeEnabled={darkModeEnabled} />
 
             <div className="filter-list flex justify-start gap-3">
                 <FilterButton
@@ -56,14 +55,14 @@ export default function FeedDetailsTab({ darkModeEnabled }) {
                     title={filteredSubscription.is_subscribed ? "Unfollow" : "Follow"}
                     icon={
                         filteredSubscription.is_subscribed ? (
-                            <svg className="w-5" viewBox="0 0 448 512">
+                            <svg className="h-4" viewBox="0 0 448 512">
                                 <path
                                     fill="currentColor"
                                     d="M440.1 103C450.3 112.4 450.3 127.6 440.1 136.1L176.1 400.1C167.6 410.3 152.4 410.3 143 400.1L7.029 264.1C-2.343 255.6-2.343 240.4 7.029 231C16.4 221.7 31.6 221.7 40.97 231L160 350.1L407 103C416.4 93.66 431.6 93.66 440.1 103V103z"
                                 />
                             </svg>
                         ) : (
-                            <svg className="w-5" viewBox="0 0 448 512">
+                            <svg className="h-4" viewBox="0 0 448 512">
                                 <path
                                     fill="currentColor"
                                     d="M432 256C432 269.3 421.3 280 408 280h-160v160c0 13.25-10.75 24.01-24 24.01S200 453.3 200 440v-160h-160c-13.25 0-24-10.74-24-23.99C16 242.8 26.75 232 40 232h160v-160c0-13.25 10.75-23.99 24-23.99S248 58.75 248 72v160h160C421.3 232 432 242.8 432 256z"
@@ -80,97 +79,51 @@ export default function FeedDetailsTab({ darkModeEnabled }) {
                 />
             </div>
 
-            <StaticArticleList articles={articles || []} small />
-        </div>
-    );
-}
-
-export function FeedCard({
-    subscription,
-    darkModeEnabled,
-    isListEntry = false,
-    setCurrentSubscription,
-}: {
-    subscription: FeedSubscription;
-    darkModeEnabled: boolean;
-    isListEntry?: boolean;
-    setCurrentSubscription?: (subscription: FeedSubscription) => void;
-}) {
-    const rep = useContext(ReplicacheContext);
-
-    return (
-        <div
-            className={clsx(
-                "info-box flex flex-grow justify-start",
-                isListEntry && "cursor-pointer transition-transform hover:scale-[99%]"
-            )}
-            onClick={() => setCurrentSubscription?.(subscription)}
-        >
-            <div
-                className="title flex flex-grow items-center gap-3 rounded-md bg-stone-100 p-3 transition-colors dark:bg-neutral-800"
-                style={{
-                    background: subscription.is_subscribed
-                        ? getRandomLightColor(subscription.domain, darkModeEnabled)
-                        : undefined,
-                }}
-            >
-                <img
-                    className={clsx(
-                        "h-10 w-10 flex-shrink-0 rounded-md transition-all",
-                        !subscription.is_subscribed && "grayscale"
-                    )}
-                    src={`https://www.google.com/s2/favicons?sz=128&domain=https://${subscription.domain}`}
+            {/* {filteredSubscription.is_subscribed && (
+                <ArticleGroup
+                    groupKey="new"
+                    title="New articles"
+                    icon={
+                        <svg className="h-4" viewBox="0 0 448 512">
+                            <path
+                                fill="currentColor"
+                                d="M432 256C432 269.3 421.3 280 408 280h-160v160c0 13.25-10.75 24.01-24 24.01S200 453.3 200 440v-160h-160c-13.25 0-24-10.74-24-23.99C16 242.8 26.75 232 40 232h160v-160c0-13.25 10.75-23.99 24-23.99S248 58.75 248 72v160h160C421.3 232 432 242.8 432 256z"
+                            />
+                        </svg>
+                    }
+                    articles={articles || []}
+                    color={getRandomLightColor(filteredSubscription.domain, darkModeEnabled)}
+                    darkModeEnabled={darkModeEnabled}
+                    reportEvent={reportEvent}
                 />
-                <div className="flex flex-grow flex-col items-start">
-                    <h1 className="font-title text-lg font-bold leading-tight">
-                        {subscription.title}
-                    </h1>
-                    <div className="flex w-full justify-between gap-3 text-base">
-                        <a
-                            className={clsx(
-                                "block",
-                                !isListEntry && "transition-transform hover:scale-[97%]"
-                            )}
-                            href={!isListEntry ? subscription.link : undefined}
-                        >
-                            {subscription.domain}
-                        </a>
+            )} */}
 
-                        {/* <div>{subscription.post_frequency}</div> */}
-                    </div>
-                </div>
-            </div>
-
-            {/* <div
-                className="flex flex-shrink-0 origin-left cursor-pointer select-none items-center gap-2 self-stretch rounded-r-md bg-stone-100 px-5 font-medium transition-colors dark:bg-neutral-800"
-                style={{
-                    background: !subscription.is_subscribed
-                        ? getRandomLightColor(subscription.domain, darkModeEnabled)
-                        : undefined,
-                }}
-                onClick={(e) => {
-                    rep?.mutate.toggleSubscriptionActive(subscription.id);
-                    e.stopPropagation();
-                }}
-            >
-                {subscription.is_subscribed ? (
-                    <svg className="w-5" viewBox="0 0 448 512">
-                        <path
-                            fill="currentColor"
-                            d="M440.1 103C450.3 112.4 450.3 127.6 440.1 136.1L176.1 400.1C167.6 410.3 152.4 410.3 143 400.1L7.029 264.1C-2.343 255.6-2.343 240.4 7.029 231C16.4 221.7 31.6 221.7 40.97 231L160 350.1L407 103C416.4 93.66 431.6 93.66 440.1 103V103z"
-                        />
-                    </svg>
-                ) : (
-                    <svg className="w-5" viewBox="0 0 448 512">
-                        <path
-                            fill="currentColor"
-                            d="M432 256C432 269.3 421.3 280 408 280h-160v160c0 13.25-10.75 24.01-24 24.01S200 453.3 200 440v-160h-160c-13.25 0-24-10.74-24-23.99C16 242.8 26.75 232 40 232h160v-160c0-13.25 10.75-23.99 24-23.99S248 58.75 248 72v160h160C421.3 232 432 242.8 432 256z"
-                        />
-                    </svg>
-                )}
-
-                {subscription.is_subscribed ? "Following" : "Follow"}
-            </div> */}
+            {articles && (
+                <ArticleGroup
+                    groupKey="past"
+                    title="Past articles"
+                    icon={
+                        <svg className="h-4" viewBox="0 0 448 512">
+                            <path
+                                fill="currentColor"
+                                d="M88 32C110.1 32 128 49.91 128 72V120C128 142.1 110.1 160 88 160H40C17.91 160 0 142.1 0 120V72C0 49.91 17.91 32 40 32H88zM88 72H40V120H88V72zM88 192C110.1 192 128 209.9 128 232V280C128 302.1 110.1 320 88 320H40C17.91 320 0 302.1 0 280V232C0 209.9 17.91 192 40 192H88zM88 232H40V280H88V232zM0 392C0 369.9 17.91 352 40 352H88C110.1 352 128 369.9 128 392V440C128 462.1 110.1 480 88 480H40C17.91 480 0 462.1 0 440V392zM40 440H88V392H40V440zM248 32C270.1 32 288 49.91 288 72V120C288 142.1 270.1 160 248 160H200C177.9 160 160 142.1 160 120V72C160 49.91 177.9 32 200 32H248zM248 72H200V120H248V72zM160 232C160 209.9 177.9 192 200 192H248C270.1 192 288 209.9 288 232V280C288 302.1 270.1 320 248 320H200C177.9 320 160 302.1 160 280V232zM200 280H248V232H200V280zM248 352C270.1 352 288 369.9 288 392V440C288 462.1 270.1 480 248 480H200C177.9 480 160 462.1 160 440V392C160 369.9 177.9 352 200 352H248zM248 392H200V440H248V392zM320 72C320 49.91 337.9 32 360 32H408C430.1 32 448 49.91 448 72V120C448 142.1 430.1 160 408 160H360C337.9 160 320 142.1 320 120V72zM360 120H408V72H360V120zM408 192C430.1 192 448 209.9 448 232V280C448 302.1 430.1 320 408 320H360C337.9 320 320 302.1 320 280V232C320 209.9 337.9 192 360 192H408zM408 232H360V280H408V232zM320 392C320 369.9 337.9 352 360 352H408C430.1 352 448 369.9 448 392V440C448 462.1 430.1 480 408 480H360C337.9 480 320 462.1 320 440V392zM360 440H408V392H360V440z"
+                            />
+                        </svg>
+                    }
+                    articles={articles}
+                    articleLines={Math.ceil(articles.length / 5)}
+                    color={
+                        filteredSubscription.is_subscribed
+                            ? getRandomLightColor(filteredSubscription.domain, darkModeEnabled)
+                            : darkModeEnabled
+                            ? "rgb(38 38 38)"
+                            : "rgb(245 245 244)"
+                    }
+                    darkModeEnabled={darkModeEnabled}
+                    reportEvent={reportEvent}
+                    enableDragging={false}
+                />
+            )}
         </div>
     );
 }

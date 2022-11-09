@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { FilterContext } from "../..";
 import { FeedSubscription, ReplicacheContext, useSubscribe } from "../../../store";
-import { FeedCard } from "./FeedDetails";
+import { FeedHeader } from "./FeedHeader";
 
 export default function FeedListTab({ darkModeEnabled }) {
     const { setCurrentSubscription } = useContext(FilterContext);
@@ -19,9 +19,9 @@ export default function FeedListTab({ darkModeEnabled }) {
     });
 
     return (
-        <div className="flex flex-col gap-4">
+        <div className="animate-fadein flex flex-col gap-4">
             {displayedSubscriptions?.map((subscription) => (
-                <FeedCard
+                <FeedHeader
                     subscription={subscription}
                     darkModeEnabled={darkModeEnabled}
                     isListEntry

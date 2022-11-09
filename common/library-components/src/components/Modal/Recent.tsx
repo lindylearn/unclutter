@@ -1,5 +1,6 @@
 import {
     DraggableArticleList,
+    StaticArticleList,
     useTabInfos,
     useArticleListsCache,
     FilterContext,
@@ -275,7 +276,7 @@ export function FilterButton({
     );
 }
 
-function ArticleGroup({
+export function ArticleGroup({
     groupKey,
     title,
     icon,
@@ -286,6 +287,7 @@ function ArticleGroup({
     darkModeEnabled,
     showTopic,
     reportEvent = () => {},
+    enableDragging = true,
 }: {
     groupKey: string;
     title?: string;
@@ -295,8 +297,9 @@ function ArticleGroup({
     articleLines?: number;
     isTopic?: boolean;
     darkModeEnabled: boolean;
-    showTopic: (topicId: string) => void;
+    showTopic?: (topicId: string) => void;
     reportEvent?: (event: string, data?: any) => void;
+    enableDragging?: boolean;
 }) {
     color = color || getRandomLightColor(groupKey, darkModeEnabled);
     // const unqueuedArticles = articles.filter((a) => !a.is_queued);
@@ -315,7 +318,7 @@ function ArticleGroup({
                             isTopic && "cursor-pointer transition-transform hover:scale-[96%]"
                         )}
                         onClick={() => {
-                            if (isTopic) {
+                            if (isTopic && showTopic) {
                                 showTopic(groupKey);
                             }
                         }}
@@ -363,12 +366,17 @@ function ArticleGroup({
                         All filtered articles are in your reading queue.
                     </div>
                 )}
-                <DraggableArticleList
-                    listId={groupKey}
-                    articlesToShow={5 * articleLines}
-                    small
-                    reportEvent={reportEvent}
-                />
+
+                {enableDragging ? (
+                    <DraggableArticleList
+                        listId={groupKey}
+                        articlesToShow={5 * articleLines}
+                        small
+                        reportEvent={reportEvent}
+                    />
+                ) : (
+                    <StaticArticleList articles={articles} small />
+                )}
             </div>
         </div>
     );
