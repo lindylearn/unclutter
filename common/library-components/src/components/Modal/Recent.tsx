@@ -86,7 +86,7 @@ export default function RecentModalTab({
                     reportEvent={reportEvent}
                 />
 
-                <PageFilters
+                {/* <PageFilters
                     userInfo={userInfo}
                     onlyUnread={onlyUnread}
                     lastFirst={lastFirst}
@@ -98,7 +98,7 @@ export default function RecentModalTab({
                     setQuery={setQuery}
                     darkModeEnabled={darkModeEnabled}
                     reportEvent={reportEvent}
-                />
+                /> */}
 
                 {searchedListCache !== null && (
                     <ArticleGroup
@@ -298,7 +298,7 @@ function ArticleGroup({
 
     return (
         <div className="topic animate-fadein relative">
-            {isTopic && (
+            {groupKey !== "queue" && (
                 <div className="topic-header mx-0.5 mb-2 flex justify-between">
                     <h2
                         className={clsx(
@@ -323,14 +323,14 @@ function ArticleGroup({
                     />
                 </div>
             )}
-            {!isTopic && groupKey !== "search" && (
+            {/* {!isTopic && groupKey !== "search" && (
                 <ReadingProgress
                     className="absolute -top-[3rem] right-0 px-2 py-1"
                     articleCount={articles?.length}
                     readCount={readCount}
                     color={color}
                 />
-            )}
+            )} */}
 
             <div
                 className="topic-articles relative rounded-md p-3"

@@ -2,6 +2,7 @@ import React, { useContext, useEffect } from "react";
 import clsx from "clsx";
 import { ReactNode, useState } from "react";
 import useResizeObserver from "use-resize-observer";
+import partition from "lodash/partition";
 
 import { getRandomColor } from "../../common/styling";
 import { Article, readingProgressFullClamp, Topic, UserInfo } from "../../store/_schema";
@@ -153,6 +154,9 @@ export function useTabInfos(
             let listArticles = articles; // filtered after topic grouping to keep ordering stable
             sortArticlesPosition(queueArticles, "queue_sort_position");
 
+            let newArticles: Article[];
+            [newArticles, listArticles] = partition(listArticles, (a) => a.is_new);
+
             if (onlyUnread) {
                 listArticles = listArticles.filter(
                     (a) => a.reading_progress < readingProgressFullClamp
@@ -171,8 +175,14 @@ export function useTabInfos(
                 {
                     key: "queue",
                     title: "Reading Queue",
-                    articles: queueArticles || [],
+                    articles: queueArticles,
                     articleLines: 1,
+                },
+                {
+                    key: "new",
+                    title: "Following",
+                    articles: newArticles.filter((a) => !a.is_queued),
+                    articleLines: 2,
                 },
             ];
             if (userInfo.onPaidPlan || userInfo.trialEnabled) {
@@ -222,7 +232,7 @@ export function useTabInfos(
 
                 tabInfos.push({
                     key: domainFilter || "list",
-                    title: "",
+                    title: "Recently opened",
                     articles: listArticles,
                     articleLines: Math.max(1, Math.min(5, Math.ceil(listArticles.length / 5))),
                 });
