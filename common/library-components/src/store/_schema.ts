@@ -113,5 +113,8 @@ export const feedSubscriptionSchema = entitySchema.extend({
     post_frequency: z.optional(z.string()),
 
     is_subscribed: z.optional(z.boolean()),
+    time_added: z.optional(z.number()),
+
+    last_fetched: z.optional(z.number()),
 });
 export type FeedSubscription = z.infer<typeof feedSubscriptionSchema>;

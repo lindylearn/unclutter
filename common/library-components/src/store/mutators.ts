@@ -305,11 +305,25 @@ export async function importEntries(tx: WriteTransaction, entries: [string, JSON
 
 /* ***** FeedSubscription ***** */
 
-export const {
+const {
+    get: getSubscription,
     put: putSubscription,
     update: updateSubscription,
     delete: deleteSubscription,
 } = generate("subscription", feedSubscriptionSchema);
+
+async function toggleSubscriptionActive(tx: WriteTransaction, subscriptionId: string) {
+    const subscription = await getSubscription(tx, subscriptionId);
+    if (!subscription) {
+        return;
+    }
+
+    await updateSubscription(tx, {
+        id: subscriptionId,
+        is_subscribed: !subscription.is_subscribed,
+        last_fetched: Math.round(new Date().getTime() / 1000), // check for new articles starting now
+    });
+}
 
 export const mutators = {
     updateArticle,
@@ -333,6 +347,7 @@ export const mutators = {
     updateUserInfo,
     putSubscription,
     updateSubscription,
+    toggleSubscriptionActive,
     deleteSubscription,
 };
 export type M = typeof mutators;

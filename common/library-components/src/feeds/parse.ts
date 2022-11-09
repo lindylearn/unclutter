@@ -49,6 +49,7 @@ function constructFeedSubscription(
         description: feed.description,
         author: feed.author,
         post_frequency: postFrequency,
+        time_added: Math.round(new Date().getTime() / 1000),
     };
 }
 

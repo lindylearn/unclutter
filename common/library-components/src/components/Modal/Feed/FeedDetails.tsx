@@ -151,10 +151,7 @@ export function FeedCard({
             <div
                 className="flex flex-shrink-0 origin-left cursor-pointer select-none items-center gap-2 self-stretch rounded-r-md bg-stone-100 px-5 font-medium transition-transform hover:scale-[97%] dark:bg-neutral-800"
                 onClick={(e) => {
-                    rep?.mutate.updateSubscription({
-                        id: subscription.id,
-                        is_subscribed: !subscription.is_subscribed,
-                    });
+                    rep?.mutate.toggleSubscriptionActive(subscription.id);
                     e.stopPropagation();
                 }}
             >

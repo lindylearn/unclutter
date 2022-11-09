@@ -371,10 +371,7 @@ export default class LibraryModifier implements PageModifier {
         }
 
         const rep = new ReplicacheProxy();
-        rep.mutate.updateSubscription({
-            id: this.libraryState.feed.id,
-            is_subscribed: !this.libraryState.feed.is_subscribed,
-        });
+        rep.mutate.toggleSubscriptionActive(this.libraryState.feed.id);
 
         this.libraryState.feed.is_subscribed = !this.libraryState.feed.is_subscribed;
         this.notifyLibraryStateListeners();
