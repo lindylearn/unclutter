@@ -229,6 +229,16 @@ export default class LibraryModifier implements PageModifier {
                 }
             }
 
+            if (this.libraryState.feed) {
+                // subscribe to feed updates
+                rep.subscribe.getSubscription(this.libraryState.feed.id)({
+                    onData: (feed) => {
+                        this.libraryState.feed = feed;
+                        this.notifyLibraryStateListeners();
+                    },
+                });
+            }
+
             this.notifyLibraryStateListeners();
         } catch (err) {
             console.error(err);
@@ -401,9 +411,5 @@ export default class LibraryModifier implements PageModifier {
 
         const rep = new ReplicacheProxy();
         rep.mutate.toggleSubscriptionActive(this.libraryState.feed.id);
-
-        // update local state
-        this.libraryState.feed.is_subscribed = !this.libraryState.feed.is_subscribed;
-        this.notifyLibraryStateListeners();
     }
 }

@@ -356,12 +356,12 @@ export function ArticleGroup({
             >
                 {groupKey === "queue" && articles.length === 0 && (
                     <div className="animate-fadein absolute top-0 left-0 flex h-full w-full select-none items-center justify-center">
-                        Drag articles here or move them via the right-click menu.
+                        Drag articles here or use the right-click menu.
                     </div>
                 )}
                 {groupKey === "new" && articles.length === 0 && (
                     <div className="animate-fadein absolute top-0 left-0 flex h-full w-full select-none items-center justify-center">
-                        Follow feeds to see new articles here.
+                        Follow website feeds to see their new articles here.
                     </div>
                 )}
                 {groupKey === "past" && articles.length === 0 && (

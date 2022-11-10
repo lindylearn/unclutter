@@ -19,13 +19,13 @@
         on:click={onClick}
     >
         <div
-            class="top-row font-title overflow-ellipsis whitespace-pre text-base font-semibold leading-tight"
+            class="top-row font-title select-none overflow-ellipsis whitespace-pre text-base font-semibold leading-tight"
         >
             <slot name="title" />
         </div>
 
         <div
-            class="bottom-row mt-1 overflow-ellipsis whitespace-pre text-gray-400 dark:text-stone-600"
+            class="bottom-row mt-1 select-none overflow-ellipsis whitespace-pre text-gray-400 dark:text-stone-600"
         >
             <slot name="subtitle" />
         </div>
