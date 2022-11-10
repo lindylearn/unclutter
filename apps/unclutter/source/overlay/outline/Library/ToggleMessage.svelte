@@ -35,7 +35,7 @@
 
     <div
         class={clsx(
-            "toggle transition-color flex h-[calc(1rem+0.5rem+1.25rem+0.75rem*2)] shrink-0 origin-left items-center rounded-r-lg bg-gray-100 px-3 dark:bg-neutral-800",
+            "toggle transition-color flex h-[calc(1rem+0.5rem+1.25rem+0.75rem*2)] shrink-0 origin-left items-center rounded-r-lg bg-gray-50 px-3 dark:bg-neutral-800",
             isActive ? "active" : "inactive",
             darkModeEnabled && "dark"
         )}

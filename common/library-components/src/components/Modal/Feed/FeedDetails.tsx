@@ -58,6 +58,9 @@ export default function FeedDetailsTab({ darkModeEnabled, reportEvent }) {
         return <></>;
     }
 
+    const highlightColor = getRandomLightColor(filteredSubscription.domain, darkModeEnabled);
+    const fallbackColor = darkModeEnabled ? "rgb(38 38 38)" : "rgb(245 245 244)";
+
     return (
         <div className="animate-fadein flex flex-col gap-4">
             <FeedHeader subscription={filteredSubscription} darkModeEnabled={darkModeEnabled} />
@@ -95,11 +98,7 @@ export default function FeedDetailsTab({ darkModeEnabled, reportEvent }) {
                             </svg>
                         )
                     }
-                    color={
-                        !filteredSubscription.is_subscribed
-                            ? getRandomLightColor(filteredSubscription.domain, darkModeEnabled)
-                            : undefined
-                    }
+                    color={!filteredSubscription.is_subscribed ? highlightColor : undefined}
                     onClick={() => rep?.mutate.toggleSubscriptionActive(filteredSubscription.id)}
                 />
             </div>
@@ -122,7 +121,7 @@ export default function FeedDetailsTab({ darkModeEnabled, reportEvent }) {
                     }
                     articles={libraryArticles || []}
                     articleLines={libraryArticles ? Math.ceil(libraryArticles.length / 5) : 1}
-                    color={getRandomLightColor(filteredSubscription.domain, darkModeEnabled)}
+                    color={filteredSubscription.is_subscribed ? highlightColor : fallbackColor}
                     darkModeEnabled={darkModeEnabled}
                     reportEvent={reportEvent}
                 />
@@ -130,7 +129,7 @@ export default function FeedDetailsTab({ darkModeEnabled, reportEvent }) {
                 {pastArticles && (
                     <ArticleGroup
                         groupKey="feed"
-                        title="Other recent articles"
+                        title="Past articles"
                         icon={
                             <svg className="h-4" viewBox="0 0 448 512">
                                 <path
@@ -141,7 +140,7 @@ export default function FeedDetailsTab({ darkModeEnabled, reportEvent }) {
                         }
                         articles={pastArticles}
                         articleLines={Math.max(1, Math.min(5, Math.ceil(pastArticles.length / 5)))}
-                        color={darkModeEnabled ? "rgb(38 38 38)" : "rgb(245 245 244)"}
+                        color={fallbackColor}
                         darkModeEnabled={darkModeEnabled}
                         showProgress={false}
                         reportEvent={reportEvent}
