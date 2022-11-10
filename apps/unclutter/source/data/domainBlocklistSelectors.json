@@ -457,7 +457,10 @@
     ],
     "theverge.com": [
         ".duet--article--lede-background",
-        ".duet--article--article-body-component.block.clear-both"
+        ".duet--article--article-body-component.block.clear-both",
+        ".inline.pr-4.font-bold",
+        ".pt-12",
+        ".flex.items-center"
     ],
     "thewalrus.ca": ["._form-content", ".code-block.code-block-4"],
     "tienphong.vn": [
