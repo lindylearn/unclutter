@@ -179,7 +179,15 @@ function ArticleSection({
                         showRest ? "hidden" : "animate-fadein"
                     )}
                 >
-                    <div className="flex items-center gap-2">
+                    <div
+                        className="flex cursor-pointer items-center gap-2 p-1 transition-transform hover:scale-95"
+                        onClick={() =>
+                            window.scrollTo({
+                                top: document.body.scrollHeight - window.innerHeight,
+                                behavior: "smooth",
+                            })
+                        }
+                    >
                         <svg className="h-4" viewBox="0 0 384 512">
                             <path
                                 fill="currentColor"
@@ -188,7 +196,10 @@ function ArticleSection({
                         </svg>
                         Scroll for more
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div
+                        className="flex cursor-pointer items-center gap-2 p-1 transition-transform hover:scale-95"
+                        onClick={() => setShowModal(true)}
+                    >
                         <svg className="h-4" viewBox="0 0 576 512">
                             <path
                                 fill="currentColor"
