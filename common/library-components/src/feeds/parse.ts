@@ -1,7 +1,7 @@
-import { parseFeed } from "htmlparser2";
+import { parseFeed, parseDocument } from "htmlparser2";
 import { cleanTitle, getDomain } from "../common/util";
 import ky from "ky";
-import { Feed, FeedItem } from "domutils";
+import { Feed, FeedItem, textContent } from "domutils";
 import { Article, FeedSubscription } from "../store";
 import { getUrlHash } from "../common";
 
@@ -106,6 +106,13 @@ export function parseFeedArticles(
             url = new URL(url, new URL(rssUrl).origin).href;
         }
 
+        // parse XML, e.g. for https://new.pythonforengineers.com/blog/web-automation-dont-use-selenium-use-playwright/
+        let description = item.description;
+        if (description?.startsWith("<")) {
+            const dom = parseDocument(description);
+            description = textContent(dom);
+        }
+
         return {
             id: getUrlHash(url),
             url,
@@ -116,7 +123,7 @@ export function parseFeedArticles(
             reading_progress: 0.0,
             topic_id: null,
             is_favorite: false,
-            description: isTemporary ? item.description?.slice(0, 150) : undefined,
+            description: isTemporary ? description?.slice(0, 150) : undefined,
             is_temporary: isTemporary || undefined,
             is_new: !isTemporary || undefined,
         };
