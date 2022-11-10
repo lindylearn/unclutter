@@ -159,7 +159,10 @@ export function DraggableContext({
             setActiveListId(targetList);
 
             if (targetList === "queue") {
-                reportEvent("addArticleToQueue");
+                reportEvent("addArticleToQueue", { source: "drag" });
+            }
+            if (sourceList === "feed") {
+                reportEvent("addFeedArticleToLibrary");
             }
         }
     }

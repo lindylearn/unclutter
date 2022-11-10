@@ -43,6 +43,7 @@ export default function SettingsModalTab({
             window.open(issueUrl, "_blank")?.focus();
         }
         messageRef.current.value = "";
+        reportEvent("sendFeedback");
     }
 
     async function generateCSV() {

@@ -1,10 +1,6 @@
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
-    getActivityColor,
-    ReadingProgress,
-    DraggableArticleList,
     DraggableContext,
-    ArticleListsCache,
     LocalScreenshotContext,
     ModalContext,
     useTabInfos,
@@ -38,7 +34,7 @@ export default function App() {
     const rep = useMemo<ReplicacheProxy>(() => new ReplicacheProxy(getUnclutterExtensionId()), []);
 
     function reportEvent(name: string, data: object = {}) {
-        reportEventContentScript(name, data, getUnclutterExtensionId());
+        reportEventContentScript(name, { ...data, onNewTab: true }, getUnclutterExtensionId());
     }
 
     const [userInfo, setUserInfo] = useState<UserInfo>();
@@ -70,7 +66,6 @@ export default function App() {
 
         if (showModal) {
             reportEvent("openLibraryModal", {
-                onNewTab: true,
                 onPaidPlan: userInfo?.onPaidPlan,
                 trialEnabled: userInfo?.trialEnabled,
                 articleCount: readingProgress?.articleCount,
@@ -137,8 +132,11 @@ function ArticleSection({
 
     const [showRest, setShowRest] = useState<boolean>(false);
     useEffect(() => {
-        const handleScroll = (e) => {
-            setShowRest(true);
+        const handleScroll = () => {
+            if (!showRest) {
+                setShowRest(true);
+                reportEvent("expandNewTab");
+            }
         };
 
         window.addEventListener("scroll", handleScroll);
@@ -146,7 +144,7 @@ function ArticleSection({
         return () => {
             window.removeEventListener("scroll", handleScroll);
         };
-    }, []);
+    }, [showRest]);
 
     return (
         <div className="font-text mb-8 flex flex-col gap-4 text-base">

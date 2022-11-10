@@ -44,7 +44,7 @@ export function ArticleDropdown({
             sortPosition: "queue_sort_position",
         });
         if (!article.is_queued) {
-            reportEvent("addArticleToQueue");
+            reportEvent("addArticleToQueue", { source: "dropdown" });
         }
     }
 
@@ -55,7 +55,9 @@ export function ArticleDropdown({
             articleId: article.id,
             readingProgress: newProgress,
         });
-        reportEvent("toggleArticleCompleted", { newProgress });
+        if (newProgress === 1) {
+            reportEvent("completeArticle", { source: "dropdown" });
+        }
     }
 
     async function deleteArticle() {

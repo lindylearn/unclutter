@@ -10,12 +10,14 @@ export default function Sidebar({
     setCurrentTab,
     darkModeEnabled,
     showSignup,
+    reportEvent = () => {},
 }: {
     userInfo: UserInfo;
     currentTab: string;
     setCurrentTab: (tab: string) => void;
     darkModeEnabled: boolean;
     showSignup: boolean;
+    reportEvent?: (event: string, data?: any) => void;
 }) {
     const { currentTopic, changedTopic, currentAnnotationsCount, relatedLinkCount } =
         useContext(FilterContext);
@@ -92,6 +94,7 @@ export default function Sidebar({
                                         : "https://chrome.google.com/webstore/detail/bghgkooimeljolohebojceacblokenjn";
 
                                 window.open(unclutterLibraryLink, "_blank");
+                                reportEvent("clickNewTabLink", { source: "modal" });
                             } else {
                                 updateTab(option.value);
                             }

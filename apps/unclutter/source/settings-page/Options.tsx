@@ -155,6 +155,9 @@ function OptionsPage({}) {
                             className="underline"
                             target="_blank"
                             rel="noopener noreferrer"
+                            onClick={() =>
+                                reportEventContentScript("clickNewTabLink", { source: "settings" })
+                            }
                         >
                             Unclutter New Tab
                         </a>{" "}

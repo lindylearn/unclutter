@@ -214,6 +214,7 @@ function ModalContent({
                         setCurrentTab={setCurrentTab}
                         darkModeEnabled={darkModeEnabled}
                         showSignup={showSignup}
+                        reportEvent={reportEvent}
                     />
                 </div>
             </aside>
@@ -260,7 +261,7 @@ function ModalContent({
                             reportEvent={reportEvent}
                         />
                     ) : (
-                        <FeedListTab darkModeEnabled={darkModeEnabled} />
+                        <FeedListTab darkModeEnabled={darkModeEnabled} reportEvent={reportEvent} />
                     ))}
                 {currentTab === "signup" && (
                     <UpgradeModalTab darkModeEnabled={darkModeEnabled} reportEvent={reportEvent} />

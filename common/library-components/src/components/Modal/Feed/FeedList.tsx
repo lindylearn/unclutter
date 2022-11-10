@@ -1,9 +1,9 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import { FilterContext } from "../..";
 import { FeedSubscription, ReplicacheContext, useSubscribe } from "../../../store";
 import { FeedHeader } from "./FeedHeader";
 
-export default function FeedListTab({ darkModeEnabled }) {
+export default function FeedListTab({ darkModeEnabled, reportEvent }) {
     const { setCurrentSubscription } = useContext(FilterContext);
     const rep = useContext(ReplicacheContext);
 
@@ -25,7 +25,10 @@ export default function FeedListTab({ darkModeEnabled }) {
                     subscription={subscription}
                     darkModeEnabled={darkModeEnabled}
                     isListEntry
-                    setCurrentSubscription={setCurrentSubscription}
+                    onClick={() => {
+                        setCurrentSubscription(subscription);
+                        reportEvent("changeModalTab", { tab: "feed_details" });
+                    }}
                 />
             ))}
         </div>

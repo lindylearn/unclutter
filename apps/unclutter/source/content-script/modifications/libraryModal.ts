@@ -71,6 +71,7 @@ export default class LibraryModalModifier implements PageModifier {
         document.documentElement.appendChild(this.modalIframe);
 
         reportEventContentScript("openLibraryModal", {
+            initialTab,
             onPaidPlan: this.libraryState.userInfo.onPaidPlan,
             trialEnabled: this.libraryState.userInfo.trialEnabled,
             linkCount: this.libraryState.linkCount,

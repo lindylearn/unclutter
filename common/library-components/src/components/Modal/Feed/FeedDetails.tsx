@@ -99,7 +99,13 @@ export default function FeedDetailsTab({ darkModeEnabled, reportEvent }) {
                         )
                     }
                     color={!filteredSubscription.is_subscribed ? highlightColor : undefined}
-                    onClick={() => rep?.mutate.toggleSubscriptionActive(filteredSubscription.id)}
+                    onClick={() => {
+                        rep?.mutate.toggleSubscriptionActive(filteredSubscription.id);
+                        reportEvent(
+                            !filteredSubscription.is_subscribed ? "followFeed" : "unfollowFeed",
+                            { source: "modal" }
+                        );
+                    }}
                 />
             </div>
 

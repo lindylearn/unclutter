@@ -46,7 +46,11 @@ export function ArticlePreview({
         e.stopPropagation();
         if (listState === "static") {
             openArticleResilient(article.url);
-            reportEvent("clickListArticle");
+            reportEvent("clickListArticle", {
+                is_queued: article.is_queued,
+                is_new: article.is_new,
+                is_temporary: article.is_temporary,
+            });
         }
     }
 

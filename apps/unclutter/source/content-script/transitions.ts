@@ -64,7 +64,11 @@ export default class TransitionManager implements PageModifier {
         this.libraryModalModifier,
         this.readingTimeModifier
     );
-    private loggingModifier = new LoggingManager(this.overlayManager, this.readingTimeModifier);
+    private loggingModifier = new LoggingManager(
+        this.overlayManager,
+        this.readingTimeModifier,
+        this.libraryModifier
+    );
     // private linkAnnotationsModifier = new LinkAnnotationsModifier(
     //     this.annotationsModifier,
     //     this.libraryModifier,

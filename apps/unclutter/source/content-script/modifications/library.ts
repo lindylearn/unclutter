@@ -322,6 +322,7 @@ export default class LibraryModifier implements PageModifier {
         ) {
             // immediately update state to show change in UI
             await this.updateReadingProgress(1.0);
+            reportEventContentScript("completeArticle", { source: "scroll" });
         } else {
             this.updateReadingProgressThrottled(pageProgress);
         }
@@ -350,7 +351,7 @@ export default class LibraryModifier implements PageModifier {
             return;
         }
 
-        // update class state
+        // update local graph state
         if (this.libraryState.graph) {
             const currentNode = this.libraryState.graph.nodes.find((n) => n.depth === 0);
             if (currentNode) {
@@ -359,9 +360,6 @@ export default class LibraryModifier implements PageModifier {
             } else {
                 console.error("Could not find active node in graph");
             }
-        }
-        if (this.libraryState.libraryInfo.article.is_queued) {
-            this.toggleArticleInQueue();
         }
 
         // update data store
@@ -403,6 +401,9 @@ export default class LibraryModifier implements PageModifier {
             articleIdAfterNewPosition: null,
             sortPosition: "queue_sort_position",
         });
+        if (!this.libraryState.libraryInfo.article.is_queued) {
+            reportEventContentScript("addArticleToQueue", { source: "message" });
+        }
     }
 
     toggleFeedSubscribed() {
@@ -412,5 +413,9 @@ export default class LibraryModifier implements PageModifier {
 
         const rep = new ReplicacheProxy();
         rep.mutate.toggleSubscriptionActive(this.libraryState.feed.id);
+        reportEventContentScript(
+            !this.libraryState.feed.is_subscribed ? "followFeed" : "unfollowFeed",
+            { source: "message" }
+        );
     }
 }

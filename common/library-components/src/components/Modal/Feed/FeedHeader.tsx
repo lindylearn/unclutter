@@ -8,12 +8,12 @@ export function FeedHeader({
     subscription,
     darkModeEnabled,
     isListEntry = false,
-    setCurrentSubscription,
+    onClick,
 }: {
     subscription: FeedSubscription;
     darkModeEnabled: boolean;
     isListEntry?: boolean;
-    setCurrentSubscription?: (subscription: FeedSubscription) => void;
+    onClick?: () => void;
 }) {
     const rep = useContext(ReplicacheContext);
 
@@ -23,7 +23,7 @@ export function FeedHeader({
                 "info-box flex flex-grow justify-start",
                 isListEntry && "cursor-pointer transition-transform hover:scale-[99%]"
             )}
-            onClick={() => setCurrentSubscription?.(subscription)}
+            onClick={onClick}
         >
             <div
                 className="title flex flex-grow items-center gap-3 rounded-md bg-stone-100 p-3 transition-colors dark:bg-neutral-800"
