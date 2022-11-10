@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import React, { useContext } from "react";
-import { getRandomLightColor, sendMessage } from "../../../common";
+import { formatPostFrequency, getRandomLightColor, sendMessage } from "../../../common";
 import { FeedSubscription, ReplicacheContext } from "../../../store";
 import { ResourceStat } from "../components/numbers";
 
@@ -65,7 +65,7 @@ export function FeedHeader({
                             {subscription.domain}
                         </a>
 
-                        <div className="">{subscription.post_frequency}</div>
+                        <div className="">{formatPostFrequency(subscription.post_frequency)}</div>
                     </div>
                 </div>
             </div>

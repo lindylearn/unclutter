@@ -61,7 +61,7 @@ function constructFeedSubscription(
     };
 }
 
-export function getPostFrequency(feed: Feed): [number, string | undefined] {
+export function getPostFrequency(feed: Feed): [number, FeedSubscription["post_frequency"]] {
     // ignore very old feed items, e.g. for https://signal.org/blog/introducing-stories/
     feed.items = feed.items.slice(0, 10);
 
@@ -72,27 +72,31 @@ export function getPostFrequency(feed: Feed): [number, string | undefined] {
     const end = new Date();
     const days = Math.round((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
 
-    let humanFrequency: string;
+    let humanFrequency: FeedSubscription["post_frequency"] = undefined;
     const articlesPerDay = Math.round(feed.items.length / days);
     const articlesPerWeek = Math.round(feed.items.length / (days / 7));
     const articlesPerMonth = Math.round(feed.items.length / (days / 30));
     const articlesPerYear = Math.round(feed.items.length / (days / 365));
     if (articlesPerDay >= 1) {
-        humanFrequency = `${articlesPerDay} new article${articlesPerDay !== 1 ? "s" : ""} per day`;
+        humanFrequency = {
+            count: articlesPerDay,
+            period: "day",
+        };
     } else if (articlesPerWeek >= 1) {
-        humanFrequency = `${articlesPerWeek} new article${
-            articlesPerWeek !== 1 ? "s" : ""
-        } per week`;
+        humanFrequency = {
+            count: articlesPerWeek,
+            period: "week",
+        };
     } else if (articlesPerMonth >= 1) {
-        humanFrequency = `${articlesPerMonth} new article${
-            articlesPerMonth !== 1 ? "s" : ""
-        } per month`;
+        humanFrequency = {
+            count: articlesPerMonth,
+            period: "month",
+        };
     } else if (articlesPerYear >= 1) {
-        humanFrequency = `${articlesPerYear} new article${
-            articlesPerYear !== 1 ? "s" : ""
-        } per year`;
-    } else {
-        humanFrequency = `no recent articles`;
+        humanFrequency = {
+            count: articlesPerYear,
+            period: "year",
+        };
     }
 
     return [articlesPerDay, humanFrequency];

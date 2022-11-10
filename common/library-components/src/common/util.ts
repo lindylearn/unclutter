@@ -1,3 +1,5 @@
+import { FeedSubscription } from "../store";
+
 export function groupBy(xs, key) {
     return xs.reduce(function (rv, x) {
         (rv[x[key]] = rv[x[key]] || []).push(x);
@@ -27,4 +29,15 @@ export function cleanTitle(title: string): string {
     title = title.split("|")[0].split(" - ")[0].split("–")[0].trim();
 
     return title;
+}
+
+export function formatPostFrequency(
+    frequency: FeedSubscription["post_frequency"]
+): string | undefined {
+    if (!frequency) {
+        return undefined;
+    }
+    return `${frequency.count} new article${frequency.count != 1 ? "s" : ""} per ${
+        frequency.period
+    }`;
 }

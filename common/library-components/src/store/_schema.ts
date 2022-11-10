@@ -113,7 +113,12 @@ export const feedSubscriptionSchema = entitySchema.extend({
     title: z.optional(z.string()),
     description: z.optional(z.string()),
     author: z.optional(z.string()),
-    post_frequency: z.optional(z.string()),
+    post_frequency: z.optional(
+        z.object({
+            count: z.number(),
+            period: z.enum(["day", "week", "month", "year"]),
+        })
+    ),
 
     time_added: z.number(),
     is_subscribed: z.optional(z.boolean()),

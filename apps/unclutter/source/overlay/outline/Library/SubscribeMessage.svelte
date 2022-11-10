@@ -6,7 +6,10 @@
     import LibraryModalModifier from "../../../content-script/modifications/libraryModal";
     import LibraryModifier from "../../../content-script/modifications/library";
     import ToggleMessage from "./ToggleMessage.svelte";
-    import { getRelativeTime } from "@unclutter/library-components/dist/common";
+    import {
+        formatPostFrequency,
+        getRelativeTime,
+    } from "@unclutter/library-components/dist/common";
 
     export let libraryState: LibraryState;
     export let libraryModifier: LibraryModifier;
@@ -36,7 +39,7 @@
         {:else if libraryState.feed?.post_frequency}
             <div class="" in:fly={{ y: 10, duration: 200, easing: cubicOut }}>
                 <!-- <span class="hide-tiny">about </span> -->
-                {libraryState.feed.post_frequency}
+                {formatPostFrequency(libraryState.feed.post_frequency)}
             </div>
         {/if}
     </div>
