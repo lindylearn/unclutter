@@ -157,23 +157,21 @@ export default class LibraryModifier implements PageModifier {
                 },
             });
 
-            // insert new article after initial UI render
+            // insert new article (add delay to animate reading progress)
             if (!this.libraryState.wasAlreadyPresent) {
-                setTimeout(async () => {
-                    if (this.libraryState.libraryInfo.topic) {
-                        await rep.mutate.putTopic(this.libraryState.libraryInfo.topic);
-                    }
-                    await rep.mutate.putArticleIfNotExists(this.libraryState.libraryInfo.article);
-                    if (this.libraryState.libraryInfo.new_links) {
-                        await rep.mutate.importArticleLinks({
-                            links: this.libraryState.libraryInfo.new_links,
-                        });
+                if (this.libraryState.libraryInfo.topic) {
+                    await rep.mutate.putTopic(this.libraryState.libraryInfo.topic);
+                }
+                await rep.mutate.putArticleIfNotExists(this.libraryState.libraryInfo.article);
+                if (this.libraryState.libraryInfo.new_links) {
+                    await rep.mutate.importArticleLinks({
+                        links: this.libraryState.libraryInfo.new_links,
+                    });
 
-                        // construct article graph
-                        await this.constructArticleGraph(rep);
-                        this.notifyLibraryStateListeners();
-                    }
-                }, 1000);
+                    // construct article graph
+                    await this.constructArticleGraph(rep);
+                    this.notifyLibraryStateListeners();
+                }
             } else {
                 // construct article graph
                 if (
@@ -185,6 +183,16 @@ export default class LibraryModifier implements PageModifier {
                     this.notifyLibraryStateListeners();
                 }
             }
+
+            // subscribe to article updates after insert
+            rep.subscribe.getArticle(this.libraryState.libraryInfo.article.id)({
+                onData: (article) => {
+                    if (article) {
+                        this.libraryState.libraryInfo.article = article;
+                        this.notifyLibraryStateListeners();
+                    }
+                },
+            });
 
             if (this.scrollOnceFetchDone) {
                 this.scrollToLastReadingPosition();
@@ -233,8 +241,10 @@ export default class LibraryModifier implements PageModifier {
                 // subscribe to feed updates
                 rep.subscribe.getSubscription(this.libraryState.feed.id)({
                     onData: (feed) => {
-                        this.libraryState.feed = feed;
-                        this.notifyLibraryStateListeners();
+                        if (feed) {
+                            this.libraryState.feed = feed;
+                            this.notifyLibraryStateListeners();
+                        }
                     },
                 });
             }
@@ -341,7 +351,6 @@ export default class LibraryModifier implements PageModifier {
         }
 
         // update class state
-        this.libraryState.libraryInfo.article.reading_progress = readingProgress;
         if (this.libraryState.graph) {
             const currentNode = this.libraryState.graph.nodes.find((n) => n.depth === 0);
             if (currentNode) {
@@ -394,14 +403,6 @@ export default class LibraryModifier implements PageModifier {
             articleIdAfterNewPosition: null,
             sortPosition: "queue_sort_position",
         });
-
-        // update local state
-        this.libraryState.libraryInfo.article.is_queued =
-            !this.libraryState.libraryInfo.article.is_queued;
-        if (this.libraryState.libraryInfo.article.reading_progress >= readingProgressFullClamp) {
-            this.libraryState.libraryInfo.article.reading_progress = 0;
-        }
-        this.notifyLibraryStateListeners();
     }
 
     toggleFeedSubscribed() {
