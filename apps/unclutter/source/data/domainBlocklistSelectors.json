@@ -512,7 +512,13 @@
     ],
     "wsj.com": [
         ".bigTop__media.bigTop__media--image.bigTop--8-16u",
-        ".media-object.type-InsetRichText.wrap.scope-web.article__inset.article__inset--type-InsetRichText.article__inset--wrap"
+        ".media-object.type-InsetRichText.wrap.scope-web.article__inset.article__inset--type-InsetRichText.article__inset--wrap",
+        "#sp_message_container_718122",
+        ".style--nav-container-2WhC8ifAI_q7i_c-2roHqs",
+        ".style--masthead-strap-35DyQ6HmvJPXbPLlnJ_1x0",
+        ".WSJTheme--md-sector-1XAXNaKmoFP-sYDZW0rPdC.WSJTheme--sector-unit-16-3V-Th_JvmEbal_hrxCWsr1.WSJTheme--is-not-fixed-1H7tpfoVLNqxQROD4IRAt4",
+        ".style--logo-wrapper-oxaF1_VhAkJbA8ovDFkkv",
+        ".style--sector-2O3DtNXcLScemWK4OPfM6G"
     ],
     "zdnet.com": [".c-socialSharebar"],
     "zeit.de": [".article-player.article-player--has-player"],
