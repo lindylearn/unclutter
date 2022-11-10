@@ -173,7 +173,7 @@ function ArticleSection({
 
                 <div
                     className={clsx(
-                        "flex select-none justify-center gap-5 text-sm text-gray-400 dark:text-stone-600",
+                        "-mt-1 flex select-none justify-center gap-5 text-sm text-gray-400 dark:text-stone-600",
                         showRest ? "hidden" : "animate-fadein"
                     )}
                 >

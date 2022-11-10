@@ -52,6 +52,7 @@ export default function NewTabModal({
             darkModeEnabled={darkModeEnabled}
             showSignup={false}
             graph={graph}
+            initialTab="stats"
             reportEvent={reportEvent}
         />
     );
