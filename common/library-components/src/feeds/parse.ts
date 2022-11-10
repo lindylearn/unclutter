@@ -4,6 +4,7 @@ import ky from "ky";
 import { Feed, FeedItem, textContent } from "domutils";
 import { Article, FeedSubscription } from "../store";
 import { getUrlHash } from "../common";
+import { FEED_EXTENSIONS } from "./discover";
 
 export async function getMainFeed(
     sourceUrl: string,
@@ -41,11 +42,17 @@ function constructFeedSubscription(
         return null;
     }
 
+    const domain = getDomain(sourceUrl);
+    // ignore rss links, e.g. for http://liuliu.me/atom.xml
+    if (feed.link && FEED_EXTENSIONS.some((e) => feed.link!.endsWith(e))) {
+        feed.link = undefined;
+    }
+
     return {
         id: rssUrl,
         rss_url: rssUrl,
-        link: feed.link || sourceUrl,
-        domain: getDomain(sourceUrl),
+        link: feed.link || `https://${domain}`,
+        domain,
         title: feed.title,
         description: feed.description,
         author: feed.author,

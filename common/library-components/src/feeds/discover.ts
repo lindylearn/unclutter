@@ -94,13 +94,13 @@ export async function discoverDomainFeeds(sourceUrl: string): Promise<string[]> 
     return [];
 }
 
-const FEED_SUFFIXES = ["/feed", "/index", "/rss", "/atom"];
-const FEED_EXTENSIONS = ["", ".rss", ".xml", ".rss", ".atom"];
+export const FEED_SUFFIXES = ["/feed", "/index", "/rss", "/atom"];
+export const FEED_EXTENSIONS = [".rss", ".xml", ".rss", ".atom"];
 export function getHeuristicFeedUrls(sourceUrl: string): string[] {
     const url = new URL(sourceUrl);
     const feedUrls: string[] = [];
     FEED_SUFFIXES.forEach((suffix) => {
-        FEED_EXTENSIONS.forEach((extension) => {
+        FEED_EXTENSIONS.concat([""]).forEach((extension) => {
             if (suffix === "/index" && extension === "") {
                 return;
             }

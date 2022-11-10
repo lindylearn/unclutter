@@ -312,31 +312,32 @@ export function ArticleGroup({
 
     return (
         <div className="topic animate-fadein relative">
-            {showProgress && (
-                <div className="topic-header mx-0.5 mb-2 flex justify-between">
-                    <h2
-                        className={clsx(
-                            "title flex select-none items-center gap-2 font-medium",
-                            isTopic && "cursor-pointer transition-transform hover:scale-[96%]"
-                        )}
-                        onClick={() => {
-                            if (isTopic && showTopic) {
-                                showTopic(groupKey);
-                            }
-                        }}
-                    >
-                        {icon}
-                        {title}
-                    </h2>
+            <div className="topic-header mx-0.5 mb-2 flex justify-between">
+                <h2
+                    className={clsx(
+                        "title flex select-none items-center gap-2 font-medium",
+                        isTopic && "cursor-pointer transition-transform hover:scale-[96%]"
+                    )}
+                    onClick={() => {
+                        if (isTopic && showTopic) {
+                            showTopic(groupKey);
+                        }
+                    }}
+                >
+                    {icon}
+                    {title}
+                </h2>
 
+                {showProgress && (
                     <ReadingProgress
                         className="relative px-1.5 py-0.5"
                         articleCount={articles?.length}
                         readCount={readCount}
                         color={color}
                     />
-                </div>
-            )}
+                )}
+            </div>
+
             {/* {!isTopic && groupKey !== "search" && (
                 <ReadingProgress
                     className="absolute -top-[3rem] right-0 px-2 py-1"

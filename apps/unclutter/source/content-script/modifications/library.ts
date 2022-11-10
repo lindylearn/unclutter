@@ -223,8 +223,10 @@ export default class LibraryModifier implements PageModifier {
                     sourceUrl: this.articleUrl,
                     candidates: feedUrls,
                 });
-                // insert even if not enabled
-                await rep.mutate.putSubscription(this.libraryState.feed);
+                if (this.libraryState.feed) {
+                    // insert even if not subscribed
+                    await rep.mutate.putSubscription(this.libraryState.feed);
+                }
             }
 
             this.notifyLibraryStateListeners();

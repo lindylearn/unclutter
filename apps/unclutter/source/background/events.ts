@@ -125,6 +125,12 @@ function handleMessage(
         tabsManager.setSocialAnnotationsCount(sender.tab.id, message.count);
     } else if (message.event === "reportBrokenPage") {
         handleReportBrokenPage(message.data);
+    } else if (message.event === "openLink") {
+        if (message.newTab) {
+            browser.tabs.create({ url: message.url, active: true });
+        } else {
+            browser.tabs.update(undefined, { url: message.url });
+        }
     } else if (message.event === "openLinkWithUnclutter") {
         const onTabActive = async (tab: Tabs.Tab) => {
             // need to wait until site loaded, as have no permissions on new tab page

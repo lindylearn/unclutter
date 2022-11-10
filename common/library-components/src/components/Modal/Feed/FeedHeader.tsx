@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import React, { useContext } from "react";
-import { getRandomLightColor } from "../../../common";
+import { getRandomLightColor, sendMessage } from "../../../common";
 import { FeedSubscription, ReplicacheContext } from "../../../store";
 import { ResourceStat } from "../components/numbers";
 
@@ -51,6 +51,16 @@ export function FeedHeader({
                                 !isListEntry && "transition-transform hover:scale-[97%]"
                             )}
                             href={!isListEntry ? subscription.link : undefined}
+                            onClick={(e) => {
+                                if (!isListEntry) {
+                                    e.preventDefault();
+                                    sendMessage({
+                                        event: "openLink",
+                                        url: subscription.link,
+                                        newTab: true,
+                                    });
+                                }
+                            }}
                         >
                             {subscription.domain}
                         </a>
