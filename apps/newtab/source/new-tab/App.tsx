@@ -133,7 +133,9 @@ function ArticleSection({
     const [showRest, setShowRest] = useState<boolean>(false);
     useEffect(() => {
         const handleScroll = () => {
-            if (!showRest) {
+            if (showRest && window.scrollY === 0) {
+                setShowRest(false);
+            } else if (!showRest) {
                 setShowRest(true);
                 reportEvent("expandNewTab");
             }

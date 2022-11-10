@@ -105,6 +105,11 @@ export function ArticleGroup({
                         No past feed articles found.
                     </div>
                 )}
+                {groupKey === "list" && articles.length === 0 && (
+                    <div className="animate-fadein absolute top-0 left-0 flex h-full w-full select-none items-center justify-center">
+                        Open articles with Unclutter to automatically save them.
+                    </div>
+                )}
                 {/* {groupKey !== "queue" && groupKey !== "search" && articles.length === 0 && (
                     <div className="animate-fadein absolute top-0 left-0 flex h-full w-full select-none items-center justify-center">
                         All filtered articles are in your reading queue.
