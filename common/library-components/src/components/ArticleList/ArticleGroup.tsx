@@ -20,6 +20,7 @@ export function ArticleGroup({
     enableDragging = true,
     showProgress = true,
     className,
+    style,
 }: {
     groupKey: string;
     title?: string;
@@ -34,6 +35,7 @@ export function ArticleGroup({
     enableDragging?: boolean;
     showProgress?: boolean;
     className?: string;
+    style?: React.CSSProperties;
 }) {
     color =
         color ||
@@ -47,7 +49,7 @@ export function ArticleGroup({
     )?.length;
 
     return (
-        <div className={clsx("topic relative", className)}>
+        <div className={clsx("topic relative", className)} style={style}>
             <div className="topic-header mx-0.5 mb-2 flex justify-between">
                 <h2
                     className={clsx(

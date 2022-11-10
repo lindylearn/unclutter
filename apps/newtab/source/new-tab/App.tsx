@@ -175,12 +175,12 @@ function ArticleSection({
 
                 <div
                     className={clsx(
-                        "-mt-1 flex select-none justify-center gap-5 text-sm text-gray-400 dark:text-stone-600",
+                        "-mt-1 flex select-none justify-center gap-5 text-sm text-gray-400 dark:text-gray-400",
                         showRest ? "hidden" : "animate-fadein"
                     )}
                 >
                     <div
-                        className="flex cursor-pointer items-center gap-2 p-1 transition-transform hover:scale-95"
+                        className="flex cursor-pointer items-center gap-2 p-1 transition-transform hover:scale-[97%]"
                         onClick={() =>
                             window.scrollTo({
                                 top: document.body.scrollHeight - window.innerHeight,
@@ -219,10 +219,8 @@ function ArticleSection({
                             groupKey={tabInfo.key}
                             articles={articleListsCache?.[tabInfo.key] || []}
                             darkModeEnabled={darkModeEnabled}
-                            className={clsx(
-                                showRest ? "animate-slidein" : "opacity-0",
-                                `delay-[${i * 100}ms]`
-                            )}
+                            className={clsx(showRest ? "animate-slidein" : "opacity-0")}
+                            // style={{ animationDelay: `${i * 50}ms` }}
                             reportEvent={reportEvent}
                         />
                     );
