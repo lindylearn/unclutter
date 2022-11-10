@@ -148,13 +148,15 @@ export function ArticlePreview({
                 )}
             ></div> */}
 
-            <ArticleDropdown
-                article={article}
-                open={dropdownOpen}
-                setOpen={setDropdownOpen}
-                small={small}
-                reportEvent={reportEvent}
-            />
+            {!article.is_temporary && (
+                <ArticleDropdown
+                    article={article}
+                    open={dropdownOpen}
+                    setOpen={setDropdownOpen}
+                    small={small}
+                    reportEvent={reportEvent}
+                />
+            )}
 
             <svg
                 viewBox="0 0 576 512"

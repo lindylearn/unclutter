@@ -37,7 +37,5 @@ export function formatPostFrequency(
     if (!frequency) {
         return undefined;
     }
-    return `${frequency.count} new article${frequency.count != 1 ? "s" : ""} per ${
-        frequency.period
-    }`;
+    return `${frequency.count} article${frequency.count != 1 ? "s" : ""} per ${frequency.period}`;
 }

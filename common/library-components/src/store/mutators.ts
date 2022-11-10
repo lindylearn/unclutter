@@ -277,6 +277,35 @@ async function articleAddMoveToQueue(
     });
 }
 
+async function articleAddMoveToLibrary(
+    tx: WriteTransaction,
+    {
+        temporaryArticle,
+        articleIdBeforeNewPosition,
+        articleIdAfterNewPosition,
+        sortPosition,
+    }: {
+        temporaryArticle: Article;
+        articleIdBeforeNewPosition: string | null;
+        articleIdAfterNewPosition: string | null;
+        sortPosition: ArticleSortPosition;
+    }
+) {
+    await putArticleIfNotExists(tx, {
+        ...temporaryArticle,
+        is_temporary: false,
+        is_new: false,
+        time_added: Math.round(new Date().getTime() / 1000),
+        // keep description to avoid display changes
+    });
+    await moveArticlePosition(tx, {
+        articleId: temporaryArticle.id,
+        articleIdBeforeNewPosition,
+        articleIdAfterNewPosition,
+        sortPosition,
+    });
+}
+
 /* ***** annotations ***** */
 
 const {
@@ -339,6 +368,7 @@ export const mutators = {
     updateAllTopics,
     moveArticlePosition,
     articleAddMoveToQueue,
+    articleAddMoveToLibrary,
     putAnnotation,
     updateAnnotation,
     deleteAnnotation,

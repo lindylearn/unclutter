@@ -81,13 +81,16 @@ export function DraggableContext({
                   articleLists[listId].some((a) => a.id === over.id)
               );
         if (targetList && sourceList !== targetList) {
-            if (sourceList !== "queue" && targetList !== "queue") {
-                // only allow moving from or to the reading queue for now
+            if (!(sourceList === "queue" || targetList === "queue" || sourceList === "feed")) {
+                // only allow specific move ops
                 return;
             }
             if (
+                // topic
                 (targetList.endsWith("_") && activeArticle.topic_id !== targetList) ||
+                // domain
                 (targetList.includes(".") && getDomain(activeArticle.url) !== targetList) ||
+                // new articles row
                 (targetList === "new" && !activeArticle.is_new)
             ) {
                 // attempted move into non-matching topic or domain group
@@ -107,7 +110,7 @@ export function DraggableContext({
             const targetArticles = articleLists[targetList];
             const targetIndex = targetArticles.findIndex((a) => a.id === over.id);
 
-            // remote update
+            // list positions for remote update
             let articleIdBeforeNewPosition: string | null;
             let articleIdAfterNewPosition: string | null;
             if (targetIndex !== -1) {
@@ -119,14 +122,24 @@ export function DraggableContext({
                 articleIdAfterNewPosition = null;
             }
 
-            // only allow moving from or to the reading queue for now
-            rep?.mutate.articleAddMoveToQueue({
-                articleId: activeArticle.id,
-                isQueued: targetList === "queue",
-                articleIdBeforeNewPosition,
-                articleIdAfterNewPosition,
-                sortPosition: "queue_sort_position",
-            });
+            if (activeArticle.is_temporary) {
+                // add to library
+                rep?.mutate.articleAddMoveToLibrary({
+                    temporaryArticle: activeArticle,
+                    articleIdBeforeNewPosition,
+                    articleIdAfterNewPosition,
+                    sortPosition: "domain_sort_position",
+                });
+            } else {
+                // toggle reading queue status
+                rep?.mutate.articleAddMoveToQueue({
+                    articleId: activeArticle.id,
+                    isQueued: targetList === "queue",
+                    articleIdBeforeNewPosition,
+                    articleIdAfterNewPosition,
+                    sortPosition: "queue_sort_position",
+                });
+            }
 
             // immediate local update
             if (sourceList) {
