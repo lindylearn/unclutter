@@ -131,8 +131,8 @@ export default function SettingsModalTab({
                         <div className="flex gap-3">
                             {userInfo.onPaidPlan && (
                                 <Button
-                                    title="Manage subscription"
-                                    href="https://billing.stripe.com/p/login/5kA8x62Ap9y26v6144"
+                                    title="Manage contribution"
+                                    href="https://opencollective.com/unclutter"
                                     darkModeEnabled={darkModeEnabled}
                                     reportEvent={reportEvent}
                                 />
