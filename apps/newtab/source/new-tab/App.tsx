@@ -169,13 +169,14 @@ function ArticleSection({
                     }
                     articles={articleListsCache?.["queue"] || []}
                     darkModeEnabled={darkModeEnabled}
+                    className="animate-fadein"
                     reportEvent={reportEvent}
                 />
 
                 <div
                     className={clsx(
-                        "flex select-none justify-center gap-5 text-sm text-gray-400",
-                        showRest ? "hidden" : ""
+                        "flex select-none justify-center gap-5 text-sm text-gray-400 dark:text-stone-600",
+                        showRest ? "hidden" : "animate-fadein"
                     )}
                 >
                     <div className="flex items-center gap-2">
