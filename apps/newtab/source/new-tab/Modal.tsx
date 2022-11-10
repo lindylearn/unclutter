@@ -19,10 +19,9 @@ export default function NewTabModal({
 }: {
     userInfo: UserInfo;
     darkModeEnabled: boolean;
-    showModal: boolean | null;
-    setShowModal: (showModal: boolean) => void;
     reportEvent?: (event: string, properties?: any) => void;
 }) {
+    // @ts-ignore
     const rep = useContext(ReplicacheContext);
     const [graph, setGraph] = useState<CustomGraphData>();
     useEffect(() => {
@@ -41,6 +40,7 @@ export default function NewTabModal({
     }, [rep]);
 
     // prevent initial fade-out animation
+    // @ts-ignore
     const { isVisible } = useContext(ModalContext);
     if (isVisible === null) {
         return <></>;

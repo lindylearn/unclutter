@@ -123,6 +123,7 @@ async function updateArticleReadingProgress(
     // dequeue if completed article
     if (readingProgress >= readingProgressFullClamp) {
         diff.is_queued = false;
+        diff.is_new = false;
     }
 
     return updateArticle(tx, diff as Article);

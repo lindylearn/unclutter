@@ -90,7 +90,6 @@ export default function RecentModalTab({
                         </svg>
                     }
                     articles={articleListsCache?.["queue"] || []}
-                    color={getActivityColor(3, darkModeEnabled)}
                     darkModeEnabled={darkModeEnabled}
                     showTopic={showTopic}
                     reportEvent={reportEvent}
@@ -119,7 +118,6 @@ export default function RecentModalTab({
                             1,
                             Math.min(5, Math.ceil(searchedListCache["search"].length / 5))
                         )}
-                        color={getRandomLightColor("search", darkModeEnabled)}
                         darkModeEnabled={darkModeEnabled}
                         showTopic={showTopic}
                         reportEvent={reportEvent}
@@ -303,7 +301,11 @@ export function ArticleGroup({
     enableDragging?: boolean;
     showProgress?: boolean;
 }) {
-    color = color || getRandomLightColor(groupKey, darkModeEnabled);
+    color =
+        color ||
+        (groupKey === "queue"
+            ? getActivityColor(3, darkModeEnabled)
+            : getRandomLightColor(groupKey, darkModeEnabled));
     // const unqueuedArticles = articles.filter((a) => !a.is_queued);
 
     const readCount = articles?.filter(
