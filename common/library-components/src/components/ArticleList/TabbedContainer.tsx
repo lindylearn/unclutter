@@ -210,7 +210,7 @@ export function useTabInfos(
                     true,
                     "recency",
                     "topic_order",
-                    tabCount
+                    tabCount - 2
                 );
                 const otherArticles: Article[] = []; // might be spread across multiple topics, e.g. if combining small groups locally
                 let otherGroupId: string = "other";

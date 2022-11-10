@@ -127,7 +127,7 @@ function ArticleSection({
     setShowModal: (showModal: boolean) => void;
     reportEvent?: (event: string, properties?: any) => void;
 }) {
-    const tabInfos = useTabInfos(0, false, true, null, userInfo);
+    const tabInfos = useTabInfos(6, false, true, null, userInfo);
     const [articleListsCache, setArticleListsCache] = useArticleListsCache(tabInfos);
 
     const [showRest, setShowRest] = useState<boolean>(false);
