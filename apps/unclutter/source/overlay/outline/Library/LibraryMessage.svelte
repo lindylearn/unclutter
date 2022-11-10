@@ -35,39 +35,15 @@
     {darkModeEnabled}
 >
     <div slot="title">
-        {#if libraryState?.libraryInfo?.topic}
-            <div
-                class="flex gap-2 overflow-ellipsis"
-                in:fly={{ y: 10, duration: 200, easing: cubicOut }}
-            >
-                <div class="flex h-[1em] items-center">
-                    {#if libraryState.libraryInfo.topic.emoji}
-                        <div class="w-5 drop-shadow-sm" use:twemojiSvelte>
-                            {libraryState.libraryInfo.topic.emoji}
-                        </div>
-                    {/if}
-                </div>
-                <h1>{libraryState.libraryInfo.topic.name}</h1>
-            </div>
-        {:else if libraryState?.isClustering}
-            <div class="flex" in:fly={{ y: 10, duration: 200, easing: cubicOut }}>
-                Adding to your library...
-            </div>
-        {:else if libraryState?.error}
-            <div class="flex" in:fly={{ y: 10, duration: 200, easing: cubicOut }}>
-                Error adding article :(
-            </div>
-        {:else}
-            <div class="whitespace-pre" in:fly={{ y: 10, duration: 200, easing: cubicOut }}>
-                {#if libraryState?.libraryInfo?.article.is_queued}
-                    Saved for later
-                {:else if libraryState?.libraryInfo.article.reading_progress >= readingProgressFullClamp}
-                    Completed article
-                {:else}
-                    Saved in library
-                {/if}
-            </div>
-        {/if}
+        <div class="whitespace-pre" in:fly={{ y: 10, duration: 200, easing: cubicOut }}>
+            {#if libraryState?.libraryInfo?.article.is_queued}
+                Saved for later
+            {:else if libraryState?.libraryInfo?.article && libraryState.libraryInfo.article.reading_progress >= readingProgressFullClamp}
+                Completed article
+            {:else}
+                Saved in library
+            {/if}
+        </div>
     </div>
 
     <div slot="subtitle" class="relative">

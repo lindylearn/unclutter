@@ -114,23 +114,48 @@ export default class LibraryModifier implements PageModifier {
                 this.libraryState.isClustering = true;
                 this.notifyLibraryStateListeners();
 
+                // immediately create rough local state to allow updates
+                this.libraryState.libraryInfo = constructLocalArticleInfo(
+                    this.articleUrl,
+                    this.articleId,
+                    this.articleTitle
+                );
+
                 if (
                     this.libraryState.userInfo?.onPaidPlan ||
                     this.libraryState.userInfo?.trialEnabled
                 ) {
-                    [this.libraryState.libraryInfo] = await addArticlesToLibrary(
-                        [this.articleUrl],
-                        this.libraryState.userInfo?.id
-                    );
-                } else {
-                    this.libraryState.libraryInfo = constructLocalArticleInfo(
-                        this.articleUrl,
-                        this.articleId,
-                        this.articleTitle
+                    // merge-in infered topic and remote info later
+                    // this should always take much longer than the insert below
+                    addArticlesToLibrary([this.articleUrl], this.libraryState.userInfo?.id).then(
+                        async ([remoteLibraryInfo]) => {
+                            if (remoteLibraryInfo.topic) {
+                                this.libraryState.libraryInfo.topic = remoteLibraryInfo.topic;
+                                await rep.mutate.putTopic(remoteLibraryInfo.topic);
+                            }
+
+                            delete remoteLibraryInfo.article["is_favorite"];
+                            delete remoteLibraryInfo.article["time_added"];
+                            delete remoteLibraryInfo.article["reading_progress"];
+                            // creates article if not exists for some reason?
+                            await rep.mutate.updateArticle(remoteLibraryInfo.article);
+                            // updated via subscribe below
+
+                            if (remoteLibraryInfo.new_links) {
+                                this.libraryState.libraryInfo.new_links =
+                                    remoteLibraryInfo.new_links;
+                                await rep.mutate.importArticleLinks({
+                                    links: remoteLibraryInfo.new_links,
+                                });
+
+                                await this.constructArticleGraph(rep);
+                                this.notifyLibraryStateListeners();
+                            }
+
+                            this.libraryState.isClustering = false;
+                        }
                     );
                 }
-
-                this.libraryState.isClustering = false;
             } else {
                 // use existing state
                 this.libraryState.wasAlreadyPresent = true;
@@ -157,21 +182,9 @@ export default class LibraryModifier implements PageModifier {
                 },
             });
 
-            // insert new article (add delay to animate reading progress)
+            // insert new article (add a delay to animate reading progress)
             if (!this.libraryState.wasAlreadyPresent) {
-                if (this.libraryState.libraryInfo.topic) {
-                    await rep.mutate.putTopic(this.libraryState.libraryInfo.topic);
-                }
                 await rep.mutate.putArticleIfNotExists(this.libraryState.libraryInfo.article);
-                if (this.libraryState.libraryInfo.new_links) {
-                    await rep.mutate.importArticleLinks({
-                        links: this.libraryState.libraryInfo.new_links,
-                    });
-
-                    // construct article graph
-                    await this.constructArticleGraph(rep);
-                    this.notifyLibraryStateListeners();
-                }
             } else {
                 // construct article graph
                 if (
