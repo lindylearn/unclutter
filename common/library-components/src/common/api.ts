@@ -2,7 +2,7 @@ import ky from "ky";
 
 import { Article } from "../store/_schema";
 import { getBrowserType, sendMessage } from "./extension";
-import { getUnclutterVersion } from "./messaging";
+import { getNewTabVersion, getUnclutterVersion } from "./messaging";
 import { SearchResult } from "./search";
 
 const lindyApiUrl = "https://api2.lindylearn.io";
@@ -46,6 +46,7 @@ export async function quickReport(
 ): Promise<string | null> {
     const browserType = getBrowserType();
     const unclutterVersion = await getUnclutterVersion();
+    const newTabVersion = await getNewTabVersion();
 
     try {
         const response = await fetch(`https://unclutter.lindylearn.io/api/quickReport`, {
@@ -60,6 +61,7 @@ export async function quickReport(
                 userAgent: navigator.userAgent,
                 browserType,
                 unclutterVersion,
+                newTabVersion,
             }),
         });
         return await response.text();
