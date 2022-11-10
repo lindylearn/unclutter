@@ -221,6 +221,10 @@
         ".py-16"
     ],
     "independent.co.uk": [".Header__AuthorImage-sc-mqbe6u-4.bEMDmP"],
+    "indiatoday.in": [
+        ".top__ad",
+        ".ads__common.ads__container.widgetgap.withbg"
+    ],
     "info.blackswanltd.com": [
         ".span6.widget-span.widget-type-linked_image",
         "[href='#intro']",
