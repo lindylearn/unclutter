@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import clsx from "clsx";
 import { ReplicacheContext, Settings, Topic, UserInfo } from "../../store";
 import { FilterContext } from "..";
-import { getBrowserType } from "../../common";
+import { getBrowserType, getNewTabVersion } from "../../common";
 
 export default function Sidebar({
     userInfo,
@@ -32,10 +32,16 @@ export default function Sidebar({
         rep?.query.getSettings().then(setSettings);
     }
 
+    const [newTabInstalled, setNewTabInstalled] = useState(true);
+    useEffect(() => {
+        getNewTabVersion().then((version) => setNewTabInstalled(version !== null));
+    }, []);
+
     const modalTabs = getModalTabOptions(
         userInfo,
         settings,
         showSignup,
+        newTabInstalled,
         !changedTopic ? relatedLinkCount : undefined,
         currentAnnotationsCount
     );
@@ -108,6 +114,7 @@ function getModalTabOptions(
     userInfo: UserInfo,
     settings: Settings | null,
     showSignup: boolean,
+    newTabInstalled: boolean,
     new_link_count?: number,
     currentAnnotationsCount?: number
 ): ModalTabOptions[] {
@@ -205,7 +212,7 @@ function getModalTabOptions(
         //     ),
         // },
 
-        {
+        !newTabInstalled && {
             label: "New Tab",
             value: "newtab",
             atEnd: true,

@@ -1,7 +1,7 @@
 import type { JSONValue, SubscribeOptions } from "replicache";
 import type { Runtime } from "webextension-polyfill";
 import { A, M, accessors, mutators, RuntimeReplicache } from "../store";
-import { getBrowser } from "./extension";
+import { getBrowser, getNewTabExtensionId, getUnclutterExtensionId } from "./extension";
 
 export async function reportEventContentScript(
     name: string,
@@ -30,9 +30,14 @@ export function openArticle(url: string, targetExtension: string | null = null) 
     });
 }
 
-export async function getUnclutterVersion(targetExtension: string | null = null): Promise<string> {
-    return await getBrowser().runtime.sendMessage(targetExtension, {
+export async function getUnclutterVersion(): Promise<string> {
+    return await getBrowser().runtime.sendMessage(getUnclutterExtensionId(), {
         event: "getUnclutterVersion",
+    });
+}
+export async function getNewTabVersion(): Promise<string> {
+    return await getBrowser().runtime.sendMessage(getNewTabExtensionId(), {
+        event: "getNewTabVersion",
     });
 }
 

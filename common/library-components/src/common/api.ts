@@ -2,6 +2,7 @@ import ky from "ky";
 
 import { Article } from "../store/_schema";
 import { getBrowserType, sendMessage } from "./extension";
+import { getUnclutterVersion } from "./messaging";
 import { SearchResult } from "./search";
 
 const lindyApiUrl = "https://api2.lindylearn.io";
@@ -44,9 +45,7 @@ export async function quickReport(
     userId?: string
 ): Promise<string | null> {
     const browserType = getBrowserType();
-    const unclutterVersion = await sendMessage({
-        event: "getUnclutterVersion",
-    });
+    const unclutterVersion = await getUnclutterVersion();
 
     try {
         const response = await fetch(`https://unclutter.lindylearn.io/api/quickReport`, {
