@@ -72,7 +72,7 @@
                         {libraryState.readingProgress.queueCount} article{libraryState
                             .readingProgress.queueCount === 1
                             ? ""
-                            : "s"} in <span class="hide-tiny">reading</span> queue
+                            : "s"} in <span class="hide-tiny">reading </span>queue
                     {/if}
                 </div>
             {/key}
@@ -113,7 +113,7 @@
 </ToggleMessage>
 
 <style lang="postcss">
-    @media (max-width: 230px) {
+    @media (max-width: 250px) {
         .hide-tiny {
             display: none;
         }
