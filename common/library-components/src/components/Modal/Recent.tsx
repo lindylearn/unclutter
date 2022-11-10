@@ -64,7 +64,7 @@ export default function RecentModalTab({
     }, [queryDebounced]);
 
     return (
-        <div className="flex flex-col gap-4">
+        <div className="animate-fadein flex flex-col gap-4">
             <DraggableContext
                 articleLists={searchedListCache || articleListsCache}
                 setArticleLists={searchedListCache ? setSearchedListCache : setArticleListsCache}

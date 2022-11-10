@@ -21,11 +21,7 @@ module.exports = {
                     "60%": { transform: "rotate(-1deg)" },
                 },
                 slidein: {
-                    "0%": { transform: "translate(400px)", opacity: "0" },
-                    "100%": { transform: "translate(0)", opacity: "1" },
-                },
-                slideinSlightly: {
-                    "0%": { transform: "translate(100px)", opacity: "0" },
+                    "0%": { transform: "translateY(150px)", opacity: "0" },
                     "100%": { transform: "translate(0)", opacity: "1" },
                 },
                 fadein: {
@@ -40,18 +36,13 @@ module.exports = {
             animation: {
                 wiggle: "wiggle 0.5s ease-in-out",
                 slidein: "slidein 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
-                slideinSlightly:
-                    "slideinSlightly 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
                 fadein: "fadein 0.2s ease-out",
                 bouncein: "bouncein 0.2s cubic-bezier(0.34, 1.56, 0.64, 1)",
             },
             boxShadow: {
-                article:
-                    "0 1px 2px 1px rgb(0 0 0 / 0.15), 0 4px 6px -1px rgb(0 0 0 / 0.1)",
-                articleHover:
-                    "0 1px 2px 1px rgb(0 0 0 / 0.15), 0 20px 25px -5px rgb(0 0 0 / 0.1)",
-                articleSmall:
-                    "0 0px 2px 0px rgb(0 0 0 / 0.15), 0 4px 6px -1px rgb(0 0 0 / 0.1)",
+                article: "0 1px 2px 1px rgb(0 0 0 / 0.15), 0 4px 6px -1px rgb(0 0 0 / 0.1)",
+                articleHover: "0 1px 2px 1px rgb(0 0 0 / 0.15), 0 20px 25px -5px rgb(0 0 0 / 0.1)",
+                articleSmall: "0 0px 2px 0px rgb(0 0 0 / 0.15), 0 4px 6px -1px rgb(0 0 0 / 0.1)",
                 articleSmallHover:
                     "0 0px 2px 0px rgb(0 0 0 / 0.15), 0 20px 25px -5px rgb(0 0 0 / 0.1)",
             },

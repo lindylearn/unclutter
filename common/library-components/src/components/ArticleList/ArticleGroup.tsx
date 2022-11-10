@@ -19,6 +19,7 @@ export function ArticleGroup({
     reportEvent = () => {},
     enableDragging = true,
     showProgress = true,
+    className,
 }: {
     groupKey: string;
     title?: string;
@@ -32,6 +33,7 @@ export function ArticleGroup({
     reportEvent?: (event: string, data?: any) => void;
     enableDragging?: boolean;
     showProgress?: boolean;
+    className?: string;
 }) {
     color =
         color ||
@@ -45,7 +47,7 @@ export function ArticleGroup({
     )?.length;
 
     return (
-        <div className="topic animate-fadein relative">
+        <div className={clsx("topic relative", className)}>
             <div className="topic-header mx-0.5 mb-2 flex justify-between">
                 <h2
                     className={clsx(
