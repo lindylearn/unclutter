@@ -29,7 +29,7 @@ export function BigNumber({
             )}
             <div
                 className={clsx(
-                    "font-title z-10 flex h-[2rem] items-center gap-2 text-2xl font-bold transition-opacity",
+                    "font-title flex h-[2rem] items-center gap-2 text-2xl font-bold transition-opacity",
                     value === undefined && "opacity-0"
                 )}
             >
@@ -39,7 +39,7 @@ export function BigNumber({
                     {target && <span className="text-base opacity-20"> / {target}</span>}
                 </div>
             </div>
-            <div className="z-10 max-w-full overflow-hidden">{tag}</div>
+            <div className="max-w-full overflow-hidden">{tag}</div>
         </div>
     );
 }
@@ -60,7 +60,7 @@ export function ResourceStat({
     return (
         <div
             className={clsx(
-                "relative z-10 flex items-center transition-opacity",
+                "relative flex items-center transition-opacity",
                 large ? "gap-1.5" : "gap-1.5",
                 value === undefined && "opacity-0",
                 className
