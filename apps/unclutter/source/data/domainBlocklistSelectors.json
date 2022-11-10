@@ -473,6 +473,11 @@
         ".jsx-3593820457.action"
     ],
     "tomsguide.com": [".bordeaux-filled-slot"],
+    "trainingscenter.kulturwerke-deutschland.de": [
+        ".footer.footer--dark.footer--left",
+        ".media",
+        ".section__sidebar.col-lg-4"
+    ],
     "twinview.com": [
         ".c-section--default.c-section.c-section--pad-x-small.c-section--pad-y-default.u-bg-purple-1",
         ".c-form__columns.no-margin"
