@@ -434,6 +434,7 @@
     ],
     "theblock.co": [".newsletterModal"],
     "theconstructor.org": [".cs-estimated-reading-time", "#toc_container"],
+    "thedrive.com": ["#empire-unit-sticky_footer__desktop-0"],
     "theguardian.com": [
         "#slot-body-end",
         ".css-v339xn",
