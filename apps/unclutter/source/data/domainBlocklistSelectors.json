@@ -102,6 +102,7 @@
         ".menu.search-menu.openSearchMenu"
     ],
     "christianitytoday.com": [".article-embed"],
+    "cloud.tencent.com": [".layout-side"],
     "cloudemployee.co.uk": [
         ".scroll.btn.btn-orange-split",
         ".right-side",
