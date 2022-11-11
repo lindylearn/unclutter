@@ -23,7 +23,7 @@ export default function RecentModalTab({
     const [onlyUnread, setOnlyUnread] = useState(false);
     const [lastFirst, setLastFirst] = useState(true);
 
-    const tabInfos = useTabInfos(6, onlyUnread, lastFirst, domainFilter, userInfo);
+    const tabInfos = useTabInfos(3 + 4 + 1, onlyUnread, lastFirst, domainFilter, userInfo);
     const [articleListsCache, setArticleListsCache] = useArticleListsCache(tabInfos);
 
     const [searchedListCache, setSearchedListCache] = useState<ArticleListsCache | null>(null);
