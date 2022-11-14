@@ -33,7 +33,7 @@
 
 <ToggleMessage
     inactiveColor={getActivityColor(2, darkModeEnabled)}
-    activeColor={getActivityColor(3, darkModeEnabled)}
+    activeColor={getActivityColor(4, darkModeEnabled)}
     isActive={libraryState?.libraryInfo?.article.is_queued || isCompleted}
     onToggle={() => libraryModifier.toggleArticleInQueue()}
     onClick={() => libraryModalModifier.showModal("list")}

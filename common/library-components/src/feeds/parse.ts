@@ -101,6 +101,8 @@ export function getPostFrequency(feed: Feed): FeedSubscription["post_frequency"]
             period: "year",
         };
     }
+
+    return undefined;
 }
 
 export function parseFeedArticles(

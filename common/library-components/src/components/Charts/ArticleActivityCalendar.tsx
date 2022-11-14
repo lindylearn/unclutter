@@ -126,7 +126,7 @@ function getColorLevels(darkModeEnabled: boolean): Theme {
               level1: "rgb(237, 215, 91, 0.1)",
               level2: "rgb(237, 215, 91, 0.3)",
               level3: "rgb(237, 215, 91, 0.6)",
-              level4: "rgb(237, 215, 91, 1.0)",
+              level4: "rgb(237, 215, 91, 0.9)",
           }
         : {
               level0: "#fafaf9", // bg-stone-50
