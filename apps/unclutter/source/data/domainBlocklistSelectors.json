@@ -390,6 +390,15 @@
         ".btn.general-list-block__btn",
         ".section.general-list-block.full-width.js-reveal.bg-blue.ruler-border-horizontal.js-animate"
     ],
+    "sspai.com": [
+        ".link-wrapper",
+        ".submenu-wrapper",
+        ".menu",
+        ".logo-prime-wrapper.ss-header_mb-hidden",
+        ".ss-header_phone-menu.pc-hidden",
+        ".ss-header_search",
+        "#app-head"
+    ],
     "stackoverflow.com": [".votecell.post-layout--left", ".bottom-notice"],
     "steveblank.com": [
         "#syndication",
