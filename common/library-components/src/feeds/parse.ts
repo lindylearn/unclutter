@@ -58,8 +58,12 @@ function constructFeedSubscription(
 }
 
 export function getPostFrequency(feed: Feed): FeedSubscription["post_frequency"] {
+    // sort reverse-chronologically
     // ignore very old feed items, e.g. for https://signal.org/blog/introducing-stories/
-    feed.items = feed.items.slice(0, 10);
+    feed.items = feed.items
+        .filter((i) => i.pubDate)
+        .sort((a, b) => new Date(b.pubDate!).getTime() - new Date(a.pubDate!).getTime())
+        .slice(0, 10);
 
     const start = feed.items[feed.items.length - 1].pubDate;
     if (!start) {
