@@ -112,7 +112,14 @@ export default class ContentBlockModifier implements PageModifier {
     }
 }
 
-const blockedTags = ["footer", "aside", "nav", "gpt-ad", "hypothesis-sidebar"];
+const blockedTags = [
+    "footer",
+    "aside",
+    "nav",
+    "gpt-ad",
+    "hypothesis-sidebar",
+    "hy-drawer", // https://orbitalindex.com/archive/2022-11-09-Issue-193/
+];
 
 // words just blocked, but considered if matched text container
 export const blockedWords = [
@@ -135,6 +142,7 @@ export const blockedWords = [
     "leaderboard", // https://www.bbc.com/news/uk-england-london-61747092
     "topbar", // https://annehelen.substack.com/p/is-everything-an-mlm?s=r
     "breadcrumb", // https://www.mei.edu/blog/monday-briefing-under-brutal-pressure-israels-coalition-verge-crumbling
+    "fixed", // https://orbitalindex.com/archive/2022-11-09-Issue-193/
 
     // newsletter signups
     "marketing", // https://www.nature.com/articles/s41598-018-38461-y
