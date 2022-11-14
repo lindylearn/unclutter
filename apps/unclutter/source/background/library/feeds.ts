@@ -12,9 +12,9 @@ export async function discoverRssFeed(
     if (candidates.length === 0) {
         candidates = await discoverDomainFeeds(sourceUrl);
     }
-    if (candidates.length === 0) {
-        candidates = getHeuristicFeedUrls(sourceUrl);
-    }
+
+    // try if other candidates invalid
+    candidates.push(...getHeuristicFeedUrls(sourceUrl));
 
     return await getMainFeed(sourceUrl, candidates);
 }

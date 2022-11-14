@@ -229,7 +229,6 @@ export default class LibraryModifier implements PageModifier {
             // parse DOM
             // TODO move to different phase
             const feedUrls = await discoverFeedsInDocument(document, this.articleUrl);
-            console.log(feedUrls);
 
             let subscriptions = await Promise.all(feedUrls.map(rep.query.getSubscription));
             subscriptions = subscriptions.filter((s) => s);
@@ -246,15 +245,19 @@ export default class LibraryModifier implements PageModifier {
                 });
                 if (this.libraryState.feed) {
                     // ignore noisy feeds, but still keep feed state to emit diagnostics event
-                    if (
-                        this.libraryState.feed.post_frequency?.period === "day" &&
-                        this.libraryState.feed.post_frequency?.count > 1
-                    ) {
-                        return;
-                    }
+                    // if (
+                    //     this.libraryState.feed.post_frequency?.period === "day" &&
+                    //     this.libraryState.feed.post_frequency?.count > 1
+                    // ) {
+                    //     return;
+                    // }
 
-                    // insert even if not subscribed
-                    await rep.mutate.putSubscription(this.libraryState.feed);
+                    // detailed fetching in background may discover more potentially existing feeds
+                    const existing = await rep.query.getSubscription(this.libraryState.feed.id);
+                    if (!existing) {
+                        // insert even if not subscribed
+                        await rep.mutate.putSubscription(this.libraryState.feed);
+                    }
                 }
             }
 
