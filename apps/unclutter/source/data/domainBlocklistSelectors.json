@@ -182,6 +182,10 @@
         ".cwj9ozl2.tvmbv18p"
     ],
     "forwardobserver.com": [".attachment-large.size-large.wp-post-image"],
+    "francetvinfo.fr": [
+        ".header-legacy__direct-radio",
+        ".header-legacy__direct-tv"
+    ],
     "gamesindustry.biz": [".thumbnail", ".shelf", "#newsletters"],
     "geoslam.com": [
         ".has-text-align-center",
