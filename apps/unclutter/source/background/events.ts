@@ -186,7 +186,9 @@ function handleMessage(
         search(message.type, message.query).then(sendResponse);
         return true;
     } else if (message.event === "discoverRssFeed") {
-        discoverRssFeed(message.sourceUrl, message.candidates).then(sendResponse);
+        discoverRssFeed(message.sourceUrl, message.feedCandidates, message.tagLinkCandidates).then(
+            sendResponse
+        );
         return true;
     } else if (message.event === "fetchRssFeed") {
         fetchRssFeed(message.feedUrl).then(sendResponse);

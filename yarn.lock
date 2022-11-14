@@ -6745,6 +6745,11 @@ html-encoding-sniffer@^3.0.0:
   dependencies:
     whatwg-encoding "^2.0.0"
 
+html-escaper@^3.0.3:
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/html-escaper/-/html-escaper-3.0.3.tgz#4d336674652beb1dcbc29ef6b6ba7f6be6fdfed6"
+  integrity sha512-RuMffC89BOWQoY0WKGpIhn5gX3iI54O6nRA0yC124NYVtzjmFWBIiFd8M0x+ZdX0P9R4lADg1mgP8C7PxGOWuQ==
+
 html-tags@^3.1.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/html-tags/-/html-tags-3.2.0.tgz#dbb3518d20b726524e4dd43de397eb0a95726961"
@@ -7977,6 +7982,17 @@ lines-and-columns@^2.0.2:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/lines-and-columns/-/lines-and-columns-2.0.3.tgz#b2f0badedb556b747020ab8ea7f0373e22efac1b"
   integrity sha512-cNOjgCnLB+FnvWWtyRTzmB3POJ+cXxTA81LoW7u8JdmhfXzriropYwpjShnz1QLLWsQwY7nIxoDmcPTwphDK9w==
+
+linkedom@^0.14.19:
+  version "0.14.19"
+  resolved "https://registry.yarnpkg.com/linkedom/-/linkedom-0.14.19.tgz#a8e9b91af26d5c631b5b3d21614cef1db8a56fb7"
+  integrity sha512-sFNkQZlKBWpEaAcbsDIghTLE0hHbyvS6dZuM7IH+KTM09GaQ772PtDZAuFlN0oFgyAjUj8XS9FpoWSLmBjl8MA==
+  dependencies:
+    css-select "^5.1.0"
+    cssom "^0.5.0"
+    html-escaper "^3.0.3"
+    htmlparser2 "^8.0.1"
+    uhyphen "^0.1.0"
 
 load-json-file@^4.0.0:
   version "4.0.0"
@@ -12118,6 +12134,11 @@ typescript@^4.7.4, typescript@^4.8.2:
   version "4.8.2"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.8.2.tgz#e3b33d5ccfb5914e4eeab6699cf208adee3fd790"
   integrity sha512-C0I1UsrrDHo2fYI5oaCGbSejwX4ch+9Y5jTQELvovfmFkK3HHSZJB8MSJcWLmCUBzQBchCrZ9rMRV6GuNrvGtw==
+
+uhyphen@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/uhyphen/-/uhyphen-0.1.0.tgz#3cc22afa790daa802b9f6789f3583108d5b4a08c"
+  integrity sha512-o0QVGuFg24FK765Qdd5kk0zU/U4dEsCtN/GSiwNI9i8xsSVtjIAOdTaVhLwZ1nrbWxFVMxNDDl+9fednsOMsBw==
 
 unbox-primitive@^1.0.2:
   version "1.0.2"

@@ -2,19 +2,37 @@ import {
     getMainFeed,
     discoverDomainFeeds,
     getHeuristicFeedUrls,
+    fetchParseFeedForUrl,
 } from "@unclutter/library-components/dist/feeds";
 import { FeedSubscription } from "@unclutter/library-components/dist/store";
 
 export async function discoverRssFeed(
     sourceUrl: string,
-    candidates: string[]
-): Promise<FeedSubscription> {
-    if (candidates.length === 0) {
-        candidates = await discoverDomainFeeds(sourceUrl);
+    feedCandidates: string[],
+    tagLinkCandidates: string[]
+): Promise<FeedSubscription | null> {
+    // TODO check main feed frequency first
+
+    if (tagLinkCandidates.length > 0) {
+        const tagFeed = await fetchParseFeedForUrl(tagLinkCandidates[0]);
+        console.log("Fetched main tag feed", tagLinkCandidates, tagFeed);
+
+        if (tagFeed) {
+            return tagFeed;
+        }
+    }
+
+    if (feedCandidates.length === 0) {
+        feedCandidates = await discoverDomainFeeds(sourceUrl);
     }
 
     // try if other candidates invalid
-    candidates.push(...getHeuristicFeedUrls(sourceUrl));
+    feedCandidates.push(...getHeuristicFeedUrls(sourceUrl));
 
-    return await getMainFeed(sourceUrl, candidates);
+    // TODO also consider
+    // RSSHub rules, see https://github.com/DIYgod/RSSHub-Radar/blob/master/src/js/common/radar-rules.js
+    // hosted rss-proxy, see https://github.com/damoeb/rss-proxy/
+    // Google News search, see trafilatura
+
+    return await getMainFeed(sourceUrl, feedCandidates);
 }

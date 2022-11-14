@@ -21,7 +21,7 @@ import { constructLocalArticleInfo, LibraryInfo, LibraryState } from "../../comm
 import ReadingTimeModifier from "./DOM/readingTime";
 import { addArticlesToLibrary } from "../../common/api";
 import AnnotationsModifier from "./annotations/annotationsModifier";
-import { discoverFeedsInDocument } from "@unclutter/library-components/dist/feeds";
+import { discoverFeedsInDocument, extractTags } from "@unclutter/library-components/dist/feeds";
 import browser from "../../common/polyfill";
 
 @trackModifierExecution
@@ -241,7 +241,8 @@ export default class LibraryModifier implements PageModifier {
                 this.libraryState.feed = await browser.runtime.sendMessage(null, {
                     event: "discoverRssFeed",
                     sourceUrl: this.articleUrl,
-                    candidates: feedUrls,
+                    feedCandidates: feedUrls,
+                    tagLinkCandidates: extractTags(document, this.articleUrl),
                 });
                 if (this.libraryState.feed) {
                     // ignore noisy feeds, but still keep feed state to emit diagnostics event

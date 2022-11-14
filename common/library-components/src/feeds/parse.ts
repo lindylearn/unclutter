@@ -10,12 +10,11 @@ export async function getMainFeed(
     sourceUrl: string,
     rssUrls: string[]
 ): Promise<FeedSubscription | null> {
-    // console.log(`Trying ${rssUrls.length} feed urls`, rssUrls);
     for (const feedUrl of rssUrls) {
         try {
             const feed = await fetchRssFeed(feedUrl);
             if (feed && feed.items.length > 0) {
-                console.log(`Found feed at ${feedUrl}:`, feed);
+                console.log(`Parsed valid feed at ${feedUrl}:`, feed);
                 return constructFeedSubscription(sourceUrl, feedUrl, feed);
             }
         } catch {}

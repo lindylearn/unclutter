@@ -8,10 +8,10 @@ export function extractTags(document: Document, sourceUrl: string): string[] {
     // user-browsable tags should always be links
     const candidates: HTMLAnchorElement[] = [];
     document.querySelectorAll("a[href]").forEach((node: HTMLAnchorElement) => {
-        // Ignore invisible nodes
-        if (node.offsetHeight === 0) {
-            return false;
-        }
+        // allow invisible nodes in case hidden by aggressive uncluttering
+        // if (node.offsetHeight === 0) {
+        //     return false;
+        // }
 
         // url-based filters
         const url = new URL(node.href);
@@ -43,10 +43,7 @@ export function extractTags(document: Document, sourceUrl: string): string[] {
         candidates.push(node);
     });
 
-    console.log(candidates.map((n) => n.innerText));
-    console.log(candidates);
-
-    return [];
+    return candidates.map((n) => n.href);
 }
 
 function cleanTag(tag: string): string {

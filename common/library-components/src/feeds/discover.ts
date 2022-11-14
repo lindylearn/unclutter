@@ -1,5 +1,3 @@
-import { JSDOM } from "jsdom";
-
 const FEED_TYPES = [
     "application/atom+xml",
     "application/json",
@@ -65,31 +63,22 @@ export async function discoverFeedsInDocument(
         })
         .filter((url) => url !== null) as string[];
 
-    // TODO also consider
-    // RSSHub rules, see https://github.com/DIYgod/RSSHub-Radar/blob/master/src/js/common/radar-rules.js
-    // hosted rss-proxy, see https://github.com/damoeb/rss-proxy/
-    // Google News search, see trafilatura
+    // try most specific feeds first
+    // often this means the second listed link
+    // TODO try longest link first?
+    feedUrls.reverse();
+
+    console.log("Discovered feeds in html", feedUrls);
 
     return feedUrls;
 }
 
 // fallback
 export async function discoverDomainFeeds(sourceUrl: string): Promise<string[]> {
-    // TODO fix node.js bundle issue
-    // try to find feed on homepage
+    // try to find feed on homepage?
     // e.g. https://jrsinclair.com/articles/2022/why-would-anyone-need-javascript-generator-functions/
-    // const origin = new URL(sourceUrl).origin;
-    // const html = await fetch(origin).then((response) => response.text());
-    // const document: Document = new JSDOM(html).window.document;
-    // if (document) {
-    //     const feeds = await discoverFeedsInDocument(document, sourceUrl);
-    //     if (feeds.length > 0) {
-    //         console.log("Found feed on homepage");
-    //         return feeds;
-    //     }
-    // }
 
-    // TODO try feeds. ?
+    // const origin = new URL(sourceUrl).origin;
 
     return [];
 }
