@@ -19,17 +19,22 @@
     export let darkModeEnabled: boolean;
 
     // local UI state
-    let topicColor: string = null;
-    $: topicColor =
-        (libraryState.userInfo?.onPaidPlan || libraryState.userInfo?.trialEnabled) &&
-        libraryState.libraryInfo?.topic?.id
-            ? getRandomLightColor(libraryState.libraryInfo.topic.id, darkModeEnabled)
-            : "";
+    // let topicColor: string = null;
+    // $: topicColor =
+    //     (libraryState.userInfo?.onPaidPlan || libraryState.userInfo?.trialEnabled) &&
+    //     libraryState.libraryInfo?.topic?.id
+    //         ? getRandomLightColor(libraryState.libraryInfo.topic.id, darkModeEnabled)
+    //         : "";
+
+    $: isCompleted =
+        libraryState?.libraryInfo?.article &&
+        libraryState.libraryInfo.article.reading_progress >= readingProgressFullClamp;
 </script>
 
 <ToggleMessage
-    color={getActivityColor(3, darkModeEnabled)}
-    isActive={libraryState?.libraryInfo?.article.is_queued}
+    inactiveColor={getActivityColor(2, darkModeEnabled)}
+    activeColor={getActivityColor(3, darkModeEnabled)}
+    isActive={libraryState?.libraryInfo?.article.is_queued || isCompleted}
     onToggle={() => libraryModifier.toggleArticleInQueue()}
     onClick={() => libraryModalModifier.showModal("list")}
     {darkModeEnabled}
@@ -38,7 +43,7 @@
         <div class="whitespace-pre" in:fly={{ y: 10, duration: 200, easing: cubicOut }}>
             {#if libraryState?.libraryInfo?.article.is_queued}
                 Saved for later
-            {:else if libraryState?.libraryInfo?.article && libraryState.libraryInfo.article.reading_progress >= readingProgressFullClamp}
+            {:else if isCompleted}
                 Completed article
             {:else}
                 Saved in library
@@ -80,7 +85,7 @@
     </div>
 
     <div slot="toggle-icon">
-        {#if libraryState?.libraryInfo.article.reading_progress >= readingProgressFullClamp}
+        {#if libraryState?.libraryInfo?.article.is_queued || isCompleted}
             <svg
                 class="mx-0.5 w-5"
                 viewBox="0 0 448 512"

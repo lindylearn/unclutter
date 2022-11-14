@@ -3,7 +3,8 @@
     import { cubicOut } from "svelte/easing";
     import clsx from "clsx";
 
-    export let color: string;
+    export let inactiveColor: string;
+    export let activeColor: string;
     export let isActive: boolean;
     export let onToggle: () => void;
     export let onClick: () => void;
@@ -35,11 +36,11 @@
 
     <div
         class={clsx(
-            "toggle transition-color flex h-[calc(1rem+0.5rem+1.25rem+0.75rem*2)] shrink-0 origin-left items-center rounded-r-lg bg-gray-50 px-3 dark:bg-neutral-800",
+            "toggle transition-color flex h-[calc(1rem+0.5rem+1.25rem+0.75rem*2)] shrink-0 origin-left items-center rounded-r-lg px-3",
             isActive ? "active" : "inactive",
             darkModeEnabled && "dark"
         )}
-        style={`background-color: ${color}`}
+        style={`--inactive-color: ${inactiveColor}; --active-color: ${activeColor};`}
         on:click={onToggle}
     >
         <slot name="toggle-icon" />
@@ -55,10 +56,13 @@
     .toggle {
         transition: background 0.2s ease-in-out !important;
     }
-    .toggle.inactive:not(:hover) {
-        background-color: rgb(243 244 246) !important;
+    .toggle.inactive {
+        background: var(--inactive-color) !important;
     }
-    .dark.toggle.inactive:not(:hover) {
-        background-color: rgb(38 38 38) !important;
+    .toggle.active {
+        background: var(--active-color) !important;
+    }
+    .toggle.inactive:hover {
+        background: var(--active-color) !important;
     }
 </style>

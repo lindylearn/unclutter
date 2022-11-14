@@ -18,7 +18,10 @@
 </script>
 
 <ToggleMessage
-    color={getRandomLightColor(libraryState.feed?.domain, darkModeEnabled)}
+    inactiveColor={getRandomLightColor(libraryState.feed?.domain, darkModeEnabled)
+        .replace("0.5", "0.4")
+        .replace("1.0", "0.7")}
+    activeColor={getRandomLightColor(libraryState.feed?.domain, darkModeEnabled)}
     isActive={libraryState.feed?.is_subscribed}
     onToggle={() => libraryModifier.toggleFeedSubscribed()}
     onClick={() => libraryModalModifier.showModal("feeds")}
