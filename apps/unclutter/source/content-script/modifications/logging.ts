@@ -34,6 +34,7 @@ export default class LoggingManager implements PageModifier {
             outlineItems: this.overlayManager.outline.length,
             readingTime: this.readingTimeModifier.totalReadingTime,
             foundFeed: !!this.libraryModifier.libraryState.feed,
+            feedFrequencyWeek: this.libraryModifier.libraryState.feed?.post_frequency?.per_week,
         });
     }
 }

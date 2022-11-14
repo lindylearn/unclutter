@@ -36,11 +36,7 @@ function constructFeedSubscription(
     if (!feed) {
         return null;
     }
-    const [articlesPerDay, postFrequency] = getPostFrequency(feed);
-    if (articlesPerDay > 1) {
-        // ignore noisy feeds
-        return null;
-    }
+    const postFrequency = getPostFrequency(feed);
 
     const domain = getDomain(sourceUrl);
     // ignore rss links, e.g. for http://liuliu.me/atom.xml
@@ -61,45 +57,46 @@ function constructFeedSubscription(
     };
 }
 
-export function getPostFrequency(feed: Feed): [number, FeedSubscription["post_frequency"]] {
+export function getPostFrequency(feed: Feed): FeedSubscription["post_frequency"] {
     // ignore very old feed items, e.g. for https://signal.org/blog/introducing-stories/
     feed.items = feed.items.slice(0, 10);
 
     const start = feed.items[feed.items.length - 1].pubDate;
     if (!start) {
-        return [0, undefined];
+        return undefined;
     }
     const end = new Date();
     const days = Math.round((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
 
-    let humanFrequency: FeedSubscription["post_frequency"] = undefined;
     const articlesPerDay = Math.round(feed.items.length / days);
     const articlesPerWeek = Math.round(feed.items.length / (days / 7));
     const articlesPerMonth = Math.round(feed.items.length / (days / 30));
     const articlesPerYear = Math.round(feed.items.length / (days / 365));
     if (articlesPerDay >= 1) {
-        humanFrequency = {
+        return {
+            per_week: articlesPerWeek,
             count: articlesPerDay,
             period: "day",
         };
     } else if (articlesPerWeek >= 1) {
-        humanFrequency = {
+        return {
+            per_week: articlesPerWeek,
             count: articlesPerWeek,
             period: "week",
         };
     } else if (articlesPerMonth >= 1) {
-        humanFrequency = {
+        return {
+            per_week: articlesPerWeek,
             count: articlesPerMonth,
             period: "month",
         };
     } else if (articlesPerYear >= 1) {
-        humanFrequency = {
+        return {
+            per_week: articlesPerWeek,
             count: articlesPerYear,
             period: "year",
         };
     }
-
-    return [articlesPerDay, humanFrequency];
 }
 
 export function parseFeedArticles(

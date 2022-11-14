@@ -31,6 +31,10 @@ export default function FeedListTab({ darkModeEnabled, reportEvent }) {
                     }}
                 />
             ))}
+
+            {displayedSubscriptions?.length === 0 && (
+                <div>Click the follow button on supported articles.</div>
+            )}
         </div>
     );
 }

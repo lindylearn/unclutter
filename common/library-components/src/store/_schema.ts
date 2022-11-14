@@ -116,6 +116,7 @@ export const feedSubscriptionSchema = entitySchema.extend({
     post_frequency: z.optional(
         z.object({
             count: z.number(),
+            per_week: z.optional(z.number()),
             period: z.enum(["day", "week", "month", "year"]),
         })
     ),

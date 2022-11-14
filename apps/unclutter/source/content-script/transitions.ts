@@ -228,6 +228,8 @@ export default class TransitionManager implements PageModifier {
         this.libraryModifier.startReadingProgressSync();
         this.libraryModifier.scrollToLastReadingPosition();
 
+        // wait until feed likely parsed
+        await new Promise((r) => setTimeout(r, 2000));
         this.loggingModifier.afterTransitionInDone();
     }
 

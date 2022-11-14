@@ -245,6 +245,14 @@ export default class LibraryModifier implements PageModifier {
                     candidates: feedUrls,
                 });
                 if (this.libraryState.feed) {
+                    // ignore noisy feeds, but still keep feed state to emit diagnostics event
+                    if (
+                        this.libraryState.feed.post_frequency?.period === "day" &&
+                        this.libraryState.feed.post_frequency?.count > 1
+                    ) {
+                        return;
+                    }
+
                     // insert even if not subscribed
                     await rep.mutate.putSubscription(this.libraryState.feed);
                 }
@@ -260,6 +268,8 @@ export default class LibraryModifier implements PageModifier {
                         }
                     },
                 });
+
+                this.libraryState.showFeed = true;
             }
 
             this.notifyLibraryStateListeners();

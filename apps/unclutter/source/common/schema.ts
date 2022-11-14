@@ -26,6 +26,7 @@ export type LibraryState = {
     linkCount?: number;
     readingProgress?: ReadingProgress;
 
+    showFeed?: boolean;
     feed?: FeedSubscription;
 };
 
