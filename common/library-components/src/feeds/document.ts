@@ -12,5 +12,5 @@ export async function fetchParseFeedForUrl(url: string): Promise<FeedSubscriptio
     }
 
     const feedUrls = await discoverFeedsInDocument(document, url);
-    return getMainFeed(url, feedUrls);
+    return await getMainFeed(url, feedUrls);
 }

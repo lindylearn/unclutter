@@ -11,11 +11,9 @@ export async function discoverRssFeed(
     feedCandidates: string[],
     tagLinkCandidates: string[]
 ): Promise<FeedSubscription | null> {
-    // TODO check main feed frequency first
-
     if (tagLinkCandidates.length > 0) {
         const tagFeed = await fetchParseFeedForUrl(tagLinkCandidates[0]);
-        console.log("Fetched main tag feed", tagLinkCandidates, tagFeed);
+        console.log("Fetched tag feeds", tagLinkCandidates, tagFeed);
 
         if (tagFeed) {
             return tagFeed;

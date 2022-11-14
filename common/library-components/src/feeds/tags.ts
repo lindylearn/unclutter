@@ -19,7 +19,9 @@ export function extractTags(document: Document, sourceUrl: string): string[] {
             getDomain(node.href) !== sourceDomain ||
             url.pathname === "/" ||
             url.pathname === new URL(sourceUrl).pathname ||
-            url.hash
+            url.hash ||
+            url.pathname.split("/").length > 4 || // /archive/opinion/
+            url.pathname.length > 30
         ) {
             return;
         }

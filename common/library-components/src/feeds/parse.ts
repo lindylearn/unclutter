@@ -14,8 +14,9 @@ export async function getMainFeed(
         try {
             const feed = await fetchRssFeed(feedUrl);
             if (feed && feed.items.length > 0) {
-                console.log(`Parsed valid feed at ${feedUrl}:`, feed);
-                return constructFeedSubscription(sourceUrl, feedUrl, feed);
+                const subscription = constructFeedSubscription(sourceUrl, feedUrl, feed);
+                console.log(`Parsed valid feed at ${feedUrl}:`, feed, subscription);
+                return subscription;
             }
         } catch {}
     }
@@ -43,6 +44,8 @@ function constructFeedSubscription(
         feed.link = undefined;
     }
 
+    console.log(postFrequency);
+
     return {
         id: rssUrl,
         rss_url: rssUrl,
@@ -56,7 +59,11 @@ function constructFeedSubscription(
     };
 }
 
-export function getPostFrequency(feed: Feed): FeedSubscription["post_frequency"] {
+export function getPostFrequency(feed: Feed): FeedSubscription["post_frequency"] | undefined {
+    if (feed.items.length < 5) {
+        return undefined;
+    }
+
     // sort reverse-chronologically
     // ignore very old feed items, e.g. for https://signal.org/blog/introducing-stories/
     feed.items = feed.items
@@ -69,7 +76,7 @@ export function getPostFrequency(feed: Feed): FeedSubscription["post_frequency"]
         return undefined;
     }
     const end = new Date();
-    const days = Math.round((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
+    const days = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
 
     const articlesPerDay = Math.round(feed.items.length / days);
     const articlesPerWeek = Math.round(feed.items.length / (days / 7));
