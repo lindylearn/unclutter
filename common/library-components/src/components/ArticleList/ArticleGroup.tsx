@@ -99,7 +99,7 @@ export function ArticleGroup({
                 )}
                 {groupKey === "new" && articles.length === 0 && (
                     <div className="animate-fadein absolute top-0 left-0 flex h-full w-full select-none items-center justify-center">
-                        Follow feeds to see their new articles here.
+                        Follow website feeds to see their new articles here.
                     </div>
                 )}
                 {groupKey === "past" && articles.length === 0 && (

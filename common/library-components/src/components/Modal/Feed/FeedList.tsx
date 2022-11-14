@@ -33,7 +33,9 @@ export default function FeedListTab({ darkModeEnabled, reportEvent }) {
             ))}
 
             {allSubscriptions?.length === 0 && (
-                <div className="mt-4">Click the website follow button on supported articles.</div>
+                <div className="mt-4">
+                    Click the follow button on supported articles to see new articles here.
+                </div>
             )}
         </div>
     );
