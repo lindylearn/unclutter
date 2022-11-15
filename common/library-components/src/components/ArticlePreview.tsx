@@ -121,7 +121,7 @@ export function ArticlePreview({
             style={style}
             {...props}
         >
-            <div className="article-fallback flex max-h-full flex-col gap-2 overflow-hidden py-2 px-3">
+            <div className="article-fallback flex max-h-full flex-col  gap-1 overflow-hidden px-3 pt-2 pb-1">
                 <div
                     className="font-text min-h-[35px] shrink-0 select-none overflow-hidden text-ellipsis text-sm font-medium leading-tight"
                     style={{
@@ -143,7 +143,14 @@ export function ArticlePreview({
                 </div>
 
                 {article.description && (
-                    <div className="font-text shrink-0 select-none overflow-hidden text-ellipsis text-xs font-normal leading-tight">
+                    <div
+                        className="font-text select-none overflow-hidden text-xs font-normal leading-tight"
+                        style={{
+                            display: "-webkit-box",
+                            WebkitBoxOrient: "vertical",
+                            WebkitLineClamp: 6,
+                        }}
+                    >
                         {article.description}
                     </div>
                 )}
