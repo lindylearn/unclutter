@@ -200,12 +200,16 @@ function ModalContent({
         <div className="font-text flex h-full items-stretch overflow-hidden text-base">
             <aside className="left-side p-4">
                 <div className="flex h-full w-32 flex-col">
-                    <div
-                        className="mb-4 flex w-full cursor-pointer items-center gap-1.5 transition-all hover:scale-[97%]"
-                        onClick={() => setCurrentTab("stats")}
-                    >
+                    <div className="mb-4 flex w-full items-center gap-2">
                         <LindyIcon className="w-8" />
-                        <span className="font-title text-2xl font-bold">Library</span>
+
+                        <h1
+                            className="font-title text-2xl font-bold"
+                            // bg-gradient-to-b from-yellow-300 to-amber-400 bg-clip-text text-transparent
+                            // style={{ WebkitBackgroundClip: "text" }}
+                        >
+                            Library
+                        </h1>
                     </div>
 
                     <Sidebar

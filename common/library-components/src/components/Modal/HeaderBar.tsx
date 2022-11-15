@@ -3,10 +3,6 @@ import { useContext, useEffect, useState } from "react";
 
 import { ReplicacheContext } from "../../store";
 import { getWeekStart } from "../../common";
-import ProgressSteps from "../Charts/ProgressSteps";
-import { LindyIcon } from "../Icons";
-import { InlineProgressCircle } from "../Charts";
-import clsx from "clsx";
 import { ResourceStat } from "./components/numbers";
 
 export default function HeaderBar({
