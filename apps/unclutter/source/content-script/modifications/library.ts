@@ -6,7 +6,7 @@ import {
     readingProgressFullClamp,
 } from "@unclutter/library-components/dist/store/_schema";
 import { constructGraphData } from "@unclutter/library-components/dist/components/Modal/Graph";
-import { getUrlHash } from "@unclutter/library-components/dist/common";
+import { getDomain, getUrlHash } from "@unclutter/library-components/dist/common";
 
 import { PageModifier, trackModifierExecution } from "./_interface";
 import { getLibraryUser } from "../../common/storage";
@@ -227,17 +227,20 @@ export default class LibraryModifier implements PageModifier {
     private async fetchFeed(rep: ReplicacheProxy) {
         try {
             // parse DOM
-            // TODO move to different phase
-            const feedUrls = await discoverFeedsInDocument(document, this.articleUrl);
+            // TODO move to different phase?
 
-            let subscriptions = await Promise.all(feedUrls.map(rep.query.getSubscription));
-            subscriptions = subscriptions.filter((s) => s);
+            // TODO consider tagged feeds
+            const subscriptions = await rep.query.getDomainSubscriptions(
+                getDomain(this.articleUrl)
+            );
 
             if (subscriptions.length > 0) {
                 // already parsed before
                 this.libraryState.feed = subscriptions[0];
             } else {
                 // fetch & parse feed in background
+                const feedUrls = await discoverFeedsInDocument(document, this.articleUrl);
+
                 this.libraryState.feed = await browser.runtime.sendMessage(null, {
                     event: "discoverRssFeed",
                     sourceUrl: this.articleUrl,
@@ -245,14 +248,6 @@ export default class LibraryModifier implements PageModifier {
                     tagLinkCandidates: extractTags(document, this.articleUrl),
                 });
                 if (this.libraryState.feed) {
-                    // ignore noisy feeds, but still keep feed state to emit diagnostics event
-                    // if (
-                    //     this.libraryState.feed.post_frequency?.period === "day" &&
-                    //     this.libraryState.feed.post_frequency?.count > 1
-                    // ) {
-                    //     return;
-                    // }
-
                     // detailed fetching in background may discover more potentially existing feeds
                     const existing = await rep.query.getSubscription(this.libraryState.feed.id);
                     if (!existing) {

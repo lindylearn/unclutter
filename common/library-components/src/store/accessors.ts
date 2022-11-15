@@ -9,6 +9,7 @@ import {
     articleLinkSchema,
     articleSchema,
     articleTextSchema,
+    FeedSubscription,
     feedSubscriptionSchema,
     PartialSyncState,
     partialSyncStateSchema,
@@ -423,6 +424,14 @@ export const { get: getSubscription, list: listSubscriptions } = generate(
     feedSubscriptionSchema
 );
 
+async function getDomainSubscriptions(
+    tx: ReadTransaction,
+    domain: string
+): Promise<FeedSubscription[]> {
+    const subscriptions = await listSubscriptions(tx);
+    return subscriptions.filter((s) => s.domain === domain);
+}
+
 export const accessors = {
     getArticle,
     listArticles,
@@ -453,6 +462,7 @@ export const accessors = {
     getSettings,
     getUserInfo,
     getSubscription,
+    getDomainSubscriptions,
     listSubscriptions,
 };
 export type A = typeof accessors;

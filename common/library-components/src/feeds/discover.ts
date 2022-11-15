@@ -1,3 +1,7 @@
+import { getDomain } from "../common";
+import { FeedSubscription } from "../store";
+import { getMainFeed } from "./parse";
+
 const FEED_TYPES = [
     "application/atom+xml",
     "application/json",
@@ -97,4 +101,26 @@ export function getHeuristicFeedUrls(sourceUrl: string): string[] {
         });
     });
     return feedUrls;
+}
+
+// try rss feed of google news search results
+// this works well for popular news sites, e.g. economist.com
+export async function getGoogleNewsFeed(sourceUrl: string): Promise<FeedSubscription | null> {
+    const domain = getDomain(sourceUrl);
+    let feed = await getMainFeed(sourceUrl, [
+        `https://news.google.com/rss/search?q=site:${domain}&scoring=n&num=20`,
+    ]);
+    if (feed && feed.post_frequency) {
+        feed.domain = domain;
+        feed.link = `https://${domain}`;
+        feed.title = domain;
+        feed.description = undefined;
+        feed.author = undefined;
+
+        console.log("Found valid Google News feed", feed);
+    } else {
+        feed = null;
+    }
+
+    return feed;
 }
