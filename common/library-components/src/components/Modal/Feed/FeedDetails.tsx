@@ -102,7 +102,10 @@ export default function FeedDetailsTab({ darkModeEnabled, reportEvent }) {
                         rep?.mutate.toggleSubscriptionActive(filteredSubscription.id);
                         reportEvent(
                             !filteredSubscription.is_subscribed ? "followFeed" : "unfollowFeed",
-                            { source: "modal" }
+                            {
+                                source: "modal",
+                                feedFrequencyWeek: this.libraryState.feed.post_frequency?.per_week,
+                            }
                         );
                     }}
                 />

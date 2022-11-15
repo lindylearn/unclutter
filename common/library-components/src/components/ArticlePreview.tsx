@@ -132,8 +132,18 @@ export function ArticlePreview({
                 >
                     {article.title}
                 </div>
+
+                <div className="font-text shrink-0 select-none text-xs font-normal leading-tight">
+                    {article.publication_date
+                        ? new Date(article.publication_date).toLocaleString("en-us", {
+                              day: "numeric",
+                              month: "long",
+                          })
+                        : " "}
+                </div>
+
                 {article.description && (
-                    <div className="font-text select-none overflow-hidden text-ellipsis text-xs font-normal leading-tight">
+                    <div className="font-text shrink-0 select-none overflow-hidden text-ellipsis text-xs font-normal leading-tight">
                         {article.description}
                     </div>
                 )}

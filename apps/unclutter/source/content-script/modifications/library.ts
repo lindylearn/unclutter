@@ -437,7 +437,10 @@ export default class LibraryModifier implements PageModifier {
         rep.mutate.toggleSubscriptionActive(this.libraryState.feed.id);
         reportEventContentScript(
             !this.libraryState.feed.is_subscribed ? "followFeed" : "unfollowFeed",
-            { source: "message" }
+            {
+                source: "message",
+                feedFrequencyWeek: this.libraryState.feed.post_frequency?.per_week,
+            }
         );
     }
 }
