@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { fly, fade } from "svelte/transition";
-    import { cubicOut, cubicIn } from "svelte/easing";
+    import { fly, slide } from "svelte/transition";
+    import { cubicOut } from "svelte/easing";
     import clsx from "clsx";
 
     export let inactiveColor: string;
@@ -13,6 +13,7 @@
 
 <div
     class="toggle-message relative flex max-w-full cursor-pointer items-center justify-between gap-2 rounded-lg text-gray-800 shadow transition-transform hover:scale-[98%]"
+    transition:slide={{ duration: 300, easing: cubicOut }}
 >
     <div
         class="content relative flex h-[calc(2*0.75rem+1.25rem+0.25rem+1.25rem)] flex-grow flex-col overflow-hidden whitespace-nowrap py-3 pl-4 text-sm"

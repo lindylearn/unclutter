@@ -82,7 +82,7 @@
         {readingTimeLeft}
     />
 
-    {#each updateMessages as { version, updateMessage }}
+    <!-- {#each updateMessages as { version, updateMessage }}
         <UpdateMessage
             {version}
             {updateMessage}
@@ -92,7 +92,7 @@
 
     {#if displayFeedbackMessage}
         <FeedbackMessage on:dismissed={dismissFeedbackMessage} />
-    {/if}
+    {/if} -->
 </div>
 
 <style global lang="postcss">
