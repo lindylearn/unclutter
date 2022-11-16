@@ -21,6 +21,7 @@ export function ArticleGroup({
     showProgress = true,
     className,
     style,
+    emptyMessage,
 }: {
     groupKey: string;
     title?: string;
@@ -36,6 +37,7 @@ export function ArticleGroup({
     showProgress?: boolean;
     className?: string;
     style?: React.CSSProperties;
+    emptyMessage?: string;
 }) {
     color =
         color ||
@@ -92,6 +94,11 @@ export function ArticleGroup({
                     background: color,
                 }}
             >
+                {emptyMessage && articles?.length === 0 && (
+                    <div className="animate-fadein absolute top-0 left-0 flex h-full w-full select-none items-center justify-center">
+                        {emptyMessage}
+                    </div>
+                )}
                 {groupKey === "queue" && articles.length === 0 && (
                     <div className="animate-fadein absolute top-0 left-0 flex h-full w-full select-none items-center justify-center">
                         Drag articles here or use the article right-click menu.
