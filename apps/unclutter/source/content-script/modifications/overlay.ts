@@ -30,6 +30,7 @@ import { PageModifier, trackModifierExecution } from "./_interface";
 import ReadingTimeModifier from "./DOM/readingTime";
 import { setUserSettingsForDomain } from "../../common/storage";
 import LibraryModifier from "./library";
+import BodyStyleModifier from "./bodyStyle";
 
 @trackModifierExecution
 export default class OverlayManager implements PageModifier {
@@ -41,6 +42,7 @@ export default class OverlayManager implements PageModifier {
     private elementPickerModifier: ElementPickerModifier;
     private libraryModifier: LibraryModifier;
     private libraryModalModifier: LibraryModalModifier;
+    private bodyStyleModifier: BodyStyleModifier;
 
     outline: OutlineItem[];
     private flatOutline: OutlineItem[];
@@ -59,7 +61,8 @@ export default class OverlayManager implements PageModifier {
         elementPickerModifier: ElementPickerModifier,
         libraryModifier: LibraryModifier,
         libraryModalModifier: LibraryModalModifier,
-        readingTimeModifier: ReadingTimeModifier
+        readingTimeModifier: ReadingTimeModifier,
+        bodyStyleModifier: BodyStyleModifier
     ) {
         this.domain = domain;
         this.browserType = getBrowserType();
@@ -69,6 +72,7 @@ export default class OverlayManager implements PageModifier {
         this.elementPickerModifier = elementPickerModifier;
         this.libraryModifier = libraryModifier;
         this.libraryModalModifier = libraryModalModifier;
+        this.bodyStyleModifier = bodyStyleModifier;
 
         annotationsModifer.annotationListeners.push(this.onAnnotationUpdate.bind(this));
         readingTimeModifier.readingTimeLeftListeners.push(this.onReadingTimeUpdate.bind(this));
@@ -93,9 +97,11 @@ export default class OverlayManager implements PageModifier {
         document.documentElement.appendChild(this.topleftIframe);
         insertIframeFont(this.topleftIframe);
 
+        // insert even if not used to set theme variables
         this.bottomIframe = createIframeNode("lindy-info-bottom");
         this.bottomIframe.style.position = "absolute"; // put on new layer
         this.bottomIframe.style.zIndex = "-101"; // put behind body
+        this.bottomIframe.style.display = "none"; // hide until used
         // if (this.libraryEnabled) {
         //     // allow overflow to the right
         //     this.bottomIframe.style.width = `calc(var(--side-width) + var(--lindy-pagewidth))`;
@@ -110,10 +116,6 @@ export default class OverlayManager implements PageModifier {
 
         this.renderTopLeftContainer();
         this.renderUiContainers();
-
-        if (true) {
-            this.renderBottomContainer();
-        }
     }
 
     setEnableAnnotations(enableAnnotations: boolean) {
@@ -220,7 +222,20 @@ export default class OverlayManager implements PageModifier {
         );
     }
 
-    renderBottomContainer() {
+    async insertRenderBottomContainer() {
+        // run later, once libraryState available
+
+        // only show feedback message after some usage
+        if (
+            !this.libraryModifier.libraryState?.readingProgress?.articleCount ||
+            this.libraryModifier.libraryState?.readingProgress?.articleCount < 6
+        ) {
+            return;
+        }
+
+        this.bodyStyleModifier.setBottomContainerPadding();
+        this.bottomIframe.style.display = "block";
+
         this.bottomSvelteComponent = new BottomContainerSvelte({
             target: this.bottomIframe?.contentDocument.body,
             props: {

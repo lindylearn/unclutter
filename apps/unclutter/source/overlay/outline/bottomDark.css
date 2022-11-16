@@ -1,4 +1,4 @@
-.related-container {
+.bottom-container {
     /* --lindy-dark-theme-text-color and background color injected from common/theme.ts */
 
     color: var(--lindy-dark-theme-text-color) !important;

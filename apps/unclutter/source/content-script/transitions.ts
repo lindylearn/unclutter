@@ -62,7 +62,8 @@ export default class TransitionManager implements PageModifier {
         this.elementPickerModifier,
         this.libraryModifier,
         this.libraryModalModifier,
-        this.readingTimeModifier
+        this.readingTimeModifier,
+        this.bodyStyleModifier
     );
     private loggingModifier = new LoggingManager(
         this.domain,
@@ -232,6 +233,7 @@ export default class TransitionManager implements PageModifier {
         // wait until feed likely parsed
         await new Promise((r) => setTimeout(r, 2000));
         this.loggingModifier.afterTransitionInDone();
+        this.overlayManager.insertRenderBottomContainer();
     }
 
     beforeTransitionOut() {

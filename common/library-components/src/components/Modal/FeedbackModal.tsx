@@ -34,7 +34,7 @@ export function FeedbackModalPage({
                     <div className="mb-4 flex w-full items-center gap-4">
                         <LindyIcon className="w-12" />
 
-                        <h1 className="font-title text-3xl font-bold">Unclutter Feedback</h1>
+                        <h1 className="font-title text-2xl font-bold">Unclutter Feedback</h1>
                     </div>
 
                     <iframe

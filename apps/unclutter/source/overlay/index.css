@@ -170,7 +170,7 @@
     margin: 0 !important;
     --side-width: calc((100vw - var(--lindy-pagewidth)) / 2 - 12px) !important;
     margin-left: var(--side-width) !important;
-    width: calc(var(--lindy-pagewidth) + 12px) !important;
+    width: calc(var(--lindy-pagewidth) + 10px) !important;
 
     /* must equal document bottom padding */
     height: calc(130px) !important;
