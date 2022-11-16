@@ -18,7 +18,7 @@
         <div class="flex flex-col">
             <div class="font-title text-lg font-semibold">Give feedback</div>
             <div class="">
-                How does Unclutter work for you? Tell us what to improve with 3 quick questions.
+                How well does Unclutter work for you? Tell us what to improve with 3 quick questions.
             </div>
         </div>
     </div>
