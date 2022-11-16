@@ -492,13 +492,14 @@ export default class OverlayManager implements PageModifier {
             createStylesheetLink(
                 browser.runtime.getURL("overlay/outline/outlineDark.css"),
                 "dark-mode-ui-style",
-                this.topleftIframe.contentDocument?.head.lastChild as HTMLElement
+                this.topleftIframe.contentDocument?.head.lastChild as HTMLElement,
+                this.topleftIframe.contentDocument
             );
-            // console.log(this.bottomIframe, this.bottomIframe.contentDocument);
             createStylesheetLink(
                 browser.runtime.getURL("overlay/outline/bottomDark.css"),
                 "dark-mode-ui-style",
-                this.bottomIframe?.contentDocument?.head.lastChild as HTMLElement
+                this.bottomIframe?.contentDocument?.head.lastChild as HTMLElement,
+                this.bottomIframe?.contentDocument
             );
         } else {
             document.querySelectorAll(".dark-mode-ui-style").forEach((e) => e.remove());
@@ -536,7 +537,7 @@ export function insertIframeFont(iframe: HTMLIFrameElement) {
         // See https://stackoverflow.com/questions/60814167/firefox-deleted-innerhtml-of-generated-iframe
         setTimeout(() => {
             insertIframeFontUnsafe(iframe);
-        }, 0);
+        }, 10);
     } else {
         insertIframeFontUnsafe(iframe);
     }

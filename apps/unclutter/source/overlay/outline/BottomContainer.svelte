@@ -11,7 +11,7 @@
     on:click={() => libraryModalModifier.showModal(undefined, true)}
     in:fade
 >
-    <div class="flex gap-4">
+    <div class="flex gap-4 items-center">
         <div class="">
             <img src={browser.runtime.getURL("assets/icon.svg")} class="w-10" alt="logo" />
         </div>

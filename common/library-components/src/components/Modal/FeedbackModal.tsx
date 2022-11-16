@@ -68,7 +68,7 @@ export function FeedbackModalPage({
                         frameBorder="0"
                         marginHeight={0}
                         marginWidth={0}
-                        className="animate-fadein"
+                        className="animate-fadein outline-none"
                     />
                 </div>
             </div>

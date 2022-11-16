@@ -1,7 +1,7 @@
 export const overrideClassname = "lindylearn-document-override";
 
-export function createStylesheetLink(url, styleId, insertAfter: HTMLElement = null) {
-    const link = document.createElement("link");
+export function createStylesheetLink(url, styleId, insertAfter: HTMLElement = null, usedDocument: Document = document) {
+    const link = usedDocument.createElement("link");
     link.classList.add(overrideClassname);
     link.classList.add(styleId);
     link.id = styleId;
@@ -12,7 +12,7 @@ export function createStylesheetLink(url, styleId, insertAfter: HTMLElement = nu
     if (insertAfter) {
         insertAfter.parentElement.insertBefore(link, insertAfter?.nextSibling || insertAfter);
     } else {
-        document.head.appendChild(link);
+        usedDocument.head.appendChild(link);
     }
 
     return link;
