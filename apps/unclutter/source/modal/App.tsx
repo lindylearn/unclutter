@@ -59,10 +59,14 @@ export default function App({
         window.top.postMessage({ event: "destroyLibraryModal" }, "*");
     }
 
+    function onSubmitFeedback() {
+        
+    }
+
     if (isFeedbackModal === "true") {
         return (
             <ModalContext.Provider value={{ isVisible: showModal, closeModal }}>
-                <FeedbackModalPage />
+                <FeedbackModalPage onSubmit={onSubmitFeedback} reportEvent={reportEventContentScript}/>
             </ModalContext.Provider>
         );
     }

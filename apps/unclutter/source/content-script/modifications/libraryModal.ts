@@ -100,8 +100,6 @@ export default class LibraryModalModifier implements PageModifier {
 
             this.iframeLoaded = false;
             this.appLoaded = false;
-
-            reportEventContentScript("closeLibraryModal");
         }, 300);
     }
 
