@@ -4,6 +4,7 @@ import {
     constructGraphData,
     CustomGraphData,
     ModalContext,
+    FeedbackModalPage,
 } from "@unclutter/library-components/dist/components";
 import {
     Article,
@@ -55,6 +56,14 @@ export default function ModalTestTab({}) {
     if (!userInfo) {
         return <></>;
     }
+
+    return (
+        <ModalContext.Provider
+            value={{ isVisible: showModal, closeModal: () => setShowModal(false) }}
+        >
+            <FeedbackModalPage />
+        </ModalContext.Provider>
+    );
 
     return (
         <div className="h-screen w-screen p-1">

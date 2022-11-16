@@ -1,5 +1,6 @@
 import React, { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import {
+    FeedbackModalPage,
     LibraryModalPage,
     ModalContext,
 } from "@unclutter/library-components/dist/components/Modal";
@@ -17,10 +18,12 @@ export default function App({
     darkModeEnabled,
     articleUrl,
     initialTab,
+    isFeedbackModal,
 }: {
     darkModeEnabled: string;
     articleUrl: string;
     initialTab?: string;
+    isFeedbackModal?: string;
 }) {
     const rep = useMemo<ReplicacheProxy>(() => new ReplicacheProxy(), []);
     const [libraryState, setLibraryState] = useState<LibraryState | null>(null);
@@ -54,6 +57,14 @@ export default function App({
     function closeModal() {
         setShowModal(false);
         window.top.postMessage({ event: "destroyLibraryModal" }, "*");
+    }
+
+    if (isFeedbackModal === "true") {
+        return (
+            <ModalContext.Provider value={{ isVisible: showModal, closeModal }}>
+                <FeedbackModalPage />
+            </ModalContext.Provider>
+        );
     }
 
     // TODO move userInfo to query params to render faster?

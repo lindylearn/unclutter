@@ -35,9 +35,9 @@ export default class LibraryModalModifier implements PageModifier {
     private modalIframe: HTMLIFrameElement;
     private iframeLoaded: boolean = false;
     private appLoaded: boolean = false;
-    async showModal(initialTab?: string) {
+    async showModal(initialTab?: string, isFeedbackModal?: boolean) {
         // create iframe on demand
-        this.createIframe(initialTab);
+        this.createIframe(initialTab, isFeedbackModal);
 
         // set theme variables once html ready, before react rendered
         await waitUntilIframeLoaded(this.modalIframe);
@@ -54,13 +54,14 @@ export default class LibraryModalModifier implements PageModifier {
         this.bodyStyleModifier.enableScrollLock();
     }
 
-    private createIframe(initialTab?: string) {
+    private createIframe(initialTab?: string, isFeedbackModal?: boolean) {
         const iframeUrl = new URL(browser.runtime.getURL("/modal/index.html"));
         iframeUrl.searchParams.append("articleUrl", window.location.href);
         iframeUrl.searchParams.append(
             "darkModeEnabled",
             (this.darkModeEnabled || false).toString()
         );
+        iframeUrl.searchParams.append("isFeedbackModal", (isFeedbackModal || false).toString());
         if (initialTab) {
             iframeUrl.searchParams.append("initialTab", initialTab);
         }
@@ -70,15 +71,18 @@ export default class LibraryModalModifier implements PageModifier {
         this.modalIframe.style.setProperty("position", "fixed", "important"); // put on new layer
         document.documentElement.appendChild(this.modalIframe);
 
-        reportEventContentScript("openLibraryModal", {
-            initialTab,
-            onPaidPlan: this.libraryState.userInfo.onPaidPlan,
-            trialEnabled: this.libraryState.userInfo.trialEnabled,
-            linkCount: this.libraryState.linkCount,
-            articleCount: this.libraryState.readingProgress.articleCount,
-            completedCount: this.libraryState.readingProgress.completedCount,
-            annotationCount: this.libraryState.readingProgress.annotationCount,
-        });
+        if (isFeedbackModal) {
+        } else {
+            reportEventContentScript("openLibraryModal", {
+                initialTab,
+                onPaidPlan: this.libraryState.userInfo.onPaidPlan,
+                trialEnabled: this.libraryState.userInfo.trialEnabled,
+                linkCount: this.libraryState.linkCount,
+                articleCount: this.libraryState.readingProgress.articleCount,
+                completedCount: this.libraryState.readingProgress.completedCount,
+                annotationCount: this.libraryState.readingProgress.annotationCount,
+            });
+        }
     }
 
     private destroyIframe() {
