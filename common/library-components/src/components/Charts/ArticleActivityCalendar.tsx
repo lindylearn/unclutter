@@ -123,16 +123,17 @@ function getColorLevels(darkModeEnabled: boolean): Theme {
         ? {
               level0: "#262626", // bg-neutral-800
 
-              level1: "rgb(237, 215, 91, 0.1)",
-              level2: "rgb(237, 215, 91, 0.3)",
-              level3: "rgb(237, 215, 91, 0.5)",
-              level4: "rgb(237, 215, 91, 0.7)",
+              // same as light now
+              level1: "rgb(250, 204, 21, 0.3)",
+              level2: "rgb(250, 204, 21, 0.5)",
+              level3: "rgb(250, 204, 21, 0.7)",
+              level4: "rgb(250, 204, 21, 0.9)",
           }
         : {
               level0: "#fafaf9", // bg-stone-50
-              level1: "rgb(237, 215, 91, 0.3)",
-              level2: "rgb(237, 215, 91, 0.5)",
-              level3: "rgb(237, 215, 91, 0.7)",
-              level4: "rgb(237, 215, 91, 0.9)",
+              level1: "rgb(250, 204, 21, 0.3)",
+              level2: "rgb(250, 204, 21, 0.5)",
+              level3: "rgb(250, 204, 21, 0.7)",
+              level4: "rgb(250, 204, 21, 0.9)",
           };
 }

@@ -5,9 +5,9 @@ module.exports = {
     theme: {
         extend: {
             colors: {
-                lindy: "hsl(51, 80%, 64%)", // == #edd75b
-                lindyDark: "hsl(51, 80%, 43%)",
-                lindyShadow: "rgba(237 215 91 / 60%)",
+                lindy: "hsl(47.9,95.8%,53.1%)", // == #facc15
+                lindyDark: "hsl(47.9,95.8%,40%)",
+                lindyShadow: "rgba(250 204 21 / 60%)",
                 chrome: "#f1f3f4",
                 chromeDark: "#292a2d",
 
