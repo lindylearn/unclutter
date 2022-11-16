@@ -1,14 +1,14 @@
-<img src="./docs/media/icon.png" align="left" width="80" />
+<img src="./docs/media/icon2.png" align="left" width="80" />
 
 # Unclutter — Modern Reader Mode
 
 Unclutter is a modern reader mode and article library for your browser.
 
-[![Latest release](https://img.shields.io/github/v/release/lindylearn/unclutter?color=edd75b)](https://github.com/lindylearn/unclutter/releases)
-![GitHub commits](https://img.shields.io/github/commit-activity/w/lindylearn/unclutter?label=commits&color=edd75b)
-[![Chrome users](https://img.shields.io/chrome-web-store/users/ibckhpijbdmdobhhhodkceffdngnglpk?label=chrome%20installs&color=edd75b)](https://chrome.google.com/webstore/detail/ibckhpijbdmdobhhhodkceffdngnglpk)
-[![Firefox users](https://img.shields.io/amo/users/lindylearn?label=firefox%20installs&color=edd75b)](https://addons.mozilla.org/en-GB/firefox/addon/lindylearn)
-[![Chrome Ratings](https://img.shields.io/chrome-web-store/stars/ibckhpijbdmdobhhhodkceffdngnglpk?label=rating&color=edd75b)](https://chrome.google.com/webstore/detail/ibckhpijbdmdobhhhodkceffdngnglpk)
+[![Latest release](https://img.shields.io/github/v/release/lindylearn/unclutter?color=facc15)](https://github.com/lindylearn/unclutter/releases)
+![GitHub commits](https://img.shields.io/github/commit-activity/w/lindylearn/unclutter?label=commits&color=facc15)
+[![Chrome users](https://img.shields.io/chrome-web-store/users/ibckhpijbdmdobhhhodkceffdngnglpk?label=chrome%20installs&color=facc15)](https://chrome.google.com/webstore/detail/ibckhpijbdmdobhhhodkceffdngnglpk)
+[![Firefox users](https://img.shields.io/amo/users/lindylearn?label=firefox%20installs&color=facc15)](https://addons.mozilla.org/en-GB/firefox/addon/lindylearn)
+[![Chrome Ratings](https://img.shields.io/chrome-web-store/stars/ibckhpijbdmdobhhhodkceffdngnglpk?label=rating&color=facc15)](https://chrome.google.com/webstore/detail/ibckhpijbdmdobhhhodkceffdngnglpk)
 
 
 <p align="center">
