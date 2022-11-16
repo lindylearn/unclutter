@@ -60,7 +60,7 @@ export default function App({
     }
 
     function onSubmitFeedback() {
-        
+        window.top.postMessage({ event: "onSubmitFeedback" }, "*");
     }
 
     if (isFeedbackModal === "true") {

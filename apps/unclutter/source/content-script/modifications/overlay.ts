@@ -4,6 +4,7 @@ import {
     enableAnnotationsFeatureFlag,
     enableSocialCommentsFeatureFlag,
     getFeatureFlag,
+    submittedFeedbackFlag,
 } from "../../common/featureFlags";
 import browser, { BrowserType, getBrowserType } from "../../common/polyfill";
 import { LibraryState } from "../../common/schema";
@@ -224,6 +225,11 @@ export default class OverlayManager implements PageModifier {
 
     async insertRenderBottomContainer() {
         // run later, once libraryState available
+
+        const submittedAlready = await getFeatureFlag(submittedFeedbackFlag);
+        if (submittedAlready) {
+            return
+        }
 
         // only show feedback message after some usage
         if (

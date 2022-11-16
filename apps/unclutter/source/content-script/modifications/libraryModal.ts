@@ -6,6 +6,7 @@ import { PageModifier, trackModifierExecution } from "./_interface";
 import { waitUntilIframeLoaded } from "./annotations/injectSidebar";
 import BodyStyleModifier from "./bodyStyle";
 import { reportEventContentScript } from "@unclutter/library-components/dist/common/messaging";
+import { setFeatureFlag, submittedFeedbackFlag } from "../../common/featureFlags";
 
 @trackModifierExecution
 export default class LibraryModalModifier implements PageModifier {
@@ -28,6 +29,8 @@ export default class LibraryModalModifier implements PageModifier {
                 this.appLoaded = true;
             } else if (data.event === "destroyLibraryModal") {
                 this.destroyIframe();
+            } else if (data.event === "onSubmitFeedback") {
+                setFeatureFlag(submittedFeedbackFlag, true);
             }
         });
     }
