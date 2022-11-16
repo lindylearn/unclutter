@@ -61,6 +61,7 @@ export function FeedbackModalPage({
                     </div>
 
                     <IframeResizer
+                        // hosted feedback form from tally.io
                         src={`https://unclutter.lindylearn.io/feedback.html?${new URLSearchParams(userInfo).toString()}`}
                         // src="http://localhost:3000/feedback.html"
                         style={{ width: '1px', minWidth: '100%'}}
