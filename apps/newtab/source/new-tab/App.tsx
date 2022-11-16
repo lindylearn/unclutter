@@ -6,6 +6,7 @@ import {
     useTabInfos,
     useArticleListsCache,
     ArticleGroup,
+    getActivityColor,
 } from "@unclutter/library-components/dist/components";
 import {
     ReadingProgress as ReadingProgressType,
@@ -168,6 +169,7 @@ function ArticleSection({
                         </svg>
                     }
                     articles={articleListsCache?.["queue"] || []}
+                    color={getActivityColor(2, darkModeEnabled)}
                     darkModeEnabled={darkModeEnabled}
                     className="animate-fadein"
                     reportEvent={reportEvent}

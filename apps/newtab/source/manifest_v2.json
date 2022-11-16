@@ -1,7 +1,7 @@
 {
     "name": "Unclutter Tab",
-    "version": "0.5.0",
-    "description": "Access your Unclutter library from your new tab page.",
+    "version": "0.5.1",
+    "description": "Access your Unclutter reading queue from your new tab page.",
     "homepage_url": "https://github.com/lindylearn/unclutter",
     "icons": {
         "128": "assets/icon.png"
