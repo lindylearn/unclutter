@@ -13,6 +13,9 @@ import {
     reportEventContentScript,
 } from "@unclutter/library-components/dist/common/messaging";
 import { ReplicacheContext } from "@unclutter/library-components/dist/store";
+import { getDistinctId, getPageReportCount } from "../common/storage";
+import { getInitialInstallVersion } from "../common/updateMessages";
+import { getAllElementBlockSelectors } from "../common/storage2";
 
 export default function App({
     darkModeEnabled,
@@ -59,6 +62,21 @@ export default function App({
         window.top.postMessage({ event: "destroyLibraryModal" }, "*");
     }
 
+    const [feedbackUserInfo, setFeedbackUserInfo] = useState<object>();
+    useEffect(() => {
+        if (isFeedbackModal) {
+            (async () => {
+                setFeedbackUserInfo({
+                    distinctId: await getDistinctId(),
+                    installVersion: await getInitialInstallVersion(),
+                    pageReports: await getPageReportCount(),
+                    elementBlocks: (await getAllElementBlockSelectors()).length,
+                    articleCount: libraryState?.readingProgress?.articleCount,
+                    annotationCount: libraryState?.readingProgress?.annotationCount
+                });
+            })()
+        }
+    }, [isFeedbackModal, libraryState])
     function onSubmitFeedback() {
         window.top.postMessage({ event: "onSubmitFeedback" }, "*");
     }
@@ -66,13 +84,13 @@ export default function App({
     if (isFeedbackModal === "true") {
         return (
             <ModalContext.Provider value={{ isVisible: showModal, closeModal }}>
-                <FeedbackModalPage onSubmit={onSubmitFeedback} reportEvent={reportEventContentScript}/>
+                <FeedbackModalPage userInfo={feedbackUserInfo} onSubmit={onSubmitFeedback} reportEvent={reportEventContentScript}/>
             </ModalContext.Provider>
         );
     }
 
     // TODO move userInfo to query params to render faster?
-    if (!libraryState?.userInfo) {
+    if (!libraryState?.userInfo || (isFeedbackModal && !feedbackUserInfo)) {
         return <></>;
     }
 

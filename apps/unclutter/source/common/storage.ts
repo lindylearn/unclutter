@@ -103,6 +103,11 @@ export async function setBlockedElementSelectors(
     });
 }
 
+export async function getDistinctId(): Promise<string | null> {
+    const config = await browser.storage.sync.get(["distinctId"]);
+    return config["distinctId"] || null;
+}
+
 export async function getLibraryUser(): Promise<string | null> {
     const config = await browser.storage.sync.get(["library-user-id"]);
     return config["library-user-id"] || null;

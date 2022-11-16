@@ -6,9 +6,11 @@ import { LindyIcon } from "../Icons";
 import { ModalContext } from "..";
 
 export function FeedbackModalPage({
+    userInfo = {},
     onSubmit,
     reportEvent = () => {},
 }: {
+    userInfo: any,
     onSubmit: () => void,
     reportEvent?: (event: string, data?: any) => void;
 }) {
@@ -59,7 +61,7 @@ export function FeedbackModalPage({
                     </div>
 
                     <IframeResizer
-                        src="https://unclutter.lindylearn.io/feedback.html"
+                        src={`https://unclutter.lindylearn.io/feedback.html?${new URLSearchParams(userInfo).toString()}`}
                         // src="http://localhost:3000/feedback.html"
                         style={{ width: '1px', minWidth: '100%'}}
                         frameBorder="0"
