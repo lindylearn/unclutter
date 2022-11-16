@@ -101,7 +101,6 @@ export default class OverlayManager implements PageModifier {
         // insert even if not used to set theme variables
         this.bottomIframe = createIframeNode("lindy-info-bottom");
         this.bottomIframe.style.position = "absolute"; // put on new layer
-        this.bottomIframe.style.zIndex = "-101"; // put behind body
         this.bottomIframe.style.display = "none"; // hide until used
         // if (this.libraryEnabled) {
         //     // allow overflow to the right
@@ -495,6 +494,7 @@ export default class OverlayManager implements PageModifier {
                 "dark-mode-ui-style",
                 this.topleftIframe.contentDocument?.head.lastChild as HTMLElement
             );
+            // console.log(this.bottomIframe, this.bottomIframe.contentDocument);
             createStylesheetLink(
                 browser.runtime.getURL("overlay/outline/bottomDark.css"),
                 "dark-mode-ui-style",

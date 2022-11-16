@@ -177,7 +177,6 @@
 
     user-select: none !important;
     contain: strict !important;
-    z-index: -101 !important; /* put behind body if library not enabled */
     will-change: transform !important;
 }
 
