@@ -49,12 +49,12 @@ export function FeedHeader({
                     <h1 className="font-title flex w-full gap-3 text-lg font-bold leading-tight">
                         <div className="flex-grow">{subscription.title}</div>
 
-                        {/* {subscription.is_subscribed && (
+                        {subscription.is_subscribed && (
                             <div className="animate-fadein flex items-center gap-2">
-                                <svg className="h-4" viewBox="0 0 448 512">
+                                <svg className="h-4" viewBox="0 0 512 512">
                                     <path
                                         fill="currentColor"
-                                        d="M440.1 103C450.3 112.4 450.3 127.6 440.1 136.1L176.1 400.1C167.6 410.3 152.4 410.3 143 400.1L7.029 264.1C-2.343 255.6-2.343 240.4 7.029 231C16.4 221.7 31.6 221.7 40.97 231L160 350.1L407 103C416.4 93.66 431.6 93.66 440.1 103V103z"
+                                        d="M464 320h-96c-9.094 0-17.41 5.125-21.47 13.28L321.2 384H190.8l-25.38-50.72C161.4 325.1 153.1 320 144 320H32c-17.67 0-32 14.33-32 32v96c0 35.35 28.65 64 64 64h384c35.35 0 64-28.65 64-64v-80C512 341.5 490.5 320 464 320zM464 448c0 8.822-7.178 16-16 16H64c-8.822 0-16-7.178-16-16v-80h81.16l25.38 50.72C158.6 426.9 166.9 432 176 432h160c9.094 0 17.41-5.125 21.47-13.28L382.8 368H464V448zM238.4 312.3C242.1 317.2 249.3 320 256 320s13.03-2.781 17.59-7.656l104-112c9-9.719 8.438-24.91-1.25-33.94c-9.719-8.969-24.88-8.438-33.94 1.25L280 234.9V24c0-13.25-10.75-24-24-24S232 10.75 232 24v210.9L169.6 167.7C160.5 157.1 145.4 157.4 135.7 166.4C125.1 175.4 125.4 190.6 134.4 200.3L238.4 312.3z"
                                     />
                                 </svg>
                                 <span className="font-text whitespace-nowrap text-base font-medium leading-tight">
@@ -62,7 +62,7 @@ export function FeedHeader({
                                     {getRelativeTime(subscription.time_added * 1000)}
                                 </span>
                             </div>
-                        )} */}
+                        )}
                     </h1>
                     <div className="flex w-full justify-between gap-3 text-base">
                         <a

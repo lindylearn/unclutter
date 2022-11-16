@@ -14,9 +14,11 @@ export default function FeedListTab({ darkModeEnabled, reportEvent }) {
         []
     ) as FeedSubscription[];
 
-    const displayedSubscriptions = allSubscriptions?.sort((a, b) => {
-        return a.time_added - b.time_added;
-    });
+    const displayedSubscriptions = allSubscriptions
+        ?.filter((s) => s.is_subscribed)
+        ?.sort((a, b) => {
+            return a.time_added - b.time_added;
+        });
 
     return (
         <div className="animate-fadein flex flex-col gap-4">
@@ -32,7 +34,7 @@ export default function FeedListTab({ darkModeEnabled, reportEvent }) {
                 />
             ))}
 
-            {allSubscriptions?.length === 0 && (
+            {displayedSubscriptions?.length === 0 && (
                 <div className="mt-4">
                     Click the follow button on supported articles to see new articles here.
                 </div>
