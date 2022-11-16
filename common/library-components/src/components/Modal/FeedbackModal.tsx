@@ -25,15 +25,16 @@ export function FeedbackModalPage({
             />
             <div className="modal-content relative z-10 mx-auto mt-10 flex h-5/6 max-h-[700px] max-w-5xl flex-col overflow-hidden rounded-lg bg-white text-stone-800 shadow dark:bg-[#212121] dark:text-[rgb(232,230,227)]">
                 <div
-                    className="overflow-y-scroll bg-gradient-to-b from-amber-300 via-yellow-400 to-amber-400 p-4 px-8"
-                    style={{
-                        backgroundImage: "linear-gradient(120deg, var(--tw-gradient-stops))",
-                    }}
+                    className="overflow-y-scroll p-4 px-8"
+                    //  bg-gradient-to-b from-amber-300 via-yellow-400 to-amber-400
+                    // style={{
+                    //     backgroundImage: "linear-gradient(120deg, var(--tw-gradient-stops))",
+                    // }}
                 >
                     <div className="mb-4 flex w-full items-center gap-4">
                         <LindyIcon className="w-12" />
 
-                        <h1 className="font-title text-4xl font-bold">Unclutter Feedback</h1>
+                        <h1 className="font-title text-3xl font-bold">Unclutter Feedback</h1>
                     </div>
 
                     <iframe

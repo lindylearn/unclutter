@@ -93,15 +93,15 @@ export default class OverlayManager implements PageModifier {
         document.documentElement.appendChild(this.topleftIframe);
         insertIframeFont(this.topleftIframe);
 
-        // this.bottomIframe = createIframeNode("lindy-info-bottom");
-        // this.bottomIframe.style.position = "absolute"; // put on new layer
-        // this.bottomIframe.style.zIndex = "-101"; // put behind body if library not enabled
+        this.bottomIframe = createIframeNode("lindy-info-bottom");
+        this.bottomIframe.style.position = "absolute"; // put on new layer
+        this.bottomIframe.style.zIndex = "-101"; // put behind body
         // if (this.libraryEnabled) {
         //     // allow overflow to the right
         //     this.bottomIframe.style.width = `calc(var(--side-width) + var(--lindy-pagewidth))`;
         // }
-        // document.documentElement.appendChild(this.bottomIframe);
-        // insertIframeFont(this.bottomIframe); // TODO run later? need to modify initial dark theme inser then
+        document.documentElement.appendChild(this.bottomIframe);
+        insertIframeFont(this.bottomIframe); // TODO run later? need to modify initial dark theme insert then
     }
 
     renderUi() {
@@ -110,6 +110,10 @@ export default class OverlayManager implements PageModifier {
 
         this.renderTopLeftContainer();
         this.renderUiContainers();
+
+        if (true) {
+            this.renderBottomContainer();
+        }
     }
 
     setEnableAnnotations(enableAnnotations: boolean) {
@@ -217,20 +221,10 @@ export default class OverlayManager implements PageModifier {
     }
 
     renderBottomContainer() {
-        return;
-
-        const availableSpace = parseFloat(
-            window.getComputedStyle(document.body).marginBottom.replace("px", "")
-        );
-        if (availableSpace < 100) {
-            // BodyStyleModifier did not add margin (e.g. feature flag fetching took longer)
-            return;
-        }
-
         this.bottomSvelteComponent = new BottomContainerSvelte({
             target: this.bottomIframe?.contentDocument.body,
             props: {
-                libraryState: this.libraryModifier.libraryState,
+                libraryModalModifier: this.libraryModalModifier,
             },
         });
     }
@@ -454,9 +448,6 @@ export default class OverlayManager implements PageModifier {
 
     updateLibraryState(libraryState: LibraryState) {
         this.topleftSvelteComponent?.$set({
-            libraryState,
-        });
-        this.bottomSvelteComponent?.$set({
             libraryState,
         });
 

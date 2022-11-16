@@ -118,7 +118,17 @@ export default class BodyStyleModifier implements PageModifier {
         document.documentElement.style.setProperty("height", "auto", "important");
         document.documentElement.style.setProperty("max-width", "none", "important");
         document.documentElement.style.setProperty("margin", "0", "important");
-        document.documentElement.style.setProperty("padding", "0", "important");
+
+        // set padding for BottomContainer on documentElement for resilience against overflows
+        if (true) {
+            document.documentElement.style.setProperty(
+                "padding-bottom",
+                "0 0 130px 0",
+                "important"
+            );
+        } else {
+            document.documentElement.style.setProperty("padding-bottom", "0 0 20px 0", "important");
+        }
     }
 
     private modifyBodyStyle() {
@@ -138,21 +148,12 @@ export default class BodyStyleModifier implements PageModifier {
     }
 
     private applyResponsiveStyle(isMobile: boolean) {
-        let marginBottom = "20px";
-        // if (this.libraryEnabled || this.showLibrarySignup) {
-        //     marginBottom = "calc(5px + 260px)";
-        // }
-
         let marginSide = "auto";
         if (isMobile) {
             marginSide = "20px";
         }
 
-        document.body.style.setProperty(
-            "margin",
-            `8px ${marginSide} ${marginBottom} ${marginSide}`,
-            "important"
-        );
+        document.body.style.setProperty("margin", `8px ${marginSide} 0 ${marginSide}`, "important");
     }
 
     scrollLockEnabled: boolean;
