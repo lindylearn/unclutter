@@ -22,7 +22,7 @@ export function BigNumber({
                 <div
                     className="absolute top-0 left-0 h-full w-full opacity-90"
                     style={{
-                        background: colorOverride || "rgb(237, 215, 91, 0.6)",
+                        background: colorOverride,
                         width: `${Math.min(1, value / target) * 100}%`,
                     }}
                 />
