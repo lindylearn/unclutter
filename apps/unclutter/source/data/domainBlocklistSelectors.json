@@ -208,7 +208,9 @@
         ".ag987e-0.pxCch.btn.btn-play",
         ".video-html5-player",
         ".sc-1wkneyl-0.hxLRyg.video-html5-playlist",
-        ".bxm4mm-3.eCMXYG"
+        ".bxm4mm-3.eCMXYG",
+        ".bxm4mm-2.hKBnez",
+        "#mgid-container"
     ],
     "grammarly.com": [".F0u0G-container", "._16iRt-container"],
     "hackster.io": ["#hello-world"],
@@ -414,6 +416,7 @@
         ".mt-4.space-y-4",
         ".relative.bg-white.py-14"
     ],
+    "spectator.co.uk": [".entry-header__meta"],
     "srm.com": [
         ".card__img.img-responsive.lazyloaded",
         ".card-list",

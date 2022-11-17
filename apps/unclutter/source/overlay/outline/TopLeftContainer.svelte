@@ -1,17 +1,8 @@
 <script lang="ts">
-    // organize-imports-ignore
-    import { dismissedFeedbackMessage } from "../../common/featureFlags";
-    import { getFeatureFlag, setFeatureFlag, showFeedbackMessage } from "../../common/featureFlags";
     import { LibraryState } from "../../common/schema";
-    import {
-        getRemoteFeatureFlag,
-        reportEventContentScript,
-    } from "@unclutter/library-components/dist/common";
-    import FeedbackMessage from "./components/FeedbackMessage.svelte";
     import LibraryMessage from "./Library/LibraryMessage.svelte";
     import Outline from "./components/Outline.svelte";
     import { OutlineItem } from "./components/parse";
-    import UpdateMessage from "./components/UpdateMessage.svelte";
     import {
         getVersionMessagesToShow,
         saveDismissedVersionMessage,
@@ -30,22 +21,6 @@
     export let darkModeEnabled: boolean;
     export let libraryModifier: LibraryModifier;
     export let libraryModalModifier: LibraryModalModifier;
-
-    let displayFeedbackMessage = false;
-    getFeatureFlag(dismissedFeedbackMessage)
-        .then((dismissed) => {
-            if (!dismissed) {
-                return getRemoteFeatureFlag(showFeedbackMessage);
-            }
-        })
-        .then((enabled) => {
-            displayFeedbackMessage = enabled;
-        });
-    function dismissFeedbackMessage() {
-        displayFeedbackMessage = false;
-        setFeatureFlag(dismissedFeedbackMessage, true);
-        reportEventContentScript("dismissedFeedbackRequest");
-    }
 
     let updateMessages = [];
     getVersionMessagesToShow().then((messages) => {
@@ -88,11 +63,7 @@
             {updateMessage}
             on:dismissed={() => dismissUpdateMessage(version)}
         />
-    {/each}
-
-    {#if displayFeedbackMessage}
-        <FeedbackMessage on:dismissed={dismissFeedbackMessage} />
-    {/if} -->
+    {/each} -->
 </div>
 
 <style global lang="postcss">

@@ -4,6 +4,7 @@ import {
     enableAnnotationsFeatureFlag,
     enableSocialCommentsFeatureFlag,
     getFeatureFlag,
+    submittedFeedbackFlag,
 } from "../../common/featureFlags";
 import browser, { BrowserType, getBrowserType } from "../../common/polyfill";
 import { LibraryState } from "../../common/schema";
@@ -30,6 +31,7 @@ import { PageModifier, trackModifierExecution } from "./_interface";
 import ReadingTimeModifier from "./DOM/readingTime";
 import { setUserSettingsForDomain } from "../../common/storage";
 import LibraryModifier from "./library";
+import BodyStyleModifier from "./bodyStyle";
 
 @trackModifierExecution
 export default class OverlayManager implements PageModifier {
@@ -41,6 +43,7 @@ export default class OverlayManager implements PageModifier {
     private elementPickerModifier: ElementPickerModifier;
     private libraryModifier: LibraryModifier;
     private libraryModalModifier: LibraryModalModifier;
+    private bodyStyleModifier: BodyStyleModifier;
 
     outline: OutlineItem[];
     private flatOutline: OutlineItem[];
@@ -59,7 +62,8 @@ export default class OverlayManager implements PageModifier {
         elementPickerModifier: ElementPickerModifier,
         libraryModifier: LibraryModifier,
         libraryModalModifier: LibraryModalModifier,
-        readingTimeModifier: ReadingTimeModifier
+        readingTimeModifier: ReadingTimeModifier,
+        bodyStyleModifier: BodyStyleModifier
     ) {
         this.domain = domain;
         this.browserType = getBrowserType();
@@ -69,6 +73,7 @@ export default class OverlayManager implements PageModifier {
         this.elementPickerModifier = elementPickerModifier;
         this.libraryModifier = libraryModifier;
         this.libraryModalModifier = libraryModalModifier;
+        this.bodyStyleModifier = bodyStyleModifier;
 
         annotationsModifer.annotationListeners.push(this.onAnnotationUpdate.bind(this));
         readingTimeModifier.readingTimeLeftListeners.push(this.onReadingTimeUpdate.bind(this));
@@ -93,9 +98,10 @@ export default class OverlayManager implements PageModifier {
         document.documentElement.appendChild(this.topleftIframe);
         insertIframeFont(this.topleftIframe);
 
+        // insert even if not used to set theme variables
         this.bottomIframe = createIframeNode("lindy-info-bottom");
         this.bottomIframe.style.position = "absolute"; // put on new layer
-        this.bottomIframe.style.zIndex = "-101"; // put behind body
+        this.bottomIframe.style.display = "none"; // hide until used
         // if (this.libraryEnabled) {
         //     // allow overflow to the right
         //     this.bottomIframe.style.width = `calc(var(--side-width) + var(--lindy-pagewidth))`;
@@ -110,10 +116,6 @@ export default class OverlayManager implements PageModifier {
 
         this.renderTopLeftContainer();
         this.renderUiContainers();
-
-        if (true) {
-            this.renderBottomContainer();
-        }
     }
 
     setEnableAnnotations(enableAnnotations: boolean) {
@@ -220,7 +222,25 @@ export default class OverlayManager implements PageModifier {
         );
     }
 
-    renderBottomContainer() {
+    async insertRenderBottomContainer() {
+        // run later, once libraryState available
+
+        const submittedAlready = await getFeatureFlag(submittedFeedbackFlag);
+        if (submittedAlready) {
+            return
+        }
+
+        // only show feedback message after some usage
+        if (
+            !this.libraryModifier.libraryState?.readingProgress?.articleCount ||
+            this.libraryModifier.libraryState?.readingProgress?.articleCount < 6
+        ) {
+            return;
+        }
+
+        this.bodyStyleModifier.setBottomContainerPadding();
+        this.bottomIframe.style.display = "block";
+
         this.bottomSvelteComponent = new BottomContainerSvelte({
             target: this.bottomIframe?.contentDocument.body,
             props: {
@@ -472,12 +492,14 @@ export default class OverlayManager implements PageModifier {
             createStylesheetLink(
                 browser.runtime.getURL("overlay/outline/outlineDark.css"),
                 "dark-mode-ui-style",
-                this.topleftIframe.contentDocument?.head.lastChild as HTMLElement
+                this.topleftIframe.contentDocument?.head.lastChild as HTMLElement,
+                this.topleftIframe.contentDocument
             );
             createStylesheetLink(
                 browser.runtime.getURL("overlay/outline/bottomDark.css"),
                 "dark-mode-ui-style",
-                this.bottomIframe?.contentDocument?.head.lastChild as HTMLElement
+                this.bottomIframe?.contentDocument?.head.lastChild as HTMLElement,
+                this.bottomIframe?.contentDocument
             );
         } else {
             document.querySelectorAll(".dark-mode-ui-style").forEach((e) => e.remove());
@@ -515,7 +537,7 @@ export function insertIframeFont(iframe: HTMLIFrameElement) {
         // See https://stackoverflow.com/questions/60814167/firefox-deleted-innerhtml-of-generated-iframe
         setTimeout(() => {
             insertIframeFontUnsafe(iframe);
-        }, 0);
+        }, 10);
     } else {
         insertIframeFontUnsafe(iframe);
     }

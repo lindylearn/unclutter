@@ -21,7 +21,7 @@ export async function getAllFeatureFlags() {
         enableSocialCountsFeatureFlag,
         enableAnnotationsFeatureFlag,
         enableSocialCommentsFeatureFlag,
-        dismissedFeedbackMessage,
+        submittedFeedbackFlag,
     ];
 
     // does not include defaultFeatureFlags
@@ -42,7 +42,7 @@ export const enableSocialCountsFeatureFlag = "social-annotations-counts-enabled"
 export const enableAnnotationsFeatureFlag = "annotations-enabled2";
 export const enableSocialCommentsFeatureFlag = "social-annotations-enabled";
 
-export const dismissedFeedbackMessage = "dismissed-feedback-message3";
+export const submittedFeedbackFlag = "submitted-feedback";
 export const dismissedLibrarySignupMessage = "dismissed-library-signup-message";
 
 // remote
@@ -59,7 +59,7 @@ export const defaultFeatureFlags = {
     [enableAnnotationsFeatureFlag]: true,
     [enableSocialCommentsFeatureFlag]: true,
 
-    [dismissedFeedbackMessage]: false,
+    [submittedFeedbackFlag]: false,
 };
 
 const featureFlagLocalOverrides = {};

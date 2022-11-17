@@ -7,7 +7,7 @@ import {
     showLibrarySignupFlag,
 } from "../common/featureFlags";
 import browser from "../common/polyfill";
-import { getLibraryUser } from "../common/storage";
+import { getLibraryUser, getDistinctId } from "../common/storage";
 import { getAllCustomDomainSettings } from "../common/storage2";
 import { getInitialInstallVersion } from "../common/updateMessages";
 
@@ -133,12 +133,12 @@ export async function migrateMetricsUser() {
 }
 
 async function _getSavedDistinctId() {
-    const config = await browser.storage.sync.get(["distinctId"]);
-    if (config["distinctId"]) {
-        return config["distinctId"];
+    let distinctId = await getDistinctId();
+    if (distinctId) {
+        return distinctId;
     }
 
-    const distinctId = crypto.getRandomValues(new Uint32Array(5)).join("");
+    distinctId = crypto.getRandomValues(new Uint32Array(5)).join("");
     await browser.storage.sync.set({
         distinctId,
     });

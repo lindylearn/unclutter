@@ -105,6 +105,7 @@ export default class BodyStyleModifier implements PageModifier {
         this.styleObserver = null;
     }
 
+    private bottomPadding = "20px";
     private modifyHtmlStyle(skipScrollChanges: boolean = false) {
         // html or body tags may have classes with fixed style applied (which we hide via css rewrite)
         document.documentElement.style.setProperty("display", "block", "important");
@@ -118,17 +119,11 @@ export default class BodyStyleModifier implements PageModifier {
         document.documentElement.style.setProperty("height", "auto", "important");
         document.documentElement.style.setProperty("max-width", "none", "important");
         document.documentElement.style.setProperty("margin", "0", "important");
-
-        // set padding for BottomContainer on documentElement for resilience against overflows
-        if (true) {
-            document.documentElement.style.setProperty(
-                "padding-bottom",
-                "0 0 130px 0",
-                "important"
-            );
-        } else {
-            document.documentElement.style.setProperty("padding-bottom", "0 0 20px 0", "important");
-        }
+        document.documentElement.style.setProperty(
+            "padding",
+            `0 0 ${this.bottomPadding} 0`,
+            "important"
+        );
     }
 
     private modifyBodyStyle() {
@@ -182,5 +177,19 @@ export default class BodyStyleModifier implements PageModifier {
 
         this.observeStyleChanges(true);
         this.scrollLockEnabled = false;
+    }
+
+    setBottomContainerPadding() {
+        // set padding for BottomContainer on documentElement for resilience against overflows
+        this.unObserveStyleChanges();
+
+        this.bottomPadding = "130px";
+        document.documentElement.style.setProperty(
+            "padding",
+            `0 0 ${this.bottomPadding} 0`,
+            "important"
+        );
+
+        this.observeStyleChanges(true);
     }
 }

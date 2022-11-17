@@ -47,7 +47,7 @@ export function FeedHeader({
                 />
                 <div className="flex flex-grow flex-col items-start">
                     <h1 className="font-title flex w-full gap-3 text-lg font-bold leading-tight">
-                        <div className="flex-grow">{subscription.title}</div>
+                        <div className="flex-grow">{subscription.title || subscription.domain}</div>
 
                         {subscription.is_subscribed && (
                             <div className="animate-fadein flex items-center gap-2">
