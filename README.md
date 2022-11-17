@@ -10,7 +10,6 @@ Unclutter is a modern reader mode and article library for your browser.
 [![Firefox users](https://img.shields.io/amo/users/lindylearn?label=firefox%20installs&color=facc15)](https://addons.mozilla.org/en-GB/firefox/addon/lindylearn)
 [![Chrome Ratings](https://img.shields.io/chrome-web-store/stars/ibckhpijbdmdobhhhodkceffdngnglpk?label=rating&color=facc15)](https://chrome.google.com/webstore/detail/ibckhpijbdmdobhhhodkceffdngnglpk)
 
-
 <p align="center">
 <img src="./docs/media/intro.png" width="100%" />
 </p>
@@ -19,7 +18,7 @@ Unclutter is a modern reader mode and article library for your browser.
 
 There many other "reader modes", but they all extract article text and re-render it their own format. Unclutter "unclutters" the original web pages itself, leaving the [original website styling](docs/comparison.md) and interactive elements intact.
 
-Articles you read are automatically saved and organized in your Unclutter library, instead of having to maintain bookmark folders or manual tags.
+Articles you read are automatically saved and can be easily added to your read-it-later queue.
 Everything happens instantly in your browser.
 
 <!-- <p align="center">
@@ -27,25 +26,29 @@ Everything happens instantly in your browser.
 </p> -->
 
 Other features include:
--   [Crowdsourced blocklists](https://github.com/lindylearn/unclutter/blob/main/docs/element-blocking.md) for annoyances on specific websites
--   [Automatically activating](https://github.com/lindylearn/unclutter/blob/main/docs/article-detection.md) the reader mode
--   [Showing page chapters](https://github.com/lindylearn/unclutter/blob/main/docs/outline.md) to navigate long articles
--   [Integrated social comments](https://github.com/lindylearn/unclutter/blob/main/docs/social-highlights.md) from Hacker News and Hypothes.is
--   [Easily saving highlights](https://github.com/lindylearn/unclutter/blob/main/docs/annotations.md) by simply selecting text
+
+- [Crowdsourced blocklists](https://github.com/lindylearn/unclutter/blob/main/docs/element-blocking.md) for annoyances on specific websites
+- [Automatically activating](https://github.com/lindylearn/unclutter/blob/main/docs/article-detection.md) the reader mode
+- [Showing page chapters](https://github.com/lindylearn/unclutter/blob/main/docs/outline.md) to navigate long articles
+- [Integrated social comments](https://github.com/lindylearn/unclutter/blob/main/docs/social-highlights.md) from Hacker News and Hypothes.is
+- [Easily saving highlights](https://github.com/lindylearn/unclutter/blob/main/docs/annotations.md) by simply selecting text
 
 Try it out for yourself:
 
 [<img src="./docs/media/install-chrome.png" height="50">](https://chrome.google.com/webstore/detail/ibckhpijbdmdobhhhodkceffdngnglpk)
 [<img src="./docs/media/install-firefox.png" height="50">](https://addons.mozilla.org/en-GB/firefox/addon/lindylearn)
 
-
 ## Get involved
 
 The mission of Unclutter is to improve reading on the web for everyone. You should decide what, when, and how to read. What if you could automatically bypass paywalls or connect similar content across the web?
 
 Here's how you can help:
-- [Use the open roadmap](https://unclutter.canny.io/) to suggest new features for Unclutter or to vote on existing ideas.
-- [Open GitHub issues](https://github.com/lindylearn/unclutter/issues) for bugs you find or for technical things to improve. All feedback from within the extension also automatically creates issues or Pull-Requests.
+
+- [Report broken articles](https://github.com/lindylearn/unclutter/blob/main/docs/element-blocking.md) or submit element block selectors from within the extension.
+- [Use the open roadmap](https://unclutter.canny.io/) to suggest new features or to vote on existing ideas.
+- [Open GitHub issues](https://github.com/lindylearn/unclutter/issues) for bugs or any other issue.
+- [Contribute code](https://github.com/lindylearn/unclutter/blob/main/DEVELOPMENT.md) to implement your favorite new feature.
+
 <!-- - [Join our Discord server](https://discord.gg/CThpNQjucB) if you want to contribute code! -->
 
 <!-- [<img src="./docs/media/canny.png">](https://unclutter.canny.io/) -->
@@ -57,7 +60,6 @@ Here's how you can help:
 ## Documentation
 
 See the [docs pages](https://github.com/lindylearn/unclutter/blob/main/docs), or the [technical README](DEVELOPMENT.md). Please open an issue for any question you have!
-
 
 ## Licence
 
