@@ -11,6 +11,9 @@
         ".size-full.wp-image-5967",
         ".inarticlead728-end"
     ],
+    "aftershock.news": [
+        ".field.field-name-field-image.field-type-image.field-label-hidden"
+    ],
     "apple.com": [
         "#ac-localeswitcher",
         ".sharesheet.component",
@@ -207,7 +210,9 @@
         ".ag987e-0.pxCch.btn.btn-play",
         ".video-html5-player",
         ".sc-1wkneyl-0.hxLRyg.video-html5-playlist",
-        ".bxm4mm-3.eCMXYG"
+        ".bxm4mm-3.eCMXYG",
+        ".bxm4mm-2.hKBnez",
+        "#mgid-container"
     ],
     "grammarly.com": [".F0u0G-container", "._16iRt-container"],
     "hackster.io": ["#hello-world"],
@@ -336,6 +341,7 @@
     "nationalpost.com": [".visually-hidden", ".more-topic"],
     "nautil.us": [".article-action-list", ".a__sc-np32r2-0.dalZPh"],
     "nazory.pravda.sk": ["#rmpPlayer", ".container.no-padding-advert"],
+    "news.marsbit.co": [".news-wxshare-icon"],
     "news.microsoft.com": [
         ".f-hero-header",
         ".iframe-fragment.x-type-center",
@@ -413,6 +419,7 @@
         ".mt-4.space-y-4",
         ".relative.bg-white.py-14"
     ],
+    "spectator.co.uk": [".entry-header__meta"],
     "srm.com": [
         ".card__img.img-responsive.lazyloaded",
         ".card-list",
