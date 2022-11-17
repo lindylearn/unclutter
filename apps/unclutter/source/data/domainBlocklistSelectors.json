@@ -102,7 +102,9 @@
         "#wbMenu",
         ".menu.share-menu",
         ".menu.collect-menu",
-        ".menu.search-menu.openSearchMenu"
+        ".menu.search-menu.openSearchMenu",
+        ".remind",
+        ".menu"
     ],
     "christianitytoday.com": [".article-embed"],
     "cloud.tencent.com": [".layout-side"],
