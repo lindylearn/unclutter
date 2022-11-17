@@ -413,6 +413,7 @@
         ".mt-4.space-y-4",
         ".relative.bg-white.py-14"
     ],
+    "spectator.co.uk": [".entry-header__meta"],
     "srm.com": [
         ".card__img.img-responsive.lazyloaded",
         ".card-list",
