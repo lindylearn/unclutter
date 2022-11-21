@@ -32,6 +32,7 @@ import ReadingTimeModifier from "./DOM/readingTime";
 import { setUserSettingsForDomain } from "../../common/storage";
 import LibraryModifier from "./library";
 import BodyStyleModifier from "./bodyStyle";
+import { reportEventContentScript } from "@unclutter/library-components/dist/common";
 
 @trackModifierExecution
 export default class OverlayManager implements PageModifier {
@@ -227,13 +228,13 @@ export default class OverlayManager implements PageModifier {
 
         const submittedAlready = await getFeatureFlag(submittedFeedbackFlag);
         if (submittedAlready) {
-            return
+            return;
         }
 
         // only show feedback message after some usage
         if (
             !this.libraryModifier.libraryState?.readingProgress?.articleCount ||
-            this.libraryModifier.libraryState?.readingProgress?.articleCount < 6
+            this.libraryModifier.libraryState?.readingProgress?.articleCount < 5
         ) {
             return;
         }
@@ -458,12 +459,19 @@ export default class OverlayManager implements PageModifier {
         return lastIndex;
     }
 
+    private maxPageProgress = 0;
     private readingTimeLeft: number = null;
     onReadingTimeUpdate(pageProgress: number, readingTimeLeft: number) {
         this.readingTimeLeft = readingTimeLeft;
         this.topleftSvelteComponent?.$set({
             readingTimeLeft,
         });
+
+        if (this.bottomSvelteComponent && pageProgress >= 0.9 && this.maxPageProgress < 0.9) {
+            reportEventContentScript("seeFeedbackMessage");
+        }
+
+        this.maxPageProgress = Math.max(this.maxPageProgress, pageProgress);
     }
 
     updateLibraryState(libraryState: LibraryState) {
