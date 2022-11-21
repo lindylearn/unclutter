@@ -1,7 +1,7 @@
 {
     "name": "Unclutter — Modern Reader Mode",
     "version": "1.2.1",
-    "description": "Remove annoyances, customise your reading & save highlights.",
+    "description": "Read, collect, and highlight articles with style.",
     "homepage_url": "https://github.com/lindylearn/unclutter",
     "icons": {
         "128": "assets/icon.png"
