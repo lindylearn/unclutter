@@ -117,6 +117,7 @@
         ".section-wrapper.hilight-career",
         ".career-wraper"
     ],
+    "collabfund.com": [".card", ".more-posts"],
     "dailymail.co.uk": [
         ".debate.item",
         ".wocc",
