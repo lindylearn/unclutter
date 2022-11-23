@@ -258,6 +258,10 @@
         ".widget-type-cell"
     ],
     "investor.vanguard.com": [".cmp-articleaspot__pills"],
+    "invistaspiti.com.br": [
+        ".btn.btn-gray-dark.dropdown-toggle",
+        ".d-none.d-sm-block"
+    ],
     "jamesclear.com": [".post__next"],
     "kaggle.com": [
         ".sc-jfmDQi.hfJycS",
