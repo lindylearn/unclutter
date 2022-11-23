@@ -462,6 +462,11 @@
         ".pretty-verdict__heading-container",
         ".read-more-container"
     ],
+    "telegram.hr": [
+        ".full.center-text.column-full-pad.subsection-title",
+        ".full.flex.article-pad",
+        ".slick-slide.slick-cloned"
+    ],
     "theatlantic.com": [
         ".ArticleShare_root__BqVqF",
         ".ArticleHero_articleUtilityBar__OtFEE",
