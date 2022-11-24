@@ -165,7 +165,9 @@
         ".css-1tllssg.e5tfikp1",
         ".css-m9rqg4.e5tfikp2",
         ".css-1brxw25.e5tfikp1",
-        ".css-1hcsrxn.e5tfikp2"
+        ".css-1hcsrxn.e5tfikp2",
+        ".ds-masthead-nav",
+        ".ds-layout-masthead"
     ],
     "edition.cnn.com": [".ticker-ribbon"],
     "eff.org": [".element-invisible.element-focusable"],
