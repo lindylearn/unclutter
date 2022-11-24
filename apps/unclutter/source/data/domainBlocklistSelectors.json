@@ -364,7 +364,9 @@
     ],
     "meduza.io": [
         ".Layout-bannerTop",
-        ".Meta-module_root__12AG7.Meta-module_hasSource__2lXiN.Meta-module_rich__1XBtZ.Meta-module_center__3BBPr"
+        ".Meta-module_root__12AG7.Meta-module_hasSource__2lXiN.Meta-module_rich__1XBtZ.Meta-module_center__3BBPr",
+        ".Header-item",
+        ".Layout-header"
     ],
     "mmazurek.dev": [
         ".wp-block-separator",
