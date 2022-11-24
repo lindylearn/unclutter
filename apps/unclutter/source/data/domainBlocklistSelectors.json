@@ -333,6 +333,15 @@
         ".PostsPagePostFooter-bottomNavigation"
     ],
     "leveragethoughts.substack.com": [".button-wrapper"],
+    "linux.org.ru": [
+        ".msg-top-header",
+        "#hd",
+        ".fav-buttons",
+        "#ft",
+        "#comments",
+        ".nav",
+        ".infoblock"
+    ],
     "litreactor.com": [
         ".imagecache.imagecache-header-square-tiny.imagecache-default.imagecache-header-square-tiny_default",
         ".imagecache.imagecache-staff-headshot-small.imagecache-linked.imagecache-staff-headshot-small_linked",
