@@ -19,6 +19,27 @@
         ".sharesheet.component",
         ".nr-article-share"
     ],
+    "aripaev.ee": [
+        ".PreviewWrapper-sc-1tmhfjt-0.ArticlePreview__ArticlePreviewWrapper-sc-52bjrr-4.iCjoyF.cuUJRm",
+        ".EditorArticle__ImageHolder-sc-1l7s435-1.gfhXfy",
+        ".EditorsMain__MainContainer-sc-1qoebtq-0.kaOoBQ",
+        ".TopBlock__Column1-sc-1tdtu89-1.bzsiJF",
+        ".ResponsiveGrid__ResponsiveGridItem-k07yqx-1.fVCOWN",
+        ".BlockHeader__Container-sc-55bvnf-0.kroioG",
+        ".PreviewWrapper-sc-1tmhfjt-0.ArticlePreview__ArticlePreviewWrapper-sc-52bjrr-4.iCjoyF.cttdFy",
+        ".ArticleMain__Separated-sc-1t8gf4o-1.dLvucU",
+        ".ResponsiveGrid__Grid-k07yqx-0.ihtIbt",
+        ".TopBlock__Wrapper-sc-1tdtu89-0.dNdGGU",
+        ".BigStoryMain__LargeArticleContainer-sc-184rxo8-1.iMuHTr",
+        ".Carousel__CarouselSlide-sc-1nsuv1f-4.iWbYkT",
+        ".Carousel__OuterWrapper-sc-1nsuv1f-0.gFundW",
+        ".BigStoryArticle__Container-sc-4eagov-0.gDrLtW",
+        ".BigStoryMain__MainContainer-sc-184rxo8-0.RWCnY",
+        ".RadioBlock__Wrapper-sc-1b8kbse-0.cmJBir",
+        ".PageHeader__SkipMenu-xp6bq-1.ewfTQz.skip-link",
+        ".BlockHeader__Container-sc-55bvnf-0.iVdrIt",
+        ".ArticleShare__ArticleShareWrapper-dyxdoz-0.jPximb"
+    ],
     "augmentingcognition.com": [".marginnote"],
     "autodesk.com": [
         ".image-style-class-header-1x-desktop.lazyloaded",
