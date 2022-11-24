@@ -230,7 +230,7 @@ export const blockedWords = [
     "disqus", // also may include ads, e.g. https://david-codes.hatanian.com/2019/06/09/aws-costs-every-programmer-should-now.html
     "intercom", // https://airbyte.com/blog/data-engineering-past-present-and-future
     // "share", // blocks images e.g. on https://spectrum.ieee.org/commodore-64
-    "-share-", // https://www.bbc.com/worklife/article/20220525-how-self-deception-allows-people-to-lie
+    "-share", // https://www.fiercehealthcare.com/health-tech/cerebrals-ex-ceo-may-be-gearing-lawsuit-claims-investors-pushed-company-prescribe
     "share-icons", // https://asia.nikkei.com/Business/Business-trends/Japan-to-fine-Meta-Twitter-if-they-keep-neglecting-domestic-registry
     "share-section", // https://brighterworld.mcmaster.ca/articles/going-all-the-way-scientists-prove-inhaled-vaccines-offer-better-protection-than-nasal-sprays/
     "sharing", // https://theaviationgeekclub.com/sr-71-pilot-explains-how-he-survived-to-his-blackbird-disintegration-at-a-speed-of-mach-3-2/
