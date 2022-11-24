@@ -330,7 +330,11 @@
         ".PingbacksList-root",
         ".FooterTagList-root",
         ".BottomNavigation-post.BottomNavigation-nextPost",
-        ".PostsPagePostFooter-bottomNavigation"
+        ".PostsPagePostFooter-bottomNavigation",
+        ".LWTooltip-root.PostsPagePostHeader-togglePodcastIcon",
+        ".PostsVote-voteScores",
+        ".BottomNavigation-post.BottomNavigation-prevPost",
+        ".PostsPage-commentsSection"
     ],
     "leveragethoughts.substack.com": [".button-wrapper"],
     "linux.org.ru": [
