@@ -92,6 +92,7 @@
     ],
     "businessinsider.com": [".the-refresh-summary-list"],
     "businessinsider.de": [".tp-container-inner"],
+    "cbc.ca": [".logo", ".searchIcon.headerSearch", ".detailBodyContainer"],
     "chaincatcher.com": [
         ".title",
         ".time",
