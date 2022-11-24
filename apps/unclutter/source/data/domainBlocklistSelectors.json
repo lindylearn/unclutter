@@ -101,6 +101,7 @@
         "#passportbox",
         ".passport-login-container"
     ],
+    "blog.frankel.ch": [".post-full-image"],
     "blog.jetbrains.com": [
         "#ez-toc-container",
         ".content__pagination",
