@@ -570,15 +570,12 @@ export default class TextContainerModifier implements PageModifier {
     enableSiblingBlock() {
         // hide main text siblings, e.g. on https://www.thespacereview.com/article/4384/1 or http://www.paulgraham.com/think.html
         // sometimes this blocks legitimate text nodes for nested containers, e.g. https://dkb.show/post/creativity-requires-solitude
+        // hiding header siblings may block legitimate headings or code blocks, e.g. https://auth0.com/docs/customize/integrations/aws/aws-api-gateway-delegation/aws-api-gateway-delegation-1#2-create-the-policy-that-grants-aws-lambda-functions-access-to-the-dynamodb-pets-table
         const css = `.${lindyMainContentContainerClass}:not(.${lindyFirstMainContainerClass}, body) > :not(
             ${globalTextElementSelector},
             .${lindyMainContentContainerClass}, 
             .${lindyImageContainerClass}, 
-            .${
-                this.foundMainHeadingElement
-                    ? lindyMainHeaderContainerClass
-                    : lindyHeadingContainerClass
-            }
+            .${lindyHeadingContainerClass}
         ) {
             display: none !important;
         }
