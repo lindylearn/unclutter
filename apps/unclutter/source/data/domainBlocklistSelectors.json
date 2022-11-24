@@ -153,6 +153,11 @@
         ".title-content.clearfix.first",
         ".title-content.clearfix"
     ],
+    "earthly.dev": [
+        ".author__avatar_top.flex.mb-4",
+        ".align-right",
+        ".page__meta-readtime.text-gray-500"
+    ],
     "economictimes.indiatimes.com": [
         ".primeSWrapper",
         ".clearfix.relTopics.raltedTopics",
