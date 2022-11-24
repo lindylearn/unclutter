@@ -1075,6 +1075,17 @@ export default class TextContainerModifier implements PageModifier {
     }
 
     private shouldExcludeAsHeaderContainer(node: HTMLElement): boolean {
+        // https://www.obsidianroundup.org/one-size-fits-all-how-to-take-big-notes-and-how-to-take-small-notes/
+        if (["FIGURE", "PICTURE", "IMG"].includes(node.tagName)) {
+            return true;
+        }
+
+        // don't stretch autor metadata to full width
+        // e.g. https://www.obsidianroundup.org/one-size-fits-all-how-to-take-big-notes-and-how-to-take-small-notes/
+        if (node.className.includes("author")) {
+            return true;
+        }
+
         // https://news.ycombinator.com/news
         if (node.id === "hnmain") {
             return true;
