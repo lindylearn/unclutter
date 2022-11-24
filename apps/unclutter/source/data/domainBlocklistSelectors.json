@@ -125,6 +125,7 @@
         ".column-content.cleared.narrow",
         ".column-content.cleared"
     ],
+    "daringfireball.net": [".smallprint", "#SiteSearch", "#Sidebar"],
     "denizlihaber.com": [
         "#topbtns",
         ".combox",
