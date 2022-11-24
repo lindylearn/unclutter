@@ -272,6 +272,7 @@ export const blockedSpecificSelectors = [
     "#ad_before_header",
     ".billboard-container", // https://www.dailymail.co.uk/tvshowbiz/article-10913383/Hugh-Jackman-tests-positive-COVID-19-just-one-day-Tony-Awards.html
     ".adsninja-ad-zone", // https://www.makeuseof.com/android-security-codes-you-need-to-know/?utm_source=MUO-NL-RP&utm_medium=newsletter
+    ".adContainer", // https://nyheder.tv2.dk/politik/2022-11-23-socialdemokratiet-har-foert-et-dobbeltspil-siger-rasende-mai-villadsen
 
     "[class$='-nav' i]", // https://fly.io/blog/a-foolish-consistency/
 
