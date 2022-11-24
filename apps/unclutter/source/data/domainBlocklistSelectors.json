@@ -294,7 +294,8 @@
         ".Header-root",
         ".PostsPagePostFooter-footerSection",
         ".Footer-root",
-        ".PingbacksList-root"
+        ".PingbacksList-root",
+        ".FooterTagList-root"
     ],
     "leveragethoughts.substack.com": [".button-wrapper"],
     "litreactor.com": [
