@@ -504,6 +504,7 @@
     "sandboxx.us": [".content#genesis-content::before"],
     "semiengineering.com": [".col-xs-12.col-sm-6.col-md-7"],
     "shopify.com": ["#GlobalIconSymbols", "#SiteNavContainer"],
+    "slatestarcodex.com": ["#left-sidebar", "#primary"],
     "smithsonianmag.com": [".author-headshot.smart-news", ".tag-list"],
     "snclavalin.com": [".top-content-item.read-time", ".top-content-item"],
     "sozcu.com.tr": [
