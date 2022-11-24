@@ -610,6 +610,10 @@ body.fastcompany {
 #HeadlineSection {
     display: none !important;
 }
+/* https://finance.yahoo.com/news/buy-fear-warren-buffett-3-230000136.html?guccounter=1 */
+.caas-readmore-collapse:not(#fakeID#fakeID#fakeID) ~ p {
+    display: block !important;
+}
 
 /* https://hackernoon.com/how-to-take-screenshots-in-the-browser-using-javascript-l92k3xq7 */
 .reactions,
