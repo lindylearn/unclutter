@@ -361,7 +361,10 @@
         ".o.ao",
         ".nh.ni.nj.nk.l"
     ],
-    "meduza.io": [".Layout-bannerTop"],
+    "meduza.io": [
+        ".Layout-bannerTop",
+        ".Meta-module_root__12AG7.Meta-module_hasSource__2lXiN.Meta-module_rich__1XBtZ.Meta-module_center__3BBPr"
+    ],
     "mmazurek.dev": [
         ".wp-block-separator",
         ".wp-block-tnp-minimal",
