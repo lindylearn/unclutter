@@ -414,6 +414,13 @@
         ".c-keywords",
         ".c-detailkeyward"
     ],
+    "nyheder.tv2.dk": [
+        ".tc_deck.tc_deck--color-100.tc_deck--col3center",
+        ".tc_video",
+        ".tc_videocarousel__carousel__item",
+        ".tc_button.tc_videocarousel__carousel__next.tc_button--layout-none.tc_button--icon-only",
+        ".tc_page__header__meta"
+    ],
     "nytimes.com": [
         ".css-vxcmzt",
         ".css-tgs79b",
