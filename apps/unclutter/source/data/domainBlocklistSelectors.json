@@ -409,6 +409,15 @@
         ".css-j3uhc5",
         "#gateway-content"
     ],
+    "nzz.ch": [
+        ".image-placeholder.poster__placeholder",
+        ".widget__row.widget__row--bta-newest",
+        ".pageelement.bta.pageelement--newestarticle",
+        ".container.container--bta.adnz-bta-fixed-placeholder",
+        ".footer__article",
+        ".resor.resor--maxiboard.resor--top.adnz-infeed-placeholder",
+        "#header"
+    ],
     "observablehq.com": [".mr3.lh-copy", "#showtitlewrapper"],
     "oglobo.globo.com": [".tp-container-inner"],
     "ole.com.ar": [
