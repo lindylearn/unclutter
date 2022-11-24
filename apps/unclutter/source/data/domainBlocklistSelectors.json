@@ -190,7 +190,8 @@
     "forwardobserver.com": [".attachment-large.size-large.wp-post-image"],
     "francetvinfo.fr": [
         ".header-legacy__direct-radio",
-        ".header-legacy__direct-tv"
+        ".header-legacy__direct-tv",
+        ".c-signature-wrapper"
     ],
     "gamesindustry.biz": [".thumbnail", ".shelf", "#newsletters"],
     "geoslam.com": [
