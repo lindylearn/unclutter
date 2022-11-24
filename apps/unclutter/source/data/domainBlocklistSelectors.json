@@ -6,19 +6,9 @@
         ".aalto-content-bottom-wrapper.content-container"
     ],
     "about.gitlab.com": ["#on-this-page", ".hidden-md.hidden-lg"],
-    "aecmag.com": [
-        ".relpost-thumb-wrapper",
-        ".size-full.wp-image-5967",
-        ".inarticlead728-end"
-    ],
-    "aftershock.news": [
-        ".field.field-name-field-image.field-type-image.field-label-hidden"
-    ],
-    "apple.com": [
-        "#ac-localeswitcher",
-        ".sharesheet.component",
-        ".nr-article-share"
-    ],
+    "aecmag.com": [".relpost-thumb-wrapper", ".size-full.wp-image-5967", ".inarticlead728-end"],
+    "aftershock.news": [".field.field-name-field-image.field-type-image.field-label-hidden"],
+    "apple.com": ["#ac-localeswitcher", ".sharesheet.component", ".nr-article-share"],
     "aripaev.ee": [
         ".PreviewWrapper-sc-1tmhfjt-0.ArticlePreview__ArticlePreviewWrapper-sc-52bjrr-4.iCjoyF.cuUJRm",
         ".EditorArticle__ImageHolder-sc-1l7s435-1.gfhXfy",
@@ -50,7 +40,14 @@
         ".ssrcss-ab5fd8-StyledFigureContainer.e34k3c21",
         ".ssrcss-2z3pjz-SectionWrapper.e1nh2i2l2"
     ],
-    "be.marketscreener.com": ["#myHeader", ".esi_h"],
+    "be.marketscreener.com": [
+        "#myHeader",
+        ".esi_h",
+        ".hPubRight2",
+        "tr > td:not(:first-child)",
+        ".slm-instream-player-container",
+        ".tabElemNoBor"
+    ],
     "bezprawnik.pl": [
         ".ad_slot_height_manager_wrapper_bp_sdh2",
         "#oa-360-1666305713099_aa6xa65xr",
@@ -94,11 +91,7 @@
         "#passportbox",
         ".passport-login-container"
     ],
-    "blog.jetbrains.com": [
-        "#ez-toc-container",
-        ".content__pagination",
-        ".content__row"
-    ],
+    "blog.jetbrains.com": ["#ez-toc-container", ".content__pagination", ".content__row"],
     "blog.vespa.ai": [
         ".col-xs-12.col-md-9.col-lg-10.text-center.text-md-left",
         ".row.post-top-meta"
@@ -148,13 +141,7 @@
         ".column-content.cleared"
     ],
     "daringfireball.net": [".smallprint", "#SiteSearch", "#Sidebar"],
-    "denizlihaber.com": [
-        "#topbtns",
-        ".combox",
-        ".passbnd",
-        ".ilce_side",
-        ".ap.ap-615.ap-xpe"
-    ],
+    "denizlihaber.com": ["#topbtns", ".combox", ".passbnd", ".ilce_side", ".ap.ap-615.ap-xpe"],
     "diit.cz": [
         "#carodaOutstream992952Container",
         "#carodaOutstream982035Container",
@@ -311,11 +298,7 @@
         ".widget-type-cell"
     ],
     "investor.vanguard.com": [".cmp-articleaspot__pills"],
-    "invistaspiti.com.br": [
-        ".btn.btn-gray-dark.dropdown-toggle",
-        ".d-none.d-sm-block",
-        ".mb-5"
-    ],
+    "invistaspiti.com.br": [".btn.btn-gray-dark.dropdown-toggle", ".d-none.d-sm-block", ".mb-5"],
     "jamesclear.com": [".post__next"],
     "kaggle.com": [
         ".sc-jfmDQi.hfJycS",
@@ -431,11 +414,7 @@
     ],
     "news.yahoo.com": ["#close-button-section"],
     "news.ycombinator.com": ["#hnmain > tbody > tr:last-child"],
-    "newyorker.com": [
-        ".SocialIconsList-Nwcjr.bFHhOT.social-icons__list",
-        ".b1x8o18",
-        ".b1x8o14"
-    ],
+    "newyorker.com": [".SocialIconsList-Nwcjr.bFHhOT.social-icons__list", ".b1x8o18", ".b1x8o14"],
     "nippon.com": [
         ".c-lang",
         ".gpc-c1_3",
@@ -557,14 +536,8 @@
         ".pay-furtherreading"
     ],
     "tarjomaan.com": ["#head_div1", "#header"],
-    "technologyreview.com": [
-        "#piano__post_body-desktop-1",
-        "#piano__post_body-desktop-2"
-    ],
-    "techradar.com": [
-        ".pretty-verdict__heading-container",
-        ".read-more-container"
-    ],
+    "technologyreview.com": ["#piano__post_body-desktop-1", "#piano__post_body-desktop-2"],
+    "techradar.com": [".pretty-verdict__heading-container", ".read-more-container"],
     "telegram.hr": [
         ".full.center-text.column-full-pad.subsection-title",
         ".full.flex.article-pad",
@@ -634,12 +607,7 @@
         ".flex.items-center"
     ],
     "thewalrus.ca": ["._form-content", ".code-block.code-block-4"],
-    "tienphong.vn": [
-        ".article__story.cms-relate",
-        ".box-heading",
-        ".story",
-        ".article__tag"
-    ],
+    "tienphong.vn": [".article__story.cms-relate", ".box-heading", ".story", ".article__tag"],
     "tinhte.vn": [
         ".jsx-3147581474.info-block--right",
         ".jsx-3569995709.main",
