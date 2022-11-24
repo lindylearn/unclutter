@@ -404,7 +404,11 @@
     ],
     "news.yahoo.com": ["#close-button-section"],
     "news.ycombinator.com": ["#hnmain > tbody > tr:last-child"],
-    "newyorker.com": [".SocialIconsList-Nwcjr.bFHhOT.social-icons__list"],
+    "newyorker.com": [
+        ".SocialIconsList-Nwcjr.bFHhOT.social-icons__list",
+        ".b1x8o18",
+        ".b1x8o14"
+    ],
     "nippon.com": [
         ".c-lang",
         ".gpc-c1_3",
