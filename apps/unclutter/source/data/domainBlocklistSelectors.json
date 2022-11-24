@@ -624,6 +624,16 @@
         ".style--sector-2O3DtNXcLScemWK4OPfM6G"
     ],
     "zdnet.com": [".c-socialSharebar"],
-    "zeit.de": [".article-player.article-player--has-player"],
+    "zeit.de": [
+        ".article-player.article-player--has-player",
+        ".header",
+        ".sticky-nav",
+        "#top",
+        "#comments",
+        ".article-footer.article__item",
+        ".article-pagination__link",
+        ".article-pagination.article__item",
+        ".footer"
+    ],
     "zhuanlan.zhihu.com": [".css-d45dic", ".css-1f4osvg", ".Button.css-1u5s92v"]
 }
