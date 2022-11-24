@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import IframeResizer from 'iframe-resizer-react'
+import IframeResizer from "iframe-resizer-react";
 import clsx from "clsx";
 
 import { LindyIcon } from "../Icons";
@@ -10,29 +10,29 @@ export function FeedbackModalPage({
     onSubmit,
     reportEvent = () => {},
 }: {
-    userInfo: any,
-    onSubmit: () => void,
+    userInfo: any;
+    onSubmit: () => void;
     reportEvent?: (event: string, data?: any) => void;
 }) {
     const { isVisible, closeModal } = useContext(ModalContext);
 
     useEffect(() => {
-        window.addEventListener('message', function (e: any) {
+        window.addEventListener("message", function (e: any) {
             try {
                 const data = JSON.parse(e.data);
-                if (data.event === 'Tally.FormSubmitted') {
+                if (data.event === "Tally.FormSubmitted") {
                     onSubmit();
-                    reportEvent('submitFeedbackForm');
+                    reportEvent("submitFeedbackForm");
                 }
             } catch {}
         });
-    }, [])
+    }, []);
 
     useEffect(() => {
         if (isVisible) {
-            reportEvent('openFeedbackModal');
+            reportEvent("openFeedbackModal");
         }
-    }, [isVisible])
+    }, [isVisible]);
 
     return (
         <div
@@ -48,7 +48,7 @@ export function FeedbackModalPage({
             />
             <div className="modal-content o relative z-10 mx-auto mt-10 flex h-5/6 max-h-[700px] max-w-5xl flex-col overflow-hidden rounded-lg bg-white text-stone-800 shadow">
                 <div
-                    className="p-4 px-8 overflow-auto"
+                    className="overflow-auto p-4 px-8"
                     //  bg-gradient-to-b from-amber-300 via-yellow-400 to-amber-400
                     // style={{
                     //     backgroundImage: "linear-gradient(120deg, var(--tw-gradient-stops))",
@@ -62,9 +62,13 @@ export function FeedbackModalPage({
 
                     <IframeResizer
                         // hosted feedback form from tally.io
-                        src={`https://unclutter.lindylearn.io/feedback.html?${new URLSearchParams(userInfo).toString()}`}
-                        // src="http://localhost:3000/feedback.html"
-                        style={{ width: '1px', minWidth: '100%'}}
+                        src={`https://tally.so/embed/npb6xB?alignLeft=1&hideTitle=1&transparentBackground=1&${new URLSearchParams(
+                            userInfo
+                        ).toString()}`}
+                        // src={`https://unclutter.lindylearn.io/feedback.html?${new URLSearchParams(
+                        //     userInfo
+                        // ).toString()}`}
+                        style={{ width: "1px", minWidth: "100%" }}
                         frameBorder="0"
                         marginHeight={0}
                         marginWidth={0}
