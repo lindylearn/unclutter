@@ -308,7 +308,10 @@
         ".Header-root",
         ".PostsPagePostFooter-footerSection",
         ".Footer-root",
-        ".PingbacksList-root"
+        ".PingbacksList-root",
+        ".FooterTagList-root",
+        ".BottomNavigation-post.BottomNavigation-nextPost",
+        ".PostsPagePostFooter-bottomNavigation"
     ],
     "leveragethoughts.substack.com": [".button-wrapper"],
     "litreactor.com": [
