@@ -279,6 +279,12 @@
     "grammarly.com": [".F0u0G-container", "._16iRt-container"],
     "hackster.io": ["#hello-world"],
     "hdvietnam.org": ["#likes-post-10851880", ".sharePage"],
+    "heise.de": [
+        ".a-u-show-from-tablet",
+        ".a-u-hide-from-tablet",
+        ".a-box.a-box--collapsable.a-inline-textbox--text.a-inline-textbox",
+        ".a-box.a-box--collapsable.a-box--full-bordered.a-u-hide-from-desktop.a-toc"
+    ],
     "hope-rehab-center-thailand.com": [
         ".perfmatters-lazy.entered.pmloaded",
         ".elementor-post.elementor-grid-item.post-42337.post.type-post.status-publish.format-standard.has-post-thumbnail.hentry.category-uncategorized",
