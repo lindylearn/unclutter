@@ -279,6 +279,22 @@
     "grammarly.com": [".F0u0G-container", "._16iRt-container"],
     "hackster.io": ["#hello-world"],
     "hdvietnam.org": ["#likes-post-10851880", ".sharePage"],
+    "heise.de": [
+        ".a-u-show-from-tablet",
+        ".a-u-hide-from-tablet",
+        ".a-box.a-box--collapsable.a-inline-textbox--text.a-inline-textbox",
+        ".a-box.a-box--collapsable.a-box--full-bordered.a-u-hide-from-desktop.a-toc",
+        ".a-layout__container.a-layout__container--full-width",
+        ".a-article-header__service",
+        ".curtain.curtain--gradient.article-layout__curtain",
+        ".stage-card",
+        ".article-layout__footer",
+        ".article-newsletter-subscription.article-sidebar__item.article-sidebar__item--margin-top",
+        ".a-box__header",
+        ".a-box.a-box--collapsable.a-box--no-border-bottom.a-u-show-from-desktop.article-sidebar__item.a-toc",
+        ".article-sidebar",
+        ".a-article-header__label"
+    ],
     "hope-rehab-center-thailand.com": [
         ".perfmatters-lazy.entered.pmloaded",
         ".elementor-post.elementor-grid-item.post-42337.post.type-post.status-publish.format-standard.has-post-thumbnail.hentry.category-uncategorized",
