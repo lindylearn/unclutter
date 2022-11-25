@@ -118,7 +118,10 @@
         ".col-second",
         ".row-quote"
     ],
-    "businessinsider.com": [".the-refresh-summary-list"],
+    "businessinsider.com": [
+        ".the-refresh-summary-list",
+        ".tp-iframe-wrapper.tp-active"
+    ],
     "businessinsider.de": [".tp-container-inner"],
     "cbc.ca": [".logo", ".sideMenu"],
     "chaincatcher.com": [
