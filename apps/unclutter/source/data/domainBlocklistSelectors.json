@@ -609,6 +609,12 @@
         ".css-1d3w5wq"
     ],
     "theinformation.com": [".ti-awareness-bar"],
+    "theinitium.com": [
+        ".row-action",
+        ".share__items.u-clearfix",
+        ".p-article__side-left.l-col-12.l-col-lg-3",
+        ".c-global-footer"
+    ],
     "theleader.vn": [
         ".mangsec-bold",
         ".news-detail-other-news-title",
