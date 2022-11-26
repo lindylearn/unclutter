@@ -707,5 +707,10 @@
         ".article-pagination.article__item",
         ".footer"
     ],
+    "zenhabits.net": [
+        ".cb-box__inner-drag",
+        "#cbox-iSUAOAHAYhUZ240B",
+        ".get-updates"
+    ],
     "zhuanlan.zhihu.com": [".css-d45dic", ".css-1f4osvg", ".Button.css-1u5s92v"]
 }
