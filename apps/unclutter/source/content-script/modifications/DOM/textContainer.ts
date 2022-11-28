@@ -221,6 +221,7 @@ export default class TextContainerModifier implements PageModifier {
         let currentStack: HTMLElement[] = [];
         while (currentElem !== document.documentElement) {
             if (
+                !currentElem ||
                 this.mainStackElements.has(currentElem) ||
                 // don't go into parents if already validated them (only for text containers since their mainStack state doesn't change for parents)
                 (stackType === "text" && this.validatedNodes.has(currentElem))
@@ -1076,7 +1077,11 @@ export default class TextContainerModifier implements PageModifier {
 
     private shouldExcludeAsHeaderContainer(node: HTMLElement): boolean {
         // https://www.obsidianroundup.org/one-size-fits-all-how-to-take-big-notes-and-how-to-take-small-notes/
-        if (["FIGURE", "PICTURE", "IMG"].includes(node.tagName)) {
+        if (
+            ["figure", "picture", "img"]
+                .concat(quoteContainerTags)
+                .includes(node.tagName.toLowerCase())
+        ) {
             return true;
         }
 
