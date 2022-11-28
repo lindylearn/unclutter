@@ -367,6 +367,18 @@
     ],
     "isvle.neu.edu.ph": ["#yui_3_17_2_1_1669620055107_31"],
     "jamesclear.com": [".post__next"],
+    "johncarlosbaez.wordpress.com": [
+        ".widgettitle",
+        "#categories-2",
+        "#respond",
+        "#recent-posts-3",
+        "#comments",
+        "#text-3",
+        ".postmetadata.alt",
+        "#jp-post-flair",
+        "#linkcat-20924250",
+        ".size-small"
+    ],
     "jamie-berrier.medium.com": [
         ".h.k.aj.ak.cu",
         ".xz.ya.yb.yc.yd.l",
