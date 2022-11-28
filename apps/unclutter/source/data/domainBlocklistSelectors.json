@@ -343,6 +343,7 @@
         ".py-16"
     ],
     "ifun.de": [
+        "[id*='div-gpt-ad-']",
         ".aligncenter.size-medium.wp-image-199270.lazy.loaded",
         ".aligncenter.size-large.wp-image-199268.lazy.loaded"
     ],
