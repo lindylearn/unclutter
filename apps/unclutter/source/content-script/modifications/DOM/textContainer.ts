@@ -221,7 +221,8 @@ export default class TextContainerModifier implements PageModifier {
         let currentStack: HTMLElement[] = [];
         while (currentElem !== document.documentElement) {
             if (
-                !currentElem ||
+                // exclude svg nodes with undefined className, e.g. https://github.com/EmbarkStudios/rust-gpu
+                !currentElem?.className.includes ||
                 this.mainStackElements.has(currentElem) ||
                 // don't go into parents if already validated them (only for text containers since their mainStack state doesn't change for parents)
                 (stackType === "text" && this.validatedNodes.has(currentElem))
