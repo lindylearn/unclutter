@@ -345,7 +345,18 @@
     "ifun.de": [
         "[id*='div-gpt-ad-']",
         ".aligncenter.size-medium.wp-image-199270.lazy.loaded",
-        ".aligncenter.size-large.wp-image-199268.lazy.loaded"
+        ".aligncenter.size-large.wp-image-199268.lazy.loaded",
+        "#article-single-featuredimage",
+        "#article-single-stats",
+        "#div-gpt-ad-1446539969275-4",
+        "#hero",
+        "#verbraucherhinweis-728",
+        ".adsbygoogle.adsbygoogle-noablate",
+        ".article-single-feedback",
+        "#aswift_1_host",
+        ".adsbygoogle",
+        ".wpd-thread-list",
+        "#article-single-comments"
     ],
     "independent.co.uk": [".Header__AuthorImage-sc-mqbe6u-4.bEMDmP"],
     "indiatoday.in": [
@@ -368,6 +379,13 @@
     ],
     "isvle.neu.edu.ph": ["#yui_3_17_2_1_1669620055107_31"],
     "jamesclear.com": [".post__next"],
+    "jamie-berrier.medium.com": [
+        ".h.k.aj.ak.cu",
+        ".xz.ya.yb.yc.yd.l",
+        ".qk.ql.qm.qn.l",
+        ".qj.l",
+        ".o.ao.u"
+    ],
     "johncarlosbaez.wordpress.com": [
         ".widgettitle",
         "#categories-2",
@@ -379,13 +397,6 @@
         "#jp-post-flair",
         "#linkcat-20924250",
         ".size-small"
-    ],
-    "jamie-berrier.medium.com": [
-        ".h.k.aj.ak.cu",
-        ".xz.ya.yb.yc.yd.l",
-        ".qk.ql.qm.qn.l",
-        ".qj.l",
-        ".o.ao.u"
     ],
     "kaggle.com": [
         ".sc-jfmDQi.hfJycS",
