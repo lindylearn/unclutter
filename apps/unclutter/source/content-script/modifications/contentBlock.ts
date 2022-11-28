@@ -236,7 +236,7 @@ export const blockedWords = [
     "sharing", // https://theaviationgeekclub.com/sr-71-pilot-explains-how-he-survived-to-his-blackbird-disintegration-at-a-speed-of-mach-3-2/
     "composer",
     "comment", // https://slatestarcodex.com/2014/09/30/i-can-tolerate-anything-except-the-outgroup/
-    "print", // catch all .hidden-print and .print-remove ?
+    "print-", // catch .hidden-print etc, but not .prettyprinted https://webglfundamentals.org/webgl/lessons/webgl-3d-orthographic.html
     "skip", // https://www.fugue.co/blog/2015-11-11-guide-to-emacs.html
     "extra", // https://arxiv.org/abs/2206.02871
     "contacts", // https://www.europarl.europa.eu/news/en/press-room/20220613IPR32838/eu-covid-certificate-meps-and-council-agree-to-extend-rules-for-another-year
