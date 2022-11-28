@@ -339,11 +339,13 @@ export async function syncSearchIndex(
     searchIndexInitialized = true;
 }
 
-// from https://github.com/NaturalNode/natural
 function splitSentences(text: string): string[] {
-    let tokens = text.match(
-        /(?<=\s+|^)["'‘“'"[({⟨]?(.*?[.?!])(\s[.?!])*["'’”'"\])}⟩]?(?=\s+|$)|(?<=\s+|^)\S(.*?[.?!])(\s[.?!])*(?=\s+|$)/g
-    );
+    let tokens;
+    try {
+        // regex from https://stackoverflow.com/questions/11761563/javascript-regexp-for-splitting-text-into-sentences-and-keeping-the-delimiter
+        // be carful, webkit doesn't support lookbehind
+        tokens = text.match(/\(?[^\.\?\!]+[\.!\?]\)?/g);
+    } catch {}
     if (!tokens) {
         return [text];
     }
