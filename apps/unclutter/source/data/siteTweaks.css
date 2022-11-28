@@ -942,3 +942,8 @@ hypothesis-highlight {
     background-color: transparent !important;
     color: var(--lindy-dark-theme-text-color) !important;
 }
+
+/* common invisible font element https://jamanetwork.com/journals/jamapsychiatry/article-abstract/481547 */
+body > [style*="height: 0px;"] {
+    display: none !important;
+}
