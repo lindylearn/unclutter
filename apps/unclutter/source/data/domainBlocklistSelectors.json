@@ -326,6 +326,18 @@
         ".mb-5"
     ],
     "jamesclear.com": [".post__next"],
+    "johncarlosbaez.wordpress.com": [
+        ".widgettitle",
+        "#categories-2",
+        "#respond",
+        "#recent-posts-3",
+        "#comments",
+        "#text-3",
+        ".postmetadata.alt",
+        "#jp-post-flair",
+        "#linkcat-20924250",
+        ".size-small"
+    ],
     "kaggle.com": [
         ".sc-jfmDQi.hfJycS",
         ".sc-ddcaxn.iTnbhq",
