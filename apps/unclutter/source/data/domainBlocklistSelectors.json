@@ -654,6 +654,15 @@
         ".block-list-news"
     ],
     "themarginalian.org": ["#social", "#article_share"],
+    "thenewslens.com": [
+        ".header.js-header",
+        ".tnl-header",
+        "#widget",
+        ".article-author",
+        ".cards-max-w",
+        ".icons-wrapper.icon-animation-mug-hot-wrapper",
+        ".js-subscription-wrapper.cards-container.cards-container-default.cards-center"
+    ],
     "thenewstack.io": [".sponsor_note_rss"],
     "thesaigontimes.vn": [
         ".vc_row_inner.tdi_167.vc_row.vc_inner.wpb_row.td-pb-row",
