@@ -239,6 +239,11 @@
         ".header-legacy__direct-tv",
         ".c-signature-wrapper"
     ],
+    "gamedev.stackexchange.com": [
+        ".votecell.post-layout--left",
+        ".d-flex.fd-column.ai-center.wmn3.hero-background",
+        ".px12.d-flex.ai-center.jc-center.mx-auto.wmx12"
+    ],
     "gamesindustry.biz": [".thumbnail", ".shelf", "#newsletters"],
     "geoslam.com": [
         ".has-text-align-center",
