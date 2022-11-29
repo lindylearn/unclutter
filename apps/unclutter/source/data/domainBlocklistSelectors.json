@@ -338,7 +338,10 @@
         "#blob_contributors_box",
         ".Box-header.Details.js-details-container",
         ".Box.d-flex.flex-column.flex-shrink-0.mb-3",
-        ".position-relative.d-flex.flex-items-center.pb-2.f6.color-fg-muted.border-top.color-border-muted.flex-column-reverse.flex-lg-row.flex-wrap.flex-lg-nowrap.mt-6.pt-6"
+        ".position-relative.d-flex.flex-items-center.pb-2.f6.color-fg-muted.border-top.color-border-muted.flex-column-reverse.flex-lg-row.flex-wrap.flex-lg-nowrap.mt-6.pt-6",
+        ".js-repo-nav.js-sidenav-container-pjax.js-responsive-underlinenav.overflow-hidden.UnderlineNav.px-3.px-md-4.px-lg-5",
+        ".py-1",
+        ".gh-header-actions.mt-0.mt-md-2.mb-3.mb-md-0.ml-0.flex-md-order-1.flex-shrink-0.d-flex.flex-items-start"
     ],
     "gitlab.com": [".issuable-discussion"],
     "gizmodo.com": [
