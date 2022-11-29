@@ -242,7 +242,6 @@
     ],
     "fenbi.com": [".mokaodasai-title", ".mokaodasai"],
     "fiercehealthcare.com": ["[style*='height: 0px;']"],
-    "jamanetwork.com": ["[style*='height: 0px;']"],
     "forwardobserver.com": [".attachment-large.size-large.wp-post-image"],
     "francetvinfo.fr": [
         ".header-legacy__direct-radio",
@@ -297,6 +296,11 @@
         "#mgid-container"
     ],
     "grammarly.com": [".F0u0G-container", "._16iRt-container"],
+    "gsmarena.com": [
+        ".pad",
+        ".brandmenu-v2.light.l-box.clearfix",
+        ".sidebar.col.left"
+    ],
     "hackster.io": ["#hello-world"],
     "hdvietnam.org": ["#likes-post-10851880", ".sharePage"],
     "heise.de": [
@@ -379,6 +383,7 @@
         ".mb-5"
     ],
     "isvle.neu.edu.ph": ["#yui_3_17_2_1_1669620055107_31"],
+    "jamanetwork.com": ["[style*='height: 0px;']"],
     "jamesclear.com": [".post__next"],
     "jamie-berrier.medium.com": [
         ".h.k.aj.ak.cu",
