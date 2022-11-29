@@ -117,6 +117,8 @@ export default class BodyStyleModifier implements PageModifier {
         document.documentElement.style.setProperty("overflow-y", "scroll", "important");
         document.documentElement.style.setProperty("width", "100%", "important");
         document.documentElement.style.setProperty("height", "auto", "important");
+        document.documentElement.style.setProperty("left", "0", "important");
+        document.documentElement.style.setProperty("right", "0", "important");
         document.documentElement.style.setProperty("max-width", "none", "important");
         document.documentElement.style.setProperty("margin", "0", "important");
         document.documentElement.style.setProperty(
