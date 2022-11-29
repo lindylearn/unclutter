@@ -160,6 +160,22 @@
         ".column-content.cleared"
     ],
     "daringfireball.net": [".smallprint", "#SiteSearch", "#Sidebar"],
+    "dekoder.org": [
+        ".ph-header",
+        ".ph-social-bar",
+        ".ph-article-source-logo-image-link",
+        ".ph-article-source-logo-wrapper",
+        ".ph-dossier-relation-list",
+        ".ph-dossier-relation",
+        ".ph-article-aside.ph-article-aside-get-pocket.is-right",
+        ".undefined",
+        ".donation-encourager__wrapper",
+        ".grid.ph-relateds",
+        ".ph-footer",
+        ".ph-footer-logos",
+        ".region.region-page-bottom",
+        "#mc_embed_signup"
+    ],
     "denizlihaber.com": [
         "#topbtns",
         ".combox",
@@ -242,7 +258,6 @@
     ],
     "fenbi.com": [".mokaodasai-title", ".mokaodasai"],
     "fiercehealthcare.com": ["[style*='height: 0px;']"],
-    "jamanetwork.com": ["[style*='height: 0px;']"],
     "forwardobserver.com": [".attachment-large.size-large.wp-post-image"],
     "francetvinfo.fr": [
         ".header-legacy__direct-radio",
@@ -379,6 +394,7 @@
         ".mb-5"
     ],
     "isvle.neu.edu.ph": ["#yui_3_17_2_1_1669620055107_31"],
+    "jamanetwork.com": ["[style*='height: 0px;']"],
     "jamesclear.com": [".post__next"],
     "jamie-berrier.medium.com": [
         ".h.k.aj.ak.cu",
