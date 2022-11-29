@@ -8,6 +8,8 @@ To enable the feature, click on the "pen" icon in the top right of the article v
 
 ## Hypothes.is sync
 
+**Note: the Hypothes.is sync is currently disabled but will be working again soon. See https://github.com/lindylearn/unclutter/issues/509**
+
 You can configure your highlights and notes to be synchronized with [Hypothes.is](https://web.hypothes.is)
 in order to access them on different devices, organize, or import them into note-taking apps.
 
