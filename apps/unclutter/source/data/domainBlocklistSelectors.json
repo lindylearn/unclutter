@@ -150,7 +150,6 @@
         ".ad.ad--top",
         ".img-meta",
         ".rcp-header-btns.ds-btn-box",
-        ".recipe-text",
         ".ds-hr",
         ".vr-7hkp7s5p5k-frame-header",
         "#vr-7hkp7s5p5k-wrapper",
@@ -166,7 +165,12 @@
         ".ds-box.ds-col-12.ds-col-m-4.ds-col-m-off-8",
         ".ad.ds-box.ds-grid-float.ds-col-12.ds-col-m-8.ds-or-3",
         ".ds-box.ds-text-center",
-        "#recipe-comments"
+        "#recipe-comments",
+        ".r-header",
+        ".r-skl-a-nav",
+        ".pi-cont",
+        ".ad--skyscraper",
+        "[data-vars-tracking-title='Weitere Rezepte von']"
     ],
     "christianitytoday.com": [".article-embed"],
     "cloud.tencent.com": [".layout-side"],
