@@ -140,6 +140,23 @@
         ".remind",
         ".menu"
     ],
+    "chefkoch.de": [
+        ".r-nav-box",
+        ".r-ri-row",
+        ".r-nav",
+        "#superbanner_1",
+        ".mm-wrapper.ads__initialized",
+        ".ds-container.bc-wrap",
+        ".ad.ad--top",
+        ".img-meta",
+        ".rcp-header-btns.ds-btn-box",
+        ".recipe-text",
+        ".ds-hr",
+        ".vr-7hkp7s5p5k-frame-header",
+        "#vr-7hkp7s5p5k-wrapper",
+        "#outstream_div",
+        ".i-amphtml-layout-fixed-height.i-amphtml-layout-size-defined.i-amphtml-element.i-amphtml-built.i-amphtml-layout"
+    ],
     "christianitytoday.com": [".article-embed"],
     "cloud.tencent.com": [".layout-side"],
     "cloudemployee.co.uk": [
