@@ -886,6 +886,18 @@ pre {
 .notion-spacer {
     min-width: 0 !important;
 }
+.notion-frame {
+    height: 100% !important;
+}
+.notion-page-content {
+    padding: 0 !important;
+}
+.notion-topbar {
+    display: none !important;
+}
+.pseudoSelection[contenteditable] {
+    display: none !important;
+}
 
 /* https://www.coursera.org/learn/the-science-of-well-being/supplement/7ASYp/welcome-letter-from-professor-santos */
 section.ItemPageLayout.ItemPageLayout {
