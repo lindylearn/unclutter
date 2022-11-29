@@ -690,6 +690,7 @@
         ".getsocial",
         "[id*='like-post-wrapper-']"
     ],
+    "strana.today": [".img-wrap", ".live-block", ".main-right-column"],
     "sueddeutsche.de": [
         ".css-wlr69t",
         ".css-1t38pmg",
