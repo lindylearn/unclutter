@@ -318,6 +318,11 @@
         "#mgid-container"
     ],
     "grammarly.com": [".F0u0G-container", "._16iRt-container"],
+    "gsmarena.com": [
+        ".pad",
+        ".brandmenu-v2.light.l-box.clearfix",
+        ".sidebar.col.left"
+    ],
     "hackster.io": ["#hello-world"],
     "hdvietnam.org": ["#likes-post-10851880", ".sharePage"],
     "heise.de": [
