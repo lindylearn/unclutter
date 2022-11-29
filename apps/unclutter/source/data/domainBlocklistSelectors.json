@@ -564,6 +564,14 @@
     "nationalpost.com": [".visually-hidden", ".more-topic"],
     "nautil.us": [".article-action-list", ".a__sc-np32r2-0.dalZPh"],
     "nazory.pravda.sk": ["#rmpPlayer", ".container.no-padding-advert"],
+    "neowin.net": [
+        ".nav-mobile.nav-item-deals.mega-parent",
+        ".nav-item-news.active.mega-parent",
+        ".nav-item-features.mega-parent",
+        ".nav-item-forums",
+        ".nav-item-deals.mega-parent",
+        ".nav-menu.menu"
+    ],
     "news.marsbit.co": [".news-wxshare-icon"],
     "news.microsoft.com": [
         ".f-hero-header",
