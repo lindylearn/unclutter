@@ -472,6 +472,11 @@
         ".h1.g-color-black.g-font-weight-700.mb-4",
         ".row.g-mb-20"
     ],
+    "kommersant.ru": [
+        ".actual__nav_button.actual__nav_button--next.slider-next",
+        ".actual__list.slider-canvas",
+        ".adv_nest.adv_nest--300x250_top.hide_desktop"
+    ],
     "kotaku.com": [
         ".ag987e-0.jWLdUN.btn.btn-play",
         ".video-html5-player",
