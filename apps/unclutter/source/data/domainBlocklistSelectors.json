@@ -586,6 +586,9 @@
         ".c-keywords",
         ".c-detailkeyward"
     ],
+    "notes.cloudcat.ca": [
+        ".ui-infobar.container-fluid.unselectable.hidden-print"
+    ],
     "nyheder.tv2.dk": [
         ".tc_deck.tc_deck--color-100.tc_deck--col3center",
         ".tc_video",
