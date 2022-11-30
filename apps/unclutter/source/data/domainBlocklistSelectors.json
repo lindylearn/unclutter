@@ -572,6 +572,16 @@
     ],
     "news.yahoo.com": ["#close-button-section"],
     "news.ycombinator.com": ["#hnmain > tbody > tr:last-child"],
+    "newscientist.com": [
+        ".card__eyebrow.card__eyebrow--health",
+        ".card__eyebrow.card__eyebrow--humans",
+        ".card__content.card__content--linked",
+        ".section-article-list__title",
+        ".article-topics.article-topics--row",
+        ".references.font-sans-serif-xxs--bold",
+        ".box-out.box-out--standard",
+        ".social__button-container"
+    ],
     "newyorker.com": [
         ".SocialIconsList-Nwcjr.bFHhOT.social-icons__list",
         ".b1x8o18",
