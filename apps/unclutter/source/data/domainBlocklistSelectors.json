@@ -113,6 +113,7 @@
         ".row.post-top-meta"
     ],
     "bostonherald.com": [".connext-modal-backdrop.fade"],
+    "brave.com": [".section.pt-12.container"],
     "builtin.com": [
         ".field.field--name-field-oc-name.field--type-string.field--label-hidden.field__item",
         ".info",
