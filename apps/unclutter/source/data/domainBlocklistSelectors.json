@@ -699,6 +699,10 @@
         "#app-head"
     ],
     "stackoverflow.com": [".votecell.post-layout--left", ".bottom-notice"],
+    "standard.co.uk": [
+        ".apester-media.apester-unit",
+        "#indy-top-container-wrapper"
+    ],
     "steveblank.com": [
         "#syndication",
         "#searchbox",
