@@ -650,6 +650,11 @@
         ".sc-1c2a70fc-0.gRjkXN",
         ".sc-c7de6d20-2.hiblGN"
     ],
+    "online-stopwatch.com": [
+        ".boxButtonStyle",
+        ".OSAd_top",
+        ".box.green.grunge"
+    ],
     "osrp.lanl.gov": ["#backband", "#backband2", "#lanlbar", "#toolbar"],
     "phoronix.com": [".node", "#about-author", "#sharebar", ".after-article"],
     "popsci.com.tr": [
