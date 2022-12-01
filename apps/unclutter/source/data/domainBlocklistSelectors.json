@@ -479,7 +479,7 @@
     "kommersant.ru": [
         ".actual__nav_button.actual__nav_button--next.slider-next",
         ".actual__list.slider-canvas",
-        ".adv_nest.adv_nest--300x250_top.hide_desktop"
+        ".adv_nest"
     ],
     "kotaku.com": [
         ".ag987e-0.jWLdUN.btn.btn-play",
