@@ -634,7 +634,10 @@
     ],
     "observablehq.com": [".mr3.lh-copy", "#showtitlewrapper"],
     "obsidianroundup.org": [".gh-toc"],
-    "oglobo.globo.com": [".tp-container-inner"],
+    "oglobo.globo.com": [
+        ".tp-container-inner",
+        ".tbl-feed-header.tbl-logo-right-position.tbl-header-with-text"
+    ],
     "ole.com.ar": [
         ".sc-ded1e020-0.gvAvuc",
         ".sc-638a79c3-0.krJuTq",
