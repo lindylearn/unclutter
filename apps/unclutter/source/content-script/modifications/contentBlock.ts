@@ -7,6 +7,7 @@ import TextContainerModifier, {
     lindyImageContainerClass,
     lindyMainContentContainerClass,
     lindyMainHeaderContainerClass,
+    quoteContainerTags,
 } from "./DOM/textContainer";
 import { PageModifier, trackModifierExecution } from "./_interface";
 
@@ -34,11 +35,11 @@ export default class ContentBlockModifier implements PageModifier {
             return;
         }
 
-        const excludedSelectors = [
+        const excludedSelectors = quoteContainerTags.concat([
             `.${lindyImageContainerClass}`,
             `.lindy-overlay-elem`,
             `svg`, // <svg> e.g. on https://garymarcus.substack.com/p/what-does-it-mean-when-an-ai-fails?s=r
-        ];
+        ]);
 
         // be less strict if no main text or header found respectively
         if (this.textContainerModifier.foundMainContentElement) {

@@ -16,7 +16,7 @@ const globalTextElementSelector = "p, font, ul";
 const globalHeadingSelector = "h1, h2, h3, h4, header, [class*='head' i], [class*='title' i]";
 const headingClassWordlist = ["header", "heading", "title", "article-details"]; // be careful here
 const globalImageSelector = "img, picture, figure, video";
-const quoteContainerTags = ["blockquote", "code", "pre"];
+export const quoteContainerTags = ["blockquote", "code", "pre"];
 
 const headingTags = globalHeadingSelector.split(", ");
 
