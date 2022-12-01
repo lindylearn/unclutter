@@ -497,8 +497,7 @@ export default class TextContainerModifier implements PageModifier {
             .${lindyHeadingContainerClass}:before, 
             .${lindyContainerClass}:after,
             .${lindyHeadingContainerClass}:after,
-            ${quoteContainerTags.join(":before, ")},
-            ${quoteContainerTags.join(":after, ")} {
+            ${quoteContainerTags.map((tag) => `${tag}:before, ${tag}:after`).join(", ")} {
                 display: none !important;
             }
             ${quoteContainerTags.join(", ")} {
