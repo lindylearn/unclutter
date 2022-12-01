@@ -1043,7 +1043,7 @@ export default class TextContainerModifier implements PageModifier {
     // very carefully exclude elements as text containers to avoid incorrect main container selection for small articles
     // this doesn't mean these elements will be removed, but they might
     private shouldExcludeAsTextContainer(node: HTMLElement): boolean {
-        if (quoteContainerTags.includes(node.tagName.toLowerCase())) {
+        if (quoteContainerTags.concat(["nav"]).includes(node.tagName.toLowerCase())) {
             // leave style of quotes intact
             // e.g. https://knowledge.wharton.upenn.edu/article/how-price-shocks-in-formative-years-scar-consumption-for-life/
             return true;
