@@ -691,6 +691,15 @@
         ".article-toolbar__container__FHGRl.article-toolbar__hidden-on-desktop__1yvVL.article-toolbar__align-left__1RG-m"
     ],
     "rha.ole.redhat.com": [".section"],
+    "rmf24.pl": [
+        ".boxHeader",
+        ".i2",
+        ".i4",
+        ".i3",
+        ".embed.Embed-left.articleEmbedArticleListTitle",
+        ".img-responsive",
+        ".detailsNew"
+    ],
     "ruanyifeng.com": [".wwads-cn.wwads-horizontal"],
     "sandboxx.us": [".content#genesis-content::before"],
     "semiengineering.com": [".col-xs-12.col-sm-6.col-md-7"],
