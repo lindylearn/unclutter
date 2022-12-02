@@ -691,6 +691,23 @@
         ".article-toolbar__container__FHGRl.article-toolbar__hidden-on-desktop__1yvVL.article-toolbar__align-left__1RG-m"
     ],
     "rha.ole.redhat.com": [".section"],
+    "rmf24.pl": [
+        ".areaCont.areaYellow",
+        ".bradio.info-radio",
+        ".boxHeader",
+        ".i2",
+        ".i1",
+        ".i4",
+        ".embed.Embed-left.articleEmbedArticleListTitle",
+        ".article-footer",
+        ".img-responsive.lazyloaded",
+        ".img-responsive",
+        "#naj",
+        ".col-sm-6.col-md-12",
+        "#contentBlockBasic1",
+        ".elementTagsListTitle",
+        ".box.elementTagsListBox"
+    ],
     "ruanyifeng.com": [".wwads-cn.wwads-horizontal"],
     "sandboxx.us": [".content#genesis-content::before"],
     "semiengineering.com": [".col-xs-12.col-sm-6.col-md-7"],
