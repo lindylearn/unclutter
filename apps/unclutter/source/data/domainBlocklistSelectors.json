@@ -434,6 +434,7 @@
         ".widget-type-cell"
     ],
     "infobae.com": [".jw-wrapper.jw-reset", ".jwplayer-ctn", ".cst_ctn"],
+    "infowars.com": [".css-1uennhi", ".css-1iu5b6c", ".css-1b72fk2"],
     "investor.vanguard.com": [".cmp-articleaspot__pills"],
     "invistaspiti.com.br": [
         ".btn.btn-gray-dark.dropdown-toggle",
