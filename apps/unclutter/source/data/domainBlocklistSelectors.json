@@ -434,6 +434,14 @@
         ".widget-type-cell"
     ],
     "infobae.com": [".jw-wrapper.jw-reset", ".jwplayer-ctn", ".cst_ctn"],
+    "infowars.com": [
+        ".css-1uennhi",
+        ".css-1iu5b6c",
+        ".css-1b72fk2",
+        ".wp-block-embed-youtube.wp-block-embed.is-type-video.is-provider-youtube.wp-embed-aspect-16-9.wp-has-aspect-ratio",
+        ".ifw-player.expanded",
+        ".wp-block-separator"
+    ],
     "investor.vanguard.com": [".cmp-articleaspot__pills"],
     "invistaspiti.com.br": [
         ".btn.btn-gray-dark.dropdown-toggle",
