@@ -595,6 +595,11 @@
         ".box-out.box-out--standard",
         ".social__button-container"
     ],
+    "newspunch.com": [
+        ".code-block.code-block-1",
+        ".sby-owl-item.active",
+        ".sby-owl-item"
+    ],
     "newyorker.com": [
         ".SocialIconsList-Nwcjr.bFHhOT.social-icons__list",
         ".b1x8o18",
