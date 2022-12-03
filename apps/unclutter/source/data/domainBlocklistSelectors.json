@@ -15,6 +15,11 @@
         ".field.field-name-field-image.field-type-image.field-label-hidden"
     ],
     "ansage.org": ["#ansag-1918435765"],
+    "apnews.com": [
+        ".Component-apps-0-2-57",
+        ".Component-followAp-0-2-59",
+        ".Component-title-0-2-62"
+    ],
     "apple.com": [
         "#ac-localeswitcher",
         ".sharesheet.component",
