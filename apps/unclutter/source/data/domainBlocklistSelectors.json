@@ -102,6 +102,7 @@
         "#passportbox",
         ".passport-login-container"
     ],
+    "blog.daniellop.me": ["#gh-head"],
     "blog.frankel.ch": [".post-full-image"],
     "blog.jetbrains.com": [
         "#ez-toc-container",
