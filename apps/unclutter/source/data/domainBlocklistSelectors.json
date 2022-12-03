@@ -405,6 +405,14 @@
         ".mb-8.ui-text-15.ui-text-15--bold",
         ".py-16"
     ],
+    "ianmcallister.substack.com": [
+        ".captioned-image-container",
+        ".post-subheader.meta-subheader",
+        ".subtitle",
+        ".post-preview.portable-archive-post.has-image",
+        ".portable-archive-tabs",
+        ".single-post-section"
+    ],
     "ifun.de": [
         "[id*='div-gpt-ad-']",
         ".aligncenter.size-medium.wp-image-199270.lazy.loaded",
