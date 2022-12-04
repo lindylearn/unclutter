@@ -691,6 +691,13 @@
         ".article-toolbar__container__FHGRl.article-toolbar__hidden-on-desktop__1yvVL.article-toolbar__align-left__1RG-m"
     ],
     "rha.ole.redhat.com": [".section"],
+    "rp.pl": [
+        ".nav--bar.navBar",
+        "#contentVideoAdvert",
+        ".bg",
+        ".circle",
+        ".has--dimensions.lazyLoad.entered.loaded"
+    ],
     "ruanyifeng.com": [".wwads-cn.wwads-horizontal"],
     "sandboxx.us": [".content#genesis-content::before"],
     "semiengineering.com": [".col-xs-12.col-sm-6.col-md-7"],
