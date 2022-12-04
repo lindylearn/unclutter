@@ -926,5 +926,15 @@
         "#cbox-iSUAOAHAYhUZ240B",
         ".get-updates"
     ],
-    "zhuanlan.zhihu.com": [".css-d45dic", ".css-1f4osvg", ".Button.css-1u5s92v"]
+    "zhuanlan.zhihu.com": [
+        ".css-d45dic",
+        ".css-1f4osvg",
+        ".Button.css-1u5s92v"
+    ],
+    "zingnews.vn": [
+        ".article-thumbnail",
+        ".sticky-header.sticky-header--show",
+        "#innerarticle",
+        ".the-article-tags"
+    ]
 }
