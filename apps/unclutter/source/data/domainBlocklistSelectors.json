@@ -52,6 +52,7 @@
         ".class__active-el",
         ".visually-hidden.focusable"
     ],
+    "baomoi.com": [".bm_FA", ".bm_AM", ".bm_FB"],
     "bbc.com": [
         ".ssrcss-ab5fd8-StyledFigureContainer.e34k3c21",
         ".ssrcss-2z3pjz-SectionWrapper.e1nh2i2l2"
