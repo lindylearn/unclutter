@@ -122,7 +122,7 @@ export async function createRemoteAnnotation(
     localAnnotation: Annotation,
     page_url: string,
     page_title: string
-): Promise<void> {
+): Promise<string> {
     const username = await getHypothesisUsername();
     const response = await fetch(`${hypothesisApi}/annotations`, {
         ...(await _getConfig()),
@@ -150,10 +150,12 @@ export async function createRemoteAnnotation(
             references: [], // localAnnotation.reply_to ? [localAnnotation.reply_to] : [],
         }),
     });
+    const json = await response.json();
+    return json.id;
 }
 
 export async function deleteRemoteAnnotation(annotation: Annotation): Promise<void> {
-    await fetch(`${hypothesisApi}/annotations/${annotation.id}`, {
+    await fetch(`${hypothesisApi}/annotations/${annotation.h_id}`, {
         ...(await _getConfig()),
         method: "DELETE",
     });
@@ -161,7 +163,7 @@ export async function deleteRemoteAnnotation(annotation: Annotation): Promise<vo
 
 export async function updateRemoteAnnotation(annotation: Annotation): Promise<void> {
     const username = await getHypothesisUsername();
-    const response = await fetch(`${hypothesisApi}/annotations/${annotation.id}`, {
+    const response = await fetch(`${hypothesisApi}/annotations/${annotation.h_id}`, {
         ...(await _getConfig()),
         method: "PATCH",
         body: JSON.stringify({
@@ -172,8 +174,8 @@ export async function updateRemoteAnnotation(annotation: Annotation): Promise<vo
             },
         }),
     });
-    const json = await response.json();
-    return json;
+    // const json = await response.json();
+    // return json;
 }
 
 export async function upvoteRemoteAnnotation(pageUrl, annotationId, isUpvote) {

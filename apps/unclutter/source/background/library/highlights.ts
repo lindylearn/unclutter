@@ -59,7 +59,13 @@ async function fetchRemoteAnnotations() {
     await importAnnotations(annotations.slice(0, 10));
 }
 
+let watchActive = false;
 async function watchLocalAnnotations() {
+    if (watchActive) {
+        return;
+    }
+    watchActive = true;
+
     rep.watch("annotations/", async (changed: Annotation[], removed: Annotation[]) => {
         if (changed.length === 0 && removed.length === 0) {
             return;
@@ -79,17 +85,29 @@ async function watchLocalAnnotations() {
             return acc;
         }, {});
 
-        return;
-
         // upload changes
         await Promise.all(
             changed.map(async (annotation) => {
                 const article = articleMap[annotation.article_id];
 
-                if (true) {
+                if (annotation.h_id) {
+                    // already exists remotely
                     return updateRemoteAnnotation(annotation);
                 } else {
-                    return createRemoteAnnotation(annotation, article.url, article.title);
+                    // create remotely, then save id
+                    const remoteId = await createRemoteAnnotation(
+                        annotation,
+                        article.url,
+                        article.title
+                    );
+                    await processReplicacheMessage({
+                        type: "mutate",
+                        methodName: "updateAnnotation",
+                        args: {
+                            id: annotation.id,
+                            h_id: remoteId,
+                        },
+                    });
                 }
             })
         );

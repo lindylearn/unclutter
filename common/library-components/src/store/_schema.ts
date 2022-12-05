@@ -65,6 +65,8 @@ export const annotationSchema = entitySchema.extend({
     text: z.optional(z.string()),
     tags: z.optional(z.array(z.string())),
     is_favorite: z.optional(z.boolean()),
+
+    h_id: z.optional(z.string()), // remote id if synced with hypothesis
 });
 export type Annotation = z.infer<typeof annotationSchema>;
 

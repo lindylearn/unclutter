@@ -74,6 +74,8 @@ export interface LindyAnnotation {
     isPublic: boolean;
     reply_to?: string;
 
+    h_id?: string; // remote id if synced with hypothesis
+
     // local state
     url: string;
     isMyAnnotation?: boolean;
@@ -92,6 +94,7 @@ export function hypothesisToLindyFormat(annotation: any, currentUsername: string
     const author: string = annotation.user.match(/([^:]+)@/)[1];
     return {
         id: annotation.id,
+        h_id: annotation.id,
         url: annotation.uri,
         author,
         isMyAnnotation: author === currentUsername,
@@ -116,6 +119,7 @@ export function hypothesisToLindyFormat(annotation: any, currentUsername: string
 export function pickleLocalAnnotation(annotation: LindyAnnotation): Annotation {
     return {
         id: annotation.id,
+        h_id: annotation.h_id,
         article_id: getUrlHash(annotation.url),
         created_at: new Date(annotation.created_at).getTime() / 1000,
         quote_text: annotation.quote_text,
