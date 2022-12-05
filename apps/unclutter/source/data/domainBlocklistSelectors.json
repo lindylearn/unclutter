@@ -881,7 +881,8 @@
         ".duet--article--article-body-component.block.clear-both",
         ".inline.pr-4.font-bold",
         ".pt-12",
-        ".flex.items-center"
+        ".flex.items-center",
+        ".mb-16.font-polysans-mono.text-16.font-light.tracking-2.leading-120.text-gray-13"
     ],
     "thewalrus.ca": ["._form-content", ".code-block.code-block-4"],
     "tienphong.vn": [
