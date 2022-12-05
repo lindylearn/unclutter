@@ -7,8 +7,7 @@ export function createDraftAnnotation(
     reply_to: string = null
 ): LindyAnnotation {
     return createAnnotation(url, selector, {
-        id: null,
-        localId: generateId(),
+        id: generateId(),
         reply_to,
         isMyAnnotation: true,
     });
@@ -34,7 +33,6 @@ export function createAnnotation(
     return {
         ...partial,
         id: partial.id,
-        localId: partial.localId || partial.id,
         url,
         quote_text: selector?.[2]?.exact || "_",
         text: partial.text || "",
@@ -77,7 +75,6 @@ export interface LindyAnnotation {
     reply_to?: string;
 
     // local state
-    localId?: string; // immutable local annotation id (stays the same through remote synchronization)
     url: string;
     isMyAnnotation?: boolean;
     displayOffset?: number;
@@ -96,7 +93,6 @@ export function hypothesisToLindyFormat(annotation: any, currentUsername: string
     return {
         id: annotation.id,
         url: annotation.uri,
-        localId: annotation.id, // base comparisons on immutable localId
         author,
         isMyAnnotation: author === currentUsername,
         platform: "h",

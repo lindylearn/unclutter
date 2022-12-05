@@ -29,7 +29,7 @@ export async function anchorAnnotations(
                 }
 
                 const highlightedNodes = highlightRange(
-                    annotation.localId,
+                    annotation.id,
                     range,
                     annotation.isMyAnnotation ? "lindy-highlight" : "lindy-crowd-highlight"
                 );
@@ -168,7 +168,7 @@ export function insertMarginBar(
 
             sendSidebarEvent(sidebarIframe, {
                 event: "focusAnnotation",
-                localId: annotation.localId,
+                id: annotation.id,
             });
         };
 
@@ -185,14 +185,14 @@ export function removeAllHighlights() {
 
 // a highlight may comprise multiple text nodes
 export function getAnnotationNodes(annotation): HTMLElement[] {
-    const nodeList = document.querySelectorAll(`lindy-highlight[id="${annotation.localId}"]`);
+    const nodeList = document.querySelectorAll(`lindy-highlight[id="${annotation.id}"]`);
     return [...nodeList] as HTMLElement[];
 }
 
 // remove a specific text highlighting
 export function removeHighlight(annotation) {
     document
-        .querySelector(`lindy-highlight[id="${annotation.localId}"] > .lindy-highlight-dot`)
+        .querySelector(`lindy-highlight[id="${annotation.id}"] > .lindy-highlight-dot`)
         ?.remove();
 
     const nodes = getAnnotationNodes(annotation);
@@ -249,7 +249,7 @@ export function addHighlightDot(annotation: LindyAnnotation, sidebarIframe: HTML
 
         sendSidebarEvent(sidebarIframe, {
             event: "focusAnnotation",
-            localId: annotation.localId,
+            id: annotation.id,
         });
     };
     dotNode.onmouseleave = () => {
@@ -258,7 +258,7 @@ export function addHighlightDot(annotation: LindyAnnotation, sidebarIframe: HTML
     dotNode.onclick = () => {
         sendSidebarEvent(sidebarIframe, {
             event: "focusAnnotation",
-            localId: annotation.localId,
+            id: annotation.id,
         });
     };
 }

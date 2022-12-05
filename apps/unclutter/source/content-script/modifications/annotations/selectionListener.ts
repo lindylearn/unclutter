@@ -175,7 +175,7 @@ async function _createAnnotationFromSelection(
 
     // use id created during selection to keep same color
     let annotation = createDraftAnnotation(window.location.href, annotationSelector);
-    annotation.localId = activeAnnotationId;
+    annotation.id = activeAnnotationId;
     annotation.focused = true;
 
     // wrap with custom html node

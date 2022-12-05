@@ -81,7 +81,7 @@ function createReplyFactory(mutateAnnotations: React.Dispatch<AnnotationMutation
         // mutateAnnotations({ action: "update", annotation: threadStart });
         // const remoteAnnotation = await createRemoteAnnotation(reply, null);
         // function updateIdDfs(current: LindyAnnotation) {
-        //     if (current.localId === remoteAnnotation.localId) {
+        //     if (current.id === remoteAnnotation.id) {
         //         current.id = remoteAnnotation.id;
         //         return;
         //     }
@@ -147,7 +147,7 @@ function onAnnotationHoverUpdateFactory(mutateAnnotations: React.Dispatch<Annota
         if (!hoverActive) {
             mutateAnnotations({
                 action: "focusAnnotation",
-                annotation: { localId: null } as LindyAnnotation,
+                annotation: { id: null } as LindyAnnotation,
             });
         }
 

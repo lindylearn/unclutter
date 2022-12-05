@@ -22,7 +22,7 @@ export const colors = [
 ];
 
 export function getAnnotationColor(annotation: LindyAnnotation): string {
-    return getRandomColor(annotation.localId || annotation.id);
+    return getRandomColor(annotation.id);
 }
 
 export function getRandomColor(seed: string) {

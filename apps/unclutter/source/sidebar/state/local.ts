@@ -33,10 +33,10 @@ export function annotationReducer(
                 return [...existingAnnotations, ...(mutation.annotations || [])];
             }
         case "remove":
-            return annotations.filter((a) => a.localId !== mutation.annotation.localId);
+            return annotations.filter((a) => a.id !== mutation.annotation.id);
         case "update":
             return annotations.map((a) => {
-                if (a.localId !== mutation.annotation.localId) {
+                if (a.id !== mutation.annotation.id) {
                     return a;
                 } else {
                     // don't overwrite local focus changes
@@ -50,13 +50,13 @@ export function annotationReducer(
         case "changeDisplayOffsets":
             return annotations.map((a) => ({
                 ...a,
-                displayOffset: mutation.offsetById[a.localId],
-                displayOffsetEnd: mutation.offsetEndById[a.localId],
+                displayOffset: mutation.offsetById[a.id],
+                displayOffsetEnd: mutation.offsetEndById[a.id],
             }));
         case "focusAnnotation":
             return annotations.map((a) => ({
                 ...a,
-                focused: a.localId === mutation?.annotation?.localId, // null to unfocus
+                focused: a.id === mutation?.annotation?.id, // null to unfocus
             }));
     }
 }
@@ -69,7 +69,7 @@ export function handleWindowEventFactory(
 ) {
     return async function ({ data }) {
         if (data.event === "createHighlight") {
-            // show state with localId immediately
+            // show state with id immediately
             mutateAnnotations({ action: "add", annotation: data.annotation });
 
             // update remotely, then replace local state

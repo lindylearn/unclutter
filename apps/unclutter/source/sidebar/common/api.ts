@@ -33,7 +33,7 @@ export async function getLindyAnnotations(url: string): Promise<LindyAnnotation[
             return {
                 ...annotation,
                 isPublic: true,
-                localId: annotation.id,
+
                 url,
                 replies: annotation.replies.map(mapFormat),
                 isMyAnnotation: annotation.author === username,

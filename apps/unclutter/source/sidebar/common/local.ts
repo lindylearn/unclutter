@@ -13,8 +13,6 @@ export async function getLocalAnnotations(pageUrl: string): Promise<LindyAnnotat
 }
 
 export async function createLocalAnnotation(annotation: LindyAnnotation): Promise<LindyAnnotation> {
-    annotation.id = annotation.localId;
-
     await rep.mutate.putAnnotation(pickleLocalAnnotation(annotation));
     return annotation;
 }

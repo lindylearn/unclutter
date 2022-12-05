@@ -50,7 +50,7 @@ function AnnotationThread(props: AnnotationThreadProps) {
                 <div className="annotation-reply ml-5 mt-1">
                     {props.annotation.replies?.map((reply) => (
                         <AnnotationThread
-                            key={reply.localId}
+                            key={reply.id}
                             {...props}
                             annotation={reply}
                             replyLevel={replyLevel + 1}

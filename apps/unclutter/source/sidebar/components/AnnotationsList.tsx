@@ -29,7 +29,7 @@ function AnnotationsList({
     createReply,
     updateAnnotation,
 }: AnnotationsListProps) {
-    const itemsRef = useRef({}); // annotation localId -> ref of rendered annotation node
+    const itemsRef = useRef({}); // annotation id -> ref of rendered annotation node
 
     const [_, rerender] = useState(0); // state to force re-renders
     const [resizeObserver, setResizeObserver] = useState(null);
@@ -61,7 +61,7 @@ function AnnotationsList({
             .flatMap((group) => group)
             .filter((a) => a.isMyAnnotation)
             .map((a) => {
-                const ref = itemsRef.current[a.localId];
+                const ref = itemsRef.current[a.id];
                 observer.observe(ref);
             });
 
@@ -88,9 +88,7 @@ function AnnotationsList({
 
                 return group.map((annotation, i) => {
                     // items are in flat list, so must track previous group items for correct absolute position
-                    const prevSiblingsRefs = group
-                        .slice(0, i)
-                        .map((a) => itemsRef.current?.[a.localId]);
+                    const prevSiblingsRefs = group.slice(0, i).map((a) => itemsRef.current?.[a.id]);
 
                     // get absolute offset after the group start
                     let innerGroupOffset: number;
@@ -111,12 +109,12 @@ function AnnotationsList({
 
                     return (
                         <CSSTransition
-                            key={annotation.localId}
+                            key={annotation.id}
                             timeout={500} // must be larger than animation duration
                             classNames="annotation-list-item"
                         >
                             <div
-                                key={annotation.localId}
+                                key={annotation.id}
                                 className="annotation-list-item absolute w-full"
                                 style={{
                                     top: groupTopOffset + innerGroupOffset,
@@ -124,9 +122,9 @@ function AnnotationsList({
                                 }}
                                 ref={(el) => {
                                     if (el) {
-                                        itemsRef.current[annotation.localId] = el;
+                                        itemsRef.current[annotation.id] = el;
                                     } else {
-                                        delete itemsRef.current[annotation.localId];
+                                        delete itemsRef.current[annotation.id];
                                     }
                                 }}
                             >
