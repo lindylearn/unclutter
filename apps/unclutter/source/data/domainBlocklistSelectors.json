@@ -726,6 +726,13 @@
         ".article-toolbar__container__FHGRl.article-toolbar__hidden-on-desktop__1yvVL.article-toolbar__align-left__1RG-m"
     ],
     "rha.ole.redhat.com": [".section"],
+    "rp.pl": [
+        ".nav--bar.navBar",
+        "#contentVideoAdvert",
+        ".bg",
+        ".circle",
+        ".has--dimensions.lazyLoad.entered.loaded"
+    ],
     "rmf24.pl": [
         ".areaCont.areaYellow",
         ".bradio.info-radio",
