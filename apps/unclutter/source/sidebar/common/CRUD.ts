@@ -30,7 +30,14 @@ export async function getAnnotations(
         enableSocialAnnotations ? getLindyAnnotations(url) : [],
     ]);
 
-    let annotations = publicAnnotations.concat(personalAnnotations);
+    // filter out public hypothesis annotations
+    let annotations = personalAnnotations;
+    const seenIds = new Set(personalAnnotations.map((a) => a.id));
+    for (const annotation of publicAnnotations) {
+        if (!seenIds.has(annotation.id)) {
+            annotations.push(annotation);
+        }
+    }
 
     // take from public lindy API preferrably (to get metadata)
     // let annotations = publicAnnotations;
@@ -43,7 +50,6 @@ export async function getAnnotations(
     //         annotations.push(annotation);
     //     }
     // }
-
     // populate replies from hypothesis (might be private or not yet propagated)
     // function populateRepliesDfs(current: LindyAnnotation) {
     //     hypothesisReplies

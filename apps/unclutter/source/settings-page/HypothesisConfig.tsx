@@ -22,9 +22,11 @@ export default function HypothesisConfig() {
             setTokenValid(tokenValid);
 
             // Trigger sync
-            browser.runtime.sendMessage(null, {
-                event: "initLibrary",
-            });
+            if (tokenValid) {
+                browser.runtime.sendMessage(null, {
+                    event: "initLibrary",
+                });
+            }
         })();
     }, [token]);
 

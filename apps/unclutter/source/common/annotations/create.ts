@@ -73,11 +73,11 @@ export interface LindyAnnotation {
     user_upvoted: boolean;
     isPublic: boolean;
     reply_to?: string;
+    url: string; // page url or article id
 
     h_id?: string; // remote id if synced with hypothesis
 
     // local state
-    url: string;
     isMyAnnotation?: boolean;
     displayOffset?: number;
     displayOffsetEnd?: number;
@@ -120,7 +120,7 @@ export function pickleLocalAnnotation(annotation: LindyAnnotation): Annotation {
     return {
         id: annotation.id,
         h_id: annotation.h_id,
-        article_id: getUrlHash(annotation.url),
+        article_id: annotation.url.startsWith("http") ? getUrlHash(annotation.url) : annotation.url,
         created_at: new Date(annotation.created_at).getTime() / 1000,
         quote_text: annotation.quote_text,
         text: annotation.text,
