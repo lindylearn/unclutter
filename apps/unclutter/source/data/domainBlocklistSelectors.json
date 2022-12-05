@@ -682,6 +682,10 @@
     "radreads.co": [".tcb-flex-col"],
     "realpython.com": [".small.text-muted"],
     "rebble.io": ["#index"],
+    "rebekahbarnett.substack.com": [
+        ".captioned-image-container",
+        ".single-post-section"
+    ],
     "reddit.com": ["._23h0-EcaBUorIHC-JZyh6J"],
     "reuters.com": [
         ".base-widget-body__list__22w1C",
