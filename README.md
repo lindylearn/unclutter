@@ -16,9 +16,9 @@ Unclutter is a modern reader mode and article library for your browser.
 
 ## Why does it exist?
 
-There many other "reader modes", but they all extract article text and re-render it their own format. Unclutter "unclutters" the original web pages itself, leaving the [original website styling](docs/comparison.md) and interactive elements intact.
+There many other "reader modes", but they all extract article text and re-render it their own format. Unclutter "unclutters" the original web pages itself, leaving their [visual style](docs/comparison.md) and interactive elements intact.
 
-Articles you read are automatically saved and can be easily added to your read-it-later queue.
+Articles you read with Unclutter are automatically saved and can be easily added to your read-it-later queue.
 Everything happens instantly in your browser.
 
 <!-- <p align="center">
@@ -40,16 +40,15 @@ Try it out for yourself:
 
 ## Get involved
 
-The mission of Unclutter is to improve reading on the web for everyone. You should decide what, when, and how to read. What if you could automatically bypass paywalls or connect similar content across the web?
+The mission of Unclutter is to improve reading on the web for everyone. You should decide what, when, and how to read.
 
 Here's how you can help:
 
+- [Join our Discord server](https://unclutter.it/discord) to discuss ideas, follow the progress, and help out.
 - [Report broken articles](https://github.com/lindylearn/unclutter/blob/main/docs/element-blocking.md) or submit element block selectors from within the extension.
 - [Use the open roadmap](https://unclutter.canny.io/) to suggest new features or to vote on existing ideas.
 - [Open GitHub issues](https://github.com/lindylearn/unclutter/issues) for bugs or any other issue.
 - [Contribute code](https://github.com/lindylearn/unclutter/blob/main/DEVELOPMENT.md) to implement your favorite new feature.
-
-<!-- - [Join our Discord server](https://discord.gg/CThpNQjucB) if you want to contribute code! -->
 
 <!-- [<img src="./docs/media/canny.png">](https://unclutter.canny.io/) -->
 
