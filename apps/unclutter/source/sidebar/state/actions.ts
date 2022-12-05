@@ -66,33 +66,29 @@ export function useAnnotationModifiers(mutateAnnotations: React.Dispatch<Annotat
 
 function createReplyFactory(mutateAnnotations: React.Dispatch<AnnotationMutation>) {
     return async function (parent: LindyAnnotation, threadStart: LindyAnnotation) {
-        const reply = createDraftAnnotation(parent.url, null, parent.id);
-
-        // dfs as there may be arbitrary nesting
-        function addReplyDfs(current: LindyAnnotation) {
-            if (current.id === parent.id) {
-                current.replies.push(reply);
-                current.reply_count += 1;
-                return;
-            }
-
-            current.replies.map(addReplyDfs);
-        }
-        addReplyDfs(threadStart);
-        mutateAnnotations({ action: "update", annotation: threadStart });
-
-        const remoteAnnotation = await createRemoteAnnotation(reply, null);
-
-        function updateIdDfs(current: LindyAnnotation) {
-            if (current.localId === remoteAnnotation.localId) {
-                current.id = remoteAnnotation.id;
-                return;
-            }
-
-            current.replies.map(updateIdDfs);
-        }
-        updateIdDfs(threadStart);
-        mutateAnnotations({ action: "update", annotation: threadStart });
+        // TODO re-enable replies
+        // const reply = createDraftAnnotation(parent.url, null, parent.id);
+        // // dfs as there may be arbitrary nesting
+        // function addReplyDfs(current: LindyAnnotation) {
+        //     if (current.id === parent.id) {
+        //         current.replies.push(reply);
+        //         current.reply_count += 1;
+        //         return;
+        //     }
+        //     current.replies.map(addReplyDfs);
+        // }
+        // addReplyDfs(threadStart);
+        // mutateAnnotations({ action: "update", annotation: threadStart });
+        // const remoteAnnotation = await createRemoteAnnotation(reply, null);
+        // function updateIdDfs(current: LindyAnnotation) {
+        //     if (current.localId === remoteAnnotation.localId) {
+        //         current.id = remoteAnnotation.id;
+        //         return;
+        //     }
+        //     current.replies.map(updateIdDfs);
+        // }
+        // updateIdDfs(threadStart);
+        // mutateAnnotations({ action: "update", annotation: threadStart });
     };
 }
 

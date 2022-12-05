@@ -1,7 +1,6 @@
 import React from "react";
 import { getHypothesisToken, validateSaveToken } from "../common/annotations/storage";
-import { createRemoteAnnotation } from "../sidebar/common/api";
-import { deleteAllLegacyAnnotations, getAllLegacyAnnotations } from "../sidebar/common/legacy";
+import browser from "../common/polyfill";
 
 export default function HypothesisConfig() {
     const [token, setToken] = React.useState("");
@@ -12,7 +11,7 @@ export default function HypothesisConfig() {
         })();
     }, []);
 
-    const [tokenValid, setTokenValid] = React.useState("");
+    const [tokenValid, setTokenValid] = React.useState<boolean>();
     React.useEffect(() => {
         (async function () {
             if (token === "") {
@@ -21,29 +20,13 @@ export default function HypothesisConfig() {
 
             const tokenValid = await validateSaveToken(token, true);
             setTokenValid(tokenValid);
+
+            // Trigger sync
+            browser.runtime.sendMessage(null, {
+                event: "initLibrary",
+            });
         })();
     }, [token]);
-
-    // if this renders, the user has enabled the hypothesis sync
-    // so upload & delete local annotations once token valid
-    // TODO: user may exit settings before uploaded, which will create duplicate annotations
-    React.useEffect(() => {
-        (async function () {
-            if (!tokenValid) {
-                return;
-            }
-
-            const localAnnotations = await getAllLegacyAnnotations();
-            if (localAnnotations.length === 0) {
-                return;
-            }
-
-            console.log(`Uploading ${localAnnotations.length} local annotations...`);
-            await Promise.all(localAnnotations.map(createRemoteAnnotation));
-
-            await deleteAllLegacyAnnotations();
-        })();
-    }, [tokenValid]);
 
     return (
         <div className="flex items-center gap-2">

@@ -2,6 +2,7 @@ import { hypothesisToLindyFormat, LindyAnnotation } from "../../common/annotatio
 import { getHypothesisToken, getHypothesisUsername } from "../../common/annotations/storage";
 import { getUrlHash } from "@unclutter/library-components/dist/common/url";
 import ky from "ky";
+import { Annotation } from "@unclutter/library-components/dist/store";
 
 /**
  * Methods for accessing the remote annotations state (hypothesis and lindy APIs).
@@ -118,19 +119,20 @@ export async function getHypothesisAnnotationsSince(
 // --- user actions
 
 export async function createRemoteAnnotation(
-    localAnnotation: LindyAnnotation,
+    localAnnotation: Annotation,
+    page_url: string,
     page_title: string
-): Promise<LindyAnnotation> {
+): Promise<void> {
     const username = await getHypothesisUsername();
     const response = await fetch(`${hypothesisApi}/annotations`, {
         ...(await _getConfig()),
         method: "POST",
         body: JSON.stringify({
-            uri: localAnnotation.url,
+            uri: page_url,
             text: localAnnotation.text,
             target: [
                 {
-                    source: localAnnotation.url,
+                    source: page_url,
                     ...(localAnnotation.quote_html_selector
                         ? {
                               selector: localAnnotation.quote_html_selector,
@@ -143,32 +145,21 @@ export async function createRemoteAnnotation(
             },
             tags: localAnnotation.tags,
             permissions: {
-                read: [
-                    localAnnotation.isPublic ? "group:__world__" : `acct:${username}@hypothes.is`,
-                ],
+                read: [false ? "group:__world__" : `acct:${username}@hypothes.is`],
             },
-            references: localAnnotation.reply_to ? [localAnnotation.reply_to] : [],
+            references: [], // localAnnotation.reply_to ? [localAnnotation.reply_to] : [],
         }),
     });
-    const json = await response.json();
-
-    return {
-        ...hypothesisToLindyFormat(json, username),
-        displayOffset: localAnnotation.displayOffset,
-        displayOffsetEnd: localAnnotation.displayOffsetEnd,
-        localId: localAnnotation.localId,
-        focused: localAnnotation.focused,
-    };
 }
 
-export async function deleteRemoteAnnotation(annotation: LindyAnnotation): Promise<void> {
+export async function deleteRemoteAnnotation(annotation: Annotation): Promise<void> {
     await fetch(`${hypothesisApi}/annotations/${annotation.id}`, {
         ...(await _getConfig()),
         method: "DELETE",
     });
 }
 
-export async function updateRemoteAnnotation(annotation: LindyAnnotation): Promise<void> {
+export async function updateRemoteAnnotation(annotation: Annotation): Promise<void> {
     const username = await getHypothesisUsername();
     const response = await fetch(`${hypothesisApi}/annotations/${annotation.id}`, {
         ...(await _getConfig()),
@@ -177,12 +168,11 @@ export async function updateRemoteAnnotation(annotation: LindyAnnotation): Promi
             text: annotation.text,
             tags: annotation.tags,
             permissions: {
-                read: [annotation.isPublic ? "group:__world__" : `acct:${username}@hypothes.is`],
+                read: [false ? "group:__world__" : `acct:${username}@hypothes.is`],
             },
         }),
     });
     const json = await response.json();
-
     return json;
 }
 

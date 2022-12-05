@@ -168,6 +168,8 @@ function handleMessage(
         setLibraryAuth(message.userId, message.webJwt).then(() => {
             initLibrary();
         });
+    } else if (message.event === "initLibrary") {
+        initLibrary();
     } else if (message.event === "getLibraryAuth") {
         getLibraryAuth().then(sendResponse);
         return true;

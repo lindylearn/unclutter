@@ -1,23 +1,9 @@
 import {
-    clusterLibraryArticles,
-    getUrlHash,
-    normalizeUrl,
     ReplicacheProxy,
     ReplicacheProxyEventTypes,
 } from "@unclutter/library-components/dist/common";
-import { Annotation } from "@unclutter/library-components/dist/store";
-import groupBy from "lodash/groupBy";
 import { JSONValue, ReadonlyJSONValue } from "replicache";
-import { addArticlesToLibrary } from "../../common/api";
-import {
-    getFeatureFlag,
-    hypothesisSyncFeatureFlag,
-    setFeatureFlag,
-} from "../../common/featureFlags";
-import { constructLocalArticleInfo, LibraryInfo } from "../../common/schema";
 import { getLibraryUser } from "../../common/storage";
-import { getHypothesisAnnotationsSince } from "../../sidebar/common/api";
-import { deleteAllLegacyAnnotations, getAllLegacyAnnotations } from "../../sidebar/common/legacy";
 import { migrateMetricsUser } from "../metrics";
 import {
     importEntries,
@@ -35,6 +21,7 @@ import {
 import { deleteAllLocalScreenshots } from "./screenshots";
 import { initSearchIndex } from "./search";
 import { refreshSubscriptions } from "@unclutter/library-components/dist/feeds";
+import { initHighlightsSync } from "./highlights";
 
 export let userId: string;
 export let rep: ReplicacheProxy | null = null;
@@ -53,11 +40,7 @@ export async function initLibrary() {
     const userInfo = await rep.query.getUserInfo();
     await initSearchIndex(userInfo, !!userId); // rebuild index after replicache migration
 
-    try {
-        await importLegacyAnnotations();
-    } catch (err) {
-        console.error(err);
-    }
+    await initHighlightsSync();
 
     await refreshLibraryFeeds();
 }
@@ -83,91 +66,6 @@ function getBackgroundReplicacheProxy(): ReplicacheProxy {
         },
         processReplicacheWatch
     );
-}
-
-async function importLegacyAnnotations() {
-    const annotations = await getAllLegacyAnnotations();
-
-    // const hypothesisSyncEnabled = await getFeatureFlag(hypothesisSyncFeatureFlag);
-    // if (hypothesisSyncEnabled) {
-    //     const remoteAnnotations = await getHypothesisAnnotationsSince(undefined, 200);
-    //     annotations.push(...remoteAnnotations.slice(50));
-    // }
-
-    if (annotations.length === 0) {
-        return;
-    }
-    console.log(`Migrating ${annotations.length} legacy annotations to replicache...`);
-
-    // const userInfo = await processReplicacheMessage({
-    //     type: "query",
-    //     methodName: "getUserInfo",
-    //     args: [],
-    // });
-
-    // fetch article state
-    const annotationsPerArticle = groupBy(annotations, (a) => a.url);
-    const urls = Object.keys(annotationsPerArticle);
-
-    let articleInfos = urls.map((url) =>
-        constructLocalArticleInfo(url, getUrlHash(url), normalizeUrl(url))
-    );
-
-    articleInfos = articleInfos.map((articleInfo) => {
-        articleInfo.article.reading_progress = 1.0;
-
-        const articleAnnotations = annotationsPerArticle[articleInfo.article.url];
-        if (articleAnnotations.length > 0) {
-            articleInfo.article.time_added = Math.round(
-                new Date(articleAnnotations[0].created_at).getTime() / 1000
-            );
-        }
-
-        return articleInfo;
-    });
-
-    // insert articles
-    await Promise.all(
-        articleInfos.map((articleInfo) => {
-            // if (articleInfo.topic) {
-            //     processReplicacheMessage({
-            //         type: "mutate",
-            //         methodName: "putTopic",
-            //         args: articleInfo.topic,
-            //     });
-            // }
-            processReplicacheMessage({
-                type: "mutate",
-                methodName: "putArticleIfNotExists",
-                args: articleInfo.article,
-            });
-            // if (articleInfo.new_links?.length > 0) {
-            //     processReplicacheMessage({
-            //         type: "mutate",
-            //         methodName: "importArticleLinks",
-            //         args: { links: articleInfo.new_links },
-            //     });
-            // }
-        })
-    );
-
-    // insert annotations
-    await Promise.all(
-        annotations.map((a) => {
-            processReplicacheMessage({
-                type: "mutate",
-                methodName: "putAnnotation",
-                args: {
-                    ...a,
-                    article_id: getUrlHash(a.url),
-                    created_at: Math.round(new Date(a.created_at).getTime() / 1000),
-                } as Annotation,
-            });
-        })
-    );
-
-    await deleteAllLegacyAnnotations();
-    setFeatureFlag(hypothesisSyncFeatureFlag, false); // disable another import
 }
 
 async function migrateToAccount(): Promise<boolean> {
