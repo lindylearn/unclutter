@@ -35,7 +35,10 @@ export async function getAnnotations(
     const seenIds = new Set(personalAnnotations.map((a) => a.id));
     for (const annotation of publicAnnotations) {
         if (!seenIds.has(annotation.id)) {
-            annotations.push(annotation);
+            annotations.push({
+                ...annotation,
+                isMyAnnotation: false,
+            });
         }
     }
 
@@ -72,14 +75,6 @@ export async function getAnnotations(
     }
     annotations = annotations.filter((a) => !hiddenAnnotations[a.id]);
     annotations.map(hideAnnotationsDfs);
-
-    if (!personalAnnotationsEnabled) {
-        // mark top-level annotations by the user immutable
-        annotations = annotations.map((a) => {
-            a.isMyAnnotation = false;
-            return a;
-        });
-    }
 
     const duration = performance.now() - start;
     console.log(`Fetched annotations in ${Math.round(duration)}ms`);

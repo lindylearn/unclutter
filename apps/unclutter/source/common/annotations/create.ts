@@ -137,6 +137,7 @@ export function pickleLocalAnnotation(annotation: LindyAnnotation): Annotation {
 export function unpickleLocalAnnotation(annotation: Annotation): LindyAnnotation {
     return createAnnotation(annotation.article_id, annotation.quote_html_selector, {
         ...annotation,
+        h_id: annotation.h_id,
         created_at: new Date(annotation.created_at * 1000).toISOString(),
         updated_at: annotation.updated_at
             ? new Date(annotation.updated_at * 1000).toISOString()
