@@ -40,11 +40,11 @@ Try it out for yourself:
 
 ## Get involved
 
-The mission of Unclutter is to improve reading on the web for everyone. You should decide what, when, and how to read.
+The mission of Unclutter is to improve reading on the web. You should decide what, when, and how to read.
 
-Here's how you can help:
+**[Join our Discord server](https://unclutter.it/discord) to help out and follow the progress!**
 
-- [Join our Discord server](https://unclutter.it/discord) to discuss ideas, follow the progress, and help out.
+Here's how you can contribute:
 - [Report broken articles](https://github.com/lindylearn/unclutter/blob/main/docs/element-blocking.md) or submit element block selectors from within the extension.
 - [Use the open roadmap](https://unclutter.canny.io/) to suggest new features or to vote on existing ideas.
 - [Open GitHub issues](https://github.com/lindylearn/unclutter/issues) for bugs or any other issue.
