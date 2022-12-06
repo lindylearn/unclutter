@@ -34,7 +34,7 @@ export async function getAnnotations(
     let annotations = personalAnnotations;
     const seenIds = new Set(personalAnnotations.map((a) => a.id));
     for (const annotation of publicAnnotations) {
-        if (!seenIds.has(annotation.id)) {
+        if (!seenIds.has(annotation.id) && annotation.text) {
             annotations.push({
                 ...annotation,
                 isMyAnnotation: false,

@@ -55,45 +55,24 @@ function AnnotationDraft({
             []
         );
 
-    // keep local state
+    // keep local state for faster updates
     const [localAnnotation, setLocalAnnotation] = React.useState(annotation);
-    // patch correct id once annotation remotely created
-    useEffect(() => {
-        if (!localAnnotation.id && annotation.id) {
-            const newAnnotation = { ...localAnnotation, id: annotation.id };
-            setLocalAnnotation(newAnnotation);
-
-            // synchronize potential local edits
-            debouncedUpdateApi(newAnnotation);
-        }
-    }, [annotation.id]);
     async function updateAnnotationLocalFirst(newAnnotation: LindyAnnotation) {
         setLocalAnnotation(newAnnotation);
 
-        if (!newAnnotation.id) {
-            // synchronized once remotely created above
-            return;
-        }
-
         if (!!annotation.text !== !!newAnnotation.text) {
+            // changed visiblity
             // immediately update if added first text or removed text (impacts visibility)
-            updateAnnotation(newAnnotation);
-            updateAnnotationApi(newAnnotation);
+            if (newAnnotation.text) {
+                updateAnnotation(newAnnotation);
+                updateAnnotationApi(newAnnotation);
+            } else {
+                deleteHide();
+            }
         } else {
             // call with newAnnotation as localAnnotation takes once loop iteration to update
             await debouncedUpdateApi(newAnnotation);
         }
-    }
-
-    // show confirm step if annotation has text
-    const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
-    function deleteWithConfirmStep() {
-        if (localAnnotation.text && !showDeleteConfirmation) {
-            setShowDeleteConfirmation(true);
-            return;
-        }
-
-        deleteHide();
     }
 
     const color = getAnnotationColor(annotation);
