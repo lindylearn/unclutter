@@ -467,7 +467,7 @@ export default class TextContainerModifier implements PageModifier {
         // :not(#fakeID#fakeID#fakeID) used to override stubborn site styles
         return `
             /* clean up all text containers */
-            .${lindyContainerClass}:not(#fakeID#fakeID#fakeID),
+            .${lindyContainerClass}:not(body, #fakeID#fakeID#fakeID),
             .${lindyHeadingContainerClass}:not(#fakeID#fakeID#fakeID),
             .${lindyContainerClass}:not(#fakeID#fakeID#fakeID) > :is(
                 ${this.usedTextElementSelector}, 
