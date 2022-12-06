@@ -671,7 +671,8 @@
         ".css-1sirvy4",
         ".css-j3uhc5",
         "#gateway-content",
-        ".css-2fg4z9.e1gzwzxm0"
+        ".css-2fg4z9.e1gzwzxm0",
+        "#NYT_MAIN_CONTENT_2_REGION"
     ],
     "nzz.ch": [
         ".image-placeholder.poster__placeholder",
@@ -726,13 +727,6 @@
         ".article-toolbar__container__FHGRl.article-toolbar__hidden-on-desktop__1yvVL.article-toolbar__align-left__1RG-m"
     ],
     "rha.ole.redhat.com": [".section"],
-    "rp.pl": [
-        ".nav--bar.navBar",
-        "#contentVideoAdvert",
-        ".bg",
-        ".circle",
-        ".has--dimensions.lazyLoad.entered.loaded"
-    ],
     "rmf24.pl": [
         ".areaCont.areaYellow",
         ".bradio.info-radio",
@@ -755,6 +749,13 @@
         ".col-xs-12.col-ms-12.col-sm-12.col-md-7.col-lg-7",
         ".text",
         ".page2.container.grayFooter"
+    ],
+    "rp.pl": [
+        ".nav--bar.navBar",
+        "#contentVideoAdvert",
+        ".bg",
+        ".circle",
+        ".has--dimensions.lazyLoad.entered.loaded"
     ],
     "ruanyifeng.com": [".wwads-cn.wwads-horizontal"],
     "sandboxx.us": [".content#genesis-content::before"],
