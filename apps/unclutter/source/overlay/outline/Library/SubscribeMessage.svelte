@@ -17,10 +17,10 @@
     export let darkModeEnabled: boolean;
 </script>
 
+<!-- inactiveColor={getRandomLightColor(libraryState.feed?.domain, darkModeEnabled)
+    .replace("0.6", "0.3")
+    .replace("1.0", "0.5")} -->
 <ToggleMessage
-    inactiveColor={getRandomLightColor(libraryState.feed?.domain, darkModeEnabled)
-        .replace("0.6", "0.3")
-        .replace("1.0", "0.5")}
     activeColor={getRandomLightColor(libraryState.feed?.domain, darkModeEnabled)}
     isActive={libraryState.feed?.is_subscribed}
     onToggle={() => libraryModifier.toggleFeedSubscribed()}

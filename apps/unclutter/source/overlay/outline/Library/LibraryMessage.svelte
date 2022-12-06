@@ -31,9 +31,9 @@
         libraryState.libraryInfo.article.reading_progress >= readingProgressFullClamp;
 </script>
 
+<!-- inactiveColor={getActivityColor(2, darkModeEnabled)} -->
 <ToggleMessage
-    inactiveColor={getActivityColor(2, darkModeEnabled)}
-    activeColor={getActivityColor(4, darkModeEnabled)}
+    activeColor={getActivityColor(3, darkModeEnabled)}
     isActive={libraryState?.libraryInfo?.article.is_queued || isCompleted}
     onToggle={() => libraryModifier.toggleArticleInQueue()}
     onClick={() => libraryModalModifier.showModal("list")}
@@ -52,7 +52,7 @@
     </div>
 
     <div slot="subtitle" class="relative">
-        {#if libraryState?.linkCount}
+        <!-- {#if libraryState?.linkCount}
             <div class="ml-0.5" in:fly={{ y: 10, duration: 200, easing: cubicOut }}>
                 <svg class="mr-0.5 inline-block w-4 align-middle" viewBox="0 0 640 512"
                     ><path
@@ -62,26 +62,26 @@
                 >
                 {libraryState.linkCount} + related article{libraryState.linkCount !== 1 ? "s" : ""}
             </div>
-        {:else if libraryState?.libraryInfo?.article && libraryState?.readingProgress && (!(libraryState?.userInfo?.onPaidPlan || libraryState?.userInfo?.trialEnabled) || libraryState?.linkCount === 0)}
-            {#key libraryState.readingProgress.queueCount}
-                <div
-                    class={clsx(
-                        "absolute top-0 left-0",
-                        !libraryState.libraryInfo?.topic && "text-gray-400 dark:text-stone-600"
-                    )}
-                    in:fly={{ y: 10, duration: 200, easing: cubicOut }}
-                >
-                    {#if libraryState.readingProgress.queueCount === 0}
-                        reading queue empty
-                    {:else}
-                        {libraryState.readingProgress.queueCount} article{libraryState
-                            .readingProgress.queueCount === 1
-                            ? ""
-                            : "s"} in <span class="hide-tiny">reading </span>queue
-                    {/if}
-                </div>
-            {/key}
-        {/if}
+        {:else if libraryState?.libraryInfo?.article && libraryState?.readingProgress && (!(libraryState?.userInfo?.onPaidPlan || libraryState?.userInfo?.trialEnabled) || libraryState?.linkCount === 0)} -->
+        {#key libraryState.readingProgress.queueCount}
+            <div
+                class={clsx(
+                    "absolute top-0 left-0",
+                    !libraryState.libraryInfo?.topic && "text-gray-400 dark:text-stone-600"
+                )}
+                in:fly={{ y: 10, duration: 200, easing: cubicOut }}
+            >
+                {#if libraryState.readingProgress.queueCount === 0}
+                    reading queue empty
+                {:else}
+                    {libraryState.readingProgress.queueCount} article{libraryState.readingProgress
+                        .queueCount === 1
+                        ? ""
+                        : "s"} in <span class="hide-tiny">reading </span>queue
+                {/if}
+            </div>
+        {/key}
+        <!-- {/if} -->
     </div>
 
     <div slot="toggle-icon">
