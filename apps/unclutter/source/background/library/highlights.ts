@@ -4,6 +4,7 @@ import { groupBy } from "lodash";
 import { LindyAnnotation, pickleLocalAnnotation } from "../../common/annotations/create";
 import { getFeatureFlag, hypothesisSyncFeatureFlag } from "../../common/featureFlags";
 import { constructLocalArticleInfo } from "../../common/schema";
+import { getHypothesisSyncState, setHypothesisSyncState, SyncState } from "../../common/storage";
 import {
     createRemoteAnnotation,
     deleteRemoteAnnotation,
@@ -24,12 +25,13 @@ export async function initHighlightsSync() {
     const hypothesisSyncEnabled = await getFeatureFlag(hypothesisSyncFeatureFlag);
     if (hypothesisSyncEnabled) {
         try {
-            await fetchRemoteAnnotations();
+            const syncState = await getHypothesisSyncState();
+            await fetchRemoteAnnotations(syncState);
 
             // wait to avoid uploading fetched annotations
             await new Promise((resolve) => setTimeout(resolve, 5000));
 
-            await watchLocalAnnotations();
+            await watchLocalAnnotations(syncState);
         } catch (err) {
             console.error(err);
         }
@@ -44,23 +46,28 @@ async function importLegacyAnnotations() {
         return;
     }
 
-    console.log(`Migrating ${annotations.length} legacy annotations to replicache...`);
+    console.log(`Migrating ${annotations.length} legacy annotations...`);
     await importAnnotations(annotations);
 
     await deleteAllLegacyAnnotations();
 }
 
-async function fetchRemoteAnnotations() {
-    // TODO add last sync date
+async function fetchRemoteAnnotations(syncState: SyncState) {
+    let [annotations, newDownloadTimestamp] = await getHypothesisAnnotationsSince(
+        syncState.lastDownloadTimestamp && new Date(syncState.lastDownloadTimestamp),
+        200
+    );
 
-    const annotations = await getHypothesisAnnotationsSince(null, 200);
+    console.log(
+        `Importing ${annotations.length} hypothes.is annotations since ${syncState.lastDownloadTimestamp}...`
+    );
+    await importAnnotations(annotations);
 
-    console.log(`Importing ${annotations.length} hypothes.is annotations to replicache...`);
-    await importAnnotations(annotations.slice(0, 10));
+    await setHypothesisSyncState({ ...syncState, lastDownloadTimestamp: newDownloadTimestamp });
 }
 
 let watchActive = false;
-async function watchLocalAnnotations() {
+async function watchLocalAnnotations(syncState: SyncState) {
     if (watchActive) {
         return;
     }

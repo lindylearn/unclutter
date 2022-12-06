@@ -79,14 +79,14 @@ export async function getPageHistory(url) {
 export async function getHypothesisAnnotationsSince(
     lastSyncDate?: Date,
     limit = 5000
-): Promise<LindyAnnotation[]> {
+): Promise<[LindyAnnotation[], string]> {
     const username = await getHypothesisUsername();
     let annotations = [];
 
+    let newestTimestamp = lastSyncDate?.toUTCString() || "1970-01-01";
     try {
         // Paginate API calls via search_after param
         // search_after=null starts with the earliest annotations
-        let newestTimestamp = lastSyncDate?.toUTCString() || "1970-01-01";
         while (annotations.length < limit) {
             const response: any = await ky
                 .get(`${hypothesisApi}/search`, {
@@ -113,7 +113,7 @@ export async function getHypothesisAnnotationsSince(
         console.error(e);
     }
 
-    return annotations.map((a) => hypothesisToLindyFormat(a, username));
+    return [annotations.map((a) => hypothesisToLindyFormat(a, username)), newestTimestamp];
 }
 
 // --- user actions

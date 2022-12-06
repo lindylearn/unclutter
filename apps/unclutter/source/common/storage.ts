@@ -130,3 +130,15 @@ export async function setLibraryAuth(userId: string, webJwt: string): Promise<vo
     await browser.storage.sync.set({ "library-web-jwt": webJwt });
     await migrateMetricsUser();
 }
+
+export interface SyncState {
+    lastDownloadTimestamp?: string;
+    lastUploadTimestamp?: string;
+}
+export async function getHypothesisSyncState(): Promise<SyncState> {
+    const config = await browser.storage.sync.get(["hypothesis-sync-state"]);
+    return config["hypothesis-sync-state"] || {};
+}
+export async function setHypothesisSyncState(syncState: SyncState): Promise<void> {
+    await browser.storage.sync.set({ "hypothesis-sync-state": syncState });
+}
