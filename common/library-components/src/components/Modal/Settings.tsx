@@ -223,7 +223,7 @@ export default function SettingsModalTab({
                 </div>
             </SettingsGroup>
 
-            <SettingsGroup
+            {/* <SettingsGroup
                 title="Give feedback"
                 icon={
                     <svg className="h-4 w-4" viewBox="0 0 512 512">
@@ -247,7 +247,7 @@ export default function SettingsModalTab({
                         reportEvent={reportEvent}
                     />
                 </div>
-            </SettingsGroup>
+            </SettingsGroup> */}
         </div>
     );
 }
