@@ -341,7 +341,7 @@ async function mergeRemoteAnnotations(tx: WriteTransaction, annotations: Annotat
             }
 
             if (existing) {
-                await updateAnnotation(tx, annotation);
+                await updateAnnotationRaw(tx, annotation);
             } else {
                 await putAnnotation(tx, annotation);
             }
