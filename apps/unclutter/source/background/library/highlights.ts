@@ -9,7 +9,6 @@ import {
     createRemoteAnnotation,
     deleteRemoteAnnotation,
     getHypothesisAnnotationsSince,
-    getPersonalHypothesisAnnotations,
     updateRemoteAnnotation,
 } from "../../sidebar/common/api";
 import { deleteAllLegacyAnnotations, getAllLegacyAnnotations } from "../../sidebar/common/legacy";
@@ -76,11 +75,12 @@ async function uploadAnnotations() {
         ? Math.round(new Date(syncState.lastUploadTimestamp).getTime() / 1000)
         : 0;
     annotations = annotations
-        .filter((a) => a.created_at > lastUploadUnix)
-        .sort((a, b) => a.created_at - b.created_at); // sort with oldest first
+        .filter((a) => a.updated_at > lastUploadUnix)
+        .sort((a, b) => a.updated_at - b.updated_at); // sort with oldest first
     if (annotations.length === 0) {
         return;
     }
+    console.log(annotations, lastUploadUnix);
     console.log(
         `Uploading ${annotations.length} changed annotations since ${syncState.lastUploadTimestamp} to hypothes.is...`
     );
@@ -123,7 +123,7 @@ async function uploadAnnotations() {
     );
 
     const newUploadTimestamp = new Date(
-        annotations[annotations.length - 1].created_at * 1000
+        annotations[annotations.length - 1].updated_at * 1000
     ).toUTCString();
     await updateHypothesisSyncState({ lastUploadTimestamp: newUploadTimestamp });
 }

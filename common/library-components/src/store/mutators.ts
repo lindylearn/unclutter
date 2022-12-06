@@ -10,6 +10,7 @@ import {
     getUserInfo,
 } from "./accessors";
 import {
+    Annotation,
     annotationSchema,
     Article,
     ArticleLink,
@@ -312,10 +313,24 @@ async function articleAddMoveToLibrary(
 const {
     get: getAnnotation,
     list: listAnnotations,
-    put: putAnnotation,
-    update: updateAnnotation,
+    put: putAnnotationRaw,
+    update: updateAnnotationRaw,
     delete: deleteAnnotation,
 } = generate("annotations", annotationSchema);
+
+async function putAnnotation(tx: WriteTransaction, annotation: Annotation) {
+    await putAnnotationRaw(tx, {
+        ...annotation,
+        updated_at: annotation.updated_at || annotation.created_at,
+    });
+}
+
+async function updateAnnotation(tx: WriteTransaction, annotation: Partial<Annotation>) {
+    await updateAnnotationRaw(tx, {
+        ...annotation,
+        updated_at: Math.round(new Date().getTime() / 1000),
+    } as Annotation);
+}
 
 /* ***** settings & useInfo ***** */
 

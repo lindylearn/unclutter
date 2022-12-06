@@ -63,6 +63,7 @@ export interface LindyAnnotation {
     platform: "h" | "hn" | "ll" | "info";
     link: string;
     created_at: string;
+    updated_at?: string; // only set in remote fetch or data store
     reply_count: number;
     quote_text: string;
     text: string;
@@ -90,6 +91,7 @@ export interface LindyAnnotation {
     article?: Article;
 }
 
+// TODO serialize to Annotation type directly
 export function hypothesisToLindyFormat(annotation: any, currentUsername: string): LindyAnnotation {
     const author: string = annotation.user.match(/([^:]+)@/)[1];
     return {
@@ -101,6 +103,7 @@ export function hypothesisToLindyFormat(annotation: any, currentUsername: string
         platform: "h",
         link: `https://hypothes.is/a/${annotation.id}`,
         created_at: annotation.created,
+        updated_at: annotation.updated,
         reply_count: 0,
         quote_text: annotation.target?.[0].selector?.filter((s) => s.type == "TextQuoteSelector")[0]
             .exact,
@@ -122,6 +125,9 @@ export function pickleLocalAnnotation(annotation: LindyAnnotation): Annotation {
         h_id: annotation.h_id,
         article_id: annotation.url.startsWith("http") ? getUrlHash(annotation.url) : annotation.url,
         created_at: Math.round(new Date(annotation.created_at).getTime() / 1000),
+        updated_at: annotation.updated_at
+            ? Math.round(new Date(annotation.updated_at).getTime() / 1000)
+            : undefined,
         quote_text: annotation.quote_text,
         text: annotation.text,
         tags: annotation.tags,
@@ -132,6 +138,9 @@ export function unpickleLocalAnnotation(annotation: Annotation): LindyAnnotation
     return createAnnotation(annotation.article_id, annotation.quote_html_selector, {
         ...annotation,
         created_at: new Date(annotation.created_at * 1000).toISOString(),
+        updated_at: annotation.updated_at
+            ? new Date(annotation.updated_at * 1000).toISOString()
+            : undefined,
         isMyAnnotation: true,
     });
 }

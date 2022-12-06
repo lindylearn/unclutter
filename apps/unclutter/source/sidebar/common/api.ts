@@ -47,21 +47,21 @@ export async function getLindyAnnotations(url: string): Promise<LindyAnnotation[
 }
 
 // private annotations directly from hypothesis
-export async function getPersonalHypothesisAnnotations(url: string): Promise<LindyAnnotation[]> {
-    const username = await getHypothesisUsername();
-    const response = await fetch(
-        `${hypothesisApi}/search?${new URLSearchParams({
-            url,
-            user: `acct:${username}@hypothes.is`,
-            limit: "50",
-        })}`,
-        await _getConfig()
-    );
-    const json = await response.json();
+// export async function getPersonalHypothesisAnnotations(url: string): Promise<LindyAnnotation[]> {
+//     const username = await getHypothesisUsername();
+//     const response = await fetch(
+//         `${hypothesisApi}/search?${new URLSearchParams({
+//             url,
+//             user: `acct:${username}@hypothes.is`,
+//             limit: "50",
+//         })}`,
+//         await _getConfig()
+//     );
+//     const json = await response.json();
 
-    // this includes replies at the top level
-    return json.rows.map((a) => hypothesisToLindyFormat(a, username));
-}
+//     // this includes replies at the top level
+//     return json.rows.map((a) => hypothesisToLindyFormat(a, username));
+// }
 
 export async function getPageHistory(url) {
     const response = await fetch(

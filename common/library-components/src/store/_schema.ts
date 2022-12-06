@@ -61,6 +61,7 @@ export const annotationSchema = entitySchema.extend({
     quote_text: z.optional(z.string()),
     quote_html_selector: z.optional(z.any()),
     created_at: z.number(), // unix seconds, 0 for missing value
+    updated_at: z.optional(z.number()),
 
     text: z.optional(z.string()),
     tags: z.optional(z.array(z.string())),
