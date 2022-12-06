@@ -61,8 +61,8 @@ export function Highlight({
                 reportEvent={reportEvent}
             />
 
-            <LimitedText text={`"${annotation.quote_text}"`} />
-            <LimitedText className="font-medium" text={annotation.text} />
+            {annotation.quote_text && <LimitedText text={`"${annotation.quote_text}"`} />}
+            {annotation.text && <LimitedText className="font-medium" text={annotation.text} />}
 
             {article ? (
                 <div className="info-bar flex items-center justify-between gap-2 whitespace-nowrap font-medium">
