@@ -325,6 +325,30 @@ async function putAnnotation(tx: WriteTransaction, annotation: Annotation) {
     });
 }
 
+async function mergeRemoteAnnotations(tx: WriteTransaction, annotations: Annotation[]) {
+    const allAnnotations = await listAnnotations(tx);
+
+    await Promise.all(
+        annotations.map(async (annotation) => {
+            let existing: Annotation | undefined;
+            if (annotation.h_id) {
+                existing = allAnnotations.find((a) => a.h_id === annotation.h_id);
+                if (existing) {
+                    annotation.id = existing.id;
+                }
+            } else {
+                existing = allAnnotations.find((a) => a.id === annotation.id);
+            }
+
+            if (existing) {
+                await updateAnnotation(tx, annotation);
+            } else {
+                await putAnnotation(tx, annotation);
+            }
+        })
+    );
+}
+
 async function updateAnnotation(tx: WriteTransaction, annotation: Partial<Annotation>) {
     await updateAnnotationRaw(tx, {
         ...annotation,
@@ -386,6 +410,7 @@ export const mutators = {
     articleAddMoveToQueue,
     articleAddMoveToLibrary,
     putAnnotation,
+    mergeRemoteAnnotations,
     updateAnnotation,
     deleteAnnotation,
     updateSettings,

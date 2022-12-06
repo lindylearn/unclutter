@@ -24,11 +24,14 @@ export async function initHighlightsSync() {
     const hypothesisSyncEnabled = await getFeatureFlag(hypothesisSyncFeatureFlag);
     if (hypothesisSyncEnabled) {
         try {
-            // trigger scheduled upload
+            // upload local changes,
+            // sets last updated time to now (so pulled changes are not uploaded again)
             await uploadAnnotations();
 
-            // await fetchRemoteAnnotations();
+            // pull remote changes
+            await fetchRemoteAnnotations();
 
+            // watch updates
             await watchLocalAnnotations();
         } catch (err) {
             console.error(err);
@@ -57,6 +60,7 @@ async function fetchRemoteAnnotations() {
         syncState.lastDownloadTimestamp && new Date(syncState.lastDownloadTimestamp),
         200
     );
+    annotations = annotations.slice(0, 10);
 
     console.log(
         `Importing ${annotations.length} hypothes.is annotations since ${syncState.lastDownloadTimestamp}...`
@@ -69,6 +73,9 @@ async function fetchRemoteAnnotations() {
 async function uploadAnnotations() {
     const syncState = await getHypothesisSyncState();
 
+    // get last updated time before async fetching & uploading
+    const newUploadTimestamp = new Date().toUTCString();
+
     // filter annotations to upload
     let annotations = await rep.query.listAnnotations();
     const lastUploadUnix = syncState.lastUploadTimestamp
@@ -78,6 +85,7 @@ async function uploadAnnotations() {
         .filter((a) => a.updated_at > lastUploadUnix)
         .sort((a, b) => a.updated_at - b.updated_at); // sort with oldest first
     if (annotations.length === 0) {
+        await updateHypothesisSyncState({ lastUploadTimestamp: newUploadTimestamp });
         return;
     }
     console.log(annotations, lastUploadUnix);
@@ -122,9 +130,6 @@ async function uploadAnnotations() {
         })
     );
 
-    const newUploadTimestamp = new Date(
-        annotations[annotations.length - 1].updated_at * 1000
-    ).toUTCString();
     await updateHypothesisSyncState({ lastUploadTimestamp: newUploadTimestamp });
 }
 const uploadAnnotationsDebounced = debounce(uploadAnnotations, 10000);
@@ -182,14 +187,10 @@ async function importAnnotations(annotations: LindyAnnotation[]) {
         )
     );
 
-    // insert annotations
-    await Promise.all(
-        annotations.map((a) =>
-            processReplicacheMessage({
-                type: "mutate",
-                methodName: "putAnnotation",
-                args: pickleLocalAnnotation(a),
-            })
-        )
-    );
+    // merge remote changes
+    processReplicacheMessage({
+        type: "mutate",
+        methodName: "mergeRemoteAnnotations",
+        args: annotations.map(pickleLocalAnnotation),
+    });
 }
