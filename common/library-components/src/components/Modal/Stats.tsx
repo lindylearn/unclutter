@@ -195,30 +195,30 @@ function WeekDetails({
     }, [allArticles, allAnnotations, start, end]);
 
     let [groups, setGroups] = useState<[string, Article[]][]>();
-    if (userInfo.onPaidPlan || userInfo.trialEnabled) {
-        groups = useArticleGroups(
-            selectedArticles,
-            false,
-            "topic_size",
-            "recency_order",
-            undefined
+    // if (userInfo.onPaidPlan || userInfo.trialEnabled) {
+    //     groups = useArticleGroups(
+    //         selectedArticles,
+    //         false,
+    //         "topic_size",
+    //         "recency_order",
+    //         undefined
+    //     );
+    // } else {
+    useEffect(() => {
+        if (selectedArticles.length === 0) {
+            return;
+        }
+        const groups: { [domain: string]: Article[] } = groupBy(
+            selectedArticles.map((a) => {
+                // @ts-ignore
+                a.domain = getDomain(a.url);
+                return a;
+            }),
+            "domain"
         );
-    } else {
-        useEffect(() => {
-            if (selectedArticles.length === 0) {
-                return;
-            }
-            const groups: { [domain: string]: Article[] } = groupBy(
-                selectedArticles.map((a) => {
-                    // @ts-ignore
-                    a.domain = getDomain(a.url);
-                    return a;
-                }),
-                "domain"
-            );
-            setGroups(Object.entries(groups).sort((a, b) => b[1].length - a[1].length));
-        }, [selectedArticles]);
-    }
+        setGroups(Object.entries(groups).sort((a, b) => b[1].length - a[1].length));
+    }, [selectedArticles]);
+    // }
 
     // TODO sum article fields instead for performance?
     const [annotationGroups, setAnnotationGroups] = useState<{ [key: string]: number }>({});
@@ -299,23 +299,23 @@ function ArticleGroupStat({
                 background: getActivityColor(activityLevel, darkModeEnabled || false),
             }}
             onClick={() => {
-                if (userInfo.onPaidPlan || userInfo.trialEnabled) {
-                    showTopic(topic!.id);
-                } else {
-                    showDomain(groupKey);
-                }
+                // if (userInfo.onPaidPlan || userInfo.trialEnabled) {
+                //     showTopic(topic!.id);
+                // } else {
+                showDomain(groupKey);
+                // }
             }}
         >
             <div className="flex max-w-full items-center overflow-hidden font-medium">
-                {topic?.emoji && <TopicEmoji emoji={topic?.emoji} className="w-4" />}
-                {!(userInfo.onPaidPlan || userInfo.trialEnabled) && (
-                    <div className="mr-1 w-4 opacity-90">
-                        <img
-                            className="w-4"
-                            src={`https://www.google.com/s2/favicons?sz=128&domain=https://${groupKey}`}
-                        />
-                    </div>
-                )}
+                {/* {topic?.emoji && <TopicEmoji emoji={topic?.emoji} className="w-4" />} */}
+                {/* {!(userInfo.onPaidPlan || userInfo.trialEnabled) && ( */}
+                <div className="mr-1 w-4 opacity-90">
+                    <img
+                        className="w-4"
+                        src={`https://www.google.com/s2/favicons?sz=128&domain=https://${groupKey}`}
+                    />
+                </div>
+                {/* )} */}
                 <div className="overflow-hidden overflow-ellipsis whitespace-nowrap">
                     {topic?.name || groupKey}
                 </div>

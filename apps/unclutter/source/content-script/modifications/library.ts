@@ -183,19 +183,19 @@ export default class LibraryModifier implements PageModifier {
             });
 
             // insert new article (add a delay to animate reading progress)
-            if (!this.libraryState.wasAlreadyPresent) {
-                await rep.mutate.putArticleIfNotExists(this.libraryState.libraryInfo.article);
-            } else {
-                // construct article graph
-                if (
-                    (this.libraryState.userInfo?.onPaidPlan ||
-                        this.libraryState.userInfo?.trialEnabled) &&
-                    this.libraryState.libraryInfo
-                ) {
-                    await this.constructArticleGraph(rep);
-                    this.notifyLibraryStateListeners();
-                }
-            }
+            // if (!this.libraryState.wasAlreadyPresent) {
+            //     await rep.mutate.putArticleIfNotExists(this.libraryState.libraryInfo.article);
+            // } else {
+            //     // construct article graph
+            //     if (
+            //         (this.libraryState.userInfo?.onPaidPlan ||
+            //             this.libraryState.userInfo?.trialEnabled) &&
+            //         this.libraryState.libraryInfo
+            //     ) {
+            //         await this.constructArticleGraph(rep);
+            //         this.notifyLibraryStateListeners();
+            //     }
+            // }
 
             // subscribe to article updates after insert
             rep.subscribe.getArticle(this.libraryState.libraryInfo.article.id)({
