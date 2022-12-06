@@ -58,9 +58,8 @@ async function fetchRemoteAnnotations() {
 
     let [annotations, newDownloadTimestamp] = await getHypothesisAnnotationsSince(
         syncState.lastDownloadTimestamp && new Date(syncState.lastDownloadTimestamp),
-        200
+        500
     );
-    annotations = annotations.slice(0, 10);
 
     console.log(
         `Importing ${annotations.length} hypothes.is annotations since ${syncState.lastDownloadTimestamp}...`
@@ -88,7 +87,6 @@ async function uploadAnnotations() {
         await updateHypothesisSyncState({ lastUploadTimestamp: newUploadTimestamp });
         return;
     }
-    console.log(annotations, lastUploadUnix);
     console.log(
         `Uploading ${annotations.length} changed annotations since ${syncState.lastUploadTimestamp} to hypothes.is...`
     );

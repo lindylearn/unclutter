@@ -15,7 +15,7 @@ export async function getMainFeed(
             const feed = await fetchRssFeed(feedUrl);
             if (feed && feed.items.length > 0) {
                 const subscription = constructFeedSubscription(sourceUrl, feedUrl, feed);
-                console.log(`Parsed valid feed at ${feedUrl}:`, feed, subscription);
+                console.log(`Parsed valid feed at ${feedUrl}`);
                 return subscription;
             }
         } catch {}
@@ -43,8 +43,6 @@ function constructFeedSubscription(
     if (feed.link && FEED_EXTENSIONS.some((e) => feed.link!.endsWith(e))) {
         feed.link = undefined;
     }
-
-    console.log(postFrequency);
 
     return {
         id: rssUrl,

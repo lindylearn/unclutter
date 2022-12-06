@@ -399,7 +399,7 @@ export default class LibraryModifier implements PageModifier {
 
     // capture a screenshot of the current article page to display as thumbnail inside the library UI
     captureScreenshot() {
-        if (this.libraryState.userInfo.accountEnabled) {
+        if (this.libraryState.userInfo?.accountEnabled) {
             // can use remote screenshot fetch
             return;
         }
