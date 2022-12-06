@@ -71,21 +71,18 @@ async function uploadAnnotations() {
     const syncState = await getHypothesisSyncState();
 
     // filter annotations to upload
-    const annotations = await rep.query.listAnnotations();
+    let annotations = await rep.query.listAnnotations();
     const lastUploadUnix = syncState.lastUploadTimestamp
-        ? new Date(syncState.lastUploadTimestamp).getTime() / 1000
+        ? Math.round(new Date(syncState.lastUploadTimestamp).getTime() / 1000)
         : 0;
-    annotations
+    annotations = annotations
         .filter((a) => a.created_at > lastUploadUnix)
-        .sort((a, b) => a.created_at - b.created_at);
-    const newUploadTimestamp = new Date(
-        annotations[annotations.length - 1].created_at * 1000
-    ).toUTCString();
+        .sort((a, b) => a.created_at - b.created_at); // sort with oldest first
     if (annotations.length === 0) {
         return;
     }
     console.log(
-        `Uploading ${annotations.length} annotations changed since ${syncState.lastUploadTimestamp} to hypothes.is...`
+        `Uploading ${annotations.length} changed annotations since ${syncState.lastUploadTimestamp} to hypothes.is...`
     );
 
     // fetch articles
@@ -125,6 +122,9 @@ async function uploadAnnotations() {
         })
     );
 
+    const newUploadTimestamp = new Date(
+        annotations[annotations.length - 1].created_at * 1000
+    ).toUTCString();
     await updateHypothesisSyncState({ lastUploadTimestamp: newUploadTimestamp });
 }
 const uploadAnnotationsDebounced = debounce(uploadAnnotations, 10000);

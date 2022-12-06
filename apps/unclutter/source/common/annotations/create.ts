@@ -121,7 +121,7 @@ export function pickleLocalAnnotation(annotation: LindyAnnotation): Annotation {
         id: annotation.id,
         h_id: annotation.h_id,
         article_id: annotation.url.startsWith("http") ? getUrlHash(annotation.url) : annotation.url,
-        created_at: new Date(annotation.created_at).getTime() / 1000,
+        created_at: Math.round(new Date(annotation.created_at).getTime() / 1000),
         quote_text: annotation.quote_text,
         text: annotation.text,
         tags: annotation.tags,
