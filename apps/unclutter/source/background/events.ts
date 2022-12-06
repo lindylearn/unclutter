@@ -16,13 +16,12 @@ import { fetchCss } from "./actions";
 import { loadAnnotationCountsToMemory } from "./annotationCounts";
 import { getAllBookmarks, requestBookmarksPermission } from "./bookmarks";
 import { enableInTab, injectScript, togglePageViewMessage } from "./inject";
-import { createAlarmListener, onNewInstall, setupWithPermissions } from "./install";
+import { createAlarmListeners, onNewInstall, setupWithPermissions } from "./install";
 import { discoverRssFeed } from "./library/feeds";
 import {
     initLibrary,
     processReplicacheMessage,
     processReplicacheSubscribe,
-    refreshLibraryFeeds,
 } from "./library/library";
 import { captureActiveTabScreenshot, getLocalScreenshot } from "./library/screenshots";
 import { search } from "./library/search";
@@ -266,4 +265,4 @@ async function initializeServiceWorker() {
 
 initializeServiceWorker();
 setupWithPermissions(); // needs to run after every reload to configure event handlers
-createAlarmListener();
+createAlarmListeners();

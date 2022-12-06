@@ -21,7 +21,8 @@ import {
 import { deleteAllLocalScreenshots } from "./screenshots";
 import { initSearchIndex } from "./search";
 import { refreshSubscriptions } from "@unclutter/library-components/dist/feeds";
-import { initHighlightsSync } from "./highlights";
+import { fetchRemoteAnnotations, initHighlightsSync } from "./highlights";
+import { getFeatureFlag, hypothesisSyncFeatureFlag } from "../../common/featureFlags";
 
 export let userId: string;
 export let rep: ReplicacheProxy | null = null;
@@ -47,6 +48,16 @@ export async function initLibrary() {
 
 export async function refreshLibraryFeeds() {
     await refreshSubscriptions(rep);
+}
+export async function syncPull() {
+    const hypothesisSyncEnabled = await getFeatureFlag(hypothesisSyncFeatureFlag);
+    if (hypothesisSyncEnabled) {
+        try {
+            await fetchRemoteAnnotations();
+        } catch (err) {
+            console.error(err);
+        }
+    }
 }
 
 function getBackgroundReplicacheProxy(): ReplicacheProxy {

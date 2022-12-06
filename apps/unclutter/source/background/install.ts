@@ -2,7 +2,7 @@ import browser, { getBrowserType } from "../common/polyfill";
 import { injectScript } from "./inject";
 import { reportEnablePageView } from "./metrics";
 import type { Alarms } from "webextension-polyfill";
-import { refreshLibraryFeeds } from "./library/library";
+import { refreshLibraryFeeds, syncPull } from "./library/library";
 
 export function onNewInstall(version: string) {
     browser.tabs.create({
@@ -23,7 +23,7 @@ export function setupWithPermissions() {
     try {
         // test if already have permissions
         installContextMenu();
-        installFeedAlarm();
+        installAlarms();
         installed = true;
         return;
     } catch {}
@@ -37,7 +37,7 @@ export function setupWithPermissions() {
             })
             .then(() => {
                 installContextMenu();
-                installFeedAlarm();
+                installAlarms();
                 installed = true;
             });
     } catch (err) {
@@ -94,22 +94,34 @@ function createOrUpdateContextMenu(id, menuOptions) {
     }
 }
 
-function installFeedAlarm() {
-    console.log("Registering library feed periodic alarm...");
+function installAlarms() {
+    console.log("Registering periodic alarms...");
 
     // updates alarm if already exists
     browser.alarms.create("unclutter-library-feed-refresh", {
-        delayInMinutes: 60 * 4,
-        periodInMinutes: 60 * 4,
+        // every 12 hours
+        delayInMinutes: 60 * 12,
+        periodInMinutes: 60 * 12,
+    } as Alarms.CreateAlarmInfoType);
+    // updates alarm if already exists
+    browser.alarms.create("unclutter-library-sync-pull", {
+        // every 6 hours
+        delayInMinutes: 60 * 6,
+        periodInMinutes: 60 * 6,
     } as Alarms.CreateAlarmInfoType);
 
-    createAlarmListener();
+    createAlarmListeners();
 }
 
-export function createAlarmListener() {
+export function createAlarmListeners() {
     browser.alarms?.onAlarm.addListener((alarm: Alarms.Alarm) => {
         if (alarm.name === "unclutter-library-feed-refresh") {
             refreshLibraryFeeds();
+        }
+    });
+    browser.alarms?.onAlarm.addListener((alarm: Alarms.Alarm) => {
+        if (alarm.name === "unclutter-library-sync-pull") {
+            syncPull();
         }
     });
 }

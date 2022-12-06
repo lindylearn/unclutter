@@ -53,16 +53,16 @@ async function importLegacyAnnotations() {
     await deleteAllLegacyAnnotations();
 }
 
-async function fetchRemoteAnnotations() {
+export async function fetchRemoteAnnotations() {
     const syncState = await getHypothesisSyncState();
 
     let [annotations, newDownloadTimestamp] = await getHypothesisAnnotationsSince(
         syncState.lastDownloadTimestamp && new Date(syncState.lastDownloadTimestamp),
-        500
+        10000
     );
 
     console.log(
-        `Importing ${annotations.length} hypothes.is annotations since ${syncState.lastDownloadTimestamp}...`
+        `Downloading ${annotations.length} hypothes.is annotations since ${syncState.lastDownloadTimestamp}...`
     );
     await importAnnotations(annotations);
 
