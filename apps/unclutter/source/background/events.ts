@@ -134,9 +134,9 @@ function handleMessage(
     } else if (message.event === "openLinkWithUnclutter") {
         const onTabActive = async (tab: Tabs.Tab) => {
             // need to wait until site loaded, as have no permissions on new tab page
-            await new Promise((resolve) => setTimeout(resolve, 100));
+            await new Promise((resolve) => setTimeout(resolve, 200));
 
-            await injectScript(tab.id, "content-script/enhance.js");
+            await enableInTab(tab.id);
 
             if (message.focusedAnnotation) {
                 await new Promise((resolve) => setTimeout(resolve, 500));
