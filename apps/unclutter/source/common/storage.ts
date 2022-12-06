@@ -139,6 +139,12 @@ export async function getHypothesisSyncState(): Promise<SyncState> {
     const config = await browser.storage.sync.get(["hypothesis-sync-state"]);
     return config["hypothesis-sync-state"] || {};
 }
-export async function setHypothesisSyncState(syncState: SyncState): Promise<void> {
-    await browser.storage.sync.set({ "hypothesis-sync-state": syncState });
+export async function updateHypothesisSyncState(diff: Partial<SyncState>): Promise<void> {
+    const syncState = await getHypothesisSyncState();
+    await browser.storage.sync.set({
+        "hypothesis-sync-state": {
+            ...syncState,
+            ...diff,
+        },
+    });
 }

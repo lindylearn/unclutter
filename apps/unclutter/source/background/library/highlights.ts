@@ -1,10 +1,10 @@
 import { getUrlHash, normalizeUrl } from "@unclutter/library-components/dist/common";
 import { Annotation, Article } from "@unclutter/library-components/dist/store";
-import { groupBy } from "lodash";
+import { debounce, groupBy } from "lodash";
 import { LindyAnnotation, pickleLocalAnnotation } from "../../common/annotations/create";
 import { getFeatureFlag, hypothesisSyncFeatureFlag } from "../../common/featureFlags";
 import { constructLocalArticleInfo } from "../../common/schema";
-import { getHypothesisSyncState, setHypothesisSyncState, SyncState } from "../../common/storage";
+import { getHypothesisSyncState, updateHypothesisSyncState } from "../../common/storage";
 import {
     createRemoteAnnotation,
     deleteRemoteAnnotation,
@@ -25,13 +25,12 @@ export async function initHighlightsSync() {
     const hypothesisSyncEnabled = await getFeatureFlag(hypothesisSyncFeatureFlag);
     if (hypothesisSyncEnabled) {
         try {
-            const syncState = await getHypothesisSyncState();
-            await fetchRemoteAnnotations(syncState);
+            // trigger scheduled upload
+            await uploadAnnotations();
 
-            // wait to avoid uploading fetched annotations
-            await new Promise((resolve) => setTimeout(resolve, 5000));
+            // await fetchRemoteAnnotations();
 
-            await watchLocalAnnotations(syncState);
+            await watchLocalAnnotations();
         } catch (err) {
             console.error(err);
         }
@@ -52,7 +51,9 @@ async function importLegacyAnnotations() {
     await deleteAllLegacyAnnotations();
 }
 
-async function fetchRemoteAnnotations(syncState: SyncState) {
+async function fetchRemoteAnnotations() {
+    const syncState = await getHypothesisSyncState();
+
     let [annotations, newDownloadTimestamp] = await getHypothesisAnnotationsSince(
         syncState.lastDownloadTimestamp && new Date(syncState.lastDownloadTimestamp),
         200
@@ -63,64 +64,88 @@ async function fetchRemoteAnnotations(syncState: SyncState) {
     );
     await importAnnotations(annotations);
 
-    await setHypothesisSyncState({ ...syncState, lastDownloadTimestamp: newDownloadTimestamp });
+    await updateHypothesisSyncState({ lastDownloadTimestamp: newDownloadTimestamp });
 }
 
+async function uploadAnnotations() {
+    const syncState = await getHypothesisSyncState();
+
+    // filter annotations to upload
+    const annotations = await rep.query.listAnnotations();
+    const lastUploadUnix = syncState.lastUploadTimestamp
+        ? new Date(syncState.lastUploadTimestamp).getTime() / 1000
+        : 0;
+    annotations
+        .filter((a) => a.created_at > lastUploadUnix)
+        .sort((a, b) => a.created_at - b.created_at);
+    const newUploadTimestamp = new Date(
+        annotations[annotations.length - 1].created_at * 1000
+    ).toUTCString();
+    if (annotations.length === 0) {
+        return;
+    }
+    console.log(
+        `Uploading ${annotations.length} annotations changed since ${syncState.lastUploadTimestamp} to hypothes.is...`
+    );
+
+    // fetch articles
+    const articleIds = Object.keys(groupBy(annotations, (a) => a.article_id));
+    const articles = await Promise.all(
+        articleIds.map((articleId) => rep.query.getArticle(articleId))
+    );
+    const articleMap: { [articleId: string]: Article } = articles.reduce((acc, article) => {
+        acc[article.id] = article;
+        return acc;
+    }, {});
+
+    // upload changes
+    await Promise.all(
+        annotations.map(async (annotation) => {
+            const article = articleMap[annotation.article_id];
+
+            if (annotation.h_id) {
+                // already exists remotely
+                return updateRemoteAnnotation(annotation);
+            } else {
+                // create remotely, then save id
+                const remoteId = await createRemoteAnnotation(
+                    annotation,
+                    article.url,
+                    article.title
+                );
+                await processReplicacheMessage({
+                    type: "mutate",
+                    methodName: "updateAnnotation",
+                    args: {
+                        id: annotation.id,
+                        h_id: remoteId,
+                    },
+                });
+            }
+        })
+    );
+
+    await updateHypothesisSyncState({ lastUploadTimestamp: newUploadTimestamp });
+}
+const uploadAnnotationsDebounced = debounce(uploadAnnotations, 10000);
+
+// only handle deletes using store watch for reslience
 let watchActive = false;
-async function watchLocalAnnotations(syncState: SyncState) {
+async function watchLocalAnnotations() {
     if (watchActive) {
         return;
     }
     watchActive = true;
 
     rep.watch("annotations/", async (changed: Annotation[], removed: Annotation[]) => {
-        if (changed.length === 0 && removed.length === 0) {
-            return;
+        if (changed.length > 0) {
+            // process based on edit timestamp for resilience
+            uploadAnnotationsDebounced();
         }
-
-        console.log(
-            `Uploading ${changed.length + removed.length} annotation changes to hypothesis...`
-        );
-
-        // fetch articles
-        const articleIds = Object.keys(groupBy(changed, (a) => a.article_id));
-        const articles = await Promise.all(
-            articleIds.map((articleId) => rep.query.getArticle(articleId))
-        );
-        const articleMap: { [articleId: string]: Article } = articles.reduce((acc, article) => {
-            acc[article.id] = article;
-            return acc;
-        }, {});
-
-        // upload changes
-        await Promise.all(
-            changed.map(async (annotation) => {
-                const article = articleMap[annotation.article_id];
-
-                if (annotation.h_id) {
-                    // already exists remotely
-                    return updateRemoteAnnotation(annotation);
-                } else {
-                    // create remotely, then save id
-                    const remoteId = await createRemoteAnnotation(
-                        annotation,
-                        article.url,
-                        article.title
-                    );
-                    await processReplicacheMessage({
-                        type: "mutate",
-                        methodName: "updateAnnotation",
-                        args: {
-                            id: annotation.id,
-                            h_id: remoteId,
-                        },
-                    });
-                }
-            })
-        );
-
-        // upload deletes
-        await Promise.all(removed.map((annotation) => deleteRemoteAnnotation(annotation)));
+        if (removed.length > 0) {
+            console.log(`Deleting ${removed.length} annotation remotely...`);
+            await Promise.all(removed.map((annotation) => deleteRemoteAnnotation(annotation)));
+        }
     });
 }
 
