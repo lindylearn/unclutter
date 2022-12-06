@@ -231,3 +231,16 @@ html.pageview.pageview > body {
         margin-left: 20px !important; /* also set via inline styles */
     }
 }
+@media print {
+    .lindy-overlay-elem,
+    #lindy-body-background:not(#fakeID#fakeID#fakeID#fakeID#fakeID#fakeID) {
+        display: none !important;
+    }
+
+    /* html.pageview {
+        --lindy-pagewidth: 100vw !important;
+    }
+    body:not(#fakeID#fakeID#fakeID#fakeID#fakeID#fakeID) {
+        margin: 0 !important;
+    } */
+}

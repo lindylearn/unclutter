@@ -33,15 +33,16 @@ export default class BodyStyleModifier implements PageModifier {
         this.observeStyleChanges();
 
         // watch for screen size changes
-        const mediaQueryList = window.matchMedia("(max-width: 1200px)");
-        const matchMediaListener = ({ matches }) => {
+        const responsiveQuery = window.matchMedia("(max-width: 1200px)");
+        const responsiveQueryListener = ({ matches }) => {
             this.applyResponsiveStyle(matches);
         };
-        matchMediaListener(mediaQueryList);
+        responsiveQueryListener(responsiveQuery);
+        responsiveQuery.addEventListener("change", responsiveQueryListener);
 
-        mediaQueryList.addEventListener("change", matchMediaListener);
-        this.removeResponsiveStyleListener = () =>
-            mediaQueryList.removeEventListener("change", matchMediaListener);
+        this.removeResponsiveStyleListener = () => {
+            responsiveQuery.removeEventListener("change", responsiveQueryListener);
+        };
     }
 
     // set styles after pageview animation done
