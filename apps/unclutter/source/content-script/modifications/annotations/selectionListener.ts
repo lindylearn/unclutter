@@ -190,6 +190,7 @@ async function _createAnnotationFromSelection(
     // notify sidebar and upload logic
     callback(annotation);
 
-    copyTextToClipboard(annotation.quote_text);
     selection.removeAllRanges();
+
+    copyTextToClipboard(`"${annotation.quote_text}"`);
 }
