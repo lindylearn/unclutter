@@ -242,16 +242,16 @@ function OptionsPage({}) {
                 >
                     <ContributionStats />
                     <div className="">
-                        This project is open source! Add your ideas to our{" "}
+                        This project is open source! Join our{" "}
                         <a
-                            href="https://unclutter.canny.io"
+                            href="https://unclutter.it/discord"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="underline"
                         >
-                            open roadmap
+                            Discord server
                         </a>{" "}
-                        or contribute{" "}
+                        to discuss improvements, or contribute{" "}
                         <a
                             href="https://github.com/lindylearn/unclutter/issues"
                             target="_blank"

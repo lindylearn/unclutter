@@ -201,14 +201,15 @@ export default function SettingsModalTab({
             >
                 <p>
                     Unclutter is open-source
-                    {showSignup ? " and funded by the community" : ""}! Vote on the roadmap, suggest
-                    features, or contribute code to improve reading on the web for everyone.
+                    {showSignup ? " and funded by the community" : ""}! Join our Discord server to
+                    discuss improvements, or contribute on GitHub to improve reading on the web for
+                    everyone.
                 </p>
 
                 <div className="flex gap-3">
                     <Button
-                        title="Open roadmap"
-                        href="https://unclutter.canny.io/"
+                        title="Join Discord"
+                        href="https://unclutter.it/discord"
                         darkModeEnabled={darkModeEnabled}
                         primary
                         reportEvent={reportEvent}
