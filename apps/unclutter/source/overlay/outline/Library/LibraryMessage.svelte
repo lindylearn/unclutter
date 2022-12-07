@@ -63,25 +63,16 @@
                 {libraryState.linkCount} + related article{libraryState.linkCount !== 1 ? "s" : ""}
             </div>
         {:else if libraryState?.libraryInfo?.article && libraryState?.readingProgress && (!(libraryState?.userInfo?.onPaidPlan || libraryState?.userInfo?.trialEnabled) || libraryState?.linkCount === 0)} -->
-        {#if libraryState?.libraryInfo?.article && libraryState?.readingProgress}
-            {#key libraryState.readingProgress.queueCount}
-                <div
-                    class={clsx(
-                        "absolute top-0 left-0",
-                        !libraryState.libraryInfo?.topic && "text-gray-400 dark:text-stone-600"
-                    )}
-                    in:fly={{ y: 10, duration: 200, easing: cubicOut }}
-                >
-                    {#if libraryState.readingProgress.queueCount === 0}
-                        reading queue empty
-                    {:else}
-                        {libraryState.readingProgress.queueCount} article{libraryState
-                            .readingProgress.queueCount === 1
-                            ? ""
-                            : "s"} in <span class="hide-tiny">reading </span>queue
-                    {/if}
-                </div>
-            {/key}
+
+        {#if libraryState.readingProgress && libraryState.readingProgress.queueCount === 0}
+            <div in:fly={{ y: 10, duration: 200, easing: cubicOut }}>reading queue empty</div>
+        {:else if libraryState.readingProgress}
+            <div in:fly={{ y: 10, duration: 200, easing: cubicOut }}>
+                {libraryState.readingProgress.queueCount} article{libraryState.readingProgress
+                    .queueCount === 1
+                    ? ""
+                    : "s"} in <span class="hide-tiny">reading </span>queue
+            </div>
         {/if}
     </div>
 
