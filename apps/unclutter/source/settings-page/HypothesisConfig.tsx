@@ -33,7 +33,7 @@ export default function HypothesisConfig() {
     return (
         <div className="flex items-center gap-2">
             <p className="mb-1">
-                Your{" "}
+                The{" "}
                 <a
                     className="underline"
                     href="https://hypothes.is/account/developer"
@@ -41,6 +41,15 @@ export default function HypothesisConfig() {
                     rel="noopener noreferrer"
                 >
                     API token
+                </a>{" "}
+                for{" "}
+                <a
+                    className="underline"
+                    href="https://hypothes.is/login"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    my account
                 </a>
                 :
             </p>

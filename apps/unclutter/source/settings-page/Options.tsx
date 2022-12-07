@@ -15,6 +15,8 @@ import FeatureFlagSwitch from "./FeatureFlagSwitch";
 import HypothesisConfig from "./HypothesisConfig";
 import { useAutoDarkMode } from "@unclutter/library-components/dist/common";
 import clsx from "clsx";
+import { getHypothesisSyncState, SyncState } from "../common/storage";
+import { getRelativeTime } from "../common/time";
 
 function OptionsPage({}) {
     React.useEffect(() => {
@@ -29,11 +31,17 @@ function OptionsPage({}) {
     }, []);
 
     const [hypothesisEnabled, setHypothesisEnabled] = React.useState(null);
+    const [hypothesisSyncState, setHypothesisSyncState] = React.useState<SyncState>(null);
     React.useEffect(() => {
         (async function () {
             const enabled = await getFeatureFlag(hypothesisSyncFeatureFlag);
             setHypothesisEnabled(enabled);
         })();
+
+        getHypothesisSyncState().then(setHypothesisSyncState);
+        setInterval(() => {
+            getHypothesisSyncState().then(setHypothesisSyncState);
+        }, 1000);
     }, []);
     function onChangeHypothesisSync(enabled) {
         setHypothesisEnabled(enabled);
@@ -161,33 +169,39 @@ function OptionsPage({}) {
                 </OptionsGroup>
 
                 <OptionsGroup
-                    headerText="Highlights"
+                    headerText="Sync"
                     iconSvg={
-                        <svg className="w-5" viewBox="0 0 512 512">
+                        <svg viewBox="0 0 512 512" className="w-4">
                             <path
                                 fill="currentColor"
-                                d="M320 62.06L362.7 19.32C387.7-5.678 428.3-5.678 453.3 19.32L492.7 58.75C517.7 83.74 517.7 124.3 492.7 149.3L229.5 412.5C181.5 460.5 120.3 493.2 53.7 506.5L28.71 511.5C20.84 513.1 12.7 510.6 7.03 504.1C1.356 499.3-1.107 491.2 .4662 483.3L5.465 458.3C18.78 391.7 51.52 330.5 99.54 282.5L286.1 96L272.1 82.91C263.6 73.54 248.4 73.54 239 82.91L136.1 184.1C127.6 194.3 112.4 194.3 103 184.1C93.66 175.6 93.66 160.4 103 151L205.1 48.97C233.2 20.85 278.8 20.85 306.9 48.97L320 62.06zM320 129.9L133.5 316.5C94.71 355.2 67.52 403.1 54.85 457.2C108 444.5 156.8 417.3 195.5 378.5L382.1 192L320 129.9z"
+                                d="M481.2 33.81c-8.938-3.656-19.31-1.656-26.16 5.219l-50.51 50.51C364.3 53.81 312.1 32 256 32C157 32 68.53 98.31 40.91 193.3C37.19 206 44.5 219.3 57.22 223c12.81 3.781 26.06-3.625 29.75-16.31C108.7 132.1 178.2 80 256 80c43.12 0 83.35 16.42 114.7 43.4l-59.63 59.63c-6.875 6.875-8.906 17.19-5.219 26.16c3.719 8.969 12.47 14.81 22.19 14.81h143.9C485.2 223.1 496 213.3 496 200v-144C496 46.28 490.2 37.53 481.2 33.81zM454.7 288.1c-12.78-3.75-26.06 3.594-29.75 16.31C403.3 379.9 333.8 432 255.1 432c-43.12 0-83.38-16.42-114.7-43.41l59.62-59.62c6.875-6.875 8.891-17.03 5.203-26C202.4 294 193.7 288 183.1 288H40.05c-13.25 0-24.11 10.74-24.11 23.99v144c0 9.719 5.844 18.47 14.81 22.19C33.72 479.4 36.84 480 39.94 480c6.25 0 12.38-2.438 16.97-7.031l50.51-50.52C147.6 458.2 199.9 480 255.1 480c99 0 187.4-66.31 215.1-161.3C474.8 305.1 467.4 292.7 454.7 288.1z"
                             />
                         </svg>
                     }
                 >
-                    <p>
-                        Select any article text to create a{" "}
-                        <a
-                            href="https://github.com/lindylearn/unclutter/blob/main/docs/annotations.md"
-                            className="underline"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            highlight
-                        </a>{" "}
-                        saved in your browser. Toggle the feature via the "pen" toolbar icon.
-                    </p>
+                    {hypothesisSyncState?.isSyncing && (
+                        <p className="text-gray-400">Synchronizing library...</p>
+                    )}
+                    {/* take latest sync action once both done */}
+                    {!hypothesisSyncState?.isSyncing &&
+                        hypothesisSyncState?.lastUploadTimestamp &&
+                        hypothesisSyncState?.lastDownloadTimestamp && (
+                            <p className="text-gray-400">
+                                Last synchronized library{" "}
+                                {getRelativeTime(
+                                    hypothesisSyncState.lastDownloadTimestamp >
+                                        hypothesisSyncState.lastUploadTimestamp
+                                        ? hypothesisSyncState.lastDownloadTimestamp
+                                        : hypothesisSyncState.lastUploadTimestamp
+                                )}
+                            </p>
+                        )}
+
                     <FeatureFlagSwitch
                         featureFlagKey={hypothesisSyncFeatureFlag}
                         onChange={onChangeHypothesisSync}
                     >
-                        Back-up notes to my{" "}
+                        Sync my highlights with{" "}
                         <a
                             href="https://web.hypothes.is"
                             className="underline"
@@ -196,7 +210,25 @@ function OptionsPage({}) {
                         >
                             Hypothes.is
                         </a>{" "}
-                        account
+                        (and to{" "}
+                        <a
+                            href="https://github.com/weichenw/obsidian-hypothesis-plugin"
+                            className="underline"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            Obsidian
+                        </a>
+                        ,{" "}
+                        <a
+                            href="https://roamjs.com/extensions/hypothesis"
+                            className="underline"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            Roam
+                        </a>
+                        , etc.)
                     </FeatureFlagSwitch>
                     {hypothesisEnabled && <HypothesisConfig />}
                 </OptionsGroup>

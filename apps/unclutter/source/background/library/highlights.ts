@@ -55,6 +55,11 @@ async function importLegacyAnnotations() {
 
 export async function fetchRemoteAnnotations() {
     const syncState = await getHypothesisSyncState();
+    await updateHypothesisSyncState({ isSyncing: true });
+
+    // get last updated time before async fetching & uploading
+    // use current time instead of last download to display time ago
+    const newUploadTimestamp = new Date().toUTCString();
 
     let [annotations, newDownloadTimestamp] = await getHypothesisAnnotationsSince(
         syncState.lastDownloadTimestamp && new Date(syncState.lastDownloadTimestamp),
@@ -66,7 +71,10 @@ export async function fetchRemoteAnnotations() {
     );
     await importAnnotations(annotations);
 
-    await updateHypothesisSyncState({ lastDownloadTimestamp: newDownloadTimestamp });
+    await updateHypothesisSyncState({
+        lastDownloadTimestamp: newUploadTimestamp,
+        isSyncing: false,
+    });
 }
 
 async function uploadAnnotations() {
@@ -85,7 +93,10 @@ async function uploadAnnotations() {
         .filter((a) => a.updated_at > lastUploadUnix)
         .sort((a, b) => a.updated_at - b.updated_at); // sort with oldest first
     if (annotations.length === 0) {
-        await updateHypothesisSyncState({ lastUploadTimestamp: newUploadTimestamp });
+        await updateHypothesisSyncState({
+            lastUploadTimestamp: newUploadTimestamp,
+            isSyncing: false,
+        });
         return;
     }
     console.log(

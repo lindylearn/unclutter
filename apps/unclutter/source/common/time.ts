@@ -1,6 +1,6 @@
 import { format as formatRelativeTime } from "timeago.js";
 
-export function getRelativeTime(timestamp: number): string {
+export function getRelativeTime(timestamp: number | string): string {
     // Safari has issues with some formats, but this seems to work?
     // See https://stackoverflow.com/questions/6427204/date-parsing-in-javascript-is-different-between-safari-and-chrome
 
