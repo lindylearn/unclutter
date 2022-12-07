@@ -1031,7 +1031,8 @@
     "zhuanlan.zhihu.com": [
         ".css-d45dic",
         ".css-1f4osvg",
-        ".Button.css-1u5s92v"
+        ".Button.css-1u5s92v",
+        ".ColumnPageHeader-Wrapper"
     ],
     "zingnews.vn": [
         ".article-thumbnail",
