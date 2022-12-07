@@ -99,15 +99,13 @@ function installAlarms() {
 
     // updates alarm if already exists
     browser.alarms.create("unclutter-library-feed-refresh", {
-        // every 12 hours
-        delayInMinutes: 60 * 12,
-        periodInMinutes: 60 * 12,
+        delayInMinutes: 1,
+        periodInMinutes: 60 * 12, // every 12 hours
     } as Alarms.CreateAlarmInfoType);
     // updates alarm if already exists
     browser.alarms.create("unclutter-library-sync-pull", {
-        // every 6 hours
-        delayInMinutes: 60 * 6,
-        periodInMinutes: 60 * 6,
+        delayInMinutes: 1,
+        periodInMinutes: 60 * 6, // every 6 hours
     } as Alarms.CreateAlarmInfoType);
 
     createAlarmListeners();

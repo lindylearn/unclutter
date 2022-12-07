@@ -45,8 +45,6 @@ export async function initLibrary() {
     await initSearchIndex();
 
     await initHighlightsSync();
-
-    await refreshLibraryFeeds();
 }
 
 export async function refreshLibraryFeeds() {
