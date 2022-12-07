@@ -27,19 +27,22 @@ import { getFeatureFlag, hypothesisSyncFeatureFlag } from "../../common/featureF
 export let userId: string;
 export let rep: ReplicacheProxy | null = null;
 export async function initLibrary() {
+    rep = getBackgroundReplicacheProxy();
+
     userId = await getLibraryUser();
     if (userId) {
         console.log(`Init Library for registered user ${userId}`);
         await initReplicache();
-        await migrateToAccount();
+        const migrated = await migrateToAccount();
+        if (migrated) {
+            // rebuild index after data migration
+            await initSearchIndex(true);
+        }
     } else {
         // local replicache mock doesn't need initialization
     }
 
-    rep = getBackgroundReplicacheProxy();
-
-    const userInfo = await rep.query.getUserInfo();
-    await initSearchIndex(userInfo, !!userId); // rebuild index after replicache migration
+    await initSearchIndex();
 
     await initHighlightsSync();
 
