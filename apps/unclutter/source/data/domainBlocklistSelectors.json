@@ -329,6 +329,19 @@
         ".px12.d-flex.ai-center.jc-center.mx-auto.wmx12"
     ],
     "gamesindustry.biz": [".thumbnail", ".shelf", "#newsletters"],
+    "genbeta.com": [
+        ".menu-external.foot-menu-external",
+        ".menu-categories.foot-menu-categories",
+        ".wrapper.foot-wrapper",
+        ".section-deeplinking-container.m-evergreen-links",
+        ".section-newsletter",
+        ".view-more",
+        ".foot-external.js-foot-external",
+        "#comments",
+        ".article-topics-list",
+        ".article-links",
+        ".article-asset.article-asset-normal.article-asset-center"
+    ],
     "genk.vn": [".kbwc-socials"],
     "geo.fr": [
         ".discoverBlock",
