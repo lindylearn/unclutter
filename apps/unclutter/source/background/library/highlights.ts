@@ -71,6 +71,7 @@ export async function fetchRemoteAnnotations() {
 
 async function uploadAnnotations() {
     const syncState = await getHypothesisSyncState();
+    await updateHypothesisSyncState({ isSyncing: true });
 
     // get last updated time before async fetching & uploading
     const newUploadTimestamp = new Date().toUTCString();
@@ -128,7 +129,7 @@ async function uploadAnnotations() {
         })
     );
 
-    await updateHypothesisSyncState({ lastUploadTimestamp: newUploadTimestamp });
+    await updateHypothesisSyncState({ isSyncing: false, lastUploadTimestamp: newUploadTimestamp });
 }
 const uploadAnnotationsDebounced = debounce(uploadAnnotations, 10000);
 

@@ -134,6 +134,7 @@ export async function setLibraryAuth(userId: string, webJwt: string): Promise<vo
 export interface SyncState {
     lastDownloadTimestamp?: string;
     lastUploadTimestamp?: string;
+    isSyncing?: boolean;
 }
 export async function getHypothesisSyncState(): Promise<SyncState> {
     const config = await browser.storage.sync.get(["hypothesis-sync-state"]);
