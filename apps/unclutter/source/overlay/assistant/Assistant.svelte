@@ -37,17 +37,25 @@
     {#await tags}
         Loading...
     {:then tags}
-        {#each tags as tag}
+        {#each tags.slice(0, 3) as tag}
             <div
-                class="tag cursor-pointer rounded-lg py-1 px-2 text-stone-900 shadow-sm transition-all hover:scale-[97%] bg-stone-100"
+                class="tag cursor-pointer text-stone-900 shadow-inner transition-all hover:scale-[97%] flex rounded-lg"
                 style={`--active-color: ${getRandomLightColor(tag, false)};`}
                 on:click={() => {
                     isExpanded = true;
                 }}
             >
-                {tag}
+                <div class="name bg-stone-100 py-1 px-2 rounded-l-lg transition-all">{tag}</div>
+                <div class="count bg-stone-200 py-1 px-2 rounded-r-lg">
+                    {Math.round(Math.random() * 10)}
+                </div>
             </div>
         {/each}
+        <div
+            class="cursor-pointer text-stone-900 transition-all hover:scale-[97%] bg-white rounded-lg flex py-1 px-2"
+        >
+            Save
+        </div>
     {:catch error}
         Error
     {/await}
@@ -59,7 +67,9 @@
             class="highlighter mt-2 flex flex-col gap-2 rounded-xl border-[1px] border-stone-100 bg-white p-2 shadow-xl drop-shadow"
         >
             {#each relatedHighlights as highlight}
-                <div class="text-stone-900 max-w-lg">
+                <div
+                    class="text-stone-900 max-w-lg bg-stone-100 p-2 rounded-lg cursor-pointer shadow-sm transition-all hover:scale-[99%]"
+                >
                     "{highlight.metadata.text}"
                 </div>
             {/each}
@@ -90,7 +100,7 @@
         }
     }
 
-    .tag:hover {
+    .tag:hover > .name {
         background-color: var(--active-color);
     }
 </style>
