@@ -959,6 +959,7 @@
         ".story",
         ".article__tag"
     ],
+    "timharek.no": [".header__logo", ".header"],
     "tinhte.vn": [
         ".jsx-3147581474.info-block--right",
         ".jsx-3569995709.main",
