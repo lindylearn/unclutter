@@ -457,6 +457,19 @@
         "#article-single-comments"
     ],
     "independent.co.uk": [".Header__AuthorImage-sc-mqbe6u-4.bEMDmP"],
+    "indianexpress.com": [
+        ".margin-top-none.election-head1",
+        ".party-sheet",
+        ".chunaw-live-button",
+        ".election-h",
+        ".partygraph_himachalpradesh",
+        ".partygraph_gujarat",
+        ".election-slide.slick-slide.slick-active",
+        ".o-election-results",
+        ".article_title",
+        ".custom_read_button",
+        ".next-story-wrap"
+    ],
     "indiatoday.in": [
         ".top__ad",
         ".ads__common.ads__container.widgetgap.withbg",
