@@ -854,6 +854,7 @@
         ".paybox",
         ".pay-furtherreading"
     ],
+    "swrfernsehen.de": [".container.breadcrumbs", ".sharing", "#footer"],
     "tarjomaan.com": ["#head_div1", "#header"],
     "technologyreview.com": [
         "#piano__post_body-desktop-1",
