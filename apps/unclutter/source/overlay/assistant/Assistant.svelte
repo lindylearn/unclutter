@@ -14,10 +14,25 @@
             .json();
     }
     let tags = getTags(quote);
+
+    async function getRelatedHighlights(quote: string): Promise<any[]> {
+        return await ky
+            .post("https://assistant-two.vercel.app/api/query", {
+                json: {
+                    query: quote,
+                },
+            })
+            .json();
+    }
+    let isExpanded = false;
+    let relatedHighlights = null;
+    $: if (isExpanded) {
+        relatedHighlights = getRelatedHighlights(quote);
+    }
 </script>
 
 <div
-    class="highlighter mt-2 flex gap-2 rounded-xl border-[1px] border-stone-100 bg-white p-2 shadow-xl drop-shadow"
+    class="highlighter mt-2 flex max-w-max gap-2 rounded-xl border-[1px] border-stone-100 bg-white p-2 shadow-xl drop-shadow"
 >
     {#await tags}
         Loading...
@@ -26,6 +41,9 @@
             <div
                 class="tag cursor-pointer rounded-lg py-1 px-2 text-stone-900 shadow-sm transition-all hover:scale-[97%] bg-stone-100"
                 style={`--active-color: ${getRandomLightColor(tag, false)};`}
+                on:click={() => {
+                    isExpanded = true;
+                }}
             >
                 {tag}
             </div>
@@ -34,6 +52,20 @@
         Error
     {/await}
 </div>
+
+{#if isExpanded}
+    {#await relatedHighlights then relatedHighlights}
+        <div
+            class="highlighter mt-2 flex flex-col gap-2 rounded-xl border-[1px] border-stone-100 bg-white p-2 shadow-xl drop-shadow"
+        >
+            {#each relatedHighlights as highlight}
+                <div class="text-stone-900 max-w-lg">
+                    "{highlight.metadata.text}"
+                </div>
+            {/each}
+        </div>
+    {/await}
+{/if}
 
 <style lang="postcss">
     @tailwind base;

@@ -1,9 +1,10 @@
 import AssistantSvelte from "./Assistant.svelte";
 
 export function startAssistant() {
-    document.addEventListener("selectstart", onSelectionStart);
+    document.addEventListener("mousedown", onSelectionStart);
     document.addEventListener("selectionchange", onSelectionChange);
     document.addEventListener("mouseup", onSelectionDone);
+    document.addEventListener("contextmenu", removeHighligher);
 
     document.addEventListener("DOMContentLoaded", () => {
         const font = document.createElement("link");
@@ -13,8 +14,8 @@ export function startAssistant() {
     });
 }
 
-function onSelectionStart() {
-    document.getElementById("highlighter")?.remove();
+function onSelectionStart(event: Event) {
+    removeHighligher();
 }
 
 function onSelectionChange() {}
@@ -30,6 +31,10 @@ function onSelectionDone() {
     renderHighlighter(rect, quote);
 }
 
+function removeHighligher() {
+    document.getElementById("highlighter")?.remove();
+}
+
 function renderHighlighter(highlightRect: DOMRect, quote: string) {
     const container = document.createElement("div");
     container.id = "highlighter";
@@ -42,5 +47,15 @@ function renderHighlighter(highlightRect: DOMRect, quote: string) {
     new AssistantSvelte({
         target: container,
         props: { quote },
+    });
+
+    // allow clicks on the highlighter
+    container.addEventListener("mousedown", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+    });
+    container.addEventListener("mouseup", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
     });
 }
