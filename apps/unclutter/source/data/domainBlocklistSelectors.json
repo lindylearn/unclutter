@@ -55,7 +55,9 @@
     "baomoi.com": [".bm_FA", ".bm_AM", ".bm_FB"],
     "bbc.com": [
         ".ssrcss-ab5fd8-StyledFigureContainer.e34k3c21",
-        ".ssrcss-2z3pjz-SectionWrapper.e1nh2i2l2"
+        ".ssrcss-2z3pjz-SectionWrapper.e1nh2i2l2",
+        ".gel-long-primer",
+        ".gs-o-table__head.gel-brevier"
     ],
     "be.marketscreener.com": [
         "#myHeader",
