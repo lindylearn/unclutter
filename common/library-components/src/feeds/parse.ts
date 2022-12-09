@@ -120,6 +120,9 @@ export function parseFeedArticles(
 
     return items.map((item) => {
         let url = item.link!;
+        if (!url) {
+            url = `https://${getDomain(rssUrl)}`;
+        }
         if (url.startsWith("/")) {
             url = new URL(url, new URL(rssUrl).origin).href;
         }
