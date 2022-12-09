@@ -53,6 +53,12 @@
         ".visually-hidden.focusable"
     ],
     "baomoi.com": [".bm_FA", ".bm_AM", ".bm_FB"],
+    "bbc.co.uk": [
+        ".gel-long-primer",
+        ".gs-o-table.story-body__table",
+        ".sp-sport-embed-no-pal",
+        ".gs-u-display-block.story-body__media.gs-u-mb-alt+.qa-story-body-media"
+    ],
     "bbc.com": [
         ".ssrcss-ab5fd8-StyledFigureContainer.e34k3c21",
         ".ssrcss-2z3pjz-SectionWrapper.e1nh2i2l2"
