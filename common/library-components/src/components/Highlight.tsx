@@ -1,7 +1,9 @@
 import clsx from "clsx";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { useDebounce } from "usehooks-ts";
+import TextareaAutosize from "react-textarea-autosize";
 import { getRandomLightColor, getRelativeTime, openArticleResilient, sendMessage } from "../common";
-import { Annotation, Article, readingProgressFullClamp } from "../store";
+import { Annotation, Article, readingProgressFullClamp, ReplicacheContext } from "../store";
 import { getActivityColor } from "./Charts";
 import { HighlightDropdown } from "./Dropdown/HighlightDowndown";
 import { ModalContext, ResourceIcon } from "./Modal";
@@ -19,6 +21,7 @@ export function Highlight({
     darkModeEnabled: boolean;
     reportEvent?: (event: string, properties?: any) => void;
 }) {
+    const rep = useContext(ReplicacheContext);
     const { closeModal } = useContext(ModalContext);
 
     const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -38,13 +41,27 @@ export function Highlight({
         reportEvent("openHighlight", { isCurrentArticle });
     }
 
+    const [localText, setLocalText] = useState(annotation.text);
+    const localTextDebounced = useDebounce(localText, 500);
+    useEffect(() => {
+        rep?.mutate.updateAnnotation({
+            id: annotation.id,
+            text: localTextDebounced,
+        });
+    }, [localTextDebounced]);
+
+    if (annotation.tags?.length === 0) {
+        annotation.tags = ["tag1", "tag2"];
+    }
+
     return (
         <a
-            className="highlight animate-fadein relative flex cursor-pointer select-none flex-col justify-between gap-3 overflow-hidden rounded-md bg-stone-100 p-3 px-4 text-sm text-stone-900 transition-all hover:scale-[99.5%] dark:text-white"
+            className="highlight animate-fadein relative flex cursor-pointer select-none flex-col gap-2 overflow-hidden rounded-md bg-stone-100 p-2 text-sm text-stone-900 transition-transform hover:scale-[99.5%] dark:text-white"
             style={{
                 background: annotation.is_favorite
                     ? getActivityColor(3, darkModeEnabled)
                     : getRandomLightColor(annotation.article_id, darkModeEnabled),
+                maxHeight: "calc(177px+2*8px)",
             }}
             href={article?.url}
             onClick={openHighlight}
@@ -61,18 +78,26 @@ export function Highlight({
                 reportEvent={reportEvent}
             />
 
-            {annotation.quote_text && (
-                <LimitedText
-                    className={clsx(!isCurrentArticle && "flex-grow")}
-                    text={`"${annotation.quote_text}"`}
-                />
-            )}
-            {annotation.text && (
-                <LimitedText
-                    className={clsx("font-medium", !isCurrentArticle && "flex-grow")}
-                    text={annotation.text}
-                />
-            )}
+            <h2 className="tags flex gap-2 overflow-hidden px-2 leading-normal">
+                {annotation.tags?.map((tag) => (
+                    <div className="tag font-title whitespace-nowrap text-base">#{tag}</div>
+                ))}
+            </h2>
+
+            <LimitedText
+                className={clsx("px-2 leading-normal", localText && "opacity-50")}
+                text={annotation.quote_text}
+                rows={localText ? 1 : 5}
+            />
+
+            <TextareaAutosize
+                className="w-full select-none resize-none rounded-md bg-[rgba(255,255,255,10%)] p-2 align-top text-sm outline-none placeholder:select-none placeholder:text-stone-900 placeholder:opacity-50 dark:placeholder:text-white"
+                placeholder="Add a note..."
+                value={localText}
+                onChange={(e) => setLocalText(e.target.value)}
+                minRows={localText ? 5 : 1}
+                maxRows={10}
+            />
 
             {!isCurrentArticle &&
                 (article ? (
@@ -101,17 +126,6 @@ export function Highlight({
 
                             <div className="overflow-hidden text-ellipsis">{article?.title}</div>
                         </div>
-
-                        {/* <div className="flex-grow" />
-                    <div className="time flex items-center gap-1.5 ">
-                        <svg className="h-4" viewBox="0 0 448 512">
-                            <path
-                                fill="currentColor"
-                                d="M152 64H296V24C296 10.75 306.7 0 320 0C333.3 0 344 10.75 344 24V64H384C419.3 64 448 92.65 448 128V448C448 483.3 419.3 512 384 512H64C28.65 512 0 483.3 0 448V128C0 92.65 28.65 64 64 64H104V24C104 10.75 114.7 0 128 0C141.3 0 152 10.75 152 24V64zM48 448C48 456.8 55.16 464 64 464H384C392.8 464 400 456.8 400 448V192H48V448z"
-                            />
-                        </svg>
-                        {getRelativeTime(annotation.created_at * 1000)}
-                    </div> */}
                     </div>
                 ) : (
                     <div className="text-base"> </div>
@@ -138,7 +152,7 @@ function LimitedText({
                 WebkitLineClamp: rows,
             }}
         >
-            {text}
+            &quot;{text}&quot;
         </div>
     );
 }
