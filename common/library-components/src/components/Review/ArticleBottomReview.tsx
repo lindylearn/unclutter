@@ -11,5 +11,9 @@ export default function ArticleBottomReview({ articleId }: { articleId: string }
     );
     console.log(annotations);
 
-    return <div>12</div>;
+    return (
+        <div className="flex h-20 w-full flex-col gap-4 rounded-lg bg-white p-4 text-stone-800 shadow dark:bg-[#212121] dark:text-[rgb(232,230,227)]">
+            12
+        </div>
+    );
 }
