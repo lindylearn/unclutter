@@ -305,6 +305,17 @@
         ".most-news-zone.right-list-zone"
     ],
     "engadget.com": ["#LB-MULTI_ATF"],
+    "eurogamer.net": [
+        ".after_article",
+        "#content_below",
+        ".social_follow",
+        ".about",
+        ".nav_primary",
+        ".app_footer",
+        ".top",
+        ".nav_secondary",
+        ".app_header"
+    ],
     "euronews.com": [".editor-tv-wrapper.editor-tv-active"],
     "facebook.com": [
         ".rq0escxv.l9j0dhe7.du4w35lb.obtkqiv7.sv5sfqaa.sj5x9vvc.cxgpxx05",
