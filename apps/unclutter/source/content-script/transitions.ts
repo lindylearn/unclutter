@@ -8,7 +8,7 @@ import ResponsiveStyleModifier from "./modifications/CSSOM/responsiveStyle";
 import StylePatchesModifier from "./modifications/CSSOM/stylePatches";
 import ThemeModifier from "./modifications/CSSOM/theme";
 import CSSOMProvider from "./modifications/CSSOM/_provider";
-import LinkAnnotationsModifier from "./modifications/DOM/linksAnnotations";
+// import LinkAnnotationsModifier from "./modifications/DOM/linksAnnotations";
 import ReadingTimeModifier from "./modifications/DOM/readingTime";
 import TextContainerModifier from "./modifications/DOM/textContainer";
 import ElementPickerModifier from "./modifications/elementPicker";
@@ -18,6 +18,7 @@ import OverlayManager from "./modifications/overlay";
 import { PageModifier, trackModifierExecution } from "./modifications/_interface";
 import KeyboardModifier from "./modifications/keyboard";
 import LoggingManager from "./modifications/logging";
+import ReviewModifier from "./modifications/review";
 
 @trackModifierExecution
 export default class TransitionManager implements PageModifier {
@@ -35,12 +36,14 @@ export default class TransitionManager implements PageModifier {
         this.textContainerModifier
     );
     private libraryModalModifier = new LibraryModalModifier(this.bodyStyleModifier);
+    private reviewModeModifier = new ReviewModifier(this.bodyStyleModifier);
     private themeModifier = new ThemeModifier(
         this.cssomProvider,
         this.annotationsModifier,
         this.textContainerModifier,
         this.bodyStyleModifier,
-        this.libraryModalModifier
+        this.libraryModalModifier,
+        this.reviewModeModifier
     );
     private backgroundModifier = new BackgroundModifier(this.themeModifier);
     private readingTimeModifier = new ReadingTimeModifier(this.bodyStyleModifier);
@@ -230,16 +233,18 @@ export default class TransitionManager implements PageModifier {
         this.libraryModifier.startReadingProgressSync();
         this.libraryModifier.scrollToLastReadingPosition();
 
-        // wait until feed likely parsed
         await new Promise((r) => setTimeout(r, 2000));
-        this.loggingModifier.afterTransitionInDone();
-        this.overlayManager.insertRenderBottomContainer();
+        this.loggingModifier.afterTransitionInDone(); // wait until feed likely parsed
+
+        // this.overlayManager.insertRenderBottomContainer();
+        this.reviewModeModifier.afterTransitionIn();
     }
 
     beforeTransitionOut() {
         // remove ui enhancements
         this.readingTimeModifier.beforeTransitionOut();
         this.annotationsModifier.beforeTransitionOut();
+        this.reviewModeModifier.beforeTransitionOut();
 
         // fade-out ui
         this.overlayManager.fadeOutUi();

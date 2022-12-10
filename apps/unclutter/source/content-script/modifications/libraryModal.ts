@@ -3,7 +3,7 @@ import { LibraryState } from "../../common/schema";
 import { createIframeNode } from "./overlay";
 import { PageModifier, trackModifierExecution } from "./_interface";
 
-import { waitUntilIframeLoaded } from "./annotations/injectSidebar";
+import { waitUntilIframeLoaded } from "../../common/reactIframe";
 import BodyStyleModifier from "./bodyStyle";
 import { reportEventContentScript } from "@unclutter/library-components/dist/common/messaging";
 import { setFeatureFlag, submittedFeedbackFlag } from "../../common/featureFlags";

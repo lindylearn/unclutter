@@ -5,8 +5,8 @@ import {
 } from "../../../common/annotations/create";
 import { getRandomColor } from "../../../common/annotations/styling";
 import { describe as describeAnnotation } from "../../../common/annotator/anchoring/html";
+import { sendIframeEvent } from "../../../common/reactIframe";
 import { createStylesheetText } from "../../../common/stylesheets";
-import { sendSidebarEvent } from "./annotationsListener";
 import { AnnotationListener } from "./annotationsModifier";
 import {
     anchorAnnotations,
@@ -73,7 +73,7 @@ export function createSelectionListener(
 
         _createAnnotationFromSelection(
             (annotation) => {
-                sendSidebarEvent(sidebarIframe, {
+                sendIframeEvent(sidebarIframe, {
                     event: "createHighlight",
                     annotation,
                 });

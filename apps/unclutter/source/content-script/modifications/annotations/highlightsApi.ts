@@ -9,7 +9,7 @@ import {
     removeHighlights as removeHighlightsApi,
 } from "../../../common/annotator/highlighter";
 import { overrideClassname } from "../../../common/stylesheets";
-import { sendSidebarEvent } from "./annotationsListener";
+import { sendIframeEvent } from "../../../common/reactIframe";
 
 // highlight text for every passed annotation on the active webpage
 export async function anchorAnnotations(
@@ -90,7 +90,7 @@ export function paintHighlight(
         node.onclick = () => {
             hoverUpdateHighlight(annotation, true);
 
-            sendSidebarEvent(sidebarIframe, {
+            sendIframeEvent(sidebarIframe, {
                 event: "focusAnnotation",
                 annotation,
             });
@@ -100,7 +100,7 @@ export function paintHighlight(
             if (!annotation.isMyAnnotation) {
                 const onNextClick = () => {
                     hoverUpdateHighlight(annotation, false);
-                    sendSidebarEvent(sidebarIframe, {
+                    sendIframeEvent(sidebarIframe, {
                         event: "focusAnnotation",
                         annotation: null,
                     });
@@ -166,7 +166,7 @@ export function insertMarginBar(
         barElement.onmouseenter = () => {
             hoverUpdateHighlight(annotation, true);
 
-            sendSidebarEvent(sidebarIframe, {
+            sendIframeEvent(sidebarIframe, {
                 event: "focusAnnotation",
                 id: annotation.id,
             });
@@ -247,7 +247,7 @@ export function addHighlightDot(annotation: LindyAnnotation, sidebarIframe: HTML
     dotNode.onmouseenter = () => {
         hoverUpdateHighlight(annotation, true);
 
-        sendSidebarEvent(sidebarIframe, {
+        sendIframeEvent(sidebarIframe, {
             event: "focusAnnotation",
             id: annotation.id,
         });
@@ -256,7 +256,7 @@ export function addHighlightDot(annotation: LindyAnnotation, sidebarIframe: HTML
         hoverUpdateHighlight(annotation, false);
     };
     dotNode.onclick = () => {
-        sendSidebarEvent(sidebarIframe, {
+        sendIframeEvent(sidebarIframe, {
             event: "focusAnnotation",
             id: annotation.id,
         });

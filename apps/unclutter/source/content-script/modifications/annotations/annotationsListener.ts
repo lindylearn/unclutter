@@ -9,6 +9,7 @@ import {
     removeAllHighlights,
     removeHighlight,
 } from "./highlightsApi";
+import { sendIframeEvent } from "../../../common/reactIframe";
 
 let listenerRef;
 export function createAnnotationListener(
@@ -37,7 +38,7 @@ export function createAnnotationListener(
             );
 
             // send response
-            sendSidebarEvent(sidebarIframe, {
+            sendIframeEvent(sidebarIframe, {
                 event: "anchoredAnnotations",
                 annotations: anchoredAnnotations,
             });
@@ -79,7 +80,7 @@ export function updateOffsetsOnHeightChange(
         ];
 
         const [offsetById, offsetEndById] = getHighlightOffsets(highlightNodes);
-        sendSidebarEvent(sidebarIframe, {
+        sendIframeEvent(sidebarIframe, {
             event: "changedDisplayOffset",
             offsetById,
             offsetEndById,
@@ -108,8 +109,4 @@ function _observeHeightChange(
 
     resizeObserver.observe(document.body);
     return resizeObserver;
-}
-
-export function sendSidebarEvent(sidebarIframe: HTMLIFrameElement, event: object) {
-    sidebarIframe.contentWindow?.postMessage(event, "*");
 }

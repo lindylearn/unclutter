@@ -1,0 +1,7 @@
+/* --lindy-dark-theme-text-color and background color injected from common/theme.ts */
+
+/* use same colors as in source/overlay/indexDark.css */
+
+body {
+    background-color: #131516 !important;
+}
