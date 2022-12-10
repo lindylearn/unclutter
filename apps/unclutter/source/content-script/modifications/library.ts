@@ -29,8 +29,8 @@ export default class LibraryModifier implements PageModifier {
     private readingProgressSyncIntervalSeconds = 10;
 
     private articleUrl: string;
-    private articleTitle: string;
     private articleId: string;
+    private articleTitle: string;
 
     private annotationsModifier: AnnotationsModifier;
 
@@ -55,13 +55,14 @@ export default class LibraryModifier implements PageModifier {
 
     constructor(
         articleUrl: string,
+        articleId: string,
         articleTitle: string,
         readingTimeModifier: ReadingTimeModifier,
         annotationsModifier: AnnotationsModifier
     ) {
         this.articleUrl = articleUrl;
+        this.articleId = articleId;
         this.articleTitle = articleTitle;
-        this.articleId = getUrlHash(articleUrl);
         this.annotationsModifier = annotationsModifier;
 
         readingTimeModifier.readingTimeLeftListeners.push(this.onScrollUpdate.bind(this));

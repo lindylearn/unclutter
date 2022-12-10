@@ -19,24 +19,27 @@ import { PageModifier, trackModifierExecution } from "./modifications/_interface
 import KeyboardModifier from "./modifications/keyboard";
 import LoggingManager from "./modifications/logging";
 import ReviewModifier from "./modifications/review";
+import { getUrlHash } from "@unclutter/library-components/dist/common";
 
 @trackModifierExecution
 export default class TransitionManager implements PageModifier {
-    private url = window.location.href;
-    private domain = getDomainFrom(new URL(this.url));
+    private articleUrl = window.location.href;
+    private articleId = getUrlHash(this.articleUrl);
+    private title = document.title;
+    private domain = getDomainFrom(new URL(this.articleUrl));
 
     private bodyStyleModifier = new BodyStyleModifier();
     private cssomProvider = new CSSOMProvider();
     private responsiveStyleModifier = new ResponsiveStyleModifier(this.cssomProvider);
     private stylePatchesModifier = new StylePatchesModifier(this.cssomProvider);
-    private annotationsModifier = new AnnotationsModifier();
+    private annotationsModifier = new AnnotationsModifier(this.articleUrl);
     private textContainerModifier = new TextContainerModifier();
     private contentBlockModifier = new ContentBlockModifier(
         this.domain,
         this.textContainerModifier
     );
     private libraryModalModifier = new LibraryModalModifier(this.bodyStyleModifier);
-    private reviewModeModifier = new ReviewModifier(this.bodyStyleModifier);
+    private reviewModeModifier = new ReviewModifier(this.articleId, this.bodyStyleModifier);
     private themeModifier = new ThemeModifier(
         this.cssomProvider,
         this.annotationsModifier,
@@ -52,8 +55,9 @@ export default class TransitionManager implements PageModifier {
         this.readingTimeModifier
     );
     private libraryModifier = new LibraryModifier(
-        this.url,
-        document.title,
+        this.articleUrl,
+        this.articleId,
+        this.title,
         this.readingTimeModifier,
         this.annotationsModifier
     );

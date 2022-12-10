@@ -1,11 +1,14 @@
 import browser from "./polyfill";
 
 // inject the annotations sidebar HTML elements, but don't show them yet
-export function injectReactIframe(htmlUrl: string, id: string): HTMLIFrameElement {
+export function injectReactIframe(
+    htmlUrl: string,
+    id: string,
+    props: { [key: string]: string } = {}
+): HTMLIFrameElement {
     // the sidebar is running in a separate iframe to isolate personal information
     const iframeUrl = new URL(browser.runtime.getURL(htmlUrl));
-    iframeUrl.searchParams.append("url", window.location.href);
-    iframeUrl.searchParams.append("title", document.title);
+    Object.entries(props).forEach(([key, value]) => iframeUrl.searchParams.append(key, value));
 
     const iframe = document.createElement("iframe");
     iframe.classList.add("lindy-overlay-elem");

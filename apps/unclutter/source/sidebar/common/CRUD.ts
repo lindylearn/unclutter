@@ -86,10 +86,7 @@ async function getPersonalAnnotations(url: string): Promise<LindyAnnotation[]> {
     return await getLocalAnnotations(url);
 }
 
-export async function createAnnotation(
-    annotation: LindyAnnotation,
-    page_title: string
-): Promise<LindyAnnotation> {
+export async function createAnnotation(annotation: LindyAnnotation): Promise<LindyAnnotation> {
     const createdAnnotation = await createLocalAnnotation(annotation);
     reportEventContentScript("createAnnotation");
     return createdAnnotation;

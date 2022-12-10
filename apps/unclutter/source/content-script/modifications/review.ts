@@ -10,12 +10,14 @@ import { PageModifier, trackModifierExecution } from "./_interface";
 
 @trackModifierExecution
 export default class ReviewModifier implements PageModifier {
-    iframe: HTMLIFrameElement;
-    loaded: boolean = false;
+    private articleId: string;
 
+    private iframe: HTMLIFrameElement;
+    private loaded: boolean = false;
     private bodyStyleModifier: BodyStyleModifier;
 
-    constructor(bodyStyleModifier: BodyStyleModifier) {
+    constructor(articleId: string, bodyStyleModifier: BodyStyleModifier) {
+        this.articleId = articleId;
         this.bodyStyleModifier = bodyStyleModifier;
     }
 
@@ -23,7 +25,9 @@ export default class ReviewModifier implements PageModifier {
         this.bodyStyleModifier.setBottomContainerPadding();
 
         // always enable sidebar
-        this.iframe = injectReactIframe("/review/index.html", "lindy-info-bottom");
+        this.iframe = injectReactIframe("/review/index.html", "lindy-info-bottom", {
+            articleId: this.articleId,
+        });
         window.addEventListener("message", ({ data }) => {
             if (data.event === "bottomIframeLoaded") {
                 // ready for css inject

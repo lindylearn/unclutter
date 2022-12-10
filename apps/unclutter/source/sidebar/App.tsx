@@ -6,7 +6,7 @@ import AnnotationsList from "./components/AnnotationsList";
 import { useAnnotationModifiers, useFetchAnnotations } from "./state/actions";
 import { annotationReducer, handleWindowEventFactory } from "./state/local";
 
-export default function App({ url, title }) {
+export default function App({ articleUrl }: { articleUrl: string }) {
     // annotation settings (updated through events below)
     const {
         personalAnnotationsEnabled,
@@ -19,7 +19,7 @@ export default function App({ url, title }) {
     // keep local annotations state
     const [annotations, mutateAnnotations] = useReducer(annotationReducer, []);
     useFetchAnnotations(
-        url,
+        articleUrl,
         personalAnnotationsEnabled,
         enableSocialAnnotations,
         mutateAnnotations
@@ -34,8 +34,7 @@ export default function App({ url, title }) {
         window.onmessage = handleWindowEventFactory(
             mutateAnnotations,
             setEnableSocialAnnotations,
-            setPersonalAnnotationsEnabled,
-            title
+            setPersonalAnnotationsEnabled
         );
         window.top.postMessage({ event: "sidebarAppReady" }, "*");
     }, []);
