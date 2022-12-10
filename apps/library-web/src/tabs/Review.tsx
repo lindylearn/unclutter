@@ -8,8 +8,8 @@ export default function ReviewTestTab({}) {
     );
 
     return (
-        <div className="mx-auto w-[780px]">
-            <div className="flex h-52 w-full items-start rounded-[10px] bg-[rgb(33,33,33)]">
+        <div className="mx-auto">
+            <div className="mx-auto flex h-52 w-[780px] items-start rounded-[10px] bg-[rgb(33,33,33)]">
                 <input
                     className="m-5 w-full rounded-lg bg-gray-100 px-3 py-1 outline-none dark:bg-stone-700"
                     placeholder="URL"
