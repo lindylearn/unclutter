@@ -555,6 +555,11 @@
         ".PostsPage-commentsSection"
     ],
     "leveragethoughts.substack.com": [".button-wrapper"],
+    "lifehacker.com": [
+        "#replies",
+        ".ynugv2-2.xruw5r-3.sbLJP",
+        ".xruw5r-7.uFmbC.js_footer-container"
+    ],
     "linux.org.ru": [
         ".msg-top-header",
         "#hd",
