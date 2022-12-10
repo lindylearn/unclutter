@@ -4,4 +4,5 @@
 
 body {
     background-color: #131516 !important;
+    color: var(--lindy-dark-theme-text-color) !important;
 }
