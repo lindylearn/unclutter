@@ -1,0 +1,17 @@
+diff --git a/node_modules/@nivo/legends/package.json b/node_modules/@nivo/legends/package.json
+index 6ec2734..ea11261 100644
+--- a/node_modules/@nivo/legends/package.json
++++ b/node_modules/@nivo/legends/package.json
+@@ -23,8 +23,10 @@
+   ],
+   "devDependencies": {
+     "@nivo/colors": "0.80.0",
+-    "@nivo/core": "0.80.0",
+-    "d3-scale": "^3.2.3"
++    "@nivo/core": "0.80.0"
++  },
++  "dependencies": {
++    "d3-scale": "~3"
+   },
+   "peerDependencies": {
+     "@nivo/core": "0.80.0",
