@@ -42,6 +42,9 @@ export function Highlight({
     }
 
     const [localText, setLocalText] = useState(annotation.text);
+    useEffect(() => {
+        setLocalText(annotation.text);
+    }, [annotation.text]);
     const localTextDebounced = useDebounce(localText, 500);
     useEffect(() => {
         rep?.mutate.updateAnnotation({
@@ -56,7 +59,7 @@ export function Highlight({
 
     return (
         <a
-            className="highlight animate-fadein relative flex cursor-pointer select-none flex-col gap-2 overflow-hidden rounded-md bg-stone-100 p-2 text-sm text-stone-900 transition-transform hover:scale-[99.5%] dark:text-white"
+            className="highlight animate-fadein relative flex cursor-pointer select-none flex-col gap-2 overflow-hidden rounded-md bg-white p-2 text-sm text-stone-900 shadow transition-transform hover:scale-[99.5%] dark:text-white"
             style={{
                 background: annotation.is_favorite
                     ? getActivityColor(3, darkModeEnabled)
@@ -79,19 +82,24 @@ export function Highlight({
             />
 
             <h2 className="tags flex gap-2 overflow-hidden px-2 leading-normal">
-                {annotation.tags?.map((tag) => (
-                    <div className="tag font-title whitespace-nowrap text-base">#{tag}</div>
+                {annotation.tags?.slice(0, 2)?.map((tag) => (
+                    <div key={tag} className="tag font-title whitespace-nowrap text-base">
+                        #{tag}
+                    </div>
                 ))}
             </h2>
 
             <LimitedText
                 className={clsx("px-2 leading-normal", localText && "opacity-50")}
                 text={annotation.quote_text}
-                rows={localText ? 1 : 5}
+                rows={localText ? 2 : 6}
             />
 
             <TextareaAutosize
-                className="w-full select-none resize-none rounded-md bg-[rgba(255,255,255,10%)] p-2 align-top text-sm outline-none placeholder:select-none placeholder:text-stone-900 placeholder:opacity-50 dark:placeholder:text-white"
+                className="w-full select-none resize-none rounded-md bg-stone-100 p-2 align-top text-sm outline-none placeholder:select-none placeholder:text-stone-900 placeholder:opacity-50 dark:placeholder:text-white"
+                style={{
+                    background: "rgba(255,255,255,20%)",
+                }}
                 placeholder="Add a note..."
                 value={localText}
                 onChange={(e) => setLocalText(e.target.value)}
