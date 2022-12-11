@@ -536,7 +536,9 @@
     "lemonde.fr": [
         ".meta__date-reading",
         ".meta.meta__social.old__meta-social",
-        ".article__status"
+        ".article__status",
+        "#js-paywall-content",
+        ".paywall"
     ],
     "lesswrong.com": [
         ".PostsPagePostHeader-headerVote",
