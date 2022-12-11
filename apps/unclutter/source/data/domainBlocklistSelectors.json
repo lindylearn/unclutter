@@ -953,6 +953,7 @@
         ".mb-16.font-polysans-mono.text-16.font-light.tracking-2.leading-120.text-gray-13"
     ],
     "thewalrus.ca": ["._form-content", ".code-block.code-block-4"],
+    "thoughtcatalog.com": [".tcf-article-md-thumb", ".g-col", ".section-title"],
     "tienphong.vn": [
         ".article__story.cms-relate",
         ".box-heading",
