@@ -63,7 +63,10 @@ export function Highlight({
             style={{
                 background: annotation.is_favorite
                     ? getActivityColor(3, darkModeEnabled)
-                    : getRandomLightColor(annotation.article_id, darkModeEnabled),
+                    : getRandomLightColor(
+                          annotation.tags?.[0] || annotation.article_id,
+                          darkModeEnabled
+                      ),
                 maxHeight: "calc(177px+2*8px)",
             }}
             href={article?.url}
@@ -98,7 +101,7 @@ export function Highlight({
             <TextareaAutosize
                 className="w-full select-none resize-none rounded-md bg-stone-100 p-2 align-top text-sm outline-none placeholder:select-none placeholder:text-stone-900 placeholder:opacity-50 dark:placeholder:text-white"
                 style={{
-                    background: "rgba(255,255,255,20%)",
+                    background: "rgba(255,255,255,30%)",
                 }}
                 placeholder="Add a note..."
                 value={localText}

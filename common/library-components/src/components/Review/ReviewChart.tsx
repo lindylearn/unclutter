@@ -1,29 +1,32 @@
-import React, { useMemo } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { ResponsiveStream, StreamDatum } from "@nivo/stream";
-import { Article } from "../../store";
+import { Article, ReplicacheContext } from "../../store";
 import { getWeekNumber } from "../../common";
 
-export function AreaChart({
-    darkModeEnabled,
-    articles,
-}: {
-    darkModeEnabled: boolean;
-    articles?: Article[];
-}) {
-    const data = useMemo(() => {
-        if (!articles) {
-            return null;
+export function ReviewChart({}: {}) {
+    const rep = useContext(ReplicacheContext);
+
+    const [keys, setKeys] = useState<string[]>();
+    const [data, setData] = useState<StreamDatum[]>();
+    useEffect(() => {
+        if (!rep) {
+            return;
         }
-        return createTopicStreamData(articles);
-    }, [articles]);
+
+        rep.query.listArticles().then((articles) => {
+            const [data, keys] = createTopicStreamData(articles);
+            setData(data);
+            setKeys(keys);
+        });
+    }, [rep]);
 
     return (
-        <div className="h-56">
+        <div className="h-56 w-full">
             {/* see https://nivo.rocks/stream/ */}
             <ResponsiveStream
                 data={data || []}
-                keys={["0_", "1_", "2_", "3_", "4_", "5_", "6_", "7_", "8_", "9_"]}
-                margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
+                keys={keys || []}
+                margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
                 axisTop={null}
                 axisRight={null}
                 axisBottom={null}
@@ -59,7 +62,7 @@ export function AreaChart({
     );
 }
 
-function createTopicStreamData(articles: Article[]): StreamDatum[] {
+function createTopicStreamData(articles: Article[]): [StreamDatum[], string[]] {
     const seenTopics = new Set<string>();
 
     const weekBuckets: { [week: string]: { [topic: string]: number } } = {};
@@ -67,15 +70,15 @@ function createTopicStreamData(articles: Article[]): StreamDatum[] {
         const date = new Date(article.time_added * 1000);
         const year = date.getFullYear();
         const week = `${year}-${getWeekNumber(date)}`;
-        // const week = `${year}-${date.getMonth()}`;
 
         if (!weekBuckets[week]) {
             weekBuckets[week] = {};
         }
 
-        if (article.topic_id) {
-            weekBuckets[week][article.topic_id] = (weekBuckets[week][article.topic_id] || 0) + 1;
-            seenTopics.add(article.topic_id);
+        const key = article.publication_date?.slice(0, 4);
+        if (key) {
+            weekBuckets[week][key] = (weekBuckets[week][key] || 0) + 1;
+            seenTopics.add(key);
         }
     });
 
@@ -87,5 +90,5 @@ function createTopicStreamData(articles: Article[]): StreamDatum[] {
         });
     });
 
-    return Object.values(weekBuckets).reverse();
+    return [Object.values(weekBuckets).reverse(), Array.from(seenTopics)];
 }

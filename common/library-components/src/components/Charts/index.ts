@@ -1,5 +1,4 @@
 export * from "./ArticleActivityCalendar";
-// export * from "./AreaChart";
 export * from "./PopularityGraph";
 export * from "./ProgressCircle";
 export * from "./InlineProgressCircle";
