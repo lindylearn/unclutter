@@ -206,7 +206,7 @@ export default class TransitionManager implements PageModifier {
 
         // *** write DOM phase ***
         // insert iframes & render UI
-        this.overlayManager.createIframes();
+        this.overlayManager.createIframes(false);
         this.overlayManager.renderUi();
         this.keyboardModifier.observeShortcuts();
 

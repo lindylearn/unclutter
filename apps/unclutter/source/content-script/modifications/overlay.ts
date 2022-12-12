@@ -11,7 +11,7 @@ import { LibraryState } from "../../common/schema";
 import { Article } from "@unclutter/library-components/dist/store/_schema";
 import { createStylesheetLink, overrideClassname } from "../../common/stylesheets";
 import { backgroundColorThemeVariable } from "../../common/theme";
-import BottomContainerSvelte from "../../overlay/outline/BottomContainer.svelte";
+import FeedbackMessage from "../../overlay/outline/Bottom/FeedbackMessage.svelte";
 import { getElementYOffset } from "../../overlay/outline/components/common";
 import {
     createRootItem,
@@ -88,7 +88,7 @@ export default class OverlayManager implements PageModifier {
 
     private topleftIframe: HTMLIFrameElement;
     private bottomIframe: HTMLIFrameElement;
-    createIframes() {
+    createIframes(enableBottomContainer: boolean = false) {
         this.topleftIframe = createIframeNode("lindy-info-topleft");
         this.topleftIframe.style.setProperty("position", "fixed", "important"); // put on new layer
         this.topleftIframe.style.setProperty(
@@ -99,16 +99,18 @@ export default class OverlayManager implements PageModifier {
         document.documentElement.appendChild(this.topleftIframe);
         insertIframeFont(this.topleftIframe);
 
-        // insert even if not used to set theme variables
-        this.bottomIframe = createIframeNode("lindy-info-bottom");
-        this.bottomIframe.style.position = "absolute"; // put on new layer
-        this.bottomIframe.style.display = "none"; // hide until used
-        // if (this.libraryEnabled) {
-        //     // allow overflow to the right
-        //     this.bottomIframe.style.width = `calc(var(--side-width) + var(--lindy-pagewidth))`;
-        // }
-        document.documentElement.appendChild(this.bottomIframe);
-        insertIframeFont(this.bottomIframe); // TODO run later? need to modify initial dark theme insert then
+        if (enableBottomContainer) {
+            // insert even if not used to set theme variables
+            this.bottomIframe = createIframeNode("lindy-info-bottom");
+            this.bottomIframe.style.position = "absolute"; // put on new layer
+            this.bottomIframe.style.display = "none"; // hide until used
+            // if (this.libraryEnabled) {
+            //     // allow overflow to the right
+            //     this.bottomIframe.style.width = `calc(var(--side-width) + var(--lindy-pagewidth))`;
+            // }
+            document.documentElement.appendChild(this.bottomIframe);
+            insertIframeFont(this.bottomIframe); // TODO run later? need to modify initial dark theme insert then
+        }
     }
 
     renderUi() {
@@ -242,7 +244,7 @@ export default class OverlayManager implements PageModifier {
         this.bodyStyleModifier.setBottomContainerPadding();
         this.bottomIframe.style.display = "block";
 
-        this.bottomSvelteComponent = new BottomContainerSvelte({
+        this.bottomSvelteComponent = new FeedbackMessage({
             target: this.bottomIframe?.contentDocument.body,
             props: {
                 libraryModalModifier: this.libraryModalModifier,

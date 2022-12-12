@@ -1,7 +1,7 @@
 <script lang="ts">
-    import browser from "../../common/polyfill";
+    import browser from "../../../common/polyfill";
     import { fade } from "svelte/transition";
-    import LibraryModalModifier from "../../content-script/modifications/libraryModal";
+    import LibraryModalModifier from "../../../content-script/modifications/libraryModal";
 
     export let libraryModalModifier: LibraryModalModifier;
 </script>
