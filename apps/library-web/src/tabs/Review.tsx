@@ -3,9 +3,7 @@ import ArticleBottomReview from "@unclutter/library-components/dist/components/R
 import { useState } from "react";
 
 export default function ReviewTestTab({}) {
-    const [url, setUrl] = useState<string>(
-        "https://thoughtcatalog.com/ryan-holiday/2013/08/how-and-why-to-keep-a-commonplace-book/"
-    );
+    const [url, setUrl] = useState<string>("http://paulgraham.com/users.html");
 
     return (
         <div className="mx-auto min-h-screen bg-gray-100">

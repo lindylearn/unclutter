@@ -58,18 +58,18 @@ export function Highlight({
     }
 
     return (
-        <a
+        <div
             className="highlight animate-fadein relative flex cursor-pointer select-none flex-col gap-2 overflow-hidden rounded-md bg-white p-2 text-sm text-stone-900 shadow transition-transform hover:scale-[99.5%] dark:text-white"
             style={{
                 background: annotation.is_favorite
                     ? getActivityColor(3, darkModeEnabled)
                     : getRandomLightColor(
-                          annotation.tags?.[0] || annotation.article_id,
+                          annotation.tags?.[0] || annotation.article_id || annotation.id,
                           darkModeEnabled
                       ),
                 maxHeight: "calc(177px+2*8px)",
             }}
-            href={article?.url}
+            // href={article?.url}
             onClick={openHighlight}
             onContextMenu={(e) => {
                 e.preventDefault();
@@ -93,22 +93,32 @@ export function Highlight({
             </h2>
 
             <LimitedText
-                className={clsx("px-2 leading-normal", localText && "opacity-50")}
+                className={clsx("flex-grow px-2 leading-normal", localText && "opacity-50")}
                 text={annotation.quote_text}
                 rows={localText ? 2 : 6}
             />
 
-            <TextareaAutosize
-                className="w-full select-none resize-none rounded-md bg-stone-100 p-2 align-top text-sm outline-none placeholder:select-none placeholder:text-stone-900 placeholder:opacity-50 dark:placeholder:text-white"
-                style={{
-                    background: "rgba(255,255,255,30%)",
-                }}
-                placeholder="Add a note..."
-                value={localText}
-                onChange={(e) => setLocalText(e.target.value)}
-                minRows={localText ? 5 : 1}
-                maxRows={10}
-            />
+            <div className="flex items-center gap-2">
+                <TextareaAutosize
+                    className="w-full select-none resize-none rounded-md bg-stone-100 p-2 align-top text-sm outline-none placeholder:select-none placeholder:text-stone-900 placeholder:opacity-50 dark:placeholder:text-white"
+                    style={{
+                        background: "rgba(255,255,255,30%)",
+                    }}
+                    placeholder="Add a note..."
+                    value={localText}
+                    onChange={(e) => setLocalText(e.target.value)}
+                    minRows={localText ? 5 : 1}
+                    maxRows={10}
+                />
+                {/* <a
+                    className="shrink-0"
+                    href="obsidian://open"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    <img className="w-10" src="https://unclutter.it/icons/obsidian.png" />
+                </a> */}
+            </div>
 
             {!isCurrentArticle &&
                 (article ? (
@@ -141,7 +151,7 @@ export function Highlight({
                 ) : (
                     <div className="text-base"> </div>
                 ))}
-        </a>
+        </div>
     );
 }
 

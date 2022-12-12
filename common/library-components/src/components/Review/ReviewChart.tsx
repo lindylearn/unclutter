@@ -1,29 +1,28 @@
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { ResponsiveStream, StreamDatum } from "@nivo/stream";
-import { Annotation, Article, ReplicacheContext } from "../../store";
+import { Annotation, Article, ReplicacheContext, useSubscribe } from "../../store";
 import { getRandomLightColor, getWeekNumber, lightColors } from "../../common";
 import { eachDayOfInterval, subWeeks } from "date-fns";
 
 export function ReviewChart({}: {}) {
     const rep = useContext(ReplicacheContext);
+    const annotations: Annotation[] = useSubscribe(rep, rep?.subscribe.listAnnotations(), []);
 
     const [keys, setKeys] = useState<string[]>();
     const [data, setData] = useState<StreamDatum[]>();
     useEffect(() => {
-        if (!rep) {
+        if (annotations.length === 0) {
             return;
         }
 
-        rep.query.listAnnotations().then((annotations) => {
-            let [data, keys] = createStreamData(annotations);
+        let [data, keys] = createStreamData(annotations);
 
-            data = data.reverse();
-            data = data.slice(3, 4).concat(data.slice(0, 3)).concat(data.slice(4));
+        // data = data.reverse();
+        // data = data.slice(3, 4).concat(data.slice(0, 3)).concat(data.slice(4));
 
-            setData(data);
-            setKeys(keys);
-        });
-    }, [rep]);
+        setData(data);
+        setKeys(keys);
+    }, [annotations.length]);
 
     return (
         <div className="h-40 w-full">
@@ -77,19 +76,19 @@ export function ReviewChart({}: {}) {
 }
 
 function createStreamData(annotations: Annotation[]): [StreamDatum[], string[]] {
-    const since = subWeeks(new Date(), 8);
+    const since = subWeeks(new Date(), 2);
 
     const seenKeys = new Set<string>();
     const timeBuckets: { [bucket: string]: { [key: string]: number } } = {};
-    // eachDayOfInterval({
-    //     start: since,
-    //     end: new Date(),
-    // })
-    //     .concat([new Date()])
-    //     .map((date) => {
-    //         const dateStr = date.toISOString().split("T")[0];
-    //         timeBuckets[dateStr] = {};
-    //     });
+    eachDayOfInterval({
+        start: since,
+        end: new Date(),
+    })
+        .concat([new Date()])
+        .map((date) => {
+            const dateStr = date.toISOString().split("T")[0];
+            timeBuckets[dateStr] = {};
+        });
 
     annotations
         .filter((a) => a.created_at * 1000 >= since.getTime())
@@ -99,7 +98,7 @@ function createStreamData(annotations: Annotation[]): [StreamDatum[], string[]] 
             const day = date.toISOString().split("T")[0];
             const week = `${date.getFullYear()}-${getWeekNumber(date)}`;
 
-            const bucket = week;
+            const bucket = day;
             if (!timeBuckets[bucket]) {
                 timeBuckets[bucket] = {};
             }
