@@ -20,6 +20,7 @@ import KeyboardModifier from "./modifications/keyboard";
 import LoggingManager from "./modifications/logging";
 import ReviewModifier from "./modifications/review";
 import { getUrlHash } from "@unclutter/library-components/dist/common";
+import AIAnnotationsModifier from "./modifications/DOM/aiAnnotations";
 
 @trackModifierExecution
 export default class TransitionManager implements PageModifier {
@@ -77,6 +78,10 @@ export default class TransitionManager implements PageModifier {
         this.overlayManager,
         this.readingTimeModifier,
         this.libraryModifier
+    );
+    private aiAnnotationsModifier = new AIAnnotationsModifier(
+        this.annotationsModifier,
+        this.textContainerModifier
     );
     // private linkAnnotationsModifier = new LinkAnnotationsModifier(
     //     this.annotationsModifier,
@@ -231,6 +236,7 @@ export default class TransitionManager implements PageModifier {
         // insert annotations sidebar, start fetch
         // this.linkAnnotationsModifier.parseArticle(); // reads page, wraps link elems
         this.annotationsModifier.afterTransitionIn();
+        // this.aiAnnotationsModifier.parseArticle();
 
         this.overlayManager.insertUiFont(); // causes ~50ms layout reflow
 

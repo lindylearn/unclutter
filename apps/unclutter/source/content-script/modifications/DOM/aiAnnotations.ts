@@ -8,6 +8,7 @@ import { wrapPaintAnnotation } from "../annotations/selectionListener";
 import { highlightRange } from "../../../common/annotator/highlighter";
 import { paintHighlight } from "../annotations/highlightsApi";
 import TextContainerModifier from "./textContainer";
+import { Annotation } from "@unclutter/library-components/dist/store";
 
 @trackModifierExecution
 export default class AIAnnotationsModifier implements PageModifier {
@@ -22,24 +23,23 @@ export default class AIAnnotationsModifier implements PageModifier {
         this.textContainerModifier = textContainerModifier;
     }
 
+    annotations: LindyAnnotation[] = [];
     async parseArticle() {
-        // TODO call only once?
-        const text = document.body.innerText.trim();
+        // const text = document.body.innerText.trim(); // TODO call DOM text extraction only once?
+        // const quotes: string[] = await ky
+        //     .post("https://assistant-two.vercel.app/api/annotations", {
+        //         json: {
+        //             text: text,
+        //         },
+        //         timeout: false,
+        //     })
+        //     .json();
+        // console.log("searching quotes", quotes);
 
-        const quotes: string[] = await ky
-            .post("https://assistant-two.vercel.app/api/annotations", {
-                json: {
-                    text: text,
-                },
-                timeout: false,
-            })
-            .json();
-        // const quotes = [
-        // ];
-        console.log("searching quotes", quotes);
+        // this.anchorQuotes(quotes);
+        // console.log("anchored quotes", this.annotations);
 
-        this.anchorQuotes(quotes);
-        console.log("anchored quotes", this.annotations);
+        await this.linkRelatedHighlights();
 
         // TODO call from transitions?
         this.paintHighlights();
@@ -57,7 +57,6 @@ export default class AIAnnotationsModifier implements PageModifier {
         this.annotationsModifier.setInfoAnnotations(this.annotations);
     }
 
-    annotations: LindyAnnotation[] = [];
     private anchorQuotes(questions: string[]) {
         document
             .querySelectorAll(this.textContainerModifier.usedTextElementSelector)
@@ -76,6 +75,76 @@ export default class AIAnnotationsModifier implements PageModifier {
                     console.error(err);
                 }
             });
+    }
+
+    private async linkRelatedHighlights() {
+        // loop paragraphs
+        await Promise.all(
+            [...document.querySelectorAll(this.textContainerModifier.usedTextElementSelector)].map(
+                async (node: HTMLElement) => {
+                    try {
+                        if (node.offsetHeight === 0) {
+                            return;
+                        }
+
+                        let text = node.innerText.trim(); // inner text to include line breaks e.g. on paulgraham.com
+
+                        const related = await this.fetchRelated(node, text);
+                    } catch (err) {
+                        console.error(err);
+                    }
+                }
+            )
+        );
+
+        console.log("linkRelatedHighlights", this.annotations);
+    }
+
+    private async fetchRelated(node: HTMLElement, text: string): Promise<Annotation[]> {
+        if (!text || text.length < 50) {
+            return [];
+        }
+
+        if (text.length >= 500) {
+            const parts = text.split("\n\n");
+            if (parts.length > 1) {
+                const results = await Promise.all(parts.map((p) => this.fetchRelated(node, p)));
+                return results.flat();
+            }
+        }
+
+        const related = await ky
+            .post("https://assistant-two.vercel.app/api/query", {
+                json: {
+                    query: text.replace(/\s+/g, " ").trim(),
+                },
+            })
+            .json()
+            .then((related: any[]) =>
+                related
+                    .filter((r) => r.score >= 0.6)
+                    .sort((a, b) => b.score - a.score)
+                    .map(
+                        (r) =>
+                            ({
+                                id: r.id,
+                                quote_text: r.metadata.text,
+                            } as Annotation)
+                    )
+            );
+
+        console.log(related, text.length, text);
+        if (related.length > 0) {
+            // TODO handle node split?
+            const range = document.createRange();
+            range.setStart(node, 0);
+            range.setEnd(node, node.childNodes.length);
+
+            this.annotations.push(
+                createInfoAnnotation(window.location.href, describeAnnotation(document.body, range))
+            );
+        }
+        return related;
     }
 }
 
