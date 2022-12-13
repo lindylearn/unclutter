@@ -1,6 +1,6 @@
 import { PageModifier, trackModifierExecution } from "../_interface";
 import { describe as describeAnnotation } from "../../../common/annotator/anchoring/html";
-import { createLinkAnnotation, LindyAnnotation } from "../../../common/annotations/create";
+import { createInfoAnnotation, LindyAnnotation } from "../../../common/annotations/create";
 import { getNodeOffset } from "../../../common/annotations/offset";
 import AnnotationsModifier from "../annotations/annotationsModifier";
 import { getLinkedArticles } from "../../../common/api";
@@ -134,7 +134,7 @@ export default class LinkAnnotationsModifier implements PageModifier {
         }
 
         const annotation = {
-            ...createLinkAnnotation(window.location.href, selector, article),
+            ...createInfoAnnotation(window.location.href, selector, article),
             displayOffset: getNodeOffset(link),
             displayOffsetEnd: getNodeOffset(link, "bottom"),
         };

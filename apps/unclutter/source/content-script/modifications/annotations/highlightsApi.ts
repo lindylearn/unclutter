@@ -12,10 +12,7 @@ import { overrideClassname } from "../../../common/stylesheets";
 import { sendIframeEvent } from "../../../common/reactIframe";
 
 // highlight text for every passed annotation on the active webpage
-export async function anchorAnnotations(
-    annotations: LindyAnnotation[],
-    sidebarIframe: HTMLIFrameElement
-) {
+export async function anchorAnnotations(annotations: LindyAnnotation[]) {
     const body = document.body;
 
     const anchoredAnnotations = [];
@@ -31,7 +28,9 @@ export async function anchorAnnotations(
                 const highlightedNodes = highlightRange(
                     annotation.id,
                     range,
-                    annotation.isMyAnnotation ? "lindy-highlight" : "lindy-crowd-highlight"
+                    annotation.isMyAnnotation || annotation.platform === "info"
+                        ? "lindy-highlight"
+                        : "lindy-crowd-highlight"
                 );
                 if (highlightedNodes.length === 0) {
                     throw Error("Includes no highlighted nodes");
@@ -97,7 +96,7 @@ export function paintHighlight(
 
             // unfocus on next click for social comments
             // for annotations this is handled without duplicate events by the textarea onBlur
-            if (!annotation.isMyAnnotation) {
+            if (!annotation.isMyAnnotation || annotation.platform !== "info") {
                 const onNextClick = () => {
                     hoverUpdateHighlight(annotation, false);
                     sendIframeEvent(sidebarIframe, {

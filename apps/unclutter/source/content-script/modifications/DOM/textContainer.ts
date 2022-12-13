@@ -41,7 +41,7 @@ export default class TextContainerModifier implements PageModifier {
         .slice(0, 15) // match only beginning
         .toLowerCase();
 
-    private usedTextElementSelector: string = globalTextElementSelector; // may get updated if page uses different html elements
+    usedTextElementSelector: string = globalTextElementSelector; // may get updated if page uses different html elements
 
     private inlineStyleTweaks: [HTMLElement, Partial<CSSStyleDeclaration>][] = [];
 

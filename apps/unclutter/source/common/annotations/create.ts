@@ -13,10 +13,10 @@ export function createDraftAnnotation(
     });
 }
 
-export function createLinkAnnotation(
+export function createInfoAnnotation(
     page_url: string,
     selector: object,
-    article: Article
+    article?: Article
 ): LindyAnnotation {
     return createAnnotation(page_url, selector, {
         id: generateId(),

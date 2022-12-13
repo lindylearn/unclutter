@@ -21,7 +21,7 @@ import { getNodeOffset } from "../../../common/annotations/offset";
 export default class AnnotationsModifier implements PageModifier {
     private articleUrl: string;
 
-    private sidebarIframe: HTMLIFrameElement;
+    sidebarIframe: HTMLIFrameElement;
     private sidebarLoaded: boolean = false;
     private reactLoaded: boolean = false;
     private pageResizeObserver: ResizeObserver;
