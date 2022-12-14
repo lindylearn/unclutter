@@ -46,7 +46,7 @@ export default class AIAnnotationsModifier implements PageModifier {
     }
 
     async paintHighlights() {
-        console.log("paintHighlights", this.annotations);
+        // console.log("paintHighlights", this.annotations);
         this.annotations = await Promise.all(
             this.annotations.map((a) =>
                 wrapPaintAnnotation(a, this.annotationsModifier.sidebarIframe)
@@ -78,41 +78,75 @@ export default class AIAnnotationsModifier implements PageModifier {
     }
 
     private async linkRelatedHighlights() {
-        // loop paragraphs
-        await Promise.all(
-            [...document.querySelectorAll(this.textContainerModifier.usedTextElementSelector)].map(
-                async (node: HTMLElement) => {
-                    try {
-                        if (node.offsetHeight === 0) {
-                            return;
-                        }
-
-                        let text = node.innerText.trim(); // inner text to include line breaks e.g. on paulgraham.com
-
-                        const related = await this.fetchRelated(node, text);
-                    } catch (err) {
-                        console.error(err);
+        const paragraphNodes: { [text: string]: HTMLElement } = {};
+        const paragraphs = [
+            ...document.querySelectorAll(this.textContainerModifier.usedTextElementSelector),
+        ]
+            .map((node: HTMLElement) => {
+                try {
+                    if (node.offsetHeight === 0) {
+                        return [];
                     }
-                }
-            )
-        );
 
-        console.log("linkRelatedHighlights", this.annotations);
+                    let text = node.innerText.trim(); // inner text to include line breaks e.g. on paulgraham.com
+                    if (!text || text.length < 50) {
+                        return [];
+                    }
+
+                    if (text.length >= 500) {
+                        const parts = text.split("\n\n").filter((t) => t && t.length >= 50);
+                        parts.forEach((part) => {
+                            paragraphNodes[part] = node;
+                        });
+                        return parts;
+                    }
+
+                    paragraphNodes[text] = node;
+                    return [text];
+                } catch (err) {
+                    console.error(err);
+                    return [];
+                }
+            })
+            .flat();
+        console.log("paragraphs", paragraphs);
+
+        const relatedAnnotations: {
+            anchor_text: string;
+            annotations: LindyAnnotation[];
+        }[] = await ky
+            .post("https://assistant-two.vercel.app/api/related_highlights", {
+                json: {
+                    paragraphs,
+                },
+            })
+            .json();
+        console.log("relatedAnnotations", relatedAnnotations);
+
+        const anchoredAnnotations = relatedAnnotations
+            .map((a) => {
+                try {
+                    const node = paragraphNodes[a.anchor_text];
+
+                    const ranges = searchNodeTree(node, [a.anchor_text]);
+                    return ranges.map((range) => ({
+                        ...createInfoAnnotation(
+                            window.location.href,
+                            describeAnnotation(document.body, range),
+                            undefined,
+                            a.annotations
+                        ),
+                    }));
+                } catch (err) {
+                    console.error(err);
+                }
+            })
+            .flat();
+        console.log("anchoredAnnotations", anchoredAnnotations);
+        this.annotations = anchoredAnnotations;
     }
 
     private async fetchRelated(node: HTMLElement, text: string): Promise<LindyAnnotation[]> {
-        if (!text || text.length < 50) {
-            return [];
-        }
-
-        if (text.length >= 500) {
-            const parts = text.split("\n\n");
-            if (parts.length > 1) {
-                const results = await Promise.all(parts.map((p) => this.fetchRelated(node, p)));
-                return results.flat();
-            }
-        }
-
         const related = await ky
             .post("https://assistant-two.vercel.app/api/query", {
                 json: {
@@ -175,7 +209,7 @@ function searchNodeTree(root: HTMLElement, quotes: string[]): Range[] {
         const start = text.indexOf(quote.toLowerCase());
         const end = start + quote.length;
 
-        console.log(node);
+        // console.log(node);
 
         // check deepest node that containes the entire quote
         const isDeepestNodeMatch = [...node.childNodes]
@@ -207,7 +241,7 @@ function searchNodeTree(root: HTMLElement, quotes: string[]): Range[] {
             }
 
             if (startNode && endNode) {
-                console.log("anchored quote");
+                // console.log("anchored quote");
                 const range = document.createRange();
                 range.setStart(startNode, startNodeOffset);
                 range.setEnd(endNode, endNodeOffset);
