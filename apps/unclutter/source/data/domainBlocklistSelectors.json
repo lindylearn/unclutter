@@ -538,6 +538,10 @@
         ".meta.meta__social.old__meta-social",
         ".article__status"
     ],
+    "lesechos.fr": [
+        ".sc-aamjrj-0.sc-2g1htt-2.cfOctI.ciLsjK",
+        ".sc-aamjrj-0.sc-2ewn6r-0.fqOMgB.fHiemS"
+    ],
     "lesswrong.com": [
         ".PostsPagePostHeader-headerVote",
         ".FooterTag-root.FooterTag-core",
