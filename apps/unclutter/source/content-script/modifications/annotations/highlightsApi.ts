@@ -71,7 +71,7 @@ export function paintHighlight(
     // set color variables
     let annotationColor: string;
     let darkerAnnotationColor: string;
-    if (annotation.isMyAnnotation) {
+    if (annotation.isMyAnnotation || annotation.platform === "info") {
         annotationColor = getAnnotationColor(annotation);
         darkerAnnotationColor = annotationColor.replace("0.3", "0.5");
     } else {

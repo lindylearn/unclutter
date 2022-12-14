@@ -100,7 +100,7 @@ export default class AIAnnotationsModifier implements PageModifier {
         console.log("linkRelatedHighlights", this.annotations);
     }
 
-    private async fetchRelated(node: HTMLElement, text: string): Promise<Annotation[]> {
+    private async fetchRelated(node: HTMLElement, text: string): Promise<LindyAnnotation[]> {
         if (!text || text.length < 50) {
             return [];
         }
@@ -122,14 +122,17 @@ export default class AIAnnotationsModifier implements PageModifier {
             .json()
             .then((related: any[]) =>
                 related
-                    .filter((r) => r.score >= 0.6)
+                    .filter((r) => r.score >= 0.5 && r.metadata.text.length >= 50)
                     .sort((a, b) => b.score - a.score)
                     .map(
                         (r) =>
                             ({
                                 id: r.id,
                                 quote_text: r.metadata.text,
-                            } as Annotation)
+                                text: `"${r.score.toString().slice(0, 4)} ${r.metadata.text
+                                    .replace(/\\n/g, " ")
+                                    .replace(/\s+/g, " ")}"`,
+                            } as LindyAnnotation)
                     )
             );
 
@@ -141,7 +144,12 @@ export default class AIAnnotationsModifier implements PageModifier {
             range.setEnd(node, node.childNodes.length);
 
             this.annotations.push(
-                createInfoAnnotation(window.location.href, describeAnnotation(document.body, range))
+                createInfoAnnotation(
+                    window.location.href,
+                    describeAnnotation(document.body, range),
+                    undefined,
+                    related
+                )
             );
         }
         return related;

@@ -50,7 +50,7 @@ export default function App({ articleUrl }: { articleUrl: string }) {
             });
 
         const visibleAnnotations = annotations.filter(
-            (a) => a.focused || (a.isMyAnnotation && a.text) || a.platform === "info"
+            (a) => a.focused || (a.isMyAnnotation && a.text)
         );
 
         // use large grouping margin to display every annotation properly

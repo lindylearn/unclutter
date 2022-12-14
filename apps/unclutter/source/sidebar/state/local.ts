@@ -135,6 +135,7 @@ export function handleWindowEventFactory(
                 });
             }
         } else if (data.event === "setInfoAnnotations") {
+            console.log("setInfoAnnotations", data.annotations);
             mutateAnnotations({ action: "add", annotations: data.annotations });
         }
     };

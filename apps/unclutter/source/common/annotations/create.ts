@@ -16,12 +16,14 @@ export function createDraftAnnotation(
 export function createInfoAnnotation(
     page_url: string,
     selector: object,
-    article?: Article
+    article?: Article,
+    relatedAnnotations?: LindyAnnotation[]
 ): LindyAnnotation {
     return createAnnotation(page_url, selector, {
         id: generateId(),
         platform: "info",
         article,
+        relatedAnnotations,
     });
 }
 
@@ -89,6 +91,7 @@ export interface LindyAnnotation {
 
     // only for info annotations
     article?: Article;
+    relatedAnnotations?: LindyAnnotation[];
 }
 
 // TODO serialize to Annotation type directly
