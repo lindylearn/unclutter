@@ -155,7 +155,7 @@ function _expandRangeToWordBoundary(range: Range, direction: "forwards" | "backw
     return range;
 }
 
-async function _createAnnotationFromSelection(
+export async function _createAnnotationFromSelection(
     callback: (newAnnotation: LindyAnnotation) => void,
     sidebarIframe: HTMLIFrameElement,
     activeAnnotationId: string

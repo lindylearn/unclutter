@@ -1,16 +1,11 @@
 import ky from "ky";
 import { PageModifier, trackModifierExecution } from "../_interface";
-import { describe as describeAnnotation } from "../../../common/annotator/anchoring/html";
-import { createInfoAnnotation, LindyAnnotation } from "../../../common/annotations/create";
-import { getNodeOffset } from "../../../common/annotations/offset";
+import { generateId, LindyAnnotation } from "../../../common/annotations/create";
 import AnnotationsModifier from "../annotations/annotationsModifier";
-import { wrapPaintAnnotation } from "../annotations/selectionListener";
-import { highlightRange } from "../../../common/annotator/highlighter";
-import { paintHighlight } from "../annotations/highlightsApi";
+import { _createAnnotationFromSelection } from "../annotations/selectionListener";
 import TextContainerModifier from "./textContainer";
-import { Annotation } from "@unclutter/library-components/dist/store";
 import { splitSentences } from "@unclutter/library-components/dist/common";
-import { getRandomColor } from "../../../common/annotations/styling";
+import { sendIframeEvent } from "../../../common/reactIframe";
 
 @trackModifierExecution
 export default class SmartHighlightsModifier implements PageModifier {
@@ -31,12 +26,14 @@ export default class SmartHighlightsModifier implements PageModifier {
             .querySelectorAll(this.textContainerModifier.usedTextElementSelector)
             .forEach((paragraph: HTMLElement) => {
                 try {
-                    console.log("#####");
-                    console.log(paragraph);
-                    let sentences = splitSentences(paragraph.textContent);
-                    if (!sentences) {
+                    const textContent = paragraph.textContent;
+                    if (!textContent) {
                         return;
                     }
+
+                    console.log("#####");
+                    console.log(paragraph);
+                    let sentences = splitSentences(textContent);
                     console.log(sentences);
 
                     // combine small sentences
@@ -44,7 +41,7 @@ export default class SmartHighlightsModifier implements PageModifier {
                     sentences.slice(1).forEach((sentence, index) => {
                         const lastSentence = combinedSentences.pop();
 
-                        if (lastSentence.length < 200) {
+                        if (lastSentence.length < 100) {
                             combinedSentences.push(lastSentence + sentence);
                         } else {
                             combinedSentences.push(lastSentence);
@@ -129,25 +126,33 @@ export default class SmartHighlightsModifier implements PageModifier {
 
                     console.log(ranges);
                     ranges.map((range) => {
-                        if (range.toString().length < 5) {
-                            return;
-                        }
-                        const wrapper = highlightRange("test", range, "lindy-smart-highlight");
+                        console.log(range.cloneRange().toString());
 
-                        // const annotationColor = getRandomColor(range.toString());
-                        // const darkerAnnotationColor = annotationColor.replace("0.3", "0.5");
-                        // wrapper.forEach((node) => {
-                        //     node.style.setProperty(
-                        //         "--annotation-color",
-                        //         annotationColor,
-                        //         "important"
-                        //     );
-                        //     node.style.setProperty(
-                        //         "--darker-annotation-color",
-                        //         darkerAnnotationColor,
-                        //         "important"
-                        //     );
-                        // });
+                        // const wrapper = highlightRange("test", range, "lindy-smart-highlight");
+                        const wrapper = document.createElement("lindy-highlight");
+                        wrapper.className = "lindy-smart-highlight";
+                        // wrapper.id = "";
+
+                        wrapper.appendChild(range.extractContents());
+                        range.insertNode(wrapper);
+
+                        wrapper.onclick = () => {
+                            const selection = window.getSelection();
+                            selection.removeAllRanges();
+                            selection.addRange(range);
+
+                            _createAnnotationFromSelection(
+                                (annotation) => {
+                                    sendIframeEvent(this.annotationsModifier.sidebarIframe, {
+                                        event: "createHighlight",
+                                        annotation,
+                                    });
+                                    // onAnnotationUpdate("add", [annotation]);
+                                },
+                                this.annotationsModifier.sidebarIframe,
+                                generateId()
+                            );
+                        };
                     });
                 } catch (err) {
                     console.error(err);
