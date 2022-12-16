@@ -10,6 +10,7 @@ import { paintHighlight } from "../annotations/highlightsApi";
 import TextContainerModifier from "./textContainer";
 import { Annotation } from "@unclutter/library-components/dist/store";
 import { splitSentences } from "@unclutter/library-components/dist/common";
+import { getRandomColor } from "../../../common/annotations/styling";
 
 @trackModifierExecution
 export default class SmartHighlightsModifier implements PageModifier {
@@ -32,7 +33,25 @@ export default class SmartHighlightsModifier implements PageModifier {
                 try {
                     console.log("#####");
                     console.log(paragraph);
-                    const sentences = splitSentences(paragraph.textContent);
+                    let sentences = splitSentences(paragraph.textContent);
+                    if (!sentences) {
+                        return;
+                    }
+                    console.log(sentences);
+
+                    // combine small sentences
+                    const combinedSentences: string[] = [sentences[0]];
+                    sentences.slice(1).forEach((sentence, index) => {
+                        const lastSentence = combinedSentences.pop();
+
+                        if (lastSentence.length < 200) {
+                            combinedSentences.push(lastSentence + sentence);
+                        } else {
+                            combinedSentences.push(lastSentence);
+                            combinedSentences.push(sentence);
+                        }
+                    });
+                    sentences = combinedSentences;
                     console.log(sentences);
 
                     const ranges: Range[] = [];
@@ -51,15 +70,15 @@ export default class SmartHighlightsModifier implements PageModifier {
                         const currentSentence = sentences[ranges.length];
                         const currentLength = currentElem.textContent.length;
 
-                        console.log({ currentElem });
+                        // console.log({ currentElem });
 
                         if (runningTextLength + currentLength < currentSentence.length) {
-                            console.log(
-                                "skip",
-                                runningTextLength,
-                                currentLength,
-                                currentSentence.length
-                            );
+                            // console.log(
+                            //     "skip",
+                            //     runningTextLength,
+                            //     currentLength,
+                            //     currentSentence.length
+                            // );
                             // not enough text, skip entire node subtree
                             runningTextLength += currentLength;
                             if (currentElem.nextSibling) {
@@ -67,11 +86,11 @@ export default class SmartHighlightsModifier implements PageModifier {
                                 currentElem = currentElem.nextSibling as HTMLElement;
                             } else if (!paragraph.contains(currentElem.parentElement.nextSibling)) {
                                 // end of paragraph (likely count error)
-                                console.log("break");
+                                // console.log("break");
 
                                 currentRange.setEndAfter(paragraph);
-                                ranges.push(currentRange);
-                                console.log(currentRange.toString());
+                                // ranges.push(currentRange);
+                                // console.log(currentRange.toString());
                                 break;
                             } else {
                                 // next parent sibling
@@ -80,30 +99,30 @@ export default class SmartHighlightsModifier implements PageModifier {
                         } else {
                             if (currentElem.childNodes.length > 0) {
                                 // iterate children
-                                console.log("iterate children");
+                                // console.log("iterate children");
                                 currentElem = currentElem.childNodes[0] as HTMLElement;
                                 continue;
                             } else {
                                 // slice text content
-                                console.log(
-                                    "slice",
-                                    runningTextLength,
-                                    currentLength,
-                                    currentSentence.length
-                                );
+                                // console.log(
+                                //     "slice",
+                                //     runningTextLength,
+                                //     currentLength,
+                                //     currentSentence.length
+                                // );
 
                                 // sentence ends inside this node
                                 const offset = currentSentence.length - runningTextLength;
                                 currentRange.setEnd(currentElem, offset);
                                 ranges.push(currentRange);
-                                console.log(currentRange.toString());
+                                // console.log(currentRange.toString());
 
                                 // start new range
                                 currentRange = document.createRange();
                                 currentRange.setStart(currentElem, offset);
                                 runningTextLength = -offset; // handle in next iteration
 
-                                console.log("---");
+                                // console.log("---");
                             }
                         }
                     }
@@ -114,6 +133,21 @@ export default class SmartHighlightsModifier implements PageModifier {
                             return;
                         }
                         const wrapper = highlightRange("test", range, "lindy-smart-highlight");
+
+                        // const annotationColor = getRandomColor(range.toString());
+                        // const darkerAnnotationColor = annotationColor.replace("0.3", "0.5");
+                        // wrapper.forEach((node) => {
+                        //     node.style.setProperty(
+                        //         "--annotation-color",
+                        //         annotationColor,
+                        //         "important"
+                        //     );
+                        //     node.style.setProperty(
+                        //         "--darker-annotation-color",
+                        //         darkerAnnotationColor,
+                        //         "important"
+                        //     );
+                        // });
                     });
                 } catch (err) {
                     console.error(err);
