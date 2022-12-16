@@ -56,7 +56,7 @@ function _drawFromArray(seed, arr) {
 }
 
 function _randomInRange(seed, min, max) {
-    // range 0..1
+    // constructur
     const random = seedrandom(seed);
 
     // a..b (b exclusive)

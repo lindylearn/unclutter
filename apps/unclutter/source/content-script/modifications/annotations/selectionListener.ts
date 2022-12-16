@@ -194,6 +194,9 @@ export async function wrapPaintAnnotation(
 ): Promise<LindyAnnotation> {
     // wrap with custom html node and get offsets
     const offsets = await anchorAnnotations([annotation]);
+    if (!offsets.length) {
+        return null;
+    }
     annotation.displayOffset = offsets[0].displayOffset;
     annotation.displayOffsetEnd = offsets[0].displayOffsetEnd;
 

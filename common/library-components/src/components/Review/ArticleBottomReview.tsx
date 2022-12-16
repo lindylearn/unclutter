@@ -53,7 +53,7 @@ export default function ArticleBottomReview({ articleId }: { articleId: string }
                                 (r) =>
                                     ({
                                         id: r.id,
-                                        quote_text: r.metadata.text,
+                                        quote_text: r.text,
                                     } as Annotation)
                             )
                     )

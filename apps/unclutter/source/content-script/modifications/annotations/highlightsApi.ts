@@ -28,9 +28,7 @@ export async function anchorAnnotations(annotations: LindyAnnotation[]) {
                 const highlightedNodes = highlightRange(
                     annotation.id,
                     range,
-                    annotation.isMyAnnotation || annotation.platform === "info"
-                        ? "lindy-highlight"
-                        : "lindy-crowd-highlight"
+                    annotation.isMyAnnotation ? "lindy-highlight" : "lindy-crowd-highlight"
                 );
                 if (highlightedNodes.length === 0) {
                     throw Error("Includes no highlighted nodes");
@@ -71,12 +69,15 @@ export function paintHighlight(
     // set color variables
     let annotationColor: string;
     let darkerAnnotationColor: string;
-    if (annotation.isMyAnnotation || annotation.platform === "info") {
+    if (annotation.isMyAnnotation) {
         annotationColor = getAnnotationColor(annotation);
         darkerAnnotationColor = annotationColor.replace("0.3", "0.5");
     } else {
         annotationColor =
-            annotation.platform === "hn" ? "rgba(255, 102, 0, 0.5)" : "rgba(189, 28, 43, 0.5)";
+            // @ts-ignore
+            annotation.platform === "hn" || annotation.score
+                ? "rgba(255, 102, 0, 0.5)"
+                : "rgba(189, 28, 43, 0.5)";
         darkerAnnotationColor = annotationColor.replace("0.5", "0.8");
     }
     highlightedNodes.map((node) => {
