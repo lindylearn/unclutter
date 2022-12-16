@@ -25,21 +25,23 @@ export default class AIAnnotationsModifier implements PageModifier {
 
     annotations: LindyAnnotation[] = [];
     async parseArticle() {
-        // const text = document.body.innerText.trim(); // TODO call DOM text extraction only once?
-        // const quotes: string[] = await ky
-        //     .post("https://assistant-two.vercel.app/api/annotations", {
-        //         json: {
-        //             text: text,
-        //         },
-        //         timeout: false,
-        //     })
-        //     .json();
-        // console.log("searching quotes", quotes);
+        return;
 
-        // this.anchorQuotes(quotes);
-        // console.log("anchored quotes", this.annotations);
+        const text = document.body.innerText.trim(); // TODO call DOM text extraction only once?
+        const quotes: string[] = await ky
+            .post("https://assistant-two.vercel.app/api/annotations", {
+                json: {
+                    text: text,
+                },
+                timeout: false,
+            })
+            .json();
+        console.log("searching quotes", quotes);
 
-        await this.linkRelatedHighlights();
+        this.anchorQuotes(quotes);
+        console.log("anchored quotes", this.annotations);
+
+        // await this.linkRelatedHighlights();
 
         // TODO call from transitions?
         this.paintHighlights();
@@ -52,6 +54,7 @@ export default class AIAnnotationsModifier implements PageModifier {
                 wrapPaintAnnotation(a, this.annotationsModifier.sidebarIframe)
             )
         );
+        this.annotations = this.annotations.filter((a) => a !== null);
 
         // await new Promise((r) => setTimeout(r, 2000));
         this.annotationsModifier.setInfoAnnotations(this.annotations);
@@ -117,8 +120,10 @@ export default class AIAnnotationsModifier implements PageModifier {
         }[] = await ky
             .post("https://assistant-two.vercel.app/api/related_highlights", {
                 json: {
+                    title: document.title,
                     paragraphs,
                 },
+                timeout: false,
             })
             .json();
         console.log("relatedAnnotations", relatedAnnotations);
@@ -162,7 +167,7 @@ export default class AIAnnotationsModifier implements PageModifier {
                         (r) =>
                             ({
                                 id: r.id,
-                                quote_text: r.metadata.text,
+                                author: r.metadata.title,
                                 text: `"${r.score.toString().slice(0, 4)} ${r.metadata.text
                                     .replace(/\\n/g, " ")
                                     .replace(/\s+/g, " ")}"`,
