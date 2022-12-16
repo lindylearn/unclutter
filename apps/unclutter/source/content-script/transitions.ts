@@ -21,6 +21,7 @@ import LoggingManager from "./modifications/logging";
 import ReviewModifier from "./modifications/review";
 import { getUrlHash } from "@unclutter/library-components/dist/common";
 import AIAnnotationsModifier from "./modifications/DOM/aiAnnotations";
+import SmartHighlightsModifier from "./modifications/DOM/smartHighlights";
 
 @trackModifierExecution
 export default class TransitionManager implements PageModifier {
@@ -80,6 +81,10 @@ export default class TransitionManager implements PageModifier {
         this.libraryModifier
     );
     private aiAnnotationsModifier = new AIAnnotationsModifier(
+        this.annotationsModifier,
+        this.textContainerModifier
+    );
+    private smartHighlightsModifier = new SmartHighlightsModifier(
         this.annotationsModifier,
         this.textContainerModifier
     );
@@ -248,6 +253,8 @@ export default class TransitionManager implements PageModifier {
 
         // this.overlayManager.insertRenderBottomContainer();
         this.reviewModeModifier.afterTransitionIn();
+
+        // this.smartHighlightsModifier.parseArticle();
     }
 
     beforeTransitionOut() {
