@@ -30,14 +30,15 @@ export default class SmartHighlightsModifier implements PageModifier {
             .querySelectorAll(this.textContainerModifier.usedTextElementSelector)
             .forEach((paragraph: HTMLElement) => {
                 try {
-                    const sentences = splitSentences(paragraph.textContent);
                     console.log("#####");
+                    console.log(paragraph);
+                    const sentences = splitSentences(paragraph.textContent);
                     console.log(sentences);
 
                     const ranges: Range[] = [];
 
                     // create ranges for each sentence by iterating leaf children
-                    let currentElem: HTMLElement = paragraph.childNodes[0] as HTMLElement;
+                    let currentElem: HTMLElement = paragraph as HTMLElement;
                     let runningTextLength = 0;
                     let currentRange = document.createRange();
                     currentRange.setStart(currentElem, 0);
@@ -61,12 +62,10 @@ export default class SmartHighlightsModifier implements PageModifier {
                             );
                             // not enough text, skip entire node subtree
                             runningTextLength += currentLength;
-                            if (currentElem.nextElementSibling) {
+                            if (currentElem.nextSibling) {
                                 // next sibling
-                                currentElem = currentElem.nextElementSibling as HTMLElement;
-                            } else if (
-                                !paragraph.contains(currentElem.parentElement.nextElementSibling)
-                            ) {
+                                currentElem = currentElem.nextSibling as HTMLElement;
+                            } else if (!paragraph.contains(currentElem.parentElement.nextSibling)) {
                                 // end of paragraph (likely count error)
                                 console.log("break");
 
@@ -76,8 +75,7 @@ export default class SmartHighlightsModifier implements PageModifier {
                                 break;
                             } else {
                                 // next parent sibling
-                                currentElem = currentElem.parentElement
-                                    .nextElementSibling as HTMLElement;
+                                currentElem = currentElem.parentElement.nextSibling as HTMLElement;
                             }
                         } else {
                             if (currentElem.childNodes.length > 0) {
@@ -112,6 +110,9 @@ export default class SmartHighlightsModifier implements PageModifier {
 
                     console.log(ranges);
                     ranges.map((range) => {
+                        if (range.toString().length < 5) {
+                            return;
+                        }
                         const wrapper = highlightRange("test", range, "lindy-smart-highlight");
                     });
                 } catch (err) {
