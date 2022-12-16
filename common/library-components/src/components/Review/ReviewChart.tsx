@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { ResponsiveStream, StreamDatum } from "@nivo/stream";
 import { Annotation, Article, ReplicacheContext, useSubscribe } from "../../store";
-import { getRandomLightColor, getWeekNumber, lightColors } from "../../common";
+import { colors, getRandomLightColor, getWeekNumber, lightColors } from "../../common";
 import { eachDayOfInterval, subWeeks } from "date-fns";
 
 export function ReviewChart({}: {}) {
@@ -24,6 +24,8 @@ export function ReviewChart({}: {}) {
         setKeys(keys);
     }, [annotations.length]);
 
+    const randomColors = useMemo(() => lightColors.sort(() => (Math.random() > 0.5 ? 1 : -1)), []);
+
     return (
         <div className="h-40 w-full">
             {/* see https://nivo.rocks/stream/ */}
@@ -40,14 +42,8 @@ export function ReviewChart({}: {}) {
                 enableGridX={false}
                 enableGridY={false}
                 offsetType="diverging"
-                // colors={{ scheme: "nivo" }}
-                // colors={lightColors}
-                colors={[
-                    getRandomLightColor("writing"),
-                    getRandomLightColor("note-taking"),
-                    getRandomLightColor("reading"),
-                ]}
-                fillOpacity={0.8}
+                colors={randomColors}
+                fillOpacity={1}
                 borderColor={{ theme: "background" }}
                 enableStackTooltip={true}
                 legends={[
@@ -76,7 +72,7 @@ export function ReviewChart({}: {}) {
 }
 
 function createStreamData(annotations: Annotation[]): [StreamDatum[], string[]] {
-    const since = subWeeks(new Date(), 2);
+    const since = subWeeks(new Date(), 1);
 
     const seenKeys = new Set<string>();
     const timeBuckets: { [bucket: string]: { [key: string]: number } } = {};
@@ -116,14 +112,16 @@ function createStreamData(annotations: Annotation[]): [StreamDatum[], string[]] 
             timeBuckets[bucket][tag] = (timeBuckets[bucket][tag] || 0) + 1;
         });
 
-    // fill in all key counts for every time bucket
-    Object.keys(timeBuckets).forEach((bucket) => {
-        seenKeys.forEach((topic) => {
-            if (!timeBuckets[bucket][topic]) {
-                timeBuckets[bucket][topic] = 0;
-            }
-        });
-    });
+    // accumulate counts
+    const timeBucketsList = Object.values(timeBuckets);
+    for (let i = 0; i < timeBucketsList.length; i++) {
+        const prev = timeBucketsList[i - 1];
+        const curr = timeBucketsList[i];
 
-    return [Object.values(timeBuckets), Array.from(seenKeys)];
+        seenKeys.forEach((topic) => {
+            curr[topic] = (curr[topic] || 0) + (prev?.[topic] || 0);
+        });
+    }
+
+    return [timeBucketsList, Array.from(seenKeys)];
 }
