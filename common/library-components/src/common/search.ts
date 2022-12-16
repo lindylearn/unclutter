@@ -3,6 +3,7 @@ import { keys, get, set, createStore, UseStore, clear } from "idb-keyval";
 
 import { Annotation, Article, ArticleText } from "../store";
 import { ReplicacheProxy } from "./messaging";
+import { splitSentences } from "./util";
 
 export interface SearchResult {
     id: string;
@@ -337,29 +338,4 @@ export async function syncSearchIndex(
     }
 
     searchIndexInitialized = true;
-}
-
-function splitSentences(text: string): string[] {
-    let tokens;
-    try {
-        // regex from https://stackoverflow.com/questions/11761563/javascript-regexp-for-splitting-text-into-sentences-and-keeping-the-delimiter
-        // be carful, webkit doesn't support lookbehind
-        tokens = text.match(/\(?[^\.\?\!]+[\.!\?]\)?/g);
-    } catch {}
-    if (!tokens) {
-        return [text];
-    }
-
-    // remove unecessary white space
-    tokens = tokens.map(Function.prototype.call, String.prototype.trim);
-    return trim(tokens);
-}
-function trim(array) {
-    while (array[array.length - 1] === "") {
-        array.pop();
-    }
-    while (array[0] === "") {
-        array.shift();
-    }
-    return array;
 }

@@ -39,3 +39,17 @@ export function formatPostFrequency(
     }
     return `${frequency.count} article${frequency.count != 1 ? "s" : ""} per ${frequency.period}`;
 }
+
+export function splitSentences(text: string): string[] {
+    let sentences: string[] | null = null;
+    try {
+        // regex from https://stackoverflow.com/questions/11761563/javascript-regexp-for-splitting-text-into-sentences-and-keeping-the-delimiter
+        // be careful, webkit doesn't support lookbehind
+        sentences = text.match(/\(?[^\.\?\!]+[\.\?\!]\)?\s?/g);
+    } catch {}
+    if (!sentences) {
+        return [text];
+    }
+
+    return sentences; //.map((s) => s.trim());
+}

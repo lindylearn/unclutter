@@ -53,26 +53,60 @@ export default class SmartHighlightsModifier implements PageModifier {
                         console.log({ currentElem });
 
                         if (runningTextLength + currentLength < currentSentence.length) {
-                            console.log("skip");
+                            console.log(
+                                "skip",
+                                runningTextLength,
+                                currentLength,
+                                currentSentence.length
+                            );
                             // not enough text, skip entire node subtree
                             runningTextLength += currentLength;
-                            currentElem = currentElem.nextElementSibling as HTMLElement;
+                            if (currentElem.nextElementSibling) {
+                                // next sibling
+                                currentElem = currentElem.nextElementSibling as HTMLElement;
+                            } else if (
+                                !paragraph.contains(currentElem.parentElement.nextElementSibling)
+                            ) {
+                                // end of paragraph (likely count error)
+                                console.log("break");
+
+                                currentRange.setEndAfter(paragraph);
+                                ranges.push(currentRange);
+                                console.log(currentRange.toString());
+                                break;
+                            } else {
+                                // next parent sibling
+                                currentElem = currentElem.parentElement
+                                    .nextElementSibling as HTMLElement;
+                            }
                         } else {
-                            console.log("end", runningTextLength, currentLength);
-                            // TODO iterate recursive children
+                            if (currentElem.childNodes.length > 0) {
+                                // iterate children
+                                console.log("iterate children");
+                                currentElem = currentElem.childNodes[0] as HTMLElement;
+                                continue;
+                            } else {
+                                // slice text content
+                                console.log(
+                                    "slice",
+                                    runningTextLength,
+                                    currentLength,
+                                    currentSentence.length
+                                );
 
-                            // sentence ends inside this node
-                            const offset = currentSentence.length - runningTextLength;
-                            currentRange.setEnd(currentElem, offset);
-                            ranges.push(currentRange);
-                            console.log(currentRange.toString());
+                                // sentence ends inside this node
+                                const offset = currentSentence.length - runningTextLength;
+                                currentRange.setEnd(currentElem, offset);
+                                ranges.push(currentRange);
+                                console.log(currentRange.toString());
 
-                            // start new range
-                            currentRange = document.createRange();
-                            currentRange.setStart(currentElem, offset);
-                            runningTextLength = -offset; // handle in next iteration
+                                // start new range
+                                currentRange = document.createRange();
+                                currentRange.setStart(currentElem, offset);
+                                runningTextLength = -offset; // handle in next iteration
 
-                            console.log("---");
+                                console.log("---");
+                            }
                         }
                     }
 
