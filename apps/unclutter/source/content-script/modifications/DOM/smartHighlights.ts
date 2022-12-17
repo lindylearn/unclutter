@@ -31,10 +31,10 @@ export default class SmartHighlightsModifier implements PageModifier {
                         return;
                     }
 
-                    console.log("#####");
-                    console.log(paragraph);
+                    // console.log("#####");
+                    // console.log(paragraph);
                     let sentences = splitSentences(textContent);
-                    console.log(sentences);
+                    // console.log(sentences);
 
                     // combine small sentences
                     const combinedSentences: string[] = [sentences[0]];
@@ -49,7 +49,7 @@ export default class SmartHighlightsModifier implements PageModifier {
                         }
                     });
                     sentences = combinedSentences;
-                    console.log(sentences);
+                    // console.log(sentences);
 
                     const ranges: Range[] = [];
 
@@ -124,9 +124,9 @@ export default class SmartHighlightsModifier implements PageModifier {
                         }
                     }
 
-                    console.log(ranges);
+                    // console.log(ranges);
                     ranges.map((range) => {
-                        console.log(range.cloneRange().toString());
+                        // console.log(range.cloneRange().toString());
 
                         // const wrapper = highlightRange("test", range, "lindy-smart-highlight");
                         const wrapper = document.createElement("lindy-highlight");
@@ -136,7 +136,12 @@ export default class SmartHighlightsModifier implements PageModifier {
                         wrapper.appendChild(range.extractContents());
                         range.insertNode(wrapper);
 
-                        wrapper.onclick = () => {
+                        wrapper.onclick = (e) => {
+                            // @ts-ignore
+                            if (e.target?.classList.contains("lindy-highlight") && e.target?.id) {
+                                return;
+                            }
+
                             const selection = window.getSelection();
                             selection.removeAllRanges();
                             selection.addRange(range);

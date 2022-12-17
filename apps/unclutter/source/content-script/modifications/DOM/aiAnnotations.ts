@@ -25,19 +25,28 @@ export default class AIAnnotationsModifier implements PageModifier {
 
     annotations: LindyAnnotation[] = [];
     async parseArticle() {
-        return;
-
         const text = document.body.innerText.trim(); // TODO call DOM text extraction only once?
-        const quotes: string[] = await ky
-            .post("https://assistant-two.vercel.app/api/annotations", {
+        const response: any = await ky
+            .post("https://q5ie5hjr3g.execute-api.us-east-2.amazonaws.com/default/heatmap", {
                 json: {
-                    text: text,
+                    text,
                 },
-                timeout: false,
             })
             .json();
-        console.log("searching quotes", quotes);
+        const quotes = response.rankings
+            .filter((r: any) => r.score > 0.8)
+            .map((r: any) => r.sentence);
 
+        // const quotes: string[] = await ky
+        //     .post("https://assistant-two.vercel.app/api/annotations", {
+        //         json: {
+        //             text: text,
+        //         },
+        //         timeout: false,
+        //     })
+        //     .json();
+
+        console.log("searching quotes", quotes);
         this.anchorQuotes(quotes);
         console.log("anchored quotes", this.annotations);
 
