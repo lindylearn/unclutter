@@ -254,7 +254,7 @@ export default class TransitionManager implements PageModifier {
         // this.overlayManager.insertRenderBottomContainer();
         this.reviewModeModifier.afterTransitionIn();
 
-        // this.smartHighlightsModifier.parseArticle();
+        // this.smartHighlightsModifier.parseArticleRemotely();
     }
 
     beforeTransitionOut() {

@@ -34,7 +34,7 @@ export default class AIAnnotationsModifier implements PageModifier {
             })
             .json();
         const quotes = response.rankings
-            .filter((r: any) => r.score > 0.8)
+            .filter((r: any) => r.score > 0.7)
             .map((r: any) => r.sentence);
 
         // const quotes: string[] = await ky

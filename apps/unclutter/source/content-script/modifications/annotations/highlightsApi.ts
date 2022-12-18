@@ -80,7 +80,7 @@ export function paintHighlight(
         } else if (annotation.platform === "h") {
             annotationColor = "rgba(189, 28, 43, 0.5)";
         } else if (annotation.platform === "info") {
-            annotationColor = "rgba(250, 204, 21, 0.1)";
+            annotationColor = "rgba(250, 204, 21, 0.2)";
         }
 
         darkerAnnotationColor = annotationColor.replace("0.5", "0.8");
