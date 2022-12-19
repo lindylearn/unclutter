@@ -219,14 +219,38 @@ export default class SmartHighlightsModifier implements PageModifier {
             if (range.toString().trim().length < 10) {
                 return;
             }
+            // if (
+            //     range.toString().trim() !==
+            //     "It’s worth noting that there is a global race around fusion, with many other labs around the world pursuing different techniques."
+            // ) {
+            //     return;
+            // }
             const score = scores?.[i];
 
-            [...range.getClientRects()].forEach((rect) => {
+            console.log(range.toString().trim());
+            console.log([...range.getClientRects()]);
+
+            let lastRect: ClientRect;
+            for (const rect of range.getClientRects()) {
+                // check overlap
+                if (
+                    lastRect &&
+                    !(
+                        lastRect.top >= rect.bottom ||
+                        lastRect.right <= rect.left ||
+                        lastRect.bottom <= rect.top ||
+                        lastRect.left >= rect.right
+                    )
+                ) {
+                    continue;
+                }
+                lastRect = rect;
+
                 const node = document.createElement("div");
                 node.className = "lindy-smart-highlight-absolute";
                 node.style.setProperty(
                     "background",
-                    `rgba(250, 204, 21, ${score >= 0.5 ? 0.5 * score ** 3 : 0})`,
+                    `rgba(250, 204, 21, ${score >= 0.6 ? 0.5 * score ** 3 : 0})`,
                     "important"
                 );
                 node.style.setProperty("top", `${rect.top - containerRect.top}px`, "important");
@@ -237,7 +261,7 @@ export default class SmartHighlightsModifier implements PageModifier {
                 node.onclick = (e) => this.onRangeClick(e, range);
 
                 this.absoluteContainer.appendChild(node);
-            });
+            }
 
             // const wrapper = document.createElement("lindy-highlight");
             // wrapper.className = "lindy-smart-highlight";
