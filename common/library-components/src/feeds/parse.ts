@@ -119,7 +119,7 @@ export function parseFeedArticles(
     }
 
     return items.map((item) => {
-        let url = item.link!;
+        let url = item.link;
         if (!url) {
             url = `https://${getDomain(rssUrl)}`;
         }
