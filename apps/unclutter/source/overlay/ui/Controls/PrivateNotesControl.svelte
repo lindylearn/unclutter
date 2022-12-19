@@ -24,7 +24,10 @@
 
         annotationsModifer.setEnableAnnotations(privateNotesEnabled);
         overlayModifier.setEnableAnnotations(privateNotesEnabled);
-        smartHighlightsModifier.setEnableAnnotations(privateNotesEnabled);
+        // hack to avoid removal during anchoring
+        setTimeout(() => {
+            smartHighlightsModifier.setEnableAnnotations(privateNotesEnabled);
+        }, 1000);
 
         setFeatureFlag(enableAnnotationsFeatureFlag, privateNotesEnabled);
 

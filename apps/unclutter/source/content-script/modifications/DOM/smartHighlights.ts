@@ -6,7 +6,11 @@ import { _createAnnotationFromSelection } from "../annotations/selectionListener
 import TextContainerModifier from "./textContainer";
 import { splitSentences } from "@unclutter/library-components/dist/common";
 import { sendIframeEvent } from "../../../common/reactIframe";
-import { enableExperimentalFeatures, getFeatureFlag } from "../../../common/featureFlags";
+import {
+    enableAnnotationsFeatureFlag,
+    enableExperimentalFeatures,
+    getFeatureFlag,
+} from "../../../common/featureFlags";
 import { removeAllHighlights } from "../annotations/highlightsApi";
 
 @trackModifierExecution
@@ -25,8 +29,9 @@ export default class SmartHighlightsModifier implements PageModifier {
     private paragraphs: HTMLElement[] = [];
     private rankedSentencesByParagraph: { score: number; sentence: string }[][];
     async parseArticle() {
-        const enabled = await getFeatureFlag(enableExperimentalFeatures);
-        if (!enabled) {
+        const annotationsEnabled = await getFeatureFlag(enableAnnotationsFeatureFlag);
+        const experimentsEnabled = await getFeatureFlag(enableExperimentalFeatures);
+        if (!annotationsEnabled || !experimentsEnabled) {
             return;
         }
 

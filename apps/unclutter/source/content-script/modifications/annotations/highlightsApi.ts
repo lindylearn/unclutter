@@ -183,7 +183,7 @@ export function insertMarginBar(
 
 // remove all text highlighting
 export function removeAllHighlights() {
-    [...document.querySelectorAll(".lindy-highlight-dot")].map((node) => node.remove());
+    // [...document.querySelectorAll(".lindy-highlight-dot")].map((node) => node.remove());
 
     removeAllHighlightsApi(document.body);
 }
