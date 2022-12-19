@@ -206,29 +206,30 @@ export default class SmartHighlightsModifier implements PageModifier {
         return ranges;
     }
 
-    private absoluteContainer: HTMLElement;
+    private backgroundContainer: HTMLElement;
+    private clickContainer: HTMLElement;
     createContainer() {
-        this.absoluteContainer = document.createElement("div");
-        this.absoluteContainer.className = "lindy-smart-highlight-container";
-        document.body.prepend(this.absoluteContainer);
+        this.backgroundContainer = document.createElement("div");
+        this.backgroundContainer.className = "lindy-smart-highlight-container";
+        this.backgroundContainer.style.setProperty("z-index", "999");
+        document.body.prepend(this.backgroundContainer);
+
+        this.clickContainer = document.createElement("div");
+        this.clickContainer.className = "lindy-smart-highlight-container";
+        this.backgroundContainer.style.setProperty("z-index", "1001");
+        document.body.append(this.clickContainer);
     }
 
     private paintRanges(ranges: Range[], scores?: number[]) {
-        const containerRect = this.absoluteContainer.getBoundingClientRect();
+        const containerRect = this.backgroundContainer.getBoundingClientRect();
         ranges.map((range, i) => {
             if (range.toString().trim().length < 10) {
                 return;
             }
-            // if (
-            //     range.toString().trim() !==
-            //     "It’s worth noting that there is a global race around fusion, with many other labs around the world pursuing different techniques."
-            // ) {
-            //     return;
-            // }
             const score = scores?.[i];
-
-            console.log(range.toString().trim());
-            console.log([...range.getClientRects()]);
+            if (score < 0.6) {
+                return;
+            }
 
             let lastRect: ClientRect;
             for (const rect of range.getClientRects()) {
@@ -253,26 +254,20 @@ export default class SmartHighlightsModifier implements PageModifier {
                     `rgba(250, 204, 21, ${score >= 0.6 ? 0.5 * score ** 3 : 0})`,
                     "important"
                 );
+                node.style.setProperty("position", "absolute", "important");
                 node.style.setProperty("top", `${rect.top - containerRect.top}px`, "important");
                 node.style.setProperty("left", `${rect.left - containerRect.left}px`, "important");
                 node.style.setProperty("width", `${rect.width}px`, "important");
                 node.style.setProperty("height", `${rect.height}px`, "important");
 
-                node.onclick = (e) => this.onRangeClick(e, range);
+                const clickNode = node.cloneNode() as HTMLElement;
+                clickNode.style.setProperty("background", "transparent", "important");
+                clickNode.style.setProperty("cursor", "pointer", "important");
+                clickNode.onclick = (e) => this.onRangeClick(e, range);
 
-                this.absoluteContainer.appendChild(node);
+                this.backgroundContainer.appendChild(node);
+                this.clickContainer.appendChild(clickNode);
             }
-
-            // const wrapper = document.createElement("lindy-highlight");
-            // wrapper.className = "lindy-smart-highlight";
-            // wrapper.style.setProperty(
-            //     "--annotation-color",
-            //     `rgba(250, 204, 21, ${score >= 0.4 ? 0.5 * score ** 2 : 0})`,
-            //     "important"
-            // );
-            // wrapper.appendChild(range.extractContents());
-            // range.insertNode(wrapper);
-            // wrapper.onclick = (e) => this.onRangeClick(e, range);
         });
     }
 

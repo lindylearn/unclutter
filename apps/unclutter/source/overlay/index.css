@@ -222,10 +222,6 @@
     left: 0 !important;
     /* contain: strict !important; */
 }
-.lindy-smart-highlight-absolute {
-    position: absolute !important;
-    z-index: 999 !important; /* just behind text elements */
-}
 @keyframes fadeInSmartHighlight {
     from {
         background: transparent;
