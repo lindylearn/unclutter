@@ -48,23 +48,23 @@
         });
 </script>
 
-<UiControl
-    iconName={socialHighlightsEnabled ? "social_enabled" : "social_disabled"}
-    tooltip={socialHighlightsEnabled
-        ? `Click to hide ${socialHighlightsCount || 0} social comment${
-              socialHighlightsCount !== 1 ? "s" : ""
-          }`
-        : `Click to show ${socialHighlightsCount || 0} social comment${
-              socialHighlightsCount !== 1 ? "s" : ""
-          }`}
-    onClick={toggleEnabled}
->
-    {#if socialHighlightsCount}
+{#if socialHighlightsCount}
+    <UiControl
+        iconName={socialHighlightsEnabled ? "social_enabled" : "social_disabled"}
+        tooltip={socialHighlightsEnabled
+            ? `Click to hide ${socialHighlightsCount || 0} social comment${
+                  socialHighlightsCount !== 1 ? "s" : ""
+              }`
+            : `Click to show ${socialHighlightsCount || 0} social comment${
+                  socialHighlightsCount !== 1 ? "s" : ""
+              }`}
+        onClick={toggleEnabled}
+    >
         <div id="lindy-crowd-count-label">
             {socialHighlightsCount}
         </div>
-    {/if}
-</UiControl>
+    </UiControl>
+{/if}
 
 <style lang="postcss">
     #lindy-crowd-count-label {
