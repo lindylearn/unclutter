@@ -181,7 +181,7 @@ export default class SmartHighlightsModifier implements PageModifier {
             wrapper.className = "lindy-smart-highlight";
             wrapper.style.setProperty(
                 "--annotation-color",
-                `rgba(250, 204, 21, ${0.5 * score ** 3})`,
+                `rgba(250, 204, 21, ${score >= 0.4 ? 0.5 * score ** 2 : 0})`,
                 "important"
             );
 
