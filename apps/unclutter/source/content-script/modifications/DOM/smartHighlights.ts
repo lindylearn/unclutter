@@ -40,7 +40,7 @@ export default class SmartHighlightsModifier implements PageModifier {
             .querySelectorAll(this.textContainerModifier.usedTextElementSelector)
             .forEach((paragraph: HTMLElement) => {
                 const textContent = paragraph.textContent;
-                if (!textContent) {
+                if (!textContent || textContent.length < 100) {
                     return;
                 }
                 this.paragraphs.push(paragraph);
@@ -62,6 +62,9 @@ export default class SmartHighlightsModifier implements PageModifier {
     enableAnnotations() {
         this.paragraphs.forEach((paragraph, index) => {
             const rankedSentences = this.rankedSentencesByParagraph?.[index];
+            if (!rankedSentences) {
+                return;
+            }
 
             const ranges = this.anchorParagraphSentences(
                 paragraph,
@@ -133,6 +136,8 @@ export default class SmartHighlightsModifier implements PageModifier {
         let currentRange = document.createRange();
         currentRange.setStart(currentElem, 0);
 
+        // console.log(paragraph, sentences);
+
         while (ranges.length < sentences.length) {
             if (!currentElem) {
                 break;
@@ -201,44 +206,72 @@ export default class SmartHighlightsModifier implements PageModifier {
         return ranges;
     }
 
+    private absoluteContainer: HTMLElement;
+    createContainer() {
+        this.absoluteContainer = document.createElement("div");
+        this.absoluteContainer.className = "lindy-smart-highlight-container";
+        document.body.prepend(this.absoluteContainer);
+    }
+
     private paintRanges(ranges: Range[], scores?: number[]) {
+        const containerRect = this.absoluteContainer.getBoundingClientRect();
         ranges.map((range, i) => {
+            if (range.toString().trim().length < 10) {
+                return;
+            }
             const score = scores?.[i];
-            // console.log(range.cloneRange().toString());
 
-            const wrapper = document.createElement("lindy-highlight");
-            wrapper.className = "lindy-smart-highlight";
-            wrapper.style.setProperty(
-                "--annotation-color",
-                `rgba(250, 204, 21, ${score >= 0.4 ? 0.5 * score ** 2 : 0})`,
-                "important"
-            );
-
-            wrapper.appendChild(range.extractContents());
-            range.insertNode(wrapper);
-
-            wrapper.onclick = (e) => {
-                // @ts-ignore
-                // if (e.target?.classList.contains("lindy-highlight") && e.target?.id) {
-                //     return;
-                // }
-
-                const selection = window.getSelection();
-                selection.removeAllRanges();
-                selection.addRange(range);
-
-                _createAnnotationFromSelection(
-                    (annotation) => {
-                        sendIframeEvent(this.annotationsModifier.sidebarIframe, {
-                            event: "createHighlight",
-                            annotation,
-                        });
-                        // onAnnotationUpdate("add", [annotation]);
-                    },
-                    this.annotationsModifier.sidebarIframe,
-                    generateId()
+            [...range.getClientRects()].forEach((rect) => {
+                const node = document.createElement("div");
+                node.className = "lindy-smart-highlight-absolute";
+                node.style.setProperty(
+                    "background",
+                    `rgba(250, 204, 21, ${score >= 0.5 ? 0.5 * score ** 3 : 0})`,
+                    "important"
                 );
-            };
+                node.style.setProperty("top", `${rect.top - containerRect.top}px`, "important");
+                node.style.setProperty("left", `${rect.left - containerRect.left}px`, "important");
+                node.style.setProperty("width", `${rect.width}px`, "important");
+                node.style.setProperty("height", `${rect.height}px`, "important");
+
+                node.onclick = (e) => this.onRangeClick(e, range);
+
+                this.absoluteContainer.appendChild(node);
+            });
+
+            // const wrapper = document.createElement("lindy-highlight");
+            // wrapper.className = "lindy-smart-highlight";
+            // wrapper.style.setProperty(
+            //     "--annotation-color",
+            //     `rgba(250, 204, 21, ${score >= 0.4 ? 0.5 * score ** 2 : 0})`,
+            //     "important"
+            // );
+            // wrapper.appendChild(range.extractContents());
+            // range.insertNode(wrapper);
+            // wrapper.onclick = (e) => this.onRangeClick(e, range);
         });
+    }
+
+    private onRangeClick(e: Event, range: Range) {
+        // @ts-ignore
+        // if (e.target?.classList.contains("lindy-highlight") && e.target?.id) {
+        //     return;
+        // }
+
+        const selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(range);
+
+        _createAnnotationFromSelection(
+            (annotation) => {
+                sendIframeEvent(this.annotationsModifier.sidebarIframe, {
+                    event: "createHighlight",
+                    annotation,
+                });
+                // onAnnotationUpdate("add", [annotation]);
+            },
+            this.annotationsModifier.sidebarIframe,
+            generateId()
+        );
     }
 }

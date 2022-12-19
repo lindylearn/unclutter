@@ -238,6 +238,7 @@ export default class TransitionManager implements PageModifier {
         // *** read DOM phase ***
         // *** write DOM phase ***
         this.libraryModifier.captureScreenshot(); // after dark mode enable
+        this.smartHighlightsModifier.createContainer();
 
         // insert annotations sidebar, start fetch
         // this.linkAnnotationsModifier.parseArticle(); // reads page, wraps link elems
