@@ -3,6 +3,7 @@ import {
     allowlistDomainOnManualActivationFeatureFlag,
     enableArchiveDetection,
     enableBootUnclutterMessage,
+    enableExperimentalFeatures,
     enableSocialCountsFeatureFlag,
     getFeatureFlag,
     hypothesisSyncFeatureFlag,
@@ -68,7 +69,7 @@ function OptionsPage({}) {
         <div className={clsx(darkModeEnabled && "dark")}>
             <div className="flex flex-col gap-5 text-gray-900 dark:text-white">
                 <OptionsGroup
-                    headerText="Unclutter articles"
+                    headerText="Reader mode"
                     iconSvg={
                         <svg className="w-4" viewBox="0 0 384 512">
                             <path
@@ -272,6 +273,19 @@ function OptionsPage({}) {
                         </svg>
                     }
                 >
+                    <FeatureFlagSwitch featureFlagKey={enableExperimentalFeatures}>
+                        Enable experimental{" "}
+                        <a
+                            href="https://unclutter.it/discord"
+                            className="underline"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            Smart Reading
+                        </a>{" "}
+                        features
+                    </FeatureFlagSwitch>
+
                     <ContributionStats />
                     <div className="">
                         This project is open source! Join our{" "}

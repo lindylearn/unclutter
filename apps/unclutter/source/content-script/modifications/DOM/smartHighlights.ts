@@ -6,6 +6,7 @@ import { _createAnnotationFromSelection } from "../annotations/selectionListener
 import TextContainerModifier from "./textContainer";
 import { splitSentences } from "@unclutter/library-components/dist/common";
 import { sendIframeEvent } from "../../../common/reactIframe";
+import { enableExperimentalFeatures, getFeatureFlag } from "../../../common/featureFlags";
 
 @trackModifierExecution
 export default class SmartHighlightsModifier implements PageModifier {
@@ -22,6 +23,11 @@ export default class SmartHighlightsModifier implements PageModifier {
 
     annotations: LindyAnnotation[] = [];
     async parseArticleRemotely() {
+        const enabled = await getFeatureFlag(enableExperimentalFeatures);
+        if (!enabled) {
+            return;
+        }
+
         const paragraphs: HTMLElement[] = [];
         const paragraphTexts: string[] = [];
         document
