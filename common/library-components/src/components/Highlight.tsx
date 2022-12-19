@@ -53,9 +53,9 @@ export function Highlight({
         });
     }, [localTextDebounced]);
 
-    if (annotation.tags?.length === 0) {
-        annotation.tags = ["tag1", "tag2"];
-    }
+    // if (annotation.tags?.length === 0) {
+    //     annotation.tags = ["tag1", "tag2"];
+    // }
 
     return (
         <div
@@ -109,6 +109,7 @@ export function Highlight({
                     onChange={(e) => setLocalText(e.target.value)}
                     minRows={localText ? 5 : 1}
                     maxRows={10}
+                    onClick={(e) => e.stopPropagation()}
                 />
                 {/* <a
                     className="shrink-0"
@@ -120,7 +121,7 @@ export function Highlight({
                 </a> */}
             </div>
 
-            {!isCurrentArticle &&
+            {/* {!isCurrentArticle &&
                 (article ? (
                     <div className="info-bar flex items-center justify-between gap-2 whitespace-nowrap font-medium">
                         <div className="text-medium flex items-center gap-1.5 overflow-hidden">
@@ -150,7 +151,7 @@ export function Highlight({
                     </div>
                 ) : (
                     <div className="text-base"> </div>
-                ))}
+                ))} */}
         </div>
     );
 }
