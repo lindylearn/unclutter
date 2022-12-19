@@ -274,7 +274,7 @@ function OptionsPage({}) {
                     }
                 >
                     <FeatureFlagSwitch featureFlagKey={enableExperimentalFeatures}>
-                        Enable experimental{" "}
+                        Help test experimental{" "}
                         <a
                             href="https://unclutter.it/discord"
                             className="underline"
