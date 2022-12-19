@@ -14,6 +14,7 @@ export default function App({ articleUrl }: { articleUrl: string }) {
         enableSocialAnnotations,
         showAllSocialAnnotations,
         setEnableSocialAnnotations,
+        experimentsEnabled,
     } = useAnnotationSettings();
 
     // keep local annotations state
@@ -50,7 +51,7 @@ export default function App({ articleUrl }: { articleUrl: string }) {
             });
 
         const visibleAnnotations = annotations.filter(
-            (a) => a.focused || (a.isMyAnnotation && a.text)
+            (a) => a.focused || (a.isMyAnnotation && (a.text || experimentsEnabled))
         );
 
         // use large grouping margin to display every annotation properly
