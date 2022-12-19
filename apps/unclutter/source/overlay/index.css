@@ -169,11 +169,13 @@
     bottom: 0 !important;
     margin: 0 !important;
     --side-width: calc((100vw - var(--lindy-pagewidth)) / 2 - 12px) !important;
-    margin-left: var(--side-width) !important;
-    width: calc(var(--lindy-pagewidth) + 10px) !important;
+    /* margin-left: var(--side-width) !important; */
+    /* width: calc(var(--lindy-pagewidth) + 10px) !important; */
+    width: 100% !important;
+    z-index: 5000 !important;
 
     /* must equal document bottom padding */
-    height: calc(130px) !important;
+    height: calc(1000px) !important;
 
     user-select: none !important;
     contain: strict !important;

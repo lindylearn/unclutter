@@ -77,7 +77,7 @@ export default function ArticleBottomReview({ articleId }: { articleId: string }
     const darkModeEnabled = true;
 
     return (
-        <div className="mx-5 flex flex-col gap-4 text-stone-800 dark:text-[rgb(232,230,227)]">
+        <div className="bottom-review flex flex-col gap-4 text-stone-800 dark:text-[rgb(232,230,227)]">
             <div className="relative mx-auto flex w-[780px] flex-col gap-4 overflow-hidden rounded-lg bg-white shadow dark:bg-[#212121]">
                 <ReviewChart />
             </div>
