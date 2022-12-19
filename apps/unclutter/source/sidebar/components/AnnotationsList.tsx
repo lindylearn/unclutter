@@ -98,7 +98,7 @@ function AnnotationsList({
                     } else if (prevSiblingsRefs.some((a) => !a)) {
                         // first pass render: not all siblings have rendered yet
                         // for now, assume default height (for draft empty comments)
-                        innerGroupOffset = 60 * i;
+                        innerGroupOffset = 68 * i;
                     } else {
                         // second pass render: know heights of previous siblings
                         // sum them up to get correct offset inside group

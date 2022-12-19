@@ -9,10 +9,10 @@ interface AnnotationProps {
     heightLimitPx?: number;
     showingReplies: boolean;
     isReply: boolean;
+    isRelated: boolean;
 
     hypothesisSyncEnabled: boolean;
     deleteHide: () => void;
-    onHoverUpdate: (hoverActive: boolean) => void;
     unfocusAnnotation: (annotation: LindyAnnotation) => void;
     createReply: () => void;
 }
@@ -24,14 +24,15 @@ function Annotation({
     showingReplies,
     hypothesisSyncEnabled,
     isReply,
+    isRelated,
     createReply,
-    onHoverUpdate,
     unfocusAnnotation,
     deleteHide,
 }: AnnotationProps) {
     const { text, author, platform, link, reply_count } = annotation;
 
-    const textLines = text.split("\n").filter((line) => line.trim() != "");
+    // @ts-ignore
+    const textLines = annotation.excerpt.split("\n").filter((line) => line.trim() != "");
 
     const [upvoteCount, setLocalUpvoteCount] = React.useState(annotation.upvote_count || 0);
     // function toggleUpvoteAnnotationLocalFirst() {
@@ -45,46 +46,40 @@ function Annotation({
     const ref = useBlurRef(annotation, unfocusAnnotation);
 
     return (
-        <div
+        <a
             className={
-                "annotation relative rounded-md bg-white px-3 py-2 text-gray-800 shadow " +
+                "annotation relative overflow-hidden rounded-md bg-white px-3 py-2 text-xs text-gray-800 shadow " +
                 className
             }
             style={{
                 borderColor: getAnnotationColor(annotation),
                 maxHeight: heightLimitPx,
             }}
-            // not using hover states for actual hover on social annotations
-            // onMouseEnter={() => onHoverUpdate(true)}
-            // onMouseLeave={() => onHoverUpdate(false)}
             ref={ref}
+            href={link}
+            target="_blank"
+            rel="noreferrer"
+            onClick={() => {
+                onExpand(annotation);
+            }}
         >
-            <a
-                className="annotation-text mr-3 select-none text-sm"
+            <div
+                className="annotation-text select-none"
                 style={{
                     display: "-webkit-box",
                     // restrict text height by whole lines
                     // assumes 20px font size and py-1.5 padding
                     WebkitLineClamp: Math.min(
                         heightLimitPx ? Math.floor((heightLimitPx - 6 * 2 - 20) / 20) : Infinity,
-                        isReply ? 3 : 5
+                        isReply ? 3 : 6
                     ),
                     WebkitBoxOrient: "vertical",
                     overflow: "hidden",
                     textOverflow: "ellipsis",
                 }}
-                href={link}
-                target="_blank"
-                rel="noreferrer"
-                onClick={() => onExpand(annotation)}
             >
-                {/* {!isReply && (
-                    <div
-                        className={
-                            "crowd-annotation-dot mr-1.5 " + annotation.platform
-                        }
-                    />
-                )} */}
+                {/* @ts-ignore */}
+                {annotation.score.toString().slice(0, 4)}{" "}
                 {textLines.flatMap((line, lineIndex) =>
                     line
                         .split(/<a>|<code>/)
@@ -95,7 +90,7 @@ function Annotation({
                             if (token.startsWith("  ")) {
                                 return (
                                     <>
-                                        <code className="bg-gray-100 text-sm">{token}</code>
+                                        <code className="bg-gray-100">{token}</code>
                                         <br />
                                     </>
                                 );
@@ -104,53 +99,44 @@ function Annotation({
                         })
                         .concat([<br key={lineIndex} />])
                 )}
-            </a>
+            </div>
 
-            <div className="top-icons absolute top-1 right-1 flex gap-3 p-1 text-gray-400">
+            {isRelated && (
                 <div
-                    className="lindy-tooltp lindy-fade cursor-pointer transition-all hover:text-gray-600 hover:drop-shadow"
-                    onClick={deleteHide}
-                    data-title="Remove comment"
+                    className="annotation-bar relative mt-2 flex cursor-pointer select-none items-center gap-2 overflow-hidden whitespace-nowrap text-gray-800 transition-transform hover:scale-[99%]"
+                    style={
+                        {
+                            // backgroundColor: getAnnotationColor(annotation),
+                        }
+                    }
+                    ref={ref}
                 >
-                    <svg className="icon h-3.5" viewBox="0 0 640 512">
+                    <svg className="-mt-0.5 w-4 shrink-0" viewBox="0 0 512 512">
                         <path
                             fill="currentColor"
-                            d="M150.7 92.77C195 58.27 251.8 32 320 32C400.8 32 465.5 68.84 512.6 112.6C559.4 156 590.7 207.1 605.5 243.7C608.8 251.6 608.8 260.4 605.5 268.3C592.1 300.6 565.2 346.1 525.6 386.7L630.8 469.1C641.2 477.3 643.1 492.4 634.9 502.8C626.7 513.2 611.6 515.1 601.2 506.9L9.196 42.89C-1.236 34.71-3.065 19.63 5.112 9.196C13.29-1.236 28.37-3.065 38.81 5.112L150.7 92.77zM189.8 123.5L235.8 159.5C258.3 139.9 287.8 128 320 128C390.7 128 448 185.3 448 256C448 277.2 442.9 297.1 433.8 314.7L487.6 356.9C521.1 322.8 545.9 283.1 558.6 256C544.1 225.1 518.4 183.5 479.9 147.7C438.8 109.6 385.2 79.1 320 79.1C269.5 79.1 225.1 97.73 189.8 123.5L189.8 123.5zM394.9 284.2C398.2 275.4 400 265.9 400 255.1C400 211.8 364.2 175.1 320 175.1C319.3 175.1 318.7 176 317.1 176C319.3 181.1 320 186.5 320 191.1C320 202.2 317.6 211.8 313.4 220.3L394.9 284.2zM404.3 414.5L446.2 447.5C409.9 467.1 367.8 480 320 480C239.2 480 174.5 443.2 127.4 399.4C80.62 355.1 49.34 304 34.46 268.3C31.18 260.4 31.18 251.6 34.46 243.7C44 220.8 60.29 191.2 83.09 161.5L120.8 191.2C102.1 214.5 89.76 237.6 81.45 255.1C95.02 286 121.6 328.5 160.1 364.3C201.2 402.4 254.8 432 320 432C350.7 432 378.8 425.4 404.3 414.5H404.3zM192 255.1C192 253.1 192.1 250.3 192.3 247.5L248.4 291.7C258.9 312.8 278.5 328.6 302 333.1L358.2 378.2C346.1 381.1 333.3 384 319.1 384C249.3 384 191.1 326.7 191.1 255.1H192z"
+                            d="M512 288c0 35.35-21.49 64-48 64c-32.43 0-31.72-32-55.64-32C394.9 320 384 330.9 384 344.4V480c0 17.67-14.33 32-32 32h-71.64C266.9 512 256 501.1 256 487.6C256 463.1 288 464.4 288 432c0-26.51-28.65-48-64-48s-64 21.49-64 48c0 32.43 32 31.72 32 55.64C192 501.1 181.1 512 167.6 512H32c-17.67 0-32-14.33-32-32v-135.6C0 330.9 10.91 320 24.36 320C48.05 320 47.6 352 80 352C106.5 352 128 323.3 128 288S106.5 223.1 80 223.1c-32.43 0-31.72 32-55.64 32C10.91 255.1 0 245.1 0 231.6v-71.64c0-17.67 14.33-31.1 32-31.1h135.6C181.1 127.1 192 117.1 192 103.6c0-23.69-32-23.24-32-55.64c0-26.51 28.65-47.1 64-47.1s64 21.49 64 47.1c0 32.43-32 31.72-32 55.64c0 13.45 10.91 24.36 24.36 24.36H352c17.67 0 32 14.33 32 31.1v71.64c0 13.45 10.91 24.36 24.36 24.36c23.69 0 23.24-32 55.64-32C490.5 223.1 512 252.7 512 288z"
+                        />
+                    </svg>
+                    {/* <img
+                        className="w-4 shrink-0 rounded-sm"
+                        src={`https://www.google.com/s2/favicons?sz=128&domain=https://${groupKey}`}
+                    /> */}
+                    <div className="flex-grow overflow-hidden overflow-ellipsis">
+                        {/* @ts-ignore */}
+                        {annotation.title}
+                    </div>
+                    <svg className="w-4 shrink-0" viewBox="0 0 448 512">
+                        <path
+                            fill="currentColor"
+                            d="M264.6 70.63l176 168c4.75 4.531 7.438 10.81 7.438 17.38s-2.688 12.84-7.438 17.38l-176 168c-9.594 9.125-24.78 8.781-33.94-.8125c-9.156-9.5-8.812-24.75 .8125-33.94l132.7-126.6H24.01c-13.25 0-24.01-10.76-24.01-24.01s10.76-23.99 24.01-23.99h340.1l-132.7-126.6C221.8 96.23 221.5 80.98 230.6 71.45C239.8 61.85 254.1 61.51 264.6 70.63z"
                         />
                     </svg>
                 </div>
-            </div>
+            )}
 
-            {/* <div className="spacer-line border-b-2 border-gray-100 -mx-3 my-1"></div> */}
-
-            <div className="info-bar mt-0.5 flex items-end justify-between gap-3 text-sm text-gray-400 transition-all">
-                {/* <div
-                    className={
-                        "upvote-button flex-shrink-0 flex cursor-pointer select-none hover:text-gray-700 hover:scale-110 transition-all " +
-                        (upvoted ? "text-gray-800 " : "") +
-                        (upvoteCount == 0 ? "invisible " : "") // shown on hover through global CSS
-                    }
-                    onClick={toggleUpvoteAnnotationLocalFirst}
-                >
-                    <svg
-                        className="inline-block align-baseline w-3 mr-1"
-                        viewBox="0 0 320 512"
-                    >
-                        <path
-                            fill="currentColor"
-                            d="M177 159.7l136 136c9.4 9.4 9.4 24.6 0 33.9l-22.6 22.6c-9.4 9.4-24.6 9.4-33.9 0L160 255.9l-96.4 96.4c-9.4 9.4-24.6 9.4-33.9 0L7 329.7c-9.4-9.4-9.4-24.6 0-33.9l136-136c9.4-9.5 24.6-9.5 34-.1z"
-                        ></path>
-                    </svg>
-                    <span>{upvoteCount}</span>
-                </div> */}
-
-                {!showingReplies && annotation.reply_count !== 0 && (
-                    <a
-                        className="cursor-pointer select-none transition-all hover:text-gray-700 hover:drop-shadow-sm"
-                        href={link}
-                        target="_blank"
-                        rel="noreferrer"
-                    >
+            {/* <div className="info-bar mt-0.5 flex items-end justify-between gap-3 text-sm text-gray-400 transition-all">
+                {!showingReplies && annotation.reply_count > 0 && (
+                    <div className="cursor-pointer select-none transition-all">
                         <svg
                             className="mr-1 inline-block w-3 rotate-180 align-baseline"
                             viewBox="0 0 512 512"
@@ -165,49 +151,13 @@ function Annotation({
                             {annotation.reply_count}
                             {annotation.reply_count === 1 ? " reply" : " replies"}
                         </span>
-                    </a>
+                    </div>
                 )}
 
-                {(showingReplies || annotation.reply_count === 0) &&
-                    annotation.platform === "h" &&
-                    hypothesisSyncEnabled && (
-                        <a
-                            className="reply-button invisible cursor-pointer select-none transition-all hover:scale-110 hover:pl-0.5 hover:text-gray-700"
-                            onClick={showingReplies ? createReply : () => onExpand(annotation)}
-                            href={!showingReplies ? link : undefined}
-                            target="_blank"
-                            rel="noreferrer"
-                        >
-                            <svg
-                                className="mr-1 inline-block w-3 rotate-180 align-baseline"
-                                viewBox="0 0 512 512"
-                                style={{ marginBottom: "-1px" }}
-                            >
-                                <path
-                                    fill="currentColor"
-                                    d="M8.309 189.836L184.313 37.851C199.719 24.546 224 35.347 224 56.015v80.053c160.629 1.839 288 34.032 288 186.258 0 61.441-39.581 122.309-83.333 154.132-13.653 9.931-33.111-2.533-28.077-18.631 45.344-145.012-21.507-183.51-176.59-185.742V360c0 20.7-24.3 31.453-39.687 18.164l-176.004-152c-11.071-9.562-11.086-26.753 0-36.328z"
-                                ></path>
-                            </svg>
-                            <span>reply</span>
-                        </a>
-                    )}
-
-                {/* <div>{relativeTime}</div> */}
-
                 <div className="flex-grow" />
-                <a
-                    className="flex-shrink-0 select-none hover:text-gray-700 hover:drop-shadow-sm"
-                    href={
-                        platform === "h"
-                            ? `https://annotations.lindylearn.io/@${author}`
-                            : `https://news.ycombinator.com/user?id=${author.replace("_hn", "")}`
-                    }
-                    target="_blank"
-                    rel="noreferrer"
-                    onClick={() => onExpand(annotation)}
-                >
+                <div className="flex-shrink-0 select-none">
                     <>
-                        {author.replace("_hn", "")}
+                        {author?.replace("_hn", "")}
                         {platform == "h" && (
                             <img
                                 src="../assets/icons/hypothesis.svg"
@@ -221,9 +171,9 @@ function Annotation({
                             />
                         )}
                     </>
-                </a>
-            </div>
-        </div>
+                </div>
+            </div> */}
+        </a>
     );
 }
 export default Annotation;
@@ -245,7 +195,7 @@ export function parseDate(timestamp) {
     // See https://stackoverflow.com/questions/6427204/date-parsing-in-javascript-is-different-between-safari-and-chrome
     return new Date(
         timestamp
-            .replace(/-/g, "/")
+            ?.replace(/-/g, "/")
             .replace(/[a-z]+/gi, " ")
             .replace(".000", "")
     );

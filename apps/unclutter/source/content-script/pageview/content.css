@@ -179,8 +179,19 @@ html.pageview.pageview > body {
     background-color: var(--annotation-color) !important;
     transition: background-color 0.15s linear !important;
 }
+.lindy-highlight {
+    /* -webkit-box-decoration-break: clone;
+    -ms-box-decoration-break: clone;
+    -o-box-decoration-break: clone;
+    box-decoration-break: clone; */
+    /* padding: 0.25em 0px !important; */
+    /* border-radius: 2px !important; */
+
+    /* box-shadow: 0.25em 0 0 var(--annotation-color), -0.25em 0 0 var(--annotation-color) !important; */
+}
 .lindy-highlight.lindy-hover {
     background-color: var(--darker-annotation-color) !important;
+    /* box-shadow: 0.25em 0 0 var(--darker-annotation-color), -0.25em 0 0 var(--darker-annotation-color) !important; */
 }
 
 .lindy-crowd-highlight {
