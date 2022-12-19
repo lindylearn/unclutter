@@ -33,6 +33,7 @@ import { setUserSettingsForDomain } from "../../common/storage";
 import LibraryModifier from "./library";
 import BodyStyleModifier from "./bodyStyle";
 import { reportEventContentScript } from "@unclutter/library-components/dist/common";
+import SmartHighlightsModifier from "./DOM/smartHighlights";
 
 @trackModifierExecution
 export default class OverlayManager implements PageModifier {
@@ -45,13 +46,14 @@ export default class OverlayManager implements PageModifier {
     private libraryModifier: LibraryModifier;
     private libraryModalModifier: LibraryModalModifier;
     private bodyStyleModifier: BodyStyleModifier;
+    private smartHighlightsModifier: SmartHighlightsModifier;
 
     outline: OutlineItem[];
     private flatOutline: OutlineItem[];
     private topleftSvelteComponent: TopLeftContainer;
     private toprightSvelteComponent: TopRightContainerSvelte;
     private pageAdjacentSvelteComponent: PageAdjacentContainerSvelte;
-    private bottomSvelteComponent: BottomContainerSvelte;
+    private bottomSvelteComponent: any;
 
     private annotationsEnabled: boolean;
 
@@ -64,7 +66,8 @@ export default class OverlayManager implements PageModifier {
         libraryModifier: LibraryModifier,
         libraryModalModifier: LibraryModalModifier,
         readingTimeModifier: ReadingTimeModifier,
-        bodyStyleModifier: BodyStyleModifier
+        bodyStyleModifier: BodyStyleModifier,
+        smartHighlightsModifier: SmartHighlightsModifier
     ) {
         this.domain = domain;
         this.browserType = getBrowserType();
@@ -75,6 +78,7 @@ export default class OverlayManager implements PageModifier {
         this.libraryModifier = libraryModifier;
         this.libraryModalModifier = libraryModalModifier;
         this.bodyStyleModifier = bodyStyleModifier;
+        this.smartHighlightsModifier = smartHighlightsModifier;
 
         annotationsModifer.annotationListeners.push(this.onAnnotationUpdate.bind(this));
         readingTimeModifier.readingTimeLeftListeners.push(this.onReadingTimeUpdate.bind(this));
@@ -199,8 +203,8 @@ export default class OverlayManager implements PageModifier {
                 domain: this.domain,
                 themeModifier: this.themeModifier,
                 annotationsModifer: this.annotationsModifer,
+                smartHighlightsModifier: this.smartHighlightsModifier,
                 overlayModifier: this,
-                textContainerModifier: this.textContainerModifier,
                 elementPickerModifier: this.elementPickerModifier,
             },
         });

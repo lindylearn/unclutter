@@ -63,6 +63,10 @@ export default class TransitionManager implements PageModifier {
         this.readingTimeModifier,
         this.annotationsModifier
     );
+    private smartHighlightsModifier = new SmartHighlightsModifier(
+        this.annotationsModifier,
+        this.textContainerModifier
+    );
     private overlayManager = new OverlayManager(
         this.domain,
         this.themeModifier,
@@ -72,7 +76,8 @@ export default class TransitionManager implements PageModifier {
         this.libraryModifier,
         this.libraryModalModifier,
         this.readingTimeModifier,
-        this.bodyStyleModifier
+        this.bodyStyleModifier,
+        this.smartHighlightsModifier
     );
     private loggingModifier = new LoggingManager(
         this.domain,
@@ -80,14 +85,10 @@ export default class TransitionManager implements PageModifier {
         this.readingTimeModifier,
         this.libraryModifier
     );
-    private aiAnnotationsModifier = new AIAnnotationsModifier(
-        this.annotationsModifier,
-        this.textContainerModifier
-    );
-    private smartHighlightsModifier = new SmartHighlightsModifier(
-        this.annotationsModifier,
-        this.textContainerModifier
-    );
+    // private aiAnnotationsModifier = new AIAnnotationsModifier(
+    //     this.annotationsModifier,
+    //     this.textContainerModifier
+    // );
     // private linkAnnotationsModifier = new LinkAnnotationsModifier(
     //     this.annotationsModifier,
     //     this.libraryModifier,
@@ -242,6 +243,7 @@ export default class TransitionManager implements PageModifier {
         // this.linkAnnotationsModifier.parseArticle(); // reads page, wraps link elems
         this.annotationsModifier.afterTransitionIn();
         // this.aiAnnotationsModifier.parseArticle();
+        this.smartHighlightsModifier.parseArticle();
 
         this.overlayManager.insertUiFont(); // causes ~50ms layout reflow
 
@@ -253,8 +255,6 @@ export default class TransitionManager implements PageModifier {
 
         // this.overlayManager.insertRenderBottomContainer();
         // this.reviewModeModifier.afterTransitionIn();
-
-        this.smartHighlightsModifier.parseArticleRemotely();
     }
 
     beforeTransitionOut() {

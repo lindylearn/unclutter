@@ -7,6 +7,7 @@ import TextContainerModifier from "./textContainer";
 import { splitSentences } from "@unclutter/library-components/dist/common";
 import { sendIframeEvent } from "../../../common/reactIframe";
 import { enableExperimentalFeatures, getFeatureFlag } from "../../../common/featureFlags";
+import { removeAllHighlights } from "../annotations/highlightsApi";
 
 @trackModifierExecution
 export default class SmartHighlightsModifier implements PageModifier {
@@ -21,14 +22,14 @@ export default class SmartHighlightsModifier implements PageModifier {
         this.textContainerModifier = textContainerModifier;
     }
 
-    annotations: LindyAnnotation[] = [];
-    async parseArticleRemotely() {
+    private paragraphs: HTMLElement[] = [];
+    private rankedSentencesByParagraph: { score: number; sentence: string }[][];
+    async parseArticle() {
         const enabled = await getFeatureFlag(enableExperimentalFeatures);
         if (!enabled) {
             return;
         }
 
-        const paragraphs: HTMLElement[] = [];
         const paragraphTexts: string[] = [];
         document
             .querySelectorAll(this.textContainerModifier.usedTextElementSelector)
@@ -37,11 +38,11 @@ export default class SmartHighlightsModifier implements PageModifier {
                 if (!textContent) {
                     return;
                 }
-                paragraphs.push(paragraph);
+                this.paragraphs.push(paragraph);
                 paragraphTexts.push(textContent);
             });
 
-        const rankedSentencesByParagraph: { score: number; sentence: string }[][] = await ky
+        this.rankedSentencesByParagraph = await ky
             .post("https://q5ie5hjr3g.execute-api.us-east-2.amazonaws.com/default/heatmap", {
                 json: {
                     paragraphs: paragraphTexts,
@@ -49,8 +50,13 @@ export default class SmartHighlightsModifier implements PageModifier {
             })
             .json();
 
-        paragraphs.forEach((paragraph, index) => {
-            const rankedSentences = rankedSentencesByParagraph[index];
+        this.enableAnnotations();
+    }
+
+    annotations: LindyAnnotation[] = [];
+    enableAnnotations() {
+        this.paragraphs.forEach((paragraph, index) => {
+            const rankedSentences = this.rankedSentencesByParagraph?.[index];
 
             const ranges = this.anchorParagraphSentences(
                 paragraph,
@@ -63,43 +69,55 @@ export default class SmartHighlightsModifier implements PageModifier {
         });
     }
 
-    async splitSentences() {
-        document
-            .querySelectorAll(this.textContainerModifier.usedTextElementSelector)
-            .forEach((paragraph: HTMLElement) => {
-                try {
-                    const textContent = paragraph.textContent;
-                    if (!textContent) {
-                        return;
-                    }
-
-                    // console.log("#####");
-                    // console.log(paragraph);
-                    let sentences = splitSentences(textContent);
-                    // console.log(sentences);
-
-                    // combine small sentences
-                    const combinedSentences: string[] = [sentences[0]];
-                    sentences.slice(1).forEach((sentence, index) => {
-                        const lastSentence = combinedSentences.pop();
-
-                        if (lastSentence.length < 100) {
-                            combinedSentences.push(lastSentence + sentence);
-                        } else {
-                            combinedSentences.push(lastSentence);
-                            combinedSentences.push(sentence);
-                        }
-                    });
-                    sentences = combinedSentences;
-                    // console.log(sentences);
-
-                    const ranges = this.anchorParagraphSentences(paragraph, sentences);
-                    this.paintRanges(ranges);
-                } catch (err) {
-                    console.error(err);
-                }
-            });
+    private disableAnnotations() {
+        removeAllHighlights();
     }
+
+    setEnableAnnotations(enableAnnotations: boolean) {
+        if (enableAnnotations) {
+            this.enableAnnotations();
+        } else {
+            this.disableAnnotations();
+        }
+    }
+
+    // private async splitSentences() {
+    //     document
+    //         .querySelectorAll(this.textContainerModifier.usedTextElementSelector)
+    //         .forEach((paragraph: HTMLElement) => {
+    //             try {
+    //                 const textContent = paragraph.textContent;
+    //                 if (!textContent) {
+    //                     return;
+    //                 }
+
+    //                 // console.log("#####");
+    //                 // console.log(paragraph);
+    //                 let sentences = splitSentences(textContent);
+    //                 // console.log(sentences);
+
+    //                 // combine small sentences
+    //                 const combinedSentences: string[] = [sentences[0]];
+    //                 sentences.slice(1).forEach((sentence, index) => {
+    //                     const lastSentence = combinedSentences.pop();
+
+    //                     if (lastSentence.length < 100) {
+    //                         combinedSentences.push(lastSentence + sentence);
+    //                     } else {
+    //                         combinedSentences.push(lastSentence);
+    //                         combinedSentences.push(sentence);
+    //                     }
+    //                 });
+    //                 sentences = combinedSentences;
+    //                 // console.log(sentences);
+
+    //                 const ranges = this.anchorParagraphSentences(paragraph, sentences);
+    //                 this.paintRanges(ranges);
+    //             } catch (err) {
+    //                 console.error(err);
+    //             }
+    //         });
+    // }
 
     // create ranges for each sentence by iterating leaf children
     private anchorParagraphSentences(paragraph: HTMLElement, sentences: string[]): Range[] {
