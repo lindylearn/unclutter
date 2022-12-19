@@ -77,7 +77,6 @@ const moveVirtualFolder = {
 const esModuleConfig = {
     input: [
         // input order is important here, as common files might overwrite each other
-        // "source/settings-page/index.tsx",
         "source/background/events.ts",
         "source/settings-page/index.tsx",
     ],
