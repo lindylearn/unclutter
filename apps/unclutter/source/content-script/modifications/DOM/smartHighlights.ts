@@ -54,12 +54,21 @@ export default class SmartHighlightsModifier implements PageModifier {
                 },
             })
             .json();
+        if (!this.rankedSentencesByParagraph) {
+            this.rankedSentencesByParagraph = null;
+        }
 
         this.enableAnnotations();
     }
 
     annotations: LindyAnnotation[] = [];
     enableAnnotations() {
+        if (this.rankedSentencesByParagraph === undefined) {
+            return this.parseArticle();
+        }
+
+        this.createContainers();
+
         this.paragraphs.forEach((paragraph, index) => {
             const rankedSentences = this.rankedSentencesByParagraph?.[index];
             if (!rankedSentences) {
@@ -78,7 +87,11 @@ export default class SmartHighlightsModifier implements PageModifier {
     }
 
     private disableAnnotations() {
-        removeAllHighlights();
+        this.backgroundContainer?.remove();
+        this.backgroundContainer = null;
+
+        this.clickContainer?.remove();
+        this.clickContainer = null;
     }
 
     setEnableAnnotations(enableAnnotations: boolean) {
@@ -144,16 +157,17 @@ export default class SmartHighlightsModifier implements PageModifier {
             }
 
             const currentSentence = sentences[ranges.length];
+            const currentSentenceLength = currentSentence.length + 1; // trailing space
             const currentLength = currentElem.textContent.length;
 
             // console.log({ currentElem });
 
-            if (runningTextLength + currentLength < currentSentence.length) {
+            if (runningTextLength + currentLength < currentSentenceLength) {
                 // console.log(
                 //     "skip",
                 //     runningTextLength,
                 //     currentLength,
-                //     currentSentence.length
+                //     currentSentenceLength
                 // );
                 // not enough text, skip entire node subtree
                 runningTextLength += currentLength;
@@ -184,12 +198,12 @@ export default class SmartHighlightsModifier implements PageModifier {
                     //     "slice",
                     //     runningTextLength,
                     //     currentLength,
-                    //     currentSentence.length
+                    //     currentSentenceLength
                     // );
 
                     // sentence ends inside this node
-                    const offset = currentSentence.length - runningTextLength;
-                    currentRange.setEnd(currentElem, offset);
+                    const offset = currentSentenceLength - runningTextLength;
+                    currentRange.setEnd(currentElem, offset - 1); // exclude trailing space
                     ranges.push(currentRange);
                     // console.log(currentRange.toString());
 
@@ -208,7 +222,7 @@ export default class SmartHighlightsModifier implements PageModifier {
 
     private backgroundContainer: HTMLElement;
     private clickContainer: HTMLElement;
-    createContainer() {
+    createContainers() {
         this.backgroundContainer = document.createElement("div");
         this.backgroundContainer.className = "lindy-smart-highlight-container";
         this.backgroundContainer.style.setProperty("z-index", "999");

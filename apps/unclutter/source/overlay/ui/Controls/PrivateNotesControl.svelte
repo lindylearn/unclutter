@@ -22,14 +22,11 @@
     function toggleEnabled() {
         privateNotesEnabled = !privateNotesEnabled;
 
+        setFeatureFlag(enableAnnotationsFeatureFlag, privateNotesEnabled);
+
         annotationsModifer.setEnableAnnotations(privateNotesEnabled);
         overlayModifier.setEnableAnnotations(privateNotesEnabled);
-        // hack to avoid removal during anchoring
-        setTimeout(() => {
-            smartHighlightsModifier.setEnableAnnotations(privateNotesEnabled);
-        }, 1000);
-
-        setFeatureFlag(enableAnnotationsFeatureFlag, privateNotesEnabled);
+        smartHighlightsModifier.setEnableAnnotations(privateNotesEnabled);
 
         reportEventContentScript("toggleAnnotations", {
             newState: privateNotesEnabled,
