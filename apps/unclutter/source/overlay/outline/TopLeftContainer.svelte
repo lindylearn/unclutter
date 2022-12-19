@@ -40,14 +40,14 @@
     {#if libraryState?.libraryEnabled}
         <LibraryMessage {libraryState} {libraryModifier} {libraryModalModifier} {darkModeEnabled} />
     {/if}
-    {#if libraryState?.showFeed}
+    <!-- {#if libraryState?.showFeed}
         <SubscribeMessage
             {libraryState}
             {libraryModifier}
             {libraryModalModifier}
             {darkModeEnabled}
         />
-    {/if}
+    {/if} -->
 
     <Outline
         {outline}
