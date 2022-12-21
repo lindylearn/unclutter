@@ -1,12 +1,40 @@
+import SmartHighlightsModifier from "../../content-script/modifications/DOM/smartHighlights";
 import AssistantSvelte from "./Assistant.svelte";
 
 export function startAssistant() {
-    document.addEventListener("mousedown", onSelectionStart);
-    document.addEventListener("selectionchange", onSelectionChange);
-    document.addEventListener("mouseup", onSelectionDone);
-    document.addEventListener("contextmenu", removeHighligher);
+    // document.addEventListener("mousedown", onSelectionStart);
+    // document.addEventListener("mouseup", onSelectionDone);
+    // document.addEventListener("contextmenu", removeHighligher);
+    document.addEventListener("mouseup", (event) => {
+        const target = event.target as HTMLElement;
+        if (!target.classList.contains("lindy-smart-highlight-absolute")) {
+            removeHighligher();
+        }
+    });
 
     document.addEventListener("DOMContentLoaded", () => {
+        const wordCount = document.body.innerText.trim().split(/\s+/).length;
+        if (wordCount < 200 * 2) {
+            console.log("Ignoring likely non-article page");
+            return;
+        }
+
+        function onHighlightClick(range: Range) {
+            removeHighligher();
+
+            const rect = range.getBoundingClientRect();
+            const quote = range.toString();
+            renderHighlighter(rect, quote);
+        }
+        const smartHighlightsModifier = new SmartHighlightsModifier(
+            null,
+            // @ts-ignore
+            { usedTextElementSelector: "p, font, li" },
+            true,
+            onHighlightClick
+        );
+        smartHighlightsModifier.parseArticle();
+
         const font = document.createElement("link");
         font.href = "https://fonts.googleapis.com/css2?family=Vollkorn:wght@400&display=swap";
         font.rel = "stylesheet";
@@ -17,8 +45,6 @@ export function startAssistant() {
 function onSelectionStart(event: Event) {
     removeHighligher();
 }
-
-function onSelectionChange() {}
 
 function onSelectionDone() {
     const selection = document.getSelection();
@@ -41,6 +67,8 @@ function renderHighlighter(highlightRect: DOMRect, quote: string) {
     container.style.position = "absolute";
     container.style.top = `${highlightRect.top + highlightRect.height + window.scrollY}px`;
     container.style.left = `${highlightRect.left}px`;
+    // container.style.top = `${highlightRect.top + window.scrollY}px`;
+    // container.style.left = `${highlightRect.left + highlightRect.width + window.scrollX}px`;
 
     document.body.appendChild(container);
 

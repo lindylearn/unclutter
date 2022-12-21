@@ -15,23 +15,37 @@ import { removeAllHighlights } from "../annotations/highlightsApi";
 
 @trackModifierExecution
 export default class SmartHighlightsModifier implements PageModifier {
+    private enabled: boolean = false;
+
     private annotationsModifier: AnnotationsModifier;
     private textContainerModifier: TextContainerModifier;
+    private onHighlightClick: null | ((range: Range) => void);
 
     constructor(
         annotationsModifier: AnnotationsModifier,
-        textContainerModifier: TextContainerModifier
+        textContainerModifier: TextContainerModifier,
+        forceEnabled: boolean = false,
+        onHighlightClick: (range: Range) => void = null
     ) {
         this.annotationsModifier = annotationsModifier;
         this.textContainerModifier = textContainerModifier;
+        this.onHighlightClick = onHighlightClick;
+
+        if (forceEnabled) {
+            this.enabled = true;
+        } else {
+            (async () => {
+                const annotationsEnabled = await getFeatureFlag(enableAnnotationsFeatureFlag);
+                const experimentsEnabled = await getFeatureFlag(enableExperimentalFeatures);
+                this.enabled = (annotationsEnabled && experimentsEnabled) || forceEnabled;
+            })();
+        }
     }
 
     private paragraphs: HTMLElement[] = [];
     private rankedSentencesByParagraph: { score: number; sentence: string }[][];
     async parseArticle() {
-        const annotationsEnabled = await getFeatureFlag(enableAnnotationsFeatureFlag);
-        const experimentsEnabled = await getFeatureFlag(enableExperimentalFeatures);
-        if (!annotationsEnabled || !experimentsEnabled) {
+        if (!this.enabled) {
             return;
         }
 
@@ -43,6 +57,7 @@ export default class SmartHighlightsModifier implements PageModifier {
                 if (!textContent || textContent.length < 100) {
                     return;
                 }
+
                 this.paragraphs.push(paragraph);
                 paragraphTexts.push(textContent);
             });
@@ -52,6 +67,7 @@ export default class SmartHighlightsModifier implements PageModifier {
                 json: {
                     paragraphs: paragraphTexts,
                 },
+                timeout: false,
             })
             .json();
         if (!this.rankedSentencesByParagraph) {
@@ -101,44 +117,6 @@ export default class SmartHighlightsModifier implements PageModifier {
             this.disableAnnotations();
         }
     }
-
-    // private async splitSentences() {
-    //     document
-    //         .querySelectorAll(this.textContainerModifier.usedTextElementSelector)
-    //         .forEach((paragraph: HTMLElement) => {
-    //             try {
-    //                 const textContent = paragraph.textContent;
-    //                 if (!textContent) {
-    //                     return;
-    //                 }
-
-    //                 // console.log("#####");
-    //                 // console.log(paragraph);
-    //                 let sentences = splitSentences(textContent);
-    //                 // console.log(sentences);
-
-    //                 // combine small sentences
-    //                 const combinedSentences: string[] = [sentences[0]];
-    //                 sentences.slice(1).forEach((sentence, index) => {
-    //                     const lastSentence = combinedSentences.pop();
-
-    //                     if (lastSentence.length < 100) {
-    //                         combinedSentences.push(lastSentence + sentence);
-    //                     } else {
-    //                         combinedSentences.push(lastSentence);
-    //                         combinedSentences.push(sentence);
-    //                     }
-    //                 });
-    //                 sentences = combinedSentences;
-    //                 // console.log(sentences);
-
-    //                 const ranges = this.anchorParagraphSentences(paragraph, sentences);
-    //                 this.paintRanges(ranges);
-    //             } catch (err) {
-    //                 console.error(err);
-    //             }
-    //         });
-    // }
 
     // create ranges for each sentence by iterating leaf children
     private anchorParagraphSentences(paragraph: HTMLElement, sentences: string[]): Range[] {
@@ -225,12 +203,12 @@ export default class SmartHighlightsModifier implements PageModifier {
     createContainers() {
         this.backgroundContainer = document.createElement("div");
         this.backgroundContainer.className = "lindy-smart-highlight-container";
-        this.backgroundContainer.style.setProperty("z-index", "999");
+        this.backgroundContainer.style.setProperty("z-index", "-1");
         document.body.prepend(this.backgroundContainer);
 
         this.clickContainer = document.createElement("div");
         this.clickContainer.className = "lindy-smart-highlight-container";
-        this.backgroundContainer.style.setProperty("z-index", "1001");
+        this.clickContainer.style.setProperty("z-index", "1001");
         document.body.append(this.clickContainer);
     }
 
@@ -265,7 +243,7 @@ export default class SmartHighlightsModifier implements PageModifier {
                 node.className = "lindy-smart-highlight-absolute";
                 node.style.setProperty(
                     "background",
-                    `rgba(250, 204, 21, ${score >= 0.6 ? 0.5 * score ** 3 : 0})`,
+                    `rgba(250, 204, 21, ${score >= 0.6 ? 0.8 * score ** 3 : 0})`,
                     "important"
                 );
                 node.style.setProperty("position", "absolute", "important");
@@ -290,6 +268,11 @@ export default class SmartHighlightsModifier implements PageModifier {
         // if (e.target?.classList.contains("lindy-highlight") && e.target?.id) {
         //     return;
         // }
+
+        if (this.onHighlightClick) {
+            this.onHighlightClick(range);
+            return;
+        }
 
         const selection = window.getSelection();
         selection.removeAllRanges();

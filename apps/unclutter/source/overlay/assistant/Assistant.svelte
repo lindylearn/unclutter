@@ -15,24 +15,24 @@
     }
     let tags = getTags(quote);
 
-    async function getRelatedHighlights(quote: string): Promise<any[]> {
-        return await ky
-            .post("https://assistant-two.vercel.app/api/query", {
-                json: {
-                    query: quote,
-                },
-            })
-            .json();
-    }
+    // async function getRelatedHighlights(quote: string): Promise<any[]> {
+    //     return await ky
+    //         .post("https://assistant-two.vercel.app/api/query", {
+    //             json: {
+    //                 query: quote,
+    //             },
+    //         })
+    //         .json();
+    // }
     let isExpanded = false;
     let relatedHighlights = null;
     $: if (isExpanded) {
-        relatedHighlights = getRelatedHighlights(quote);
+        // relatedHighlights = getRelatedHighlights(quote);
     }
 </script>
 
 <div
-    class="highlighter mt-2 flex max-w-max gap-2 rounded-xl border-[1px] border-stone-100 bg-white p-2 shadow-xl drop-shadow"
+    class="highlighter mt-2 flex max-w-max gap-2 rounded-xl border-[1px] border-stone-100 bg-white p-2 text-sm shadow-xl drop-shadow"
 >
     {#await tags}
         Loading...

@@ -207,26 +207,3 @@
         max-width: calc(100% - 15px) !important;
     }
 }
-
-.lindy-smart-highlight {
-    cursor: pointer !important;
-    border-radius: 2px !important;
-
-    /* transition: background-color 0.15s ease-in-out !important; */
-    animation: fadeInSmartHighlight 0.15s ease-in-out !important;
-    animation-fill-mode: both !important;
-}
-.lindy-smart-highlight-container:not(#fakeID#fakeID#fakeID#fakeID) {
-    position: absolute !important;
-    top: 0 !important;
-    left: 0 !important;
-    /* contain: strict !important; */
-}
-@keyframes fadeInSmartHighlight {
-    from {
-        background: transparent;
-    }
-    to {
-        background: var(--annotation-color);
-    }
-}
