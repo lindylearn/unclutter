@@ -36,7 +36,8 @@ export function startAssistant() {
         smartHighlightsModifier.parseArticle();
 
         const font = document.createElement("link");
-        font.href = "https://fonts.googleapis.com/css2?family=Vollkorn:wght@400&display=swap";
+        font.href =
+            "https://fonts.googleapis.com/css2?family=Vollkorn&family=Vollkorn+SC&display=swap";
         font.rel = "stylesheet";
         document.head.appendChild(font);
     });

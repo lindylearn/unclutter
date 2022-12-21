@@ -15,24 +15,26 @@
     }
     let tags = getTags(quote);
 
-    // async function getRelatedHighlights(quote: string): Promise<any[]> {
-    //     return await ky
-    //         .post("https://assistant-two.vercel.app/api/query", {
-    //             json: {
-    //                 query: quote,
-    //             },
-    //         })
-    //         .json();
-    // }
-    let isExpanded = false;
+    async function getRelatedHighlights(quote: string): Promise<any[]> {
+        const highlights: any[] = await ky
+            .post("https://assistant-two.vercel.app/api/query", {
+                json: {
+                    query: quote,
+                },
+            })
+            .json();
+
+        return highlights.filter((h) => h.score >= 0.5);
+    }
+    let isExpanded = true;
     let relatedHighlights = null;
     $: if (isExpanded) {
-        // relatedHighlights = getRelatedHighlights(quote);
+        relatedHighlights = getRelatedHighlights(quote);
     }
 </script>
 
 <div
-    class="highlighter mt-2 flex max-w-max gap-2 rounded-xl border-[1px] border-stone-100 bg-white p-2 text-sm shadow-xl drop-shadow"
+    class="font-vollkorn highlighter mt-2 flex max-w-max gap-2 rounded-xl border-[1px] border-stone-100 bg-white p-2 text-sm shadow-xl drop-shadow"
 >
     {#await tags}
         Loading...
@@ -45,8 +47,12 @@
                     isExpanded = true;
                 }}
             >
-                <div class="name bg-stone-100 py-1 px-2 rounded-l-lg transition-all">{tag}</div>
-                <div class="count bg-stone-200 py-1 px-2 rounded-r-lg">
+                <div
+                    class="name bg-stone-100 py-1 px-2 rounded-l-lg transition-all font-vollkornSC"
+                >
+                    {tag}
+                </div>
+                <div class="count bg-stone-100 py-1 px-2 rounded-r-lg">
                     {Math.round(Math.random() * 10)}
                 </div>
             </div>
@@ -63,17 +69,34 @@
 
 {#if isExpanded}
     {#await relatedHighlights then relatedHighlights}
-        <div
-            class="highlighter mt-2 flex flex-col gap-2 rounded-xl border-[1px] border-stone-100 bg-white p-2 shadow-xl drop-shadow"
-        >
-            {#each relatedHighlights as highlight}
-                <div
-                    class="text-stone-900 max-w-lg bg-stone-100 p-2 rounded-lg cursor-pointer shadow-sm transition-all hover:scale-[99%]"
-                >
-                    "{highlight.metadata.text}"
-                </div>
-            {/each}
-        </div>
+        {#if relatedHighlights.length}
+            <div
+                class="font-vollkorn highlighter mt-2 flex flex-col gap-2 rounded-xl border-[1px] border-stone-100 bg-white p-2 shadow-xl drop-shadow text-sm"
+            >
+                {#each relatedHighlights.slice(0, 3) as highlight}
+                    <div
+                        class="text-stone-900 max-w-lg rounded-lg cursor-pointer shadow-sm transition-all hover:scale-[99%] bg-stone-100 p-2 flex flex-col gap-2"
+                    >
+                        <div class="">"{highlight.excerpt}"</div>
+                        <div
+                            class="flex gap-2 items-center rounded-b-lg justify-between font-vollkornSC overflow-hidden"
+                        >
+                            <div
+                                class="flex-shrink overflow-ellipsis whitespace-nowrap overflow-hidden"
+                            >
+                                {highlight.title}
+                            </div>
+                            <!-- <svg class="w-4 shrink-0" viewBox="0 0 448 512"
+                        ><path
+                            fill="currentColor"
+                            d="M264.6 70.63l176 168c4.75 4.531 7.438 10.81 7.438 17.38s-2.688 12.84-7.438 17.38l-176 168c-9.594 9.125-24.78 8.781-33.94-.8125c-9.156-9.5-8.812-24.75 .8125-33.94l132.7-126.6H24.01c-13.25 0-24.01-10.76-24.01-24.01s10.76-23.99 24.01-23.99h340.1l-132.7-126.6C221.8 96.23 221.5 80.98 230.6 71.45C239.8 61.85 254.1 61.51 264.6 70.63z"
+                        /></svg
+                    > -->
+                        </div>
+                    </div>
+                {/each}
+            </div>
+        {/if}
     {/await}
 {/if}
 
@@ -83,12 +106,9 @@
     @tailwind utilities;
 
     .highlighter {
-        /* font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
-            Cantarell, "Open Sans", "Helvetica Neue", sans-serif; */
-        font-family: "Vollkorn", serif;
-
         animation: highlighterFadeIn 100ms cubic-bezier(0.34, 1.56, 0.64, 1); /* easeOutBack */
         animation-fill-mode: both;
+        background: white !important; /* prevent site override */
     }
 
     @keyframes highlighterFadeIn {

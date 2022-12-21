@@ -51,6 +51,8 @@ module.exports = {
             title: ["Poppins", "sans-serif"],
             text: ["Work Sans", "sans-serif"],
             chrome: ["Roboto", "system-ui", "sans-serif"],
+            vollkorn: ["Vollkorn", "serif"],
+            vollkornSC: ["Vollkorn SC", "serif"],
         },
     },
     plugins: [],
