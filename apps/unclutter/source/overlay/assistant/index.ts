@@ -14,13 +14,11 @@ export function startAssistant() {
     });
 
     document.addEventListener("DOMContentLoaded", () => {
-        const wordCount = document.body.innerText.trim().split(/\s+/).length;
-        if (wordCount < 200 * 2) {
+        const readingTimeMinutes = document.body.innerText.trim().split(/\s+/).length / 200;
+        if (readingTimeMinutes < 2) {
             console.log("Ignoring likely non-article page");
             return;
         }
-
-        renderArticleCard();
 
         function onHighlightClick(range: Range) {
             removeHighligher();
@@ -36,7 +34,13 @@ export function startAssistant() {
             true,
             onHighlightClick
         );
-        smartHighlightsModifier.parseArticle();
+        smartHighlightsModifier.parseArticle().then(() => {
+            renderArticleCard(
+                Math.ceil(readingTimeMinutes),
+                smartHighlightsModifier.keyPointsCount,
+                smartHighlightsModifier.articleSummary
+            );
+        });
 
         const font = document.createElement("link");
         font.href =
@@ -92,7 +96,11 @@ function renderHighlighter(highlightRect: DOMRect, quote: string) {
     });
 }
 
-function renderArticleCard() {
+function renderArticleCard(
+    readingTimeMinutes: number,
+    keyPointsCount: number,
+    articleSummary: string
+) {
     const container = document.createElement("div");
     container.id = "page-card";
     container.style.position = "absolute";
@@ -103,6 +111,6 @@ function renderArticleCard() {
 
     new ArticleCardSvelte({
         target: container,
-        props: {},
+        props: { readingTimeMinutes, keyPointsCount, articleSummary },
     });
 }

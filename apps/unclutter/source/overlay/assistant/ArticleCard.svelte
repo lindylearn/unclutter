@@ -2,6 +2,10 @@
     import ky from "ky";
     import { getRandomLightColor } from "@unclutter/library-components/dist/common";
 
+    export let readingTimeMinutes: number;
+    export let keyPointsCount: number | null;
+    export let articleSummary: string | null;
+
     // async function getTags(quote: string): Promise<string[]> {
     //     return await ky
     //         .post("https://assistant-two.vercel.app/api/tag", {
@@ -15,17 +19,16 @@
 </script>
 
 <div
-    class="font-vollkorn article-card mt-2 flex max-w-sm flex-col gap-2 rounded-xl border-[1px] border-stone-100 bg-white p-1.5 text-sm text-stone-900 shadow-xl drop-shadow"
+    class="font-vollkorn article-card flex max-w-sm flex-col gap-2 rounded-xl border-[1px] border-stone-100 bg-white p-1.5 text-sm text-stone-900 shadow-xl drop-shadow"
 >
     <!-- <div class="font-vollkornSC text-base">{document.title}</div> -->
     <div class="rounded-lg bg-stone-100 p-2">
-        About how Vladimir Putin is pushing humanity toward an era of war that might be worse than
-        anything we have seen before.
+        {articleSummary}
     </div>
     <div class="font-vollkornSC flex gap-2">
-        <div class="rounded-lg bg-stone-100 py-1 px-2">5 min</div>
-        <div class="rounded-lg bg-stone-100 py-1 px-2">6 quotes</div>
-        <div class="rounded-lg bg-stone-100 py-1 px-2">3 related</div>
+        <div class="rounded-lg bg-stone-100 py-1 px-2">{readingTimeMinutes} min</div>
+        <div class="rounded-lg bg-stone-100 py-1 px-2">{keyPointsCount} key quotes</div>
+        <!-- <div class="rounded-lg bg-stone-100 py-1 px-2">3 related</div> -->
     </div>
 </div>
 

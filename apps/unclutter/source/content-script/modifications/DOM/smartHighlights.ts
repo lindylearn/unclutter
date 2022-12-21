@@ -21,6 +21,9 @@ export default class SmartHighlightsModifier implements PageModifier {
     private textContainerModifier: TextContainerModifier;
     private onHighlightClick: null | ((range: Range) => void);
 
+    articleSummary: string | null;
+    keyPointsCount: number | null;
+
     constructor(
         annotationsModifier: AnnotationsModifier,
         textContainerModifier: TextContainerModifier,
@@ -62,17 +65,17 @@ export default class SmartHighlightsModifier implements PageModifier {
                 paragraphTexts.push(textContent);
             });
 
-        this.rankedSentencesByParagraph = await ky
-            .post("https://q5ie5hjr3g.execute-api.us-east-2.amazonaws.com/default/heatmap", {
+        const response: any = await ky
+            .post("https://q5ie5hjr3g.execute-api.us-east-2.amazonaws.com/default/heatmap?v2", {
                 json: {
                     paragraphs: paragraphTexts,
                 },
                 timeout: false,
             })
             .json();
-        if (!this.rankedSentencesByParagraph) {
-            this.rankedSentencesByParagraph = null;
-        }
+        this.rankedSentencesByParagraph = response.rankings || null;
+        this.articleSummary = response.summary || null;
+        this.keyPointsCount = response.keyPointsCount || null;
 
         this.enableAnnotations();
     }
