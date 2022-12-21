@@ -8,6 +8,8 @@ const staticFileUrl = "https://s3.lindylearn.io/unclutter-url-counts-v2.csv";
 // Load the URL counts map to memory for faster lookup
 const annotationCounts = {};
 export async function loadAnnotationCountsToMemory() {
+    // TODO re-enable
+    return;
     try {
         const response = await fetch(staticFileUrl);
         const text = await response.text();
