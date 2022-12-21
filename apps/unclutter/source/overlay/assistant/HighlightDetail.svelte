@@ -34,14 +34,14 @@
 </script>
 
 <div
-    class="font-vollkorn highlighter mt-2 flex max-w-max gap-2 rounded-xl border-[1px] border-stone-100 bg-white p-2 text-sm shadow-xl drop-shadow"
+    class="font-vollkorn highlighter mt-2 flex max-w-max gap-2 rounded-xl border-[1px] border-stone-100 bg-white p-1.5 text-sm text-stone-900 shadow-xl drop-shadow"
 >
     {#await tags}
         Loading...
     {:then tags}
         {#each tags.slice(0, 3) as tag}
             <div
-                class="tag cursor-pointer text-stone-900 shadow-inner transition-all hover:scale-[97%] flex rounded-lg"
+                class="tag cursor-pointer shadow-inner transition-all hover:scale-[97%] flex rounded-lg"
                 style={`--active-color: ${getRandomLightColor(tag, false)};`}
                 on:click={() => {
                     isExpanded = true;
@@ -58,7 +58,7 @@
             </div>
         {/each}
         <div
-            class="cursor-pointer text-stone-900 transition-all hover:scale-[97%] bg-white rounded-lg flex py-1 px-2"
+            class="cursor-pointer transition-all hover:scale-[97%] bg-white rounded-lg flex py-1 px-2"
         >
             Save
         </div>
@@ -71,11 +71,11 @@
     {#await relatedHighlights then relatedHighlights}
         {#if relatedHighlights.length}
             <div
-                class="font-vollkorn highlighter mt-2 flex flex-col gap-2 rounded-xl border-[1px] border-stone-100 bg-white p-2 shadow-xl drop-shadow text-sm"
+                class="font-vollkorn highlighter mt-2 flex flex-col gap-2 rounded-xl border-[1px] border-stone-100 bg-white p-1.5 shadow-xl drop-shadow text-sm text-stone-900"
             >
                 {#each relatedHighlights.slice(0, 3) as highlight}
                     <div
-                        class="text-stone-900 max-w-lg rounded-lg cursor-pointer shadow-sm transition-all hover:scale-[99%] bg-stone-100 p-2 flex flex-col gap-2"
+                        class="max-w-lg rounded-lg cursor-pointer shadow-sm transition-all hover:scale-[99%] bg-stone-100 p-2 flex flex-col gap-2"
                     >
                         <div class="">"{highlight.excerpt}"</div>
                         <div

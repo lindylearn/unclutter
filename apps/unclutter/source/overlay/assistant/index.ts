@@ -1,5 +1,6 @@
 import SmartHighlightsModifier from "../../content-script/modifications/DOM/smartHighlights";
-import AssistantSvelte from "./Assistant.svelte";
+import HighlightDetailSvelte from "./HighlightDetail.svelte";
+import ArticleCardSvelte from "./ArticleCard.svelte";
 
 export function startAssistant() {
     // document.addEventListener("mousedown", onSelectionStart);
@@ -18,6 +19,8 @@ export function startAssistant() {
             console.log("Ignoring likely non-article page");
             return;
         }
+
+        renderArticleCard();
 
         function onHighlightClick(range: Range) {
             removeHighligher();
@@ -73,7 +76,7 @@ function renderHighlighter(highlightRect: DOMRect, quote: string) {
 
     document.body.appendChild(container);
 
-    new AssistantSvelte({
+    new HighlightDetailSvelte({
         target: container,
         props: { quote },
     });
@@ -86,5 +89,20 @@ function renderHighlighter(highlightRect: DOMRect, quote: string) {
     container.addEventListener("mouseup", (event) => {
         event.preventDefault();
         event.stopPropagation();
+    });
+}
+
+function renderArticleCard() {
+    const container = document.createElement("div");
+    container.id = "page-card";
+    container.style.position = "absolute";
+    container.style.top = `20px`;
+    container.style.right = `20px`;
+    container.style.zIndex = `9999999999`;
+    document.body.appendChild(container);
+
+    new ArticleCardSvelte({
+        target: container,
+        props: {},
     });
 }
