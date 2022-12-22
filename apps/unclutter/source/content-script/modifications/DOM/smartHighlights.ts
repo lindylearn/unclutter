@@ -45,9 +45,19 @@ export default class SmartHighlightsModifier implements PageModifier {
         }
     }
 
+    async parseArticle() {
+        // fetch container references if already exist (e.g. from assistant code)
+        this.backgroundContainer = document.getElementsByClassName(
+            "smart-highlight-background"
+        )[0] as HTMLElement;
+        this.clickContainer = document.getElementsByClassName(
+            "smart-highlight-click"
+        )[0] as HTMLElement;
+    }
+
     private paragraphs: HTMLElement[] = [];
     private rankedSentencesByParagraph: { score: number; sentence: string }[][];
-    async parseArticle() {
+    async parseUnclutteredArticle() {
         if (!this.enabled) {
             return;
         }
@@ -105,7 +115,7 @@ export default class SmartHighlightsModifier implements PageModifier {
         });
     }
 
-    private disableAnnotations() {
+    disableAnnotations() {
         this.backgroundContainer?.remove();
         this.backgroundContainer = null;
 
@@ -205,12 +215,13 @@ export default class SmartHighlightsModifier implements PageModifier {
     private clickContainer: HTMLElement;
     createContainers() {
         this.backgroundContainer = document.createElement("div");
-        this.backgroundContainer.className = "lindy-smart-highlight-container";
+        this.backgroundContainer.className =
+            "lindy-smart-highlight-container smart-highlight-background";
         this.backgroundContainer.style.setProperty("z-index", "-1");
         document.body.prepend(this.backgroundContainer);
 
         this.clickContainer = document.createElement("div");
-        this.clickContainer.className = "lindy-smart-highlight-container";
+        this.clickContainer.className = "lindy-smart-highlight-container smart-highlight-click";
         this.clickContainer.style.setProperty("z-index", "1001");
         document.body.append(this.clickContainer);
     }

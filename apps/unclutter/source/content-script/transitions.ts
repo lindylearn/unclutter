@@ -111,6 +111,7 @@ export default class TransitionManager implements PageModifier {
         // iterate DOM in original state (& in read phase)
         this.textContainerModifier.iterateDom();
         this.textContainerModifier.measureFontProperties();
+        this.smartHighlightsModifier.parseArticle();
 
         // *** write DOM phase ***
 
@@ -156,6 +157,7 @@ export default class TransitionManager implements PageModifier {
         }
         this.contentBlockModifier.transitionIn(); // uses softer blocking if no text elements found
         this.elementPickerModifier.transitionIn(); // applies local block rules
+        this.smartHighlightsModifier.disableAnnotations(); // disable assistant highlights
 
         // enable mobile styles & style patches (this may shift layout in various ways)
         this.responsiveStyleModifier.enableResponsiveStyles();
@@ -236,14 +238,15 @@ export default class TransitionManager implements PageModifier {
         }
 
         // *** read DOM phase ***
+        this.smartHighlightsModifier.parseUnclutteredArticle();
+        // this.aiAnnotationsModifier.parseArticle();
+
         // *** write DOM phase ***
         this.libraryModifier.captureScreenshot(); // after dark mode enable
 
         // insert annotations sidebar, start fetch
         // this.linkAnnotationsModifier.parseArticle(); // reads page, wraps link elems
         this.annotationsModifier.afterTransitionIn();
-        // this.aiAnnotationsModifier.parseArticle();
-        this.smartHighlightsModifier.parseArticle();
 
         this.overlayManager.insertUiFont(); // causes ~50ms layout reflow
 

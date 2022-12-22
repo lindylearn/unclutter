@@ -339,4 +339,7 @@ export const blockedSpecificSelectors = [
     // term of contents (Unclutter shows its own outline)
     ".toc",
     "#toc",
+
+    "#lindy-page-card",
+    "#lindy-highlighter",
 ];

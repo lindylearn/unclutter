@@ -1,6 +1,7 @@
 import SmartHighlightsModifier from "../../content-script/modifications/DOM/smartHighlights";
 import HighlightDetailSvelte from "./HighlightDetail.svelte";
 import ArticleCardSvelte from "./ArticleCard.svelte";
+import ArticleEdgeSvelte from "./ArticleEdge.svelte";
 
 export function startAssistant() {
     // document.addEventListener("mousedown", onSelectionStart);
@@ -20,6 +21,12 @@ export function startAssistant() {
             return;
         }
 
+        const font = document.createElement("link");
+        font.href =
+            "https://fonts.googleapis.com/css2?family=Vollkorn&family=Vollkorn+SC&display=swap";
+        font.rel = "stylesheet";
+        document.head.appendChild(font);
+
         function onHighlightClick(range: Range) {
             removeHighligher();
 
@@ -34,19 +41,13 @@ export function startAssistant() {
             true,
             onHighlightClick
         );
-        smartHighlightsModifier.parseArticle().then(() => {
+        smartHighlightsModifier.parseUnclutteredArticle().then(() => {
             renderArticleCard(
                 Math.ceil(readingTimeMinutes),
                 smartHighlightsModifier.keyPointsCount,
                 smartHighlightsModifier.articleSummary
             );
         });
-
-        const font = document.createElement("link");
-        font.href =
-            "https://fonts.googleapis.com/css2?family=Vollkorn&family=Vollkorn+SC&display=swap";
-        font.rel = "stylesheet";
-        document.head.appendChild(font);
     });
 }
 
@@ -66,12 +67,12 @@ function onSelectionDone() {
 }
 
 function removeHighligher() {
-    document.getElementById("highlighter")?.remove();
+    document.getElementById("lindy-highlighter")?.remove();
 }
 
 function renderHighlighter(highlightRect: DOMRect, quote: string) {
     const container = document.createElement("div");
-    container.id = "highlighter";
+    container.id = "lindy-highlighter";
     container.style.position = "absolute";
     container.style.top = `${highlightRect.top + highlightRect.height + window.scrollY}px`;
     container.style.left = `${highlightRect.left}px`;
@@ -102,10 +103,10 @@ function renderArticleCard(
     articleSummary: string
 ) {
     const container = document.createElement("div");
-    container.id = "page-card";
+    container.id = "lindy-page-card";
     container.style.position = "absolute";
-    container.style.top = `20px`;
-    container.style.right = `20px`;
+    container.style.top = `10px`;
+    container.style.right = `10px`;
     container.style.zIndex = `9999999999`;
     document.body.appendChild(container);
 
