@@ -4,9 +4,14 @@ import {
     isDeniedForDomain,
     isNonLeafPage,
 } from "../common/articleDetection";
-import { enableBootUnclutterMessage, getFeatureFlag } from "../common/featureFlags";
+import {
+    enableBootUnclutterMessage,
+    enableExperimentalFeatures,
+    getFeatureFlag,
+} from "../common/featureFlags";
 import browser from "../common/polyfill";
 import { getDomainFrom } from "../common/util";
+import { startAssistant } from "../overlay/assistant";
 import { displayToast } from "../overlay/toast";
 
 // script injected into every tab before dom constructed
@@ -26,7 +31,7 @@ async function boot() {
 
     let triggeredIsLikelyArticle = false;
 
-    // console.log("isNonLeafPage", isNonLeafPage(url));
+    console.log("isNonLeafPage", isNonLeafPage(url));
 
     // url heuristic check
     if (!isNonLeafPage(url)) {
@@ -45,6 +50,12 @@ async function boot() {
 
     if (["unclutter.lindylearn.io", "library.lindylearn.io", "localhost"].includes(domain)) {
         listenForPageEvents();
+    }
+
+    // run assistant independently of non-leaf detection
+    const experimentsEnabled = await getFeatureFlag(enableExperimentalFeatures);
+    if (experimentsEnabled) {
+        startAssistant(enablePageView);
     }
 }
 

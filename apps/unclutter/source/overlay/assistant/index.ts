@@ -15,50 +15,49 @@ export function startAssistant(enablePageView: (reason: string) => void) {
     //     }
     // });
 
-    document.addEventListener("DOMContentLoaded", () => {
-        const readingTimeMinutes = document.body.innerText.trim().split(/\s+/).length / 200;
-        if (readingTimeMinutes < 2) {
-            console.log("Ignoring likely non-article page");
-            return;
-        }
-
-        const font = document.createElement("link");
-        font.href =
-            "https://fonts.googleapis.com/css2?family=Poppins&family=Work+Sans+SC&display=swap";
-        font.rel = "stylesheet";
-        document.head.appendChild(font);
-
-        // renderArticleCard(
-        //     Math.ceil(readingTimeMinutes),
-        //     3,
-        //     "About early stage startups and how product-market fit is a useful way to differentiate between pre and post childhood stages.",
-        //     enablePageView
-        // );
-        // return;
-
-        function onHighlightClick(range: Range) {
-            enablePageView("smart-highlight");
-
-            // removeHighligher();
-            // const rect = range.getBoundingClientRect();
-            // const quote = range.toString();
-            // renderHighlighter(rect, quote);
-        }
-        const smartHighlightsModifier = new SmartHighlightsModifier(
-            null,
-            // @ts-ignore
-            { usedTextElementSelector: "p, font, li" },
-            true,
-            onHighlightClick
-        );
-        smartHighlightsModifier.parseUnclutteredArticle().then(() => {
-            renderArticleCard(
-                Math.ceil(readingTimeMinutes),
-                smartHighlightsModifier.keyPointsCount,
-                smartHighlightsModifier.articleSummary,
-                enablePageView
-            );
+    if (document.readyState !== "complete") {
+        document.addEventListener("DOMContentLoaded", () => {
+            onDocumentReady(enablePageView);
         });
+    } else {
+        onDocumentReady(enablePageView);
+    }
+}
+
+function onDocumentReady(enablePageView: (reason: string) => void) {
+    const readingTimeMinutes = document.body.innerText.trim().split(/\s+/).length / 200;
+    if (readingTimeMinutes < 2) {
+        console.log("Ignoring likely non-article page");
+        return;
+    }
+
+    const font = document.createElement("link");
+    font.href = "https://fonts.googleapis.com/css2?family=Poppins&family=Work+Sans+SC&display=swap";
+    font.rel = "stylesheet";
+    document.head.appendChild(font);
+
+    function onHighlightClick(range: Range) {
+        enablePageView("smart-highlight");
+
+        // removeHighligher();
+        // const rect = range.getBoundingClientRect();
+        // const quote = range.toString();
+        // renderHighlighter(rect, quote);
+    }
+    const smartHighlightsModifier = new SmartHighlightsModifier(
+        null,
+        // @ts-ignore
+        { usedTextElementSelector: "p, font, li" },
+        true,
+        onHighlightClick
+    );
+    smartHighlightsModifier.parseUnclutteredArticle().then(() => {
+        renderArticleCard(
+            Math.ceil(readingTimeMinutes),
+            smartHighlightsModifier.keyPointsCount,
+            smartHighlightsModifier.articleSummary,
+            enablePageView
+        );
     });
 }
 
