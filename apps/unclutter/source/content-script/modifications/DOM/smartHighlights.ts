@@ -250,8 +250,11 @@ export default class SmartHighlightsModifier implements PageModifier {
             "lindy-smart-highlight-container smart-highlight-scrollbar";
         this.scrollbarContainer.style.setProperty("z-index", "1001");
         document.body.append(this.scrollbarContainer);
+    }
 
-        // put scrollbar on <body> to allow overlapping divs
+    // put scrollbar on <body> to allow overlapping divs
+    // only needed when called outside the reader mode
+    fixScrollbars() {
         document.documentElement.style.overflow = "hidden";
         document.body.style.maxHeight = "100vh";
         document.body.style.overflow = "auto";

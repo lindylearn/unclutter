@@ -51,6 +51,8 @@ function onDocumentReady(enablePageView: (reason: string) => void) {
         true,
         onHighlightClick
     );
+
+    smartHighlightsModifier.fixScrollbars();
     smartHighlightsModifier.parseUnclutteredArticle().then(() => {
         renderArticleCard(
             Math.ceil(readingTimeMinutes),
