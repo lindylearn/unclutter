@@ -76,30 +76,33 @@ export default class SmartHighlightsModifier implements PageModifier {
             });
 
         const response: any = await ky
-            .post("https://q5ie5hjr3g.execute-api.us-east-2.amazonaws.com/default/heatmap?v2", {
+            .post("https://q5ie5hjr3g.execute-api.us-east-2.amazonaws.com/default/heatmap", {
                 json: {
                     paragraphs: paragraphTexts,
                 },
                 timeout: false,
             })
             .json();
-        this.rankedSentencesByParagraph = response.rankings || null;
-        this.articleSummary = response.summary || null;
-        this.keyPointsCount = response.keyPointsCount || null;
+        this.rankedSentencesByParagraph = response;
+        this.articleSummary = null;
+        this.keyPointsCount = null;
+        // this.rankedSentencesByParagraph = response.rankings || null;
+        // this.articleSummary = response.summary || null;
+        // this.keyPointsCount = response.keyPointsCount || null;
 
         this.enableAnnotations();
-        if (this.annotationsModifier.sidebarIframe) {
-            sendIframeEvent(this.annotationsModifier.sidebarIframe, {
-                event: "setSummaryAnnotation",
-                summaryAnnotation: createAnnotation(window.location.href, null, {
-                    id: generateId(),
-                    platform: "summary",
-                    text: this.articleSummary,
-                    displayOffset: 0,
-                    displayOffsetEnd: 0,
-                }),
-            });
-        }
+        // if (this.annotationsModifier?.sidebarIframe) {
+        //     sendIframeEvent(this.annotationsModifier.sidebarIframe, {
+        //         event: "setSummaryAnnotation",
+        //         summaryAnnotation: createAnnotation(window.location.href, null, {
+        //             id: generateId(),
+        //             platform: "summary",
+        //             text: this.articleSummary,
+        //             displayOffset: 0,
+        //             displayOffsetEnd: 0,
+        //         }),
+        //     });
+        // }
     }
 
     annotations: LindyAnnotation[] = [];
@@ -225,17 +228,48 @@ export default class SmartHighlightsModifier implements PageModifier {
 
     private backgroundContainer: HTMLElement;
     private clickContainer: HTMLElement;
+    private scrollbarContainer: HTMLElement;
     createContainers() {
         this.backgroundContainer = document.createElement("div");
         this.backgroundContainer.className =
             "lindy-smart-highlight-container smart-highlight-background";
-        this.backgroundContainer.style.setProperty("z-index", "-1");
+        // this.backgroundContainer.style.setProperty("z-index", "-1");
+        this.backgroundContainer.style.setProperty("position", "relative");
         document.body.prepend(this.backgroundContainer);
 
         this.clickContainer = document.createElement("div");
         this.clickContainer.className = "lindy-smart-highlight-container smart-highlight-click";
+        this.clickContainer.style.setProperty("position", "absolute");
+        this.clickContainer.style.setProperty("top", "0");
+        this.clickContainer.style.setProperty("left", "0");
         this.clickContainer.style.setProperty("z-index", "1001");
         document.body.append(this.clickContainer);
+
+        this.scrollbarContainer = document.createElement("div");
+        this.scrollbarContainer.className =
+            "lindy-smart-highlight-container smart-highlight-scrollbar";
+        this.scrollbarContainer.style.setProperty("z-index", "1001");
+        document.body.append(this.scrollbarContainer);
+
+        // put scrollbar on <body> to allow overlapping divs
+        document.documentElement.style.overflow = "hidden";
+        document.body.style.maxHeight = "100vh";
+        document.body.style.overflow = "auto";
+
+        const bodyStyle = window.getComputedStyle(document.body);
+        if (bodyStyle.marginRight !== "0px") {
+            // avoid space between scrollbar and window
+            document.body.style.setProperty(
+                "padding-right",
+                `calc(${bodyStyle.paddingRight} + ${bodyStyle.marginRight})`,
+                "important"
+            );
+            document.body.style.setProperty("margin-right", "0px", "important");
+        }
+        if (bodyStyle.position === "static") {
+            // position absolute body children correctly
+            document.body.style.setProperty("position", "relative", "important");
+        }
     }
 
     private paintRanges(ranges: Range[], scores?: number[]) {
@@ -269,7 +303,7 @@ export default class SmartHighlightsModifier implements PageModifier {
                 node.className = "lindy-smart-highlight-absolute";
                 node.style.setProperty(
                     "background",
-                    `rgba(250, 204, 21, ${score >= 0.6 ? 0.8 * score ** 3 : 0})`,
+                    `rgba(250, 204, 21, ${score >= 0.6 ? 0.8 * score ** 4 : 0})`,
                     "important"
                 );
                 node.style.setProperty("position", "absolute", "important");
@@ -286,6 +320,22 @@ export default class SmartHighlightsModifier implements PageModifier {
                 this.backgroundContainer.appendChild(node);
                 this.clickContainer.appendChild(clickNode);
             }
+
+            const rect = range.getBoundingClientRect();
+            const scrollbarNode = document.createElement("div");
+            scrollbarNode.className = "lindy-smart-highlight-scroll";
+            scrollbarNode.style.setProperty(
+                "background",
+                `rgba(250, 204, 21, ${score >= 0.6 ? 0.8 * score ** 4 : 0})`,
+                "important"
+            );
+            scrollbarNode.style.setProperty(
+                "top",
+                `${(100 * (rect.top - containerRect.top)) / document.body.scrollHeight}vh`,
+                "important"
+            );
+
+            this.scrollbarContainer.appendChild(scrollbarNode);
         });
     }
 
