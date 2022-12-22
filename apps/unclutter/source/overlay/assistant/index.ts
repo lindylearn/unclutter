@@ -3,7 +3,7 @@ import HighlightDetailSvelte from "./HighlightDetail.svelte";
 import ArticleCardSvelte from "./ArticleCard.svelte";
 import ArticleEdgeSvelte from "./ArticleEdge.svelte";
 
-export function startAssistant() {
+export function startAssistant(enablePageView: (reason: string) => void) {
     // document.addEventListener("mousedown", onSelectionStart);
     // document.addEventListener("mouseup", onSelectionDone);
     // document.addEventListener("contextmenu", removeHighligher);
@@ -28,11 +28,12 @@ export function startAssistant() {
         document.head.appendChild(font);
 
         function onHighlightClick(range: Range) {
-            removeHighligher();
+            enablePageView("smart-highlight");
 
-            const rect = range.getBoundingClientRect();
-            const quote = range.toString();
-            renderHighlighter(rect, quote);
+            // removeHighligher();
+            // const rect = range.getBoundingClientRect();
+            // const quote = range.toString();
+            // renderHighlighter(rect, quote);
         }
         const smartHighlightsModifier = new SmartHighlightsModifier(
             null,
@@ -45,7 +46,8 @@ export function startAssistant() {
             renderArticleCard(
                 Math.ceil(readingTimeMinutes),
                 smartHighlightsModifier.keyPointsCount,
-                smartHighlightsModifier.articleSummary
+                smartHighlightsModifier.articleSummary,
+                enablePageView
             );
         });
     });
@@ -100,7 +102,8 @@ function renderHighlighter(highlightRect: DOMRect, quote: string) {
 function renderArticleCard(
     readingTimeMinutes: number,
     keyPointsCount: number,
-    articleSummary: string
+    articleSummary: string,
+    enablePageView: (reason: string) => void
 ) {
     const container = document.createElement("div");
     container.id = "lindy-page-card";
@@ -112,6 +115,6 @@ function renderArticleCard(
 
     new ArticleCardSvelte({
         target: container,
-        props: { readingTimeMinutes, keyPointsCount, articleSummary },
+        props: { readingTimeMinutes, keyPointsCount, articleSummary, enablePageView },
     });
 }

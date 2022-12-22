@@ -5,6 +5,7 @@
     export let readingTimeMinutes: number;
     export let keyPointsCount: number | null;
     export let articleSummary: string | null;
+    export let enablePageView: (reason: string) => void;
 
     // async function getTags(quote: string): Promise<string[]> {
     //     return await ky
@@ -45,7 +46,11 @@
             {keyPointsCount} related
         </div> -->
 
-        <div class="rounded-lg bg-stone-100 py-1 px-2" style:background="rgba(250, 204, 21, 0.8)">
+        <div
+            class="rounded-lg bg-stone-100 py-1 px-2"
+            style:background="rgba(250, 204, 21, 0.8)"
+            on:click={() => enablePageView("summary-card")}
+        >
             Unclutter article
         </div>
     </div>
