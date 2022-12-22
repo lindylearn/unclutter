@@ -26,7 +26,10 @@ export function startAssistant(enablePageView: (reason: string) => void) {
 
 function onDocumentReady(enablePageView: (reason: string) => void) {
     const readingTimeMinutes = document.body.innerText.trim().split(/\s+/).length / 200;
-    if (readingTimeMinutes < 2) {
+    const linkCount = document.querySelectorAll("a").length;
+    const linksPerMinute = linkCount / readingTimeMinutes;
+    console.log({ readingTimeMinutes, linkCount, linksPerMinute });
+    if (readingTimeMinutes < 2 || linksPerMinute > 20) {
         console.log("Ignoring likely non-article page");
         return;
     }

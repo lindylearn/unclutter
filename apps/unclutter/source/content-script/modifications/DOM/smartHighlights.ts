@@ -180,17 +180,23 @@ export default class SmartHighlightsModifier implements PageModifier {
                 if (currentElem.nextSibling) {
                     // next sibling
                     currentElem = currentElem.nextSibling as HTMLElement;
-                } else if (!paragraph.contains(currentElem.parentElement.nextSibling)) {
+                } else if (!paragraph.contains(currentElem.parentElement?.nextSibling)) {
                     // end of paragraph (likely count error)
                     // console.log("break");
 
-                    currentRange.setEndAfter(paragraph);
+                    if (currentElem.parentElement?.nextSibling) {
+                        currentRange.setEndAfter(paragraph);
+                    } else {
+                        // parent may not be defined, e.g. on https://www.theatlantic.com/ideas/archive/2022/12/volodymyr-zelensky-visit-ukraine-united-states/672528/
+                        // how to handle?
+                    }
+
                     // ranges.push(currentRange);
                     // console.log(currentRange.toString());
                     break;
                 } else {
                     // next parent sibling
-                    currentElem = currentElem.parentElement.nextSibling as HTMLElement;
+                    currentElem = currentElem.parentElement?.nextSibling as HTMLElement;
                 }
             } else {
                 if (currentElem.childNodes.length > 0) {
@@ -306,7 +312,7 @@ export default class SmartHighlightsModifier implements PageModifier {
                 node.className = "lindy-smart-highlight-absolute";
                 node.style.setProperty(
                     "background",
-                    `rgba(250, 204, 21, ${score >= 0.6 ? 0.8 * score ** 4 : 0})`,
+                    `rgba(250, 204, 21, ${score >= 0.6 ? 0.8 * score ** 3 : 0})`,
                     "important"
                 );
                 node.style.setProperty("position", "absolute", "important");
@@ -329,7 +335,7 @@ export default class SmartHighlightsModifier implements PageModifier {
             scrollbarNode.className = "lindy-smart-highlight-scroll";
             scrollbarNode.style.setProperty(
                 "background",
-                `rgba(250, 204, 21, ${score >= 0.6 ? 0.8 * score ** 4 : 0})`,
+                `rgba(250, 204, 21, ${score >= 0.6 ? 0.8 * score ** 3 : 0})`,
                 "important"
             );
             scrollbarNode.style.setProperty(
