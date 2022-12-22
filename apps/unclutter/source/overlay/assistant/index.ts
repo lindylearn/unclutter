@@ -7,12 +7,13 @@ export function startAssistant(enablePageView: (reason: string) => void) {
     // document.addEventListener("mousedown", onSelectionStart);
     // document.addEventListener("mouseup", onSelectionDone);
     // document.addEventListener("contextmenu", removeHighligher);
-    document.addEventListener("mouseup", (event) => {
-        const target = event.target as HTMLElement;
-        if (!target.classList.contains("lindy-smart-highlight-absolute")) {
-            removeHighligher();
-        }
-    });
+
+    // document.addEventListener("mouseup", (event) => {
+    //     const target = event.target as HTMLElement;
+    //     if (!target.classList.contains("lindy-smart-highlight-absolute")) {
+    //         removeHighligher();
+    //     }
+    // });
 
     document.addEventListener("DOMContentLoaded", () => {
         const readingTimeMinutes = document.body.innerText.trim().split(/\s+/).length / 200;
@@ -23,9 +24,17 @@ export function startAssistant(enablePageView: (reason: string) => void) {
 
         const font = document.createElement("link");
         font.href =
-            "https://fonts.googleapis.com/css2?family=Vollkorn&family=Vollkorn+SC&display=swap";
+            "https://fonts.googleapis.com/css2?family=Poppins&family=Work+Sans+SC&display=swap";
         font.rel = "stylesheet";
         document.head.appendChild(font);
+
+        // renderArticleCard(
+        //     Math.ceil(readingTimeMinutes),
+        //     3,
+        //     "About early stage startups and how product-market fit is a useful way to differentiate between pre and post childhood stages.",
+        //     enablePageView
+        // );
+        // return;
 
         function onHighlightClick(range: Range) {
             enablePageView("smart-highlight");

@@ -20,17 +20,18 @@
 </script>
 
 <div
-    class="font-vollkorn article-card flex max-w-xs flex-col gap-2 rounded-xl border-[1px] border-stone-100 bg-white p-1.5 text-sm text-stone-900 shadow-xl drop-shadow"
+    class="article-card flex max-w-xs flex-col gap-2 rounded-lg bg-gradient-to-b from-yellow-300 to-amber-400 text-sm text-stone-900 shadow-lg drop-shadow"
+    style:background-image="linear-gradient(120deg, var(--tw-gradient-stops))"
 >
     <!-- <div class="font-vollkornSC text-base">{document.title}</div> -->
-    <div class="rounded-lg bg-stone-100 p-2">
+    <!-- <div class="font-text rounded-lg">
         {articleSummary}
-    </div>
-    <div class="font-vollkornSC flex gap-2">
-        <div class="rounded-lg bg-stone-100 py-1 px-2">
+    </div> -->
+    <div class="font-title flex font-bold">
+        <div class="rounded-lg p-2 ">
             {keyPointsCount} key points
         </div>
-        <!-- <div class="rounded-lg bg-stone-100 py-1 px-2">
+        <!-- <div class="rounded-lg p-2 ">
             {readingTimeMinutes} min
         </div> -->
         <!-- <div class="rounded-lg bg-stone-100 py-1 px-2">3 related</div> -->
@@ -47,11 +48,10 @@
         </div> -->
 
         <div
-            class="rounded-lg bg-stone-100 py-1 px-2"
-            style:background="rgba(250, 204, 21, 0.8)"
+            class="lindy-button cursor-pointer rounded-r-lg p-2 transition-all"
             on:click={() => enablePageView("summary-card")}
         >
-            Unclutter article
+            Unclutter
         </div>
     </div>
 </div>
@@ -62,17 +62,46 @@
     @tailwind utilities;
 
     .article-card {
-        animation: highlighterFadeIn 100ms cubic-bezier(0.34, 1.56, 0.64, 1); /* easeOutBack */
+        animation: pageCardBounceIn 0.75s;
         animation-fill-mode: both;
-        background: white !important; /* prevent site override */
     }
 
-    @keyframes highlighterFadeIn {
-        from {
-            transform: scale(0.95) translateY(10px);
+    .lindy-button:hover {
+        background: rgba(255, 255, 255, 0.5) !important;
+    }
+
+    @keyframes pageCardBounceIn {
+        0% {
+            transform: translateY(-100%) rotate(-5deg);
+            opacity: 0;
         }
-        to {
-            transform: scale(1) translateY(0);
+        12% {
+            transform: translateY(-89.11%) rotate(-4.4deg);
+        }
+        24% {
+            transform: translateY(-56.44%) rotate(-3.2deg);
+        }
+        36% {
+            transform: translateY(-1.99%) rotate(-1.6deg);
+        }
+        54% {
+            transform: translateY(-24.98%) rotate(-0.8deg);
+        }
+        74% {
+            transform: translateY(-1.63%) rotate(-0.4deg);
+        }
+        82% {
+            transform: translateY(-6.25%) rotate(-0.2deg);
+        }
+        92% {
+            transform: translateY(-0.66%) rotate(-0.1deg);
+        }
+        96% {
+            transform: translateY(-1.54%) rotate(-0.05deg);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0%) rotate(0deg);
         }
     }
 </style>
