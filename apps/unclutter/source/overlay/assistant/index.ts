@@ -15,7 +15,7 @@ export function startAssistant(enablePageView: (reason: string) => void) {
     //     }
     // });
 
-    if (document.readyState !== "complete") {
+    if (document.readyState === "loading") {
         document.addEventListener("DOMContentLoaded", () => {
             onDocumentReady(enablePageView);
         });

@@ -72,7 +72,7 @@ async function onIsLikelyArticle(domain: string) {
 async function showUnclutterMessage() {
     // console.log("showUnclutterMessage");
 
-    if (document.readyState !== "complete") {
+    if (document.readyState === "loading") {
         await new Promise((resolve) => window.addEventListener("load", resolve));
     }
 

@@ -139,6 +139,7 @@ export default class BodyStyleModifier implements PageModifier {
         document.body.style.setProperty("padding", "30px 50px", "important");
         document.body.style.setProperty("min-width", "0", "important");
         document.body.style.setProperty("max-width", "var(--lindy-pagewidth)", "important");
+        document.body.style.setProperty("max-height", "none", "important");
         document.body.style.setProperty("display", "block", "important");
         document.body.style.setProperty("height", "auto", "important");
 
