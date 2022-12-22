@@ -136,7 +136,7 @@ html.pageview.pageview > body {
 
 #lindy-annotations-bar {
     position: absolute !important;
-    top: 50px !important;
+    top: 8px !important;
     left: calc((100vw - var(--lindy-pagewidth)) / 2 + var(--lindy-pagewidth) - 5px) !important;
     width: calc((100vw - var(--lindy-pagewidth)) / 2 - 50px) !important;
     height: calc(100% - 50px - 50px) !important;

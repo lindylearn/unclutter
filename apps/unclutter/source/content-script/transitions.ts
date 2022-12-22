@@ -238,8 +238,6 @@ export default class TransitionManager implements PageModifier {
         }
 
         // *** read DOM phase ***
-        this.smartHighlightsModifier.parseUnclutteredArticle();
-        // this.aiAnnotationsModifier.parseArticle();
 
         // *** write DOM phase ***
         this.libraryModifier.captureScreenshot(); // after dark mode enable
@@ -247,6 +245,9 @@ export default class TransitionManager implements PageModifier {
         // insert annotations sidebar, start fetch
         // this.linkAnnotationsModifier.parseArticle(); // reads page, wraps link elems
         this.annotationsModifier.afterTransitionIn();
+
+        this.smartHighlightsModifier.parseUnclutteredArticle();
+        // this.aiAnnotationsModifier.parseArticle();
 
         this.overlayManager.insertUiFont(); // causes ~50ms layout reflow
 

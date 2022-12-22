@@ -1,6 +1,6 @@
 import ky from "ky";
 import { PageModifier, trackModifierExecution } from "../_interface";
-import { generateId, LindyAnnotation } from "../../../common/annotations/create";
+import { createAnnotation, generateId, LindyAnnotation } from "../../../common/annotations/create";
 import AnnotationsModifier from "../annotations/annotationsModifier";
 import { _createAnnotationFromSelection } from "../annotations/selectionListener";
 import TextContainerModifier from "./textContainer";
@@ -88,6 +88,18 @@ export default class SmartHighlightsModifier implements PageModifier {
         this.keyPointsCount = response.keyPointsCount || null;
 
         this.enableAnnotations();
+        if (this.annotationsModifier.sidebarIframe) {
+            sendIframeEvent(this.annotationsModifier.sidebarIframe, {
+                event: "setSummaryAnnotation",
+                summaryAnnotation: createAnnotation(window.location.href, null, {
+                    id: generateId(),
+                    platform: "summary",
+                    text: this.articleSummary,
+                    displayOffset: 0,
+                    displayOffsetEnd: 0,
+                }),
+            });
+        }
     }
 
     annotations: LindyAnnotation[] = [];

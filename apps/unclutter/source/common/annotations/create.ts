@@ -62,7 +62,7 @@ export function generateId(): string {
 export interface LindyAnnotation {
     id: string;
     author: string;
-    platform: "h" | "hn" | "ll" | "info";
+    platform: "h" | "hn" | "ll" | "info" | "summary";
     link: string;
     created_at: string;
     updated_at?: string; // only set in remote fetch or data store

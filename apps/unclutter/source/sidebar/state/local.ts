@@ -64,7 +64,8 @@ export function annotationReducer(
 export function handleWindowEventFactory(
     mutateAnnotations: React.Dispatch<AnnotationMutation>,
     setEnableSocialAnnotations: (enabled: boolean) => void,
-    setPersonalAnnotationsEnabled: (enabled: boolean) => void
+    setPersonalAnnotationsEnabled: (enabled: boolean) => void,
+    setSummaryAnnotation: (summaryAnnotation: LindyAnnotation) => void
 ) {
     return async function ({ data }) {
         if (data.event === "createHighlight") {
@@ -137,6 +138,8 @@ export function handleWindowEventFactory(
         } else if (data.event === "setInfoAnnotations") {
             console.log("setInfoAnnotations", data.annotations);
             mutateAnnotations({ action: "add", annotations: data.annotations });
+        } else if (data.event === "setSummaryAnnotation") {
+            setSummaryAnnotation(data.summaryAnnotation);
         }
     };
 }

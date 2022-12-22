@@ -31,9 +31,6 @@ function Annotation({
 }: AnnotationProps) {
     const { text, author, platform, link, reply_count } = annotation;
 
-    // @ts-ignore
-    const textLines = annotation.excerpt.split("\n").filter((line) => line.trim() != "");
-
     const [upvoteCount, setLocalUpvoteCount] = React.useState(annotation.upvote_count || 0);
     // function toggleUpvoteAnnotationLocalFirst() {
     //     const newCount = upvoteCount + (upvoted ? -1 : 1);
@@ -46,7 +43,7 @@ function Annotation({
     const ref = useBlurRef(annotation, unfocusAnnotation);
 
     return (
-        <a
+        <div
             className={
                 "annotation relative overflow-hidden rounded-md bg-white px-3 py-2 text-xs text-gray-800 shadow " +
                 className
@@ -56,9 +53,6 @@ function Annotation({
                 maxHeight: heightLimitPx,
             }}
             ref={ref}
-            href={link}
-            target="_blank"
-            rel="noreferrer"
             onClick={() => {
                 onExpand(annotation);
             }}
@@ -79,26 +73,21 @@ function Annotation({
                 }}
             >
                 {/* @ts-ignore */}
-                {annotation.score.toString().slice(0, 4)}{" "}
-                {textLines.flatMap((line, lineIndex) =>
-                    line
-                        .split(/<a>|<code>/)
-                        .map((token) => {
-                            if (token.startsWith("http")) {
-                                return <AbbreviatedLink key={token} href={token} />;
-                            }
-                            if (token.startsWith("  ")) {
-                                return (
-                                    <>
-                                        <code className="bg-gray-100">{token}</code>
-                                        <br />
-                                    </>
-                                );
-                            }
-                            return token;
-                        })
-                        .concat([<br key={lineIndex} />])
-                )}
+                {/* {annotation.score.toString().slice(0, 4)}{" "} */}
+                {text.split(/<a>|<code>/).map((token) => {
+                    if (token.startsWith("http")) {
+                        return <AbbreviatedLink key={token} href={token} />;
+                    }
+                    if (token.startsWith("  ")) {
+                        return (
+                            <>
+                                <code className="bg-gray-100">{token}</code>
+                                <br />
+                            </>
+                        );
+                    }
+                    return token;
+                })}
             </div>
 
             {isRelated && (
@@ -173,7 +162,7 @@ function Annotation({
                     </>
                 </div>
             </div> */}
-        </a>
+        </div>
     );
 }
 export default Annotation;
