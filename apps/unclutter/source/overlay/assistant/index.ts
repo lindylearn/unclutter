@@ -118,7 +118,7 @@ function renderArticleCard(
     container.id = "lindy-page-card";
     container.style.position = "absolute";
     container.style.top = `10px`;
-    container.style.right = `10px`;
+    container.style.right = `25px`;
     container.style.zIndex = `9999999999`;
     document.body.appendChild(container);
 

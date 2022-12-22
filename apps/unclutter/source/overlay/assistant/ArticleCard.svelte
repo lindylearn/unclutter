@@ -20,7 +20,7 @@
 </script>
 
 <div
-    class="article-card flex max-w-xs flex-col gap-2 rounded-lg bg-gradient-to-b from-yellow-300 to-amber-400 text-sm text-stone-900 shadow-lg drop-shadow"
+    class="article-card flex max-w-xs flex-col gap-2 rounded-lg bg-gradient-to-b from-yellow-300 to-amber-400 text-sm text-stone-900 shadow-md drop-shadow transition-all hover:rotate-[0.5deg]"
     style:background-image="linear-gradient(120deg, var(--tw-gradient-stops))"
 >
     <!-- <div class="font-vollkornSC text-base">{document.title}</div> -->
@@ -28,13 +28,6 @@
         {articleSummary}
     </div> -->
     <div class="font-title flex font-bold">
-        <div class="rounded-lg p-2 ">
-            {keyPointsCount} key points
-        </div>
-        <!-- <div class="rounded-lg p-2 ">
-            {readingTimeMinutes} min
-        </div> -->
-        <!-- <div class="rounded-lg bg-stone-100 py-1 px-2">3 related</div> -->
         <div class="flex-grow" />
 
         <!-- <div class="flex items-center gap-1 py-1 px-2">
@@ -47,8 +40,14 @@
             {keyPointsCount} related
         </div> -->
 
+        <div class="lindy-button cursor-pointer rounded-r-lg px-2 py-1.5 transition-all">Save</div>
+
+        <div class="lindy-button cursor-pointer rounded-r-lg px-2 py-1.5 transition-all">
+            Summarize
+        </div>
+
         <div
-            class="lindy-button cursor-pointer rounded-r-lg p-2 transition-all"
+            class="lindy-button cursor-pointer rounded-r-lg px-2 py-1.5 transition-all"
             on:click={() => enablePageView("summary-card")}
         >
             Unclutter
@@ -63,7 +62,7 @@
 
     .article-card {
         animation: pageCardBounceIn 0.75s;
-        animation-fill-mode: both;
+        animation-fill-mode: backwards;
     }
 
     .lindy-button:hover {
@@ -85,19 +84,19 @@
             transform: translateY(-1.99%) rotate(-1.6deg);
         }
         54% {
-            transform: translateY(-24.98%) rotate(-0.8deg);
+            transform: translateY(-24.98%) rotate(0deg);
         }
         74% {
-            transform: translateY(-1.63%) rotate(-0.4deg);
+            transform: translateY(-1.63%) rotate(0deg);
         }
         82% {
-            transform: translateY(-6.25%) rotate(-0.2deg);
+            transform: translateY(-6.25%) rotate(0deg);
         }
         92% {
-            transform: translateY(-0.66%) rotate(-0.1deg);
+            transform: translateY(-0.66%) rotate(0deg);
         }
         96% {
-            transform: translateY(-1.54%) rotate(-0.05deg);
+            transform: translateY(-1.54%) rotate(0deg);
         }
         100% {
             opacity: 1;
