@@ -24,7 +24,7 @@
             })
             .json();
 
-        return highlights.filter((h) => h.score >= 0.5);
+        return highlights.filter((h) => h.score >= 0.6);
     }
     let isExpanded = true;
     let relatedHighlights = null;
@@ -71,15 +71,15 @@
     {#await relatedHighlights then relatedHighlights}
         {#if relatedHighlights.length}
             <div
-                class="font-vollkorn highlighter mt-2 flex flex-col gap-2 rounded-xl border-[1px] border-stone-100 bg-white p-1.5 shadow-xl drop-shadow text-sm text-stone-900"
+                class="font-text highlighter mt-2 flex flex-col gap-2 rounded-xl border-[1px] border-stone-100 bg-white p-1.5 shadow-xl drop-shadow text-sm text-stone-900"
             >
                 {#each relatedHighlights.slice(0, 3) as highlight}
                     <div
                         class="max-w-lg rounded-lg cursor-pointer shadow-sm transition-all hover:scale-[99%] bg-stone-100 p-2 flex flex-col gap-2"
                     >
-                        <div class="">"{highlight.excerpt}"</div>
+                        <div class="">{highlight.score} "{highlight.excerpt}"</div>
                         <div
-                            class="flex gap-2 items-center rounded-b-lg justify-between font-vollkornSC overflow-hidden"
+                            class="flex gap-2 items-center rounded-b-lg justify-between font-title overflow-hidden"
                         >
                             <div
                                 class="flex-shrink overflow-ellipsis whitespace-nowrap overflow-hidden"

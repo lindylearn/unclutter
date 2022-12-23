@@ -382,18 +382,23 @@ export default class SmartHighlightsModifier implements PageModifier {
         const notableSentences: string[] = [];
         const paragraphIndexes: number[] = [];
         this.rankedSentencesByParagraph.forEach((paragraph, i) => {
-            paragraph.forEach((sentence) => {
-                if (sentence.score >= 0.5) {
-                    notableSentences.push(sentence.sentence);
-                    paragraphIndexes.push(i);
-                }
-            });
+            notableSentences.push(this.paragraphs[i].textContent);
+            paragraphIndexes.push(i);
+            return;
+
+            // paragraph.forEach((sentence) => {
+            //     if (sentence.score >= 0.5) {
+            //         notableSentences.push(sentence.sentence);
+            //         paragraphIndexes.push(i);
+            //     }
+            // });
         });
 
-        console.log(notableSentences);
+        // console.log(notableSentences);
         const results: any = await ky
             .post("https://assistant-two.vercel.app/api/related_highlights", {
                 json: {
+                    title: document.title,
                     paragraphs: notableSentences,
                 },
                 timeout: false,
@@ -403,10 +408,11 @@ export default class SmartHighlightsModifier implements PageModifier {
         const ranges: Range[] = [];
         const scores: number[] = [];
         results.forEach(({ anchor_text, annotations }) => {
-            if (annotations[0].score < 0.8) {
+            if (annotations[0].score < 0.6) {
                 return;
             }
-            console.log(annotations[0].score, annotations[0].text);
+            // console.log(anchor_text);
+            // console.log(annotations[0].score, annotations[0].text);
 
             const index = notableSentences.indexOf(anchor_text);
             const paragraphIndex = paragraphIndexes[index];
@@ -415,10 +421,9 @@ export default class SmartHighlightsModifier implements PageModifier {
             const range = searchNodeTree(paragraph, [anchor_text]);
             if (range.length > 0) {
                 ranges.push(range[0]);
-                scores.push(annotations[0].score);
+                scores.push(annotations[0].score + 0.3);
             }
         });
-        console.log(ranges);
 
         this.paintRanges(ranges, scores, "168, 85, 247");
     }
