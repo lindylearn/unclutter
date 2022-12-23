@@ -40,12 +40,12 @@ function onDocumentReady(enablePageView: (reason: string) => void) {
     document.head.appendChild(font);
 
     function onHighlightClick(range: Range) {
-        enablePageView("smart-highlight");
+        // enablePageView("smart-highlight");
 
-        // removeHighligher();
-        // const rect = range.getBoundingClientRect();
-        // const quote = range.toString();
-        // renderHighlighter(rect, quote);
+        removeHighligher();
+        const rect = range.getBoundingClientRect();
+        const quote = range.toString();
+        renderHighlighter(rect, quote);
     }
     const smartHighlightsModifier = new SmartHighlightsModifier(
         null,
@@ -120,9 +120,9 @@ function renderArticleCard(
 ) {
     const container = document.createElement("div");
     container.id = "lindy-page-card";
-    container.style.position = "absolute";
+    container.style.position = "fixed";
     container.style.top = `10px`;
-    container.style.right = `25px`;
+    container.style.right = `10px`;
     container.style.zIndex = `9999999999`;
     document.body.appendChild(container);
 
