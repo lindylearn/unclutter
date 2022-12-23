@@ -8,12 +8,12 @@ export function startAssistant(enablePageView: (reason: string) => void) {
     // document.addEventListener("mouseup", onSelectionDone);
     // document.addEventListener("contextmenu", removeHighligher);
 
-    // document.addEventListener("mouseup", (event) => {
-    //     const target = event.target as HTMLElement;
-    //     if (!target.classList.contains("lindy-smart-highlight-absolute")) {
-    //         removeHighligher();
-    //     }
-    // });
+    document.addEventListener("mouseup", (event) => {
+        const target = event.target as HTMLElement;
+        if (!target.classList.contains("lindy-smart-highlight-absolute")) {
+            removeHighligher();
+        }
+    });
 
     if (document.readyState === "loading") {
         document.addEventListener("DOMContentLoaded", () => {
@@ -63,6 +63,8 @@ function onDocumentReady(enablePageView: (reason: string) => void) {
             smartHighlightsModifier.articleSummary,
             enablePageView
         );
+
+        smartHighlightsModifier.fetchRelatedHighlights();
     });
 }
 
@@ -89,7 +91,9 @@ function renderHighlighter(highlightRect: DOMRect, quote: string) {
     const container = document.createElement("div");
     container.id = "lindy-highlighter";
     container.style.position = "absolute";
-    container.style.top = `${highlightRect.top + highlightRect.height + window.scrollY}px`;
+    container.style.top = `${
+        highlightRect.top + highlightRect.height + window.scrollY + document.body.scrollTop
+    }px`;
     container.style.left = `${highlightRect.left}px`;
     // container.style.top = `${highlightRect.top + window.scrollY}px`;
     // container.style.left = `${highlightRect.left + highlightRect.width + window.scrollX}px`;

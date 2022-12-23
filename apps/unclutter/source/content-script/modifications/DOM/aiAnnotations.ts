@@ -204,13 +204,13 @@ export default class AIAnnotationsModifier implements PageModifier {
     }
 }
 
-function searchNodeTree(root: HTMLElement, quotes: string[]): Range[] {
+export function searchNodeTree(root: HTMLElement, quotes: string[]): Range[] {
     let ranges: Range[] = [];
 
     function searchParentNodeDfs(node: HTMLElement) {
         // test if entire text of chilren includes search string
         // match text against spaces (does not matter for offset)
-        let text = node.textContent?.replace(/\s+/g, " ").trim().toLowerCase();
+        let text = node.textContent.toLowerCase();
         if (!text) {
             return false;
         }

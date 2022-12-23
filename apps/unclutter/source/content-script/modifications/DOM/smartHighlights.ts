@@ -12,6 +12,7 @@ import {
     getFeatureFlag,
 } from "../../../common/featureFlags";
 import { removeAllHighlights } from "../annotations/highlightsApi";
+import { searchNodeTree } from "./aiAnnotations";
 
 @trackModifierExecution
 export default class SmartHighlightsModifier implements PageModifier {
@@ -125,7 +126,8 @@ export default class SmartHighlightsModifier implements PageModifier {
             );
             this.paintRanges(
                 ranges,
-                rankedSentences.map((s) => s.score)
+                rankedSentences.map((s) => s.score),
+                "250, 204, 21"
             );
         });
     }
@@ -281,7 +283,7 @@ export default class SmartHighlightsModifier implements PageModifier {
         }
     }
 
-    private paintRanges(ranges: Range[], scores?: number[]) {
+    private paintRanges(ranges: Range[], scores: number[], color: string) {
         const containerRect = this.backgroundContainer.getBoundingClientRect();
         ranges.map((range, i) => {
             if (range.toString().trim().length < 10) {
@@ -312,7 +314,7 @@ export default class SmartHighlightsModifier implements PageModifier {
                 node.className = "lindy-smart-highlight-absolute";
                 node.style.setProperty(
                     "background",
-                    `rgba(250, 204, 21, ${score >= 0.6 ? 0.8 * score ** 3 : 0})`,
+                    `rgba(${color}, ${score >= 0.6 ? 0.8 * score ** 3 : 0})`,
                     "important"
                 );
                 node.style.setProperty("position", "absolute", "important");
@@ -335,7 +337,7 @@ export default class SmartHighlightsModifier implements PageModifier {
             scrollbarNode.className = "lindy-smart-highlight-scroll";
             scrollbarNode.style.setProperty(
                 "background",
-                `rgba(250, 204, 21, ${score >= 0.6 ? 0.8 * score ** 3 : 0})`,
+                `rgba(${color}, ${score >= 0.6 ? 0.8 * score ** 3 : 0})`,
                 "important"
             );
             scrollbarNode.style.setProperty(
@@ -374,5 +376,50 @@ export default class SmartHighlightsModifier implements PageModifier {
             this.annotationsModifier.sidebarIframe,
             generateId()
         );
+    }
+
+    async fetchRelatedHighlights() {
+        const notableSentences: string[] = [];
+        const paragraphIndexes: number[] = [];
+        this.rankedSentencesByParagraph.forEach((paragraph, i) => {
+            paragraph.forEach((sentence) => {
+                if (sentence.score >= 0.5) {
+                    notableSentences.push(sentence.sentence);
+                    paragraphIndexes.push(i);
+                }
+            });
+        });
+
+        console.log(notableSentences);
+        const results: any = await ky
+            .post("https://assistant-two.vercel.app/api/related_highlights", {
+                json: {
+                    paragraphs: notableSentences,
+                },
+                timeout: false,
+            })
+            .json();
+
+        const ranges: Range[] = [];
+        const scores: number[] = [];
+        results.forEach(({ anchor_text, annotations }) => {
+            if (annotations[0].score < 0.8) {
+                return;
+            }
+            console.log(annotations[0].score, annotations[0].text);
+
+            const index = notableSentences.indexOf(anchor_text);
+            const paragraphIndex = paragraphIndexes[index];
+            const paragraph = this.paragraphs[paragraphIndex];
+
+            const range = searchNodeTree(paragraph, [anchor_text]);
+            if (range.length > 0) {
+                ranges.push(range[0]);
+                scores.push(annotations[0].score);
+            }
+        });
+        console.log(ranges);
+
+        this.paintRanges(ranges, scores, "168, 85, 247");
     }
 }
