@@ -9,6 +9,6 @@
 
 <div class="relative flex gap-2 rounded-lg" in:fade>
     {#each articles as article, index}
-        <ArticlePreview {article} {index} />
+        <ArticlePreview {article} {index} className="h-48 w-40" />
     {/each}
 </div>

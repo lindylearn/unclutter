@@ -19,7 +19,10 @@ export function startAssistant(enablePageView: (reason: string) => void) {
 
     if (document.readyState === "loading") {
         document.addEventListener("DOMContentLoaded", () => {
-            onDocumentReady(enablePageView);
+            // complete text may lazy load, e.g. on https://arstechnica.com/tech-policy/2022/01/amazon-ends-widely-mocked-scheme-that-turned-workers-into-twitter-ambassadors/
+            setTimeout(() => {
+                onDocumentReady(enablePageView);
+            }, 1000);
         });
     } else {
         onDocumentReady(enablePageView);
@@ -63,6 +66,7 @@ function onDocumentReady(enablePageView: (reason: string) => void) {
             Math.ceil(readingTimeMinutes),
             smartHighlightsModifier.keyPointsCount,
             smartHighlightsModifier.relatedCount,
+            smartHighlightsModifier.relatedArticles,
             smartHighlightsModifier.articleSummary,
             enablePageView
         );
@@ -120,6 +124,7 @@ function renderArticleCard(
     readingTimeMinutes: number,
     keyPointsCount: number,
     relatedCount: number,
+    relatedArticles: RelatedHighlight[],
     articleSummary: string,
     enablePageView: (reason: string) => void
 ) {
@@ -133,6 +138,13 @@ function renderArticleCard(
 
     new ArticleCardSvelte({
         target: container,
-        props: { readingTimeMinutes, keyPointsCount, relatedCount, articleSummary, enablePageView },
+        props: {
+            readingTimeMinutes,
+            keyPointsCount,
+            relatedCount,
+            relatedArticles,
+            articleSummary,
+            enablePageView,
+        },
     });
 }

@@ -2,6 +2,8 @@
     import ky from "ky";
     import { getRandomLightColor } from "@unclutter/library-components/dist/common";
     import { RelatedHighlight } from "../../content-script/modifications/DOM/smartHighlights";
+    import { highlightRange } from "../../common/annotator/highlighter";
+    import ArticlePreview from "../outline/Library/ArticlePreview.svelte";
 
     export let quote: string;
     export let related: RelatedHighlight[];
@@ -71,32 +73,40 @@
 
 {#if related && related.length > 0}
     <div
-        class="font-text highlighter mt-2 flex flex-col gap-2 rounded-xl border-[1px] border-stone-100 bg-white p-1.5 text-sm text-stone-900 shadow-xl drop-shadow"
+        class="font-text highlighter mt-2 flex max-w-lg flex-col gap-2 rounded-xl border-[1px] border-stone-100 bg-white p-1.5 text-sm text-stone-900 shadow-xl drop-shadow"
     >
         {#each related.slice(0, 3) as highlight}
-            <div
-                class="flex max-w-lg cursor-pointer flex-col gap-2 rounded-lg bg-stone-100 p-2 shadow-sm transition-all hover:scale-[99%]"
-            >
-                <div class="">"{highlight.excerpt}" {highlight.score.toFixed(2)}</div>
+            <div class="flex cursor-pointer gap-2 transition-all hover:scale-[99%]">
                 <div
-                    class="font-title flex items-center justify-between gap-2 overflow-hidden rounded-b-lg"
+                    class="w flex flex-col gap-2 overflow-hidden rounded-lg bg-stone-100 p-2 shadow-sm"
                 >
-                    <div class="flex-shrink overflow-hidden overflow-ellipsis whitespace-nowrap">
-                        {highlight.title}
+                    <div class="">"{highlight.excerpt}" {highlight.score.toFixed(2)}</div>
+                    <div
+                        class="font-title flex items-center justify-between gap-2 overflow-hidden rounded-b-lg"
+                    >
+                        <div
+                            class="flex-shrink overflow-hidden overflow-ellipsis whitespace-nowrap"
+                        >
+                            {highlight.title}
+                        </div>
                     </div>
-                    <!-- <svg class="w-4 shrink-0" viewBox="0 0 448 512"
-                        ><path
-                            fill="currentColor"
-                            d="M264.6 70.63l176 168c4.75 4.531 7.438 10.81 7.438 17.38s-2.688 12.84-7.438 17.38l-176 168c-9.594 9.125-24.78 8.781-33.94-.8125c-9.156-9.5-8.812-24.75 .8125-33.94l132.7-126.6H24.01c-13.25 0-24.01-10.76-24.01-24.01s10.76-23.99 24.01-23.99h340.1l-132.7-126.6C221.8 96.23 221.5 80.98 230.6 71.45C239.8 61.85 254.1 61.51 264.6 70.63z"
-                        /></svg
-                    > -->
                 </div>
+                <!-- <ArticlePreview
+                    index={0}
+                    article={{
+                        url: "",
+                        title: highlight.title,
+                        reading_progress: 0,
+                    }}
+                    className="shrink-0 w-28 h-32"
+                    transform="rotate(1deg)"
+                /> -->
             </div>
         {/each}
     </div>
 {/if}
 
-<style lang="postcss">
+<style global lang="postcss">
     @tailwind base;
     @tailwind components;
     @tailwind utilities;

@@ -45,7 +45,7 @@
 
 <a
     class={clsx(
-        "article-container h-48 w-40 flex-shrink-0 cursor-pointer rounded-lg bg-white transition-all shadow hover:shadow-lg overflow-hidden",
+        "article-container flex-shrink-0 cursor-pointer rounded-lg bg-white transition-all shadow hover:shadow-lg overflow-hidden",
         transform && "disable-rotate",
         index % 2 === 1 && "list-alternate",
         className || "relative"

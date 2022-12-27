@@ -3,32 +3,38 @@
     import { getRandomLightColor } from "@unclutter/library-components/dist/common";
     import AnimatedNumber from "../outline/Library/AnimatedNumber.svelte";
     import clsx from "clsx";
+    import { RelatedHighlight } from "../../content-script/modifications/DOM/smartHighlights";
 
     export let readingTimeMinutes: number;
     export let keyPointsCount: number | null;
     export let relatedCount: number | null;
+    export let relatedArticles: RelatedHighlight[] | null;
     export let articleSummary: string | null;
     export let enablePageView: (reason: string) => void;
 
-    async function getTags(quote: string): Promise<string[]> {
-        return ["culture", "reading", "writing"];
-        const tags: any[] = await ky
-            .post("https://assistant-two.vercel.app/api/tag", {
-                json: {
-                    text: quote,
-                },
-            })
-            .json();
-        return tags.map((t) => t.split(" ")[0]);
-    }
-    let tags = getTags(document.title);
+    // async function getRelatedHighlights(): Promise<any[]> {
+    //     const articles: any[] = await ky
+    //         .post("https://assistant-two.vercel.app/api/query", {
+    //             json: {
+    //                 query: document.body.innerText.trim().split(/\s+/).join("\n").slice(0, 2000),
+    //             },
+    //         })
+    //         .json();
+    //     console.log(articles);
+
+    //     return articles.filter((h) => h.score >= 0.4).slice(0, 3);
+    // }
+    // let relatedHighlights = null;
+    // $: relatedHighlights = getRelatedHighlights();
 </script>
 
 <div
-    class="article-card ml-auto flex w-max flex-col overflow-hidden rounded-lg bg-gradient-to-b from-yellow-200 to-yellow-300 text-sm text-stone-900 shadow drop-shadow"
+    class="article-card ml-auto flex w-max flex-col overflow-hidden rounded-lg bg-gradient-to-b from-yellow-300 to-amber-400 text-sm text-stone-900 shadow drop-shadow transition-transform hover:scale-[99%]"
     style:background-image="linear-gradient(120deg, var(--tw-gradient-stops))"
 >
     <div class="font-title flex items-stretch gap-1">
+        <!-- <input class="w-20 bg-white px-2 outline-none placeholder:text-stone-400" /> -->
+
         <div class="flex items-center gap-1 px-2 py-1.5">
             <svg class="w-4" viewBox="0 0 576 512"
                 ><path
@@ -38,7 +44,7 @@
             >
             {keyPointsCount}
         </div>
-        <!-- <div class="flex items-center gap-1 px-1">
+        <div class="flex items-center gap-1 px-1">
             <svg class="-mt-0.5 w-4" viewBox="0 0 512 512">
                 <path
                     fill="currentColor"
@@ -46,7 +52,7 @@
                 />
             </svg>
             {relatedCount}
-        </div> -->
+        </div>
 
         <!-- {#await tags then tags}
             {#each tags.slice(0, 3) as tag, i}
@@ -98,6 +104,24 @@
     </div>
 {/if}
 
+<!-- <div
+    class="font-text highlighter mt-2 flex flex-col gap-2 rounded-xl border-[1px] border-stone-100 bg-white p-1.5 text-xs text-stone-900 shadow-xl drop-shadow"
+>
+    {#each relatedArticles as related}
+        <div
+            class="flex max-w-xs cursor-pointer flex-col gap-2 rounded-lg bg-stone-100 p-2 shadow-sm transition-all hover:scale-[99%]"
+        >
+            <div class="">"{related.text.slice(0, 100)}" {related.score.toFixed(2)}</div>
+            <div
+                class="font-title flex items-center justify-between gap-2 overflow-hidden rounded-b-lg"
+            >
+                <div class="flex-shrink overflow-hidden overflow-ellipsis whitespace-nowrap">
+                    {related.title}
+                </div>
+            </div>
+        </div>
+    {/each}
+</div> -->
 <style lang="postcss">
     @tailwind base;
     @tailwind components;
