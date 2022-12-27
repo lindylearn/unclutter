@@ -1,4 +1,6 @@
-import SmartHighlightsModifier from "../../content-script/modifications/DOM/smartHighlights";
+import SmartHighlightsModifier, {
+    RelatedHighlight,
+} from "../../content-script/modifications/DOM/smartHighlights";
 import HighlightDetailSvelte from "./HighlightDetail.svelte";
 import ArticleCardSvelte from "./ArticleCard.svelte";
 import ArticleEdgeSvelte from "./ArticleEdge.svelte";
@@ -27,9 +29,9 @@ export function startAssistant(enablePageView: (reason: string) => void) {
 function onDocumentReady(enablePageView: (reason: string) => void) {
     const readingTimeMinutes = document.body.innerText.trim().split(/\s+/).length / 200;
     const linkCount = document.querySelectorAll("a").length;
-    const linksPerMinute = linkCount / readingTimeMinutes;
-    console.log({ readingTimeMinutes, linkCount, linksPerMinute });
-    if (readingTimeMinutes < 2 || linksPerMinute > 20) {
+    // const linksPerMinute = linkCount / readingTimeMinutes;
+    console.log({ readingTimeMinutes, linkCount });
+    if (readingTimeMinutes < 2) {
         console.log("Ignoring likely non-article page");
         return;
     }
@@ -39,13 +41,13 @@ function onDocumentReady(enablePageView: (reason: string) => void) {
     font.rel = "stylesheet";
     document.head.appendChild(font);
 
-    function onHighlightClick(range: Range) {
+    function onHighlightClick(range: Range, related: RelatedHighlight[]) {
         // enablePageView("smart-highlight");
 
         removeHighligher();
         const rect = range.getBoundingClientRect();
         const quote = range.toString();
-        renderHighlighter(rect, quote);
+        renderHighlighter(rect, quote, related);
     }
     const smartHighlightsModifier = new SmartHighlightsModifier(
         null,
@@ -63,8 +65,6 @@ function onDocumentReady(enablePageView: (reason: string) => void) {
             smartHighlightsModifier.articleSummary,
             enablePageView
         );
-
-        smartHighlightsModifier.fetchRelatedHighlights();
     });
 }
 
@@ -87,7 +87,7 @@ function removeHighligher() {
     document.getElementById("lindy-highlighter")?.remove();
 }
 
-function renderHighlighter(highlightRect: DOMRect, quote: string) {
+function renderHighlighter(highlightRect: DOMRect, quote: string, related: RelatedHighlight[]) {
     const container = document.createElement("div");
     container.id = "lindy-highlighter";
     container.style.position = "absolute";
@@ -102,7 +102,7 @@ function renderHighlighter(highlightRect: DOMRect, quote: string) {
 
     new HighlightDetailSvelte({
         target: container,
-        props: { quote },
+        props: { quote, related },
     });
 
     // allow clicks on the highlighter
@@ -126,7 +126,7 @@ function renderArticleCard(
     container.id = "lindy-page-card";
     container.style.position = "fixed";
     container.style.top = `10px`;
-    container.style.right = `10px`;
+    container.style.right = `25px`;
     container.style.zIndex = `9999999999`;
     document.body.appendChild(container);
 

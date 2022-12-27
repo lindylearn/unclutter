@@ -14,13 +14,26 @@ import {
 import { removeAllHighlights } from "../annotations/highlightsApi";
 import { searchNodeTree } from "./aiAnnotations";
 
+export interface RankedSentence {
+    score: number;
+    sentence: string;
+    related?: RelatedHighlight[];
+}
+export interface RelatedHighlight {
+    score: number;
+    score2: number;
+    text: string;
+    excerpt: string;
+    title: string;
+}
+
 @trackModifierExecution
 export default class SmartHighlightsModifier implements PageModifier {
     private enabled: boolean = false;
 
     private annotationsModifier: AnnotationsModifier;
     private textContainerModifier: TextContainerModifier;
-    private onHighlightClick: null | ((range: Range) => void);
+    private onHighlightClick: null | ((range: Range, related: RelatedHighlight[]) => void);
 
     articleSummary: string | null;
     keyPointsCount: number | null;
@@ -29,7 +42,7 @@ export default class SmartHighlightsModifier implements PageModifier {
         annotationsModifier: AnnotationsModifier,
         textContainerModifier: TextContainerModifier,
         forceEnabled: boolean = false,
-        onHighlightClick: (range: Range) => void = null
+        onHighlightClick: (range: Range, related: RelatedHighlight[]) => void = null
     ) {
         this.annotationsModifier = annotationsModifier;
         this.textContainerModifier = textContainerModifier;
@@ -57,7 +70,7 @@ export default class SmartHighlightsModifier implements PageModifier {
     }
 
     private paragraphs: HTMLElement[] = [];
-    private rankedSentencesByParagraph: { score: number; sentence: string }[][];
+    private rankedSentencesByParagraph: RankedSentence[][];
     async parseUnclutteredArticle() {
         if (!this.enabled) {
             return;
@@ -77,19 +90,19 @@ export default class SmartHighlightsModifier implements PageModifier {
             });
 
         const response: any = await ky
-            .post("https://q5ie5hjr3g.execute-api.us-east-2.amazonaws.com/default/heatmap", {
+            .post("https://q5ie5hjr3g.execute-api.us-east-2.amazonaws.com/default/heatmap?v2", {
                 json: {
                     paragraphs: paragraphTexts,
                 },
                 timeout: false,
             })
             .json();
-        this.rankedSentencesByParagraph = response;
-        this.articleSummary = null;
-        this.keyPointsCount = null;
-        // this.rankedSentencesByParagraph = response.rankings || null;
-        // this.articleSummary = response.summary || null;
-        // this.keyPointsCount = response.keyPointsCount || null;
+        console.log(response.rankings);
+        // this.rankedSentencesByParagraph = response;
+        // this.articleSummary = null;
+        // this.keyPointsCount = null;
+        this.rankedSentencesByParagraph = response.rankings || null;
+        this.articleSummary = response.summary || null;
 
         this.enableAnnotations();
         // if (this.annotationsModifier?.sidebarIframe) {
@@ -124,11 +137,7 @@ export default class SmartHighlightsModifier implements PageModifier {
                 paragraph,
                 rankedSentences.map((s) => s.sentence)
             );
-            this.paintRanges(
-                ranges,
-                rankedSentences.map((s) => s.score),
-                "250, 204, 21"
-            );
+            this.paintRanges(rankedSentences, ranges);
         });
     }
 
@@ -283,14 +292,21 @@ export default class SmartHighlightsModifier implements PageModifier {
         }
     }
 
-    private paintRanges(ranges: Range[], scores: number[], color: string) {
+    private paintRanges(sentences: RankedSentence[], ranges: Range[]) {
         const containerRect = this.backgroundContainer.getBoundingClientRect();
         ranges.map((range, i) => {
             if (range.toString().trim().length < 10) {
                 return;
             }
-            const score = scores?.[i];
-            if (score < 0.6) {
+            const sentence = sentences[i];
+            let score: number = sentence.score;
+            let color: string = "250, 204, 21";
+            if (sentence.related) {
+                color = "168, 85, 247";
+                score = sentence.related[0].score2;
+            }
+
+            if (score < 0.5) {
                 return;
             }
 
@@ -314,7 +330,7 @@ export default class SmartHighlightsModifier implements PageModifier {
                 node.className = "lindy-smart-highlight-absolute";
                 node.style.setProperty(
                     "background",
-                    `rgba(${color}, ${score >= 0.6 ? 0.8 * score ** 3 : 0})`,
+                    `rgba(${color}, ${0.8 * score ** 3})`,
                     "important"
                 );
                 node.style.setProperty("position", "absolute", "important");
@@ -326,7 +342,7 @@ export default class SmartHighlightsModifier implements PageModifier {
                 const clickNode = node.cloneNode() as HTMLElement;
                 clickNode.style.setProperty("background", "transparent", "important");
                 clickNode.style.setProperty("cursor", "pointer", "important");
-                clickNode.onclick = (e) => this.onRangeClick(e, range);
+                clickNode.onclick = (e) => this.onRangeClick(e, range, sentence.related);
 
                 this.backgroundContainer.appendChild(node);
                 this.clickContainer.appendChild(clickNode);
@@ -337,7 +353,7 @@ export default class SmartHighlightsModifier implements PageModifier {
             scrollbarNode.className = "lindy-smart-highlight-scroll";
             scrollbarNode.style.setProperty(
                 "background",
-                `rgba(${color}, ${score >= 0.6 ? 0.8 * score ** 3 : 0})`,
+                `rgba(${color}, ${0.8 * score ** 3})`,
                 "important"
             );
             scrollbarNode.style.setProperty(
@@ -350,14 +366,14 @@ export default class SmartHighlightsModifier implements PageModifier {
         });
     }
 
-    private onRangeClick(e: Event, range: Range) {
+    private onRangeClick(e: Event, range: Range, related: RelatedHighlight[]) {
         // @ts-ignore
         // if (e.target?.classList.contains("lindy-highlight") && e.target?.id) {
         //     return;
         // }
 
         if (this.onHighlightClick) {
-            this.onHighlightClick(range);
+            this.onHighlightClick(range, related);
             return;
         }
 
@@ -376,55 +392,5 @@ export default class SmartHighlightsModifier implements PageModifier {
             this.annotationsModifier.sidebarIframe,
             generateId()
         );
-    }
-
-    async fetchRelatedHighlights() {
-        const notableSentences: string[] = [];
-        const paragraphIndexes: number[] = [];
-        this.rankedSentencesByParagraph.forEach((paragraph, i) => {
-            notableSentences.push(this.paragraphs[i].textContent);
-            paragraphIndexes.push(i);
-            return;
-
-            // paragraph.forEach((sentence) => {
-            //     if (sentence.score >= 0.5) {
-            //         notableSentences.push(sentence.sentence);
-            //         paragraphIndexes.push(i);
-            //     }
-            // });
-        });
-
-        // console.log(notableSentences);
-        const results: any = await ky
-            .post("https://assistant-two.vercel.app/api/related_highlights", {
-                json: {
-                    title: document.title,
-                    paragraphs: notableSentences,
-                },
-                timeout: false,
-            })
-            .json();
-
-        const ranges: Range[] = [];
-        const scores: number[] = [];
-        results.forEach(({ anchor_text, annotations }) => {
-            if (annotations[0].score < 0.6) {
-                return;
-            }
-            // console.log(anchor_text);
-            // console.log(annotations[0].score, annotations[0].text);
-
-            const index = notableSentences.indexOf(anchor_text);
-            const paragraphIndex = paragraphIndexes[index];
-            const paragraph = this.paragraphs[paragraphIndex];
-
-            const range = searchNodeTree(paragraph, [anchor_text]);
-            if (range.length > 0) {
-                ranges.push(range[0]);
-                scores.push(annotations[0].score + 0.3);
-            }
-        });
-
-        this.paintRanges(ranges, scores, "168, 85, 247");
     }
 }
