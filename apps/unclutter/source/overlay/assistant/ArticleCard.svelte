@@ -25,7 +25,7 @@
 </script>
 
 <div
-    class="article-card ml-auto flex w-max flex-col overflow-hidden rounded-xl bg-gradient-to-b from-yellow-200 to-yellow-300 text-sm text-stone-900 shadow drop-shadow"
+    class="article-card ml-auto flex w-max flex-col overflow-hidden rounded-lg bg-gradient-to-b from-yellow-200 to-yellow-300 text-sm text-stone-900 shadow drop-shadow"
     style:background-image="linear-gradient(120deg, var(--tw-gradient-stops))"
 >
     <div class="font-title flex items-stretch gap-1">
@@ -38,7 +38,7 @@
             >
             {keyPointsCount}
         </div>
-        <div class="flex items-center gap-1 px-1">
+        <!-- <div class="flex items-center gap-1 px-1">
             <svg class="-mt-0.5 w-4" viewBox="0 0 512 512">
                 <path
                     fill="currentColor"
@@ -46,7 +46,7 @@
                 />
             </svg>
             {relatedCount}
-        </div>
+        </div> -->
 
         <!-- {#await tags then tags}
             {#each tags.slice(0, 3) as tag, i}

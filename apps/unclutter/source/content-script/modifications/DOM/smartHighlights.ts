@@ -91,7 +91,7 @@ export default class SmartHighlightsModifier implements PageModifier {
             });
 
         const response: any = await ky
-            .post("https://q5ie5hjr3g.execute-api.us-east-2.amazonaws.com/default/heatmap?v2", {
+            .post("https://q5ie5hjr3g.execute-api.us-east-2.amazonaws.com/default/heatmap", {
                 json: {
                     title: document.title,
                     paragraphs: paragraphTexts,
@@ -99,11 +99,9 @@ export default class SmartHighlightsModifier implements PageModifier {
                 timeout: false,
             })
             .json();
-        console.log(response.rankings);
-        // this.rankedSentencesByParagraph = response;
-        // this.articleSummary = null;
-        this.rankedSentencesByParagraph = response.rankings || null;
-        this.articleSummary = response.summary || null;
+        this.rankedSentencesByParagraph = response;
+        // this.rankedSentencesByParagraph = response.rankings || null;
+        // this.articleSummary = response.summary || null;
 
         this.keyPointsCount = 0;
         this.relatedCount = 0;
@@ -261,20 +259,20 @@ export default class SmartHighlightsModifier implements PageModifier {
     private clickContainer: HTMLElement;
     private scrollbarContainer: HTMLElement;
     createContainers() {
-        this.backgroundContainer = document.createElement("div");
-        this.backgroundContainer.className =
-            "lindy-smart-highlight-container smart-highlight-background";
-        // this.backgroundContainer.style.setProperty("z-index", "-1");
-        this.backgroundContainer.style.setProperty("position", "relative");
-        document.body.prepend(this.backgroundContainer);
+        // this.backgroundContainer = document.createElement("div");
+        // this.backgroundContainer.className =
+        //     "lindy-smart-highlight-container smart-highlight-background";
+        // // this.backgroundContainer.style.setProperty("z-index", "-1");
+        // this.backgroundContainer.style.setProperty("position", "relative");
+        // document.body.prepend(this.backgroundContainer);
 
-        this.clickContainer = document.createElement("div");
-        this.clickContainer.className = "lindy-smart-highlight-container smart-highlight-click";
-        this.clickContainer.style.setProperty("position", "absolute");
-        this.clickContainer.style.setProperty("top", "0");
-        this.clickContainer.style.setProperty("left", "0");
-        this.clickContainer.style.setProperty("z-index", "1001");
-        document.body.append(this.clickContainer);
+        // this.clickContainer = document.createElement("div");
+        // this.clickContainer.className = "lindy-smart-highlight-container smart-highlight-click";
+        // this.clickContainer.style.setProperty("position", "absolute");
+        // this.clickContainer.style.setProperty("top", "0");
+        // this.clickContainer.style.setProperty("left", "0");
+        // this.clickContainer.style.setProperty("z-index", "1001");
+        // document.body.append(this.clickContainer);
 
         this.scrollbarContainer = document.createElement("div");
         this.scrollbarContainer.className =
@@ -361,14 +359,14 @@ export default class SmartHighlightsModifier implements PageModifier {
                 node.style.setProperty("height", `${rect.height}px`, "important");
                 // node.style.setProperty("z-index", `-1`, "important");
 
-                const clickNode = node.cloneNode() as HTMLElement;
-                clickNode.style.setProperty("background", "transparent", "important");
-                clickNode.style.setProperty("cursor", "pointer", "important");
-                clickNode.style.setProperty("z-index", `1001`, "important");
-                clickNode.onclick = (e) => this.onRangeClick(e, range, sentence.related);
+                // const clickNode = node.cloneNode() as HTMLElement;
+                // clickNode.style.setProperty("background", "transparent", "important");
+                // clickNode.style.setProperty("cursor", "pointer", "important");
+                // clickNode.style.setProperty("z-index", `1001`, "important");
+                // clickNode.onclick = (e) => this.onRangeClick(e, range, sentence.related);
 
                 container.prepend(node);
-                container.appendChild(clickNode);
+                // container.appendChild(clickNode);
             }
 
             const rect = range.getBoundingClientRect();
