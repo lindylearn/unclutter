@@ -109,10 +109,10 @@ export default class SmartHighlightsModifier implements PageModifier {
         this.relatedCount = 0;
         this.rankedSentencesByParagraph?.forEach((paragraph) => {
             paragraph.forEach((sentence) => {
-                if (sentence.score >= 0.5) {
+                if (sentence.score >= 0.6) {
                     this.keyPointsCount += 1;
                 }
-                if (sentence.related) {
+                if (sentence.related && sentence.related?.[0]?.score2 > 0.5) {
                     this.relatedCount += 1;
                 }
             });
@@ -316,7 +316,7 @@ export default class SmartHighlightsModifier implements PageModifier {
             let color: string = "250, 204, 21";
             if (sentence.related) {
                 color = "168, 85, 247";
-                score = sentence.related[0].score2;
+                score = sentence.related[0].score2 + 0.1;
             }
 
             if (score < 0.6) {
@@ -381,7 +381,7 @@ export default class SmartHighlightsModifier implements PageModifier {
             );
             scrollbarNode.style.setProperty(
                 "top",
-                `${(100 * (rect.top - containerRect.top)) / document.body.scrollHeight}vh`,
+                `${(100 * (rect.top + document.body.scrollTop)) / document.body.scrollHeight}vh`,
                 "important"
             );
 

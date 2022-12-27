@@ -77,7 +77,7 @@
             <div
                 class="flex max-w-lg cursor-pointer flex-col gap-2 rounded-lg bg-stone-100 p-2 shadow-sm transition-all hover:scale-[99%]"
             >
-                <div class="">{highlight.score.toFixed(2)} "{highlight.text}"</div>
+                <div class="">"{highlight.excerpt}" {highlight.score.toFixed(2)}</div>
                 <div
                     class="font-title flex items-center justify-between gap-2 overflow-hidden rounded-b-lg"
                 >
