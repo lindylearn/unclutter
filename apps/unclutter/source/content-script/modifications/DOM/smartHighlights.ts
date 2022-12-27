@@ -37,6 +37,7 @@ export default class SmartHighlightsModifier implements PageModifier {
 
     articleSummary: string | null;
     keyPointsCount: number | null;
+    relatedCount: number | null;
 
     constructor(
         annotationsModifier: AnnotationsModifier,
@@ -100,9 +101,22 @@ export default class SmartHighlightsModifier implements PageModifier {
         console.log(response.rankings);
         // this.rankedSentencesByParagraph = response;
         // this.articleSummary = null;
-        // this.keyPointsCount = null;
         this.rankedSentencesByParagraph = response.rankings || null;
         this.articleSummary = response.summary || null;
+
+        this.keyPointsCount = 0;
+        this.relatedCount = 0;
+        this.rankedSentencesByParagraph?.forEach((paragraph) => {
+            paragraph.forEach((sentence) => {
+                console.log(sentence);
+                if (sentence.score >= 0.5) {
+                    this.keyPointsCount += 1;
+                }
+                if (sentence.related) {
+                    this.relatedCount += 1;
+                }
+            });
+        });
 
         this.enableAnnotations();
         // if (this.annotationsModifier?.sidebarIframe) {
@@ -293,7 +307,6 @@ export default class SmartHighlightsModifier implements PageModifier {
     }
 
     private paintRanges(sentences: RankedSentence[], ranges: Range[]) {
-        const containerRect = this.backgroundContainer.getBoundingClientRect();
         ranges.map((range, i) => {
             if (range.toString().trim().length < 10) {
                 return;
@@ -309,6 +322,14 @@ export default class SmartHighlightsModifier implements PageModifier {
             if (score < 0.5) {
                 return;
             }
+
+            let container = range.commonAncestorContainer as HTMLElement;
+            while (container && container.nodeType !== Node.ELEMENT_NODE) {
+                container = container.parentElement;
+            }
+
+            const containerRect = container.getBoundingClientRect();
+            container.style.setProperty("position", "relative", "important");
 
             let lastRect: ClientRect;
             for (const rect of range.getClientRects()) {
@@ -338,14 +359,16 @@ export default class SmartHighlightsModifier implements PageModifier {
                 node.style.setProperty("left", `${rect.left - containerRect.left}px`, "important");
                 node.style.setProperty("width", `${rect.width}px`, "important");
                 node.style.setProperty("height", `${rect.height}px`, "important");
+                // node.style.setProperty("z-index", `-1`, "important");
 
                 const clickNode = node.cloneNode() as HTMLElement;
                 clickNode.style.setProperty("background", "transparent", "important");
                 clickNode.style.setProperty("cursor", "pointer", "important");
+                clickNode.style.setProperty("z-index", `1001`, "important");
                 clickNode.onclick = (e) => this.onRangeClick(e, range, sentence.related);
 
-                this.backgroundContainer.appendChild(node);
-                this.clickContainer.appendChild(clickNode);
+                container.prepend(node);
+                container.appendChild(clickNode);
             }
 
             const rect = range.getBoundingClientRect();

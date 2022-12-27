@@ -62,26 +62,27 @@ function onDocumentReady(enablePageView: (reason: string) => void) {
         renderArticleCard(
             Math.ceil(readingTimeMinutes),
             smartHighlightsModifier.keyPointsCount,
+            smartHighlightsModifier.relatedCount,
             smartHighlightsModifier.articleSummary,
             enablePageView
         );
     });
 }
 
-function onSelectionStart(event: Event) {
-    removeHighligher();
-}
+// function onSelectionStart(event: Event) {
+//     removeHighligher();
+// }
 
-function onSelectionDone() {
-    const selection = document.getSelection();
-    const quote = selection.toString();
-    if (!quote) {
-        return;
-    }
+// function onSelectionDone() {
+//     const selection = document.getSelection();
+//     const quote = selection.toString();
+//     if (!quote) {
+//         return;
+//     }
 
-    const rect = selection.getRangeAt(0).getBoundingClientRect();
-    renderHighlighter(rect, quote);
-}
+//     const rect = selection.getRangeAt(0).getBoundingClientRect();
+//     renderHighlighter(rect, quote);
+// }
 
 function removeHighligher() {
     document.getElementById("lindy-highlighter")?.remove();
@@ -119,6 +120,7 @@ function renderHighlighter(highlightRect: DOMRect, quote: string, related: Relat
 function renderArticleCard(
     readingTimeMinutes: number,
     keyPointsCount: number,
+    relatedCount: number,
     articleSummary: string,
     enablePageView: (reason: string) => void
 ) {
@@ -132,6 +134,6 @@ function renderArticleCard(
 
     new ArticleCardSvelte({
         target: container,
-        props: { readingTimeMinutes, keyPointsCount, articleSummary, enablePageView },
+        props: { readingTimeMinutes, keyPointsCount, relatedCount, articleSummary, enablePageView },
     });
 }
