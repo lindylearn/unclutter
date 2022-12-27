@@ -92,12 +92,11 @@ function renderHighlighter(highlightRect: DOMRect, quote: string, related: Relat
     const container = document.createElement("div");
     container.id = "lindy-highlighter";
     container.style.position = "absolute";
+    container.style.zIndex = "9999999999";
     container.style.top = `${
         highlightRect.top + highlightRect.height + window.scrollY + document.body.scrollTop
     }px`;
     container.style.left = `${highlightRect.left}px`;
-    // container.style.top = `${highlightRect.top + window.scrollY}px`;
-    // container.style.left = `${highlightRect.left + highlightRect.width + window.scrollX}px`;
 
     document.body.appendChild(container);
 

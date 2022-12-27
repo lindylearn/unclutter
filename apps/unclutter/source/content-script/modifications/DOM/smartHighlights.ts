@@ -93,6 +93,7 @@ export default class SmartHighlightsModifier implements PageModifier {
         const response: any = await ky
             .post("https://q5ie5hjr3g.execute-api.us-east-2.amazonaws.com/default/heatmap?v2", {
                 json: {
+                    title: document.title,
                     paragraphs: paragraphTexts,
                 },
                 timeout: false,
@@ -108,7 +109,6 @@ export default class SmartHighlightsModifier implements PageModifier {
         this.relatedCount = 0;
         this.rankedSentencesByParagraph?.forEach((paragraph) => {
             paragraph.forEach((sentence) => {
-                console.log(sentence);
                 if (sentence.score >= 0.5) {
                     this.keyPointsCount += 1;
                 }
@@ -319,7 +319,7 @@ export default class SmartHighlightsModifier implements PageModifier {
                 score = sentence.related[0].score2;
             }
 
-            if (score < 0.5) {
+            if (score < 0.6) {
                 return;
             }
 

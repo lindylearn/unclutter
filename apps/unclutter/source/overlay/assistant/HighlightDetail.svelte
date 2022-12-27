@@ -69,7 +69,7 @@
     {/await}
 </div> -->
 
-{#if related?.length > 0}
+{#if related && related.length > 0}
     <div
         class="font-text highlighter mt-2 flex flex-col gap-2 rounded-xl border-[1px] border-stone-100 bg-white p-1.5 text-sm text-stone-900 shadow-xl drop-shadow"
     >
@@ -77,7 +77,7 @@
             <div
                 class="flex max-w-lg cursor-pointer flex-col gap-2 rounded-lg bg-stone-100 p-2 shadow-sm transition-all hover:scale-[99%]"
             >
-                <div class="">{highlight.score} "{highlight.excerpt}"</div>
+                <div class="">{highlight.score.toFixed(2)} "{highlight.text}"</div>
                 <div
                     class="font-title flex items-center justify-between gap-2 overflow-hidden rounded-b-lg"
                 >
@@ -102,7 +102,7 @@
     @tailwind utilities;
 
     .highlighter {
-        animation: highlighterFadeIn 100ms cubic-bezier(0.34, 1.56, 0.64, 1); /* easeOutBack */
+        animation: highlighterFadeIn 200ms cubic-bezier(0.34, 1.56, 0.64, 1); /* easeOutBack */
         animation-fill-mode: both;
         background: white !important; /* prevent site override */
     }
