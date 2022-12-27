@@ -44,7 +44,7 @@
             >
             {keyPointsCount}
         </div>
-        <div class="flex items-center gap-1 px-1">
+        <!-- <div class="flex items-center gap-1 px-1">
             <svg class="-mt-0.5 w-4" viewBox="0 0 512 512">
                 <path
                     fill="currentColor"
@@ -52,7 +52,7 @@
                 />
             </svg>
             {relatedCount}
-        </div>
+        </div> -->
 
         <!-- {#await tags then tags}
             {#each tags.slice(0, 3) as tag, i}
