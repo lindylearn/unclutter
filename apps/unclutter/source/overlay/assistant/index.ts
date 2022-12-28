@@ -20,9 +20,9 @@ export function startAssistant(enablePageView: (reason: string) => void) {
     if (document.readyState === "loading") {
         document.addEventListener("DOMContentLoaded", () => {
             // complete text may lazy load, e.g. on https://arstechnica.com/tech-policy/2022/01/amazon-ends-widely-mocked-scheme-that-turned-workers-into-twitter-ambassadors/
-            setTimeout(() => {
-                onDocumentReady(enablePageView);
-            }, 1000);
+            // setTimeout(() => {
+            onDocumentReady(enablePageView);
+            // }, 1000);
         });
     } else {
         onDocumentReady(enablePageView);

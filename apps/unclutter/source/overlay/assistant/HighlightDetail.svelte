@@ -80,7 +80,7 @@
                 <div
                     class="w flex flex-col gap-2 overflow-hidden rounded-lg bg-stone-100 p-2 shadow-sm"
                 >
-                    <div class="">"{highlight.excerpt}" {highlight.score.toFixed(2)}</div>
+                    <div class="">"{highlight.text}" {highlight.score.toFixed(2)}</div>
                     <div
                         class="font-title flex items-center justify-between gap-2 overflow-hidden rounded-b-lg"
                     >

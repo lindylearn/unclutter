@@ -92,7 +92,7 @@ export default class SmartHighlightsModifier implements PageModifier {
             });
 
         const response: any = await ky
-            .post("https://q5ie5hjr3g.execute-api.us-east-2.amazonaws.com/default/heatmap", {
+            .post("https://q5ie5hjr3g.execute-api.us-east-2.amazonaws.com/default/heatmap?v2", {
                 json: {
                     title: document.title,
                     url: window.location.href,
@@ -101,9 +101,9 @@ export default class SmartHighlightsModifier implements PageModifier {
                 timeout: false,
             })
             .json();
-        this.rankedSentencesByParagraph = response;
-        // this.rankedSentencesByParagraph = response.rankings || null;
-        // this.articleSummary = response.summary || null;
+        // this.rankedSentencesByParagraph = response;
+        this.rankedSentencesByParagraph = response.rankings || null;
+        this.articleSummary = response.summary || null;
         console.log(this.rankedSentencesByParagraph);
 
         this.keyPointsCount = 0;
@@ -374,12 +374,14 @@ export default class SmartHighlightsModifier implements PageModifier {
                 node.style.setProperty("z-index", `-1`, "important");
                 container.prepend(node);
 
-                const clickNode = node.cloneNode() as HTMLElement;
-                clickNode.style.setProperty("background", "transparent", "important");
-                clickNode.style.setProperty("cursor", "pointer", "important");
-                clickNode.style.setProperty("z-index", `1001`, "important");
-                clickNode.onclick = (e) => this.onRangeClick(e, range, sentence.related);
-                container.appendChild(clickNode);
+                if (sentence.related) {
+                    const clickNode = node.cloneNode() as HTMLElement;
+                    clickNode.style.setProperty("background", "transparent", "important");
+                    clickNode.style.setProperty("cursor", "pointer", "important");
+                    clickNode.style.setProperty("z-index", `1001`, "important");
+                    clickNode.onclick = (e) => this.onRangeClick(e, range, sentence.related);
+                    container.appendChild(clickNode);
+                }
             }
 
             const rect = range.getBoundingClientRect();
