@@ -5,6 +5,7 @@
         openArticleResilient,
         reportEventContentScript,
     } from "@unclutter/library-components/dist/common";
+    import { getRandomLightColor } from "@unclutter/library-components/dist/common";
 
     export let article: Article;
     export let index: number;
@@ -43,7 +44,7 @@
     }
 </script>
 
-<a
+<div
     class={clsx(
         "article-container flex-shrink-0 cursor-pointer rounded-lg bg-white transition-all shadow hover:shadow-lg overflow-hidden",
         transform && "disable-rotate",
@@ -54,7 +55,7 @@
     href={article.url}
     on:click={openPage}
 >
-    <div class="article-fallback p-3 ">
+    <div class="article-fallback p-2">
         <div class="select-none font-bold leading-tight text-gray-700">
             {article.title}
         </div>
@@ -89,9 +90,13 @@
         class="progress-bar absolute bottom-0 left-0 h-[7px] w-full rounded-r bg-lindy transition-all dark:bg-lindyDark"
         style={`width: ${readingProgress * 100}%`}
     /> -->
-</a>
+</div>
 
-<style>
+<style lang="postcss">
+    @tailwind base;
+    @tailwind components;
+    @tailwind utilities;
+
     .article-container:not(.disable-rotate):hover {
         rotate: -1.5deg;
     }

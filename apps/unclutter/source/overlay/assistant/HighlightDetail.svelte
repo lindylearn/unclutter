@@ -76,12 +76,29 @@
         class="font-text highlighter mt-2 flex max-w-lg flex-col gap-2 rounded-xl border-[1px] border-stone-100 bg-white p-1.5 text-sm text-stone-900 shadow-xl drop-shadow"
     >
         {#each related.slice(0, 3) as highlight}
-            <div class="flex cursor-pointer gap-2 transition-all hover:scale-[99%]">
+            <div class="flex cursor-pointer items-center gap-2">
+                <ArticlePreview
+                    index={0}
+                    article={{
+                        url: "http://paulgraham.com/vb.html",
+                        title: highlight.title,
+                        reading_progress: 0,
+                    }}
+                    className="shrink-0 w-[100px] h-[120px] transition-transform relative"
+                    transform="rotate(1deg) scale(1.1)"
+                />
                 <div
-                    class="w flex flex-col gap-2 overflow-hidden rounded-lg bg-stone-100 p-2 shadow-sm"
+                    class="flex flex-col gap-2 overflow-hidden overflow-ellipsis rounded-lg bg-stone-100 p-2 shadow-sm"
+                    style:min-height="80px"
+                    style:display="-webkit-box"
+                    style:-webkit-box-orient="vertical"
+                    style:-webkit-line-clamp="4"
                 >
-                    <div class="">"{highlight.text}" {highlight.score.toFixed(2)}</div>
-                    <div
+                    <!-- <div class=""> -->
+                    {highlight.excerpt}
+                    {highlight.score2.toFixed(2)}
+                    <!-- </div> -->
+                    <!-- <div
                         class="font-title flex items-center justify-between gap-2 overflow-hidden rounded-b-lg"
                     >
                         <div
@@ -89,24 +106,14 @@
                         >
                             {highlight.title}
                         </div>
-                    </div>
+                    </div> -->
                 </div>
-                <!-- <ArticlePreview
-                    index={0}
-                    article={{
-                        url: "",
-                        title: highlight.title,
-                        reading_progress: 0,
-                    }}
-                    className="shrink-0 w-28 h-32"
-                    transform="rotate(1deg)"
-                /> -->
             </div>
         {/each}
     </div>
 {/if}
 
-<style global lang="postcss">
+<style lang="postcss">
     @tailwind base;
     @tailwind components;
     @tailwind utilities;
