@@ -108,5 +108,5 @@ export function isArticleByTextContent(): boolean {
     const linksPerMinute = linkCount / readingTimeMinutes;
     console.log({ readingTimeMinutes, linkCount, linksPerMinute });
 
-    return readingTimeMinutes >= 4;
+    return readingTimeMinutes >= 3;
 }

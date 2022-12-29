@@ -256,12 +256,11 @@ html.pageview.pageview > body {
     } */
 }
 
-.lindy-smart-highlight {
-    cursor: pointer !important;
-    border-radius: 2px !important;
+.lindy-smart-highlight,
+.lindy-smart-highlight-scroll {
+    /* border-radius: 2px !important; */
 
-    /* transition: background-color 0.15s ease-in-out !important; */
-    animation: fadeInSmartHighlight 0.15s ease-in-out !important;
+    animation: fadeInSmartHighlight 200ms cubic-bezier(0.34, 1.56, 0.64, 1) !important; /* easeOutBack */
     animation-fill-mode: both !important;
 }
 .lindy-smart-highlight-scroll {

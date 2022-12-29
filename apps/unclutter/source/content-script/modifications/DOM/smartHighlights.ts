@@ -325,9 +325,9 @@ export default class SmartHighlightsModifier implements PageModifier {
     private scrollbarContainer: HTMLElement;
     createContainers() {
         this.scrollbarContainer = document.createElement("div");
-        this.scrollbarContainer.className =
-            "lindy-smart-highlight-container smart-highlight-scrollbar";
-        this.scrollbarContainer.style.setProperty("z-index", "1001");
+        this.scrollbarContainer.className = "smart-highlight-scrollbar";
+        this.scrollbarContainer.style.setProperty("position", "relative", "important");
+        this.scrollbarContainer.style.setProperty("z-index", "1001", "important");
         document.body.append(this.scrollbarContainer);
     }
 
@@ -433,8 +433,8 @@ export default class SmartHighlightsModifier implements PageModifier {
             lastRect = rect;
 
             const node = document.createElement("div");
-            node.className = "lindy-smart-highlight-absolute";
-            node.style.setProperty("background", `rgba(${color}, ${colorIntensity})`, "important");
+            node.className = "lindy-smart-highlight";
+            node.style.setProperty("--annotation-color", `rgba(${color}, ${colorIntensity})`);
             node.style.setProperty("position", "absolute", "important");
             node.style.setProperty("top", `${rect.top - containerRect.top}px`, "important");
             node.style.setProperty("left", `${rect.left - containerRect.left}px`, "important");
@@ -459,11 +459,7 @@ export default class SmartHighlightsModifier implements PageModifier {
 
         const scrollbarNode = document.createElement("div");
         scrollbarNode.className = "lindy-smart-highlight-scroll";
-        scrollbarNode.style.setProperty(
-            "background",
-            `rgba(${color}, ${colorIntensity})`,
-            "important"
-        );
+        scrollbarNode.style.setProperty("--annotation-color", `rgba(${color}, ${colorIntensity})`);
         scrollbarNode.style.setProperty(
             "top",
             `${(100 * (rect.top + document.body.scrollTop)) / document.body.scrollHeight}vh`,

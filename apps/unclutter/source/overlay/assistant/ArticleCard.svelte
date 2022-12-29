@@ -74,7 +74,8 @@
     @tailwind utilities;
 
     .article-card {
-        animation: pageCardBounceIn 0.75s;
+        /* animation: pageCardBounceIn 0.75s; */
+        animation: pageCardFadeIn 200ms cubic-bezier(0.34, 1.56, 0.64, 1); /* easeOutBack */
         animation-fill-mode: backwards;
     }
 
@@ -82,7 +83,15 @@
         background: rgba(255, 255, 255, 0.5) !important;
     }
 
-    @keyframes pageCardBounceIn {
+    @keyframes pageCardFadeIn {
+        from {
+            transform: scale(0.95) translateY(5px);
+        }
+        to {
+            transform: scale(1) translateY(0);
+        }
+    }
+    /* @keyframes pageCardBounceIn {
         0% {
             transform: translateY(-100%) rotate(-5deg);
             opacity: 0;
@@ -115,7 +124,7 @@
             opacity: 1;
             transform: translateY(0%) rotate(0deg);
         }
-    }
+    } */
 
     .animated-number > .before-value {
         animation: animateNumberOut 0.4s cubic-bezier(0.5, 1, 0.89, 1) 0.5s; /* easeOutQuad */
