@@ -188,7 +188,8 @@ export default class SmartHighlightsModifier implements PageModifier {
         let currentRange = document.createRange();
         currentRange.setStart(currentElem, 0);
 
-        // if (!paragraph.textContent.includes("surprise")) {
+        // debug
+        // if (!paragraph.textContent.includes("discounts")) {
         //     return [];
         // }
         // console.log(paragraph, sentences);
@@ -311,7 +312,8 @@ export default class SmartHighlightsModifier implements PageModifier {
     private paintRanges(sentences: RankedSentence[], ranges: Range[]) {
         ranges.map((range, i) => {
             // filter
-            if (range.toString().trim().length < 10) {
+            const anchorText = range.toString().trim();
+            if (anchorText.length < 10) {
                 return;
             }
             const sentence = sentences[i];
@@ -325,21 +327,39 @@ export default class SmartHighlightsModifier implements PageModifier {
                 return;
             }
 
+            // debug
+            // if (!anchorText.includes("discounts")) {
+            //     return;
+            // }
+
             // get container to anchor highlight elements
             let container = range.commonAncestorContainer as HTMLElement;
-            while (container && container.nodeType !== Node.ELEMENT_NODE) {
+
+            // need to be able to anchor absolute elements
+            while (container.nodeType !== Node.ELEMENT_NODE) {
                 container = container.parentElement;
             }
-            const containerRect = container.getBoundingClientRect();
-            // TODO can remove?
-            container.style.setProperty("position", "relative", "important");
+
+            // box is not correct for inline elements
+            let containerStyle = window.getComputedStyle(container);
+            while (containerStyle.display === "inline") {
+                container = container.parentElement;
+                containerStyle = window.getComputedStyle(container);
+            }
+
+            // be careful with style changes
+            if (containerStyle.position === "static") {
+                container.style.setProperty("position", "relative", "important");
+            }
             container.style.setProperty("z-index", "0", "important");
 
+            // highlight onclick
             const onClick = sentence.related
                 ? (e) => this.onRangeClick(e, range, sentence.related)
                 : null;
 
             // first paint
+            const containerRect = container.getBoundingClientRect();
             let rangeElements = this.paintRange(
                 container,
                 containerRect,
@@ -350,10 +370,21 @@ export default class SmartHighlightsModifier implements PageModifier {
             );
 
             // paint again on position change
-            const resizeObserver = new ResizeObserver((entries) => {
-                console.log(entries.map((e) => e.target));
-            });
-            resizeObserver.observe(container);
+            // const resizeObserver = new ResizeObserver((entries) => {
+            //     console.log(anchorText);
+            //     rangeElements.forEach((e) => e.remove());
+
+            //     const containerRect = container.getBoundingClientRect();
+            //     rangeElements = this.paintRange(
+            //         container,
+            //         containerRect,
+            //         range,
+            //         score,
+            //         color,
+            //         onClick
+            //     );
+            // });
+            // resizeObserver.observe(container);
         });
     }
 
