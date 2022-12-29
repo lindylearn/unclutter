@@ -5,7 +5,7 @@ import { extensionSupportsUrl } from "../common/articleDetection";
 import { handleReportBrokenPage } from "../common/bugReport";
 import {
     collectAnonymousMetricsFeatureFlag,
-    getFeatureFlag,
+    enableExperimentalFeatures,
     isDevelopmentFeatureFlag,
     setFeatureFlag,
 } from "../common/featureFlags";
@@ -216,9 +216,9 @@ browser.runtime.onInstalled.addListener(async ({ reason }) => {
     const isDev = extensionInfo.installType === "development";
 
     if (isDev) {
-        // disable metrics in dev mode
         await setFeatureFlag(collectAnonymousMetricsFeatureFlag, false);
         await setFeatureFlag(isDevelopmentFeatureFlag, true);
+        await setFeatureFlag(enableExperimentalFeatures, true);
     }
 
     // report aggregates on enabled extension features
