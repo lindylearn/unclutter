@@ -286,12 +286,32 @@ export default class SmartHighlightsModifier implements PageModifier {
         document.body.append(this.scrollbarContainer);
     }
 
-    // put scrollbar on <body> to allow overlapping divs
-    // only needed when called outside the reader mode
+    private styleObserver: MutationObserver;
     fixScrollbars() {
-        document.documentElement.style.overflow = "hidden";
-        document.body.style.maxHeight = "100vh";
-        document.body.style.overflow = "auto";
+        this.patchScrollbarStyle();
+
+        // site may override inline styles, e.g. https://www.fortressofdoors.com/ai-markets-for-lemons-and-the-great-logging-off/
+        this.styleObserver = new MutationObserver(() => {
+            this.patchScrollbarStyle();
+        });
+        this.styleObserver.observe(document.documentElement, {
+            attributeFilter: ["style"],
+        });
+        this.styleObserver.observe(document.body, {
+            attributeFilter: ["style"],
+        });
+    }
+
+    private patchScrollbarStyle() {
+        // put scrollbar on <body> to allow overlapping divs
+        // only needed when called outside the reader mode
+        console.log("Patching scrollbar style");
+
+        document.documentElement.style.setProperty("overflow", "hidden", "important");
+
+        document.body.style.setProperty("height", "100vh", "important");
+        document.body.style.setProperty("max-height", "100vh", "important");
+        document.body.style.setProperty("overflow", "auto", "important");
 
         const bodyStyle = window.getComputedStyle(document.body);
         if (bodyStyle.marginRight !== "0px") {
