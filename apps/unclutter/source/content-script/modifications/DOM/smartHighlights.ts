@@ -4,15 +4,12 @@ import { createAnnotation, generateId, LindyAnnotation } from "../../../common/a
 import AnnotationsModifier from "../annotations/annotationsModifier";
 import { _createAnnotationFromSelection } from "../annotations/selectionListener";
 import TextContainerModifier from "./textContainer";
-import { splitSentences } from "@unclutter/library-components/dist/common";
 import { sendIframeEvent } from "../../../common/reactIframe";
 import {
     enableAnnotationsFeatureFlag,
     enableExperimentalFeatures,
     getFeatureFlag,
 } from "../../../common/featureFlags";
-import { removeAllHighlights } from "../annotations/highlightsApi";
-import { searchNodeTree } from "./aiAnnotations";
 
 export interface RankedSentence {
     score: number;
@@ -63,11 +60,11 @@ export default class SmartHighlightsModifier implements PageModifier {
 
     async parseArticle() {
         // fetch container references if already exist (e.g. from assistant code)
-        this.backgroundContainer = document.getElementsByClassName(
-            "smart-highlight-background"
-        )[0] as HTMLElement;
         this.clickContainer = document.getElementsByClassName(
             "smart-highlight-click"
+        )[0] as HTMLElement;
+        this.scrollbarContainer = document.getElementsByClassName(
+            "smart-highlight-scrollbar"
         )[0] as HTMLElement;
     }
 
@@ -167,11 +164,11 @@ export default class SmartHighlightsModifier implements PageModifier {
     }
 
     disableAnnotations() {
-        this.backgroundContainer?.remove();
-        this.backgroundContainer = null;
-
         this.clickContainer?.remove();
         this.clickContainer = null;
+
+        this.scrollbarContainer?.remove();
+        this.scrollbarContainer = null;
     }
 
     setEnableAnnotations(enableAnnotations: boolean) {
@@ -268,17 +265,9 @@ export default class SmartHighlightsModifier implements PageModifier {
         return ranges;
     }
 
-    private backgroundContainer: HTMLElement;
     private clickContainer: HTMLElement;
     private scrollbarContainer: HTMLElement;
     createContainers() {
-        // this.backgroundContainer = document.createElement("div");
-        // this.backgroundContainer.className =
-        //     "lindy-smart-highlight-container smart-highlight-background";
-        // // this.backgroundContainer.style.setProperty("z-index", "-1");
-        // this.backgroundContainer.style.setProperty("position", "relative");
-        // document.body.prepend(this.backgroundContainer);
-
         // this.clickContainer = document.createElement("div");
         // this.clickContainer.className = "lindy-smart-highlight-container smart-highlight-click";
         // this.clickContainer.style.setProperty("position", "absolute");

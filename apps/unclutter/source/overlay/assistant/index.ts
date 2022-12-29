@@ -3,7 +3,6 @@ import SmartHighlightsModifier, {
 } from "../../content-script/modifications/DOM/smartHighlights";
 import HighlightDetailSvelte from "./HighlightDetail.svelte";
 import ArticleCardSvelte from "./ArticleCard.svelte";
-import ArticleEdgeSvelte from "./ArticleEdge.svelte";
 
 export function startAssistant(enablePageView: (reason: string) => void) {
     // document.addEventListener("mousedown", onSelectionStart);

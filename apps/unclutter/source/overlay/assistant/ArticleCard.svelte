@@ -29,7 +29,7 @@
 </script>
 
 <div
-    class="article-card ml-auto flex w-max flex-col overflow-hidden rounded-lg bg-gradient-to-b from-yellow-300 to-amber-400 text-sm text-stone-900 shadow drop-shadow transition-transform hover:scale-x-[99%] hover:scale-y-[99.5%]"
+    class="article-card ml-auto flex w-max flex-col overflow-hidden rounded-lg bg-gradient-to-b from-yellow-300 to-amber-400 text-sm text-stone-900 shadow drop-shadow transition-transform hover:scale-x-[98%] hover:scale-y-[99.5%]"
     style:background-image="linear-gradient(120deg, var(--tw-gradient-stops))"
 >
     <div class="font-title flex items-stretch">
@@ -55,37 +55,6 @@
                 {relatedCount}
             </div>
         {/if}
-
-        <!-- {#await tags then tags}
-            {#each tags.slice(0, 3) as tag, i}
-                <div
-                    class={clsx(
-                        "tag cursor-pointer flex text-xs font-text px-2 py-1.5 gap-1 rounded-lg bg-white"
-                        // i === 0 && "rounded-l-lg",
-                        // i === tags.length - 1 && "rounded-r-lg"
-                        // style={`background: ${getRandomLightColor(tag, false)};`}
-                    )}
-                >
-                    <div class="whitespace-nowrap">
-                        {tag}
-                    </div>
-                    <div class="animated-number relative">
-                        <div class="after-value">
-                            {Math.round(Math.random() * 10)}
-                        </div>
-                        <div class="before-value absolute top-0 left-0 h-full w-full">
-                            {Math.round(Math.random() * 10)}
-                        </div>
-                    </div>
-                </div>
-            {/each}
-        {:catch error}
-            Error
-        {/await} -->
-
-        <!-- <div class="lindy-button cursor-pointer px-2 py-1.5 font-bold transition-all">
-            Summarize
-        </div> -->
 
         <div
             class="lindy-button cursor-pointer rounded-r-lg px-2 py-1.5 font-bold transition-all"
