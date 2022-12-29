@@ -18,7 +18,8 @@ export function startAssistant(enablePageView: (reason: string) => void) {
     });
 
     const font = document.createElement("link");
-    font.href = "https://fonts.googleapis.com/css2?family=Poppins&family=Work+Sans+SC&display=swap";
+    font.href = "https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap";
+    // &family=Work+Sans:wght@400
     font.rel = "stylesheet";
     document.head.appendChild(font);
 

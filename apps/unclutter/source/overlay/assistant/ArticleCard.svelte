@@ -9,10 +9,10 @@
 </script>
 
 <div
-    class="article-card ml-auto flex w-max flex-col overflow-hidden rounded-lg bg-gradient-to-b from-yellow-300 to-amber-400 text-sm text-stone-900 shadow drop-shadow transition-transform hover:scale-x-[98%] hover:scale-y-[99%]"
+    class="article-card ml-auto flex w-max cursor-pointer flex-col overflow-hidden rounded-lg bg-gradient-to-b from-yellow-300 to-amber-400 text-sm shadow-sm hover:scale-[97%]"
     style:background-image="linear-gradient(150deg, var(--tw-gradient-stops))"
 >
-    <div class="font-title flex items-stretch">
+    <div class="lindy-button font-title flex items-stretch font-medium text-stone-800">
         <!-- <input class="w-20 bg-white px-2 outline-none placeholder:text-stone-400" /> -->
 
         <div class="ml-0.5 flex items-center gap-1 px-1.5">
@@ -37,7 +37,7 @@
         {/if}
 
         <div
-            class="lindy-button cursor-pointer rounded-r-lg px-2 py-1.5 font-bold transition-all"
+            class="mr-0.5 rounded-r-lg px-1.5 py-1.5 transition-all"
             on:click={() => enablePageView("summary-card")}
         >
             Unclutter
@@ -74,13 +74,14 @@
     @tailwind utilities;
 
     .article-card {
-        /* animation: pageCardBounceIn 0.75s; */
         animation: pageCardFadeIn 200ms cubic-bezier(0.34, 1.56, 0.64, 1); /* easeOutBack */
         animation-fill-mode: backwards;
+        transition: all 200ms cubic-bezier(0.34, 1.56, 0.64, 1); /* easeOutBack */
     }
 
     .lindy-button:hover {
-        background: rgba(255, 255, 255, 0.5) !important;
+        transition: all 200ms cubic-bezier(0.34, 1.56, 0.64, 1); /* easeOutBack */
+        background: rgba(255, 255, 255, 0.3) !important;
     }
 
     @keyframes pageCardFadeIn {
@@ -91,40 +92,6 @@
             transform: scale(1) translateY(0);
         }
     }
-    /* @keyframes pageCardBounceIn {
-        0% {
-            transform: translateY(-100%) rotate(-5deg);
-            opacity: 0;
-        }
-        12% {
-            transform: translateY(-89.11%) rotate(-4.4deg);
-        }
-        24% {
-            transform: translateY(-56.44%) rotate(-3.2deg);
-        }
-        36% {
-            transform: translateY(-1.99%) rotate(-1.6deg);
-        }
-        54% {
-            transform: translateY(-24.98%) rotate(0deg);
-        }
-        74% {
-            transform: translateY(-1.63%) rotate(0deg);
-        }
-        82% {
-            transform: translateY(-6.25%) rotate(0deg);
-        }
-        92% {
-            transform: translateY(-0.66%) rotate(0deg);
-        }
-        96% {
-            transform: translateY(-1.54%) rotate(0deg);
-        }
-        100% {
-            opacity: 1;
-            transform: translateY(0%) rotate(0deg);
-        }
-    } */
 
     .animated-number > .before-value {
         animation: animateNumberOut 0.4s cubic-bezier(0.5, 1, 0.89, 1) 0.5s; /* easeOutQuad */
