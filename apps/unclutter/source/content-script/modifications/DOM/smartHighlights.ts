@@ -24,6 +24,13 @@ export interface RelatedHighlight {
     title: string;
 }
 
+interface AnnotationState {
+    sentence: any;
+    container: HTMLElement;
+    range: Range;
+    paintedElements?: HTMLElement[];
+}
+
 const excludedParagraphClassNames = [
     "comment", // https://civilservice.blog.gov.uk/2022/08/16/a-simple-guide-on-words-to-avoid-in-government/
     "reference", // https://en.wikipedia.org/wiki/Sunstone_(medieval)
@@ -157,7 +164,7 @@ export default class SmartHighlightsModifier implements PageModifier {
         // }
     }
 
-    annotations: LindyAnnotation[] = [];
+    private annotationState: AnnotationState[] = [];
     enableAnnotations() {
         if (this.rankedSentencesByParagraph === undefined) {
             return this.parseArticle();
@@ -171,11 +178,86 @@ export default class SmartHighlightsModifier implements PageModifier {
                 return;
             }
 
-            const ranges = this.anchorParagraphSentences(
+            const container = this.getParagraphAnchor(paragraph);
+
+            // anchor all sentences returned from backend
+            let ranges = this.anchorParagraphSentences(
                 paragraph,
                 rankedSentences.map((s) => s.sentence)
             );
-            this.paintRanges(rankedSentences, ranges);
+
+            // construct global annotationState
+            ranges.forEach((range, i) => {
+                const sentence = rankedSentences[i];
+                if (sentence.related) {
+                    sentence.score = sentence.related[0].score2 + 0.1;
+                }
+
+                // filter
+                if (sentence.score < 0.6) {
+                    return;
+                }
+
+                this.annotationState.push({
+                    sentence,
+                    container,
+                    range,
+                });
+            });
+        });
+
+        // first paint
+        this.paintAllAnnotations();
+
+        // paint again on position change
+        let isInitialPaint = true;
+        const resizeObserver = new ResizeObserver(() => {
+            if (isInitialPaint) {
+                isInitialPaint = false;
+                return;
+            }
+
+            this.paintAllAnnotations();
+        });
+        this.annotationState.forEach(({ container }) => {
+            resizeObserver.observe(container);
+        });
+    }
+
+    private getParagraphAnchor(container: HTMLElement) {
+        // get container to anchor highlight elements
+
+        // need to be able to anchor absolute elements
+        while (container.nodeType !== Node.ELEMENT_NODE) {
+            container = container.parentElement;
+        }
+
+        // box is not correct for inline elements
+        let containerStyle = window.getComputedStyle(container);
+        while (containerStyle.display === "inline") {
+            container = container.parentElement;
+            containerStyle = window.getComputedStyle(container);
+        }
+
+        // be careful with style changes
+        if (containerStyle.position === "static") {
+            container.style.setProperty("position", "relative", "important");
+        }
+        container.style.setProperty("z-index", "0", "important");
+
+        return container;
+    }
+
+    private paintAllAnnotations() {
+        console.log(`Painting ${this.annotationState.length} smart annotations`);
+
+        this.annotationState.forEach(({ sentence, container, range }, i) => {
+            const containerRect = container.getBoundingClientRect();
+
+            this.annotationState[i].paintedElements?.forEach((e) => e.remove());
+
+            let paintedElements = this.paintRange(container, containerRect, range, sentence);
+            this.annotationState[i].paintedElements = paintedElements;
         });
     }
 
@@ -304,7 +386,7 @@ export default class SmartHighlightsModifier implements PageModifier {
 
     private styleObserver: MutationObserver;
     private styleChangesCount = 0;
-    fixScrollbars() {
+    enableStyleTweaks() {
         this.patchScrollbarStyle();
 
         // site may override inline styles, e.g. https://www.fortressofdoors.com/ai-markets-for-lemons-and-the-great-logging-off/
@@ -353,99 +435,27 @@ export default class SmartHighlightsModifier implements PageModifier {
         }
     }
 
-    private paintRanges(sentences: RankedSentence[], ranges: Range[]) {
-        ranges.map((range, i) => {
-            // filter
-            const anchorText = range.toString().trim();
-            if (anchorText.length < 10) {
-                return;
-            }
-            const sentence = sentences[i];
-            let score: number = sentence.score;
-            let color: string = "250, 204, 21";
-            if (sentence.related) {
-                color = "168, 85, 247";
-                score = sentence.related[0].score2 + 0.1;
-            }
-            if (score < 0.6) {
-                return;
-            }
+    disableStyleTweaks() {
+        this.styleObserver.disconnect();
 
-            // debug
-            // if (!anchorText.includes("discounts")) {
-            //     return;
-            // }
+        document.documentElement.style.removeProperty("overflow");
 
-            // get container to anchor highlight elements
-            let container = range.commonAncestorContainer as HTMLElement;
-
-            // need to be able to anchor absolute elements
-            while (container.nodeType !== Node.ELEMENT_NODE) {
-                container = container.parentElement;
-            }
-
-            // box is not correct for inline elements
-            let containerStyle = window.getComputedStyle(container);
-            while (containerStyle.display === "inline") {
-                container = container.parentElement;
-                containerStyle = window.getComputedStyle(container);
-            }
-
-            // be careful with style changes
-            if (containerStyle.position === "static") {
-                container.style.setProperty("position", "relative", "important");
-            }
-            container.style.setProperty("z-index", "0", "important");
-
-            // highlight onclick
-            const onClick = sentence.related
-                ? (e) => this.onRangeClick(e, range, sentence.related)
-                : null;
-
-            // first paint
-            const containerRect = container.getBoundingClientRect();
-            let rangeElements = this.paintRange(
-                container,
-                containerRect,
-                range,
-                score,
-                color,
-                onClick
-            );
-
-            // paint again on position change
-            let isInitialPaint = true;
-            const resizeObserver = new ResizeObserver(() => {
-                if (isInitialPaint) {
-                    isInitialPaint = false;
-                    return;
-                }
-
-                console.log("Re-painting range on resize");
-                rangeElements.forEach((e) => e.remove());
-
-                const containerRect = container.getBoundingClientRect();
-                rangeElements = this.paintRange(
-                    container,
-                    containerRect,
-                    range,
-                    score,
-                    color,
-                    onClick
-                );
-            });
-            resizeObserver.observe(container);
-        });
+        document.body.style.removeProperty("height");
+        document.body.style.removeProperty("max-height");
+        document.body.style.removeProperty("overflow");
     }
 
     private paintRange(
         container: HTMLElement,
         containerRect: DOMRect,
         range: Range,
-        score: number,
-        color: string,
-        onClick: (e: Event) => void = null
+        sentence: any
     ): HTMLElement[] {
+        const color: string = sentence.related ? "168, 85, 247" : "250, 204, 21";
+        const onClick = sentence.related
+            ? (e) => this.onRangeClick(e, range, sentence.related)
+            : null;
+
         let addedElements: HTMLElement[] = [];
 
         const rect = range.getBoundingClientRect();
@@ -480,7 +490,7 @@ export default class SmartHighlightsModifier implements PageModifier {
             node.className = "lindy-smart-highlight-absolute";
             node.style.setProperty(
                 "background",
-                `rgba(${color}, ${0.8 * score ** 3})`,
+                `rgba(${color}, ${0.8 * sentence.score ** 3})`,
                 "important"
             );
             node.style.setProperty("position", "absolute", "important");
@@ -509,7 +519,7 @@ export default class SmartHighlightsModifier implements PageModifier {
         scrollbarNode.className = "lindy-smart-highlight-scroll";
         scrollbarNode.style.setProperty(
             "background",
-            `rgba(${color}, ${0.8 * score ** 3})`,
+            `rgba(${color}, ${0.8 * sentence.score ** 3})`,
             "important"
         );
         scrollbarNode.style.setProperty(

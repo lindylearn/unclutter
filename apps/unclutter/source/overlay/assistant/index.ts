@@ -59,7 +59,14 @@ function onDocumentReady(enablePageView: (reason: string) => void) {
         onHighlightClick
     );
 
-    smartHighlightsModifier.fixScrollbars();
+    smartHighlightsModifier.enableStyleTweaks();
+
+    const enablePageViewInner = (reason: string) => {
+        smartHighlightsModifier.disableStyleTweaks();
+        smartHighlightsModifier.disableAnnotations();
+
+        enablePageView(reason);
+    };
     smartHighlightsModifier.parseUnclutteredArticle().then(() => {
         renderArticleCard(
             Math.ceil(readingTimeMinutes),
@@ -67,7 +74,7 @@ function onDocumentReady(enablePageView: (reason: string) => void) {
             smartHighlightsModifier.relatedCount,
             smartHighlightsModifier.relatedArticles,
             smartHighlightsModifier.articleSummary,
-            enablePageView
+            enablePageViewInner
         );
     });
 }
