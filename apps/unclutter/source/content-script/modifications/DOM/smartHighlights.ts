@@ -302,11 +302,19 @@ export default class SmartHighlightsModifier implements PageModifier {
     }
 
     private styleObserver: MutationObserver;
+    private styleChangesCount = 0;
     fixScrollbars() {
         this.patchScrollbarStyle();
 
         // site may override inline styles, e.g. https://www.fortressofdoors.com/ai-markets-for-lemons-and-the-great-logging-off/
         this.styleObserver = new MutationObserver(() => {
+            // avoid infinite loops if there's another observer (e.g. in BodyStyleModifier)
+            if (this.styleChangesCount > 10) {
+                this.styleObserver.disconnect();
+                return;
+            }
+            this.styleChangesCount += 1;
+
             this.patchScrollbarStyle();
         });
         this.styleObserver.observe(document.documentElement, {

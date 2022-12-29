@@ -93,8 +93,16 @@ export default class BodyStyleModifier implements PageModifier {
         document.body.style.removeProperty("overflow");
     }
 
+    private styleChangesCount = 0;
     private observeStyleChanges(skipScrollChanges: boolean = false) {
         this.styleObserver = new MutationObserver((mutations, observer) => {
+            // avoid infinite loops if there's another observer
+            if (this.styleChangesCount > 10) {
+                this.styleObserver.disconnect();
+                return;
+            }
+            this.styleChangesCount += 1;
+
             this.modifyHtmlStyle(skipScrollChanges);
         });
         this.styleObserver.observe(document.documentElement, {
