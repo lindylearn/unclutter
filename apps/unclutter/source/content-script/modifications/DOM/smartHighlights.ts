@@ -455,7 +455,13 @@ export default class SmartHighlightsModifier implements PageModifier {
         }
 
         let lastRect: ClientRect;
-        for (const rect of range.getClientRects()) {
+        const clientRects = [...range.getClientRects()]
+            // sort to avoid double-paint of <b> elements
+            .sort((a, b) => {
+                return a.top - b.top || a.left - b.left;
+            })
+            .reverse();
+        for (const rect of clientRects) {
             // check overlap
             if (
                 lastRect &&
