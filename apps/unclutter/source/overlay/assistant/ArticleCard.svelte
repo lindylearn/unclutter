@@ -1,7 +1,6 @@
 <script lang="ts">
     import type { RelatedHighlight } from "../../content-script/modifications/DOM/smartHighlights";
 
-    export let readingTimeMinutes: number;
     export let keyPointsCount: number | null;
     export let relatedCount: number | null;
     export let relatedArticles: RelatedHighlight[] | null;

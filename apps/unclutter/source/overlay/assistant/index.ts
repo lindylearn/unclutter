@@ -16,28 +16,6 @@ export function startAssistant(enablePageView: (reason: string) => void) {
         }
     });
 
-    if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", () => {
-            // complete text may lazy load, e.g. on https://arstechnica.com/tech-policy/2022/01/amazon-ends-widely-mocked-scheme-that-turned-workers-into-twitter-ambassadors/
-            // setTimeout(() => {
-            onDocumentReady(enablePageView);
-            // }, 1000);
-        });
-    } else {
-        onDocumentReady(enablePageView);
-    }
-}
-
-function onDocumentReady(enablePageView: (reason: string) => void) {
-    const readingTimeMinutes = document.body.innerText.trim().split(/\s+/).length / 200;
-    const linkCount = document.querySelectorAll("a").length;
-    const linksPerMinute = linkCount / readingTimeMinutes;
-    console.log({ readingTimeMinutes, linkCount, linksPerMinute });
-    if (readingTimeMinutes < 3) {
-        console.log("Ignoring likely non-article page");
-        return;
-    }
-
     const font = document.createElement("link");
     font.href = "https://fonts.googleapis.com/css2?family=Poppins&family=Work+Sans+SC&display=swap";
     font.rel = "stylesheet";
@@ -72,7 +50,6 @@ function onDocumentReady(enablePageView: (reason: string) => void) {
     };
     smartHighlightsModifier.parseUnclutteredArticle().then(() => {
         renderArticleCard(
-            Math.ceil(readingTimeMinutes),
             smartHighlightsModifier.keyPointsCount,
             smartHighlightsModifier.relatedCount,
             smartHighlightsModifier.relatedArticles,
@@ -130,7 +107,6 @@ function renderHighlighter(highlightRect: DOMRect, quote: string, related: Relat
 }
 
 function renderArticleCard(
-    readingTimeMinutes: number,
     keyPointsCount: number,
     relatedCount: number,
     relatedArticles: RelatedHighlight[],
@@ -148,7 +124,6 @@ function renderArticleCard(
     new ArticleCardSvelte({
         target: container,
         props: {
-            readingTimeMinutes,
             keyPointsCount,
             relatedCount,
             relatedArticles,

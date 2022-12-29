@@ -96,13 +96,18 @@ function handleMessage(
         // event sent from boot.js to inject additional functionality
         // browser apis are only available in scripts injected from background scripts or manifest.json
         console.log("boot.js requested injection into tab");
-        injectScript(sender.tab.id, "content-script/enhance.js");
 
-        tabsManager
-            .getSocialAnnotationsCount(sender.tab.id, sender.url)
-            .then((socialCommentsCount) =>
-                reportEnablePageView(message.trigger, socialCommentsCount)
-            );
+        if (message.type === "full") {
+            injectScript(sender.tab.id, "content-script/enhance.js");
+
+            tabsManager
+                .getSocialAnnotationsCount(sender.tab.id, sender.url)
+                .then((socialCommentsCount) =>
+                    reportEnablePageView(message.trigger, socialCommentsCount)
+                );
+        } else if (message.type === "highlights") {
+            injectScript(sender.tab.id, "content-script/highlights.js");
+        }
     } else if (message.event === "openOptionsPage") {
         browser.runtime.openOptionsPage();
     } else if (message.event === "fetchCss") {
