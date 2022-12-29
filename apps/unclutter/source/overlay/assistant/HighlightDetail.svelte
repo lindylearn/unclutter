@@ -1,8 +1,5 @@
 <script lang="ts">
-    import ky from "ky";
-    import { getRandomLightColor } from "@unclutter/library-components/dist/common";
-    import { RelatedHighlight } from "../../content-script/modifications/DOM/smartHighlights";
-    import { highlightRange } from "../../common/annotator/highlighter";
+    import type { RelatedHighlight } from "../../content-script/modifications/DOM/smartHighlights";
     import ArticlePreview from "../outline/Library/ArticlePreview.svelte";
 
     export let quote: string;

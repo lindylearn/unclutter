@@ -1,9 +1,9 @@
 import ky from "ky";
 import { PageModifier, trackModifierExecution } from "../_interface";
-import { createAnnotation, generateId, LindyAnnotation } from "../../../common/annotations/create";
-import AnnotationsModifier from "../annotations/annotationsModifier";
+import { generateId, LindyAnnotation } from "../../../common/annotations/create";
+import type AnnotationsModifier from "../annotations/annotationsModifier";
 import { _createAnnotationFromSelection } from "../annotations/selectionListener";
-import TextContainerModifier from "./textContainer";
+import type TextContainerModifier from "./textContainer";
 import { sendIframeEvent } from "../../../common/reactIframe";
 import {
     enableAnnotationsFeatureFlag,

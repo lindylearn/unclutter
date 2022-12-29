@@ -1,5 +1,5 @@
-import { getUrlHash } from "@unclutter/library-components/dist/common";
-import { Annotation, Article } from "@unclutter/library-components/dist/store/_schema";
+import { getUrlHash } from "@unclutter/library-components/dist/common/url";
+import type { Annotation, Article } from "@unclutter/library-components/dist/store/_schema";
 
 export function createDraftAnnotation(
     url: string,

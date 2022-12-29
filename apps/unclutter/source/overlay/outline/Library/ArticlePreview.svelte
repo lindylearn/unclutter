@@ -1,11 +1,8 @@
 <script lang="ts">
     import clsx from "clsx";
-    import { Article } from "@unclutter/library-components/dist/store/_schema";
-    import {
-        openArticleResilient,
-        reportEventContentScript,
-    } from "@unclutter/library-components/dist/common";
-    import { getRandomLightColor } from "@unclutter/library-components/dist/common";
+    import type { Article } from "@unclutter/library-components/dist/store/_schema";
+    // import { openArticleResilient } from "@unclutter/library-components/dist/common/extension";
+    // import { reportEventContentScript } from "@unclutter/library-components/dist/common/messaging";
 
     export let article: Article;
     export let index: number;
@@ -39,8 +36,8 @@
         e.preventDefault();
         e.stopPropagation();
 
-        openArticleResilient(article.url);
-        reportEventContentScript("clickRelatedArticle");
+        // openArticleResilient(article.url);
+        // reportEventContentScript("clickRelatedArticle");
     }
 </script>
 

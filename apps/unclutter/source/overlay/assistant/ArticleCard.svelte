@@ -1,9 +1,5 @@
 <script lang="ts">
-    import ky from "ky";
-    import { getRandomLightColor } from "@unclutter/library-components/dist/common";
-    import AnimatedNumber from "../outline/Library/AnimatedNumber.svelte";
-    import clsx from "clsx";
-    import { RelatedHighlight } from "../../content-script/modifications/DOM/smartHighlights";
+    import type { RelatedHighlight } from "../../content-script/modifications/DOM/smartHighlights";
 
     export let readingTimeMinutes: number;
     export let keyPointsCount: number | null;

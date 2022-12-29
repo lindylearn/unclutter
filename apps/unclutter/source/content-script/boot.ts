@@ -12,7 +12,6 @@ import {
 import browser from "../common/polyfill";
 import { getDomainFrom } from "../common/util";
 import { startAssistant } from "../overlay/assistant";
-import { displayToast } from "../overlay/toast";
 
 // script injected into every tab before dom constructed
 // if configured by the user, initialize the extension funcationality
@@ -65,20 +64,8 @@ async function onIsLikelyArticle(domain: string) {
     if (configuredEnable) {
         enablePageView("allowlisted");
     } else if (false && enableUnclutterMessage) {
-        showUnclutterMessage();
+        // showUnclutterMessage();
     }
-}
-
-async function showUnclutterMessage() {
-    // console.log("showUnclutterMessage");
-
-    if (document.readyState === "loading") {
-        await new Promise((resolve) => window.addEventListener("load", resolve));
-    }
-
-    displayToast("Unclutter article?", () => {
-        enablePageView("message");
-    });
 }
 
 function enablePageView(trigger) {

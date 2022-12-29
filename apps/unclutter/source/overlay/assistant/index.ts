@@ -1,7 +1,7 @@
 import SmartHighlightsModifier, {
     RelatedHighlight,
 } from "../../content-script/modifications/DOM/smartHighlights";
-import HighlightDetailSvelte from "./HighlightDetail.svelte";
+// import HighlightDetailSvelte from "./HighlightDetail.svelte";
 import ArticleCardSvelte from "./ArticleCard.svelte";
 
 export function startAssistant(enablePageView: (reason: string) => void) {
@@ -103,10 +103,10 @@ function renderHighlighter(highlightRect: DOMRect, quote: string, related: Relat
 
     document.body.appendChild(container);
 
-    new HighlightDetailSvelte({
-        target: container,
-        props: { quote, related },
-    });
+    // new HighlightDetailSvelte({
+    //     target: container,
+    //     props: { quote, related },
+    // });
 
     // allow clicks on the highlighter
     container.addEventListener("mousedown", (event) => {

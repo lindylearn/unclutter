@@ -7,7 +7,7 @@ import { getRandomColor } from "../../../common/annotations/styling";
 import { describe as describeAnnotation } from "../../../common/annotator/anchoring/html";
 import { sendIframeEvent } from "../../../common/reactIframe";
 import { createStylesheetText } from "../../../common/stylesheets";
-import { AnnotationListener } from "./annotationsModifier";
+import type { AnnotationListener } from "./annotationsModifier";
 import {
     anchorAnnotations,
     copyTextToClipboard,
