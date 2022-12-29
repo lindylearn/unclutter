@@ -24,6 +24,10 @@ export interface RelatedHighlight {
     title: string;
 }
 
+const excludedParagraphClassNames = [
+    "comment", // https://civilservice.blog.gov.uk/2022/08/16/a-simple-guide-on-words-to-avoid-in-government/
+];
+
 @trackModifierExecution
 export default class SmartHighlightsModifier implements PageModifier {
     private enabled: boolean = false;
@@ -80,7 +84,18 @@ export default class SmartHighlightsModifier implements PageModifier {
             .querySelectorAll(this.textContainerModifier.usedTextElementSelector)
             .forEach((paragraph: HTMLElement) => {
                 const textContent = paragraph.textContent;
-                if (!textContent || textContent.length < 100) {
+                if (!textContent || textContent.length < 200) {
+                    return;
+                }
+
+                if (
+                    excludedParagraphClassNames.some((word) =>
+                        paragraph.className.toLowerCase().includes(word)
+                    ) ||
+                    excludedParagraphClassNames.some((word) =>
+                        paragraph.parentElement.className.toLowerCase().includes(word)
+                    )
+                ) {
                     return;
                 }
 
