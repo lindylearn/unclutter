@@ -308,6 +308,7 @@ export default class SmartHighlightsModifier implements PageModifier {
 
     private paintRanges(sentences: RankedSentence[], ranges: Range[]) {
         ranges.map((range, i) => {
+            // filter
             if (range.toString().trim().length < 10) {
                 return;
             }
@@ -318,77 +319,115 @@ export default class SmartHighlightsModifier implements PageModifier {
                 color = "168, 85, 247";
                 score = sentence.related[0].score2 + 0.1;
             }
-
             if (score < 0.6) {
                 return;
             }
 
+            // get container to anchor highlight elements
             let container = range.commonAncestorContainer as HTMLElement;
             while (container && container.nodeType !== Node.ELEMENT_NODE) {
                 container = container.parentElement;
             }
-
             const containerRect = container.getBoundingClientRect();
+            // TODO can remove?
             container.style.setProperty("position", "relative", "important");
             container.style.setProperty("z-index", "0", "important");
 
-            let lastRect: ClientRect;
-            for (const rect of range.getClientRects()) {
-                // check overlap
-                if (
-                    lastRect &&
-                    !(
-                        lastRect.top >= rect.bottom ||
-                        lastRect.right <= rect.left ||
-                        lastRect.bottom <= rect.top ||
-                        lastRect.left >= rect.right
-                    )
-                ) {
-                    continue;
-                }
-                lastRect = rect;
+            const onClick = sentence.related
+                ? (e) => this.onRangeClick(e, range, sentence.related)
+                : null;
 
-                const node = document.createElement("div");
-                node.className = "lindy-smart-highlight-absolute";
-                node.style.setProperty(
-                    "background",
-                    `rgba(${color}, ${0.8 * score ** 3})`,
-                    "important"
-                );
-                node.style.setProperty("position", "absolute", "important");
-                node.style.setProperty("top", `${rect.top - containerRect.top}px`, "important");
-                node.style.setProperty("left", `${rect.left - containerRect.left}px`, "important");
-                node.style.setProperty("width", `${rect.width}px`, "important");
-                node.style.setProperty("height", `${rect.height}px`, "important");
-                node.style.setProperty("z-index", `-1`, "important");
-                container.prepend(node);
+            // first paint
+            let rangeElements = this.paintRange(
+                container,
+                containerRect,
+                range,
+                score,
+                color,
+                onClick
+            );
 
-                if (sentence.related) {
-                    const clickNode = node.cloneNode() as HTMLElement;
-                    clickNode.style.setProperty("background", "transparent", "important");
-                    clickNode.style.setProperty("cursor", "pointer", "important");
-                    clickNode.style.setProperty("z-index", `1001`, "important");
-                    clickNode.onclick = (e) => this.onRangeClick(e, range, sentence.related);
-                    container.appendChild(clickNode);
-                }
+            // paint again on position change
+            const resizeObserver = new ResizeObserver((entries) => {
+                console.log(entries.map((e) => e.target));
+            });
+            resizeObserver.observe(container);
+        });
+    }
+
+    private paintRange(
+        container: HTMLElement,
+        containerRect: DOMRect,
+        range: Range,
+        score: number,
+        color: string,
+        onClick: (e: Event) => void = null
+    ): HTMLElement[] {
+        let addedElements: HTMLElement[] = [];
+
+        let lastRect: ClientRect;
+        for (const rect of range.getClientRects()) {
+            // check overlap
+            if (
+                lastRect &&
+                !(
+                    lastRect.top >= rect.bottom ||
+                    lastRect.right <= rect.left ||
+                    lastRect.bottom <= rect.top ||
+                    lastRect.left >= rect.right
+                )
+            ) {
+                continue;
             }
+            lastRect = rect;
 
-            const rect = range.getBoundingClientRect();
-            const scrollbarNode = document.createElement("div");
-            scrollbarNode.className = "lindy-smart-highlight-scroll";
-            scrollbarNode.style.setProperty(
+            const node = document.createElement("div");
+            node.className = "lindy-smart-highlight-absolute";
+            node.style.setProperty(
                 "background",
                 `rgba(${color}, ${0.8 * score ** 3})`,
                 "important"
             );
-            scrollbarNode.style.setProperty(
-                "top",
-                `${(100 * (rect.top + document.body.scrollTop)) / document.body.scrollHeight}vh`,
-                "important"
-            );
+            node.style.setProperty("position", "absolute", "important");
+            node.style.setProperty("top", `${rect.top - containerRect.top}px`, "important");
+            node.style.setProperty("left", `${rect.left - containerRect.left}px`, "important");
+            node.style.setProperty("width", `${rect.width}px`, "important");
+            node.style.setProperty("height", `${rect.height}px`, "important");
+            node.style.setProperty("z-index", `-1`, "important");
 
-            this.scrollbarContainer.appendChild(scrollbarNode);
-        });
+            container.prepend(node);
+            addedElements.push(node);
+
+            if (onClick) {
+                const clickNode = node.cloneNode() as HTMLElement;
+                clickNode.style.setProperty("background", "transparent", "important");
+                clickNode.style.setProperty("cursor", "pointer", "important");
+                clickNode.style.setProperty("z-index", `1001`, "important");
+
+                clickNode.onclick = onClick;
+                container.appendChild(clickNode);
+                addedElements.push(clickNode);
+            }
+        }
+
+        const rect = range.getBoundingClientRect();
+        const scrollbarNode = document.createElement("div");
+        scrollbarNode.className = "lindy-smart-highlight-scroll";
+        scrollbarNode.style.setProperty(
+            "background",
+            `rgba(${color}, ${0.8 * score ** 3})`,
+            "important"
+        );
+        scrollbarNode.style.setProperty(
+            "top",
+            `${(100 * (rect.top + document.body.scrollTop)) / document.body.scrollHeight}vh`,
+            "important"
+        );
+
+        this.scrollbarContainer.appendChild(scrollbarNode);
+        addedElements.push(scrollbarNode);
+
+        return addedElements;
     }
 
     private onRangeClick(e: Event, range: Range, related: RelatedHighlight[]) {
