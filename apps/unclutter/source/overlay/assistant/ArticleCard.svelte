@@ -1,31 +1,16 @@
 <script lang="ts">
-    import type { RelatedHighlight } from "../../content-script/modifications/DOM/smartHighlights";
+    import type { RankedSentence } from "../../content-script/modifications/DOM/smartHighlights";
 
     export let keyPointsCount: number | null;
     export let relatedCount: number | null;
-    export let relatedArticles: RelatedHighlight[] | null;
+    export let topHighlights: RankedSentence[] | null;
     export let articleSummary: string | null;
     export let enablePageView: (reason: string) => void;
-
-    // async function getRelatedHighlights(): Promise<any[]> {
-    //     const articles: any[] = await ky
-    //         .post("https://assistant-two.vercel.app/api/query", {
-    //             json: {
-    //                 query: document.body.innerText.trim().split(/\s+/).join("\n").slice(0, 2000),
-    //             },
-    //         })
-    //         .json();
-    //     console.log(articles);
-
-    //     return articles.filter((h) => h.score >= 0.4).slice(0, 3);
-    // }
-    // let relatedHighlights = null;
-    // $: relatedHighlights = getRelatedHighlights();
 </script>
 
 <div
-    class="article-card ml-auto flex w-max flex-col overflow-hidden rounded-lg bg-gradient-to-b from-yellow-300 to-amber-400 text-sm text-stone-900 shadow drop-shadow transition-transform hover:scale-x-[98%] hover:scale-y-[99.5%]"
-    style:background-image="linear-gradient(120deg, var(--tw-gradient-stops))"
+    class="article-card ml-auto flex w-max flex-col overflow-hidden rounded-lg bg-gradient-to-b from-yellow-300 to-amber-400 text-sm text-stone-900 shadow drop-shadow transition-transform hover:scale-x-[98%] hover:scale-y-[99%]"
+    style:background-image="linear-gradient(150deg, var(--tw-gradient-stops))"
 >
     <div class="font-title flex items-stretch">
         <!-- <input class="w-20 bg-white px-2 outline-none placeholder:text-stone-400" /> -->
@@ -60,7 +45,7 @@
     </div>
 </div>
 
-{#if articleSummary}
+<!-- {#if articleSummary}
     <div
         class="article-card mt-2 flex w-max max-w-xs flex-col gap-2 rounded-lg bg-white text-sm text-stone-900 shadow-md drop-shadow transition-all hover:rotate-[0.5deg]"
     >
@@ -68,23 +53,18 @@
             {articleSummary}
         </div>
     </div>
-{/if}
+{/if} -->
 
-<!-- <div
-    class="font-text highlighter mt-2 flex flex-col gap-2 rounded-xl border-[1px] border-stone-100 bg-white p-1.5 text-xs text-stone-900 shadow-xl drop-shadow"
->
-    {#each relatedArticles as related}
+<!-- <div class="mt-2 flex max-w-xs flex-col gap-2">
+    {#each topHighlights?.slice(0, 2) as highlight}
         <div
-            class="flex max-w-xs cursor-pointer flex-col gap-2 rounded-lg bg-stone-100 p-2 shadow-sm transition-all hover:scale-[99%]"
+            class="font-text flex cursor-pointer flex-col gap-2 overflow-hidden overflow-ellipsis rounded-lg p-2 text-sm text-stone-900 shadow-sm drop-shadow"
+            style:display="-webkit-box"
+            style:-webkit-box-orient="vertical"
+            style:-webkit-line-clamp="4"
+            style:background={`rgba(250, 204, 21, ${0.8 * highlight.score ** 4})`}
         >
-            <div class="">"{related.text.slice(0, 100)}" {related.score.toFixed(2)}</div>
-            <div
-                class="font-title flex items-center justify-between gap-2 overflow-hidden rounded-b-lg"
-            >
-                <div class="flex-shrink overflow-hidden overflow-ellipsis whitespace-nowrap">
-                    {related.title}
-                </div>
-            </div>
+            "{highlight.sentence}"
         </div>
     {/each}
 </div> -->

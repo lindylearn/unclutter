@@ -1,5 +1,6 @@
 import SmartHighlightsModifier, {
     RelatedHighlight,
+    RankedSentence,
 } from "../../content-script/modifications/DOM/smartHighlights";
 // import HighlightDetailSvelte from "./HighlightDetail.svelte";
 import ArticleCardSvelte from "./ArticleCard.svelte";
@@ -52,7 +53,7 @@ export function startAssistant(enablePageView: (reason: string) => void) {
         renderArticleCard(
             smartHighlightsModifier.keyPointsCount,
             smartHighlightsModifier.relatedCount,
-            smartHighlightsModifier.relatedArticles,
+            smartHighlightsModifier.topHighlights,
             smartHighlightsModifier.articleSummary,
             enablePageViewInner
         );
@@ -109,7 +110,7 @@ function renderHighlighter(highlightRect: DOMRect, quote: string, related: Relat
 function renderArticleCard(
     keyPointsCount: number,
     relatedCount: number,
-    relatedArticles: RelatedHighlight[],
+    topHighlights: RankedSentence[],
     articleSummary: string,
     enablePageView: (reason: string) => void
 ) {
@@ -119,14 +120,14 @@ function renderArticleCard(
     container.style.top = `10px`;
     container.style.right = `25px`;
     container.style.zIndex = `9999999999`;
-    document.body.appendChild(container);
+    document.documentElement.appendChild(container);
 
     new ArticleCardSvelte({
         target: container,
         props: {
             keyPointsCount,
             relatedCount,
-            relatedArticles,
+            topHighlights,
             articleSummary,
             enablePageView,
         },

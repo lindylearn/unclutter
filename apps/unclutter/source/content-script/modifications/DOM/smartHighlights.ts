@@ -26,7 +26,7 @@ export default class SmartHighlightsModifier implements PageModifier {
     articleSummary: string | null;
     keyPointsCount: number | null;
     relatedCount: number | null;
-    relatedArticles: RelatedHighlight[] | null;
+    topHighlights: RankedSentence[] | null;
 
     constructor(onHighlightClick: (range: Range, related: RelatedHighlight[]) => void = null) {
         this.onHighlightClick = onHighlightClick;
@@ -74,26 +74,19 @@ export default class SmartHighlightsModifier implements PageModifier {
 
         this.keyPointsCount = 0;
         this.relatedCount = 0;
+        this.topHighlights = [];
         this.rankedSentencesByParagraph?.forEach((paragraph) => {
-            paragraph.forEach((sentence) => {
-                if (sentence.score >= 0.6) {
-                    this.keyPointsCount += 1;
-                }
+            paragraph.forEach((sentence: RankedSentence) => {
                 if (sentence.related && sentence.related?.[0]?.score2 > 0.5) {
                     this.relatedCount += 1;
+                } else if (sentence.score >= 0.6) {
+                    this.keyPointsCount += 1;
+
+                    // this.topHighlights.push(sentence);
                 }
             });
         });
-
-        // this.relatedArticles = await ky
-        //     .post("https://assistant-two.vercel.app/api/query", {
-        //         json: {
-        //             query: `${document.title}\n${paragraphTexts.slice(0, 3).join("\n")}`,
-        //         },
-        //         timeout: false,
-        //     })
-        //     .json();
-        // this.relatedArticles = this.relatedArticles.filter((h) => h.score >= 0.5).slice(0, 3);
+        // this.topHighlights = this.topHighlights.sort((a, b) => b.score - a.score).slice(0, 3);
 
         this.enableAnnotations();
         // if (this.annotationsModifier?.sidebarIframe) {
@@ -111,7 +104,7 @@ export default class SmartHighlightsModifier implements PageModifier {
     }
 
     private annotationState: {
-        sentence: any;
+        sentence: RankedSentence;
         container: HTMLElement;
         range: Range;
         paintedElements?: HTMLElement[];
@@ -403,7 +396,7 @@ export default class SmartHighlightsModifier implements PageModifier {
         container: HTMLElement,
         containerRect: DOMRect,
         range: Range,
-        sentence: any
+        sentence: RankedSentence
     ): HTMLElement[] {
         const color: string = sentence.related ? "168, 85, 247" : "250, 204, 21";
         const score = sentence.score > 0.6 ? sentence.score : 0;
