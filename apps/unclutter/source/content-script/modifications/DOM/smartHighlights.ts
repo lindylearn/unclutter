@@ -188,6 +188,9 @@ export default class SmartHighlightsModifier implements PageModifier {
         let currentRange = document.createRange();
         currentRange.setStart(currentElem, 0);
 
+        // if (!paragraph.textContent.includes("surprise")) {
+        //     return [];
+        // }
         // console.log(paragraph, sentences);
 
         while (ranges.length < sentences.length) {
@@ -196,18 +199,22 @@ export default class SmartHighlightsModifier implements PageModifier {
             }
 
             const currentSentence = sentences[ranges.length];
-            const currentSentenceLength = currentSentence.length + 1; // trailing space
+            let currentSentenceLength = currentSentence.length;
             const currentLength = currentElem.textContent.length;
+
+            // assume trailing space removed in backend
+            // TODO handle this better
+            let hasTrailingSpace = false;
+            if (ranges.length < sentences.length - 1) {
+                hasTrailingSpace = true;
+                currentSentenceLength += 1;
+            }
 
             // console.log({ currentElem });
 
             if (runningTextLength + currentLength < currentSentenceLength) {
-                // console.log(
-                //     "skip",
-                //     runningTextLength,
-                //     currentLength,
-                //     currentSentenceLength
-                // );
+                // console.log("skip", runningTextLength, currentLength, currentSentenceLength);
+
                 // not enough text, skip entire node subtree
                 runningTextLength += currentLength;
                 if (currentElem.nextSibling) {
@@ -224,7 +231,7 @@ export default class SmartHighlightsModifier implements PageModifier {
                         // how to handle?
                     }
 
-                    // ranges.push(currentRange);
+                    ranges.push(currentRange);
                     // console.log(currentRange.toString());
                     break;
                 } else {
@@ -239,16 +246,11 @@ export default class SmartHighlightsModifier implements PageModifier {
                     continue;
                 } else {
                     // slice text content
-                    // console.log(
-                    //     "slice",
-                    //     runningTextLength,
-                    //     currentLength,
-                    //     currentSentenceLength
-                    // );
+                    // console.log("slice", runningTextLength, currentLength, currentSentenceLength);
 
                     // sentence ends inside this node
                     const offset = currentSentenceLength - runningTextLength;
-                    currentRange.setEnd(currentElem, offset - 1); // exclude trailing space
+                    currentRange.setEnd(currentElem, offset - (hasTrailingSpace ? 1 : 0));
                     ranges.push(currentRange);
                     // console.log(currentRange.toString());
 
