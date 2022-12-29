@@ -5,7 +5,7 @@ import { getNodeOffset } from "../../../common/annotations/offset";
 import AnnotationsModifier from "../annotations/annotationsModifier";
 import { getLinkedArticles } from "../../../common/api";
 import LibraryModifier from "../library";
-import { Article } from "@unclutter/library-components/dist/store/_schema";
+import type { Article } from "@unclutter/library-components/dist/store/_schema";
 import { openArticle } from "@unclutter/library-components/dist/common/messaging";
 import OverlayManager from "../overlay";
 import { extensionSupportsUrl, isNonLeafPage } from "../../../common/articleDetection";

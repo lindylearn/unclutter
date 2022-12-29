@@ -1,12 +1,12 @@
 import throttle from "lodash/throttle";
 
-import {
+import type {
     Article,
     ArticleLink,
     readingProgressFullClamp,
 } from "@unclutter/library-components/dist/store/_schema";
 import { constructGraphData } from "@unclutter/library-components/dist/components/Modal/Graph";
-import { getDomain, getUrlHash } from "@unclutter/library-components/dist/common";
+import { getDomain } from "@unclutter/library-components/dist/common/util";
 
 import { PageModifier, trackModifierExecution } from "./_interface";
 import { getLibraryUser } from "../../common/storage";

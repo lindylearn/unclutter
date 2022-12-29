@@ -1,7 +1,7 @@
 import {
     ReplicacheProxy,
     ReplicacheProxyEventTypes,
-} from "@unclutter/library-components/dist/common";
+} from "@unclutter/library-components/dist/common/messaging";
 import { JSONValue, ReadonlyJSONValue } from "replicache";
 import { getLibraryUser } from "../../common/storage";
 import { migrateMetricsUser } from "../metrics";

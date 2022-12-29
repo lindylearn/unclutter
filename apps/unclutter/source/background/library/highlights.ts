@@ -1,5 +1,5 @@
-import { getUrlHash, normalizeUrl } from "@unclutter/library-components/dist/common";
-import { Annotation, Article } from "@unclutter/library-components/dist/store";
+import { getUrlHash, normalizeUrl } from "@unclutter/library-components/dist/common/url";
+import type { Annotation, Article } from "@unclutter/library-components/dist/store";
 import { debounce, groupBy } from "lodash";
 import { LindyAnnotation, pickleLocalAnnotation } from "../../common/annotations/create";
 import { getFeatureFlag, hypothesisSyncFeatureFlag } from "../../common/featureFlags";

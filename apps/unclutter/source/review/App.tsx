@@ -1,6 +1,6 @@
-import { ReplicacheProxy } from "@unclutter/library-components/dist/common";
+import { ReplicacheProxy } from "@unclutter/library-components/dist/common/messaging";
 import ArticleBottomReview from "@unclutter/library-components/dist/components/Review/ArticleBottomReview";
-import { ReplicacheContext } from "@unclutter/library-components/dist/store";
+import { ReplicacheContext } from "@unclutter/library-components/dist/store/replicache";
 import React, { useMemo } from "react";
 
 export default function App({ articleId }) {

@@ -10,7 +10,7 @@ import {
 } from "replicache";
 import { accessors, mutators } from "@unclutter/library-components/dist/store";
 import * as idb from "idb-keyval";
-import { ReplicacheProxyEventTypes } from "@unclutter/library-components/dist/common/messaging";
+import type { ReplicacheProxyEventTypes } from "@unclutter/library-components/dist/common/messaging";
 import type { Runtime } from "webextension-polyfill";
 
 // local-only replicache stub

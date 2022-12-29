@@ -1,8 +1,6 @@
 <script lang="ts">
     import { reportPageContentScript } from "../../../common/bugReport";
-    import { incrementPageReportCount } from "../../../common/storage";
-    import { reportEventContentScript } from "@unclutter/library-components/dist/common";
-    import TextContainerModifier from "../../../content-script/modifications/DOM/textContainer";
+    import { reportEventContentScript } from "@unclutter/library-components/dist/common/messaging";
     import ElementPickerModifier from "../../../content-script/modifications/elementPicker";
     import Icon from "../Icon.svelte";
     import ElementPickerModifierDialog from "./ElementPickerDialog.svelte";

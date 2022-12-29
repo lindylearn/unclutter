@@ -2,13 +2,9 @@ import ky from "ky";
 import { PageModifier, trackModifierExecution } from "../_interface";
 import { describe as describeAnnotation } from "../../../common/annotator/anchoring/html";
 import { createInfoAnnotation, LindyAnnotation } from "../../../common/annotations/create";
-import { getNodeOffset } from "../../../common/annotations/offset";
 import AnnotationsModifier from "../annotations/annotationsModifier";
 import { wrapPaintAnnotation } from "../annotations/selectionListener";
-import { highlightRange } from "../../../common/annotator/highlighter";
-import { paintHighlight } from "../annotations/highlightsApi";
 import TextContainerModifier from "./textContainer";
-import { Annotation } from "@unclutter/library-components/dist/store";
 
 @trackModifierExecution
 export default class AIAnnotationsModifier implements PageModifier {

@@ -1,9 +1,7 @@
 import clsx from "clsx";
-import ky from "ky";
 import debounce from "lodash/debounce";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import TextareaAutosize from "react-textarea-autosize";
-import { AnimatedNumber } from "@unclutter/library-components/dist/components";
 
 import { LindyAnnotation } from "../../common/annotations/create";
 import { getAnnotationColor } from "../../common/annotations/styling";

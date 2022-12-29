@@ -8,7 +8,7 @@ import {
 } from "../../common/featureFlags";
 import browser, { BrowserType, getBrowserType } from "../../common/polyfill";
 import { LibraryState } from "../../common/schema";
-import { Article } from "@unclutter/library-components/dist/store/_schema";
+import type { Article } from "@unclutter/library-components/dist/store/_schema";
 import { createStylesheetLink, overrideClassname } from "../../common/stylesheets";
 import { backgroundColorThemeVariable } from "../../common/theme";
 import FeedbackMessage from "../../overlay/outline/Bottom/FeedbackMessage.svelte";
@@ -32,7 +32,7 @@ import ReadingTimeModifier from "./DOM/readingTime";
 import { setUserSettingsForDomain } from "../../common/storage";
 import LibraryModifier from "./library";
 import BodyStyleModifier from "./bodyStyle";
-import { reportEventContentScript } from "@unclutter/library-components/dist/common";
+import { reportEventContentScript } from "@unclutter/library-components/dist/common/messaging";
 import SmartHighlightsModifier from "./DOM/smartHighlights";
 
 @trackModifierExecution

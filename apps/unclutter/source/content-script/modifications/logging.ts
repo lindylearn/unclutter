@@ -1,4 +1,4 @@
-import { reportEventContentScript } from "@unclutter/library-components/dist/common";
+import { reportEventContentScript } from "@unclutter/library-components/dist/common/messaging";
 import ReadingTimeModifier from "./DOM/readingTime";
 import LibraryModifier from "./library";
 import OverlayManager from "./overlay";

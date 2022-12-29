@@ -1,11 +1,10 @@
 import {
     getMainFeed,
-    discoverDomainFeeds,
     getHeuristicFeedUrls,
     fetchParseFeedForUrl,
     getGoogleNewsFeed,
 } from "@unclutter/library-components/dist/feeds";
-import { FeedSubscription } from "@unclutter/library-components/dist/store";
+import type { FeedSubscription } from "@unclutter/library-components/dist/store";
 
 export async function discoverRssFeed(
     sourceUrl: string,

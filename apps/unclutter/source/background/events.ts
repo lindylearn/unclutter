@@ -1,6 +1,6 @@
-import { clusterLibraryArticles } from "@unclutter/library-components/dist/common";
+import { clusterLibraryArticles } from "@unclutter/library-components/dist/common/api";
 import { fetchRssFeed } from "@unclutter/library-components/dist/feeds";
-import type { Runtime, Tabs, Alarms } from "webextension-polyfill";
+import type { Runtime, Tabs } from "webextension-polyfill";
 import { extensionSupportsUrl } from "../common/articleDetection";
 import { handleReportBrokenPage } from "../common/bugReport";
 import {

@@ -19,8 +19,8 @@ import { PageModifier, trackModifierExecution } from "./modifications/_interface
 import KeyboardModifier from "./modifications/keyboard";
 import LoggingManager from "./modifications/logging";
 import ReviewModifier from "./modifications/review";
-import { getUrlHash } from "@unclutter/library-components/dist/common";
-import AIAnnotationsModifier from "./modifications/DOM/aiAnnotations";
+import { getUrlHash } from "@unclutter/library-components/dist/common/url";
+// import AIAnnotationsModifier from "./modifications/DOM/aiAnnotations";
 import SmartHighlightsModifier from "./modifications/DOM/smartHighlights";
 
 @trackModifierExecution

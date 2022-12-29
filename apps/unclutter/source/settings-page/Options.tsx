@@ -1,8 +1,6 @@
 import React from "react";
 import {
     allowlistDomainOnManualActivationFeatureFlag,
-    enableArchiveDetection,
-    enableBootUnclutterMessage,
     enableExperimentalFeatures,
     enableSocialCountsFeatureFlag,
     getFeatureFlag,
@@ -14,7 +12,7 @@ import ContributionStats from "./ContributionStats";
 import DomainSettingsList from "./DomainSettingsList";
 import FeatureFlagSwitch from "./FeatureFlagSwitch";
 import HypothesisConfig from "./HypothesisConfig";
-import { useAutoDarkMode } from "@unclutter/library-components/dist/common";
+import { useAutoDarkMode } from "@unclutter/library-components/dist/common/hooks";
 import clsx from "clsx";
 import { getHypothesisSyncState, SyncState } from "../common/storage";
 import { getRelativeTime } from "../common/time";
