@@ -101,7 +101,7 @@ export default class SmartHighlightsModifier implements PageModifier {
         this.rankedSentencesByParagraph = response;
         // this.rankedSentencesByParagraph = response.rankings || null;
         // this.articleSummary = response.summary || null;
-        console.log(this.rankedSentencesByParagraph);
+        // console.log(this.rankedSentencesByParagraph);
 
         this.keyPointsCount = 0;
         this.relatedCount = 0;
@@ -418,6 +418,12 @@ export default class SmartHighlightsModifier implements PageModifier {
     ): HTMLElement[] {
         let addedElements: HTMLElement[] = [];
 
+        const rect = range.getBoundingClientRect();
+        if (rect.top === 0) {
+            // position error
+            return [];
+        }
+
         let lastRect: ClientRect;
         for (const rect of range.getClientRects()) {
             // check overlap
@@ -463,7 +469,6 @@ export default class SmartHighlightsModifier implements PageModifier {
             }
         }
 
-        const rect = range.getBoundingClientRect();
         const scrollbarNode = document.createElement("div");
         scrollbarNode.className = "lindy-smart-highlight-scroll";
         scrollbarNode.style.setProperty(
