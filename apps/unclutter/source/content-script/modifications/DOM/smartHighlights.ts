@@ -115,6 +115,7 @@ export default class SmartHighlightsModifier implements PageModifier {
         container: HTMLElement;
         range: Range;
         paintedElements?: HTMLElement[];
+        invalid?: boolean;
     }[] = [];
     enableAnnotations() {
         this.createContainers();
@@ -140,7 +141,7 @@ export default class SmartHighlightsModifier implements PageModifier {
                     sentence.score = sentence.related[0].score2 + 0.1;
                 }
 
-                // filter
+                // filter considered sentences
                 if (sentence.score < 0.6) {
                     return;
                 }
@@ -198,13 +199,23 @@ export default class SmartHighlightsModifier implements PageModifier {
     private paintAllAnnotations() {
         console.log(`Painting ${this.annotationState.length} smart annotations`);
 
-        this.annotationState.forEach(({ sentence, container, range }, i) => {
-            const containerRect = container.getBoundingClientRect();
+        this.annotationState.forEach(({ invalid, sentence, container, range }, i) => {
+            if (invalid) {
+                return;
+            }
+            if (sentence.score < 0.6 && !this.enableAllSentences) {
+                return;
+            }
 
+            const containerRect = container.getBoundingClientRect();
             this.annotationState[i].paintedElements?.forEach((e) => e.remove());
 
             let paintedElements = this.paintRange(container, containerRect, range, sentence);
-            this.annotationState[i].paintedElements = paintedElements;
+            if (paintedElements.length === 0) {
+                this.annotationState[i].invalid = true;
+            } else {
+                this.annotationState[i].paintedElements = paintedElements;
+            }
         });
     }
 
@@ -395,9 +406,8 @@ export default class SmartHighlightsModifier implements PageModifier {
         sentence: any
     ): HTMLElement[] {
         const color: string = sentence.related ? "168, 85, 247" : "250, 204, 21";
-        const onClick = sentence.related
-            ? (e) => this.onRangeClick(e, range, sentence.related)
-            : null;
+        const score = sentence.score > 0.6 ? sentence.score : 0;
+        const colorIntensity = 0.8 * score ** 4;
 
         let addedElements: HTMLElement[] = [];
 
@@ -431,11 +441,7 @@ export default class SmartHighlightsModifier implements PageModifier {
 
             const node = document.createElement("div");
             node.className = "lindy-smart-highlight-absolute";
-            node.style.setProperty(
-                "background",
-                `rgba(${color}, ${0.8 * sentence.score ** 3})`,
-                "important"
-            );
+            node.style.setProperty("background", `rgba(${color}, ${colorIntensity})`, "important");
             node.style.setProperty("position", "absolute", "important");
             node.style.setProperty("top", `${rect.top - containerRect.top}px`, "important");
             node.style.setProperty("left", `${rect.left - containerRect.left}px`, "important");
@@ -446,13 +452,13 @@ export default class SmartHighlightsModifier implements PageModifier {
             container.prepend(node);
             addedElements.push(node);
 
-            if (onClick) {
+            if (this.enableHighlightsClick) {
                 const clickNode = node.cloneNode() as HTMLElement;
                 clickNode.style.setProperty("background", "transparent", "important");
                 clickNode.style.setProperty("cursor", "pointer", "important");
                 clickNode.style.setProperty("z-index", `1001`, "important");
 
-                clickNode.onclick = onClick;
+                clickNode.onclick = (e) => this.onRangeClick(e, range, sentence.related);
                 container.appendChild(clickNode);
                 addedElements.push(clickNode);
             }
@@ -462,7 +468,7 @@ export default class SmartHighlightsModifier implements PageModifier {
         scrollbarNode.className = "lindy-smart-highlight-scroll";
         scrollbarNode.style.setProperty(
             "background",
-            `rgba(${color}, ${0.8 * sentence.score ** 3})`,
+            `rgba(${color}, ${colorIntensity})`,
             "important"
         );
         scrollbarNode.style.setProperty(
@@ -477,22 +483,26 @@ export default class SmartHighlightsModifier implements PageModifier {
         return addedElements;
     }
 
+    enableHighlightsClick: boolean = false;
+    enableAllSentences: boolean = false;
+    isProxyActive: boolean = false;
     private onRangeClick(e: Event, range: Range, related: RelatedHighlight[]) {
-        // @ts-ignore
-        // if (e.target?.classList.contains("lindy-highlight") && e.target?.id) {
-        //     return;
-        // }
+        // TODO split handling for related annotations
 
-        if (this.onHighlightClick) {
-            this.onHighlightClick(range, related);
-            return;
+        if (this.isProxyActive) {
+            // pass to proxy running inside enhance.ts
+            // TODO pass range instead of modifying the selection
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+
+            window.postMessage({ type: "clickSmartHighlight" }, "*");
+        } else {
+            // handle in assistant
+            if (this.onHighlightClick) {
+                this.onHighlightClick(range, related);
+                return;
+            }
         }
-
-        // TODO pass range instead of modifying the selection
-        const selection = window.getSelection();
-        selection.removeAllRanges();
-        selection.addRange(range);
-
-        window.postMessage({ type: "clickSmartHighlight" }, "*");
     }
 }

@@ -56,8 +56,17 @@ function onDocumentReady(enablePageView: (reason: string) => void) {
     smartHighlightsModifier.enableStyleTweaks();
 
     const enablePageViewInner = (reason: string) => {
+        // disable scrollbar for reader mode
         smartHighlightsModifier.disableStyleTweaks();
         smartHighlightsModifier.disableScrollbar();
+
+        // handle clicks on highlights in enhance.ts
+        smartHighlightsModifier.isProxyActive = true;
+
+        // enable click layer on next re-paint
+        smartHighlightsModifier.enableHighlightsClick = true;
+
+        // smartHighlightsModifier.enableAllSentences = true;
 
         enablePageView(reason);
     };

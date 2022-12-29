@@ -11,22 +11,22 @@ export default class SmartHighlightsProxy implements PageModifier {
 
     constructor(annotationsModifier: AnnotationsModifier) {
         this.annotationsModifier = annotationsModifier;
+
+        window.addEventListener("message", (event) => this.handleMessage(event.data || {}));
     }
 
-    private handleMessage(message: { type: string }) {
-        window.addEventListener("message", (event) => {
-            if (event.data.type === "clickSmartHighlight") {
-                _createAnnotationFromSelection(
-                    (annotation) => {
-                        sendIframeEvent(this.annotationsModifier.sidebarIframe, {
-                            event: "createHighlight",
-                            annotation,
-                        });
-                    },
-                    this.annotationsModifier.sidebarIframe,
-                    generateId()
-                );
-            }
-        });
+    private handleMessage(message: any) {
+        if (message.type === "clickSmartHighlight") {
+            _createAnnotationFromSelection(
+                (annotation) => {
+                    sendIframeEvent(this.annotationsModifier.sidebarIframe, {
+                        event: "createHighlight",
+                        annotation,
+                    });
+                },
+                this.annotationsModifier.sidebarIframe,
+                generateId()
+            );
+        }
     }
 }
