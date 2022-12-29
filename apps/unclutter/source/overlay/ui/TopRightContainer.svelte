@@ -2,18 +2,18 @@
     import browser from "../../common/polyfill";
     import UIControl from "./Controls/UIControl.svelte";
     import PrivateNotesControl from "./Controls/PrivateNotesControl.svelte";
-    import AnnotationsModifier from "../../content-script/modifications/annotations/annotationsModifier";
-    import ThemeModifier from "../../content-script/modifications/CSSOM/theme";
-    import OverlayManager from "../../content-script/modifications/overlay";
+    import type AnnotationsModifier from "../../content-script/modifications/annotations/annotationsModifier";
+    import type ThemeModifier from "../../content-script/modifications/CSSOM/theme";
+    import type OverlayManager from "../../content-script/modifications/overlay";
     import SocialHighlightsControl from "./Controls/SocialHighlightsControl.svelte";
     import ThemeControl from "./Controls/ThemeControl.svelte";
     import BugReportControl from "./Controls/BugReportControl.svelte";
-    import ElementPickerModifier from "../../content-script/modifications/elementPicker";
-    import SmartHighlightsModifier from "../../content-script/modifications/DOM/smartHighlights";
+    import type ElementPickerModifier from "../../content-script/modifications/elementPicker";
+    import type SmartHighlightsProxy from "../../content-script/modifications/DOM/smartHighlightsProxy";
 
     export let themeModifier: ThemeModifier;
     export let annotationsModifer: AnnotationsModifier;
-    export let smartHighlightsModifier: SmartHighlightsModifier;
+    export let smartHighlightsProxy: SmartHighlightsProxy;
     export let overlayModifier: OverlayManager;
     export let elementPickerModifier: ElementPickerModifier;
 
@@ -28,7 +28,7 @@
 />
 <BugReportControl {domain} {elementPickerModifier} />
 <ThemeControl {domain} {themeModifier} />
-<PrivateNotesControl {annotationsModifer} {overlayModifier} {smartHighlightsModifier} />
+<PrivateNotesControl {annotationsModifer} {overlayModifier} {smartHighlightsProxy} />
 <SocialHighlightsControl {annotationsModifer} {overlayModifier} {anchoredSocialHighlightsCount} />
 
 <style global lang="postcss">

@@ -5,13 +5,13 @@
         setFeatureFlag,
     } from "../../../common/featureFlags";
     import { reportEventContentScript } from "@unclutter/library-components/dist/common/messaging";
-    import AnnotationsModifier from "../../../content-script/modifications/annotations/annotationsModifier";
-    import OverlayManager from "../../../content-script/modifications/overlay";
+    import type AnnotationsModifier from "../../../content-script/modifications/annotations/annotationsModifier";
+    import type OverlayManager from "../../../content-script/modifications/overlay";
     import UiControl from "./UIControl.svelte";
-    import SmartHighlightsModifier from "../../../content-script/modifications/DOM/smartHighlights";
+    import type SmartHighlightsProxy from "../../../content-script/modifications/DOM/smartHighlightsProxy";
 
     export let annotationsModifer: AnnotationsModifier;
-    export let smartHighlightsModifier: SmartHighlightsModifier;
+    export let smartHighlightsProxy: SmartHighlightsProxy;
     export let overlayModifier: OverlayManager;
 
     let privateNotesEnabled: boolean = true;
@@ -26,7 +26,7 @@
 
         annotationsModifer.setEnableAnnotations(privateNotesEnabled);
         overlayModifier.setEnableAnnotations(privateNotesEnabled);
-        smartHighlightsModifier.setEnableAnnotations(privateNotesEnabled);
+        // smartHighlightsProxy.setEnableAnnotations(privateNotesEnabled);
 
         reportEventContentScript("toggleAnnotations", {
             newState: privateNotesEnabled,

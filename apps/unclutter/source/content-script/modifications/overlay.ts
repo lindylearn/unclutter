@@ -33,7 +33,7 @@ import { setUserSettingsForDomain } from "../../common/storage";
 import LibraryModifier from "./library";
 import BodyStyleModifier from "./bodyStyle";
 import { reportEventContentScript } from "@unclutter/library-components/dist/common/messaging";
-import SmartHighlightsModifier from "./DOM/smartHighlights";
+import SmartHighlightsProxy from "./DOM/smartHighlightsProxy";
 
 @trackModifierExecution
 export default class OverlayManager implements PageModifier {
@@ -46,7 +46,7 @@ export default class OverlayManager implements PageModifier {
     private libraryModifier: LibraryModifier;
     private libraryModalModifier: LibraryModalModifier;
     private bodyStyleModifier: BodyStyleModifier;
-    private smartHighlightsModifier: SmartHighlightsModifier;
+    private smartHighlightsProxy: SmartHighlightsProxy;
 
     outline: OutlineItem[];
     private flatOutline: OutlineItem[];
@@ -67,7 +67,7 @@ export default class OverlayManager implements PageModifier {
         libraryModalModifier: LibraryModalModifier,
         readingTimeModifier: ReadingTimeModifier,
         bodyStyleModifier: BodyStyleModifier,
-        smartHighlightsModifier: SmartHighlightsModifier
+        smartHighlightsProxy: SmartHighlightsProxy
     ) {
         this.domain = domain;
         this.browserType = getBrowserType();
@@ -78,7 +78,7 @@ export default class OverlayManager implements PageModifier {
         this.libraryModifier = libraryModifier;
         this.libraryModalModifier = libraryModalModifier;
         this.bodyStyleModifier = bodyStyleModifier;
-        this.smartHighlightsModifier = smartHighlightsModifier;
+        this.smartHighlightsProxy = smartHighlightsProxy;
 
         annotationsModifer.annotationListeners.push(this.onAnnotationUpdate.bind(this));
         readingTimeModifier.readingTimeLeftListeners.push(this.onReadingTimeUpdate.bind(this));
@@ -203,7 +203,7 @@ export default class OverlayManager implements PageModifier {
                 domain: this.domain,
                 themeModifier: this.themeModifier,
                 annotationsModifer: this.annotationsModifer,
-                smartHighlightsModifier: this.smartHighlightsModifier,
+                smartHighlightsProxy: this.smartHighlightsProxy,
                 overlayModifier: this,
                 elementPickerModifier: this.elementPickerModifier,
             },

@@ -51,19 +51,13 @@ function onDocumentReady(enablePageView: (reason: string) => void) {
         const quote = range.toString();
         renderHighlighter(rect, quote, related);
     }
-    const smartHighlightsModifier = new SmartHighlightsModifier(
-        null,
-        // @ts-ignore
-        { usedTextElementSelector: "p, font, li" },
-        true,
-        onHighlightClick
-    );
+    const smartHighlightsModifier = new SmartHighlightsModifier(onHighlightClick);
 
     smartHighlightsModifier.enableStyleTweaks();
 
     const enablePageViewInner = (reason: string) => {
         smartHighlightsModifier.disableStyleTweaks();
-        smartHighlightsModifier.disableAnnotations();
+        smartHighlightsModifier.disableScrollbar();
 
         enablePageView(reason);
     };

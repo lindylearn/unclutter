@@ -1,15 +1,5 @@
 import ky from "ky";
 import { PageModifier, trackModifierExecution } from "../_interface";
-import { generateId, LindyAnnotation } from "../../../common/annotations/create";
-import type AnnotationsModifier from "../annotations/annotationsModifier";
-import { _createAnnotationFromSelection } from "../annotations/selectionListener";
-import type TextContainerModifier from "./textContainer";
-import { sendIframeEvent } from "../../../common/reactIframe";
-import {
-    enableAnnotationsFeatureFlag,
-    enableExperimentalFeatures,
-    getFeatureFlag,
-} from "../../../common/featureFlags";
 
 export interface RankedSentence {
     score: number;
@@ -24,13 +14,6 @@ export interface RelatedHighlight {
     title: string;
 }
 
-interface AnnotationState {
-    sentence: any;
-    container: HTMLElement;
-    range: Range;
-    paintedElements?: HTMLElement[];
-}
-
 const excludedParagraphClassNames = [
     "comment", // https://civilservice.blog.gov.uk/2022/08/16/a-simple-guide-on-words-to-avoid-in-government/
     "reference", // https://en.wikipedia.org/wiki/Sunstone_(medieval)
@@ -38,10 +21,6 @@ const excludedParagraphClassNames = [
 
 @trackModifierExecution
 export default class SmartHighlightsModifier implements PageModifier {
-    private enabled: boolean = false;
-
-    private annotationsModifier: AnnotationsModifier;
-    private textContainerModifier: TextContainerModifier;
     private onHighlightClick: null | ((range: Range, related: RelatedHighlight[]) => void);
 
     articleSummary: string | null;
@@ -49,67 +28,34 @@ export default class SmartHighlightsModifier implements PageModifier {
     relatedCount: number | null;
     relatedArticles: RelatedHighlight[] | null;
 
-    constructor(
-        annotationsModifier: AnnotationsModifier,
-        textContainerModifier: TextContainerModifier,
-        forceEnabled: boolean = false,
-        onHighlightClick: (range: Range, related: RelatedHighlight[]) => void = null
-    ) {
-        this.annotationsModifier = annotationsModifier;
-        this.textContainerModifier = textContainerModifier;
+    constructor(onHighlightClick: (range: Range, related: RelatedHighlight[]) => void = null) {
         this.onHighlightClick = onHighlightClick;
-
-        if (forceEnabled) {
-            this.enabled = true;
-        } else {
-            (async () => {
-                const annotationsEnabled = await getFeatureFlag(enableAnnotationsFeatureFlag);
-                const experimentsEnabled = await getFeatureFlag(enableExperimentalFeatures);
-                this.enabled = (annotationsEnabled && experimentsEnabled) || forceEnabled;
-            })();
-        }
-    }
-
-    async parseArticle() {
-        // fetch container references if already exist (e.g. from assistant code)
-        this.clickContainer = document.getElementsByClassName(
-            "smart-highlight-click"
-        )[0] as HTMLElement;
-        this.scrollbarContainer = document.getElementsByClassName(
-            "smart-highlight-scrollbar"
-        )[0] as HTMLElement;
     }
 
     private paragraphs: HTMLElement[] = [];
     private rankedSentencesByParagraph: RankedSentence[][];
     async parseUnclutteredArticle() {
-        if (!this.enabled) {
-            return;
-        }
-
         const paragraphTexts: string[] = [];
-        document
-            .querySelectorAll(this.textContainerModifier.usedTextElementSelector)
-            .forEach((paragraph: HTMLElement) => {
-                const textContent = paragraph.textContent;
-                if (!textContent || textContent.length < 200) {
-                    return;
-                }
+        document.querySelectorAll("p, font, li").forEach((paragraph: HTMLElement) => {
+            const textContent = paragraph.textContent;
+            if (!textContent || textContent.length < 200) {
+                return;
+            }
 
-                if (
-                    excludedParagraphClassNames.some((word) =>
-                        paragraph.className.toLowerCase().includes(word)
-                    ) ||
-                    excludedParagraphClassNames.some((word) =>
-                        paragraph.parentElement.className.toLowerCase().includes(word)
-                    )
-                ) {
-                    return;
-                }
+            if (
+                excludedParagraphClassNames.some((word) =>
+                    paragraph.className.toLowerCase().includes(word)
+                ) ||
+                excludedParagraphClassNames.some((word) =>
+                    paragraph.parentElement.className.toLowerCase().includes(word)
+                )
+            ) {
+                return;
+            }
 
-                this.paragraphs.push(paragraph);
-                paragraphTexts.push(textContent);
-            });
+            this.paragraphs.push(paragraph);
+            paragraphTexts.push(textContent);
+        });
 
         const response: any = await ky
             .post("https://q5ie5hjr3g.execute-api.us-east-2.amazonaws.com/default/heatmap", {
@@ -164,12 +110,13 @@ export default class SmartHighlightsModifier implements PageModifier {
         // }
     }
 
-    private annotationState: AnnotationState[] = [];
+    private annotationState: {
+        sentence: any;
+        container: HTMLElement;
+        range: Range;
+        paintedElements?: HTMLElement[];
+    }[] = [];
     enableAnnotations() {
-        if (this.rankedSentencesByParagraph === undefined) {
-            return this.parseArticle();
-        }
-
         this.createContainers();
 
         this.paragraphs.forEach((paragraph, index) => {
@@ -206,7 +153,7 @@ export default class SmartHighlightsModifier implements PageModifier {
             });
         });
 
-        // first paint
+        // immediate first paint
         this.paintAllAnnotations();
 
         // paint again on position change
@@ -261,12 +208,17 @@ export default class SmartHighlightsModifier implements PageModifier {
         });
     }
 
-    disableAnnotations() {
-        this.clickContainer?.remove();
-        this.clickContainer = null;
-
+    disableScrollbar() {
         this.scrollbarContainer?.remove();
         this.scrollbarContainer = null;
+    }
+
+    disableAnnotations() {
+        this.disableScrollbar();
+        this.annotationState.forEach(({ paintedElements }) => {
+            paintedElements?.forEach((e) => e.remove());
+        });
+        this.annotationState = [];
     }
 
     setEnableAnnotations(enableAnnotations: boolean) {
@@ -366,17 +318,8 @@ export default class SmartHighlightsModifier implements PageModifier {
         return ranges;
     }
 
-    private clickContainer: HTMLElement;
     private scrollbarContainer: HTMLElement;
     createContainers() {
-        // this.clickContainer = document.createElement("div");
-        // this.clickContainer.className = "lindy-smart-highlight-container smart-highlight-click";
-        // this.clickContainer.style.setProperty("position", "absolute");
-        // this.clickContainer.style.setProperty("top", "0");
-        // this.clickContainer.style.setProperty("left", "0");
-        // this.clickContainer.style.setProperty("z-index", "1001");
-        // document.body.append(this.clickContainer);
-
         this.scrollbarContainer = document.createElement("div");
         this.scrollbarContainer.className =
             "lindy-smart-highlight-container smart-highlight-scrollbar";
@@ -528,7 +471,7 @@ export default class SmartHighlightsModifier implements PageModifier {
             "important"
         );
 
-        this.scrollbarContainer.appendChild(scrollbarNode);
+        this.scrollbarContainer?.appendChild(scrollbarNode);
         addedElements.push(scrollbarNode);
 
         return addedElements;
@@ -545,20 +488,11 @@ export default class SmartHighlightsModifier implements PageModifier {
             return;
         }
 
+        // TODO pass range instead of modifying the selection
         const selection = window.getSelection();
         selection.removeAllRanges();
         selection.addRange(range);
 
-        _createAnnotationFromSelection(
-            (annotation) => {
-                sendIframeEvent(this.annotationsModifier.sidebarIframe, {
-                    event: "createHighlight",
-                    annotation,
-                });
-                // onAnnotationUpdate("add", [annotation]);
-            },
-            this.annotationsModifier.sidebarIframe,
-            generateId()
-        );
+        window.postMessage({ type: "clickSmartHighlight" }, "*");
     }
 }

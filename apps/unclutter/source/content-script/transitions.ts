@@ -20,8 +20,7 @@ import KeyboardModifier from "./modifications/keyboard";
 import LoggingManager from "./modifications/logging";
 import ReviewModifier from "./modifications/review";
 import { getUrlHash } from "@unclutter/library-components/dist/common/url";
-// import AIAnnotationsModifier from "./modifications/DOM/aiAnnotations";
-import SmartHighlightsModifier from "./modifications/DOM/smartHighlights";
+import SmartHighlightsProxyModifier from "./modifications/DOM/smartHighlightsProxy";
 
 @trackModifierExecution
 export default class TransitionManager implements PageModifier {
@@ -63,10 +62,7 @@ export default class TransitionManager implements PageModifier {
         this.readingTimeModifier,
         this.annotationsModifier
     );
-    private smartHighlightsModifier = new SmartHighlightsModifier(
-        this.annotationsModifier,
-        this.textContainerModifier
-    );
+    private smartHighlightsProxy = new SmartHighlightsProxyModifier(this.annotationsModifier);
     private overlayManager = new OverlayManager(
         this.domain,
         this.themeModifier,
@@ -77,7 +73,7 @@ export default class TransitionManager implements PageModifier {
         this.libraryModalModifier,
         this.readingTimeModifier,
         this.bodyStyleModifier,
-        this.smartHighlightsModifier
+        this.smartHighlightsProxy
     );
     private loggingModifier = new LoggingManager(
         this.domain,
@@ -111,7 +107,6 @@ export default class TransitionManager implements PageModifier {
         // iterate DOM in original state (& in read phase)
         this.textContainerModifier.iterateDom();
         this.textContainerModifier.measureFontProperties();
-        this.smartHighlightsModifier.parseArticle();
 
         // *** write DOM phase ***
 
@@ -157,7 +152,6 @@ export default class TransitionManager implements PageModifier {
         }
         this.contentBlockModifier.transitionIn(); // uses softer blocking if no text elements found
         this.elementPickerModifier.transitionIn(); // applies local block rules
-        this.smartHighlightsModifier.disableAnnotations(); // disable assistant highlights
 
         // enable mobile styles & style patches (this may shift layout in various ways)
         this.responsiveStyleModifier.enableResponsiveStyles();
@@ -245,9 +239,6 @@ export default class TransitionManager implements PageModifier {
         // insert annotations sidebar, start fetch
         // this.linkAnnotationsModifier.parseArticle(); // reads page, wraps link elems
         this.annotationsModifier.afterTransitionIn();
-
-        this.smartHighlightsModifier.parseUnclutteredArticle();
-        // this.aiAnnotationsModifier.parseArticle();
 
         this.overlayManager.insertUiFont(); // causes ~50ms layout reflow
 
