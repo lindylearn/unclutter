@@ -26,6 +26,7 @@ export interface RelatedHighlight {
 
 const excludedParagraphClassNames = [
     "comment", // https://civilservice.blog.gov.uk/2022/08/16/a-simple-guide-on-words-to-avoid-in-government/
+    "reference", // https://en.wikipedia.org/wiki/Sunstone_(medieval)
 ];
 
 @trackModifierExecution
@@ -413,21 +414,27 @@ export default class SmartHighlightsModifier implements PageModifier {
             );
 
             // paint again on position change
-            // const resizeObserver = new ResizeObserver((entries) => {
-            //     console.log(anchorText);
-            //     rangeElements.forEach((e) => e.remove());
+            let isInitialPaint = true;
+            const resizeObserver = new ResizeObserver(() => {
+                if (isInitialPaint) {
+                    isInitialPaint = false;
+                    return;
+                }
 
-            //     const containerRect = container.getBoundingClientRect();
-            //     rangeElements = this.paintRange(
-            //         container,
-            //         containerRect,
-            //         range,
-            //         score,
-            //         color,
-            //         onClick
-            //     );
-            // });
-            // resizeObserver.observe(container);
+                console.log("Re-painting range on resize");
+                rangeElements.forEach((e) => e.remove());
+
+                const containerRect = container.getBoundingClientRect();
+                rangeElements = this.paintRange(
+                    container,
+                    containerRect,
+                    range,
+                    score,
+                    color,
+                    onClick
+                );
+            });
+            resizeObserver.observe(container);
         });
     }
 
