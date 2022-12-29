@@ -10,7 +10,7 @@
     import ToggleMessage from "./ToggleMessage.svelte";
     import { getActivityColor } from "@unclutter/library-components/dist/components/Charts/ArticleActivityCalendar";
     import LibraryModifier from "../../../content-script/modifications/library";
-    import { readingProgressFullClamp } from "@unclutter/library-components/dist/store";
+    import { readingProgressFullClamp } from "@unclutter/library-components/dist/store/constants";
 
     export let libraryState: LibraryState;
     export let libraryModifier: LibraryModifier;

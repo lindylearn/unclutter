@@ -1,6 +1,7 @@
 <script lang="ts">
     import clsx from "clsx";
     import type { Article } from "@unclutter/library-components/dist/store/_schema";
+    import { readingProgressFullClamp } from "@unclutter/library-components/dist/store/constants";
     // import { openArticleResilient } from "@unclutter/library-components/dist/common/extension";
     // import { reportEventContentScript } from "@unclutter/library-components/dist/common/messaging";
 
@@ -22,7 +23,6 @@
         }
     }
 
-    const readingProgressFullClamp = 0.95;
     let readingProgress: number = null;
     $: {
         if (readingProgress > readingProgressFullClamp) {

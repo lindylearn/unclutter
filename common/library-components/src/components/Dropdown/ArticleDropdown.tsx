@@ -4,7 +4,7 @@ import { useContext } from "react";
 
 import { ReplicacheContext } from "../../store";
 import { reportBrokenPage } from "../../common/api";
-import { Article, readingProgressFullClamp } from "../../store/_schema";
+import { Article, readingProgressFullClamp } from "../../store";
 import { Dropdown, DropdownItem } from "./Dropdown";
 
 export function ArticleDropdown({

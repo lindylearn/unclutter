@@ -28,7 +28,6 @@ export const articleSchema = entitySchema.extend({
     description: z.optional(z.string()), // set for non-library feed articles
 });
 export type Article = z.infer<typeof articleSchema>;
-export const readingProgressFullClamp = 0.95;
 
 // *** Topic ***
 export const topicSchema = entitySchema.extend({

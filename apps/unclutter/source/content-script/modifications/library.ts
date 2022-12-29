@@ -1,10 +1,6 @@
 import throttle from "lodash/throttle";
 
-import type {
-    Article,
-    ArticleLink,
-    readingProgressFullClamp,
-} from "@unclutter/library-components/dist/store/_schema";
+import type { Article, ArticleLink } from "@unclutter/library-components/dist/store/_schema";
 import { constructGraphData } from "@unclutter/library-components/dist/components/Modal/Graph";
 import { getDomain } from "@unclutter/library-components/dist/common/util";
 
@@ -23,6 +19,7 @@ import { addArticlesToLibrary } from "../../common/api";
 import AnnotationsModifier from "./annotations/annotationsModifier";
 import { discoverFeedsInDocument, extractTags } from "@unclutter/library-components/dist/feeds";
 import browser from "../../common/polyfill";
+import { readingProgressFullClamp } from "@unclutter/library-components/dist/store/constants";
 
 @trackModifierExecution
 export default class LibraryModifier implements PageModifier {
