@@ -94,6 +94,7 @@
     .article-card.article-card-clicked {
         opacity: 0;
         transform: scale(90%);
+        transition: all 600ms cubic-bezier(0.34, 1.56, 0.64, 1); /* easeOutQuart */
     }
 
     .lindy-button:hover {

@@ -31,7 +31,9 @@ async function boot() {
     let triggeredIsLikelyArticle = false;
 
     // url heuristic check
-    if (!isNonLeafPage(url)) {
+    const nonLeaf = isNonLeafPage(url);
+    console.log({ nonLeaf });
+    if (!nonLeaf) {
         onIsLikelyArticle(domain);
         triggeredIsLikelyArticle = true;
     }
@@ -51,7 +53,7 @@ async function boot() {
 
     // run assistant independently of non-leaf detection
     const experimentsEnabled = await getFeatureFlag(enableExperimentalFeatures);
-    if (experimentsEnabled) {
+    if (experimentsEnabled && url.pathname !== "/") {
         // accessing text content requires ready dom
         await waitUntilDomLoaded();
 
