@@ -121,10 +121,11 @@ function renderArticleCard(
     container.style.top = `10px`;
     container.style.right = `25px`;
     container.style.zIndex = `9999999999`;
+    container.style.contain = `content`;
     document.documentElement.appendChild(container);
 
     new ArticleCardSvelte({
-        target: container,
+        target: container.attachShadow({ mode: "open" }),
         props: {
             keyPointsCount,
             relatedCount,

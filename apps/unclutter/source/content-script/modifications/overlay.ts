@@ -198,7 +198,7 @@ export default class OverlayManager implements PageModifier {
 
         // render svelte component
         this.toprightSvelteComponent = new TopRightContainerSvelte({
-            target: topRightContainer,
+            target: topRightContainer.attachShadow({ mode: "open" }),
             props: {
                 domain: this.domain,
                 themeModifier: this.themeModifier,
