@@ -99,6 +99,13 @@
         "#colgauche",
         ".spip_document_134.spip_documents.spip_documents_right"
     ],
+    "biron.com": [
+        ".padding-vertical-gutter-small.flexbox.margin-left-minus-gutter-small.children-padding-left-gutter-small.children-border-box.margin-top-minus-gutter-small.children-padding-top-gutter-small.flex-wrap.transition-buttons-ctn",
+        ".width-full.width-1_2-from-sm.width-3_4-from-sm",
+        ".width-full.width-1_2-from-ph.width-1_3-from-xs.width-1_4-from-sm.mother.transition-module-glossary-group",
+        ".js-auto-scroll-to-id-offset.height-gutter-big.pointer-event-none.absolute.top-full",
+        ".visually-hidden"
+    ],
     "blog.csdn.net": [
         ".article-bar-top",
         ".article-info-box",
