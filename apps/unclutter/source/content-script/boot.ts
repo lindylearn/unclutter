@@ -51,7 +51,7 @@ async function boot() {
         listenForPageEvents();
     }
 
-    // run assistant independently of non-leaf detection
+    // run highlights.ts independently of non-leaf detection
     const experimentsEnabled = await getFeatureFlag(enableExperimentalFeatures);
     if (experimentsEnabled && url.pathname !== "/") {
         // accessing text content requires ready dom

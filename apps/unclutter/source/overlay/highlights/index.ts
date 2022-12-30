@@ -3,9 +3,9 @@ import SmartHighlightsModifier, {
     RankedSentence,
 } from "../../content-script/modifications/DOM/smartHighlights";
 // import HighlightDetailSvelte from "./HighlightDetail.svelte";
-import ArticleCardSvelte from "./ArticleCard.svelte";
+import ArticleBadgeSvelte from "./ArticleBadge.svelte";
 
-export function startAssistant(enablePageView: (reason: string) => void) {
+export function renderHighlightsLayer(enablePageView: (reason: string) => void) {
     // document.addEventListener("mousedown", onSelectionStart);
     // document.addEventListener("mouseup", onSelectionDone);
     // document.addEventListener("contextmenu", removeHighligher);
@@ -51,7 +51,7 @@ export function startAssistant(enablePageView: (reason: string) => void) {
         enablePageView(reason);
     };
     smartHighlightsModifier.parseUnclutteredArticle().then(() => {
-        renderArticleCard(
+        renderArticleBadge(
             smartHighlightsModifier.keyPointsCount,
             smartHighlightsModifier.relatedCount,
             smartHighlightsModifier.topHighlights,
@@ -108,7 +108,7 @@ function renderHighlighter(highlightRect: DOMRect, quote: string, related: Relat
     });
 }
 
-function renderArticleCard(
+function renderArticleBadge(
     keyPointsCount: number,
     relatedCount: number,
     topHighlights: RankedSentence[],
@@ -124,7 +124,7 @@ function renderArticleCard(
     container.style.contain = `content`;
     document.documentElement.appendChild(container);
 
-    new ArticleCardSvelte({
+    new ArticleBadgeSvelte({
         target: container.attachShadow({ mode: "open" }),
         props: {
             keyPointsCount,

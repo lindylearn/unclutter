@@ -487,7 +487,7 @@ export default class SmartHighlightsModifier implements PageModifier {
 
             window.postMessage({ type: "clickSmartHighlight" }, "*");
         } else {
-            // handle in assistant
+            // handle in highlights.ts
             if (this.onHighlightClick) {
                 this.onHighlightClick(range, related);
                 return;

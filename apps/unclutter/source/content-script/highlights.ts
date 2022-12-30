@@ -1,8 +1,8 @@
 import browser from "../common/polyfill";
-import { startAssistant } from "../overlay/assistant";
+import { renderHighlightsLayer } from "../overlay/highlights";
 
 function main() {
-    startAssistant(enablePageView);
+    renderHighlightsLayer(enablePageView);
 }
 
 function enablePageView() {
