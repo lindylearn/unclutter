@@ -116,35 +116,6 @@ html.pageview.pageview > body {
     text-decoration-color: transparent !important;
 }
 
-.lindy-highlight-dot {
-    position: relative !important;
-    top: -0.3em !important;
-    left: 0.1em !important;
-
-    content: "" !important;
-    display: inline-block !important;
-    width: 10px !important;
-    height: 10px !important;
-    border-radius: 50% !important;
-    filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.05)) !important;
-    background-color: var(--darker-annotation-color) !important;
-
-    cursor: pointer !important;
-    animation: fadeInDot 0.15s linear !important;
-}
-@keyframes fadeInDot {
-    from {
-        opacity: 0;
-        width: 0px;
-        height: 0px;
-    }
-    to {
-        opacity: 1;
-        width: 10px;
-        height: 10px;
-    }
-}
-
 @media (max-width: 1200px) {
     html.pageview > body {
         margin-left: 20px !important; /* also set via inline styles */

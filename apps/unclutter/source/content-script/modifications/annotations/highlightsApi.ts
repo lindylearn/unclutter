@@ -183,8 +183,6 @@ export function insertMarginBar(
 
 // remove all text highlighting
 export function removeAllHighlights() {
-    // [...document.querySelectorAll(".lindy-highlight-dot")].map((node) => node.remove());
-
     removeAllHighlightsApi(document.body);
 }
 
@@ -196,10 +194,6 @@ export function getAnnotationNodes(annotation): HTMLElement[] {
 
 // remove a specific text highlighting
 export function removeHighlight(annotation) {
-    document
-        .querySelector(`lindy-highlight[id="${annotation.id}"] > .lindy-highlight-dot`)
-        ?.remove();
-
     const nodes = getAnnotationNodes(annotation);
     removeHighlightsApi(nodes);
 }
@@ -235,37 +229,6 @@ export function hoverUpdateHighlight(annotation: LindyAnnotation, hoverActive: b
             node.classList.remove("lindy-hover");
         });
     }
-}
-
-export function addHighlightDot(annotation: LindyAnnotation, sidebarIframe: HTMLIFrameElement) {
-    const nodes = getAnnotationNodes(annotation);
-    const anchorNode = nodes[nodes.length - 1];
-
-    if (anchorNode.getElementsByClassName("lindy-highlight-dot").length !== 0) {
-        return;
-    }
-
-    const dotNode = document.createElement("lindy-dot");
-    dotNode.classList.add("lindy-highlight-dot");
-    anchorNode.insertBefore(dotNode, null);
-
-    dotNode.onmouseenter = () => {
-        hoverUpdateHighlight(annotation, true);
-
-        sendIframeEvent(sidebarIframe, {
-            event: "focusAnnotation",
-            id: annotation.id,
-        });
-    };
-    dotNode.onmouseleave = () => {
-        hoverUpdateHighlight(annotation, false);
-    };
-    dotNode.onclick = () => {
-        sendIframeEvent(sidebarIframe, {
-            event: "focusAnnotation",
-            id: annotation.id,
-        });
-    };
 }
 
 export async function copyTextToClipboard(text: string) {

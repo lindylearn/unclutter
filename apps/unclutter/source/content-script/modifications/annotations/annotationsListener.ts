@@ -1,7 +1,6 @@
 import throttle from "lodash/throttle";
 import { AnnotationListener } from "./annotationsModifier";
 import {
-    addHighlightDot,
     anchorAnnotations,
     getHighlightOffsets,
     hoverUpdateHighlight,
@@ -52,8 +51,6 @@ export function createAnnotationListener(
             onAnnotationUpdate("remove", data.annotations);
         } else if (data.event === "onAnnotationHoverUpdate") {
             hoverUpdateHighlight(data.annotation, data.hoverActive);
-        } else if (data.event === "showHighlightDotsFor") {
-            data.annotations.map((a) => addHighlightDot(a, sidebarIframe));
         }
     };
     window.addEventListener("message", onMessage);
