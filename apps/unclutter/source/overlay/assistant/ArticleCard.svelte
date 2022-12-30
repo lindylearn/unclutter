@@ -1,4 +1,5 @@
 <script lang="ts">
+    import clsx from "clsx";
     import type { RankedSentence } from "../../content-script/modifications/DOM/smartHighlights";
 
     export let keyPointsCount: number | null;
@@ -6,10 +7,19 @@
     export let topHighlights: RankedSentence[] | null;
     export let articleSummary: string | null;
     export let enablePageView: (reason: string) => void;
+
+    let clicked = false;
+    function onClick() {
+        clicked = true;
+        enablePageView("summary-card");
+    }
 </script>
 
 <div
-    class="article-card ml-auto flex w-max cursor-pointer flex-col overflow-hidden rounded-lg bg-gradient-to-b from-yellow-300 to-amber-400 text-sm shadow-sm hover:scale-[97%]"
+    class={clsx(
+        "article-card ml-auto flex w-max cursor-pointer flex-col overflow-hidden rounded-lg bg-gradient-to-b from-yellow-300 to-amber-400 text-sm shadow-sm",
+        clicked && "article-card-clicked"
+    )}
     style:background-image="linear-gradient(150deg, var(--tw-gradient-stops))"
 >
     <div class="lindy-button font-title flex items-stretch font-medium text-stone-800">
@@ -36,10 +46,7 @@
             </div>
         {/if}
 
-        <div
-            class="mr-0.5 rounded-r-lg px-1.5 py-1.5 transition-all"
-            on:click={() => enablePageView("summary-card")}
-        >
+        <div class="mr-0.5 rounded-r-lg px-1.5 py-1.5 transition-all" on:click={onClick}>
             Unclutter
         </div>
     </div>
@@ -74,9 +81,19 @@
     @tailwind utilities;
 
     .article-card {
+        opacity: 1;
+        transform: scale(100%);
+
         animation: pageCardFadeIn 200ms cubic-bezier(0.34, 1.56, 0.64, 1); /* easeOutBack */
         animation-fill-mode: backwards;
         transition: all 200ms cubic-bezier(0.34, 1.56, 0.64, 1); /* easeOutBack */
+    }
+    .article-card:hover {
+        transform: scale(96%);
+    }
+    .article-card.article-card-clicked {
+        opacity: 0;
+        transform: scale(90%);
     }
 
     .lindy-button:hover {

@@ -130,7 +130,14 @@ function renderArticleCard(
             relatedCount,
             topHighlights,
             articleSummary,
-            enablePageView,
+            enablePageView: (reason: string) => {
+                // anchor on left edge to prevent jump on scrollbar insert
+                const rect = container.getBoundingClientRect();
+                container.style.left = `${rect.left}px`;
+                container.style.removeProperty("right");
+
+                enablePageView(reason);
+            },
         },
     });
 }
