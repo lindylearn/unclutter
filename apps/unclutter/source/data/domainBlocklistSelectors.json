@@ -646,6 +646,14 @@
         "#mailpoet_form_3"
     ],
     "modularhomesource.com": [".elementor-shape-fill", ".wp-block-image"],
+    "moneycontrol.com": [
+        ".leftcol.clearfix",
+        ".clear",
+        "#stockwg1_9673021",
+        ".stockwidget",
+        ".social_icons_mobile_wrapper",
+        ".tags_wrapper"
+    ],
     "mrmoneymustache.com": ["#text-22"],
     "mullvad.net": ["#connection-status"],
     "nationalgeographic.com": [
