@@ -18,7 +18,7 @@ export default function ContributionStats() {
     return (
         <div className="">
             You reported {reportCount} broken article
-            {reportCount !== 1 ? "s" : ""} and submitted {selectorCount}{" "}
+            {reportCount !== 1 ? "s" : ""} and submitted {selectorCount} annoyances{" "}
             <a
                 href="https://github.com/lindylearn/unclutter/tree/main/docs/element-blocking.md"
                 target="_blank"
