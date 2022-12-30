@@ -427,6 +427,7 @@
         ".brandmenu-v2.light.l-box.clearfix",
         ".sidebar.col.left"
     ],
+    "haaretz.com": [".a.ce.cr"],
     "hackster.io": ["#hello-world"],
     "hdvietnam.org": ["#likes-post-10851880", ".sharePage"],
     "heise.de": [
