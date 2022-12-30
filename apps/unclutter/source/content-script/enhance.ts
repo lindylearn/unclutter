@@ -2,7 +2,8 @@ import browser from "../common/polyfill";
 import { enablePageView } from "./pageview/enablePageView";
 import TransitionManager from "./transitions";
 
-// complete extension functionality injected into a tab
+// complete extension functionality injected into a tab if configured by the user
+// this enables the reader mode
 
 // NOTE: NOT A CONTENT SCRIPT. Using browser.runtime after the initial execution loop seems to make Chrome
 // think it's a service worker and it terminates the background script on reload.

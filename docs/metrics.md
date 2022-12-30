@@ -1,39 +1,46 @@
 # Privacy policy
 
-The Unclutter browser extension is provided for free, without any required sign-up or collection of personal information. **In particular, no information is collected about the webpages you visit.**
+The Unclutter browser extension is provided for free and does not collect any personal information. No data at all is shared with third parties. **In particular, no information about the websites you visit leaves your local browser.**
 
-The extension reports technical usage metrics and error logs in order to understand which features work as expected and which do not.
+## Website access
 
-## Specific features
+The Unclutter extension has the permission to "read and change all your data on websites that you visit" by default. This permission is used to locally check if a page is likely to be an article, and to automatically activate the reader mode or enable the AI highlights if you enabled those features.
 
-To implement the configurable automatic activation on article domains, Unclutter has the permission to "read and change all your data on websites that you visit" by default. In practice this means [a small script](https://github.com/lindylearn/unclutter/blob/main/source/content-script/boot.ts) locally checks each URL against your settings and optionally triggers the reader mode as if you clicked on the extension icon.
-**If you do not use this feature you can simply revoke the "Site access" permission from the Unclutter extension.**
+In practice, [a small boot script](https://github.com/lindylearn/unclutter/blob/main/source/content-script/boot.ts) gets injected into your tabs and checks the site URL and amount of text content on each page against your settings.
+
+**If you do not use the automatic activation or smart reading features you can simply revoke the "Site access" permission from the Unclutter extension settings.**
+
+## Article library
+
+Articles you open with Unclutter are automatically saved in your local browser to provide the "library" read-it-later features. Highlights you create are saved similarly.
+
+You can optionally create an Unclutter library account to synchronize your data between devices and browsers. In that case your data is stored remotely but not accessible to any third parties.
+
+## Highlights sync
+
+If you enable the Hypothes.is [sync feature](./annotations.md), your highlights will be uploaded to the hypothes.is service and are subject to their [privacy policy](https://web.hypothes.is/privacy/).
+
+## Smart Reading
+
+If you enable the experimental "smart reading" AI features, the text for articles you read is sent to a remote cloud function in order to run large AI models on it.
+
+This data is not stored, shared, or used for any purpose other than returning information about the article to the Unclutter browser extension.
+
+## Social comments
 
 The optional [social comments](./social-highlights.md) feature sends a network request to fetch highlights for articles you activate the reader mode on. This network request contains only the SHA256 one-way hash of the normalized page URL, containing no query parameters or user identification.
 
 The number of social comments on the Unclutter extension icon works without network requests by periodically downloading a [static CSV](./social-highlights.md#privacy) file.
 
-If you enable the [Hypothes.is sync](./annotations.md.md) feature after signing up for an account there, your highlights will be uploaded to their service and are subject to their [privacy policy](https://web.hypothes.is/privacy/).
+## Usage metrics
 
-## Unclutter Library
+The extension reports technical usage metrics to understand which features work as expected, but these metrics never include personal information or specific information about the articles you read.
 
-If you sign up for the work-in-progress Unclutter Library beta and connect your account to the Unclutter extension, articles you activate the reader mode on will be saved to your account and categorized per topic.
-Your reading progress and created highlights will also be saved remotely.
+To verify this, [browse](https://github.com/lindylearn/unclutter/search?q=reportEvent) the code on Github or where you downloaded the extension files to. Unclutter is bundled in a way to be as readable as possible.
 
-The seperate work-in-progress Unclutter Library extension also does not collect any personal information or information about the web pages you visit.
-It has the permission to access your browser bookmarks and frequently-visited websites solely in order to display them on the New Tab page it replaces, and does not save or send this data anywhere.
+## Licence
 
-The URLs, topics, and notes in your Unclutter Library account are not accessible to any third parties.
-
-## Verification and Open Source
-
-To verify any part of this pricacy policy, simply browse the code on Github or where you downloaded the extension to. The extension is bundled in a way to be as readable as possible
-
-For example, you can [search](https://github.com/lindylearn/unclutter/search?q=reportEvent) for references of `reportEvent()` to check which usage metrics are reported.
-
-## Warranty
-
-See [LICENCE](../LICENCE) for details.
+This project uses [GNU AGPLv3](https://choosealicense.com/licenses/gpl-3.0/), which requires commercial projects that use it to be open-source as well. See [LICENCE](../LICENCE) for details.
 
 | 🐛     **Any concern with this? Please [open an issue](https://github.com/lindylearn/unclutter/issues/new) for it!** |
 | -------------------------------------------------------------------------------------------------------------------- |

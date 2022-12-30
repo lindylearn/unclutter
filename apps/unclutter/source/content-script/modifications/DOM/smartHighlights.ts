@@ -20,6 +20,7 @@ const excludedParagraphClassNames = [
     "reference", // https://en.wikipedia.org/wiki/Sunstone_(medieval)
 ];
 
+// analyse an article page and highlight key sentences using AI
 @trackModifierExecution
 export default class SmartHighlightsModifier implements PageModifier {
     private onHighlightClick: null | ((range: Range, related: RelatedHighlight[]) => void);
@@ -38,6 +39,7 @@ export default class SmartHighlightsModifier implements PageModifier {
     async parseUnclutteredArticle() {
         let start = performance.now();
 
+        // parse article paragraphs from page
         const paragraphTexts: string[] = [];
         document.querySelectorAll("p, font, li").forEach((paragraph: HTMLElement) => {
             const textContent = paragraph.textContent;
@@ -60,6 +62,7 @@ export default class SmartHighlightsModifier implements PageModifier {
             paragraphTexts.push(textContent);
         });
 
+        // fetch AI highlights for this page
         const response: any = await ky
             .post("https://q5ie5hjr3g.execute-api.us-east-2.amazonaws.com/default/heatmap", {
                 json: {
@@ -75,6 +78,7 @@ export default class SmartHighlightsModifier implements PageModifier {
         // this.articleSummary = response.summary || null;
         // console.log(this.rankedSentencesByParagraph);
 
+        // construct stats
         this.keyPointsCount = 0;
         this.relatedCount = 0;
         this.topHighlights = [];
@@ -91,20 +95,10 @@ export default class SmartHighlightsModifier implements PageModifier {
         });
         // this.topHighlights = this.topHighlights.sort((a, b) => b.score - a.score).slice(0, 3);
 
+        // paint highlights once done
         this.enableAnnotations();
-        // if (this.annotationsModifier?.sidebarIframe) {
-        //     sendIframeEvent(this.annotationsModifier.sidebarIframe, {
-        //         event: "setSummaryAnnotation",
-        //         summaryAnnotation: createAnnotation(window.location.href, null, {
-        //             id: generateId(),
-        //             platform: "summary",
-        //             text: this.articleSummary,
-        //             displayOffset: 0,
-        //             displayOffsetEnd: 0,
-        //         }),
-        //     });
-        // }
 
+        // report diagnostics
         let durationMs = Math.round(performance.now() - start);
         reportEventContentScript("renderHighlightsLayer", {
             paragraphCount: this.paragraphs.length,
@@ -114,6 +108,7 @@ export default class SmartHighlightsModifier implements PageModifier {
         });
     }
 
+    // paint AI highlights on the page
     private annotationState: {
         sentence: RankedSentence;
         container: HTMLElement;

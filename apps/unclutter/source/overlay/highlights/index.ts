@@ -10,12 +10,12 @@ export function renderHighlightsLayer(enablePageView: () => void) {
     // document.addEventListener("mouseup", onSelectionDone);
     // document.addEventListener("contextmenu", removeHighligher);
 
-    document.addEventListener("mouseup", (event) => {
-        const target = event.target as HTMLElement;
-        if (!target.classList.contains("lindy-smart-highlight-absolute")) {
-            removeHighligher();
-        }
-    });
+    // document.addEventListener("mouseup", (event) => {
+    //     const target = event.target as HTMLElement;
+    //     if (!target.classList.contains("lindy-smart-highlight-absolute")) {
+    //         removeHighligher();
+    //     }
+    // });
 
     const font = document.createElement("link");
     font.href = "https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap";

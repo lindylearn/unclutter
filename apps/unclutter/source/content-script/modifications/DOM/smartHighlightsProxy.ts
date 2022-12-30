@@ -29,4 +29,17 @@ export default class SmartHighlightsProxy implements PageModifier {
             );
         }
     }
+
+    // if (this.annotationsModifier?.sidebarIframe) {
+    //     sendIframeEvent(this.annotationsModifier.sidebarIframe, {
+    //         event: "setSummaryAnnotation",
+    //         summaryAnnotation: createAnnotation(window.location.href, null, {
+    //             id: generateId(),
+    //             platform: "summary",
+    //             text: this.articleSummary,
+    //             displayOffset: 0,
+    //             displayOffsetEnd: 0,
+    //         }),
+    //     });
+    // }
 }

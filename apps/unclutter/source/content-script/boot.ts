@@ -13,8 +13,9 @@ import {
 import browser from "../common/polyfill";
 import { getDomainFrom } from "../common/util";
 
-// script injected into every tab before dom constructed
+// script injected into every tab before dom construction
 // if configured by the user, initialize the extension functionality
+
 async function boot() {
     const url = new URL(window.location.href);
     const domain = getDomainFrom(url);
