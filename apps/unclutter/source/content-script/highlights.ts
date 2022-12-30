@@ -5,7 +5,8 @@ import { renderHighlightsLayer } from "../overlay/highlights";
 // this enables the "smart reading" AI highlights
 
 function main() {
-    renderHighlightsLayer(enablePageView);
+    const preparePageView = renderHighlightsLayer(enablePageView);
+    handleEvents(preparePageView);
 }
 
 function enablePageView() {
@@ -14,6 +15,23 @@ function enablePageView() {
         trigger: "highlights-layer",
         type: "full",
     });
+}
+
+// handle background events until enhance.ts active, to ensure highlights cleanup code is called
+function handleEvents(preparePageView) {
+    function onMessage(message, sender, sendResponse) {
+        if (message.event === "ping") {
+            sendResponse({ pageViewEnabled: false });
+            return true;
+        } else if (message.event === "togglePageView") {
+            browser.runtime.onMessage.removeListener(onMessage);
+
+            preparePageView();
+            enablePageView();
+            return false;
+        }
+    }
+    browser.runtime.onMessage.addListener(onMessage);
 }
 
 main();

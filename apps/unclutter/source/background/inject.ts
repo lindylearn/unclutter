@@ -1,13 +1,12 @@
 import browser from "../common/polyfill";
 
 export async function enableInTab(tabId) {
-    let pageViewEnabled = false;
     try {
         const response = await browser.tabs.sendMessage(tabId, {
             event: "ping",
         });
-        pageViewEnabled = response?.pageViewEnabled;
-        console.log("Got ping response from open tab:", response);
+        const pageViewEnabled = response?.pageViewEnabled;
+        console.log("Got ping response from content script", { pageViewEnabled });
 
         // toggle the page view if not active
         if (!pageViewEnabled) {
@@ -32,8 +31,10 @@ export async function togglePageViewMessage(tabId) {
 // inject a content script
 export async function injectScript(tabId, filePath) {
     // different calls for v2 and v3 manifest
+    // @ts-ignore
     if (chrome?.scripting) {
         // default runAt=document_idle
+        // @ts-ignore
         await chrome.scripting.executeScript({
             target: { tabId },
             files: [filePath],

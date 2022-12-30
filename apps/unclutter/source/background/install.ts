@@ -107,11 +107,10 @@ async function createAlarmIfNotExists(id: string, everyXHour: number) {
     if (await browser.alarms.get()) {
         return;
     }
-    const res = browser.alarms.create(id, {
+    browser.alarms.create(id, {
         delayInMinutes: 1,
         periodInMinutes: 60 * everyXHour,
     } as Alarms.CreateAlarmInfoType);
-    console.log(res);
 }
 
 export function createAlarmListeners() {

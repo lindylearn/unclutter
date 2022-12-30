@@ -37,7 +37,7 @@ export function renderHighlightsLayer(enablePageView: () => void) {
 
     smartHighlightsModifier.enableStyleTweaks();
 
-    const enablePageViewInner = () => {
+    function preparePageView() {
         // disable scrollbar for reader mode
         smartHighlightsModifier.disableStyleTweaks();
         smartHighlightsModifier.disableScrollbar();
@@ -49,9 +49,11 @@ export function renderHighlightsLayer(enablePageView: () => void) {
         smartHighlightsModifier.enableHighlightsClick = true;
 
         // smartHighlightsModifier.enableAllSentences = true;
-
+    }
+    function enablePageViewInner() {
+        preparePageView();
         enablePageView();
-    };
+    }
     smartHighlightsModifier.parseUnclutteredArticle().then(() => {
         renderArticleBadge(
             smartHighlightsModifier.keyPointsCount,
@@ -62,6 +64,8 @@ export function renderHighlightsLayer(enablePageView: () => void) {
             enablePageViewInner
         );
     });
+
+    return preparePageView;
 }
 
 // function onSelectionStart(event: Event) {

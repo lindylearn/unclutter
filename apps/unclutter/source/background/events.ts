@@ -95,7 +95,7 @@ function handleMessage(
     } else if (message.event === "requestEnhance") {
         // event sent from boot.js to inject additional functionality
         // browser apis are only available in scripts injected from background scripts or manifest.json
-        console.log("boot.js requested injection into tab");
+        console.log(`Requested ${message.type} script injection`);
 
         if (message.type === "full") {
             injectScript(sender.tab.id, "content-script/enhance.js");

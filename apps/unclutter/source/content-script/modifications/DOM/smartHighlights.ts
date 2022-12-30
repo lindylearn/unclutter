@@ -407,8 +407,6 @@ export default class SmartHighlightsModifier implements PageModifier {
             if (position === "static") {
                 [...node.children].forEach((node) => iterateNode(node as HTMLElement, depth + 1));
             } else if (position === "absolute") {
-                console.log(node);
-
                 node.style.setProperty("top", style.top, "important");
             }
         }
