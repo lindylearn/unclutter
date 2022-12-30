@@ -489,21 +489,27 @@ export default class SmartHighlightsModifier implements PageModifier {
             }
         }
 
-        const scrollbarNode = document.createElement("div");
-        scrollbarNode.className = "lindy-smart-highlight-scroll";
-        scrollbarNode.style.setProperty("--annotation-color", `rgba(${color}, ${colorIntensity})`);
-        scrollbarNode.style.setProperty(
-            "top",
-            `${(100 * (rect.top + document.body.scrollTop)) / document.body.scrollHeight}vh`,
-            "important"
-        );
+        if (this.enableScrollBar) {
+            const scrollbarNode = document.createElement("div");
+            scrollbarNode.className = "lindy-smart-highlight-scroll";
+            scrollbarNode.style.setProperty(
+                "--annotation-color",
+                `rgba(${color}, ${colorIntensity})`
+            );
+            scrollbarNode.style.setProperty(
+                "top",
+                `${(100 * (rect.top + document.body.scrollTop)) / document.body.scrollHeight}vh`,
+                "important"
+            );
 
-        this.scrollbarContainer?.appendChild(scrollbarNode);
-        addedElements.push(scrollbarNode);
+            this.scrollbarContainer?.appendChild(scrollbarNode);
+            addedElements.push(scrollbarNode);
+        }
 
         return addedElements;
     }
 
+    enableScrollBar: boolean = true;
     enableHighlightsClick: boolean = false;
     enableAllSentences: boolean = false;
     isProxyActive: boolean = false;

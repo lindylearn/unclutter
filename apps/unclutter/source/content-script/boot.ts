@@ -59,6 +59,8 @@ async function boot() {
         await waitUntilDomLoaded();
 
         if (isArticleByTextContent()) {
+            // enhance.ts must always be injected before highlights.ts
+            // TODO run before for performance?
             requestEnhance("boot", "highlights");
         }
     }

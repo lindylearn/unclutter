@@ -5,8 +5,15 @@ import { renderHighlightsLayer } from "../overlay/highlights";
 // this enables the "smart reading" AI highlights
 
 function main() {
-    const preparePageView = renderHighlightsLayer(enablePageView);
-    handleEvents(preparePageView);
+    // if injected later than enhance.ts (e.g. because of automatic activation),
+    // don't run scrollbar tweaks and don't handle events
+    // @ts-ignore
+    const enhanceActive = window.unclutterEnhanceLoaded;
+
+    const preparePageView = renderHighlightsLayer(enablePageView, enhanceActive);
+    if (!enhanceActive) {
+        handleEvents(preparePageView);
+    }
 }
 
 function enablePageView() {

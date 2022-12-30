@@ -7,7 +7,7 @@ import SmartHighlightsModifier, {
 // import HighlightDetailSvelte from "./HighlightDetail.svelte";
 import ArticleBadgeSvelte from "./ArticleBadge.svelte";
 
-export function renderHighlightsLayer(enablePageView: () => void) {
+export function renderHighlightsLayer(enablePageView: () => void, enhanceActive: boolean) {
     // document.addEventListener("mousedown", onSelectionStart);
     // document.addEventListener("mouseup", onSelectionDone);
     // document.addEventListener("contextmenu", removeHighligher);
@@ -19,12 +19,6 @@ export function renderHighlightsLayer(enablePageView: () => void) {
     //     }
     // });
 
-    const font = document.createElement("link");
-    font.href = "https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap";
-    // &family=Work+Sans:wght@400
-    font.rel = "stylesheet";
-    document.head.appendChild(font);
-
     function onHighlightClick(range: Range, related: RelatedHighlight[]) {
         // enablePageView();
 
@@ -35,7 +29,20 @@ export function renderHighlightsLayer(enablePageView: () => void) {
     }
     const smartHighlightsModifier = new SmartHighlightsModifier(onHighlightClick);
 
-    smartHighlightsModifier.enableStyleTweaks();
+    if (enhanceActive) {
+        // TODO move to shared fn (same as below)
+        smartHighlightsModifier.isProxyActive = true;
+        smartHighlightsModifier.enableHighlightsClick = true;
+        smartHighlightsModifier.enableScrollBar = false;
+    } else {
+        const font = document.createElement("link");
+        font.href = "https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap";
+        // &family=Work+Sans:wght@400
+        font.rel = "stylesheet";
+        document.head.appendChild(font);
+
+        smartHighlightsModifier.enableStyleTweaks();
+    }
 
     function preparePageView() {
         // disable scrollbar for reader mode
@@ -48,21 +55,24 @@ export function renderHighlightsLayer(enablePageView: () => void) {
         // enable click layer on next re-paint
         smartHighlightsModifier.enableHighlightsClick = true;
 
-        // smartHighlightsModifier.enableAllSentences = true;
+        // scrollbar not supported yet
+        smartHighlightsModifier.enableScrollBar = false;
     }
     function enablePageViewInner() {
         preparePageView();
         enablePageView();
     }
     smartHighlightsModifier.parseUnclutteredArticle().then(() => {
-        renderArticleBadge(
-            smartHighlightsModifier.keyPointsCount,
-            smartHighlightsModifier.relatedCount,
-            smartHighlightsModifier.topHighlights,
-            smartHighlightsModifier.articleSummary,
-            smartHighlightsModifier.disableAnnotations.bind(smartHighlightsModifier),
-            enablePageViewInner
-        );
+        if (!enhanceActive) {
+            renderArticleBadge(
+                smartHighlightsModifier.keyPointsCount,
+                smartHighlightsModifier.relatedCount,
+                smartHighlightsModifier.topHighlights,
+                smartHighlightsModifier.articleSummary,
+                smartHighlightsModifier.disableAnnotations.bind(smartHighlightsModifier),
+                enablePageViewInner
+            );
+        }
     });
 
     return preparePageView;

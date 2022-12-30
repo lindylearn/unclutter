@@ -96,6 +96,10 @@ export async function togglePageView() {
 
 // perform style changes if pageview was already triggered by boot.js
 async function enhance() {
+    // accessed in highlights.ts
+    // @ts-ignore
+    window.unclutterEnhanceLoaded = true;
+
     const pageViewEnabled = document.documentElement.classList.contains("pageview");
 
     if (!pageViewEnabled) {
