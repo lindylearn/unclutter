@@ -1,7 +1,7 @@
 import browser from "../common/polyfill";
 import type { Bookmarks } from "webextension-polyfill";
 import { getDomainFrom } from "../common/util";
-import { BookmarkedPage } from "@unclutter/library-components/dist/common";
+import type { BookmarkedPage } from "@unclutter/library-components/dist/common/api";
 
 export function requestBookmarksPermission() {
     return browser.permissions.request({

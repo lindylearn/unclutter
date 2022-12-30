@@ -4,7 +4,7 @@ import { CSSTransition, TransitionGroup } from "react-transition-group";
 import { LindyAnnotation } from "../../common/annotations/create";
 import AnnotationThread from "./AnnotationThread";
 
-const sidebarOffsetTopPx = 50;
+const sidebarOffsetTopPx = 8;
 
 interface AnnotationsListProps {
     groupedAnnotations: LindyAnnotation[][];
@@ -84,7 +84,7 @@ function AnnotationsList({
                 //     group[0].displayOffset -
                 //     annotationMarginPx;
 
-                const groupTopOffset = group[0].displayOffset - sidebarOffsetTopPx;
+                const groupTopOffset = Math.max(0, group[0].displayOffset - sidebarOffsetTopPx);
 
                 return group.map((annotation, i) => {
                     // items are in flat list, so must track previous group items for correct absolute position
@@ -98,7 +98,7 @@ function AnnotationsList({
                     } else if (prevSiblingsRefs.some((a) => !a)) {
                         // first pass render: not all siblings have rendered yet
                         // for now, assume default height (for draft empty comments)
-                        innerGroupOffset = 60 * i;
+                        innerGroupOffset = 68 * i;
                     } else {
                         // second pass render: know heights of previous siblings
                         // sum them up to get correct offset inside group

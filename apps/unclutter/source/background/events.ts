@@ -1,11 +1,11 @@
-import { clusterLibraryArticles } from "@unclutter/library-components/dist/common";
+import { clusterLibraryArticles } from "@unclutter/library-components/dist/common/api";
 import { fetchRssFeed } from "@unclutter/library-components/dist/feeds";
-import type { Runtime, Tabs, Alarms } from "webextension-polyfill";
+import type { Runtime, Tabs } from "webextension-polyfill";
 import { extensionSupportsUrl } from "../common/articleDetection";
 import { handleReportBrokenPage } from "../common/bugReport";
 import {
     collectAnonymousMetricsFeatureFlag,
-    getFeatureFlag,
+    enableExperimentalFeatures,
     isDevelopmentFeatureFlag,
     setFeatureFlag,
 } from "../common/featureFlags";
@@ -96,13 +96,18 @@ function handleMessage(
         // event sent from boot.js to inject additional functionality
         // browser apis are only available in scripts injected from background scripts or manifest.json
         console.log("boot.js requested injection into tab");
-        injectScript(sender.tab.id, "content-script/enhance.js");
 
-        tabsManager
-            .getSocialAnnotationsCount(sender.tab.id, sender.url)
-            .then((socialCommentsCount) =>
-                reportEnablePageView(message.trigger, socialCommentsCount)
-            );
+        if (message.type === "full") {
+            injectScript(sender.tab.id, "content-script/enhance.js");
+
+            tabsManager
+                .getSocialAnnotationsCount(sender.tab.id, sender.url)
+                .then((socialCommentsCount) =>
+                    reportEnablePageView(message.trigger, socialCommentsCount)
+                );
+        } else if (message.type === "highlights") {
+            injectScript(sender.tab.id, "content-script/highlights.js");
+        }
     } else if (message.event === "openOptionsPage") {
         browser.runtime.openOptionsPage();
     } else if (message.event === "fetchCss") {
@@ -216,9 +221,9 @@ browser.runtime.onInstalled.addListener(async ({ reason }) => {
     const isDev = extensionInfo.installType === "development";
 
     if (isDev) {
-        // disable metrics in dev mode
         await setFeatureFlag(collectAnonymousMetricsFeatureFlag, false);
         await setFeatureFlag(isDevelopmentFeatureFlag, true);
+        await setFeatureFlag(enableExperimentalFeatures, true);
     }
 
     // report aggregates on enabled extension features

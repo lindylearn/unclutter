@@ -1,7 +1,6 @@
 import throttle from "lodash/throttle";
 import { AnnotationListener } from "./annotationsModifier";
 import {
-    addHighlightDot,
     anchorAnnotations,
     getHighlightOffsets,
     hoverUpdateHighlight,
@@ -9,6 +8,7 @@ import {
     removeAllHighlights,
     removeHighlight,
 } from "./highlightsApi";
+import { sendIframeEvent } from "../../../common/reactIframe";
 
 let listenerRef;
 export function createAnnotationListener(
@@ -27,7 +27,7 @@ export function createAnnotationListener(
 
             // anchor only called with all complete annotations
             removeAllHighlights();
-            const anchoredAnnotations = await anchorAnnotations(data.annotations, sidebarIframe);
+            const anchoredAnnotations = await anchorAnnotations(data.annotations);
 
             const duration = performance.now() - start;
             console.info(
@@ -37,7 +37,7 @@ export function createAnnotationListener(
             );
 
             // send response
-            sendSidebarEvent(sidebarIframe, {
+            sendIframeEvent(sidebarIframe, {
                 event: "anchoredAnnotations",
                 annotations: anchoredAnnotations,
             });
@@ -51,8 +51,6 @@ export function createAnnotationListener(
             onAnnotationUpdate("remove", data.annotations);
         } else if (data.event === "onAnnotationHoverUpdate") {
             hoverUpdateHighlight(data.annotation, data.hoverActive);
-        } else if (data.event === "showHighlightDotsFor") {
-            data.annotations.map((a) => addHighlightDot(a, sidebarIframe));
         }
     };
     window.addEventListener("message", onMessage);
@@ -79,7 +77,7 @@ export function updateOffsetsOnHeightChange(
         ];
 
         const [offsetById, offsetEndById] = getHighlightOffsets(highlightNodes);
-        sendSidebarEvent(sidebarIframe, {
+        sendIframeEvent(sidebarIframe, {
             event: "changedDisplayOffset",
             offsetById,
             offsetEndById,
@@ -108,8 +106,4 @@ function _observeHeightChange(
 
     resizeObserver.observe(document.body);
     return resizeObserver;
-}
-
-export function sendSidebarEvent(sidebarIframe: HTMLIFrameElement, event: object) {
-    sidebarIframe.contentWindow?.postMessage(event, "*");
 }

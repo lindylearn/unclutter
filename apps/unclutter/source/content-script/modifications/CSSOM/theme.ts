@@ -19,6 +19,7 @@ import BodyStyleModifier from "../bodyStyle";
 import TextContainerModifier from "../DOM/textContainer";
 import LibraryModalModifier from "../libraryModal";
 import type OverlayManager from "../overlay";
+import ReviewModifier from "../review";
 import { PageModifier, trackModifierExecution } from "../_interface";
 import CSSOMProvider, { isMediaRule, isStyleRule } from "./_provider";
 
@@ -31,6 +32,7 @@ export default class ThemeModifier implements PageModifier {
     private bodyStyleModifier: BodyStyleModifier;
     private overlayModifier: OverlayManager;
     private libraryModalModifier: LibraryModalModifier;
+    private reviewModeModifier: ReviewModifier;
 
     public theme: UserTheme;
     private darkModeActive = false; // seperate from theme -- auto theme enables and disable dark mode
@@ -43,13 +45,15 @@ export default class ThemeModifier implements PageModifier {
         annotationsModifer: AnnotationsModifier,
         textContainerModifier: TextContainerModifier,
         bodyStyleModifier: BodyStyleModifier,
-        libraryModalModifier: LibraryModalModifier
+        libraryModalModifier: LibraryModalModifier,
+        reviewModeModifier: ReviewModifier
     ) {
         this.cssomProvider = cssomProvider;
         this.annotationsModifer = annotationsModifer;
         this.textContainerModifier = textContainerModifier;
         this.bodyStyleModifier = bodyStyleModifier;
         this.libraryModalModifier = libraryModalModifier;
+        this.reviewModeModifier = reviewModeModifier;
     }
 
     setCyclicDependencies(overlayModifier: OverlayManager) {
@@ -223,7 +227,8 @@ export default class ThemeModifier implements PageModifier {
         document.documentElement.style.setProperty("background", "#131516", "important");
 
         this.overlayModifier.setOverlayDarkMode(true);
-        this.annotationsModifer.setSidebarDarkMode(true);
+        this.annotationsModifer.setDarkMode(true);
+        this.reviewModeModifier.setDarkMode(true);
         this.libraryModalModifier.setDarkMode(true);
 
         // enable site dark mode styles if present, but always run our css tweaks too
@@ -288,7 +293,8 @@ export default class ThemeModifier implements PageModifier {
 
     private setCssThemeVariable(variableName: string, value: string) {
         setCssThemeVariable(variableName, value);
-        this.annotationsModifer.setSidebarCssVariable(variableName, value);
+        this.annotationsModifer.setCssVariable(variableName, value);
+        this.reviewModeModifier.setCssVariable(variableName, value);
         this.libraryModalModifier.setCssVariable(variableName, value);
     }
 
@@ -304,7 +310,8 @@ export default class ThemeModifier implements PageModifier {
         this.disableDarkModeStyleTweaks();
 
         this.overlayModifier.setOverlayDarkMode(false);
-        this.annotationsModifer.setSidebarDarkMode(false);
+        this.annotationsModifer.setDarkMode(false);
+        this.reviewModeModifier.setDarkMode(false);
     }
 
     private enabledSiteDarkModeRules: CSSMediaRule[] = [];

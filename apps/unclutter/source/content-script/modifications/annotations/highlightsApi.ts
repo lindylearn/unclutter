@@ -9,13 +9,10 @@ import {
     removeHighlights as removeHighlightsApi,
 } from "../../../common/annotator/highlighter";
 import { overrideClassname } from "../../../common/stylesheets";
-import { sendSidebarEvent } from "./annotationsListener";
+import { sendIframeEvent } from "../../../common/reactIframe";
 
 // highlight text for every passed annotation on the active webpage
-export async function anchorAnnotations(
-    annotations: LindyAnnotation[],
-    sidebarIframe: HTMLIFrameElement
-) {
+export async function anchorAnnotations(annotations: LindyAnnotation[]) {
     const body = document.body;
 
     const anchoredAnnotations = [];
@@ -31,7 +28,9 @@ export async function anchorAnnotations(
                 const highlightedNodes = highlightRange(
                     annotation.id,
                     range,
-                    annotation.isMyAnnotation ? "lindy-highlight" : "lindy-crowd-highlight"
+                    annotation.isMyAnnotation || annotation.platform === "info"
+                        ? "lindy-highlight"
+                        : "lindy-crowd-highlight"
                 );
                 if (highlightedNodes.length === 0) {
                     throw Error("Includes no highlighted nodes");
@@ -76,8 +75,14 @@ export function paintHighlight(
         annotationColor = getAnnotationColor(annotation);
         darkerAnnotationColor = annotationColor.replace("0.3", "0.5");
     } else {
-        annotationColor =
-            annotation.platform === "hn" ? "rgba(255, 102, 0, 0.5)" : "rgba(189, 28, 43, 0.5)";
+        if (annotation.platform === "hn") {
+            annotationColor = "rgba(255, 102, 0, 0.5)";
+        } else if (annotation.platform === "h") {
+            annotationColor = "rgba(189, 28, 43, 0.5)";
+        } else if (annotation.platform === "info") {
+            annotationColor = "rgba(250, 204, 21, 0.2)";
+        }
+
         darkerAnnotationColor = annotationColor.replace("0.5", "0.8");
     }
     highlightedNodes.map((node) => {
@@ -90,17 +95,17 @@ export function paintHighlight(
         node.onclick = () => {
             hoverUpdateHighlight(annotation, true);
 
-            sendSidebarEvent(sidebarIframe, {
+            sendIframeEvent(sidebarIframe, {
                 event: "focusAnnotation",
                 annotation,
             });
 
             // unfocus on next click for social comments
             // for annotations this is handled without duplicate events by the textarea onBlur
-            if (!annotation.isMyAnnotation) {
+            if (!annotation.isMyAnnotation || annotation.platform !== "info") {
                 const onNextClick = () => {
                     hoverUpdateHighlight(annotation, false);
-                    sendSidebarEvent(sidebarIframe, {
+                    sendIframeEvent(sidebarIframe, {
                         event: "focusAnnotation",
                         annotation: null,
                     });
@@ -166,7 +171,7 @@ export function insertMarginBar(
         barElement.onmouseenter = () => {
             hoverUpdateHighlight(annotation, true);
 
-            sendSidebarEvent(sidebarIframe, {
+            sendIframeEvent(sidebarIframe, {
                 event: "focusAnnotation",
                 id: annotation.id,
             });
@@ -178,8 +183,6 @@ export function insertMarginBar(
 
 // remove all text highlighting
 export function removeAllHighlights() {
-    [...document.querySelectorAll(".lindy-highlight-dot")].map((node) => node.remove());
-
     removeAllHighlightsApi(document.body);
 }
 
@@ -191,10 +194,6 @@ export function getAnnotationNodes(annotation): HTMLElement[] {
 
 // remove a specific text highlighting
 export function removeHighlight(annotation) {
-    document
-        .querySelector(`lindy-highlight[id="${annotation.id}"] > .lindy-highlight-dot`)
-        ?.remove();
-
     const nodes = getAnnotationNodes(annotation);
     removeHighlightsApi(nodes);
 }
@@ -230,37 +229,6 @@ export function hoverUpdateHighlight(annotation: LindyAnnotation, hoverActive: b
             node.classList.remove("lindy-hover");
         });
     }
-}
-
-export function addHighlightDot(annotation: LindyAnnotation, sidebarIframe: HTMLIFrameElement) {
-    const nodes = getAnnotationNodes(annotation);
-    const anchorNode = nodes[nodes.length - 1];
-
-    if (anchorNode.getElementsByClassName("lindy-highlight-dot").length !== 0) {
-        return;
-    }
-
-    const dotNode = document.createElement("lindy-dot");
-    dotNode.classList.add("lindy-highlight-dot");
-    anchorNode.insertBefore(dotNode, null);
-
-    dotNode.onmouseenter = () => {
-        hoverUpdateHighlight(annotation, true);
-
-        sendSidebarEvent(sidebarIframe, {
-            event: "focusAnnotation",
-            id: annotation.id,
-        });
-    };
-    dotNode.onmouseleave = () => {
-        hoverUpdateHighlight(annotation, false);
-    };
-    dotNode.onclick = () => {
-        sendSidebarEvent(sidebarIframe, {
-            event: "focusAnnotation",
-            id: annotation.id,
-        });
-    };
 }
 
 export async function copyTextToClipboard(text: string) {

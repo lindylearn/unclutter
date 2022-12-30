@@ -65,7 +65,7 @@ export function handleWindowEventFactory(
     mutateAnnotations: React.Dispatch<AnnotationMutation>,
     setEnableSocialAnnotations: (enabled: boolean) => void,
     setPersonalAnnotationsEnabled: (enabled: boolean) => void,
-    page_title: string
+    setSummaryAnnotation: (summaryAnnotation: LindyAnnotation) => void
 ) {
     return async function ({ data }) {
         if (data.event === "createHighlight") {
@@ -73,7 +73,7 @@ export function handleWindowEventFactory(
             mutateAnnotations({ action: "add", annotation: data.annotation });
 
             // update remotely, then replace local state
-            const remoteAnnotation = await createAnnotation(data.annotation, page_title);
+            const remoteAnnotation = await createAnnotation(data.annotation);
             mutateAnnotations({
                 action: "update",
                 annotation: remoteAnnotation,
@@ -136,7 +136,10 @@ export function handleWindowEventFactory(
                 });
             }
         } else if (data.event === "setInfoAnnotations") {
+            console.log("setInfoAnnotations", data.annotations);
             mutateAnnotations({ action: "add", annotations: data.annotations });
+        } else if (data.event === "setSummaryAnnotation") {
+            setSummaryAnnotation(data.summaryAnnotation);
         }
     };
 }

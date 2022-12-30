@@ -5,8 +5,13 @@ import useResizeObserver from "use-resize-observer";
 import partition from "lodash/partition";
 
 import { getRandomColor } from "../../common/styling";
-import { Article, readingProgressFullClamp, Topic, UserInfo } from "../../store/_schema";
-import { ReplicacheContext, sortArticlesPosition, useSubscribe } from "../../store";
+import type { Article, Topic, UserInfo } from "../../store/_schema";
+import {
+    readingProgressFullClamp,
+    ReplicacheContext,
+    sortArticlesPosition,
+    useSubscribe,
+} from "../../store";
 import { groupArticlesByTopic } from "./GroupedArticleList";
 import { TopicEmoji } from "../TopicTag";
 import { ArticleListsCache } from "./DraggableContext";

@@ -2,6 +2,7 @@ import { generate } from "@rocicorp/rails";
 import { ReadTransaction } from "replicache";
 import { getDomain } from "../common";
 import { getWeekNumber, getWeekStart, subtractWeeks } from "../common/time";
+import { readingProgressFullClamp } from "./constants";
 import {
     Annotation,
     annotationSchema,
@@ -14,7 +15,6 @@ import {
     PartialSyncState,
     partialSyncStateSchema,
     PARTIAL_SYNC_STATE_KEY,
-    readingProgressFullClamp,
     Settings,
     settingsSchema,
     Topic,

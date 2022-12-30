@@ -2,10 +2,11 @@ import React, { createContext, useEffect } from "react";
 import clsx from "clsx";
 import { useContext, useLayoutEffect, useState } from "react";
 
-import { Article, readingProgressFullClamp } from "../store/_schema";
+import { Article } from "../store/_schema";
 import { ArticleDropdown } from "./Dropdown";
 import { openArticleResilient } from "../common";
 import { ResourceIcon } from "./Modal";
+import { readingProgressFullClamp } from "../store/constants";
 
 export type LocalScreenshotFetcher = ((articleId: string) => Promise<string | null>) | null;
 export const LocalScreenshotContext = createContext<LocalScreenshotFetcher>(null);

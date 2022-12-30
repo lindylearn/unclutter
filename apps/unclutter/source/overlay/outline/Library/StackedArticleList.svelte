@@ -1,7 +1,7 @@
 <script lang="ts">
     import { fade } from "svelte/transition";
 
-    import { Article } from "@unclutter/library-components/dist/store/_schema";
+    import type { Article } from "@unclutter/library-components/dist/store/_schema";
     import ArticlePreview from "./ArticlePreview.svelte";
 
     export let articles: Article[];
@@ -20,7 +20,7 @@
         <ArticlePreview
             {article}
             {index}
-            className="absolute origin-top-left"
+            className="absolute origin-top-left h-48 w-40"
             transform={`scale(${articleScale}) translate(${
                 articleOverlay * 100 * index
             }%, 0) rotate(${index % 2 === 0 ? -2 : 2}deg)`}

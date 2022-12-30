@@ -93,8 +93,16 @@ export default class BodyStyleModifier implements PageModifier {
         document.body.style.removeProperty("overflow");
     }
 
+    private styleChangesCount = 0;
     private observeStyleChanges(skipScrollChanges: boolean = false) {
         this.styleObserver = new MutationObserver((mutations, observer) => {
+            // avoid infinite loops if there's another observer
+            if (this.styleChangesCount > 10) {
+                this.styleObserver.disconnect();
+                return;
+            }
+            this.styleChangesCount += 1;
+
             this.modifyHtmlStyle(skipScrollChanges);
         });
         this.styleObserver.observe(document.documentElement, {
@@ -139,6 +147,7 @@ export default class BodyStyleModifier implements PageModifier {
         document.body.style.setProperty("padding", "30px 50px", "important");
         document.body.style.setProperty("min-width", "0", "important");
         document.body.style.setProperty("max-width", "var(--lindy-pagewidth)", "important");
+        document.body.style.setProperty("max-height", "none", "important");
         document.body.style.setProperty("display", "block", "important");
         document.body.style.setProperty("height", "auto", "important");
 
@@ -186,7 +195,7 @@ export default class BodyStyleModifier implements PageModifier {
         // set padding for BottomContainer on documentElement for resilience against overflows
         this.unObserveStyleChanges();
 
-        this.bottomPadding = "130px";
+        this.bottomPadding = "1000px";
         document.documentElement.style.setProperty(
             "padding",
             `0 0 ${this.bottomPadding} 0`,

@@ -1,10 +1,9 @@
 <script lang="ts">
     import clsx from "clsx";
-    import { Article } from "@unclutter/library-components/dist/store/_schema";
-    import {
-        openArticleResilient,
-        reportEventContentScript,
-    } from "@unclutter/library-components/dist/common";
+    import type { Article } from "@unclutter/library-components/dist/store/_schema";
+    import { readingProgressFullClamp } from "@unclutter/library-components/dist/store/constants";
+    // import { openArticleResilient } from "@unclutter/library-components/dist/common/extension";
+    // import { reportEventContentScript } from "@unclutter/library-components/dist/common/messaging";
 
     export let article: Article;
     export let index: number;
@@ -24,7 +23,6 @@
         }
     }
 
-    const readingProgressFullClamp = 0.95;
     let readingProgress: number = null;
     $: {
         if (readingProgress > readingProgressFullClamp) {
@@ -38,14 +36,14 @@
         e.preventDefault();
         e.stopPropagation();
 
-        openArticleResilient(article.url);
-        reportEventContentScript("clickRelatedArticle");
+        // openArticleResilient(article.url);
+        // reportEventContentScript("clickRelatedArticle");
     }
 </script>
 
-<a
+<div
     class={clsx(
-        "article-container h-48 w-40 flex-shrink-0 cursor-pointer rounded-lg bg-white transition-all shadow hover:shadow-lg overflow-hidden",
+        "article-container flex-shrink-0 cursor-pointer rounded-lg bg-white transition-all shadow hover:shadow-lg overflow-hidden",
         transform && "disable-rotate",
         index % 2 === 1 && "list-alternate",
         className || "relative"
@@ -54,7 +52,7 @@
     href={article.url}
     on:click={openPage}
 >
-    <div class="article-fallback p-3 ">
+    <div class="article-fallback p-2">
         <div class="select-none font-bold leading-tight text-gray-700">
             {article.title}
         </div>
@@ -89,9 +87,13 @@
         class="progress-bar absolute bottom-0 left-0 h-[7px] w-full rounded-r bg-lindy transition-all dark:bg-lindyDark"
         style={`width: ${readingProgress * 100}%`}
     /> -->
-</a>
+</div>
 
-<style>
+<style lang="postcss">
+    @tailwind base;
+    @tailwind components;
+    @tailwind utilities;
+
     .article-container:not(.disable-rotate):hover {
         rotate: -1.5deg;
     }

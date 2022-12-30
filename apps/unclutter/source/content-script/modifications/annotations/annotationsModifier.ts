@@ -1,28 +1,33 @@
 import browser from "../../../common/polyfill";
 import { LindyAnnotation } from "../../../common/annotations/create";
 import { enableAnnotationsFeatureFlag, getFeatureFlag } from "../../../common/featureFlags";
-import LinkAnnotationsModifier from "../DOM/linksAnnotations";
 import { PageModifier, trackModifierExecution } from "../_interface";
 import {
     createAnnotationListener,
     removeAnnotationListener,
-    sendSidebarEvent,
     updateOffsetsOnHeightChange,
 } from "./annotationsListener";
 import { removeAllHighlights } from "./highlightsApi";
-import { injectSidebar, removeSidebar, waitUntilIframeLoaded } from "./injectSidebar";
+import {
+    injectReactIframe,
+    removeReactIframe,
+    sendIframeEvent,
+    waitUntilIframeLoaded,
+} from "../../../common/reactIframe";
 import { createSelectionListener, removeSelectionListener } from "./selectionListener";
 import { getNodeOffset } from "../../../common/annotations/offset";
 
 @trackModifierExecution
 export default class AnnotationsModifier implements PageModifier {
-    sidebarIframe: HTMLIFrameElement;
-    sidebarLoaded: boolean = false;
-    reactLoaded: boolean = false;
+    private articleUrl: string;
 
+    sidebarIframe: HTMLIFrameElement;
+    private sidebarLoaded: boolean = false;
+    private reactLoaded: boolean = false;
     private pageResizeObserver: ResizeObserver;
 
-    constructor() {
+    constructor(articleUrl: string) {
+        this.articleUrl = articleUrl;
         browser.runtime.onMessage.addListener(this.onRuntimeMessage.bind(this));
     }
 
@@ -33,7 +38,9 @@ export default class AnnotationsModifier implements PageModifier {
 
     async afterTransitionIn() {
         // always enable sidebar
-        this.sidebarIframe = injectSidebar();
+        this.sidebarIframe = injectReactIframe("/sidebar/index.html", "lindy-annotations-bar", {
+            articleUrl: this.articleUrl,
+        });
         window.addEventListener("message", ({ data }) => {
             if (data.event === "sidebarIframeLoaded") {
                 // ready for css inject
@@ -59,11 +66,9 @@ export default class AnnotationsModifier implements PageModifier {
 
         // set theme variables if those are already configured
         if (this.darkModeEnabled !== null) {
-            this.setSidebarDarkMode(this.darkModeEnabled);
+            this.setDarkMode(this.darkModeEnabled);
         }
-        Object.entries(this.cssVariables).map(([key, value]) =>
-            this.setSidebarCssVariable(key, value)
-        );
+        Object.entries(this.cssVariables).map(([key, value]) => this.setCssVariable(key, value));
     }
 
     async beforeTransitionOut() {
@@ -72,7 +77,7 @@ export default class AnnotationsModifier implements PageModifier {
         this.pageResizeObserver?.disconnect();
 
         if (this.sidebarIframe) {
-            removeSidebar();
+            removeReactIframe("lindy-annotations-bar");
         }
         this.sidebarLoaded = false;
     }
@@ -91,7 +96,7 @@ export default class AnnotationsModifier implements PageModifier {
         // selection is only user interface for annotations
         createSelectionListener(this.sidebarIframe, this.onAnnotationUpdate.bind(this));
 
-        sendSidebarEvent(this.sidebarIframe, {
+        sendIframeEvent(this.sidebarIframe, {
             event: "setEnablePersonalAnnotations",
             enablePersonalAnnotations: true,
         });
@@ -101,21 +106,21 @@ export default class AnnotationsModifier implements PageModifier {
         removeSelectionListener();
         removeAllHighlights(); // social annotations get re-anchored through below event
 
-        sendSidebarEvent(this.sidebarIframe, {
+        sendIframeEvent(this.sidebarIframe, {
             event: "setEnablePersonalAnnotations",
             enablePersonalAnnotations: false,
         });
     }
 
     setShowSocialAnnotations(showSocialAnnotations: boolean) {
-        sendSidebarEvent(this.sidebarIframe, {
+        sendIframeEvent(this.sidebarIframe, {
             event: "setShowSocialAnnotations",
             showSocialAnnotations,
         });
     }
 
     private cssVariables: { [key: string]: string } = {};
-    async setSidebarCssVariable(key: string, value: string) {
+    async setCssVariable(key: string, value: string) {
         this.cssVariables[key] = value;
 
         if (!this.sidebarIframe) {
@@ -126,7 +131,7 @@ export default class AnnotationsModifier implements PageModifier {
         }
 
         // can't access iframe as from different origin, so send message instead
-        sendSidebarEvent(this.sidebarIframe, {
+        sendIframeEvent(this.sidebarIframe, {
             event: "setCssVariable",
             key,
             value,
@@ -134,7 +139,7 @@ export default class AnnotationsModifier implements PageModifier {
     }
 
     private darkModeEnabled: boolean = null;
-    async setSidebarDarkMode(darkModeEnabled: boolean) {
+    async setDarkMode(darkModeEnabled: boolean) {
         this.darkModeEnabled = darkModeEnabled;
 
         if (!this.sidebarIframe) {
@@ -144,7 +149,7 @@ export default class AnnotationsModifier implements PageModifier {
             await waitUntilIframeLoaded(this.sidebarIframe);
         }
 
-        sendSidebarEvent(this.sidebarIframe, {
+        sendIframeEvent(this.sidebarIframe, {
             event: "setDarkMode",
             darkModeEnabled,
         });
@@ -153,7 +158,7 @@ export default class AnnotationsModifier implements PageModifier {
     setInfoAnnotations(annotations: LindyAnnotation[]) {
         // ideally need to listen for reactLoaded event
 
-        sendSidebarEvent(this.sidebarIframe, {
+        sendIframeEvent(this.sidebarIframe, {
             event: "setInfoAnnotations",
             annotations: annotations,
         });

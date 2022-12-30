@@ -19,12 +19,12 @@ import {
     ArticleText,
     articleTextSchema,
     feedSubscriptionSchema,
-    readingProgressFullClamp,
     Settings,
     Topic,
     topicSchema,
     UserInfo,
 } from "./_schema";
+import { readingProgressFullClamp } from "./constants";
 
 /* ***** articles & topics ***** */
 

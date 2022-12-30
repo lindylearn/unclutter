@@ -8,7 +8,7 @@ import ResponsiveStyleModifier from "./modifications/CSSOM/responsiveStyle";
 import StylePatchesModifier from "./modifications/CSSOM/stylePatches";
 import ThemeModifier from "./modifications/CSSOM/theme";
 import CSSOMProvider from "./modifications/CSSOM/_provider";
-import LinkAnnotationsModifier from "./modifications/DOM/linksAnnotations";
+// import LinkAnnotationsModifier from "./modifications/DOM/linksAnnotations";
 import ReadingTimeModifier from "./modifications/DOM/readingTime";
 import TextContainerModifier from "./modifications/DOM/textContainer";
 import ElementPickerModifier from "./modifications/elementPicker";
@@ -18,29 +18,36 @@ import OverlayManager from "./modifications/overlay";
 import { PageModifier, trackModifierExecution } from "./modifications/_interface";
 import KeyboardModifier from "./modifications/keyboard";
 import LoggingManager from "./modifications/logging";
+import ReviewModifier from "./modifications/review";
+import { getUrlHash } from "@unclutter/library-components/dist/common/url";
+import SmartHighlightsProxyModifier from "./modifications/DOM/smartHighlightsProxy";
 
 @trackModifierExecution
 export default class TransitionManager implements PageModifier {
-    private url = window.location.href;
-    private domain = getDomainFrom(new URL(this.url));
+    private articleUrl = window.location.href;
+    private articleId = getUrlHash(this.articleUrl);
+    private title = document.title;
+    private domain = getDomainFrom(new URL(this.articleUrl));
 
     private bodyStyleModifier = new BodyStyleModifier();
     private cssomProvider = new CSSOMProvider();
     private responsiveStyleModifier = new ResponsiveStyleModifier(this.cssomProvider);
     private stylePatchesModifier = new StylePatchesModifier(this.cssomProvider);
-    private annotationsModifier = new AnnotationsModifier();
+    private annotationsModifier = new AnnotationsModifier(this.articleUrl);
     private textContainerModifier = new TextContainerModifier();
     private contentBlockModifier = new ContentBlockModifier(
         this.domain,
         this.textContainerModifier
     );
     private libraryModalModifier = new LibraryModalModifier(this.bodyStyleModifier);
+    private reviewModeModifier = new ReviewModifier(this.articleId, this.bodyStyleModifier);
     private themeModifier = new ThemeModifier(
         this.cssomProvider,
         this.annotationsModifier,
         this.textContainerModifier,
         this.bodyStyleModifier,
-        this.libraryModalModifier
+        this.libraryModalModifier,
+        this.reviewModeModifier
     );
     private backgroundModifier = new BackgroundModifier(this.themeModifier);
     private readingTimeModifier = new ReadingTimeModifier(this.bodyStyleModifier);
@@ -49,11 +56,13 @@ export default class TransitionManager implements PageModifier {
         this.readingTimeModifier
     );
     private libraryModifier = new LibraryModifier(
-        this.url,
-        document.title,
+        this.articleUrl,
+        this.articleId,
+        this.title,
         this.readingTimeModifier,
         this.annotationsModifier
     );
+    private smartHighlightsProxy = new SmartHighlightsProxyModifier(this.annotationsModifier);
     private overlayManager = new OverlayManager(
         this.domain,
         this.themeModifier,
@@ -63,7 +72,8 @@ export default class TransitionManager implements PageModifier {
         this.libraryModifier,
         this.libraryModalModifier,
         this.readingTimeModifier,
-        this.bodyStyleModifier
+        this.bodyStyleModifier,
+        this.smartHighlightsProxy
     );
     private loggingModifier = new LoggingManager(
         this.domain,
@@ -71,6 +81,10 @@ export default class TransitionManager implements PageModifier {
         this.readingTimeModifier,
         this.libraryModifier
     );
+    // private aiAnnotationsModifier = new AIAnnotationsModifier(
+    //     this.annotationsModifier,
+    //     this.textContainerModifier
+    // );
     // private linkAnnotationsModifier = new LinkAnnotationsModifier(
     //     this.annotationsModifier,
     //     this.libraryModifier,
@@ -199,7 +213,7 @@ export default class TransitionManager implements PageModifier {
 
         // *** write DOM phase ***
         // insert iframes & render UI
-        this.overlayManager.createIframes();
+        this.overlayManager.createIframes(false);
         this.overlayManager.renderUi();
         this.keyboardModifier.observeShortcuts();
 
@@ -218,6 +232,7 @@ export default class TransitionManager implements PageModifier {
         }
 
         // *** read DOM phase ***
+
         // *** write DOM phase ***
         this.libraryModifier.captureScreenshot(); // after dark mode enable
 
@@ -230,16 +245,18 @@ export default class TransitionManager implements PageModifier {
         this.libraryModifier.startReadingProgressSync();
         this.libraryModifier.scrollToLastReadingPosition();
 
-        // wait until feed likely parsed
         await new Promise((r) => setTimeout(r, 2000));
-        this.loggingModifier.afterTransitionInDone();
-        this.overlayManager.insertRenderBottomContainer();
+        this.loggingModifier.afterTransitionInDone(); // wait until feed likely parsed
+
+        // this.overlayManager.insertRenderBottomContainer();
+        // this.reviewModeModifier.afterTransitionIn();
     }
 
     beforeTransitionOut() {
         // remove ui enhancements
         this.readingTimeModifier.beforeTransitionOut();
         this.annotationsModifier.beforeTransitionOut();
+        this.reviewModeModifier.beforeTransitionOut();
 
         // fade-out ui
         this.overlayManager.fadeOutUi();

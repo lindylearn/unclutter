@@ -94,21 +94,24 @@ function createOrUpdateContextMenu(id, menuOptions) {
     }
 }
 
-function installAlarms() {
+async function installAlarms() {
     console.log("Registering periodic alarms...");
 
-    // updates alarm if already exists
-    browser.alarms.create("unclutter-library-feed-refresh", {
-        delayInMinutes: 1,
-        periodInMinutes: 60 * 12, // every 12 hours
-    } as Alarms.CreateAlarmInfoType);
-    // updates alarm if already exists
-    browser.alarms.create("unclutter-library-sync-pull", {
-        delayInMinutes: 1,
-        periodInMinutes: 60 * 6, // every 6 hours
-    } as Alarms.CreateAlarmInfoType);
+    createAlarmIfNotExists("unclutter-library-feed-refresh", 12);
+    createAlarmIfNotExists("unclutter-library-sync-pull", 4);
 
     createAlarmListeners();
+}
+
+async function createAlarmIfNotExists(id: string, everyXHour: number) {
+    if (await browser.alarms.get()) {
+        return;
+    }
+    const res = browser.alarms.create(id, {
+        delayInMinutes: 1,
+        periodInMinutes: 60 * everyXHour,
+    } as Alarms.CreateAlarmInfoType);
+    console.log(res);
 }
 
 export function createAlarmListeners() {

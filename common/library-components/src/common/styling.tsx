@@ -36,7 +36,7 @@ export const lightColors = [
     // "rgba(244, 255, 129, 1.0)",
     // "rgba(255, 255, 141, 1.0)",
     "rgba(255, 229, 127, 1.0)",
-    "rgba(255, 209, 128, 1.0)",
+    // "rgba(255, 209, 128, 1.0)",
     "rgba(255, 158, 128, 1.0)",
 ];
 
@@ -56,7 +56,7 @@ function _drawFromArray(seed, arr) {
 }
 
 function _randomInRange(seed, min, max) {
-    // range 0..1
+    // constructur
     const random = seedrandom(seed);
 
     // a..b (b exclusive)

@@ -1,11 +1,11 @@
 import browser from "../polyfill";
 
 export async function getHypothesisToken() {
-    return (await getUserInfo())["hypothesis-api-token"];
+    return (await getUserInfo())?.["hypothesis-api-token"];
 }
 
 export async function getHypothesisUsername() {
-    return (await getUserInfo())["hypothesis-username"];
+    return (await getUserInfo())?.["hypothesis-username"];
 }
 
 export async function getUserInfo() {

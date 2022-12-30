@@ -37,6 +37,7 @@ export const enableArchiveDetection = "enable-archive-detection";
 export const isDevelopmentFeatureFlag = "is-dev";
 export const hypothesisSyncFeatureFlag = "hypothesis-sync";
 export const enableSocialCountsFeatureFlag = "social-annotations-counts-enabled";
+export const enableExperimentalFeatures = "enable-experimental-features";
 
 // sticky user setting
 export const enableAnnotationsFeatureFlag = "annotations-enabled2";

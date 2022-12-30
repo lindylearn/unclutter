@@ -1,12 +1,12 @@
-import {
+import type {
     Article,
     ArticleLink,
     Topic,
     UserInfo,
     FeedSubscription,
 } from "@unclutter/library-components/dist/store/_schema";
-import { ReadingProgress } from "@unclutter/library-components/dist/store/accessors";
-import { CustomGraphData } from "@unclutter/library-components/dist/components/Modal/Graph";
+import type { ReadingProgress } from "@unclutter/library-components/dist/store/accessors";
+import type { CustomGraphData } from "@unclutter/library-components/dist/components/Modal/Graph";
 import { cleanTitle } from "@unclutter/library-components/dist/common/util";
 
 export type LibraryState = {

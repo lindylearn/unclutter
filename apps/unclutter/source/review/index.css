@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.bottom-review > * {
+    background: var(--lindy-background-color) !important;
+}
+
+@media (max-width: 1200px) {
+    .bottom-review > * {
+        margin-left: 0 !important;
+    }
+}

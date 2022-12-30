@@ -11,5 +11,5 @@ img {
 /* https://www.vladionescu.me/posts/scaling-containers-on-aws-in-2022/ */
 * {
     /* color: unset !important; https://9fans.github.io/plan9port/man/man1/rc.html */
-    background-color: unset !important;
+    /* background-color: unset !important; causes issues for smart highlights */
 }

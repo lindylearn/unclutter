@@ -1,11 +1,11 @@
 import { PageModifier, trackModifierExecution } from "../_interface";
 import { describe as describeAnnotation } from "../../../common/annotator/anchoring/html";
-import { createLinkAnnotation, LindyAnnotation } from "../../../common/annotations/create";
+import { createInfoAnnotation, LindyAnnotation } from "../../../common/annotations/create";
 import { getNodeOffset } from "../../../common/annotations/offset";
 import AnnotationsModifier from "../annotations/annotationsModifier";
 import { getLinkedArticles } from "../../../common/api";
 import LibraryModifier from "../library";
-import { Article } from "@unclutter/library-components/dist/store/_schema";
+import type { Article } from "@unclutter/library-components/dist/store/_schema";
 import { openArticle } from "@unclutter/library-components/dist/common/messaging";
 import OverlayManager from "../overlay";
 import { extensionSupportsUrl, isNonLeafPage } from "../../../common/articleDetection";
@@ -134,7 +134,7 @@ export default class LinkAnnotationsModifier implements PageModifier {
         }
 
         const annotation = {
-            ...createLinkAnnotation(window.location.href, selector, article),
+            ...createInfoAnnotation(window.location.href, selector, article),
             displayOffset: getNodeOffset(link),
             displayOffsetEnd: getNodeOffset(link, "bottom"),
         };

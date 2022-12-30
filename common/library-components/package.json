@@ -9,6 +9,7 @@
     "dependencies": {
         "@radix-ui/react-dropdown-menu": "^1.0.0",
         "clsx": "^1.2.1",
+        "d3-scale": "~3",
         "date-fns": "^2.29.3",
         "flexsearch": "^0.7.21",
         "jsdom": "^20.0.2",

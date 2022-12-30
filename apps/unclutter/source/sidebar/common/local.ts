@@ -1,4 +1,5 @@
-import { getUrlHash, ReplicacheProxy } from "@unclutter/library-components/dist/common";
+import { getUrlHash } from "@unclutter/library-components/dist/common/url";
+import { ReplicacheProxy } from "@unclutter/library-components/dist/common/messaging";
 import {
     LindyAnnotation,
     pickleLocalAnnotation,

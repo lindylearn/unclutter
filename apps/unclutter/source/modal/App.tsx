@@ -4,7 +4,7 @@ import {
     LibraryModalPage,
     ModalContext,
 } from "@unclutter/library-components/dist/components/Modal";
-import { LocalScreenshotContext } from "@unclutter/library-components/dist/components";
+import { LocalScreenshotContext } from "@unclutter/library-components/dist/components/ArticlePreview";
 
 import { LibraryState } from "../common/schema";
 import {
@@ -12,7 +12,7 @@ import {
     ReplicacheProxy,
     reportEventContentScript,
 } from "@unclutter/library-components/dist/common/messaging";
-import { ReplicacheContext } from "@unclutter/library-components/dist/store";
+import { ReplicacheContext } from "@unclutter/library-components/dist/store/replicache";
 import { getDistinctId, getPageReportCount } from "../common/storage";
 import { getInitialInstallVersion } from "../common/updateMessages";
 import { getAllElementBlockSelectors } from "../common/storage2";
@@ -72,11 +72,11 @@ export default function App({
                     pageReports: await getPageReportCount(),
                     elementBlocks: (await getAllElementBlockSelectors()).length,
                     articleCount: libraryState?.readingProgress?.articleCount,
-                    annotationCount: libraryState?.readingProgress?.annotationCount
+                    annotationCount: libraryState?.readingProgress?.annotationCount,
                 });
-            })()
+            })();
         }
-    }, [isFeedbackModal, libraryState])
+    }, [isFeedbackModal, libraryState]);
     function onSubmitFeedback() {
         window.top.postMessage({ event: "onSubmitFeedback" }, "*");
     }
@@ -84,7 +84,11 @@ export default function App({
     if (isFeedbackModal === "true") {
         return (
             <ModalContext.Provider value={{ isVisible: showModal, closeModal }}>
-                <FeedbackModalPage userInfo={feedbackUserInfo} onSubmit={onSubmitFeedback} reportEvent={reportEventContentScript}/>
+                <FeedbackModalPage
+                    userInfo={feedbackUserInfo}
+                    onSubmit={onSubmitFeedback}
+                    reportEvent={reportEventContentScript}
+                />
             </ModalContext.Provider>
         );
     }

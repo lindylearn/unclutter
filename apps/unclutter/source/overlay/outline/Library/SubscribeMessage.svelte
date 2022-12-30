@@ -1,15 +1,13 @@
 <script lang="ts">
     import { fly, fade } from "svelte/transition";
     import { cubicOut, cubicIn } from "svelte/easing";
-    import { getRandomLightColor } from "@unclutter/library-components/dist/common/styling";
     import { LibraryState } from "../../../common/schema";
     import LibraryModalModifier from "../../../content-script/modifications/libraryModal";
     import LibraryModifier from "../../../content-script/modifications/library";
     import ToggleMessage from "./ToggleMessage.svelte";
-    import {
-        formatPostFrequency,
-        getRelativeTime,
-    } from "@unclutter/library-components/dist/common";
+    import { getRandomLightColor } from "@unclutter/library-components/dist/common/styling";
+    import { formatPostFrequency } from "@unclutter/library-components/dist/common/util";
+    import { getRelativeTime } from "@unclutter/library-components/dist/common/time";
 
     export let libraryState: LibraryState;
     export let libraryModifier: LibraryModifier;

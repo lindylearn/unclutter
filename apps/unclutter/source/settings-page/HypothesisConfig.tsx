@@ -49,7 +49,7 @@ export default function HypothesisConfig() {
                     target="_blank"
                     rel="noopener noreferrer"
                 >
-                    my account
+                    your account
                 </a>
                 :
             </p>

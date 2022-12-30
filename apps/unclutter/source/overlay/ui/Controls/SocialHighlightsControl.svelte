@@ -5,7 +5,7 @@
         getFeatureFlag,
         setFeatureFlag,
     } from "../../../common/featureFlags";
-    import { reportEventContentScript } from "@unclutter/library-components/dist/common";
+    import { reportEventContentScript } from "@unclutter/library-components/dist/common/messaging";
     import AnnotationsModifier from "../../../content-script/modifications/annotations/annotationsModifier";
     import OverlayManager from "../../../content-script/modifications/overlay";
     import UiControl from "./UIControl.svelte";
@@ -48,23 +48,23 @@
         });
 </script>
 
-<UiControl
-    iconName={socialHighlightsEnabled ? "social_enabled" : "social_disabled"}
-    tooltip={socialHighlightsEnabled
-        ? `Click to hide ${socialHighlightsCount || 0} social comment${
-              socialHighlightsCount !== 1 ? "s" : ""
-          }`
-        : `Click to show ${socialHighlightsCount || 0} social comment${
-              socialHighlightsCount !== 1 ? "s" : ""
-          }`}
-    onClick={toggleEnabled}
->
-    {#if socialHighlightsCount}
+{#if socialHighlightsCount}
+    <UiControl
+        iconName={socialHighlightsEnabled ? "social_enabled" : "social_disabled"}
+        tooltip={socialHighlightsEnabled
+            ? `Click to hide ${socialHighlightsCount || 0} social comment${
+                  socialHighlightsCount !== 1 ? "s" : ""
+              }`
+            : `Click to show ${socialHighlightsCount || 0} social comment${
+                  socialHighlightsCount !== 1 ? "s" : ""
+              }`}
+        onClick={toggleEnabled}
+    >
         <div id="lindy-crowd-count-label">
             {socialHighlightsCount}
         </div>
-    {/if}
-</UiControl>
+    </UiControl>
+{/if}
 
 <style lang="postcss">
     #lindy-crowd-count-label {

@@ -1,5 +1,5 @@
-import { getUrlHash } from "@unclutter/library-components/dist/common";
-import { Annotation, Article } from "@unclutter/library-components/dist/store/_schema";
+import { getUrlHash } from "@unclutter/library-components/dist/common/url";
+import type { Annotation, Article } from "@unclutter/library-components/dist/store/_schema";
 
 export function createDraftAnnotation(
     url: string,
@@ -13,15 +13,17 @@ export function createDraftAnnotation(
     });
 }
 
-export function createLinkAnnotation(
+export function createInfoAnnotation(
     page_url: string,
     selector: object,
-    article: Article
+    article?: Article,
+    relatedAnnotations?: LindyAnnotation[]
 ): LindyAnnotation {
     return createAnnotation(page_url, selector, {
         id: generateId(),
         platform: "info",
         article,
+        relatedAnnotations,
     });
 }
 
@@ -60,7 +62,7 @@ export function generateId(): string {
 export interface LindyAnnotation {
     id: string;
     author: string;
-    platform: "h" | "hn" | "ll" | "info";
+    platform: "h" | "hn" | "ll" | "info" | "summary";
     link: string;
     created_at: string;
     updated_at?: string; // only set in remote fetch or data store
@@ -89,6 +91,7 @@ export interface LindyAnnotation {
 
     // only for info annotations
     article?: Article;
+    relatedAnnotations?: LindyAnnotation[];
 }
 
 // TODO serialize to Annotation type directly

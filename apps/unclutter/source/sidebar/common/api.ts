@@ -2,7 +2,7 @@ import { hypothesisToLindyFormat, LindyAnnotation } from "../../common/annotatio
 import { getHypothesisToken, getHypothesisUsername } from "../../common/annotations/storage";
 import { getUrlHash } from "@unclutter/library-components/dist/common/url";
 import ky from "ky";
-import { Annotation } from "@unclutter/library-components/dist/store";
+import type { Annotation } from "@unclutter/library-components/dist/store";
 
 /**
  * Methods for accessing the remote annotations state (hypothesis and lindy APIs).

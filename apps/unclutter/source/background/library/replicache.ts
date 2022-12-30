@@ -1,7 +1,7 @@
 import { JSONValue, Replicache } from "replicache";
 import { getLibraryUser, getLibraryUserJwt } from "../../common/storage";
 import { accessors, M, mutators } from "@unclutter/library-components/dist/store";
-import { ReplicacheProxyEventTypes } from "@unclutter/library-components/dist/common";
+import type { ReplicacheProxyEventTypes } from "@unclutter/library-components/dist/common/messaging";
 import type { Runtime } from "webextension-polyfill";
 
 // const apiHost = "http://localhost:3000"

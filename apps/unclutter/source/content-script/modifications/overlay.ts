@@ -8,10 +8,10 @@ import {
 } from "../../common/featureFlags";
 import browser, { BrowserType, getBrowserType } from "../../common/polyfill";
 import { LibraryState } from "../../common/schema";
-import { Article } from "@unclutter/library-components/dist/store/_schema";
+import type { Article } from "@unclutter/library-components/dist/store/_schema";
 import { createStylesheetLink, overrideClassname } from "../../common/stylesheets";
 import { backgroundColorThemeVariable } from "../../common/theme";
-import BottomContainerSvelte from "../../overlay/outline/BottomContainer.svelte";
+import FeedbackMessage from "../../overlay/outline/Bottom/FeedbackMessage.svelte";
 import { getElementYOffset } from "../../overlay/outline/components/common";
 import {
     createRootItem,
@@ -32,7 +32,8 @@ import ReadingTimeModifier from "./DOM/readingTime";
 import { setUserSettingsForDomain } from "../../common/storage";
 import LibraryModifier from "./library";
 import BodyStyleModifier from "./bodyStyle";
-import { reportEventContentScript } from "@unclutter/library-components/dist/common";
+import { reportEventContentScript } from "@unclutter/library-components/dist/common/messaging";
+import SmartHighlightsProxy from "./DOM/smartHighlightsProxy";
 
 @trackModifierExecution
 export default class OverlayManager implements PageModifier {
@@ -45,13 +46,14 @@ export default class OverlayManager implements PageModifier {
     private libraryModifier: LibraryModifier;
     private libraryModalModifier: LibraryModalModifier;
     private bodyStyleModifier: BodyStyleModifier;
+    private smartHighlightsProxy: SmartHighlightsProxy;
 
     outline: OutlineItem[];
     private flatOutline: OutlineItem[];
     private topleftSvelteComponent: TopLeftContainer;
     private toprightSvelteComponent: TopRightContainerSvelte;
     private pageAdjacentSvelteComponent: PageAdjacentContainerSvelte;
-    private bottomSvelteComponent: BottomContainerSvelte;
+    private bottomSvelteComponent: any;
 
     private annotationsEnabled: boolean;
 
@@ -64,7 +66,8 @@ export default class OverlayManager implements PageModifier {
         libraryModifier: LibraryModifier,
         libraryModalModifier: LibraryModalModifier,
         readingTimeModifier: ReadingTimeModifier,
-        bodyStyleModifier: BodyStyleModifier
+        bodyStyleModifier: BodyStyleModifier,
+        smartHighlightsProxy: SmartHighlightsProxy
     ) {
         this.domain = domain;
         this.browserType = getBrowserType();
@@ -75,6 +78,7 @@ export default class OverlayManager implements PageModifier {
         this.libraryModifier = libraryModifier;
         this.libraryModalModifier = libraryModalModifier;
         this.bodyStyleModifier = bodyStyleModifier;
+        this.smartHighlightsProxy = smartHighlightsProxy;
 
         annotationsModifer.annotationListeners.push(this.onAnnotationUpdate.bind(this));
         readingTimeModifier.readingTimeLeftListeners.push(this.onReadingTimeUpdate.bind(this));
@@ -88,7 +92,7 @@ export default class OverlayManager implements PageModifier {
 
     private topleftIframe: HTMLIFrameElement;
     private bottomIframe: HTMLIFrameElement;
-    createIframes() {
+    createIframes(enableBottomContainer: boolean = false) {
         this.topleftIframe = createIframeNode("lindy-info-topleft");
         this.topleftIframe.style.setProperty("position", "fixed", "important"); // put on new layer
         this.topleftIframe.style.setProperty(
@@ -99,16 +103,18 @@ export default class OverlayManager implements PageModifier {
         document.documentElement.appendChild(this.topleftIframe);
         insertIframeFont(this.topleftIframe);
 
-        // insert even if not used to set theme variables
-        this.bottomIframe = createIframeNode("lindy-info-bottom");
-        this.bottomIframe.style.position = "absolute"; // put on new layer
-        this.bottomIframe.style.display = "none"; // hide until used
-        // if (this.libraryEnabled) {
-        //     // allow overflow to the right
-        //     this.bottomIframe.style.width = `calc(var(--side-width) + var(--lindy-pagewidth))`;
-        // }
-        document.documentElement.appendChild(this.bottomIframe);
-        insertIframeFont(this.bottomIframe); // TODO run later? need to modify initial dark theme insert then
+        if (enableBottomContainer) {
+            // insert even if not used to set theme variables
+            this.bottomIframe = createIframeNode("lindy-info-bottom");
+            this.bottomIframe.style.position = "absolute"; // put on new layer
+            this.bottomIframe.style.display = "none"; // hide until used
+            // if (this.libraryEnabled) {
+            //     // allow overflow to the right
+            //     this.bottomIframe.style.width = `calc(var(--side-width) + var(--lindy-pagewidth))`;
+            // }
+            document.documentElement.appendChild(this.bottomIframe);
+            insertIframeFont(this.bottomIframe); // TODO run later? need to modify initial dark theme insert then
+        }
     }
 
     renderUi() {
@@ -192,13 +198,13 @@ export default class OverlayManager implements PageModifier {
 
         // render svelte component
         this.toprightSvelteComponent = new TopRightContainerSvelte({
-            target: topRightContainer,
+            target: topRightContainer.attachShadow({ mode: "open" }),
             props: {
                 domain: this.domain,
                 themeModifier: this.themeModifier,
                 annotationsModifer: this.annotationsModifer,
+                smartHighlightsProxy: this.smartHighlightsProxy,
                 overlayModifier: this,
-                textContainerModifier: this.textContainerModifier,
                 elementPickerModifier: this.elementPickerModifier,
             },
         });
@@ -242,7 +248,7 @@ export default class OverlayManager implements PageModifier {
         this.bodyStyleModifier.setBottomContainerPadding();
         this.bottomIframe.style.display = "block";
 
-        this.bottomSvelteComponent = new BottomContainerSvelte({
+        this.bottomSvelteComponent = new FeedbackMessage({
             target: this.bottomIframe?.contentDocument.body,
             props: {
                 libraryModalModifier: this.libraryModalModifier,

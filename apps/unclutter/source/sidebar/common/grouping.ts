@@ -11,7 +11,7 @@ export function groupAnnotations(
     }
 
     const orderedAnnotations: LindyAnnotation[] = annotations
-        .filter((a) => a.displayOffset)
+        .filter((a) => a.displayOffset !== undefined)
         .sort((a, b) => a.displayOffset - b.displayOffset);
 
     let groupedAnnotations: LindyAnnotation[][] = [];
@@ -34,7 +34,7 @@ export function groupAnnotations(
         // show all personal or info annotations
         const [staticAnnotations, socialComments] = partition(
             groupList,
-            (a) => a.isMyAnnotation || a.platform === "info"
+            (a) => a.isMyAnnotation || a.platform === "info" || a.platform === "summary"
         );
 
         // but filter social comments

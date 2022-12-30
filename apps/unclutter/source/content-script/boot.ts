@@ -3,14 +3,18 @@ import {
     isConfiguredToEnable,
     isDeniedForDomain,
     isNonLeafPage,
+    isArticleByTextContent,
 } from "../common/articleDetection";
-import { enableBootUnclutterMessage, getFeatureFlag } from "../common/featureFlags";
+import {
+    enableBootUnclutterMessage,
+    enableExperimentalFeatures,
+    getFeatureFlag,
+} from "../common/featureFlags";
 import browser from "../common/polyfill";
 import { getDomainFrom } from "../common/util";
-import { displayToast } from "../overlay/toast";
 
 // script injected into every tab before dom constructed
-// if configured by the user, initialize the extension funcationality
+// if configured by the user, initialize the extension functionality
 async function boot() {
     const url = new URL(window.location.href);
     const domain = getDomainFrom(url);
@@ -26,25 +30,36 @@ async function boot() {
 
     let triggeredIsLikelyArticle = false;
 
-    // console.log("isNonLeafPage", isNonLeafPage(url));
-
     // url heuristic check
-    if (!isNonLeafPage(url)) {
+    const nonLeaf = isNonLeafPage(url);
+    console.log({ nonLeaf });
+    if (!nonLeaf) {
         onIsLikelyArticle(domain);
         triggeredIsLikelyArticle = true;
     }
 
     // check local url map for article annotation count matches
-    const foundCount = await browser.runtime.sendMessage(null, {
-        event: "checkLocalAnnotationCount",
-    });
-    if (foundCount && !triggeredIsLikelyArticle) {
-        console.log("Found annotations count, assuming this is an article");
-        onIsLikelyArticle(domain);
-    }
+    // const foundCount = await browser.runtime.sendMessage(null, {
+    //     event: "checkLocalAnnotationCount",
+    // });
+    // if (foundCount && !triggeredIsLikelyArticle) {
+    //     console.log("Found annotations count, assuming this is an article");
+    //     onIsLikelyArticle(domain);
+    // }
 
     if (["unclutter.lindylearn.io", "library.lindylearn.io", "localhost"].includes(domain)) {
         listenForPageEvents();
+    }
+
+    // run highlights.ts independently of non-leaf detection
+    const experimentsEnabled = await getFeatureFlag(enableExperimentalFeatures);
+    if (experimentsEnabled && url.pathname !== "/") {
+        // accessing text content requires ready dom
+        await waitUntilDomLoaded();
+
+        if (isArticleByTextContent()) {
+            requestEnhance("boot", "highlights");
+        }
     }
 }
 
@@ -52,29 +67,17 @@ async function onIsLikelyArticle(domain: string) {
     const configuredEnable = await isConfiguredToEnable(domain);
     const enableUnclutterMessage = await getFeatureFlag(enableBootUnclutterMessage);
     if (configuredEnable) {
-        enablePageView("allowlisted");
+        requestEnhance("allowlisted");
     } else if (false && enableUnclutterMessage) {
-        showUnclutterMessage();
+        // showUnclutterMessage();
     }
 }
 
-async function showUnclutterMessage() {
-    // console.log("showUnclutterMessage");
-
-    if (document.readyState !== "complete") {
-        await new Promise((resolve) => window.addEventListener("load", resolve));
-    }
-
-    displayToast("Unclutter article?", () => {
-        enablePageView("message");
-    });
-}
-
-function enablePageView(trigger) {
-    // request injection of additional extension functionality
+function requestEnhance(trigger: string, type = "full") {
     browser.runtime.sendMessage(null, {
         event: "requestEnhance",
         trigger,
+        type,
     });
 }
 
@@ -88,6 +91,16 @@ function listenForPageEvents() {
             )
         ) {
             browser.runtime.sendMessage(event.data);
+        }
+    });
+}
+
+async function waitUntilDomLoaded(): Promise<void> {
+    return new Promise((resolve) => {
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", () => resolve());
+        } else {
+            resolve();
         }
     });
 }

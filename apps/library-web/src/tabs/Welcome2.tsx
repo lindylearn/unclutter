@@ -75,8 +75,6 @@ export default function Welcome2Tab() {
             } else {
                 setUnclutterLibraryAuth(user.id);
             }
-
-            // sendMessage({ event: "requestEnhance" })
         })();
     }, [rep, user, userInfo]);
 

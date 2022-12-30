@@ -1,12 +1,8 @@
 import throttle from "lodash/throttle";
 
-import {
-    Article,
-    ArticleLink,
-    readingProgressFullClamp,
-} from "@unclutter/library-components/dist/store/_schema";
+import type { Article, ArticleLink } from "@unclutter/library-components/dist/store/_schema";
 import { constructGraphData } from "@unclutter/library-components/dist/components/Modal/Graph";
-import { getDomain, getUrlHash } from "@unclutter/library-components/dist/common";
+import { getDomain } from "@unclutter/library-components/dist/common/util";
 
 import { PageModifier, trackModifierExecution } from "./_interface";
 import { getLibraryUser } from "../../common/storage";
@@ -23,14 +19,15 @@ import { addArticlesToLibrary } from "../../common/api";
 import AnnotationsModifier from "./annotations/annotationsModifier";
 import { discoverFeedsInDocument, extractTags } from "@unclutter/library-components/dist/feeds";
 import browser from "../../common/polyfill";
+import { readingProgressFullClamp } from "@unclutter/library-components/dist/store/constants";
 
 @trackModifierExecution
 export default class LibraryModifier implements PageModifier {
     private readingProgressSyncIntervalSeconds = 10;
 
     private articleUrl: string;
-    private articleTitle: string;
     private articleId: string;
+    private articleTitle: string;
 
     private annotationsModifier: AnnotationsModifier;
 
@@ -55,13 +52,14 @@ export default class LibraryModifier implements PageModifier {
 
     constructor(
         articleUrl: string,
+        articleId: string,
         articleTitle: string,
         readingTimeModifier: ReadingTimeModifier,
         annotationsModifier: AnnotationsModifier
     ) {
         this.articleUrl = articleUrl;
+        this.articleId = articleId;
         this.articleTitle = articleTitle;
-        this.articleId = getUrlHash(articleUrl);
         this.annotationsModifier = annotationsModifier;
 
         readingTimeModifier.readingTimeLeftListeners.push(this.onScrollUpdate.bind(this));

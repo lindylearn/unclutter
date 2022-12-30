@@ -1,9 +1,9 @@
-import { Article, UserInfo } from "@unclutter/library-components/dist/store";
+import type { Article } from "@unclutter/library-components/dist/store";
 import {
     SearchIndex,
     SearchResult,
     syncSearchIndex,
-} from "@unclutter/library-components/dist/common";
+} from "@unclutter/library-components/dist/common/search";
 import { rep } from "./library";
 
 let annotationsSearchIndex: SearchIndex;

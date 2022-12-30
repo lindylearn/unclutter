@@ -1,17 +1,16 @@
 <script lang="ts">
-    import { fly, fade } from "svelte/transition";
-    import { cubicOut, cubicIn } from "svelte/easing";
-    import twemojiSvelte from "../components/twemoji-svelte";
-    import clsx from "clsx";
-    import { getRandomLightColor } from "@unclutter/library-components/dist/common/styling";
+    import { fly } from "svelte/transition";
+    import { cubicOut } from "svelte/easing";
+    // import twemojiSvelte from "../components/twemoji-svelte";
+    // import clsx from "clsx";
+    // import { getRandomLightColor } from "@unclutter/library-components/dist/common/styling";
 
     import { LibraryState } from "../../../common/schema";
     import LibraryModalModifier from "../../../content-script/modifications/libraryModal";
     import ToggleMessage from "./ToggleMessage.svelte";
-    import { getActivityColor } from "@unclutter/library-components/dist/components";
-    import ResourceStat from "./ResourceStat.svelte";
+    import { getActivityColor } from "@unclutter/library-components/dist/components/Charts/ArticleActivityCalendar";
     import LibraryModifier from "../../../content-script/modifications/library";
-    import { readingProgressFullClamp } from "@unclutter/library-components/dist/store";
+    import { readingProgressFullClamp } from "@unclutter/library-components/dist/store/constants";
 
     export let libraryState: LibraryState;
     export let libraryModifier: LibraryModifier;
