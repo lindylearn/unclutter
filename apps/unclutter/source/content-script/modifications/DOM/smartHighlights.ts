@@ -340,6 +340,7 @@ export default class SmartHighlightsModifier implements PageModifier {
     private styleObserver: MutationObserver;
     private styleChangesCount = 0;
     enableStyleTweaks() {
+        this.patchAbsolutePositions(); // read before modify
         this.patchScrollbarStyle();
 
         // site may override inline styles, e.g. https://www.fortressofdoors.com/ai-markets-for-lemons-and-the-great-logging-off/
@@ -386,6 +387,31 @@ export default class SmartHighlightsModifier implements PageModifier {
             // position absolute body children correctly
             document.body.style.setProperty("position", "relative", "important");
         }
+    }
+
+    // Set concrete absolute positions so they work with the patched body height. E.g.:
+    // - https://tedgioia.substack.com/p/what-can-we-learn-from-barnes-and
+    // - https://www.benkuhn.net/abyss/
+    private patchAbsolutePositions(maxDepth = 3) {
+        // TODO undo later?
+
+        function iterateNode(node: HTMLElement, depth: number = 0) {
+            if (depth > maxDepth) {
+                return;
+            }
+
+            const style = window.getComputedStyle(node);
+            const position = style.position;
+            if (position === "static") {
+                [...node.children].forEach((node) => iterateNode(node as HTMLElement, depth + 1));
+            } else if (position === "absolute") {
+                console.log(node);
+
+                node.style.setProperty("top", style.top, "important");
+            }
+        }
+
+        [...document.body.children].forEach(iterateNode);
     }
 
     disableStyleTweaks() {
