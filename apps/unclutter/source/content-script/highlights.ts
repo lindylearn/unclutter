@@ -8,6 +8,7 @@ function main() {
 function enablePageView() {
     browser.runtime.sendMessage(null, {
         event: "requestEnhance",
+        trigger: "highlights-layer",
         type: "full",
     });
 }

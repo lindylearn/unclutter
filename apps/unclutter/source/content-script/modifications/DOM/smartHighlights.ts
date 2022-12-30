@@ -1,3 +1,4 @@
+import { reportEventContentScript } from "@unclutter/library-components/dist/common";
 import ky from "ky";
 import { PageModifier, trackModifierExecution } from "../_interface";
 
@@ -35,6 +36,8 @@ export default class SmartHighlightsModifier implements PageModifier {
     private paragraphs: HTMLElement[] = [];
     private rankedSentencesByParagraph: RankedSentence[][];
     async parseUnclutteredArticle() {
+        let start = performance.now();
+
         const paragraphTexts: string[] = [];
         document.querySelectorAll("p, font, li").forEach((paragraph: HTMLElement) => {
             const textContent = paragraph.textContent;
@@ -101,6 +104,14 @@ export default class SmartHighlightsModifier implements PageModifier {
         //         }),
         //     });
         // }
+
+        let durationMs = Math.round(performance.now() - start);
+        reportEventContentScript("renderHighlightsLayer", {
+            paragraphCount: this.paragraphs.length,
+            keyPointsCount: this.keyPointsCount,
+            relatedCount: this.relatedCount,
+            durationMs,
+        });
     }
 
     private annotationState: {

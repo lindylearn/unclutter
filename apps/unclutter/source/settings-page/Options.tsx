@@ -180,6 +180,7 @@ function OptionsPage({}) {
                 >
                     <p>
                         Enable experimental AI features to help you read faster and more in depth.
+                        <br />
                         Join our{" "}
                         <a
                             href="https://unclutter.it/discord"

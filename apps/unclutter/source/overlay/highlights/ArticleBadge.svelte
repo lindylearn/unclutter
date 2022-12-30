@@ -6,12 +6,12 @@
     export let relatedCount: number | null;
     export let topHighlights: RankedSentence[] | null;
     export let articleSummary: string | null;
-    export let enablePageView: (reason: string) => void;
+    export let enablePageView: () => void;
 
     let clicked = false;
     function onClick() {
         clicked = true;
-        enablePageView("summary-card");
+        enablePageView();
     }
 </script>
 

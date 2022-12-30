@@ -5,7 +5,7 @@ import SmartHighlightsModifier, {
 // import HighlightDetailSvelte from "./HighlightDetail.svelte";
 import ArticleBadgeSvelte from "./ArticleBadge.svelte";
 
-export function renderHighlightsLayer(enablePageView: (reason: string) => void) {
+export function renderHighlightsLayer(enablePageView: () => void) {
     // document.addEventListener("mousedown", onSelectionStart);
     // document.addEventListener("mouseup", onSelectionDone);
     // document.addEventListener("contextmenu", removeHighligher);
@@ -24,7 +24,7 @@ export function renderHighlightsLayer(enablePageView: (reason: string) => void) 
     document.head.appendChild(font);
 
     function onHighlightClick(range: Range, related: RelatedHighlight[]) {
-        // enablePageView("smart-highlight");
+        // enablePageView();
 
         removeHighligher();
         const rect = range.getBoundingClientRect();
@@ -35,7 +35,7 @@ export function renderHighlightsLayer(enablePageView: (reason: string) => void) 
 
     smartHighlightsModifier.enableStyleTweaks();
 
-    const enablePageViewInner = (reason: string) => {
+    const enablePageViewInner = () => {
         // disable scrollbar for reader mode
         smartHighlightsModifier.disableStyleTweaks();
         smartHighlightsModifier.disableScrollbar();
@@ -48,7 +48,7 @@ export function renderHighlightsLayer(enablePageView: (reason: string) => void) 
 
         // smartHighlightsModifier.enableAllSentences = true;
 
-        enablePageView(reason);
+        enablePageView();
     };
     smartHighlightsModifier.parseUnclutteredArticle().then(() => {
         renderArticleBadge(
@@ -113,7 +113,7 @@ function renderArticleBadge(
     relatedCount: number,
     topHighlights: RankedSentence[],
     articleSummary: string,
-    enablePageView: (reason: string) => void
+    enablePageView: () => void
 ) {
     const container = document.createElement("div");
     container.id = "lindy-article-badge";
@@ -126,13 +126,13 @@ function renderArticleBadge(
             relatedCount,
             topHighlights,
             articleSummary,
-            enablePageView: (reason: string) => {
+            enablePageView: () => {
                 // anchor on left edge to prevent jump on scrollbar insert
                 const rect = container.getBoundingClientRect();
                 container.style.setProperty("left", `${rect.left}px`, "important");
                 container.style.setProperty("right", "unset", "important");
 
-                enablePageView(reason);
+                enablePageView();
             },
         },
     });
