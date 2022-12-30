@@ -224,7 +224,9 @@ export default class SmartHighlightsModifier implements PageModifier {
     }
 
     disableAnnotations() {
+        this.disableStyleTweaks();
         this.disableScrollbar();
+
         this.annotationState.forEach(({ paintedElements }) => {
             paintedElements?.forEach((e) => e.remove());
         });

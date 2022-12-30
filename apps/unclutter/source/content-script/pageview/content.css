@@ -46,10 +46,10 @@ html.pageview.pageview > body {
     all: initial !important;
     position: fixed !important;
     z-index: 9999999999 !important;
-    contain: strict style !important;
+    contain: layout style !important;
 
-    top: 10px !important;
-    right: 25px !important;
+    top: 0 !important;
+    right: 15px !important;
 }
 
 #lindy-annotations-bar {
@@ -59,7 +59,7 @@ html.pageview.pageview > body {
     width: calc((100vw - var(--lindy-pagewidth)) / 2 - 50px) !important;
     height: calc(100% - 50px - 50px) !important;
     user-select: none !important;
-    contain: strict style !important;
+    contain: strict !important;
     z-index: 1000 !important;
 }
 

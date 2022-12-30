@@ -1,3 +1,5 @@
+import { getDomain } from "@unclutter/library-components/dist/common/util";
+import { setUserSettingsForDomain } from "../../common/storage";
 import SmartHighlightsModifier, {
     RelatedHighlight,
     RankedSentence,
@@ -56,6 +58,7 @@ export function renderHighlightsLayer(enablePageView: () => void) {
             smartHighlightsModifier.relatedCount,
             smartHighlightsModifier.topHighlights,
             smartHighlightsModifier.articleSummary,
+            smartHighlightsModifier.disableAnnotations.bind(smartHighlightsModifier),
             enablePageViewInner
         );
     });
@@ -113,6 +116,7 @@ function renderArticleBadge(
     relatedCount: number,
     topHighlights: RankedSentence[],
     articleSummary: string,
+    disableAnnotations: () => void,
     enablePageView: () => void
 ) {
     const container = document.createElement("div");
@@ -133,6 +137,13 @@ function renderArticleBadge(
                 container.style.setProperty("right", "unset", "important");
 
                 enablePageView();
+            },
+            disableHighlightslayer: () => {
+                container.remove();
+                disableAnnotations();
+
+                const domain = getDomain(window.location.href);
+                setUserSettingsForDomain(domain, "deny");
             },
         },
     });
