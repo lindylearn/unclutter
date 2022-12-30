@@ -432,7 +432,7 @@ export default class SmartHighlightsModifier implements PageModifier {
     ): HTMLElement[] {
         const color: string = sentence.related ? "168, 85, 247" : "250, 204, 21";
         const score = sentence.score > 0.6 ? sentence.score : 0;
-        const colorIntensity = 0.8 * score ** 4;
+        const colorIntensity = 0.8 * score ** 3;
 
         let addedElements: HTMLElement[] = [];
 

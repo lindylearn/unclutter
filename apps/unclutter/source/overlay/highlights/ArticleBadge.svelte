@@ -69,7 +69,7 @@
             style:display="-webkit-box"
             style:-webkit-box-orient="vertical"
             style:-webkit-line-clamp="4"
-            style:background={`rgba(250, 204, 21, ${0.8 * highlight.score ** 4})`}
+            style:background={`rgba(250, 204, 21, ${0.8 * highlight.score ** 3})`}
         >
             "{highlight.sentence}"
         </div>
@@ -90,10 +90,10 @@
 
         animation: pageCardFadeIn 200ms cubic-bezier(0.34, 1.56, 0.64, 1); /* easeOutBack */
         animation-fill-mode: backwards;
-        transition: all 200ms cubic-bezier(0.34, 1.56, 0.64, 1); /* easeOutBack */
+        transition: all 200ms cubic-bezier(0.34, 1.56, 0.64, 1); /* easeOutQuart */
     }
     .article-card:hover {
-        transform: scale(96%);
+        transform: scale(98%);
     }
     .article-card.article-card-clicked {
         opacity: 0;
@@ -102,7 +102,7 @@
     }
 
     .lindy-button:hover {
-        transition: all 200ms cubic-bezier(0.34, 1.56, 0.64, 1); /* easeOutBack */
+        transition: all 200ms cubic-bezier(0.34, 1.56, 0.64, 1); /* easeOutQuart */
         background: rgba(255, 255, 255, 0.3) !important;
     }
 
