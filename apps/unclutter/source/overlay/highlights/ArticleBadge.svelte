@@ -80,6 +80,10 @@
     @tailwind components;
     @tailwind utilities;
 
+    :root {
+        font-size: 16px !important;
+    }
+
     .article-card {
         opacity: 1;
         transform: scale(100%);

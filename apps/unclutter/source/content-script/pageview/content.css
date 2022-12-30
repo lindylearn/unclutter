@@ -42,6 +42,16 @@ html.pageview.pageview > body {
     border-radius: 10px !important;
 }
 
+#lindy-article-badge {
+    all: initial !important;
+    position: fixed !important;
+    z-index: 9999999999 !important;
+    contain: strict style !important;
+
+    top: 10px !important;
+    right: 25px !important;
+}
+
 #lindy-annotations-bar {
     position: absolute !important;
     top: 8px !important;

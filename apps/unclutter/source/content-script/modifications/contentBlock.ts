@@ -340,6 +340,6 @@ export const blockedSpecificSelectors = [
     ".toc",
     "#toc",
 
-    "#lindy-page-card",
+    "#lindy-article-badge",
     "#lindy-highlighter",
 ];

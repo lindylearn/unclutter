@@ -12,17 +12,20 @@ import postcss from "rollup-plugin-postcss";
 import svelte from "rollup-plugin-svelte";
 import sveltePreprocess from "svelte-preprocess";
 import tailwindcss from "tailwindcss";
+import autoprefixer from "autoprefixer";
+import remToPx from "@thedutchcoder/postcss-rem-to-px";
 // import builtins from "rollup-plugin-node-builtins";
 // import globals from "rollup-plugin-node-globals";
 // import nodePo1lyfills from "rollup-plugin-node-polyfills";
 // import nodePolyfills from "rollup-plugin-polyfill-node";
 
-const isProduction = !process.env.ROLLUP_WATCH;
+const isProduction = true; // !process.env.ROLLUP_WATCH;
 
 // bundle content scripts
 // absolute path imports (starting with "source/") seems to break this.
 const contentScriptConfigs = [
     "source/content-script/boot.ts",
+    "source/content-script/highlights.ts",
     "source/content-script/enhance.ts",
     "source/sidebar/index.tsx",
     "source/sidebar/messaging.ts",
@@ -43,12 +46,13 @@ const contentScriptConfigs = [
         svelte({
             preprocess: sveltePreprocess({
                 postcss: {
-                    plugins: [tailwindcss()],
+                    // convert UI sizes to px to make independent of host rem
+                    plugins: [tailwindcss(), remToPx(), autoprefixer()],
                 },
             }),
-            emitCss: false, // bundle conponent styles
+            emitCss: false, // bundle component styles
         }),
-        postcss({ plugins: [tailwindcss()] }),
+        postcss({ plugins: [tailwindcss(), autoprefixer()] }), // styles for react views
         nodeResolve({ browser: true }),
         commonjs({ include: /node_modules/ }),
         typescript(),
@@ -92,7 +96,7 @@ const esModuleConfig = {
         // nodePolyfills(), // before nodeResolve
         nodeResolve({ browser: true, preferBuiltins: true }), // run before typescript to use correct browser imports
         typescript(),
-        postcss({ plugins: [tailwindcss()] }),
+        postcss({ plugins: [tailwindcss(), autoprefixer()] }),
         babel({ babelHelpers: "bundled", presets: ["@babel/preset-react"] }),
         // multiple bundles would overwrite each other's tree-shaked common imports
         multiInput({

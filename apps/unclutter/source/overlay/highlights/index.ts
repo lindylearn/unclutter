@@ -116,12 +116,7 @@ function renderArticleBadge(
     enablePageView: (reason: string) => void
 ) {
     const container = document.createElement("div");
-    container.id = "lindy-page-card";
-    container.style.position = "fixed";
-    container.style.top = `10px`;
-    container.style.right = `25px`;
-    container.style.zIndex = `9999999999`;
-    container.style.contain = `content`;
+    container.id = "lindy-article-badge";
     document.documentElement.appendChild(container);
 
     new ArticleBadgeSvelte({
@@ -134,8 +129,8 @@ function renderArticleBadge(
             enablePageView: (reason: string) => {
                 // anchor on left edge to prevent jump on scrollbar insert
                 const rect = container.getBoundingClientRect();
-                container.style.left = `${rect.left}px`;
-                container.style.removeProperty("right");
+                container.style.setProperty("left", `${rect.left}px`, "important");
+                container.style.setProperty("right", "unset", "important");
 
                 enablePageView(reason);
             },
