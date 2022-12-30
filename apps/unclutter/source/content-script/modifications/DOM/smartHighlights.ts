@@ -1,4 +1,4 @@
-import { reportEventContentScript } from "@unclutter/library-components/dist/common";
+import { reportEventContentScript } from "@unclutter/library-components/dist/common/messaging";
 import ky from "ky";
 import { PageModifier, trackModifierExecution } from "../_interface";
 

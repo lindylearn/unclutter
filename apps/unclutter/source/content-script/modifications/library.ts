@@ -9,9 +9,9 @@ import { getLibraryUser } from "../../common/storage";
 import {
     captureActiveTabScreenshot,
     getRemoteFeatureFlag,
-    ReplicacheProxy,
     reportEventContentScript,
 } from "@unclutter/library-components/dist/common/messaging";
+import { ReplicacheProxy } from "@unclutter/library-components/dist/common/replicache";
 import { showLibrarySignupFlag } from "../../common/featureFlags";
 import { constructLocalArticleInfo, LibraryInfo, LibraryState } from "../../common/schema";
 import ReadingTimeModifier from "./DOM/readingTime";

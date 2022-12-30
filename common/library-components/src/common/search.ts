@@ -2,7 +2,7 @@ import { Index, Document } from "flexsearch";
 import { keys, get, set, createStore, UseStore, clear } from "idb-keyval";
 
 import { Annotation, Article, ArticleText } from "../store";
-import { ReplicacheProxy } from "./messaging";
+import { ReplicacheProxy } from "./replicache";
 import { splitSentences } from "./util";
 
 export interface SearchResult {

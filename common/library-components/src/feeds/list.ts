@@ -1,6 +1,7 @@
 import { parseFeed } from "htmlparser2";
 import ky from "ky";
-import { createScreenshots, getBrowser, getUnclutterExtensionId, ReplicacheProxy } from "../common";
+import { createScreenshots, getBrowser, getUnclutterExtensionId } from "../common";
+import { ReplicacheProxy } from "../common/replicache";
 import { Article, FeedSubscription } from "../store";
 import { fetchRssFeed, parseFeedArticles } from "./parse";
 

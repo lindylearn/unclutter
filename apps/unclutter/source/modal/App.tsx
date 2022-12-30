@@ -9,9 +9,9 @@ import { LocalScreenshotContext } from "@unclutter/library-components/dist/compo
 import { LibraryState } from "../common/schema";
 import {
     getLocalScreenshot,
-    ReplicacheProxy,
     reportEventContentScript,
 } from "@unclutter/library-components/dist/common/messaging";
+import { ReplicacheProxy } from "@unclutter/library-components/dist/common/replicache";
 import { ReplicacheContext } from "@unclutter/library-components/dist/store/replicache";
 import { getDistinctId, getPageReportCount } from "../common/storage";
 import { getInitialInstallVersion } from "../common/updateMessages";

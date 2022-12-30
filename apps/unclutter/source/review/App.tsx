@@ -1,4 +1,4 @@
-import { ReplicacheProxy } from "@unclutter/library-components/dist/common/messaging";
+import { ReplicacheProxy } from "@unclutter/library-components/dist/common/replicache";
 import ArticleBottomReview from "@unclutter/library-components/dist/components/Review/ArticleBottomReview";
 import { ReplicacheContext } from "@unclutter/library-components/dist/store/replicache";
 import React, { useMemo } from "react";

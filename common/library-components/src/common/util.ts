@@ -1,4 +1,4 @@
-import { FeedSubscription } from "../store";
+import type { FeedSubscription } from "../store";
 
 export function groupBy(xs, key) {
     return xs.reduce(function (rv, x) {
