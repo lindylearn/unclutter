@@ -76,6 +76,7 @@
         ".partners-top__title",
         ".partners-top__outer-wrapper"
     ],
+    "biblegateway.com": [".default-tooltip", ".passage-scroller.no-sidebar"],
     "biobiochile.cl": [
         ".ad-aside.bbcl-app",
         ".post-aside",
