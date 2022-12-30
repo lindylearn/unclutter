@@ -2,6 +2,7 @@ import { getUrlHash, normalizeUrl } from "@unclutter/library-components/dist/com
 import type { Annotation, Article } from "@unclutter/library-components/dist/store";
 import { debounce, groupBy } from "lodash";
 import { LindyAnnotation, pickleLocalAnnotation } from "../../common/annotations/create";
+import { getHypothesisUsername } from "../../common/annotations/storage";
 import { getFeatureFlag, hypothesisSyncFeatureFlag } from "../../common/featureFlags";
 import { constructLocalArticleInfo } from "../../common/schema";
 import { getHypothesisSyncState, updateHypothesisSyncState } from "../../common/storage";
@@ -22,7 +23,8 @@ export async function initHighlightsSync() {
     }
 
     const hypothesisSyncEnabled = await getFeatureFlag(hypothesisSyncFeatureFlag);
-    if (hypothesisSyncEnabled) {
+    const hypothesisUsername = await getHypothesisUsername();
+    if (hypothesisSyncEnabled && hypothesisUsername) {
         try {
             // upload local changes,
             // sets last updated time to now (so pulled changes are not uploaded again)
