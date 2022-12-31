@@ -388,6 +388,7 @@
         ".wp-block-spacer",
         ".wp-block-ugb-spacer.ugb-spacer.ugb-67effb8.ugb-spacer--v2.ugb-main-block"
     ],
+    "gigazine.net": ["#header-social-button-box"],
     "gist.github.com": [".d-block.d-md-none.px-3.px-md-3.px-lg-5.mb-3"],
     "github.blog": [
         ".col-12.offset-lg-1.col-lg-1.post__social",
