@@ -754,6 +754,7 @@
         ".c-keywords",
         ".c-detailkeyward"
     ],
+    "nlab.itmedia.co.jp": [".pulldown-wrap"],
     "notes.cloudcat.ca": [
         ".ui-infobar.container-fluid.unselectable.hidden-print"
     ],
