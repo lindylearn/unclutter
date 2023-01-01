@@ -754,6 +754,12 @@
         ".c-keywords",
         ".c-detailkeyward"
     ],
+    "nlab.itmedia.co.jp": [
+        ".pulldown-head",
+        ".myBoxTitle.colBoxTitle",
+        ".myBoxBG",
+        ".pulldown-wrap"
+    ],
     "notes.cloudcat.ca": [
         ".ui-infobar.container-fluid.unselectable.hidden-print"
     ],
