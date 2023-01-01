@@ -145,6 +145,7 @@
         ".col-second",
         ".row-quote"
     ],
+    "burusoku-vip.com": [".side"],
     "businessinsider.com": [
         ".the-refresh-summary-list",
         ".tp-iframe-wrapper.tp-active"
