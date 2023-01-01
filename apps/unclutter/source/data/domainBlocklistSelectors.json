@@ -671,6 +671,7 @@
         ".Header-item",
         ".Layout-header"
     ],
+    "mirum.naturalfiberwelding.com": [".parallax-slider"],
     "mmazurek.dev": [
         ".wp-block-separator",
         ".wp-block-tnp-minimal",
