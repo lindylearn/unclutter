@@ -574,6 +574,14 @@
         ".h1.g-color-black.g-font-weight-700.mb-4",
         ".row.g-mb-20"
     ],
+    "kinsta.com": [
+        ".skip-to-content",
+        ".site-menu__logo",
+        "#megamenu-item-1",
+        "#nav",
+        ".widget-share__title",
+        ".mb--50.mt--50"
+    ],
     "kommersant.ru": [
         ".actual__nav_button.actual__nav_button--next.slider-next",
         ".actual__list.slider-canvas",
