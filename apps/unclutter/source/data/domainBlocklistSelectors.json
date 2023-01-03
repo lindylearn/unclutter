@@ -812,6 +812,9 @@
         "#td-header-menu",
         ".td-pb-span4"
     ],
+    "pureinfotech.com": [
+        ".attachment-large.size-large.wp-post-image.jetpack-lazy-image.jetpack-lazy-image--handled"
+    ],
     "radreads.co": [".tcb-flex-col"],
     "realpython.com": [".small.text-muted"],
     "rebble.io": ["#index"],
