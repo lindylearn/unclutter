@@ -198,6 +198,7 @@
         "[data-vars-tracking-title='Weitere Rezepte von']"
     ],
     "christianitytoday.com": [".article-embed"],
+    "ciechanow.ski": ["#hero"],
     "cloud.tencent.com": [".layout-side"],
     "cloudemployee.co.uk": [
         ".scroll.btn.btn-orange-split",
