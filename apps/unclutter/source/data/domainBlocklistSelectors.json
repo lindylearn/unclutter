@@ -136,6 +136,10 @@
         ".col-xs-12.col-md-9.col-lg-10.text-center.text-md-left",
         ".row.post-top-meta"
     ],
+    "bloomberg.com": [
+        ".skiplink__hide-until-focus",
+        ".postr-recirc.postr-recirc--citylab.paywall"
+    ],
     "bostonherald.com": [".connext-modal-backdrop.fade"],
     "builtin.com": [
         ".field.field--name-field-oc-name.field--type-string.field--label-hidden.field__item",
