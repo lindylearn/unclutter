@@ -1071,6 +1071,22 @@
     ],
     "vancouversun.com": [".more-topic", ".visually-hidden", ".cat-head.short"],
     "vanitynotes.com": ["#toggle-large-font"],
+    "variety.com": [
+        ".lrv-a-glue-parent",
+        ".comment-form-comment",
+        ".comment-form-email",
+        ".comment-form-author",
+        ".form-submit",
+        ".comment-form-url",
+        "#respond",
+        "#comments-loaded",
+        "#title-of-a-story",
+        ".o-tease__primary.lrv-u-flex-grow-1",
+        ".o-tease-list__item.u-border-color-brand-secondary-40",
+        ".c-lazy-image__img.lrv-u-background-color-grey-lightest.lrv-u-width-100p.lrv-u-display-block.lrv-u-height-auto",
+        ".lrv-a-crop-16x9",
+        ".lrv-u-padding-tb-1"
+    ],
     "vnexpress.net": [
         ".section.page-detail.bottom-detail",
         ".width_common.box-tinlienquanv2",
