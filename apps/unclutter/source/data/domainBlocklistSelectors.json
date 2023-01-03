@@ -322,6 +322,7 @@
         ".most-news-zone.right-list-zone"
     ],
     "engadget.com": ["#LB-MULTI_ATF"],
+    "espinof.com": [".article-metadata-container"],
     "eurogamer.net": [
         ".after_article",
         "#content_below",
