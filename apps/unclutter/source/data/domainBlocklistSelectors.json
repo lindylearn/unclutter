@@ -46,6 +46,7 @@
         ".BlockHeader__Container-sc-55bvnf-0.iVdrIt",
         ".ArticleShare__ArticleShareWrapper-dyxdoz-0.jPximb"
     ],
+    "audio-heritage.jp": ["#aswift_4_host", "#aswift_3_host", ".adsbygoogle"],
     "augmentingcognition.com": [".marginnote"],
     "autodesk.com": [
         ".image-style-class-header-1x-desktop.lazyloaded",
@@ -132,9 +133,14 @@
         ".content__pagination",
         ".content__row"
     ],
+    "blog.livedoor.jp": [".side", ".article-header-inner"],
     "blog.vespa.ai": [
         ".col-xs-12.col-md-9.col-lg-10.text-center.text-md-left",
         ".row.post-top-meta"
+    ],
+    "bloomberg.com": [
+        ".skiplink__hide-until-focus",
+        ".postr-recirc.postr-recirc--citylab.paywall"
     ],
     "bostonherald.com": [".connext-modal-backdrop.fade"],
     "builtin.com": [
@@ -145,6 +151,7 @@
         ".col-second",
         ".row-quote"
     ],
+    "burusoku-vip.com": [".side"],
     "businessinsider.com": [
         ".the-refresh-summary-list",
         ".tp-iframe-wrapper.tp-active"
@@ -198,6 +205,7 @@
         "[data-vars-tracking-title='Weitere Rezepte von']"
     ],
     "christianitytoday.com": [".article-embed"],
+    "ciechanow.ski": ["#hero"],
     "cloud.tencent.com": [".layout-side"],
     "cloudemployee.co.uk": [
         ".scroll.btn.btn-orange-split",
@@ -345,6 +353,7 @@
     "fedoramagazine.org": [".header-wrapper"],
     "fenbi.com": [".mokaodasai-title", ".mokaodasai"],
     "fiercehealthcare.com": ["[style*='height: 0px;']"],
+    "forest.watch.impress.co.jp": [".list.latest", "#extra"],
     "forwardobserver.com": [".attachment-large.size-large.wp-post-image"],
     "francetvinfo.fr": [
         ".header-legacy__direct-radio",
@@ -391,8 +400,7 @@
     "gigazine.net": [
         "#header-social-button-box",
         ".header-social-button.fl-fb",
-        "#header-snsdiv",
-        ".sbn"
+        "#ad",
     ],
     "gist.github.com": [".d-block.d-md-none.px-3.px-md-3.px-lg-5.mb-3"],
     "github.blog": [
@@ -544,6 +552,26 @@
         ".d-none.d-sm-block",
         ".mb-5"
     ],
+    "iphone-mania.jp": [
+        ".sidebar_views",
+        "#sidebar_right_menu",
+        ".button_ss",
+        "#sidebar_menu_news",
+        "#sidebar_menu_iphone",
+        "#sidebar_menu_oyaku",
+        "#sidebar_menu_ipad",
+        ".sidebar_category_06",
+        ".sidebar_category_05",
+        ".sidebar_category_ipad_03",
+        ".sidebar_category_ipad_02",
+        ".sidebar_category_ipad_01",
+        ".sidebar_category_07",
+        "#sidebar_left",
+        ".search",
+        "#bread",
+        ".ls-is-cached.lazyloaded",
+        ".lazyloaded"
+    ],
     "isvle.neu.edu.ph": ["#yui_3_17_2_1_1669620055107_31"],
     "jamanetwork.com": ["[style*='height: 0px;']"],
     "jamesclear.com": [".post__next"],
@@ -566,6 +594,11 @@
         "#linkcat-20924250",
         ".size-small"
     ],
+    "jp.quora.com": [
+        ".q-fixed.qu-fullX.qu-zIndex--header.qu-bg--raised.qu-borderBottom.qu-boxShadow--medium.qu-borderColor--raised",
+        ".q-click-wrapper.qu-p--tiny.qu-pl--small.qu-alignItems--center.qu-userSelect--none.qu-display--flex.qu-tapHighlight--white.qu-cursor--pointer.qu-hover--bg--darken.ClickWrapper___StyledClickWrapperBox-zoqi4f-0.iyYUZT",
+        ".q-fixed.qu-bg--raised.qu-display--flex.qu-flexDirection--column.qu-borderTopLeftRadius--small.qu-borderTopRightRadius--small.DesktopMessagesDock___StyledFixed-sc-1bh1698-0.gWVrmC"
+    ],
     "kaggle.com": [
         ".sc-jfmDQi.hfJycS",
         ".sc-ddcaxn.iTnbhq",
@@ -580,6 +613,14 @@
         ".h1.g-color-black.g-font-weight-700.mb-4",
         ".row.g-mb-20"
     ],
+    "kinsta.com": [
+        ".skip-to-content",
+        ".site-menu__logo",
+        "#megamenu-item-1",
+        "#nav",
+        ".widget-share__title",
+        ".mb--50.mt--50"
+    ],
     "kommersant.ru": [
         ".actual__nav_button.actual__nav_button--next.slider-next",
         ".actual__list.slider-canvas",
@@ -592,6 +633,7 @@
         ".sc-1wkneyl-0.hxLRyg.video-html5-playlist",
         ".bxm4mm-3.eCMXYG"
     ],
+    "kyobun.co.jp": [".tp-iframe-wrapper.tp-active"],
     "lavoz.com.ar": [".article.card.default"],
     "lemonbin.com": ["#toc_container"],
     "lemonde.fr": [
@@ -628,6 +670,7 @@
         ".xruw5r-7.uFmbC.js_footer-container"
     ],
     "lightnovelworld.com": [".MRBtHBPL.OGtiqFda.MRBtHBPL_"],
+    "linux.just4fun.biz": [".google-auto-placed"],
     "linux.org.ru": [
         ".msg-top-header",
         "#hd",
@@ -677,6 +720,7 @@
         ".Header-item",
         ".Layout-header"
     ],
+    "mirum.naturalfiberwelding.com": [".parallax-slider"],
     "mmazurek.dev": [
         ".wp-block-separator",
         ".wp-block-tnp-minimal",
@@ -731,6 +775,13 @@
         ".iframe-fragment.x-type-center",
         ".f-content-column.f-content-column-1"
     ],
+    "news.yahoo.co.jp": [
+        ".CommentFloatingCommentItem__Link-gktzXW.dormMx",
+        "#snavi",
+        ".sc-iAyFgw.euMPUo.yjnHeader_nav_main",
+        "#yjnHeader_nav",
+        "#yjnHeader"
+    ],
     "news.yahoo.com": ["#close-button-section"],
     "news.ycombinator.com": ["#hnmain > tbody > tr:last-child"],
     "newscientist.com": [
@@ -759,6 +810,12 @@
         ".paging",
         ".c-keywords",
         ".c-detailkeyward"
+    ],
+    "nlab.itmedia.co.jp": [
+        ".pulldown-head",
+        ".myBoxTitle.colBoxTitle",
+        ".myBoxBG",
+        ".pulldown-wrap"
     ],
     "notes.cloudcat.ca": [
         ".ui-infobar.container-fluid.unselectable.hidden-print"
@@ -1066,9 +1123,14 @@
         ".media",
         ".section__sidebar.col-lg-4"
     ],
+    "tutorialspoint.com": [".rounded-img", "#divResources"],
     "twinview.com": [
         ".c-section--default.c-section.c-section--pad-x-small.c-section--pad-y-default.u-bg-purple-1",
         ".c-form__columns.no-margin"
+    ],
+    "unix.stackexchange.com": [
+        ".votecell.post-layout--left",
+        ".d-flex.fd-column.ai-center.wmn3.hero-background"
     ],
     "valeriorosso.com": [
         ".aligncenter.wp-image-7359.size-full.entered.lazyloaded",
@@ -1077,6 +1139,22 @@
     ],
     "vancouversun.com": [".more-topic", ".visually-hidden", ".cat-head.short"],
     "vanitynotes.com": ["#toggle-large-font"],
+    "variety.com": [
+        ".lrv-a-glue-parent",
+        ".comment-form-comment",
+        ".comment-form-email",
+        ".comment-form-author",
+        ".form-submit",
+        ".comment-form-url",
+        "#respond",
+        "#comments-loaded",
+        "#title-of-a-story",
+        ".o-tease__primary.lrv-u-flex-grow-1",
+        ".o-tease-list__item.u-border-color-brand-secondary-40",
+        ".c-lazy-image__img.lrv-u-background-color-grey-lightest.lrv-u-width-100p.lrv-u-display-block.lrv-u-height-auto",
+        ".lrv-a-crop-16x9",
+        ".lrv-u-padding-tb-1"
+    ],
     "vnexpress.net": [
         ".section.page-detail.bottom-detail",
         ".width_common.box-tinlienquanv2",
@@ -1107,6 +1185,11 @@
         ".media-layout.css-m32lxl-Layout.ek23gj80",
         "#share_tools",
         "#article_tools"
+    ],
+    "xataka.com": [
+        ".article-metadata-container",
+        ".article-asset.article-asset-normal.article-asset-center",
+        ".desvio-container"
     ],
     "zdnet.com": [".c-socialSharebar"],
     "zeit.de": [
