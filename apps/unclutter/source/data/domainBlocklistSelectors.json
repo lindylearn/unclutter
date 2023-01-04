@@ -596,6 +596,11 @@
         "#linkcat-20924250",
         ".size-small"
     ],
+    "jp.quora.com": [
+        ".q-fixed.qu-fullX.qu-zIndex--header.qu-bg--raised.qu-borderBottom.qu-boxShadow--medium.qu-borderColor--raised",
+        ".q-click-wrapper.qu-p--tiny.qu-pl--small.qu-alignItems--center.qu-userSelect--none.qu-display--flex.qu-tapHighlight--white.qu-cursor--pointer.qu-hover--bg--darken.ClickWrapper___StyledClickWrapperBox-zoqi4f-0.iyYUZT",
+        ".q-fixed.qu-bg--raised.qu-display--flex.qu-flexDirection--column.qu-borderTopLeftRadius--small.qu-borderTopRightRadius--small.DesktopMessagesDock___StyledFixed-sc-1bh1698-0.gWVrmC"
+    ],
     "kaggle.com": [
         ".sc-jfmDQi.hfJycS",
         ".sc-ddcaxn.iTnbhq",
