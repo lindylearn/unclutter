@@ -786,6 +786,7 @@
     ],
     "news.yahoo.com": ["#close-button-section"],
     "news.ycombinator.com": ["#hnmain > tbody > tr:last-child"],
+    "news4vip.livedoor.biz": ["#left"],
     "newscientist.com": [
         ".card",
         ".article-topics.article-topics--row",
