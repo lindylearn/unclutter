@@ -1161,6 +1161,11 @@
         "#share_tools",
         "#article_tools"
     ],
+    "xataka.com": [
+        ".article-metadata-container",
+        ".article-asset.article-asset-normal.article-asset-center",
+        ".desvio-container"
+    ],
     "zdnet.com": [".c-socialSharebar"],
     "zeit.de": [
         ".article-player.article-player--has-player",
