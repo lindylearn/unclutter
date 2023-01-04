@@ -133,6 +133,7 @@
         ".content__pagination",
         ".content__row"
     ],
+    "blog.livedoor.jp": [".side", ".article-header-inner"],
     "blog.vespa.ai": [
         ".col-xs-12.col-md-9.col-lg-10.text-center.text-md-left",
         ".row.post-top-meta"
