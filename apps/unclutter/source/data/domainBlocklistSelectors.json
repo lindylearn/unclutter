@@ -399,15 +399,8 @@
     ],
     "gigazine.net": [
         "#header-social-button-box",
-        ".items",
-        "#list",
-        ".list-1",
+        ".header-social-button.fl-fb",
         "#ad",
-        "#latest",
-        "#ranking-entry",
-        "#rl-list",
-        ".rlcontents-s",
-        ".article"
     ],
     "gist.github.com": [".d-block.d-md-none.px-3.px-md-3.px-lg-5.mb-3"],
     "github.blog": [
