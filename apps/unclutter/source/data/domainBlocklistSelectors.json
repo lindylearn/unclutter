@@ -769,6 +769,13 @@
         ".iframe-fragment.x-type-center",
         ".f-content-column.f-content-column-1"
     ],
+    "news.yahoo.co.jp": [
+        ".CommentFloatingCommentItem__Link-gktzXW.dormMx",
+        "#snavi",
+        ".sc-iAyFgw.euMPUo.yjnHeader_nav_main",
+        "#yjnHeader_nav",
+        "#yjnHeader"
+    ],
     "news.yahoo.com": ["#close-button-section"],
     "news.ycombinator.com": ["#hnmain > tbody > tr:last-child"],
     "newscientist.com": [
