@@ -27,17 +27,23 @@ export async function loadEmbeddingsModelUSE() {
     useModel = await loadUSE();
 
     // prevent unbounded memory growth, see https://github.com/tensorflow/tfjs/issues/4127
-    tf.ENV.set("WEBGL_DELETE_TEXTURE_THRESHOLD", 256 * 1024 * 1024); // 256MB
+    tf.ENV.set("WEBGL_DELETE_TEXTURE_THRESHOLD", 512 * 1024 * 1024); // 256MB
+    // performance help? https://github.com/tensorflow/tfjs/issues/6678
+    tf.ENV.set("WEBGL_EXP_CONV", true);
 
-    // works?
+    // https://tfjs-benchmarks.web.app/local-benchmark/
     tf.ENV.set("KEEP_INTERMEDIATE_TENSORS", false);
+    tf.ENV.set("WEBGL_USE_SHAPES_UNIFORMS", true);
+
+    // warmup run
+    await getEmbeddingsUSE(["test"]);
 
     console.log(
         `Loaded ${tf.getBackend()} USE model in ${Math.round(performance.now() - useStart)}ms`
     );
 }
 
-export async function getEmbeddingsUSE(sentences: string[], batchSize = 100): Promise<number[][]> {
+export async function getEmbeddingsUSE(sentences: string[], batchSize = 10): Promise<number[][]> {
     if (!useModel) {
         await loadEmbeddingsModelUSE();
     }
@@ -59,7 +65,7 @@ export async function getEmbeddingsUSE(sentences: string[], batchSize = 100): Pr
 
         tensor.dispose();
 
-        await new Promise((resolve) => setTimeout(resolve, 100));
+        // await new Promise((resolve) => setTimeout(resolve, 100));
     }
 
     const end = performance.now();
