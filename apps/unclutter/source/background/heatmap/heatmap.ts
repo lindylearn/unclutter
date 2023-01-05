@@ -1,6 +1,6 @@
 import { cosine_similarity_matrix } from "./groups";
 // import { getEmbeddingsONNX, loadEmbeddingsModelONNX } from "./onnx/embeddings_onnx";
-import { getEmbeddingsUSE, loadEmbeddingsModelUSE } from "./embeddings_use";
+import { cleanupEmbeddings, getEmbeddingsUSE, loadEmbeddingsModelUSE } from "./embeddings_use";
 import { getParagraphSentences } from "./sentences";
 import textRank from "./textrank";
 
@@ -31,7 +31,7 @@ export async function getHeatmap(
         return [];
     }
 
-    let embeddings;
+    let embeddings: number[][] = undefined;
     if (embeddingsType === "onnx") {
         // embeddings = await getEmbeddingsONNX(sentences);
     } else if (embeddingsType === "use") {
@@ -73,6 +73,8 @@ export async function getHeatmap(
     );
 
     console.log(`Computed heatmap in ${Math.round(performance.now() - t0)}ms`);
+
+    cleanupEmbeddings();
 
     return groupedSentenceScores;
 }

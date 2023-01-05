@@ -35,16 +35,19 @@ export async function getEmbeddingsUSE(sentences: string[], batchSize = 20): Pro
         await loadEmbeddingsModelUSE();
     }
 
+    tf.engine().startScope();
+
     const start = performance.now();
 
-    const embeddings: number[][] = [];
+    let embeddings: number[][] = [];
     for (let i = 0; i < sentences.length; i += batchSize) {
         const batch = sentences.slice(i, i + batchSize);
 
         const tensor = await useModel.embed(batch);
-        embeddings.push(...tensor.arraySync());
-        tf.dispose(tensor);
-        tf.disposeVariables();
+        const data = await tensor.array();
+        embeddings.push(...data);
+
+        tensor.dispose();
 
         await new Promise((resolve) => setTimeout(resolve, 100));
     }
@@ -52,5 +55,10 @@ export async function getEmbeddingsUSE(sentences: string[], batchSize = 20): Pro
     const end = performance.now();
     console.log(`Computed ${sentences.length} embeddings in ${Math.round(end - start)}ms`);
 
-    return embeddings;
+    return [];
+}
+
+export function cleanupEmbeddings() {
+    tf.disposeVariables();
+    tf.engine().endScope();
 }
