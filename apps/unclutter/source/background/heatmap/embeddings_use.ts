@@ -15,22 +15,29 @@ export async function loadEmbeddingsModelUSE() {
     console.log("Loading USE model...");
 
     tf.enableProdMode();
+    // tf.enableDebugMode();
 
     // WASM backend uses worker, which doesn't work inside the background service worker
-    // tf.enableDebugMode();
     // wasm.setWasmPaths("https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-wasm/wasm-out/");
     // wasm.setThreadsCount(4);
     // await tf.setBackend("wasm");
-    // await tf.ready();
+
+    await tf.ready();
 
     useModel = await loadUSE();
+
+    // prevent unbounded memory growth, see https://github.com/tensorflow/tfjs/issues/4127
+    tf.ENV.set("WEBGL_DELETE_TEXTURE_THRESHOLD", 256 * 1024 * 1024); // 256MB
+
+    // works?
+    tf.ENV.set("KEEP_INTERMEDIATE_TENSORS", false);
 
     console.log(
         `Loaded ${tf.getBackend()} USE model in ${Math.round(performance.now() - useStart)}ms`
     );
 }
 
-export async function getEmbeddingsUSE(sentences: string[], batchSize = 20): Promise<number[][]> {
+export async function getEmbeddingsUSE(sentences: string[], batchSize = 100): Promise<number[][]> {
     if (!useModel) {
         await loadEmbeddingsModelUSE();
     }
