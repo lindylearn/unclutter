@@ -1,5 +1,6 @@
 import { reportEventContentScript } from "@unclutter/library-components/dist/common/messaging";
-import ky from "ky";
+// import ky from "ky";
+import browser from "../../../common/polyfill";
 import { PageModifier, trackModifierExecution } from "../_interface";
 
 export interface RankedSentence {
@@ -63,16 +64,22 @@ export default class SmartHighlightsModifier implements PageModifier {
         });
 
         // fetch AI highlights for this page
-        const response: any = await ky
-            .post("https://q5ie5hjr3g.execute-api.us-east-2.amazonaws.com/default/heatmap", {
-                json: {
-                    title: document.title,
-                    url: window.location.href,
-                    paragraphs: paragraphTexts,
-                },
-                timeout: false,
-            })
-            .json();
+        // const response: any = await ky
+        //     .post("https://q5ie5hjr3g.execute-api.us-east-2.amazonaws.com/default/heatmap", {
+        //         json: {
+        //             title: document.title,
+        //             url: window.location.href,
+        //             paragraphs: paragraphTexts,
+        //         },
+        //         timeout: false,
+        //     })
+        //     .json();
+        const response = await browser.runtime.sendMessage(null, {
+            event: "getHeatmap",
+            paragraphs: paragraphTexts,
+        });
+        // console.log(response);
+
         this.rankedSentencesByParagraph = response;
         // this.rankedSentencesByParagraph = response.rankings || null;
         // this.articleSummary = response.summary || null;

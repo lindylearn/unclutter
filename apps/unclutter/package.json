@@ -4,6 +4,8 @@
     "private": true,
     "dependencies": {
         "@rocicorp/rails": "^0.2.2",
+        "@tensorflow-models/universal-sentence-encoder": "^1.3.3",
+        "@tensorflow/tfjs": "^4.2.0",
         "@types/offscreencanvas": "^2019.7.0",
         "@unclutter/library-components": "*",
         "approx-string-match": "^2.0.0",
@@ -23,6 +25,7 @@
         "react-transition-group": "^4.4.2",
         "recharts": "^2.1.9",
         "replicache": "^11.2.0",
+        "sbd": "^1.0.19",
         "seedrandom": "^3.0.5",
         "svelte": "^3.46.6",
         "timeago.js": "^4.0.2",

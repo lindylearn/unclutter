@@ -6,6 +6,7 @@ import { handleReportBrokenPage } from "../common/bugReport";
 import {
     collectAnonymousMetricsFeatureFlag,
     enableExperimentalFeatures,
+    getFeatureFlag,
     isDevelopmentFeatureFlag,
     setFeatureFlag,
 } from "../common/featureFlags";
@@ -34,6 +35,7 @@ import {
     startMetrics,
 } from "./metrics";
 import { TabStateManager } from "./tabs";
+import { getHeatmap, loadHeatmapModel } from "./heatmap/heatmap";
 
 const tabsManager = new TabStateManager();
 
@@ -199,6 +201,9 @@ function handleMessage(
     } else if (message.event === "fetchRssFeed") {
         fetchRssFeed(message.feedUrl).then(sendResponse);
         return true;
+    } else if (message.event === "getHeatmap") {
+        getHeatmap(message.paragraphs).then(sendResponse);
+        return true;
     }
 
     return false;
@@ -266,6 +271,14 @@ async function initializeServiceWorker() {
 
     initLibrary();
     loadAnnotationCountsToMemory();
+
+    const enableExperimental = await getFeatureFlag(enableExperimentalFeatures);
+    if (enableExperimental) {
+        // load tensorflow model
+        // unfortunately cannot create nested service workers, see https://bugs.chromium.org/p/chromium/issues/detail?id=1219164
+        // another option: importScript()? https://stackoverflow.com/questions/66406672/how-do-i-import-scripts-into-a-service-worker-using-chrome-extension-manifest-ve
+        loadHeatmapModel();
+    }
 }
 
 initializeServiceWorker();
