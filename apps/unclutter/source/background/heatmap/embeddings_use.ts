@@ -3,7 +3,7 @@ import {
     load as loadUSE,
     UniversalSentenceEncoder,
 } from "@tensorflow-models/universal-sentence-encoder";
-// import "@tensorflow/tfjs-backend-wasm";
+// import * as wasm from "@tensorflow/tfjs-backend-wasm";
 
 let useModel: UniversalSentenceEncoder;
 export async function loadEmbeddingsModelUSE() {
@@ -15,7 +15,13 @@ export async function loadEmbeddingsModelUSE() {
     console.log("Loading USE model...");
 
     tf.enableProdMode();
+
+    // WASM backend uses worker, which doesn't work inside the background service worker
+    // tf.enableDebugMode();
+    // wasm.setWasmPaths("https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-wasm/wasm-out/");
+    // wasm.setThreadsCount(4);
     // await tf.setBackend("wasm");
+    // await tf.ready();
 
     useModel = await loadUSE();
 
@@ -35,7 +41,12 @@ export async function getEmbeddingsUSE(sentences: string[], batchSize = 20): Pro
     for (let i = 0; i < sentences.length; i += batchSize) {
         const batch = sentences.slice(i, i + batchSize);
 
-        embeddings.push(...(await useModel.embed(batch)).arraySync());
+        const tensor = await useModel.embed(batch);
+        embeddings.push(...tensor.arraySync());
+        tf.dispose(tensor);
+        tf.disposeVariables();
+
+        await new Promise((resolve) => setTimeout(resolve, 100));
     }
 
     const end = performance.now();

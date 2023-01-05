@@ -27,6 +27,9 @@ export async function getHeatmap(
     let [sentences, sentence_paragraph] = getParagraphSentences(paragraphs);
     sentences = sentences.slice(0, maxSentences);
     sentence_paragraph = sentence_paragraph.slice(0, maxSentences);
+    if (sentences.length === 0) {
+        return [];
+    }
 
     let embeddings;
     if (embeddingsType === "onnx") {
@@ -144,10 +147,12 @@ function combineRelatedSentences(
             currentSentenceParagraph,
             currentEmbeddings
         ).forEach(([sentences, scores, paragraph, embeddings]) => {
-            newSentences.push(sentences.join(" "));
-            newSentenceScores.push(Math.max(...scores));
-            newSentenceParagraph.push(paragraph[0]);
-            newEmbeddings.push(averageEmbeddings(embeddings));
+            if (sentences.length > 0) {
+                newSentences.push(sentences.join(" "));
+                newSentenceScores.push(Math.max(...scores));
+                newSentenceParagraph.push(paragraph[0]);
+                newEmbeddings.push(averageEmbeddings(embeddings));
+            }
         });
     }
 
