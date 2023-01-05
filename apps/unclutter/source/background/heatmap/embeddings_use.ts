@@ -35,13 +35,16 @@ export async function getEmbeddingsUSE(sentences: string[], batchSize = 20): Pro
         await loadEmbeddingsModelUSE();
     }
 
+    // embed without whitespace (which is needed for anchoring)
+    const cleanSentences = sentences.map((s) => s.replace(/[\s\n]+/g, " ").trim());
+
     tf.engine().startScope();
 
     const start = performance.now();
 
     let embeddings: number[][] = [];
-    for (let i = 0; i < sentences.length; i += batchSize) {
-        const batch = sentences.slice(i, i + batchSize);
+    for (let i = 0; i < cleanSentences.length; i += batchSize) {
+        const batch = cleanSentences.slice(i, i + batchSize);
 
         const tensor = await useModel.embed(batch);
         const data = await tensor.array();
@@ -53,9 +56,9 @@ export async function getEmbeddingsUSE(sentences: string[], batchSize = 20): Pro
     }
 
     const end = performance.now();
-    console.log(`Computed ${sentences.length} embeddings in ${Math.round(end - start)}ms`);
+    console.log(`Computed ${cleanSentences.length} embeddings in ${Math.round(end - start)}ms`);
 
-    return [];
+    return embeddings;
 }
 
 export function cleanupEmbeddings() {

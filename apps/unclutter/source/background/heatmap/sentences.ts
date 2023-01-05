@@ -20,7 +20,9 @@ export function getParagraphSentences(paragraphs: Array<string>): [Array<string>
     }
 
     console.log(
-        `Splitted ${sentences.length} sentences in ${Math.round(performance.now() - t0)}ms`
+        `Splitted ${sentences.length} sentences across ${
+            paragraphs.length
+        } paragraphs in ${Math.round(performance.now() - t0)}ms`
     );
 
     return [sentences, sentence_paragraph];

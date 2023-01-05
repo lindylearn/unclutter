@@ -44,7 +44,8 @@ export default class SmartHighlightsModifier implements PageModifier {
         const paragraphTexts: string[] = [];
         document.querySelectorAll("p, font, li").forEach((paragraph: HTMLElement) => {
             const textContent = paragraph.textContent;
-            if (!textContent || textContent.length < 200) {
+            const cleanTextContent = textContent?.replace(/[\s\n]+/g, " ").trim();
+            if (!textContent || cleanTextContent.length < 200) {
                 return;
             }
 
@@ -60,6 +61,7 @@ export default class SmartHighlightsModifier implements PageModifier {
             }
 
             this.paragraphs.push(paragraph);
+            // use raw text content to anchor sentences correctly later
             paragraphTexts.push(textContent);
         });
 
