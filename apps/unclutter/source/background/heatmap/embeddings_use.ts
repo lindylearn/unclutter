@@ -3,6 +3,7 @@ import {
     load as loadUSE,
     UniversalSentenceEncoder,
 } from "@tensorflow-models/universal-sentence-encoder";
+import { Tensor2D } from "@tensorflow/tfjs";
 // import * as wasm from "@tensorflow/tfjs-backend-wasm";
 
 let useModel: UniversalSentenceEncoder;
@@ -36,45 +37,38 @@ export async function loadEmbeddingsModelUSE() {
     tf.ENV.set("WEBGL_USE_SHAPES_UNIFORMS", true);
 
     // warmup run
-    await getEmbeddingsUSE(["test"]);
+    const tensor = await getEmbeddingsUSE(["test"]);
+    tensor.dispose();
 
     console.log(
         `Loaded ${tf.getBackend()} USE model in ${Math.round(performance.now() - useStart)}ms`
     );
 }
 
-export async function getEmbeddingsUSE(sentences: string[], batchSize = 10): Promise<number[][]> {
+export async function getEmbeddingsUSE(sentences: string[], batchSize = 10): Promise<Tensor2D> {
     if (!useModel) {
         await loadEmbeddingsModelUSE();
     }
+    const start = performance.now();
 
     // embed without whitespace (which is needed for anchoring)
     const cleanSentences = sentences.map((s) => s.replace(/[\s\n]+/g, " ").trim());
 
-    tf.engine().startScope();
-
-    const start = performance.now();
-
-    let embeddings: number[][] = [];
+    let embeddings: Tensor2D[] = [];
     for (let i = 0; i < cleanSentences.length; i += batchSize) {
         const batch = cleanSentences.slice(i, i + batchSize);
 
         const tensor = await useModel.embed(batch);
-        const data = await tensor.array();
-        embeddings.push(...data);
-
-        tensor.dispose();
+        embeddings.push(tensor);
 
         // await new Promise((resolve) => setTimeout(resolve, 100));
     }
 
+    const combined = tf.concat(embeddings, 0);
+    embeddings.forEach((e) => e.dispose());
+
     const end = performance.now();
     console.log(`Computed ${cleanSentences.length} embeddings in ${Math.round(end - start)}ms`);
 
-    return embeddings;
-}
-
-export function cleanupEmbeddings() {
-    tf.disposeVariables();
-    tf.engine().endScope();
+    return combined;
 }

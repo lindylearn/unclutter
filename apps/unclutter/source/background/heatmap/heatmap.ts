@@ -1,8 +1,10 @@
 import { cosine_similarity_matrix } from "./groups";
 // import { getEmbeddingsONNX, loadEmbeddingsModelONNX } from "./onnx/embeddings_onnx";
-import { cleanupEmbeddings, getEmbeddingsUSE, loadEmbeddingsModelUSE } from "./embeddings_use";
+import { getEmbeddingsUSE, loadEmbeddingsModelUSE } from "./embeddings_use";
 import { getParagraphSentences } from "./sentences";
 import textRank from "./textrank";
+import * as tf from "@tensorflow/tfjs";
+import { Tensor2D } from "@tensorflow/tfjs";
 
 interface RankedSentence {
     sentence: string;
@@ -24,6 +26,9 @@ export async function getHeatmap(
 ): Promise<RankedSentence[][]> {
     const t0 = performance.now();
 
+    tf.engine().startScope();
+
+    // split into sentences
     let [sentences, sentence_paragraph] = getParagraphSentences(paragraphs);
     sentences = sentences.slice(0, maxSentences);
     sentence_paragraph = sentence_paragraph.slice(0, maxSentences);
@@ -31,50 +36,43 @@ export async function getHeatmap(
         return [];
     }
 
-    let embeddings: number[][] = undefined;
-    if (embeddingsType === "onnx") {
-        // embeddings = await getEmbeddingsONNX(sentences);
-    } else if (embeddingsType === "use") {
-        embeddings = await getEmbeddingsUSE(sentences);
-    }
+    // compute embeddings
+    let embeddings: Tensor2D = await getEmbeddingsUSE(sentences);
+    const matrix = (await tf.matMul(embeddings, embeddings.transpose()).array()) as number[][];
 
-    let matrix = cosine_similarity_matrix(embeddings);
-    if (embeddingsType === "use") {
-        tweakUSEMatrix(matrix);
-    }
-
+    // get sentence scores
     let sentenceScores = textRank(matrix);
 
-    [sentences, sentenceScores, sentence_paragraph, embeddings] = combineRelatedSentences(
+    // combine related sentences
+    [sentences, sentenceScores, sentence_paragraph] = combineRelatedSentences(
         sentences,
         sentenceScores,
         sentence_paragraph,
-        matrix,
-        embeddings
+        matrix
     );
 
     // re-compute scores for on combined sentences
-    matrix = cosine_similarity_matrix(embeddings);
-    if (embeddingsType === "use") {
-        tweakUSEMatrix(matrix);
-    }
+    // matrix = cosine_similarity_matrix(embeddings);
+    // if (embeddingsType === "use") {
+    //     tweakUSEMatrix(matrix);
+    // }
+    // sentenceScores = textRank(matrix);
 
-    sentenceScores = textRank(matrix);
-
-    // const topN = Math.round(paragraphs.length / 3);
-    // globalMMR(sentences, sentenceScores, sentence_paragraph, matrix, topN);
-
+    // pick the most interesting sentences
     pickLeadingSentences(sentences, sentenceScores, sentence_paragraph, matrix, 0.6);
 
+    // group by paragraph again
     const groupedSentenceScores = groupSentenceScores(
         sentences,
         sentenceScores,
         sentence_paragraph
     );
 
-    console.log(`Computed heatmap in ${Math.round(performance.now() - t0)}ms`);
+    embeddings.dispose();
+    tf.disposeVariables();
+    tf.engine().endScope();
 
-    cleanupEmbeddings();
+    console.log(`Computed heatmap in ${Math.round(performance.now() - t0)}ms`);
 
     return groupedSentenceScores;
 }
@@ -127,33 +125,28 @@ function combineRelatedSentences(
     sentences: string[],
     sentenceScores: number[],
     sentence_paragraph: number[],
-    matrix: number[][],
-    embeddings: number[][]
-): [string[], number[], number[], number[][]] {
+    matrix: number[][]
+): [string[], number[], number[]] {
     // construct new
     const newSentences: string[] = [];
     const newSentenceScores: number[] = [];
     const newSentenceParagraph: number[] = [];
-    const newEmbeddings = [];
 
     // collect groups of related sentences
     let currentSentences = [sentences[0]];
     let currentSentenceScores = [sentenceScores[0]];
     let currentSentenceParagraph = [sentence_paragraph[0]];
-    let currentEmbeddings = [embeddings[0]];
 
     function closeCurrentGroup() {
         splitLargeHighlightGroup(
             currentSentences,
             currentSentenceScores,
-            currentSentenceParagraph,
-            currentEmbeddings
-        ).forEach(([sentences, scores, paragraph, embeddings]) => {
+            currentSentenceParagraph
+        ).forEach(([sentences, scores, paragraph]) => {
             if (sentences.length > 0) {
                 newSentences.push(sentences.join(" "));
                 newSentenceScores.push(Math.max(...scores));
                 newSentenceParagraph.push(paragraph[0]);
-                newEmbeddings.push(averageEmbeddings(embeddings));
             }
         });
     }
@@ -174,7 +167,6 @@ function combineRelatedSentences(
             currentSentences.push(sentences[i]);
             currentSentenceScores.push(sentenceScores[i]);
             currentSentenceParagraph.push(sentence_paragraph[i]);
-            currentEmbeddings.push(embeddings[i]);
 
             continue;
         } else {
@@ -187,13 +179,12 @@ function combineRelatedSentences(
         currentSentences = [sentences[i]];
         currentSentenceScores = [sentenceScores[i]];
         currentSentenceParagraph = [sentence_paragraph[i]];
-        currentEmbeddings = [embeddings[i]];
     }
 
     // close last group
     closeCurrentGroup();
 
-    return [newSentences, newSentenceScores, newSentenceParagraph, newEmbeddings];
+    return [newSentences, newSentenceScores, newSentenceParagraph];
 }
 
 function averageEmbeddings(embeddings: number[][]): number[] {
@@ -213,10 +204,9 @@ function splitLargeHighlightGroup(
     sentences: string[],
     sentenceScores: number[],
     sentenceParagraphs: number[],
-    embeddings: number[][],
     maxLen = 200
-): [string[], number[], number[], number[][]][] {
-    const groups: [string[], number[], number[], number[][]][] = [];
+): [string[], number[], number[]][] {
+    const groups: [string[], number[], number[]][] = [];
     if (sentences.length === 0) {
         return groups;
     }
@@ -249,7 +239,6 @@ function splitLargeHighlightGroup(
                 sentences.slice(0, start),
                 sentenceScores.slice(0, start),
                 sentenceParagraphs.slice(0, start),
-                embeddings.slice(0, start),
                 maxLen
             )
         );
@@ -258,7 +247,6 @@ function splitLargeHighlightGroup(
         sentences.slice(start, end),
         sentenceScores.slice(start, end),
         sentenceParagraphs.slice(start, end),
-        embeddings.slice(start, end),
     ]);
     if (end < sentences.length) {
         groups.push(
@@ -266,7 +254,6 @@ function splitLargeHighlightGroup(
                 sentences.slice(end),
                 sentenceScores.slice(end),
                 sentenceParagraphs.slice(end),
-                embeddings.slice(end),
                 maxLen
             )
         );
