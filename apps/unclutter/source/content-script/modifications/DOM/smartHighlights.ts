@@ -37,18 +37,20 @@ export default class SmartHighlightsModifier implements PageModifier {
 
     private paragraphs: HTMLElement[] = [];
     private rankedSentencesByParagraph: RankedSentence[][];
-    async parseUnclutteredArticle() {
+    async parseUnclutteredArticle(): Promise<boolean> {
         let start = performance.now();
 
         // parse article paragraphs from page
         const paragraphTexts: string[] = [];
         document.querySelectorAll("p, font, li").forEach((paragraph: HTMLElement) => {
+            // check text content
             const textContent = paragraph.textContent;
             const cleanTextContent = textContent?.replace(/[\s\n]+/g, " ").trim();
             if (!textContent || cleanTextContent.length < 200) {
                 return;
             }
 
+            // check classes
             if (
                 excludedParagraphClassNames.some((word) =>
                     paragraph.className.toLowerCase().includes(word)
@@ -59,11 +61,19 @@ export default class SmartHighlightsModifier implements PageModifier {
             ) {
                 return;
             }
+            if (paragraph.tagName === "CODE" || paragraph.parentElement.tagName === "CODE") {
+                return;
+            }
 
             this.paragraphs.push(paragraph);
             // use raw text content to anchor sentences correctly later
             paragraphTexts.push(textContent);
         });
+
+        if (paragraphTexts.length <= 3 || paragraphTexts.length >= 200) {
+            // likely not an article
+            return false;
+        }
 
         // fetch AI highlights for this page
         // const response: any = await ky
@@ -115,6 +125,8 @@ export default class SmartHighlightsModifier implements PageModifier {
             relatedCount: this.relatedCount,
             durationMs,
         });
+
+        return true;
     }
 
     // paint AI highlights on the page

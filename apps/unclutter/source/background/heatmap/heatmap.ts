@@ -22,7 +22,7 @@ export async function loadHeatmapModel(embeddingsType = "use") {
 export async function getHeatmap(
     paragraphs: string[],
     embeddingsType = "use",
-    maxSentences = 100
+    maxSentences = 300
 ): Promise<RankedSentence[][]> {
     const t0 = performance.now();
 

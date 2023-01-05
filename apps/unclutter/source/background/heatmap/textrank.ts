@@ -3,7 +3,7 @@ export default function textRank(
     dampening = 0.85,
     maxIterations = 20
 ): number[] {
-    const start = performance.now();
+    // const start = performance.now();
 
     // similarities = similarities.map((row) => normalize(row));
     // console.log(similarities);
@@ -45,7 +45,7 @@ export default function textRank(
 
     scores = rescale(scores);
 
-    console.log(`Ran textrank in ${Math.round(performance.now() - start)}ms`);
+    // console.log(`Ran textrank in ${Math.round(performance.now() - start)}ms`);
 
     return scores;
 }

@@ -62,8 +62,8 @@ export function renderHighlightsLayer(enablePageView: () => void, enhanceActive:
         preparePageView();
         enablePageView();
     }
-    smartHighlightsModifier.parseUnclutteredArticle().then(() => {
-        if (!enhanceActive) {
+    smartHighlightsModifier.parseUnclutteredArticle().then((isArticle) => {
+        if (isArticle && !enhanceActive) {
             renderArticleBadge(
                 smartHighlightsModifier.keyPointsCount,
                 smartHighlightsModifier.relatedCount,
