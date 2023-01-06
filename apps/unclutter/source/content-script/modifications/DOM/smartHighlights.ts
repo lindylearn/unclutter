@@ -59,7 +59,10 @@ export default class SmartHighlightsModifier implements PageModifier {
                     paragraph.className.toLowerCase().includes(word)
                 ) ||
                 excludedParagraphClassNames.some((word) =>
-                    paragraph.parentElement.className.toLowerCase().includes(word)
+                    paragraph.parentElement?.className.toLowerCase().includes(word)
+                ) ||
+                excludedParagraphClassNames.some((word) =>
+                    paragraph.parentElement?.parentElement?.className.toLowerCase().includes(word)
                 )
             ) {
                 return;
