@@ -131,7 +131,8 @@ export default class SmartHighlightsModifier implements PageModifier {
             this.relatedCount = 0;
             relatedPerHighlight.forEach((related, highlightIndex) => {
                 // filter related now
-                if (related.length === 0 || related[0].score < 0.5) {
+                related = related.filter((r) => r.score >= 0.6);
+                if (related.length === 0) {
                     return;
                 }
                 this.relatedCount += 1;

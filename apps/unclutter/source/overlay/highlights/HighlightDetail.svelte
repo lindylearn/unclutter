@@ -23,13 +23,13 @@
                     transform="rotate(1deg) scale(1.1)"
                 /> -->
                 <div
-                    class="flex flex-col gap-2 overflow-hidden rounded-lg bg-stone-100 p-2 shadow-sm"
+                    class="flex flex-col gap-2 overflow-hidden rounded-lg bg-stone-100 p-2 shadow-sm transition-transform hover:scale-x-[99.5%]"
                 >
                     <div
                         class="overflow-hidden overflow-ellipsis"
                         style:display="-webkit-box"
                         style:-webkit-box-orient="vertical"
-                        style:-webkit-line-clamp="4"
+                        style:-webkit-line-clamp="3"
                     >
                         {highlight.score.toFixed(2)}
                         "{highlight.text}"
