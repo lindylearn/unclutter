@@ -4,7 +4,7 @@ import SmartHighlightsModifier, {
     RelatedHighlight,
     RankedSentence,
 } from "../../content-script/modifications/DOM/smartHighlights";
-// import HighlightDetailSvelte from "./HighlightDetail.svelte";
+import HighlightDetailSvelte from "./HighlightDetail.svelte";
 import ArticleBadgeSvelte from "./ArticleBadge.svelte";
 
 export function renderHighlightsLayer(enablePageView: () => void, enhanceActive: boolean) {
@@ -12,12 +12,12 @@ export function renderHighlightsLayer(enablePageView: () => void, enhanceActive:
     // document.addEventListener("mouseup", onSelectionDone);
     // document.addEventListener("contextmenu", removeHighligher);
 
-    // document.addEventListener("mouseup", (event) => {
-    //     const target = event.target as HTMLElement;
-    //     if (!target.classList.contains("lindy-smart-highlight-absolute")) {
-    //         removeHighligher();
-    //     }
-    // });
+    document.addEventListener("mouseup", (event) => {
+        const target = event.target as HTMLElement;
+        if (!target.classList.contains("lindy-smart-highlight-absolute")) {
+            removeHighligher();
+        }
+    });
 
     function onHighlightClick(range: Range, related: RelatedHighlight[]) {
         // enablePageView();
@@ -109,10 +109,10 @@ function renderHighlighter(highlightRect: DOMRect, quote: string, related: Relat
 
     document.body.appendChild(container);
 
-    // new HighlightDetailSvelte({
-    //     target: container,
-    //     props: { quote, related },
-    // });
+    new HighlightDetailSvelte({
+        target: container,
+        props: { quote, related },
+    });
 
     // allow clicks on the highlighter
     container.addEventListener("mousedown", (event) => {

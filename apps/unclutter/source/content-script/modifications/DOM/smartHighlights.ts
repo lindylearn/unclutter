@@ -90,30 +90,54 @@ export default class SmartHighlightsModifier implements PageModifier {
 
         // parse heatmap stats and most important sentences
         this.keyPointsCount = 0;
-        this.topHighlights = [];
-        this.rankedSentencesByParagraph?.forEach((paragraph) => {
-            paragraph.forEach((sentence: RankedSentence) => {
+        const topHighlights: {
+            highlight: string;
+            paragraphIndex: number;
+            sentenceIndex: number;
+        }[] = [];
+        this.rankedSentencesByParagraph?.forEach((paragraph, paragraphIndex) => {
+            paragraph.forEach((sentence: RankedSentence, sentenceIndex) => {
                 if (sentence.score >= this.scoreThreshold) {
                     this.keyPointsCount += 1;
-                    this.topHighlights.push(sentence);
+                    topHighlights.push({
+                        highlight: sentence.sentence,
+                        paragraphIndex,
+                        sentenceIndex,
+                    });
                 }
             });
         });
-        console.log(this.topHighlights.map((s) => s.sentence?.replace(/[\s\n]+/g, " ").trim()));
+        console.log(topHighlights.map((s) => s.highlight?.replace(/[\s\n]+/g, " ").trim()));
 
         if (this.relatedEnabled) {
             // save significant sentences in user library, and fetch related existing highlights
-            const response = await fetch("https://unclutter.app/api/v1/highlights", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    highlights: this.topHighlights.map((s) => s.sentence),
-                }),
+            const response = await fetch(
+                "https://q5ie5hjr3g.execute-api.us-east-2.amazonaws.com/default/related",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        title: document.title,
+                        url: window.location.href,
+                        highlights: topHighlights.map((s) => s.highlight),
+                    }),
+                }
+            );
+            const relatedPerHighlight: RelatedHighlight[][] = (await response.json())?.related;
+
+            // add to rankedSentencesByParagraph
+            this.relatedCount = 0;
+            relatedPerHighlight.forEach((related, highlightIndex) => {
+                if (related.length === 0) {
+                    return;
+                }
+                this.relatedCount += 1;
+
+                const { paragraphIndex, sentenceIndex } = topHighlights[highlightIndex];
+                this.rankedSentencesByParagraph[paragraphIndex][sentenceIndex].related = related;
             });
-            const relatedPerHighlight: RelatedHighlight[][] = await response.json();
-            console.log(relatedPerHighlight);
         }
 
         // paint highlights immediately once fetch done
@@ -159,9 +183,9 @@ export default class SmartHighlightsModifier implements PageModifier {
             // construct global annotationState
             ranges.forEach((range, i) => {
                 const sentence = rankedSentences[i];
-                if (sentence.related) {
-                    sentence.score = sentence.related[0].score2 + 0.1;
-                }
+                // if (sentence.related) {
+                //     sentence.score = sentence.related[0].score2 + 0.1;
+                // }
 
                 // filter considered sentences
                 if (sentence.score < this.scoreThreshold) {
@@ -535,7 +559,7 @@ export default class SmartHighlightsModifier implements PageModifier {
     }
 
     enableScrollBar: boolean = true;
-    enableHighlightsClick: boolean = false;
+    enableHighlightsClick: boolean = this.relatedEnabled;
     enableAllSentences: boolean = false;
     isProxyActive: boolean = false;
     private onRangeClick(e: Event, range: Range, related: RelatedHighlight[]) {
