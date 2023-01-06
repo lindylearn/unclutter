@@ -269,7 +269,7 @@ function pickLeadingSentences(
     sentence_paragraph: number[],
     matrix: number[][],
     theshold = 0.6,
-    similarityWindow = 6,
+    similarityWindow = 10,
     significantWindow = 1
 ) {
     for (let i = 0; i < sentences.length; i++) {
