@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { RelatedHighlight } from "../../content-script/modifications/DOM/smartHighlights";
-    import ArticlePreview from "../outline/Library/ArticlePreview.svelte";
+    // import ArticlePreview from "../outline/Library/ArticlePreview.svelte";
 
     export let quote: string;
     export let related: RelatedHighlight[];
@@ -23,7 +23,7 @@
                     transform="rotate(1deg) scale(1.1)"
                 /> -->
                 <div
-                    class="flex flex-col gap-2 overflow-hidden rounded-lg bg-stone-100 p-2 shadow-sm transition-transform hover:scale-x-[99.5%]"
+                    class="flex flex-col gap-2 overflow-hidden rounded-lg bg-stone-100 p-2 shadow-sm transition-transform hover:scale-[99%]"
                 >
                     <div
                         class="overflow-hidden overflow-ellipsis"
@@ -32,6 +32,7 @@
                         style:-webkit-line-clamp="3"
                     >
                         {highlight.score.toFixed(2)}
+                        {highlight.score2.toFixed(2)}
                         "{highlight.text}"
                     </div>
                     <div

@@ -114,7 +114,7 @@ export default class SmartHighlightsModifier implements PageModifier {
 
         if (this.relatedEnabled) {
             // save significant sentences in user library, and fetch related existing highlights
-            const response = await fetch(
+            const response = await fetchRetry(
                 "https://q5ie5hjr3g.execute-api.us-east-2.amazonaws.com/default/related",
                 {
                     method: "POST",
@@ -134,7 +134,7 @@ export default class SmartHighlightsModifier implements PageModifier {
             this.relatedCount = 0;
             relatedPerHighlight.forEach((related, highlightIndex) => {
                 // filter related now
-                related = related.filter((r) => r.score >= 0.6);
+                related = related.filter((r) => r.score2 >= 0.5 || r.score >= -5);
                 if (related.length === 0) {
                     return;
                 }
@@ -490,7 +490,8 @@ export default class SmartHighlightsModifier implements PageModifier {
 
         let score = sentence.score >= this.scoreThreshold ? sentence.score : 0;
         if (sentence.related) {
-            score = sentence.related[0].score + 0.2;
+            // score = sentence.score;
+            score = sentence.related[0].score2 + 0.2;
         }
         const colorIntensity = 0.8 * score ** 3;
         const adjustedColor = color.replace("1.0", colorIntensity.toString());
@@ -589,5 +590,17 @@ export default class SmartHighlightsModifier implements PageModifier {
                 return;
             }
         }
+    }
+}
+
+async function fetchRetry(url: string, options: RequestInit, n: number = 1): Promise<Response> {
+    try {
+        return await fetch(url, options);
+    } catch (err) {
+        if (n === 0) {
+            throw err;
+        }
+        await new Promise((resolve) => setTimeout(resolve, 5000));
+        return fetchRetry(url, options, n - 1);
     }
 }
