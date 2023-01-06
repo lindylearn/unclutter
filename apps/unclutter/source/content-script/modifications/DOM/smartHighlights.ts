@@ -1,6 +1,5 @@
 import { reportEventContentScript } from "@unclutter/library-components/dist/common/messaging";
 // import { getRandomLightColor } from "@unclutter/library-components/dist/common/styling";
-// import ky from "ky";
 import browser from "../../../common/polyfill";
 import { PageModifier, trackModifierExecution } from "../_interface";
 
@@ -33,6 +32,7 @@ export default class SmartHighlightsModifier implements PageModifier {
     topHighlights: RankedSentence[] | null;
 
     private scoreThreshold = 0.6;
+    private relatedEnabled = true;
 
     constructor(onHighlightClick: (range: Range, related: RelatedHighlight[]) => void = null) {
         this.onHighlightClick = onHighlightClick;
@@ -82,49 +82,41 @@ export default class SmartHighlightsModifier implements PageModifier {
             return false;
         }
 
-        // fetch AI highlights for this page
-        // const response: any = await ky
-        //     .post("https://q5ie5hjr3g.execute-api.us-east-2.amazonaws.com/default/heatmap", {
-        //         json: {
-        //             title: document.title,
-        //             url: window.location.href,
-        //             paragraphs: paragraphTexts,
-        //         },
-        //         timeout: false,
-        //     })
-        //     .json();
-        const response = await browser.runtime.sendMessage(null, {
+        // construct sentence heatmap in extension background worker (with no data sent over the network)
+        this.rankedSentencesByParagraph = await browser.runtime.sendMessage(null, {
             event: "getHeatmap",
             paragraphs: paragraphTexts,
         });
-        // console.log(response);
 
-        this.rankedSentencesByParagraph = response;
-        // this.rankedSentencesByParagraph = response.rankings || null;
-        // this.articleSummary = response.summary || null;
-        // console.log(this.rankedSentencesByParagraph);
-
-        // construct stats
+        // parse heatmap stats and most important sentences
         this.keyPointsCount = 0;
-        this.relatedCount = 0;
         this.topHighlights = [];
         this.rankedSentencesByParagraph?.forEach((paragraph) => {
             paragraph.forEach((sentence: RankedSentence) => {
-                if (
-                    sentence.related &&
-                    sentence.related?.[0]?.score2 >= this.scoreThreshold - 0.1
-                ) {
-                    this.relatedCount += 1;
-                } else if (sentence.score >= this.scoreThreshold) {
+                if (sentence.score >= this.scoreThreshold) {
                     this.keyPointsCount += 1;
-
-                    // this.topHighlights.push(sentence);
+                    this.topHighlights.push(sentence);
                 }
             });
         });
-        // this.topHighlights = this.topHighlights.sort((a, b) => b.score - a.score).slice(0, 3);
+        console.log(this.topHighlights.map((s) => s.sentence?.replace(/[\s\n]+/g, " ").trim()));
 
-        // paint highlights once done
+        if (this.relatedEnabled) {
+            // save significant sentences in user library, and fetch related existing highlights
+            const response = await fetch("https://unclutter.app/api/v1/highlights", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    highlights: this.topHighlights.map((s) => s.sentence),
+                }),
+            });
+            const relatedPerHighlight: RelatedHighlight[][] = await response.json();
+            console.log(relatedPerHighlight);
+        }
+
+        // paint highlights immediately once fetch done
         this.enableAnnotations();
 
         // report diagnostics
