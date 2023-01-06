@@ -11,7 +11,7 @@
         class="font-text highlighter mt-2 flex max-w-lg flex-col gap-2 rounded-xl border-[1px] border-stone-100 bg-white p-1.5 text-sm text-stone-900 shadow-xl drop-shadow"
     >
         {#each related.slice(0, 3) as highlight}
-            <div class="flex cursor-pointer items-center gap-2">
+            <div class="flex cursor-pointer items-center gap-2 overflow-hidden">
                 <!-- <ArticlePreview
                     index={0}
                     article={{
@@ -22,15 +22,17 @@
                     className="shrink-0 w-[100px] h-[120px] transition-transform relative"
                     transform="rotate(1deg) scale(1.1)"
                 /> -->
-                <div class="flex flex-col gap-2 rounded-lg bg-stone-100 p-2 shadow-sm">
+                <div
+                    class="flex flex-col gap-2 overflow-hidden rounded-lg bg-stone-100 p-2 shadow-sm"
+                >
                     <div
                         class="overflow-hidden overflow-ellipsis"
                         style:display="-webkit-box"
                         style:-webkit-box-orient="vertical"
-                        style:-webkit-line-clamp="3"
+                        style:-webkit-line-clamp="4"
                     >
                         {highlight.score.toFixed(2)}
-                        {highlight.text}
+                        "{highlight.text}"
                     </div>
                     <div
                         class="font-title flex items-center justify-between gap-2 overflow-hidden rounded-b-lg"

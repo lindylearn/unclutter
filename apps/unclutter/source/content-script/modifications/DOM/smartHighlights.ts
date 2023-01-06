@@ -130,7 +130,8 @@ export default class SmartHighlightsModifier implements PageModifier {
             // add to rankedSentencesByParagraph
             this.relatedCount = 0;
             relatedPerHighlight.forEach((related, highlightIndex) => {
-                if (related.length === 0) {
+                // filter related now
+                if (related.length === 0 || related[0].score < 0.5) {
                     return;
                 }
                 this.relatedCount += 1;
@@ -183,12 +184,9 @@ export default class SmartHighlightsModifier implements PageModifier {
             // construct global annotationState
             ranges.forEach((range, i) => {
                 const sentence = rankedSentences[i];
-                // if (sentence.related) {
-                //     sentence.score = sentence.related[0].score2 + 0.1;
-                // }
 
-                // filter considered sentences
-                if (sentence.score < this.scoreThreshold) {
+                // TODO save all sentences for enableAllAnnotations?
+                if (!sentence.related && sentence.score < this.scoreThreshold) {
                     return;
                 }
 
@@ -249,7 +247,11 @@ export default class SmartHighlightsModifier implements PageModifier {
             if (invalid) {
                 return;
             }
-            if (sentence.score < this.scoreThreshold && !this.enableAllSentences) {
+            if (
+                !sentence.related &&
+                sentence.score < this.scoreThreshold &&
+                !this.enableAllSentences
+            ) {
                 return;
             }
 
@@ -482,7 +484,10 @@ export default class SmartHighlightsModifier implements PageModifier {
             : "rgba(250, 204, 21, 1.0)";
         // const color: string = getRandomLightColor(sentence.sentence);
 
-        const score = sentence.score >= this.scoreThreshold ? sentence.score : 0;
+        let score = sentence.score >= this.scoreThreshold ? sentence.score : 0;
+        if (sentence.related) {
+            score = sentence.related[0].score + 0.2;
+        }
         const colorIntensity = 0.8 * score ** 3;
         const adjustedColor = color.replace("1.0", colorIntensity.toString());
 
@@ -529,7 +534,7 @@ export default class SmartHighlightsModifier implements PageModifier {
             container.prepend(node);
             addedElements.push(node);
 
-            if (this.enableHighlightsClick) {
+            if (this.enableHighlightsClick || sentence.related) {
                 const clickNode = node.cloneNode() as HTMLElement;
                 clickNode.style.setProperty("background", "transparent", "important");
                 clickNode.style.setProperty("cursor", "pointer", "important");
@@ -559,7 +564,7 @@ export default class SmartHighlightsModifier implements PageModifier {
     }
 
     enableScrollBar: boolean = true;
-    enableHighlightsClick: boolean = this.relatedEnabled;
+    enableHighlightsClick: boolean = false;
     enableAllSentences: boolean = false;
     isProxyActive: boolean = false;
     private onRangeClick(e: Event, range: Range, related: RelatedHighlight[]) {
