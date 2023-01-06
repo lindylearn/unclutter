@@ -17,12 +17,11 @@ function main() {
 }
 
 function enablePageView() {
-    const response = browser.runtime.sendMessage(null, {
+    browser.runtime.sendMessage(null, {
         event: "requestEnhance",
         trigger: "highlights-layer",
         type: "full",
     });
-    console.log(response);
 }
 
 // handle background events until enhance.ts active, to ensure highlights cleanup code is called

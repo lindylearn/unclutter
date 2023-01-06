@@ -19,10 +19,11 @@
 <div class="article-card-container mt-[10px] flex items-stretch">
     <div
         class={clsx(
-            "article-card ml-auto flex w-max cursor-pointer flex-col overflow-hidden rounded-lg bg-gradient-to-b from-yellow-300 to-amber-400 text-sm shadow-sm",
+            "article-card ml-auto flex w-max cursor-pointer flex-col overflow-hidden rounded-lg bg-gradient-to-b from-yellow-300 to-amber-400 text-sm shadow-sm select-none",
             clicked && "article-card-clicked"
         )}
         style:background-image="linear-gradient(150deg, var(--tw-gradient-stops))"
+        on:click={onClick}
     >
         <div class="lindy-button font-title flex items-stretch font-medium text-stone-800">
             <!-- <input class="w-20 bg-white px-2 outline-none placeholder:text-stone-400" /> -->
@@ -48,9 +49,7 @@
                 </div>
             {/if}
 
-            <div class="mr-0.5 rounded-r-lg px-1.5 py-1.5 transition-all" on:click={onClick}>
-                Unclutter
-            </div>
+            <div class="mr-0.5 rounded-r-lg px-1.5 py-1.5 transition-all">Unclutter</div>
         </div>
     </div>
 
