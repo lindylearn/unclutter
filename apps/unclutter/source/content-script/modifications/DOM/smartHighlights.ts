@@ -88,6 +88,9 @@ export default class SmartHighlightsModifier implements PageModifier {
             paragraphs: paragraphTexts,
         });
 
+        // paint highlights immediately once heatmap ready
+        this.enableAnnotations();
+
         // parse heatmap stats and most important sentences
         this.keyPointsCount = 0;
         const topHighlights: {
@@ -140,10 +143,10 @@ export default class SmartHighlightsModifier implements PageModifier {
                 const { paragraphIndex, sentenceIndex } = topHighlights[highlightIndex];
                 this.rankedSentencesByParagraph[paragraphIndex][sentenceIndex].related = related;
             });
-        }
 
-        // paint highlights immediately once fetch done
-        this.enableAnnotations();
+            // paint again including related data
+            this.paintAllAnnotations();
+        }
 
         // report diagnostics
         let durationMs = Math.round(performance.now() - start);
