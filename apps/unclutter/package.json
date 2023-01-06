@@ -82,7 +82,7 @@
         "xo": "^0.44.0"
     },
     "scripts": {
-        "build": "rollup -c rollup.config.js",
+        "build": "export NODE_OPTIONS='--max-old-space-size=8192' && rollup -c rollup.config.js",
         "build-v2": "yarn build && yarn install-v2-manifest",
         "watch": "rollup -c rollup.config.js -w",
         "install-v3-manifest": "cp source/manifest.json distribution/manifest.json",
