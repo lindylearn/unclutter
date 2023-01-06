@@ -49,26 +49,32 @@ export async function getEmbeddingsUSE(sentences: string[], batchSize = 10): Pro
     if (!useModel) {
         await loadEmbeddingsModelUSE();
     }
-    const start = performance.now();
+    try {
+        const start = performance.now();
 
-    // embed without whitespace (which is needed for anchoring)
-    const cleanSentences = sentences.map((s) => s.replace(/[\s\n]+/g, " ").trim());
+        // embed without whitespace (which is needed for anchoring)
+        const cleanSentences = sentences.map((s) => s.replace(/[\s\n]+/g, " ").trim());
 
-    let embeddings: Tensor2D[] = [];
-    for (let i = 0; i < cleanSentences.length; i += batchSize) {
-        const batch = cleanSentences.slice(i, i + batchSize);
+        let embeddings: Tensor2D[] = [];
+        for (let i = 0; i < cleanSentences.length; i += batchSize) {
+            const batch = cleanSentences.slice(i, i + batchSize);
 
-        const tensor = await useModel.embed(batch);
-        embeddings.push(tensor);
+            const tensor = await useModel.embed(batch);
+            embeddings.push(tensor);
 
-        // await new Promise((resolve) => setTimeout(resolve, 100));
+            // await new Promise((resolve) => setTimeout(resolve, 100));
+        }
+
+        const combined = tf.concat(embeddings, 0);
+        embeddings.forEach((e) => e.dispose());
+
+        const end = performance.now();
+        console.log(`Computed ${cleanSentences.length} embeddings in ${Math.round(end - start)}ms`);
+
+        return combined;
+    } catch (err) {
+        console.error(err);
+        console.error(useModel.model);
+        throw err;
     }
-
-    const combined = tf.concat(embeddings, 0);
-    embeddings.forEach((e) => e.dispose());
-
-    const end = performance.now();
-    console.log(`Computed ${cleanSentences.length} embeddings in ${Math.round(end - start)}ms`);
-
-    return combined;
 }
