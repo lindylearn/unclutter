@@ -49,7 +49,7 @@ export function splitSentences(paragraph: string): string[] {
     return sentences;
 }
 
-export function combineShortSentences(sentences: string[], threshold = 100) {
+export function combineShortSentences(sentences: string[], threshold = 60) {
     let combined_sentences = [];
     for (let i = 0; i < sentences.length; i++) {
         if (i == 0) {

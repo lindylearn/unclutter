@@ -38,10 +38,11 @@ export async function getHeatmap(
 
     // compute embeddings
     let embeddings: Tensor2D = await getEmbeddingsUSE(sentences);
-    const matrix = (await tf.matMul(embeddings, embeddings.transpose()).array()) as number[][];
+    const matrix = (await tf.matMul(embeddings, embeddings, false, true).array()) as number[][];
 
     // get sentence scores
     let sentenceScores = textRank(matrix);
+    // console.log(sentenceScores);
 
     // combine related sentences
     [sentences, sentenceScores, sentence_paragraph] = combineRelatedSentences(

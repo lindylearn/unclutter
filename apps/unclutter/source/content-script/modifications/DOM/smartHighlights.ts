@@ -1,4 +1,5 @@
 import { reportEventContentScript } from "@unclutter/library-components/dist/common/messaging";
+// import { getRandomLightColor } from "@unclutter/library-components/dist/common/styling";
 // import ky from "ky";
 import browser from "../../../common/polyfill";
 import { PageModifier, trackModifierExecution } from "../_interface";
@@ -30,6 +31,8 @@ export default class SmartHighlightsModifier implements PageModifier {
     keyPointsCount: number | null;
     relatedCount: number | null;
     topHighlights: RankedSentence[] | null;
+
+    private scoreThreshold = 0.6;
 
     constructor(onHighlightClick: (range: Range, related: RelatedHighlight[]) => void = null) {
         this.onHighlightClick = onHighlightClick;
@@ -70,8 +73,9 @@ export default class SmartHighlightsModifier implements PageModifier {
             paragraphTexts.push(textContent);
         });
 
-        if (paragraphTexts.length <= 3 || paragraphTexts.length >= 200) {
+        if (paragraphTexts.length === 0 || paragraphTexts.length >= 200) {
             // likely not an article
+            // be careful, e.g. paulgraham.com has single paragraph
             return false;
         }
 
@@ -103,9 +107,12 @@ export default class SmartHighlightsModifier implements PageModifier {
         this.topHighlights = [];
         this.rankedSentencesByParagraph?.forEach((paragraph) => {
             paragraph.forEach((sentence: RankedSentence) => {
-                if (sentence.related && sentence.related?.[0]?.score2 > 0.5) {
+                if (
+                    sentence.related &&
+                    sentence.related?.[0]?.score2 >= this.scoreThreshold - 0.1
+                ) {
                     this.relatedCount += 1;
-                } else if (sentence.score >= 0.6) {
+                } else if (sentence.score >= this.scoreThreshold) {
                     this.keyPointsCount += 1;
 
                     // this.topHighlights.push(sentence);
@@ -162,7 +169,7 @@ export default class SmartHighlightsModifier implements PageModifier {
                 }
 
                 // filter considered sentences
-                if (sentence.score < 0.6) {
+                if (sentence.score < this.scoreThreshold) {
                     return;
                 }
 
@@ -223,7 +230,7 @@ export default class SmartHighlightsModifier implements PageModifier {
             if (invalid) {
                 return;
             }
-            if (sentence.score < 0.6 && !this.enableAllSentences) {
+            if (sentence.score < this.scoreThreshold && !this.enableAllSentences) {
                 return;
             }
 
@@ -451,9 +458,14 @@ export default class SmartHighlightsModifier implements PageModifier {
         range: Range,
         sentence: RankedSentence
     ): HTMLElement[] {
-        const color: string = sentence.related ? "168, 85, 247" : "250, 204, 21";
-        const score = sentence.score > 0.6 ? sentence.score : 0;
+        const color: string = sentence.related
+            ? "rgba(168, 85, 247, 1.0)"
+            : "rgba(250, 204, 21, 1.0)";
+        // const color: string = getRandomLightColor(sentence.sentence);
+
+        const score = sentence.score >= this.scoreThreshold ? sentence.score : 0;
         const colorIntensity = 0.8 * score ** 3;
+        const adjustedColor = color.replace("1.0", colorIntensity.toString());
 
         let addedElements: HTMLElement[] = [];
 
@@ -487,7 +499,7 @@ export default class SmartHighlightsModifier implements PageModifier {
 
             const node = document.createElement("div");
             node.className = "lindy-smart-highlight";
-            node.style.setProperty("--annotation-color", `rgba(${color}, ${colorIntensity})`);
+            node.style.setProperty("--annotation-color", adjustedColor);
             node.style.setProperty("position", "absolute", "important");
             node.style.setProperty("top", `${rect.top - containerRect.top}px`, "important");
             node.style.setProperty("left", `${rect.left - containerRect.left}px`, "important");
@@ -513,10 +525,7 @@ export default class SmartHighlightsModifier implements PageModifier {
         if (this.enableScrollBar) {
             const scrollbarNode = document.createElement("div");
             scrollbarNode.className = "lindy-smart-highlight-scroll";
-            scrollbarNode.style.setProperty(
-                "--annotation-color",
-                `rgba(${color}, ${colorIntensity})`
-            );
+            scrollbarNode.style.setProperty("--annotation-color", adjustedColor);
             scrollbarNode.style.setProperty(
                 "top",
                 `${(100 * (rect.top + document.body.scrollTop)) / document.body.scrollHeight}vh`,
