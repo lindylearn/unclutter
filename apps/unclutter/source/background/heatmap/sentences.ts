@@ -1,6 +1,6 @@
 // import winkNLP from "wink-nlp";
 // import model from "wink-eng-lite-web-model";
-import sbd from "sbd";
+// import sbd from "sbd";
 
 // const nlp = winkNLP(model);
 
@@ -29,11 +29,23 @@ export function getParagraphSentences(paragraphs: Array<string>): [Array<string>
 }
 
 export function splitSentences(paragraph: string): string[] {
-    // const sentences = nlp.readDoc(paragraph).sentences().out();
-    const sentences = sbd.sentences(paragraph);
-    // const sentences = paragraph.split(/(?<=[.?!])\s+(?=[a-z])/gi);
+    // good test case: http://www.paulgraham.com/users.html
 
-    // return [s.replace("\n", " ").strip() for s in paragraph if s and not s.isspace()]
+    // TODO use more resilient sentence splitter
+
+    const sentences = paragraph.split(/(?<=[.?!])\s+(?=[a-z])/gi);
+
+    // sbd seems to have bugs with whitespace
+    // const sentences: string[] = sbd.sentences(paragraph, {
+    //     newline_boundaries: false,
+    //     preserve_whitespace: true,
+    // });
+
+    // winkNLP doesn't keep whitespace
+    // const sentences = nlp.readDoc(paragraph).sentences().out();
+
+    // console.log(sentences);
+
     return sentences;
 }
 

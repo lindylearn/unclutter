@@ -1,7 +1,7 @@
 export default function textRank(
     similarities: number[][],
     dampening = 0.85,
-    maxIterations = 20
+    maxIterations = 10
 ): number[] {
     // const start = performance.now();
 

@@ -2362,14 +2362,6 @@
     "@types/seedrandom" "^2.4.28"
     seedrandom "^3.0.5"
 
-"@tensorflow/tfjs-backend-wasm@^4.2.0":
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/@tensorflow/tfjs-backend-wasm/-/tfjs-backend-wasm-4.2.0.tgz#8f3a5f7f9999cea26dcab2ec1a1d64f5a4cca468"
-  integrity sha512-q0YeksFQkh0bMSUdJBHYFAkmsxa8/9HldubgqDFI3nMejr2uOBdFD/+w5QYEluG3+b8163qDrTr6OA0FsOpkmg==
-  dependencies:
-    "@tensorflow/tfjs-backend-cpu" "4.2.0"
-    "@types/emscripten" "~0.0.34"
-
 "@tensorflow/tfjs-backend-webgl@4.2.0":
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/@tensorflow/tfjs-backend-webgl/-/tfjs-backend-webgl-4.2.0.tgz#684368f9a2605511d6d6753bf6fe9a08c73f6791"
@@ -2521,11 +2513,6 @@
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@types/d3-time/-/d3-time-3.0.0.tgz#e1ac0f3e9e195135361fa1a1d62f795d87e6e819"
   integrity sha512-sZLCdHvBUcNby1cB6Fd3ZBrABbjz3v1Vm90nysCQ6Vt7vd6e/h9Lt7SiJUoEX0l4Dzc7P5llKyhqSi1ycSf1Hg==
-
-"@types/emscripten@~0.0.34":
-  version "0.0.34"
-  resolved "https://registry.yarnpkg.com/@types/emscripten/-/emscripten-0.0.34.tgz#12b4a344274fb102ff2f6c877b37587bc3e46008"
-  integrity sha512-QSb9ojDincskc+uKMI0KXp8e1NALFINCrMlp8VGKGcTSxeEyRTTKyjWw75NYrCZHUsVEEEpr1tYHpbtaC++/sQ==
 
 "@types/eslint@^7.2.13":
   version "7.29.0"
@@ -12889,6 +12876,16 @@ widest-line@^4.0.1:
   integrity sha512-o0cyEG0e8GPzT4iGHphIOh0cJOV8fivsXxddQasHPHfoZf1ZexrfeA21w2NaEN1RHE+fXlfISmOE8R9N3u3Qig==
   dependencies:
     string-width "^5.0.1"
+
+wink-eng-lite-web-model@^1.4.3:
+  version "1.4.3"
+  resolved "https://registry.yarnpkg.com/wink-eng-lite-web-model/-/wink-eng-lite-web-model-1.4.3.tgz#2612dc3075fe0e6d68b98f5489ee87a59b94320c"
+  integrity sha512-HAx6nmDdoCucs4RnPhlxpTqiw0/MYiiGtSyfykYM03KTxvCVjX6HNtdfBhmdUeGLzGh0M/D4WJANU42qH6/1nA==
+
+wink-nlp@^1.13.0:
+  version "1.13.0"
+  resolved "https://registry.yarnpkg.com/wink-nlp/-/wink-nlp-1.13.0.tgz#c4ec1e22597f6177b9472f1f8c2b96edc8315141"
+  integrity sha512-aK+KAOwIkeCzCX1E9SNJ3VT5F98Fln4AYRk7XsACcHjgQzJV6Fw6dQoB4UHRybLJt65YGLiQRAXlALd8aFJBcw==
 
 winreg@0.0.12:
   version "0.0.12"

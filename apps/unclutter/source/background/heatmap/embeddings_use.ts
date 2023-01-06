@@ -28,7 +28,7 @@ export async function loadEmbeddingsModelUSE() {
     useModel = await loadUSE();
 
     // prevent unbounded memory growth, see https://github.com/tensorflow/tfjs/issues/4127
-    tf.ENV.set("WEBGL_DELETE_TEXTURE_THRESHOLD", 512 * 1024 * 1024); // 256MB
+    tf.ENV.set("WEBGL_DELETE_TEXTURE_THRESHOLD", 256 * 1024 * 1024); // 256MB
     // performance help? https://github.com/tensorflow/tfjs/issues/6678
     tf.ENV.set("WEBGL_EXP_CONV", true);
 
