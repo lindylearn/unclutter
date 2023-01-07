@@ -45,7 +45,11 @@ export async function loadEmbeddingsModelUSE() {
     );
 }
 
-export async function getEmbeddingsUSE(sentences: string[], batchSize = 10): Promise<Tensor2D> {
+export async function getEmbeddingsUSE(
+    sentences: string[],
+    batchSize = 10,
+    retry: boolean = true
+): Promise<Tensor2D> {
     if (!useModel) {
         await loadEmbeddingsModelUSE();
     }
@@ -74,7 +78,15 @@ export async function getEmbeddingsUSE(sentences: string[], batchSize = 10): Pro
         return combined;
     } catch (err) {
         console.error(err);
-        console.error(useModel.model);
+
+        // maybe 'tensor disposed' is caused by memory cleanup?
+
+        if (retry) {
+            console.log("Retrying embed once...");
+            useModel = undefined; // re-load model
+            return getEmbeddingsUSE(sentences, batchSize, false);
+        }
+
         throw err;
     }
 }
