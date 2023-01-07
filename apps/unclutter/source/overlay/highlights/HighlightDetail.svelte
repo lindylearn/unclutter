@@ -32,7 +32,7 @@
                         style:-webkit-line-clamp="3"
                     >
                         {highlight.score.toFixed(2)}
-                        {highlight.score2.toFixed(2)}
+                        {highlight.score2?.toFixed(2) || ""}
                         "{highlight.text}"
                     </div>
                     <div

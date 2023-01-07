@@ -135,7 +135,7 @@ export default class SmartHighlightsModifier implements PageModifier {
             relatedPerHighlight.forEach((related, highlightIndex) => {
                 // filter related now
                 // related = related.filter((r) => r.score2 >= 0.5 || r.score >= -5);
-                related = related.filter((r) => r.score2 >= 0.5);
+                related = related.filter((r) => r.score >= 0.55);
                 if (related.length === 0) {
                     return;
                 }
