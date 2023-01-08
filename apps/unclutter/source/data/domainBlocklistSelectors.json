@@ -995,6 +995,14 @@
         ".getsocial",
         "[id*='like-post-wrapper-']"
     ],
+    "straitstimes.com": [
+        ".ads.clearleft",
+        ".paragraph.paragraph--type--more-on-this-topic.paragraph--view-mode--default",
+        ".paragraph.paragraph--type--remote-video.paragraph--view-mode--default",
+        ".image-style-large30x20",
+        ".paragraph.paragraph--type--image.paragraph--view-mode--default",
+        ".paragraph.paragraph--type--sph-brightcove-video.paragraph--view-mode--default"
+    ],
     "strana.today": [
         ".img-wrap",
         ".live-block",
