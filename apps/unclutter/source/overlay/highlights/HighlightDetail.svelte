@@ -29,11 +29,12 @@
                         class="overflow-hidden overflow-ellipsis"
                         style:display="-webkit-box"
                         style:-webkit-box-orient="vertical"
-                        style:-webkit-line-clamp="3"
+                        style:-webkit-line-clamp="2"
                     >
-                        "{highlight.excerpt || highlight.text}"
                         <!-- {highlight.score.toFixed(2)}
                         {highlight.score2?.toFixed(2) || ""} -->
+                        "{highlight.excerpt}
+                        {highlight.text}"
                     </div>
                     <div
                         class="font-title flex items-center justify-between gap-2 overflow-hidden rounded-b-lg"

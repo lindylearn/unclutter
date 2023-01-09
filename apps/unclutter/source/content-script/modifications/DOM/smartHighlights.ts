@@ -110,6 +110,12 @@ export default class SmartHighlightsModifier implements PageModifier {
                     });
                 }
             });
+
+            // topHighlights.push({
+            //     highlight: paragraph.map((s) => s.sentence).join(" "),
+            //     paragraphIndex,
+            //     sentenceIndex: 0,
+            // });
         });
         console.log(topHighlights.map((s) => s.highlight?.replace(/[\s\n]+/g, " ").trim()));
 
@@ -136,7 +142,7 @@ export default class SmartHighlightsModifier implements PageModifier {
             relatedPerHighlight.forEach((related, highlightIndex) => {
                 // filter related now
                 // related = related.filter((r) => r.score2 >= 0.5 || r.score >= -5);
-                related = related.filter((r) => r.score >= 0.5 && r.score2 > 0);
+                related = related.filter((r) => r.score >= 0.5 && r.score2 > 0.4);
                 if (related.length === 0) {
                     return;
                 }
@@ -213,7 +219,7 @@ export default class SmartHighlightsModifier implements PageModifier {
                                 // push before anchor text
                                 textFragments.push({
                                     sentence: sentence.sentence.slice(start, anchorIndex),
-                                    score: 0,
+                                    score: 0, // sentence.score,
                                 });
                             }
                             // push anchor text
@@ -228,7 +234,7 @@ export default class SmartHighlightsModifier implements PageModifier {
                         // push after anchor text
                         textFragments.push({
                             sentence: sentence.sentence.slice(start),
-                            score: 0,
+                            score: 0, // sentence.score,
                         });
                     }
                 }
