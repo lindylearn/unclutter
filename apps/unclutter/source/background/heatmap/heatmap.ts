@@ -270,7 +270,7 @@ function pickLeadingSentences(
     matrix: number[][],
     theshold = 0.6,
     similarityWindow = 10,
-    significantWindow = 1
+    significantWindow = 2
 ) {
     for (let i = 0; i < sentences.length; i++) {
         if (sentenceScores[i] < theshold) {

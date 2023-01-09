@@ -136,7 +136,7 @@ export default class SmartHighlightsModifier implements PageModifier {
             relatedPerHighlight.forEach((related, highlightIndex) => {
                 // filter related now
                 // related = related.filter((r) => r.score2 >= 0.5 || r.score >= -5);
-                related = related.filter((r) => r.score >= 0.55);
+                related = related.filter((r) => r.score >= 0.5 && r.score2 > 0);
                 if (related.length === 0) {
                     return;
                 }
@@ -185,11 +185,6 @@ export default class SmartHighlightsModifier implements PageModifier {
             // consider related anchors independently
             const textFragments: RankedSentence[] = [];
             rankedSentences.forEach((sentence, index) => {
-                // add trailing space
-                if (index < rankedSentences.length - 1) {
-                    sentence.sentence += " ";
-                }
-
                 if (!sentence.related) {
                     textFragments.push(sentence);
                 } else {
@@ -218,22 +213,22 @@ export default class SmartHighlightsModifier implements PageModifier {
                                 // push before anchor text
                                 textFragments.push({
                                     sentence: sentence.sentence.slice(start, anchorIndex),
-                                    score: sentence.score,
+                                    score: 0,
                                 });
                             }
                             // push anchor text
                             textFragments.push({
-                                sentence: anchor,
+                                sentence: anchor + " ",
                                 score: sentence.score,
                                 related: anchorPhrases[anchor],
                             });
-                            start = anchorIndex + anchor.length;
+                            start = anchorIndex + anchor.length + 1;
                         });
                     if (start < sentence.sentence.length) {
                         // push after anchor text
                         textFragments.push({
                             sentence: sentence.sentence.slice(start),
-                            score: sentence.score,
+                            score: 0,
                         });
                     }
                 }
@@ -383,8 +378,9 @@ export default class SmartHighlightsModifier implements PageModifier {
 
             // assume trailing space removed in backend
             // TODO handle this better
-            let hasTrailingSpace = false;
-            if (!currentSentence.endsWith(" ") && ranges.length < sentences.length - 1) {
+            let hasTrailingSpace = currentSentence.endsWith(" ");
+            if (!hasTrailingSpace && ranges.length < sentences.length - 1) {
+                // add space if middle sentence
                 hasTrailingSpace = true;
                 currentSentenceLength += 1;
             }

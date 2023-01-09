@@ -8,7 +8,7 @@
 
 {#if related && related.length > 0}
     <div
-        class="font-text highlighter mt-2 flex max-w-lg flex-col gap-2 rounded-xl border-[1px] border-stone-100 bg-white p-1.5 text-sm text-stone-900 shadow-xl drop-shadow"
+        class="font-text highlighter mt-2 flex max-w-lg flex-col items-stretch gap-2 rounded-xl border-[1px] border-stone-100 bg-white p-1.5 text-left text-sm text-stone-900 shadow-xl drop-shadow"
     >
         {#each related.slice(0, 3) as highlight}
             <div class="flex cursor-pointer items-center gap-2 overflow-hidden">
@@ -23,7 +23,7 @@
                     transform="rotate(1deg) scale(1.1)"
                 /> -->
                 <div
-                    class="flex flex-col gap-2 overflow-hidden rounded-lg bg-stone-100 p-2 shadow-sm transition-transform hover:scale-[99%]"
+                    class="flex grow flex-col gap-2 overflow-hidden rounded-lg bg-stone-100 p-2 shadow-sm transition-transform hover:scale-[99%]"
                 >
                     <div
                         class="overflow-hidden overflow-ellipsis"
@@ -31,9 +31,9 @@
                         style:-webkit-box-orient="vertical"
                         style:-webkit-line-clamp="3"
                     >
-                        {highlight.score.toFixed(2)}
-                        {highlight.score2?.toFixed(2) || ""}
-                        "{highlight.text}"
+                        "{highlight.excerpt || highlight.text}"
+                        <!-- {highlight.score.toFixed(2)}
+                        {highlight.score2?.toFixed(2) || ""} -->
                     </div>
                     <div
                         class="font-title flex items-center justify-between gap-2 overflow-hidden rounded-b-lg"
