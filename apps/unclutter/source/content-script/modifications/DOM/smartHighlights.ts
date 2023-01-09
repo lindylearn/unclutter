@@ -11,6 +11,7 @@ export interface RankedSentence {
 export interface RelatedHighlight {
     score: number;
     score2: number;
+    anchor?: string;
     text: string;
     excerpt: string;
     title: string;
@@ -146,7 +147,8 @@ export default class SmartHighlightsModifier implements PageModifier {
             });
 
             // paint again including related data
-            this.paintAllAnnotations();
+            this.disableAnnotations();
+            this.enableAnnotations();
         }
 
         // report diagnostics
@@ -178,17 +180,77 @@ export default class SmartHighlightsModifier implements PageModifier {
                 return;
             }
 
+            // console.log(rankedSentences);
+
+            // consider related anchors independently
+            const textFragments: RankedSentence[] = [];
+            rankedSentences.forEach((sentence, index) => {
+                // add trailing space
+                if (index < rankedSentences.length - 1) {
+                    sentence.sentence += " ";
+                }
+
+                if (!sentence.related) {
+                    textFragments.push(sentence);
+                } else {
+                    const anchorPhrases: {
+                        [anchor: string]: RelatedHighlight[];
+                    } = sentence.related.reduce((obj, r) => {
+                        if (!obj[r.anchor]) {
+                            obj[r.anchor] = [];
+                        }
+                        obj[r.anchor].push(r);
+                        return obj;
+                    }, {});
+                    const anchorIndexes: {
+                        [anchor: string]: number;
+                    } = Object.keys(anchorPhrases).reduce((obj, anchor) => {
+                        obj[anchor] = sentence.sentence.indexOf(anchor);
+                        return obj;
+                    }, {});
+
+                    let start = 0;
+                    Object.keys(anchorPhrases)
+                        .sort((a, b) => anchorIndexes[a] - anchorIndexes[b])
+                        .forEach((anchor) => {
+                            const anchorIndex = anchorIndexes[anchor];
+                            if (anchorIndex > start) {
+                                // push before anchor text
+                                textFragments.push({
+                                    sentence: sentence.sentence.slice(start, anchorIndex),
+                                    score: sentence.score,
+                                });
+                            }
+                            // push anchor text
+                            textFragments.push({
+                                sentence: anchor,
+                                score: sentence.score,
+                                related: anchorPhrases[anchor],
+                            });
+                            start = anchorIndex + anchor.length;
+                        });
+                    if (start < sentence.sentence.length) {
+                        // push after anchor text
+                        textFragments.push({
+                            sentence: sentence.sentence.slice(start),
+                            score: sentence.score,
+                        });
+                    }
+                }
+            });
+            // console.log(textFragments);
+
             const container = this.getParagraphAnchor(paragraph);
 
             // anchor all sentences returned from backend
             let ranges = this.anchorParagraphSentences(
                 paragraph,
-                rankedSentences.map((s) => s.sentence)
+                textFragments.map((s) => s.sentence)
             );
 
             // construct global annotationState
             ranges.forEach((range, i) => {
-                const sentence = rankedSentences[i];
+                const sentence = textFragments[i];
 
                 // TODO save all sentences for enableAllAnnotations?
                 if (!sentence.related && sentence.score < this.scoreThreshold) {
@@ -322,7 +384,7 @@ export default class SmartHighlightsModifier implements PageModifier {
             // assume trailing space removed in backend
             // TODO handle this better
             let hasTrailingSpace = false;
-            if (ranges.length < sentences.length - 1) {
+            if (!currentSentence.endsWith(" ") && ranges.length < sentences.length - 1) {
                 hasTrailingSpace = true;
                 currentSentenceLength += 1;
             }
