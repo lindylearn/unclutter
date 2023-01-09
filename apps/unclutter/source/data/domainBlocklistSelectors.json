@@ -322,6 +322,7 @@
     "edition.cnn.com": [".ticker-ribbon"],
     "eff.org": [".element-invisible.element-focusable"],
     "emeatribune.com": ["#vuukle-emote", ".vuukle-powerbar.powerbarBoxDiv"],
+    "en.wikipedia.org": [".wiki-logo", "#wiki_header"],
     "en.yna.co.kr": [
         ".keyword-zone.right-list-zone",
         ".section-tit",
