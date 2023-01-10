@@ -72,8 +72,11 @@ export function updateOffsetsOnHeightChange(
         }
         console.info(`page resized, recalculating annotation offsets...`);
 
+        // notifies of node position change -- works for anchored highlights and background smart highlight
         const highlightNodes = [
-            ...document.body.querySelectorAll("lindy-highlight, a.lindy-link-info"),
+            ...document.body.querySelectorAll(
+                "lindy-highlight, a.lindy-link-info, .lindy-smart-highlight"
+            ),
         ];
 
         const [offsetById, offsetEndById] = getHighlightOffsets(highlightNodes);

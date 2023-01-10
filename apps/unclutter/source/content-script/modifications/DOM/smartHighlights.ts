@@ -4,6 +4,7 @@ import browser from "../../../common/polyfill";
 import { PageModifier, trackModifierExecution } from "../_interface";
 
 export interface RankedSentence {
+    id: string;
     score: number;
     sentence: string;
     related?: RelatedHighlight[];
@@ -30,7 +31,11 @@ export default class SmartHighlightsModifier implements PageModifier {
     articleSummary: string | null;
     keyPointsCount: number | null;
     relatedCount: number | null;
-    topHighlights: RankedSentence[] | null;
+    topHighlights: {
+        highlight: string;
+        paragraphIndex: number;
+        sentenceIndex: number;
+    }[] = [];
 
     private scoreThreshold = 0.6;
     private relatedEnabled = true;
@@ -94,16 +99,11 @@ export default class SmartHighlightsModifier implements PageModifier {
 
         // parse heatmap stats and most important sentences
         this.keyPointsCount = 0;
-        const topHighlights: {
-            highlight: string;
-            paragraphIndex: number;
-            sentenceIndex: number;
-        }[] = [];
         this.rankedSentencesByParagraph?.forEach((paragraph, paragraphIndex) => {
             paragraph.forEach((sentence: RankedSentence, sentenceIndex) => {
                 if (sentence.score >= this.scoreThreshold) {
                     this.keyPointsCount += 1;
-                    topHighlights.push({
+                    this.topHighlights.push({
                         highlight: sentence.sentence,
                         paragraphIndex,
                         sentenceIndex,
@@ -117,7 +117,7 @@ export default class SmartHighlightsModifier implements PageModifier {
             //     sentenceIndex: 0,
             // });
         });
-        console.log(topHighlights.map((s) => s.highlight?.replace(/[\s\n]+/g, " ").trim()));
+        console.log(this.topHighlights.map((s) => s.highlight?.replace(/[\s\n]+/g, " ").trim()));
 
         if (this.relatedEnabled) {
             // save significant sentences in user library, and fetch related existing highlights
@@ -218,12 +218,14 @@ export default class SmartHighlightsModifier implements PageModifier {
                             if (anchorIndex > start) {
                                 // push before anchor text
                                 textFragments.push({
+                                    id: `${sentence.id}_before`,
                                     sentence: sentence.sentence.slice(start, anchorIndex),
                                     score: 0, // sentence.score,
                                 });
                             }
                             // push anchor text
                             textFragments.push({
+                                id: sentence.id,
                                 sentence: anchor + " ",
                                 score: sentence.score,
                                 related: anchorPhrases[anchor],
@@ -233,6 +235,7 @@ export default class SmartHighlightsModifier implements PageModifier {
                     if (start < sentence.sentence.length) {
                         // push after anchor text
                         textFragments.push({
+                            id: `${sentence.id}_after`,
                             sentence: sentence.sentence.slice(start),
                             score: 0, // sentence.score,
                         });
@@ -576,7 +579,8 @@ export default class SmartHighlightsModifier implements PageModifier {
                 return a.top - b.top || a.left - b.left;
             })
             .reverse();
-        for (const rect of clientRects) {
+
+        clientRects.forEach((rect, rectIndex) => {
             // check overlap
             if (
                 lastRect &&
@@ -587,11 +591,13 @@ export default class SmartHighlightsModifier implements PageModifier {
                     lastRect.left >= rect.right
                 )
             ) {
-                continue;
+                return;
             }
             lastRect = rect;
 
             const node = document.createElement("div");
+            // consider first rect in annotationListener resize handler
+            node.id = rectIndex === 0 ? sentence.id : `${sentence.id}_${rectIndex}`;
             node.className = "lindy-smart-highlight";
             node.style.setProperty("--annotation-color", adjustedColor);
             node.style.setProperty("position", "absolute", "important");
@@ -614,7 +620,7 @@ export default class SmartHighlightsModifier implements PageModifier {
                 container.appendChild(clickNode);
                 addedElements.push(clickNode);
             }
-        }
+        });
 
         if (this.enableScrollBar) {
             const scrollbarNode = document.createElement("div");

@@ -1,15 +1,10 @@
-import { cosine_similarity_matrix } from "./groups";
-// import { getEmbeddingsONNX, loadEmbeddingsModelONNX } from "./onnx/embeddings_onnx";
-import { getEmbeddingsUSE, loadEmbeddingsModelUSE } from "./embeddings_use";
-import { getParagraphSentences } from "./sentences";
-import textRank from "./textrank";
 import * as tf from "@tensorflow/tfjs";
 import { Tensor2D } from "@tensorflow/tfjs";
 
-interface RankedSentence {
-    sentence: string;
-    score: number;
-}
+import { getEmbeddingsUSE, loadEmbeddingsModelUSE } from "./embeddings_use";
+import { getParagraphSentences } from "./sentences";
+import type { RankedSentence } from "../../content-script/modifications/DOM/smartHighlights";
+import textRank from "./textrank";
 
 export async function loadHeatmapModel(embeddingsType = "use") {
     if (embeddingsType === "onnx") {
@@ -309,6 +304,7 @@ function groupSentenceScores(
             groupedSentenceScores[paragraph] = [];
         }
         groupedSentenceScores[paragraph].push({
+            id: `heatmap_${i}`,
             sentence: sentences[i],
             score: sentenceScores[i],
         });
