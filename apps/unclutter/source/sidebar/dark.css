@@ -16,18 +16,3 @@ body {
 .annotation > textarea::placeholder {
     color: #757575 !important;
 }
-.annotation > .top-icons,
-.annotation > .info-bar {
-    color: #616161 !important;
-}
-.top-icons > *:hover,
-.info-bar > *:hover,
-.upvote-button:hover,
-.reply-button:hover,
-.public-toggle.is-public {
-    color: #bdbdbd !important;
-}
-
-.lindy-tooltp {
-    --text-color: var(--lindy-dark-theme-text-color) !important;
-}

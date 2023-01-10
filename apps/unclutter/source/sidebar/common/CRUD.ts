@@ -42,31 +42,6 @@ export async function getAnnotations(
         }
     }
 
-    // take from public lindy API preferrably (to get metadata)
-    // let annotations = publicAnnotations;
-    // let hypothesisReplies: LindyAnnotation[] = [];
-    // const seenIds = new Set(publicAnnotations.map((a) => a.id));
-    // for (const annotation of personalAnnotations) {
-    //     if (annotation.reply_to) {
-    //         hypothesisReplies.push(annotation);
-    //     } else if (!seenIds.has(annotation.id)) {
-    //         annotations.push(annotation);
-    //     }
-    // }
-    // populate replies from hypothesis (might be private or not yet propagated)
-    // function populateRepliesDfs(current: LindyAnnotation) {
-    //     hypothesisReplies
-    //         .filter((a) => a.reply_to === current.id)
-    //         .filter((a) => !current.replies.some((r) => r.id === a.id))
-    //         .map((reply) => {
-    //             current.replies.push(reply);
-    //             current.reply_count += 1;
-    //         });
-
-    //     current.replies.map(populateRepliesDfs);
-    // }
-    // annotations.map(populateRepliesDfs);
-
     // remove annotations hidden by the user
     const hiddenAnnotations = await getHiddenAnnotations();
     function hideAnnotationsDfs(current: LindyAnnotation) {

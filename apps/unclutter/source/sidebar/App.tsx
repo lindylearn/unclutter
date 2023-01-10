@@ -28,7 +28,7 @@ export default function App({ articleUrl }: { articleUrl: string }) {
     );
 
     // handlers to modify remote & local state
-    const { createReply, deleteHideAnnotation, onAnnotationHoverUpdate, updateAnnotation } =
+    const { deleteHideAnnotation, onAnnotationHoverUpdate, updateAnnotation } =
         useAnnotationModifiers(mutateAnnotations);
 
     // receive events from the text highlighting content script code
@@ -76,12 +76,9 @@ export default function App({ articleUrl }: { articleUrl: string }) {
         <div className="font-text mx-2 text-gray-700">
             <AnnotationsList
                 groupedAnnotations={groupedAnnotations}
-                hypothesisSyncEnabled={false}
-                showAllSocialAnnotations={showAllSocialAnnotations}
                 deleteHideAnnotation={deleteHideAnnotation}
                 onAnnotationHoverUpdate={onAnnotationHoverUpdate}
                 unfocusAnnotation={onAnnotationHoverUpdate}
-                createReply={createReply}
                 updateAnnotation={updateAnnotation}
             />
         </div>

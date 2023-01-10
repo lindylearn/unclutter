@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from "react";
-import { LindyAnnotation } from "../../common/annotations/create";
+import React from "react";
+import type { LindyAnnotation } from "../../common/annotations/create";
 import { getAnnotationColor } from "../../common/annotations/styling";
 import { reportEventContentScript } from "@unclutter/library-components/dist/common/messaging";
 
@@ -7,40 +7,13 @@ interface AnnotationProps {
     annotation: LindyAnnotation;
     className?: string;
     heightLimitPx?: number;
-    showingReplies: boolean;
-    isReply: boolean;
     isRelated: boolean;
 
-    hypothesisSyncEnabled: boolean;
     deleteHide: () => void;
-    unfocusAnnotation: (annotation: LindyAnnotation) => void;
-    createReply: () => void;
 }
 
-function Annotation({
-    annotation,
-    className,
-    heightLimitPx,
-    showingReplies,
-    hypothesisSyncEnabled,
-    isReply,
-    isRelated,
-    createReply,
-    unfocusAnnotation,
-    deleteHide,
-}: AnnotationProps) {
-    const { text, author, platform, link, reply_count } = annotation;
-
-    const [upvoteCount, setLocalUpvoteCount] = React.useState(annotation.upvote_count || 0);
-    // function toggleUpvoteAnnotationLocalFirst() {
-    //     const newCount = upvoteCount + (upvoted ? -1 : 1);
-    //     upvoteAnnotation(!upvoted);
-    //     setLocalUpvoteCount(newCount);
-    // }
-
-    // const relativeTime = formatRelativeTime(parseDate(annotation.created_at));
-
-    const ref = useBlurRef(annotation, unfocusAnnotation);
+function Annotation({ annotation, className, heightLimitPx, isRelated }: AnnotationProps) {
+    const { text, platform, link } = annotation;
 
     return (
         <div
@@ -52,7 +25,6 @@ function Annotation({
                 borderColor: getAnnotationColor(annotation),
                 maxHeight: heightLimitPx,
             }}
-            ref={ref}
             onClick={() => {
                 onExpand(annotation);
             }}
@@ -64,8 +36,8 @@ function Annotation({
                     // restrict text height by whole lines
                     // assumes 20px font size and py-1.5 padding
                     WebkitLineClamp: Math.min(
+                        10,
                         heightLimitPx ? Math.floor((heightLimitPx - 6 * 2 - 20) / 20) : Infinity,
-                        isReply ? 3 : 6,
                         isRelated ? 4 : Infinity
                     ),
                     WebkitBoxOrient: "vertical",
@@ -73,8 +45,6 @@ function Annotation({
                     textOverflow: "ellipsis",
                 }}
             >
-                {/* @ts-ignore */}
-                {/* {annotation.score.toString().slice(0, 4)}{" "} */}
                 {text.split(/<a>|<code>/).map((token) => {
                     if (token.startsWith("http")) {
                         return <AbbreviatedLink key={token} href={token} />;
@@ -92,15 +62,7 @@ function Annotation({
             </div>
 
             {isRelated && (
-                <div
-                    className="annotation-bar relative mt-2 flex cursor-pointer select-none items-center gap-2 overflow-hidden whitespace-nowrap text-gray-800 transition-transform hover:scale-[99%]"
-                    style={
-                        {
-                            // backgroundColor: getAnnotationColor(annotation),
-                        }
-                    }
-                    ref={ref}
-                >
+                <div className="annotation-bar relative mt-2 flex cursor-pointer select-none items-center gap-2 overflow-hidden whitespace-nowrap text-gray-800 transition-transform hover:scale-[99%]">
                     <svg className="-mt-0.5 w-4 shrink-0" viewBox="0 0 512 512">
                         <path
                             fill="currentColor"
@@ -123,46 +85,6 @@ function Annotation({
                     </svg>
                 </div>
             )}
-
-            {/* <div className="info-bar mt-0.5 flex items-end justify-between gap-3 text-sm text-gray-400 transition-all">
-                {!showingReplies && annotation.reply_count > 0 && (
-                    <div className="cursor-pointer select-none transition-all">
-                        <svg
-                            className="mr-1 inline-block w-3 rotate-180 align-baseline"
-                            viewBox="0 0 512 512"
-                            style={{ marginBottom: "-1px" }}
-                        >
-                            <path
-                                fill="currentColor"
-                                d="M8.309 189.836L184.313 37.851C199.719 24.546 224 35.347 224 56.015v80.053c160.629 1.839 288 34.032 288 186.258 0 61.441-39.581 122.309-83.333 154.132-13.653 9.931-33.111-2.533-28.077-18.631 45.344-145.012-21.507-183.51-176.59-185.742V360c0 20.7-24.3 31.453-39.687 18.164l-176.004-152c-11.071-9.562-11.086-26.753 0-36.328z"
-                            ></path>
-                        </svg>
-                        <span>
-                            {annotation.reply_count}
-                            {annotation.reply_count === 1 ? " reply" : " replies"}
-                        </span>
-                    </div>
-                )}
-
-                <div className="flex-grow" />
-                <div className="flex-shrink-0 select-none">
-                    <>
-                        {author?.replace("_hn", "")}
-                        {platform == "h" && (
-                            <img
-                                src="../assets/icons/hypothesis.svg"
-                                className="ml-1 inline-block w-3"
-                            />
-                        )}
-                        {platform == "hn" && (
-                            <img
-                                src="../assets/icons/yc.svg"
-                                className="ml-1 mb-0.5 inline-block w-3"
-                            />
-                        )}
-                    </>
-                </div>
-            </div> */}
         </div>
     );
 }
@@ -196,35 +118,4 @@ function onExpand(annotation: LindyAnnotation) {
         platform: annotation.platform,
         reply_count: annotation.reply_count,
     });
-}
-
-export function useBlurRef(
-    annotation: LindyAnnotation,
-    unfocusAnnotation: (annotation: LindyAnnotation) => void
-) {
-    // if annotation focused, detect clicks to unfocus it
-    const ref = useRef<HTMLDivElement>();
-    useEffect(() => {
-        if (annotation.focused) {
-            const onClick = (e) => {
-                const clickTarget: HTMLElement = e.target;
-
-                // ignore actions performed on other annotations (e.g. deletes)
-                if (clickTarget.classList.contains("icon")) {
-                    return;
-                }
-
-                if (ref.current && !ref.current.contains(clickTarget)) {
-                    unfocusAnnotation(annotation);
-                }
-            };
-
-            document.addEventListener("click", onClick, true);
-            return () => {
-                document.removeEventListener("click", onClick, true);
-            };
-        }
-    }, [annotation.focused]);
-
-    return ref;
 }

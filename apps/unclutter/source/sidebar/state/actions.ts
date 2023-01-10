@@ -45,7 +45,6 @@ export function useFetchAnnotations(
 }
 
 export function useAnnotationModifiers(mutateAnnotations: React.Dispatch<AnnotationMutation>) {
-    const createReply = useCallback(createReplyFactory(mutateAnnotations), []);
     const deleteHideAnnotation = useCallback(deleteHideAnnotationFactory(mutateAnnotations), []);
     const updateAnnotation = useCallback(
         (annotation: LindyAnnotation) => mutateAnnotations({ action: "update", annotation }),
@@ -57,72 +56,23 @@ export function useAnnotationModifiers(mutateAnnotations: React.Dispatch<Annotat
     );
 
     return {
-        createReply,
         deleteHideAnnotation,
         onAnnotationHoverUpdate,
         updateAnnotation,
     };
 }
 
-function createReplyFactory(mutateAnnotations: React.Dispatch<AnnotationMutation>) {
-    return async function (parent: LindyAnnotation, threadStart: LindyAnnotation) {
-        // TODO re-enable replies
-        // const reply = createDraftAnnotation(parent.url, null, parent.id);
-        // // dfs as there may be arbitrary nesting
-        // function addReplyDfs(current: LindyAnnotation) {
-        //     if (current.id === parent.id) {
-        //         current.replies.push(reply);
-        //         current.reply_count += 1;
-        //         return;
-        //     }
-        //     current.replies.map(addReplyDfs);
-        // }
-        // addReplyDfs(threadStart);
-        // mutateAnnotations({ action: "update", annotation: threadStart });
-        // const remoteAnnotation = await createRemoteAnnotation(reply, null);
-        // function updateIdDfs(current: LindyAnnotation) {
-        //     if (current.id === remoteAnnotation.id) {
-        //         current.id = remoteAnnotation.id;
-        //         return;
-        //     }
-        //     current.replies.map(updateIdDfs);
-        // }
-        // updateIdDfs(threadStart);
-        // mutateAnnotations({ action: "update", annotation: threadStart });
-    };
-}
-
 function deleteHideAnnotationFactory(mutateAnnotations: React.Dispatch<AnnotationMutation>) {
     return function (annotation: LindyAnnotation, threadStart?: LindyAnnotation) {
         // delete from local state first
-        if (threadStart) {
-            // remove just this reply
 
-            // dfs as there may be arbitrary nesting
-            function removeReplyDfs(current: LindyAnnotation) {
-                if (current.replies.some((a) => a.id === annotation.id)) {
-                    // found reply, modify reference
-                    current.replies = current.replies.filter((a) => a.id !== annotation.id);
-                    return;
-                }
-
-                current.replies.map(removeReplyDfs);
-            }
-            removeReplyDfs(threadStart);
-
-            mutateAnnotations({ action: "update", annotation: threadStart });
-        } else {
-            // is root, so remove entire thread
-            mutateAnnotations({ action: "remove", annotation: annotation });
-            if (annotation.quote_text) {
-                window.top.postMessage(
-                    { event: "removeHighlights", annotations: [annotation] },
-                    "*"
-                );
-            }
+        // is root, so remove entire thread
+        mutateAnnotations({ action: "remove", annotation: annotation });
+        if (annotation.quote_text) {
+            window.top.postMessage({ event: "removeHighlights", annotations: [annotation] }, "*");
         }
 
-        // delete or hide remotely (detect if is reply there)
+        // delete or hide remotely
         if (annotation.isMyAnnotation) {
             deleteAnnotation(annotation);
         } else {

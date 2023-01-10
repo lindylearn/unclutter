@@ -8,12 +8,9 @@ const sidebarOffsetTopPx = 8;
 
 interface AnnotationsListProps {
     groupedAnnotations: LindyAnnotation[][];
-    hypothesisSyncEnabled: boolean;
-    showAllSocialAnnotations: boolean;
     deleteHideAnnotation: (annotation: LindyAnnotation, threadStart: LindyAnnotation) => void;
     onAnnotationHoverUpdate: (annotation: LindyAnnotation, hoverActive: boolean) => void;
     unfocusAnnotation: (annotation: LindyAnnotation) => void;
-    createReply: (parent: LindyAnnotation, threadStart: LindyAnnotation) => void;
     updateAnnotation: (annotation: LindyAnnotation) => void;
 }
 
@@ -21,12 +18,9 @@ const annotationMarginPx = 8;
 
 function AnnotationsList({
     groupedAnnotations,
-    hypothesisSyncEnabled,
-    showAllSocialAnnotations,
     deleteHideAnnotation,
     onAnnotationHoverUpdate,
     unfocusAnnotation,
-    createReply,
     updateAnnotation,
 }: AnnotationsListProps) {
     const itemsRef = useRef({}); // annotation id -> ref of rendered annotation node
@@ -139,8 +133,6 @@ function AnnotationsList({
                                         onAnnotationHoverUpdate(annotation, hoverActive)
                                     }
                                     unfocusAnnotation={unfocusAnnotation}
-                                    hypothesisSyncEnabled={hypothesisSyncEnabled}
-                                    createReply={createReply}
                                     updateAnnotation={updateAnnotation}
                                 />
                             </div>
