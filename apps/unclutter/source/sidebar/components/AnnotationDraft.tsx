@@ -99,7 +99,7 @@ function AnnotationDraft({
     return (
         <div
             className={clsx(
-                `annotation annotation-draft relative flex flex-col gap-2 rounded-l rounded-r-md p-1 pl-2 text-sm shadow`,
+                `annotation annotation-draft relative flex flex-col gap-2 rounded-l rounded-r-md p-2 pl-3 text-sm shadow`,
                 annotation.focused && "focused",
                 className
             )}
@@ -110,7 +110,7 @@ function AnnotationDraft({
             ref={ref}
         >
             <TextareaAutosize
-                className="w-full select-none resize-none rounded-md bg-transparent p-1 align-top outline-none placeholder:select-none placeholder:text-stone-500 placeholder:opacity-50"
+                className="w-full select-none resize-none rounded-md bg-transparent align-top outline-none placeholder:select-none placeholder:text-stone-500 placeholder:opacity-50"
                 placeholder={question || "What to remember?"}
                 // placeholder={localAnnotation.tags
                 //     ?.slice(0, 3)
