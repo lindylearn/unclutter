@@ -67,8 +67,6 @@ export function renderHighlightsLayer(enablePageView: () => void, enhanceActive:
             renderArticleBadge(
                 smartHighlightsModifier.keyPointsCount,
                 smartHighlightsModifier.relatedCount,
-                smartHighlightsModifier.topHighlights,
-                smartHighlightsModifier.articleSummary,
                 smartHighlightsModifier.disableAnnotations.bind(smartHighlightsModifier),
                 enablePageViewInner
             );
@@ -128,8 +126,6 @@ function renderHighlighter(highlightRect: DOMRect, quote: string, related: Relat
 function renderArticleBadge(
     keyPointsCount: number,
     relatedCount: number,
-    topHighlights: RankedSentence[],
-    articleSummary: string,
     disableAnnotations: () => void,
     enablePageView: () => void
 ) {
@@ -142,8 +138,6 @@ function renderArticleBadge(
         props: {
             keyPointsCount,
             relatedCount,
-            topHighlights,
-            articleSummary,
             enablePageView: () => {
                 // anchor on left edge to prevent jump on scrollbar insert
                 const rect = container.getBoundingClientRect();

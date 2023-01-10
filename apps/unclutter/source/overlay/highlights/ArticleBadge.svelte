@@ -1,11 +1,8 @@
 <script lang="ts">
     import clsx from "clsx";
-    import type { RankedSentence } from "../../content-script/modifications/DOM/smartHighlights";
 
     export let keyPointsCount: number | null;
     export let relatedCount: number | null;
-    export let topHighlights: RankedSentence[] | null;
-    export let articleSummary: string | null;
     export let enablePageView: () => void;
     export let disableHighlightslayer: () => void;
 

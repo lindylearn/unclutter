@@ -39,22 +39,6 @@ function AnnotationThread(props: AnnotationThreadProps) {
 
     const ref = useBlurRef(props.annotation, props.unfocusAnnotation);
 
-    // const [related, setRelated] = useState<LindyAnnotation[]>(
-    //     props.annotation.relatedAnnotations || []
-    // );
-    // useEffect(() => {
-    //     if (props.annotation.isMyAnnotation && props.annotation.focused) {
-    //         ky.post("https://assistant-two.vercel.app/api/query", {
-    //             json: {
-    //                 query: props.annotation.quote_text,
-    //             },
-    //             timeout: false,
-    //         })
-    //             .json()
-    //             .then(setRelated);
-    //     }
-    // }, []);
-
     return (
         <>
             {props.annotation.platform !== "info" && (
@@ -72,10 +56,12 @@ function AnnotationThread(props: AnnotationThreadProps) {
             {/* {props.annotation.platform === "info" && !linked && (
                 <div
                     className="annotation-bar relative flex cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-sm text-gray-800 shadow transition-transform hover:scale-[99%] md:text-base"
-                    style={{
-                        // borderLeft: `8px solid ${getAnnotationColor(props.annotation)}`,
-                        backgroundColor: getAnnotationColor(props.annotation),
-                    }}
+                    style={
+                        {
+                            // borderLeft: `8px solid ${getAnnotationColor(props.annotation)}`,
+                            // backgroundColor: getAnnotationColor(props.annotation),
+                        }
+                    }
                     onClick={() => setLinked(true)}
                     ref={ref}
                 >
@@ -117,13 +103,16 @@ function AnnotationThread(props: AnnotationThreadProps) {
                 </div>
             )} */}
 
-            {/* {related.length > 0 && (
+            {props.annotation.relatedAnnotations?.length > 0 && (
                 <div className="mt-1 flex flex-col gap-1">
-                    {related?.slice(0, 3).map((r) => (
+                    {props.annotation.relatedAnnotations?.slice(0, 3).map((r: any) => (
                         <Annotation
                             key={r.id}
                             {...props}
-                            annotation={r}
+                            annotation={{
+                                ...r,
+                                text: r.excerpt + r.text,
+                            }}
                             deleteHide={() => props.deleteHideAnnotation(props.annotation, null)}
                             createReply={() =>
                                 props.createReply(props.annotation, props.annotation)
@@ -134,7 +123,7 @@ function AnnotationThread(props: AnnotationThreadProps) {
                         />
                     ))}
                 </div>
-            )} */}
+            )}
         </>
     );
 }

@@ -65,7 +65,8 @@ function Annotation({
                     // assumes 20px font size and py-1.5 padding
                     WebkitLineClamp: Math.min(
                         heightLimitPx ? Math.floor((heightLimitPx - 6 * 2 - 20) / 20) : Infinity,
-                        isReply ? 3 : 6
+                        isReply ? 3 : 6,
+                        isRelated ? 4 : Infinity
                     ),
                     WebkitBoxOrient: "vertical",
                     overflow: "hidden",

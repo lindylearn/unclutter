@@ -1,8 +1,7 @@
 import React, { useMemo, useReducer, useState } from "react";
 import { LindyAnnotation } from "../common/annotations/create";
-import { SummaryState } from "../content-script/modifications/DOM/smartHighlights";
 import { groupAnnotations } from "./common/grouping";
-import { useAnnotationSettings, useFeatureFlag } from "./common/hooks";
+import { useAnnotationSettings } from "./common/hooks";
 import AnnotationsList from "./components/AnnotationsList";
 import { useAnnotationModifiers, useFetchAnnotations } from "./state/actions";
 import { annotationReducer, handleWindowEventFactory } from "./state/local";
@@ -43,6 +42,8 @@ export default function App({ articleUrl }: { articleUrl: string }) {
         window.top.postMessage({ event: "sidebarAppReady" }, "*");
     }, []);
 
+    console.log(annotations);
+
     // group and filter annotations on every local state change (e.g. added, focused)
     const [groupedAnnotations, setGroupedAnnotations] = useState<LindyAnnotation[][]>([]);
     React.useEffect(() => {
@@ -54,7 +55,10 @@ export default function App({ articleUrl }: { articleUrl: string }) {
             });
 
         const visibleAnnotations = annotations.filter(
-            (a) => a.focused || (a.isMyAnnotation && (a.text || experimentsEnabled))
+            (a) =>
+                a.focused ||
+                a.platform === "info" ||
+                (a.isMyAnnotation && (a.text || experimentsEnabled))
         );
 
         if (summaryAnnotation) {
