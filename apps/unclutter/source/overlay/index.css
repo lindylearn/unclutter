@@ -17,18 +17,18 @@
 
 .lindy-page-settings-toprght {
     all: revert !important;
-    position: fixed !important;
+    position: absolute !important;
     top: 0 !important;
     right: 0 !important;
     z-index: 3000 !important;
-    padding: 9px !important;
+    padding: 10px !important;
     contain: layout style !important;
 
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
     line-height: 1 !important;
-    gap: 6px !important;
+    gap: 8px !important;
     width: 26px !important;
 }
 .lindy-page-settings-pageadjacent {
@@ -196,11 +196,11 @@
         display: none !important;
     }
     #lindy-annotations-bar {
-        left: calc(var(--lindy-pagewidth) + 20px + 5px) !important;
-        width: calc(100vw - (var(--lindy-pagewidth) + 20px + 5px) - 50px) !important;
+        left: calc(var(--lindy-pagewidth) + 10px + 5px) !important;
+        width: calc(100vw - (var(--lindy-pagewidth) + 10px + 5px) - 20px) !important;
     }
     .lindy-page-settings-pageadjacent {
-        left: calc(var(--lindy-pagewidth) + 20px + 0px) !important;
+        left: calc(var(--lindy-pagewidth) + 10px + 0px) !important;
     }
     #lindy-info-bottom {
         margin-left: 15px !important;

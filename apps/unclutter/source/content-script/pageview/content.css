@@ -1,5 +1,5 @@
 html.pageview {
-    background: #f1f3f4 !important;
+    background: #f5f5f4 !important;
 }
 
 html.pageview.pageview > body {
@@ -128,7 +128,7 @@ html.pageview.pageview > body {
 
 @media (max-width: 1200px) {
     html.pageview > body {
-        margin-left: 20px !important; /* also set via inline styles */
+        margin-left: 10px !important; /* also set via inline styles */
     }
 }
 @media print {

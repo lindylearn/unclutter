@@ -157,7 +157,7 @@ export default class BodyStyleModifier implements PageModifier {
     private applyResponsiveStyle(isMobile: boolean) {
         let marginSide = "auto";
         if (isMobile) {
-            marginSide = "20px";
+            marginSide = "10px";
         }
 
         document.body.style.setProperty("margin", `8px ${marginSide} 0 ${marginSide}`, "important");
