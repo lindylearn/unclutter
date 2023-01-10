@@ -1171,6 +1171,7 @@
         ".width_common.btn_guicauhoi_detail.mb20",
         ".width_common.topic-detail.gaBoxLinkDisplay"
     ],
+    "vox.com": [".c-social-buttons.c-social-buttons--popover.main-social"],
     "voxeu.org": [".bookmarks.autoclear", ".slogan", "#header"],
     "web.archive.org": [
         "#wm-ipp-base",
