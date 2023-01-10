@@ -1205,6 +1205,7 @@
         ".article-asset.article-asset-normal.article-asset-center",
         ".desvio-container"
     ],
+    "xatakamovil.com": [".article-metadata-container"],
     "zdnet.com": [".c-socialSharebar"],
     "zeit.de": [
         ".article-player.article-player--has-player",
