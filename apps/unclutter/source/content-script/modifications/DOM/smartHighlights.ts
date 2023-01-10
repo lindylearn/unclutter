@@ -156,6 +156,7 @@ export default class SmartHighlightsModifier implements PageModifier {
             }
         );
         const relatedPerHighlight: RelatedHighlight[][] = (await response.json())?.related;
+        // console.log(relatedPerHighlight);
 
         // add to rankedSentencesByParagraph
         this.relatedCount = 0;
@@ -201,55 +202,33 @@ export default class SmartHighlightsModifier implements PageModifier {
             // consider related anchors independently
             const textFragments: RankedSentence[] = [];
             rankedSentences.forEach((sentence, index) => {
-                textFragments.push(sentence);
-                return;
-
                 if (!sentence.related) {
                     textFragments.push(sentence);
                 } else {
-                    const anchorPhrases: {
-                        [anchor: string]: RelatedHighlight[];
-                    } = sentence.related.reduce((obj, r) => {
-                        if (!obj[r.anchor]) {
-                            obj[r.anchor] = [];
-                        }
-                        obj[r.anchor].push(r);
-                        return obj;
-                    }, {});
-                    const anchorIndexes: {
-                        [anchor: string]: number;
-                    } = Object.keys(anchorPhrases).reduce((obj, anchor) => {
-                        obj[anchor] = sentence.sentence.indexOf(anchor);
-                        return obj;
-                    }, {});
+                    const anchor = sentence.related[0].anchor;
+                    const anchorIndex = sentence.sentence.indexOf(anchor);
 
-                    let start = 0;
-                    Object.keys(anchorPhrases)
-                        .sort((a, b) => anchorIndexes[a] - anchorIndexes[b])
-                        .forEach((anchor) => {
-                            const anchorIndex = anchorIndexes[anchor];
-                            if (anchorIndex > start) {
-                                // push before anchor text
-                                textFragments.push({
-                                    id: `${sentence.id}_before`,
-                                    sentence: sentence.sentence.slice(start, anchorIndex),
-                                    score: 0, // sentence.score,
-                                });
-                            }
-                            // push anchor text
-                            textFragments.push({
-                                id: sentence.id,
-                                sentence: anchor + " ",
-                                score: sentence.score,
-                                related: anchorPhrases[anchor],
-                            });
-                            start = anchorIndex + anchor.length + 1;
+                    // before anchor text
+                    if (anchorIndex > 0) {
+                        textFragments.push({
+                            id: `${sentence.id}_before`,
+                            sentence: sentence.sentence.slice(0, anchorIndex),
+                            score: 0, // sentence.score,
                         });
-                    if (start < sentence.sentence.length) {
-                        // push after anchor text
+                    }
+                    // anchor text
+                    textFragments.push({
+                        id: sentence.id,
+                        sentence: anchor + " ",
+                        score: sentence.score,
+                        related: sentence.related,
+                    });
+                    // after anchor text
+                    const end = anchorIndex + anchor.length + 1;
+                    if (end < sentence.sentence.length) {
                         textFragments.push({
                             id: `${sentence.id}_after`,
-                            sentence: sentence.sentence.slice(start),
+                            sentence: sentence.sentence.slice(end),
                             score: 0, // sentence.score,
                         });
                     }
@@ -275,7 +254,7 @@ export default class SmartHighlightsModifier implements PageModifier {
                 }
 
                 if (sentence.related) {
-                    sentence.related.forEach((r, i) => {
+                    sentence.related.slice(0, 2).forEach((r, i) => {
                         this.annotations.push(
                             createAnnotation(
                                 window.location.href,
@@ -285,7 +264,7 @@ export default class SmartHighlightsModifier implements PageModifier {
                                     id: `${sentence.id}_${i}`,
                                     platform: "info",
                                     infoType: "related",
-                                    sentenceScore: sentence.score,
+                                    score: r.score,
                                     displayOffset: getNodeOffset(range),
                                     displayOffsetEnd: getNodeOffset(range, "bottom"),
                                 }
@@ -584,13 +563,16 @@ export default class SmartHighlightsModifier implements PageModifier {
         range: Range,
         sentence: RankedSentence
     ): HTMLElement[] {
-        const color: string = "rgba(250, 204, 21, 1.0)";
+        // const color = "rgba(250, 204, 21, 1.0)";
+        const color: string = sentence.related
+            ? "rgba(168, 85, 247, 1.0)"
+            : "rgba(250, 204, 21, 1.0)";
         // const color: string = getRandomLightColor(sentence.sentence);
 
         let score = sentence.score >= this.scoreThreshold ? sentence.score : 0;
-        // if (sentence.related) {
-        //     score = sentence.related[0].score + 0.2;
-        // }
+        if (sentence.related) {
+            score = sentence.related[0].score + 0.2;
+        }
         const colorIntensity = 0.8 * score ** 3;
         const adjustedColor = color.replace("1.0", colorIntensity.toString());
 

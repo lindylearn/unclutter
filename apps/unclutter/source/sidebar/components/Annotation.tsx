@@ -11,7 +11,7 @@ interface AnnotationProps {
 }
 
 function Annotation({ annotation, heightLimitPx }: AnnotationProps) {
-    const { excerpt, text, platform, infoType, sentenceScore, author } = annotation;
+    const { excerpt, text, platform, infoType, score, author } = annotation;
 
     const sampleDomains = [
         "www.nytimes.com",
@@ -33,7 +33,7 @@ function Annotation({ annotation, heightLimitPx }: AnnotationProps) {
 
     let color: string;
     if (platform === "info") {
-        color = `rgba(250, 204, 21, ${0.8 * sentenceScore ** 3})`;
+        color = `rgba(250, 204, 21, ${0.8 * (score + 0.2) ** 3})`;
     } else if (platform === "hn") {
         color = "rgba(255, 102, 0, 0.5)";
     } else if (platform === "h") {

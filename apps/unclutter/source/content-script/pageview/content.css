@@ -57,7 +57,7 @@ html.pageview.pageview > body {
     top: 8px !important;
     left: calc((100vw - var(--lindy-pagewidth)) / 2 + var(--lindy-pagewidth) - 5px) !important;
     width: calc((100vw - var(--lindy-pagewidth)) / 2 - 50px) !important;
-    height: calc(100% - 50px - 50px) !important;
+    height: calc(100% - 8px) !important;
     user-select: none !important;
     contain: strict !important;
     z-index: 1000 !important;
