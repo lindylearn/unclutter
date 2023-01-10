@@ -37,6 +37,6 @@ function randomInRange(seed, min, max) {
     return Math.floor(random() * (max - min) + min);
 }
 
-function drawFromArray(seed, arr) {
+export function drawFromArray(seed, arr) {
     return arr[randomInRange(seed, 0, arr.length)];
 }

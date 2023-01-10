@@ -42,8 +42,6 @@ export default function App({ articleUrl }: { articleUrl: string }) {
         window.top.postMessage({ event: "sidebarAppReady" }, "*");
     }, []);
 
-    console.log(annotations);
-
     // group and filter annotations on every local state change (e.g. added, focused)
     const [groupedAnnotations, setGroupedAnnotations] = useState<LindyAnnotation[][]>([]);
     React.useEffect(() => {

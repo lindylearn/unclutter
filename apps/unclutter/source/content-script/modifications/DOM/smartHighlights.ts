@@ -201,6 +201,9 @@ export default class SmartHighlightsModifier implements PageModifier {
             // consider related anchors independently
             const textFragments: RankedSentence[] = [];
             rankedSentences.forEach((sentence, index) => {
+                textFragments.push(sentence);
+                return;
+
                 if (!sentence.related) {
                     textFragments.push(sentence);
                 } else {
@@ -272,20 +275,23 @@ export default class SmartHighlightsModifier implements PageModifier {
                 }
 
                 if (sentence.related) {
-                    this.annotations.push(
-                        createAnnotation(
-                            window.location.href,
-                            describeAnnotation(document.body, range),
-                            {
-                                id: sentence.id,
-                                platform: "info",
-                                infoType: "related",
-                                displayOffset: getNodeOffset(range),
-                                displayOffsetEnd: getNodeOffset(range, "bottom"),
-                                relatedAnnotations: sentence.related,
-                            }
-                        )
-                    );
+                    sentence.related.forEach((r, i) => {
+                        this.annotations.push(
+                            createAnnotation(
+                                window.location.href,
+                                describeAnnotation(document.body, range),
+                                {
+                                    ...r,
+                                    id: `${sentence.id}_${i}`,
+                                    platform: "info",
+                                    infoType: "related",
+                                    sentenceScore: sentence.score,
+                                    displayOffset: getNodeOffset(range),
+                                    displayOffsetEnd: getNodeOffset(range, "bottom"),
+                                }
+                            )
+                        );
+                    });
                 }
 
                 this.annotationState.push({
@@ -578,16 +584,13 @@ export default class SmartHighlightsModifier implements PageModifier {
         range: Range,
         sentence: RankedSentence
     ): HTMLElement[] {
-        const color: string = sentence.related
-            ? "rgba(168, 85, 247, 1.0)"
-            : "rgba(250, 204, 21, 1.0)";
+        const color: string = "rgba(250, 204, 21, 1.0)";
         // const color: string = getRandomLightColor(sentence.sentence);
 
         let score = sentence.score >= this.scoreThreshold ? sentence.score : 0;
-        if (sentence.related) {
-            // score = sentence.score;
-            score = sentence.related[0].score + 0.2;
-        }
+        // if (sentence.related) {
+        //     score = sentence.related[0].score + 0.2;
+        // }
         const colorIntensity = 0.8 * score ** 3;
         const adjustedColor = color.replace("1.0", colorIntensity.toString());
 
@@ -637,16 +640,16 @@ export default class SmartHighlightsModifier implements PageModifier {
             container.prepend(node);
             addedElements.push(node);
 
-            if (this.enableHighlightsClick || sentence.related) {
-                const clickNode = node.cloneNode() as HTMLElement;
-                clickNode.style.setProperty("background", "transparent", "important");
-                clickNode.style.setProperty("cursor", "pointer", "important");
-                clickNode.style.setProperty("z-index", `1001`, "important");
+            // if (this.enableHighlightsClick || sentence.related) {
+            //     const clickNode = node.cloneNode() as HTMLElement;
+            //     clickNode.style.setProperty("background", "transparent", "important");
+            //     clickNode.style.setProperty("cursor", "pointer", "important");
+            //     clickNode.style.setProperty("z-index", `1001`, "important");
 
-                clickNode.onclick = (e) => this.onRangeClick(e, range, sentence.related);
-                container.appendChild(clickNode);
-                addedElements.push(clickNode);
-            }
+            //     clickNode.onclick = (e) => this.onRangeClick(e, range, sentence.related);
+            //     container.appendChild(clickNode);
+            //     addedElements.push(clickNode);
+            // }
         });
 
         if (this.enableScrollBar) {

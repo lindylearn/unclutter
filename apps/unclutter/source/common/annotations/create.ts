@@ -92,7 +92,8 @@ export interface LindyAnnotation {
     // only for info annotations
     infoType?: "link" | "related";
     article?: Article;
-    relatedAnnotations?: LindyAnnotation[];
+    excerpt?: string;
+    sentenceScore?: number;
 }
 
 // TODO serialize to Annotation type directly
