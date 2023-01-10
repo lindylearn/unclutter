@@ -81,10 +81,6 @@ export default class TransitionManager implements PageModifier {
         this.readingTimeModifier,
         this.libraryModifier
     );
-    // private aiAnnotationsModifier = new AIAnnotationsModifier(
-    //     this.annotationsModifier,
-    //     this.textContainerModifier
-    // );
     // private linkAnnotationsModifier = new LinkAnnotationsModifier(
     //     this.annotationsModifier,
     //     this.libraryModifier,

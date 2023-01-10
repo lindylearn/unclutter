@@ -1,7 +1,9 @@
 import { reportEventContentScript } from "@unclutter/library-components/dist/common/messaging";
-// import { getRandomLightColor } from "@unclutter/library-components/dist/common/styling";
 import browser from "../../../common/polyfill";
+import { createInfoAnnotation, LindyAnnotation } from "../../../common/annotations/create";
+import { describe as describeAnnotation } from "../../../common/annotator/anchoring/html";
 import { PageModifier, trackModifierExecution } from "../_interface";
+import { getNodeOffset } from "../../../common/annotations/offset";
 
 export interface RankedSentence {
     id: string;
@@ -43,6 +45,8 @@ export default class SmartHighlightsModifier implements PageModifier {
     constructor(onHighlightClick: (range: Range, related: RelatedHighlight[]) => void = null) {
         this.onHighlightClick = onHighlightClick;
     }
+
+    annotations: LindyAnnotation[] = [];
 
     private paragraphs: HTMLElement[] = [];
     private rankedSentencesByParagraph: RankedSentence[][];
@@ -120,41 +124,7 @@ export default class SmartHighlightsModifier implements PageModifier {
         console.log(this.topHighlights.map((s) => s.highlight?.replace(/[\s\n]+/g, " ").trim()));
 
         if (this.relatedEnabled) {
-            // save significant sentences in user library, and fetch related existing highlights
-            const response = await fetchRetry(
-                "https://q5ie5hjr3g.execute-api.us-east-2.amazonaws.com/default/related",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        title: document.title,
-                        url: window.location.href,
-                        highlights: topHighlights.map((s) => s.highlight),
-                    }),
-                }
-            );
-            const relatedPerHighlight: RelatedHighlight[][] = (await response.json())?.related;
-
-            // add to rankedSentencesByParagraph
-            this.relatedCount = 0;
-            relatedPerHighlight.forEach((related, highlightIndex) => {
-                // filter related now
-                // related = related.filter((r) => r.score2 >= 0.5 || r.score >= -5);
-                related = related.filter((r) => r.score >= 0.5 && r.score2 > 0.4);
-                if (related.length === 0) {
-                    return;
-                }
-                this.relatedCount += 1;
-
-                const { paragraphIndex, sentenceIndex } = topHighlights[highlightIndex];
-                this.rankedSentencesByParagraph[paragraphIndex][sentenceIndex].related = related;
-            });
-
-            // paint again including related data
-            this.disableAnnotations();
-            this.enableAnnotations();
+            this.fetchRelatedHighlights();
         }
 
         // report diagnostics
@@ -167,6 +137,46 @@ export default class SmartHighlightsModifier implements PageModifier {
         });
 
         return true;
+    }
+
+    private async fetchRelatedHighlights(): Promise<void> {
+        // save significant sentences in user library, and fetch related existing highlights
+        const response = await fetchRetry(
+            "https://q5ie5hjr3g.execute-api.us-east-2.amazonaws.com/default/related",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    title: document.title,
+                    url: window.location.href,
+                    highlights: this.topHighlights.map((s) => s.highlight),
+                }),
+            }
+        );
+        const relatedPerHighlight: RelatedHighlight[][] = (await response.json())?.related;
+
+        // add to rankedSentencesByParagraph
+        this.relatedCount = 0;
+        relatedPerHighlight.forEach((related, highlightIndex) => {
+            // filter related now
+            // related = related.filter((r) => r.score2 >= 0.5 || r.score >= -5);
+            related = related.filter((r) => r.score >= 0.5 && r.score2 > 0.4);
+            if (related.length === 0) {
+                return;
+            }
+            this.relatedCount += 1;
+
+            const { paragraphIndex, sentenceIndex } = this.topHighlights[highlightIndex];
+            this.rankedSentencesByParagraph[paragraphIndex][sentenceIndex].related = related;
+        });
+
+        // paint again including related data
+        this.disableAnnotations();
+        this.enableAnnotations();
+
+        window.postMessage({ type: "setRelatedHighlights", annotations: this.annotations }, "*");
     }
 
     // paint AI highlights on the page
@@ -259,6 +269,20 @@ export default class SmartHighlightsModifier implements PageModifier {
                 // TODO save all sentences for enableAllAnnotations?
                 if (!sentence.related && sentence.score < this.scoreThreshold) {
                     return;
+                }
+
+                if (sentence.related) {
+                    this.annotations.push({
+                        ...createInfoAnnotation(
+                            window.location.href,
+                            describeAnnotation(document.body, range),
+                            undefined,
+                            sentence.related
+                        ),
+                        id: sentence.id,
+                        displayOffset: getNodeOffset(range),
+                        displayOffsetEnd: getNodeOffset(range, "bottom"),
+                    });
                 }
 
                 this.annotationState.push({

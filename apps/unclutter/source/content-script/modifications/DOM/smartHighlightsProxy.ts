@@ -27,8 +27,18 @@ export default class SmartHighlightsProxy implements PageModifier {
                 this.annotationsModifier.sidebarIframe,
                 generateId()
             );
+        } else if (message.type === "setRelatedHighlights") {
+            console.log("SmartHighlightsProxy", message);
+            sendIframeEvent(this.annotationsModifier.sidebarIframe, {
+                event: "setInfoAnnotations",
+                annotations: message.annotations,
+            });
         }
     }
+
+    // setInfoAnnotations() {
+    //     window.postMessage({ type: "getRelatedHighlights" }, "*");
+    // }
 
     // if (this.annotationsModifier?.sidebarIframe) {
     //     sendIframeEvent(this.annotationsModifier.sidebarIframe, {
