@@ -1,5 +1,4 @@
 import {
-    collectAnonymousMetricsFeatureFlag,
     getAllFeatureFlags,
     getFeatureFlag,
     isDevelopmentFeatureFlag,
@@ -14,7 +13,6 @@ import { getInitialInstallVersion } from "../common/updateMessages";
 // Anonymously report usage events (if the user allowed it)
 // See https://github.com/lindylearn/unclutter/blob/main/docs/metrics.md
 export async function reportEvent(name: string, data = {}) {
-    const metricsEnabled = await getFeatureFlag(collectAnonymousMetricsFeatureFlag);
     const isDev = await getFeatureFlag(isDevelopmentFeatureFlag);
     if (isDev) {
         console.log(`Metric ${name}:`, data);

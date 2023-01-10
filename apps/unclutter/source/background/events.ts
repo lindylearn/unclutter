@@ -4,7 +4,6 @@ import type { Runtime, Tabs } from "webextension-polyfill";
 import { extensionSupportsUrl } from "../common/articleDetection";
 import { handleReportBrokenPage } from "../common/bugReport";
 import {
-    collectAnonymousMetricsFeatureFlag,
     enableExperimentalFeatures,
     getFeatureFlag,
     isDevelopmentFeatureFlag,
@@ -226,7 +225,6 @@ browser.runtime.onInstalled.addListener(async ({ reason }) => {
     const isDev = extensionInfo.installType === "development";
 
     if (isDev) {
-        await setFeatureFlag(collectAnonymousMetricsFeatureFlag, false);
         await setFeatureFlag(isDevelopmentFeatureFlag, true);
         await setFeatureFlag(enableExperimentalFeatures, true);
     }

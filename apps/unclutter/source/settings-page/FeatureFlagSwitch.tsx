@@ -1,9 +1,5 @@
 import React from "react";
-import {
-    collectAnonymousMetricsFeatureFlag,
-    getFeatureFlag,
-    setFeatureFlag,
-} from "../common/featureFlags";
+import { getFeatureFlag, setFeatureFlag } from "../common/featureFlags";
 import { reportEventContentScript } from "@unclutter/library-components/dist/common/messaging";
 
 // there's a weird bundling error on firefox when importing React, {useState}
@@ -29,10 +25,6 @@ export default function FeatureFlagSwitch({
             flag: featureFlagKey,
             state: newState ? "enabled" : "disabled",
         });
-        if (featureFlagKey === collectAnonymousMetricsFeatureFlag && !newState) {
-            // report that metrics were disabled before applying new config (after that reportEvent no-nops)
-            await reportEventContentScript("disableMetrics");
-        }
 
         setFeatureFlag(featureFlagKey, newState);
 
