@@ -69,8 +69,6 @@ function AnnotationDraft({
         }
     }
 
-    const color = getAnnotationColor(annotation);
-
     const [question, setQuestion] = useState<string>();
     // useEffect(() => {
     // if (!annotation.text) {
@@ -106,7 +104,7 @@ function AnnotationDraft({
                 className
             )}
             style={{
-                borderLeft: `8px solid ${color}`,
+                borderLeft: `8px solid ${getAnnotationColor(annotation)}`,
                 maxHeight: heightLimitPx,
             }}
             ref={ref}

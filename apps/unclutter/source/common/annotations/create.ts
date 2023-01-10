@@ -90,6 +90,7 @@ export interface LindyAnnotation {
     listIndex?: number;
 
     // only for info annotations
+    infoType?: "link" | "related";
     article?: Article;
     relatedAnnotations?: LindyAnnotation[];
 }

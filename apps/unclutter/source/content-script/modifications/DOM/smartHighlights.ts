@@ -1,6 +1,6 @@
 import { reportEventContentScript } from "@unclutter/library-components/dist/common/messaging";
 import browser from "../../../common/polyfill";
-import { createInfoAnnotation, LindyAnnotation } from "../../../common/annotations/create";
+import { createAnnotation, LindyAnnotation } from "../../../common/annotations/create";
 import { describe as describeAnnotation } from "../../../common/annotator/anchoring/html";
 import { PageModifier, trackModifierExecution } from "../_interface";
 import { getNodeOffset } from "../../../common/annotations/offset";
@@ -272,17 +272,20 @@ export default class SmartHighlightsModifier implements PageModifier {
                 }
 
                 if (sentence.related) {
-                    this.annotations.push({
-                        ...createInfoAnnotation(
+                    this.annotations.push(
+                        createAnnotation(
                             window.location.href,
                             describeAnnotation(document.body, range),
-                            undefined,
-                            sentence.related
-                        ),
-                        id: sentence.id,
-                        displayOffset: getNodeOffset(range),
-                        displayOffsetEnd: getNodeOffset(range, "bottom"),
-                    });
+                            {
+                                id: sentence.id,
+                                platform: "info",
+                                infoType: "related",
+                                displayOffset: getNodeOffset(range),
+                                displayOffsetEnd: getNodeOffset(range, "bottom"),
+                                relatedAnnotations: sentence.related,
+                            }
+                        )
+                    );
                 }
 
                 this.annotationState.push({

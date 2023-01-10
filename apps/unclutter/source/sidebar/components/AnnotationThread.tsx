@@ -56,11 +56,11 @@ function AnnotationThread(props: AnnotationThreadProps) {
                             key={r.id}
                             {...props}
                             annotation={{
+                                ...props.annotation,
                                 ...r,
                                 text: r.excerpt + r.text,
                             }}
                             deleteHide={() => props.deleteHideAnnotation(props.annotation, null)}
-                            isRelated
                         />
                     ))}
                 </div>
