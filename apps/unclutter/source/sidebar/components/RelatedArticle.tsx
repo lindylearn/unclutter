@@ -22,7 +22,7 @@ export default function RelatedArticle({ annotation, className }: RelatedArticle
     return (
         <div
             className={clsx(
-                "annotation relative flex select-none items-start gap-3 rounded bg-white p-2 text-sm text-gray-800 shadow-sm transition-all",
+                "annotation relative flex select-none items-start gap-3 rounded bg-white p-2 text-sm shadow-sm transition-all",
                 className
             )}
             // style={{

@@ -71,7 +71,7 @@ export default function App({ articleUrl }: { articleUrl: string }) {
 
     return (
         // x margin to show slight shadow (iframe allows no overflow)
-        <div className="font-text mx-2 text-gray-700">
+        <div className="app font-text mx-2 text-stone-800">
             <AnnotationsList
                 groupedAnnotations={groupedAnnotations}
                 deleteHideAnnotation={deleteHideAnnotation}

@@ -6,11 +6,7 @@ body {
     background-color: #131516 !important;
 }
 
-.annotation,
-.annotation-bar {
-    color: var(--lindy-dark-theme-text-color) !important;
-}
-.annotation > textarea {
+.app {
     color: var(--lindy-dark-theme-text-color) !important;
 }
 .annotation > textarea::placeholder {
