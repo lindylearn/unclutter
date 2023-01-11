@@ -1205,6 +1205,15 @@
         ".article-asset.article-asset-normal.article-asset-center",
         ".desvio-container"
     ],
+    "xtech.nikkei.com": [
+        ".p-article_header_bar",
+        ".l-header_container",
+        ".l-topicsPath",
+        ".l-categoryNavi_menu",
+        ".globalNaviContainer",
+        ".p-headerInfo",
+        ".p-article_action"
+    ],
     "zdnet.com": [".c-socialSharebar"],
     "zeit.de": [
         ".article-player.article-player--has-player",
