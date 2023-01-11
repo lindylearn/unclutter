@@ -695,16 +695,16 @@ export default class SmartHighlightsModifier implements PageModifier {
             container.prepend(node);
             addedElements.push(node);
 
-            // if (this.enableHighlightsClick || sentence.related) {
-            //     const clickNode = node.cloneNode() as HTMLElement;
-            //     clickNode.style.setProperty("background", "transparent", "important");
-            //     clickNode.style.setProperty("cursor", "pointer", "important");
-            //     clickNode.style.setProperty("z-index", `1001`, "important");
+            if (this.enableHighlightsClick || (sentence.related && !this.isProxyActive)) {
+                const clickNode = node.cloneNode() as HTMLElement;
+                clickNode.style.setProperty("background", "transparent", "important");
+                clickNode.style.setProperty("cursor", "pointer", "important");
+                clickNode.style.setProperty("z-index", `1001`, "important");
 
-            //     clickNode.onclick = (e) => this.onRangeClick(e, range, sentence.related);
-            //     container.appendChild(clickNode);
-            //     addedElements.push(clickNode);
-            // }
+                clickNode.onclick = (e) => this.onRangeClick(e, range, sentence.related);
+                container.appendChild(clickNode);
+                addedElements.push(clickNode);
+            }
         });
 
         if (this.enableScrollBar) {

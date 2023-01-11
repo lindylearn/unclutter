@@ -2,9 +2,8 @@ import { getDomain } from "@unclutter/library-components/dist/common/util";
 import { setUserSettingsForDomain } from "../../common/storage";
 import SmartHighlightsModifier, {
     RelatedHighlight,
-    RankedSentence,
 } from "../../content-script/modifications/DOM/smartHighlights";
-import HighlightDetailSvelte from "./HighlightDetail.svelte";
+// import HighlightDetailSvelte from "./HighlightDetail.svelte";
 import ArticleBadgeSvelte from "./ArticleBadge.svelte";
 
 export function renderHighlightsLayer(enablePageView: () => void, enhanceActive: boolean) {
@@ -12,28 +11,25 @@ export function renderHighlightsLayer(enablePageView: () => void, enhanceActive:
     // document.addEventListener("mouseup", onSelectionDone);
     // document.addEventListener("contextmenu", removeHighligher);
 
-    document.addEventListener("mouseup", (event) => {
-        const target = event.target as HTMLElement;
-        if (!target.classList.contains("lindy-smart-highlight-absolute")) {
-            removeHighligher();
-        }
-    });
+    // document.addEventListener("mouseup", (event) => {
+    //     const target = event.target as HTMLElement;
+    //     if (!target.classList.contains("lindy-smart-highlight-absolute")) {
+    //         removeHighligher();
+    //     }
+    // });
 
     function onHighlightClick(range: Range, related: RelatedHighlight[]) {
-        // enablePageView();
+        enablePageViewInner();
 
-        removeHighligher();
-        const rect = range.getBoundingClientRect();
-        const quote = range.toString();
-        renderHighlighter(rect, quote, related);
+        // removeHighligher();
+        // const rect = range.getBoundingClientRect();
+        // const quote = range.toString();
+        // renderHighlighter(rect, quote, related);
     }
     const smartHighlightsModifier = new SmartHighlightsModifier(onHighlightClick);
 
     if (enhanceActive) {
-        // TODO move to shared fn (same as below)
-        smartHighlightsModifier.isProxyActive = true;
-        smartHighlightsModifier.enableHighlightsClick = true;
-        smartHighlightsModifier.enableScrollBar = false;
+        setReaderModeSettings();
     } else {
         const font = document.createElement("link");
         font.href = "https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap";
@@ -49,13 +45,11 @@ export function renderHighlightsLayer(enablePageView: () => void, enhanceActive:
         smartHighlightsModifier.disableStyleTweaks();
         smartHighlightsModifier.disableScrollbar();
 
-        // handle clicks on highlights in enhance.ts
+        setReaderModeSettings();
+    }
+    function setReaderModeSettings() {
         smartHighlightsModifier.isProxyActive = true;
-
-        // enable click layer on next re-paint
         smartHighlightsModifier.enableHighlightsClick = true;
-
-        // scrollbar not supported yet
         smartHighlightsModifier.enableScrollBar = false;
     }
     function enablePageViewInner() {
@@ -91,37 +85,37 @@ export function renderHighlightsLayer(enablePageView: () => void, enhanceActive:
 //     renderHighlighter(rect, quote);
 // }
 
-function removeHighligher() {
-    document.getElementById("lindy-highlighter")?.remove();
-}
+// function removeHighligher() {
+//     document.getElementById("lindy-highlighter")?.remove();
+// }
 
-function renderHighlighter(highlightRect: DOMRect, quote: string, related: RelatedHighlight[]) {
-    const container = document.createElement("div");
-    container.id = "lindy-highlighter";
-    container.style.position = "absolute";
-    container.style.zIndex = "9999999999";
-    container.style.top = `${
-        highlightRect.top + highlightRect.height + window.scrollY + document.body.scrollTop
-    }px`;
-    container.style.left = `${highlightRect.left}px`;
+// function renderHighlighter(highlightRect: DOMRect, quote: string, related: RelatedHighlight[]) {
+//     const container = document.createElement("div");
+//     container.id = "lindy-highlighter";
+//     container.style.position = "absolute";
+//     container.style.zIndex = "9999999999";
+//     container.style.top = `${
+//         highlightRect.top + highlightRect.height + window.scrollY + document.body.scrollTop
+//     }px`;
+//     container.style.left = `${highlightRect.left}px`;
 
-    document.body.appendChild(container);
+//     document.body.appendChild(container);
 
-    new HighlightDetailSvelte({
-        target: container,
-        props: { quote, related },
-    });
+//     new HighlightDetailSvelte({
+//         target: container,
+//         props: { quote, related },
+//     });
 
-    // allow clicks on the highlighter
-    container.addEventListener("mousedown", (event) => {
-        event.preventDefault();
-        event.stopPropagation();
-    });
-    container.addEventListener("mouseup", (event) => {
-        event.preventDefault();
-        event.stopPropagation();
-    });
-}
+//     // allow clicks on the highlighter
+//     container.addEventListener("mousedown", (event) => {
+//         event.preventDefault();
+//         event.stopPropagation();
+//     });
+//     container.addEventListener("mouseup", (event) => {
+//         event.preventDefault();
+//         event.stopPropagation();
+//     });
+// }
 
 function renderArticleBadge(
     keyPointsCount: number,
