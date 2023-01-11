@@ -59,7 +59,7 @@ export function createSelectionListener(
     // when selection done, expand to nearest word and highlight
     function onmouseup() {
         const selection = document.getSelection();
-        if (!selection.toString()) {
+        if (!selection.toString().trim()) {
             return;
         }
 
@@ -71,7 +71,13 @@ export function createSelectionListener(
             _expandRangeToWordBoundary(range, "forwards");
         }
 
-        _createAnnotationFromSelection(
+        const selector = describeAnnotation(document.body, range);
+        if (!selector) {
+            return;
+        }
+
+        createPaintNewAnnotation(
+            selector,
             (annotation) => {
                 sendIframeEvent(sidebarIframe, {
                     event: "createHighlight",
@@ -82,6 +88,8 @@ export function createSelectionListener(
             sidebarIframe,
             activeAnnotationId
         );
+
+        selection.removeAllRanges();
     }
     listeners.push(["mouseup", onmouseup]);
 
@@ -151,26 +159,14 @@ function _expandRangeToWordBoundary(range: Range, direction: "forwards" | "backw
     return range;
 }
 
-export async function _createAnnotationFromSelection(
+export async function createPaintNewAnnotation(
+    selector: any,
     callback: (newAnnotation: LindyAnnotation) => void,
     sidebarIframe: HTMLIFrameElement,
     activeAnnotationId: string
 ) {
-    // get mouse selection
-    const selection = document.getSelection();
-    if (!selection || !selection.toString().trim()) {
-        return;
-    }
-    const range = selection.getRangeAt(0);
-
-    // convert to text anchor
-    const annotationSelector = describeAnnotation(document.body, range);
-    if (!annotationSelector) {
-        return;
-    }
-
     // use id created during selection to keep same color
-    let annotation = createDraftAnnotation(window.location.href, annotationSelector);
+    let annotation = createDraftAnnotation(window.location.href, selector);
     annotation.id = activeAnnotationId;
     annotation.focused = true;
 
@@ -178,8 +174,6 @@ export async function _createAnnotationFromSelection(
 
     // notify sidebar and upload logic
     callback(annotation);
-
-    selection.removeAllRanges();
 
     copyTextToClipboard(`"${annotation.quote_text}"`);
 }

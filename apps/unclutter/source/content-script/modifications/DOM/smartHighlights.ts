@@ -732,16 +732,15 @@ export default class SmartHighlightsModifier implements PageModifier {
     enableAllSentences: boolean = false;
     isProxyActive: boolean = false;
     private onRangeClick(e: Event, range: Range, related: RelatedHighlight[]) {
-        // TODO split handling for related annotations
+        // can't send Range via postMessage, so anchor in highlights.ts
+        const selector = describeAnnotation(document.body, range);
+        if (!selector) {
+            return;
+        }
 
         if (this.isProxyActive) {
             // pass to proxy running inside enhance.ts
-            // TODO pass range instead of modifying the selection
-            const selection = window.getSelection();
-            selection.removeAllRanges();
-            selection.addRange(range);
-
-            window.postMessage({ type: "clickSmartHighlight" }, "*");
+            window.postMessage({ type: "clickSmartHighlight", selector }, "*");
         } else {
             // handle in highlights.ts
             if (this.onHighlightClick) {

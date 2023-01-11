@@ -75,6 +75,10 @@ export function handleWindowEventFactory(
 ) {
     return async function ({ data }) {
         if (data.event === "createHighlight") {
+            if (!data.annotation) {
+                return;
+            }
+
             // show state with id immediately
             mutateAnnotations({ action: "add", annotation: data.annotation });
 
