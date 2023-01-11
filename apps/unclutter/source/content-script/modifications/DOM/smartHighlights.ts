@@ -153,10 +153,6 @@ export default class SmartHighlightsModifier implements PageModifier {
         });
         console.log(this.topHighlights.map((s) => s.highlight?.replace(/[\s\n]+/g, " ").trim()));
 
-        if (this.relatedEnabled) {
-            this.fetchRelatedHighlights();
-        }
-
         // report diagnostics
         let durationMs = Math.round(performance.now() - start);
         reportEventContentScript("renderHighlightsLayer", {
@@ -169,7 +165,7 @@ export default class SmartHighlightsModifier implements PageModifier {
         return true;
     }
 
-    private async fetchRelatedHighlights(): Promise<void> {
+    async fetchRelatedHighlights(): Promise<void> {
         // save significant sentences in user library, and fetch related existing highlights
         const response = await fetchRetry(
             "https://q5ie5hjr3g.execute-api.us-east-2.amazonaws.com/default/related",

@@ -56,16 +56,28 @@ export function renderHighlightsLayer(enablePageView: () => void, enhanceActive:
         preparePageView();
         enablePageView();
     }
-    smartHighlightsModifier.parseUnclutteredArticle().then((isArticle) => {
-        if (isArticle && !enhanceActive) {
-            renderArticleBadge(
-                smartHighlightsModifier.keyPointsCount,
-                smartHighlightsModifier.relatedCount,
-                smartHighlightsModifier.disableAnnotations.bind(smartHighlightsModifier),
-                enablePageViewInner
-            );
+
+    async function fetchHighlights() {
+        const isArticle = await smartHighlightsModifier.parseUnclutteredArticle();
+        if (!isArticle || enhanceActive) {
+            return;
         }
-    });
+
+        renderArticleBadge(
+            smartHighlightsModifier.keyPointsCount,
+            smartHighlightsModifier.relatedCount,
+            smartHighlightsModifier.disableAnnotations.bind(smartHighlightsModifier),
+            enablePageViewInner
+        );
+
+        await smartHighlightsModifier.fetchRelatedHighlights();
+
+        updateArticleBadge(
+            smartHighlightsModifier.keyPointsCount,
+            smartHighlightsModifier.relatedCount
+        );
+    }
+    fetchHighlights();
 
     return preparePageView;
 }
@@ -117,6 +129,7 @@ export function renderHighlightsLayer(enablePageView: () => void, enhanceActive:
 //     });
 // }
 
+let articleBadgeComponent: ArticleBadgeSvelte;
 function renderArticleBadge(
     keyPointsCount: number,
     relatedCount: number,
@@ -127,7 +140,7 @@ function renderArticleBadge(
     container.id = "lindy-article-badge";
     document.documentElement.appendChild(container);
 
-    new ArticleBadgeSvelte({
+    articleBadgeComponent = new ArticleBadgeSvelte({
         target: container.attachShadow({ mode: "open" }),
         props: {
             keyPointsCount,
@@ -149,4 +162,10 @@ function renderArticleBadge(
             },
         },
     });
+}
+
+function updateArticleBadge(keyPointsCount: number, relatedCount: number) {
+    if (articleBadgeComponent) {
+        articleBadgeComponent.$set({ keyPointsCount, relatedCount });
+    }
 }
