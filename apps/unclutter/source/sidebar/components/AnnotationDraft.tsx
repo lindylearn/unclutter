@@ -110,7 +110,7 @@ function AnnotationDraft({
             ref={ref}
         >
             <TextareaAutosize
-                className="w-full select-none resize-none bg-transparent align-top outline-none placeholder:select-none placeholder:text-stone-500 placeholder:opacity-50"
+                className="w-full select-none resize-none overflow-hidden bg-transparent align-top outline-none placeholder:select-none placeholder:text-stone-500 placeholder:opacity-50"
                 placeholder={"What to remember?"}
                 // placeholder={localAnnotation.tags
                 //     ?.slice(0, 3)
@@ -127,14 +127,14 @@ function AnnotationDraft({
                     if (!localAnnotation.text && (e.key === "Backspace" || e.key === "Delete")) {
                         deleteHide();
                     }
-                    if (!localAnnotation.text && e.key === "Tab" && question) {
-                        updateAnnotationLocalFirst({
-                            ...localAnnotation,
-                            text: question,
-                        });
-                        e.preventDefault();
-                        e.stopPropagation();
-                    }
+                    // if (!localAnnotation.text && e.key === "Tab" && question) {
+                    //     updateAnnotationLocalFirst({
+                    //         ...localAnnotation,
+                    //         text: question,
+                    //     });
+                    //     e.preventDefault();
+                    //     e.stopPropagation();
+                    // }
                 }}
                 minRows={2}
                 maxRows={6}
