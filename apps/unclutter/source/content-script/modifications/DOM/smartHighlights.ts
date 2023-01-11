@@ -46,6 +46,28 @@ export default class SmartHighlightsModifier implements PageModifier {
 
     constructor(onHighlightClick: (range: Range, related: RelatedHighlight[]) => void = null) {
         this.onHighlightClick = onHighlightClick;
+
+        window.addEventListener("message", (event) => this.handleMessage(event.data || {}));
+    }
+
+    private handleMessage(message: any) {
+        if (message.type === "sendSmartHighlightsToSidebar") {
+            // sent from AnnotationsModifier once sidebar is ready
+            const sidebarIframe = document.getElementById(
+                "lindy-annotations-bar"
+            ) as HTMLIFrameElement;
+            if (sidebarIframe && this.annotations.length > 0) {
+                sendIframeEvent(sidebarIframe, {
+                    event: "setInfoAnnotations",
+                    annotations: this.annotations,
+                });
+                sendIframeEvent(sidebarIframe, {
+                    event: "changedDisplayOffset",
+                    offsetById: this.offsetById,
+                    offsetEndById: this.offsetEndById,
+                });
+            }
+        }
     }
 
     annotations: LindyAnnotation[] = [];
@@ -340,13 +362,13 @@ export default class SmartHighlightsModifier implements PageModifier {
         return container;
     }
 
+    // save last offsets to send to sidebar once requested
+    private offsetById: { [id: string]: number } = {};
+    private offsetEndById: { [id: string]: number } = {};
     private paintAllAnnotations() {
         console.log(`Painting ${this.annotationState.length} smart annotations`);
 
         // update sidebar annotation offsets
-        const offsetById = {};
-        const offsetEndById = {};
-
         this.annotationState.forEach(({ invalid, sentence, container, range }, i) => {
             if (invalid) {
                 return;
@@ -374,18 +396,18 @@ export default class SmartHighlightsModifier implements PageModifier {
 
                 sentence.related.forEach((r, i) => {
                     const annotationId = `${sentence.id}_${i}`;
-                    offsetById[annotationId] = displayOffset;
-                    offsetEndById[annotationId] = displayOffsetEnd;
+                    this.offsetById[annotationId] = displayOffset;
+                    this.offsetEndById[annotationId] = displayOffsetEnd;
                 });
             }
         });
 
         const sidebarIframe = document.getElementById("lindy-annotations-bar") as HTMLIFrameElement;
-        if (sidebarIframe && Object.keys(offsetById).length > 0) {
+        if (sidebarIframe && Object.keys(this.offsetById).length > 0) {
             sendIframeEvent(sidebarIframe, {
                 event: "changedDisplayOffset",
-                offsetById,
-                offsetEndById,
+                offsetById: this.offsetById,
+                offsetEndById: this.offsetEndById,
             });
         }
     }

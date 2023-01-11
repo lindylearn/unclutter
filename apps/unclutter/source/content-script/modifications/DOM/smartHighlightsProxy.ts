@@ -16,6 +16,8 @@ export default class SmartHighlightsProxy implements PageModifier {
     }
 
     private handleMessage(message: any) {
+        // "setInfoAnnotations" and "changedDisplayOffset" sidebar events sent directly from smartHighlights.ts
+
         if (message.type === "clickSmartHighlight") {
             _createAnnotationFromSelection(
                 (annotation) => {
@@ -29,21 +31,4 @@ export default class SmartHighlightsProxy implements PageModifier {
             );
         }
     }
-
-    // setInfoAnnotations() {
-    //     window.postMessage({ type: "getRelatedHighlights" }, "*");
-    // }
-
-    // if (this.annotationsModifier?.sidebarIframe) {
-    //     sendIframeEvent(this.annotationsModifier.sidebarIframe, {
-    //         event: "setSummaryAnnotation",
-    //         summaryAnnotation: createAnnotation(window.location.href, null, {
-    //             id: generateId(),
-    //             platform: "summary",
-    //             text: this.articleSummary,
-    //             displayOffset: 0,
-    //             displayOffsetEnd: 0,
-    //         }),
-    //     });
-    // }
 }
