@@ -48,11 +48,17 @@ export function annotationReducer(
                 }
             });
         case "changeDisplayOffsets":
-            return annotations.map((a) => ({
-                ...a,
-                displayOffset: mutation.offsetById[a.id],
-                displayOffsetEnd: mutation.offsetEndById[a.id],
-            }));
+            return (
+                annotations
+                    // null to remove hidden annotations, e.g. from smartHighlights.ts
+                    // but don't remove annotations with no present offsets, as udpate from different files
+                    .filter((a) => mutation.offsetById[a.id] !== null)
+                    .map((a) => ({
+                        ...a,
+                        displayOffset: mutation.offsetById[a.id] || a.displayOffset,
+                        displayOffsetEnd: mutation.offsetEndById[a.id] || a.displayOffsetEnd,
+                    }))
+            );
         case "focusAnnotation":
             return annotations.map((a) => ({
                 ...a,
@@ -115,6 +121,7 @@ export function handleWindowEventFactory(
                 annotations: displayedAnnotations,
             });
         } else if (data.event === "changedDisplayOffset") {
+            console.log("changedDisplayOffsets", data.offsetById);
             mutateAnnotations({
                 action: "changeDisplayOffsets",
                 offsetById: data.offsetById,

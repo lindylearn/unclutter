@@ -70,14 +70,16 @@ export function updateOffsetsOnHeightChange(
         if (!sidebarIframe.contentWindow) {
             return;
         }
-        console.info(`page resized, recalculating annotation offsets...`);
+        console.info(`Page resized, recalculating annotation offsets...`);
 
-        // notifies of node position change -- works for anchored highlights and background smart highlight
+        // notifies of node position change
+        // smart highlights handled seperately in smartHighlights.ts
         const highlightNodes = [
-            ...document.body.querySelectorAll(
-                "lindy-highlight, a.lindy-link-info, .lindy-smart-highlight"
-            ),
-        ];
+            ...document.body.querySelectorAll("lindy-highlight, a.lindy-link-info"),
+        ] as HTMLElement[];
+        if (highlightNodes.length === 0) {
+            return;
+        }
 
         const [offsetById, offsetEndById] = getHighlightOffsets(highlightNodes);
         sendIframeEvent(sidebarIframe, {
