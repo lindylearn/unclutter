@@ -1015,6 +1015,7 @@
     ],
     "swrfernsehen.de": [".container.breadcrumbs", ".sharing", "#footer"],
     "tarjomaan.com": ["#head_div1", "#header"],
+    "techdirt.com": [".details"],
     "technologyreview.com": [
         "#piano__post_body-desktop-1",
         "#piano__post_body-desktop-2"
