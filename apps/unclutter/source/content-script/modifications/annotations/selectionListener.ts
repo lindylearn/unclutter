@@ -116,6 +116,7 @@ function _isSelectionBackwards(sel: Selection) {
 }
 
 function _expandRangeToWordBoundary(range: Range, direction: "forwards" | "backwards") {
+    const boundaryChars = ".;!?—".split("");
     try {
         if (direction === "forwards") {
             let wordEnd = range.endOffset; // exclusive
@@ -123,30 +124,25 @@ function _expandRangeToWordBoundary(range: Range, direction: "forwards" | "backw
             while (
                 nodeValue &&
                 wordEnd < nodeValue.length &&
-                nodeValue[wordEnd].trim() &&
-                nodeValue[wordEnd] !== "—"
+                !boundaryChars.includes(nodeValue[wordEnd - 1])
             ) {
                 wordEnd += 1;
             }
 
             // strip some punctuation
-            if (",:".includes(nodeValue[wordEnd - 1])) {
+            if (",:".includes(nodeValue[wordEnd])) {
                 wordEnd -= 1;
             }
 
-            range.setEnd(range.endContainer, wordEnd);
+            range.setEnd(range.endContainer, Math.min(nodeValue.length, wordEnd));
         } else if (direction === "backwards") {
             let wordStart = range.startOffset;
-            const nodeValue = range.endContainer.nodeValue;
-            while (
-                wordStart - 1 >= 0 &&
-                nodeValue[wordStart - 1]?.trim() &&
-                nodeValue[wordStart - 1] !== "—"
-            ) {
+            const nodeValue = range.startContainer.nodeValue;
+            while (wordStart > 0 && !boundaryChars.includes(nodeValue[wordStart - 2])) {
                 wordStart -= 1;
             }
 
-            range.setStart(range.startContainer, wordStart);
+            range.setStart(range.startContainer, Math.max(0, wordStart));
         }
     } catch (err) {
         console.error(err);
