@@ -49,6 +49,7 @@ export function renderHighlightsLayer(enablePageView: () => void, enhanceActive:
     }
     function setReaderModeSettings() {
         smartHighlightsModifier.isProxyActive = true;
+        smartHighlightsModifier.enableAllSentences = false;
         smartHighlightsModifier.enableHighlightsClick = true;
         smartHighlightsModifier.enableScrollBar = false;
     }
@@ -70,12 +71,11 @@ export function renderHighlightsLayer(enablePageView: () => void, enhanceActive:
             enablePageViewInner
         );
 
-        await smartHighlightsModifier.fetchRelatedHighlights();
-
-        updateArticleBadge(
-            smartHighlightsModifier.keyPointsCount,
-            smartHighlightsModifier.relatedCount
-        );
+        // await smartHighlightsModifier.fetchRelatedHighlights();
+        // updateArticleBadge(
+        //     smartHighlightsModifier.keyPointsCount,
+        //     smartHighlightsModifier.relatedCount
+        // );
     }
     fetchHighlights();
 

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import type { LindyAnnotation } from "../../common/annotations/create";
 import Annotation from "./Annotation";
 import AnnotationDraft from "./AnnotationDraft";
@@ -14,30 +14,50 @@ interface AnnotationThreadProps {
 }
 
 function AnnotationThread(props: AnnotationThreadProps) {
-    const Component = props.annotation.isMyAnnotation ? AnnotationDraft : Annotation;
+    const [related, setRelated] = useState<LindyAnnotation[]>();
+    useEffect(() => {
+        if (props.annotation.isMyAnnotation && props.annotation.focused) {
+            fetch("https://q5ie5hjr3g.execute-api.us-east-2.amazonaws.com/default/related", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    title: "",
+                    url: props.annotation.url,
+                    highlights: [props.annotation.quote_text],
+                    score_threshold: 0.4,
+                    save_highlights: false, // testing
+                }),
+            }).then((r) => r.json().then((r) => setRelated(r.related[0])));
+        }
+    }, []);
+
+    const deleteHide = () => props.deleteHideAnnotation(props.annotation, null);
+
     return (
         <>
-            <Component
-                {...props}
-                deleteHide={() => props.deleteHideAnnotation(props.annotation, null)}
-            />
+            {!props.annotation.isMyAnnotation && <Annotation {...props} deleteHide={deleteHide} />}
+            {props.annotation.isMyAnnotation && (
+                <AnnotationDraft {...props} deleteHide={deleteHide} />
+            )}
 
-            {/* {props.annotation.relatedAnnotations?.length > 0 && (
+            {related?.length > 0 && (
                 <div className="mt-1 flex flex-col gap-1">
-                    {props.annotation.relatedAnnotations?.slice(0, 3).map((r: any) => (
+                    {related?.slice(0, 2).map((r: any) => (
                         <Annotation
                             key={r.id}
                             {...props}
                             annotation={{
-                                ...props.annotation,
                                 ...r,
-                                text: r.excerpt + r.text,
+                                platform: "related",
+                                relatedId: props.annotation.id,
                             }}
                             deleteHide={() => props.deleteHideAnnotation(props.annotation, null)}
                         />
                     ))}
                 </div>
-            )} */}
+            )}
         </>
     );
 }

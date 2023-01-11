@@ -377,6 +377,14 @@ export default class SmartHighlightsModifier implements PageModifier {
                 return;
             }
 
+            if (
+                !sentence.related &&
+                !this.enableAllSentences &&
+                sentence.score < this.scoreThreshold
+            ) {
+                return;
+            }
+
             const containerRect = container.getBoundingClientRect();
             this.annotationState[i].paintedElements?.forEach((e) => e.remove());
 
@@ -632,10 +640,10 @@ export default class SmartHighlightsModifier implements PageModifier {
         range: Range,
         sentence: RankedSentence
     ): HTMLElement[] {
-        // const color = "rgba(250, 204, 21, 1.0)";
-        const color: string = sentence.related
-            ? "rgba(168, 85, 247, 1.0)"
-            : "rgba(250, 204, 21, 1.0)";
+        const color = "rgba(250, 204, 21, 1.0)";
+        // const color: string = sentence.related
+        //     ? "rgba(168, 85, 247, 1.0)"
+        //     : "rgba(250, 204, 21, 1.0)";
         // const color: string = getRandomLightColor(sentence.sentence);
 
         let score = sentence.score >= this.scoreThreshold ? sentence.score : 0;
@@ -693,8 +701,7 @@ export default class SmartHighlightsModifier implements PageModifier {
 
             if (this.enableHighlightsClick || (sentence.related && !this.isProxyActive)) {
                 const clickNode = node.cloneNode() as HTMLElement;
-                clickNode.style.setProperty("background", "transparent", "important");
-                clickNode.style.setProperty("cursor", "pointer", "important");
+                clickNode.className = "lindy-smart-highlight-click";
                 clickNode.style.setProperty("z-index", `1001`, "important");
 
                 clickNode.onclick = (e) => this.onRangeClick(e, range, sentence.related);

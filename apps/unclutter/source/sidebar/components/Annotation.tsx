@@ -1,6 +1,6 @@
 import React from "react";
 import type { LindyAnnotation } from "../../common/annotations/create";
-import { drawFromArray } from "../../common/annotations/styling";
+import { drawFromArray, getRandomColor } from "../../common/annotations/styling";
 import { reportEventContentScript } from "@unclutter/library-components/dist/common/messaging";
 
 interface AnnotationProps {
@@ -33,11 +33,13 @@ function Annotation({ annotation, heightLimitPx }: AnnotationProps) {
 
     let color: string;
     if (platform === "info") {
-        color = `rgba(168, 85, 247, ${0.8 * score ** 3})`;
+        color = `rgba(250, 204, 21, ${0.8 * score ** 3})`;
     } else if (platform === "hn") {
         color = "rgba(255, 102, 0, 0.5)";
     } else if (platform === "h") {
         color = "rgba(189, 28, 43, 0.5)";
+    } else if (platform === "related") {
+        color = getRandomColor(annotation.relatedId);
     }
 
     return (
@@ -60,7 +62,7 @@ function Annotation({ annotation, heightLimitPx }: AnnotationProps) {
                     WebkitLineClamp: Math.min(
                         10,
                         // heightLimitPx ? Math.floor((heightLimitPx - 6 * 2 - 20) / 20) : Infinity,
-                        4
+                        3
                     ),
                     WebkitBoxOrient: "vertical",
                     overflow: "hidden",
@@ -85,7 +87,7 @@ function Annotation({ annotation, heightLimitPx }: AnnotationProps) {
             </div>
 
             <div className="annotation-bar font-title relative flex select-none items-center gap-2 overflow-hidden whitespace-nowrap">
-                {platform === "info" && (
+                {(platform === "info" || platform === "related") && (
                     <img
                         className="w-4 shrink-0 rounded-sm"
                         src={`https://www.google.com/s2/favicons?sz=128&domain=https://${domain}`}

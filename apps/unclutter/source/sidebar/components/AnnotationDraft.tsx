@@ -69,31 +69,31 @@ function AnnotationDraft({
         }
     }
 
-    const [question, setQuestion] = useState<string>();
+    // const [question, setQuestion] = useState<string>();
     // useEffect(() => {
-    // if (!annotation.text) {
-    //     ky.post("https://assistant-two.vercel.app/api/question", {
-    //         json: {
-    //             text: annotation.quote_text,
-    //         },
-    //     })
-    //         .json()
-    //         .then((question: any) => setQuestion(question));
-    // }
-    // if (!annotation.tags || annotation.tags.length === 0) {
-    //     ky.post("https://assistant-two.vercel.app/api/tag", {
-    //         json: {
-    //             text: annotation.quote_text.replace("\n", " "),
-    //         },
-    //     })
-    //         .json()
-    //         .then((tags: any) => {
-    //             updateAnnotationLocalFirst({
-    //                 ...localAnnotation,
-    //                 tags,
+    //     // if (!annotation.text) {
+    //     //     ky.post("https://assistant-two.vercel.app/api/question", {
+    //     //         json: {
+    //     //             text: annotation.quote_text,
+    //     //         },
+    //     //     })
+    //     //         .json()
+    //     //         .then((question: any) => setQuestion(question));
+    //     // }
+    //     if (!annotation.tags || annotation.tags.length === 0) {
+    //         ky.post("https://assistant-two.vercel.app/api/tag", {
+    //             json: {
+    //                 text: annotation.quote_text.replace("\n", " "),
+    //             },
+    //         })
+    //             .json()
+    //             .then((tags: any) => {
+    //                 updateAnnotationLocalFirst({
+    //                     ...localAnnotation,
+    //                     tags,
+    //                 });
     //             });
-    //         });
-    // }
+    //     }
     // }, []);
 
     return (
@@ -111,7 +111,7 @@ function AnnotationDraft({
         >
             <TextareaAutosize
                 className="w-full select-none resize-none bg-transparent align-top outline-none placeholder:select-none placeholder:text-stone-500 placeholder:opacity-50"
-                placeholder={question || "What to remember?"}
+                placeholder={"What to remember?"}
                 // placeholder={localAnnotation.tags
                 //     ?.slice(0, 3)
                 //     .map((t) => `#${t.replace(" ", "-")}`)
@@ -136,7 +136,7 @@ function AnnotationDraft({
                         e.stopPropagation();
                     }
                 }}
-                minRows={3}
+                minRows={2}
                 maxRows={6}
                 ref={inputRef}
                 onFocus={() => onHoverUpdate(true)}
