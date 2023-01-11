@@ -142,6 +142,11 @@
         ".skiplink__hide-until-focus",
         ".postr-recirc.postr-recirc--citylab.paywall"
     ],
+    "bloomberglinea.com": [
+        ".hide-container",
+        ".new-blocks-wrap",
+        ".heading__StyledHeading-sc-1m7zxnp-0.dzjSfh"
+    ],
     "bostonherald.com": [".connext-modal-backdrop.fade"],
     "builtin.com": [
         ".field.field--name-field-oc-name.field--type-string.field--label-hidden.field__item",
