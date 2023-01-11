@@ -108,7 +108,7 @@ html.pageview.pageview > body {
     /* box-shadow: 0.25em 0 0 var(--annotation-color), -0.25em 0 0 var(--annotation-color) !important; */
 }
 .lindy-highlight.lindy-hover {
-    background-color: var(--darker-annotation-color) !important;
+    /* background-color: var(--darker-annotation-color) !important; */
     /* box-shadow: 0.25em 0 0 var(--darker-annotation-color), -0.25em 0 0 var(--darker-annotation-color) !important; */
 }
 
