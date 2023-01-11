@@ -473,7 +473,7 @@ export default class TextContainerModifier implements PageModifier {
                 ${this.usedTextElementSelector}, 
                 div,
                 ${globalHeadingSelector}
-            ) {
+            ):not(.lindy-smart-highlight) {
                 width: 100% !important;
                 min-width: 0 !important;
                 min-height: 0 !important;
@@ -579,7 +579,8 @@ export default class TextContainerModifier implements PageModifier {
             ${globalTextElementSelector},
             .${lindyMainContentContainerClass}, 
             .${lindyImageContainerClass}, 
-            .${lindyHeadingContainerClass}
+            .${lindyHeadingContainerClass},
+            .lindy-smart-highlight
         ) {
             display: none !important;
         }
