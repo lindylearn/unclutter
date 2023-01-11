@@ -203,7 +203,6 @@ export default class SmartHighlightsModifier implements PageModifier {
         });
 
         // paint again including related data
-        this.disableAnnotations();
         this.enableAnnotations();
     }
 
@@ -219,7 +218,15 @@ export default class SmartHighlightsModifier implements PageModifier {
     enableAnnotations() {
         this.createContainers();
 
+        // ensure clean state
+        // TODO repaint only changed (e.g. after related fetch)
+        this.annotationState.forEach(({ paintedElements }) => {
+            paintedElements?.forEach((e) => e.remove());
+        });
         this.annotations = [];
+        this.annotationState = [];
+        this.resizeObserver?.disconnect();
+
         this.paragraphs.forEach((paragraph, index) => {
             const rankedSentences = this.rankedSentencesByParagraph?.[index];
             if (!rankedSentences) {
@@ -527,6 +534,10 @@ export default class SmartHighlightsModifier implements PageModifier {
 
     private scrollbarContainer: HTMLElement;
     createContainers() {
+        if (this.scrollbarContainer) {
+            return;
+        }
+
         this.scrollbarContainer = document.createElement("div");
         this.scrollbarContainer.className = "smart-highlight-scrollbar";
         this.scrollbarContainer.style.setProperty("position", "relative", "important");
