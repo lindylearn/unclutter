@@ -56,10 +56,15 @@ export default class SmartHighlightsModifier implements PageModifier {
         // parse article paragraphs from page
         const paragraphTexts: string[] = [];
         document.querySelectorAll("p, font, li").forEach((paragraph: HTMLElement) => {
-            // check text content
-            const textContent = paragraph.textContent;
-            const cleanTextContent = textContent?.replace(/[\s\n]+/g, " ").trim();
-            if (!textContent || cleanTextContent.length < 200) {
+            // Ignore invisible nodes
+            if (paragraph.offsetHeight === 0) {
+                return false;
+            }
+
+            // check text content (textContent to anchor range correctly)
+            const rawText = paragraph.textContent;
+            const cleanText = rawText?.replace(/[\s\n]+/g, " ").trim();
+            if (!rawText || cleanText.length < 200) {
                 return;
             }
 
@@ -83,7 +88,7 @@ export default class SmartHighlightsModifier implements PageModifier {
 
             this.paragraphs.push(paragraph);
             // use raw text content to anchor sentences correctly later
-            paragraphTexts.push(textContent);
+            paragraphTexts.push(rawText);
         });
 
         if (paragraphTexts.length === 0 || paragraphTexts.length >= 200) {
@@ -97,6 +102,7 @@ export default class SmartHighlightsModifier implements PageModifier {
             event: "getHeatmap",
             paragraphs: paragraphTexts,
         });
+        // console.log(this.rankedSentencesByParagraph);
 
         // paint highlights immediately once heatmap ready
         this.enableAnnotations();
@@ -163,7 +169,7 @@ export default class SmartHighlightsModifier implements PageModifier {
         relatedPerHighlight.forEach((related, highlightIndex) => {
             // filter related now
             // related = related.filter((r) => r.score2 >= 0.5 || r.score >= -5);
-            related = related.filter((r) => r.score >= 0.5 && r.score2 > 0.4);
+            related = related.filter((r) => r.score >= 0.5 && r.score2 !== 1);
             if (related.length === 0) {
                 return;
             }
@@ -196,8 +202,6 @@ export default class SmartHighlightsModifier implements PageModifier {
             if (!rankedSentences) {
                 return;
             }
-
-            // console.log(rankedSentences);
 
             // consider related anchors independently
             const textFragments: RankedSentence[] = [];
@@ -234,7 +238,6 @@ export default class SmartHighlightsModifier implements PageModifier {
                     }
                 }
             });
-            // console.log(textFragments);
 
             const container = this.getParagraphAnchor(paragraph);
 
@@ -254,23 +257,27 @@ export default class SmartHighlightsModifier implements PageModifier {
                 }
 
                 if (sentence.related) {
-                    sentence.related.slice(0, 2).forEach((r, i) => {
-                        this.annotations.push(
-                            createAnnotation(
-                                window.location.href,
-                                describeAnnotation(document.body, range),
-                                {
-                                    ...r,
-                                    id: `${sentence.id}_${i}`,
-                                    platform: "info",
-                                    infoType: "related",
-                                    score: r.score,
-                                    displayOffset: getNodeOffset(range),
-                                    displayOffsetEnd: getNodeOffset(range, "bottom"),
-                                }
-                            )
-                        );
-                    });
+                    const displayOffset = getNodeOffset(range);
+                    const displayOffsetEnd = getNodeOffset(range, "bottom");
+                    if (displayOffset !== 0) {
+                        sentence.related.slice(0, 2).forEach((r, i) => {
+                            this.annotations.push(
+                                createAnnotation(
+                                    window.location.href,
+                                    describeAnnotation(document.body, range),
+                                    {
+                                        ...r,
+                                        id: `${sentence.id}_${i}`,
+                                        platform: "info",
+                                        infoType: "related",
+                                        score: r.score,
+                                        displayOffset,
+                                        displayOffsetEnd,
+                                    }
+                                )
+                            );
+                        });
+                    }
                 }
 
                 this.annotationState.push({
@@ -280,6 +287,7 @@ export default class SmartHighlightsModifier implements PageModifier {
                 });
             });
         });
+        // console.log(this.annotationState);
 
         // immediate first paint
         this.paintAllAnnotations();
@@ -382,13 +390,10 @@ export default class SmartHighlightsModifier implements PageModifier {
         let currentRange = document.createRange();
         currentRange.setStart(currentElem, 0);
 
-        // debug
-        // if (!paragraph.textContent.includes("discounts")) {
-        //     return [];
-        // }
-        // console.log(paragraph, sentences);
+        // console.log(paragraph.textContent, sentences);
 
         while (ranges.length < sentences.length) {
+            // console.log(currentElem);
             if (!currentElem) {
                 break;
             }
@@ -406,33 +411,33 @@ export default class SmartHighlightsModifier implements PageModifier {
                 currentSentenceLength += 1;
             }
 
-            // console.log({ currentElem });
-
             if (runningTextLength + currentLength < currentSentenceLength) {
-                // console.log("skip", runningTextLength, currentLength, currentSentenceLength);
-
                 // not enough text, skip entire node subtree
+                // console.log("skip", runningTextLength, currentLength, currentSentenceLength);
                 runningTextLength += currentLength;
-                if (currentElem.nextSibling) {
-                    // next sibling
-                    currentElem = currentElem.nextSibling as HTMLElement;
-                } else if (!paragraph.contains(currentElem.parentElement?.nextSibling)) {
-                    // end of paragraph (likely count error)
-                    // console.log("break");
 
-                    if (currentElem.parentElement?.nextSibling) {
-                        currentRange.setEndAfter(paragraph);
-                    } else {
-                        // parent may not be defined, e.g. on https://www.theatlantic.com/ideas/archive/2022/12/volodymyr-zelensky-visit-ukraine-united-states/672528/
-                        // how to handle?
+                // get next sibling of closest parent
+                // e.g. not direct parent on https://hardpivot.substack.com/p/why-we-stopped-working-on-athens
+                let nextElem: HTMLElement;
+                while (paragraph.contains(currentElem)) {
+                    if (currentElem.nextSibling) {
+                        nextElem = currentElem.nextSibling as HTMLElement;
+                        break;
                     }
+                    currentElem = currentElem.parentElement as HTMLElement;
+                }
+
+                if (nextElem) {
+                    currentElem = nextElem;
+                } else {
+                    // end of paragraph (likely count error)
+                    // console.log("break", currentElem);
+
+                    // TODO parent not defined, e.g. on https://www.theatlantic.com/ideas/archive/2022/12/volodymyr-zelensky-visit-ukraine-united-states/672528/
+                    currentRange.setEndAfter(paragraph);
 
                     ranges.push(currentRange);
-                    // console.log(currentRange.toString());
                     break;
-                } else {
-                    // next parent sibling
-                    currentElem = currentElem.parentElement?.nextSibling as HTMLElement;
                 }
             } else {
                 if (currentElem.childNodes.length > 0) {
@@ -459,6 +464,7 @@ export default class SmartHighlightsModifier implements PageModifier {
                 }
             }
         }
+        // console.log(ranges.map((r) => r.toString()));
 
         return ranges;
     }
