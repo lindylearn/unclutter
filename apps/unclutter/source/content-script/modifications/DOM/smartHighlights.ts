@@ -270,7 +270,7 @@ export default class SmartHighlightsModifier implements PageModifier {
                                     id: `${sentence.id}_${i}`,
                                     platform: "info",
                                     infoType: "related",
-                                    score: r.score,
+                                    score: sentence.related[0].score + 0.2, // same score for all related
                                 }
                             )
                         );

@@ -110,7 +110,7 @@ function AnnotationDraft({
             ref={ref}
         >
             <TextareaAutosize
-                className="w-full select-none resize-none rounded-md bg-transparent align-top outline-none placeholder:select-none placeholder:text-stone-500 placeholder:opacity-50"
+                className="w-full select-none resize-none bg-transparent align-top outline-none placeholder:select-none placeholder:text-stone-500 placeholder:opacity-50"
                 placeholder={question || "What to remember?"}
                 // placeholder={localAnnotation.tags
                 //     ?.slice(0, 3)

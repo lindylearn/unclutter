@@ -33,7 +33,7 @@ function Annotation({ annotation, heightLimitPx }: AnnotationProps) {
 
     let color: string;
     if (platform === "info") {
-        color = `rgba(250, 204, 21, ${0.8 * (score + 0.2) ** 3})`;
+        color = `rgba(168, 85, 247, ${0.8 * score ** 3})`;
     } else if (platform === "hn") {
         color = "rgba(255, 102, 0, 0.5)";
     } else if (platform === "h") {
@@ -106,7 +106,7 @@ function Annotation({ annotation, heightLimitPx }: AnnotationProps) {
                 {annotation.author && <div className="">{author?.replace("_hn", "")}</div>}
 
                 {annotation.reply_count > 0 && (
-                    <div>
+                    <div className="ml-2">
                         {annotation.reply_count}
                         {annotation.reply_count === 1 ? " reply" : " replies"}
                     </div>
