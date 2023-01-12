@@ -17,7 +17,7 @@
 
 .lindy-page-settings-toprght {
     all: revert !important;
-    position: absolute !important;
+    position: fixed !important;
     top: 0 !important;
     right: 0 !important;
     z-index: 3000 !important;
