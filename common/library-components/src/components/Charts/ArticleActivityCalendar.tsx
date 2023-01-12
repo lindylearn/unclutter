@@ -9,6 +9,7 @@ export function ArticleActivityCalendar({
     articles,
     startWeeksAgo,
     setStartWeeksAgo,
+    enableOverlay = false,
     defaultWeekOverlay,
     reportEvent = () => {},
 }: {
@@ -16,7 +17,8 @@ export function ArticleActivityCalendar({
     articles?: Article[];
     startWeeksAgo: number;
     setStartWeeksAgo: (weeksAgo: number) => void;
-    defaultWeekOverlay: number;
+    enableOverlay?: boolean;
+    defaultWeekOverlay?: number;
     reportEvent?: (event: string, data?: any) => void;
 }) {
     const data = useMemo(() => {
@@ -39,10 +41,11 @@ export function ArticleActivityCalendar({
     }
 
     return (
-        <div className="animate-fadein my-2 mr-2 max-w-[860px]">
+        <div className="animate-fadein max-w-[860px]">
             <ActivityCalendar
                 data={data || []}
-                startWeekOffset={-defaultWeekOverlay - 1}
+                enableOverlay={enableOverlay}
+                startWeekOffset={defaultWeekOverlay ? -defaultWeekOverlay - 1 : undefined}
                 onChangeWeekOffset={changeWeekOffset}
                 theme={getColorLevels(darkModeEnabled)}
                 overlayColor={

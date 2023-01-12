@@ -118,7 +118,8 @@ export interface Props {
     weekStart?: WeekDay;
 
     overlayColor: string;
-    startWeekOffset: number;
+    enableOverlay?: boolean;
+    startWeekOffset?: number;
     onChangeWeekOffset: (offset: number) => void;
 }
 
@@ -142,7 +143,8 @@ export function ActivityCalendar({
     theme: themeProp,
     weekStart = 0, // Sunday
     overlayColor = "rgba(0, 0, 0, 0.5)",
-    startWeekOffset,
+    enableOverlay,
+    startWeekOffset = 0,
     onChangeWeekOffset,
 }: Props) {
     if (loading) {
@@ -314,7 +316,7 @@ export function ActivityCalendar({
     const [diffX, setDiffX] = useState(0);
     const overlayHandleRef = useRef<SVGRectElement>(null);
     useEffect(() => {
-        if (!overlayHandleRef.current) {
+        if (!enableOverlay || !overlayHandleRef.current) {
             return;
         }
 
@@ -463,7 +465,7 @@ export function ActivityCalendar({
             >
                 {!loading && renderLabels()}
                 {renderBlocks()}
-                {renderOverlay()}
+                {enableOverlay && renderOverlay()}
             </svg>
             {renderFooter()}
             {children}

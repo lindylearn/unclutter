@@ -76,6 +76,7 @@ export default function StatsModalTab({
                 darkModeEnabled={darkModeEnabled}
                 startWeeksAgo={startWeeksAgo}
                 setStartWeeksAgo={setStartWeeksAgo}
+                enableOverlay={true}
                 defaultWeekOverlay={defaultWeekOverlay}
                 reportEvent={reportEvent}
             />
