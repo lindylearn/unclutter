@@ -31,7 +31,7 @@ export default function ArticleBottomReview({
     return (
         <div className="bottom-review flex flex-col gap-[8px] text-stone-800 dark:text-[rgb(232,230,227)]">
             <CardContainer>
-                <div className="grid grid-cols-4 gap-4 p-4">
+                <div className="grid grid-cols-4 gap-4">
                     <BigNumber
                         value={1}
                         tag={`saved article`}
@@ -48,16 +48,12 @@ export default function ArticleBottomReview({
                         icon={<ResourceIcon type="links" large />}
                     />
                 </div>
-            </CardContainer>
 
-            <CardContainer>
-                <div className="p-4">
-                    <ArticleActivityCalendar
-                        articles={allArticles}
-                        darkModeEnabled={darkModeEnabled}
-                        // reportEvent={reportEvent}
-                    />
-                </div>
+                <ArticleActivityCalendar
+                    articles={allArticles}
+                    darkModeEnabled={darkModeEnabled}
+                    // reportEvent={reportEvent}
+                />
             </CardContainer>
         </div>
     );
@@ -65,7 +61,7 @@ export default function ArticleBottomReview({
 
 function CardContainer({ children }) {
     return (
-        <div className="relative mx-auto w-[780px] gap-4 overflow-hidden rounded-lg bg-white shadow dark:bg-[#212121]">
+        <div className="relative mx-auto flex w-[780px] flex-col gap-4 overflow-hidden rounded-lg bg-white p-4 shadow dark:bg-[#212121]">
             {children}
         </div>
     );

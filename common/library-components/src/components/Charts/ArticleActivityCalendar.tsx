@@ -3,6 +3,7 @@ import { ActivityCalendar, CalendarData, Level, Theme } from "./ActivityCalendar
 import { eachDayOfInterval, subMonths } from "date-fns";
 
 import { Article } from "../../store";
+import { getWeekStartByLocale } from "weekstart";
 
 export function ArticleActivityCalendar({
     darkModeEnabled,
@@ -21,12 +22,13 @@ export function ArticleActivityCalendar({
     defaultWeekOverlay?: number;
     reportEvent?: (event: string, data?: any) => void;
 }) {
+    const weekStart = useMemo(() => getWeekStartByLocale(navigator.language), []);
     const data = useMemo(() => {
-        if (!articles) {
+        if (!articles || !weekStart) {
             return null;
         }
-        return getActivityData(articles);
-    }, [articles]);
+        return getActivityData(articles, weekStart);
+    }, [articles, weekStart]);
 
     function changeWeekOffset(offset) {
         const newValue = -offset;
@@ -41,7 +43,7 @@ export function ArticleActivityCalendar({
     }
 
     return (
-        <div className="animate-fadein">
+        <div className="animate-fadein mt-[5px]">
             <ActivityCalendar
                 data={data || []}
                 enableOverlay={enableOverlay}
@@ -54,6 +56,7 @@ export function ArticleActivityCalendar({
                 labels={{
                     legend: { less: "Fewer articles read", more: "More" },
                 }}
+                weekStart={weekStart}
                 hideTotalCount
                 loading={data === null}
                 hideColorLegend
@@ -73,8 +76,9 @@ export function ArticleActivityCalendar({
     );
 }
 
-export function getActivityData(articles: Article[]): CalendarData {
+export function getActivityData(articles: Article[], weekStart: number): CalendarData {
     const since = subMonths(new Date(), 10);
+    since.setDate(weekStart); // fill first row
 
     const dateCounts: { [date: string]: number } = {};
     eachDayOfInterval({
