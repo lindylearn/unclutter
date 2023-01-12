@@ -175,7 +175,7 @@
     z-index: 5000 !important;
 
     /* must equal document bottom padding */
-    height: calc(1000px) !important;
+    height: calc(350px) !important;
 
     user-select: none !important;
     contain: strict !important;
@@ -291,7 +291,7 @@
         left: calc(var(--lindy-pagewidth) + 10px + 0px) !important;
     }
     #lindy-info-bottom {
-        margin-left: 15px !important;
-        max-width: calc(100% - 15px) !important;
+        margin-left: 0 !important;
+        max-width: calc(100%) !important;
     }
 }

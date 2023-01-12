@@ -7,7 +7,7 @@ export default function App({ articleId }) {
     const rep = useMemo<ReplicacheProxy>(() => new ReplicacheProxy(), []);
 
     return (
-        <div className="bottom-container font-text relative mt-4">
+        <div className="bottom-container font-text relative mt-[8px]">
             {/* @ts-ignore */}
             <ReplicacheContext.Provider value={rep}>
                 <ArticleBottomReview articleId={articleId} />

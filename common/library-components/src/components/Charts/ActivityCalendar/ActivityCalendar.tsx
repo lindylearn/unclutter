@@ -122,14 +122,14 @@ export interface Props {
 
 export function ActivityCalendar({
     data,
-    blockMargin = 4,
-    blockRadius = 2,
-    blockSize = 12,
+    blockMargin = 5,
+    blockRadius = 5,
+    blockSize = 15,
     children,
     color = undefined,
     dateFormat = "MMM do, yyyy",
     eventHandlers = {},
-    fontSize = 14,
+    fontSize = 16,
     hideColorLegend = false,
     hideMonthLabels = false,
     hideTotalCount = false,
@@ -458,7 +458,7 @@ export function ActivityCalendar({
                 width={width}
                 height={height}
                 viewBox={`0 0 ${width} ${height}`}
-                className="calendar block h-auto max-w-full overflow-visible"
+                className="calendar font-text block h-auto max-w-full overflow-visible"
             >
                 {!loading && renderLabels()}
                 {renderBlocks()}

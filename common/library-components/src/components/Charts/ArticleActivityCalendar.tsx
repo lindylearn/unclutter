@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { ActivityCalendar, CalendarData, Level, Theme } from "./ActivityCalendar";
-import { eachDayOfInterval, subYears } from "date-fns";
+import { eachDayOfInterval, subMonths } from "date-fns";
 
 import { Article } from "../../store";
 
@@ -15,8 +15,8 @@ export function ArticleActivityCalendar({
 }: {
     darkModeEnabled: boolean;
     articles?: Article[];
-    startWeeksAgo: number;
-    setStartWeeksAgo: (weeksAgo: number) => void;
+    startWeeksAgo?: number;
+    setStartWeeksAgo?: (weeksAgo: number) => void;
     enableOverlay?: boolean;
     defaultWeekOverlay?: number;
     reportEvent?: (event: string, data?: any) => void;
@@ -31,7 +31,7 @@ export function ArticleActivityCalendar({
     function changeWeekOffset(offset) {
         const newValue = -offset;
         if (newValue !== startWeeksAgo) {
-            setStartWeeksAgo(newValue);
+            setStartWeeksAgo!(newValue);
             reportEvent("changeStatsTimeWindow", { startWeeksAgo: newValue });
         }
     }
@@ -41,7 +41,7 @@ export function ArticleActivityCalendar({
     }
 
     return (
-        <div className="animate-fadein max-w-[860px]">
+        <div className="animate-fadein">
             <ActivityCalendar
                 data={data || []}
                 enableOverlay={enableOverlay}
@@ -54,7 +54,6 @@ export function ArticleActivityCalendar({
                 labels={{
                     legend: { less: "Fewer articles read", more: "More" },
                 }}
-                blockRadius={3}
                 hideTotalCount
                 loading={data === null}
                 hideColorLegend
@@ -75,7 +74,7 @@ export function ArticleActivityCalendar({
 }
 
 export function getActivityData(articles: Article[]): CalendarData {
-    const since = subYears(new Date(), 1);
+    const since = subMonths(new Date(), 10);
 
     const dateCounts: { [date: string]: number } = {};
     eachDayOfInterval({

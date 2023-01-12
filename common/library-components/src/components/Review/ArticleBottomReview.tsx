@@ -1,15 +1,16 @@
 import React, { useContext, useEffect, useState } from "react";
-import ky from "ky";
 import { Annotation, Article, ReplicacheContext, useSubscribe } from "../../store";
-import { Highlight } from "../Highlight";
-import { ReviewChart } from "./ReviewChart";
 import { ArticleActivityCalendar } from "../Charts";
-import { getWeekStart, subtractWeeks } from "../../common";
+import { BigNumber, ResourceIcon } from "../Modal";
 
 export default function ArticleBottomReview({ articleId }: { articleId: string }) {
     const rep = useContext(ReplicacheContext);
 
-    const defaultWeekOverlay = 3;
+    const annotations: Annotation[] = useSubscribe(
+        rep,
+        rep?.subscribe.listArticleAnnotations(articleId),
+        []
+    );
 
     const [allArticles, setAllArticles] = useState<Article[]>();
     const [allAnnotations, setAllAnnotations] = useState<Annotation[]>();
@@ -21,28 +22,47 @@ export default function ArticleBottomReview({ articleId }: { articleId: string }
         rep.query.listAnnotations().then(setAllAnnotations);
     }, [rep]);
 
-    const [start, setStart] = useState<Date>();
-    const [end, setEnd] = useState<Date>(new Date());
-    const [startWeeksAgo, setStartWeeksAgo] = useState(defaultWeekOverlay);
-    useEffect(() => {
-        const end = getWeekStart(new Date());
-        const start = subtractWeeks(end, startWeeksAgo - 1);
-        setStart(start);
-    }, [startWeeksAgo]);
-
     const darkModeEnabled = false;
 
     return (
-        <div className="bottom-review flex flex-col gap-4 text-stone-800 dark:text-[rgb(232,230,227)]">
-            <div className="relative mx-auto flex w-[780px] flex-col gap-4 overflow-hidden rounded-lg bg-white p-4 shadow dark:bg-[#212121]">
-                <ArticleActivityCalendar
-                    articles={allArticles}
-                    darkModeEnabled={darkModeEnabled}
-                    startWeeksAgo={startWeeksAgo}
-                    setStartWeeksAgo={setStartWeeksAgo}
-                    // reportEvent={reportEvent}
-                />
-            </div>
+        <div className="bottom-review flex flex-col gap-[8px] text-stone-800 dark:text-[rgb(232,230,227)]">
+            <CardContainer>
+                <div className="grid grid-cols-4 gap-4 p-4">
+                    <BigNumber
+                        value={1}
+                        tag={`saved article`}
+                        icon={<ResourceIcon type="articles_completed" large />}
+                    />
+                    <BigNumber
+                        value={annotations.length}
+                        tag={`saved highlights`}
+                        icon={<ResourceIcon type="highlights" large />}
+                    />
+                    <BigNumber
+                        value={annotations.length * 2}
+                        tag={`connected ideas`}
+                        icon={<ResourceIcon type="links" large />}
+                    />
+                </div>
+            </CardContainer>
+
+            <CardContainer>
+                <div className="p-4">
+                    <ArticleActivityCalendar
+                        articles={allArticles}
+                        darkModeEnabled={darkModeEnabled}
+                        // reportEvent={reportEvent}
+                    />
+                </div>
+            </CardContainer>
+        </div>
+    );
+}
+
+function CardContainer({ children }) {
+    return (
+        <div className="relative mx-auto w-[780px] gap-4 overflow-hidden rounded-lg bg-white shadow dark:bg-[#212121]">
+            {children}
         </div>
     );
 }

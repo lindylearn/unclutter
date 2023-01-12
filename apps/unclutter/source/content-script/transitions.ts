@@ -245,7 +245,7 @@ export default class TransitionManager implements PageModifier {
         this.loggingModifier.afterTransitionInDone(); // wait until feed likely parsed
 
         // this.overlayManager.insertRenderBottomContainer();
-        // this.reviewModeModifier.afterTransitionIn();
+        this.reviewModeModifier.afterTransitionIn();
     }
 
     beforeTransitionOut() {
