@@ -54,7 +54,7 @@ export async function anchorAnnotations(annotations: LindyAnnotation[]) {
         })
     );
 
-    // insertMarginBar(anchoredAnnotations, sidebarIframe);
+    // insertMarginBar(anchoredAnnotations);
 
     return anchoredAnnotations;
 }
@@ -125,9 +125,11 @@ export function paintHighlight(
 }
 
 export function insertMarginBar(
-    anchoredAnnotations: LindyAnnotation[],
-    sidebarIframe: HTMLIFrameElement
+    anchoredAnnotations: LindyAnnotation[]
+    // sidebarIframe: HTMLIFrameElement
 ) {
+    document.getElementById("lindy-annotations-marginbar")?.remove();
+
     const container = document.createElement("div");
     container.className = overrideClassname;
     container.id = "lindy-annotations-marginbar";
@@ -142,40 +144,42 @@ export function insertMarginBar(
         const barElement = document.createElement("div");
         barElement.style.top = `${annotation.displayOffset - bodyOffset}px`;
 
+        // color
+        // const annotationColor =
+        //     annotation.platform === "hn" ? "rgba(255, 102, 0, 0.5)" : "rgba(189, 28, 43, 0.5)";
+        // const darkerAnnotationColor = annotationColor.replace("0.5", "0.8");
+        // barElement.style.setProperty(
+        //     "--darker-annotation-color",
+        //     darkerAnnotationColor,
+        //     "important"
+        // );
+
         // dot style
         // barElement.className = "lindy-marginbar-dot";
 
         // bar style
-        // barElement.style.height = `${
-        //     annotation.displayOffsetEnd - annotation.displayOffset
-        // }px`;
+        // barElement.style.height = `${annotation.displayOffsetEnd - annotation.displayOffset}px`;
+        // barElement.style.width = "8px";
+        // barElement.style.background = "var(--darker-annotation-color)";
 
         // text style
-        // barElement.innerText = `${index + 1}`;
+        // barElement.innerText = `${Math.ceil(Math.random() * 5)}`;
 
         // icon style
         barElement.style.width = "16px";
+        barElement.style.height = "16px";
         const img = document.createElement("img");
-        img.src = browser.runtime.getURL("assets/link.svg");
+        img.src = browser.runtime.getURL("assets/related.svg");
         barElement.appendChild(img);
 
-        const annotationColor =
-            annotation.platform === "hn" ? "rgba(255, 102, 0, 0.5)" : "rgba(189, 28, 43, 0.5)";
-        const darkerAnnotationColor = annotationColor.replace("0.5", "0.8");
-        barElement.style.setProperty(
-            "--darker-annotation-color",
-            darkerAnnotationColor,
-            "important"
-        );
+        // barElement.onmouseenter = () => {
+        //     hoverUpdateHighlight(annotation, true);
 
-        barElement.onmouseenter = () => {
-            hoverUpdateHighlight(annotation, true);
-
-            sendIframeEvent(sidebarIframe, {
-                event: "focusAnnotation",
-                id: annotation.id,
-            });
-        };
+        //     sendIframeEvent(sidebarIframe, {
+        //         event: "focusAnnotation",
+        //         id: annotation.id,
+        //     });
+        // };
 
         container.appendChild(barElement);
     });

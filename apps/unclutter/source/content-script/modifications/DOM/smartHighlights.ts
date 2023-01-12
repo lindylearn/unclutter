@@ -6,6 +6,7 @@ import { describe as describeAnnotation } from "../../../common/annotator/anchor
 import { PageModifier, trackModifierExecution } from "../_interface";
 import { getNodeOffset } from "../../../common/annotations/offset";
 import { sendIframeEvent } from "../../../common/reactIframe";
+// import { insertMarginBar } from "../annotations/highlightsApi";
 
 export interface RankedSentence {
     id: string;
@@ -415,11 +416,26 @@ export default class SmartHighlightsModifier implements PageModifier {
 
         const sidebarIframe = document.getElementById("lindy-annotations-bar") as HTMLIFrameElement;
         if (sidebarIframe && Object.keys(this.offsetById).length > 0) {
-            sendIframeEvent(sidebarIframe, {
-                event: "changedDisplayOffset",
-                offsetById: this.offsetById,
-                offsetEndById: this.offsetEndById,
-            });
+            // sendIframeEvent(sidebarIframe, {
+            //     event: "changedDisplayOffset",
+            //     offsetById: this.offsetById,
+            //     offsetEndById: this.offsetEndById,
+            // });
+            // insertMarginBar(
+            //     this.annotations
+            //         .map((a) => {
+            //             // take only first
+            //             if (!a.id.endsWith("_0")) {
+            //                 return null;
+            //             }
+            //             return {
+            //                 ...a,
+            //                 displayOffset: this.offsetById[a.id],
+            //                 displayOffsetEnd: this.offsetEndById[a.id],
+            //             };
+            //         })
+            //         .filter((e) => e !== null)
+            // );
         }
     }
 
