@@ -2,15 +2,18 @@ import React from "react";
 import type { LindyAnnotation } from "../../common/annotations/create";
 import { drawFromArray, getRandomColor } from "../../common/annotations/styling";
 import { reportEventContentScript } from "@unclutter/library-components/dist/common/messaging";
+import clsx from "clsx";
 
 interface AnnotationProps {
+    className?: string;
+    style?: React.CSSProperties;
     annotation: LindyAnnotation;
     heightLimitPx?: number;
 
     deleteHide: () => void;
 }
 
-function Annotation({ annotation, heightLimitPx }: AnnotationProps) {
+function Annotation({ className, style, annotation, heightLimitPx }: AnnotationProps) {
     const { excerpt, text, platform, infoType, score, author } = annotation;
 
     const sampleDomains = [
@@ -44,10 +47,14 @@ function Annotation({ annotation, heightLimitPx }: AnnotationProps) {
 
     return (
         <div
-            className="annotation relative flex cursor-pointer flex-col gap-2 overflow-hidden rounded-l rounded-r-md p-2 pl-3 text-sm shadow transition-transform hover:scale-[99%]"
+            className={clsx(
+                "annotation relative flex cursor-pointer flex-col gap-2 overflow-hidden rounded-l rounded-r-md p-2 pl-3 text-sm shadow transition-transform hover:scale-[99%]",
+                className
+            )}
             style={{
                 borderLeft: `8px solid ${color}`,
                 maxHeight: heightLimitPx,
+                ...style,
             }}
             onClick={() => {
                 onExpand(annotation);
