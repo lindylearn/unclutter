@@ -5,12 +5,13 @@ import React, {
     useRef,
     useEffect,
     useState,
+    useMemo,
 } from "react";
 import tinycolor, { ColorInput } from "tinycolor2";
 import format from "date-fns/format";
 import getYear from "date-fns/getYear";
 import parseISO from "date-fns/parseISO";
-import type { Day as WeekDay } from "date-fns";
+import { getWeekStartByLocale } from "weekstart";
 
 import { Day, EventHandlerMap, Labels, ReactEvent, SVGRectEventHandler, Theme } from "./types";
 import {
@@ -112,10 +113,6 @@ export interface Props {
      * An object specifying all theme colors explicitly`.
      */
     theme?: Theme;
-    /**
-     * Index of day to be used as start of week. 0 represents Sunday.
-     */
-    weekStart?: WeekDay;
 
     overlayColor: string;
     enableOverlay?: boolean;
@@ -141,7 +138,6 @@ export function ActivityCalendar({
     showWeekdayLabels = false,
     style = {},
     theme: themeProp,
-    weekStart = 0, // Sunday
     overlayColor = "rgba(0, 0, 0, 0.5)",
     enableOverlay,
     startWeekOffset = 0,
@@ -155,6 +151,7 @@ export function ActivityCalendar({
         return null;
     }
 
+    const weekStart = useMemo(() => getWeekStartByLocale(navigator.language), []);
     const weeks = groupByWeeks(data, weekStart);
     const totalCount = data.reduce((sum, day) => sum + day.count, 0);
     const year = getYear(parseISO(data[0]?.date));

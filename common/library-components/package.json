@@ -14,7 +14,8 @@
         "flexsearch": "^0.7.21",
         "jsdom": "^20.0.2",
         "rss-parser": "^3.12.0",
-        "use-resize-observer": "^9.0.2"
+        "use-resize-observer": "^9.0.2",
+        "weekstart": "^1.1.0"
     },
     "peerDependencies": {
         "react": "18.2.0"
