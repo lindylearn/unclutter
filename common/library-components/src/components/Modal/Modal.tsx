@@ -75,9 +75,9 @@ export function LibraryModalPage({
         if (currentArticle) {
             rep?.query.listArticleAnnotations(currentArticle).then((annotations) => {
                 setCurrentAnnotationsCount(annotations.length);
-                if (annotations.length > 0) {
-                    setCurrentTab("highlights");
-                }
+                // if (annotations.length > 0) {
+                //     setCurrentTab("highlights");
+                // }
             });
         }
     }, [rep]);

@@ -44,7 +44,6 @@ export function ArticleGroup({
         (groupKey === "queue"
             ? getActivityColor(3, darkModeEnabled)
             : getRandomLightColor(groupKey, darkModeEnabled));
-    // const unqueuedArticles = articles.filter((a) => !a.is_queued);
 
     const readCount = articles?.filter(
         (a) => a.reading_progress >= readingProgressFullClamp
@@ -99,31 +98,11 @@ export function ArticleGroup({
                         {emptyMessage}
                     </div>
                 )}
-                {groupKey === "queue" && articles.length === 0 && (
+                {!emptyMessage && articles?.length === 0 && emptyListMessage[groupKey] && (
                     <div className="animate-fadein absolute top-0 left-0 flex h-full w-full select-none items-center justify-center">
-                        Drag articles here or use the article right-click menu.
+                        {emptyListMessage[groupKey]}
                     </div>
                 )}
-                {groupKey === "new" && articles.length === 0 && (
-                    <div className="animate-fadein absolute top-0 left-0 flex h-full w-full select-none items-center justify-center">
-                        Follow website feeds to see their new articles here.
-                    </div>
-                )}
-                {groupKey === "past" && articles.length === 0 && (
-                    <div className="animate-fadein absolute top-0 left-0 flex h-full w-full select-none items-center justify-center">
-                        No past feed articles found.
-                    </div>
-                )}
-                {groupKey === "list" && articles.length === 0 && (
-                    <div className="animate-fadein absolute top-0 left-0 flex h-full w-full select-none items-center justify-center">
-                        Open articles with Unclutter to automatically save them.
-                    </div>
-                )}
-                {/* {groupKey !== "queue" && groupKey !== "search" && articles.length === 0 && (
-                    <div className="animate-fadein absolute top-0 left-0 flex h-full w-full select-none items-center justify-center">
-                        All filtered articles are in your reading queue.
-                    </div>
-                )} */}
 
                 {enableDragging ? (
                     <DraggableArticleList
@@ -139,3 +118,12 @@ export function ArticleGroup({
         </div>
     );
 }
+
+const emptyListMessage = {
+    queue: "Drag articles here to read them later.",
+    new: "Follow website feeds to see new articles here.",
+    past: "No past feed articles found.",
+    list: "Open articles with Unclutter to automatically save them.",
+    // uncompleted: "No uncompleted articles found.",
+    // completed: "No completed articles found.",
+};

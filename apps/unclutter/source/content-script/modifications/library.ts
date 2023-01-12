@@ -100,7 +100,7 @@ export default class LibraryModifier implements PageModifier {
 
         // fetch or create article state (even if library UI not enabled)
         this.fetchArticleState(rep);
-        this.fetchFeed(rep);
+        // this.fetchFeed(rep);
     }
 
     async fetchArticleState(rep: ReplicacheProxy) {

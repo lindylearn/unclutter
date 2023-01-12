@@ -144,13 +144,13 @@ function NumberStats({
                 icon={<ResourceIcon type="highlights" large />}
             />
 
-            {(userInfo.onPaidPlan || userInfo.trialEnabled) && (
+            {/* {(userInfo.onPaidPlan || userInfo.trialEnabled) && (
                 <BigNumber
                     value={topicsCount}
                     tag={`article topic${topicsCount !== 1 ? "s" : ""}`}
                     icon={<ResourceIcon type="links" large />}
                 />
-            )}
+            )} */}
         </div>
     );
 }
@@ -302,7 +302,7 @@ function ArticleGroupStat({
                 // if (userInfo.onPaidPlan || userInfo.trialEnabled) {
                 //     showTopic(topic!.id);
                 // } else {
-                showDomain(groupKey);
+                // showDomain(groupKey);
                 // }
             }}
         >
