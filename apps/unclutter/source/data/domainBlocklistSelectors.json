@@ -689,6 +689,12 @@
         ".imagecache.imagecache-staff-headshot-small.imagecache-linked.imagecache-staff-headshot-small_linked",
         "#preface-top-wrapper"
     ],
+    "loversmagazine.com": [
+        ".interview-photo",
+        ".section-header",
+        ".interview",
+        "#related-interviews"
+    ],
     "lwn.net": [".FeatureByline", ".IndexEntries"],
     "macrumors.com": [
         ".textRow--3IWlPgCD.content--24wu6sGS",
