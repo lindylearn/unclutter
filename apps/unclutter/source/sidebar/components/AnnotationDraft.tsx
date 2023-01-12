@@ -140,6 +140,7 @@ function AnnotationDraft({
                 }}
                 minRows={2}
                 maxRows={6}
+                spellCheck={false}
                 ref={inputRef}
                 onFocus={() => onHoverUpdate(true)}
                 onBlur={() => onHoverUpdate(false)}
