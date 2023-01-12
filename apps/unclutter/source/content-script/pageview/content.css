@@ -49,7 +49,7 @@ html.pageview.pageview > body {
     contain: layout style !important;
 
     top: 0 !important;
-    right: 15px !important;
+    right: 16px !important;
 }
 
 @media (max-width: 1200px) {

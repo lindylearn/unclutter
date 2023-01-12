@@ -67,9 +67,8 @@ function Annotation({ className, style, annotation, heightLimitPx }: AnnotationP
                     // restrict text height by whole lines
                     // assumes 20px font size and py-1.5 padding
                     WebkitLineClamp: Math.min(
-                        10,
+                        4
                         // heightLimitPx ? Math.floor((heightLimitPx - 6 * 2 - 20) / 20) : Infinity,
-                        3
                     ),
                     WebkitBoxOrient: "vertical",
                     overflow: "hidden",

@@ -33,9 +33,9 @@ const excludedParagraphClassNames = [
 export default class SmartHighlightsModifier implements PageModifier {
     private onHighlightClick: null | ((range: Range, related: RelatedHighlight[]) => void);
 
-    articleSummary: string | null;
-    keyPointsCount: number | null;
-    relatedCount: number | null;
+    articleSummary: string | null = null;
+    keyPointsCount: number | null = null;
+    relatedCount: number | null = null;
     topHighlights: {
         highlight: string;
         paragraphIndex: number;

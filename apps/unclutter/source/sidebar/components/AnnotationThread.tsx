@@ -14,9 +14,11 @@ interface AnnotationThreadProps {
 }
 
 function AnnotationThread(props: AnnotationThreadProps) {
+    const [isFetchingRelated, setIsFetchingRelated] = useState(false);
     const [related, setRelated] = useState<LindyAnnotation[]>();
     useEffect(() => {
         if (props.annotation.isMyAnnotation) {
+            setIsFetchingRelated(true);
             fetch("https://api2.lindylearn.io/related/get_related", {
                 method: "POST",
                 headers: {
@@ -29,7 +31,12 @@ function AnnotationThread(props: AnnotationThreadProps) {
                     score_threshold: 0.5,
                     save_highlights: false, // testing
                 }),
-            }).then((r) => r.json().then((r) => setRelated(r.related[0])));
+            }).then(async (response) => {
+                const data = await response.json();
+
+                setIsFetchingRelated(false);
+                setRelated(data.related[0]);
+            });
         }
     }, []);
 
@@ -39,7 +46,11 @@ function AnnotationThread(props: AnnotationThreadProps) {
         <>
             {!props.annotation.isMyAnnotation && <Annotation {...props} deleteHide={deleteHide} />}
             {props.annotation.isMyAnnotation && (
-                <AnnotationDraft {...props} deleteHide={deleteHide} />
+                <AnnotationDraft
+                    {...props}
+                    isFetchingRelated={isFetchingRelated}
+                    deleteHide={deleteHide}
+                />
             )}
 
             {related?.length > 0 && (
@@ -55,7 +66,7 @@ function AnnotationThread(props: AnnotationThreadProps) {
                                 platform: "related",
                                 relatedId: props.annotation.id,
                             }}
-                            deleteHide={() => props.deleteHideAnnotation(props.annotation, null)}
+                            deleteHide={deleteHide}
                         />
                     ))}
                 </div>

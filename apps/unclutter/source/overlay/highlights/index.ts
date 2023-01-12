@@ -64,11 +64,9 @@ export function renderHighlightsLayer(enablePageView: () => void, enhanceActive:
             return;
         }
 
-        renderArticleBadge(
+        updateArticleBadge(
             smartHighlightsModifier.keyPointsCount,
-            smartHighlightsModifier.relatedCount,
-            smartHighlightsModifier.disableAnnotations.bind(smartHighlightsModifier),
-            enablePageViewInner
+            smartHighlightsModifier.relatedCount
         );
 
         // await smartHighlightsModifier.fetchRelatedHighlights();
@@ -77,6 +75,14 @@ export function renderHighlightsLayer(enablePageView: () => void, enhanceActive:
         //     smartHighlightsModifier.relatedCount
         // );
     }
+
+    renderArticleBadge(
+        smartHighlightsModifier.keyPointsCount,
+        smartHighlightsModifier.relatedCount,
+        smartHighlightsModifier.disableAnnotations.bind(smartHighlightsModifier),
+        enablePageViewInner
+    );
+
     fetchHighlights();
 
     return preparePageView;

@@ -11,6 +11,7 @@ interface AnnotationDraftProps {
     annotation: LindyAnnotation;
     className?: string;
     heightLimitPx?: number;
+    isFetchingRelated?: boolean;
 
     deleteHide: () => void;
     onHoverUpdate: (hoverActive: boolean) => void;
@@ -23,6 +24,7 @@ function AnnotationDraft({
     className,
     deleteHide,
     heightLimitPx,
+    isFetchingRelated,
     updateAnnotation,
     onHoverUpdate,
     unfocusAnnotation,
@@ -142,6 +144,10 @@ function AnnotationDraft({
                 onFocus={() => onHoverUpdate(true)}
                 onBlur={() => onHoverUpdate(false)}
             />
+
+            {isFetchingRelated && (
+                <div className="loader absolute top-2 right-2 flex h-4 w-4 gap-2"></div>
+            )}
 
             {/* <div className="mb-1 ml-1 flex min-h-[20px] gap-2 overflow-hidden text-xs text-stone-400 opacity-50">
                 {localAnnotation.tags?.slice(0, 3).map((tag, i) => (
