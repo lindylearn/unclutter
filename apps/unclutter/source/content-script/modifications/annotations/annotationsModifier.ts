@@ -40,6 +40,7 @@ export default class AnnotationsModifier implements PageModifier {
         // always enable sidebar
         this.sidebarIframe = injectReactIframe("/sidebar/index.html", "lindy-annotations-bar", {
             articleUrl: this.articleUrl,
+            darkModeEnabled: (this.darkModeEnabled || false).toString(),
         });
         window.addEventListener("message", ({ data }) => {
             if (data.event === "sidebarIframeLoaded") {

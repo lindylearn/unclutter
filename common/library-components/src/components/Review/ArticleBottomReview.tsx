@@ -3,7 +3,13 @@ import { Annotation, Article, ReplicacheContext, useSubscribe } from "../../stor
 import { ArticleActivityCalendar } from "../Charts";
 import { BigNumber, ResourceIcon } from "../Modal";
 
-export default function ArticleBottomReview({ articleId }: { articleId: string }) {
+export default function ArticleBottomReview({
+    articleId,
+    darkModeEnabled,
+}: {
+    articleId: string;
+    darkModeEnabled: boolean;
+}) {
     const rep = useContext(ReplicacheContext);
 
     const annotations: Annotation[] = useSubscribe(
@@ -21,8 +27,6 @@ export default function ArticleBottomReview({ articleId }: { articleId: string }
         rep.query.listRecentArticles().then(setAllArticles);
         rep.query.listAnnotations().then(setAllAnnotations);
     }, [rep]);
-
-    const darkModeEnabled = false;
 
     return (
         <div className="bottom-review flex flex-col gap-[8px] text-stone-800 dark:text-[rgb(232,230,227)]">

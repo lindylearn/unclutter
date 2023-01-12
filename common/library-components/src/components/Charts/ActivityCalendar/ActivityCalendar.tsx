@@ -458,7 +458,7 @@ export function ActivityCalendar({
                 width={width}
                 height={height}
                 viewBox={`0 0 ${width} ${height}`}
-                className="calendar font-text block h-auto max-w-full overflow-visible"
+                className="calendar font-text block h-auto max-w-full select-none overflow-visible"
             >
                 {!loading && renderLabels()}
                 {renderBlocks()}

@@ -27,6 +27,7 @@ export default class ReviewModifier implements PageModifier {
         // always enable sidebar
         this.iframe = injectReactIframe("/review/index.html", "lindy-info-bottom", {
             articleId: this.articleId,
+            darkModeEnabled: (this.darkModeEnabled || false).toString(),
         });
         window.addEventListener("message", ({ data }) => {
             if (data.event === "bottomIframeLoaded") {
