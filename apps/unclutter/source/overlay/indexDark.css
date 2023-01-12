@@ -49,3 +49,8 @@
 .lindy-bugreport-button:not(.lindy-pressed):hover {
     filter: brightness(120%) !important;
 }
+
+.lindy-smart-highlight:not(#fakeID#fakeID#fakeID#fakeID),
+.lindy-smart-highlight-scroll:not(#fakeID#fakeID#fakeID#fakeID) {
+    --active-color: var(--darker-annotation-color) !important;
+}

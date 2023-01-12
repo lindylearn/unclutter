@@ -257,9 +257,10 @@
     /* background-color: var(--darker-annotation-color) !important; */
     /* box-shadow: 0.25em 0 0 var(--darker-annotation-color), -0.25em 0 0 var(--darker-annotation-color) !important; */
 }
-.lindy-smart-highlight:not(#fakeID#fakeID#fakeID#fakeID) {
+.lindy-smart-highlight:not(#fakeID#fakeID#fakeID#fakeID),
+.lindy-smart-highlight-scroll:not(#fakeID#fakeID#fakeID#fakeID) {
     display: block !important;
-    background: var(--annotation-color) !important;
+    background: var(--active-color) !important;
 }
 .lindy-smart-highlight-click:not(#fakeID#fakeID#fakeID#fakeID) {
     display: block !important;

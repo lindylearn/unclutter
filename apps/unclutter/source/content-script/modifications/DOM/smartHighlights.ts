@@ -119,14 +119,20 @@ export default class SmartHighlightsModifier implements PageModifier {
         if (paragraphTexts.length === 0 || paragraphTexts.length >= 200) {
             // likely not an article
             // be careful, e.g. paulgraham.com has single paragraph
+            this.keyPointsCount = 0;
             return false;
         }
 
         // construct sentence heatmap in extension background worker (with no data sent over the network)
-        this.rankedSentencesByParagraph = await browser.runtime.sendMessage(null, {
-            event: "getHeatmap",
-            paragraphs: paragraphTexts,
-        });
+        try {
+            this.rankedSentencesByParagraph = await browser.runtime.sendMessage(null, {
+                event: "getHeatmap",
+                paragraphs: paragraphTexts,
+            });
+        } catch {
+            this.keyPointsCount = 0;
+            return false;
+        }
         // console.log(this.rankedSentencesByParagraph);
 
         // paint highlights immediately once heatmap ready
@@ -666,8 +672,8 @@ export default class SmartHighlightsModifier implements PageModifier {
         if (sentence.related) {
             score = sentence.related[0].score + 0.2;
         }
-        const colorIntensity = 0.8 * score ** 3;
-        const adjustedColor = color.replace("1.0", colorIntensity.toString());
+        const lightColor = color.replace("1.0", `${0.8 * score ** 3}`);
+        const darkColor = color.replace("1.0", `${0.5 * score ** 3}`);
 
         let addedElements: HTMLElement[] = [];
 
@@ -704,7 +710,8 @@ export default class SmartHighlightsModifier implements PageModifier {
             // consider first rect in annotationListener resize handler
             node.id = rectIndex === 0 ? sentence.id : `${sentence.id}_${rectIndex}`;
             node.className = "lindy-smart-highlight";
-            node.style.setProperty("--annotation-color", adjustedColor);
+            node.style.setProperty("--annotation-color", lightColor);
+            node.style.setProperty("--darker-annotation-color", darkColor);
             node.style.setProperty("position", "absolute", "important");
             node.style.setProperty("top", `${rect.top - containerRect.top}px`, "important");
             node.style.setProperty("left", `${rect.left - containerRect.left}px`, "important");
@@ -729,7 +736,8 @@ export default class SmartHighlightsModifier implements PageModifier {
         if (this.enableScrollBar) {
             const scrollbarNode = document.createElement("div");
             scrollbarNode.className = "lindy-smart-highlight-scroll";
-            scrollbarNode.style.setProperty("--annotation-color", adjustedColor);
+            scrollbarNode.style.setProperty("--annotation-color", lightColor);
+            scrollbarNode.style.setProperty("--darker-annotation-color", darkColor);
             scrollbarNode.style.setProperty(
                 "top",
                 `${(100 * (rect.top + document.body.scrollTop)) / document.body.scrollHeight}vh`,
