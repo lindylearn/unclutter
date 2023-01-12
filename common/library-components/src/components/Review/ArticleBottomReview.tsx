@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Annotation, Article, ReplicacheContext, useSubscribe } from "../../store";
-import { ArticleActivityCalendar } from "../Charts";
 import { BigNumber, ResourceIcon } from "../Modal";
 
 export default function ArticleBottomReview({
@@ -12,7 +11,7 @@ export default function ArticleBottomReview({
 }) {
     const rep = useContext(ReplicacheContext);
 
-    const annotations: Annotation[] = useSubscribe(
+    const articleAnnotations: Annotation[] = useSubscribe(
         rep,
         rep?.subscribe.listArticleAnnotations(articleId),
         []
@@ -28,32 +27,47 @@ export default function ArticleBottomReview({
         rep.query.listAnnotations().then(setAllAnnotations);
     }, [rep]);
 
+    function openLibrary(initialTab: string) {
+        window.top?.postMessage(
+            {
+                event: "showModal",
+                initialTab,
+            },
+            "*"
+        );
+    }
+
     return (
         <div className="bottom-review flex flex-col gap-[8px] text-stone-800 dark:text-[rgb(232,230,227)]">
             <CardContainer>
-                <div className="grid grid-cols-4 gap-4">
+                <div className="relative grid grid-cols-4 gap-4">
                     <BigNumber
-                        value={1}
-                        tag={`saved article`}
-                        icon={<ResourceIcon type="articles_completed" large />}
+                        value={allArticles?.length}
+                        diff={1}
+                        tag={`saved articles`}
+                        icon={<ResourceIcon type="articles" large />}
+                        onClick={() => openLibrary("stats")}
                     />
                     <BigNumber
-                        value={annotations.length}
+                        value={allAnnotations?.length}
+                        diff={articleAnnotations?.length}
                         tag={`saved highlights`}
                         icon={<ResourceIcon type="highlights" large />}
+                        onClick={() => openLibrary("highlights")}
                     />
                     <BigNumber
-                        value={annotations.length * 2}
+                        value={allAnnotations && allAnnotations?.length * 2}
+                        diff={articleAnnotations && articleAnnotations?.length * 2}
                         tag={`connected ideas`}
                         icon={<ResourceIcon type="links" large />}
                     />
                 </div>
 
-                <ArticleActivityCalendar
+                {/* <ArticleActivityCalendar
                     articles={allArticles}
                     darkModeEnabled={darkModeEnabled}
                     // reportEvent={reportEvent}
-                />
+                /> */}
             </CardContainer>
         </div>
     );

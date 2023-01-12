@@ -3,21 +3,30 @@ import React, { ReactNode, useContext, useEffect, useState } from "react";
 
 export function BigNumber({
     value,
+    diff,
     target,
     tag,
     colorOverride,
     icon,
-    darkModeEnabled,
+    onClick,
 }: {
     value?: number;
+    diff?: number;
     target?: number;
     tag: ReactNode;
     colorOverride?: string;
     icon?: ReactNode;
-    darkModeEnabled?: boolean;
+    onClick?: () => void;
 }) {
     return (
-        <div className="relative flex select-none flex-col items-center overflow-hidden rounded-md bg-stone-50 p-3 transition-all hover:scale-[97%] dark:bg-neutral-800">
+        <div
+            className={clsx(
+                "relative flex select-none flex-col items-center overflow-hidden rounded-md bg-stone-50 p-3 dark:bg-neutral-800",
+                onClick && "cursor-pointer transition-all hover:scale-[97%]"
+            )}
+            style={{ background: colorOverride }}
+            onClick={onClick}
+        >
             {value !== undefined && target !== undefined && (
                 <div
                     className="absolute top-0 left-0 h-full w-full opacity-90"
@@ -35,8 +44,16 @@ export function BigNumber({
             >
                 {icon}
                 <div>
-                    +{value}
+                    <span className={clsx(diff && "")}>{(value || 0) - (diff || 0)}</span>
+                    {diff && (
+                        <>
+                            <span className="mx-1">+</span>
+                            <span>{diff}</span>
+                        </>
+                    )}
                     {target && <span className="text-base opacity-20"> / {target}</span>}
+
+                    {/* {value && diff && <AnimatedNumber value={value} diff={diff} />} */}
                 </div>
             </div>
             <div className="font-text max-w-full overflow-hidden">{tag}</div>
