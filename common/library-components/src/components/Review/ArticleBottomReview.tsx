@@ -37,6 +37,9 @@ export default function ArticleBottomReview({
         );
     }
 
+    const allAnnotationsCount =
+        allAnnotations && articleAnnotations && allAnnotations?.length + articleAnnotations?.length;
+
     return (
         <div className="bottom-review flex flex-col gap-[8px] text-stone-800 dark:text-[rgb(232,230,227)]">
             <CardContainer>
@@ -49,14 +52,14 @@ export default function ArticleBottomReview({
                         onClick={() => openLibrary("stats")}
                     />
                     <BigNumber
-                        value={allAnnotations?.length}
+                        value={allAnnotationsCount}
                         diff={articleAnnotations?.length}
                         tag={`saved highlights`}
                         icon={<ResourceIcon type="highlights" large />}
                         onClick={() => openLibrary("highlights")}
                     />
                     <BigNumber
-                        value={allAnnotations && allAnnotations?.length * 2}
+                        value={allAnnotationsCount && allAnnotationsCount * 2}
                         diff={articleAnnotations && articleAnnotations?.length * 2}
                         tag={`connected ideas`}
                         icon={<ResourceIcon type="links" large />}

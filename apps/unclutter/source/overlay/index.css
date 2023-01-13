@@ -194,8 +194,8 @@
 #lindy-annotations-bar {
     position: absolute !important;
     top: 8px !important;
-    left: calc((100vw - var(--lindy-pagewidth)) / 2 + var(--lindy-pagewidth) - 5px) !important;
-    width: calc((100vw - var(--lindy-pagewidth)) / 2 - 50px) !important;
+    left: calc((100vw - var(--lindy-pagewidth)) / 2 + var(--lindy-pagewidth) - 4px) !important;
+    width: calc((100vw - var(--lindy-pagewidth)) / 2 - 8px - 4px) !important;
     height: calc(100% - 8px) !important;
     user-select: none !important;
     contain: strict !important;
@@ -286,7 +286,7 @@
     }
     #lindy-annotations-bar {
         left: calc(var(--lindy-pagewidth) + 10px + 5px) !important;
-        width: calc(100vw - (var(--lindy-pagewidth) + 10px + 5px) - 20px) !important;
+        width: calc(100vw - (var(--lindy-pagewidth) + 10px + 5px) - 15px) !important;
     }
     .lindy-page-settings-pageadjacent {
         left: calc(var(--lindy-pagewidth) + 10px + 0px) !important;

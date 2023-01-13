@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import ky from "ky";
 import debounce from "lodash/debounce";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import TextareaAutosize from "react-textarea-autosize";
@@ -72,36 +73,36 @@ function AnnotationDraft({
     }
 
     // const [question, setQuestion] = useState<string>();
-    // useEffect(() => {
-    //     // if (!annotation.text) {
-    //     //     ky.post("https://assistant-two.vercel.app/api/question", {
-    //     //         json: {
-    //     //             text: annotation.quote_text,
-    //     //         },
-    //     //     })
-    //     //         .json()
-    //     //         .then((question: any) => setQuestion(question));
-    //     // }
-    //     if (!annotation.tags || annotation.tags.length === 0) {
-    //         ky.post("https://assistant-two.vercel.app/api/tag", {
-    //             json: {
-    //                 text: annotation.quote_text.replace("\n", " "),
-    //             },
-    //         })
-    //             .json()
-    //             .then((tags: any) => {
-    //                 updateAnnotationLocalFirst({
-    //                     ...localAnnotation,
-    //                     tags,
-    //                 });
-    //             });
-    //     }
-    // }, []);
+    useEffect(() => {
+        // if (!annotation.text) {
+        //     ky.post("https://assistant-two.vercel.app/api/question", {
+        //         json: {
+        //             text: annotation.quote_text,
+        //         },
+        //     })
+        //         .json()
+        //         .then((question: any) => setQuestion(question));
+        // }
+        if (!annotation.tags || annotation.tags.length === 0) {
+            ky.post("https://assistant-two.vercel.app/api/tag", {
+                json: {
+                    text: annotation.quote_text.replace("\n", " "),
+                },
+            })
+                .json()
+                .then((tags: any) => {
+                    updateAnnotationLocalFirst({
+                        ...localAnnotation,
+                        tags,
+                    });
+                });
+        }
+    }, []);
 
     return (
         <div
             className={clsx(
-                `annotation annotation-draft relative flex flex-col gap-2 rounded-l rounded-r-md p-2 pl-3 text-sm shadow`,
+                `annotation annotation-draft relative flex flex-col gap-2 rounded-l-sm rounded-r-md p-2 px-3 text-sm shadow`,
                 annotation.focused && "focused",
                 className
             )}
@@ -112,12 +113,12 @@ function AnnotationDraft({
             ref={ref}
         >
             <TextareaAutosize
-                className="w-full select-none resize-none overflow-hidden bg-transparent align-top outline-none placeholder:select-none placeholder:text-stone-500 placeholder:opacity-50"
-                placeholder={"What to remember?"}
-                // placeholder={localAnnotation.tags
-                //     ?.slice(0, 3)
-                //     .map((t) => `#${t.replace(" ", "-")}`)
-                //     .join(" ")}
+                className="w-full select-none resize-none overflow-hidden bg-transparent align-top outline-none placeholder:select-none placeholder:text-stone-600 placeholder:opacity-50"
+                // placeholder={"What to remember?"}
+                placeholder={localAnnotation.tags
+                    ?.slice(0, 3)
+                    .map((t) => `#${t.replace(" ", "-")}`)
+                    .join(" ")}
                 value={localAnnotation.text}
                 onChange={(e) =>
                     updateAnnotationLocalFirst({
@@ -138,7 +139,7 @@ function AnnotationDraft({
                     //     e.stopPropagation();
                     // }
                 }}
-                minRows={2}
+                minRows={1}
                 maxRows={6}
                 spellCheck={false}
                 ref={inputRef}

@@ -45,13 +45,15 @@ export function BigNumber({
                 {icon}
                 <div>
                     <span className={clsx(diff && "")}>{(value || 0) - (diff || 0)}</span>
-                    {diff && (
+                    {diff ? (
                         <>
                             <span className="mx-1">+</span>
                             <span>{diff}</span>
                         </>
+                    ) : (
+                        <></>
                     )}
-                    {target && <span className="text-base opacity-20"> / {target}</span>}
+                    {/* {target && <span className="text-base opacity-20"> / {target}</span>} */}
 
                     {/* {value && diff && <AnimatedNumber value={value} diff={diff} />} */}
                 </div>
