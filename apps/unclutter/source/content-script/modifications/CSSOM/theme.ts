@@ -117,17 +117,19 @@ export default class ThemeModifier implements PageModifier {
             this.bodyStyleModifier.originalBackgroundColor ||
             "white";
 
-        // TODO test color distance to background color (brightness alone doesn't look nice)
-        // but only known case is https://arstechnica.com/science/2022/05/rocket-report-starliner-soars-into-orbit-about-those-raptor-ruds-in-texas/
-        if (this.backgroundColor === "rgb(240, 241, 242)") {
-            this.backgroundColor = "white";
-        }
-
         // test if dark mode enabled
         const backgroundBrightness = getBrightness(this.backgroundColor);
         const textBrightness = this.textContainerModifier.mainTextColor
             ? getBrightness(this.textContainerModifier.mainTextColor)
             : null;
+
+        // round light background colors to white, to increase UI contrast
+        // 0.94 https://arstechnica.com/science/2022/05/rocket-report-starliner-soars-into-orbit-about-those-raptor-ruds-in-texas/
+        // 0.97 https://www.polygon.com/gaming/23538801/video-game-studio-union-microsoft-activision-blizzard
+        // console.log(backgroundBrightness);
+        if (backgroundBrightness > 0.9) {
+            this.backgroundColor = "white";
+        }
 
         if (backgroundBrightness < 0.6 && !this.darkModeActive) {
             if (!textBrightness || textBrightness > 0.5) {
