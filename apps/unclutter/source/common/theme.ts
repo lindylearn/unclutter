@@ -13,18 +13,12 @@ export const backgroundColorThemeVariable = "--lindy-background-color";
 export const autoBackgroundThemeVariable = "--lindy-auto-background-color";
 export const darkThemeTextColor = "--lindy-dark-theme-text-color";
 
-export function applySaveThemeOverride(domain, varName, value) {
+export function saveThemeChange(domain, varName, value) {
     if (varName === fontSizeThemeVariable) {
-        setCssThemeVariable(varName, value);
-
         mergeUserTheme({ fontSize: value });
     } else if (varName === pageWidthThemeVariable) {
-        setCssThemeVariable(varName, value);
-
         mergeUserTheme({ pageWidth: value });
     } else if (varName === activeColorThemeVariable) {
-        // apply handled in ThemeModifier.ts
-
         mergeUserTheme({ colorTheme: value });
     }
 }
@@ -34,19 +28,22 @@ export function getThemeValue(varName) {
 }
 
 export function setCssThemeVariable(varName, value, params = {}) {
+    // note: set on react apps via modifier methods (can't access cross-domain frames)
+    // thus this function should only be called internally from ThemeModifier
+
     // To minimize rerenders, set CSS variables only on elements where they're used
     if (varName === fontSizeThemeVariable) {
         document.documentElement.style.setProperty(varName, value);
     } else if (varName === pageWidthThemeVariable) {
         document.documentElement.style.setProperty(varName, value);
+        console.log("here", getBottomIframe());
+        getBottomIframe()?.body.style.setProperty(varName, value);
     } else if (varName === backgroundColorThemeVariable) {
         if (!params["setOnlyUi"]) {
             document.body.style.setProperty("background", value, "important");
         }
 
         getOutlineIframe()?.body.style.setProperty(varName, value);
-        getBottomIframe()?.body.style.setProperty(varName, value);
-        // set on react iframes via modifier methods
     } else if (varName === autoBackgroundThemeVariable || varName === activeColorThemeVariable) {
         document
             .getElementById("lindy-page-settings-toprght")
@@ -57,8 +54,6 @@ export function setCssThemeVariable(varName, value, params = {}) {
         }
 
         getOutlineIframe()?.body.style.setProperty(varName, value);
-        getBottomIframe()?.body.style.setProperty(varName, value);
-        // set on react iframes via modifier methods
     } else {
         document.documentElement.style.setProperty(varName, value);
     }

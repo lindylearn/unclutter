@@ -3,7 +3,7 @@ import { getUserTheme, UserTheme } from "../../../common/storage";
 import { createStylesheetLink } from "../../../common/stylesheets";
 import {
     activeColorThemeVariable,
-    applySaveThemeOverride,
+    saveThemeChange,
     autoBackgroundThemeVariable,
     backgroundColorThemeVariable,
     colorThemeToBackgroundColor,
@@ -170,7 +170,7 @@ export default class ThemeModifier implements PageModifier {
         this.applyActiveColorTheme();
 
         // save in storage
-        applySaveThemeOverride(this.domain, activeColorThemeVariable, newColorThemeName);
+        saveThemeChange(this.domain, activeColorThemeVariable, newColorThemeName);
     }
 
     applyActiveColorTheme(): boolean {
@@ -293,7 +293,7 @@ export default class ThemeModifier implements PageModifier {
         );
     }
 
-    private setCssThemeVariable(variableName: string, value: string) {
+    setCssThemeVariable(variableName: string, value: string) {
         setCssThemeVariable(variableName, value);
         this.annotationsModifer.setCssVariable(variableName, value);
         this.reviewModeModifier.setCssVariable(variableName, value);

@@ -1,6 +1,6 @@
 <script lang="ts">
     import {
-        applySaveThemeOverride,
+        saveThemeChange,
         fontSizeThemeVariable,
         getThemeValue,
         pageWidthThemeVariable,
@@ -32,7 +32,8 @@
         const currentSize = getThemeValue(varName).replace("px", "");
         const newSizePx = `${parseFloat(currentSize) + delta}px`;
 
-        applySaveThemeOverride(domain, varName, newSizePx);
+        themeModifier.setCssThemeVariable(varName, newSizePx);
+        saveThemeChange(domain, varName, newSizePx);
 
         reportThemeEvent(varName);
     }
