@@ -110,38 +110,25 @@ function NumberStats({
     darkModeEnabled: boolean;
 }) {
     const rep = useContext(ReplicacheContext);
-    const [topicsCount, setTopicsCount] = useState<number>();
-    useEffect(() => {
-        if (userInfo.onPaidPlan || userInfo.trialEnabled) {
-            rep?.query
-                .listTopics()
-                .then((topics) => setTopicsCount(topics.filter((t) => !!t.group_id).length));
-        }
-    }, [rep]);
-
-    const readArticlesCount = allArticles?.filter(
-        (a) => a.reading_progress >= readingProgressFullClamp
-    ).length;
-    const unreadCount =
-        articleCount !== undefined && readArticlesCount !== undefined
-            ? articleCount - readArticlesCount
-            : undefined;
+    // const [topicsCount, setTopicsCount] = useState<number>();
+    // useEffect(() => {
+    //     if (userInfo.onPaidPlan || userInfo.trialEnabled) {
+    //         rep?.query
+    //             .listTopics()
+    //             .then((topics) => setTopicsCount(topics.filter((t) => !!t.group_id).length));
+    //     }
+    // }, [rep]);
 
     return (
         <div className="grid grid-cols-5 gap-4">
             <BigNumber
-                value={readArticlesCount}
-                tag={`read article${readArticlesCount !== 1 ? "s" : ""}`}
-                icon={<ResourceIcon type="articles_completed" large />}
-            />
-            <BigNumber
-                value={unreadCount}
-                tag={`unread article${unreadCount !== 1 ? "s" : ""}`}
+                value={allArticles?.length}
+                tag={`saved article${allArticles?.length !== 1 ? "s" : ""}`}
                 icon={<ResourceIcon type="articles" large />}
             />
             <BigNumber
                 value={allAnnotations?.length}
-                tag={`highlight${allAnnotations?.length !== 1 ? "s" : ""}`}
+                tag={`saved highlight${allAnnotations?.length !== 1 ? "s" : ""}`}
                 icon={<ResourceIcon type="highlights" large />}
             />
 
@@ -283,11 +270,6 @@ function ArticleGroupStat({
     }
 
     const addedCount = selectedArticles.length;
-    const readCount = selectedArticles.filter(
-        (a) => a.reading_progress >= readingProgressFullClamp
-    ).length;
-    const unreadCount = addedCount - readCount;
-
     const activityLevel = getActivityLevel(addedCount);
 
     return (
@@ -322,16 +304,11 @@ function ArticleGroupStat({
                 </div>
             </div>
 
-            <div className="flex gap-3">
-                <ResourceStat
-                    type="articles_completed"
-                    value={readCount}
-                    className={clsx(readCount === 0 && "opacity-0")}
-                />
+            <div className="flex gap-4">
                 <ResourceStat
                     type="articles"
-                    value={unreadCount}
-                    className={clsx(unreadCount === 0 && "opacity-0")}
+                    value={addedCount}
+                    className={clsx(addedCount === 0 && "opacity-0")}
                 />
                 <ResourceStat
                     type="highlights"
