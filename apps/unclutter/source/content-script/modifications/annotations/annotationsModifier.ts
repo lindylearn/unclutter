@@ -171,7 +171,7 @@ export default class AnnotationsModifier implements PageModifier {
     public annotationListeners: AnnotationListener[] = [];
 
     // private fn passed to selection listener (added) and annotations side events listener (anchored, removed)
-    private onAnnotationUpdate(action: "set" | "add" | "remove", annotations: LindyAnnotation[]) {
+    onAnnotationUpdate(action: "set" | "add" | "remove", annotations: LindyAnnotation[]) {
         if (action === "set") {
             // called after paintHighlights event
             this.onAnnotationsVisible(annotations);

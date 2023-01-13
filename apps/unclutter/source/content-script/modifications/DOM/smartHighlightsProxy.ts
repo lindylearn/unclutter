@@ -27,6 +27,7 @@ export default class SmartHighlightsProxy implements PageModifier {
                         event: "createHighlight",
                         annotation,
                     });
+                    this.annotationsModifier.onAnnotationUpdate("add", [annotation]);
                 },
                 this.annotationsModifier.sidebarIframe,
                 generateId()

@@ -83,20 +83,20 @@ function AnnotationDraft({
         //         .json()
         //         .then((question: any) => setQuestion(question));
         // }
-        if (!annotation.tags || annotation.tags.length === 0) {
-            ky.post("https://assistant-two.vercel.app/api/tag", {
-                json: {
-                    text: annotation.quote_text.replace("\n", " "),
-                },
-            })
-                .json()
-                .then((tags: any) => {
-                    updateAnnotationLocalFirst({
-                        ...localAnnotation,
-                        tags,
-                    });
-                });
-        }
+        // if (!annotation.tags || annotation.tags.length === 0) {
+        //     ky.post("https://assistant-two.vercel.app/api/tag", {
+        //         json: {
+        //             text: annotation.quote_text.replace("\n", " "),
+        //         },
+        //     })
+        //         .json()
+        //         .then((tags: any) => {
+        //             updateAnnotationLocalFirst({
+        //                 ...localAnnotation,
+        //                 tags,
+        //             });
+        //         });
+        // }
     }, []);
 
     return (
@@ -114,11 +114,11 @@ function AnnotationDraft({
         >
             <TextareaAutosize
                 className="w-full select-none resize-none overflow-hidden bg-transparent align-top outline-none placeholder:select-none placeholder:text-stone-600 placeholder:opacity-50"
-                // placeholder={"What to remember?"}
-                placeholder={localAnnotation.tags
-                    ?.slice(0, 3)
-                    .map((t) => `#${t.replace(" ", "-")}`)
-                    .join(" ")}
+                placeholder={isFetchingRelated ? "" : "Saved highlight"}
+                // placeholder={localAnnotation.tags
+                //     ?.slice(0, 3)
+                //     .map((t) => `#${t.replace(" ", "-")}`)
+                //     .join(" ")}
                 value={localAnnotation.text}
                 onChange={(e) =>
                     updateAnnotationLocalFirst({

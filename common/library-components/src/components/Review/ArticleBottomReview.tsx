@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Annotation, Article, ReplicacheContext, useSubscribe } from "../../store";
+import { getActivityColor } from "../Charts";
 import { BigNumber, ResourceIcon } from "../Modal";
 
 export default function ArticleBottomReview({
@@ -49,6 +50,7 @@ export default function ArticleBottomReview({
                         diff={1}
                         tag={`saved articles`}
                         icon={<ResourceIcon type="articles" large />}
+                        colorOverride={getActivityColor(1, darkModeEnabled)}
                         onClick={() => openLibrary("stats")}
                     />
                     <BigNumber
@@ -56,14 +58,15 @@ export default function ArticleBottomReview({
                         diff={articleAnnotations?.length}
                         tag={`saved highlights`}
                         icon={<ResourceIcon type="highlights" large />}
+                        colorOverride={getActivityColor(1, darkModeEnabled)}
                         onClick={() => openLibrary("highlights")}
                     />
-                    <BigNumber
+                    {/* <BigNumber
                         value={allAnnotationsCount && allAnnotationsCount * 2}
                         diff={articleAnnotations && articleAnnotations?.length * 2}
                         tag={`connected ideas`}
                         icon={<ResourceIcon type="links" large />}
-                    />
+                    /> */}
                 </div>
 
                 {/* <ArticleActivityCalendar
@@ -78,7 +81,7 @@ export default function ArticleBottomReview({
 
 function CardContainer({ children }) {
     return (
-        <div className="relative mx-auto flex w-[780px] flex-col gap-4 overflow-hidden rounded-lg bg-white p-4 shadow dark:bg-[#212121]">
+        <div className="relative mx-auto flex w-[var(--lindy-pagewidth)] flex-col gap-4 overflow-hidden rounded-lg bg-white p-4 shadow dark:bg-[#212121]">
             {children}
         </div>
     );
