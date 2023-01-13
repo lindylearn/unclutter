@@ -17,7 +17,7 @@
 
 .lindy-page-settings-toprght {
     all: revert !important;
-    position: fixed !important;
+    position: absolute !important;
     top: 0 !important;
     right: 0 !important;
     z-index: 3000 !important;
@@ -79,7 +79,7 @@
 }
 
 #lindy-info-topleft {
-    position: absolute !important;
+    position: fixed !important;
     top: 0 !important;
     left: 0 !important;
     /* margin inside iframe to render shadow */

@@ -61,12 +61,13 @@ export default function ArticleBottomReview({
                         colorOverride={getActivityColor(1, darkModeEnabled)}
                         onClick={() => openLibrary("highlights")}
                     />
-                    {/* <BigNumber
+                    <BigNumber
                         value={allAnnotationsCount && allAnnotationsCount * 2}
                         diff={articleAnnotations && articleAnnotations?.length * 2}
                         tag={`connected ideas`}
                         icon={<ResourceIcon type="links" large />}
-                    /> */}
+                        colorOverride={getActivityColor(1, darkModeEnabled)}
+                    />
                 </div>
 
                 {/* <ArticleActivityCalendar

@@ -13,6 +13,7 @@ interface AnnotationDraftProps {
     className?: string;
     heightLimitPx?: number;
     isFetchingRelated?: boolean;
+    relatedCount?: number;
 
     deleteHide: () => void;
     onHoverUpdate: (hoverActive: boolean) => void;
@@ -26,6 +27,7 @@ function AnnotationDraft({
     deleteHide,
     heightLimitPx,
     isFetchingRelated,
+    relatedCount,
     updateAnnotation,
     onHoverUpdate,
     unfocusAnnotation,
@@ -114,7 +116,13 @@ function AnnotationDraft({
         >
             <TextareaAutosize
                 className="w-full select-none resize-none overflow-hidden bg-transparent align-top outline-none placeholder:select-none placeholder:text-stone-600 placeholder:opacity-50"
-                placeholder={isFetchingRelated ? "" : "Saved highlight"}
+                placeholder={
+                    isFetchingRelated
+                        ? ""
+                        : relatedCount
+                        ? `${relatedCount} related highlight${relatedCount !== 1 ? "s" : ""}`
+                        : "Saved highlight"
+                }
                 // placeholder={localAnnotation.tags
                 //     ?.slice(0, 3)
                 //     .map((t) => `#${t.replace(" ", "-")}`)

@@ -32,12 +32,18 @@ function AnnotationThread(props: AnnotationThreadProps) {
                     score_threshold: 0.5,
                     save_highlights: false, // testing
                 }),
-            }).then(async (response) => {
-                const data = await response.json();
+            })
+                .then(async (response) => {
+                    const data = await response.json();
+                    let related = data.related[0].slice(0, 2);
 
-                setIsFetchingRelated(false);
-                setRelated(data.related[0]);
-            });
+                    setIsFetchingRelated(false);
+                    setRelated(related);
+                })
+                .catch((err) => {
+                    console.error(err);
+                    setIsFetchingRelated(false);
+                });
         }
     }, []);
 
@@ -50,6 +56,7 @@ function AnnotationThread(props: AnnotationThreadProps) {
                 <AnnotationDraft
                     {...props}
                     isFetchingRelated={isFetchingRelated}
+                    relatedCount={related?.length}
                     deleteHide={deleteHide}
                 />
             )}
@@ -78,7 +85,7 @@ function AnnotationThread(props: AnnotationThreadProps) {
 
             {related?.length > 0 && (
                 <div className="mt-[6px] flex flex-col gap-[6px]">
-                    {related?.slice(0, 2).map((r: any, i) => (
+                    {related?.map((r: any, i) => (
                         <Annotation
                             key={r.id}
                             className="related-annotation"
