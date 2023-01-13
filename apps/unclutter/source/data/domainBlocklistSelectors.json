@@ -885,6 +885,7 @@
     "pureinfotech.com": [
         ".attachment-large.size-large.wp-post-image.jetpack-lazy-image.jetpack-lazy-image--handled"
     ],
+    "quizlet.com": [".SetPageTerm-imageWrap"],
     "radreads.co": [".tcb-flex-col"],
     "realpython.com": [".small.text-muted"],
     "rebble.io": ["#index"],
