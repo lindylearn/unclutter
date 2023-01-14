@@ -140,12 +140,14 @@ export async function getArticleGraph(url: string, user_id: string): Promise<Gra
 }
 
 export interface RelatedHighlight {
-    score: number;
-    score2: number;
-    anchor?: string;
+    id: string;
+    article_id: string;
     text: string;
+    score: number;
+
+    score2?: number;
+    anchor?: string;
     excerpt: string;
-    title: string;
 }
 
 export async function fetchRelatedAnnotations(

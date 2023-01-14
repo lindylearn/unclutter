@@ -1,3 +1,4 @@
+import { ReplicacheProxy } from "@unclutter/library-components/dist/common/replicache";
 import React, { useEffect, useState } from "react";
 import type { LindyAnnotation } from "../../common/annotations/create";
 import { fetchRelatedAnnotations, RelatedHighlight } from "../../common/api";
@@ -26,9 +27,18 @@ function AnnotationThread(props: AnnotationThreadProps) {
             fetchRelatedAnnotations(userId, props.annotation.article_id, [
                 props.annotation.quote_text,
             ])
-                .then(async (related) => {
+                .then(async (response) => {
+                    const related = response[0].slice(0, 2);
+
+                    const rep = new ReplicacheProxy();
+                    await Promise.all(
+                        related.map(async (r) => {
+                            r.article = await rep.query.getArticle(r.article_id);
+                        })
+                    );
+
                     setIsFetchingRelated(false);
-                    setRelated(related[0].slice(0, 2));
+                    setRelated(related);
                 })
                 .catch((err) => {
                     console.error(err);
@@ -75,7 +85,7 @@ function AnnotationThread(props: AnnotationThreadProps) {
 
             {related?.length > 0 && (
                 <div className="mt-[6px] flex flex-col gap-[6px]">
-                    {related?.map((r: any, i) => (
+                    {related?.map((r, i) => (
                         <Annotation
                             key={r.id}
                             className="related-annotation"

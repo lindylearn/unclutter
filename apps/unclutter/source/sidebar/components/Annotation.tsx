@@ -2,6 +2,7 @@ import React from "react";
 import type { LindyAnnotation } from "../../common/annotations/create";
 import { drawFromArray, getRandomColor } from "../../common/annotations/styling";
 import { reportEventContentScript } from "@unclutter/library-components/dist/common/messaging";
+import { openArticleResilient } from "@unclutter/library-components/dist/common/extension";
 import clsx from "clsx";
 
 interface AnnotationProps {
@@ -46,7 +47,7 @@ function Annotation({ className, style, annotation, heightLimitPx }: AnnotationP
     }
 
     return (
-        <div
+        <a
             className={clsx(
                 "annotation relative flex cursor-pointer flex-col gap-2 overflow-hidden rounded-l-sm rounded-r-md p-2 px-3 text-sm shadow transition-transform hover:scale-[99%]",
                 className
@@ -56,9 +57,21 @@ function Annotation({ className, style, annotation, heightLimitPx }: AnnotationP
                 maxHeight: heightLimitPx,
                 ...style,
             }}
-            onClick={() => {
-                onExpand(annotation);
+            onClick={(e) => {
+                if (annotation.article?.url) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    openArticleResilient(annotation.article.url, true, annotation.id);
+                }
+
+                reportEventContentScript("expandAnnotation", {
+                    platform: annotation.platform,
+                });
             }}
+            href={annotation.link || annotation.article?.url}
+            target="_blank"
+            rel="noreferrer"
         >
             <div
                 className="annotation-text select-none"
@@ -93,10 +106,12 @@ function Annotation({ className, style, annotation, heightLimitPx }: AnnotationP
             </div>
 
             <div className="annotation-bar font-title relative flex select-none items-center gap-2 overflow-hidden whitespace-nowrap">
-                {(platform === "info" || platform === "related") && (
+                {(platform === "info" || platform === "related") && annotation.article?.url && (
                     <img
                         className="w-4 shrink-0 rounded-sm"
-                        src={`https://www.google.com/s2/favicons?sz=128&domain=https://${domain}`}
+                        src={`https://www.google.com/s2/favicons?sz=128&domain=https://${getDomain(
+                            annotation.article.url
+                        )}`}
                     />
                 )}
                 {platform == "h" && (
@@ -106,9 +121,9 @@ function Annotation({ className, style, annotation, heightLimitPx }: AnnotationP
                     <img src="../assets/icons/yc.svg" className="w-4 rounded-sm" />
                 )}
 
-                {annotation.title && (
+                {annotation.article && (
                     <div className="flex-grow overflow-hidden overflow-ellipsis">
-                        {annotation.title}
+                        {annotation.article.title}
                     </div>
                 )}
                 {annotation.author && <div className="">{author?.replace("_hn", "")}</div>}
@@ -120,7 +135,7 @@ function Annotation({ className, style, annotation, heightLimitPx }: AnnotationP
                     </div>
                 )}
             </div>
-        </div>
+        </a>
     );
 }
 export default Annotation;
@@ -146,11 +161,4 @@ export function parseDate(timestamp) {
             .replace(/[a-z]+/gi, " ")
             .replace(".000", "")
     );
-}
-
-function onExpand(annotation: LindyAnnotation) {
-    reportEventContentScript("expandSocialHighlight", {
-        platform: annotation.platform,
-        reply_count: annotation.reply_count,
-    });
 }
