@@ -43,7 +43,7 @@ export default class SmartHighlightsModifier implements PageModifier {
     }[] = [];
 
     private scoreThreshold = 0.6;
-    private relatedEnabled = true;
+    private relatedThreshold = 0.5;
 
     constructor(
         user_id: string,
@@ -187,14 +187,16 @@ export default class SmartHighlightsModifier implements PageModifier {
         const relatedPerHighlight = await fetchRelatedAnnotations(
             this.user_id,
             this.article_id,
-            this.topHighlights.map((s) => s.highlight)
+            this.topHighlights.map((s) => s.highlight),
+            this.relatedThreshold,
+            true // save passed highlights to the user database
         );
 
         // add to rankedSentencesByParagraph
         this.relatedCount = 0;
         relatedPerHighlight.forEach((related, highlightIndex) => {
             // filter related now
-            related = related.filter((r) => r.score >= 0.5 && r.score2 !== 1).slice(0, 2);
+            related = related.slice(0, 2);
             if (related.length === 0) {
                 return;
             }
@@ -203,6 +205,9 @@ export default class SmartHighlightsModifier implements PageModifier {
             const { paragraphIndex, sentenceIndex } = this.topHighlights[highlightIndex];
             this.rankedSentencesByParagraph[paragraphIndex][sentenceIndex].related = related;
         });
+        if (this.relatedCount === 0) {
+            return;
+        }
 
         // paint again including related data
         this.enableAnnotations();
@@ -238,9 +243,11 @@ export default class SmartHighlightsModifier implements PageModifier {
             // consider related anchors independently
             const textFragments: RankedSentence[] = [];
             rankedSentences.forEach((sentence, index) => {
-                if (!sentence.related) {
+                if (!sentence.related || !sentence.related[0].anchor) {
                     textFragments.push(sentence);
                 } else {
+                    // process specific anchor sentences
+
                     const anchor = sentence.related[0].anchor;
                     const anchorIndex = sentence.sentence.indexOf(anchor);
 
@@ -421,11 +428,12 @@ export default class SmartHighlightsModifier implements PageModifier {
 
         const sidebarIframe = document.getElementById("lindy-annotations-bar") as HTMLIFrameElement;
         if (sidebarIframe && Object.keys(this.offsetById).length > 0) {
-            // sendIframeEvent(sidebarIframe, {
-            //     event: "changedDisplayOffset",
-            //     offsetById: this.offsetById,
-            //     offsetEndById: this.offsetEndById,
-            // });
+            sendIframeEvent(sidebarIframe, {
+                event: "changedDisplayOffset",
+                offsetById: this.offsetById,
+                offsetEndById: this.offsetEndById,
+            });
+
             // insertMarginBar(
             //     this.annotations
             //         .map((a) => {
@@ -771,17 +779,5 @@ export default class SmartHighlightsModifier implements PageModifier {
                 return;
             }
         }
-    }
-}
-
-async function fetchRetry(url: string, options: RequestInit, n: number = 2): Promise<Response> {
-    try {
-        return await fetch(url, options);
-    } catch (err) {
-        if (n === 0) {
-            throw err;
-        }
-        await new Promise((resolve) => setTimeout(resolve, 10 * 1000));
-        return fetchRetry(url, options, n - 1);
     }
 }

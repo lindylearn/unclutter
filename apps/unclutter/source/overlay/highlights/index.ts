@@ -26,7 +26,7 @@ export function renderHighlightsLayer(enablePageView: () => void, enhanceActive:
         // const quote = range.toString();
         // renderHighlighter(rect, quote, related);
     }
-    const userId = "test-user";
+    const userId = "fulltext-test2";
     const smartHighlightsModifier = new SmartHighlightsModifier(userId, onHighlightClick);
 
     if (enhanceActive) {
@@ -70,11 +70,11 @@ export function renderHighlightsLayer(enablePageView: () => void, enhanceActive:
             smartHighlightsModifier.relatedCount
         );
 
-        // await smartHighlightsModifier.fetchRelatedHighlights();
-        // updateArticleBadge(
-        //     smartHighlightsModifier.keyPointsCount,
-        //     smartHighlightsModifier.relatedCount
-        // );
+        await smartHighlightsModifier.fetchRelatedHighlights();
+        updateArticleBadge(
+            smartHighlightsModifier.keyPointsCount,
+            smartHighlightsModifier.relatedCount
+        );
     }
 
     renderArticleBadge(

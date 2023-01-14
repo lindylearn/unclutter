@@ -40,7 +40,7 @@
                 </div>
             {/if}
 
-            <!-- {#if relatedCount}
+            {#if relatedCount !== null}
                 <div class="flex items-center gap-1">
                     <svg class="-mt-0.5 w-4" viewBox="0 0 512 512">
                         <path
@@ -50,7 +50,7 @@
                     </svg>
                     {relatedCount}
                 </div>
-            {/if} -->
+            {/if}
 
             <div class="py-1.5">Unclutter</div>
         </div>

@@ -40,7 +40,7 @@ export function createAnnotation(
         author: partial.author || "",
         quote_html_selector: selector,
         platform: partial.platform || "ll",
-        link: partial.id,
+        link: partial.link,
         reply_count: partial.reply_count || 0,
 
         isMyAnnotation: partial.isMyAnnotation || false,

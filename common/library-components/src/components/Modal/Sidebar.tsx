@@ -138,7 +138,7 @@ function getModalTabOptions(
         //     ),
         // },
         {
-            label: "Progress",
+            label: "Stats",
             value: "stats",
             svg: (
                 <svg className="h-4" viewBox="0 0 448 512">

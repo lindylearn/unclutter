@@ -23,7 +23,7 @@ function AnnotationThread(props: AnnotationThreadProps) {
         if (props.annotation.isMyAnnotation) {
             setIsFetchingRelated(true);
 
-            const userId = "test-user";
+            const userId = "fulltext-test2";
             fetchRelatedAnnotations(userId, props.annotation.article_id, [
                 props.annotation.quote_text,
             ])

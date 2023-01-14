@@ -170,6 +170,10 @@ export async function fetchRelatedAnnotations(
             save_highlights,
         }),
     });
+    if (!response.ok) {
+        return [];
+    }
+
     const json = await response.json();
     return json?.related;
 }
@@ -211,4 +215,16 @@ export async function deleteAnnotationVectors(
             highlight_id,
         }),
     });
+}
+
+async function fetchRetry(url: string, options: RequestInit, n: number = 1): Promise<Response> {
+    try {
+        return await fetch(url, options);
+    } catch (err) {
+        if (n === 0) {
+            throw err;
+        }
+        await new Promise((resolve) => setTimeout(resolve, 1 * 1000));
+        return fetchRetry(url, options, n - 1);
+    }
 }
