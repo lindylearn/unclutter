@@ -12,6 +12,7 @@ import {
     updateLocalAnnotation,
 } from "./local";
 import { getHiddenAnnotations } from "./legacy";
+import { indexAnnotationVectors } from "../../common/api";
 
 export async function getAnnotations(
     url: string,
@@ -64,6 +65,9 @@ async function getPersonalAnnotations(url: string): Promise<LindyAnnotation[]> {
 export async function createAnnotation(annotation: LindyAnnotation): Promise<LindyAnnotation> {
     const createdAnnotation = await createLocalAnnotation(annotation);
     reportEventContentScript("createAnnotation");
+
+    // indexAnnotationVectors("test", )
+
     return createdAnnotation;
 }
 

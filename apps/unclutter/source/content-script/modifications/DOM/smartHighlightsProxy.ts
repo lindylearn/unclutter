@@ -7,9 +7,11 @@ import { sendIframeEvent } from "../../../common/reactIframe";
 // communicate with a SmartHighlightsModifier instance inside the same window
 @trackModifierExecution
 export default class SmartHighlightsProxy implements PageModifier {
+    private articleId: string;
     private annotationsModifier: AnnotationsModifier;
 
-    constructor(annotationsModifier: AnnotationsModifier) {
+    constructor(articleId: string, annotationsModifier: AnnotationsModifier) {
+        this.articleId = articleId;
         this.annotationsModifier = annotationsModifier;
 
         window.addEventListener("message", (event) => this.handleMessage(event.data || {}));
@@ -21,6 +23,7 @@ export default class SmartHighlightsProxy implements PageModifier {
         if (message.type === "clickSmartHighlight") {
             // call createPaintNewAnnotation in enhance.ts for smaller bundle size
             createPaintNewAnnotation(
+                this.articleId,
                 message.selector,
                 (annotation) => {
                     sendIframeEvent(this.annotationsModifier.sidebarIframe, {

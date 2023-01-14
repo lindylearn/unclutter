@@ -33,7 +33,7 @@ export function useFetchAnnotations(
             // TODO re-enable page notes
             // const pageNotes = annotations.filter((a) => !a.quote_html_selector);
             // if (pageNotes.length === 0) {
-            //     pageNotes.push(createDraftAnnotation(url, null));
+            //     pageNotes.push(createDraftAnnotation(article_id, null));
             // }
             // show page notes immediately, others once anchored
             // mutateAnnotations({ action: "set", annotations: pageNotes });

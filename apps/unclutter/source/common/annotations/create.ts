@@ -1,12 +1,13 @@
 import { getUrlHash } from "@unclutter/library-components/dist/common/url";
 import type { Annotation, Article } from "@unclutter/library-components/dist/store/_schema";
+import { constructLocalArticleInfo } from "../schema";
 
 export function createDraftAnnotation(
-    url: string,
+    article_id: string,
     selector: object,
     reply_to: string = null
 ): LindyAnnotation {
-    return createAnnotation(url, selector, {
+    return createAnnotation(article_id, selector, {
         id: generateId(),
         reply_to,
         isMyAnnotation: true,
@@ -14,28 +15,26 @@ export function createDraftAnnotation(
 }
 
 export function createInfoAnnotation(
-    page_url: string,
+    article_id: string,
     selector: object,
-    article?: Article,
-    relatedAnnotations?: LindyAnnotation[]
+    article?: Article
 ): LindyAnnotation {
-    return createAnnotation(page_url, selector, {
+    return createAnnotation(article_id, selector, {
         id: generateId(),
         platform: "info",
         article,
-        relatedAnnotations,
     });
 }
 
 export function createAnnotation(
-    url: string,
+    article_id: string,
     selector: object,
     partial: Partial<LindyAnnotation> = {}
 ): LindyAnnotation {
     return {
         ...partial,
         id: partial.id,
-        url,
+        article_id,
         quote_text: selector?.[2]?.exact || "_",
         text: partial.text || "",
         author: partial.author || "",
@@ -76,7 +75,8 @@ export interface LindyAnnotation {
     user_upvoted: boolean;
     isPublic: boolean;
     reply_to?: string;
-    url: string; // page url or article id
+
+    article_id: string;
 
     h_id?: string; // remote id if synced with hypothesis
 
@@ -96,13 +96,15 @@ export interface LindyAnnotation {
     score?: number;
 }
 
+// only used when importing from hypothesis
 // TODO serialize to Annotation type directly
 export function hypothesisToLindyFormat(annotation: any, currentUsername: string): LindyAnnotation {
+    const article_id = getUrlHash(annotation.uri);
     const author: string = annotation.user.match(/([^:]+)@/)[1];
     return {
         id: annotation.id,
         h_id: annotation.id,
-        url: annotation.uri,
+        article_id,
         author,
         isMyAnnotation: author === currentUsername,
         platform: "h",
@@ -120,6 +122,12 @@ export function hypothesisToLindyFormat(annotation: any, currentUsername: string
         user_upvoted: false,
         isPublic: annotation.permissions.read[0] === "group:__world__",
         reply_to: annotation.references?.[annotation.references.length - 1],
+
+        article: constructLocalArticleInfo(
+            annotation.uri,
+            article_id,
+            annotation.document.title?.[0]
+        ).article,
     };
 }
 
@@ -128,7 +136,7 @@ export function pickleLocalAnnotation(annotation: LindyAnnotation): Annotation {
     return {
         id: annotation.id,
         h_id: annotation.h_id,
-        article_id: annotation.url.startsWith("http") ? getUrlHash(annotation.url) : annotation.url,
+        article_id: annotation.article_id,
         created_at: Math.round(new Date(annotation.created_at).getTime() / 1000),
         updated_at: annotation.updated_at
             ? Math.round(new Date(annotation.updated_at).getTime() / 1000)

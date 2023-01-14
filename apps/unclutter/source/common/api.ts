@@ -162,7 +162,7 @@ export async function fetchRelatedAnnotations(
         },
         body: JSON.stringify({
             user_id,
-            article_id,
+            for_article_id: article_id,
             highlights,
             score_threshold,
             save_highlights,

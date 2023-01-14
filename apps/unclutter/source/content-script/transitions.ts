@@ -62,7 +62,10 @@ export default class TransitionManager implements PageModifier {
         this.readingTimeModifier,
         this.annotationsModifier
     );
-    private smartHighlightsProxy = new SmartHighlightsProxyModifier(this.annotationsModifier);
+    private smartHighlightsProxy = new SmartHighlightsProxyModifier(
+        this.articleId,
+        this.annotationsModifier
+    );
     private overlayManager = new OverlayManager(
         this.domain,
         this.themeModifier,
@@ -82,6 +85,7 @@ export default class TransitionManager implements PageModifier {
         this.libraryModifier
     );
     // private linkAnnotationsModifier = new LinkAnnotationsModifier(
+    //     this.articleId,
     //     this.annotationsModifier,
     //     this.libraryModifier,
     //     this.overlayManager

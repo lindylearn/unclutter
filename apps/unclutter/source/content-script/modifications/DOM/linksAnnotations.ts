@@ -16,15 +16,18 @@ import { createScreenshots } from "@unclutter/library-components/dist/common/api
 */
 @trackModifierExecution
 export default class LinkAnnotationsModifier implements PageModifier {
+    private article_id: string;
     private annotationsModifier: AnnotationsModifier;
     private libraryModifier: LibraryModifier;
     private overlayManager: OverlayManager;
 
     constructor(
+        article_id: string,
         annotationsModifier: AnnotationsModifier,
         libraryModifier: LibraryModifier,
         overlayManager: OverlayManager
     ) {
+        this.article_id = article_id;
         this.annotationsModifier = annotationsModifier;
         this.libraryModifier = libraryModifier;
         this.overlayManager = overlayManager;
@@ -134,7 +137,7 @@ export default class LinkAnnotationsModifier implements PageModifier {
         }
 
         const annotation = {
-            ...createInfoAnnotation(window.location.href, selector, article),
+            ...createInfoAnnotation(this.article_id, selector, article),
             displayOffset: getNodeOffset(link),
             displayOffsetEnd: getNodeOffset(link, "bottom"),
         };

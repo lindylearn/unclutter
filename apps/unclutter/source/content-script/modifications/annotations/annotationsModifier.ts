@@ -98,7 +98,11 @@ export default class AnnotationsModifier implements PageModifier {
         // listeners need to be configured before rendering iframe to anchor annotations?
 
         // selection is only user interface for annotations
-        createSelectionListener(this.sidebarIframe, this.onAnnotationUpdate.bind(this));
+        createSelectionListener(
+            this.articleUrl,
+            this.sidebarIframe,
+            this.onAnnotationUpdate.bind(this)
+        );
 
         sendIframeEvent(this.sidebarIframe, {
             event: "setEnablePersonalAnnotations",

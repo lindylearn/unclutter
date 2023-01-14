@@ -18,6 +18,7 @@ import {
 // send user text selections to the sidebar iframe, in order to create an annotation
 const listeners: [string, () => void][] = [];
 export function createSelectionListener(
+    articleId: string,
     sidebarIframe: HTMLIFrameElement,
     onAnnotationUpdate: AnnotationListener
 ) {
@@ -77,6 +78,7 @@ export function createSelectionListener(
         }
 
         createPaintNewAnnotation(
+            articleId,
             selector,
             (annotation) => {
                 sendIframeEvent(sidebarIframe, {
@@ -160,13 +162,14 @@ function _expandRangeToWordBoundary(range: Range, direction: "forwards" | "backw
 }
 
 export async function createPaintNewAnnotation(
+    articleId: string,
     selector: any,
     callback: (newAnnotation: LindyAnnotation) => void,
     sidebarIframe: HTMLIFrameElement,
     activeAnnotationId: string
 ) {
     // use id created during selection to keep same color
-    let annotation = createDraftAnnotation(window.location.href, selector);
+    let annotation = createDraftAnnotation(articleId, selector);
     annotation.id = activeAnnotationId;
     annotation.focused = true;
 

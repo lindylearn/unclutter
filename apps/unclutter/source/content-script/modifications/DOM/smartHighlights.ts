@@ -156,14 +156,8 @@ export default class SmartHighlightsModifier implements PageModifier {
                     });
                 }
             });
-
-            // topHighlights.push({
-            //     highlight: paragraph.map((s) => s.sentence).join(" "),
-            //     paragraphIndex,
-            //     sentenceIndex: 0,
-            // });
         });
-        console.log(this.topHighlights.map((s) => s.highlight?.replace(/[\s\n]+/g, " ").trim()));
+        // console.log(this.topHighlights.map((s) => s.highlight?.replace(/[\s\n]+/g, " ").trim()));
 
         // insert smart highlights into the remote vector database, if enabled by the user
         // only the text highlighted in yellow on article pages is sent over the network,
@@ -300,7 +294,7 @@ export default class SmartHighlightsModifier implements PageModifier {
                     sentence.related.forEach((r, i) => {
                         this.annotations.push(
                             createAnnotation(
-                                window.location.href,
+                                this.article_id,
                                 describeAnnotation(document.body, range),
                                 {
                                     ...r,
