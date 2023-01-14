@@ -26,7 +26,8 @@ export function renderHighlightsLayer(enablePageView: () => void, enhanceActive:
         // const quote = range.toString();
         // renderHighlighter(rect, quote, related);
     }
-    const smartHighlightsModifier = new SmartHighlightsModifier(onHighlightClick);
+    const userId = "test-user";
+    const smartHighlightsModifier = new SmartHighlightsModifier(userId, onHighlightClick);
 
     if (enhanceActive) {
         setReaderModeSettings();

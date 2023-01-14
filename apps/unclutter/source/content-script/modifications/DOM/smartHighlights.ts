@@ -6,6 +6,12 @@ import { describe as describeAnnotation } from "../../../common/annotator/anchor
 import { PageModifier, trackModifierExecution } from "../_interface";
 import { getNodeOffset } from "../../../common/annotations/offset";
 import { sendIframeEvent } from "../../../common/reactIframe";
+import { getUrlHash } from "@unclutter/library-components/dist/common/url";
+import {
+    fetchRelatedAnnotations,
+    indexAnnotationVectors,
+    RelatedHighlight,
+} from "../../../common/api";
 // import { insertMarginBar } from "../annotations/highlightsApi";
 
 export interface RankedSentence {
@@ -13,14 +19,6 @@ export interface RankedSentence {
     score: number;
     sentence: string;
     related?: RelatedHighlight[];
-}
-export interface RelatedHighlight {
-    score: number;
-    score2: number;
-    anchor?: string;
-    text: string;
-    excerpt: string;
-    title: string;
 }
 
 const excludedParagraphClassNames = [
@@ -31,6 +29,8 @@ const excludedParagraphClassNames = [
 // analyse an article page and highlight key sentences using AI
 @trackModifierExecution
 export default class SmartHighlightsModifier implements PageModifier {
+    private user_id: string;
+    private article_id: string;
     private onHighlightClick: null | ((range: Range, related: RelatedHighlight[]) => void);
 
     articleSummary: string | null = null;
@@ -45,7 +45,12 @@ export default class SmartHighlightsModifier implements PageModifier {
     private scoreThreshold = 0.6;
     private relatedEnabled = true;
 
-    constructor(onHighlightClick: (range: Range, related: RelatedHighlight[]) => void = null) {
+    constructor(
+        user_id: string,
+        onHighlightClick: (range: Range, related: RelatedHighlight[]) => void = null
+    ) {
+        this.user_id = user_id;
+        this.article_id = getUrlHash(window.location.href);
         this.onHighlightClick = onHighlightClick;
 
         window.addEventListener("message", (event) => this.handleMessage(event.data || {}));
@@ -160,6 +165,17 @@ export default class SmartHighlightsModifier implements PageModifier {
         });
         console.log(this.topHighlights.map((s) => s.highlight?.replace(/[\s\n]+/g, " ").trim()));
 
+        // insert smart highlights into the remote vector database, if enabled by the user
+        // only the text highlighted in yellow on article pages is sent over the network,
+        // using only the one-way hash of the current URL for deduplication
+        indexAnnotationVectors(
+            this.user_id,
+            this.article_id,
+            this.topHighlights.map((h) => h.highlight),
+            undefined,
+            true
+        );
+
         // report diagnostics
         let durationMs = Math.round(performance.now() - start);
         reportEventContentScript("renderHighlightsLayer", {
@@ -173,23 +189,12 @@ export default class SmartHighlightsModifier implements PageModifier {
     }
 
     async fetchRelatedHighlights(): Promise<void> {
-        // save significant sentences in user library, and fetch related existing highlights
-        const response = await fetchRetry(
-            "https://q5ie5hjr3g.execute-api.us-east-2.amazonaws.com/default/related",
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    title: document.title,
-                    url: window.location.href,
-                    highlights: this.topHighlights.map((s) => s.highlight),
-                }),
-            }
+        // fetch related existing highlights
+        const relatedPerHighlight = await fetchRelatedAnnotations(
+            this.user_id,
+            this.article_id,
+            this.topHighlights.map((s) => s.highlight)
         );
-        const relatedPerHighlight: RelatedHighlight[][] = (await response.json())?.related;
-        // console.log(relatedPerHighlight);
 
         // add to rankedSentencesByParagraph
         this.relatedCount = 0;

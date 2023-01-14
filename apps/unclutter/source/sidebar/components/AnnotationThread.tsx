@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import type { LindyAnnotation } from "../../common/annotations/create";
+import { fetchRelatedAnnotations, RelatedHighlight } from "../../common/api";
 // import { getAnnotationColor } from "../../common/annotations/styling";
 import Annotation from "./Annotation";
 import AnnotationDraft from "./AnnotationDraft";
@@ -16,29 +17,19 @@ interface AnnotationThreadProps {
 
 function AnnotationThread(props: AnnotationThreadProps) {
     const [isFetchingRelated, setIsFetchingRelated] = useState(false);
-    const [related, setRelated] = useState<LindyAnnotation[]>();
+    const [related, setRelated] = useState<RelatedHighlight[]>();
     useEffect(() => {
         if (props.annotation.isMyAnnotation) {
             setIsFetchingRelated(true);
-            fetch("https://api2.lindylearn.io/related/get_related", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    title: "",
-                    url: props.annotation.url,
-                    highlights: [props.annotation.quote_text],
-                    score_threshold: 0.5,
-                    save_highlights: false, // testing
-                }),
-            })
-                .then(async (response) => {
-                    const data = await response.json();
-                    let related = data.related[0].slice(0, 2);
 
+            console.log(props.annotation);
+            const userId = "test-user";
+            fetchRelatedAnnotations(userId, props.annotation.article_id, [
+                props.annotation.quote_text,
+            ])
+                .then(async (related) => {
                     setIsFetchingRelated(false);
-                    setRelated(related);
+                    setRelated(related[0].slice(0, 2));
                 })
                 .catch((err) => {
                     console.error(err);

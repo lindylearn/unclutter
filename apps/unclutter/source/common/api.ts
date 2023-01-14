@@ -138,3 +138,75 @@ export async function getArticleGraph(url: string, user_id: string): Promise<Gra
 
     return await response.json();
 }
+
+export interface RelatedHighlight {
+    score: number;
+    score2: number;
+    anchor?: string;
+    text: string;
+    excerpt: string;
+    title: string;
+}
+
+export async function fetchRelatedAnnotations(
+    user_id: string,
+    article_id: string,
+    highlights: string[],
+    score_threshold: number = 0.5,
+    save_highlights: boolean = false
+): Promise<RelatedHighlight[][]> {
+    const response = await fetch(`${lindyApiUrl}/related/fetch`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            user_id,
+            article_id,
+            highlights,
+            score_threshold,
+            save_highlights,
+        }),
+    });
+    const json = await response.json();
+    return json?.related;
+}
+
+export async function indexAnnotationVectors(
+    user_id: string,
+    article_id: string,
+    highlights: string[],
+    highlight_ids: string[] = undefined,
+    delete_previous: boolean = false
+) {
+    await fetch(`${lindyApiUrl}/related/insert`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            user_id,
+            article_id,
+            highlights,
+            delete_previous,
+        }),
+    });
+}
+
+export async function deleteAnnotationVectors(
+    user_id: string,
+    article_id: string = undefined,
+    highlight_id: string = undefined
+) {
+    await fetch(`${lindyApiUrl}/related/delete`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            user_id,
+            article_id,
+            highlight_id,
+        }),
+    });
+}
