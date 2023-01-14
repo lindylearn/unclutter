@@ -1,4 +1,3 @@
-import { getUrlHash } from "@unclutter/library-components/dist/common/url";
 import { ReplicacheProxy } from "@unclutter/library-components/dist/common/replicache";
 import {
     LindyAnnotation,
@@ -8,8 +7,8 @@ import {
 
 const rep = new ReplicacheProxy();
 
-export async function getLocalAnnotations(pageUrl: string): Promise<LindyAnnotation[]> {
-    const annotations = await rep.query.listArticleAnnotations(getUrlHash(pageUrl));
+export async function getLocalAnnotations(articleId: string): Promise<LindyAnnotation[]> {
+    const annotations = await rep.query.listArticleAnnotations(articleId);
     return annotations.map(unpickleLocalAnnotation);
 }
 

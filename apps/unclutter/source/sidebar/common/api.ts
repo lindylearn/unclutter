@@ -1,6 +1,5 @@
 import { hypothesisToLindyFormat, LindyAnnotation } from "../../common/annotations/create";
 import { getHypothesisToken, getHypothesisUsername } from "../../common/annotations/storage";
-import { getUrlHash } from "@unclutter/library-components/dist/common/url";
 import ky from "ky";
 import type { Annotation } from "@unclutter/library-components/dist/store";
 
@@ -15,14 +14,12 @@ const hypothesisApi = "https://api.hypothes.is/api";
 // --- global fetching
 
 // public annotations via lindy api
-export async function getLindyAnnotations(url: string): Promise<LindyAnnotation[]> {
-    // query API with hash of normalized url to not leak visited articles
-    const url_hash = getUrlHash(url);
-
+export async function getLindyAnnotations(articleId: string): Promise<LindyAnnotation[]> {
     try {
         const response = await fetch(
             `${lindyApiUrl}/annotations/?${new URLSearchParams({
-                page_hash: url_hash,
+                // query API with hash of normalized url to not leak visited articles
+                page_hash: articleId,
             })}`,
             await _getConfig()
         );
@@ -34,7 +31,7 @@ export async function getLindyAnnotations(url: string): Promise<LindyAnnotation[
                 ...annotation,
                 isPublic: true,
 
-                url,
+                article_id: articleId,
                 replies: annotation.replies.map(mapFormat),
                 isMyAnnotation: annotation.author === username,
             };

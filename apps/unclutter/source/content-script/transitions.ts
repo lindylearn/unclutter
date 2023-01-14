@@ -33,7 +33,7 @@ export default class TransitionManager implements PageModifier {
     private cssomProvider = new CSSOMProvider();
     private responsiveStyleModifier = new ResponsiveStyleModifier(this.cssomProvider);
     private stylePatchesModifier = new StylePatchesModifier(this.cssomProvider);
-    private annotationsModifier = new AnnotationsModifier(this.articleUrl);
+    private annotationsModifier = new AnnotationsModifier(this.articleId);
     private textContainerModifier = new TextContainerModifier();
     private contentBlockModifier = new ContentBlockModifier(
         this.domain,

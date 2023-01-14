@@ -1,7 +1,6 @@
 import { useCallback, useEffect } from "react";
-import { createDraftAnnotation, LindyAnnotation } from "../../common/annotations/create";
+import { LindyAnnotation } from "../../common/annotations/create";
 import { reportEventContentScript } from "@unclutter/library-components/dist/common/messaging";
-import { createRemoteAnnotation } from "../common/api";
 import { deleteAnnotation, getAnnotations } from "../common/CRUD";
 import { hideAnnotationLocally } from "../common/legacy";
 import { AnnotationMutation } from "./local";
@@ -11,7 +10,7 @@ import { AnnotationMutation } from "./local";
 const maxSocialQuoteLength = 300;
 
 export function useFetchAnnotations(
-    url: string,
+    articleId: string,
     personalAnnotationsEnabled: boolean,
     enableSocialAnnotations: boolean,
     mutateAnnotations: React.Dispatch<AnnotationMutation>
@@ -19,7 +18,7 @@ export function useFetchAnnotations(
     useEffect(() => {
         (async function () {
             let annotations = await getAnnotations(
-                url,
+                articleId,
                 personalAnnotationsEnabled,
                 enableSocialAnnotations
             );

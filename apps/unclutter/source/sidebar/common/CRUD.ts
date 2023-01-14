@@ -15,7 +15,7 @@ import { getHiddenAnnotations } from "./legacy";
 import { indexAnnotationVectors } from "../../common/api";
 
 export async function getAnnotations(
-    url: string,
+    articleId: string,
     personalAnnotationsEnabled: boolean,
     enableSocialAnnotations: boolean
 ): Promise<LindyAnnotation[]> {
@@ -27,8 +27,8 @@ export async function getAnnotations(
 
     // fetch annotations from configured sources
     const [personalAnnotations, publicAnnotations] = await Promise.all([
-        personalAnnotationsEnabled ? getPersonalAnnotations(url) : [],
-        enableSocialAnnotations ? getLindyAnnotations(url) : [],
+        personalAnnotationsEnabled ? getPersonalAnnotations(articleId) : [],
+        enableSocialAnnotations ? getLindyAnnotations(articleId) : [],
     ]);
 
     // filter out public hypothesis annotations
@@ -58,8 +58,8 @@ export async function getAnnotations(
     return annotations;
 }
 
-async function getPersonalAnnotations(url: string): Promise<LindyAnnotation[]> {
-    return await getLocalAnnotations(url);
+async function getPersonalAnnotations(articleId: string): Promise<LindyAnnotation[]> {
+    return await getLocalAnnotations(articleId);
 }
 
 export async function createAnnotation(annotation: LindyAnnotation): Promise<LindyAnnotation> {

@@ -19,15 +19,15 @@ import { getNodeOffset } from "../../../common/annotations/offset";
 
 @trackModifierExecution
 export default class AnnotationsModifier implements PageModifier {
-    private articleUrl: string;
+    private articleId: string;
 
     sidebarIframe: HTMLIFrameElement;
     private sidebarLoaded: boolean = false;
     private reactLoaded: boolean = false;
     private pageResizeObserver: ResizeObserver;
 
-    constructor(articleUrl: string) {
-        this.articleUrl = articleUrl;
+    constructor(articleId: string) {
+        this.articleId = articleId;
         browser.runtime.onMessage.addListener(this.onRuntimeMessage.bind(this));
     }
 
@@ -39,7 +39,7 @@ export default class AnnotationsModifier implements PageModifier {
     async afterTransitionIn() {
         // always enable sidebar
         this.sidebarIframe = injectReactIframe("/sidebar/index.html", "lindy-annotations-bar", {
-            articleUrl: this.articleUrl,
+            articleId: this.articleId,
             darkModeEnabled: (this.darkModeEnabled || false).toString(),
         });
         window.addEventListener("message", ({ data }) => {
@@ -99,7 +99,7 @@ export default class AnnotationsModifier implements PageModifier {
 
         // selection is only user interface for annotations
         createSelectionListener(
-            this.articleUrl,
+            this.articleId,
             this.sidebarIframe,
             this.onAnnotationUpdate.bind(this)
         );

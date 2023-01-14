@@ -6,7 +6,7 @@ import AnnotationsList from "./components/AnnotationsList";
 import { useAnnotationModifiers, useFetchAnnotations } from "./state/actions";
 import { annotationReducer, handleWindowEventFactory } from "./state/local";
 
-export default function App({ articleUrl }: { articleUrl: string }) {
+export default function App({ articleId }: { articleId: string }) {
     // annotation settings (updated through events below)
     const {
         personalAnnotationsEnabled,
@@ -21,7 +21,7 @@ export default function App({ articleUrl }: { articleUrl: string }) {
     const [summaryAnnotation, setSummaryAnnotation] = useState<LindyAnnotation>();
     const [annotations, mutateAnnotations] = useReducer(annotationReducer, []);
     useFetchAnnotations(
-        articleUrl,
+        articleId,
         personalAnnotationsEnabled,
         enableSocialAnnotations,
         mutateAnnotations
