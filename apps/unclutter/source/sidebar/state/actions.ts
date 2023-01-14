@@ -5,10 +5,6 @@ import { deleteAnnotation, getAnnotations } from "../common/CRUD";
 import { hideAnnotationLocally } from "../common/legacy";
 import { AnnotationMutation } from "./local";
 
-// don't show large social comments as they are distracting
-// examples: http://johnsalvatier.org/blog/2017/reality-has-a-surprising-amount-of-detail
-const maxSocialQuoteLength = 300;
-
 export function useFetchAnnotations(
     articleId: string,
     personalAnnotationsEnabled: boolean,
@@ -21,10 +17,6 @@ export function useFetchAnnotations(
                 articleId,
                 personalAnnotationsEnabled,
                 enableSocialAnnotations
-            );
-
-            annotations = annotations.filter(
-                (a) => !a.quote_text || a.quote_text.length < maxSocialQuoteLength
             );
 
             // send anchor event even for empty list in order to remove annotations later

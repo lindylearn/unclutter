@@ -26,7 +26,7 @@ export async function getLindyAnnotations(articleId: string): Promise<LindyAnnot
         const json = await response.json();
 
         const username = await getHypothesisUsername();
-        function mapFormat(annotation: LindyAnnotation): LindyAnnotation {
+        function mapFormat(annotation: any): LindyAnnotation {
             return {
                 ...annotation,
                 isPublic: true,
@@ -36,7 +36,13 @@ export async function getLindyAnnotations(articleId: string): Promise<LindyAnnot
                 isMyAnnotation: annotation.author === username,
             };
         }
-        return json.results.map(mapFormat);
+        let annotations: LindyAnnotation[] = json.results.map(mapFormat);
+
+        // don't show large social comments as they are distracting
+        // examples: http://johnsalvatier.org/blog/2017/reality-has-a-surprising-amount-of-detail
+        annotations = annotations.filter((a) => a.quote_text?.length < 300);
+
+        return annotations;
     } catch (err) {
         console.error(err);
         return [];
