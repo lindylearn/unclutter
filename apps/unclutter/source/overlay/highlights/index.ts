@@ -51,7 +51,7 @@ export function renderHighlightsLayer(enablePageView: () => void, enhanceActive:
     function setReaderModeSettings() {
         smartHighlightsModifier.isProxyActive = true;
         smartHighlightsModifier.enableAllSentences = false;
-        smartHighlightsModifier.enableHighlightsClick = true;
+        smartHighlightsModifier.enableHighlightsClick = false;
         smartHighlightsModifier.enableScrollBar = false;
     }
     function enablePageViewInner() {

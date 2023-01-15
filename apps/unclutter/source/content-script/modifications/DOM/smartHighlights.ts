@@ -64,15 +64,15 @@ export default class SmartHighlightsModifier implements PageModifier {
             ) as HTMLIFrameElement;
             if (sidebarIframe && this.annotations.length > 0) {
                 // disabled automatic show
-                // sendIframeEvent(sidebarIframe, {
-                //     event: "setInfoAnnotations",
-                //     annotations: this.annotations,
-                // });
-                // sendIframeEvent(sidebarIframe, {
-                //     event: "changedDisplayOffset",
-                //     offsetById: this.offsetById,
-                //     offsetEndById: this.offsetEndById,
-                // });
+                sendIframeEvent(sidebarIframe, {
+                    event: "setInfoAnnotations",
+                    annotations: this.annotations,
+                });
+                sendIframeEvent(sidebarIframe, {
+                    event: "changedDisplayOffset",
+                    offsetById: this.offsetById,
+                    offsetEndById: this.offsetEndById,
+                });
             }
         }
     }
@@ -309,7 +309,7 @@ export default class SmartHighlightsModifier implements PageModifier {
                                     id: `${sentence.id}_${i}`,
                                     platform: "info",
                                     infoType: "related",
-                                    score: sentence.related[0].score + 0.2, // same score for all related
+                                    // score: sentence.related[0].score + 0.2, // same score for all related
                                 }
                             )
                         );
@@ -429,27 +429,27 @@ export default class SmartHighlightsModifier implements PageModifier {
 
         const sidebarIframe = document.getElementById("lindy-annotations-bar") as HTMLIFrameElement;
         if (sidebarIframe && Object.keys(this.offsetById).length > 0) {
-            // sendIframeEvent(sidebarIframe, {
-            //     event: "changedDisplayOffset",
-            //     offsetById: this.offsetById,
-            //     offsetEndById: this.offsetEndById,
-            // });
+            sendIframeEvent(sidebarIframe, {
+                event: "changedDisplayOffset",
+                offsetById: this.offsetById,
+                offsetEndById: this.offsetEndById,
+            });
 
-            insertMarginBar(
-                this.annotations
-                    .map((a) => {
-                        // take only first
-                        if (!a.id.endsWith("_0")) {
-                            return null;
-                        }
-                        return {
-                            ...a,
-                            displayOffset: this.offsetById[a.id],
-                            displayOffsetEnd: this.offsetEndById[a.id],
-                        };
-                    })
-                    .filter((e) => e !== null)
-            );
+            // insertMarginBar(
+            //     this.annotations
+            //         .map((a) => {
+            //             // take only first
+            //             if (!a.id.endsWith("_0")) {
+            //                 return null;
+            //             }
+            //             return {
+            //                 ...a,
+            //                 displayOffset: this.offsetById[a.id],
+            //                 displayOffsetEnd: this.offsetEndById[a.id],
+            //             };
+            //         })
+            //         .filter((e) => e !== null)
+            // );
         }
     }
 

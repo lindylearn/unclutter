@@ -80,7 +80,7 @@ function Annotation({ className, style, annotation, heightLimitPx }: AnnotationP
                     // restrict text height by whole lines
                     // assumes 20px font size and py-1.5 padding
                     WebkitLineClamp: Math.min(
-                        4
+                        10
                         // heightLimitPx ? Math.floor((heightLimitPx - 6 * 2 - 20) / 20) : Infinity,
                     ),
                     WebkitBoxOrient: "vertical",
@@ -102,7 +102,7 @@ function Annotation({ className, style, annotation, heightLimitPx }: AnnotationP
                     }
                     return token;
                 })} */}
-                "{excerpt || text}"
+                "{excerpt || text}" {score.toFixed(2)}
             </div>
 
             <div className="annotation-bar font-title relative flex select-none items-center gap-2 overflow-hidden whitespace-nowrap">
