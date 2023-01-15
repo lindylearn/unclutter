@@ -125,7 +125,7 @@ export function handleWindowEventFactory(
                 annotations: displayedAnnotations,
             });
         } else if (data.event === "changedDisplayOffset") {
-            console.log("changedDisplayOffsets", data.offsetById);
+            // console.log("changedDisplayOffsets", data.offsetById);
             mutateAnnotations({
                 action: "changeDisplayOffsets",
                 offsetById: data.offsetById,
@@ -147,7 +147,7 @@ export function handleWindowEventFactory(
                 });
             }
         } else if (data.event === "setInfoAnnotations") {
-            console.log("setInfoAnnotations", data.annotations);
+            // console.log("setInfoAnnotations", data.annotations);
             mutateAnnotations({ action: "add", annotations: data.annotations });
         } else if (data.event === "setSummaryAnnotation") {
             setSummaryAnnotation(data.summaryAnnotation);

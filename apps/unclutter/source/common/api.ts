@@ -148,6 +148,9 @@ export interface RelatedHighlight {
     score2?: number;
     anchor?: string;
     excerpt: string;
+
+    // added locally
+    article?: Article;
 }
 
 export async function fetchRelatedAnnotations(

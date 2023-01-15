@@ -13,6 +13,7 @@ import {
     RelatedHighlight,
 } from "../../../common/api";
 import { insertMarginBar } from "../annotations/highlightsApi";
+import { ReplicacheProxy } from "@unclutter/library-components/dist/common/replicache";
 
 export interface RankedSentence {
     id: string;
@@ -193,19 +194,30 @@ export default class SmartHighlightsModifier implements PageModifier {
             true // save passed highlights to the user database
         );
 
+        const rep = new ReplicacheProxy();
+
         // add to rankedSentencesByParagraph
         this.relatedCount = 0;
-        relatedPerHighlight.forEach((related, highlightIndex) => {
-            // filter related now
-            related = related.slice(0, 2);
-            if (related.length === 0) {
-                return;
-            }
-            this.relatedCount += 1;
+        await Promise.all(
+            relatedPerHighlight.map(async (related, highlightIndex) => {
+                // filter related now
+                related = related.slice(0, 2);
+                if (related.length === 0) {
+                    return;
+                }
 
-            const { paragraphIndex, sentenceIndex } = this.topHighlights[highlightIndex];
-            this.rankedSentencesByParagraph[paragraphIndex][sentenceIndex].related = related;
-        });
+                // fetch article info from local user library
+                await Promise.all(
+                    related.map(async (related) => {
+                        related.article = await rep.query.getArticle(related.article_id);
+                    })
+                );
+
+                this.relatedCount += related.length;
+                const { paragraphIndex, sentenceIndex } = this.topHighlights[highlightIndex];
+                this.rankedSentencesByParagraph[paragraphIndex][sentenceIndex].related = related;
+            })
+        );
         if (this.relatedCount === 0) {
             return;
         }
