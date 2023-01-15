@@ -243,7 +243,7 @@ export default class TransitionManager implements PageModifier {
         this.overlayManager.insertUiFont(); // causes ~50ms layout reflow
 
         this.libraryModifier.startReadingProgressSync();
-        this.libraryModifier.scrollToLastReadingPosition();
+        // this.libraryModifier.scrollToLastReadingPosition();
 
         await new Promise((r) => setTimeout(r, 2000));
         this.loggingModifier.afterTransitionInDone(); // wait until feed likely parsed

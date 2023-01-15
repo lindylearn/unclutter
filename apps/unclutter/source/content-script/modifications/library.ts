@@ -207,9 +207,9 @@ export default class LibraryModifier implements PageModifier {
                 },
             });
 
-            if (this.scrollOnceFetchDone) {
-                this.scrollToLastReadingPosition();
-            }
+            // if (this.scrollOnceFetchDone) {
+            //     this.scrollToLastReadingPosition();
+            // }
 
             // report library events
             if (this.libraryState.wasAlreadyPresent) {
