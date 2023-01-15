@@ -37,9 +37,9 @@
     id="lindy-info-topleft-content"
     class={clsx("font-text flex flex-col gap-2", darkModeEnabled && "dark")}
 >
-    {#if libraryState?.libraryEnabled}
+    <!-- {#if libraryState?.libraryEnabled}
         <LibraryMessage {libraryState} {libraryModifier} {libraryModalModifier} {darkModeEnabled} />
-    {/if}
+    {/if} -->
     <!-- {#if libraryState?.showFeed}
         <SubscribeMessage
             {libraryState}

@@ -51,7 +51,7 @@ export default function ArticleBottomReview({
                         tag={`saved articles`}
                         icon={<ResourceIcon type="articles" large />}
                         colorOverride={getActivityColor(1, darkModeEnabled)}
-                        onClick={() => openLibrary("stats")}
+                        onClick={() => openLibrary("list")}
                     />
                     <BigNumber
                         value={allAnnotationsCount}
