@@ -1,8 +1,7 @@
 import { getDomain } from "@unclutter/library-components/dist/common/util";
 import { setUserSettingsForDomain } from "../../common/storage";
-import SmartHighlightsModifier, {
-    RelatedHighlight,
-} from "../../content-script/modifications/DOM/smartHighlights";
+import SmartHighlightsModifier from "../../content-script/modifications/DOM/smartHighlights";
+import type { RelatedHighlight } from "@unclutter/library-components/dist/common/api";
 // import HighlightDetailSvelte from "./HighlightDetail.svelte";
 import ArticleBadgeSvelte from "./ArticleBadge.svelte";
 
@@ -26,7 +25,7 @@ export function renderHighlightsLayer(enablePageView: () => void, enhanceActive:
         // const quote = range.toString();
         // renderHighlighter(rect, quote, related);
     }
-    const userId = "fulltext-test2";
+    const userId = "test-user5";
     const smartHighlightsModifier = new SmartHighlightsModifier(userId, onHighlightClick);
 
     if (enhanceActive) {

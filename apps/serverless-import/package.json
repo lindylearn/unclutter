@@ -19,7 +19,7 @@
     },
     "scripts": {
         "build": "parcel build && cp package.json dist/",
-        "deploy": "yarn build && gcloud beta functions deploy serverless-import --gen2 --source=dist --entry-point=main --allow-unauthenticated --trigger-http --runtime=nodejs16 --region=us-east1 --memory=2048MB --timeout=120s"
+        "deploy": "yarn build && gcloud beta functions deploy serverless-import --gen2 --source=dist --entry-point=main --allow-unauthenticated --trigger-http --runtime=nodejs16 --region=us-east1 --timeout=120s"
     },
     "dependencies": {
         "@google-cloud/functions-framework": "^3.1.3",

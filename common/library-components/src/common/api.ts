@@ -144,3 +144,97 @@ export async function clusterLibraryArticles(
         }
     );
 }
+
+export interface RelatedHighlight {
+    id: string;
+    article_id: string;
+    text: string;
+    score: number;
+
+    score2?: number;
+    anchor?: string;
+    excerpt: string;
+
+    // added locally
+    article?: Article;
+}
+
+export async function fetchRelatedAnnotations(
+    user_id: string,
+    article_id: string,
+    highlights: string[],
+    score_threshold: number = 0.5,
+    save_highlights: boolean = false
+): Promise<RelatedHighlight[][]> {
+    const response = await fetch(`${lindyApiUrl}/related/fetch`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            user_id,
+            for_article_id: article_id,
+            highlights,
+            score_threshold,
+            save_highlights,
+        }),
+    });
+    if (!response.ok) {
+        return [];
+    }
+
+    const json = await response.json();
+    return json?.related;
+}
+
+export async function indexAnnotationVectors(
+    user_id: string,
+    article_id: string,
+    highlights: string[],
+    highlight_ids: string[] | undefined = undefined,
+    delete_previous: boolean = false
+) {
+    await fetch(`https://related4-jumq7esahq-ue.a.run.app?action=insert`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            user_id,
+            article_id,
+            highlights,
+            highlight_ids,
+            delete_previous,
+        }),
+    });
+}
+
+export async function deleteAnnotationVectors(
+    user_id: string,
+    article_id: string | undefined = undefined,
+    highlight_id: string | undefined = undefined
+) {
+    await fetch(`${lindyApiUrl}/related/delete`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            user_id,
+            article_id,
+            highlight_id,
+        }),
+    });
+}
+
+async function fetchRetry(url: string, options: RequestInit, n: number = 1): Promise<Response> {
+    try {
+        return await fetch(url, options);
+    } catch (err) {
+        if (n === 0) {
+            throw err;
+        }
+        await new Promise((resolve) => setTimeout(resolve, 1 * 1000));
+        return fetchRetry(url, options, n - 1);
+    }
+}

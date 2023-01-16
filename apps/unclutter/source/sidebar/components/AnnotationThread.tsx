@@ -1,7 +1,10 @@
 import { ReplicacheProxy } from "@unclutter/library-components/dist/common/replicache";
 import React, { useEffect, useState } from "react";
 import type { LindyAnnotation } from "../../common/annotations/create";
-import { fetchRelatedAnnotations, RelatedHighlight } from "../../common/api";
+import {
+    fetchRelatedAnnotations,
+    RelatedHighlight,
+} from "@unclutter/library-components/dist/common/api";
 // import { getAnnotationColor } from "../../common/annotations/styling";
 import Annotation from "./Annotation";
 import AnnotationDraft from "./AnnotationDraft";
@@ -24,7 +27,7 @@ function AnnotationThread(props: AnnotationThreadProps) {
         if (props.annotation.isMyAnnotation) {
             setIsFetchingRelated(true);
 
-            const userId = "fulltext-test2";
+            const userId = "test-user5";
             fetchRelatedAnnotations(userId, props.annotation.article_id, [
                 props.annotation.quote_text,
             ])

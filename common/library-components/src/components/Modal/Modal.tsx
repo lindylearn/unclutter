@@ -14,6 +14,7 @@ import FeedsDetailsTab from "./Feed/FeedDetails";
 import UpgradeModalTab from "./Upgrade";
 import SettingsModalTab from "./Settings";
 import FeedListTab from "./Feed/FeedList";
+import SyncModalTab from "./Sync/Sync";
 
 export const ModalContext = createContext<{
     isVisible: boolean;
@@ -269,6 +270,9 @@ function ModalContent({
                     ))}
                 {currentTab === "signup" && (
                     <UpgradeModalTab darkModeEnabled={darkModeEnabled} reportEvent={reportEvent} />
+                )}
+                {currentTab === "sync" && (
+                    <SyncModalTab darkModeEnabled={darkModeEnabled} reportEvent={reportEvent} />
                 )}
                 {currentTab === "settings" && (
                     <SettingsModalTab

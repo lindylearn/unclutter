@@ -15,7 +15,7 @@ import {
     fetchRelatedAnnotations,
     indexAnnotationVectors,
     RelatedHighlight,
-} from "../../../common/api";
+} from "@unclutter/library-components/dist/common/api";
 // import { insertMarginBar } from "../annotations/highlightsApi";
 import { ReplicacheProxy } from "@unclutter/library-components/dist/common/replicache";
 
