@@ -5,6 +5,7 @@ import { fetchRelatedAnnotations, RelatedHighlight } from "../../common/api";
 // import { getAnnotationColor } from "../../common/annotations/styling";
 import Annotation from "./Annotation";
 import AnnotationDraft from "./AnnotationDraft";
+import SummaryAnnotation from "./Summary";
 
 interface AnnotationThreadProps {
     annotation: LindyAnnotation;
@@ -51,7 +52,9 @@ function AnnotationThread(props: AnnotationThreadProps) {
 
     return (
         <>
-            {!props.annotation.isMyAnnotation && <Annotation {...props} deleteHide={deleteHide} />}
+            {props.annotation.platform === "summary" && (
+                <SummaryAnnotation summaryInfo={props.annotation.summaryInfo!} />
+            )}
             {props.annotation.isMyAnnotation && (
                 <AnnotationDraft
                     {...props}
@@ -59,6 +62,9 @@ function AnnotationThread(props: AnnotationThreadProps) {
                     relatedCount={related?.length}
                     deleteHide={deleteHide}
                 />
+            )}
+            {!props.annotation.isMyAnnotation && props.annotation.platform !== "summary" && (
+                <Annotation {...props} deleteHide={deleteHide} />
             )}
 
             {/* {props.annotation.isMyAnnotation && (

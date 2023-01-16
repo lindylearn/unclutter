@@ -73,6 +73,7 @@ export default class SmartHighlightsModifier implements PageModifier {
             sendIframeEvent(sidebarIframe, {
                 event: "setSummaryInfo",
                 summaryInfo: {
+                    title: document.title,
                     keyPointsCount: this.keyPointsCount,
                     relatedCount: this.relatedCount,
                     topHighlights: this.topHighlights.map((h) => h.highlight),

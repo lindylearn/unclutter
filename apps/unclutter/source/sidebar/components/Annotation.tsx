@@ -1,6 +1,6 @@
 import React from "react";
 import type { LindyAnnotation } from "../../common/annotations/create";
-import { drawFromArray, getRandomColor } from "../../common/annotations/styling";
+import { getRandomColor } from "../../common/annotations/styling";
 import { reportEventContentScript } from "@unclutter/library-components/dist/common/messaging";
 import { openArticleResilient } from "@unclutter/library-components/dist/common/extension";
 import clsx from "clsx";
@@ -16,24 +16,6 @@ interface AnnotationProps {
 
 function Annotation({ className, style, annotation, heightLimitPx }: AnnotationProps) {
     const { excerpt, text, platform, infoType, score, author } = annotation;
-
-    const sampleDomains = [
-        "www.nytimes.com",
-        "www.theguardian.com",
-        "www.bbc.com",
-        "www.washingtonpost.com",
-        "www.cnn.com",
-        "www.wsj.com",
-        "www.bloomberg.com",
-        "www.economist.com",
-        "www.ft.com",
-        "www.latimes.com",
-        "www.npr.org",
-        "www.foxnews.com",
-        "www.nbcnews.com",
-        "www.cbsnews.com",
-    ];
-    const domain = drawFromArray(annotation.id, sampleDomains);
 
     let color: string;
     if (platform === "info") {

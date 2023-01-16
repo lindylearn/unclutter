@@ -99,6 +99,7 @@ export interface LindyAnnotation {
 }
 
 export interface ArticleSummaryInfo {
+    title: string;
     keyPointsCount: number;
     relatedCount: number;
     topHighlights: string[];
