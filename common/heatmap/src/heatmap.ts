@@ -11,8 +11,15 @@ export interface RankedSentence {
     sentence: string;
 }
 
+let loadingPromise: Promise<void> | undefined;
 export async function loadHeatmapModel() {
-    await loadEmbeddingsModelUSE();
+    if (loadingPromise) {
+        await loadingPromise;
+        return;
+    }
+    loadingPromise = loadEmbeddingsModelUSE();
+    await loadingPromise;
+    loadingPromise = undefined;
 }
 
 export async function getHeatmap(
