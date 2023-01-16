@@ -1,10 +1,14 @@
 import { Request, Response } from "express";
 import { getHeatmap, loadHeatmapModel } from "@unclutter/heatmap/dist/heatmap";
-
-loadHeatmapModel();
+import { fetchArticleParagraphs } from "./fetch";
 
 export async function main(req: Request, res: Response) {
-    const paragraphs: string[] = req.body?.paragraphs;
+    const url: string = req.body?.url;
+    let paragraphs: string[] | undefined = req.body?.paragraphs;
+    if (url) {
+        paragraphs = await fetchArticleParagraphs(url);
+    }
+
     if (!paragraphs) {
         res.status(400).send();
         return;
@@ -12,5 +16,5 @@ export async function main(req: Request, res: Response) {
 
     const sentences = await getHeatmap(paragraphs);
 
-    res.send({ sentences });
+    res.send({ paragraphs, sentences });
 }

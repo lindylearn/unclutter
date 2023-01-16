@@ -50,7 +50,7 @@ export async function getEmbeddingsUSE(
     batchSize = 10,
     retry: boolean = true
 ): Promise<Tensor2D> {
-    if (!useModel && retry) {
+    if (!useModel) {
         await loadEmbeddingsModelUSE(false);
     }
     try {
@@ -71,6 +71,7 @@ export async function getEmbeddingsUSE(
 
         const combined = tf.concat(embeddings, 0);
         embeddings.forEach((e) => e.dispose());
+        // tf.disposeVariables();
 
         const end = performance.now();
         console.log(`Computed ${cleanSentences.length} embeddings in ${Math.round(end - start)}ms`);
