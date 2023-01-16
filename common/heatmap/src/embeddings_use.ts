@@ -7,7 +7,7 @@ import { Tensor2D } from "@tensorflow/tfjs";
 // import * as wasm from "@tensorflow/tfjs-backend-wasm";
 
 let useModel: UniversalSentenceEncoder | undefined;
-export async function loadEmbeddingsModelUSE() {
+export async function loadEmbeddingsModelUSE(retry: boolean = true) {
     if (useModel) {
         return;
     }
@@ -37,7 +37,7 @@ export async function loadEmbeddingsModelUSE() {
     tf.ENV.set("WEBGL_USE_SHAPES_UNIFORMS", true);
 
     // warmup run
-    const tensor = await getEmbeddingsUSE(["test"]);
+    const tensor = await getEmbeddingsUSE(["test"], 10, retry);
     tensor.dispose();
 
     console.log(
@@ -50,8 +50,8 @@ export async function getEmbeddingsUSE(
     batchSize = 10,
     retry: boolean = true
 ): Promise<Tensor2D> {
-    if (!useModel) {
-        await loadEmbeddingsModelUSE();
+    if (!useModel && retry) {
+        await loadEmbeddingsModelUSE(false);
     }
     try {
         const start = performance.now();
