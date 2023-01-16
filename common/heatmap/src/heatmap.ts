@@ -11,18 +11,14 @@ export interface RankedSentence {
     sentence: string;
 }
 
-export async function loadHeatmapModel(embeddingsType = "use") {
-    if (embeddingsType === "onnx") {
-        // await loadEmbeddingsModelONNX();
-    } else if (embeddingsType === "use") {
-        await loadEmbeddingsModelUSE();
-    }
+export async function loadHeatmapModel() {
+    await loadEmbeddingsModelUSE();
 }
 
 export async function getHeatmap(
     paragraphs: string[],
-    embeddingsType = "use",
-    maxSentences = 300
+    maxSentences = 300,
+    batchSize = 10
 ): Promise<RankedSentence[][]> {
     const t0 = performance.now();
 
@@ -37,7 +33,7 @@ export async function getHeatmap(
     }
 
     // compute embeddings
-    let embeddings: Tensor2D = await getEmbeddingsUSE(sentences);
+    let embeddings: Tensor2D = await getEmbeddingsUSE(sentences, batchSize);
     const matrix = (await tf.matMul(embeddings, embeddings, false, true).array()) as number[][];
 
     // get sentence scores
