@@ -1,7 +1,11 @@
 import debounce from "lodash/debounce";
 import { reportEventContentScript } from "@unclutter/library-components/dist/common/messaging";
 import browser from "../../../common/polyfill";
-import { createAnnotation, LindyAnnotation } from "../../../common/annotations/create";
+import {
+    ArticleSummaryInfo,
+    createAnnotation,
+    LindyAnnotation,
+} from "../../../common/annotations/create";
 import { describe as describeAnnotation } from "../../../common/annotator/anchoring/html";
 import { PageModifier, trackModifierExecution } from "../_interface";
 import { getNodeOffset } from "../../../common/annotations/offset";
@@ -34,7 +38,6 @@ export default class SmartHighlightsModifier implements PageModifier {
     private article_id: string;
     private onHighlightClick: null | ((range: Range, related: RelatedHighlight[]) => void);
 
-    articleSummary: string | null = null;
     keyPointsCount: number | null = null;
     relatedCount: number | null = null;
     topHighlights: {
@@ -67,7 +70,14 @@ export default class SmartHighlightsModifier implements PageModifier {
     private sendSidebarMessages() {
         const sidebarIframe = document.getElementById("lindy-annotations-bar") as HTMLIFrameElement;
         if (sidebarIframe && this.annotations.length > 0) {
-            // disabled automatic show
+            sendIframeEvent(sidebarIframe, {
+                event: "setSummaryInfo",
+                summaryInfo: {
+                    keyPointsCount: this.keyPointsCount,
+                    relatedCount: this.relatedCount,
+                    topHighlights: this.topHighlights.map((h) => h.highlight),
+                } as ArticleSummaryInfo,
+            });
             sendIframeEvent(sidebarIframe, {
                 event: "setInfoAnnotations",
                 annotations: this.annotations,

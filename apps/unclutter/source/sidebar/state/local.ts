@@ -1,4 +1,8 @@
-import { LindyAnnotation } from "../../common/annotations/create";
+import {
+    ArticleSummaryInfo,
+    createAnnotation as createAnnotationData,
+    LindyAnnotation,
+} from "../../common/annotations/create";
 import { reportEventContentScript } from "@unclutter/library-components/dist/common/messaging";
 import { createAnnotation } from "../common/CRUD";
 import { groupAnnotations } from "../common/grouping";
@@ -149,8 +153,15 @@ export function handleWindowEventFactory(
         } else if (data.event === "setInfoAnnotations") {
             // console.log("setInfoAnnotations", data.annotations);
             mutateAnnotations({ action: "add", annotations: data.annotations });
-        } else if (data.event === "setSummaryAnnotation") {
-            setSummaryAnnotation(data.summaryAnnotation);
+        } else if (data.event === "setSummaryInfo") {
+            const summaryInfo: ArticleSummaryInfo = data.summaryInfo;
+            const summaryAnnotation = createAnnotationData("", null, {
+                platform: "summary",
+                summaryInfo,
+                displayOffset: 0,
+                text: "test",
+            });
+            setSummaryAnnotation(summaryAnnotation);
         }
     };
 }

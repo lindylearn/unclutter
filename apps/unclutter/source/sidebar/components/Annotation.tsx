@@ -102,7 +102,7 @@ function Annotation({ className, style, annotation, heightLimitPx }: AnnotationP
                     }
                     return token;
                 })} */}
-                "{excerpt || text}" {score.toFixed(2)} {annotation.score2.toFixed(2)}
+                "{excerpt || text}" {score?.toFixed(2)} {annotation.score2?.toFixed(2)}
             </div>
 
             <div className="annotation-bar font-title relative flex select-none items-center gap-2 overflow-hidden whitespace-nowrap">

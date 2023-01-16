@@ -94,6 +94,14 @@ export interface LindyAnnotation {
     article?: Article;
     excerpt?: string;
     score?: number;
+    score2?: number;
+    summaryInfo?: ArticleSummaryInfo;
+}
+
+export interface ArticleSummaryInfo {
+    keyPointsCount: number;
+    relatedCount: number;
+    topHighlights: string[];
 }
 
 // only used when importing from hypothesis
