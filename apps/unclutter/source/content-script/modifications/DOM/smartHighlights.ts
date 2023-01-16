@@ -702,17 +702,16 @@ export default class SmartHighlightsModifier implements PageModifier {
             // sort to avoid double-paint of <b> elements
             .sort((a, b) => {
                 return a.top - b.top || a.left - b.left;
-            })
-            .reverse();
+            });
 
         clientRects.forEach((rect, rectIndex) => {
             // check overlap
             if (
                 lastRect &&
                 !(
-                    lastRect.top >= rect.bottom ||
+                    lastRect.top >= rect.bottom - rect.height / 2 ||
                     lastRect.right <= rect.left ||
-                    lastRect.bottom <= rect.top ||
+                    lastRect.bottom - lastRect.height / 2 <= rect.top ||
                     lastRect.left >= rect.right
                 )
             ) {
