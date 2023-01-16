@@ -1,5 +1,16 @@
 import { Request, Response } from "express";
+import { getHeatmap, loadHeatmapModel } from "@unclutter/heatmap/dist/heatmap";
 
-export function helloHttp(req: Request, res: Response) {
-    res.send({ message: "Hello from TS2" });
+loadHeatmapModel();
+
+export async function main(req: Request, res: Response) {
+    const paragraphs: string[] = req.body?.paragraphs;
+    if (!paragraphs) {
+        res.status(400).send();
+        return;
+    }
+
+    const sentences = await getHeatmap(paragraphs);
+
+    res.send({ sentences });
 }
