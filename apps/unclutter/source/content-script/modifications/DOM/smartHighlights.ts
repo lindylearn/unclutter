@@ -12,7 +12,7 @@ import {
     indexAnnotationVectors,
     RelatedHighlight,
 } from "../../../common/api";
-import { insertMarginBar } from "../annotations/highlightsApi";
+// import { insertMarginBar } from "../annotations/highlightsApi";
 import { ReplicacheProxy } from "@unclutter/library-components/dist/common/replicache";
 
 export interface RankedSentence {
@@ -60,21 +60,41 @@ export default class SmartHighlightsModifier implements PageModifier {
     private handleMessage(message: any) {
         if (message.type === "sendSmartHighlightsToSidebar") {
             // sent from AnnotationsModifier once sidebar is ready
-            const sidebarIframe = document.getElementById(
-                "lindy-annotations-bar"
-            ) as HTMLIFrameElement;
-            if (sidebarIframe && this.annotations.length > 0) {
-                // disabled automatic show
-                sendIframeEvent(sidebarIframe, {
-                    event: "setInfoAnnotations",
-                    annotations: this.annotations,
-                });
-                sendIframeEvent(sidebarIframe, {
-                    event: "changedDisplayOffset",
-                    offsetById: this.offsetById,
-                    offsetEndById: this.offsetEndById,
-                });
-            }
+            this.sendSidebarMessages();
+        }
+    }
+
+    private sendSidebarMessages() {
+        const sidebarIframe = document.getElementById("lindy-annotations-bar") as HTMLIFrameElement;
+        if (sidebarIframe && this.annotations.length > 0) {
+            // disabled automatic show
+            sendIframeEvent(sidebarIframe, {
+                event: "setInfoAnnotations",
+                annotations: this.annotations,
+            });
+            sendIframeEvent(sidebarIframe, {
+                event: "changedDisplayOffset",
+                offsetById: this.offsetById,
+                offsetEndById: this.offsetEndById,
+            });
+
+            // insertMarginBar(
+            //     this.annotations
+            //         .map((a) => {
+            //             // take only first
+            //             if (!a.id.endsWith("_0")) {
+            //                 return null;
+            //             }
+            //             return {
+            //                 ...a,
+            //                 displayOffset: this.offsetById[a.id],
+            //                 displayOffsetEnd: this.offsetEndById[a.id],
+            //             };
+            //         })
+            //         .filter((e) => e !== null)
+            // );
+
+            this.paintAnnotations();
         }
     }
 
@@ -143,7 +163,8 @@ export default class SmartHighlightsModifier implements PageModifier {
         // console.log(this.rankedSentencesByParagraph);
 
         // paint highlights immediately once heatmap ready
-        this.enableAnnotations();
+        // this.enableAnnotations();
+        this.anchorSentences();
 
         // parse heatmap stats and most important sentences
         this.keyPointsCount = 0;
@@ -201,7 +222,7 @@ export default class SmartHighlightsModifier implements PageModifier {
         await Promise.all(
             relatedPerHighlight.map(async (related, highlightIndex) => {
                 // filter related now
-                related = related.slice(0, 2);
+                related = related.slice(0, 2).filter((r) => r.score2 >= this.relatedThreshold);
                 if (related.length === 0) {
                     return;
                 }
@@ -223,11 +244,10 @@ export default class SmartHighlightsModifier implements PageModifier {
         }
 
         // paint again including related data
-        this.enableAnnotations();
+        this.createInfoAnnotations();
     }
 
-    // paint AI highlights on the page
-    private resizeObserver: ResizeObserver;
+    // populate this.annotationState based on this.rankedSentencesByParagraph
     private annotationState: {
         sentence: RankedSentence;
         container: HTMLElement;
@@ -235,17 +255,8 @@ export default class SmartHighlightsModifier implements PageModifier {
         paintedElements?: HTMLElement[];
         invalid?: boolean;
     }[] = [];
-    enableAnnotations() {
-        this.createContainers();
-
-        // ensure clean state
-        // TODO repaint only changed (e.g. after related fetch)
-        this.annotationState.forEach(({ paintedElements }) => {
-            paintedElements?.forEach((e) => e.remove());
-        });
-        this.annotations = [];
+    private anchorSentences() {
         this.annotationState = [];
-        this.resizeObserver?.disconnect();
 
         this.paragraphs.forEach((paragraph, index) => {
             const rankedSentences = this.rankedSentencesByParagraph?.[index];
@@ -308,26 +319,6 @@ export default class SmartHighlightsModifier implements PageModifier {
                     return;
                 }
 
-                if (sentence.related) {
-                    // displayOffsets set via changedDisplayOffset once painted
-                    // this avoids rendering annotations for un-anchored highlights
-                    sentence.related.forEach((r, i) => {
-                        this.annotations.push(
-                            createAnnotation(
-                                this.article_id,
-                                describeAnnotation(document.body, range),
-                                {
-                                    ...r,
-                                    id: `${sentence.id}_${i}`,
-                                    platform: "info",
-                                    infoType: "related",
-                                    // score: sentence.related[0].score + 0.2, // same score for all related
-                                }
-                            )
-                        );
-                    });
-                }
-
                 this.annotationState.push({
                     sentence,
                     container,
@@ -335,36 +326,47 @@ export default class SmartHighlightsModifier implements PageModifier {
                 });
             });
         });
+    }
+
+    // save last offsets to send to sidebar once requested
+    private offsetById: { [id: string]: number } = {};
+    private offsetEndById: { [id: string]: number } = {};
+    private createInfoAnnotations() {
+        this.annotations = [];
+
+        this.annotationState.forEach(({ sentence, range }) => {
+            if (sentence.related) {
+                // displayOffsets set via changedDisplayOffset once painted
+                // this avoids rendering annotations for un-anchored highlights
+                sentence.related.forEach((r, i) => {
+                    this.annotations.push(
+                        createAnnotation(
+                            this.article_id,
+                            describeAnnotation(document.body, range),
+                            {
+                                ...r,
+                                id: `${sentence.id}_${i}`,
+                                platform: "info",
+                                infoType: "related",
+                                // score: sentence.related[0].score + 0.2, // same score for all related
+                            }
+                        )
+                    );
+                });
+
+                let displayOffset = getNodeOffset(range);
+                let displayOffsetEnd = getNodeOffset(range, "bottom");
+
+                sentence.related.forEach((r, i) => {
+                    const annotationId = `${sentence.id}_${i}`;
+                    this.offsetById[annotationId] = displayOffset;
+                    this.offsetEndById[annotationId] = displayOffsetEnd;
+                });
+            }
+        });
 
         // send constructed annotations to sidebar if present
-        const sidebarIframe = document.getElementById("lindy-annotations-bar") as HTMLIFrameElement;
-        if (sidebarIframe && this.annotations.length > 0) {
-            sendIframeEvent(sidebarIframe, {
-                event: "setInfoAnnotations",
-                annotations: this.annotations,
-            });
-        }
-
-        // immediate first paint
-        this.paintAllAnnotations();
-
-        // paint again on container position change
-        let ignoreNextCall = true;
-        const onResized = () => {
-            // ignore first call on observe()
-            if (ignoreNextCall) {
-                ignoreNextCall = false;
-                return;
-            }
-
-            console.log("Smart annotations changed position, repainting...");
-            this.paintAllAnnotations();
-        };
-        // TODO animate rect movement?
-        this.resizeObserver = new ResizeObserver(debounce(onResized, 200));
-        this.annotationState.forEach(({ container }) => {
-            this.resizeObserver.observe(container);
-        });
+        this.sendSidebarMessages();
     }
 
     private getParagraphAnchor(container: HTMLElement) {
@@ -391,10 +393,40 @@ export default class SmartHighlightsModifier implements PageModifier {
         return container;
     }
 
-    // save last offsets to send to sidebar once requested
-    private offsetById: { [id: string]: number } = {};
-    private offsetEndById: { [id: string]: number } = {};
-    private paintAllAnnotations() {
+    // paint AI highlights on the page
+    private resizeObserver: ResizeObserver;
+    private paintAnnotations() {
+        // ensure clean state
+        this.annotationState.forEach(({ paintedElements }) => {
+            paintedElements?.forEach((e) => e.remove());
+        });
+        this.resizeObserver?.disconnect();
+
+        this.createContainers();
+
+        // immediate first paint
+        this.rePaintAnnotations();
+
+        // paint again on container position change
+        let ignoreNextCall = true;
+        const onResized = () => {
+            // ignore first call on observe()
+            if (ignoreNextCall) {
+                ignoreNextCall = false;
+                return;
+            }
+
+            console.log("Smart annotations changed position, repainting...");
+            this.rePaintAnnotations();
+        };
+        // TODO animate rect movement?
+        this.resizeObserver = new ResizeObserver(debounce(onResized, 200));
+        this.annotationState.forEach(({ container }) => {
+            this.resizeObserver.observe(container);
+        });
+    }
+
+    private rePaintAnnotations() {
         console.log(`Painting ${this.annotationState.length} smart annotations`);
 
         // update sidebar annotation offsets
@@ -421,48 +453,7 @@ export default class SmartHighlightsModifier implements PageModifier {
             } else {
                 this.annotationState[i].paintedElements = paintedElements;
             }
-
-            if (sentence.related) {
-                let displayOffset = getNodeOffset(range);
-                let displayOffsetEnd = getNodeOffset(range, "bottom");
-                if (paintedElements.length === 0) {
-                    // null to remove
-                    displayOffset = null;
-                    displayOffsetEnd = null;
-                }
-
-                sentence.related.forEach((r, i) => {
-                    const annotationId = `${sentence.id}_${i}`;
-                    this.offsetById[annotationId] = displayOffset;
-                    this.offsetEndById[annotationId] = displayOffsetEnd;
-                });
-            }
         });
-
-        const sidebarIframe = document.getElementById("lindy-annotations-bar") as HTMLIFrameElement;
-        if (sidebarIframe && Object.keys(this.offsetById).length > 0) {
-            sendIframeEvent(sidebarIframe, {
-                event: "changedDisplayOffset",
-                offsetById: this.offsetById,
-                offsetEndById: this.offsetEndById,
-            });
-
-            // insertMarginBar(
-            //     this.annotations
-            //         .map((a) => {
-            //             // take only first
-            //             if (!a.id.endsWith("_0")) {
-            //                 return null;
-            //             }
-            //             return {
-            //                 ...a,
-            //                 displayOffset: this.offsetById[a.id],
-            //                 displayOffsetEnd: this.offsetEndById[a.id],
-            //             };
-            //         })
-            //         .filter((e) => e !== null)
-            // );
-        }
     }
 
     disableScrollbar() {
@@ -470,7 +461,7 @@ export default class SmartHighlightsModifier implements PageModifier {
         this.scrollbarContainer = null;
     }
 
-    disableAnnotations() {
+    removePaintedAnnotations() {
         this.resizeObserver?.disconnect();
 
         this.disableStyleTweaks();
@@ -480,14 +471,6 @@ export default class SmartHighlightsModifier implements PageModifier {
             paintedElements?.forEach((e) => e.remove());
         });
         this.annotationState = [];
-    }
-
-    setEnableAnnotations(enableAnnotations: boolean) {
-        if (enableAnnotations) {
-            this.enableAnnotations();
-        } else {
-            this.disableAnnotations();
-        }
     }
 
     // create ranges for each sentence by iterating leaf children
@@ -601,7 +584,7 @@ export default class SmartHighlightsModifier implements PageModifier {
         this.styleObserver = new MutationObserver(() => {
             // avoid infinite loops if there's another observer (e.g. in BodyStyleModifier)
             if (this.styleChangesCount > 10) {
-                this.styleObserver.disconnect();
+                this.styleObserver?.disconnect();
                 return;
             }
             this.styleChangesCount += 1;
@@ -667,7 +650,7 @@ export default class SmartHighlightsModifier implements PageModifier {
     }
 
     disableStyleTweaks() {
-        this.styleObserver.disconnect();
+        this.styleObserver?.disconnect();
 
         document.documentElement.style.removeProperty("overflow");
 
@@ -742,7 +725,7 @@ export default class SmartHighlightsModifier implements PageModifier {
             container.prepend(node);
             addedElements.push(node);
 
-            if (this.enableHighlightsClick || (sentence.related && !this.isProxyActive)) {
+            if (this.enableHighlightsClick) {
                 const clickNode = node.cloneNode() as HTMLElement;
                 clickNode.className = "lindy-smart-highlight-click";
                 clickNode.style.setProperty("z-index", `1001`, "important");

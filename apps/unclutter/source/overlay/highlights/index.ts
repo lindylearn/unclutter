@@ -38,13 +38,13 @@ export function renderHighlightsLayer(enablePageView: () => void, enhanceActive:
         font.rel = "stylesheet";
         document.head.appendChild(font);
 
-        smartHighlightsModifier.enableStyleTweaks();
+        // smartHighlightsModifier.enableStyleTweaks();
     }
 
     function preparePageView() {
         // disable scrollbar for reader mode
-        smartHighlightsModifier.disableStyleTweaks();
-        smartHighlightsModifier.disableScrollbar();
+        // smartHighlightsModifier.disableStyleTweaks();
+        // smartHighlightsModifier.disableScrollbar();
 
         setReaderModeSettings();
     }
@@ -80,7 +80,7 @@ export function renderHighlightsLayer(enablePageView: () => void, enhanceActive:
     renderArticleBadge(
         smartHighlightsModifier.keyPointsCount,
         smartHighlightsModifier.relatedCount,
-        smartHighlightsModifier.disableAnnotations.bind(smartHighlightsModifier),
+        smartHighlightsModifier.removePaintedAnnotations.bind(smartHighlightsModifier),
         enablePageViewInner
     );
 
