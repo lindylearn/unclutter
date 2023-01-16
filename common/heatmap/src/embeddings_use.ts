@@ -6,7 +6,7 @@ import {
 import { Tensor2D } from "@tensorflow/tfjs";
 // import * as wasm from "@tensorflow/tfjs-backend-wasm";
 
-let useModel: UniversalSentenceEncoder;
+let useModel: UniversalSentenceEncoder | undefined;
 export async function loadEmbeddingsModelUSE() {
     if (useModel) {
         return;
@@ -63,7 +63,7 @@ export async function getEmbeddingsUSE(
         for (let i = 0; i < cleanSentences.length; i += batchSize) {
             const batch = cleanSentences.slice(i, i + batchSize);
 
-            const tensor = await useModel.embed(batch);
+            const tensor = await useModel!.embed(batch);
             embeddings.push(tensor);
 
             // await new Promise((resolve) => setTimeout(resolve, 100));

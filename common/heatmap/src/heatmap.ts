@@ -3,8 +3,13 @@ import { Tensor2D } from "@tensorflow/tfjs";
 
 import { getEmbeddingsUSE, loadEmbeddingsModelUSE } from "./embeddings_use";
 import { getParagraphSentences } from "./sentences";
-import type { RankedSentence } from "../../content-script/modifications/DOM/smartHighlights";
 import textRank from "./textrank";
+
+export interface RankedSentence {
+    id: string;
+    score: number;
+    sentence: string;
+}
 
 export async function loadHeatmapModel(embeddingsType = "use") {
     if (embeddingsType === "onnx") {
@@ -297,7 +302,7 @@ function groupSentenceScores(
     sentenceScores: number[],
     sentence_paragraph: number[]
 ): RankedSentence[][] {
-    const groupedSentenceScores = [];
+    const groupedSentenceScores: RankedSentence[][] = [];
     for (let i = 0; i < sentence_paragraph.length; i++) {
         const paragraph = sentence_paragraph[i];
         if (groupedSentenceScores[paragraph] === undefined) {

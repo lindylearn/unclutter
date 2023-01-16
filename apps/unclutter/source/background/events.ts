@@ -34,7 +34,7 @@ import {
     startMetrics,
 } from "./metrics";
 import { TabStateManager } from "./tabs";
-import { getHeatmap, loadHeatmapModel } from "./heatmap/heatmap";
+import { getHeatmap, loadHeatmapModel } from "@unclutter/heatmap/dist/heatmap";
 
 const tabsManager = new TabStateManager();
 
