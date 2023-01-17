@@ -3,7 +3,7 @@ import clsx from "clsx";
 import { useContext } from "react";
 
 import { ReplicacheContext } from "../../store";
-import { reportBrokenPage } from "../../common/api";
+import { deleteAnnotationVectors, reportBrokenPage } from "../../common/api";
 import { Article, readingProgressFullClamp } from "../../store";
 import { Dropdown, DropdownItem } from "./Dropdown";
 
@@ -60,8 +60,11 @@ export function ArticleDropdown({
         }
     }
 
+    const user_id = "test-user6";
+
     async function deleteArticle() {
         await rep?.mutate.deleteArticle(article.id);
+        await deleteAnnotationVectors(user_id, article.id);
         reportEvent("deleteArticle");
     }
     async function reportPage() {

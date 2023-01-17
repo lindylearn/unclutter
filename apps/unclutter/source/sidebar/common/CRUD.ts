@@ -12,6 +12,10 @@ import {
     updateLocalAnnotation,
 } from "./local";
 import { getHiddenAnnotations } from "./legacy";
+import {
+    deleteAnnotationVectors,
+    indexAnnotationVectors,
+} from "@unclutter/library-components/dist/common/api";
 
 export async function getAnnotations(
     articleId: string,
@@ -63,8 +67,18 @@ async function getPersonalAnnotations(articleId: string): Promise<LindyAnnotatio
     return annotations.filter((a) => !a.ai_created);
 }
 
-export async function createAnnotation(annotation: LindyAnnotation): Promise<LindyAnnotation> {
+export async function createAnnotation(
+    user_id: string,
+    annotation: LindyAnnotation
+): Promise<LindyAnnotation> {
     const createdAnnotation = await createLocalAnnotation(annotation);
+    indexAnnotationVectors(
+        user_id,
+        annotation.article_id,
+        [annotation.quote_text],
+        [annotation.id]
+    );
+
     reportEventContentScript("createAnnotation");
 
     return createdAnnotation;
@@ -75,7 +89,12 @@ export async function updateAnnotation(annotation: LindyAnnotation): Promise<Lin
     return annotation;
 }
 
-export async function deleteAnnotation(annotation: LindyAnnotation): Promise<void> {
+export async function deleteAnnotation(
+    user_id: string,
+    annotation: LindyAnnotation
+): Promise<void> {
+    await deleteLocalAnnotation(annotation);
+    deleteAnnotationVectors(user_id, undefined, annotation.id);
+
     reportEventContentScript("deleteAnnotation");
-    return await deleteLocalAnnotation(annotation);
 }

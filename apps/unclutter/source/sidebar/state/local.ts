@@ -76,6 +76,7 @@ export function annotationReducer(
 }
 
 export function handleWindowEventFactory(
+    userId: string,
     mutateAnnotations: React.Dispatch<AnnotationMutation>,
     setEnableSocialAnnotations: (enabled: boolean) => void,
     setPersonalAnnotationsEnabled: (enabled: boolean) => void,
@@ -91,7 +92,7 @@ export function handleWindowEventFactory(
             mutateAnnotations({ action: "add", annotation: data.annotation });
 
             // create in data store
-            await createAnnotation(data.annotation);
+            await createAnnotation(userId, data.annotation);
         } else if (data.event === "anchoredAnnotations") {
             if (data.annotations.length === 0) {
                 // shortcut

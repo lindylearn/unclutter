@@ -45,8 +45,14 @@ export function useFetchAnnotations(
     }, [personalAnnotationsEnabled, enableSocialAnnotations]);
 }
 
-export function useAnnotationModifiers(mutateAnnotations: React.Dispatch<AnnotationMutation>) {
-    const deleteHideAnnotation = useCallback(deleteHideAnnotationFactory(mutateAnnotations), []);
+export function useAnnotationModifiers(
+    userId: string,
+    mutateAnnotations: React.Dispatch<AnnotationMutation>
+) {
+    const deleteHideAnnotation = useCallback(
+        deleteHideAnnotationFactory(userId, mutateAnnotations),
+        []
+    );
     const updateAnnotation = useCallback(
         (annotation: LindyAnnotation) => mutateAnnotations({ action: "update", annotation }),
         []
@@ -63,7 +69,10 @@ export function useAnnotationModifiers(mutateAnnotations: React.Dispatch<Annotat
     };
 }
 
-function deleteHideAnnotationFactory(mutateAnnotations: React.Dispatch<AnnotationMutation>) {
+function deleteHideAnnotationFactory(
+    userId: string,
+    mutateAnnotations: React.Dispatch<AnnotationMutation>
+) {
     return function (annotation: LindyAnnotation, threadStart?: LindyAnnotation) {
         // delete from local state first
 
@@ -75,7 +84,7 @@ function deleteHideAnnotationFactory(mutateAnnotations: React.Dispatch<Annotatio
 
         // delete or hide remotely
         if (annotation.isMyAnnotation) {
-            deleteAnnotation(annotation);
+            deleteAnnotation(userId, annotation);
         } else {
             hideAnnotationLocally(annotation);
 

@@ -1,6 +1,5 @@
 import { reportEventContentScript } from "@unclutter/library-components/dist/common/messaging";
 import browser from "../../../common/polyfill";
-import { createAnnotation, LindyAnnotation } from "../../../common/annotations/create";
 import { describe as describeAnnotation } from "../../../common/annotator/anchoring/html";
 import { PageModifier, trackModifierExecution } from "../_interface";
 import { sendIframeEvent } from "../../../common/reactIframe";
@@ -376,8 +375,8 @@ export default class SmartHighlightsModifier implements PageModifier {
             this.user_id,
             this.article_id,
             aiAnnotations.map((a) => a.quote_text),
-            undefined,
-            true
+            aiAnnotations.map((a) => a.id),
+            false
         );
     }
 }

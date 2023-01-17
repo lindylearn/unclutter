@@ -1,5 +1,6 @@
 import React from "react";
 import { useContext } from "react";
+import { deleteAnnotationVectors } from "../../common";
 
 import { ReplicacheContext } from "../../store";
 import { Annotation } from "../../store/_schema";
@@ -29,8 +30,11 @@ export function HighlightDropdown({
         });
     }
 
+    const user_id = "test-user6";
+
     async function deleteAnnotation() {
         await rep?.mutate.deleteAnnotation(annotation.id);
+        await deleteAnnotationVectors(user_id, undefined, annotation.id);
         reportEvent("deleteAnnotation");
     }
 

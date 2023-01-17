@@ -17,6 +17,8 @@ export default function App({ articleId }: { articleId: string }) {
         experimentsEnabled,
     } = useAnnotationSettings();
 
+    const userId = "test-user6";
+
     // keep local annotations state
     const [summaryAnnotation, setSummaryAnnotation] = useState<LindyAnnotation>();
     const [annotations, mutateAnnotations] = useReducer(annotationReducer, []);
@@ -29,11 +31,12 @@ export default function App({ articleId }: { articleId: string }) {
 
     // handlers to modify remote & local state
     const { deleteHideAnnotation, onAnnotationHoverUpdate, updateAnnotation } =
-        useAnnotationModifiers(mutateAnnotations);
+        useAnnotationModifiers(userId, mutateAnnotations);
 
     // receive events from the text highlighting content script code
     useMemo(() => {
         window.onmessage = handleWindowEventFactory(
+            userId,
             mutateAnnotations,
             setEnableSocialAnnotations,
             setPersonalAnnotationsEnabled,
