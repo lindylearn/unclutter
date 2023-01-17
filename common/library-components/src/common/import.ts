@@ -1,6 +1,6 @@
 import asyncPool from "tiny-async-pool";
 
-import { Article, RuntimeReplicache } from "../store";
+import { Annotation, Article, RuntimeReplicache } from "../store";
 import { indexAnnotationVectors } from "./api";
 
 export interface ImportProgress {
@@ -16,19 +16,19 @@ export async function indexLibraryArticles(
 ) {
     let articles = await rep.query.listArticles();
     articles.sort((a, b) => b.time_added - a.time_added);
-    // articles = articles.slice(0, 5);
+    // articles = articles.slice(0, 2);
 
     console.log(`Indexing ${articles.length} articles...`);
     onProgress?.({ targetArticles: articles.length });
 
-    const user_id = "test-user5";
+    const user_id = "test-user7";
 
     // batch for resilience
     const start = performance.now();
     let articleCount = 0;
     let highlightCount = 0;
     for await (const newHighlights of asyncPool(concurrency, articles, (article) =>
-        indexArticle(user_id, article)
+        indexArticle(rep, user_id, article)
     )) {
         articleCount += 1;
         highlightCount += newHighlights;
@@ -46,16 +46,34 @@ export async function indexLibraryArticles(
     );
 }
 
-async function indexArticle(user_id: string, article: Article): Promise<number> {
+async function indexArticle(
+    rep: RuntimeReplicache,
+    user_id: string,
+    article: Article
+): Promise<number> {
     try {
-        const sentences = await createArticleSentences(article.url);
-        if (!sentences) {
+        const highlights = await getTopArticleHighlights(article.url);
+        if (!highlights || highlights.length === 0) {
             return 0;
         }
 
-        await indexAnnotationVectors(user_id, article.id, sentences, undefined, false);
+        await Promise.all(
+            highlights.map((h, i) => {
+                h.id = `ai_${article.id.slice(0, 20)}_${i}`;
+                const annotation = topHighlightToAnnotation(h, article, undefined);
+                return rep.mutate.putAnnotation(annotation);
+            })
+        );
 
-        return sentences.length;
+        await indexAnnotationVectors(
+            user_id,
+            article.id,
+            highlights.map((sentence) => sentence.sentence),
+            highlights.map((sentence) => sentence.id),
+            false
+        );
+
+        return highlights.length;
     } catch (err) {
         console.error(err);
         return 0;
@@ -68,15 +86,30 @@ export interface RankedSentence {
     sentence: string;
 }
 
-async function createArticleSentences(
+function topHighlightToAnnotation(
+    sentence: RankedSentence,
+    article: Article,
+    quote_html_selector: any
+): Annotation {
+    return {
+        id: sentence.id,
+        article_id: article.id,
+        quote_text: sentence.sentence,
+        created_at: article.time_added,
+        quote_html_selector,
+        ai_created: true,
+        ai_score: sentence.score,
+    };
+}
+
+async function getTopArticleHighlights(
     url: string,
     scoreThreshold: number = 0.6
-): Promise<string[]> {
+): Promise<RankedSentence[]> {
     const sentences = await getHeatmapRemote(url);
     return sentences
         ?.flatMap((paragraph) => paragraph)
-        .filter((sentence) => sentence.score >= scoreThreshold)
-        .map((sentence) => sentence.sentence);
+        .filter((sentence) => sentence.score >= scoreThreshold);
 }
 
 async function getHeatmapRemote(url: string): Promise<RankedSentence[][]> {
