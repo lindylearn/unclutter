@@ -13,7 +13,7 @@ import {
 import { Highlight } from "../Highlight";
 import { ResourceIcon } from "./components/numbers";
 import { SearchBox } from "./components/search";
-import { FilterContext } from "..";
+import { FilterContext } from "./Modal";
 
 export default function HighlightsTab({
     userInfo,
@@ -28,9 +28,9 @@ export default function HighlightsTab({
         useContext(FilterContext);
 
     const rep = useContext(ReplicacheContext);
-    useEffect(() => {
-        rep?.mutate.updateSettings({ seen_highlights_version: latestHighlightsVersion });
-    }, [rep]);
+    // useEffect(() => {
+    //     rep?.mutate.updateSettings({ seen_highlights_version: latestHighlightsVersion });
+    // }, [rep]);
 
     const annotations = useSubscribe(rep, rep?.subscribe.listAnnotationsWithArticles(), null);
 
@@ -39,7 +39,8 @@ export default function HighlightsTab({
 
     // filter to one of the current objects
     const [activeCurrentFilter, setActiveCurrentFilter] = useState<boolean>(
-        !!((currentArticle && currentAnnotationsCount) || domainFilter)
+        false
+        // !!((currentArticle && currentAnnotationsCount) || domainFilter)
     );
 
     const [filteredAnnotations, setFilteredAnnotations] = useState<AnnotationWithArticle[]>([]);
@@ -119,7 +120,7 @@ export default function HighlightsTab({
     return (
         <div className="flex flex-col gap-4">
             <div className="filter-list flex justify-start gap-3">
-                {!activeCurrentFilter && (
+                {/* {!activeCurrentFilter && (
                     <FilterButton
                         title={onlyFavorites ? "Favorites" : "All highlights"}
                         icon={
@@ -169,9 +170,9 @@ export default function HighlightsTab({
                         setLastFirst(!lastFirst);
                         reportEvent("changeListFilter", { lastFirst });
                     }}
-                />
+                /> */}
 
-                {activeCurrentFilter && (
+                {/* {activeCurrentFilter && (
                     <FilterButton
                         title={
                             domainFilter ||
@@ -196,7 +197,7 @@ export default function HighlightsTab({
                             darkModeEnabled
                         )}
                     />
-                )}
+                )} */}
 
                 <SearchBox
                     query={query}
@@ -204,7 +205,7 @@ export default function HighlightsTab({
                     placeholder={
                         annotations === null
                             ? ""
-                            : `Search across ${annotations.length} highlight${
+                            : `Search across your ${annotations.length} highlight${
                                   annotations.length !== 1 ? "s" : ""
                               }...`
                     }

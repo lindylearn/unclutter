@@ -289,16 +289,11 @@ function ArticleGroupStat({
                 // }
             }}
         >
-            <div className="flex max-w-full items-center overflow-hidden font-medium">
-                {/* {topic?.emoji && <TopicEmoji emoji={topic?.emoji} className="w-4" />} */}
-                {/* {!(userInfo.onPaidPlan || userInfo.trialEnabled) && ( */}
-                <div className="mr-1 w-4 opacity-90">
-                    <img
-                        className="w-4"
-                        src={`https://www.google.com/s2/favicons?sz=128&domain=https://${groupKey}`}
-                    />
-                </div>
-                {/* )} */}
+            <div className="flex max-w-full items-center gap-1 overflow-hidden font-medium">
+                <img
+                    className="h-4 w-4 shrink-0 rounded-sm"
+                    src={`https://www.google.com/s2/favicons?sz=128&domain=https://${groupKey}`}
+                />
                 <div className="overflow-hidden overflow-ellipsis whitespace-nowrap">
                     {topic?.name || groupKey}
                 </div>

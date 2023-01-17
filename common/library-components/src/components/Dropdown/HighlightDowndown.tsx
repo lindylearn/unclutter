@@ -36,7 +36,7 @@ export function HighlightDropdown({
 
     return (
         <Dropdown open={open} setOpen={setOpen}>
-            <DropdownItem
+            {/* <DropdownItem
                 title={annotation.is_favorite ? "Unfavorite" : "Favorite"}
                 svg={
                     <svg
@@ -58,7 +58,7 @@ export function HighlightDropdown({
                 }
                 onSelect={toggleFavorite}
                 top
-            />
+            /> */}
 
             <DropdownItem
                 title="Remove"

@@ -123,6 +123,6 @@ const emptyListMessage = {
     new: "Follow website feeds to see new articles here.",
     past: "No past feed articles found.",
     list: "Open articles with Unclutter to automatically save them.",
-    // uncompleted: "No uncompleted articles found.",
+    uncompleted: "Your unread articles will appear here.",
     // completed: "No completed articles found.",
 };
