@@ -12,6 +12,7 @@ import {
     RelatedHighlight,
 } from "@unclutter/library-components/dist/common/api";
 import { ReplicacheProxy } from "@unclutter/library-components/dist/common/replicache";
+import { Annotation } from "@unclutter/library-components/dist/store";
 
 export interface RankedSentence {
     id: string;
@@ -20,24 +21,15 @@ export interface RankedSentence {
     related?: RelatedHighlight[];
 }
 
-const excludedParagraphClassNames = [
-    "comment", // https://civilservice.blog.gov.uk/2022/08/16/a-simple-guide-on-words-to-avoid-in-government/
-    "reference", // https://en.wikipedia.org/wiki/Sunstone_(medieval)
-];
-
-// analyse an article page and highlight key sentences using AI
+// analyse an article page and highlight key sentences using an in-browser AI model
 @trackModifierExecution
 export default class SmartHighlightsModifier implements PageModifier {
     private user_id: string;
     private article_id: string;
 
-    keyPointsCount: number | null = null;
-    relatedCount: number | null = null;
-    topHighlights: {
-        highlight: string;
-        paragraphIndex: number;
-        sentenceIndex: number;
-    }[] = [];
+    annotations: Annotation[];
+    annotationsCount: number | null;
+    relatedCount: number | null;
 
     private scoreThreshold = 0.6;
     private relatedThreshold = 0.4;
@@ -49,36 +41,71 @@ export default class SmartHighlightsModifier implements PageModifier {
         window.addEventListener("message", (event) => this.handleMessage(event.data || {}));
     }
 
-    private handleMessage(message: any) {
-        if (message.type === "sendSmartHighlightsToSidebar") {
-            // sent from AnnotationsModifier once sidebar is ready
-            this.sendSidebarMessages();
+    async fetchAnnotations(): Promise<boolean> {
+        // fetch existing user annotations locally
+        const rep = new ReplicacheProxy();
+        this.annotations = await rep.query.listArticleAnnotations(this.article_id);
+        console.log(`Found ${this.annotations.length} local annotations for article`);
+
+        // if no ai annotations saved, create them
+        const aiAnnotations = this.annotations.filter((a) => a.ai_created);
+        if (aiAnnotations.length === 0) {
+            const newAnnotations = await this.parseAnnotationsFromArticle();
+            this.annotations.push(...newAnnotations);
         }
+
+        // likely not an article if no annotations present or generated
+        this.annotationsCount = this.annotations.length;
+        if (this.annotations.length === 0) {
+            return false;
+        }
+
+        return true;
     }
 
-    private sendSidebarMessages() {
-        const sidebarIframe = document.getElementById("lindy-annotations-bar") as HTMLIFrameElement;
-        if (sidebarIframe && this.annotations.length > 0) {
-            sendIframeEvent(sidebarIframe, {
-                event: "setInfoAnnotations",
-                annotations: this.annotations,
-            });
-            sendIframeEvent(sidebarIframe, {
-                event: "changedDisplayOffset",
-                offsetById: this.offsetById,
-                offsetEndById: this.offsetEndById,
-            });
-        }
-    }
-
-    annotations: LindyAnnotation[] = [];
-
-    private paragraphs: HTMLElement[] = [];
-    private rankedSentencesByParagraph: RankedSentence[][];
-    async parseUnclutteredArticle(): Promise<boolean> {
+    async parseAnnotationsFromArticle(): Promise<Annotation[]> {
+        console.log(`Generating AI highlights for article...`);
         let start = performance.now();
 
-        // parse article paragraphs from page
+        // parse DOM and extract significant text elements
+        const [paragraphsElements, paragraphTexts] = this.listParagraphs();
+        if (paragraphTexts.length === 0 || paragraphTexts.length >= 200) {
+            // likely not an article
+            // be careful, e.g. paulgraham.com has single paragraph
+            return [];
+        }
+
+        // run AI model on article text in extension background worker (no data is sent over the network)
+        let rankedSentencesByParagraph: RankedSentence[][] | undefined;
+        try {
+            rankedSentencesByParagraph = await browser.runtime.sendMessage(null, {
+                event: "getHeatmap",
+                paragraphs: paragraphTexts,
+            });
+        } catch {
+            return [];
+        }
+
+        // create annotations for significant detected quotes
+        const newAnnotations = this.createAnnotations(
+            paragraphsElements,
+            rankedSentencesByParagraph
+        );
+
+        // report diagnostics
+        let durationMs = Math.round(performance.now() - start);
+        reportEventContentScript("renderHighlightsLayer", {
+            paragraphCount: paragraphsElements.length,
+            annotationsCount: this.annotationsCount,
+            relatedCount: this.relatedCount,
+            durationMs,
+        });
+
+        return newAnnotations;
+    }
+
+    private listParagraphs(): [HTMLElement[], string[]] {
+        const paragraphsElements: HTMLElement[] = [];
         const paragraphTexts: string[] = [];
         document.querySelectorAll("p, font, li").forEach((paragraph: HTMLElement) => {
             // Ignore invisible nodes
@@ -111,216 +138,55 @@ export default class SmartHighlightsModifier implements PageModifier {
                 return;
             }
 
-            this.paragraphs.push(paragraph);
+            paragraphsElements.push(paragraph);
             // use raw text content to anchor sentences correctly later
             paragraphTexts.push(rawText);
         });
 
-        if (paragraphTexts.length === 0 || paragraphTexts.length >= 200) {
-            // likely not an article
-            // be careful, e.g. paulgraham.com has single paragraph
-            this.keyPointsCount = 0;
-            return false;
-        }
-
-        // construct sentence heatmap in extension background worker (with no data sent over the network)
-        try {
-            this.rankedSentencesByParagraph = await browser.runtime.sendMessage(null, {
-                event: "getHeatmap",
-                paragraphs: paragraphTexts,
-            });
-        } catch {
-            this.keyPointsCount = 0;
-            return false;
-        }
-        // console.log(this.rankedSentencesByParagraph);
-
-        // paint highlights immediately once heatmap ready
-        // this.enableAnnotations();
-        this.anchorSentences();
-
-        // parse heatmap stats and most important sentences
-        this.keyPointsCount = 0;
-        this.rankedSentencesByParagraph?.forEach((paragraph, paragraphIndex) => {
-            paragraph.forEach((sentence: RankedSentence, sentenceIndex) => {
-                if (sentence.score >= this.scoreThreshold) {
-                    this.keyPointsCount += 1;
-                    this.topHighlights.push({
-                        highlight: sentence.sentence,
-                        paragraphIndex,
-                        sentenceIndex,
-                    });
-                }
-            });
-        });
-        // console.log(this.topHighlights.map((s) => s.highlight?.replace(/[\s\n]+/g, " ").trim()));
-
-        // insert smart highlights into the remote vector database, if enabled by the user
-        // only the text highlighted in yellow on article pages is sent over the network,
-        // using only the one-way hash of the current URL for deduplication
-        // indexAnnotationVectors(
-        //     this.user_id,
-        //     this.article_id,
-        //     this.topHighlights.map((h) => h.highlight),
-        //     undefined,
-        //     true
-        // );
-
-        // report diagnostics
-        let durationMs = Math.round(performance.now() - start);
-        reportEventContentScript("renderHighlightsLayer", {
-            paragraphCount: this.paragraphs.length,
-            keyPointsCount: this.keyPointsCount,
-            relatedCount: this.relatedCount,
-            durationMs,
-        });
-
-        return true;
+        return [paragraphsElements, paragraphTexts];
     }
 
-    async fetchRelatedHighlights(): Promise<void> {
-        // fetch related existing highlights
-        const relatedPerHighlight = await fetchRelatedAnnotations(
-            this.user_id,
-            this.article_id,
-            this.topHighlights.map((s) => s.highlight),
-            this.relatedThreshold,
-            true // save passed highlights to the user database
-        );
+    private createAnnotations(
+        paragraphElements: HTMLElement[],
+        rankedSentencesByParagraph: RankedSentence[][]
+    ): Annotation[] {
+        const annotations: Annotation[] = [];
 
-        const rep = new ReplicacheProxy();
+        const created_at = Math.round(new Date().getTime() / 1000);
 
-        // add to rankedSentencesByParagraph
-        this.relatedCount = 0;
-        await Promise.all(
-            relatedPerHighlight.map(async (related, highlightIndex) => {
-                // filter related now
-                related = related.slice(0, 2).filter((r) => r.score2 >= this.relatedThreshold);
-                if (related.length === 0) {
-                    return;
-                }
-
-                // fetch article info from local user library
-                await Promise.all(
-                    related.map(async (related) => {
-                        related.article = await rep.query.getArticle(related.article_id);
-                    })
-                );
-
-                this.relatedCount += related.length;
-                const { paragraphIndex, sentenceIndex } = this.topHighlights[highlightIndex];
-                this.rankedSentencesByParagraph[paragraphIndex][sentenceIndex].related = related;
-            })
-        );
-        if (this.relatedCount === 0) {
-            return;
-        }
-
-        // paint again including related data
-        this.createInfoAnnotations();
-    }
-
-    // populate this.annotationState based on this.rankedSentencesByParagraph
-    private annotationState: {
-        sentence: RankedSentence;
-        container: HTMLElement;
-        range: Range;
-        paintedElements?: HTMLElement[];
-        invalid?: boolean;
-    }[] = [];
-    private anchorSentences() {
-        this.annotationState = [];
-
-        this.paragraphs.forEach((paragraph, index) => {
-            const rankedSentences = this.rankedSentencesByParagraph?.[index];
+        paragraphElements.forEach((paragraph, index) => {
+            const rankedSentences = rankedSentencesByParagraph?.[index];
             if (!rankedSentences) {
                 return;
             }
 
-            // consider related anchors independently
-            const textFragments: RankedSentence[] = [];
-            rankedSentences.forEach((sentence, index) => {
-                textFragments.push(sentence);
-            });
-
-            const container = this.getParagraphAnchor(paragraph);
-
-            // anchor all sentences returned from backend
+            // anchor all sentences to use correct offsets
             let ranges = this.anchorParagraphSentences(
                 paragraph,
-                textFragments.map((s) => s.sentence)
+                rankedSentences.map((s) => s.sentence)
             );
 
             // construct global annotationState
             ranges.forEach((range, i) => {
-                const sentence = textFragments[i];
+                const sentence = rankedSentences[i];
 
-                // TODO save all sentences for enableAllAnnotations?
-                if (!sentence.related && sentence.score < this.scoreThreshold) {
+                // filter to only important sentences
+                if (sentence.score < this.scoreThreshold) {
                     return;
                 }
 
-                this.annotationState.push({
-                    sentence,
-                    container,
-                    range,
+                annotations.push({
+                    id: `ai_${this.article_id.slice(0, 20)}_${i}`,
+                    article_id: this.article_id,
+                    quote_text: sentence.sentence,
+                    created_at,
+                    quote_html_selector: describeAnnotation(document.body, range),
+                    ai_created: true,
                 });
             });
         });
-    }
 
-    // save last offsets to send to sidebar once requested
-    private offsetById: { [id: string]: number } = {};
-    private offsetEndById: { [id: string]: number } = {};
-    private createInfoAnnotations() {
-        this.annotations = [];
-
-        this.annotationState.forEach(({ sentence, range }) => {
-            if (sentence.related) {
-                sentence.related.forEach((r, i) => {
-                    this.annotations.push(
-                        createAnnotation(
-                            this.article_id,
-                            describeAnnotation(document.body, range),
-                            {
-                                ...r,
-                                id: `${sentence.id}_${i}`,
-                                platform: "info",
-                                infoType: "related",
-                                // score: sentence.related[0].score + 0.2, // same score for all related
-                            }
-                        )
-                    );
-                });
-            }
-        });
-
-        // send constructed annotations to sidebar if present
-        this.sendSidebarMessages();
-    }
-
-    private getParagraphAnchor(container: HTMLElement) {
-        // get container to anchor highlight elements
-
-        // need to be able to anchor absolute elements
-        while (container.nodeType !== Node.ELEMENT_NODE) {
-            container = container.parentElement;
-        }
-
-        // box is not correct for inline elements
-        let containerStyle = window.getComputedStyle(container);
-        while (containerStyle.display === "inline") {
-            container = container.parentElement;
-            containerStyle = window.getComputedStyle(container);
-        }
-
-        // be careful with style changes
-        if (containerStyle.position === "static") {
-            container.style.setProperty("position", "relative", "important");
-        }
-        container.style.setProperty("z-index", "0", "important");
-
-        return container;
+        return annotations;
     }
 
     // create ranges for each sentence by iterating leaf children
@@ -410,4 +276,78 @@ export default class SmartHighlightsModifier implements PageModifier {
 
         return ranges;
     }
+
+    // async fetchRelated(): Promise<void> {
+    //     // fetch related existing highlights
+    //     const relatedPerHighlight = await fetchRelatedAnnotations(
+    //         this.user_id,
+    //         this.article_id,
+    //         this.topHighlights.map((s) => s.highlight),
+    //         this.relatedThreshold,
+    //         true // save passed highlights to the user database
+    //     );
+
+    //     const rep = new ReplicacheProxy();
+
+    //     // add to rankedSentencesByParagraph
+    //     this.relatedCount = 0;
+    //     await Promise.all(
+    //         relatedPerHighlight.map(async (related, highlightIndex) => {
+    //             // filter related now
+    //             related = related.slice(0, 2).filter((r) => r.score2 >= this.relatedThreshold);
+    //             if (related.length === 0) {
+    //                 return;
+    //             }
+
+    //             // fetch article info from local user library
+    //             await Promise.all(
+    //                 related.map(async (related) => {
+    //                     related.article = await rep.query.getArticle(related.article_id);
+    //                 })
+    //             );
+
+    //             this.relatedCount += related.length;
+    //             const { paragraphIndex, sentenceIndex } = this.topHighlights[highlightIndex];
+    //             this.rankedSentencesByParagraph[paragraphIndex][sentenceIndex].related = related;
+    //         })
+    //     );
+    //     if (this.relatedCount === 0) {
+    //         return;
+    //     }
+    // }
+
+    async saveHighlights() {
+        // insert smart highlights into the remote vector database, if enabled by the user
+        // only the text highlighted in yellow on article pages is sent over the network,
+        // using only the one-way hash of the current URL for deduplication
+        // indexAnnotationVectors(
+        //     this.user_id,
+        //     this.article_id,
+        //     this.topHighlights.map((h) => h.highlight),
+        //     undefined,
+        //     true
+        // );
+    }
+
+    private handleMessage(message: any) {
+        if (message.type === "sendSmartHighlightsToSidebar") {
+            // sent from AnnotationsModifier once sidebar is ready
+            this.sendSidebarMessages();
+        }
+    }
+
+    private sendSidebarMessages() {
+        const sidebarIframe = document.getElementById("lindy-annotations-bar") as HTMLIFrameElement;
+        if (sidebarIframe && this.annotations.length > 0) {
+            sendIframeEvent(sidebarIframe, {
+                event: "setInfoAnnotations",
+                annotations: this.annotations,
+            });
+        }
+    }
 }
+
+const excludedParagraphClassNames = [
+    "comment", // https://civilservice.blog.gov.uk/2022/08/16/a-simple-guide-on-words-to-avoid-in-government/
+    "reference", // https://en.wikipedia.org/wiki/Sunstone_(medieval)
+];

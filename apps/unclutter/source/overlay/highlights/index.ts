@@ -17,16 +17,8 @@ export function renderHighlightsLayer(enablePageView: () => void, enhanceActive:
     //     }
     // });
 
-    function onHighlightClick(range: Range, related: RelatedHighlight[]) {
-        enablePageViewInner();
-
-        // removeHighligher();
-        // const rect = range.getBoundingClientRect();
-        // const quote = range.toString();
-        // renderHighlighter(rect, quote, related);
-    }
-    const userId = "test-user5";
-    const smartHighlightsModifier = new SmartHighlightsModifier(userId, onHighlightClick);
+    const userId = "test-user6";
+    const smartHighlightsModifier = new SmartHighlightsModifier(userId);
 
     if (enhanceActive) {
         setReaderModeSettings();
@@ -47,39 +39,34 @@ export function renderHighlightsLayer(enablePageView: () => void, enhanceActive:
 
         setReaderModeSettings();
     }
-    function setReaderModeSettings() {
-        smartHighlightsModifier.isProxyActive = true;
-        smartHighlightsModifier.enableAllSentences = false;
-        smartHighlightsModifier.enableHighlightsClick = false;
-        smartHighlightsModifier.enableScrollBar = false;
-    }
+    function setReaderModeSettings() {}
     function enablePageViewInner() {
         preparePageView();
         enablePageView();
     }
 
     async function fetchHighlights() {
-        const isArticle = await smartHighlightsModifier.parseUnclutteredArticle();
+        const isArticle = await smartHighlightsModifier.fetchAnnotations();
+        updateArticleBadge(
+            smartHighlightsModifier.annotationsCount,
+            smartHighlightsModifier.relatedCount
+        );
+
         if (!isArticle || enhanceActive) {
             return;
         }
 
-        updateArticleBadge(
-            smartHighlightsModifier.keyPointsCount,
-            smartHighlightsModifier.relatedCount
-        );
-
-        await smartHighlightsModifier.fetchRelatedHighlights();
-        updateArticleBadge(
-            smartHighlightsModifier.keyPointsCount,
-            smartHighlightsModifier.relatedCount
-        );
+        // await smartHighlightsModifier.fetchRelatedHighlights();
+        // updateArticleBadge(
+        //     smartHighlightsModifier.keyPointsCount,
+        //     smartHighlightsModifier.relatedCount
+        // );
     }
 
     renderArticleBadge(
-        smartHighlightsModifier.keyPointsCount,
+        smartHighlightsModifier.annotationsCount,
         smartHighlightsModifier.relatedCount,
-        smartHighlightsModifier.removePaintedAnnotations.bind(smartHighlightsModifier),
+        () => {},
         enablePageViewInner
     );
 
@@ -137,7 +124,7 @@ export function renderHighlightsLayer(enablePageView: () => void, enhanceActive:
 
 let articleBadgeComponent: ArticleBadgeSvelte;
 function renderArticleBadge(
-    keyPointsCount: number,
+    annotationsCount: number,
     relatedCount: number,
     disableAnnotations: () => void,
     enablePageView: () => void
@@ -149,7 +136,7 @@ function renderArticleBadge(
     articleBadgeComponent = new ArticleBadgeSvelte({
         target: container.attachShadow({ mode: "open" }),
         props: {
-            keyPointsCount,
+            annotationsCount,
             relatedCount,
             enablePageView: () => {
                 // anchor on left edge to prevent jump on scrollbar insert
@@ -170,8 +157,8 @@ function renderArticleBadge(
     });
 }
 
-function updateArticleBadge(keyPointsCount: number, relatedCount: number) {
+function updateArticleBadge(annotationsCount: number, relatedCount: number) {
     if (articleBadgeComponent) {
-        articleBadgeComponent.$set({ keyPointsCount, relatedCount });
+        articleBadgeComponent.$set({ annotationsCount, relatedCount });
     }
 }
