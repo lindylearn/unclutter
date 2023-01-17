@@ -87,6 +87,7 @@
         ".partners-top__outer-wrapper"
     ],
     "biblegateway.com": [".default-tooltip", ".passage-scroller.no-sidebar"],
+    "bikepacking.com": [".BPC"],
     "biobiochile.cl": [
         ".ad-aside.bbcl-app",
         ".post-aside",
