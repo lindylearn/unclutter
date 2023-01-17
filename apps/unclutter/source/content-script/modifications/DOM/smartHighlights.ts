@@ -47,7 +47,7 @@ export default class SmartHighlightsModifier implements PageModifier {
     }[] = [];
 
     private scoreThreshold = 0.6;
-    private relatedThreshold = 0.5;
+    private relatedThreshold = 0.4;
 
     constructor(
         user_id: string,
@@ -64,21 +64,24 @@ export default class SmartHighlightsModifier implements PageModifier {
         if (message.type === "sendSmartHighlightsToSidebar") {
             // sent from AnnotationsModifier once sidebar is ready
             this.sendSidebarMessages();
+
+            // paint once inside reader mode
+            this.paintAnnotations();
         }
     }
 
     private sendSidebarMessages() {
         const sidebarIframe = document.getElementById("lindy-annotations-bar") as HTMLIFrameElement;
         if (sidebarIframe && this.annotations.length > 0) {
-            sendIframeEvent(sidebarIframe, {
-                event: "setSummaryInfo",
-                summaryInfo: {
-                    title: document.title,
-                    keyPointsCount: this.keyPointsCount,
-                    relatedCount: this.relatedCount,
-                    topHighlights: this.topHighlights.map((h) => h.highlight),
-                } as ArticleSummaryInfo,
-            });
+            // sendIframeEvent(sidebarIframe, {
+            //     event: "setSummaryInfo",
+            //     summaryInfo: {
+            //         title: document.title,
+            //         keyPointsCount: this.keyPointsCount,
+            //         relatedCount: this.relatedCount,
+            //         topHighlights: this.topHighlights.map((h) => h.highlight),
+            //     } as ArticleSummaryInfo,
+            // });
             sendIframeEvent(sidebarIframe, {
                 event: "setInfoAnnotations",
                 annotations: this.annotations,
@@ -105,6 +108,7 @@ export default class SmartHighlightsModifier implements PageModifier {
             //         .filter((e) => e !== null)
             // );
 
+            // paint if already in reader mode
             this.paintAnnotations();
         }
     }
@@ -266,6 +270,7 @@ export default class SmartHighlightsModifier implements PageModifier {
         paintedElements?: HTMLElement[];
         invalid?: boolean;
     }[] = [];
+    private resizeObserver: ResizeObserver;
     private anchorSentences() {
         this.annotationState = [];
 
@@ -337,6 +342,42 @@ export default class SmartHighlightsModifier implements PageModifier {
                 });
             });
         });
+
+        // observe position changes
+        this.resizeObserver?.disconnect();
+        this.resizeObserver = new ResizeObserver(debounce(this.onPositionChange.bind(this), 200));
+        this.annotationState.forEach(({ container }) => {
+            this.resizeObserver.observe(container);
+        });
+    }
+
+    private ignoreNextCall = true;
+    private onPositionChange() {
+        // ignore first call on observe()
+        if (this.ignoreNextCall) {
+            this.ignoreNextCall = false;
+            return;
+        }
+
+        console.log("Smart annotations changed position, repainting...");
+
+        if (this.annotations?.length) {
+            this.parseRangeOffsets();
+
+            const sidebarIframe = document.getElementById(
+                "lindy-annotations-bar"
+            ) as HTMLIFrameElement;
+            if (sidebarIframe) {
+                sendIframeEvent(sidebarIframe, {
+                    event: "changedDisplayOffset",
+                    offsetById: this.offsetById,
+                    offsetEndById: this.offsetEndById,
+                });
+            }
+        }
+        if (this.paintedAnnotations) {
+            this.rePaintAnnotations();
+        }
     }
 
     // save last offsets to send to sidebar once requested
@@ -347,8 +388,6 @@ export default class SmartHighlightsModifier implements PageModifier {
 
         this.annotationState.forEach(({ sentence, range }) => {
             if (sentence.related) {
-                // displayOffsets set via changedDisplayOffset once painted
-                // this avoids rendering annotations for un-anchored highlights
                 sentence.related.forEach((r, i) => {
                     this.annotations.push(
                         createAnnotation(
@@ -364,7 +403,18 @@ export default class SmartHighlightsModifier implements PageModifier {
                         )
                     );
                 });
+            }
+        });
 
+        this.parseRangeOffsets();
+
+        // send constructed annotations to sidebar if present
+        this.sendSidebarMessages();
+    }
+
+    private parseRangeOffsets() {
+        this.annotationState.forEach(({ sentence, range }) => {
+            if (sentence.related) {
                 let displayOffset = getNodeOffset(range);
                 let displayOffsetEnd = getNodeOffset(range, "bottom");
 
@@ -375,9 +425,6 @@ export default class SmartHighlightsModifier implements PageModifier {
                 });
             }
         });
-
-        // send constructed annotations to sidebar if present
-        this.sendSidebarMessages();
     }
 
     private getParagraphAnchor(container: HTMLElement) {
@@ -405,36 +452,23 @@ export default class SmartHighlightsModifier implements PageModifier {
     }
 
     // paint AI highlights on the page
-    private resizeObserver: ResizeObserver;
+    private paintedAnnotations = false;
     private paintAnnotations() {
+        // call first paint only once
+        if (this.paintedAnnotations) {
+            return;
+        }
+
         // ensure clean state
         this.annotationState.forEach(({ paintedElements }) => {
             paintedElements?.forEach((e) => e.remove());
         });
-        this.resizeObserver?.disconnect();
-
         this.createContainers();
 
         // immediate first paint
         this.rePaintAnnotations();
 
-        // paint again on container position change
-        let ignoreNextCall = true;
-        const onResized = () => {
-            // ignore first call on observe()
-            if (ignoreNextCall) {
-                ignoreNextCall = false;
-                return;
-            }
-
-            console.log("Smart annotations changed position, repainting...");
-            this.rePaintAnnotations();
-        };
-        // TODO animate rect movement?
-        this.resizeObserver = new ResizeObserver(debounce(onResized, 200));
-        this.annotationState.forEach(({ container }) => {
-            this.resizeObserver.observe(container);
-        });
+        this.paintedAnnotations = true;
     }
 
     private rePaintAnnotations() {
