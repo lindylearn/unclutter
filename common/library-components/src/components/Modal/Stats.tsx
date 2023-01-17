@@ -1,16 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
-import {
-    Annotation,
-    Article,
-    readingProgressFullClamp,
-    ReplicacheContext,
-    Topic,
-    UserInfo,
-} from "../../store";
+import { Annotation, Article, ReplicacheContext, Topic, UserInfo } from "../../store";
 import { ArticleActivityCalendar, getActivityColor, getActivityLevel } from "../Charts";
-import { getDomain, getRandomLightColor, getWeekStart, groupBy, subtractWeeks } from "../../common";
-import { useArticleGroups } from "../ArticleList";
-import { TopicEmoji } from "../TopicTag";
+import { getDomain, getWeekStart, groupBy, subtractWeeks } from "../../common";
 import clsx from "clsx";
 import { BigNumber, ResourceIcon, ResourceStat } from "./components/numbers";
 import { FilterContext } from "..";
@@ -282,11 +273,7 @@ function ArticleGroupStat({
                 background: getActivityColor(activityLevel, darkModeEnabled || false),
             }}
             onClick={() => {
-                // if (userInfo.onPaidPlan || userInfo.trialEnabled) {
-                //     showTopic(topic!.id);
-                // } else {
-                // showDomain(groupKey);
-                // }
+                showDomain(groupKey);
             }}
         >
             <div className="flex max-w-full items-center gap-1 overflow-hidden font-medium">

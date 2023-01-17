@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useDebounce } from "usehooks-ts";
 import { FilterButton } from "./Recent";
-import { getBrowser, getDomain, getUnclutterExtensionId } from "../../common";
+import { getBrowser, getDomain, getRandomLightColor, getUnclutterExtensionId } from "../../common";
 import {
     AnnotationWithArticle,
     ReplicacheContext,
@@ -33,7 +33,7 @@ export default function HighlightsTab({
 
     // filter to one of the current objects
     const [activeCurrentFilter, setActiveCurrentFilter] = useState<boolean>(
-        false
+        !!domainFilter
         // !!((currentArticle && currentAnnotationsCount) || domainFilter)
     );
 
@@ -55,7 +55,8 @@ export default function HighlightsTab({
                     (a) => a.article_id === currentArticle
                 );
             }
-        } else if (onlyManualHighlights) {
+        }
+        if (onlyManualHighlights) {
             filteredAnnotations = filteredAnnotations.filter((a) => !a.ai_created);
         }
 
@@ -124,7 +125,7 @@ export default function HighlightsTab({
                     }}
                 />
 
-                {/* {activeCurrentFilter && (
+                {activeCurrentFilter && (
                     <FilterButton
                         title={
                             domainFilter ||
@@ -144,12 +145,12 @@ export default function HighlightsTab({
                             setDomainFilter();
                             reportEvent("changeListFilter", { activeCurrentFilter: null });
                         }}
-                        color={getRandomLightColor(
-                            domainFilter || currentArticle || "",
-                            darkModeEnabled
-                        )}
+                        // color={getRandomLightColor(
+                        //     domainFilter || currentArticle || "",
+                        //     darkModeEnabled
+                        // )}
                     />
-                )} */}
+                )}
 
                 <SearchBox
                     query={query}

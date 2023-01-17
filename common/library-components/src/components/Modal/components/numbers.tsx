@@ -21,8 +21,8 @@ export function BigNumber({
     return (
         <div
             className={clsx(
-                "relative flex select-none flex-col items-center overflow-hidden rounded-md bg-stone-50 p-3 dark:bg-neutral-800",
-                onClick && "cursor-pointer transition-all hover:scale-[97%]"
+                "relative flex select-none flex-col items-center overflow-hidden rounded-md bg-stone-50 p-3 transition-all hover:scale-[97%] dark:bg-neutral-800",
+                onClick && "cursor-pointer"
             )}
             style={{ background: colorOverride }}
             onClick={onClick}
