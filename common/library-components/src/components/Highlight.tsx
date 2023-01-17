@@ -48,7 +48,6 @@ export function Highlight({
     }
 
     const localText = annotation.text;
-    annotation.is_favorite = false;
 
     // const [localText, setLocalText] = useState(annotation.text);
     // useEffect(() => {
@@ -70,10 +69,10 @@ export function Highlight({
 
     return (
         <div
-            className="highlight animate-fadein relative flex cursor-pointer select-none flex-col gap-4 overflow-hidden rounded-md bg-white p-4 text-sm text-stone-900 shadow transition-transform hover:scale-[99%] dark:text-white"
+            className="highlight animate-fadein relative flex cursor-pointer select-none flex-col gap-4 overflow-hidden rounded-md bg-white p-4 text-sm text-stone-900 transition-transform hover:scale-[99%] dark:text-white"
             style={{
-                background: annotation.is_favorite
-                    ? getActivityColor(3, darkModeEnabled)
+                background: annotation.ai_created
+                    ? getActivityColor(1, darkModeEnabled)
                     : getRandomLightColor(
                           annotation.tags?.[0] || annotation.article_id || annotation.id,
                           darkModeEnabled
@@ -88,12 +87,12 @@ export function Highlight({
                 setDropdownOpen(true);
             }}
         >
-            <HighlightDropdown
+            {/* <HighlightDropdown
                 annotation={annotation}
                 open={dropdownOpen}
                 setOpen={setDropdownOpen}
                 reportEvent={reportEvent}
-            />
+            /> */}
 
             {/* <h2 className="tags flex gap-2 overflow-hidden px-2 leading-normal">
                 {annotation.tags?.slice(0, 2)?.map((tag) => (

@@ -26,7 +26,7 @@
         <div
             class="lindy-button font-title flex items-stretch gap-2 px-2.5 font-medium text-stone-800"
         >
-            {#if annotationsCount === undefined}
+            <!-- {#if annotationsCount === undefined}
                 <div class="flex items-center"><div class="loader h-4 w-4" /></div>
             {:else if annotationsCount}
                 <div class="flex items-center gap-1" in:fade>
@@ -38,6 +38,10 @@
                     >
                     {annotationsCount}
                 </div>
+            {/if} -->
+
+            {#if relatedCount === undefined}
+                <div class="flex items-center"><div class="loader h-4 w-4" /></div>
             {/if}
 
             {#if relatedCount !== undefined}

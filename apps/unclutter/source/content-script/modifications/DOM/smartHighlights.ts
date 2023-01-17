@@ -188,6 +188,7 @@ export default class SmartHighlightsModifier implements PageModifier {
                     created_at,
                     quote_html_selector: describeAnnotation(document.body, range),
                     ai_created: true,
+                    ai_score: sentence.score,
                 });
                 runningCount++;
             });

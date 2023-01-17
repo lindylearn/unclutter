@@ -62,6 +62,9 @@ function AnnotationThread(props: AnnotationThreadProps) {
     const color = props.annotation.ai_created
         ? getAIAnnotationColor(props.annotation.ai_score)
         : getAnnotationColor(props.annotation);
+    const darkColor = props.annotation.ai_created
+        ? getAIAnnotationColor(props.annotation.ai_score, true)
+        : getAnnotationColor(props.annotation);
 
     return (
         <>
@@ -74,7 +77,6 @@ function AnnotationThread(props: AnnotationThreadProps) {
                     isFetchingRelated={isFetchingRelated}
                     relatedCount={related?.length}
                     deleteHide={deleteHide}
-                    color={color}
                 />
             )}
             {!props.annotation.isMyAnnotation && props.annotation.platform !== "summary" && (
@@ -117,6 +119,7 @@ function AnnotationThread(props: AnnotationThreadProps) {
                                 platform: "related",
                             }}
                             colorOverride={color}
+                            colorOverrideDark={darkColor}
                             deleteHide={deleteHide}
                         />
                     ))}

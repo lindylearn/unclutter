@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { Annotation, Article, ReplicacheContext, useSubscribe } from "../../store";
 import { getActivityColor } from "../Charts";
 import { BigNumber, ResourceIcon } from "../Modal";
@@ -38,8 +38,14 @@ export default function ArticleBottomReview({
         );
     }
 
-    const allAnnotationsCount =
-        allAnnotations && articleAnnotations && allAnnotations?.length + articleAnnotations?.length;
+    const allAnnotationsCount = useMemo(
+        () =>
+            allAnnotations &&
+            articleAnnotations &&
+            allAnnotations.filter((a) => a.article_id !== articleId).length +
+                articleAnnotations.length,
+        [allAnnotations, articleAnnotations]
+    );
 
     return (
         <div className="bottom-review flex flex-col gap-[8px] text-stone-800 dark:text-[rgb(232,230,227)]">
@@ -61,13 +67,13 @@ export default function ArticleBottomReview({
                         colorOverride={getActivityColor(1, darkModeEnabled)}
                         onClick={() => openLibrary("highlights")}
                     />
-                    <BigNumber
+                    {/* <BigNumber
                         value={allAnnotationsCount && allAnnotationsCount * 2}
                         diff={articleAnnotations && articleAnnotations?.length * 2}
                         tag={`connected ideas`}
                         icon={<ResourceIcon type="links" large />}
                         colorOverride={getActivityColor(1, darkModeEnabled)}
-                    />
+                    /> */}
                 </div>
 
                 {/* <ArticleActivityCalendar

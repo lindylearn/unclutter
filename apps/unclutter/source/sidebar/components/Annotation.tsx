@@ -12,6 +12,7 @@ interface AnnotationProps {
     heightLimitPx?: number;
 
     colorOverride?: string;
+    colorOverrideDark?: string;
 
     deleteHide: () => void;
 }
@@ -22,14 +23,13 @@ function Annotation({
     annotation,
     heightLimitPx,
     colorOverride,
+    colorOverrideDark,
 }: AnnotationProps) {
     const { excerpt, text, platform, infoType, score, author } = annotation;
 
     let color: string;
     if (colorOverride) {
         color = colorOverride;
-    } else if (platform === "info") {
-        color = `rgba(250, 204, 21, ${0.8 * score ** 3})`;
     } else if (platform === "hn") {
         color = "rgba(255, 102, 0, 0.5)";
     } else if (platform === "h") {
@@ -44,6 +44,8 @@ function Annotation({
             )}
             style={{
                 borderLeft: `8px solid ${color}`,
+                // @ts-ignore
+                "--dark-border-color": colorOverrideDark || colorOverride || color,
                 maxHeight: heightLimitPx,
                 ...style,
             }}

@@ -12,3 +12,7 @@ body {
 .annotation > textarea::placeholder {
     color: #757575 !important;
 }
+
+.annotation {
+    border-color: var(--dark-border-color) !important;
+}
