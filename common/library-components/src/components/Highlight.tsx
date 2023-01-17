@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 // import { useDebounce } from "usehooks-ts";
 // import TextareaAutosize from "react-textarea-autosize";
 import {
+    getAIAnnotationColor,
     getDomain,
     getRandomLightColor,
     getRelativeTime,
@@ -47,8 +48,6 @@ export function Highlight({
         reportEvent("openHighlight", { isCurrentArticle });
     }
 
-    const localText = annotation.text;
-
     // const [localText, setLocalText] = useState(annotation.text);
     // useEffect(() => {
     //     setLocalText(annotation.text);
@@ -72,7 +71,7 @@ export function Highlight({
             className="highlight animate-fadein relative flex cursor-pointer select-none flex-col gap-4 overflow-hidden rounded-md bg-white p-4 text-sm text-stone-900 transition-transform hover:scale-[99%] dark:text-white"
             style={{
                 background: annotation.ai_created
-                    ? getActivityColor(1, darkModeEnabled)
+                    ? getAIAnnotationColor(annotation.ai_score, darkModeEnabled)
                     : getRandomLightColor(
                           annotation.tags?.[0] || annotation.article_id || annotation.id,
                           darkModeEnabled
@@ -103,10 +102,15 @@ export function Highlight({
             </h2> */}
 
             <LimitedText
-                className={clsx("flex-grow leading-normal", localText && "opacity-50")}
-                text={annotation.quote_text}
-                rows={localText ? 2 : 8}
+                className={clsx("flex-grow leading-normal")}
+                text={annotation.text || annotation.quote_text}
+                rows={8}
             />
+
+            {/* <div>
+                {annotation.score?.toFixed(2)}
+                {annotation.score2?.toFixed(2)}
+            </div> */}
 
             {/* <div className="flex items-center gap-2">
                 <TextareaAutosize

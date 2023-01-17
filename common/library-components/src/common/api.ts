@@ -161,7 +161,7 @@ export interface RelatedHighlight {
 
 export async function fetchRelatedAnnotations(
     user_id: string,
-    article_id: string,
+    article_id: string | undefined,
     highlights: string[],
     score_threshold: number = 0.5,
     save_highlights: boolean = false
