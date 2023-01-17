@@ -30,7 +30,17 @@ export function useFetchAnnotations(
             // mutateAnnotations({ action: "set", annotations: pageNotes });
 
             // local state is set in handleWindowEventFactory() once anchored on page
-            window.top.postMessage({ event: "anchorAnnotations", annotations }, "*");
+
+            window.top.postMessage(
+                {
+                    event: "anchorAnnotations",
+                    annotations,
+                    removePrevious: true, // remove previous annotations e.g. after changing settings
+                    groupAfterAnchoring: true, // filter number of social annotations
+                    requestAIAnnotationsAfterAnchoring: true, // paint AI annotations after each settings change
+                },
+                "*"
+            );
         })();
     }, [personalAnnotationsEnabled, enableSocialAnnotations]);
 }

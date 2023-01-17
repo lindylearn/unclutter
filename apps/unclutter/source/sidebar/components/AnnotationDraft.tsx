@@ -1,3 +1,4 @@
+import { getAIAnnotationColor } from "@unclutter/library-components/dist/common/styling";
 import clsx from "clsx";
 import ky from "ky";
 import debounce from "lodash/debounce";
@@ -109,7 +110,11 @@ function AnnotationDraft({
                 className
             )}
             style={{
-                borderLeft: `8px solid ${getAnnotationColor(annotation)}`,
+                borderLeft: `8px solid ${
+                    annotation.ai_created
+                        ? getAIAnnotationColor(annotation.ai_score)
+                        : getAnnotationColor(annotation)
+                }`,
                 maxHeight: heightLimitPx,
             }}
             ref={ref}

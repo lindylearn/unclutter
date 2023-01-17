@@ -37,9 +37,6 @@ export function renderHighlightsLayer(enablePageView: () => void, enhanceActive:
         // smartHighlightsModifier.disableStyleTweaks();
         // smartHighlightsModifier.disableScrollbar();
 
-        // save highlights async if ready (but before sidebar app fetches them)
-        smartHighlightsModifier.saveHighlights();
-
         setReaderModeSettings();
     }
     function setReaderModeSettings() {}

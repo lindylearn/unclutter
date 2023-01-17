@@ -280,6 +280,7 @@ export default class SmartHighlightsModifier implements PageModifier {
         return ranges;
     }
 
+    private relatedFetchDone = false;
     async fetchRelated(): Promise<void> {
         if (!this.annotations || this.annotations.length === 0) {
             return;
@@ -317,42 +318,26 @@ export default class SmartHighlightsModifier implements PageModifier {
                 // this.annotations[highlightIndex].related = related;
             })
         );
-    }
 
-    // save generated annotations to local user library once reader mode enabled
-    async saveHighlights() {
-        const aiAnnotations = this.annotations.filter((a) => a.ai_created);
-        if (!this.generatedAnnotations || aiAnnotations.length === 0) {
-            return;
-        }
-
-        console.log(`Saving ${aiAnnotations.length} AI highlights...`);
-
-        const rep = new ReplicacheProxy();
-        await Promise.all(aiAnnotations.map((a) => rep.mutate.putAnnotation(a)));
-
-        await indexAnnotationVectors(
-            this.user_id,
-            this.article_id,
-            aiAnnotations.map((h) => h.quote_text),
-            undefined,
-            true
-        );
+        // send to sidebar if already ready
+        this.sendAnnotationsToSidebar();
     }
 
     private handleMessage(message: any) {
-        if (message.type === "sendSmartHighlightsToSidebar") {
-            // sent from AnnotationsModifier once sidebar is ready
-            this.sendSidebarMessages();
+        if (message.type === "sendAIAnnotationsToSidebar") {
+            // event sent from AnnotationsModifier once sidebar is ready
+
+            // reply with annotations
+            this.sendAnnotationsToSidebar();
         }
     }
 
-    private sendSidebarMessages() {
+    private sendAnnotationsToSidebar() {
         const sidebarIframe = document.getElementById("lindy-annotations-bar") as HTMLIFrameElement;
         if (sidebarIframe && this.annotations.length > 0) {
             sendIframeEvent(sidebarIframe, {
-                event: "setInfoAnnotations",
-                annotations: this.annotations,
+                event: "setAIAnnotations",
+                annotations: this.annotations.filter((a) => a.ai_created),
             });
         }
     }

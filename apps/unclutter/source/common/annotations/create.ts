@@ -79,6 +79,8 @@ export interface LindyAnnotation {
     article_id: string;
 
     h_id?: string; // remote id if synced with hypothesis
+    ai_created?: boolean;
+    ai_score?: number;
 
     // local state
     isMyAnnotation?: boolean;
@@ -154,6 +156,8 @@ export function pickleLocalAnnotation(annotation: LindyAnnotation): Annotation {
         text: annotation.text,
         tags: annotation.tags,
         quote_html_selector: annotation.quote_html_selector,
+        ai_created: annotation.ai_created,
+        ai_score: annotation.ai_score,
     };
 }
 export function unpickleLocalAnnotation(annotation: Annotation): LindyAnnotation {
@@ -165,5 +169,7 @@ export function unpickleLocalAnnotation(annotation: Annotation): LindyAnnotation
             ? new Date(annotation.updated_at * 1000).toISOString()
             : undefined,
         isMyAnnotation: true,
+        ai_created: annotation.ai_created,
+        ai_score: annotation.ai_score,
     });
 }

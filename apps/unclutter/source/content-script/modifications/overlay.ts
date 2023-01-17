@@ -391,7 +391,8 @@ export default class OverlayManager implements PageModifier {
         annotations.map((annotation) => {
             const outlineIndex = this.getOutlineIndexForAnnotation(annotation);
 
-            if (!annotation.isMyAnnotation) {
+            if (annotation.ai_created) {
+            } else if (!annotation.isMyAnnotation) {
                 if (action === "set" || action === "add") {
                     this.totalSocialCommentsCount += 1;
                     this.flatOutline[outlineIndex].socialCommentsCount += 1;

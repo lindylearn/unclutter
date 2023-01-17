@@ -49,9 +49,6 @@ export default class AnnotationsModifier implements PageModifier {
             } else if (data.event === "sidebarAppReady") {
                 // react app loaded, can now handle events
                 this.reactLoaded = true;
-
-                // send info annotations from highlights.ts if present
-                window.postMessage({ type: "sendSmartHighlightsToSidebar" }, "*");
             }
         });
 

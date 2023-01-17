@@ -25,7 +25,7 @@ export async function getAnnotations(
     const start = performance.now();
 
     // fetch annotations from configured sources
-    const [personalAnnotations, publicAnnotations] = await Promise.all([
+    let [personalAnnotations, publicAnnotations] = await Promise.all([
         personalAnnotationsEnabled ? getPersonalAnnotations(articleId) : [],
         enableSocialAnnotations ? getLindyAnnotations(articleId) : [],
     ]);
@@ -58,7 +58,9 @@ export async function getAnnotations(
 }
 
 async function getPersonalAnnotations(articleId: string): Promise<LindyAnnotation[]> {
-    return await getLocalAnnotations(articleId);
+    const annotations = await getLocalAnnotations(articleId);
+    // AI annotations fetched in highlights.ts
+    return annotations.filter((a) => !a.ai_created);
 }
 
 export async function createAnnotation(annotation: LindyAnnotation): Promise<LindyAnnotation> {

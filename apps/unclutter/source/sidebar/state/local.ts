@@ -2,10 +2,12 @@ import {
     ArticleSummaryInfo,
     createAnnotation as createAnnotationData,
     LindyAnnotation,
+    unpickleLocalAnnotation,
 } from "../../common/annotations/create";
 import { reportEventContentScript } from "@unclutter/library-components/dist/common/messaging";
 import { createAnnotation } from "../common/CRUD";
 import { groupAnnotations } from "../common/grouping";
+import type { Annotation } from "@unclutter/library-components/dist/store";
 
 export interface AnnotationMutation {
     action: "set" | "add" | "remove" | "update" | "changeDisplayOffsets" | "focusAnnotation";
@@ -86,12 +88,8 @@ export function handleWindowEventFactory(
             // show state with id immediately
             mutateAnnotations({ action: "add", annotation: data.annotation });
 
-            // update remotely, then replace local state
-            const remoteAnnotation = await createAnnotation(data.annotation);
-            mutateAnnotations({
-                action: "update",
-                annotation: remoteAnnotation,
-            });
+            // create in data store
+            await createAnnotation(data.annotation);
         } else if (data.event === "anchoredAnnotations") {
             if (data.annotations.length === 0) {
                 // shortcut
@@ -102,22 +100,27 @@ export function handleWindowEventFactory(
                 return;
             }
 
-            // now group annotations to filter out overlaps
-            // use small margin to just detect overlaps in quotes
-            const groupedAnnotations = groupAnnotations(data.annotations, 10);
+            let displayedAnnotations: LindyAnnotation[];
+            if (data.groupAfterAnchoring) {
+                // now group annotations to filter out overlaps
+                // use small margin to just detect overlaps in quotes
+                const groupedAnnotations = groupAnnotations(data.annotations, 10);
 
-            const displayedAnnotations = groupedAnnotations.flatMap((group) => group);
-            const displayedAnnotationsSet = new Set(displayedAnnotations);
-            const droppedAnnotations = data.annotations.filter(
-                (a) => !displayedAnnotationsSet.has(a)
-            );
+                displayedAnnotations = groupedAnnotations.flatMap((group) => group);
+                const displayedAnnotationsSet = new Set(displayedAnnotations);
+                const droppedAnnotations = data.annotations.filter(
+                    (a) => !displayedAnnotationsSet.has(a)
+                );
 
-            // remove overlapping annotations
-            console.log(`Ignoring ${droppedAnnotations.length} overlapping annotations`);
-            window.top.postMessage(
-                { event: "removeHighlights", annotations: droppedAnnotations },
-                "*"
-            );
+                // remove overlapping annotations
+                console.log(`Ignoring ${droppedAnnotations.length} overlapping annotations`);
+                window.top.postMessage(
+                    { event: "removeHighlights", annotations: droppedAnnotations },
+                    "*"
+                );
+            } else {
+                displayedAnnotations = data.annotations;
+            }
 
             // display selected annotations
             window.top.postMessage(
@@ -128,6 +131,10 @@ export function handleWindowEventFactory(
                 action: "add",
                 annotations: displayedAnnotations,
             });
+
+            if (data.requestAIAnnotationsAfterAnchoring) {
+                window.top.postMessage({ type: "sendAIAnnotationsToSidebar" }, "*");
+            }
         } else if (data.event === "changedDisplayOffset") {
             // console.log("changedDisplayOffsets", data.offsetById);
             mutateAnnotations({
@@ -162,6 +169,15 @@ export function handleWindowEventFactory(
                 text: "test",
             });
             setSummaryAnnotation(summaryAnnotation);
+        } else if (data.event === "setAIAnnotations") {
+            console.log(data);
+            const annotations = data.annotations.map(unpickleLocalAnnotation);
+
+            // go through anchor loop (including paint) just for new annotations
+            window.top.postMessage(
+                { event: "anchorAnnotations", annotations, removePrevious: false },
+                "*"
+            );
         }
     };
 }

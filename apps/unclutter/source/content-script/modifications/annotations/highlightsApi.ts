@@ -10,6 +10,7 @@ import {
 } from "../../../common/annotator/highlighter";
 import { overrideClassname } from "../../../common/stylesheets";
 import { sendIframeEvent } from "../../../common/reactIframe";
+import { getAIAnnotationColor } from "@unclutter/library-components/dist/common/styling";
 
 // highlight text for every passed annotation on the active webpage
 export async function anchorAnnotations(annotations: LindyAnnotation[]) {
@@ -71,7 +72,10 @@ export function paintHighlight(
     // set color variables
     let annotationColor: string;
     let darkerAnnotationColor: string;
-    if (annotation.isMyAnnotation) {
+    if (annotation.ai_created) {
+        annotationColor = getAIAnnotationColor(annotation.ai_score, false);
+        darkerAnnotationColor = getAIAnnotationColor(annotation.ai_score, true);
+    } else if (annotation.isMyAnnotation) {
         annotationColor = getAnnotationColor(annotation);
         darkerAnnotationColor = annotationColor.replace("0.3", "0.5");
     } else {

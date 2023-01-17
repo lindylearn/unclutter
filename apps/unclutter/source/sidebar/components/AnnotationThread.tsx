@@ -8,7 +8,7 @@ import {
 // import { getAnnotationColor } from "../../common/annotations/styling";
 import Annotation from "./Annotation";
 import AnnotationDraft from "./AnnotationDraft";
-import SummaryAnnotation from "./Summary";
+// import SummaryAnnotation from "./Summary";
 
 interface AnnotationThreadProps {
     annotation: LindyAnnotation;
@@ -24,10 +24,10 @@ function AnnotationThread(props: AnnotationThreadProps) {
     const [isFetchingRelated, setIsFetchingRelated] = useState(false);
     const [related, setRelated] = useState<RelatedHighlight[]>();
     useEffect(() => {
-        if (props.annotation.isMyAnnotation) {
+        if (props.annotation.isMyAnnotation && !props.annotation.ai_created) {
             setIsFetchingRelated(true);
 
-            const userId = "test-user5";
+            const userId = "test-user6";
             fetchRelatedAnnotations(userId, props.annotation.article_id, [
                 props.annotation.quote_text,
             ])
@@ -55,17 +55,18 @@ function AnnotationThread(props: AnnotationThreadProps) {
 
     return (
         <>
-            {props.annotation.platform === "summary" && (
+            {/* {props.annotation.platform === "summary" && (
                 <SummaryAnnotation summaryInfo={props.annotation.summaryInfo!} />
-            )}
-            {props.annotation.isMyAnnotation && (
-                <AnnotationDraft
-                    {...props}
-                    isFetchingRelated={isFetchingRelated}
-                    relatedCount={related?.length}
-                    deleteHide={deleteHide}
-                />
-            )}
+            )} */}
+            {props.annotation.isMyAnnotation &&
+                (props.annotation.text || props.annotation.focused) && (
+                    <AnnotationDraft
+                        {...props}
+                        isFetchingRelated={isFetchingRelated}
+                        relatedCount={related?.length}
+                        deleteHide={deleteHide}
+                    />
+                )}
             {!props.annotation.isMyAnnotation && props.annotation.platform !== "summary" && (
                 <Annotation {...props} deleteHide={deleteHide} />
             )}

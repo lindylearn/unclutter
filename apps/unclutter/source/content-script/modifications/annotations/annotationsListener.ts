@@ -25,8 +25,9 @@ export function createAnnotationListener(
         if (data.event == "anchorAnnotations") {
             const start = performance.now();
 
-            // anchor only called with all complete annotations
-            removeAllHighlights();
+            if (data.removePrevious) {
+                removeAllHighlights();
+            }
             const anchoredAnnotations = await anchorAnnotations(data.annotations);
 
             const duration = performance.now() - start;
@@ -38,6 +39,7 @@ export function createAnnotationListener(
 
             // send response
             sendIframeEvent(sidebarIframe, {
+                ...data,
                 event: "anchoredAnnotations",
                 annotations: anchoredAnnotations,
             });
