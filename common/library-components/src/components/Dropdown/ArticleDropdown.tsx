@@ -60,7 +60,7 @@ export function ArticleDropdown({
         }
     }
 
-    const user_id = "test-user6";
+    const user_id = "test-user7";
 
     async function deleteArticle() {
         await rep?.mutate.deleteArticle(article.id);
@@ -100,7 +100,7 @@ export function ArticleDropdown({
             /> */}
 
             <DropdownItem
-                title={article.is_queued ? "De-queue" : "Add to Queue"}
+                title={article.is_queued ? "De-queue" : "Queue"}
                 svg={
                     <svg className="mr-1.5 inline-block h-4 w-4" viewBox="0 0 640 512">
                         <path

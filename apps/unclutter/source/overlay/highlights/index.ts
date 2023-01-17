@@ -17,7 +17,7 @@ export function renderHighlightsLayer(enablePageView: () => void, enhanceActive:
     //     }
     // });
 
-    const userId = "test-user6";
+    const userId = "test-user7";
     const smartHighlightsModifier = new SmartHighlightsModifier(userId);
 
     if (enhanceActive) {

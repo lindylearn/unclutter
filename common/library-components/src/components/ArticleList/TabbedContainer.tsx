@@ -274,7 +274,7 @@ export function useTabInfos(
                             articles: uncompletedArticles,
                             articleLines: Math.max(
                                 1,
-                                Math.min(5, Math.ceil(uncompletedArticles.length / 5))
+                                Math.min(2, Math.ceil(uncompletedArticles.length / 5))
                             ),
                         },
                         {
@@ -290,7 +290,7 @@ export function useTabInfos(
                             ),
                             articles: completedArticles,
                             articleLines: Math.max(
-                                1,
+                                2,
                                 Math.min(5, Math.ceil(completedArticles.length / 5))
                             ),
                         },

@@ -83,10 +83,7 @@ export default function RecentModalTab({
                         </svg>
                     }
                     articles={articleListsCache?.["queue"] || []}
-                    articleLines={Math.max(
-                        1,
-                        Math.min(2, Math.ceil((articleListsCache?.["queue"] || []).length / 5))
-                    )}
+                    articleLines={1}
                     darkModeEnabled={darkModeEnabled}
                     showTopic={showTopic}
                     reportEvent={reportEvent}

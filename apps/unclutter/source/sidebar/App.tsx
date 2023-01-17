@@ -17,7 +17,7 @@ export default function App({ articleId }: { articleId: string }) {
         experimentsEnabled,
     } = useAnnotationSettings();
 
-    const userId = "test-user6";
+    const userId = "test-user7";
 
     // keep local annotations state
     const [summaryAnnotation, setSummaryAnnotation] = useState<LindyAnnotation>();

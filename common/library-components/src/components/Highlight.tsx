@@ -86,12 +86,13 @@ export function Highlight({
                 setDropdownOpen(true);
             }}
         >
-            {/* <HighlightDropdown
+            <HighlightDropdown
                 annotation={annotation}
+                article={article}
                 open={dropdownOpen}
                 setOpen={setDropdownOpen}
                 reportEvent={reportEvent}
-            /> */}
+            />
 
             {/* <h2 className="tags flex gap-2 overflow-hidden px-2 leading-normal">
                 {annotation.tags?.slice(0, 2)?.map((tag) => (

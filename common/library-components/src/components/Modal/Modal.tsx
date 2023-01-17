@@ -84,7 +84,7 @@ export function LibraryModalPage({
     }, [rep]);
 
     const initialRender = useRef<boolean>(true);
-    const [currentTab, setCurrentTab] = useState(initialTab || "list");
+    const [currentTab, setCurrentTab] = useState(initialTab || "sync");
     useEffect(() => {
         if (initialRender.current) {
             initialRender.current = false;
@@ -98,24 +98,27 @@ export function LibraryModalPage({
         initialSubscription
     );
     const [domainFilter, setDomainFilter] = useState<string>();
-    useEffect(() => {
-        setCurrentTopic(initialTopic);
-    }, [initialTopic]);
+    // useEffect(() => {
+    //     setCurrentTopic(initialTopic);
+    // }, [initialTopic]);
 
     async function showTopic(topicId: string) {
-        const topic = await rep?.query.getTopic(topicId);
-        setCurrentTopic(topic);
-        setCurrentTab("graph");
-        reportEvent("showTopicGraph");
+        // const topic = await rep?.query.getTopic(topicId);
+        // setCurrentTopic(topic);
+        // setCurrentTab("graph");
+        // reportEvent("showTopicGraph");
     }
     async function showDomain(domain: string) {
-        const subscriptions = await rep?.query.listSubscriptions();
-        const domainSubscription = subscriptions?.find((s) => s.domain === domain);
-        if (domainSubscription) {
-            setCurrentSubscription(domainSubscription);
-            setCurrentTab("feeds");
-            reportEvent("showDomainFeed");
-        }
+        // const subscriptions = await rep?.query.listSubscriptions();
+        // const domainSubscription = subscriptions?.find((s) => s.domain === domain);
+        // if (domainSubscription) {
+        //     setCurrentSubscription(domainSubscription);
+        //     setCurrentTab("feeds");
+        //     reportEvent("showDomainFeed");
+        // }
+
+        setDomainFilter(domain);
+        setCurrentTab("highlights");
 
         reportEvent("showDomainDetails");
     }
@@ -205,7 +208,7 @@ function ModalContent({
                         <LindyIcon className="w-8" />
 
                         <h1
-                            className="font-title text-2xl font-bold"
+                            className="font-title select-none text-2xl font-bold"
                             // bg-gradient-to-b from-yellow-300 to-amber-400 bg-clip-text text-transparent
                             // style={{ WebkitBackgroundClip: "text" }}
                         >
@@ -237,13 +240,13 @@ function ModalContent({
                         reportEvent={reportEvent}
                     />
                 )}
-                {currentTab === "graph" && (
+                {/* {currentTab === "graph" && (
                     <GraphPage
                         graph={graph}
                         darkModeEnabled={darkModeEnabled}
                         reportEvent={reportEvent}
                     />
-                )}
+                )} */}
                 {currentTab === "stats" && (
                     <StatsModalTab
                         userInfo={userInfo}
@@ -259,7 +262,7 @@ function ModalContent({
                         reportEvent={reportEvent}
                     />
                 )}
-                {currentTab === "feeds" &&
+                {/* {currentTab === "feeds" &&
                     (currentSubscription ? (
                         <FeedsDetailsTab
                             darkModeEnabled={darkModeEnabled}
@@ -267,10 +270,10 @@ function ModalContent({
                         />
                     ) : (
                         <FeedListTab darkModeEnabled={darkModeEnabled} reportEvent={reportEvent} />
-                    ))}
-                {currentTab === "signup" && (
+                    ))} */}
+                {/* {currentTab === "signup" && (
                     <UpgradeModalTab darkModeEnabled={darkModeEnabled} reportEvent={reportEvent} />
-                )}
+                )} */}
                 {currentTab === "sync" && (
                     <SyncModalTab darkModeEnabled={darkModeEnabled} reportEvent={reportEvent} />
                 )}
