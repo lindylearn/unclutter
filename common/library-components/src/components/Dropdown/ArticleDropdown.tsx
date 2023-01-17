@@ -97,7 +97,7 @@ export function ArticleDropdown({
             /> */}
 
             <DropdownItem
-                title={article.is_queued ? "Read later" : "Add to Queue"}
+                title={article.is_queued ? "De-queue" : "Add to Queue"}
                 svg={
                     <svg className="mr-1.5 inline-block h-4 w-4" viewBox="0 0 640 512">
                         <path
@@ -136,7 +136,7 @@ export function ArticleDropdown({
                 onSelect={toggleCompleted}
             />
             <DropdownItem
-                title="Remove"
+                title="Delete"
                 svg={
                     <svg
                         viewBox="0 0 576 512"
@@ -150,7 +150,7 @@ export function ArticleDropdown({
                 }
                 onSelect={deleteArticle}
             />
-            <DropdownItem
+            {/* <DropdownItem
                 title="Report"
                 svg={
                     <svg
@@ -165,7 +165,7 @@ export function ArticleDropdown({
                 }
                 onSelect={reportPage}
                 bottom
-            />
+            /> */}
         </Dropdown>
     );
 }

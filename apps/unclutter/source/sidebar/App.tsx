@@ -40,6 +40,12 @@ export default function App({ articleId }: { articleId: string }) {
             setSummaryAnnotation
         );
         window.top.postMessage({ event: "sidebarAppReady" }, "*");
+        window.onkeydown = (e: KeyboardEvent) => {
+            if (e.key === "Tab") {
+                window.top?.postMessage({ event: "showModal" }, "*");
+                e.preventDefault();
+            }
+        };
     }, []);
 
     // group and filter annotations on every local state change (e.g. added, focused)

@@ -279,7 +279,7 @@ export function useTabInfos(
                         },
                         {
                             key: "completed",
-                            title: "Recently saved",
+                            title: "Recently read",
                             icon: (
                                 <svg className="h-4" viewBox="0 0 512 512">
                                     <path

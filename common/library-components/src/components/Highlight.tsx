@@ -70,7 +70,7 @@ export function Highlight({
 
     return (
         <div
-            className="highlight animate-fadein relative flex cursor-pointer select-none flex-col gap-3 overflow-hidden rounded-md bg-white p-3 px-4 text-sm text-stone-900 shadow transition-transform hover:scale-[99.5%] dark:text-white"
+            className="highlight animate-fadein relative flex cursor-pointer select-none flex-col gap-4 overflow-hidden rounded-md bg-white p-4 text-sm text-stone-900 shadow transition-transform hover:scale-[99%] dark:text-white"
             style={{
                 background: annotation.is_favorite
                     ? getActivityColor(3, darkModeEnabled)
@@ -88,12 +88,12 @@ export function Highlight({
                 setDropdownOpen(true);
             }}
         >
-            {/* <HighlightDropdown
+            <HighlightDropdown
                 annotation={annotation}
                 open={dropdownOpen}
                 setOpen={setDropdownOpen}
                 reportEvent={reportEvent}
-            /> */}
+            />
 
             {/* <h2 className="tags flex gap-2 overflow-hidden px-2 leading-normal">
                 {annotation.tags?.slice(0, 2)?.map((tag) => (
@@ -125,7 +125,7 @@ export function Highlight({
             </div> */}
 
             {article ? (
-                <div className="info-bar font-title flex items-center justify-between gap-2 whitespace-nowrap">
+                <div className="info-bar flex items-center justify-between gap-2 whitespace-nowrap font-medium">
                     <div className="flex items-center gap-2 overflow-hidden">
                         <img
                             className="w-4 shrink-0 rounded-sm"

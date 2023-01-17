@@ -124,5 +124,5 @@ const emptyListMessage = {
     past: "No past feed articles found.",
     list: "Open articles with Unclutter to automatically save them.",
     uncompleted: "Your unread articles will appear here.",
-    // completed: "No completed articles found.",
+    completed: "Every article you read with Unclutter will appear here.",
 };

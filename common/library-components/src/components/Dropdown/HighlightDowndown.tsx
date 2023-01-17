@@ -61,7 +61,7 @@ export function HighlightDropdown({
             /> */}
 
             <DropdownItem
-                title="Remove"
+                title="Delete"
                 svg={
                     <svg
                         viewBox="0 0 576 512"

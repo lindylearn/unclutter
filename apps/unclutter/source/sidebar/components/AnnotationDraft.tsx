@@ -115,7 +115,7 @@ function AnnotationDraft({
             ref={ref}
         >
             <TextareaAutosize
-                className="w-full select-none resize-none overflow-hidden bg-transparent align-top outline-none placeholder:select-none placeholder:text-stone-600 placeholder:opacity-50"
+                className="w-full select-none resize-none overflow-hidden bg-transparent align-top outline-none placeholder:select-none placeholder:text-stone-400 placeholder:opacity-50 dark:placeholder:text-stone-600"
                 placeholder={
                     isFetchingRelated
                         ? ""
