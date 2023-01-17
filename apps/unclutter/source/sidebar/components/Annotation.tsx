@@ -11,21 +11,29 @@ interface AnnotationProps {
     annotation: LindyAnnotation;
     heightLimitPx?: number;
 
+    colorOverride?: string;
+
     deleteHide: () => void;
 }
 
-function Annotation({ className, style, annotation, heightLimitPx }: AnnotationProps) {
+function Annotation({
+    className,
+    style,
+    annotation,
+    heightLimitPx,
+    colorOverride,
+}: AnnotationProps) {
     const { excerpt, text, platform, infoType, score, author } = annotation;
 
     let color: string;
-    if (platform === "info") {
+    if (colorOverride) {
+        color = colorOverride;
+    } else if (platform === "info") {
         color = `rgba(250, 204, 21, ${0.8 * score ** 3})`;
     } else if (platform === "hn") {
         color = "rgba(255, 102, 0, 0.5)";
     } else if (platform === "h") {
         color = "rgba(189, 28, 43, 0.5)";
-    } else if (platform === "related") {
-        color = getRandomColor(annotation.relatedId);
     }
 
     return (

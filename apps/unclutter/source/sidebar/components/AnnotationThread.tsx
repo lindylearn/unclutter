@@ -8,6 +8,9 @@ import {
 // import { getAnnotationColor } from "../../common/annotations/styling";
 import Annotation from "./Annotation";
 import AnnotationDraft from "./AnnotationDraft";
+import clsx from "clsx";
+import { getAIAnnotationColor } from "@unclutter/library-components/dist/common/styling";
+import { getAnnotationColor } from "../../common/annotations/styling";
 // import SummaryAnnotation from "./Summary";
 
 interface AnnotationThreadProps {
@@ -22,7 +25,7 @@ interface AnnotationThreadProps {
 
 function AnnotationThread(props: AnnotationThreadProps) {
     const [isFetchingRelated, setIsFetchingRelated] = useState(false);
-    const [related, setRelated] = useState<RelatedHighlight[]>();
+    const [related, setRelated] = useState<RelatedHighlight[]>(props.annotation.related);
     useEffect(() => {
         if (props.annotation.isMyAnnotation && !props.annotation.ai_created) {
             setIsFetchingRelated(true);
@@ -53,20 +56,27 @@ function AnnotationThread(props: AnnotationThreadProps) {
 
     const deleteHide = () => props.deleteHideAnnotation(props.annotation, null);
 
+    const draftVisible =
+        props.annotation.isMyAnnotation && (props.annotation.text || props.annotation.focused);
+
+    const color = props.annotation.ai_created
+        ? getAIAnnotationColor(props.annotation.ai_score)
+        : getAnnotationColor(props.annotation);
+
     return (
         <>
             {/* {props.annotation.platform === "summary" && (
                 <SummaryAnnotation summaryInfo={props.annotation.summaryInfo!} />
             )} */}
-            {props.annotation.isMyAnnotation &&
-                (props.annotation.text || props.annotation.focused) && (
-                    <AnnotationDraft
-                        {...props}
-                        isFetchingRelated={isFetchingRelated}
-                        relatedCount={related?.length}
-                        deleteHide={deleteHide}
-                    />
-                )}
+            {draftVisible && (
+                <AnnotationDraft
+                    {...props}
+                    isFetchingRelated={isFetchingRelated}
+                    relatedCount={related?.length}
+                    deleteHide={deleteHide}
+                    color={color}
+                />
+            )}
             {!props.annotation.isMyAnnotation && props.annotation.platform !== "summary" && (
                 <Annotation {...props} deleteHide={deleteHide} />
             )}
@@ -94,7 +104,7 @@ function AnnotationThread(props: AnnotationThreadProps) {
             )} */}
 
             {related?.length > 0 && (
-                <div className="mt-[6px] flex flex-col gap-[6px]">
+                <div className={clsx("flex flex-col gap-[6px]", draftVisible && "mt-[6px]")}>
                     {related?.map((r, i) => (
                         <Annotation
                             key={r.id}
@@ -102,10 +112,11 @@ function AnnotationThread(props: AnnotationThreadProps) {
                             style={{ animationDelay: `${i * 50}ms` }}
                             {...props}
                             annotation={{
+                                ...props.annotation,
                                 ...r,
                                 platform: "related",
-                                relatedId: props.annotation.id,
                             }}
+                            colorOverride={color}
                             deleteHide={deleteHide}
                         />
                     ))}

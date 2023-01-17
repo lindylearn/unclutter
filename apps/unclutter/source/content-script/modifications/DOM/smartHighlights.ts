@@ -284,13 +284,14 @@ export default class SmartHighlightsModifier implements PageModifier {
         return ranges;
     }
 
+    private relatedPerAnnotation: RelatedHighlight[][];
     async fetchRelated(): Promise<void> {
         if (!this.annotations || this.annotations.length === 0) {
             return;
         }
 
         // fetch user highlights that are related to the found article annotations
-        const relatedPerHighlight = await fetchRelatedAnnotations(
+        const relatedPerAnnotation = await fetchRelatedAnnotations(
             this.user_id,
             this.article_id,
             this.annotations.map((a) => a.quote_text),
@@ -303,10 +304,11 @@ export default class SmartHighlightsModifier implements PageModifier {
         // add to rankedSentencesByParagraph
         this.relatedCount = 0;
         await Promise.all(
-            relatedPerHighlight.map(async (related, highlightIndex) => {
+            relatedPerAnnotation.map(async (related, i) => {
                 // filter related now
                 related = related.slice(0, 2).filter((r) => r.score2 >= this.relatedThreshold);
                 if (related.length === 0) {
+                    relatedPerAnnotation[i] = [];
                     return;
                 }
 
@@ -318,11 +320,12 @@ export default class SmartHighlightsModifier implements PageModifier {
                 );
 
                 this.relatedCount += related.length;
-                // this.annotations[highlightIndex].related = related;
+                relatedPerAnnotation[i] = related;
             })
         );
 
         // send to sidebar if already ready
+        this.relatedPerAnnotation = relatedPerAnnotation;
         this.sendAnnotationsToSidebar();
     }
 
@@ -330,8 +333,10 @@ export default class SmartHighlightsModifier implements PageModifier {
         if (message.type === "sendAIAnnotationsToSidebar") {
             // event sent from AnnotationsModifier once sidebar is ready
 
-            // reply with annotations
-            this.sendAnnotationsToSidebar();
+            // reply with annotations (only if related done)
+            if (this.relatedPerAnnotation) {
+                this.sendAnnotationsToSidebar();
+            }
         }
     }
 
@@ -340,7 +345,8 @@ export default class SmartHighlightsModifier implements PageModifier {
         if (sidebarIframe && this.annotations.length > 0) {
             sendIframeEvent(sidebarIframe, {
                 event: "setAIAnnotations",
-                annotations: this.annotations.filter((a) => a.ai_created),
+                annotations: this.annotations,
+                relatedPerAnnotation: this.relatedPerAnnotation,
             });
         }
     }

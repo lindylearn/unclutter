@@ -7,7 +7,6 @@ import {
 import { reportEventContentScript } from "@unclutter/library-components/dist/common/messaging";
 import { createAnnotation } from "../common/CRUD";
 import { groupAnnotations } from "../common/grouping";
-import type { Annotation } from "@unclutter/library-components/dist/store";
 
 export interface AnnotationMutation {
     action: "set" | "add" | "remove" | "update" | "changeDisplayOffsets" | "focusAnnotation";
@@ -100,6 +99,11 @@ export function handleWindowEventFactory(
                     action: "add",
                     annotations: [],
                 });
+
+                if (data.requestAIAnnotationsAfterAnchoring) {
+                    window.top.postMessage({ type: "sendAIAnnotationsToSidebar" }, "*");
+                }
+
                 return;
             }
 
@@ -174,7 +178,13 @@ export function handleWindowEventFactory(
             setSummaryAnnotation(summaryAnnotation);
         } else if (data.event === "setAIAnnotations") {
             console.log(data);
-            const annotations = data.annotations.map(unpickleLocalAnnotation);
+            let annotations = data.annotations.map(unpickleLocalAnnotation);
+            data.relatedPerAnnotation?.forEach((related, i) => {
+                annotations[i].related = related;
+            });
+
+            // rest already considered
+            annotations = annotations.filter((a) => a.ai_created);
 
             // go through anchor loop (including paint) just for new annotations
             window.top.postMessage(

@@ -1,3 +1,4 @@
+import type { RelatedHighlight } from "@unclutter/library-components/dist/common/api";
 import { getUrlHash } from "@unclutter/library-components/dist/common/url";
 import type { Annotation, Article } from "@unclutter/library-components/dist/store/_schema";
 import { constructLocalArticleInfo } from "../schema";
@@ -61,7 +62,7 @@ export function generateId(): string {
 export interface LindyAnnotation {
     id: string;
     author: string;
-    platform: "h" | "hn" | "ll" | "info" | "summary";
+    platform: "h" | "hn" | "ll" | "info" | "summary" | "related";
     link: string;
     created_at: string;
     updated_at?: string; // only set in remote fetch or data store
@@ -98,6 +99,7 @@ export interface LindyAnnotation {
     score?: number;
     score2?: number;
     summaryInfo?: ArticleSummaryInfo;
+    related?: RelatedHighlight[];
 }
 
 export interface ArticleSummaryInfo {

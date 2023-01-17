@@ -1,12 +1,9 @@
-import { getAIAnnotationColor } from "@unclutter/library-components/dist/common/styling";
 import clsx from "clsx";
-import ky from "ky";
 import debounce from "lodash/debounce";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import TextareaAutosize from "react-textarea-autosize";
 
 import { LindyAnnotation } from "../../common/annotations/create";
-import { getAnnotationColor } from "../../common/annotations/styling";
 import { updateAnnotation as updateAnnotationApi } from "../common/CRUD";
 
 interface AnnotationDraftProps {
@@ -15,6 +12,7 @@ interface AnnotationDraftProps {
     heightLimitPx?: number;
     isFetchingRelated?: boolean;
     relatedCount?: number;
+    color: string;
 
     deleteHide: () => void;
     onHoverUpdate: (hoverActive: boolean) => void;
@@ -29,6 +27,7 @@ function AnnotationDraft({
     heightLimitPx,
     isFetchingRelated,
     relatedCount,
+    color,
     updateAnnotation,
     onHoverUpdate,
     unfocusAnnotation,
@@ -110,11 +109,7 @@ function AnnotationDraft({
                 className
             )}
             style={{
-                borderLeft: `8px solid ${
-                    annotation.ai_created
-                        ? getAIAnnotationColor(annotation.ai_score)
-                        : getAnnotationColor(annotation)
-                }`,
+                borderLeft: `8px solid ${color}`,
                 maxHeight: heightLimitPx,
             }}
             ref={ref}
