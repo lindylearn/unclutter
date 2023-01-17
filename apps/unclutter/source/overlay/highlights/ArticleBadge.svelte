@@ -41,7 +41,7 @@
             {/if}
 
             {#if relatedCount !== undefined}
-                <div class="flex items-center gap-1">
+                <div class="flex items-center gap-1" in:fade>
                     <svg class="-mt-0.5 w-4" viewBox="0 0 512 512">
                         <path
                             fill="currentColor"

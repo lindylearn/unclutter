@@ -37,6 +37,9 @@ export function renderHighlightsLayer(enablePageView: () => void, enhanceActive:
         // smartHighlightsModifier.disableStyleTweaks();
         // smartHighlightsModifier.disableScrollbar();
 
+        // save highlights async if ready (but before sidebar app fetches them)
+        smartHighlightsModifier.saveHighlights();
+
         setReaderModeSettings();
     }
     function setReaderModeSettings() {}
@@ -56,11 +59,11 @@ export function renderHighlightsLayer(enablePageView: () => void, enhanceActive:
             return;
         }
 
-        // await smartHighlightsModifier.fetchRelatedHighlights();
-        // updateArticleBadge(
-        //     smartHighlightsModifier.keyPointsCount,
-        //     smartHighlightsModifier.relatedCount
-        // );
+        await smartHighlightsModifier.fetchRelated();
+        updateArticleBadge(
+            smartHighlightsModifier.annotationsCount,
+            smartHighlightsModifier.relatedCount
+        );
     }
 
     renderArticleBadge(

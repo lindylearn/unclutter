@@ -3,7 +3,6 @@ import browser from "../../../common/polyfill";
 import { createAnnotation, LindyAnnotation } from "../../../common/annotations/create";
 import { describe as describeAnnotation } from "../../../common/annotator/anchoring/html";
 import { PageModifier, trackModifierExecution } from "../_interface";
-import { getNodeOffset } from "../../../common/annotations/offset";
 import { sendIframeEvent } from "../../../common/reactIframe";
 import { getUrlHash } from "@unclutter/library-components/dist/common/url";
 import {
@@ -41,6 +40,7 @@ export default class SmartHighlightsModifier implements PageModifier {
         window.addEventListener("message", (event) => this.handleMessage(event.data || {}));
     }
 
+    private generatedAnnotations: boolean = false;
     async fetchAnnotations(): Promise<boolean> {
         // fetch existing user annotations locally
         const rep = new ReplicacheProxy();
@@ -52,6 +52,7 @@ export default class SmartHighlightsModifier implements PageModifier {
         if (aiAnnotations.length === 0) {
             const newAnnotations = await this.parseAnnotationsFromArticle();
             this.annotations.push(...newAnnotations);
+            this.generatedAnnotations = true;
         }
 
         // likely not an article if no annotations present or generated
@@ -154,6 +155,7 @@ export default class SmartHighlightsModifier implements PageModifier {
 
         const created_at = Math.round(new Date().getTime() / 1000);
 
+        let runningCount = 0;
         paragraphElements.forEach((paragraph, index) => {
             const rankedSentences = rankedSentencesByParagraph?.[index];
             if (!rankedSentences) {
@@ -176,13 +178,14 @@ export default class SmartHighlightsModifier implements PageModifier {
                 }
 
                 annotations.push({
-                    id: `ai_${this.article_id.slice(0, 20)}_${i}`,
+                    id: `ai_${this.article_id.slice(0, 20)}_${runningCount}`,
                     article_id: this.article_id,
                     quote_text: sentence.sentence,
                     created_at,
                     quote_html_selector: describeAnnotation(document.body, range),
                     ai_created: true,
                 });
+                runningCount++;
             });
         });
 
@@ -277,56 +280,64 @@ export default class SmartHighlightsModifier implements PageModifier {
         return ranges;
     }
 
-    // async fetchRelated(): Promise<void> {
-    //     // fetch related existing highlights
-    //     const relatedPerHighlight = await fetchRelatedAnnotations(
-    //         this.user_id,
-    //         this.article_id,
-    //         this.topHighlights.map((s) => s.highlight),
-    //         this.relatedThreshold,
-    //         true // save passed highlights to the user database
-    //     );
+    async fetchRelated(): Promise<void> {
+        if (!this.annotations || this.annotations.length === 0) {
+            return;
+        }
 
-    //     const rep = new ReplicacheProxy();
+        // fetch user highlights that are related to the found article annotations
+        const relatedPerHighlight = await fetchRelatedAnnotations(
+            this.user_id,
+            this.article_id,
+            this.annotations.map((a) => a.quote_text),
+            this.relatedThreshold,
+            false
+        );
 
-    //     // add to rankedSentencesByParagraph
-    //     this.relatedCount = 0;
-    //     await Promise.all(
-    //         relatedPerHighlight.map(async (related, highlightIndex) => {
-    //             // filter related now
-    //             related = related.slice(0, 2).filter((r) => r.score2 >= this.relatedThreshold);
-    //             if (related.length === 0) {
-    //                 return;
-    //             }
+        const rep = new ReplicacheProxy();
 
-    //             // fetch article info from local user library
-    //             await Promise.all(
-    //                 related.map(async (related) => {
-    //                     related.article = await rep.query.getArticle(related.article_id);
-    //                 })
-    //             );
+        // add to rankedSentencesByParagraph
+        this.relatedCount = 0;
+        await Promise.all(
+            relatedPerHighlight.map(async (related, highlightIndex) => {
+                // filter related now
+                related = related.slice(0, 2).filter((r) => r.score2 >= this.relatedThreshold);
+                if (related.length === 0) {
+                    return;
+                }
 
-    //             this.relatedCount += related.length;
-    //             const { paragraphIndex, sentenceIndex } = this.topHighlights[highlightIndex];
-    //             this.rankedSentencesByParagraph[paragraphIndex][sentenceIndex].related = related;
-    //         })
-    //     );
-    //     if (this.relatedCount === 0) {
-    //         return;
-    //     }
-    // }
+                // fetch article info from local user library
+                await Promise.all(
+                    related.map(async (related) => {
+                        related.article = await rep.query.getArticle(related.article_id);
+                    })
+                );
 
+                this.relatedCount += related.length;
+                // this.annotations[highlightIndex].related = related;
+            })
+        );
+    }
+
+    // save generated annotations to local user library once reader mode enabled
     async saveHighlights() {
-        // insert smart highlights into the remote vector database, if enabled by the user
-        // only the text highlighted in yellow on article pages is sent over the network,
-        // using only the one-way hash of the current URL for deduplication
-        // indexAnnotationVectors(
-        //     this.user_id,
-        //     this.article_id,
-        //     this.topHighlights.map((h) => h.highlight),
-        //     undefined,
-        //     true
-        // );
+        const aiAnnotations = this.annotations.filter((a) => a.ai_created);
+        if (!this.generatedAnnotations || aiAnnotations.length === 0) {
+            return;
+        }
+
+        console.log(`Saving ${aiAnnotations.length} AI highlights...`);
+
+        const rep = new ReplicacheProxy();
+        await Promise.all(aiAnnotations.map((a) => rep.mutate.putAnnotation(a)));
+
+        await indexAnnotationVectors(
+            this.user_id,
+            this.article_id,
+            aiAnnotations.map((h) => h.quote_text),
+            undefined,
+            true
+        );
     }
 
     private handleMessage(message: any) {
