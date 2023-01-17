@@ -61,6 +61,10 @@ export default class SmartHighlightsModifier implements PageModifier {
             return false;
         }
 
+        if (this.saveOnGenerated) {
+            this.saveAnnotations();
+        }
+
         return true;
     }
 
@@ -280,7 +284,6 @@ export default class SmartHighlightsModifier implements PageModifier {
         return ranges;
     }
 
-    private relatedFetchDone = false;
     async fetchRelated(): Promise<void> {
         if (!this.annotations || this.annotations.length === 0) {
             return;
@@ -340,6 +343,35 @@ export default class SmartHighlightsModifier implements PageModifier {
                 annotations: this.annotations.filter((a) => a.ai_created),
             });
         }
+    }
+
+    private saveOnGenerated = false;
+    async saveAnnotations() {
+        if (!this.generatedAnnotations) {
+            this.saveOnGenerated = true;
+            return;
+        }
+
+        const aiAnnotations = this.annotations?.filter((a) => a.ai_created);
+        if (!aiAnnotations || aiAnnotations.length === 0) {
+            return;
+        }
+        console.log(`Saving ${aiAnnotations.length} AI highlights...`);
+
+        // save locally
+        const rep = new ReplicacheProxy();
+        await Promise.all(
+            aiAnnotations.map(async (annotation) => rep.mutate.putAnnotation(annotation))
+        );
+
+        // save embeddings
+        await indexAnnotationVectors(
+            this.user_id,
+            this.article_id,
+            aiAnnotations.map((a) => a.quote_text),
+            undefined,
+            true
+        );
     }
 }
 

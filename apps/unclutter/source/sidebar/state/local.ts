@@ -27,10 +27,13 @@ export function annotationReducer(
         case "set":
             return mutation.annotations;
         case "add":
-            const existingAnnotations = annotations.map((a) => ({
-                ...a,
-                focused: false,
-            }));
+            const newIds = mutation.annotations?.map((a) => a.id) || [mutation.annotation.id];
+            const existingAnnotations = annotations
+                .map((a) => ({
+                    ...a,
+                    focused: false,
+                }))
+                .filter((a) => !newIds.includes(a.id));
             if (mutation.annotation) {
                 // single annotation
                 return [...existingAnnotations, { ...mutation.annotation }];

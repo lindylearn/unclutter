@@ -37,6 +37,9 @@ export function renderHighlightsLayer(enablePageView: () => void, enhanceActive:
         // smartHighlightsModifier.disableStyleTweaks();
         // smartHighlightsModifier.disableScrollbar();
 
+        // save highlights async once ready
+        setTimeout(() => smartHighlightsModifier.saveAnnotations(), 2000);
+
         setReaderModeSettings();
     }
     function setReaderModeSettings() {}
