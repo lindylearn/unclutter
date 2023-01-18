@@ -1,19 +1,22 @@
+import { getUserInfoSimple } from "@unclutter/library-components/dist/common/messaging";
 import browser from "../common/polyfill";
-import { getLibraryUser } from "../common/storage";
 import { renderHighlightsLayer } from "../overlay/highlights";
 
 // "light" extension functionality injected into a tab if configured by the user
 // this enables the "smart reading" AI highlights
 
 async function main() {
-    const userId = await getLibraryUser();
+    const userInfo = await getUserInfoSimple();
+    if (!userInfo?.aiEnabled) {
+        return;
+    }
 
     // if injected later than enhance.ts (e.g. because of automatic activation),
     // don't run scrollbar tweaks and don't handle events
     // @ts-ignore
     const enhanceActive = window.unclutterEnhanceLoaded;
 
-    const preparePageView = renderHighlightsLayer(userId, enablePageView, enhanceActive);
+    const preparePageView = renderHighlightsLayer(userInfo.id, enablePageView, enhanceActive);
     if (!enhanceActive) {
         handleEvents(preparePageView);
     }

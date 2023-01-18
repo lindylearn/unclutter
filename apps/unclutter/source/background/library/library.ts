@@ -45,7 +45,7 @@ export async function initLibrary(isDev: boolean): Promise<UserInfo | undefined>
 
     const userInfo = await rep.query.getUserInfo();
     if (isDev) {
-        await rep.mutate.updateUserInfo({ aiEnabled: true });
+        await rep.mutate.updateUserInfo({ id: "dev-user", aiEnabled: true });
     }
 
     await initSearchIndex();
