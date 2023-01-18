@@ -1,6 +1,7 @@
+import type { UserInfo } from "../store";
 import { getBrowser, getNewTabExtensionId, getUnclutterExtensionId } from "./extension";
 
-export async function getUserInfoSimple() {
+export async function getUserInfoSimple(): Promise<UserInfo | undefined> {
     return await getBrowser().runtime.sendMessage(getUnclutterExtensionId(), {
         event: "getUserInfo",
     });

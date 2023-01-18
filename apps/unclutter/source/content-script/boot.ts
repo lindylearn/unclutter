@@ -1,4 +1,4 @@
-import { UserInfo } from "@unclutter/library-components/dist/store";
+import { getUserInfoSimple } from "@unclutter/library-components/dist/common/messaging";
 import {
     extensionSupportsUrl,
     isConfiguredToEnable,
@@ -6,11 +6,6 @@ import {
     isNonLeafPage,
     isArticleByTextContent,
 } from "../common/articleDetection";
-import {
-    enableBootUnclutterMessage,
-    enableExperimentalFeatures,
-    getFeatureFlag,
-} from "../common/featureFlags";
 import browser from "../common/polyfill";
 import { getDomainFrom } from "../common/util";
 
@@ -53,9 +48,7 @@ async function boot() {
         listenForPageEvents();
     }
 
-    const userInfo: UserInfo | undefined = await browser.runtime.sendMessage(null, {
-        event: "getUserInfo",
-    });
+    const userInfo = await getUserInfoSimple();
     if (userInfo?.aiEnabled) {
         // accessing text content requires ready dom
         await waitUntilDomLoaded();
@@ -70,11 +63,8 @@ async function boot() {
 
 async function onIsLikelyArticle(domain: string) {
     const configuredEnable = await isConfiguredToEnable(domain);
-    const enableUnclutterMessage = await getFeatureFlag(enableBootUnclutterMessage);
     if (configuredEnable) {
         requestEnhance("allowlisted");
-    } else if (false && enableUnclutterMessage) {
-        // showUnclutterMessage();
     }
 }
 
