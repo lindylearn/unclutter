@@ -1,4 +1,3 @@
-import { getAIAnnotationColor } from "@unclutter/library-components/dist/common/styling";
 import clsx from "clsx";
 import debounce from "lodash/debounce";
 import React, { useCallback, useEffect, useRef, useState } from "react";
@@ -14,6 +13,9 @@ interface AnnotationDraftProps {
     isFetchingRelated?: boolean;
     relatedCount?: number;
 
+    color: string;
+    colorDark?: string;
+
     deleteHide: () => void;
     onHoverUpdate: (hoverActive: boolean) => void;
     updateAnnotation: (annotation: LindyAnnotation) => void;
@@ -27,6 +29,8 @@ function AnnotationDraft({
     heightLimitPx,
     isFetchingRelated,
     relatedCount,
+    color,
+    colorDark,
     updateAnnotation,
     onHoverUpdate,
     unfocusAnnotation,
@@ -108,9 +112,9 @@ function AnnotationDraft({
                 className
             )}
             style={{
-                borderLeft: `8px solid ${getAIAnnotationColor(annotation.ai_score, false)}`,
+                borderLeft: `8px solid ${color}`,
                 // @ts-ignore
-                "--dark-border-color": getAIAnnotationColor(annotation.ai_score, true),
+                "--dark-border-color": colorDark || color,
                 maxHeight: heightLimitPx,
             }}
             ref={ref}

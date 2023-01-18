@@ -1,6 +1,5 @@
 import React from "react";
 import type { LindyAnnotation } from "../../common/annotations/create";
-import { getRandomColor } from "../../common/annotations/styling";
 import { reportEventContentScript } from "@unclutter/library-components/dist/common/messaging";
 import { openArticleResilient } from "@unclutter/library-components/dist/common/extension";
 import clsx from "clsx";
@@ -11,8 +10,8 @@ interface AnnotationProps {
     annotation: LindyAnnotation;
     heightLimitPx?: number;
 
-    colorOverride?: string;
-    colorOverrideDark?: string;
+    color: string;
+    colorDark?: string;
 
     deleteHide: () => void;
 }
@@ -22,19 +21,10 @@ function Annotation({
     style,
     annotation,
     heightLimitPx,
-    colorOverride,
-    colorOverrideDark,
+    color,
+    colorDark,
 }: AnnotationProps) {
     const { excerpt, text, platform, infoType, score, author } = annotation;
-
-    let color: string;
-    if (colorOverride) {
-        color = colorOverride;
-    } else if (platform === "hn") {
-        color = "rgba(255, 102, 0, 0.5)";
-    } else if (platform === "h") {
-        color = "rgba(189, 28, 43, 0.5)";
-    }
 
     return (
         <a
@@ -45,7 +35,7 @@ function Annotation({
             style={{
                 borderLeft: `8px solid ${color}`,
                 // @ts-ignore
-                "--dark-border-color": colorOverrideDark || colorOverride || color,
+                "--dark-border-color": colorDark || color,
                 maxHeight: heightLimitPx,
                 ...style,
             }}

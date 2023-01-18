@@ -24,16 +24,16 @@ interface AnnotationThreadProps {
 }
 
 function AnnotationThread(props: AnnotationThreadProps) {
+    const annotation = props.annotation;
+
     const [isFetchingRelated, setIsFetchingRelated] = useState(false);
-    const [related, setRelated] = useState<RelatedHighlight[]>(props.annotation.related);
+    const [related, setRelated] = useState<RelatedHighlight[]>(annotation.related);
     useEffect(() => {
-        if (props.annotation.isMyAnnotation && !props.annotation.ai_created) {
+        if (annotation.isMyAnnotation && !annotation.ai_created) {
             setIsFetchingRelated(true);
 
             const userId = "test-user7";
-            fetchRelatedAnnotations(userId, props.annotation.article_id, [
-                props.annotation.quote_text,
-            ])
+            fetchRelatedAnnotations(userId, annotation.article_id, [annotation.quote_text])
                 .then(async (response) => {
                     const related = response[0].slice(0, 2);
 
@@ -54,41 +54,53 @@ function AnnotationThread(props: AnnotationThreadProps) {
         }
     }, []);
 
-    const deleteHide = () => props.deleteHideAnnotation(props.annotation, null);
+    const deleteHide = () => props.deleteHideAnnotation(annotation, null);
 
-    const draftVisible =
-        props.annotation.isMyAnnotation && (props.annotation.text || props.annotation.focused);
+    const draftVisible = annotation.isMyAnnotation && (annotation.text || annotation.focused);
 
-    const color = props.annotation.ai_created
-        ? getAIAnnotationColor(props.annotation.ai_score)
-        : getAnnotationColor(props.annotation);
-    const darkColor = props.annotation.ai_created
-        ? getAIAnnotationColor(props.annotation.ai_score, true)
-        : getAnnotationColor(props.annotation);
+    let color: string;
+    let colorDark: string;
+    if (annotation.ai_created) {
+        color = getAIAnnotationColor(annotation.ai_score);
+        colorDark = getAIAnnotationColor(annotation.ai_score, true);
+    } else if (annotation.isMyAnnotation) {
+        color = getAnnotationColor(annotation);
+    } else if (annotation.platform === "hn") {
+        color = "rgba(255, 102, 0, 0.5)";
+    } else if (annotation.platform === "h") {
+        color = "rgba(189, 28, 43, 0.5)";
+    }
 
     return (
         <>
-            {/* {props.annotation.platform === "summary" && (
-                <SummaryAnnotation summaryInfo={props.annotation.summaryInfo!} />
+            {/* {annotation.platform === "summary" && (
+                <SummaryAnnotation summaryInfo={annotation.summaryInfo!} />
             )} */}
             {draftVisible && (
                 <AnnotationDraft
                     {...props}
                     isFetchingRelated={isFetchingRelated}
                     relatedCount={related?.length}
+                    color={color}
+                    colorDark={colorDark}
                     deleteHide={deleteHide}
                 />
             )}
-            {!props.annotation.isMyAnnotation && props.annotation.platform !== "summary" && (
-                <Annotation {...props} deleteHide={deleteHide} />
+            {!annotation.isMyAnnotation && annotation.platform !== "summary" && (
+                <Annotation
+                    {...props}
+                    color={color}
+                    colorDark={colorDark}
+                    deleteHide={deleteHide}
+                />
             )}
 
-            {/* {props.annotation.isMyAnnotation && (
+            {/* {annotation.isMyAnnotation && (
                 <div
                     className="annotation-bar relative flex cursor-pointer items-center gap-2 rounded-sm rounded-tr-md px-3 py-2 text-sm shadow transition-transform hover:scale-[99%] md:text-base"
                     style={{
-                        // borderLeft: `8px solid ${getAnnotationColor(props.annotation)}`,
-                        backgroundColor: getAnnotationColor(props.annotation),
+                        // borderLeft: `8px solid ${getAnnotationColor(annotation)}`,
+                        backgroundColor: getAnnotationColor(annotation),
                     }}
                 >
                     <svg className="-mt-0.5 w-4" viewBox="0 0 512 512">
@@ -114,12 +126,12 @@ function AnnotationThread(props: AnnotationThreadProps) {
                             style={{ animationDelay: `${i * 50}ms` }}
                             {...props}
                             annotation={{
-                                ...props.annotation,
+                                ...annotation,
                                 ...r,
                                 platform: "related",
                             }}
-                            colorOverride={color}
-                            colorOverrideDark={darkColor}
+                            color={color}
+                            colorDark={colorDark}
                             deleteHide={deleteHide}
                         />
                     ))}
