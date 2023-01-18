@@ -87,7 +87,7 @@ export function createAnnotations(
             annotations.push({
                 id: `ai_${article_id.slice(0, 20)}_${runningCount}`,
                 article_id,
-                quote_text: sentence.sentence,
+                quote_text: sentence.sentence.replace(/\n/g, " ").replace(/\s+/g, " ").trim(),
                 created_at,
                 quote_html_selector: describeAnnotation(document.body, range),
                 ai_created: true,

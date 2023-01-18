@@ -22,7 +22,7 @@ export async function main(req: Request, res: Response) {
     // fetch html
     const url: string = req.body?.url;
     const articleId = req.body?.article_id;
-    const scoreThreshold = req.body?.score_threshold || 0.5;
+    const scoreThreshold = req.body?.score_threshold || 0.6;
     const document = await fetchDocument(url);
     if (!document) {
         console.error("Failed to fetch document");
