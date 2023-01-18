@@ -858,7 +858,8 @@
     "obsidianroundup.org": [".gh-toc"],
     "oglobo.globo.com": [
         ".tp-container-inner",
-        ".tbl-feed-header.tbl-logo-right-position.tbl-header-with-text"
+        ".tbl-feed-header.tbl-logo-right-position.tbl-header-with-text",
+        ".navigation"
     ],
     "ole.com.ar": [
         ".sc-ded1e020-0.gvAvuc",
