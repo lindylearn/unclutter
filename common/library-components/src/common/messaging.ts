@@ -1,5 +1,11 @@
 import { getBrowser, getNewTabExtensionId, getUnclutterExtensionId } from "./extension";
 
+export async function getUserInfoSimple() {
+    return await getBrowser().runtime.sendMessage(getUnclutterExtensionId(), {
+        event: "getUserInfo",
+    });
+}
+
 export async function reportEventContentScript(
     name: string,
     data = {},

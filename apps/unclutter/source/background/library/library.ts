@@ -26,7 +26,7 @@ import { getFeatureFlag, hypothesisSyncFeatureFlag } from "../../common/featureF
 
 export let userId: string;
 export let rep: ReplicacheProxy | null = null;
-export async function initLibrary() {
+export async function initLibrary(isDev: boolean) {
     rep = getBackgroundReplicacheProxy();
 
     userId = await getLibraryUser();
@@ -40,6 +40,10 @@ export async function initLibrary() {
         }
     } else {
         // local replicache mock doesn't need initialization
+    }
+
+    if (isDev) {
+        await rep.mutate.updateUserInfo({ trialEnabled: true });
     }
 
     await initSearchIndex();

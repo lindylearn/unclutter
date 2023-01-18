@@ -1,16 +1,19 @@
 import browser from "../common/polyfill";
+import { getLibraryUser } from "../common/storage";
 import { renderHighlightsLayer } from "../overlay/highlights";
 
 // "light" extension functionality injected into a tab if configured by the user
 // this enables the "smart reading" AI highlights
 
-function main() {
+async function main() {
+    const userId = await getLibraryUser();
+
     // if injected later than enhance.ts (e.g. because of automatic activation),
     // don't run scrollbar tweaks and don't handle events
     // @ts-ignore
     const enhanceActive = window.unclutterEnhanceLoaded;
 
-    const preparePageView = renderHighlightsLayer(enablePageView, enhanceActive);
+    const preparePageView = renderHighlightsLayer(userId, enablePageView, enhanceActive);
     if (!enhanceActive) {
         handleEvents(preparePageView);
     }

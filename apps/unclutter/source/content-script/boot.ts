@@ -1,3 +1,4 @@
+import { UserInfo } from "@unclutter/library-components/dist/store";
 import {
     extensionSupportsUrl,
     isConfiguredToEnable,
@@ -52,9 +53,10 @@ async function boot() {
         listenForPageEvents();
     }
 
-    // run highlights.ts independently of non-leaf detection
-    const experimentsEnabled = await getFeatureFlag(enableExperimentalFeatures);
-    if (experimentsEnabled && url.pathname !== "/") {
+    const userInfo: UserInfo | undefined = await browser.runtime.sendMessage(null, {
+        event: "getUserInfo",
+    });
+    if (userInfo?.onPaidPlan || userInfo?.trialEnabled) {
         // accessing text content requires ready dom
         await waitUntilDomLoaded();
 

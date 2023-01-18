@@ -1,11 +1,15 @@
 import { getDomain } from "@unclutter/library-components/dist/common/util";
 import { setUserSettingsForDomain } from "../../common/storage";
 import SmartHighlightsModifier from "../../content-script/modifications/DOM/smartHighlights";
-import type { RelatedHighlight } from "@unclutter/library-components/dist/common/api";
+// import type { RelatedHighlight } from "@unclutter/library-components/dist/common/api";
 // import HighlightDetailSvelte from "./HighlightDetail.svelte";
 import ArticleBadgeSvelte from "./ArticleBadge.svelte";
 
-export function renderHighlightsLayer(enablePageView: () => void, enhanceActive: boolean) {
+export function renderHighlightsLayer(
+    userId: string,
+    enablePageView: () => void,
+    enhanceActive: boolean
+) {
     // document.addEventListener("mousedown", onSelectionStart);
     // document.addEventListener("mouseup", onSelectionDone);
     // document.addEventListener("contextmenu", removeHighligher);
@@ -17,7 +21,6 @@ export function renderHighlightsLayer(enablePageView: () => void, enhanceActive:
     //     }
     // });
 
-    const userId = "test-user7";
     const smartHighlightsModifier = new SmartHighlightsModifier(userId);
 
     if (enhanceActive) {

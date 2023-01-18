@@ -22,6 +22,7 @@ import {
     initLibrary,
     processReplicacheMessage,
     processReplicacheSubscribe,
+    rep,
 } from "./library/library";
 import { captureActiveTabScreenshot, getLocalScreenshot } from "./library/screenshots";
 import { search } from "./library/search";
@@ -175,8 +176,8 @@ function handleMessage(
         });
     } else if (message.event === "initLibrary") {
         initLibrary();
-    } else if (message.event === "getLibraryAuth") {
-        getLibraryAuth().then(sendResponse);
+    } else if (message.event === "getUserInfo") {
+        rep?.query.getUserInfo().then(sendResponse);
         return true;
     } else if (message.event === "processReplicacheMessage") {
         processReplicacheMessage(message).then(sendResponse);
@@ -267,7 +268,7 @@ async function initializeServiceWorker() {
 
     startMetrics(isDev);
 
-    initLibrary();
+    initLibrary(isDev);
     loadAnnotationCountsToMemory();
 
     const enableExperimental = await getFeatureFlag(enableExperimentalFeatures);
