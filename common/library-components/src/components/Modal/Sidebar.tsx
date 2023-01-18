@@ -124,7 +124,7 @@ function getModalTabOptions(
     currentAnnotationsCount?: number
 ): ModalTabOptions[] {
     const options: (ModalTabOptions | false | undefined)[] = [
-        // (userInfo.onPaidPlan || userInfo.trialEnabled) && {
+        // (userInfo?.onPaidPlan || userInfo?.trialEnabled) && {
         //     label: "Related",
         //     value: "graph",
         //     tag: new_link_count ? `${new_link_count} +` : undefined,
@@ -189,7 +189,7 @@ function getModalTabOptions(
             ),
         },
         // showSignup &&
-        //     !(userInfo.onPaidPlan || userInfo.trialEnabled) && {
+        //     !(userInfo?.onPaidPlan || userInfo?.trialEnabled) && {
         //         label: "More",
         //         value: "signup",
         //         unavailable: true,

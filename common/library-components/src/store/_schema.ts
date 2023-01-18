@@ -99,11 +99,12 @@ export type Settings = z.infer<typeof settingsSchema>;
 export const userInfoSchema = z.object({
     id: z.string(),
     name: z.optional(z.string()),
-    signinProvider: z.enum(["email", "google", "github"]),
-    email: z.string(),
 
-    accountEnabled: z.boolean(),
-    onPaidPlan: z.boolean(),
+    accountEnabled: z.optional(z.boolean()),
+    signinProvider: z.optional(z.enum(["email", "google", "github"])),
+    email: z.optional(z.string()),
+
+    onPaidPlan: z.optional(z.boolean()),
     trialEnabled: z.optional(z.boolean()),
 });
 export type UserInfo = z.infer<typeof userInfoSchema>;

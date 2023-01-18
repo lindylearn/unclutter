@@ -83,7 +83,7 @@ export default class LinkAnnotationsModifier implements PageModifier {
 
         // run article & screenshots fetch in parallel, to show results faster & re-render once screenshots complete
         let articles: Article[] = [];
-        getLinkedArticles(hrefs, this.libraryModifier.libraryState.userInfo.id).then(
+        getLinkedArticles(hrefs, this.libraryModifier.libraryState.userInfo?.id).then(
             (newArticles) => {
                 articles = newArticles;
                 this.overlayManager.updateLinkedArticles(articles);

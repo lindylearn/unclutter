@@ -103,7 +103,7 @@ function NumberStats({
     const rep = useContext(ReplicacheContext);
     // const [topicsCount, setTopicsCount] = useState<number>();
     // useEffect(() => {
-    //     if (userInfo.onPaidPlan || userInfo.trialEnabled) {
+    //     if (userInfo?.onPaidPlan || userInfo?.trialEnabled) {
     //         rep?.query
     //             .listTopics()
     //             .then((topics) => setTopicsCount(topics.filter((t) => !!t.group_id).length));
@@ -123,7 +123,7 @@ function NumberStats({
                 icon={<ResourceIcon type="highlights" large />}
             />
 
-            {/* {(userInfo.onPaidPlan || userInfo.trialEnabled) && (
+            {/* {(userInfo?.onPaidPlan || userInfo?.trialEnabled) && (
                 <BigNumber
                     value={topicsCount}
                     tag={`article topic${topicsCount !== 1 ? "s" : ""}`}
@@ -174,7 +174,7 @@ function WeekDetails({
     }, [allArticles, allAnnotations, start, end]);
 
     let [groups, setGroups] = useState<[string, Article[]][]>();
-    // if (userInfo.onPaidPlan || userInfo.trialEnabled) {
+    // if (userInfo?.onPaidPlan || userInfo?.trialEnabled) {
     //     groups = useArticleGroups(
     //         selectedArticles,
     //         false,
@@ -253,7 +253,7 @@ function ArticleGroupStat({
     showDomain: (domain: string) => void;
 }) {
     const [topic, setTopic] = useState<Topic>();
-    if (userInfo.onPaidPlan || userInfo.trialEnabled) {
+    if (userInfo?.onPaidPlan || userInfo?.trialEnabled) {
         const rep = useContext(ReplicacheContext);
         useEffect(() => {
             rep?.query.getTopic(groupKey).then(setTopic);

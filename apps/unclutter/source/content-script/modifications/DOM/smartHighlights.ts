@@ -24,7 +24,7 @@ export default class SmartHighlightsModifier implements PageModifier {
     relatedCount: number | null;
 
     private scoreThreshold = 0.6;
-    private relatedThreshold = 0.4;
+    private relatedThreshold = 0.5;
 
     constructor(user_id: string) {
         this.user_id = user_id;

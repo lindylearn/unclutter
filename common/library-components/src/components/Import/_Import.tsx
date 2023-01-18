@@ -117,7 +117,7 @@ export function ImportTab({
             ws.current!.send(
                 JSON.stringify({
                     event: "join_user",
-                    user_id: userInfo.id,
+                    user_id: userInfo?.id,
                 })
             );
         };

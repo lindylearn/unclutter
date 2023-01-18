@@ -210,7 +210,7 @@ export function useTabInfos(
                 // },
             ];
             if (false) {
-                // userInfo.onPaidPlan || userInfo.trialEnabled
+                // userInfo?.onPaidPlan || userInfo?.trialEnabled
                 // const groupEntries = await groupArticlesByTopic(
                 //     listArticles,
                 //     true,

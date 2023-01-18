@@ -130,7 +130,7 @@ export default function Welcome2Tab() {
                 </>
             )}
 
-            {userInfo.onPaidPlan && (
+            {userInfo?.onPaidPlan && (
                 <p>
                     Seriously thank you for the financial support! This project wouldn't be possible
                     without it. For any questions or ideas, just create a{" "}

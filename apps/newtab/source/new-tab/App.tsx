@@ -16,11 +16,11 @@ import {
 } from "@unclutter/library-components/dist/store";
 import {
     reportEventContentScript,
-    ReplicacheProxy,
     getUnclutterExtensionId,
     getLocalScreenshot,
     useAutoDarkMode,
 } from "@unclutter/library-components/dist/common";
+import { ReplicacheProxy } from "@unclutter/library-components/dist/common/replicache";
 import { settingsStore, useSettings } from "../common/settings";
 import NewTabModal from "./Modal";
 
@@ -40,17 +40,7 @@ export default function App() {
 
     const [userInfo, setUserInfo] = useState<UserInfo>();
     useEffect(() => {
-        rep?.query.getUserInfo().then((userInfo) => {
-            setUserInfo(
-                userInfo || {
-                    id: null,
-                    email: null,
-                    signinProvider: null,
-                    accountEnabled: false,
-                    onPaidPlan: false,
-                }
-            );
-        });
+        rep?.query.getUserInfo().then(setUserInfo);
     }, [rep]);
     const readingProgress = useSubscribe(rep, rep.subscribe.getReadingProgress(), null);
 
@@ -89,7 +79,7 @@ export default function App() {
         <ReplicacheContext.Provider value={rep} darkModeEnabled={darkModeEnabled}>
             <LocalScreenshotContext.Provider
                 value={
-                    !userInfo.accountEnabled
+                    !userInfo?.accountEnabled
                         ? (articleId) => getLocalScreenshot(articleId, getUnclutterExtensionId())
                         : null
                 }

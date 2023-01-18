@@ -227,7 +227,7 @@ function PageFilters({
                 />
             )}
 
-            {(userInfo.onPaidPlan || userInfo.trialEnabled) && (
+            {(userInfo?.onPaidPlan || userInfo?.trialEnabled) && (
                 <SearchBox
                     query={query}
                     setQuery={setQuery}

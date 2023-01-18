@@ -78,22 +78,13 @@ export default class LibraryModifier implements PageModifier {
 
         // fetch user info
         const libraryUser = await getLibraryUser();
+        this.libraryState.userInfo = await rep.query.getUserInfo();
         if (libraryUser) {
             // user with account
             this.libraryState.libraryEnabled = true;
-            this.libraryState.userInfo = await rep.query.getUserInfo(); // maybe be undefined?
         } else {
             this.libraryState.libraryEnabled = true;
             this.libraryState.showLibrarySignup = await getRemoteFeatureFlag(showLibrarySignupFlag);
-        }
-        if (!this.libraryState.userInfo) {
-            this.libraryState.userInfo = {
-                id: null,
-                email: null,
-                signinProvider: null,
-                accountEnabled: false,
-                onPaidPlan: false,
-            };
         }
 
         this.notifyLibraryStateListeners();

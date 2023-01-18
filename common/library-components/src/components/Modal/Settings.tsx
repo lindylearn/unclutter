@@ -37,7 +37,7 @@ export default function SettingsModalTab({
         if (!messageRef.current?.value) {
             return;
         }
-        const issueUrl = await quickReport(messageRef.current.value, undefined, userInfo.id);
+        const issueUrl = await quickReport(messageRef.current.value, undefined, userInfo?.id);
 
         if (issueUrl) {
             window.open(issueUrl, "_blank")?.focus();
@@ -110,7 +110,7 @@ export default function SettingsModalTab({
                 </p>
             </SettingsGroup>
 
-            {userInfo.accountEnabled && (
+            {userInfo?.accountEnabled && (
                 <SettingsGroup
                     title="Account"
                     icon={
@@ -124,13 +124,13 @@ export default function SettingsModalTab({
                 >
                     <>
                         <p>
-                            You're signed in as {userInfo.email}.{" "}
-                            {userInfo.onPaidPlan && (
+                            You're signed in as {userInfo?.email}.{" "}
+                            {userInfo?.onPaidPlan && (
                                 <span>Thank you for supporting Unclutter!</span>
                             )}
                         </p>
                         <div className="flex gap-3">
-                            {userInfo.onPaidPlan && (
+                            {userInfo?.onPaidPlan && (
                                 <Button
                                     title="Manage contribution"
                                     href="https://opencollective.com/unclutter"
@@ -155,7 +155,7 @@ export default function SettingsModalTab({
                 </SettingsGroup>
             )}
 
-            {!userInfo.accountEnabled && (
+            {!userInfo?.accountEnabled && (
                 <SettingsGroup
                     title="Account"
                     icon={
