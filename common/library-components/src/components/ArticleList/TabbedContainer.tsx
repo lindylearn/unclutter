@@ -141,7 +141,7 @@ export function useTabInfos(
     onlyUnread: boolean = false,
     lastFirst: boolean = false,
     domainFilter: string | undefined,
-    userInfo: UserInfo
+    userInfo: UserInfo | undefined
 ): TabInfo[] | undefined {
     const rep = useContext(ReplicacheContext);
 

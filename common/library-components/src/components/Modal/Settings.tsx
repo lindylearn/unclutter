@@ -1,21 +1,14 @@
 import clsx from "clsx";
 import React, { ReactNode, useContext, useEffect, useRef, useState } from "react";
 import { quickReport } from "../../common";
-import { latestSettingsVersion, ReplicacheContext, Settings, UserInfo } from "../../store";
+import { latestSettingsVersion, ReplicacheContext, Settings } from "../../store";
 import { getActivityColor } from "../Charts";
 import { saveAs } from "file-saver";
+import { ModalStateContext } from "./context";
 
-export default function SettingsModalTab({
-    userInfo,
-    darkModeEnabled,
-    showSignup,
-    reportEvent = () => {},
-}: {
-    userInfo: UserInfo;
-    darkModeEnabled: boolean;
-    showSignup: boolean;
-    reportEvent?: (event: string, data?: any) => void;
-}) {
+export default function SettingsModalTab({}: {}) {
+    const { darkModeEnabled, userInfo, showSignup, reportEvent } = useContext(ModalStateContext);
+
     const rep = useContext(ReplicacheContext);
     const [settings, setSettings] = useState<Settings>();
     useEffect(() => {

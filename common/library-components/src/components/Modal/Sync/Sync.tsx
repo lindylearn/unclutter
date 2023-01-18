@@ -1,15 +1,11 @@
 import clsx from "clsx";
-import React, { ReactNode, useContext, useState } from "react";
+import React, { useContext, useState } from "react";
+import { ModalStateContext } from "../context";
 import { ImportProgress, indexLibraryArticles } from "../../../common/import";
 import { ReplicacheContext } from "../../../store";
 
-export default function SyncModalTab({
-    darkModeEnabled,
-    reportEvent = () => {},
-}: {
-    darkModeEnabled: boolean;
-    reportEvent?: (event: string, data?: any) => void;
-}) {
+export default function SyncModalTab({}: {}) {
+    const { userInfo, reportEvent } = useContext(ModalStateContext);
     const rep = useContext(ReplicacheContext);
 
     // const [hypothesisEnabled, setHypothesisEnabled] = React.useState(null);
@@ -30,11 +26,11 @@ export default function SyncModalTab({
         progress.currentArticles / progress.targetArticles;
 
     function generateHighlights() {
-        if (!rep) {
+        if (!rep || !userInfo?.aiEnabled) {
             return;
         }
 
-        indexLibraryArticles(rep, setProgress);
+        indexLibraryArticles(rep, userInfo, setProgress);
     }
 
     return (

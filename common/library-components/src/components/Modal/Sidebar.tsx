@@ -1,24 +1,17 @@
 import React, { useContext, useEffect, useState } from "react";
 import clsx from "clsx";
 import { ReplicacheContext, Settings, Topic, UserInfo } from "../../store";
-import { FilterContext } from "..";
+import { FilterContext, ModalStateContext } from "./context";
 import { getBrowserType, getNewTabVersion } from "../../common";
 
 export default function Sidebar({
-    userInfo,
     currentTab,
     setCurrentTab,
-    darkModeEnabled,
-    showSignup,
-    reportEvent = () => {},
 }: {
-    userInfo: UserInfo;
     currentTab: string;
     setCurrentTab: (tab: string) => void;
-    darkModeEnabled: boolean;
-    showSignup: boolean;
-    reportEvent?: (event: string, data?: any) => void;
 }) {
+    const { darkModeEnabled, userInfo, showSignup, reportEvent } = useContext(ModalStateContext);
     const { currentTopic, changedTopic, currentAnnotationsCount, relatedLinkCount } =
         useContext(FilterContext);
     const rep = useContext(ReplicacheContext);
@@ -116,7 +109,7 @@ export interface ModalTabOptions {
     svg: React.ReactNode;
 }
 function getModalTabOptions(
-    userInfo: UserInfo,
+    userInfo: UserInfo | undefined,
     settings: Settings | null,
     showSignup: boolean,
     newTabInstalled: boolean,

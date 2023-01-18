@@ -5,22 +5,15 @@ import { getBrowser, getDomain, getRandomLightColor, getUnclutterExtensionId } f
 import { AnnotationWithArticle, ReplicacheContext, UserInfo, useSubscribe } from "../../store";
 import { Highlight } from "../Highlight";
 import { SearchBox } from "./components/search";
-import { FilterContext } from "./Modal";
-import { fetchRelatedAnnotations } from "../../common/api";
+import { FilterContext, ModalStateContext } from "./context";
 
-export default function HighlightsTab({
-    userInfo,
-    darkModeEnabled,
-    reportEvent = () => {},
-}: {
-    userInfo: UserInfo;
-    darkModeEnabled: boolean;
-    reportEvent?: (event: string, data?: any) => void;
-}) {
-    const rep = useContext(ReplicacheContext);
+export default function HighlightsTab({}: {}) {
+    const { darkModeEnabled, userInfo, reportEvent } = useContext(ModalStateContext);
+
     const { currentArticle, currentTopic, domainFilter, setDomainFilter, currentAnnotationsCount } =
         useContext(FilterContext);
 
+    const rep = useContext(ReplicacheContext);
     const annotations = useSubscribe(rep, rep?.subscribe.listAnnotationsWithArticles(), null);
 
     const [onlyManualHighlights, setOnlyManualHighlights] = useState(false);

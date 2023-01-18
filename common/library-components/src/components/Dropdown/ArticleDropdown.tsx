@@ -6,20 +6,20 @@ import { ReplicacheContext } from "../../store";
 import { deleteAnnotationVectors, reportBrokenPage } from "../../common/api";
 import { Article, readingProgressFullClamp } from "../../store";
 import { Dropdown, DropdownItem } from "./Dropdown";
+import { ModalStateContext } from "../Modal/context";
 
 export function ArticleDropdown({
     article,
     open,
     setOpen,
     small,
-    reportEvent = () => {},
 }: {
     article: Article;
     open: boolean;
     setOpen: (open: boolean) => void;
     small?: boolean;
-    reportEvent?: (event: string, properties?: any) => void;
 }) {
+    const { userInfo, reportEvent } = useContext(ModalStateContext);
     const rep = useContext(ReplicacheContext);
 
     // async function toggleFavorite(e) {
@@ -60,11 +60,13 @@ export function ArticleDropdown({
         }
     }
 
-    const user_id = "test-user7";
-
     async function deleteArticle() {
         await rep?.mutate.deleteArticle(article.id);
-        await deleteAnnotationVectors(user_id, article.id);
+
+        if (userInfo?.aiEnabled) {
+            await deleteAnnotationVectors(userInfo.id, article.id);
+        }
+
         reportEvent("deleteArticle");
     }
     async function reportPage() {

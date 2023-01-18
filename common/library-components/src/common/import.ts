@@ -1,6 +1,6 @@
 import asyncPool from "tiny-async-pool";
 
-import { Annotation, Article, RuntimeReplicache } from "../store";
+import { Annotation, Article, RuntimeReplicache, UserInfo } from "../store";
 import { indexAnnotationVectors } from "./api";
 
 export interface ImportProgress {
@@ -11,6 +11,7 @@ export interface ImportProgress {
 
 export async function indexLibraryArticles(
     rep: RuntimeReplicache,
+    userInfo: UserInfo,
     onProgress?: (progress: ImportProgress) => void,
     concurrency: number = 5
 ) {
@@ -20,14 +21,12 @@ export async function indexLibraryArticles(
     console.log(`Indexing ${articles.length} articles...`);
     onProgress?.({ targetArticles: articles.length });
 
-    const user_id = "test-user7";
-
     // batch for resilience
     const start = performance.now();
     let articleCount = 0;
     let highlightCount = 0;
     for await (const newHighlights of asyncPool(concurrency, articles, (article) =>
-        indexArticle(rep, user_id, article)
+        indexArticle(rep, userInfo.id, article)
     )) {
         articleCount += 1;
         highlightCount += newHighlights;

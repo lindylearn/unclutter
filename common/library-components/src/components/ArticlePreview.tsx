@@ -176,7 +176,6 @@ export function ArticlePreview({
                     open={dropdownOpen}
                     setOpen={setDropdownOpen}
                     small={small}
-                    reportEvent={reportEvent}
                 />
             )}
 

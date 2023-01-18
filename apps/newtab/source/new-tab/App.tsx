@@ -1,13 +1,13 @@
 import React, { useEffect, useMemo, useState } from "react";
 import {
     DraggableContext,
-    LocalScreenshotContext,
-    ModalContext,
     useTabInfos,
     useArticleListsCache,
     ArticleGroup,
     getActivityColor,
 } from "@unclutter/library-components/dist/components";
+import { ModalVisibilityContext } from "@unclutter/library-components/dist/components/Modal/context";
+import { LocalScreenshotContext } from "@unclutter/library-components/dist/components/ArticlePreview";
 import {
     ReadingProgress as ReadingProgressType,
     ReplicacheContext,
@@ -83,7 +83,7 @@ export default function App() {
                         : null
                 }
             >
-                <ModalContext.Provider
+                <ModalVisibilityContext.Provider
                     value={{ isVisible: showModal, closeModal: () => setShowModal(false) }}
                 >
                     <ArticleSection
@@ -98,7 +98,7 @@ export default function App() {
                         darkModeEnabled={darkModeEnabled}
                         reportEvent={reportEvent}
                     />
-                </ModalContext.Provider>
+                </ModalVisibilityContext.Provider>
             </LocalScreenshotContext.Provider>
         </ReplicacheContext.Provider>
     );

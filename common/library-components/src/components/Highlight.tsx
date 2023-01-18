@@ -1,19 +1,15 @@
 import clsx from "clsx";
 import React, { useContext, useEffect, useState } from "react";
-// import { useDebounce } from "usehooks-ts";
-// import TextareaAutosize from "react-textarea-autosize";
 import {
     getAIAnnotationColor,
     getDomain,
     getRandomLightColor,
-    getRelativeTime,
     openArticleResilient,
     sendMessage,
 } from "../common";
-import { Annotation, Article, readingProgressFullClamp, ReplicacheContext } from "../store";
-import { getActivityColor } from "./Charts";
+import { Annotation, Article } from "../store";
 import { HighlightDropdown } from "./Dropdown/HighlightDowndown";
-import { ModalContext, ResourceIcon } from "./Modal";
+import { ModalVisibilityContext } from "./Modal/context";
 
 export function Highlight({
     annotation,
@@ -29,7 +25,7 @@ export function Highlight({
     reportEvent?: (event: string, properties?: any) => void;
 }) {
     // const rep = useContext(ReplicacheContext);
-    const { closeModal } = useContext(ModalContext);
+    const { closeModal } = useContext(ModalVisibilityContext);
 
     const [dropdownOpen, setDropdownOpen] = useState(false);
 
@@ -91,7 +87,6 @@ export function Highlight({
                 article={article}
                 open={dropdownOpen}
                 setOpen={setDropdownOpen}
-                reportEvent={reportEvent}
             />
 
             {/* <h2 className="tags flex gap-2 overflow-hidden px-2 leading-normal">

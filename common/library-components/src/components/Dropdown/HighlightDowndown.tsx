@@ -4,6 +4,7 @@ import { deleteAnnotationVectors } from "../../common";
 
 import { ReplicacheContext } from "../../store";
 import { Annotation, Article } from "../../store/_schema";
+import { ModalStateContext } from "../Modal/context";
 import { Dropdown, DropdownItem } from "./Dropdown";
 
 export function HighlightDropdown({
@@ -11,14 +12,13 @@ export function HighlightDropdown({
     article,
     open,
     setOpen,
-    reportEvent = () => {},
 }: {
     annotation: Annotation;
     article: Article | undefined;
     open: boolean;
     setOpen: (open: boolean) => void;
-    reportEvent?: (event: string, properties?: any) => void;
 }) {
+    const { userInfo, reportEvent } = useContext(ModalStateContext);
     const rep = useContext(ReplicacheContext);
 
     async function toggleFavorite(e) {
@@ -32,11 +32,13 @@ export function HighlightDropdown({
         });
     }
 
-    const user_id = "test-user7";
-
     async function deleteAnnotation() {
         await rep?.mutate.deleteAnnotation(annotation.id);
-        await deleteAnnotationVectors(user_id, undefined, annotation.id);
+
+        if (userInfo?.aiEnabled) {
+            await deleteAnnotationVectors(userInfo.id, undefined, annotation.id);
+        }
+
         reportEvent("deleteAnnotation");
     }
 

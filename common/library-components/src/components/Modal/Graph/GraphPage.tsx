@@ -10,7 +10,7 @@ import { NodeTooltip } from "./Tooltips";
 import { ReplicacheContext, Topic } from "../../../store";
 import { TopicEmoji } from "../../TopicTag";
 import { ReadingProgress } from "../components/numbers";
-import { FilterContext } from "../..";
+import { FilterContext } from "../context";
 
 export function GraphPage({
     graph,

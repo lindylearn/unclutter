@@ -4,22 +4,17 @@ import { ArticleActivityCalendar, getActivityColor, getActivityLevel } from "../
 import { getDomain, getWeekStart, groupBy, subtractWeeks } from "../../common";
 import clsx from "clsx";
 import { BigNumber, ResourceIcon, ResourceStat } from "./components/numbers";
-import { FilterContext } from "..";
+import { FilterContext, ModalStateContext } from "./context";
 
 export default function StatsModalTab({
-    userInfo,
     articleCount,
-    darkModeEnabled,
     defaultWeekOverlay = 3,
-    reportEvent = () => {},
 }: {
-    userInfo: UserInfo;
     articleCount?: number;
-    darkModeEnabled: boolean;
     defaultWeekOverlay?: number;
-    reportEvent?: (event: string, data?: any) => void;
 }) {
-    const { showTopic, showDomain } = useContext(FilterContext);
+    const { darkModeEnabled, userInfo, reportEvent } = useContext(ModalStateContext);
+    const { showDomain } = useContext(FilterContext);
 
     const rep = useContext(ReplicacheContext);
 
@@ -79,7 +74,6 @@ export default function StatsModalTab({
                     allArticles={allArticles}
                     allAnnotations={allAnnotations}
                     darkModeEnabled={darkModeEnabled}
-                    showTopic={showTopic}
                     showDomain={showDomain}
                 />
             )}
@@ -94,7 +88,7 @@ function NumberStats({
     allAnnotations,
     darkModeEnabled,
 }: {
-    userInfo: UserInfo;
+    userInfo?: UserInfo;
     articleCount?: number;
     allArticles?: Article[];
     allAnnotations?: Annotation[];
@@ -123,16 +117,14 @@ function WeekDetails({
     allArticles,
     allAnnotations,
     darkModeEnabled,
-    showTopic,
     showDomain,
 }: {
-    userInfo: UserInfo;
+    userInfo?: UserInfo;
     start: Date;
     end: Date;
     allArticles?: Article[];
     allAnnotations?: Annotation[];
     darkModeEnabled: boolean;
-    showTopic: (topicId: string) => void;
     showDomain: (domain: string) => void;
 }) {
     const [selectedArticles, setSelectedArticles] = useState<Article[]>([]);
@@ -199,7 +191,6 @@ function WeekDetails({
                         selectedArticles={groupArticles}
                         annotationsCount={annotationGroups[groupKey]}
                         darkModeEnabled={darkModeEnabled}
-                        showTopic={showTopic}
                         showDomain={showDomain}
                     />
                 ))}
@@ -214,15 +205,13 @@ function ArticleGroupStat({
     selectedArticles,
     annotationsCount,
     darkModeEnabled,
-    showTopic,
     showDomain,
 }: {
-    userInfo: UserInfo;
+    userInfo?: UserInfo;
     groupKey: string;
     selectedArticles: Article[];
     annotationsCount: number;
     darkModeEnabled: boolean;
-    showTopic: (topicId: string) => void;
     showDomain: (domain: string) => void;
 }) {
     const addedCount = selectedArticles.length;
