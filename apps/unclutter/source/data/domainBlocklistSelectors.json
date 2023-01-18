@@ -447,6 +447,13 @@
     "haaretz.com": [".a.ce.cr"],
     "hackster.io": ["#hello-world"],
     "hdvietnam.org": ["#likes-post-10851880", ".sharePage"],
+    "healthy.walla.co.il": [
+        ".ob_sf_loader",
+        "#ob-explore-more",
+        ".level-0",
+        ".promotions",
+        ".css-12qql9u"
+    ],
     "heise.de": [
         ".a-u-show-from-tablet",
         ".a-u-hide-from-tablet",
