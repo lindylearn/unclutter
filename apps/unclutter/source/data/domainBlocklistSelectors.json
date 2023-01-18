@@ -447,6 +447,19 @@
     "haaretz.com": [".a.ce.cr"],
     "hackster.io": ["#hello-world"],
     "hdvietnam.org": ["#likes-post-10851880", ".sharePage"],
+    "healthy.walla.co.il": [
+        ".ob_sf_loader",
+        "#ob-explore-more",
+        ".level-0",
+        ".promotions",
+        ".css-12qql9u",
+        ".ob-cards",
+        ".css-js53d3.walla-ob-wrapper.AR_1.top-border.noprint-hidden",
+        ".share-panel.noprint.css-kxiwjn.vertical-view.only-mobile.bottom-share-panel",
+        ".css-gcmf5r.breadcrumb.noprint",
+        ".tags-and-breadcrumbs",
+        "#main-footer"
+    ],
     "heise.de": [
         ".a-u-show-from-tablet",
         ".a-u-hide-from-tablet",
