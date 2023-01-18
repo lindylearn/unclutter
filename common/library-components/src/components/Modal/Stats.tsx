@@ -100,16 +100,6 @@ function NumberStats({
     allAnnotations?: Annotation[];
     darkModeEnabled: boolean;
 }) {
-    const rep = useContext(ReplicacheContext);
-    // const [topicsCount, setTopicsCount] = useState<number>();
-    // useEffect(() => {
-    //     if (userInfo?.onPaidPlan || userInfo?.trialEnabled) {
-    //         rep?.query
-    //             .listTopics()
-    //             .then((topics) => setTopicsCount(topics.filter((t) => !!t.group_id).length));
-    //     }
-    // }, [rep]);
-
     return (
         <div className="grid grid-cols-5 gap-4">
             <BigNumber
@@ -122,14 +112,6 @@ function NumberStats({
                 tag={`saved highlight${allAnnotations?.length !== 1 ? "s" : ""}`}
                 icon={<ResourceIcon type="highlights" large />}
             />
-
-            {/* {(userInfo?.onPaidPlan || userInfo?.trialEnabled) && (
-                <BigNumber
-                    value={topicsCount}
-                    tag={`article topic${topicsCount !== 1 ? "s" : ""}`}
-                    icon={<ResourceIcon type="links" large />}
-                />
-            )} */}
         </div>
     );
 }
@@ -174,15 +156,6 @@ function WeekDetails({
     }, [allArticles, allAnnotations, start, end]);
 
     let [groups, setGroups] = useState<[string, Article[]][]>();
-    // if (userInfo?.onPaidPlan || userInfo?.trialEnabled) {
-    //     groups = useArticleGroups(
-    //         selectedArticles,
-    //         false,
-    //         "topic_size",
-    //         "recency_order",
-    //         undefined
-    //     );
-    // } else {
     useEffect(() => {
         if (selectedArticles.length === 0) {
             return;
@@ -252,14 +225,6 @@ function ArticleGroupStat({
     showTopic: (topicId: string) => void;
     showDomain: (domain: string) => void;
 }) {
-    const [topic, setTopic] = useState<Topic>();
-    if (userInfo?.onPaidPlan || userInfo?.trialEnabled) {
-        const rep = useContext(ReplicacheContext);
-        useEffect(() => {
-            rep?.query.getTopic(groupKey).then(setTopic);
-        }, [rep, groupKey]);
-    }
-
     const addedCount = selectedArticles.length;
     const activityLevel = getActivityLevel(addedCount);
 
@@ -282,7 +247,7 @@ function ArticleGroupStat({
                     src={`https://www.google.com/s2/favicons?sz=128&domain=https://${groupKey}`}
                 />
                 <div className="overflow-hidden overflow-ellipsis whitespace-nowrap">
-                    {topic?.name || groupKey}
+                    {groupKey}
                 </div>
             </div>
 
