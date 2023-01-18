@@ -2,7 +2,7 @@ import axios from "axios";
 import { Readability } from "@mozilla/readability";
 import { JSDOM } from "jsdom";
 
-export async function fetchArticleParagraphs(url: string): Promise<string[] | undefined> {
+export async function fetchDocument(url: string): Promise<Document | undefined> {
     const start = performance.now();
 
     const response = await axios.get(url, {
@@ -21,10 +21,12 @@ export async function fetchArticleParagraphs(url: string): Promise<string[] | un
     }
 
     const document = new JSDOM(html, { url })?.window?.document;
-    if (!document) {
-        return;
-    }
+    console.log(`Fetched remote document in ${Math.round(performance.now() - start)}ms`);
 
+    return document;
+}
+
+export async function fetchArticleParagraphs(url: string): Promise<string[] | undefined> {
     let paragraphs: string[] = [];
 
     // try readability

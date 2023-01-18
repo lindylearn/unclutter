@@ -9,6 +9,7 @@
     "dependencies": {
         "@tensorflow-models/universal-sentence-encoder": "^1.3.3",
         "@tensorflow/tfjs": "4.1.0",
+        "approx-string-match": "^2.0.0",
         "wink-eng-lite-web-model": "^1.4.3",
         "wink-nlp": "^1.13.0"
     },

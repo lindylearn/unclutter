@@ -2,12 +2,13 @@
     "name": "@unclutter/serverless-import",
     "version": "0.1.0",
     "private": true,
+    "type": "module",
     "main": "index.js",
     "source": "src/index.ts",
     "targets": {
         "default": {
             "source": "src/index.ts",
-            "outputFormat": "commonjs",
+            "outputFormat": "esmodule",
             "context": "node",
             "isLibrary": true,
             "includeNodeModules": [
@@ -26,6 +27,7 @@
         "@mozilla/readability": "^0.4.2",
         "@tensorflow-models/universal-sentence-encoder": "^1.3.3",
         "@tensorflow/tfjs-node": "4.1.0",
+        "approx-string-match": "^2.0.0",
         "axios": "^1.2.2",
         "express": "^4.18.2",
         "jsdom": "^21.0.0"
