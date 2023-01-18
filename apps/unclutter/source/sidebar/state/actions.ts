@@ -51,7 +51,7 @@ export function useAnnotationModifiers(
 ) {
     const deleteHideAnnotation = useCallback(
         deleteHideAnnotationFactory(userId, mutateAnnotations),
-        []
+        [userId]
     );
     const updateAnnotation = useCallback(
         (annotation: LindyAnnotation) => mutateAnnotations({ action: "update", annotation }),

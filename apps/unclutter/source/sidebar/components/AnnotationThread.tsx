@@ -1,5 +1,5 @@
 import { ReplicacheProxy } from "@unclutter/library-components/dist/common/replicache";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import type { LindyAnnotation } from "../../common/annotations/create";
 import {
     fetchRelatedAnnotations,
@@ -11,6 +11,7 @@ import AnnotationDraft from "./AnnotationDraft";
 import clsx from "clsx";
 import { getAIAnnotationColor } from "@unclutter/library-components/dist/common/styling";
 import { getAnnotationColor } from "../../common/annotations/styling";
+import { SidebarContext } from "../context";
 // import SummaryAnnotation from "./Summary";
 
 interface AnnotationThreadProps {
@@ -23,17 +24,21 @@ interface AnnotationThreadProps {
     updateAnnotation: (annotation: LindyAnnotation) => void;
 }
 
-function AnnotationThread(props: AnnotationThreadProps) {
+export default function AnnotationThread(props: AnnotationThreadProps) {
+    const { userInfo } = useContext(SidebarContext);
     const annotation = props.annotation;
 
     const [isFetchingRelated, setIsFetchingRelated] = useState(false);
     const [related, setRelated] = useState<RelatedHighlight[]>(annotation.related);
     useEffect(() => {
+        if (!userInfo?.aiEnabled) {
+            return;
+        }
+
         if (annotation.isMyAnnotation && !annotation.ai_created) {
             setIsFetchingRelated(true);
 
-            const userId = "test-user7";
-            fetchRelatedAnnotations(userId, annotation.article_id, [annotation.quote_text])
+            fetchRelatedAnnotations(userInfo.id, annotation.article_id, [annotation.quote_text])
                 .then(async (response) => {
                     const related = response[0].slice(0, 2);
 
@@ -52,7 +57,7 @@ function AnnotationThread(props: AnnotationThreadProps) {
                     setIsFetchingRelated(false);
                 });
         }
-    }, []);
+    }, [userInfo]);
 
     const deleteHide = () => props.deleteHideAnnotation(annotation, null);
 
@@ -140,4 +145,3 @@ function AnnotationThread(props: AnnotationThreadProps) {
         </>
     );
 }
-export default AnnotationThread;

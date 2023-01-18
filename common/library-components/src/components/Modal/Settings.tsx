@@ -72,7 +72,7 @@ export default function SettingsModalTab({}: {}) {
     }
 
     return (
-        <div className="animate-fadein mt-2 flex flex-col gap-4">
+        <div className="animate-fadein flex flex-col gap-4">
             <SettingsGroup
                 title="About"
                 icon={
