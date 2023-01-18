@@ -20,8 +20,14 @@ export async function fetchDocument(url: string): Promise<Document | undefined> 
         return;
     }
 
-    const document = new JSDOM(html, { url })?.window?.document;
+    const dom = new JSDOM(html, { url });
+    const document = dom?.window?.document;
     console.log(`Fetched remote document in ${Math.round(performance.now() - start)}ms`);
+
+    // fix for anchoring
+    global.Range = dom.window.Range;
+    global.Node = dom.window.Node;
+    global.NodeFilter = dom.window.NodeFilter;
 
     return document;
 }

@@ -3,12 +3,12 @@ import type { Annotation } from "@unclutter/library-components/dist/store/_schem
 import { describe as describeAnnotation } from "./annotator/anchoring/html";
 import type { RankedSentence } from "./heatmap";
 
-export function listParagraphs(document: Document): [HTMLElement[], string[]] {
+export function listParagraphs(document: Document, isJsdom = false): [HTMLElement[], string[]] {
     const paragraphsElements: HTMLElement[] = [];
     const paragraphTexts: string[] = [];
     document.querySelectorAll("p, font, li").forEach((paragraph: HTMLElement) => {
         // Ignore invisible nodes
-        if (paragraph.offsetHeight === 0) {
+        if (!isJsdom && paragraph.offsetHeight === 0) {
             return false;
         }
 

@@ -21,33 +21,35 @@ export async function main(req: Request, res: Response) {
 
     // fetch html
     const url: string = req.body?.url;
+    const articleId = req.body?.article_id;
+    const scoreThreshold = req.body?.score_threshold || 0.5;
     const document = await fetchDocument(url);
     if (!document) {
+        console.error("Failed to fetch document");
         res.status(400).send();
         return;
     }
 
     // parse DOM and extract significant text elements
-    const [paragraphsElements, paragraphTexts] = listParagraphs(document);
+    const [paragraphsElements, paragraphTexts] = listParagraphs(document, true);
     if (paragraphTexts.length === 0 || paragraphTexts.length >= 200) {
         // likely not an article
         // be careful, e.g. paulgraham.com has single paragraph
+        console.error("Failed to extract paragraphs");
         res.status(400).send();
         return;
     }
-    console.log(paragraphTexts);
 
     // run AI model
     let rankedSentencesByParagraph: RankedSentence[][] = await getHeatmap(paragraphTexts, 300, 100);
-    console.log(rankedSentencesByParagraph);
 
     // create annotations for significant detected quotes
     const annotations = createAnnotations(
         document,
         paragraphsElements,
         rankedSentencesByParagraph,
-        this.article_id,
-        this.scoreThreshold
+        articleId,
+        scoreThreshold
     );
 
     res.send({ annotations });
@@ -65,3 +67,22 @@ export function handledCors(req: Request, res: Response<any>): boolean {
 
     return false;
 }
+
+// main(
+//     {
+//         body: {
+//             url: "https://stratechery.com/2015/netflix-and-the-conservation-of-attractive-profits/",
+//             article_id: "test",
+//         },
+//     } as Request,
+//     {
+//         send: console.log,
+//         status: (code: number) => {
+//             console.log(code);
+//             return {
+//                 send: console.log,
+//             };
+//         },
+//         setHeader: console.log,
+//     } as Response
+// );
