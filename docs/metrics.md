@@ -8,7 +8,7 @@ The Unclutter extension has the permission to "read and change all your data on 
 
 In practice, [a small boot script](https://github.com/lindylearn/unclutter/blob/main/source/content-script/boot.ts) gets injected into your tabs and checks the site URL and amount of text content on each page against your settings.
 
-**If you do not use the automatic activation or smart reading features you can simply revoke the "Site access" permission from the Unclutter extension settings.**
+**If you do not use the automatic activation or AI smart reading features you can simply revoke the "Site access" permission from the Unclutter extension settings.**
 
 ## Article library
 
@@ -20,9 +20,9 @@ You can optionally create an Unclutter library account to synchronize your data 
 
 If you enable the Hypothes.is [sync feature](./annotations.md), your highlights will be uploaded to the hypothes.is service and are subject to their [privacy policy](https://web.hypothes.is/privacy/).
 
-## Smart Reading
+## AI Smart Reading
 
-If you enable the experimental "smart reading" AI features, the text for articles you read is sent to a remote cloud function in order to run large AI models on it.
+If you enable the experimental "AI smart reading" AI features, the text for articles you read is sent to a remote cloud function in order to run large AI models on it.
 
 This data is not stored, shared, or used for any purpose other than returning information about the article to the Unclutter browser extension.
 

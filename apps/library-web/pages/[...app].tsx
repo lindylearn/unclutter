@@ -1,7 +1,7 @@
 import { getUser, withPageAuth } from "@supabase/auth-helpers-nextjs";
 import { createContext, useEffect } from "react";
 import { createSpace, spaceExists } from "@unclutter/replicache-nextjs/lib/backend";
-import NewApp from "../src/NewApp";
+import NewApp from "../src/new/NewApp";
 import { setUnclutterLibraryAuth } from "@unclutter/library-components/dist/common";
 import { useReplicache } from "@unclutter/replicache-nextjs/lib/frontend";
 import {

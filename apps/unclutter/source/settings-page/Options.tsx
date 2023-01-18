@@ -166,7 +166,7 @@ function OptionsPage({}) {
                 </OptionsGroup>
 
                 {/* <OptionsGroup
-                    headerText="Smart Reading"
+                    headerText="AI Smart Reading"
                     iconSvg={
                         <svg className="w-5" viewBox="0 0 576 512">
                             <path

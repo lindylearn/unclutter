@@ -49,7 +49,7 @@ export default function ModalTestTab({}) {
     const userInfo = useSubscribe(rep, rep?.subscribe.getUserInfo(), null);
     if (userInfo) {
         userInfo.accountEnabled = false;
-        userInfo.trialEnabled = false;
+        userInfo.aiEnabled = false;
     }
 
     if (!userInfo) {
@@ -82,7 +82,6 @@ export default function ModalTestTab({}) {
                     showSignup={true}
                     // currentArticle={article?.url}
                     initialTopic={topic}
-                    graph={graph}
                     // relatedLinkCount={2}
                 />
             </ModalVisibilityContext.Provider>
