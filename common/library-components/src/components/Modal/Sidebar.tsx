@@ -176,7 +176,7 @@ function getModalTabOptions(
             ),
         },
         // showSignup &&
-        //     !(userInfo?.onPaidPlan || userInfo?.trialEnabled) && {
+        //     !(userInfo?.aiEnabled && {
         //         label: "More",
         //         value: "signup",
         //         unavailable: true,
@@ -190,7 +190,7 @@ function getModalTabOptions(
         //         ),
         //     },
 
-        {
+        userInfo?.aiEnabled && {
             label: "Sync",
             value: "sync",
             atEnd: true,

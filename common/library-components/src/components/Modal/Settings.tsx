@@ -125,12 +125,12 @@ export default function SettingsModalTab({
                     <>
                         <p>
                             You're signed in as {userInfo?.email}.{" "}
-                            {userInfo?.onPaidPlan && (
+                            {userInfo?.aiEnabled && (
                                 <span>Thank you for supporting Unclutter!</span>
                             )}
                         </p>
                         <div className="flex gap-3">
-                            {userInfo?.onPaidPlan && (
+                            {userInfo?.aiEnabled && (
                                 <Button
                                     title="Manage contribution"
                                     href="https://opencollective.com/unclutter"

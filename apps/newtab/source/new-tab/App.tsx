@@ -57,8 +57,7 @@ export default function App() {
 
         if (showModal) {
             reportEvent("openLibraryModal", {
-                onPaidPlan: userInfo?.onPaidPlan,
-                trialEnabled: userInfo?.trialEnabled,
+                aiEnabled: userInfo?.aiEnabled,
                 articleCount: readingProgress?.articleCount,
                 completedCount: readingProgress?.completedCount,
                 annotationCount: readingProgress?.annotationCount,

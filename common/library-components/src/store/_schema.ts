@@ -104,8 +104,7 @@ export const userInfoSchema = z.object({
     signinProvider: z.optional(z.enum(["email", "google", "github"])),
     email: z.optional(z.string()),
 
-    onPaidPlan: z.optional(z.boolean()),
-    trialEnabled: z.optional(z.boolean()),
+    aiEnabled: z.optional(z.boolean()),
 });
 export type UserInfo = z.infer<typeof userInfoSchema>;
 

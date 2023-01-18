@@ -44,37 +44,37 @@ export default function Welcome2Tab() {
                 return;
             }
 
-            console.log(userInfo);
-            if (userInfo === null) {
-                // new user signup
-                setIsSignup(true);
-                console.log("new user signup");
+            // console.log(userInfo);
+            // if (userInfo === null) {
+            //     // new user signup
+            //     setIsSignup(true);
+            //     console.log("new user signup");
 
-                // fetch email subscription status
-                const onPaidPlan = await checkHasSubscription(user.id, user.email);
-                const trialEnabled = true;
-                await rep.mutate.updateUserInfo({
-                    id: user.id,
-                    name: undefined,
-                    signinProvider: user.app_metadata.provider as any,
-                    email: user.email,
-                    accountEnabled: true,
-                    trialEnabled,
-                    onPaidPlan,
-                });
-                await new Promise((resolve) => setTimeout(resolve, 2000));
+            //     // fetch email subscription status
+            //     const onPaidPlan = await checkHasSubscription(user.id, user.email);
+            //     const trialEnabled = true;
+            //     await rep.mutate.updateUserInfo({
+            //         id: user.id,
+            //         name: undefined,
+            //         signinProvider: user.app_metadata.provider as any,
+            //         email: user.email,
+            //         accountEnabled: true,
+            //         trialEnabled,
+            //         onPaidPlan,
+            //     });
+            //     await new Promise((resolve) => setTimeout(resolve, 2000));
 
-                setUnclutterLibraryAuth(user.id);
+            //     setUnclutterLibraryAuth(user.id);
 
-                if (onPaidPlan || trialEnabled) {
-                    // trigger topic clustering after upload
-                    // TODO ideally trigger this from extension
-                    await new Promise((resolve) => setTimeout(resolve, 10000));
-                    await clusterLibraryArticles([], user.id);
-                }
-            } else {
-                setUnclutterLibraryAuth(user.id);
-            }
+            //     if (onPaidPlan || trialEnabled) {
+            //         // trigger topic clustering after upload
+            //         // TODO ideally trigger this from extension
+            //         await new Promise((resolve) => setTimeout(resolve, 10000));
+            //         await clusterLibraryArticles([], user.id);
+            //     }
+            // } else {
+            //     setUnclutterLibraryAuth(user.id);
+            // }
         })();
     }, [rep, user, userInfo]);
 

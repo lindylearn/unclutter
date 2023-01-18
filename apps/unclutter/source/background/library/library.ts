@@ -43,7 +43,7 @@ export async function initLibrary(isDev: boolean) {
     }
 
     if (isDev) {
-        await rep.mutate.updateUserInfo({ trialEnabled: true });
+        await rep.mutate.updateUserInfo({ aiEnabled: true });
     }
 
     await initSearchIndex();

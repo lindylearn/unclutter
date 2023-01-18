@@ -56,7 +56,7 @@ async function boot() {
     const userInfo: UserInfo | undefined = await browser.runtime.sendMessage(null, {
         event: "getUserInfo",
     });
-    if (userInfo?.onPaidPlan || userInfo?.trialEnabled) {
+    if (userInfo?.aiEnabled) {
         // accessing text content requires ready dom
         await waitUntilDomLoaded();
 
