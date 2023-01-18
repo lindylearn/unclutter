@@ -2,13 +2,9 @@ import { useUser } from "@supabase/auth-helpers-react";
 import {
     setUnclutterLibraryAuth,
     checkHasSubscription,
-    sendMessage,
-    clusterLibraryArticles,
 } from "@unclutter/library-components/dist/common";
 import { useContext, useEffect, useState } from "react";
-
 import {
-    PartialSyncState,
     ReplicacheContext,
     UserInfo,
     useSubscribe,
@@ -23,19 +19,7 @@ export default function Welcome2Tab() {
     const { user } = useUser();
 
     // @ts-ignore
-    // const partialSync: PartialSyncState | undefined = useSubscribe(
-    //     rep,
-    //     // @ts-ignore
-    //     rep?.subscribe.getPartialSyncState(),
-    //     undefined
-    // );
-
-    const userInfo: UserInfo | undefined = useSubscribe(
-        rep,
-        rep?.subscribe.getUserInfo(),
-        // @ts-ignore
-        undefined
-    );
+    const userInfo = useSubscribe<UserInfo>(rep, rep?.subscribe.getUserInfo(), undefined);
 
     const [isSignup, setIsSignup] = useState(false);
     useEffect(() => {
@@ -44,37 +28,28 @@ export default function Welcome2Tab() {
                 return;
             }
 
-            // console.log(userInfo);
-            // if (userInfo === null) {
-            //     // new user signup
-            //     setIsSignup(true);
-            //     console.log("new user signup");
+            console.log(userInfo);
+            if (userInfo === null) {
+                setIsSignup(true);
+                console.log("Signing up new user...");
 
-            //     // fetch email subscription status
-            //     const onPaidPlan = await checkHasSubscription(user.id, user.email);
-            //     const trialEnabled = true;
-            //     await rep.mutate.updateUserInfo({
-            //         id: user.id,
-            //         name: undefined,
-            //         signinProvider: user.app_metadata.provider as any,
-            //         email: user.email,
-            //         accountEnabled: true,
-            //         trialEnabled,
-            //         onPaidPlan,
-            //     });
-            //     await new Promise((resolve) => setTimeout(resolve, 2000));
+                // fetch email subscription status
+                const aiEnabled = await checkHasSubscription(user.id, user.email);
+                await rep.mutate.updateUserInfo({
+                    id: user.id,
+                    name: undefined,
+                    signinProvider: user.app_metadata.provider as any,
+                    email: user.email,
+                    accountEnabled: true,
+                    aiEnabled,
+                });
+                await new Promise((resolve) => setTimeout(resolve, 2000));
 
-            //     setUnclutterLibraryAuth(user.id);
-
-            //     if (onPaidPlan || trialEnabled) {
-            //         // trigger topic clustering after upload
-            //         // TODO ideally trigger this from extension
-            //         await new Promise((resolve) => setTimeout(resolve, 10000));
-            //         await clusterLibraryArticles([], user.id);
-            //     }
-            // } else {
-            //     setUnclutterLibraryAuth(user.id);
-            // }
+                setUnclutterLibraryAuth(user.id);
+            } else {
+                console.log("Loggin in existing user...");
+                setUnclutterLibraryAuth(user.id);
+            }
         })();
     }, [rep, user, userInfo]);
 

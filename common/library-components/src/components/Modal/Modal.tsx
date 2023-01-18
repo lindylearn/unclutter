@@ -59,6 +59,10 @@ export function LibraryModalPage({
         } else {
             reportEvent("changeModalTab", { tab: currentTab });
         }
+
+        if (currentTab !== "highlights") {
+            setDomainFilter(undefined);
+        }
     }, [currentTab]);
 
     const [currentSubscription, setCurrentSubscription] = useState<FeedSubscription | undefined>(
