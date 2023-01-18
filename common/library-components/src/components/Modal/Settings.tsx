@@ -79,7 +79,7 @@ export default function SettingsModalTab({
     }
 
     return (
-        <div className="animate-fadein mt-2 flex max-w-2xl flex-col gap-4">
+        <div className="animate-fadein mt-2 flex flex-col gap-4">
             <SettingsGroup
                 title="About"
                 icon={
@@ -91,13 +91,11 @@ export default function SettingsModalTab({
                     </svg>
                 }
             >
-                <p>
-                    Every article you open with Unclutter gets automatically saved in your library.
-                </p>
+                <p>Every article you open with Unclutter gets saved in your library.</p>
 
                 <p>
                     See what you've read over the last weeks, get back to articles you didn't
-                    finish, or review your highlights. It's all just one{" "}
+                    finish, or review your highlights. It's just one{" "}
                     <span
                         className="inline-block rounded-md bg-stone-200 px-1 font-medium dark:bg-neutral-700 dark:text-stone-800"
                         style={{
@@ -201,8 +199,10 @@ export default function SettingsModalTab({
             >
                 <p>
                     Unclutter is open-source
-                    {showSignup ? " and funded by the community" : ""}! Join our Discord server to
-                    discuss improvements, or contribute on GitHub to improve reading on the web for
+                    {showSignup ? " and funded by the community" : ""}!
+                </p>
+                <p>
+                    Join our Discord server to discuss how to improve reading on the web for
                     everyone.
                 </p>
 
@@ -274,7 +274,7 @@ function SettingsGroup({
                 {icon}
                 {title}
             </h2>
-            <div className="flex flex-col gap-3">{children}</div>
+            <div className="flex max-w-2xl flex-col gap-3">{children}</div>
         </div>
     );
 }

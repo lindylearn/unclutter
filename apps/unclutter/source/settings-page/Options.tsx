@@ -1,8 +1,6 @@
 import React from "react";
 import {
     allowlistDomainOnManualActivationFeatureFlag,
-    enableExperimentalFeatures,
-    enableSocialCountsFeatureFlag,
     getFeatureFlag,
     hypothesisSyncFeatureFlag,
 } from "../common/featureFlags";
@@ -167,7 +165,7 @@ function OptionsPage({}) {
                     </p>
                 </OptionsGroup>
 
-                <OptionsGroup
+                {/* <OptionsGroup
                     headerText="Smart Reading"
                     iconSvg={
                         <svg className="w-5" viewBox="0 0 576 512">
@@ -196,7 +194,7 @@ function OptionsPage({}) {
                     <FeatureFlagSwitch featureFlagKey={enableExperimentalFeatures}>
                         Highlight important sentences on each article you visit
                     </FeatureFlagSwitch>
-                </OptionsGroup>
+                </OptionsGroup> */}
 
                 <OptionsGroup
                     headerText="Sync"

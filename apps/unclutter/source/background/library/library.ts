@@ -23,10 +23,11 @@ import { initSearchIndex } from "./search";
 import { refreshSubscriptions } from "@unclutter/library-components/dist/feeds";
 import { fetchRemoteAnnotations, initHighlightsSync } from "./highlights";
 import { getFeatureFlag, hypothesisSyncFeatureFlag } from "../../common/featureFlags";
+import type { UserInfo } from "@unclutter/library-components/dist/store";
 
 export let userId: string;
 export let rep: ReplicacheProxy | null = null;
-export async function initLibrary(isDev: boolean) {
+export async function initLibrary(isDev: boolean): Promise<UserInfo | undefined> {
     rep = getBackgroundReplicacheProxy();
 
     userId = await getLibraryUser();
@@ -42,6 +43,7 @@ export async function initLibrary(isDev: boolean) {
         // local replicache mock doesn't need initialization
     }
 
+    const userInfo = await rep.query.getUserInfo();
     if (isDev) {
         await rep.mutate.updateUserInfo({ aiEnabled: true });
     }
@@ -49,6 +51,8 @@ export async function initLibrary(isDev: boolean) {
     await initSearchIndex();
 
     await initHighlightsSync();
+
+    return userInfo;
 }
 
 export async function refreshLibraryFeeds() {

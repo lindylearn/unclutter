@@ -5,7 +5,6 @@ import { extensionSupportsUrl } from "../common/articleDetection";
 import { handleReportBrokenPage } from "../common/bugReport";
 import {
     enableExperimentalFeatures,
-    getFeatureFlag,
     isDevelopmentFeatureFlag,
     setFeatureFlag,
 } from "../common/featureFlags";
@@ -13,7 +12,6 @@ import browser from "../common/polyfill";
 import { getLibraryAuth, getLibraryUser, setLibraryAuth } from "../common/storage";
 import { saveInitialInstallVersionIfMissing } from "../common/updateMessages";
 import { fetchCss } from "./actions";
-import { loadAnnotationCountsToMemory } from "./annotationCounts";
 import { getAllBookmarks, requestBookmarksPermission } from "./bookmarks";
 import { enableInTab, injectScript, togglePageViewMessage } from "./inject";
 import { createAlarmListeners, onNewInstall, setupWithPermissions } from "./install";
@@ -267,12 +265,11 @@ async function initializeServiceWorker() {
     const isDev = extensionInfo.installType === "development";
 
     startMetrics(isDev);
+    const userInfo = await initLibrary(isDev);
 
-    initLibrary(isDev);
-    loadAnnotationCountsToMemory();
+    // loadAnnotationCountsToMemory();
 
-    const enableExperimental = await getFeatureFlag(enableExperimentalFeatures);
-    if (enableExperimental) {
+    if (userInfo?.aiEnabled) {
         // load tensorflow model
         // unfortunately cannot create nested service workers, see https://bugs.chromium.org/p/chromium/issues/detail?id=1219164
         // another option: importScript()? https://stackoverflow.com/questions/66406672/how-do-i-import-scripts-into-a-service-worker-using-chrome-extension-manifest-ve
