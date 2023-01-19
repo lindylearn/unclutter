@@ -27,7 +27,7 @@ export default function LoginPage({ isSignup = false }) {
     return (
         <div className="min-h-screen bg-white p-10 text-stone-800 dark:bg-[#212121] dark:text-[rgb(232,230,227)]">
             <Head>
-                <title>Unclutter Library Login</title>
+                <title>Unclutter Login</title>
             </Head>
 
             <div className="mx-auto max-w-md">

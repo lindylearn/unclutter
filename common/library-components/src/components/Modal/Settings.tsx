@@ -195,7 +195,7 @@ export function SettingsGroup({
     return (
         <div
             className={clsx(
-                "relative z-20 rounded-md bg-stone-50 p-3 px-4 dark:bg-neutral-800",
+                "relative z-20 overflow-hidden rounded-md bg-stone-50 p-3 px-4 dark:bg-neutral-800",
                 className
             )}
         >

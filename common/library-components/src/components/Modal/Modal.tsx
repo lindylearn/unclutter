@@ -9,7 +9,7 @@ import RecentModalTab from "./Recent";
 import { LindyIcon } from "../Icons";
 import HighlightsTab from "./Highlights";
 import SettingsModalTab from "./Settings";
-import SyncModalTab from "./Sync/Sync";
+// import SyncModalTab from "./Sync/Sync";
 import { ModalVisibilityContext, FilterContext, ModalStateContext } from "./context";
 
 export function LibraryModalPage({
@@ -188,7 +188,7 @@ function ModalContent({
                 {/* {currentTab === "signup" && (
                     <UpgradeModalTab darkModeEnabled={darkModeEnabled} reportEvent={reportEvent} />
                 )} */}
-                {currentTab === "sync" && <SyncModalTab />}
+                {/* {currentTab === "sync" && <SyncModalTab />} */}
                 {currentTab === "settings" && <SettingsModalTab />}
             </div>
         </div>

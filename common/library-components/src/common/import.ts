@@ -4,8 +4,11 @@ import { Annotation, Article, RuntimeReplicache, UserInfo } from "../store";
 import { indexAnnotationVectors } from "./api";
 
 export interface ImportProgress {
-    targetArticles: number;
+    finished?: boolean;
+
     currentArticles?: number;
+    targetArticles: number;
+
     currentHighlights?: number;
 }
 
@@ -17,6 +20,7 @@ export async function indexLibraryArticles(
 ) {
     let articles = await rep.query.listArticles();
     articles.sort((a, b) => b.time_added - a.time_added);
+    articles = articles.slice(0, 2);
 
     console.log(`Indexing ${articles.length} articles...`);
     onProgress?.({ targetArticles: articles.length });
@@ -33,11 +37,18 @@ export async function indexLibraryArticles(
 
         console.log(`${articleCount}/${articles.length}`);
         onProgress?.({
-            targetArticles: articles.length,
             currentArticles: articleCount,
+            targetArticles: articles.length,
             currentHighlights: highlightCount,
         });
     }
+
+    onProgress?.({
+        currentArticles: articleCount,
+        targetArticles: articles.length,
+        currentHighlights: highlightCount,
+        finished: true,
+    });
 
     console.log(
         `Created ${highlightCount} highlights in ${Math.round(performance.now() - start)}ms.`

@@ -1,10 +1,5 @@
-import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import { useUser } from "@supabase/auth-helpers-react";
-import {
-    setUnclutterLibraryAuth,
-    checkHasSubscription,
-    useAutoDarkMode,
-} from "@unclutter/library-components/dist/common";
+import { useAutoDarkMode } from "@unclutter/library-components/dist/common";
 import { useContext, useEffect, useState } from "react";
 import {
     ReplicacheContext,
@@ -14,8 +9,11 @@ import {
 import {
     SettingsGroup,
     Button,
-    generateCSV,
 } from "@unclutter/library-components/dist/components/Modal/Settings";
+import {
+    indexLibraryArticles,
+    ImportProgress,
+} from "@unclutter/library-components/dist/common/import";
 import { getActivityColor } from "@unclutter/library-components/dist/components";
 import { reportEventPosthog } from "../../common/metrics";
 import { useRouter } from "next/router";
@@ -31,10 +29,27 @@ export default function SmartReadingTab() {
     const userInfo = useSubscribe<UserInfo>(rep, rep?.subscribe.getUserInfo(), undefined);
 
     useEffect(() => {
+        if (!rep || !userInfo) {
+            return;
+        }
         // if (!userInfo?.aiEnabled) {
         //     router.push("/welcome");
         // }
-    }, [userInfo]);
+
+        generateHighlights();
+    }, [rep, userInfo]);
+
+    const [progress, setProgress] = useState<ImportProgress>();
+    const progressPercentage =
+        progress?.currentArticles && progress.currentArticles / progress.targetArticles;
+
+    function generateHighlights() {
+        if (!rep) {
+            return;
+        }
+
+        indexLibraryArticles(rep, userInfo, setProgress);
+    }
 
     if (!userInfo) {
         return <></>;
@@ -115,13 +130,31 @@ export default function SmartReadingTab() {
                 }
             >
                 <p>
-                    The more articles you read and annotations you save, the more value you'll get
-                    out of Unclutter. Import options (e.g. from Pocket) are coming soon!
+                    The more articles in your library, the more value you'll get out of the Smart
+                    Reading features. Import options (e.g. from Pocket) are coming soon!
                 </p>
-                <p>
-                    While you've read this page, Unclutter generated 50 annotations across 2 / 23 of
-                    your previously saved articles. Please keep this page open until it is done!
+                <p className="mb-3">
+                    {progress?.finished ? (
+                        <>
+                            Unclutter generated {progress?.currentHighlights} highlights for your{" "}
+                            {progress?.targetArticles} saved articles! These highlights will now
+                            turn up whenever you're reading about a related topic.
+                        </>
+                    ) : (
+                        <>
+                            Unclutter is currently generating highlights for your{" "}
+                            {progress?.targetArticles} saved articles (
+                            {progress?.currentArticles || 0}/{progress?.targetArticles} done).
+                            Please keep this page open until the import is done!
+                        </>
+                    )}
                 </p>
+                <div
+                    className="bg-lindy dark:bg-lindyDark absolute bottom-0 left-0 h-2 transition-all"
+                    style={{
+                        width: `${(progressPercentage || 0) * 100}%`,
+                    }}
+                />
             </SettingsGroup>
         </div>
     );
