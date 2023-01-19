@@ -13,12 +13,7 @@ export async function initSearchIndex(forceReinit: boolean = false) {
         console.log("Initializing highlights search index...");
         try {
             annotationsSearchIndex = new SearchIndex(""); // default for all users
-            await syncSearchIndex(
-                rep,
-                annotationsSearchIndex as unknown as SearchIndex,
-                false,
-                true
-            );
+            await syncSearchIndex(rep, annotationsSearchIndex, false, true);
         } catch (err) {
             console.error(err);
             annotationsSearchIndex = null;
