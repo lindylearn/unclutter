@@ -35,14 +35,7 @@ async function boot() {
         triggeredIsLikelyArticle = true;
     }
 
-    // check local url map for article annotation count matches
-    // const foundCount = await browser.runtime.sendMessage(null, {
-    //     event: "checkLocalAnnotationCount",
-    // });
-    // if (foundCount && !triggeredIsLikelyArticle) {
-    //     console.log("Found annotations count, assuming this is an article");
-    //     onIsLikelyArticle(domain);
-    // }
+    // TODO check annotation count in background
 
     if (["unclutter.lindylearn.io", "library.lindylearn.io", "localhost"].includes(domain)) {
         listenForPageEvents();

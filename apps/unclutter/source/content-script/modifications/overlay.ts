@@ -383,10 +383,6 @@ export default class OverlayManager implements PageModifier {
                 anchoredSocialHighlightsCount: this.totalSocialCommentsCount,
             });
         }, 4000);
-        browser.runtime.sendMessage(null, {
-            event: "setSocialAnnotationsCount",
-            count: this.totalSocialCommentsCount,
-        });
     }
 
     disableSocialAnnotations() {

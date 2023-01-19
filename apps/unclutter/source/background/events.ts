@@ -64,13 +64,9 @@ browser.action.onClicked.addListener((tab: Tabs.Tab) => {
                 return;
             }
 
-            tabsManager.checkIsArticle(tab.id, tab.url);
             if (didEnable) {
-                tabsManager
-                    .getSocialAnnotationsCount(tab.id, tab.url)
-                    .then((socialCommentsCount) =>
-                        reportEnablePageView("manual", socialCommentsCount)
-                    );
+                tabsManager.onActivateReaderMode(tab.id);
+                reportEnablePageView("manual");
             }
         });
     }
@@ -99,13 +95,11 @@ function handleMessage(
 
         if (message.type === "full") {
             injectScript(sender.tab.id, "content-script/enhance.js");
-
-            tabsManager
-                .getSocialAnnotationsCount(sender.tab.id, sender.url)
-                .then((socialCommentsCount) =>
-                    reportEnablePageView(message.trigger, socialCommentsCount)
-                );
+            tabsManager.onActivateReaderMode(sender.tab.id);
+            reportEnablePageView(message.trigger);
         } else if (message.type === "highlights") {
+            // TODO check if already have AI annotations for this tab
+
             injectScript(sender.tab.id, "content-script/highlights.js");
         }
     } else if (message.event === "openOptionsPage") {
@@ -118,15 +112,6 @@ function handleMessage(
     } else if (message.event === "getRemoteFeatureFlags") {
         getRemoteFeatureFlags().then(sendResponse);
         return true;
-    } else if (message.event === "checkLocalAnnotationCount") {
-        // trigger from boot.js because we don't have tabs permissions
-        tabsManager.checkIsArticle(sender.tab.id, sender.url).then(sendResponse);
-        return true;
-    } else if (message.event === "getSocialAnnotationsCount") {
-        tabsManager.getSocialAnnotationsCount(sender.tab.id, sender.url).then(sendResponse);
-        return true;
-    } else if (message.event === "setSocialAnnotationsCount") {
-        tabsManager.setSocialAnnotationsCount(sender.tab.id, message.count);
     } else if (message.event === "reportBrokenPage") {
         handleReportBrokenPage(message.data);
     } else if (message.event === "openLink") {
@@ -141,6 +126,7 @@ function handleMessage(
             await new Promise((resolve) => setTimeout(resolve, 100));
 
             await injectScript(tab.id, "content-script/enhance.js");
+            tabsManager.onActivateReaderMode(sender.tab.id);
 
             if (message.annotationId) {
                 await new Promise((resolve) => setTimeout(resolve, 200));
@@ -202,6 +188,8 @@ function handleMessage(
     } else if (message.event === "getHeatmap") {
         getHeatmap(message.paragraphs).then(sendResponse);
         return true;
+    } else if (message.event === "setParsedAnnotations") {
+        tabsManager.setParsedAnnotations(sender.tab.id, message.annotations);
     }
 
     return false;
@@ -266,8 +254,6 @@ async function initializeServiceWorker() {
 
     startMetrics(isDev);
     const userInfo = await initLibrary(isDev);
-
-    // loadAnnotationCountsToMemory();
 
     if (userInfo?.aiEnabled) {
         // load tensorflow model

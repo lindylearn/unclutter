@@ -27,7 +27,7 @@ import type { UserInfo } from "@unclutter/library-components/dist/store";
 
 export let userId: string;
 export let rep: ReplicacheProxy | null = null;
-export async function initLibrary(isDev: boolean): Promise<UserInfo | undefined> {
+export async function initLibrary(isDev: boolean = false): Promise<UserInfo | undefined> {
     rep = getBackgroundReplicacheProxy();
 
     userId = await getLibraryUser();
