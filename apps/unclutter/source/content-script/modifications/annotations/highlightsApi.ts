@@ -95,6 +95,21 @@ export function paintHighlight(
                 annotation,
             });
 
+            // unfocus on next click for social comments
+            // for annotations this is handled without duplicate events by the textarea onBlur
+            // if (!annotation.isMyAnnotation || annotation.platform !== "info") {
+            //     const onNextClick = () => {
+            //         hoverUpdateHighlight(annotation, false);
+            //         sendIframeEvent(sidebarIframe, {
+            //             event: "focusAnnotation",
+            //             annotation: null,
+            //         });
+
+            //         document.removeEventListener("click", onNextClick, true);
+            //     };
+            //     document.addEventListener("click", onNextClick, true);
+            // }
+
             if (annotation.isMyAnnotation) {
                 copyTextToClipboard(`"${annotation.quote_text}"`);
             }

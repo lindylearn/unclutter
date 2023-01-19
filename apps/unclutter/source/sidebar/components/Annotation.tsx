@@ -12,8 +12,6 @@ interface AnnotationProps {
 
     color: string;
     colorDark?: string;
-
-    deleteHide: () => void;
 }
 
 function Annotation({

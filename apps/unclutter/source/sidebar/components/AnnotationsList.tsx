@@ -8,21 +8,12 @@ const sidebarOffsetTopPx = 8;
 
 interface AnnotationsListProps {
     groupedAnnotations: LindyAnnotation[][];
-    deleteHideAnnotation: (annotation: LindyAnnotation, threadStart: LindyAnnotation) => void;
-    onAnnotationHoverUpdate: (annotation: LindyAnnotation, hoverActive: boolean) => void;
-    unfocusAnnotation: (annotation: LindyAnnotation) => void;
-    updateAnnotation: (annotation: LindyAnnotation) => void;
+    unfocusAnnotation: () => void;
 }
 
 const annotationMarginPx = 6;
 
-function AnnotationsList({
-    groupedAnnotations,
-    deleteHideAnnotation,
-    onAnnotationHoverUpdate,
-    unfocusAnnotation,
-    updateAnnotation,
-}: AnnotationsListProps) {
+function AnnotationsList({ groupedAnnotations, unfocusAnnotation }: AnnotationsListProps) {
     const itemsRef = useRef({}); // annotation id -> ref of rendered annotation node
 
     const [_, rerender] = useState(0); // state to force re-renders
@@ -124,16 +115,10 @@ function AnnotationsList({
                             >
                                 <AnnotationThread
                                     annotation={annotation}
-                                    deleteHideAnnotation={deleteHideAnnotation}
                                     // heightLimitPx={
                                     //     groupHeightLimitPx / group.length
                                     // } // give each item equal share -- always avoids overflows
-                                    onHoverUpdate={(hoverActive: boolean) =>
-                                        // call hover on top level annotation
-                                        onAnnotationHoverUpdate(annotation, hoverActive)
-                                    }
                                     unfocusAnnotation={unfocusAnnotation}
-                                    updateAnnotation={updateAnnotation}
                                 />
                             </div>
                         </CSSTransition>

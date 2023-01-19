@@ -150,18 +150,17 @@ export default class SmartHighlightsModifier implements PageModifier {
         );
 
         // send to sidebar if already ready
-        this.relatedPerAnnotation = relatedPerAnnotation;
-        this.sendAnnotationsToSidebar();
+        // this.relatedPerAnnotation = relatedPerAnnotation;
+        // this.sendAnnotationsToSidebar();
     }
 
     private handleMessage(message: any) {
         if (message.type === "sendAIAnnotationsToSidebar") {
             // event sent from AnnotationsModifier once sidebar is ready
-
             // reply with annotations (only if related done)
-            if (this.relatedPerAnnotation) {
-                this.sendAnnotationsToSidebar();
-            }
+            // if (this.relatedPerAnnotation) {
+            //     this.sendAnnotationsToSidebar();
+            // }
         }
     }
 

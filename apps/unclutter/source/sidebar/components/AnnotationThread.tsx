@@ -18,10 +18,7 @@ interface AnnotationThreadProps {
     annotation: LindyAnnotation;
     heightLimitPx?: number;
 
-    deleteHideAnnotation: (annotation: LindyAnnotation, threadStart: LindyAnnotation) => void;
-    onHoverUpdate: (hoverActive: boolean) => void;
-    unfocusAnnotation: (annotation: LindyAnnotation) => void;
-    updateAnnotation: (annotation: LindyAnnotation) => void;
+    unfocusAnnotation: () => void;
 }
 
 export default function AnnotationThread(props: AnnotationThreadProps) {
@@ -59,8 +56,6 @@ export default function AnnotationThread(props: AnnotationThreadProps) {
         }
     }, [userInfo]);
 
-    const deleteHide = () => props.deleteHideAnnotation(annotation, null);
-
     let color: string;
     let colorDark: string;
     if (annotation.ai_created) {
@@ -86,16 +81,10 @@ export default function AnnotationThread(props: AnnotationThreadProps) {
                 relatedCount={related?.length}
                 color={color}
                 colorDark={colorDark}
-                deleteHide={deleteHide}
             />
 
             {!annotation.isMyAnnotation && annotation.platform !== "summary" && (
-                <Annotation
-                    {...props}
-                    color={color}
-                    colorDark={colorDark}
-                    deleteHide={deleteHide}
-                />
+                <Annotation {...props} color={color} colorDark={colorDark} />
             )}
 
             {/* {annotation.isMyAnnotation && (
@@ -135,7 +124,6 @@ export default function AnnotationThread(props: AnnotationThreadProps) {
                             }}
                             color={color}
                             colorDark={colorDark}
-                            deleteHide={deleteHide}
                         />
                     ))}
                 </div>

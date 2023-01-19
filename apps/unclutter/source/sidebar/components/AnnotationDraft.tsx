@@ -1,10 +1,11 @@
 import clsx from "clsx";
 import debounce from "lodash/debounce";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
 import TextareaAutosize from "react-textarea-autosize";
 
 import { LindyAnnotation } from "../../common/annotations/create";
-import { updateAnnotation as updateAnnotationApi } from "../common/CRUD";
+import { deleteAnnotation, updateAnnotation } from "../common/CRUD";
+import { SidebarContext } from "../context";
 
 interface AnnotationDraftProps {
     annotation: LindyAnnotation;
@@ -16,26 +17,21 @@ interface AnnotationDraftProps {
     color: string;
     colorDark?: string;
 
-    deleteHide: () => void;
-    onHoverUpdate: (hoverActive: boolean) => void;
-    updateAnnotation: (annotation: LindyAnnotation) => void;
-    unfocusAnnotation: (annotation: LindyAnnotation) => void;
+    unfocusAnnotation: () => void;
 }
 
 function AnnotationDraft({
     annotation,
     className,
-    deleteHide,
     heightLimitPx,
     isFetchingRelated,
     relatedCount,
     color,
     colorDark,
-    updateAnnotation,
-    onHoverUpdate,
     unfocusAnnotation,
 }: AnnotationDraftProps) {
     const inputRef = useRef<HTMLTextAreaElement>();
+    const { userInfo } = useContext(SidebarContext);
 
     // focus on initial render
     useEffect(() => {
@@ -48,11 +44,11 @@ function AnnotationDraft({
 
     // debounce local state and remote updates
     // debounce instead of throttle so that newest call eventually runs
+    // @ts-ignore
     const debouncedUpdateApi: (annotation: LindyAnnotation) => Promise<LindyAnnotation> =
         useCallback(
             debounce((a) => {
-                updateAnnotation(a); // update app root state
-                updateAnnotationApi(a);
+                updateAnnotation(a);
             }, 1000),
             []
         );
@@ -67,9 +63,8 @@ function AnnotationDraft({
             // immediately update if added first text or removed text (impacts visibility)
             if (newAnnotation.text) {
                 updateAnnotation(newAnnotation);
-                updateAnnotationApi(newAnnotation);
             } else {
-                deleteHide();
+                deleteAnnotation(userInfo.id, newAnnotation);
             }
         } else {
             // call with newAnnotation as localAnnotation takes once loop iteration to update
@@ -141,7 +136,7 @@ function AnnotationDraft({
                 }
                 onKeyDown={(e) => {
                     if (!localAnnotation.text && (e.key === "Backspace" || e.key === "Delete")) {
-                        deleteHide();
+                        deleteAnnotation(userInfo.id, localAnnotation);
                     }
                     // if (!localAnnotation.text && e.key === "Tab" && question) {
                     //     updateAnnotationLocalFirst({
@@ -156,8 +151,7 @@ function AnnotationDraft({
                 maxRows={6}
                 spellCheck={false}
                 ref={inputRef}
-                onFocus={() => onHoverUpdate(true)}
-                onBlur={() => onHoverUpdate(false)}
+                onBlur={unfocusAnnotation}
             />
 
             {isFetchingRelated && (
@@ -181,10 +175,7 @@ function AnnotationDraft({
 }
 export default AnnotationDraft;
 
-export function useBlurRef(
-    annotation: LindyAnnotation,
-    unfocusAnnotation: (annotation: LindyAnnotation) => void
-) {
+export function useBlurRef(annotation: LindyAnnotation, unfocusAnnotation: () => void) {
     // if annotation focused, detect clicks to unfocus it
     const ref = useRef<HTMLDivElement>();
     useEffect(() => {
@@ -198,7 +189,7 @@ export function useBlurRef(
                 }
 
                 if (ref.current && !ref.current.contains(clickTarget)) {
-                    unfocusAnnotation(annotation);
+                    unfocusAnnotation();
                 }
             };
 

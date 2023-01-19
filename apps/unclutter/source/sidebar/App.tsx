@@ -40,7 +40,9 @@ export default function App({ articleId }: { articleId: string }) {
     // send annotation add, deletes to highlights anchor code
     const lastAnnotations = useRef<LindyAnnotation[]>([]);
     useEffect(() => {
-        if (!storeAnnotations) {
+        if (!storeAnnotations || !personalAnnotationsEnabled) {
+            // clear lastAnnotations state to re-render all annotations once valid
+            lastAnnotations.current = [];
             return;
         }
 
@@ -53,8 +55,6 @@ export default function App({ articleId }: { articleId: string }) {
         const deletedAnnotations = lastAnnotations.current.filter(
             (a) => !storeAnnotationsSet.has(a.id)
         );
-
-        console.log({ newAnnotations, deletedAnnotations });
 
         if (deletedAnnotations.length) {
             window.top.postMessage(
@@ -74,7 +74,7 @@ export default function App({ articleId }: { articleId: string }) {
         }
 
         lastAnnotations.current = storeAnnotations.map(unpickleLocalAnnotation);
-    }, [storeAnnotations]);
+    }, [storeAnnotations, personalAnnotationsEnabled]);
 
     // receive events from the text highlighting content script code
     useMemo(() => {
@@ -133,43 +133,33 @@ export default function App({ articleId }: { articleId: string }) {
     React.useEffect(() => {
         console.log("Grouping annotations");
 
-        const visibleAnnotations = storeAnnotations
-            .map(unpickleLocalAnnotation)
-            .filter((a) => a.isMyAnnotation)
-            .map((a) => ({
-                ...a,
-                focused: a.id === focusedAnnotationId,
-                displayOffset: displayOffsets[a.id],
-                displayOffsetEnd: displayOffsetEnds[a.id],
-            }))
-            .sort((a, b) => a.displayOffset - b.displayOffset)
-            .filter((a) => a.focused || (a.isMyAnnotation && a.text));
+        let visibleAnnotations = [];
+        if (personalAnnotationsEnabled) {
+            visibleAnnotations = visibleAnnotations.concat(
+                storeAnnotations
+                    .map(unpickleLocalAnnotation)
+                    .map((a) => ({
+                        ...a,
+                        focused: a.id === focusedAnnotationId,
+                        displayOffset: displayOffsets[a.id],
+                        displayOffsetEnd: displayOffsetEnds[a.id],
+                    }))
+                    .filter((a) => a.focused || (a.isMyAnnotation && a.text))
+            );
+        }
+
+        visibleAnnotations.sort((a, b) => a.displayOffset - b.displayOffset);
 
         // use large grouping margin to display every annotation properly
         const groupedAnnotations = groupAnnotations(visibleAnnotations, 75);
         setGroupedAnnotations(groupedAnnotations);
-    }, [storeAnnotations, focusedAnnotationId, displayOffsets, displayOffsetEnds]);
-
-    function deleteHideAnnotation(annotation: LindyAnnotation) {
-        if (annotation.isMyAnnotation) {
-            deleteAnnotation(userInfo.id, annotation);
-        } else {
-            hideAnnotationLocally(annotation);
-
-            // TODO add to moderation queue
-            // hideRemoteAnnotation(annotation);
-
-            reportEventContentScript("hideSocialAnnotation", {
-                id: annotation.id,
-                platform: annotation.platform,
-            });
-        }
-    }
-    function onAnnotationHoverUpdate(annotation: LindyAnnotation, hoverActive: boolean = false) {
-        setFocusedAnnotationId(annotation.id);
-        window.top.postMessage({ event: "onAnnotationHoverUpdate", annotation, hoverActive }, "*");
-    }
-    function updateAnnotation() {}
+    }, [
+        storeAnnotations,
+        focusedAnnotationId,
+        displayOffsets,
+        displayOffsetEnds,
+        personalAnnotationsEnabled,
+    ]);
 
     return (
         // @ts-ignore
@@ -179,10 +169,7 @@ export default function App({ articleId }: { articleId: string }) {
                 <div className="app font-text mx-2 text-stone-800">
                     <AnnotationsList
                         groupedAnnotations={groupedAnnotations}
-                        deleteHideAnnotation={deleteHideAnnotation}
-                        onAnnotationHoverUpdate={onAnnotationHoverUpdate}
-                        unfocusAnnotation={onAnnotationHoverUpdate}
-                        updateAnnotation={updateAnnotation}
+                        unfocusAnnotation={() => setFocusedAnnotationId(null)}
                     />
                 </div>
             </SidebarContext.Provider>
