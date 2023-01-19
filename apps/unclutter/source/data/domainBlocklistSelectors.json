@@ -157,6 +157,15 @@
         ".tp-iframe-wrapper.tp-active"
     ],
     "businessinsider.de": [".tp-container-inner"],
+    "calcalist.co.il": [
+        ".articleItem",
+        ".mediaArea",
+        ".ArticleCalcalistSlider",
+        ".slick-slider.slider.slick-initialized",
+        ".commertialSlider",
+        ".CommertialComponenta",
+        ".slotTitle"
+    ],
     "cbc.ca": [".logo", ".sideMenu"],
     "chaincatcher.com": [
         ".title",
