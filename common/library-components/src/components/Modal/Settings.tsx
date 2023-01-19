@@ -145,7 +145,7 @@ export default function SettingsModalTab({}: {}) {
             >
                 <p>
                     Unclutter is open-source! Join our Discord server to help improve reading on the
-                    web for everyone. Or email peter@lindylearn.io at any time!
+                    web for everyone. Or post about issues on GitHub!
                 </p>
 
                 <div className="flex gap-3">

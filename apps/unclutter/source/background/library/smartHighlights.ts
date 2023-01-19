@@ -6,7 +6,7 @@ export async function getArticleAnnotations(articleId: string) {
     return await rep.query.listArticleAnnotations(articleId);
 }
 
-export async function saveAnnotations(annotations: Annotation[]) {
+export async function saveAIAnnotations(annotations: Annotation[]) {
     const aiAnnotations = annotations?.filter((a) => a.ai_created);
     if (!aiAnnotations || aiAnnotations.length === 0) {
         return;

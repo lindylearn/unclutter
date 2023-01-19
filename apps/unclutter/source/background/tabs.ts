@@ -1,9 +1,10 @@
 import type { Annotation } from "@unclutter/library-components/dist/store";
 import browser from "../common/polyfill";
-import { getArticleAnnotations, saveAnnotations } from "./library/smartHighlights";
+import { rep } from "./library/library";
+import { getArticleAnnotations, saveAIAnnotations } from "./library/smartHighlights";
 
 export class TabStateManager {
-    private enabled = true;
+    private enabled = false;
     private tabReaderModeActive: { [tabId: number]: boolean } = {};
     private tabAnnotations: { [tabId: string]: Annotation[] } = {};
 
@@ -31,9 +32,13 @@ export class TabStateManager {
     // check saved annotations for a given url (without any network requests), to
     // determine if the user previously used the extension on this page
     async checkHasLocalAnnotations(tabId: number, articleId: string) {
+        // update enabled status on every reader mode call
+        // TODO cache this? but how to show counts once enabled?
+        await this.checkEnabled();
         if (!this.enabled) {
             return;
         }
+
         // clear immediately after navigation
         this.tabReaderModeActive[tabId] = false;
         this.tabAnnotations[tabId] = undefined;
@@ -62,7 +67,7 @@ export class TabStateManager {
 
         // highlights.ts may be injected by reader mode itself, so directly save annotations once available
         if (this.tabReaderModeActive[tabId]) {
-            saveAnnotations(annotations);
+            saveAIAnnotations(annotations);
         }
 
         this.renderBadgeCount(tabId);
@@ -77,7 +82,7 @@ export class TabStateManager {
 
         const annotations = this.tabAnnotations[tabId];
         if (annotations?.length) {
-            await saveAnnotations(annotations);
+            await saveAIAnnotations(annotations);
         }
     }
 
@@ -87,5 +92,13 @@ export class TabStateManager {
 
         browser.action.setBadgeBackgroundColor({ color: "#facc15" });
         browser.action.setBadgeText({ text });
+    }
+
+    private async checkEnabled() {
+        if (this.enabled) {
+            return;
+        }
+        const userInfo = await rep.query.getUserInfo();
+        this.enabled = !!userInfo?.aiEnabled;
     }
 }
