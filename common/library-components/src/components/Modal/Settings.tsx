@@ -107,7 +107,7 @@ export default function SettingsModalTab({}: {}) {
                                     {showSignup && (
                                         <Button
                                             title="Create account"
-                                            href="https://library.lindylearn.io/signup"
+                                            href="https://my.lindylearn.io/signup"
                                             darkModeEnabled={darkModeEnabled}
                                             reportEvent={reportEvent}
                                         />

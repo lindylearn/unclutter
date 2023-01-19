@@ -169,8 +169,7 @@ function ModalContent({
             </aside>
             <div
                 className={clsx(
-                    "right-side flex h-full max-h-full w-full flex-col",
-                    currentTab === "stats" ? "overflow-y-scroll" : "overflow-y-auto",
+                    "right-side flex h-full max-h-full w-full flex-col overflow-y-auto",
                     currentTab === "graph" ? "" : "p-4"
                 )}
             >

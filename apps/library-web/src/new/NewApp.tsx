@@ -29,7 +29,7 @@ export default function App() {
                     <div className="mb-4 flex w-full items-center gap-2">
                         <LindyIcon className="w-8" />
 
-                        <h1 className="font-title select-none text-2xl font-bold">Library</h1>
+                        <h1 className="font-title select-none text-2xl font-bold">Unclutter</h1>
                     </div>
                 </div>
             </aside>

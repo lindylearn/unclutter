@@ -16,7 +16,6 @@ import {
     Button,
     generateCSV,
 } from "@unclutter/library-components/dist/components/Modal/Settings";
-import { getActivityColor } from "@unclutter/library-components/dist/components";
 import { reportEventPosthog } from "../../common/metrics";
 import { useRouter } from "next/router";
 
@@ -78,14 +77,11 @@ export default function NewWelcomeTab() {
                     </svg>
                 }
             >
-                <p>
-                    Hey{userInfo.name && ` ${userInfo.name}`}, welcome to your Unclutter Library
-                    account!
-                </p>
+                <p>Hey{userInfo.name && ` ${userInfo.name}`}, welcome to your Unclutter account!</p>
 
                 <p>
-                    Your saved articles and highlights are now securely backed-up and available in
-                    every browser where you sign in to this website.
+                    Your saved articles and highlights are now backed-up and available in every
+                    browser where you sign in to this website.
                 </p>
                 <div className="flex gap-3">
                     <Button
@@ -136,8 +132,8 @@ export default function NewWelcomeTab() {
                     organize, and surface article highlights for you.
                 </p>
                 <p>
-                    That means you'll see all related perspectives and facts from your knowledge
-                    base right next to each article. You do the thinking, Unclutter does the
+                    That means you'll see related perspectives and facts from your knowledge base
+                    right next to each article. You do the reading and thinking, Unclutter does the
                     information retrieval and organization.
                 </p>
                 <div className="flex gap-3">
