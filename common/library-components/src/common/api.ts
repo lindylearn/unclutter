@@ -1,11 +1,11 @@
 import ky from "ky";
 
-import { getDomain } from "@unclutter/library-components/dist/common/util";
 import { Article } from "../store/_schema";
 import { getBrowserType, sendMessage } from "./extension";
 import { getNewTabVersion, getUnclutterVersion } from "./messaging";
 import type { ReplicacheProxy } from "./replicache";
 import { SearchResult } from "./search";
+import { getDomain } from "./util";
 
 const lindyApiUrl = "https://api2.lindylearn.io";
 // const lindyApiUrl = "http://localhost:8000";

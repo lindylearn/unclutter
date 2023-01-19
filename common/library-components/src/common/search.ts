@@ -134,7 +134,7 @@ export class SearchIndex {
     }
 
     async addAnnotations(annotations: Annotation[]) {
-        if (annotations.length === 0) {
+        if (annotations?.length) {
             return;
         }
 
@@ -168,7 +168,7 @@ export class SearchIndex {
     }
 
     async removeAnnotations(annotations: Annotation[]) {
-        if (annotations.length === 0) {
+        if (annotations?.length) {
             return;
         }
 

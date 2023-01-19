@@ -23,7 +23,7 @@ export default class ReviewModifier implements PageModifier {
 
     async afterTransitionIn() {
         const userInfo = await getUserInfoSimple();
-        if (!userInfo.aiEnabled) {
+        if (!userInfo?.aiEnabled) {
             return;
         }
 

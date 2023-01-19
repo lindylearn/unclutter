@@ -1,4 +1,3 @@
-import type { RelatedHighlight } from "@unclutter/library-components/dist/common/api";
 import type { Annotation } from "@unclutter/library-components/dist/store/_schema";
 import { describe as describeAnnotation } from "./annotator/anchoring/html";
 import type { RankedSentence } from "./heatmap";

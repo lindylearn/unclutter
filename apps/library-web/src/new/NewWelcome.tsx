@@ -84,7 +84,7 @@ export default function NewWelcomeTab() {
                 }
             >
                 <p>
-                    Hey{userInfo.name && ` ${userInfo.name.split(" ")[0]}`}, welcome to your
+                    Hey{userInfo?.name && ` ${userInfo.name.split(" ")[0]}`}, welcome to your
                     Unclutter account!
                 </p>
 

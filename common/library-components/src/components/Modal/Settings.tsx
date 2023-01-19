@@ -85,7 +85,7 @@ export default function SettingsModalTab({}: {}) {
                 <>
                     {userInfo?.accountEnabled ? (
                         <p>
-                            Hey{userInfo.name && ` ${userInfo.name.split(" ")[0]}`}, your articles
+                            Hey{userInfo?.name && ` ${userInfo.name.split(" ")[0]}`}, your articles
                             and highlights are securely backed-up to your account!
                         </p>
                     ) : (
@@ -207,7 +207,7 @@ export function SmartReadingSetting({ userInfo, darkModeEnabled, reportEvent }) 
                 </svg>
             }
         >
-            {userInfo.aiEnabled ? (
+            {userInfo?.aiEnabled ? (
                 <>
                     <p>
                         The AI Smart reading features are enabled. Thank you for supporting
@@ -229,7 +229,7 @@ export function SmartReadingSetting({ userInfo, darkModeEnabled, reportEvent }) 
             )}
 
             <div className="flex gap-3">
-                {userInfo.aiEnabled ? (
+                {userInfo?.aiEnabled ? (
                     <>
                         <Button
                             title="Manage subscription"

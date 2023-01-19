@@ -63,7 +63,7 @@ function AnnotationDraft({
             if (newAnnotation.text) {
                 updateAnnotation(newAnnotation);
             } else {
-                deleteAnnotation(userInfo.id, newAnnotation);
+                deleteAnnotation(userInfo, newAnnotation);
             }
         } else {
             // call with newAnnotation as localAnnotation takes once loop iteration to update
@@ -135,7 +135,7 @@ function AnnotationDraft({
                 }
                 onKeyDown={(e) => {
                     if (!localAnnotation.text && (e.key === "Backspace" || e.key === "Delete")) {
-                        deleteAnnotation(userInfo.id, localAnnotation);
+                        deleteAnnotation(userInfo, localAnnotation);
                     }
                     // if (!localAnnotation.text && e.key === "Tab" && question) {
                     //     updateAnnotationLocalFirst({

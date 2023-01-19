@@ -11,6 +11,7 @@ import {
     deleteAnnotationVectors,
     indexAnnotationVectors,
 } from "@unclutter/library-components/dist/common/api";
+import type { UserInfo } from "@unclutter/library-components/dist/store/_schema";
 
 const rep = new ReplicacheProxy();
 
@@ -64,17 +65,19 @@ async function getPersonalAnnotations(articleId: string): Promise<LindyAnnotatio
 }
 
 export async function createAnnotation(
-    user_id: string,
+    userInfo: UserInfo,
     annotation: LindyAnnotation
 ): Promise<LindyAnnotation> {
     await rep.mutate.putAnnotation(pickleLocalAnnotation(annotation));
 
-    indexAnnotationVectors(
-        user_id,
-        annotation.article_id,
-        [annotation.quote_text],
-        [annotation.id]
-    );
+    if (userInfo?.aiEnabled) {
+        indexAnnotationVectors(
+            userInfo.id,
+            annotation.article_id,
+            [annotation.quote_text],
+            [annotation.id]
+        );
+    }
 
     reportEventContentScript("createAnnotation");
 
@@ -87,11 +90,14 @@ export async function updateAnnotation(annotation: LindyAnnotation): Promise<Lin
 }
 
 export async function deleteAnnotation(
-    user_id: string,
+    userInfo: UserInfo,
     annotation: LindyAnnotation
 ): Promise<void> {
     await rep.mutate.deleteAnnotation(annotation.id);
-    deleteAnnotationVectors(user_id, undefined, annotation.id);
+
+    if (userInfo?.aiEnabled) {
+        deleteAnnotationVectors(userInfo.id, undefined, annotation.id);
+    }
 
     reportEventContentScript("deleteAnnotation");
 }
