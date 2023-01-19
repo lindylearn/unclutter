@@ -23,6 +23,7 @@ export default class SmartHighlightsProxy implements PageModifier {
         }
         const userInfo = await getUserInfoSimple();
         if (userInfo?.aiEnabled) {
+            // will only be injected if article not parsed already
             browser.runtime.sendMessage(null, {
                 event: "requestEnhance",
                 trigger: "enhance",

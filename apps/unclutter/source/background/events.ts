@@ -34,6 +34,7 @@ import {
 } from "./metrics";
 import { TabStateManager } from "./tabs";
 import { getHeatmap, loadHeatmapModel } from "@unclutter/heatmap/dist/heatmap";
+import { getUrlHash } from "@unclutter/library-components/dist/common/url";
 
 const tabsManager = new TabStateManager();
 
@@ -84,8 +85,6 @@ function handleMessage(
     sender: Runtime.MessageSender,
     sendResponse: (...args: any[]) => void
 ) {
-    // console.log(`Received '${message.event}' message:`, message);
-
     if (message.event === "disabledPageView") {
         reportDisablePageView(message.trigger, message.pageHeightPx);
     } else if (message.event === "requestEnhance") {
@@ -98,7 +97,10 @@ function handleMessage(
             tabsManager.onActivateReaderMode(sender.tab.id);
             reportEnablePageView(message.trigger);
         } else if (message.type === "highlights") {
-            // TODO check if already have AI annotations for this tab
+            if (tabsManager.hasParsedAnnotations(sender.tab.id)) {
+                // already parsed page for annotations before
+                return;
+            }
 
             injectScript(sender.tab.id, "content-script/highlights.js");
         }
@@ -187,6 +189,12 @@ function handleMessage(
         return true;
     } else if (message.event === "getHeatmap") {
         getHeatmap(message.paragraphs).then(sendResponse);
+        return true;
+    } else if (message.event === "clearTabState") {
+        tabsManager.onCloseTab(sender.tab.id);
+    } else if (message.event === "checkHasLocalAnnotations") {
+        const articleId = getUrlHash(sender.tab.url);
+        tabsManager.checkHasLocalAnnotations(sender.tab.id, articleId).then(sendResponse);
         return true;
     } else if (message.event === "setParsedAnnotations") {
         tabsManager.setParsedAnnotations(sender.tab.id, message.annotations);

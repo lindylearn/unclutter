@@ -16,47 +16,52 @@ async function boot() {
     const url = new URL(window.location.href);
     const domain = getDomain(window.location.href);
 
+    // reset badge count for tab after navigation
+    browser.runtime.sendMessage(null, {
+        event: "clearTabState",
+    });
+
     // hard denylists
-    if (!extensionSupportsUrl(url)) {
-        return;
-    }
-    const deniedForDomain = await isDeniedForDomain(domain);
-    if (deniedForDomain) {
+    if (!extensionSupportsUrl(url) || (await isDeniedForDomain(domain))) {
         return;
     }
 
-    let triggeredIsLikelyArticle = false;
-
-    // url heuristic check
-    const nonLeaf = isNonLeafPage(url);
-    console.log({ nonLeaf });
-    if (!nonLeaf) {
-        onIsLikelyArticle(domain);
-        triggeredIsLikelyArticle = true;
-    }
-
-    // TODO check annotation count in background
-
+    // events from the Unclutter companion website
     if (["unclutter.lindylearn.io", "library.lindylearn.io", "localhost"].includes(domain)) {
         listenForPageEvents();
     }
 
-    const userInfo = await getUserInfoSimple();
-    if (userInfo?.aiEnabled) {
-        // accessing text content requires ready dom
-        await waitUntilDomLoaded();
+    // check if the user already annotated this page
+    const foundCount = await browser.runtime.sendMessage(null, {
+        event: "checkHasLocalAnnotations",
+    });
+    if (foundCount) {
+        onIsLikelyArticle(domain);
+    }
 
-        if (isArticleByTextContent()) {
-            // enhance.ts must always be injected before highlights.ts
-            // TODO run before for performance?
+    // url heuristic check to detect likely article pages (has many false negatives)
+    if (!isNonLeafPage(url)) {
+        onIsLikelyArticle(domain);
+    }
+
+    // accessing text content requires ready dom
+    await waitUntilDomLoaded();
+    if (isArticleByTextContent()) {
+        onIsLikelyArticle(domain);
+
+        // parse the article for annotations if enabled
+        const userInfo = await getUserInfoSimple();
+        if (userInfo?.aiEnabled) {
+            // handle rest in highlights.ts
             requestEnhance("boot", "highlights");
         }
     }
 }
 
 async function onIsLikelyArticle(domain: string) {
-    const configuredEnable = await isConfiguredToEnable(domain);
-    if (configuredEnable) {
+    // enabled the extension if enabled by the user
+    const automaticEnable = await isConfiguredToEnable(domain);
+    if (automaticEnable) {
         requestEnhance("allowlisted");
     }
 }
