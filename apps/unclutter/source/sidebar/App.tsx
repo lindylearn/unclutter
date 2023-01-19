@@ -10,7 +10,6 @@ import { LindyAnnotation, unpickleLocalAnnotation } from "../common/annotations/
 import { createAnnotation, deleteAnnotation } from "./common/CRUD";
 import { groupAnnotations } from "./common/grouping";
 import { useAnnotationSettings } from "./common/hooks";
-import { hideAnnotationLocally } from "./common/legacy";
 import AnnotationsList from "./components/AnnotationsList";
 import { SidebarContext } from "./context";
 
@@ -31,10 +30,12 @@ export default function App({ articleId }: { articleId: string }) {
         setEnableSocialAnnotations,
     } = useAnnotationSettings();
 
+    // local display state
     const [focusedAnnotationId, setFocusedAnnotationId] = useState<string | null>(null);
     const [displayOffsets, setDisplayOffsets] = useState<{ [id: string]: number }>({});
     const [displayOffsetEnds, setDisplayOffsetEnds] = useState<{ [id: string]: number }>({});
 
+    // reactive data store (also updated by e.g. the AI highlights)
     const storeAnnotations = useSubscribe(rep, rep.subscribe.listArticleAnnotations(articleId), []);
 
     // send annotation add, deletes to highlights anchor code
@@ -115,7 +116,7 @@ export default function App({ articleId }: { articleId: string }) {
                 setDisplayOffsets((prev) => ({ ...prev, ...data.offsetById }));
                 setDisplayOffsetEnds((prev) => ({ ...prev, ...data.offsetEndById }));
             } else if (data.event === "focusAnnotation") {
-                setFocusedAnnotationId(data.annotation.id);
+                setFocusedAnnotationId(data.annotationId || null);
             }
         };
 
@@ -130,7 +131,7 @@ export default function App({ articleId }: { articleId: string }) {
 
     // group and filter annotations on every local state change (e.g. added, focused)
     const [groupedAnnotations, setGroupedAnnotations] = useState<LindyAnnotation[][]>([]);
-    React.useEffect(() => {
+    useEffect(() => {
         console.log("Grouping annotations");
 
         let visibleAnnotations = [];

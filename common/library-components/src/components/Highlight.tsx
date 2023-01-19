@@ -35,7 +35,7 @@ export function Highlight({
 
         if (isCurrentArticle) {
             closeModal?.();
-            sendMessage({ event: "focusAnnotation", focusedAnnotation: annotation.id });
+            sendMessage({ event: "focusAnnotation", annotationId: annotation.id, source: "modal" });
         } else if (article?.url) {
             // open new tab & scroll to highlight
             openArticleResilient(article.url, true, annotation.id);

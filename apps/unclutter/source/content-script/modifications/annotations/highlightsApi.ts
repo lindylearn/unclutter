@@ -92,7 +92,7 @@ export function paintHighlight(
 
             sendIframeEvent(sidebarIframe, {
                 event: "focusAnnotation",
-                annotation,
+                annotationId: annotation.id,
             });
 
             // unfocus on next click for social comments
@@ -102,7 +102,7 @@ export function paintHighlight(
             //         hoverUpdateHighlight(annotation, false);
             //         sendIframeEvent(sidebarIframe, {
             //             event: "focusAnnotation",
-            //             annotation: null,
+            //             annotationId: null,
             //         });
 
             //         document.removeEventListener("click", onNextClick, true);
@@ -174,7 +174,7 @@ export function insertMarginBar(
 
         //     sendIframeEvent(sidebarIframe, {
         //         event: "focusAnnotation",
-        //         id: annotation.id,
+        //         annotationId: annotation.id,
         //     });
         // };
 

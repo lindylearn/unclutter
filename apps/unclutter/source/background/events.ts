@@ -142,11 +142,11 @@ function handleMessage(
 
             await injectScript(tab.id, "content-script/enhance.js");
 
-            if (message.focusedAnnotation) {
-                await new Promise((resolve) => setTimeout(resolve, 500));
+            if (message.annotationId) {
+                await new Promise((resolve) => setTimeout(resolve, 200));
                 await browser.tabs.sendMessage(tab.id, {
                     event: "focusAnnotation",
-                    focusedAnnotation: message.focusedAnnotation,
+                    annotationId: message.annotationId,
                 });
             }
         };

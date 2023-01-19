@@ -186,25 +186,28 @@ export default class AnnotationsModifier implements PageModifier {
     private async onRuntimeMessage(message, sender, sendResponse) {
         if (message.event === "focusAnnotation") {
             if (this.annotationsVisible) {
-                // only called from libray modal for now
-                // leave time to disable scroll lock
-                await new Promise((resolve) => setTimeout(resolve, 200));
+                if (message.source === "modal") {
+                    // wait until modal scroll-lock disabled
+                    await new Promise((resolve) => setTimeout(resolve, 200));
+                }
 
-                this.focusAnnotation(message.focusedAnnotation);
+                this.focusAnnotation(message.annotationId);
             } else {
                 // scroll to annotation once anchored
-                this.focusedAnnotation = message.focusedAnnotation;
+                this.focusedAnnotation = message.annotationId;
             }
         }
     }
 
-    private onAnnotationsVisible(annotations: LindyAnnotation[]) {
+    private async onAnnotationsVisible(annotations: LindyAnnotation[]) {
         if (annotations.length === 0) {
             // more annotations might get fetched later (and there is nothing to focus anyways)
             return;
         }
 
         if (this.focusedAnnotation) {
+            await new Promise((resolve) => setTimeout(resolve, 200));
+
             this.focusAnnotation(this.focusedAnnotation);
 
             // ignore further repositioning
@@ -214,7 +217,7 @@ export default class AnnotationsModifier implements PageModifier {
         this.annotationsVisible = true;
     }
 
-    private focusAnnotation(annotationId: string) {
+    private async focusAnnotation(annotationId: string) {
         const node = document.getElementById(annotationId);
         if (!node) {
             console.log(`Could not find focused annotation ${annotationId}`);
@@ -225,6 +228,11 @@ export default class AnnotationsModifier implements PageModifier {
         window.scrollTo({
             top: getNodeOffset(node) - 100,
             behavior: "smooth",
+        });
+
+        sendIframeEvent(this.sidebarIframe, {
+            event: "focusAnnotation",
+            annotationId,
         });
     }
 }

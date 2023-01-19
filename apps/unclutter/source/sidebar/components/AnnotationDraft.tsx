@@ -30,6 +30,7 @@ function AnnotationDraft({
     colorDark,
     unfocusAnnotation,
 }: AnnotationDraftProps) {
+    const ref = useBlurRef(annotation, unfocusAnnotation);
     const inputRef = useRef<HTMLTextAreaElement>();
     const { userInfo } = useContext(SidebarContext);
 
@@ -39,8 +40,6 @@ function AnnotationDraft({
             inputRef.current?.focus();
         }
     }, [inputRef, annotation.focused]);
-
-    const ref = useBlurRef(annotation, unfocusAnnotation);
 
     // debounce local state and remote updates
     // debounce instead of throttle so that newest call eventually runs
@@ -151,7 +150,6 @@ function AnnotationDraft({
                 maxRows={6}
                 spellCheck={false}
                 ref={inputRef}
-                onBlur={unfocusAnnotation}
             />
 
             {isFetchingRelated && (
@@ -184,7 +182,10 @@ export function useBlurRef(annotation: LindyAnnotation, unfocusAnnotation: () =>
                 const clickTarget: HTMLElement = e.target;
 
                 // ignore actions performed on other annotations (e.g. deletes)
-                if (clickTarget.classList.contains("icon")) {
+                if (
+                    clickTarget?.classList.contains("annotation") ||
+                    clickTarget?.parentElement?.classList.contains("annotation")
+                ) {
                     return;
                 }
 

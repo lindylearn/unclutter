@@ -45,16 +45,12 @@ export function sendMessage(message: object, toLibrary: boolean = false) {
     }
 }
 
-export function openArticleResilient(
-    url: string,
-    newTab: boolean = true,
-    focusedAnnotation?: string
-) {
+export function openArticleResilient(url: string, newTab: boolean = true, annotationId?: string) {
     sendMessage({
         event: "openLinkWithUnclutter",
         url,
         newTab,
-        focusedAnnotation,
+        annotationId,
     });
 }
 
