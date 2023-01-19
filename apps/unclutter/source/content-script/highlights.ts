@@ -15,6 +15,8 @@ async function main() {
     // don't run scrollbar tweaks and don't handle events
     // @ts-ignore
     const enhanceActive = window.unclutterEnhanceLoaded;
+    // @ts-ignore
+    window.unclutterHighlightsLoaded = true;
 
     const preparePageView = renderHighlightsLayer(userInfo.id, enablePageView, enhanceActive);
     if (!enhanceActive) {

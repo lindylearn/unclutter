@@ -96,6 +96,8 @@ export default class TransitionManager implements PageModifier {
     async prepare() {
         this.loggingModifier.prepare();
 
+        this.smartHighlightsProxy.injectHighlightsScript();
+
         // *** read DOM phase ***
 
         this.themeModifier.setCyclicDependencies(this.overlayManager);

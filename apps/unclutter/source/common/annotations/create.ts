@@ -56,7 +56,7 @@ export function createAnnotation(
 }
 
 export function generateId(): string {
-    return Math.random().toString(36).slice(-10);
+    return Math.random().toString(36).slice(-20);
 }
 
 export interface LindyAnnotation {

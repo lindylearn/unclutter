@@ -34,7 +34,7 @@ export default class SmartHighlightsModifier implements PageModifier {
     }
 
     private generatedAnnotations: boolean = false;
-    async fetchAnnotations(fetchSaved = false): Promise<boolean> {
+    async fetchAnnotations(fetchSaved = true): Promise<boolean> {
         if (fetchSaved) {
             // fetch existing user annotations locally
             const rep = new ReplicacheProxy();
@@ -76,7 +76,6 @@ export default class SmartHighlightsModifier implements PageModifier {
             // be careful, e.g. paulgraham.com has single paragraph
             return [];
         }
-        console.log(paragraphTexts);
 
         // run AI model on article text in extension background worker (no data is sent over the network)
         let rankedSentencesByParagraph: RankedSentence[][] | undefined;

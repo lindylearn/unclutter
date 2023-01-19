@@ -57,8 +57,11 @@ export function renderHighlightsLayer(
             smartHighlightsModifier.annotationsCount,
             smartHighlightsModifier.relatedCount
         );
-
-        if (!isArticle || enhanceActive) {
+        if (!isArticle) {
+            return;
+        }
+        if (enhanceActive) {
+            await smartHighlightsModifier.saveAnnotations();
             return;
         }
 
