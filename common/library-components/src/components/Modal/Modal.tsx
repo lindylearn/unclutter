@@ -9,7 +9,6 @@ import RecentModalTab from "./Recent";
 import { LindyIcon } from "../Icons";
 import HighlightsTab from "./Highlights";
 import SettingsModalTab from "./Settings";
-// import SyncModalTab from "./Sync/Sync";
 import { ModalVisibilityContext, FilterContext, ModalStateContext } from "./context";
 
 export function LibraryModalPage({
@@ -169,7 +168,8 @@ function ModalContent({
             </aside>
             <div
                 className={clsx(
-                    "right-side flex h-full max-h-full w-full flex-col overflow-y-auto",
+                    "right-side flex h-full max-h-full w-full flex-col",
+                    currentTab === "stats" ? "overflow-y-scroll" : "overflow-y-auto",
                     currentTab === "graph" ? "" : "p-4"
                 )}
             >

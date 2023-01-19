@@ -36,7 +36,7 @@ export default function SmartReadingTab() {
         //     router.push("/welcome");
         // }
 
-        generateHighlights();
+        // generateHighlights();
     }, [rep, userInfo]);
 
     const [progress, setProgress] = useState<ImportProgress>();
@@ -144,7 +144,7 @@ export default function SmartReadingTab() {
                         <>
                             Unclutter is currently generating highlights for your{" "}
                             {progress?.targetArticles} saved articles (
-                            {progress?.currentArticles || 0}/{progress?.targetArticles} done).
+                            {progress?.currentArticles || 0}/{progress?.targetArticles || 0} done).
                             Please keep this page open until the import is done!
                         </>
                     )}
