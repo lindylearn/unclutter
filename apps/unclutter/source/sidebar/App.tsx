@@ -188,7 +188,9 @@ export default function App({ articleId }: { articleId: string }) {
                     .flatMap((a) => [
                         a,
                         ...(a.related?.map((r, i) => ({
+                            ...a,
                             ...r,
+                            relatedToId: a.id,
                             isMyAnnotation: false,
                             platform: "related",
                             displayOffset: a.displayOffset + i,
@@ -199,13 +201,10 @@ export default function App({ articleId }: { articleId: string }) {
                         (a) => a.focused || a.platform === "related" || (a.isMyAnnotation && a.text)
                     )
             );
-
-            console.log(visibleAnnotations);
         }
 
         // use large grouping margin to display every annotation properly
         const groupedAnnotations = groupAnnotations(visibleAnnotations, 75);
-        console.log(groupedAnnotations);
         setGroupedAnnotations(groupedAnnotations);
     }, [
         storeAnnotations,

@@ -100,6 +100,7 @@ export interface LindyAnnotation {
     score2?: number;
     summaryInfo?: ArticleSummaryInfo;
     related?: RelatedHighlight[];
+    relatedToId?: string;
 }
 
 export interface ArticleSummaryInfo {

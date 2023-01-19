@@ -61,12 +61,12 @@ export default function AnnotationThread(props: AnnotationThreadProps) {
     if (annotation.ai_created) {
         color = getAIAnnotationColor(annotation.ai_score);
         colorDark = getAIAnnotationColor(annotation.ai_score, true);
-    } else if (annotation.isMyAnnotation) {
-        color = getAnnotationColor(annotation);
     } else if (annotation.platform === "hn") {
         color = "rgba(255, 102, 0, 0.5)";
     } else if (annotation.platform === "h") {
         color = "rgba(189, 28, 43, 0.5)";
+    } else {
+        color = getAnnotationColor(annotation);
     }
 
     return (

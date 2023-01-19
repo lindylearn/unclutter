@@ -30,7 +30,7 @@ function AnnotationDraft({
     colorDark,
     unfocusAnnotation,
 }: AnnotationDraftProps) {
-    const ref = useBlurRef(annotation, unfocusAnnotation);
+    // const ref = useBlurRef(annotation, unfocusAnnotation);
     const inputRef = useRef<HTMLTextAreaElement>();
     const { userInfo } = useContext(SidebarContext);
 
@@ -111,7 +111,7 @@ function AnnotationDraft({
                 "--dark-border-color": colorDark || color,
                 maxHeight: heightLimitPx,
             }}
-            ref={ref}
+            // ref={ref}
         >
             <TextareaAutosize
                 className="w-full select-none resize-none overflow-hidden bg-transparent align-top outline-none placeholder:select-none placeholder:text-stone-400 placeholder:opacity-50 dark:placeholder:text-stone-600"
@@ -150,6 +150,7 @@ function AnnotationDraft({
                 maxRows={6}
                 spellCheck={false}
                 ref={inputRef}
+                onBlur={unfocusAnnotation}
             />
 
             {isFetchingRelated && (
