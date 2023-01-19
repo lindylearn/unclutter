@@ -4,6 +4,7 @@ import { getArticleAnnotations, saveAnnotations } from "./library/smartHighlight
 
 export class TabStateManager {
     private enabled = true;
+    private tabReaderModeActive: { [tabId: number]: boolean } = {};
     private tabAnnotations: { [tabId: string]: Annotation[] } = {};
 
     onChangeActiveTab(tabId: number) {
@@ -20,6 +21,7 @@ export class TabStateManager {
         }
 
         // release storage
+        delete this.tabReaderModeActive[tabId];
         delete this.tabAnnotations[tabId];
 
         // clear badge
@@ -33,6 +35,7 @@ export class TabStateManager {
             return;
         }
         // clear immediately after navigation
+        this.tabReaderModeActive[tabId] = false;
         this.tabAnnotations[tabId] = undefined;
 
         this.tabAnnotations[tabId] = await getArticleAnnotations(articleId);
@@ -57,10 +60,21 @@ export class TabStateManager {
 
         this.tabAnnotations[tabId] = annotations;
 
+        // highlights.ts may be injected by reader mode itself, so directly save annotations once available
+        if (this.tabReaderModeActive[tabId]) {
+            saveAnnotations(annotations);
+        }
+
         this.renderBadgeCount(tabId);
     }
 
     async onActivateReaderMode(tabId: number) {
+        if (!this.enabled) {
+            return;
+        }
+
+        this.tabReaderModeActive[tabId] = true;
+
         const annotations = this.tabAnnotations[tabId];
         if (annotations?.length) {
             await saveAnnotations(annotations);
