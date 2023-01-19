@@ -3,6 +3,7 @@ import ky from "ky";
 import { Article } from "../store/_schema";
 import { getBrowserType, sendMessage } from "./extension";
 import { getNewTabVersion, getUnclutterVersion } from "./messaging";
+import type { ReplicacheProxy } from "./replicache";
 import { SearchResult } from "./search";
 
 const lindyApiUrl = "https://api2.lindylearn.io";
@@ -185,6 +186,21 @@ export async function fetchRelatedAnnotations(
 
     const json = await response.json();
     return json?.related;
+}
+
+export async function populateRelatedArticles(
+    rep: ReplicacheProxy,
+    relatedGroups: RelatedHighlight[][]
+) {
+    await Promise.all(
+        relatedGroups.map(async (related) => {
+            await Promise.all(
+                related.map(async (related) => {
+                    related.article = await rep.query.getArticle(related.article_id);
+                })
+            );
+        })
+    );
 }
 
 export async function indexAnnotationVectors(

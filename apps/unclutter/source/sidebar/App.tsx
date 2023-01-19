@@ -1,5 +1,6 @@
 import {
     fetchRelatedAnnotations,
+    populateRelatedArticles,
     RelatedHighlight,
 } from "@unclutter/library-components/dist/common/api";
 import { reportEventContentScript } from "@unclutter/library-components/dist/common/messaging";
@@ -17,6 +18,8 @@ import { groupAnnotations } from "./common/grouping";
 import { useAnnotationSettings } from "./common/hooks";
 import AnnotationsList from "./components/AnnotationsList";
 import { SidebarContext } from "./context";
+
+const maxRelatedCount = 2;
 
 export default function App({ articleId }: { articleId: string }) {
     const rep = useMemo<ReplicacheProxy>(() => new ReplicacheProxy(), []);
@@ -66,6 +69,9 @@ export default function App({ articleId }: { articleId: string }) {
             window.top.postMessage(
                 { event: "removeHighlights", annotations: deletedAnnotations },
                 "*"
+            );
+            deletedAnnotations.forEach((a) =>
+                relatedPerAnnotation?.[a.id]?.forEach((r) => usedRelatedIds.current.delete(r.id))
             );
         }
         if (newAnnotations.length) {
@@ -138,34 +144,58 @@ export default function App({ articleId }: { articleId: string }) {
     const [relatedPerAnnotation, setRelatedPerAnnotation] = useState<{
         [id: string]: RelatedHighlight[];
     }>();
+    const usedRelatedIds = useRef(new Set<string>());
     useEffect(() => {
-        if (!userInfo?.aiEnabled || !storeAnnotations || storeAnnotations.length === 0) {
+        if (!rep || !userInfo?.aiEnabled || !storeAnnotations || storeAnnotations.length === 0) {
             return;
         }
 
-        // only fetch for first fetch
+        // only fetch for first batch of retrieved annotations
         if (!isFirstFetch.current) {
             return;
         }
         isFirstFetch.current = false;
-        console.log("fetch related");
+        console.log("Fetching related annotations...");
 
         fetchRelatedAnnotations(
             userInfo.id,
             articleId,
             storeAnnotations.map((a) => a.quote_text)
-        ).then((list) =>
+        ).then(async (groups) => {
+            groups = groups.map((group) => group.slice(0, maxRelatedCount));
+            usedRelatedIds.current = new Set(groups.flat().map((r) => r.id));
+
+            await populateRelatedArticles(rep, groups);
+
+            // TODO storeAnnotations closure works?
             setRelatedPerAnnotation(
-                list.reduce(
+                groups.reduce(
                     (relatedPerAnnotation, related, i) => ({
                         ...relatedPerAnnotation,
                         [storeAnnotations[i].id]: related,
                     }),
                     {}
                 )
-            )
-        );
+            );
+        });
     }, [storeAnnotations]);
+    async function fetchRelatedLater(annotation: LindyAnnotation): Promise<void> {
+        await fetchRelatedAnnotations(userInfo.id, articleId, [annotation.quote_text]).then(
+            async (groups) => {
+                const related = groups[0]
+                    .filter((r) => !usedRelatedIds.current.has(r.id))
+                    .slice(0, maxRelatedCount);
+                related.forEach((r) => usedRelatedIds.current.add(r.id));
+
+                // populate relatedPerAnnotation even with empty list to avoid fetching again
+                await populateRelatedArticles(rep, [related]);
+                setRelatedPerAnnotation((prev) => ({
+                    ...prev,
+                    [annotation.id]: related,
+                }));
+            }
+        );
+    }
 
     // group and filter annotations on every local state change (e.g. added, focused)
     const [groupedAnnotations, setGroupedAnnotations] = useState<LindyAnnotation[][]>([]);
@@ -224,6 +254,7 @@ export default function App({ articleId }: { articleId: string }) {
                     <AnnotationsList
                         groupedAnnotations={groupedAnnotations}
                         unfocusAnnotation={() => setFocusedAnnotationId(null)}
+                        fetchRelatedLater={fetchRelatedLater}
                     />
                 </div>
             </SidebarContext.Provider>

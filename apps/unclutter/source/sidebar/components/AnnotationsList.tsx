@@ -9,11 +9,16 @@ const sidebarOffsetTopPx = 8;
 interface AnnotationsListProps {
     groupedAnnotations: LindyAnnotation[][];
     unfocusAnnotation: () => void;
+    fetchRelatedLater: (annotation: LindyAnnotation) => Promise<void>;
 }
 
 const annotationMarginPx = 6;
 
-function AnnotationsList({ groupedAnnotations, unfocusAnnotation }: AnnotationsListProps) {
+function AnnotationsList({
+    groupedAnnotations,
+    unfocusAnnotation,
+    fetchRelatedLater,
+}: AnnotationsListProps) {
     const itemsRef = useRef({}); // annotation id -> ref of rendered annotation node
 
     const [_, rerender] = useState(0); // state to force re-renders
@@ -119,6 +124,7 @@ function AnnotationsList({ groupedAnnotations, unfocusAnnotation }: AnnotationsL
                                     //     groupHeightLimitPx / group.length
                                     // } // give each item equal share -- always avoids overflows
                                     unfocusAnnotation={unfocusAnnotation}
+                                    fetchRelatedLater={fetchRelatedLater}
                                 />
                             </div>
                         </CSSTransition>

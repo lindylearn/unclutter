@@ -19,42 +19,27 @@ interface AnnotationThreadProps {
     heightLimitPx?: number;
 
     unfocusAnnotation: () => void;
+    fetchRelatedLater: (annotation: LindyAnnotation) => Promise<void>;
 }
 
 export default function AnnotationThread(props: AnnotationThreadProps) {
     const { userInfo } = useContext(SidebarContext);
     const annotation = props.annotation;
 
+    // trigger related annotations fetch if not already done
     const [isFetchingRelated, setIsFetchingRelated] = useState(false);
-    const [related, setRelated] = useState<RelatedHighlight[]>(annotation.related);
-    // useEffect(() => {
-    //     if (!userInfo?.aiEnabled) {
-    //         return;
-    //     }
+    useEffect(() => {
+        if (
+            !userInfo?.aiEnabled ||
+            !annotation.isMyAnnotation ||
+            annotation.related !== undefined
+        ) {
+            return;
+        }
 
-    //     if (annotation.isMyAnnotation && !annotation.ai_created) {
-    //         setIsFetchingRelated(true);
-
-    //         fetchRelatedAnnotations(userInfo.id, annotation.article_id, [annotation.quote_text])
-    //             .then(async (response) => {
-    //                 const related = response[0].slice(0, 2);
-
-    //                 const rep = new ReplicacheProxy();
-    //                 await Promise.all(
-    //                     related.map(async (r) => {
-    //                         r.article = await rep.query.getArticle(r.article_id);
-    //                     })
-    //                 );
-
-    //                 setIsFetchingRelated(false);
-    //                 setRelated(related);
-    //             })
-    //             .catch((err) => {
-    //                 console.error(err);
-    //                 setIsFetchingRelated(false);
-    //             });
-    //     }
-    // }, [userInfo]);
+        setIsFetchingRelated(true);
+        props.fetchRelatedLater(annotation).then(() => setIsFetchingRelated(false));
+    }, [userInfo]);
 
     let color: string;
     let colorDark: string;
@@ -79,7 +64,7 @@ export default function AnnotationThread(props: AnnotationThreadProps) {
                 <AnnotationDraft
                     {...props}
                     isFetchingRelated={isFetchingRelated}
-                    relatedCount={related?.length}
+                    relatedCount={annotation.related?.length}
                     color={color}
                     colorDark={colorDark}
                 />
@@ -108,26 +93,6 @@ export default function AnnotationThread(props: AnnotationThreadProps) {
                     {isFetchingRelated && (
                         <div className="loader absolute top-2 right-2 flex h-4 w-4 gap-2"></div>
                     )}
-                </div>
-            )} */}
-
-            {/* {related?.length > 0 && (
-                <div className={clsx("flex flex-col gap-[6px]", draftVisible && "mt-[6px]")}>
-                    {related?.map((r, i) => (
-                        <Annotation
-                            key={r.id}
-                            className="related-annotation"
-                            style={{ animationDelay: `${i * 50}ms` }}
-                            {...props}
-                            annotation={{
-                                ...annotation,
-                                ...r,
-                                platform: "related",
-                            }}
-                            color={color}
-                            colorDark={colorDark}
-                        />
-                    ))}
                 </div>
             )} */}
         </>

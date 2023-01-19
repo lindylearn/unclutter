@@ -124,30 +124,10 @@ export default class SmartHighlightsModifier implements PageModifier {
             false
         );
 
-        const rep = new ReplicacheProxy();
-
-        // add to rankedSentencesByParagraph
         this.relatedCount = 0;
-        await Promise.all(
-            relatedPerAnnotation.map(async (related, i) => {
-                // filter related now
-                related = related.slice(0, 2).filter((r) => r.score2 >= this.relatedThreshold);
-                if (related.length === 0) {
-                    relatedPerAnnotation[i] = [];
-                    return;
-                }
-
-                // fetch article info from local user library
-                await Promise.all(
-                    related.map(async (related) => {
-                        related.article = await rep.query.getArticle(related.article_id);
-                    })
-                );
-
-                this.relatedCount += related.length;
-                relatedPerAnnotation[i] = related;
-            })
-        );
+        relatedPerAnnotation.forEach((related) => {
+            this.relatedCount += related.length;
+        });
 
         // send to sidebar if already ready
         // this.relatedPerAnnotation = relatedPerAnnotation;
