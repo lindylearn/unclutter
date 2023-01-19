@@ -1,6 +1,11 @@
+import {
+    fetchRelatedAnnotations,
+    RelatedHighlight,
+} from "@unclutter/library-components/dist/common/api";
 import { reportEventContentScript } from "@unclutter/library-components/dist/common/messaging";
 import { ReplicacheProxy } from "@unclutter/library-components/dist/common/replicache";
 import {
+    Annotation,
     ReplicacheContext,
     UserInfo,
     useSubscribe,
@@ -129,6 +134,39 @@ export default function App({ articleId }: { articleId: string }) {
         };
     }, [userInfo]);
 
+    const isFirstFetch = useRef(true);
+    const [relatedPerAnnotation, setRelatedPerAnnotation] = useState<{
+        [id: string]: RelatedHighlight[];
+    }>();
+    useEffect(() => {
+        if (!userInfo?.aiEnabled || !storeAnnotations || storeAnnotations.length === 0) {
+            return;
+        }
+
+        // only fetch for first fetch
+        if (!isFirstFetch.current) {
+            return;
+        }
+        isFirstFetch.current = false;
+        console.log("fetch related");
+
+        fetchRelatedAnnotations(
+            userInfo.id,
+            articleId,
+            storeAnnotations.map((a) => a.quote_text)
+        ).then((list) =>
+            setRelatedPerAnnotation(
+                list.reduce(
+                    (relatedPerAnnotation, related, i) => ({
+                        ...relatedPerAnnotation,
+                        [storeAnnotations[i].id]: related,
+                    }),
+                    {}
+                )
+            )
+        );
+    }, [storeAnnotations]);
+
     // group and filter annotations on every local state change (e.g. added, focused)
     const [groupedAnnotations, setGroupedAnnotations] = useState<LindyAnnotation[][]>([]);
     useEffect(() => {
@@ -139,20 +177,35 @@ export default function App({ articleId }: { articleId: string }) {
             visibleAnnotations = visibleAnnotations.concat(
                 storeAnnotations
                     .map(unpickleLocalAnnotation)
+                    .sort((a, b) => a.displayOffset - b.displayOffset)
                     .map((a) => ({
                         ...a,
                         focused: a.id === focusedAnnotationId,
                         displayOffset: displayOffsets[a.id],
                         displayOffsetEnd: displayOffsetEnds[a.id],
+                        related: relatedPerAnnotation?.[a.id],
                     }))
-                    .filter((a) => a.focused || (a.isMyAnnotation && a.text))
+                    .flatMap((a) => [
+                        a,
+                        ...(a.related?.map((r, i) => ({
+                            ...r,
+                            isMyAnnotation: false,
+                            platform: "related",
+                            displayOffset: a.displayOffset + i,
+                            displayOffsetEnd: a.displayOffsetEnd + i,
+                        })) || []),
+                    ])
+                    .filter(
+                        (a) => a.focused || a.platform === "related" || (a.isMyAnnotation && a.text)
+                    )
             );
-        }
 
-        visibleAnnotations.sort((a, b) => a.displayOffset - b.displayOffset);
+            console.log(visibleAnnotations);
+        }
 
         // use large grouping margin to display every annotation properly
         const groupedAnnotations = groupAnnotations(visibleAnnotations, 75);
+        console.log(groupedAnnotations);
         setGroupedAnnotations(groupedAnnotations);
     }, [
         storeAnnotations,
@@ -160,6 +213,7 @@ export default function App({ articleId }: { articleId: string }) {
         displayOffsets,
         displayOffsetEnds,
         personalAnnotationsEnabled,
+        relatedPerAnnotation,
     ]);
 
     return (

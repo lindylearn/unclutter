@@ -27,34 +27,34 @@ export default function AnnotationThread(props: AnnotationThreadProps) {
 
     const [isFetchingRelated, setIsFetchingRelated] = useState(false);
     const [related, setRelated] = useState<RelatedHighlight[]>(annotation.related);
-    useEffect(() => {
-        if (!userInfo?.aiEnabled) {
-            return;
-        }
+    // useEffect(() => {
+    //     if (!userInfo?.aiEnabled) {
+    //         return;
+    //     }
 
-        if (annotation.isMyAnnotation && !annotation.ai_created) {
-            setIsFetchingRelated(true);
+    //     if (annotation.isMyAnnotation && !annotation.ai_created) {
+    //         setIsFetchingRelated(true);
 
-            fetchRelatedAnnotations(userInfo.id, annotation.article_id, [annotation.quote_text])
-                .then(async (response) => {
-                    const related = response[0].slice(0, 2);
+    //         fetchRelatedAnnotations(userInfo.id, annotation.article_id, [annotation.quote_text])
+    //             .then(async (response) => {
+    //                 const related = response[0].slice(0, 2);
 
-                    const rep = new ReplicacheProxy();
-                    await Promise.all(
-                        related.map(async (r) => {
-                            r.article = await rep.query.getArticle(r.article_id);
-                        })
-                    );
+    //                 const rep = new ReplicacheProxy();
+    //                 await Promise.all(
+    //                     related.map(async (r) => {
+    //                         r.article = await rep.query.getArticle(r.article_id);
+    //                     })
+    //                 );
 
-                    setIsFetchingRelated(false);
-                    setRelated(related);
-                })
-                .catch((err) => {
-                    console.error(err);
-                    setIsFetchingRelated(false);
-                });
-        }
-    }, [userInfo]);
+    //                 setIsFetchingRelated(false);
+    //                 setRelated(related);
+    //             })
+    //             .catch((err) => {
+    //                 console.error(err);
+    //                 setIsFetchingRelated(false);
+    //             });
+    //     }
+    // }, [userInfo]);
 
     let color: string;
     let colorDark: string;
@@ -75,13 +75,15 @@ export default function AnnotationThread(props: AnnotationThreadProps) {
                 <SummaryAnnotation summaryInfo={annotation.summaryInfo!} />
             )} */}
 
-            <AnnotationDraft
-                {...props}
-                isFetchingRelated={isFetchingRelated}
-                relatedCount={related?.length}
-                color={color}
-                colorDark={colorDark}
-            />
+            {annotation.isMyAnnotation && (
+                <AnnotationDraft
+                    {...props}
+                    isFetchingRelated={isFetchingRelated}
+                    relatedCount={related?.length}
+                    color={color}
+                    colorDark={colorDark}
+                />
+            )}
 
             {!annotation.isMyAnnotation && annotation.platform !== "summary" && (
                 <Annotation {...props} color={color} colorDark={colorDark} />
@@ -109,8 +111,8 @@ export default function AnnotationThread(props: AnnotationThreadProps) {
                 </div>
             )} */}
 
-            {related?.length > 0 && (
-                <div className={clsx("flex flex-col gap-[6px]", true && "mt-[6px]")}>
+            {/* {related?.length > 0 && (
+                <div className={clsx("flex flex-col gap-[6px]", draftVisible && "mt-[6px]")}>
                     {related?.map((r, i) => (
                         <Annotation
                             key={r.id}
@@ -127,7 +129,7 @@ export default function AnnotationThread(props: AnnotationThreadProps) {
                         />
                     ))}
                 </div>
-            )}
+            )} */}
         </>
     );
 }
