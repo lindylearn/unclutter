@@ -1,13 +1,8 @@
 import clsx from "clsx";
 import React, { useContext, useEffect, useState } from "react";
-import {
-    getAIAnnotationColor,
-    getDomain,
-    getRandomLightColor,
-    openArticleResilient,
-    sendMessage,
-} from "../common";
+import { getDomain, getRandomLightColor, openArticleResilient, sendMessage } from "../common";
 import { Annotation, Article } from "../store";
+import { getActivityColor } from "./Charts";
 import { HighlightDropdown } from "./Dropdown/HighlightDowndown";
 import { ModalVisibilityContext } from "./Modal/context";
 
@@ -67,7 +62,7 @@ export function Highlight({
             className="highlight animate-fadein relative flex cursor-pointer select-none flex-col gap-4 overflow-hidden rounded-md bg-white p-4 text-sm text-stone-900 transition-transform hover:scale-[99%] dark:text-white"
             style={{
                 background: annotation.ai_created
-                    ? getAIAnnotationColor(annotation.ai_score, darkModeEnabled)
+                    ? getActivityColor(1, darkModeEnabled)
                     : getRandomLightColor(
                           annotation.tags?.[0] || annotation.article_id || annotation.id,
                           darkModeEnabled

@@ -58,11 +58,9 @@ svg.icon > path {
 }
 .annotation-list-item-exit {
     opacity: 1;
-    transform: scale(100%);
 }
 .annotation-list-item-exit-active {
     opacity: 0;
-    transform: scale(95%);
 
     transition: opacity 0.1s cubic-bezier(0.32, 0, 0.67, 0),
         transform 0.1s cubic-bezier(0.32, 0, 0.67, 0); /* easeInCubic */

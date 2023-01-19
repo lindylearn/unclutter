@@ -21,7 +21,13 @@ import { SidebarContext } from "./context";
 
 const maxRelatedCount = 2;
 
-export default function App({ articleId }: { articleId: string }) {
+export default function App({
+    articleId,
+    sourceAnnotationId,
+}: {
+    articleId: string;
+    sourceAnnotationId: string | null;
+}) {
     const rep = useMemo<ReplicacheProxy>(() => new ReplicacheProxy(), []);
 
     // one-time fetch of user info
@@ -39,7 +45,9 @@ export default function App({ articleId }: { articleId: string }) {
     } = useAnnotationSettings();
 
     // local display state
-    const [focusedAnnotationId, setFocusedAnnotationId] = useState<string | null>(null);
+    const [focusedAnnotationId, setFocusedAnnotationId] = useState<string | null>(
+        sourceAnnotationId
+    );
     const [displayOffsets, setDisplayOffsets] = useState<{ [id: string]: number }>({});
     const [displayOffsetEnds, setDisplayOffsetEnds] = useState<{ [id: string]: number }>({});
 
@@ -143,7 +151,7 @@ export default function App({ articleId }: { articleId: string }) {
     const isFirstFetch = useRef(true);
     const [relatedPerAnnotation, setRelatedPerAnnotation] = useState<{
         [id: string]: RelatedHighlight[];
-    }>();
+    }>({});
     const usedRelatedIds = useRef(new Set<string>());
     useEffect(() => {
         if (!rep || !userInfo?.aiEnabled || !storeAnnotations || storeAnnotations.length === 0) {
@@ -155,46 +163,73 @@ export default function App({ articleId }: { articleId: string }) {
             return;
         }
         isFirstFetch.current = false;
-        console.log("Fetching related annotations...");
 
         fetchRelatedAnnotations(
             userInfo.id,
             articleId,
-            storeAnnotations.map((a) => a.quote_text)
+            storeAnnotations.filter((a) => a.id !== sourceAnnotationId).map((a) => a.quote_text)
         ).then(async (groups) => {
-            groups = groups.map((group) => group.slice(0, maxRelatedCount));
-            usedRelatedIds.current = new Set(groups.flat().map((r) => r.id));
+            groups = groups.map((group) =>
+                group.filter((r) => !usedRelatedIds.current.has(r.id)).slice(0, maxRelatedCount)
+            );
+            groups.flat().forEach((r) => usedRelatedIds.current.add(r.id));
 
             await populateRelatedArticles(rep, groups);
 
             // TODO storeAnnotations closure works?
-            setRelatedPerAnnotation(
-                groups.reduce(
-                    (relatedPerAnnotation, related, i) => ({
-                        ...relatedPerAnnotation,
-                        [storeAnnotations[i].id]: related,
-                    }),
-                    {}
-                )
-            );
+            setRelatedPerAnnotation((prev) => {
+                groups.forEach((group, i) => {
+                    const annotation = storeAnnotations[i];
+                    if (!prev[annotation.id]) {
+                        // individual source annotation fetch may be done before this, don't overwrite
+                        prev[annotation.id] = group;
+                    }
+                });
+
+                return { ...prev };
+            });
         });
     }, [storeAnnotations]);
     async function fetchRelatedLater(annotation: LindyAnnotation): Promise<void> {
-        await fetchRelatedAnnotations(userInfo.id, articleId, [annotation.quote_text]).then(
-            async (groups) => {
-                const related = groups[0]
-                    .filter((r) => !usedRelatedIds.current.has(r.id))
-                    .slice(0, maxRelatedCount);
-                related.forEach((r) => usedRelatedIds.current.add(r.id));
+        const isSourceAnnotation = annotation.id === sourceAnnotationId;
+        await fetchRelatedAnnotations(
+            userInfo.id,
+            articleId,
+            [annotation.quote_text],
+            isSourceAnnotation ? 0.4 : 0.5
+        ).then(async (groups) => {
+            let related = groups[0];
+            let removeFromOtherThreads: string[] = [];
+            if (isSourceAnnotation) {
+                // the user navigated to the article via this annotation
+                // so make sure we show all of its related annotations for a nicer UX
+                console.log("Showing all related annotations for source annotation.");
 
-                // populate relatedPerAnnotation even with empty list to avoid fetching again
-                await populateRelatedArticles(rep, [related]);
-                setRelatedPerAnnotation((prev) => ({
+                removeFromOtherThreads = related
+                    .filter((r) => usedRelatedIds.current.has(r.id))
+                    .map((r) => r.id);
+            } else {
+                related = related.filter((r) => !usedRelatedIds.current.has(r.id));
+            }
+
+            related = related.slice(0, maxRelatedCount);
+            related.forEach((r) => usedRelatedIds.current.add(r.id));
+
+            // populate relatedPerAnnotation even with empty list to avoid fetching again
+            await populateRelatedArticles(rep, [related]);
+            setRelatedPerAnnotation((prev) => {
+                if (removeFromOtherThreads.length > 0) {
+                    for (const [id, other] of Object.entries(prev)) {
+                        prev[id] = other.filter((r) => !removeFromOtherThreads.includes(r.id));
+                    }
+                }
+
+                return {
                     ...prev,
                     [annotation.id]: related,
-                }));
-            }
-        );
+                };
+            });
+        });
     }
 
     // group and filter annotations on every local state change (e.g. added, focused)

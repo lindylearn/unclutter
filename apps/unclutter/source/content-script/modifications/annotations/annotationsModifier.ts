@@ -41,6 +41,7 @@ export default class AnnotationsModifier implements PageModifier {
         this.sidebarIframe = injectReactIframe("/sidebar/index.html", "lindy-annotations-bar", {
             articleId: this.articleId,
             darkModeEnabled: (this.darkModeEnabled || false).toString(),
+            sourceAnnotationId: this.focusedAnnotation,
         });
         window.addEventListener("message", ({ data }) => {
             if (data.event === "sidebarIframeLoaded") {
