@@ -1,5 +1,5 @@
 import { overrideClassname } from "../common/stylesheets";
-import { getDomainFrom } from "../common/util";
+import { getDomain } from "@unclutter/library-components/dist/common/util";
 import AnnotationsModifier from "./modifications/annotations/annotationsModifier";
 import BackgroundModifier from "./modifications/background";
 import BodyStyleModifier from "./modifications/bodyStyle";
@@ -27,7 +27,7 @@ export default class TransitionManager implements PageModifier {
     private articleUrl = window.location.href;
     private articleId = getUrlHash(this.articleUrl);
     private title = document.title;
-    private domain = getDomainFrom(new URL(this.articleUrl));
+    private domain = getDomain(this.articleUrl);
 
     private bodyStyleModifier = new BodyStyleModifier();
     private cssomProvider = new CSSOMProvider();

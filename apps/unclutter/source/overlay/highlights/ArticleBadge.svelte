@@ -151,7 +151,7 @@
         opacity: 1;
         transform: scale(100%);
 
-        animation: pageCardFadeIn 200ms cubic-bezier(0.34, 1.56, 0.64, 1); /* easeOutBack */
+        animation: pageCardFadeIn 200ms cubic-bezier(0.34, 1.56, 0.64, 1) 100ms; /* easeOutBack */
         animation-fill-mode: backwards;
         transition: all 200ms cubic-bezier(0.34, 1.56, 0.64, 1); /* easeOutQuart */
     }

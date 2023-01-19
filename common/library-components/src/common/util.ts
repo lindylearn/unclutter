@@ -7,8 +7,12 @@ export function groupBy(xs, key) {
     }, {});
 }
 
-export function getDomain(url: string): string {
-    return new URL(url).hostname.replace("www.", "");
+export function getDomain(url: string): string | null {
+    try {
+        return new URL(url).hostname.replace("www.", "");
+    } catch {
+        return null;
+    }
 }
 
 export function formatDate(date: Date): string {

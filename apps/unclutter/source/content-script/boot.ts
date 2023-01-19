@@ -7,14 +7,14 @@ import {
     isArticleByTextContent,
 } from "../common/articleDetection";
 import browser from "../common/polyfill";
-import { getDomainFrom } from "../common/util";
+import { getDomain } from "@unclutter/library-components/dist/common/util";
 
 // script injected into every tab before dom construction
 // if configured by the user, initialize the extension functionality
 
 async function boot() {
     const url = new URL(window.location.href);
-    const domain = getDomainFrom(url);
+    const domain = getDomain(window.location.href);
 
     // hard denylists
     if (!extensionSupportsUrl(url)) {

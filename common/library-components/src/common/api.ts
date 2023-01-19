@@ -1,5 +1,6 @@
 import ky from "ky";
 
+import { getDomain } from "@unclutter/library-components/dist/common/util";
 import { Article } from "../store/_schema";
 import { getBrowserType, sendMessage } from "./extension";
 import { getNewTabVersion, getUnclutterVersion } from "./messaging";
@@ -20,7 +21,7 @@ export async function getPageHistory(url: string) {
 }
 
 export async function reportBrokenPage(url: string) {
-    const domain = getDomainFrom(new URL(url));
+    const domain = getDomain(url);
     const browserType = "serverless-screenshots";
 
     try {
@@ -69,10 +70,6 @@ export async function quickReport(
     } catch {
         return null;
     }
-}
-
-function getDomainFrom(url: URL) {
-    return url.hostname.replace("www.", "");
 }
 
 export async function searchArticles(user_id: string, query: string): Promise<SearchResult[]> {
