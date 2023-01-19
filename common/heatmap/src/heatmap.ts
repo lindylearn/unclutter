@@ -17,7 +17,7 @@ export async function loadHeatmapModel() {
         await loadingPromise;
         return;
     }
-    loadingPromise = loadEmbeddingsModelUSE();
+    loadingPromise = loadEmbeddingsModelUSE(true, true);
     await loadingPromise;
     loadingPromise = undefined;
 }
