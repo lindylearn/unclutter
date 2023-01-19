@@ -61,8 +61,6 @@ export default function AnnotationThread(props: AnnotationThreadProps) {
 
     const deleteHide = () => props.deleteHideAnnotation(annotation, null);
 
-    const draftVisible = annotation.isMyAnnotation && (annotation.text || annotation.focused);
-
     let color: string;
     let colorDark: string;
     if (annotation.ai_created) {
@@ -81,16 +79,16 @@ export default function AnnotationThread(props: AnnotationThreadProps) {
             {/* {annotation.platform === "summary" && (
                 <SummaryAnnotation summaryInfo={annotation.summaryInfo!} />
             )} */}
-            {draftVisible && (
-                <AnnotationDraft
-                    {...props}
-                    isFetchingRelated={isFetchingRelated}
-                    relatedCount={related?.length}
-                    color={color}
-                    colorDark={colorDark}
-                    deleteHide={deleteHide}
-                />
-            )}
+
+            <AnnotationDraft
+                {...props}
+                isFetchingRelated={isFetchingRelated}
+                relatedCount={related?.length}
+                color={color}
+                colorDark={colorDark}
+                deleteHide={deleteHide}
+            />
+
             {!annotation.isMyAnnotation && annotation.platform !== "summary" && (
                 <Annotation
                     {...props}
@@ -123,7 +121,7 @@ export default function AnnotationThread(props: AnnotationThreadProps) {
             )} */}
 
             {related?.length > 0 && (
-                <div className={clsx("flex flex-col gap-[6px]", draftVisible && "mt-[6px]")}>
+                <div className={clsx("flex flex-col gap-[6px]", true && "mt-[6px]")}>
                     {related?.map((r, i) => (
                         <Annotation
                             key={r.id}

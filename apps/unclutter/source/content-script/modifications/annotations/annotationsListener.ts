@@ -28,7 +28,7 @@ export function createAnnotationListener(
             if (data.removePrevious) {
                 removeAllHighlights();
             }
-            const anchoredAnnotations = await anchorAnnotations(data.annotations);
+            const [offsetById, offsetEndById] = await anchorAnnotations(data.annotations);
 
             const duration = performance.now() - start;
             console.info(
@@ -41,7 +41,9 @@ export function createAnnotationListener(
             sendIframeEvent(sidebarIframe, {
                 ...data,
                 event: "anchoredAnnotations",
-                annotations: anchoredAnnotations,
+                annotations: data.annotations,
+                offsetById,
+                offsetEndById,
             });
         } else if (data.event === "paintHighlights") {
             data.annotations.map((a) => paintHighlight(a, sidebarIframe));

@@ -1,21 +1,18 @@
-/**
- * Wrapper over local and remote annotation storage, using the one configured by the user.
- */
-
-import { LindyAnnotation } from "../../common/annotations/create";
+import { ReplicacheProxy } from "@unclutter/library-components/dist/common/replicache";
+import {
+    LindyAnnotation,
+    pickleLocalAnnotation,
+    unpickleLocalAnnotation,
+} from "../../common/annotations/create";
 import { reportEventContentScript } from "@unclutter/library-components/dist/common/messaging";
 import { getLindyAnnotations } from "./api";
-import {
-    createLocalAnnotation,
-    deleteLocalAnnotation,
-    getLocalAnnotations,
-    updateLocalAnnotation,
-} from "./local";
 import { getHiddenAnnotations } from "./legacy";
 import {
     deleteAnnotationVectors,
     indexAnnotationVectors,
 } from "@unclutter/library-components/dist/common/api";
+
+const rep = new ReplicacheProxy();
 
 export async function getAnnotations(
     articleId: string,
@@ -62,16 +59,16 @@ export async function getAnnotations(
 }
 
 async function getPersonalAnnotations(articleId: string): Promise<LindyAnnotation[]> {
-    const annotations = await getLocalAnnotations(articleId);
-    // AI annotations fetched in highlights.ts
-    return annotations.filter((a) => !a.ai_created);
+    const annotations = await rep.query.listArticleAnnotations(articleId);
+    return annotations.map(unpickleLocalAnnotation);
 }
 
 export async function createAnnotation(
     user_id: string,
     annotation: LindyAnnotation
 ): Promise<LindyAnnotation> {
-    const createdAnnotation = await createLocalAnnotation(annotation);
+    await rep.mutate.putAnnotation(pickleLocalAnnotation(annotation));
+
     indexAnnotationVectors(
         user_id,
         annotation.article_id,
@@ -81,11 +78,11 @@ export async function createAnnotation(
 
     reportEventContentScript("createAnnotation");
 
-    return createdAnnotation;
+    return annotation;
 }
 
 export async function updateAnnotation(annotation: LindyAnnotation): Promise<LindyAnnotation> {
-    await updateLocalAnnotation(annotation);
+    await rep.mutate.updateAnnotation(pickleLocalAnnotation(annotation));
     return annotation;
 }
 
@@ -93,7 +90,7 @@ export async function deleteAnnotation(
     user_id: string,
     annotation: LindyAnnotation
 ): Promise<void> {
-    await deleteLocalAnnotation(annotation);
+    await rep.mutate.deleteAnnotation(annotation.id);
     deleteAnnotationVectors(user_id, undefined, annotation.id);
 
     reportEventContentScript("deleteAnnotation");

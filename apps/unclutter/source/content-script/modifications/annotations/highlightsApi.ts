@@ -16,7 +16,7 @@ import { getAIAnnotationColor } from "@unclutter/library-components/dist/common/
 export async function anchorAnnotations(annotations: LindyAnnotation[]) {
     const body = document.body;
 
-    const anchoredAnnotations = [];
+    const nodes: HTMLElement[] = [];
     await Promise.all(
         annotations.map(async (annotation) => {
             try {
@@ -37,27 +37,18 @@ export async function anchorAnnotations(annotations: LindyAnnotation[]) {
                     throw Error("Includes no highlighted nodes");
                 }
 
-                // get position on page
-                const displayOffset = getNodeOffset(highlightedNodes[0]);
-                const displayOffsetEnd = getNodeOffset(
-                    highlightedNodes[highlightedNodes.length - 1],
-                    "bottom"
-                );
-
-                anchoredAnnotations.push({
-                    ...annotation,
-                    displayOffset,
-                    displayOffsetEnd,
-                });
+                nodes.push(highlightedNodes[0]);
             } catch (err) {
                 console.error(`Could not anchor annotation with id`, annotation.id);
             }
         })
     );
 
+    const [offsetById, offsetEndById] = getHighlightOffsets(nodes);
+
     // insertMarginBar(anchoredAnnotations);
 
-    return anchoredAnnotations;
+    return [offsetById, offsetEndById];
 }
 
 export function paintHighlight(
@@ -103,21 +94,6 @@ export function paintHighlight(
                 event: "focusAnnotation",
                 annotation,
             });
-
-            // unfocus on next click for social comments
-            // for annotations this is handled without duplicate events by the textarea onBlur
-            if (!annotation.isMyAnnotation || annotation.platform !== "info") {
-                const onNextClick = () => {
-                    hoverUpdateHighlight(annotation, false);
-                    sendIframeEvent(sidebarIframe, {
-                        event: "focusAnnotation",
-                        annotation: null,
-                    });
-
-                    document.removeEventListener("click", onNextClick, true);
-                };
-                document.addEventListener("click", onNextClick, true);
-            }
 
             if (annotation.isMyAnnotation) {
                 copyTextToClipboard(`"${annotation.quote_text}"`);
