@@ -563,6 +563,13 @@
         ".mb-8.ui-text-15.ui-text-15--bold",
         ".py-16"
     ],
+    "hyperskill.org": [
+        ".separate-by-arrow.text-gray",
+        ".mb-2.mb-md-0.mr-md-4",
+        ".d-flex.flex-column.flex-md-row.align-items-start.mb-2",
+        ".d-flex.justify-content-end",
+        ".mt-4"
+    ],
     "ianmcallister.substack.com": [
         ".captioned-image-container",
         ".post-subheader.meta-subheader",
