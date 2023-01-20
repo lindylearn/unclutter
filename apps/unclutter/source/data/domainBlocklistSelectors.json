@@ -1311,6 +1311,7 @@
         ".article-asset.article-asset-normal.article-asset-center",
         ".desvio-container"
     ],
+    "xatakamovil.com": [".article-metadata-container", ".desvio-container"],
     "xtech.nikkei.com": [
         ".p-article_header_bar",
         ".l-header_container",
