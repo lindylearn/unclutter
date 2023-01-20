@@ -971,6 +971,7 @@
     "osrp.lanl.gov": ["#backband", "#backband2", "#lanlbar", "#toolbar"],
     "phileweb.com": ["#header", ".topicPath", "#entryUtility", "#submidashi"],
     "phoronix.com": [".node", "#about-author", "#sharebar", ".after-article"],
+    "polygon.com": [".c-entry-hero__logo"],
     "popsci.com.tr": [
         ".td-crumb-container",
         ".td-category",
