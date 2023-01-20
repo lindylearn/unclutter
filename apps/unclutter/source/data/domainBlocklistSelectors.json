@@ -238,6 +238,9 @@
         ".section-wrapper.hilight-career",
         ".career-wraper"
     ],
+    "coindesk.com": [
+        ".featured-imagestyles__FeaturedImageWrapper-ojmof1-0.ecyZhm"
+    ],
     "collabfund.com": [".card", ".more-posts"],
     "coursera.org": [
         ".cds-37.ItemPageLayout_header.ItemPageLayout_scoped_max_width.css-0.cds-39.cds-grid-item",
