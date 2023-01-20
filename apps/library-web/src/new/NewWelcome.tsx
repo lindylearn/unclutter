@@ -68,10 +68,6 @@ export default function NewWelcomeTab() {
 
     // console.log(userInfo);
 
-    if (!userInfo) {
-        return <></>;
-    }
-
     return (
         <div className="animate-fadein flex flex-col gap-4">
             <SettingsGroup
@@ -87,11 +83,16 @@ export default function NewWelcomeTab() {
             >
                 <p>Hey {userInfo?.email}, welcome to your Unclutter account!</p>
 
-                <p>
-                    Your {articles?.length} saved articles and {annotations?.length} saved
-                    highlights are now backed-up and available in every browser where you sign in to
-                    this website.
-                </p>
+                {!articles?.length ? (
+                    <p>Your library is synchronizing...</p>
+                ) : (
+                    <p>
+                        Synchronization done! Your {articles?.length} saved articles and{" "}
+                        {annotations?.length} saved highlights are now backed-up and available in
+                        every browser where you sign in to this website.
+                    </p>
+                )}
+
                 <div className="flex gap-3">
                     <SettingsButton
                         title="Export data"

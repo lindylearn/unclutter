@@ -16,7 +16,7 @@ export function SettingsGroup({
     return (
         <div
             className={clsx(
-                "relative z-20 overflow-hidden rounded-md bg-stone-50 p-3 px-4 dark:bg-neutral-800",
+                "animate-fadein relative z-20 overflow-hidden rounded-md bg-stone-50 p-3 px-4 dark:bg-neutral-800",
                 className
             )}
         >

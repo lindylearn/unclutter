@@ -1,70 +1,35 @@
-import { useUser } from "@supabase/auth-helpers-react";
+import { createPaymentsLink, useAutoDarkMode } from "@unclutter/library-components/dist/common";
 import {
-    setUnclutterLibraryAuth,
-    useAutoDarkMode,
-} from "@unclutter/library-components/dist/common";
-import { useContext, useEffect, useState } from "react";
+    SettingsButton,
+    SettingsGroup,
+} from "@unclutter/library-components/dist/components/Settings/SettingsGroup";
 import {
     ReplicacheContext,
     UserInfo,
     useSubscribe,
 } from "@unclutter/library-components/dist/store";
-import {
-    SettingsGroup,
-    Button,
-} from "@unclutter/library-components/dist/components/Modal/Settings";
-import {
-    indexLibraryArticles,
-    ImportProgress,
-} from "@unclutter/library-components/dist/common/import";
-import { getActivityColor } from "@unclutter/library-components/dist/components";
+import { useContext, useEffect, useState } from "react";
 import { reportEventPosthog } from "../../common/metrics";
-import { useRouter } from "next/router";
 
-export default function SmartReadingTab() {
+export default function SmartReadingDetails() {
     const rep = useContext(ReplicacheContext);
-    const { user } = useUser();
-
-    const darkModeEnabled = useAutoDarkMode();
-    const router = useRouter();
-
     // @ts-ignore
     const userInfo = useSubscribe<UserInfo>(rep, rep?.subscribe.getUserInfo(), undefined);
 
+    const darkModeEnabled = useAutoDarkMode();
+
+    const [paymentsLink, setPaymentsLink] = useState<string>();
     useEffect(() => {
-        if (!rep || !userInfo || !user) {
+        if (!userInfo?.email || userInfo.aiEnabled) {
             return;
         }
-        // if (!userInfo?.aiEnabled) {
-        //     router.push("/welcome");
-        // }
-
-        // rep.mutate.updateUserInfo({ aiEnabled: true });
-        // setUnclutterLibraryAuth(user.id);
-
-        // generateHighlights();
-    }, [rep, userInfo]);
-
-    const [progress, setProgress] = useState<ImportProgress>();
-    const progressPercentage =
-        progress?.currentArticles && progress.currentArticles / progress.targetArticles;
-
-    function generateHighlights() {
-        if (!rep) {
-            return;
-        }
-
-        indexLibraryArticles(rep, userInfo, setProgress);
-    }
-
-    if (!userInfo) {
-        return <></>;
-    }
+        // createPaymentsLink(userInfo.id, userInfo.email).then(setPaymentsLink);
+    }, [userInfo]);
 
     return (
         <div className="animate-fadein flex flex-col gap-4">
             <SettingsGroup
-                title="Thank you!"
+                title="AI Smart Reading"
                 icon={
                     <svg className="h-4 w-4" viewBox="0 0 512 512">
                         <path
@@ -74,11 +39,14 @@ export default function SmartReadingTab() {
                     </svg>
                 }
             >
-                <p>Thank you for supporting Unclutter!</p>
-
                 <p>
-                    The AI Smart Reading features are now activated for your account. Here are some
-                    ways you can use them effectively:
+                    To help you make sense of what you read, Unclutter can automatically create,
+                    organize, and surface article highlights for you.
+                </p>
+                <p>
+                    That means you'll see related perspectives and facts from your knowledge base
+                    right next to each article. You do the reading and thinking, Unclutter does the
+                    information retrieval and organization.
                 </p>
             </SettingsGroup>
 
@@ -125,42 +93,39 @@ export default function SmartReadingTab() {
             </SettingsGroup>
 
             <SettingsGroup
-                title="Import articles"
+                title="Get started"
                 icon={
                     <svg className="h-4 w-4" viewBox="0 0 512 512">
                         <path
                             fill="currentColor"
-                            d="M481.2 33.81c-8.938-3.656-19.31-1.656-26.16 5.219l-50.51 50.51C364.3 53.81 312.1 32 256 32C157 32 68.53 98.31 40.91 193.3C37.19 206 44.5 219.3 57.22 223c12.81 3.781 26.06-3.625 29.75-16.31C108.7 132.1 178.2 80 256 80c43.12 0 83.35 16.42 114.7 43.4l-59.63 59.63c-6.875 6.875-8.906 17.19-5.219 26.16c3.719 8.969 12.47 14.81 22.19 14.81h143.9C485.2 223.1 496 213.3 496 200v-144C496 46.28 490.2 37.53 481.2 33.81zM454.7 288.1c-12.78-3.75-26.06 3.594-29.75 16.31C403.3 379.9 333.8 432 255.1 432c-43.12 0-83.38-16.42-114.7-43.41l59.62-59.62c6.875-6.875 8.891-17.03 5.203-26C202.4 294 193.7 288 183.1 288H40.05c-13.25 0-24.11 10.74-24.11 23.99v144c0 9.719 5.844 18.47 14.81 22.19C33.72 479.4 36.84 480 39.94 480c6.25 0 12.38-2.438 16.97-7.031l50.51-50.52C147.6 458.2 199.9 480 255.1 480c99 0 187.4-66.31 215.1-161.3C474.8 305.1 467.4 292.7 454.7 288.1z"
+                            d="M504.1 471l-134-134C399.1 301.5 415.1 256.8 415.1 208c0-114.9-93.13-208-208-208S-.0002 93.13-.0002 208S93.12 416 207.1 416c48.79 0 93.55-16.91 129-45.04l134 134C475.7 509.7 481.9 512 488 512s12.28-2.344 16.97-7.031C514.3 495.6 514.3 480.4 504.1 471zM48 208c0-88.22 71.78-160 160-160s160 71.78 160 160s-71.78 160-160 160S48 296.2 48 208z"
                         />
                     </svg>
                 }
             >
-                <p>
-                    The more articles in your library, the more value you'll get out of the Smart
-                    Reading features. Import options (e.g. from Pocket) are coming soon!
-                </p>
-                <p className="mb-3">
-                    {progress?.finished ? (
+                <p></p>
+                <div className="flex gap-3">
+                    {userInfo?.aiEnabled ? (
                         <>
-                            Unclutter generated {progress?.currentHighlights} highlights for your{" "}
-                            {progress?.targetArticles} saved articles! These highlights will now
-                            turn up whenever you're reading about a related topic.
+                            <SettingsButton
+                                title="Manage subscription"
+                                href="https://billing.stripe.com/p/login/5kA8x62Ap9y26v6144"
+                                darkModeEnabled={darkModeEnabled}
+                                reportEvent={reportEventPosthog}
+                            />
                         </>
                     ) : (
                         <>
-                            Unclutter is currently generating highlights for your{" "}
-                            {progress?.targetArticles} saved articles (
-                            {progress?.currentArticles || 0}/{progress?.targetArticles || 0} done).
-                            Please keep this page open until the import is done!
+                            <SettingsButton
+                                title="Start trial"
+                                href={paymentsLink}
+                                inNewTab={false}
+                                darkModeEnabled={darkModeEnabled}
+                                reportEvent={reportEventPosthog}
+                            />
                         </>
                     )}
-                </p>
-                <div
-                    className="bg-lindy dark:bg-lindyDark absolute bottom-0 left-0 h-2 transition-all"
-                    style={{
-                        width: `${(progressPercentage || 0) * 100}%`,
-                    }}
-                />
+                </div>
             </SettingsGroup>
         </div>
     );

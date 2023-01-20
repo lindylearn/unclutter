@@ -1,16 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { createPaymentsLink } from "../../common";
+import React from "react";
 import { SettingsButton, SettingsGroup } from "./SettingsGroup";
 
 export function SmartReadingPreview({ userInfo, darkModeEnabled, reportEvent }) {
-    const [paymentsLink, setPaymentsLink] = useState<string>();
-    useEffect(() => {
-        if (!userInfo || userInfo.aiEnabled) {
-            return;
-        }
-        createPaymentsLink(userInfo.id, userInfo.email).then(setPaymentsLink);
-    }, [userInfo]);
-
     return (
         <SettingsGroup
             title="AI Smart reading"
@@ -37,9 +28,9 @@ export function SmartReadingPreview({ userInfo, darkModeEnabled, reportEvent }) 
                         organize, and surface article highlights for you.
                     </p>
                     <p>
-                        That means you'll see related perspectives and facts from your knowledge
-                        base right next to each article. You do the reading and thinking, Unclutter
-                        does the information retrieval and organization.
+                        That means whenever you're reading, you'll see related perspectives and
+                        facts from your knowledge base right next to each article. You do the
+                        thinking, Unclutter does the information retrieval and organization.
                     </p>
                 </>
             )}
@@ -53,23 +44,26 @@ export function SmartReadingPreview({ userInfo, darkModeEnabled, reportEvent }) 
                             darkModeEnabled={darkModeEnabled}
                             reportEvent={reportEvent}
                         />
+                    </>
+                ) : (
+                    <>
                         <SettingsButton
-                            title="Learn more"
-                            href="https://my.unclutter.it/smart-reading"
+                            title="Start trial"
+                            href={""}
                             inNewTab={false}
                             darkModeEnabled={darkModeEnabled}
                             reportEvent={reportEvent}
                         />
                     </>
-                ) : (
-                    <SettingsButton
-                        title="Start trial"
-                        href={paymentsLink}
-                        inNewTab={false}
-                        darkModeEnabled={darkModeEnabled}
-                        reportEvent={reportEvent}
-                    />
                 )}
+
+                <SettingsButton
+                    title="Learn more"
+                    href="https://my.unclutter.it/smart-reading"
+                    inNewTab={false}
+                    darkModeEnabled={darkModeEnabled}
+                    reportEvent={reportEvent}
+                />
             </div>
         </SettingsGroup>
     );

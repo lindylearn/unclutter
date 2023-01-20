@@ -4,16 +4,11 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 
 import NewWelcomeTab from "./NewWelcome";
+import SmartReadingOnboarding from "./Onboarding";
 import SmartReadingTab from "./SmartReading";
 
 export default function App() {
     const router = useRouter();
-
-    useEffect(() => {
-        if (router.pathname === "/") {
-            router.push("/welcome");
-        }
-    }, []);
 
     return (
         <div className="font-text h-screen w-screen bg-white p-6 text-stone-800 dark:bg-[#212121] dark:text-[rgb(232,230,227)]">
@@ -24,7 +19,7 @@ export default function App() {
             <aside className="absolute">
                 <div
                     className="flex h-full w-32 cursor-pointer flex-col"
-                    onClick={() => router.push("/welcome")}
+                    onClick={() => router.push("/")}
                 >
                     <div className="mb-4 flex w-full items-center gap-2">
                         <LindyIcon className="w-8" />
@@ -35,8 +30,9 @@ export default function App() {
             </aside>
 
             <main className="mx-auto max-w-2xl">
-                {router.asPath === "/welcome" && <NewWelcomeTab />}
+                {router.asPath === "/" && <NewWelcomeTab />}
                 {router.asPath === "/smart-reading" && <SmartReadingTab />}
+                {router.asPath === "/import" && <SmartReadingOnboarding />}
             </main>
         </div>
     );

@@ -99,8 +99,9 @@ export async function createPaymentsLink(
             })
             .json();
 
-        return data;
-    } catch {
+        return data.url;
+    } catch (err) {
+        console.log(err);
         return undefined;
     }
 }

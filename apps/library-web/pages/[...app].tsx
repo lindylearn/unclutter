@@ -51,7 +51,7 @@ export const getServerSideProps = withPageAuth({
             await createSpace(userId);
             return {
                 redirect: {
-                    destination: `/welcome`,
+                    destination: `/`,
                     permanent: false,
                 },
             };
