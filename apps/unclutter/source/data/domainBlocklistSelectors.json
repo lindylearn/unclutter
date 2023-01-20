@@ -925,6 +925,14 @@
     "pureinfotech.com": [
         ".attachment-large.size-large.wp-post-image.jetpack-lazy-image.jetpack-lazy-image--handled"
     ],
+    "pv-magazine.com": [
+        "#mid-article-bibblio",
+        ".bib__image",
+        ".bib__link.bib__link--2.bib__link--image",
+        ".bib__link.bib__link--1.bib__link--image",
+        ".bib--rcm-init",
+        ".pv-bibblio-events"
+    ],
     "radreads.co": [".tcb-flex-col"],
     "realpython.com": [".small.text-muted"],
     "rebble.io": ["#index"],
