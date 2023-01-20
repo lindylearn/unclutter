@@ -166,10 +166,11 @@ export default function App({
         }
         console.log("Fetching related annotations in batch");
         const start = performance.now();
+        const fetchedAnnotations = storeAnnotations.filter((a) => a.id !== sourceAnnotationId);
         let groups = await fetchRelatedAnnotations(
             userInfo.id,
             articleId,
-            storeAnnotations.filter((a) => a.id !== sourceAnnotationId).map((a) => a.quote_text)
+            fetchedAnnotations.map((a) => a.quote_text)
         );
 
         // reset usedRelatedIds
@@ -187,7 +188,7 @@ export default function App({
 
         setRelatedPerAnnotation((prev) => {
             groups.forEach((group, i) => {
-                const annotation = storeAnnotations[i];
+                const annotation = fetchedAnnotations[i];
                 prev[annotation.id] = group;
             });
 
