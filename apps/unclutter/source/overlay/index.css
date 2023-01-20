@@ -172,7 +172,7 @@
     /* margin-left: var(--side-width) !important; */
     /* width: calc(var(--lindy-pagewidth) + 10px) !important; */
     width: 100% !important;
-    z-index: -1000 !important;
+    z-index: -1 !important; /* just behind body in case of overlaps */
 
     /* must equal document bottom padding */
     height: calc(134.5px) !important;
