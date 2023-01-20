@@ -26,8 +26,15 @@ async function boot() {
         return;
     }
 
-    // events from the Unclutter companion website
-    if (["unclutter.lindylearn.io", "library.lindylearn.io", "localhost"].includes(domain)) {
+    // events from the Unclutter companion websites
+    if (
+        [
+            "unclutter.lindylearn.io",
+            "library.lindylearn.io",
+            "my.unclutter.it",
+            "localhost", // dev testing
+        ].includes(domain)
+    ) {
         listenForPageEvents();
     }
 

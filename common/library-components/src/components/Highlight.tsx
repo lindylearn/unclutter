@@ -61,12 +61,10 @@ export function Highlight({
         <div
             className="highlight animate-fadein relative flex cursor-pointer select-none flex-col gap-4 overflow-hidden rounded-md bg-white p-4 text-sm text-stone-900 transition-transform hover:scale-[99%] dark:text-white"
             style={{
-                background: annotation.ai_created
-                    ? getActivityColor(1, darkModeEnabled)
-                    : getRandomLightColor(
-                          annotation.tags?.[0] || annotation.article_id || annotation.id,
-                          darkModeEnabled
-                      ),
+                background: getRandomLightColor(
+                    annotation.article_id || annotation.id,
+                    darkModeEnabled
+                ),
                 // maxHeight: "calc(177px+2*8px)",
             }}
             // href={article?.url}

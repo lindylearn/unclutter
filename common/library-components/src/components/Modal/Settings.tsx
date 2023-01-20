@@ -238,7 +238,7 @@ export function SmartReadingSetting({ userInfo, darkModeEnabled, reportEvent }) 
                             reportEvent={reportEvent}
                         />
                         <Button
-                            title="Open tutorial"
+                            title="Learn more"
                             href="https://my.unclutter.it/smart-reading"
                             inNewTab={false}
                             darkModeEnabled={darkModeEnabled}
