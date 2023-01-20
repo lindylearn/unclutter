@@ -155,6 +155,11 @@
         ".skiplink__hide-until-focus",
         ".postr-recirc.postr-recirc--citylab.paywall"
     ],
+    "bloomberglinea.com": [
+        ".flex.items-center.justify-start.flex-1",
+        ".new-blocks-wrap.markets-block-wrap",
+        ".hide-container"
+    ],
     "bmpi.dev": [".giscus"],
     "bostonherald.com": [".connext-modal-backdrop.fade"],
     "builtin.com": [
