@@ -1097,6 +1097,10 @@
         ".full.flex.article-pad",
         ".slick-slide.slick-cloned"
     ],
+    "tfos.co": [
+        ".flex.flex-col.items-center.text-center.px-3.text-white",
+        ".h-5"
+    ],
     "theatlantic.com": [
         ".ArticleShare_root__BqVqF",
         ".ArticleHero_articleUtilityBar__OtFEE",
