@@ -26,7 +26,7 @@ export default class ReadingTimeModifier implements PageModifier {
         const wordCount = document.body.innerText.trim().split(/\s+/).length;
         this.totalReadingTime = Math.round(wordCount / this.wpm);
 
-        this.likelyMainTextMissing = document.body.scrollHeight < 500 || this.totalReadingTime < 2;
+        this.likelyMainTextMissing = document.body.scrollHeight < 1000;
 
         // Don't re-render outline on every scroll update (might trigger <100ms)
         // throttle instead of debounce to update during continous scrolls
