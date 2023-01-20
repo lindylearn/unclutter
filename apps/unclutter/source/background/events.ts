@@ -17,7 +17,7 @@ import { enableInTab, injectScript, togglePageViewMessage } from "./inject";
 import { createAlarmListeners, onNewInstall, setupWithPermissions } from "./install";
 import { discoverRssFeed } from "./library/feeds";
 import {
-    initLibrary,
+    initLibraryOnce,
     processReplicacheMessage,
     processReplicacheSubscribe,
     rep,
@@ -158,10 +158,10 @@ function handleMessage(
         });
     } else if (message.event === "setLibraryAuth") {
         setLibraryAuth(message.userId, message.webJwt).then(() => {
-            initLibrary();
+            initLibraryOnce();
         });
     } else if (message.event === "initLibrary") {
-        initLibrary();
+        initLibraryOnce();
     } else if (message.event === "getUserInfo") {
         rep?.query.getUserInfo().then(sendResponse);
         return true;
@@ -261,7 +261,7 @@ async function initializeServiceWorker() {
     const isDev = extensionInfo.installType === "development";
 
     startMetrics(isDev);
-    const userInfo = await initLibrary(isDev);
+    const userInfo = await initLibraryOnce(isDev);
 
     if (userInfo?.aiEnabled) {
         // load tensorflow model

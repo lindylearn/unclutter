@@ -25,9 +25,26 @@ import { fetchRemoteAnnotations, initHighlightsSync } from "./highlights";
 import { getFeatureFlag, hypothesisSyncFeatureFlag } from "../../common/featureFlags";
 import type { UserInfo } from "@unclutter/library-components/dist/store";
 
+let loadingPromise: Promise<UserInfo | undefined> = undefined;
+export async function initLibraryOnce(isDev: boolean = false): Promise<UserInfo | undefined> {
+    const newUserId = await getLibraryUser();
+    if (newUserId !== userId) {
+        console.log("Changed userId, reinitializing library...");
+        loadingPromise = undefined;
+        userId = newUserId;
+
+        // TODO also reinit if JWT changed?
+    }
+
+    if (loadingPromise === undefined) {
+        loadingPromise = initLibrary(isDev);
+    }
+    return await loadingPromise;
+}
+
 export let userId: string; // actual replicache id, don't change in dev
 export let rep: ReplicacheProxy | null = null;
-export async function initLibrary(isDev: boolean = false): Promise<UserInfo | undefined> {
+async function initLibrary(isDev: boolean = false): Promise<UserInfo | undefined> {
     rep = getBackgroundReplicacheProxy();
 
     userId = await getLibraryUser();
@@ -44,7 +61,7 @@ export async function initLibrary(isDev: boolean = false): Promise<UserInfo | un
     }
 
     if (isDev) {
-        await rep.mutate.updateUserInfo({ id: "dev-user", aiEnabled: true });
+        await rep.mutate.updateUserInfo({ id: "dev-user", aiEnabled: false });
     }
     const userInfo = await rep.query.getUserInfo();
 
