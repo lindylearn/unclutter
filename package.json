@@ -9,9 +9,11 @@
     "scripts": {
         "dev:components": "yarn --cwd common/library-components watch",
         "dev:replicache": "yarn --cwd common/replicache-nextjs watch",
+        "dev:heatmap": "yarn --cwd common/heatmap watch",
         "dev": "npm-run-all --parallel dev:*",
         "build:components": "yarn --cwd common/library-components build",
         "build:replicache": "yarn --cwd common/replicache-nextjs build",
+        "build:heatmap": "yarn --cwd common/heatmap build",
         "build": "npm-run-all build:*",
         "postinstall": "patch-package"
     },

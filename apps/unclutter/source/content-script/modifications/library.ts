@@ -15,7 +15,6 @@ import { ReplicacheProxy } from "@unclutter/library-components/dist/common/repli
 import { showLibrarySignupFlag } from "../../common/featureFlags";
 import { constructLocalArticleInfo, LibraryInfo, LibraryState } from "../../common/schema";
 import ReadingTimeModifier from "./DOM/readingTime";
-import { addArticlesToLibrary } from "../../common/api";
 import AnnotationsModifier from "./annotations/annotationsModifier";
 import { discoverFeedsInDocument, extractTags } from "@unclutter/library-components/dist/feeds";
 import browser from "../../common/polyfill";
@@ -78,22 +77,13 @@ export default class LibraryModifier implements PageModifier {
 
         // fetch user info
         const libraryUser = await getLibraryUser();
+        this.libraryState.userInfo = await rep.query.getUserInfo();
         if (libraryUser) {
             // user with account
             this.libraryState.libraryEnabled = true;
-            this.libraryState.userInfo = await rep.query.getUserInfo(); // maybe be undefined?
         } else {
             this.libraryState.libraryEnabled = true;
             this.libraryState.showLibrarySignup = await getRemoteFeatureFlag(showLibrarySignupFlag);
-        }
-        if (!this.libraryState.userInfo) {
-            this.libraryState.userInfo = {
-                id: null,
-                email: null,
-                signinProvider: null,
-                accountEnabled: false,
-                onPaidPlan: false,
-            };
         }
 
         this.notifyLibraryStateListeners();
@@ -120,42 +110,6 @@ export default class LibraryModifier implements PageModifier {
                     this.articleId,
                     this.articleTitle
                 );
-
-                if (
-                    this.libraryState.userInfo?.onPaidPlan ||
-                    this.libraryState.userInfo?.trialEnabled
-                ) {
-                    // merge-in infered topic and remote info later
-                    // this should always take much longer than the insert below
-                    addArticlesToLibrary([this.articleUrl], this.libraryState.userInfo?.id).then(
-                        async ([remoteLibraryInfo]) => {
-                            if (remoteLibraryInfo.topic) {
-                                this.libraryState.libraryInfo.topic = remoteLibraryInfo.topic;
-                                await rep.mutate.putTopic(remoteLibraryInfo.topic);
-                            }
-
-                            delete remoteLibraryInfo.article["is_favorite"];
-                            delete remoteLibraryInfo.article["time_added"];
-                            delete remoteLibraryInfo.article["reading_progress"];
-                            // creates article if not exists for some reason?
-                            await rep.mutate.updateArticle(remoteLibraryInfo.article);
-                            // updated via subscribe below
-
-                            if (remoteLibraryInfo.new_links) {
-                                this.libraryState.libraryInfo.new_links =
-                                    remoteLibraryInfo.new_links;
-                                await rep.mutate.importArticleLinks({
-                                    links: remoteLibraryInfo.new_links,
-                                });
-
-                                await this.constructArticleGraph(rep);
-                                this.notifyLibraryStateListeners();
-                            }
-
-                            this.libraryState.isClustering = false;
-                        }
-                    );
-                }
             } else {
                 // use existing state
                 this.libraryState.wasAlreadyPresent = true;
@@ -185,16 +139,6 @@ export default class LibraryModifier implements PageModifier {
             // insert new article (add a delay to animate reading progress)
             if (!this.libraryState.wasAlreadyPresent) {
                 await rep.mutate.putArticleIfNotExists(this.libraryState.libraryInfo.article);
-            } else {
-                //     // construct article graph
-                //     if (
-                //         (this.libraryState.userInfo?.onPaidPlan ||
-                //             this.libraryState.userInfo?.trialEnabled) &&
-                //         this.libraryState.libraryInfo
-                //     ) {
-                //         await this.constructArticleGraph(rep);
-                //         this.notifyLibraryStateListeners();
-                //     }
             }
 
             // subscribe to article updates after insert
@@ -207,9 +151,9 @@ export default class LibraryModifier implements PageModifier {
                 },
             });
 
-            if (this.scrollOnceFetchDone) {
-                this.scrollToLastReadingPosition();
-            }
+            // if (this.scrollOnceFetchDone) {
+            //     this.scrollToLastReadingPosition();
+            // }
 
             // report library events
             if (this.libraryState.wasAlreadyPresent) {
@@ -224,58 +168,58 @@ export default class LibraryModifier implements PageModifier {
         }
     }
 
-    private async fetchFeed(rep: ReplicacheProxy) {
-        try {
-            // parse DOM
-            // TODO move to different phase?
+    // private async fetchFeed(rep: ReplicacheProxy) {
+    //     try {
+    //         // parse DOM
+    //         // TODO move to different phase?
 
-            // TODO consider tagged feeds
-            const subscriptions = await rep.query.getDomainSubscriptions(
-                getDomain(this.articleUrl)
-            );
+    //         // TODO consider tagged feeds
+    //         const subscriptions = await rep.query.getDomainSubscriptions(
+    //             getDomain(this.articleUrl)
+    //         );
 
-            if (subscriptions.length > 0) {
-                // already parsed before
-                this.libraryState.feed = subscriptions[0];
-            } else {
-                // fetch & parse feed in background
-                const feedUrls = await discoverFeedsInDocument(document, this.articleUrl);
+    //         if (subscriptions.length > 0) {
+    //             // already parsed before
+    //             this.libraryState.feed = subscriptions[0];
+    //         } else {
+    //             // fetch & parse feed in background
+    //             const feedUrls = await discoverFeedsInDocument(document, this.articleUrl);
 
-                this.libraryState.feed = await browser.runtime.sendMessage(null, {
-                    event: "discoverRssFeed",
-                    sourceUrl: this.articleUrl,
-                    feedCandidates: feedUrls,
-                    tagLinkCandidates: extractTags(document, this.articleUrl),
-                });
-                if (this.libraryState.feed) {
-                    // detailed fetching in background may discover more potentially existing feeds
-                    const existing = await rep.query.getSubscription(this.libraryState.feed.id);
-                    if (!existing) {
-                        // insert even if not subscribed
-                        await rep.mutate.putSubscription(this.libraryState.feed);
-                    }
-                }
-            }
+    //             this.libraryState.feed = await browser.runtime.sendMessage(null, {
+    //                 event: "discoverRssFeed",
+    //                 sourceUrl: this.articleUrl,
+    //                 feedCandidates: feedUrls,
+    //                 tagLinkCandidates: extractTags(document, this.articleUrl),
+    //             });
+    //             if (this.libraryState.feed) {
+    //                 // detailed fetching in background may discover more potentially existing feeds
+    //                 const existing = await rep.query.getSubscription(this.libraryState.feed.id);
+    //                 if (!existing) {
+    //                     // insert even if not subscribed
+    //                     await rep.mutate.putSubscription(this.libraryState.feed);
+    //                 }
+    //             }
+    //         }
 
-            if (this.libraryState.feed) {
-                // subscribe to feed updates
-                rep.subscribe.getSubscription(this.libraryState.feed.id)({
-                    onData: (feed) => {
-                        if (feed) {
-                            this.libraryState.feed = feed;
-                            this.notifyLibraryStateListeners();
-                        }
-                    },
-                });
+    //         if (this.libraryState.feed) {
+    //             // subscribe to feed updates
+    //             rep.subscribe.getSubscription(this.libraryState.feed.id)({
+    //                 onData: (feed) => {
+    //                     if (feed) {
+    //                         this.libraryState.feed = feed;
+    //                         this.notifyLibraryStateListeners();
+    //                     }
+    //                 },
+    //             });
 
-                this.libraryState.showFeed = true;
-            }
+    //             this.libraryState.showFeed = true;
+    //         }
 
-            this.notifyLibraryStateListeners();
-        } catch (err) {
-            console.error(err);
-        }
-    }
+    //         this.notifyLibraryStateListeners();
+    //     } catch (err) {
+    //         console.error(err);
+    //     }
+    // }
 
     private async getLibraryInfo(rep: ReplicacheProxy, articleId: string): Promise<LibraryInfo> {
         const article = await rep.query.getArticle(articleId);
@@ -288,22 +232,6 @@ export default class LibraryModifier implements PageModifier {
             article,
             topic,
         };
-    }
-
-    private async constructArticleGraph(rep: ReplicacheProxy) {
-        let start = performance.now();
-        let nodes: Article[] = await rep.query.listRecentArticles();
-        let links: ArticleLink[] = await rep.query.listArticleLinks();
-
-        [this.libraryState.graph, this.libraryState.linkCount] = await constructGraphData(
-            nodes,
-            links,
-            this.libraryState.libraryInfo.article.url,
-            this.libraryState.libraryInfo.topic
-        );
-
-        let duration = performance.now() - start;
-        console.log(`Constructed library graph in ${Math.round(duration)}ms`);
     }
 
     // called from transitions.ts, or again internally once fetch done

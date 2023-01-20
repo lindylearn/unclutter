@@ -5,15 +5,13 @@ import useResizeObserver from "use-resize-observer";
 import partition from "lodash/partition";
 
 import { getRandomColor } from "../../common/styling";
-import type { Article, Topic, UserInfo } from "../../store/_schema";
+import type { Article, UserInfo } from "../../store/_schema";
 import {
     readingProgressFullClamp,
     ReplicacheContext,
     sortArticlesPosition,
     useSubscribe,
 } from "../../store";
-import { groupArticlesByTopic } from "./GroupedArticleList";
-import { TopicEmoji } from "../TopicTag";
 import { ArticleListsCache } from "./DraggableContext";
 import { StaticArticleList } from "./StaticArticleList";
 import { getDomain } from "../../common";
@@ -143,7 +141,7 @@ export function useTabInfos(
     onlyUnread: boolean = false,
     lastFirst: boolean = false,
     domainFilter: string | undefined,
-    userInfo: UserInfo
+    userInfo: UserInfo | undefined
 ): TabInfo[] | undefined {
     const rep = useContext(ReplicacheContext);
 
@@ -156,14 +154,15 @@ export function useTabInfos(
         }
         (async () => {
             const queueArticles = articles.filter((a) => a.is_queued);
-            let listArticles = articles; // filtered after topic grouping to keep ordering stable
+            let listArticles = articles.filter((a) => !a.is_queued);
+            // (was) filtered after topic grouping to keep ordering stable
             sortArticlesPosition(queueArticles, "queue_sort_position");
 
-            let newArticles: Article[];
-            [newArticles, listArticles] = partition(listArticles, (a) => a.is_new);
-            newArticles = newArticles
-                .filter((a) => !a.is_queued)
-                .filter((a) => a.reading_progress < readingProgressFullClamp);
+            // let newArticles: Article[];
+            // [newArticles, listArticles] = partition(listArticles, (a) => a.is_new);
+            // newArticles = newArticles
+            //     .filter((a) => !a.is_queued)
+            //     .filter((a) => a.reading_progress < readingProgressFullClamp);
 
             if (onlyUnread) {
                 listArticles = listArticles.filter(
@@ -177,6 +176,12 @@ export function useTabInfos(
             if (!lastFirst) {
                 listArticles.reverse();
             }
+
+            listArticles = listArticles;
+            const [uncompletedArticles, completedArticles] = partition(
+                listArticles,
+                (a) => a.reading_progress < readingProgressFullClamp
+            );
 
             // construct tab infos
             const tabInfos: TabInfo[] = [
@@ -208,95 +213,38 @@ export function useTabInfos(
                 //     articles: newArticles,
                 //     articleLines: Math.max(1, Math.min(2, Math.ceil(newArticles.length / 5))),
                 // },
+                {
+                    key: "uncompleted",
+                    title: "Continue reading",
+                    icon: (
+                        <svg className="h-4" viewBox="0 0 384 512">
+                            <path
+                                fill="currentColor"
+                                d="M24.52 38.13C39.66 29.64 58.21 29.99 73.03 39.04L361 215C375.3 223.8 384 239.3 384 256C384 272.7 375.3 288.2 361 296.1L73.03 472.1C58.21 482 39.66 482.4 24.52 473.9C9.377 465.4 0 449.4 0 432V80C0 62.64 9.377 46.63 24.52 38.13V38.13zM48 432L336 256L48 80V432z"
+                            />
+                        </svg>
+                    ),
+                    articles: uncompletedArticles,
+                    articleLines: Math.max(
+                        1,
+                        Math.min(2, Math.ceil(uncompletedArticles.length / 5))
+                    ),
+                },
+                {
+                    key: "completed",
+                    title: "Recently read",
+                    icon: (
+                        <svg className="h-4" viewBox="0 0 512 512">
+                            <path
+                                fill="currentColor"
+                                d="M256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C203.8 512 155.2 496.4 114.7 469.5C103.7 462.2 100.7 447.3 107.1 436.3C115.3 425.2 130.2 422.2 141.3 429.5C174.1 451.3 213.5 464 256 464C370.9 464 464 370.9 464 256C464 141.1 370.9 48 256 48C182.4 48 117.7 86.24 80.69 144H136C149.3 144 160 154.7 160 168C160 181.3 149.3 192 136 192H24C10.75 192 0 181.3 0 168V56C0 42.75 10.75 32 24 32C37.25 32 48 42.75 48 56V106.7C94.45 42.12 170.3 0 256 0H256zM256 128C269.3 128 280 138.7 280 152V246.1L344.1 311C354.3 320.4 354.3 335.6 344.1 344.1C335.6 354.3 320.4 354.3 311 344.1L239 272.1C234.5 268.5 232 262.4 232 256V152C232 138.7 242.7 128 256 128V128z"
+                            />
+                        </svg>
+                    ),
+                    articles: completedArticles,
+                    articleLines: Math.max(2, Math.min(5, Math.ceil(completedArticles.length / 5))),
+                },
             ];
-            if (false) {
-                // userInfo.onPaidPlan || userInfo.trialEnabled
-                // const groupEntries = await groupArticlesByTopic(
-                //     listArticles,
-                //     true,
-                //     "recency",
-                //     "topic_order",
-                //     tabCount - 2
-                // );
-                // const otherArticles: Article[] = []; // might be spread across multiple topics, e.g. if combining small groups locally
-                // let otherGroupId: string = "other";
-                // const topicTabInfos: TabInfo[] = await Promise.all(
-                //     groupEntries.map(async ([topic_id, articles]) => {
-                //         const topic: Topic | undefined = await rep?.query.getTopic(topic_id);
-                //         if (!topic || topic.name === "Other") {
-                //             if (topic?.id) {
-                //                 otherGroupId = topic.id;
-                //             }
-                //             otherArticles.push(...articles);
-                //             articles = [];
-                //         }
-                //         return {
-                //             key: topic_id,
-                //             title: topic?.name || topic_id,
-                //             icon: topic && (
-                //                 <TopicEmoji emoji={topic?.emoji!} className="mr-0 w-[18px]" />
-                //             ),
-                //             isTopic: true,
-                //             articles: articles.filter((a) => !a.is_queued),
-                //         };
-                //     })
-                // );
-                // tabInfos.push(...topicTabInfos.filter((t) => t.articles.length > 0));
-                // if (otherArticles.length > 0) {
-                //     tabInfos.push({
-                //         key: otherGroupId,
-                //         title: "Other",
-                //         icon: <></>,
-                //         isTopic: true,
-                //         articles: otherArticles,
-                //     });
-                // }
-            } else {
-                listArticles = listArticles.filter((a) => !a.is_queued);
-                const [uncompletedArticles, completedArticles] = partition(
-                    listArticles,
-                    (a) => a.reading_progress < readingProgressFullClamp
-                );
-
-                tabInfos.push(
-                    ...[
-                        {
-                            key: "uncompleted",
-                            title: "Continue reading",
-                            icon: (
-                                <svg className="w-4" viewBox="0 0 512 512">
-                                    <path
-                                        fill="currentColor"
-                                        d="M256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C203.8 512 155.2 496.4 114.7 469.5C103.7 462.2 100.7 447.3 107.1 436.3C115.3 425.2 130.2 422.2 141.3 429.5C174.1 451.3 213.5 464 256 464C370.9 464 464 370.9 464 256C464 141.1 370.9 48 256 48C182.4 48 117.7 86.24 80.69 144H136C149.3 144 160 154.7 160 168C160 181.3 149.3 192 136 192H24C10.75 192 0 181.3 0 168V56C0 42.75 10.75 32 24 32C37.25 32 48 42.75 48 56V106.7C94.45 42.12 170.3 0 256 0H256zM256 128C269.3 128 280 138.7 280 152V246.1L344.1 311C354.3 320.4 354.3 335.6 344.1 344.1C335.6 354.3 320.4 354.3 311 344.1L239 272.1C234.5 268.5 232 262.4 232 256V152C232 138.7 242.7 128 256 128V128z"
-                                    />
-                                </svg>
-                            ),
-                            articles: uncompletedArticles,
-                            articleLines: Math.max(
-                                1,
-                                Math.min(5, Math.ceil(uncompletedArticles.length / 5))
-                            ),
-                        },
-                        {
-                            key: "completed",
-                            title: "Recently completed",
-                            icon: (
-                                <svg className="w-4" viewBox="0 0 512 512">
-                                    <path
-                                        fill="currentColor"
-                                        d="M256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C203.8 512 155.2 496.4 114.7 469.5C103.7 462.2 100.7 447.3 107.1 436.3C115.3 425.2 130.2 422.2 141.3 429.5C174.1 451.3 213.5 464 256 464C370.9 464 464 370.9 464 256C464 141.1 370.9 48 256 48C182.4 48 117.7 86.24 80.69 144H136C149.3 144 160 154.7 160 168C160 181.3 149.3 192 136 192H24C10.75 192 0 181.3 0 168V56C0 42.75 10.75 32 24 32C37.25 32 48 42.75 48 56V106.7C94.45 42.12 170.3 0 256 0H256zM256 128C269.3 128 280 138.7 280 152V246.1L344.1 311C354.3 320.4 354.3 335.6 344.1 344.1C335.6 354.3 320.4 354.3 311 344.1L239 272.1C234.5 268.5 232 262.4 232 256V152C232 138.7 242.7 128 256 128V128z"
-                                    />
-                                </svg>
-                            ),
-                            articles: completedArticles,
-                            articleLines: Math.max(
-                                1,
-                                Math.min(5, Math.ceil(completedArticles.length / 5))
-                            ),
-                        },
-                    ]
-                );
-            }
 
             // update state
             setTabInfos(tabInfos);

@@ -1,12 +1,15 @@
 import { getDomain } from "@unclutter/library-components/dist/common/util";
 import { setUserSettingsForDomain } from "../../common/storage";
-import SmartHighlightsModifier, {
-    RelatedHighlight,
-} from "../../content-script/modifications/DOM/smartHighlights";
+import SmartHighlightsModifier from "../../content-script/modifications/DOM/smartHighlights";
+// import type { RelatedHighlight } from "@unclutter/library-components/dist/common/api";
 // import HighlightDetailSvelte from "./HighlightDetail.svelte";
 import ArticleBadgeSvelte from "./ArticleBadge.svelte";
 
-export function renderHighlightsLayer(enablePageView: () => void, enhanceActive: boolean) {
+export function renderHighlightsLayer(
+    userId: string,
+    enablePageView: () => void,
+    enhanceActive: boolean
+) {
     // document.addEventListener("mousedown", onSelectionStart);
     // document.addEventListener("mouseup", onSelectionDone);
     // document.addEventListener("contextmenu", removeHighligher);
@@ -18,15 +21,7 @@ export function renderHighlightsLayer(enablePageView: () => void, enhanceActive:
     //     }
     // });
 
-    function onHighlightClick(range: Range, related: RelatedHighlight[]) {
-        enablePageViewInner();
-
-        // removeHighligher();
-        // const rect = range.getBoundingClientRect();
-        // const quote = range.toString();
-        // renderHighlighter(rect, quote, related);
-    }
-    const smartHighlightsModifier = new SmartHighlightsModifier(onHighlightClick);
+    const smartHighlightsModifier = new SmartHighlightsModifier(userId);
 
     if (enhanceActive) {
         setReaderModeSettings();
@@ -37,49 +32,50 @@ export function renderHighlightsLayer(enablePageView: () => void, enhanceActive:
         font.rel = "stylesheet";
         document.head.appendChild(font);
 
-        smartHighlightsModifier.enableStyleTweaks();
+        // smartHighlightsModifier.enableStyleTweaks();
     }
 
     function preparePageView() {
         // disable scrollbar for reader mode
-        smartHighlightsModifier.disableStyleTweaks();
-        smartHighlightsModifier.disableScrollbar();
+        // smartHighlightsModifier.disableStyleTweaks();
+        // smartHighlightsModifier.disableScrollbar();
+
+        // save highlights async once ready
+        setTimeout(() => smartHighlightsModifier.saveAnnotations(), 2000);
 
         setReaderModeSettings();
     }
-    function setReaderModeSettings() {
-        smartHighlightsModifier.isProxyActive = true;
-        smartHighlightsModifier.enableAllSentences = false;
-        smartHighlightsModifier.enableHighlightsClick = true;
-        smartHighlightsModifier.enableScrollBar = false;
-    }
+    function setReaderModeSettings() {}
     function enablePageViewInner() {
         preparePageView();
         enablePageView();
     }
 
     async function fetchHighlights() {
-        const isArticle = await smartHighlightsModifier.parseUnclutteredArticle();
-        if (!isArticle || enhanceActive) {
+        const isArticle = await smartHighlightsModifier.fetchAnnotations();
+        updateArticleBadge(
+            smartHighlightsModifier.annotationsCount,
+            smartHighlightsModifier.relatedCount
+        );
+        if (!isArticle) {
+            return;
+        }
+        if (enhanceActive) {
+            await smartHighlightsModifier.saveAnnotations();
             return;
         }
 
+        await smartHighlightsModifier.fetchRelated();
         updateArticleBadge(
-            smartHighlightsModifier.keyPointsCount,
+            smartHighlightsModifier.annotationsCount,
             smartHighlightsModifier.relatedCount
         );
-
-        // await smartHighlightsModifier.fetchRelatedHighlights();
-        // updateArticleBadge(
-        //     smartHighlightsModifier.keyPointsCount,
-        //     smartHighlightsModifier.relatedCount
-        // );
     }
 
     renderArticleBadge(
-        smartHighlightsModifier.keyPointsCount,
+        smartHighlightsModifier.annotationsCount,
         smartHighlightsModifier.relatedCount,
-        smartHighlightsModifier.disableAnnotations.bind(smartHighlightsModifier),
+        () => {},
         enablePageViewInner
     );
 
@@ -137,7 +133,7 @@ export function renderHighlightsLayer(enablePageView: () => void, enhanceActive:
 
 let articleBadgeComponent: ArticleBadgeSvelte;
 function renderArticleBadge(
-    keyPointsCount: number,
+    annotationsCount: number,
     relatedCount: number,
     disableAnnotations: () => void,
     enablePageView: () => void
@@ -149,7 +145,7 @@ function renderArticleBadge(
     articleBadgeComponent = new ArticleBadgeSvelte({
         target: container.attachShadow({ mode: "open" }),
         props: {
-            keyPointsCount,
+            annotationsCount,
             relatedCount,
             enablePageView: () => {
                 // anchor on left edge to prevent jump on scrollbar insert
@@ -170,8 +166,8 @@ function renderArticleBadge(
     });
 }
 
-function updateArticleBadge(keyPointsCount: number, relatedCount: number) {
+function updateArticleBadge(annotationsCount: number, relatedCount: number) {
     if (articleBadgeComponent) {
-        articleBadgeComponent.$set({ keyPointsCount, relatedCount });
+        articleBadgeComponent.$set({ annotationsCount, relatedCount });
     }
 }

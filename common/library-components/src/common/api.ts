@@ -3,7 +3,9 @@ import ky from "ky";
 import { Article } from "../store/_schema";
 import { getBrowserType, sendMessage } from "./extension";
 import { getNewTabVersion, getUnclutterVersion } from "./messaging";
+import type { ReplicacheProxy } from "./replicache";
 import { SearchResult } from "./search";
+import { getDomain } from "./util";
 
 const lindyApiUrl = "https://api2.lindylearn.io";
 // const lindyApiUrl = "http://localhost:8000";
@@ -19,7 +21,7 @@ export async function getPageHistory(url: string) {
 }
 
 export async function reportBrokenPage(url: string) {
-    const domain = getDomainFrom(new URL(url));
+    const domain = getDomain(url);
     const browserType = "serverless-screenshots";
 
     try {
@@ -68,10 +70,6 @@ export async function quickReport(
     } catch {
         return null;
     }
-}
-
-function getDomainFrom(url: URL) {
-    return url.hostname.replace("www.", "");
 }
 
 export async function searchArticles(user_id: string, query: string): Promise<SearchResult[]> {
@@ -143,4 +141,113 @@ export async function clusterLibraryArticles(
             body: JSON.stringify(importData),
         }
     );
+}
+
+export interface RelatedHighlight {
+    id: string;
+    article_id: string;
+    text: string;
+    score: number;
+
+    score2?: number;
+    anchor?: string;
+    excerpt: string;
+
+    // added locally
+    article?: Article;
+}
+
+export async function fetchRelatedAnnotations(
+    user_id: string,
+    article_id: string | undefined,
+    highlights: string[],
+    score_threshold: number = 0.5,
+    save_highlights: boolean = false
+): Promise<RelatedHighlight[][]> {
+    const response = await fetch(`${lindyApiUrl}/related/fetch`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            user_id,
+            for_article_id: article_id,
+            highlights,
+            score_threshold,
+            save_highlights,
+        }),
+    });
+    if (!response.ok) {
+        return [];
+    }
+
+    const json = await response.json();
+    return json?.related;
+}
+
+export async function populateRelatedArticles(
+    rep: ReplicacheProxy,
+    relatedGroups: RelatedHighlight[][]
+) {
+    await Promise.all(
+        relatedGroups.map(async (related) => {
+            await Promise.all(
+                related.map(async (related) => {
+                    related.article = await rep.query.getArticle(related.article_id);
+                })
+            );
+        })
+    );
+}
+
+export async function indexAnnotationVectors(
+    user_id: string,
+    article_id: string,
+    highlights: string[],
+    highlight_ids: string[] | undefined = undefined,
+    delete_previous: boolean = false
+) {
+    await fetch(`https://related4-jumq7esahq-ue.a.run.app?action=insert`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            user_id,
+            article_id,
+            highlights,
+            highlight_ids,
+            delete_previous,
+        }),
+    });
+}
+
+export async function deleteAnnotationVectors(
+    user_id: string,
+    article_id: string | undefined = undefined,
+    highlight_id: string | undefined = undefined
+) {
+    await fetch(`${lindyApiUrl}/related/delete`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            user_id,
+            article_id,
+            highlight_id,
+        }),
+    });
+}
+
+async function fetchRetry(url: string, options: RequestInit, n: number = 1): Promise<Response> {
+    try {
+        return await fetch(url, options);
+    } catch (err) {
+        if (n === 0) {
+            throw err;
+        }
+        await new Promise((resolve) => setTimeout(resolve, 1 * 1000));
+        return fetchRetry(url, options, n - 1);
+    }
 }

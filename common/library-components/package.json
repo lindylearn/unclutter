@@ -14,6 +14,7 @@
         "flexsearch": "^0.7.21",
         "jsdom": "^20.0.2",
         "rss-parser": "^3.12.0",
+        "tiny-async-pool": "^2.1.0",
         "use-resize-observer": "^9.0.2",
         "weekstart": "^1.1.0"
     },

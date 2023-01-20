@@ -36,7 +36,7 @@ export function setCssThemeVariable(varName, value, params = {}) {
         document.documentElement.style.setProperty(varName, value);
     } else if (varName === pageWidthThemeVariable) {
         document.documentElement.style.setProperty(varName, value);
-        console.log("here", getBottomIframe());
+
         getBottomIframe()?.body.style.setProperty(varName, value);
     } else if (varName === backgroundColorThemeVariable) {
         if (!params["setOnlyUi"]) {
