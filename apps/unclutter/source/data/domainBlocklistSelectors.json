@@ -1075,6 +1075,7 @@
         ".pretty-verdict__heading-container",
         ".read-more-container"
     ],
+    "techwalla.com": [".image-container"],
     "telegram.hr": [
         ".full.center-text.column-full-pad.subsection-title",
         ".full.flex.article-pad",
