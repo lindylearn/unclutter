@@ -64,7 +64,7 @@ async function initLibrary(isDev: boolean = false): Promise<UserInfo | undefined
     }
 
     if (isDev) {
-        await rep.mutate.updateUserInfo({ id: "dev-user", aiEnabled: false });
+        await rep.mutate.updateUserInfo({ id: "dev-user2", aiEnabled: true });
     }
     const userInfo = await rep.query.getUserInfo();
 
