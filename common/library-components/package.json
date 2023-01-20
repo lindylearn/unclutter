@@ -11,7 +11,7 @@
         "clsx": "^1.2.1",
         "d3-scale": "~3",
         "date-fns": "^2.29.3",
-        "flexsearch": "^0.7.21",
+        "flexsearch": "^0.7.31",
         "jsdom": "^20.0.2",
         "rss-parser": "^3.12.0",
         "tiny-async-pool": "^2.1.0",

@@ -67,7 +67,7 @@ export class SearchIndex {
                 })
             );
             const duration = Math.round(performance.now() - start);
-            console.log(`Loaded search index in ${duration}ms`);
+            console.log(`Loaded search index with ${savedKeys.length} entries in ${duration}ms`);
 
             this.isLoaded = true;
             return false;
