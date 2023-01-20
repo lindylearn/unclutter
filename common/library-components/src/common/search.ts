@@ -17,29 +17,28 @@ export interface SearchResult {
 
 export class SearchIndex {
     private isLoaded = false;
-    private index: Document<unknown, string[]>;
+    private index = new Document({
+        document: {
+            id: "id",
+            index: ["paragraph", "title"],
+            store: ["docId", "paragraph"],
+        },
+        // cache: true,
+        optimize: true,
+        charset: "latin:advanced",
+        tokenize: "forward",
+        context: {
+            resolution: 5,
+            depth: 3,
+            bidirectional: true,
+        },
+        // worker: true,
+    });
     private indexVersion = 1;
 
     private idSuffix: string;
     constructor(idSuffix: string) {
         this.idSuffix = idSuffix;
-        this.index = new Document({
-            document: {
-                id: "id",
-                index: ["paragraph", "title"],
-                store: ["docId", "paragraph"],
-            },
-            // cache: true,
-            optimize: true,
-            charset: "latin:advanced",
-            tokenize: "forward",
-            context: {
-                resolution: 5,
-                depth: 3,
-                bidirectional: true,
-            },
-            // worker: true,
-        });
     }
 
     private indexStore: UseStore;
@@ -63,7 +62,12 @@ export class SearchIndex {
             const start = performance.now();
             await Promise.all(
                 savedKeys.map(async (key: string) => {
-                    this.index.import(key, await get(key, this.indexStore));
+                    const doc = await get(key, this.indexStore);
+
+                    // storing other info in indexStore, so may throw
+                    try {
+                        await this.index.import(key, doc);
+                    } catch {}
                 })
             );
             const duration = Math.round(performance.now() - start);
