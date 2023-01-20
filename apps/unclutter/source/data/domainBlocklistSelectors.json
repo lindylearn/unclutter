@@ -758,6 +758,7 @@
         ".imagecache.imagecache-staff-headshot-small.imagecache-linked.imagecache-staff-headshot-small_linked",
         "#preface-top-wrapper"
     ],
+    "loversmagazine.com": [".interview-photo", ".section-header", ".interview"],
     "lowtechmagazine.com": ["#beta", "#all-comments", "#atp-comments"],
     "lwn.net": [".FeatureByline", ".IndexEntries"],
     "macrumors.com": [
