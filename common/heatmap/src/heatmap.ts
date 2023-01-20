@@ -1,28 +1,31 @@
-import { cosine_similarity_matrix } from "./groups";
-// import { getEmbeddingsONNX, loadEmbeddingsModelONNX } from "./onnx/embeddings_onnx";
-import { getEmbeddingsUSE, loadEmbeddingsModelUSE } from "./embeddings_use";
-import { getParagraphSentences } from "./sentences";
-import textRank from "./textrank";
 import * as tf from "@tensorflow/tfjs";
 import { Tensor2D } from "@tensorflow/tfjs";
 
-interface RankedSentence {
-    sentence: string;
+import { getEmbeddingsUSE, loadEmbeddingsModelUSE } from "./embeddings_use";
+import { getParagraphSentences } from "./sentences";
+import textRank from "./textrank";
+
+export interface RankedSentence {
+    id: string;
     score: number;
+    sentence: string;
 }
 
-export async function loadHeatmapModel(embeddingsType = "use") {
-    if (embeddingsType === "onnx") {
-        // await loadEmbeddingsModelONNX();
-    } else if (embeddingsType === "use") {
-        await loadEmbeddingsModelUSE();
+let loadingPromise: Promise<void> | undefined;
+export async function loadHeatmapModel() {
+    if (loadingPromise) {
+        await loadingPromise;
+        return;
     }
+    loadingPromise = loadEmbeddingsModelUSE(true, true);
+    await loadingPromise;
+    loadingPromise = undefined;
 }
 
 export async function getHeatmap(
     paragraphs: string[],
-    embeddingsType = "use",
-    maxSentences = 300
+    maxSentences = 300,
+    batchSize = 10
 ): Promise<RankedSentence[][]> {
     const t0 = performance.now();
 
@@ -37,7 +40,7 @@ export async function getHeatmap(
     }
 
     // compute embeddings
-    let embeddings: Tensor2D = await getEmbeddingsUSE(sentences);
+    let embeddings: Tensor2D = await getEmbeddingsUSE(sentences, batchSize);
     const matrix = (await tf.matMul(embeddings, embeddings, false, true).array()) as number[][];
 
     // get sentence scores
@@ -302,13 +305,14 @@ function groupSentenceScores(
     sentenceScores: number[],
     sentence_paragraph: number[]
 ): RankedSentence[][] {
-    const groupedSentenceScores = [];
+    const groupedSentenceScores: RankedSentence[][] = [];
     for (let i = 0; i < sentence_paragraph.length; i++) {
         const paragraph = sentence_paragraph[i];
         if (groupedSentenceScores[paragraph] === undefined) {
             groupedSentenceScores[paragraph] = [];
         }
         groupedSentenceScores[paragraph].push({
+            id: `heatmap_${i}`,
             sentence: sentences[i],
             score: sentenceScores[i],
         });

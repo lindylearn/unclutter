@@ -1,4 +1,4 @@
-export function getNodeOffset(node, nodeProp = "top"): number {
+export function getNodeOffset(node: HTMLElement | Range, nodeProp = "top"): number {
     const pageOffset = document.body.offsetTop;
 
     // getBoundingClientRect() is relative to scrolled viewport

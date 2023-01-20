@@ -21,7 +21,7 @@ export function PopularityMessage({ annotations, url, onClick }) {
 
     return (
         <div className="overflow-hidden rounded-lg bg-white drop-shadow-sm" onClick={onClick}>
-            {/* <div className="text-xs md:text-sm text-gray-400 text-right font-mono py-1 px-2 z-10 absolute">
+            {/* <div className="text-xs md:text-sm text-right font-mono py-1 px-2 z-10 absolute">
 				Article popularity
 			</div> */}
             <div className="-mt-8 w-full">

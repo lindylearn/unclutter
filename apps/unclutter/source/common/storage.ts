@@ -44,7 +44,7 @@ export async function setUserSettingsForDomain(domain, status) {
 }
 
 export interface UserTheme {
-    fontSize: number;
+    fontSize: string; // including 'px'
     pageWidth: string;
     colorTheme: themeName;
 }
@@ -64,7 +64,7 @@ export async function getUserTheme(): Promise<UserTheme> {
         colorTheme: theme.colorTheme || "auto",
     };
 }
-export async function mergeUserTheme(partialTheme: UserTheme): Promise<void> {
+export async function mergeUserTheme(partialTheme: Partial<UserTheme>): Promise<void> {
     const config = await browser.storage.sync.get(["custom-global-theme"]);
     const themeConfig = {
         ...(config["custom-global-theme"] || {}),

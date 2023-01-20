@@ -2,11 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+    font-size: 15px !important;
+}
+
 .bottom-review > * {
     background: var(--lindy-background-color) !important;
 }
 
 @media (max-width: 1200px) {
+    .bottom-container {
+        margin-left: 10px !important;
+    }
     .bottom-review > * {
         margin-left: 0 !important;
     }

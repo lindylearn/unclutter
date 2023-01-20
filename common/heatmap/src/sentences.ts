@@ -50,7 +50,7 @@ export function splitSentences(paragraph: string): string[] {
 }
 
 export function combineShortSentences(sentences: string[], threshold = 60) {
-    let combined_sentences = [];
+    let combined_sentences: string[] = [];
     for (let i = 0; i < sentences.length; i++) {
         if (i == 0) {
             combined_sentences.push(sentences[i]);

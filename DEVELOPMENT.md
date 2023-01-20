@@ -36,4 +36,4 @@ For hot reloading of the `common` packages run `yarn dev` at the root of the pro
 `yarn package` inside any of the extension folders generates the bundled `.zip` extension files.
 These need to be manually uploaded to the Chrome and Firefox extension stores by @phgn0. For Chrome, extension releases usually take 1-4 days to be approved due to their review process. 
 
-The `apps/library-web` website and `apps/screenshots` service are infrequently deployed on demand.
+The `apps/library-web` website and `apps/serverless-screenshots` service are infrequently deployed on demand.

@@ -1,35 +1,39 @@
 import React, { useMemo } from "react";
 import { ActivityCalendar, CalendarData, Level, Theme } from "./ActivityCalendar";
-import { eachDayOfInterval, subYears } from "date-fns";
+import { eachDayOfInterval, subMonths } from "date-fns";
 
 import { Article } from "../../store";
+import { getWeekStartByLocale } from "weekstart";
 
 export function ArticleActivityCalendar({
     darkModeEnabled,
     articles,
     startWeeksAgo,
     setStartWeeksAgo,
+    enableOverlay = false,
     defaultWeekOverlay,
     reportEvent = () => {},
 }: {
     darkModeEnabled: boolean;
     articles?: Article[];
-    startWeeksAgo: number;
-    setStartWeeksAgo: (weeksAgo: number) => void;
-    defaultWeekOverlay: number;
+    startWeeksAgo?: number;
+    setStartWeeksAgo?: (weeksAgo: number) => void;
+    enableOverlay?: boolean;
+    defaultWeekOverlay?: number;
     reportEvent?: (event: string, data?: any) => void;
 }) {
+    const weekStart = useMemo(() => getWeekStartByLocale(navigator.language), []);
     const data = useMemo(() => {
-        if (!articles) {
+        if (!articles || !weekStart) {
             return null;
         }
-        return getActivityData(articles);
-    }, [articles]);
+        return getActivityData(articles, weekStart);
+    }, [articles, weekStart]);
 
     function changeWeekOffset(offset) {
         const newValue = -offset;
         if (newValue !== startWeeksAgo) {
-            setStartWeeksAgo(newValue);
+            setStartWeeksAgo!(newValue);
             reportEvent("changeStatsTimeWindow", { startWeeksAgo: newValue });
         }
     }
@@ -39,10 +43,11 @@ export function ArticleActivityCalendar({
     }
 
     return (
-        <div className="animate-fadein my-2 mr-2 max-w-[860px]">
+        <div className="animate-fadein mt-[5px]">
             <ActivityCalendar
                 data={data || []}
-                startWeekOffset={-defaultWeekOverlay - 1}
+                enableOverlay={enableOverlay}
+                startWeekOffset={defaultWeekOverlay ? -defaultWeekOverlay - 1 : undefined}
                 onChangeWeekOffset={changeWeekOffset}
                 theme={getColorLevels(darkModeEnabled)}
                 overlayColor={
@@ -51,7 +56,7 @@ export function ArticleActivityCalendar({
                 labels={{
                     legend: { less: "Fewer articles read", more: "More" },
                 }}
-                blockRadius={3}
+                weekStart={weekStart}
                 hideTotalCount
                 loading={data === null}
                 hideColorLegend
@@ -71,8 +76,9 @@ export function ArticleActivityCalendar({
     );
 }
 
-export function getActivityData(articles: Article[]): CalendarData {
-    const since = subYears(new Date(), 1);
+export function getActivityData(articles: Article[], weekStart: number): CalendarData {
+    const since = subMonths(new Date(), 10);
+    since.setDate(weekStart); // fill first row
 
     const dateCounts: { [date: string]: number } = {};
     eachDayOfInterval({

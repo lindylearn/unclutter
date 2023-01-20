@@ -35,7 +35,7 @@ export const lightColors = [
     "rgba(204, 255, 144, 1.0)",
     // "rgba(244, 255, 129, 1.0)",
     // "rgba(255, 255, 141, 1.0)",
-    "rgba(255, 229, 127, 1.0)",
+    // "rgba(255, 229, 127, 1.0)",
     // "rgba(255, 209, 128, 1.0)",
     "rgba(255, 158, 128, 1.0)",
 ];
@@ -61,4 +61,12 @@ function _randomInRange(seed, min, max) {
 
     // a..b (b exclusive)
     return Math.floor(random() * (max - min) + min);
+}
+
+export function getAIAnnotationColor(ai_score?: number, darkModeEnabled: boolean = false) {
+    const baseColor = "rgba(250, 204, 21, 1.0)";
+    let score = (ai_score || 0.6) ** 3;
+    let multiplier = darkModeEnabled ? 0.6 : 0.8;
+
+    return baseColor.replace("1.0", `${multiplier * score}`);
 }

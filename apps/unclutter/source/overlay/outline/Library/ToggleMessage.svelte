@@ -27,7 +27,7 @@
         </div>
 
         <div
-            class="bottom-row mt-1 select-none overflow-ellipsis whitespace-pre text-gray-400 dark:text-stone-600"
+            class="bottom-row mt-1 select-none overflow-ellipsis whitespace-pre text-stone-400 dark:text-stone-600"
         >
             <slot name="subtitle" />
         </div>

@@ -1,11 +1,11 @@
-import clsx from "clsx";
 import React, { useContext, useEffect, useState } from "react";
-import { ArticleGroup, FilterButton, FilterContext } from "../..";
 import { getRandomLightColor } from "../../../common";
-import { listFeedItemsContentScript, listFeedItemsWeb } from "../../../feeds/list";
 import { Article, FeedSubscription, ReplicacheContext, useSubscribe } from "../../../store";
 import { FeedHeader } from "./FeedHeader";
 import { ArticleListsCache, DraggableContext } from "../../ArticleList/DraggableContext";
+import { FilterContext } from "../context";
+import { FilterButton } from "../Recent";
+import { ArticleGroup } from "../../ArticleList";
 
 export default function FeedDetailsTab({ darkModeEnabled, reportEvent }) {
     const { currentSubscription, setCurrentSubscription } = useContext(FilterContext);
