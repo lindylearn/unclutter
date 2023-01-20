@@ -4,14 +4,11 @@ import {
     enableAnnotationsFeatureFlag,
     enableSocialCommentsFeatureFlag,
     getFeatureFlag,
-    submittedFeedbackFlag,
 } from "../../common/featureFlags";
 import browser, { BrowserType, getBrowserType } from "../../common/polyfill";
 import { LibraryState } from "../../common/schema";
-import type { Article } from "@unclutter/library-components/dist/store/_schema";
 import { createStylesheetLink, overrideClassname } from "../../common/stylesheets";
 import { backgroundColorThemeVariable } from "../../common/theme";
-import FeedbackMessage from "../../overlay/outline/Bottom/FeedbackMessage.svelte";
 import { getElementYOffset } from "../../overlay/outline/components/common";
 import {
     createRootItem,
@@ -32,7 +29,6 @@ import ReadingTimeModifier from "./DOM/readingTime";
 import { setUserSettingsForDomain } from "../../common/storage";
 import LibraryModifier from "./library";
 import BodyStyleModifier from "./bodyStyle";
-import { reportEventContentScript } from "@unclutter/library-components/dist/common/messaging";
 import SmartHighlightsProxy from "./DOM/smartHighlightsProxy";
 
 @trackModifierExecution
@@ -53,7 +49,6 @@ export default class OverlayManager implements PageModifier {
     private topleftSvelteComponent: TopLeftContainer;
     private toprightSvelteComponent: TopRightContainerSvelte;
     private pageAdjacentSvelteComponent: PageAdjacentContainerSvelte;
-    private bottomSvelteComponent: any;
 
     private annotationsEnabled: boolean;
 
@@ -91,8 +86,7 @@ export default class OverlayManager implements PageModifier {
     }
 
     private topleftIframe: HTMLIFrameElement;
-    private bottomIframe: HTMLIFrameElement;
-    createIframes(enableBottomContainer: boolean = false) {
+    createIframes() {
         this.topleftIframe = createIframeNode("lindy-info-topleft");
         this.topleftIframe.style.setProperty("position", "fixed", "important"); // put on new layer
         this.topleftIframe.style.setProperty(
@@ -102,19 +96,6 @@ export default class OverlayManager implements PageModifier {
         ); // prevent initial transition
         document.documentElement.appendChild(this.topleftIframe);
         insertIframeFont(this.topleftIframe);
-
-        if (enableBottomContainer) {
-            // insert even if not used to set theme variables
-            this.bottomIframe = createIframeNode("lindy-info-bottom");
-            this.bottomIframe.style.position = "absolute"; // put on new layer
-            this.bottomIframe.style.display = "none"; // hide until used
-            // if (this.libraryEnabled) {
-            //     // allow overflow to the right
-            //     this.bottomIframe.style.width = `calc(var(--side-width) + var(--lindy-pagewidth))`;
-            // }
-            document.documentElement.appendChild(this.bottomIframe);
-            insertIframeFont(this.bottomIframe); // TODO run later? need to modify initial dark theme insert then
-        }
     }
 
     renderUi() {
@@ -229,33 +210,6 @@ export default class OverlayManager implements PageModifier {
         );
     }
 
-    async insertRenderBottomContainer() {
-        // run later, once libraryState available
-
-        const submittedAlready = await getFeatureFlag(submittedFeedbackFlag);
-        if (submittedAlready) {
-            return;
-        }
-
-        // only show feedback message after some usage
-        if (
-            !this.libraryModifier.libraryState?.readingProgress?.articleCount ||
-            this.libraryModifier.libraryState?.readingProgress?.articleCount < 5
-        ) {
-            return;
-        }
-
-        this.bodyStyleModifier.setBottomContainerPadding();
-        this.bottomIframe.style.display = "block";
-
-        this.bottomSvelteComponent = new FeedbackMessage({
-            target: this.bottomIframe?.contentDocument.body,
-            props: {
-                libraryModalModifier: this.libraryModalModifier,
-            },
-        });
-    }
-
     // insert font into main HTML doc
     insertUiFont() {
         const fontLink = document.createElement("link");
@@ -341,7 +295,7 @@ export default class OverlayManager implements PageModifier {
     fadeOutUi() {
         document
             .querySelectorAll(
-                "#lindy-page-settings-toprght, #lindy-page-settings-pageadjacent, #lindy-info-topleft, #lindy-info-bottom"
+                "#lindy-page-settings-toprght, #lindy-page-settings-pageadjacent, #lindy-info-topleft"
             )
             .forEach((e) => e.classList.add("lindy-ui-fadeout"));
 
@@ -353,7 +307,7 @@ export default class OverlayManager implements PageModifier {
     removeUi() {
         document
             .querySelectorAll(
-                "#lindy-page-settings-toprght, #lindy-page-settings-pageadjacent, #lindy-info-topleft, #lindy-info-bottom"
+                "#lindy-page-settings-toprght, #lindy-page-settings-pageadjacent, #lindy-info-topleft"
             )
             .forEach((e) => e.remove());
     }
@@ -391,7 +345,8 @@ export default class OverlayManager implements PageModifier {
         annotations.map((annotation) => {
             const outlineIndex = this.getOutlineIndexForAnnotation(annotation);
 
-            if (!annotation.isMyAnnotation) {
+            if (annotation.ai_created) {
+            } else if (!annotation.isMyAnnotation) {
                 if (action === "set" || action === "add") {
                     this.totalSocialCommentsCount += 1;
                     this.flatOutline[outlineIndex].socialCommentsCount += 1;
@@ -428,10 +383,6 @@ export default class OverlayManager implements PageModifier {
                 anchoredSocialHighlightsCount: this.totalSocialCommentsCount,
             });
         }, 4000);
-        browser.runtime.sendMessage(null, {
-            event: "setSocialAnnotationsCount",
-            count: this.totalSocialCommentsCount,
-        });
     }
 
     disableSocialAnnotations() {
@@ -473,10 +424,6 @@ export default class OverlayManager implements PageModifier {
             readingTimeLeft,
         });
 
-        if (this.bottomSvelteComponent && pageProgress >= 0.9 && this.maxPageProgress < 0.9) {
-            reportEventContentScript("seeFeedbackMessage");
-        }
-
         this.maxPageProgress = Math.max(this.maxPageProgress, pageProgress);
     }
 
@@ -486,12 +433,6 @@ export default class OverlayManager implements PageModifier {
         });
 
         this.libraryModalModifier.updateLibraryState(libraryState);
-    }
-
-    updateLinkedArticles(linkedArticles: Article[]) {
-        this.bottomSvelteComponent?.$set({
-            linkedArticles,
-        });
     }
 
     private darkModeEnabled: boolean = null;
@@ -509,18 +450,9 @@ export default class OverlayManager implements PageModifier {
                 this.topleftIframe.contentDocument?.head.lastChild as HTMLElement,
                 this.topleftIframe.contentDocument
             );
-            createStylesheetLink(
-                browser.runtime.getURL("overlay/outline/bottomDark.css"),
-                "dark-mode-ui-style",
-                this.bottomIframe?.contentDocument?.head.lastChild as HTMLElement,
-                this.bottomIframe?.contentDocument
-            );
         } else {
             document.querySelectorAll(".dark-mode-ui-style").forEach((e) => e.remove());
             this.topleftIframe.contentDocument?.head
-                ?.querySelectorAll(".dark-mode-ui-style")
-                .forEach((e) => e.remove());
-            this.bottomIframe?.contentDocument?.head
                 ?.querySelectorAll(".dark-mode-ui-style")
                 .forEach((e) => e.remove());
         }

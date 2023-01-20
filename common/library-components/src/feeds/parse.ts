@@ -39,6 +39,9 @@ function constructFeedSubscription(
     const postFrequency = getPostFrequency(feed);
 
     const domain = getDomain(sourceUrl);
+    if (!domain) {
+        return null;
+    }
     // ignore rss links, e.g. for http://liuliu.me/atom.xml
     if (feed.link && FEED_EXTENSIONS.some((e) => feed.link!.endsWith(e))) {
         feed.link = undefined;

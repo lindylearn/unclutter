@@ -8,26 +8,16 @@ const sidebarOffsetTopPx = 8;
 
 interface AnnotationsListProps {
     groupedAnnotations: LindyAnnotation[][];
-    hypothesisSyncEnabled: boolean;
-    showAllSocialAnnotations: boolean;
-    deleteHideAnnotation: (annotation: LindyAnnotation, threadStart: LindyAnnotation) => void;
-    onAnnotationHoverUpdate: (annotation: LindyAnnotation, hoverActive: boolean) => void;
-    unfocusAnnotation: (annotation: LindyAnnotation) => void;
-    createReply: (parent: LindyAnnotation, threadStart: LindyAnnotation) => void;
-    updateAnnotation: (annotation: LindyAnnotation) => void;
+    unfocusAnnotation: () => void;
+    fetchRelatedLater: (annotation: LindyAnnotation) => Promise<void>;
 }
 
-const annotationMarginPx = 8;
+const annotationMarginPx = 6;
 
 function AnnotationsList({
     groupedAnnotations,
-    hypothesisSyncEnabled,
-    showAllSocialAnnotations,
-    deleteHideAnnotation,
-    onAnnotationHoverUpdate,
     unfocusAnnotation,
-    createReply,
-    updateAnnotation,
+    fetchRelatedLater,
 }: AnnotationsListProps) {
     const itemsRef = useRef({}); // annotation id -> ref of rendered annotation node
 
@@ -118,7 +108,7 @@ function AnnotationsList({
                                 className="annotation-list-item absolute w-full"
                                 style={{
                                     top: groupTopOffset + innerGroupOffset,
-                                    maxWidth: "250px",
+                                    maxWidth: "275px",
                                 }}
                                 ref={(el) => {
                                     if (el) {
@@ -130,18 +120,11 @@ function AnnotationsList({
                             >
                                 <AnnotationThread
                                     annotation={annotation}
-                                    deleteHideAnnotation={deleteHideAnnotation}
                                     // heightLimitPx={
                                     //     groupHeightLimitPx / group.length
                                     // } // give each item equal share -- always avoids overflows
-                                    onHoverUpdate={(hoverActive: boolean) =>
-                                        // call hover on top level annotation
-                                        onAnnotationHoverUpdate(annotation, hoverActive)
-                                    }
                                     unfocusAnnotation={unfocusAnnotation}
-                                    hypothesisSyncEnabled={hypothesisSyncEnabled}
-                                    createReply={createReply}
-                                    updateAnnotation={updateAnnotation}
+                                    fetchRelatedLater={fetchRelatedLater}
                                 />
                             </div>
                         </CSSTransition>

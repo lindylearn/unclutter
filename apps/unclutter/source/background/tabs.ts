@@ -1,72 +1,97 @@
-import { enableSocialCountsFeatureFlag, getFeatureFlag } from "../common/featureFlags";
+import type { Annotation, UserInfo } from "@unclutter/library-components/dist/store";
 import browser from "../common/polyfill";
-import { getSocialCommentsCount } from "./annotationCounts";
+import { rep } from "./library/library";
+import { saveAIAnnotations, getRelatedAnnotationsCount } from "./library/smartHighlights";
 
 export class TabStateManager {
-    // store annotation counts per tab id, and update the badge text on active tab changes
-    // this avoids having to check the large counts map every time
-    private annotationCounts: { [tabId: string]: number } = {};
+    private userInfo: UserInfo;
+    private tabReaderModeActive: { [tabId: number]: boolean } = {};
+    private tabAnnotations: { [tabId: string]: Annotation[] } = {};
+    private relatedAnnotationsCount: { [tabId: string]: number } = {};
 
-    async onChangeActiveTab(tabId: number) {
-        if (!(await this.isCountEnabled())) {
-            return;
-        }
-
+    onChangeActiveTab(tabId: number) {
         this.renderBadgeCount(tabId);
     }
 
     onCloseTab(tabId: number) {
         // release storage
-        delete this.annotationCounts[tabId];
+        delete this.tabReaderModeActive[tabId];
+        delete this.tabAnnotations[tabId];
+        delete this.relatedAnnotationsCount[tabId];
+
+        // clear badge
+        this.renderBadgeCount(tabId);
     }
 
-    // check annotation counts for this url (locally, without a remote request)
-    // show count in extension badge if enabled, and return if we found annotations
-    async checkIsArticle(tabId: number, url: string): Promise<boolean> {
-        if (this.annotationCounts[tabId] === undefined) {
-            this.annotationCounts[tabId] = await getSocialCommentsCount(url);
-        }
-
-        if (await this.isCountEnabled()) {
-            this.renderBadgeCount(tabId);
-        }
-
-        return !!this.annotationCounts[tabId];
-    }
-
-    async getSocialAnnotationsCount(tabId: number, url: string): Promise<number> {
-        // use cached value if present -- is more accurate as updated by anchoring
-        if (this.annotationCounts[tabId]) {
-            return this.annotationCounts[tabId];
-        }
-
-        return await getSocialCommentsCount(url);
-    }
-
-    // update from content script, how many annotations actually displayed
-    async setSocialAnnotationsCount(tabId: number, count: number) {
-        if (this.annotationCounts[tabId] === count) {
+    // check saved annotations for a given url (without any network requests), to
+    // determine if the user previously used the extension on this page
+    async checkHasLocalAnnotations(tabId: number, articleId: string) {
+        if (!(await this.checkAIEnabled())) {
             return;
         }
 
-        this.annotationCounts[tabId] = count;
+        // clear immediately after navigation
+        this.onCloseTab(tabId);
 
-        if (await this.isCountEnabled()) {
-            this.renderBadgeCount(tabId);
+        this.tabAnnotations[tabId] = await rep.query.listArticleAnnotations(articleId);
+        // this.relatedAnnotationsCount[tabId] = await getRelatedAnnotationsCount(
+        //     this.userInfo,
+        //     this.tabAnnotations[tabId]
+        // );
+        this.renderBadgeCount(tabId);
+
+        return !!this.tabAnnotations[tabId]?.length;
+    }
+
+    hasAIAnnotations(tabId: number) {
+        const aiAnnotations = this.tabAnnotations[tabId]?.filter((a) => a.ai_created) || [];
+        return !!aiAnnotations?.length;
+    }
+
+    async setParsedAnnotations(tabId: number, annotations: Annotation[]) {
+        if (!(await this.checkAIEnabled())) {
+            return;
+        }
+
+        // highlights.ts may be injected by reader mode itself, so immediately save annotations once available
+        if (this.tabReaderModeActive[tabId]) {
+            saveAIAnnotations(this.userInfo, annotations);
+        }
+
+        this.tabAnnotations[tabId] = annotations;
+        // this.relatedAnnotationsCount[tabId] = await getRelatedAnnotationsCount(
+        //     this.userInfo,
+        //     annotations
+        // );
+
+        this.renderBadgeCount(tabId);
+    }
+
+    async onActivateReaderMode(tabId: number) {
+        this.tabReaderModeActive[tabId] = true;
+
+        const annotations = this.tabAnnotations[tabId];
+        if (annotations?.length) {
+            await saveAIAnnotations(this.userInfo, annotations);
         }
     }
 
     private async renderBadgeCount(tabId: number) {
-        const annotationCount = this.annotationCounts[tabId];
-        const badgeText = annotationCount ? annotationCount.toString() : "";
+        // const badgeCount = this.relatedAnnotationsCount[tabId];
+        const badgeCount = this.tabAnnotations[tabId]?.length;
 
-        browser.action.setBadgeBackgroundColor({ color: "#6b7280" });
-        browser.action.setBadgeText({ text: badgeText });
+        const text = badgeCount ? badgeCount.toString() : "";
+
+        browser.action.setBadgeBackgroundColor({ color: "#facc15" });
+        browser.action.setBadgeText({ text });
     }
 
-    // check settings every time in case user changed it
-    private async isCountEnabled(): Promise<boolean> {
-        const showAnnotationCount = await getFeatureFlag(enableSocialCountsFeatureFlag);
-        return showAnnotationCount;
+    // update enabled status on every reader mode call
+    // TODO cache this? but how to show counts once enabled?
+    private async checkAIEnabled() {
+        if (!this.userInfo) {
+            this.userInfo = await rep.query.getUserInfo();
+        }
+        return this.userInfo?.aiEnabled;
     }
 }

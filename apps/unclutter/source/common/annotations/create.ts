@@ -1,12 +1,14 @@
+import type { RelatedHighlight } from "@unclutter/library-components/dist/common/api";
 import { getUrlHash } from "@unclutter/library-components/dist/common/url";
 import type { Annotation, Article } from "@unclutter/library-components/dist/store/_schema";
+import { constructLocalArticleInfo } from "../schema";
 
 export function createDraftAnnotation(
-    url: string,
+    article_id: string,
     selector: object,
     reply_to: string = null
 ): LindyAnnotation {
-    return createAnnotation(url, selector, {
+    return createAnnotation(article_id, selector, {
         id: generateId(),
         reply_to,
         isMyAnnotation: true,
@@ -14,34 +16,32 @@ export function createDraftAnnotation(
 }
 
 export function createInfoAnnotation(
-    page_url: string,
+    article_id: string,
     selector: object,
-    article?: Article,
-    relatedAnnotations?: LindyAnnotation[]
+    article?: Article
 ): LindyAnnotation {
-    return createAnnotation(page_url, selector, {
+    return createAnnotation(article_id, selector, {
         id: generateId(),
         platform: "info",
         article,
-        relatedAnnotations,
     });
 }
 
 export function createAnnotation(
-    url: string,
+    article_id: string,
     selector: object,
     partial: Partial<LindyAnnotation> = {}
 ): LindyAnnotation {
     return {
         ...partial,
         id: partial.id,
-        url,
+        article_id,
         quote_text: selector?.[2]?.exact || "_",
         text: partial.text || "",
         author: partial.author || "",
         quote_html_selector: selector,
         platform: partial.platform || "ll",
-        link: partial.id,
+        link: partial.link,
         reply_count: partial.reply_count || 0,
 
         isMyAnnotation: partial.isMyAnnotation || false,
@@ -56,13 +56,13 @@ export function createAnnotation(
 }
 
 export function generateId(): string {
-    return Math.random().toString(36).slice(-10);
+    return Math.random().toString(36).slice(-20);
 }
 
 export interface LindyAnnotation {
     id: string;
     author: string;
-    platform: "h" | "hn" | "ll" | "info" | "summary";
+    platform: "h" | "hn" | "ll" | "info" | "summary" | "related";
     link: string;
     created_at: string;
     updated_at?: string; // only set in remote fetch or data store
@@ -76,9 +76,12 @@ export interface LindyAnnotation {
     user_upvoted: boolean;
     isPublic: boolean;
     reply_to?: string;
-    url: string; // page url or article id
+
+    article_id: string;
 
     h_id?: string; // remote id if synced with hypothesis
+    ai_created?: boolean;
+    ai_score?: number;
 
     // local state
     isMyAnnotation?: boolean;
@@ -90,17 +93,32 @@ export interface LindyAnnotation {
     listIndex?: number;
 
     // only for info annotations
+    infoType?: "link" | "related";
     article?: Article;
-    relatedAnnotations?: LindyAnnotation[];
+    excerpt?: string;
+    score?: number;
+    score2?: number;
+    summaryInfo?: ArticleSummaryInfo;
+    related?: RelatedHighlight[];
+    relatedToId?: string;
 }
 
+export interface ArticleSummaryInfo {
+    title: string;
+    keyPointsCount: number;
+    relatedCount: number;
+    topHighlights: string[];
+}
+
+// only used when importing from hypothesis
 // TODO serialize to Annotation type directly
 export function hypothesisToLindyFormat(annotation: any, currentUsername: string): LindyAnnotation {
+    const article_id = getUrlHash(annotation.uri);
     const author: string = annotation.user.match(/([^:]+)@/)[1];
     return {
         id: annotation.id,
         h_id: annotation.id,
-        url: annotation.uri,
+        article_id,
         author,
         isMyAnnotation: author === currentUsername,
         platform: "h",
@@ -118,6 +136,12 @@ export function hypothesisToLindyFormat(annotation: any, currentUsername: string
         user_upvoted: false,
         isPublic: annotation.permissions.read[0] === "group:__world__",
         reply_to: annotation.references?.[annotation.references.length - 1],
+
+        article: constructLocalArticleInfo(
+            annotation.uri,
+            article_id,
+            annotation.document.title?.[0]
+        ).article,
     };
 }
 
@@ -126,7 +150,7 @@ export function pickleLocalAnnotation(annotation: LindyAnnotation): Annotation {
     return {
         id: annotation.id,
         h_id: annotation.h_id,
-        article_id: annotation.url.startsWith("http") ? getUrlHash(annotation.url) : annotation.url,
+        article_id: annotation.article_id,
         created_at: Math.round(new Date(annotation.created_at).getTime() / 1000),
         updated_at: annotation.updated_at
             ? Math.round(new Date(annotation.updated_at).getTime() / 1000)
@@ -135,6 +159,8 @@ export function pickleLocalAnnotation(annotation: LindyAnnotation): Annotation {
         text: annotation.text,
         tags: annotation.tags,
         quote_html_selector: annotation.quote_html_selector,
+        ai_created: annotation.ai_created,
+        ai_score: annotation.ai_score,
     };
 }
 export function unpickleLocalAnnotation(annotation: Annotation): LindyAnnotation {
@@ -146,5 +172,7 @@ export function unpickleLocalAnnotation(annotation: Annotation): LindyAnnotation
             ? new Date(annotation.updated_at * 1000).toISOString()
             : undefined,
         isMyAnnotation: true,
+        ai_created: annotation.ai_created,
+        ai_score: annotation.ai_score,
     });
 }

@@ -1,13 +1,15 @@
 import { getDomain } from "@unclutter/library-components/dist/common/util";
 import { setUserSettingsForDomain } from "../../common/storage";
-import SmartHighlightsModifier, {
-    RelatedHighlight,
-    RankedSentence,
-} from "../../content-script/modifications/DOM/smartHighlights";
+import SmartHighlightsModifier from "../../content-script/modifications/DOM/smartHighlights";
+// import type { RelatedHighlight } from "@unclutter/library-components/dist/common/api";
 // import HighlightDetailSvelte from "./HighlightDetail.svelte";
 import ArticleBadgeSvelte from "./ArticleBadge.svelte";
 
-export function renderHighlightsLayer(enablePageView: () => void, enhanceActive: boolean) {
+export function renderHighlightsLayer(
+    userId: string,
+    enablePageView: () => void,
+    enhanceActive: boolean
+) {
     // document.addEventListener("mousedown", onSelectionStart);
     // document.addEventListener("mouseup", onSelectionDone);
     // document.addEventListener("contextmenu", removeHighligher);
@@ -19,21 +21,10 @@ export function renderHighlightsLayer(enablePageView: () => void, enhanceActive:
     //     }
     // });
 
-    function onHighlightClick(range: Range, related: RelatedHighlight[]) {
-        // enablePageView();
-
-        removeHighligher();
-        const rect = range.getBoundingClientRect();
-        const quote = range.toString();
-        renderHighlighter(rect, quote, related);
-    }
-    const smartHighlightsModifier = new SmartHighlightsModifier(onHighlightClick);
+    const smartHighlightsModifier = new SmartHighlightsModifier(userId);
 
     if (enhanceActive) {
-        // TODO move to shared fn (same as below)
-        smartHighlightsModifier.isProxyActive = true;
-        smartHighlightsModifier.enableHighlightsClick = true;
-        smartHighlightsModifier.enableScrollBar = false;
+        setReaderModeSettings();
     } else {
         const font = document.createElement("link");
         font.href = "https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap";
@@ -41,39 +32,54 @@ export function renderHighlightsLayer(enablePageView: () => void, enhanceActive:
         font.rel = "stylesheet";
         document.head.appendChild(font);
 
-        smartHighlightsModifier.enableStyleTweaks();
+        // smartHighlightsModifier.enableStyleTweaks();
     }
 
     function preparePageView() {
         // disable scrollbar for reader mode
-        smartHighlightsModifier.disableStyleTweaks();
-        smartHighlightsModifier.disableScrollbar();
+        // smartHighlightsModifier.disableStyleTweaks();
+        // smartHighlightsModifier.disableScrollbar();
 
-        // handle clicks on highlights in enhance.ts
-        smartHighlightsModifier.isProxyActive = true;
+        // save highlights async once ready
+        setTimeout(() => smartHighlightsModifier.saveAnnotations(), 2000);
 
-        // enable click layer on next re-paint
-        smartHighlightsModifier.enableHighlightsClick = true;
-
-        // scrollbar not supported yet
-        smartHighlightsModifier.enableScrollBar = false;
+        setReaderModeSettings();
     }
+    function setReaderModeSettings() {}
     function enablePageViewInner() {
         preparePageView();
         enablePageView();
     }
-    smartHighlightsModifier.parseUnclutteredArticle().then(() => {
-        if (!enhanceActive) {
-            renderArticleBadge(
-                smartHighlightsModifier.keyPointsCount,
-                smartHighlightsModifier.relatedCount,
-                smartHighlightsModifier.topHighlights,
-                smartHighlightsModifier.articleSummary,
-                smartHighlightsModifier.disableAnnotations.bind(smartHighlightsModifier),
-                enablePageViewInner
-            );
+
+    async function fetchHighlights() {
+        const isArticle = await smartHighlightsModifier.fetchAnnotations();
+        updateArticleBadge(
+            smartHighlightsModifier.annotationsCount,
+            smartHighlightsModifier.relatedCount
+        );
+        if (!isArticle) {
+            return;
         }
-    });
+        if (enhanceActive) {
+            await smartHighlightsModifier.saveAnnotations();
+            return;
+        }
+
+        await smartHighlightsModifier.fetchRelated();
+        updateArticleBadge(
+            smartHighlightsModifier.annotationsCount,
+            smartHighlightsModifier.relatedCount
+        );
+    }
+
+    renderArticleBadge(
+        smartHighlightsModifier.annotationsCount,
+        smartHighlightsModifier.relatedCount,
+        () => {},
+        enablePageViewInner
+    );
+
+    fetchHighlights();
 
     return preparePageView;
 }
@@ -93,43 +99,42 @@ export function renderHighlightsLayer(enablePageView: () => void, enhanceActive:
 //     renderHighlighter(rect, quote);
 // }
 
-function removeHighligher() {
-    document.getElementById("lindy-highlighter")?.remove();
-}
+// function removeHighligher() {
+//     document.getElementById("lindy-highlighter")?.remove();
+// }
 
-function renderHighlighter(highlightRect: DOMRect, quote: string, related: RelatedHighlight[]) {
-    const container = document.createElement("div");
-    container.id = "lindy-highlighter";
-    container.style.position = "absolute";
-    container.style.zIndex = "9999999999";
-    container.style.top = `${
-        highlightRect.top + highlightRect.height + window.scrollY + document.body.scrollTop
-    }px`;
-    container.style.left = `${highlightRect.left}px`;
+// function renderHighlighter(highlightRect: DOMRect, quote: string, related: RelatedHighlight[]) {
+//     const container = document.createElement("div");
+//     container.id = "lindy-highlighter";
+//     container.style.position = "absolute";
+//     container.style.zIndex = "9999999999";
+//     container.style.top = `${
+//         highlightRect.top + highlightRect.height + window.scrollY + document.body.scrollTop
+//     }px`;
+//     container.style.left = `${highlightRect.left}px`;
 
-    document.body.appendChild(container);
+//     document.body.appendChild(container);
 
-    // new HighlightDetailSvelte({
-    //     target: container,
-    //     props: { quote, related },
-    // });
+//     new HighlightDetailSvelte({
+//         target: container,
+//         props: { quote, related },
+//     });
 
-    // allow clicks on the highlighter
-    container.addEventListener("mousedown", (event) => {
-        event.preventDefault();
-        event.stopPropagation();
-    });
-    container.addEventListener("mouseup", (event) => {
-        event.preventDefault();
-        event.stopPropagation();
-    });
-}
+//     // allow clicks on the highlighter
+//     container.addEventListener("mousedown", (event) => {
+//         event.preventDefault();
+//         event.stopPropagation();
+//     });
+//     container.addEventListener("mouseup", (event) => {
+//         event.preventDefault();
+//         event.stopPropagation();
+//     });
+// }
 
+let articleBadgeComponent: ArticleBadgeSvelte;
 function renderArticleBadge(
-    keyPointsCount: number,
+    annotationsCount: number,
     relatedCount: number,
-    topHighlights: RankedSentence[],
-    articleSummary: string,
     disableAnnotations: () => void,
     enablePageView: () => void
 ) {
@@ -137,13 +142,11 @@ function renderArticleBadge(
     container.id = "lindy-article-badge";
     document.documentElement.appendChild(container);
 
-    new ArticleBadgeSvelte({
+    articleBadgeComponent = new ArticleBadgeSvelte({
         target: container.attachShadow({ mode: "open" }),
         props: {
-            keyPointsCount,
+            annotationsCount,
             relatedCount,
-            topHighlights,
-            articleSummary,
             enablePageView: () => {
                 // anchor on left edge to prevent jump on scrollbar insert
                 const rect = container.getBoundingClientRect();
@@ -161,4 +164,10 @@ function renderArticleBadge(
             },
         },
     });
+}
+
+function updateArticleBadge(annotationsCount: number, relatedCount: number) {
+    if (articleBadgeComponent) {
+        articleBadgeComponent.$set({ annotationsCount, relatedCount });
+    }
 }

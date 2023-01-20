@@ -18,7 +18,7 @@ import SettingsTab from "./tabs/Settings";
 import TopicsListTab from "./tabs/TopicsList";
 import WelcomeTab from "./tabs/Welcome";
 import ModalTestTab from "./tabs/ModalTest";
-import Welcome2Tab from "./tabs/Welcome2";
+import Welcome2Tab from "./new/NewWelcome";
 import { reportEventPosthog } from "../common/metrics";
 import Import2Tab from "./tabs/Import2";
 import ImportTab from "./tabs/Import/_Import";

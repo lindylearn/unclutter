@@ -66,7 +66,7 @@
 .crisp-client.crisp-client .cc-52lo .cc-1s3d,
 .crisp-client.crisp-client .cc-52lo .cc-1801:before,
 .crisp-client.crisp-client .cc-52lo .cc-1801:after {
-    background-color: hsl(51, 80%, 64%) !important;
+    background-color: theme(colors.lindy) !important;
 }
 .crisp-client.crisp-client .cc-52lo .cc-guf7,
 .crisp-client .cc-52lo .cc-u6xv:hover {
@@ -101,4 +101,20 @@
 }
 .search-topic:hover > .search-topic-delete {
     opacity: 1;
+}
+
+/* login */
+.sbui-btn-primary,
+.sbui-checkbox[type="checkbox"]:checked {
+    background-color: theme(colors.lindy) !important;
+}
+.sbui-typography-link {
+    color: rgba(75, 85, 99, var(--tw-text-opacity)) !important;
+}
+.sbui-input:focus {
+    box-shadow: 0 0 0 2px rgba(237 215 91 / 10%) !important;
+}
+.sbui-input:focus,
+.sbui-checkbox:hover {
+    border-color: theme(colors.lindy) !important;
 }

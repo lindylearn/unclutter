@@ -1,5 +1,5 @@
 import { overrideClassname } from "../common/stylesheets";
-import { getDomainFrom } from "../common/util";
+import { getDomain } from "@unclutter/library-components/dist/common/util";
 import AnnotationsModifier from "./modifications/annotations/annotationsModifier";
 import BackgroundModifier from "./modifications/background";
 import BodyStyleModifier from "./modifications/bodyStyle";
@@ -27,13 +27,13 @@ export default class TransitionManager implements PageModifier {
     private articleUrl = window.location.href;
     private articleId = getUrlHash(this.articleUrl);
     private title = document.title;
-    private domain = getDomainFrom(new URL(this.articleUrl));
+    private domain = getDomain(this.articleUrl);
 
     private bodyStyleModifier = new BodyStyleModifier();
     private cssomProvider = new CSSOMProvider();
     private responsiveStyleModifier = new ResponsiveStyleModifier(this.cssomProvider);
     private stylePatchesModifier = new StylePatchesModifier(this.cssomProvider);
-    private annotationsModifier = new AnnotationsModifier(this.articleUrl);
+    private annotationsModifier = new AnnotationsModifier(this.articleId);
     private textContainerModifier = new TextContainerModifier();
     private contentBlockModifier = new ContentBlockModifier(
         this.domain,
@@ -62,7 +62,10 @@ export default class TransitionManager implements PageModifier {
         this.readingTimeModifier,
         this.annotationsModifier
     );
-    private smartHighlightsProxy = new SmartHighlightsProxyModifier(this.annotationsModifier);
+    private smartHighlightsProxy = new SmartHighlightsProxyModifier(
+        this.articleId,
+        this.annotationsModifier
+    );
     private overlayManager = new OverlayManager(
         this.domain,
         this.themeModifier,
@@ -81,11 +84,8 @@ export default class TransitionManager implements PageModifier {
         this.readingTimeModifier,
         this.libraryModifier
     );
-    // private aiAnnotationsModifier = new AIAnnotationsModifier(
-    //     this.annotationsModifier,
-    //     this.textContainerModifier
-    // );
     // private linkAnnotationsModifier = new LinkAnnotationsModifier(
+    //     this.articleId,
     //     this.annotationsModifier,
     //     this.libraryModifier,
     //     this.overlayManager
@@ -95,6 +95,8 @@ export default class TransitionManager implements PageModifier {
 
     async prepare() {
         this.loggingModifier.prepare();
+
+        this.smartHighlightsProxy.injectHighlightsScript();
 
         // *** read DOM phase ***
 
@@ -213,7 +215,7 @@ export default class TransitionManager implements PageModifier {
 
         // *** write DOM phase ***
         // insert iframes & render UI
-        this.overlayManager.createIframes(false);
+        this.overlayManager.createIframes();
         this.overlayManager.renderUi();
         this.keyboardModifier.observeShortcuts();
 
@@ -243,13 +245,13 @@ export default class TransitionManager implements PageModifier {
         this.overlayManager.insertUiFont(); // causes ~50ms layout reflow
 
         this.libraryModifier.startReadingProgressSync();
-        this.libraryModifier.scrollToLastReadingPosition();
+        // this.libraryModifier.scrollToLastReadingPosition();
 
         await new Promise((r) => setTimeout(r, 2000));
         this.loggingModifier.afterTransitionInDone(); // wait until feed likely parsed
 
         // this.overlayManager.insertRenderBottomContainer();
-        // this.reviewModeModifier.afterTransitionIn();
+        this.reviewModeModifier.afterTransitionIn();
     }
 
     beforeTransitionOut() {

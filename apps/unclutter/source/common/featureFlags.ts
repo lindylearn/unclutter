@@ -15,13 +15,14 @@ export async function setFeatureFlag(key, status) {
 export async function getAllFeatureFlags() {
     const reportedFlags = [
         allowlistDomainOnManualActivationFeatureFlag,
-        collectAnonymousMetricsFeatureFlag,
         enableBootUnclutterMessage,
         hypothesisSyncFeatureFlag,
         enableSocialCountsFeatureFlag,
         enableAnnotationsFeatureFlag,
         enableSocialCommentsFeatureFlag,
         submittedFeedbackFlag,
+        enableExperimentalFeatures,
+        dismissedLibrarySignupMessage,
     ];
 
     // does not include defaultFeatureFlags
@@ -31,7 +32,6 @@ export async function getAllFeatureFlags() {
 }
 
 export const allowlistDomainOnManualActivationFeatureFlag = "allowlist-domain-manual-activation";
-export const collectAnonymousMetricsFeatureFlag = "collect-anonymous-metrics";
 export const enableBootUnclutterMessage = "enable-boot-unclutter-message";
 export const enableArchiveDetection = "enable-archive-detection";
 export const isDevelopmentFeatureFlag = "is-dev";
@@ -52,7 +52,6 @@ export const showLibrarySignupFlag = "show-library-signup";
 
 export const defaultFeatureFlags = {
     [allowlistDomainOnManualActivationFeatureFlag]: false,
-    [collectAnonymousMetricsFeatureFlag]: true,
     [enableBootUnclutterMessage]: false,
     [isDevelopmentFeatureFlag]: false,
     [enableSocialCountsFeatureFlag]: true,

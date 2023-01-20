@@ -1,3 +1,4 @@
+import { getUrlHash } from "@unclutter/library-components/dist/common/url";
 import { createAnnotation, LindyAnnotation } from "../../common/annotations/create";
 import browser from "../../common/polyfill";
 
@@ -8,7 +9,7 @@ export async function getAllLegacyAnnotations(): Promise<LindyAnnotation[]> {
         .filter((pageKey) => pageKey.startsWith("local-annotations_"))
         .reduce((list, pageKey) => [...list, ...Object.values(allStorage[pageKey])], [])
         .map((annotation) => {
-            return createAnnotation(annotation.url, annotation.quote_html_selector, {
+            return createAnnotation(getUrlHash(annotation.url), annotation.quote_html_selector, {
                 ...annotation,
                 created_at: new Date(annotation.created_at).toISOString(),
                 isMyAnnotation: true,

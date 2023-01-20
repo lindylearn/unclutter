@@ -6,6 +6,7 @@
         "@rocicorp/rails": "^0.2.2",
         "@types/offscreencanvas": "^2019.7.0",
         "@unclutter/library-components": "*",
+        "@unclutter/heatmap": "*",
         "approx-string-match": "^2.0.0",
         "clsx": "^1.2.1",
         "crypto-js": "^4.1.1",
@@ -23,6 +24,7 @@
         "react-transition-group": "^4.4.2",
         "recharts": "^2.1.9",
         "replicache": "^11.2.0",
+        "sbd": "^1.0.19",
         "seedrandom": "^3.0.5",
         "svelte": "^3.46.6",
         "timeago.js": "^4.0.2",
@@ -79,7 +81,7 @@
         "xo": "^0.44.0"
     },
     "scripts": {
-        "build": "rollup -c rollup.config.js",
+        "build": "export NODE_OPTIONS='--max-old-space-size=8192' && rollup -c rollup.config.js",
         "build-v2": "yarn build && yarn install-v2-manifest",
         "watch": "rollup -c rollup.config.js -w",
         "install-v3-manifest": "cp source/manifest.json distribution/manifest.json",

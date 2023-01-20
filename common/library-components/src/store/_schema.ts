@@ -66,6 +66,8 @@ export const annotationSchema = entitySchema.extend({
     tags: z.optional(z.array(z.string())),
     is_favorite: z.optional(z.boolean()),
 
+    ai_created: z.optional(z.boolean()),
+    ai_score: z.optional(z.number()),
     h_id: z.optional(z.string()), // remote id if synced with hypothesis
 });
 export type Annotation = z.infer<typeof annotationSchema>;
@@ -97,12 +99,12 @@ export type Settings = z.infer<typeof settingsSchema>;
 export const userInfoSchema = z.object({
     id: z.string(),
     name: z.optional(z.string()),
-    signinProvider: z.enum(["email", "google", "github"]),
-    email: z.string(),
 
-    accountEnabled: z.boolean(),
-    onPaidPlan: z.boolean(),
-    trialEnabled: z.optional(z.boolean()),
+    accountEnabled: z.optional(z.boolean()),
+    signinProvider: z.optional(z.enum(["email", "google", "github"])),
+    email: z.optional(z.string()),
+
+    aiEnabled: z.optional(z.boolean()),
 });
 export type UserInfo = z.infer<typeof userInfoSchema>;
 

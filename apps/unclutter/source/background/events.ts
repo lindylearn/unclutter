@@ -4,7 +4,6 @@ import type { Runtime, Tabs } from "webextension-polyfill";
 import { extensionSupportsUrl } from "../common/articleDetection";
 import { handleReportBrokenPage } from "../common/bugReport";
 import {
-    collectAnonymousMetricsFeatureFlag,
     enableExperimentalFeatures,
     isDevelopmentFeatureFlag,
     setFeatureFlag,
@@ -13,7 +12,6 @@ import browser from "../common/polyfill";
 import { getLibraryAuth, getLibraryUser, setLibraryAuth } from "../common/storage";
 import { saveInitialInstallVersionIfMissing } from "../common/updateMessages";
 import { fetchCss } from "./actions";
-import { loadAnnotationCountsToMemory } from "./annotationCounts";
 import { getAllBookmarks, requestBookmarksPermission } from "./bookmarks";
 import { enableInTab, injectScript, togglePageViewMessage } from "./inject";
 import { createAlarmListeners, onNewInstall, setupWithPermissions } from "./install";
@@ -22,6 +20,7 @@ import {
     initLibrary,
     processReplicacheMessage,
     processReplicacheSubscribe,
+    rep,
 } from "./library/library";
 import { captureActiveTabScreenshot, getLocalScreenshot } from "./library/screenshots";
 import { search } from "./library/search";
@@ -34,6 +33,8 @@ import {
     startMetrics,
 } from "./metrics";
 import { TabStateManager } from "./tabs";
+import { getHeatmap, loadHeatmapModel } from "@unclutter/heatmap/dist/heatmap";
+import { getUrlHash } from "@unclutter/library-components/dist/common/url";
 
 const tabsManager = new TabStateManager();
 
@@ -64,13 +65,9 @@ browser.action.onClicked.addListener((tab: Tabs.Tab) => {
                 return;
             }
 
-            tabsManager.checkIsArticle(tab.id, tab.url);
             if (didEnable) {
-                tabsManager
-                    .getSocialAnnotationsCount(tab.id, tab.url)
-                    .then((socialCommentsCount) =>
-                        reportEnablePageView("manual", socialCommentsCount)
-                    );
+                tabsManager.onActivateReaderMode(tab.id);
+                reportEnablePageView("manual");
             }
         });
     }
@@ -88,8 +85,6 @@ function handleMessage(
     sender: Runtime.MessageSender,
     sendResponse: (...args: any[]) => void
 ) {
-    // console.log(`Received '${message.event}' message:`, message);
-
     if (message.event === "disabledPageView") {
         reportDisablePageView(message.trigger, message.pageHeightPx);
     } else if (message.event === "requestEnhance") {
@@ -99,13 +94,14 @@ function handleMessage(
 
         if (message.type === "full") {
             injectScript(sender.tab.id, "content-script/enhance.js");
-
-            tabsManager
-                .getSocialAnnotationsCount(sender.tab.id, sender.url)
-                .then((socialCommentsCount) =>
-                    reportEnablePageView(message.trigger, socialCommentsCount)
-                );
+            tabsManager.onActivateReaderMode(sender.tab.id);
+            reportEnablePageView(message.trigger);
         } else if (message.type === "highlights") {
+            if (tabsManager.hasAIAnnotations(sender.tab.id)) {
+                // already parsed page for annotations before
+                return;
+            }
+
             injectScript(sender.tab.id, "content-script/highlights.js");
         }
     } else if (message.event === "openOptionsPage") {
@@ -118,15 +114,6 @@ function handleMessage(
     } else if (message.event === "getRemoteFeatureFlags") {
         getRemoteFeatureFlags().then(sendResponse);
         return true;
-    } else if (message.event === "checkLocalAnnotationCount") {
-        // trigger from boot.js because we don't have tabs permissions
-        tabsManager.checkIsArticle(sender.tab.id, sender.url).then(sendResponse);
-        return true;
-    } else if (message.event === "getSocialAnnotationsCount") {
-        tabsManager.getSocialAnnotationsCount(sender.tab.id, sender.url).then(sendResponse);
-        return true;
-    } else if (message.event === "setSocialAnnotationsCount") {
-        tabsManager.setSocialAnnotationsCount(sender.tab.id, message.count);
     } else if (message.event === "reportBrokenPage") {
         handleReportBrokenPage(message.data);
     } else if (message.event === "openLink") {
@@ -141,12 +128,13 @@ function handleMessage(
             await new Promise((resolve) => setTimeout(resolve, 100));
 
             await injectScript(tab.id, "content-script/enhance.js");
+            tabsManager.onActivateReaderMode(sender.tab.id);
 
-            if (message.focusedAnnotation) {
-                await new Promise((resolve) => setTimeout(resolve, 500));
+            if (message.annotationId) {
+                await new Promise((resolve) => setTimeout(resolve, 200));
                 await browser.tabs.sendMessage(tab.id, {
                     event: "focusAnnotation",
-                    focusedAnnotation: message.focusedAnnotation,
+                    annotationId: message.annotationId,
                 });
             }
         };
@@ -174,8 +162,8 @@ function handleMessage(
         });
     } else if (message.event === "initLibrary") {
         initLibrary();
-    } else if (message.event === "getLibraryAuth") {
-        getLibraryAuth().then(sendResponse);
+    } else if (message.event === "getUserInfo") {
+        rep?.query.getUserInfo().then(sendResponse);
         return true;
     } else if (message.event === "processReplicacheMessage") {
         processReplicacheMessage(message).then(sendResponse);
@@ -199,6 +187,17 @@ function handleMessage(
     } else if (message.event === "fetchRssFeed") {
         fetchRssFeed(message.feedUrl).then(sendResponse);
         return true;
+    } else if (message.event === "getHeatmap") {
+        getHeatmap(message.paragraphs).then(sendResponse);
+        return true;
+    } else if (message.event === "clearTabState") {
+        tabsManager.onCloseTab(sender.tab.id);
+    } else if (message.event === "checkHasLocalAnnotations") {
+        const articleId = getUrlHash(sender.tab.url);
+        tabsManager.checkHasLocalAnnotations(sender.tab.id, articleId).then(sendResponse);
+        return true;
+    } else if (message.event === "setParsedAnnotations") {
+        tabsManager.setParsedAnnotations(sender.tab.id, message.annotations);
     }
 
     return false;
@@ -221,7 +220,6 @@ browser.runtime.onInstalled.addListener(async ({ reason }) => {
     const isDev = extensionInfo.installType === "development";
 
     if (isDev) {
-        await setFeatureFlag(collectAnonymousMetricsFeatureFlag, false);
         await setFeatureFlag(isDevelopmentFeatureFlag, true);
         await setFeatureFlag(enableExperimentalFeatures, true);
     }
@@ -263,9 +261,14 @@ async function initializeServiceWorker() {
     const isDev = extensionInfo.installType === "development";
 
     startMetrics(isDev);
+    const userInfo = await initLibrary(isDev);
 
-    initLibrary();
-    loadAnnotationCountsToMemory();
+    if (userInfo?.aiEnabled) {
+        // load tensorflow model
+        // unfortunately cannot create nested service workers, see https://bugs.chromium.org/p/chromium/issues/detail?id=1219164
+        // another option: importScript()? https://stackoverflow.com/questions/66406672/how-do-i-import-scripts-into-a-service-worker-using-chrome-extension-manifest-ve
+        loadHeatmapModel();
+    }
 }
 
 initializeServiceWorker();
