@@ -18,7 +18,7 @@ export default function App() {
     return (
         <div className="font-text h-screen w-screen bg-white p-6 text-stone-800 dark:bg-[#212121] dark:text-[rgb(232,230,227)]">
             <Head>
-                <title>Your Unclutter Library</title>
+                <title>Your Unclutter Account</title>
             </Head>
 
             <aside className="absolute">

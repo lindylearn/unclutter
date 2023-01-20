@@ -2,7 +2,7 @@ import { getUser, withPageAuth } from "@supabase/auth-helpers-nextjs";
 import { createContext, useEffect } from "react";
 import { createSpace, spaceExists } from "@unclutter/replicache-nextjs/lib/backend";
 import NewApp from "../src/new/NewApp";
-import { setUnclutterLibraryAuth } from "@unclutter/library-components/dist/common";
+
 import { useReplicache } from "@unclutter/replicache-nextjs/lib/frontend";
 import {
     mutators,
@@ -15,10 +15,6 @@ import {
 export const SearchWorkerContent = createContext<MessagePort | null>(null);
 
 export default function Index({ userId }: { userId: string }) {
-    useEffect(() => {
-        setUnclutterLibraryAuth(userId);
-    }, []);
-
     const rep = useReplicache({
         name: userId,
         mutators,

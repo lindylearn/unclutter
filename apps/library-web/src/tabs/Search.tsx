@@ -40,7 +40,6 @@ export default function SearchTab({ searchQuery }) {
         try {
             const searchIndex = wrapWorker<SearchIndex>(workerPort);
 
-            // const hits = await searchArticles(user.id, query);
             const hits = await searchIndex.search(query);
             let hitsWithArticles = await Promise.all(
                 hits.map(async (hit) => ({

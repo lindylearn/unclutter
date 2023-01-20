@@ -72,7 +72,7 @@ export default function HighlightsTab({}: {}) {
             setActiveCurrentFilter(false);
         }
     }, [query]);
-    const queryDebounced = useDebounce(query, 500);
+    const queryDebounced = useDebounce(query, 200);
     useEffect(() => {
         if (!query || !rep) {
             return;

@@ -2,7 +2,7 @@ import { useUser } from "@supabase/auth-helpers-react";
 import clsx from "clsx";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "wouter";
-import { getBrowserType, setUnclutterLibraryAuth } from "@unclutter/library-components/dist/common";
+import { getBrowserType } from "@unclutter/library-components/dist/common";
 import { UITag } from "@unclutter/library-components/dist/components";
 import BrowserBookmarksImportSettings from "./Bookmarks";
 import CSVImportSettings from "./CSV";
@@ -73,14 +73,6 @@ export default function ImportTab({}) {
             importOptions["bookmarks"].backgroundColor = "bg-orange-100 dark:bg-orange-900";
         }
     }, []);
-
-    // access global state
-    const { user } = useUser();
-    useEffect(() => {
-        if (user) {
-            setUnclutterLibraryAuth(user.id);
-        }
-    }, [user]);
 
     // local state
     const [activeOption, setActiveOption] = useState<keyof typeof importOptions>();

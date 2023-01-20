@@ -7,11 +7,6 @@ import { setUnclutterLibraryAuth } from "@unclutter/library-components/dist/comm
 
 export default function SettingsTab({}) {
     const { user } = useUser();
-    useEffect(() => {
-        if (user) {
-            setUnclutterLibraryAuth(user.id);
-        }
-    }, [user]);
 
     if (!user) {
         return <></>;

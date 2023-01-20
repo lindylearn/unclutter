@@ -89,9 +89,7 @@ export class TabStateManager {
     // update enabled status on every reader mode call
     // TODO cache this? but how to show counts once enabled?
     private async checkAIEnabled() {
-        if (!this.userInfo) {
-            this.userInfo = await rep.query.getUserInfo();
-        }
+        this.userInfo = await rep?.query.getUserInfo();
         return this.userInfo?.aiEnabled;
     }
 }

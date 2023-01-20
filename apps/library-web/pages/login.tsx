@@ -5,7 +5,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import posthog from "posthog-js";
 import { useEffect } from "react";
-import { setUnclutterLibraryAuth } from "@unclutter/library-components/dist/common";
+
 import { LindyIcon } from "@unclutter/library-components/dist/components";
 
 export default function LoginPage({ isSignup = false }) {
@@ -15,9 +15,7 @@ export default function LoginPage({ isSignup = false }) {
     useEffect(() => {
         // on login success
         if (user) {
-            setUnclutterLibraryAuth(user.id);
             posthog.identify(user.id, { email: user.email });
-
             router.push("/");
         }
     }, [user]);

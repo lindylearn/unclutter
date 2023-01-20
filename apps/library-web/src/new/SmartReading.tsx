@@ -1,5 +1,8 @@
 import { useUser } from "@supabase/auth-helpers-react";
-import { useAutoDarkMode } from "@unclutter/library-components/dist/common";
+import {
+    setUnclutterLibraryAuth,
+    useAutoDarkMode,
+} from "@unclutter/library-components/dist/common";
 import { useContext, useEffect, useState } from "react";
 import {
     ReplicacheContext,
@@ -29,12 +32,15 @@ export default function SmartReadingTab() {
     const userInfo = useSubscribe<UserInfo>(rep, rep?.subscribe.getUserInfo(), undefined);
 
     useEffect(() => {
-        if (!rep || !userInfo) {
+        if (!rep || !userInfo || !user) {
             return;
         }
         // if (!userInfo?.aiEnabled) {
         //     router.push("/welcome");
         // }
+
+        rep.mutate.updateUserInfo({ aiEnabled: true });
+        setUnclutterLibraryAuth(user.id);
 
         // generateHighlights();
     }, [rep, userInfo]);
