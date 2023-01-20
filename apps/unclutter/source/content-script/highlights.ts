@@ -14,7 +14,7 @@ async function main() {
     // @ts-ignore
     window.unclutterHighlightsLoaded = true;
 
-    const smartHighlightsModifier = new SmartHighlightsModifier("");
+    const smartHighlightsModifier = new SmartHighlightsModifier();
 
     const annotations = await smartHighlightsModifier.parseAnnotationsFromArticle();
     await browser.runtime.sendMessage(null, {

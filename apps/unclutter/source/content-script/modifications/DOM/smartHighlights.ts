@@ -9,18 +9,10 @@ import type { RankedSentence } from "@unclutter/heatmap/dist/heatmap";
 // analyse an article page and highlight key sentences using an in-browser AI model
 @trackModifierExecution
 export default class SmartHighlightsModifier implements PageModifier {
-    private user_id: string;
     private article_id: string;
-
-    annotations: Annotation[];
-    annotationsCount: number | null;
-    relatedCount: number | null;
-
     private scoreThreshold = 0.6;
-    private relatedThreshold = 0.5;
 
-    constructor(user_id: string) {
-        this.user_id = user_id;
+    constructor() {
         this.article_id = getUrlHash(window.location.href);
     }
 
@@ -60,10 +52,9 @@ export default class SmartHighlightsModifier implements PageModifier {
         // report diagnostics
         let durationMs = Math.round(performance.now() - start);
         console.log(`Generated ${newAnnotations.length} AI highlights in ${durationMs}ms`);
-        reportEventContentScript("renderHighlightsLayer", {
+        reportEventContentScript("generateAIHighlights", {
             paragraphCount: paragraphsElements.length,
-            annotationsCount: this.annotationsCount,
-            relatedCount: this.relatedCount,
+            annotationsCount: newAnnotations.length,
             durationMs,
         });
 

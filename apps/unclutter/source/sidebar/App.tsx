@@ -165,6 +165,7 @@ export default function App({
             return;
         }
         console.log("Fetching related annotations in batch");
+        const start = performance.now();
         let groups = await fetchRelatedAnnotations(
             userInfo.id,
             articleId,
@@ -191,6 +192,15 @@ export default function App({
             });
 
             return { ...prev };
+        });
+
+        const dutationMs = Math.round(performance.now() - start);
+        console.log(`Fetched related annotations in ${dutationMs}ms`);
+        reportEventContentScript("displayRelatedAnnotations", {
+            annotationCount: storeAnnotations.length,
+            anchorCount: groups.filter((g) => g.length > 0).length,
+            relatedCount: groups.flat().length,
+            dutationMs,
         });
     }
     async function fetchRelatedLater(annotation: LindyAnnotation): Promise<void> {
