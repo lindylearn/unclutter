@@ -260,7 +260,6 @@ export default function App({
             visibleAnnotations = visibleAnnotations.concat(
                 storeAnnotations
                     .map(unpickleLocalAnnotation)
-                    .sort((a, b) => a.displayOffset - b.displayOffset)
                     .map((a) => ({
                         ...a,
                         focused: a.id === focusedAnnotationId,
@@ -268,6 +267,8 @@ export default function App({
                         displayOffsetEnd: displayOffsetEnds[a.id],
                         related: relatedPerAnnotation?.[a.id],
                     }))
+                    .filter((a) => a.displayOffset && a.displayOffsetEnd)
+                    .sort((a, b) => a.displayOffset - b.displayOffset)
                     .flatMap((a) => [
                         a,
                         ...(a.related?.map((r, i) => ({
