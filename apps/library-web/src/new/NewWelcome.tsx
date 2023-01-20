@@ -11,14 +11,14 @@ import {
     UserInfo,
     useSubscribe,
 } from "@unclutter/library-components/dist/store";
-import {
-    SettingsGroup,
-    Button,
-    generateCSV,
-    SmartReadingSetting,
-} from "@unclutter/library-components/dist/components/Modal/Settings";
 import { reportEventPosthog } from "../../common/metrics";
 import { useRouter } from "next/router";
+import { SmartReadingPreview } from "@unclutter/library-components/dist/components/Settings/SmartReading";
+import {
+    SettingsButton,
+    SettingsGroup,
+} from "@unclutter/library-components/dist/components/Settings/SettingsGroup";
+import { generateCSV } from "@unclutter/library-components/dist/components/Settings/account";
 
 export default function NewWelcomeTab() {
     const rep = useContext(ReplicacheContext);
@@ -45,22 +45,24 @@ export default function NewWelcomeTab() {
                 console.log("Signing up new user", user);
 
                 // fetch email subscription status
-                const aiEnabled = await checkHasSubscription(user.id, user.email);
                 await rep.mutate.updateUserInfo({
                     id: user.id,
                     name: user.user_metadata.name,
                     signinProvider: user.app_metadata.provider as any,
                     email: user.email,
                     accountEnabled: true,
-                    aiEnabled,
                 });
-                await new Promise((resolve) => setTimeout(resolve, 2000));
 
+                await new Promise((resolve) => setTimeout(resolve, 2000));
                 setUnclutterLibraryAuth(user.id);
             } else {
                 console.log("Logging in existing user");
                 setUnclutterLibraryAuth(user.id);
             }
+
+            // await rep.mutate.updateUserInfo({
+            //     aiEnabled: false,
+            // });
         })();
     }, [rep, user, userInfo]);
 
@@ -83,10 +85,7 @@ export default function NewWelcomeTab() {
                     </svg>
                 }
             >
-                <p>
-                    Hey{userInfo?.name && ` ${userInfo.name.split(" ")[0]}`}, welcome to your
-                    Unclutter account!
-                </p>
+                <p>Hey {userInfo?.email}, welcome to your Unclutter account!</p>
 
                 <p>
                     Your {articles?.length} saved articles and {annotations?.length} saved
@@ -94,13 +93,13 @@ export default function NewWelcomeTab() {
                     this website.
                 </p>
                 <div className="flex gap-3">
-                    <Button
+                    <SettingsButton
                         title="Export data"
                         onClick={() => generateCSV(rep!)}
                         darkModeEnabled={darkModeEnabled}
                         reportEvent={reportEventPosthog}
                     />
-                    <Button
+                    <SettingsButton
                         title="Sign out"
                         onClick={async () => {
                             await supabaseClient.auth.signOut();
@@ -126,7 +125,7 @@ export default function NewWelcomeTab() {
                 <p></p>
             </SettingsGroup> */}
 
-            <SmartReadingSetting
+            <SmartReadingPreview
                 userInfo={userInfo}
                 darkModeEnabled={darkModeEnabled}
                 reportEvent={reportEventPosthog}

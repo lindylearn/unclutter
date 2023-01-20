@@ -85,12 +85,31 @@ export async function searchArticles(user_id: string, query: string): Promise<Se
     return data.filter((d) => d.sentences?.[0]?.length);
 }
 
-export async function checkHasSubscription(user_id: string, email: string): Promise<boolean> {
+export async function createPaymentsLink(
+    user_id: string,
+    email: string
+): Promise<string | undefined> {
+    try {
+        let data: any = await ky
+            .get(`${lindyApiUrl}/subscriptions/create_link`, {
+                searchParams: {
+                    user_id,
+                    email,
+                },
+            })
+            .json();
+
+        return data;
+    } catch {
+        return undefined;
+    }
+}
+
+export async function checkHasSubscription(stripe_id: string): Promise<boolean> {
     let data: any = await ky
         .get(`${lindyApiUrl}/subscriptions/check_subscription`, {
             searchParams: {
-                user_id,
-                email,
+                stripe_id,
             },
         })
         .json();

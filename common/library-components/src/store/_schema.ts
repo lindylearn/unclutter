@@ -105,6 +105,7 @@ export const userInfoSchema = z.object({
     email: z.optional(z.string()),
 
     aiEnabled: z.optional(z.boolean()),
+    stripeId: z.optional(z.string()),
 });
 export type UserInfo = z.infer<typeof userInfoSchema>;
 

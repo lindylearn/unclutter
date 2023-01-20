@@ -15,7 +15,7 @@ export function getBrowserType(): BrowserType {
 
 export function getUnclutterExtensionId(): string {
     return getBrowserType() === "chromium"
-        ? "ibckhpijbdmdobhhhodkceffdngnglpk"
+        ? "mhgpmildoiaglaeaejiagiidkmfdbbcp"
         : "{8f8c4c52-216c-4c6f-aae0-c214a870d9d9}";
 }
 export function getNewTabExtensionId(): string {
