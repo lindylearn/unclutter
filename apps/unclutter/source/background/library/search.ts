@@ -7,13 +7,15 @@ import {
 import { rep } from "./library";
 
 let annotationsSearchIndex: SearchIndex;
-let articlesSearchIndex: SearchIndex;
 export async function initSearchIndex(forceReinit: boolean = false) {
     if (!annotationsSearchIndex || forceReinit) {
         console.log("Initializing highlights search index...");
         try {
             annotationsSearchIndex = new SearchIndex(""); // default for all users
-            await syncSearchIndex(rep, annotationsSearchIndex, false, true);
+
+            // loading a flexsearch export is broken at the moment, so re-index every time
+            // see https://github.com/nextapps-de/flexsearch/issues/358
+            await syncSearchIndex(rep, annotationsSearchIndex, true);
         } catch (err) {
             console.error(err);
             annotationsSearchIndex = null;
@@ -27,8 +29,6 @@ export async function search(
 ): Promise<(SearchResult & { article: Article })[]> {
     if (type === "annotations") {
         return searchAnnotations(query);
-    } else if (type === "articles") {
-        return searchArticles(query);
     }
 }
 
@@ -53,25 +53,4 @@ export async function searchAnnotations(
         })
     );
     return resultsWithArticles.filter((hit) => hit.annotation !== undefined);
-}
-
-export async function searchArticles(
-    query: string
-): Promise<(SearchResult & { article: Article })[]> {
-    if (!articlesSearchIndex) {
-        return;
-    }
-
-    const results = await articlesSearchIndex.search(query, true, false);
-
-    const resultsWithArticles = await Promise.all(
-        results.map(async (hit) => {
-            const article = await rep.query.getArticle(hit.id);
-            return {
-                ...hit,
-                article,
-            };
-        })
-    );
-    return resultsWithArticles.filter((hit) => hit.article !== undefined);
 }

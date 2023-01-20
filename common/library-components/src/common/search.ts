@@ -1,7 +1,7 @@
 import { Index, Document } from "flexsearch";
 import { keys, get, set, createStore, UseStore, clear } from "idb-keyval";
 
-import { Annotation, Article, ArticleText } from "../store";
+import { Annotation, Article } from "../store";
 import { ReplicacheProxy } from "./replicache";
 import { splitSentences } from "./util";
 
@@ -42,7 +42,7 @@ export class SearchIndex {
     }
 
     private indexStore: UseStore;
-    async initialize(): Promise<boolean> {
+    async initialize(forceReinit = false): Promise<boolean> {
         if (this.isLoaded) {
             return false;
         }
@@ -51,7 +51,7 @@ export class SearchIndex {
 
         const savedIndexVersion = await get("indexVersion", this.indexStore);
         const savedKeys = await keys(this.indexStore);
-        if (savedIndexVersion < this.indexVersion || savedKeys.length === 0) {
+        if (forceReinit || savedIndexVersion < this.indexVersion || savedKeys.length === 0) {
             // need to create new index from current data
             await clear(this.indexStore);
 
@@ -76,65 +76,6 @@ export class SearchIndex {
             this.isLoaded = true;
             return false;
         }
-    }
-
-    async addArticleTexts(articleTexts: ArticleText[]) {
-        if (articleTexts.length === 0) {
-            return;
-        }
-
-        const start = performance.now();
-        await Promise.all(
-            articleTexts.map(async (doc, docIndex) => {
-                // using numeric ids reduces memory usage significantly
-                // 0.1% collision chance for 10k articles
-                // allows up to 300 paragraphs per article
-                const numericDocId = Math.floor(Math.random() * 1000 * 10000) * 300;
-
-                await Promise.all(
-                    doc.paragraphs.slice(0, 300).map((paragraph, paragraphIndex) =>
-                        this.index.addAsync(numericDocId + paragraphIndex, {
-                            docId: doc.id,
-                            title: doc.title || "",
-                            paragraph,
-                        })
-                    )
-                );
-
-                await set(doc.id, numericDocId, this.indexStore);
-            })
-        );
-
-        const duration = Math.round(performance.now() - start);
-        const paragraphCount = articleTexts.reduce((acc, article) => {
-            return acc + article.paragraphs.length;
-        }, 0);
-        console.log(
-            `Indexed ${paragraphCount} paragraphs across ${articleTexts.length} documents in ${duration}ms`
-        );
-
-        await this.saveIndex();
-    }
-
-    async removeArticleTexts(articleTexts: ArticleText[]) {
-        if (articleTexts.length === 0) {
-            return;
-        }
-
-        await Promise.all(
-            articleTexts.map(async (doc) => {
-                const docId = await get<number>(doc.id, this.indexStore);
-                if (docId === undefined) {
-                    return;
-                }
-
-                await Promise.all(
-                    doc.paragraphs.map((paragraph, paragraphIndex) =>
-                        this.index.removeAsync(docId + paragraphIndex)
-                    )
-                );
-            })
-        );
     }
 
     async addAnnotations(annotations: Annotation[]) {
@@ -168,7 +109,7 @@ export class SearchIndex {
         const duration = Math.round(performance.now() - start);
         console.log(`Indexed ${annotations.length} annotations in ${duration}ms`);
 
-        await this.saveIndex();
+        // await this.saveIndex();
     }
 
     async removeAnnotations(annotations: Annotation[]) {
@@ -283,61 +224,34 @@ export class SearchIndex {
 export async function syncSearchIndex(
     rep: ReplicacheProxy,
     searchIndex: SearchIndex,
-    enableArticleTexts = true,
-    enableAnnotations = false
+    forceReinit = false
 ) {
     let searchIndexInitialized = false;
 
     // watch replicache changes
-    let addedArticleTextsBuffer: ArticleText[] = [];
-    let removedArticleTextsBuffer: ArticleText[] = [];
-    if (enableArticleTexts) {
-        rep.watch("text/", (added: ArticleText[], removed: ArticleText[]) => {
-            if (!searchIndexInitialized) {
-                addedArticleTextsBuffer.push(...added);
-                removedArticleTextsBuffer.push(...removed);
-            } else {
-                searchIndex.addArticleTexts(added);
-                searchIndex.removeArticleTexts(removed);
-            }
-        });
-    }
     let addedAnnotationsBuffer: Annotation[] = [];
     let removedAnnotationBuffer: Annotation[] = [];
-    if (enableAnnotations) {
-        rep.watch("annotations/", (added: Annotation[], removed: Annotation[]) => {
-            if (!searchIndexInitialized) {
-                addedAnnotationsBuffer.push(...added);
-                removedAnnotationBuffer.push(...removed);
-            } else {
-                searchIndex.addAnnotations(added);
-                searchIndex.removeAnnotations(removed);
-            }
-        });
-    }
+    rep.watch("annotations/", (added: Annotation[], removed: Annotation[]) => {
+        if (!searchIndexInitialized) {
+            addedAnnotationsBuffer.push(...added);
+            removedAnnotationBuffer.push(...removed);
+        } else {
+            searchIndex.addAnnotations(added);
+            searchIndex.removeAnnotations(removed);
+        }
+    });
 
     // load index or create new one
-    const isEmpty: boolean = await searchIndex.initialize();
+    const isEmpty: boolean = await searchIndex.initialize(forceReinit);
 
     // backfill entries
     if (isEmpty) {
         // backfill all current enties
 
-        if (enableArticleTexts) {
-            // @ts-ignore
-            const articleTexts = await rep.query.listArticleTexts();
-            await searchIndex.addArticleTexts(articleTexts);
-        }
-        if (enableAnnotations) {
-            // @ts-ignore
-            const annotations = await rep.query.listAnnotations();
-            await searchIndex.addAnnotations(annotations);
-        }
+        const annotations = await rep.query.listAnnotations();
+        await searchIndex.addAnnotations(annotations);
     } else {
         // backfill changes during initialization
-        searchIndex.addArticleTexts(addedArticleTextsBuffer);
-        searchIndex.removeArticleTexts(removedArticleTextsBuffer);
-
         searchIndex.addAnnotations(addedAnnotationsBuffer);
         searchIndex.removeAnnotations(removedAnnotationBuffer);
     }
