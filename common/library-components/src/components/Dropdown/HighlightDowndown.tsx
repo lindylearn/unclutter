@@ -1,21 +1,24 @@
 import React from "react";
 import { useContext } from "react";
+import { deleteAnnotationVectors } from "../../common";
 
 import { ReplicacheContext } from "../../store";
-import { Annotation } from "../../store/_schema";
+import { Annotation, Article } from "../../store/_schema";
+import { ModalStateContext } from "../Modal/context";
 import { Dropdown, DropdownItem } from "./Dropdown";
 
 export function HighlightDropdown({
     annotation,
+    article,
     open,
     setOpen,
-    reportEvent = () => {},
 }: {
     annotation: Annotation;
+    article: Article | undefined;
     open: boolean;
     setOpen: (open: boolean) => void;
-    reportEvent?: (event: string, properties?: any) => void;
 }) {
+    const { userInfo, reportEvent } = useContext(ModalStateContext);
     const rep = useContext(ReplicacheContext);
 
     async function toggleFavorite(e) {
@@ -31,37 +34,49 @@ export function HighlightDropdown({
 
     async function deleteAnnotation() {
         await rep?.mutate.deleteAnnotation(annotation.id);
+
+        if (userInfo?.aiEnabled) {
+            await deleteAnnotationVectors(userInfo.id, undefined, annotation.id);
+        }
+
         reportEvent("deleteAnnotation");
+    }
+
+    async function toggleQueued(e) {
+        // use articleAddMoveToQueue for reading progress handling
+        await rep?.mutate.articleAddMoveToQueue({
+            articleId: article!.id,
+            isQueued: !article!.is_queued,
+            // add to front of queue
+            articleIdBeforeNewPosition: null,
+            articleIdAfterNewPosition: null,
+            sortPosition: "queue_sort_position",
+        });
+        if (!article!.is_queued) {
+            reportEvent("addArticleToQueue", { source: "dropdown" });
+        }
     }
 
     return (
         <Dropdown open={open} setOpen={setOpen}>
-            <DropdownItem
-                title={annotation.is_favorite ? "Unfavorite" : "Favorite"}
-                svg={
-                    <svg
-                        viewBox="0 0 576 512"
-                        className="dropdown-elem -mt-0.5 mr-1.5 inline-block w-4"
-                    >
-                        {annotation.is_favorite ? (
+            {article && (
+                <DropdownItem
+                    title={article.is_queued ? "De-queue article" : "Queue article"}
+                    svg={
+                        <svg className="mr-1.5 inline-block h-4 w-4" viewBox="0 0 640 512">
                             <path
                                 fill="currentColor"
-                                d="M381.2 150.3L524.9 171.5C536.8 173.2 546.8 181.6 550.6 193.1C554.4 204.7 551.3 217.3 542.7 225.9L438.5 328.1L463.1 474.7C465.1 486.7 460.2 498.9 450.2 506C440.3 513.1 427.2 514 416.5 508.3L288.1 439.8L159.8 508.3C149 514 135.9 513.1 126 506C116.1 498.9 111.1 486.7 113.2 474.7L137.8 328.1L33.58 225.9C24.97 217.3 21.91 204.7 25.69 193.1C29.46 181.6 39.43 173.2 51.42 171.5L195 150.3L259.4 17.97C264.7 6.954 275.9-.0391 288.1-.0391C300.4-.0391 311.6 6.954 316.9 17.97L381.2 150.3z"
+                                d="M443.5 17.94C409.8 5.608 375.3 0 341.4 0C250.1 0 164.6 41.44 107.1 112.1c-6.752 8.349-2.752 21.07 7.375 24.68C303.1 203.8 447.4 258.3 618.4 319.1c1.75 .623 3.623 .9969 5.5 .9969c8.25 0 15.88-6.355 16-15.08C643 180.7 567.2 62.8 443.5 17.94zM177.1 108.4c42.88-36.51 97.76-58.07 154.5-60.19c-4.5 3.738-36.88 28.41-70.25 90.72L177.1 108.4zM452.6 208.1L307.4 155.4c14.25-25.17 30.63-47.23 48.13-63.8c25.38-23.93 50.13-34.02 67.51-27.66c17.5 6.355 29.75 29.78 33.75 64.42C459.6 152.4 457.9 179.6 452.6 208.1zM497.8 224.4c7.375-34.89 12.13-76.76 4.125-117.9c45.75 38.13 77.13 91.34 86.88 150.9L497.8 224.4zM576 488.1C576 501.3 565.3 512 552 512L23.99 510.4c-13.25 0-24-10.72-24-23.93c0-13.21 10.75-23.93 24-23.93l228 .6892l78.35-214.8l45.06 16.5l-72.38 198.4l248.1 .7516C565.3 464.1 576 474.9 576 488.1z"
                             />
-                        ) : (
-                            <path
-                                fill="currentColor"
-                                d="M287.9 0C297.1 0 305.5 5.25 309.5 13.52L378.1 154.8L531.4 177.5C540.4 178.8 547.8 185.1 550.7 193.7C553.5 202.4 551.2 211.9 544.8 218.2L433.6 328.4L459.9 483.9C461.4 492.9 457.7 502.1 450.2 507.4C442.8 512.7 432.1 513.4 424.9 509.1L287.9 435.9L150.1 509.1C142.9 513.4 133.1 512.7 125.6 507.4C118.2 502.1 114.5 492.9 115.1 483.9L142.2 328.4L31.11 218.2C24.65 211.9 22.36 202.4 25.2 193.7C28.03 185.1 35.5 178.8 44.49 177.5L197.7 154.8L266.3 13.52C270.4 5.249 278.7 0 287.9 0L287.9 0zM287.9 78.95L235.4 187.2C231.9 194.3 225.1 199.3 217.3 200.5L98.98 217.9L184.9 303C190.4 308.5 192.9 316.4 191.6 324.1L171.4 443.7L276.6 387.5C283.7 383.7 292.2 383.7 299.2 387.5L404.4 443.7L384.2 324.1C382.9 316.4 385.5 308.5 391 303L476.9 217.9L358.6 200.5C350.7 199.3 343.9 194.3 340.5 187.2L287.9 78.95z"
-                            />
-                        )}
-                    </svg>
-                }
-                onSelect={toggleFavorite}
-                top
-            />
+                        </svg>
+                    }
+                    onSelect={toggleQueued}
+                    top
+                />
+            )}
 
             <DropdownItem
-                title="Remove"
+                title="Delete"
                 svg={
                     <svg
                         viewBox="0 0 576 512"

@@ -114,11 +114,11 @@ async function createAlarmIfNotExists(id: string, everyXHour: number) {
 }
 
 export function createAlarmListeners() {
-    browser.alarms?.onAlarm.addListener((alarm: Alarms.Alarm) => {
-        if (alarm.name === "unclutter-library-feed-refresh") {
-            refreshLibraryFeeds();
-        }
-    });
+    // browser.alarms?.onAlarm.addListener((alarm: Alarms.Alarm) => {
+    //     if (alarm.name === "unclutter-library-feed-refresh") {
+    //         refreshLibraryFeeds();
+    //     }
+    // });
     browser.alarms?.onAlarm.addListener((alarm: Alarms.Alarm) => {
         if (alarm.name === "unclutter-library-sync-pull") {
             syncPull();

@@ -3,7 +3,7 @@ import IframeResizer from "iframe-resizer-react";
 import clsx from "clsx";
 
 import { LindyIcon } from "../Icons";
-import { ModalContext } from "..";
+import { ModalVisibilityContext } from "./context";
 
 export function FeedbackModalPage({
     userInfo = {},
@@ -14,7 +14,7 @@ export function FeedbackModalPage({
     onSubmit: () => void;
     reportEvent?: (event: string, data?: any) => void;
 }) {
-    const { isVisible, closeModal } = useContext(ModalContext);
+    const { isVisible, closeModal } = useContext(ModalVisibilityContext);
 
     useEffect(() => {
         window.addEventListener("message", function (e: any) {

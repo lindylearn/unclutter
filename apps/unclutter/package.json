@@ -4,10 +4,9 @@
     "private": true,
     "dependencies": {
         "@rocicorp/rails": "^0.2.2",
-        "@tensorflow-models/universal-sentence-encoder": "^1.3.3",
-        "@tensorflow/tfjs": "^4.2.0",
         "@types/offscreencanvas": "^2019.7.0",
         "@unclutter/library-components": "*",
+        "@unclutter/heatmap": "*",
         "approx-string-match": "^2.0.0",
         "clsx": "^1.2.1",
         "crypto-js": "^4.1.1",
@@ -33,8 +32,6 @@
         "twemoji": "^14.0.2",
         "webext-options-sync": "^2.0.1",
         "webextension-polyfill": "^0.8.0",
-        "wink-eng-lite-web-model": "^1.4.3",
-        "wink-nlp": "^1.13.0",
         "zod": "^3.19.1"
     },
     "devDependencies": {

@@ -176,7 +176,6 @@ export function ArticlePreview({
                     open={dropdownOpen}
                     setOpen={setDropdownOpen}
                     small={small}
-                    reportEvent={reportEvent}
                 />
             )}
 
@@ -199,14 +198,14 @@ export function ArticlePreview({
                 </div>
             )}
 
-            {article.annotation_count ? (
+            {/* {article.annotation_count ? (
                 <div className="font-title absolute bottom-2.5 right-0 flex select-none items-center gap-1.5 rounded-lg bg-[rgba(255,255,255,50%)] px-1.5 text-base font-bold text-stone-800">
                     <ResourceIcon type="highlights" />
                     {article.annotation_count}
                 </div>
             ) : (
                 <></>
-            )}
+            )} */}
 
             <div
                 className="bg-lindy dark:bg-lindyDark absolute bottom-0 left-0 h-[7px] rounded-r transition-all"

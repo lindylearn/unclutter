@@ -1,34 +1,20 @@
 import React, { useContext, useEffect, useState } from "react";
-import {
-    Annotation,
-    Article,
-    readingProgressFullClamp,
-    ReplicacheContext,
-    Topic,
-    UserInfo,
-} from "../../store";
+import { Annotation, Article, ReplicacheContext, Topic, UserInfo } from "../../store";
 import { ArticleActivityCalendar, getActivityColor, getActivityLevel } from "../Charts";
-import { getDomain, getRandomLightColor, getWeekStart, groupBy, subtractWeeks } from "../../common";
-import { useArticleGroups } from "../ArticleList";
-import { TopicEmoji } from "../TopicTag";
+import { getDomain, getWeekStart, groupBy, subtractWeeks } from "../../common";
 import clsx from "clsx";
 import { BigNumber, ResourceIcon, ResourceStat } from "./components/numbers";
-import { FilterContext } from "..";
+import { FilterContext, ModalStateContext } from "./context";
 
 export default function StatsModalTab({
-    userInfo,
     articleCount,
-    darkModeEnabled,
     defaultWeekOverlay = 3,
-    reportEvent = () => {},
 }: {
-    userInfo: UserInfo;
     articleCount?: number;
-    darkModeEnabled: boolean;
     defaultWeekOverlay?: number;
-    reportEvent?: (event: string, data?: any) => void;
 }) {
-    const { showTopic, showDomain } = useContext(FilterContext);
+    const { darkModeEnabled, userInfo, reportEvent } = useContext(ModalStateContext);
+    const { showDomain } = useContext(FilterContext);
 
     const rep = useContext(ReplicacheContext);
 
@@ -76,6 +62,7 @@ export default function StatsModalTab({
                 darkModeEnabled={darkModeEnabled}
                 startWeeksAgo={startWeeksAgo}
                 setStartWeeksAgo={setStartWeeksAgo}
+                enableOverlay={true}
                 defaultWeekOverlay={defaultWeekOverlay}
                 reportEvent={reportEvent}
             />
@@ -87,7 +74,6 @@ export default function StatsModalTab({
                     allArticles={allArticles}
                     allAnnotations={allAnnotations}
                     darkModeEnabled={darkModeEnabled}
-                    showTopic={showTopic}
                     showDomain={showDomain}
                 />
             )}
@@ -102,55 +88,24 @@ function NumberStats({
     allAnnotations,
     darkModeEnabled,
 }: {
-    userInfo: UserInfo;
+    userInfo?: UserInfo;
     articleCount?: number;
     allArticles?: Article[];
     allAnnotations?: Annotation[];
     darkModeEnabled: boolean;
 }) {
-    const rep = useContext(ReplicacheContext);
-    const [topicsCount, setTopicsCount] = useState<number>();
-    useEffect(() => {
-        if (userInfo.onPaidPlan || userInfo.trialEnabled) {
-            rep?.query
-                .listTopics()
-                .then((topics) => setTopicsCount(topics.filter((t) => !!t.group_id).length));
-        }
-    }, [rep]);
-
-    const readArticlesCount = allArticles?.filter(
-        (a) => a.reading_progress >= readingProgressFullClamp
-    ).length;
-    const unreadCount =
-        articleCount !== undefined && readArticlesCount !== undefined
-            ? articleCount - readArticlesCount
-            : undefined;
-
     return (
         <div className="grid grid-cols-5 gap-4">
             <BigNumber
-                value={readArticlesCount}
-                tag={`read article${readArticlesCount !== 1 ? "s" : ""}`}
-                icon={<ResourceIcon type="articles_completed" large />}
-            />
-            <BigNumber
-                value={unreadCount}
-                tag={`unread article${unreadCount !== 1 ? "s" : ""}`}
+                value={allArticles?.length}
+                tag={`saved article${allArticles?.length !== 1 ? "s" : ""}`}
                 icon={<ResourceIcon type="articles" large />}
             />
             <BigNumber
                 value={allAnnotations?.length}
-                tag={`highlight${allAnnotations?.length !== 1 ? "s" : ""}`}
+                tag={`saved highlight${allAnnotations?.length !== 1 ? "s" : ""}`}
                 icon={<ResourceIcon type="highlights" large />}
             />
-
-            {(userInfo.onPaidPlan || userInfo.trialEnabled) && (
-                <BigNumber
-                    value={topicsCount}
-                    tag={`article topic${topicsCount !== 1 ? "s" : ""}`}
-                    icon={<ResourceIcon type="links" large />}
-                />
-            )}
         </div>
     );
 }
@@ -162,16 +117,14 @@ function WeekDetails({
     allArticles,
     allAnnotations,
     darkModeEnabled,
-    showTopic,
     showDomain,
 }: {
-    userInfo: UserInfo;
+    userInfo?: UserInfo;
     start: Date;
     end: Date;
     allArticles?: Article[];
     allAnnotations?: Annotation[];
     darkModeEnabled: boolean;
-    showTopic: (topicId: string) => void;
     showDomain: (domain: string) => void;
 }) {
     const [selectedArticles, setSelectedArticles] = useState<Article[]>([]);
@@ -195,15 +148,6 @@ function WeekDetails({
     }, [allArticles, allAnnotations, start, end]);
 
     let [groups, setGroups] = useState<[string, Article[]][]>();
-    // if (userInfo.onPaidPlan || userInfo.trialEnabled) {
-    //     groups = useArticleGroups(
-    //         selectedArticles,
-    //         false,
-    //         "topic_size",
-    //         "recency_order",
-    //         undefined
-    //     );
-    // } else {
     useEffect(() => {
         if (selectedArticles.length === 0) {
             return;
@@ -247,7 +191,6 @@ function WeekDetails({
                         selectedArticles={groupArticles}
                         annotationsCount={annotationGroups[groupKey]}
                         darkModeEnabled={darkModeEnabled}
-                        showTopic={showTopic}
                         showDomain={showDomain}
                     />
                 ))}
@@ -262,31 +205,16 @@ function ArticleGroupStat({
     selectedArticles,
     annotationsCount,
     darkModeEnabled,
-    showTopic,
     showDomain,
 }: {
-    userInfo: UserInfo;
+    userInfo?: UserInfo;
     groupKey: string;
     selectedArticles: Article[];
     annotationsCount: number;
     darkModeEnabled: boolean;
-    showTopic: (topicId: string) => void;
     showDomain: (domain: string) => void;
 }) {
-    const [topic, setTopic] = useState<Topic>();
-    if (userInfo.onPaidPlan || userInfo.trialEnabled) {
-        const rep = useContext(ReplicacheContext);
-        useEffect(() => {
-            rep?.query.getTopic(groupKey).then(setTopic);
-        }, [rep, groupKey]);
-    }
-
     const addedCount = selectedArticles.length;
-    const readCount = selectedArticles.filter(
-        (a) => a.reading_progress >= readingProgressFullClamp
-    ).length;
-    const unreadCount = addedCount - readCount;
-
     const activityLevel = getActivityLevel(addedCount);
 
     return (
@@ -299,38 +227,24 @@ function ArticleGroupStat({
                 background: getActivityColor(activityLevel, darkModeEnabled || false),
             }}
             onClick={() => {
-                // if (userInfo.onPaidPlan || userInfo.trialEnabled) {
-                //     showTopic(topic!.id);
-                // } else {
                 showDomain(groupKey);
-                // }
             }}
         >
-            <div className="flex max-w-full items-center overflow-hidden font-medium">
-                {/* {topic?.emoji && <TopicEmoji emoji={topic?.emoji} className="w-4" />} */}
-                {/* {!(userInfo.onPaidPlan || userInfo.trialEnabled) && ( */}
-                <div className="mr-1 w-4 opacity-90">
-                    <img
-                        className="w-4"
-                        src={`https://www.google.com/s2/favicons?sz=128&domain=https://${groupKey}`}
-                    />
-                </div>
-                {/* )} */}
+            <div className="flex max-w-full items-center gap-1 overflow-hidden font-medium">
+                <img
+                    className="h-4 w-4 shrink-0 rounded-sm"
+                    src={`https://www.google.com/s2/favicons?sz=128&domain=https://${groupKey}`}
+                />
                 <div className="overflow-hidden overflow-ellipsis whitespace-nowrap">
-                    {topic?.name || groupKey}
+                    {groupKey}
                 </div>
             </div>
 
-            <div className="flex gap-3">
-                <ResourceStat
-                    type="articles_completed"
-                    value={readCount}
-                    className={clsx(readCount === 0 && "opacity-0")}
-                />
+            <div className="flex gap-4">
                 <ResourceStat
                     type="articles"
-                    value={unreadCount}
-                    className={clsx(unreadCount === 0 && "opacity-0")}
+                    value={addedCount}
+                    className={clsx(addedCount === 0 && "opacity-0")}
                 />
                 <ResourceStat
                     type="highlights"

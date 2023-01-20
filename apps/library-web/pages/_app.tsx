@@ -14,20 +14,20 @@ function MyApp({ Component, pageProps }) {
     }, []);
 
     // crisp.chat bubble
-    useEffect(() => {
-        // @ts-ignore
-        window.$crisp = [];
-        // @ts-ignore
-        window.CRISP_WEBSITE_ID = "4fff2160-a2f2-4c45-958b-dc03bcbd2166";
-        (() => {
-            const d = document;
-            const s = d.createElement("script");
-            s.src = "https://client.crisp.chat/l.js";
-            // @ts-ignore
-            s.async = 1;
-            d.getElementsByTagName("body")[0].appendChild(s);
-        })();
-    }, []);
+    // useEffect(() => {
+    //     // @ts-ignore
+    //     window.$crisp = [];
+    //     // @ts-ignore
+    //     window.CRISP_WEBSITE_ID = "4fff2160-a2f2-4c45-958b-dc03bcbd2166";
+    //     (() => {
+    //         const d = document;
+    //         const s = d.createElement("script");
+    //         s.src = "https://client.crisp.chat/l.js";
+    //         // @ts-ignore
+    //         s.async = 1;
+    //         d.getElementsByTagName("body")[0].appendChild(s);
+    //     })();
+    // }, []);
 
     return (
         <UserProvider supabaseClient={supabaseClient}>

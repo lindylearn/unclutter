@@ -17,10 +17,6 @@ export default class LibraryModalModifier implements PageModifier {
 
         // set up event handlers once
         window.addEventListener("message", ({ data }) => {
-            if (!this.modalIframe) {
-                return;
-            }
-
             if (data.event === "modalIframeLoaded") {
                 // ready for css inject
                 this.iframeLoaded = true;
@@ -31,6 +27,8 @@ export default class LibraryModalModifier implements PageModifier {
                 this.destroyIframe();
             } else if (data.event === "onSubmitFeedback") {
                 setFeatureFlag(submittedFeedbackFlag, true);
+            } else if (data.event === "showModal") {
+                this.showModal(data.initialTab, data.isFeedbackModal);
             }
         });
     }
@@ -78,8 +76,7 @@ export default class LibraryModalModifier implements PageModifier {
         } else {
             reportEventContentScript("openLibraryModal", {
                 initialTab,
-                onPaidPlan: this.libraryState.userInfo?.onPaidPlan,
-                trialEnabled: this.libraryState.userInfo?.trialEnabled,
+                aiEnabled: this.libraryState.userInfo?.aiEnabled,
                 linkCount: this.libraryState.linkCount,
                 articleCount: this.libraryState.readingProgress.articleCount,
                 completedCount: this.libraryState.readingProgress.completedCount,

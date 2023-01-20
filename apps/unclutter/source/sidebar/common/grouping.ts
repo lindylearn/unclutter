@@ -30,31 +30,31 @@ export function groupAnnotations(
         lastOffset = annotation.displayOffsetEnd;
     }
 
-    groupedAnnotations = groupedAnnotations.map((groupList) => {
-        // show all personal or info annotations
-        const [staticAnnotations, socialComments] = partition(
-            groupList,
-            (a) => a.isMyAnnotation || a.platform === "info" || a.platform === "summary"
-        );
+    // groupedAnnotations = groupedAnnotations.map((groupList) => {
+    //     // show all personal or info annotations
+    //     const [staticAnnotations, socialComments] = partition(
+    //         groupList,
+    //         (a) => a.isMyAnnotation || a.platform === "info" || a.platform === "summary"
+    //     );
 
-        // but filter social comments
-        const bestSocialComments = socialComments
-            .sort((a, b) => {
-                // prefer more replies
-                if (b.reply_count !== a.reply_count) {
-                    return b.reply_count - a.reply_count;
-                }
+    //     // but filter social comments
+    //     const bestSocialComments = socialComments
+    //         .sort((a, b) => {
+    //             // prefer more replies
+    //             if (b.reply_count !== a.reply_count) {
+    //                 return b.reply_count - a.reply_count;
+    //             }
 
-                // prefer longer comments
-                return b.text.length - a.text.length;
-            })
-            .slice(0, 1);
+    //             // prefer longer comments
+    //             return b.text.length - a.text.length;
+    //         })
+    //         .slice(0, 1);
 
-        // Order by appearance
-        return bestSocialComments
-            .concat(staticAnnotations)
-            .sort((a, b) => a.displayOffset - b.displayOffset);
-    });
+    //     // Order by appearance
+    //     return bestSocialComments
+    //         .concat(staticAnnotations)
+    //         .sort((a, b) => a.displayOffset - b.displayOffset);
+    // });
 
     return groupedAnnotations;
 }

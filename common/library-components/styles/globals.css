@@ -2,23 +2,7 @@ body {
     margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
         "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-    -webkit-font-smoothing: auto;
-}
-
-/* login */
-.sbui-btn-primary,
-.sbui-checkbox[type="checkbox"]:checked {
-    background-color: hsl(51, 80%, 64%) !important;
-}
-.sbui-typography-link {
-    color: rgba(75, 85, 99, var(--tw-text-opacity)) !important;
-}
-.sbui-input:focus {
-    box-shadow: 0 0 0 2px rgba(237 215 91 / 10%) !important;
-}
-.sbui-input:focus,
-.sbui-checkbox:hover {
-    border-color: hsl(51, 80%, 64%) !important;
+    -webkit-font-smoothing: antialiased;
 }
 
 /* topic tag */

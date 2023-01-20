@@ -172,10 +172,10 @@
     /* margin-left: var(--side-width) !important; */
     /* width: calc(var(--lindy-pagewidth) + 10px) !important; */
     width: 100% !important;
-    z-index: 5000 !important;
+    z-index: -1000 !important;
 
     /* must equal document bottom padding */
-    height: calc(1000px) !important;
+    height: calc(134.5px) !important;
 
     user-select: none !important;
     contain: strict !important;
@@ -191,19 +191,106 @@
     height: 100vh !important;
 }
 
+#lindy-annotations-bar {
+    position: absolute !important;
+    top: 8px !important;
+    left: calc((100vw - var(--lindy-pagewidth)) / 2 + var(--lindy-pagewidth) - 4px) !important;
+    width: calc((100vw - var(--lindy-pagewidth)) / 2 - 8px - 4px) !important;
+    height: calc(100% - 8px) !important;
+    user-select: none !important;
+    contain: strict !important;
+    z-index: 1000 !important;
+}
+
+#lindy-annotations-marginbar:not(#fakeID#fakeID#fakeID#fakeID#fakeID) {
+    position: absolute !important;
+    top: 0 !important;
+    height: 100% !important;
+    width: 8px !important;
+
+    left: unset !important;
+    right: 0 !important;
+}
+#lindy-annotations-marginbar > * {
+    position: absolute !important;
+    right: 15px !important;
+    /* top and height set via JS */
+
+    font-family: Poppins, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        Roboto !important;
+    font-size: 18px !important;
+    font-weight: 700 !important;
+    opacity: 50% !important;
+}
+.lindy-marginbar-dot {
+    content: "" !important;
+    display: block !important;
+    width: 10px !important;
+    height: 10px !important;
+    /* border-radius: 5px !important; */
+    border-radius: 50% !important;
+    filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.05)) !important;
+    background-color: var(--darker-annotation-color) !important;
+
+    cursor: pointer !important;
+    animation: fadeInDot 0.15s linear !important;
+}
+
+.lindy-highlight:not(#fakeID#fakeID#fakeID#fakeID) {
+    cursor: pointer !important;
+    background-color: var(--annotation-color) !important;
+    transition: background-color 0.15s linear !important;
+}
+.lindy-highlight {
+    /* -webkit-box-decoration-break: clone;
+    -ms-box-decoration-break: clone;
+    -o-box-decoration-break: clone;
+    box-decoration-break: clone; */
+    /* padding: 0.25em 0px !important; */
+    /* border-radius: 2px !important; */
+
+    /* box-shadow: 0.25em 0 0 var(--annotation-color), -0.25em 0 0 var(--annotation-color) !important; */
+}
+.lindy-highlight.lindy-hover {
+    /* background-color: var(--darker-annotation-color) !important; */
+    /* box-shadow: 0.25em 0 0 var(--darker-annotation-color), -0.25em 0 0 var(--darker-annotation-color) !important; */
+}
+.lindy-smart-highlight:not(#fakeID#fakeID#fakeID#fakeID),
+.lindy-smart-highlight-scroll:not(#fakeID#fakeID#fakeID#fakeID) {
+    display: block !important;
+    background: var(--active-color) !important;
+}
+.lindy-smart-highlight-click:not(#fakeID#fakeID#fakeID#fakeID) {
+    display: block !important;
+}
+
+.lindy-crowd-highlight {
+    transition: background-color 0.15s linear, text-decoration 0.15s linear !important;
+
+    --annotation-color: transparent !important;
+    text-decoration: underline solid var(--annotation-color) 0.15em !important;
+    text-underline-offset: 0.05em !important;
+    text-decoration-skip-ink: none !important;
+    cursor: pointer !important;
+}
+.lindy-crowd-highlight.lindy-hover {
+    background-color: var(--annotation-color) !important;
+    text-decoration-color: transparent !important;
+}
+
 @media (max-width: 1200px) {
     #lindy-info-topleft {
         display: none !important;
     }
     #lindy-annotations-bar {
         left: calc(var(--lindy-pagewidth) + 10px + 5px) !important;
-        width: calc(100vw - (var(--lindy-pagewidth) + 10px + 5px) - 20px) !important;
+        width: calc(100vw - (var(--lindy-pagewidth) + 10px + 5px) - 15px) !important;
     }
     .lindy-page-settings-pageadjacent {
         left: calc(var(--lindy-pagewidth) + 10px + 0px) !important;
     }
     #lindy-info-bottom {
-        margin-left: 15px !important;
-        max-width: calc(100% - 15px) !important;
+        margin-left: 0 !important;
+        max-width: calc(100%) !important;
     }
 }

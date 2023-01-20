@@ -107,6 +107,10 @@ export function getHeuristicFeedUrls(sourceUrl: string): string[] {
 // this works well for popular news sites, e.g. economist.com
 export async function getGoogleNewsFeed(sourceUrl: string): Promise<FeedSubscription | null> {
     const domain = getDomain(sourceUrl);
+    if (!domain) {
+        return null;
+    }
+
     let feed = await getMainFeed(sourceUrl, [
         `https://news.google.com/rss/search?q=site:${domain}&scoring=n&num=20`,
     ]);

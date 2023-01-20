@@ -18,6 +18,7 @@ import {
 // send user text selections to the sidebar iframe, in order to create an annotation
 const listeners: [string, () => void][] = [];
 export function createSelectionListener(
+    articleId: string,
     sidebarIframe: HTMLIFrameElement,
     onAnnotationUpdate: AnnotationListener
 ) {
@@ -59,7 +60,7 @@ export function createSelectionListener(
     // when selection done, expand to nearest word and highlight
     function onmouseup() {
         const selection = document.getSelection();
-        if (!selection.toString()) {
+        if (!selection.toString().trim()) {
             return;
         }
 
@@ -71,17 +72,23 @@ export function createSelectionListener(
             _expandRangeToWordBoundary(range, "forwards");
         }
 
-        _createAnnotationFromSelection(
-            (annotation) => {
-                sendIframeEvent(sidebarIframe, {
-                    event: "createHighlight",
-                    annotation,
-                });
-                onAnnotationUpdate("add", [annotation]);
-            },
-            sidebarIframe,
-            activeAnnotationId
-        );
+        const selector = describeAnnotation(document.body, range);
+        if (!selector) {
+            return;
+        }
+
+        let annotation = createDraftAnnotation(articleId, selector);
+        annotation.id = activeAnnotationId;
+
+        sendIframeEvent(sidebarIframe, {
+            event: "createHighlight",
+            annotation,
+        });
+        onAnnotationUpdate("add", [annotation]);
+
+        copyTextToClipboard(`"${annotation.quote_text}"`);
+
+        selection.removeAllRanges();
     }
     listeners.push(["mouseup", onmouseup]);
 
@@ -116,6 +123,7 @@ function _isSelectionBackwards(sel: Selection) {
 }
 
 function _expandRangeToWordBoundary(range: Range, direction: "forwards" | "backwards") {
+    const boundaryChars = ".;!?—".split("");
     try {
         if (direction === "forwards") {
             let wordEnd = range.endOffset; // exclusive
@@ -123,86 +131,29 @@ function _expandRangeToWordBoundary(range: Range, direction: "forwards" | "backw
             while (
                 nodeValue &&
                 wordEnd < nodeValue.length &&
-                nodeValue[wordEnd].trim() &&
-                nodeValue[wordEnd] !== "—"
+                !boundaryChars.includes(nodeValue[wordEnd - 1])
             ) {
                 wordEnd += 1;
             }
 
             // strip some punctuation
-            if (",:".includes(nodeValue[wordEnd - 1])) {
+            if (",:".includes(nodeValue[wordEnd])) {
                 wordEnd -= 1;
             }
 
-            range.setEnd(range.endContainer, wordEnd);
+            range.setEnd(range.endContainer, Math.min(nodeValue.length, wordEnd));
         } else if (direction === "backwards") {
             let wordStart = range.startOffset;
-            const nodeValue = range.endContainer.nodeValue;
-            while (
-                wordStart - 1 >= 0 &&
-                nodeValue[wordStart - 1]?.trim() &&
-                nodeValue[wordStart - 1] !== "—"
-            ) {
+            const nodeValue = range.startContainer.nodeValue;
+            while (wordStart > 0 && !boundaryChars.includes(nodeValue[wordStart - 2])) {
                 wordStart -= 1;
             }
 
-            range.setStart(range.startContainer, wordStart);
+            range.setStart(range.startContainer, Math.max(0, wordStart));
         }
     } catch (err) {
         console.error(err);
     }
 
     return range;
-}
-
-export async function _createAnnotationFromSelection(
-    callback: (newAnnotation: LindyAnnotation) => void,
-    sidebarIframe: HTMLIFrameElement,
-    activeAnnotationId: string
-) {
-    // get mouse selection
-    const selection = document.getSelection();
-    if (!selection || !selection.toString().trim()) {
-        return;
-    }
-    const range = selection.getRangeAt(0);
-
-    // convert to text anchor
-    const annotationSelector = describeAnnotation(document.body, range);
-    if (!annotationSelector) {
-        return;
-    }
-
-    // use id created during selection to keep same color
-    let annotation = createDraftAnnotation(window.location.href, annotationSelector);
-    annotation.id = activeAnnotationId;
-    annotation.focused = true;
-
-    annotation = await wrapPaintAnnotation(annotation, sidebarIframe);
-
-    // notify sidebar and upload logic
-    callback(annotation);
-
-    selection.removeAllRanges();
-
-    copyTextToClipboard(`"${annotation.quote_text}"`);
-}
-
-export async function wrapPaintAnnotation(
-    annotation: LindyAnnotation,
-    sidebarIframe: HTMLIFrameElement
-): Promise<LindyAnnotation> {
-    // wrap with custom html node and get offsets
-    const offsets = await anchorAnnotations([annotation]);
-    if (!offsets.length) {
-        return null;
-    }
-    annotation.displayOffset = offsets[0].displayOffset;
-    annotation.displayOffsetEnd = offsets[0].displayOffsetEnd;
-
-    // add styling
-    const highlightedNodes = getAnnotationNodes(annotation);
-    paintHighlight(annotation, sidebarIframe, highlightedNodes);
-
-    return annotation;
 }

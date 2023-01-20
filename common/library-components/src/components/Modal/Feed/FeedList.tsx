@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { FilterContext } from "../..";
+import { FilterContext } from "../context";
 import { FeedSubscription, ReplicacheContext, useSubscribe } from "../../../store";
 import { FeedHeader } from "./FeedHeader";
 

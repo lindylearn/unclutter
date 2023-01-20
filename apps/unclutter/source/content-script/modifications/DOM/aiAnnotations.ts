@@ -5,6 +5,7 @@ import { createInfoAnnotation, LindyAnnotation } from "../../../common/annotatio
 import AnnotationsModifier from "../annotations/annotationsModifier";
 import { wrapPaintAnnotation } from "../annotations/selectionListener";
 import TextContainerModifier from "./textContainer";
+import { getUrlHash } from "@unclutter/library-components/dist/common/url";
 
 @trackModifierExecution
 export default class AIAnnotationsModifier implements PageModifier {
@@ -74,7 +75,7 @@ export default class AIAnnotationsModifier implements PageModifier {
                     ranges.forEach((range) => {
                         this.annotations.push(
                             createInfoAnnotation(
-                                window.location.href,
+                                getUrlHash(window.location.href),
                                 describeAnnotation(document.body, range)
                             )
                         );
@@ -141,10 +142,10 @@ export default class AIAnnotationsModifier implements PageModifier {
                     const ranges = searchNodeTree(node, [a.anchor_text]);
                     return ranges.map((range) => ({
                         ...createInfoAnnotation(
-                            window.location.href,
+                            getUrlHash(window.location.href),
                             describeAnnotation(document.body, range),
-                            undefined,
-                            a.annotations
+                            undefined
+                            // a.annotations
                         ),
                     }));
                 } catch (err) {
@@ -189,10 +190,10 @@ export default class AIAnnotationsModifier implements PageModifier {
 
             this.annotations.push(
                 createInfoAnnotation(
-                    window.location.href,
+                    getUrlHash(window.location.href),
                     describeAnnotation(document.body, range),
-                    undefined,
-                    related
+                    undefined
+                    // related
                 )
             );
         }
