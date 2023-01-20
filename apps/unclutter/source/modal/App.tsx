@@ -2,8 +2,8 @@ import React, { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import {
     FeedbackModalPage,
     LibraryModalPage,
-    ModalContext,
 } from "@unclutter/library-components/dist/components/Modal";
+import { ModalVisibilityContext } from "@unclutter/library-components/dist/components/Modal/context";
 import { LocalScreenshotContext } from "@unclutter/library-components/dist/components/ArticlePreview";
 
 import { LibraryState } from "../common/schema";
@@ -83,13 +83,13 @@ export default function App({
 
     if (isFeedbackModal === "true") {
         return (
-            <ModalContext.Provider value={{ isVisible: showModal, closeModal }}>
+            <ModalVisibilityContext.Provider value={{ isVisible: showModal, closeModal }}>
                 <FeedbackModalPage
                     userInfo={feedbackUserInfo}
                     onSubmit={onSubmitFeedback}
                     reportEvent={reportEventContentScript}
                 />
-            </ModalContext.Provider>
+            </ModalVisibilityContext.Provider>
         );
     }
 
@@ -102,9 +102,9 @@ export default function App({
         // @ts-ignore
         <ReplicacheContext.Provider value={rep}>
             <LocalScreenshotContext.Provider
-                value={!libraryState.userInfo.accountEnabled ? getLocalScreenshot : null}
+                value={!libraryState.userInfo?.accountEnabled ? getLocalScreenshot : null}
             >
-                <ModalContext.Provider value={{ isVisible: showModal, closeModal }}>
+                <ModalVisibilityContext.Provider value={{ isVisible: showModal, closeModal }}>
                     <LibraryModalPage
                         userInfo={libraryState?.userInfo}
                         darkModeEnabled={darkModeEnabled === "true"} // convert string to bool
@@ -117,7 +117,7 @@ export default function App({
                         graph={libraryState?.graph}
                         reportEvent={reportEventContentScript}
                     />
-                </ModalContext.Provider>
+                </ModalVisibilityContext.Provider>
             </LocalScreenshotContext.Provider>
         </ReplicacheContext.Provider>
     );

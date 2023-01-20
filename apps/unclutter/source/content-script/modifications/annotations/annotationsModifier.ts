@@ -19,15 +19,15 @@ import { getNodeOffset } from "../../../common/annotations/offset";
 
 @trackModifierExecution
 export default class AnnotationsModifier implements PageModifier {
-    private articleUrl: string;
+    private articleId: string;
 
     sidebarIframe: HTMLIFrameElement;
     private sidebarLoaded: boolean = false;
     private reactLoaded: boolean = false;
     private pageResizeObserver: ResizeObserver;
 
-    constructor(articleUrl: string) {
-        this.articleUrl = articleUrl;
+    constructor(articleId: string) {
+        this.articleId = articleId;
         browser.runtime.onMessage.addListener(this.onRuntimeMessage.bind(this));
     }
 
@@ -39,7 +39,9 @@ export default class AnnotationsModifier implements PageModifier {
     async afterTransitionIn() {
         // always enable sidebar
         this.sidebarIframe = injectReactIframe("/sidebar/index.html", "lindy-annotations-bar", {
-            articleUrl: this.articleUrl,
+            articleId: this.articleId,
+            darkModeEnabled: (this.darkModeEnabled || false).toString(),
+            sourceAnnotationId: this.focusedAnnotation,
         });
         window.addEventListener("message", ({ data }) => {
             if (data.event === "sidebarIframeLoaded") {
@@ -94,7 +96,11 @@ export default class AnnotationsModifier implements PageModifier {
         // listeners need to be configured before rendering iframe to anchor annotations?
 
         // selection is only user interface for annotations
-        createSelectionListener(this.sidebarIframe, this.onAnnotationUpdate.bind(this));
+        createSelectionListener(
+            this.articleId,
+            this.sidebarIframe,
+            this.onAnnotationUpdate.bind(this)
+        );
 
         sendIframeEvent(this.sidebarIframe, {
             event: "setEnablePersonalAnnotations",
@@ -167,7 +173,7 @@ export default class AnnotationsModifier implements PageModifier {
     public annotationListeners: AnnotationListener[] = [];
 
     // private fn passed to selection listener (added) and annotations side events listener (anchored, removed)
-    private onAnnotationUpdate(action: "set" | "add" | "remove", annotations: LindyAnnotation[]) {
+    onAnnotationUpdate(action: "set" | "add" | "remove", annotations: LindyAnnotation[]) {
         if (action === "set") {
             // called after paintHighlights event
             this.onAnnotationsVisible(annotations);
@@ -181,25 +187,28 @@ export default class AnnotationsModifier implements PageModifier {
     private async onRuntimeMessage(message, sender, sendResponse) {
         if (message.event === "focusAnnotation") {
             if (this.annotationsVisible) {
-                // only called from libray modal for now
-                // leave time to disable scroll lock
-                await new Promise((resolve) => setTimeout(resolve, 200));
+                if (message.source === "modal") {
+                    // wait until modal scroll-lock disabled
+                    await new Promise((resolve) => setTimeout(resolve, 200));
+                }
 
-                this.focusAnnotation(message.focusedAnnotation);
+                this.focusAnnotation(message.annotationId);
             } else {
                 // scroll to annotation once anchored
-                this.focusedAnnotation = message.focusedAnnotation;
+                this.focusedAnnotation = message.annotationId;
             }
         }
     }
 
-    private onAnnotationsVisible(annotations: LindyAnnotation[]) {
+    private async onAnnotationsVisible(annotations: LindyAnnotation[]) {
         if (annotations.length === 0) {
             // more annotations might get fetched later (and there is nothing to focus anyways)
             return;
         }
 
         if (this.focusedAnnotation) {
+            await new Promise((resolve) => setTimeout(resolve, 200));
+
             this.focusAnnotation(this.focusedAnnotation);
 
             // ignore further repositioning
@@ -209,7 +218,7 @@ export default class AnnotationsModifier implements PageModifier {
         this.annotationsVisible = true;
     }
 
-    private focusAnnotation(annotationId: string) {
+    private async focusAnnotation(annotationId: string) {
         const node = document.getElementById(annotationId);
         if (!node) {
             console.log(`Could not find focused annotation ${annotationId}`);
@@ -220,6 +229,11 @@ export default class AnnotationsModifier implements PageModifier {
         window.scrollTo({
             top: getNodeOffset(node) - 100,
             behavior: "smooth",
+        });
+
+        sendIframeEvent(this.sidebarIframe, {
+            event: "focusAnnotation",
+            annotationId,
         });
     }
 }

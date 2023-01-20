@@ -25,13 +25,13 @@ export async function initReplicache(): Promise<Replicache> {
         auth: jwt,
     });
 
-    rep.createIndex({
-        name: "articlesByTopic",
-        // @ts-ignore
-        keyPrefix: "/articles/",
-        jsonPointer: "/topic_id",
-        allowEmpty: true,
-    });
+    // rep.createIndex({
+    //     name: "articlesByTopic",
+    //     // @ts-ignore
+    //     keyPrefix: "/articles/",
+    //     jsonPointer: "/topic_id",
+    //     allowEmpty: true,
+    // });
     rep.createIndex({
         name: "annotationsPerArticle",
         // @ts-ignore

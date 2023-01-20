@@ -40,7 +40,7 @@
         visibility: hidden !important;
         opacity: 0 !important;
         transform: translate3d(10px, 0, 0) !important;
-        transition: all 0.15s ease-out !important;
+        transition: all 200ms ease-out !important;
     }
     .lindy-ui-dialog-container:hover > .lindy-ui-dialog {
         visibility: visible !important;

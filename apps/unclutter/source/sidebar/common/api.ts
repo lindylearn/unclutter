@@ -1,6 +1,5 @@
 import { hypothesisToLindyFormat, LindyAnnotation } from "../../common/annotations/create";
 import { getHypothesisToken, getHypothesisUsername } from "../../common/annotations/storage";
-import { getUrlHash } from "@unclutter/library-components/dist/common/url";
 import ky from "ky";
 import type { Annotation } from "@unclutter/library-components/dist/store";
 
@@ -15,31 +14,35 @@ const hypothesisApi = "https://api.hypothes.is/api";
 // --- global fetching
 
 // public annotations via lindy api
-export async function getLindyAnnotations(url: string): Promise<LindyAnnotation[]> {
-    // query API with hash of normalized url to not leak visited articles
-    const url_hash = getUrlHash(url);
-
+export async function getLindyAnnotations(articleId: string): Promise<LindyAnnotation[]> {
     try {
         const response = await fetch(
             `${lindyApiUrl}/annotations/?${new URLSearchParams({
-                page_hash: url_hash,
+                // query API with hash of normalized url to not leak visited articles
+                page_hash: articleId,
             })}`,
             await _getConfig()
         );
         const json = await response.json();
 
         const username = await getHypothesisUsername();
-        function mapFormat(annotation: LindyAnnotation): LindyAnnotation {
+        function mapFormat(annotation: any): LindyAnnotation {
             return {
                 ...annotation,
                 isPublic: true,
 
-                url,
+                article_id: articleId,
                 replies: annotation.replies.map(mapFormat),
                 isMyAnnotation: annotation.author === username,
             };
         }
-        return json.results.map(mapFormat);
+        let annotations: LindyAnnotation[] = json.results.map(mapFormat);
+
+        // don't show large social comments as they are distracting
+        // examples: http://johnsalvatier.org/blog/2017/reality-has-a-surprising-amount-of-detail
+        annotations = annotations.filter((a) => a.quote_text?.length < 300);
+
+        return annotations;
     } catch (err) {
         console.error(err);
         return [];

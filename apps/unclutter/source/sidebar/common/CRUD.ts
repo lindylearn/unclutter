@@ -1,20 +1,22 @@
-/**
- * Wrapper over local and remote annotation storage, using the one configured by the user.
- */
-
-import { LindyAnnotation } from "../../common/annotations/create";
+import { ReplicacheProxy } from "@unclutter/library-components/dist/common/replicache";
+import {
+    LindyAnnotation,
+    pickleLocalAnnotation,
+    unpickleLocalAnnotation,
+} from "../../common/annotations/create";
 import { reportEventContentScript } from "@unclutter/library-components/dist/common/messaging";
 import { getLindyAnnotations } from "./api";
-import {
-    createLocalAnnotation,
-    deleteLocalAnnotation,
-    getLocalAnnotations,
-    updateLocalAnnotation,
-} from "./local";
 import { getHiddenAnnotations } from "./legacy";
+import {
+    deleteAnnotationVectors,
+    indexAnnotationVectors,
+} from "@unclutter/library-components/dist/common/api";
+import type { UserInfo } from "@unclutter/library-components/dist/store/_schema";
+
+const rep = new ReplicacheProxy();
 
 export async function getAnnotations(
-    url: string,
+    articleId: string,
     personalAnnotationsEnabled: boolean,
     enableSocialAnnotations: boolean
 ): Promise<LindyAnnotation[]> {
@@ -25,9 +27,9 @@ export async function getAnnotations(
     const start = performance.now();
 
     // fetch annotations from configured sources
-    const [personalAnnotations, publicAnnotations] = await Promise.all([
-        personalAnnotationsEnabled ? getPersonalAnnotations(url) : [],
-        enableSocialAnnotations ? getLindyAnnotations(url) : [],
+    let [personalAnnotations, publicAnnotations] = await Promise.all([
+        personalAnnotationsEnabled ? getPersonalAnnotations(articleId) : [],
+        enableSocialAnnotations ? getLindyAnnotations(articleId) : [],
     ]);
 
     // filter out public hypothesis annotations
@@ -41,31 +43,6 @@ export async function getAnnotations(
             });
         }
     }
-
-    // take from public lindy API preferrably (to get metadata)
-    // let annotations = publicAnnotations;
-    // let hypothesisReplies: LindyAnnotation[] = [];
-    // const seenIds = new Set(publicAnnotations.map((a) => a.id));
-    // for (const annotation of personalAnnotations) {
-    //     if (annotation.reply_to) {
-    //         hypothesisReplies.push(annotation);
-    //     } else if (!seenIds.has(annotation.id)) {
-    //         annotations.push(annotation);
-    //     }
-    // }
-    // populate replies from hypothesis (might be private or not yet propagated)
-    // function populateRepliesDfs(current: LindyAnnotation) {
-    //     hypothesisReplies
-    //         .filter((a) => a.reply_to === current.id)
-    //         .filter((a) => !current.replies.some((r) => r.id === a.id))
-    //         .map((reply) => {
-    //             current.replies.push(reply);
-    //             current.reply_count += 1;
-    //         });
-
-    //     current.replies.map(populateRepliesDfs);
-    // }
-    // annotations.map(populateRepliesDfs);
 
     // remove annotations hidden by the user
     const hiddenAnnotations = await getHiddenAnnotations();
@@ -82,22 +59,45 @@ export async function getAnnotations(
     return annotations;
 }
 
-async function getPersonalAnnotations(url: string): Promise<LindyAnnotation[]> {
-    return await getLocalAnnotations(url);
+async function getPersonalAnnotations(articleId: string): Promise<LindyAnnotation[]> {
+    const annotations = await rep.query.listArticleAnnotations(articleId);
+    return annotations.map(unpickleLocalAnnotation);
 }
 
-export async function createAnnotation(annotation: LindyAnnotation): Promise<LindyAnnotation> {
-    const createdAnnotation = await createLocalAnnotation(annotation);
+export async function createAnnotation(
+    userInfo: UserInfo,
+    annotation: LindyAnnotation
+): Promise<LindyAnnotation> {
+    await rep.mutate.putAnnotation(pickleLocalAnnotation(annotation));
+
+    if (userInfo?.aiEnabled) {
+        indexAnnotationVectors(
+            userInfo.id,
+            annotation.article_id,
+            [annotation.quote_text],
+            [annotation.id]
+        );
+    }
+
     reportEventContentScript("createAnnotation");
-    return createdAnnotation;
-}
 
-export async function updateAnnotation(annotation: LindyAnnotation): Promise<LindyAnnotation> {
-    await updateLocalAnnotation(annotation);
     return annotation;
 }
 
-export async function deleteAnnotation(annotation: LindyAnnotation): Promise<void> {
+export async function updateAnnotation(annotation: LindyAnnotation): Promise<LindyAnnotation> {
+    await rep.mutate.updateAnnotation(pickleLocalAnnotation(annotation));
+    return annotation;
+}
+
+export async function deleteAnnotation(
+    userInfo: UserInfo,
+    annotation: LindyAnnotation
+): Promise<void> {
+    await rep.mutate.deleteAnnotation(annotation.id);
+
+    if (userInfo?.aiEnabled) {
+        deleteAnnotationVectors(userInfo.id, undefined, annotation.id);
+    }
+
     reportEventContentScript("deleteAnnotation");
-    return await deleteLocalAnnotation(annotation);
 }

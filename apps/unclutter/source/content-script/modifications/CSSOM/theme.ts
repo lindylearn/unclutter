@@ -3,7 +3,7 @@ import { getUserTheme, UserTheme } from "../../../common/storage";
 import { createStylesheetLink } from "../../../common/stylesheets";
 import {
     activeColorThemeVariable,
-    applySaveThemeOverride,
+    saveThemeChange,
     autoBackgroundThemeVariable,
     backgroundColorThemeVariable,
     colorThemeToBackgroundColor,
@@ -117,17 +117,19 @@ export default class ThemeModifier implements PageModifier {
             this.bodyStyleModifier.originalBackgroundColor ||
             "white";
 
-        // TODO test color distance to background color (brightness alone doesn't look nice)
-        // but only known case is https://arstechnica.com/science/2022/05/rocket-report-starliner-soars-into-orbit-about-those-raptor-ruds-in-texas/
-        if (this.backgroundColor === "rgb(240, 241, 242)") {
-            this.backgroundColor = "white";
-        }
-
         // test if dark mode enabled
         const backgroundBrightness = getBrightness(this.backgroundColor);
         const textBrightness = this.textContainerModifier.mainTextColor
             ? getBrightness(this.textContainerModifier.mainTextColor)
             : null;
+
+        // round light background colors to white, to increase UI contrast
+        // 0.94 https://arstechnica.com/science/2022/05/rocket-report-starliner-soars-into-orbit-about-those-raptor-ruds-in-texas/
+        // 0.97 https://www.polygon.com/gaming/23538801/video-game-studio-union-microsoft-activision-blizzard
+        // console.log(backgroundBrightness);
+        if (backgroundBrightness > 0.9) {
+            this.backgroundColor = "white";
+        }
 
         if (backgroundBrightness < 0.6 && !this.darkModeActive) {
             if (!textBrightness || textBrightness > 0.5) {
@@ -168,7 +170,7 @@ export default class ThemeModifier implements PageModifier {
         this.applyActiveColorTheme();
 
         // save in storage
-        applySaveThemeOverride(this.domain, activeColorThemeVariable, newColorThemeName);
+        saveThemeChange(this.domain, activeColorThemeVariable, newColorThemeName);
     }
 
     applyActiveColorTheme(): boolean {
@@ -291,7 +293,7 @@ export default class ThemeModifier implements PageModifier {
         );
     }
 
-    private setCssThemeVariable(variableName: string, value: string) {
+    setCssThemeVariable(variableName: string, value: string) {
         setCssThemeVariable(variableName, value);
         this.annotationsModifer.setCssVariable(variableName, value);
         this.reviewModeModifier.setCssVariable(variableName, value);

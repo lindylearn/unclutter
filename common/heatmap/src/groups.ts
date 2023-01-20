@@ -23,9 +23,9 @@ export function similarity(a: number[], b: number[]): number {
 }
 
 export function cosine_similarity_matrix(matrix: number[][]): number[][] {
-    let cosine_similarity_matrix = [];
+    let cosine_similarity_matrix: number[][] = [];
     for (let i = 0; i < matrix.length; i++) {
-        let row = [];
+        let row: number[] = [];
         for (let j = 0; j < i; j++) {
             row.push(cosine_similarity_matrix[j][i]);
         }

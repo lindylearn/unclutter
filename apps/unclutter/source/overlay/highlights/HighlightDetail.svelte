@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { RelatedHighlight } from "../../content-script/modifications/DOM/smartHighlights";
+    import type { RelatedHighlight } from "@unclutter/library-components/dist/common/api";
     // import ArticlePreview from "../outline/Library/ArticlePreview.svelte";
 
     export let quote: string;

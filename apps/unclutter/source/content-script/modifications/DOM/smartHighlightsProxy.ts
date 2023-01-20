@@ -1,45 +1,38 @@
+import browser from "../../../common/polyfill";
 import { PageModifier, trackModifierExecution } from "../_interface";
-import { generateId } from "../../../common/annotations/create";
 import type AnnotationsModifier from "../annotations/annotationsModifier";
-import { _createAnnotationFromSelection } from "../annotations/selectionListener";
-import { sendIframeEvent } from "../../../common/reactIframe";
+import { getUserInfoSimple } from "@unclutter/library-components/dist/common/messaging";
 
 // communicate with a SmartHighlightsModifier instance inside the same window
 @trackModifierExecution
 export default class SmartHighlightsProxy implements PageModifier {
+    private articleId: string;
     private annotationsModifier: AnnotationsModifier;
 
-    constructor(annotationsModifier: AnnotationsModifier) {
+    constructor(articleId: string, annotationsModifier: AnnotationsModifier) {
+        this.articleId = articleId;
         this.annotationsModifier = annotationsModifier;
 
         window.addEventListener("message", (event) => this.handleMessage(event.data || {}));
     }
 
-    private handleMessage(message: any) {
-        if (message.type === "clickSmartHighlight") {
-            _createAnnotationFromSelection(
-                (annotation) => {
-                    sendIframeEvent(this.annotationsModifier.sidebarIframe, {
-                        event: "createHighlight",
-                        annotation,
-                    });
-                },
-                this.annotationsModifier.sidebarIframe,
-                generateId()
-            );
+    async injectHighlightsScript() {
+        // @ts-ignore
+        if (window.unclutterHighlightsLoaded) {
+            return;
+        }
+        const userInfo = await getUserInfoSimple();
+        if (userInfo?.aiEnabled) {
+            // will only be injected if article not parsed already
+            browser.runtime.sendMessage(null, {
+                event: "requestEnhance",
+                trigger: "enhance",
+                type: "highlights",
+            });
         }
     }
 
-    // if (this.annotationsModifier?.sidebarIframe) {
-    //     sendIframeEvent(this.annotationsModifier.sidebarIframe, {
-    //         event: "setSummaryAnnotation",
-    //         summaryAnnotation: createAnnotation(window.location.href, null, {
-    //             id: generateId(),
-    //             platform: "summary",
-    //             text: this.articleSummary,
-    //             displayOffset: 0,
-    //             displayOffsetEnd: 0,
-    //         }),
-    //     });
-    // }
+    private handleMessage(message: any) {
+        // "setInfoAnnotations" and "changedDisplayOffset" sidebar events sent directly from smartHighlights.ts
+    }
 }

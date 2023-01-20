@@ -1,4 +1,4 @@
-import browser from "../../common/polyfill";
+import { getUserInfoSimple } from "@unclutter/library-components/dist/common/messaging";
 import {
     injectReactIframe,
     removeReactIframe,
@@ -22,11 +22,17 @@ export default class ReviewModifier implements PageModifier {
     }
 
     async afterTransitionIn() {
+        const userInfo = await getUserInfoSimple();
+        if (!userInfo?.aiEnabled) {
+            return;
+        }
+
         this.bodyStyleModifier.setBottomContainerPadding();
 
         // always enable sidebar
         this.iframe = injectReactIframe("/review/index.html", "lindy-info-bottom", {
             articleId: this.articleId,
+            darkModeEnabled: (this.darkModeEnabled || false).toString(),
         });
         window.addEventListener("message", ({ data }) => {
             if (data.event === "bottomIframeLoaded") {
