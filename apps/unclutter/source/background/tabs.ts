@@ -1,29 +1,23 @@
-import type { Annotation } from "@unclutter/library-components/dist/store";
+import type { Annotation, UserInfo } from "@unclutter/library-components/dist/store";
 import browser from "../common/polyfill";
 import { rep } from "./library/library";
-import { getArticleAnnotations, saveAIAnnotations } from "./library/smartHighlights";
+import { saveAIAnnotations, getRelatedAnnotationsCount } from "./library/smartHighlights";
 
 export class TabStateManager {
-    private enabled = false;
+    private userInfo: UserInfo;
     private tabReaderModeActive: { [tabId: number]: boolean } = {};
     private tabAnnotations: { [tabId: string]: Annotation[] } = {};
+    private relatedAnnotationsCount: { [tabId: string]: number } = {};
 
     onChangeActiveTab(tabId: number) {
-        if (!this.enabled) {
-            return;
-        }
-
         this.renderBadgeCount(tabId);
     }
 
     onCloseTab(tabId: number) {
-        if (!this.enabled) {
-            return;
-        }
-
         // release storage
         delete this.tabReaderModeActive[tabId];
         delete this.tabAnnotations[tabId];
+        delete this.relatedAnnotationsCount[tabId];
 
         // clear badge
         this.renderBadgeCount(tabId);
@@ -32,73 +26,72 @@ export class TabStateManager {
     // check saved annotations for a given url (without any network requests), to
     // determine if the user previously used the extension on this page
     async checkHasLocalAnnotations(tabId: number, articleId: string) {
-        // update enabled status on every reader mode call
-        // TODO cache this? but how to show counts once enabled?
-        await this.checkEnabled();
-        if (!this.enabled) {
+        if (!(await this.checkAIEnabled())) {
             return;
         }
 
         // clear immediately after navigation
-        this.tabReaderModeActive[tabId] = false;
-        this.tabAnnotations[tabId] = undefined;
+        this.onCloseTab(tabId);
 
-        this.tabAnnotations[tabId] = await getArticleAnnotations(articleId);
+        this.tabAnnotations[tabId] = await rep.query.listArticleAnnotations(articleId);
+        // this.relatedAnnotationsCount[tabId] = await getRelatedAnnotationsCount(
+        //     this.userInfo,
+        //     this.tabAnnotations[tabId]
+        // );
         this.renderBadgeCount(tabId);
 
-        return this.tabAnnotations[tabId].length > 0;
+        return !!this.tabAnnotations[tabId]?.length;
     }
 
-    hasParsedAnnotations(tabId: number) {
-        if (!this.enabled) {
-            return false;
-        }
-
+    hasAIAnnotations(tabId: number) {
         const aiAnnotations = this.tabAnnotations[tabId]?.filter((a) => a.ai_created) || [];
-        return aiAnnotations.length > 0;
+        return !!aiAnnotations?.length;
     }
 
-    setParsedAnnotations(tabId: number, annotations: Annotation[]) {
-        if (!this.enabled) {
+    async setParsedAnnotations(tabId: number, annotations: Annotation[]) {
+        if (!(await this.checkAIEnabled())) {
             return;
         }
 
-        this.tabAnnotations[tabId] = annotations;
-
-        // highlights.ts may be injected by reader mode itself, so directly save annotations once available
+        // highlights.ts may be injected by reader mode itself, so immediately save annotations once available
         if (this.tabReaderModeActive[tabId]) {
-            saveAIAnnotations(annotations);
+            saveAIAnnotations(this.userInfo, annotations);
         }
+
+        this.tabAnnotations[tabId] = annotations;
+        // this.relatedAnnotationsCount[tabId] = await getRelatedAnnotationsCount(
+        //     this.userInfo,
+        //     annotations
+        // );
 
         this.renderBadgeCount(tabId);
     }
 
     async onActivateReaderMode(tabId: number) {
-        if (!this.enabled) {
-            return;
-        }
-
         this.tabReaderModeActive[tabId] = true;
 
         const annotations = this.tabAnnotations[tabId];
         if (annotations?.length) {
-            await saveAIAnnotations(annotations);
+            await saveAIAnnotations(this.userInfo, annotations);
         }
     }
 
     private async renderBadgeCount(tabId: number) {
-        const annotationCount = this.tabAnnotations[tabId]?.length;
-        const text = annotationCount ? annotationCount.toString() : "";
+        // const badgeCount = this.relatedAnnotationsCount[tabId];
+        const badgeCount = this.tabAnnotations[tabId]?.length;
+
+        const text = badgeCount ? badgeCount.toString() : "";
 
         browser.action.setBadgeBackgroundColor({ color: "#facc15" });
         browser.action.setBadgeText({ text });
     }
 
-    private async checkEnabled() {
-        if (this.enabled) {
-            return;
+    // update enabled status on every reader mode call
+    // TODO cache this? but how to show counts once enabled?
+    private async checkAIEnabled() {
+        if (!this.userInfo) {
+            this.userInfo = await rep.query.getUserInfo();
         }
-        const userInfo = await rep.query.getUserInfo();
-        this.enabled = !!userInfo?.aiEnabled;
+        return this.userInfo?.aiEnabled;
     }
 }

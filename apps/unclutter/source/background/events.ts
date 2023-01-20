@@ -97,7 +97,7 @@ function handleMessage(
             tabsManager.onActivateReaderMode(sender.tab.id);
             reportEnablePageView(message.trigger);
         } else if (message.type === "highlights") {
-            if (tabsManager.hasParsedAnnotations(sender.tab.id)) {
+            if (tabsManager.hasAIAnnotations(sender.tab.id)) {
                 // already parsed page for annotations before
                 return;
             }

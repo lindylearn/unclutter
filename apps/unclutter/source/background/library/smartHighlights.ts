@@ -1,28 +1,51 @@
-import { indexAnnotationVectors } from "@unclutter/library-components/dist/common/api";
-import { Annotation } from "@unclutter/library-components/dist/store";
-import { rep, userId } from "./library";
+import {
+    fetchRelatedAnnotations,
+    indexAnnotationVectors,
+} from "@unclutter/library-components/dist/common/api";
+import { Annotation, UserInfo } from "@unclutter/library-components/dist/store";
+import { rep } from "./library";
 
-export async function getArticleAnnotations(articleId: string) {
-    return await rep.query.listArticleAnnotations(articleId);
-}
-
-export async function saveAIAnnotations(annotations: Annotation[]) {
-    const aiAnnotations = annotations?.filter((a) => a.ai_created);
-    if (!aiAnnotations || aiAnnotations.length === 0) {
+export async function saveAIAnnotations(userInfo: UserInfo, annotations: Annotation[]) {
+    if (!annotations?.length) {
         return;
     }
-    console.log(`Saving ${aiAnnotations.length} AI highlights...`);
+    console.log(`Saving ${annotations.length} AI highlights...`);
 
-    await Promise.all(
-        aiAnnotations.map(async (annotation) => rep.mutate.putAnnotation(annotation))
-    );
+    await Promise.all(annotations.map(async (annotation) => rep.mutate.putAnnotation(annotation)));
 
     // save embeddings
     await indexAnnotationVectors(
-        userId,
-        aiAnnotations[0].article_id,
-        aiAnnotations.map((a) => a.quote_text),
-        aiAnnotations.map((a) => a.id),
+        userInfo.id,
+        annotations[0].article_id,
+        annotations.map((a) => a.quote_text),
+        annotations.map((a) => a.id),
         false
     );
+}
+
+export async function getRelatedAnnotationsCount(
+    userInfo: UserInfo,
+    annotations: Annotation[],
+    relatedThreshold = 0.5
+) {
+    if (!annotations?.length) {
+        return;
+    }
+
+    // fetch user highlights that are related to the found article annotations
+    const relatedPerAnnotation = await fetchRelatedAnnotations(
+        userInfo.id,
+        annotations[0].article_id,
+        annotations.map((a) => a.quote_text),
+        relatedThreshold,
+        false
+    );
+
+    let relatedCount = 0;
+    relatedPerAnnotation.forEach((related) => {
+        relatedCount += related.length;
+    });
+    console.log(`Found ${relatedCount} related highlights...`);
+
+    return relatedCount;
 }

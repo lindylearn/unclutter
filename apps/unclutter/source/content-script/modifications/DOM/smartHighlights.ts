@@ -84,7 +84,8 @@ export default class SmartHighlightsModifier implements PageModifier {
                 event: "getHeatmap",
                 paragraphs: paragraphTexts,
             });
-        } catch {
+        } catch (err) {
+            console.error(err);
             return [];
         }
 
@@ -99,6 +100,7 @@ export default class SmartHighlightsModifier implements PageModifier {
 
         // report diagnostics
         let durationMs = Math.round(performance.now() - start);
+        console.log(`Generated ${newAnnotations.length} AI highlights in ${durationMs}ms`);
         reportEventContentScript("renderHighlightsLayer", {
             paragraphCount: paragraphsElements.length,
             annotationsCount: this.annotationsCount,
