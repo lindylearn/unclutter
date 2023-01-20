@@ -1,45 +1,27 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useDebounce } from "usehooks-ts";
 import { FilterButton } from "./Recent";
 import { getBrowser, getDomain, getRandomLightColor, getUnclutterExtensionId } from "../../common";
-import {
-    AnnotationWithArticle,
-    latestHighlightsVersion,
-    ReplicacheContext,
-    Topic,
-    UserInfo,
-    useSubscribe,
-} from "../../store";
+import { AnnotationWithArticle, ReplicacheContext, UserInfo, useSubscribe } from "../../store";
 import { Highlight } from "../Highlight";
-import { ResourceIcon } from "./components/numbers";
 import { SearchBox } from "./components/search";
-import { FilterContext } from "..";
+import { FilterContext, ModalStateContext } from "./context";
 
-export default function HighlightsTab({
-    userInfo,
-    darkModeEnabled,
-    reportEvent = () => {},
-}: {
-    userInfo: UserInfo;
-    darkModeEnabled: boolean;
-    reportEvent?: (event: string, data?: any) => void;
-}) {
+export default function HighlightsTab({}: {}) {
+    const { darkModeEnabled, userInfo, reportEvent } = useContext(ModalStateContext);
+
     const { currentArticle, currentTopic, domainFilter, setDomainFilter, currentAnnotationsCount } =
         useContext(FilterContext);
 
     const rep = useContext(ReplicacheContext);
-    useEffect(() => {
-        rep?.mutate.updateSettings({ seen_highlights_version: latestHighlightsVersion });
-    }, [rep]);
-
     const annotations = useSubscribe(rep, rep?.subscribe.listAnnotationsWithArticles(), null);
 
-    const [onlyFavorites, setOnlyFavorites] = useState(false);
-    const [lastFirst, setLastFirst] = useState(true);
+    const [onlyManualHighlights, setOnlyManualHighlights] = useState(false);
 
     // filter to one of the current objects
     const [activeCurrentFilter, setActiveCurrentFilter] = useState<boolean>(
-        !!((currentArticle && currentAnnotationsCount) || domainFilter)
+        !!domainFilter
+        // !!((currentArticle && currentAnnotationsCount) || domainFilter)
     );
 
     const [filteredAnnotations, setFilteredAnnotations] = useState<AnnotationWithArticle[]>([]);
@@ -60,14 +42,12 @@ export default function HighlightsTab({
                     (a) => a.article_id === currentArticle
                 );
             }
-        } else if (onlyFavorites) {
-            filteredAnnotations = filteredAnnotations.filter((a) => a.is_favorite);
+        }
+        if (onlyManualHighlights) {
+            filteredAnnotations = filteredAnnotations.filter((a) => !a.ai_created);
         }
 
-        // sort
-        filteredAnnotations.sort((a, b) =>
-            lastFirst ? b.created_at - a.created_at : a.created_at - b.created_at
-        );
+        filteredAnnotations.sort((a, b) => b.created_at - a.created_at);
         setFilteredAnnotations(filteredAnnotations);
     }, [
         annotations,
@@ -76,14 +56,13 @@ export default function HighlightsTab({
         currentAnnotationsCount,
         currentTopic,
         domainFilter,
-        onlyFavorites,
-        lastFirst,
+        onlyManualHighlights,
     ]);
 
     const [searchedAnnotations, setSearchedAnnotations] = useState<AnnotationWithArticle[] | null>(
         null
     );
-    const [query, setQuery] = useState<string>();
+    const [query, setQuery] = useState<string>("");
     useEffect(() => {
         if (!query) {
             setSearchedAnnotations(null);
@@ -92,38 +71,27 @@ export default function HighlightsTab({
         if (activeCurrentFilter) {
             setActiveCurrentFilter(false);
         }
-        (async () => {
-            let hits = await getBrowser().runtime.sendMessage(getUnclutterExtensionId(), {
-                event: "searchLibrary",
-                type: "annotations",
-                query,
-            });
-            if (!hits) {
-                hits = [];
-            }
-            setSearchedAnnotations(
-                hits.map((h) => {
-                    h.annotation.article = h.article;
-                    return h.annotation;
-                })
-            );
-        })();
     }, [query]);
     const queryDebounced = useDebounce(query, 500);
     useEffect(() => {
-        if (queryDebounced) {
-            reportEvent("highlightsSearch");
+        if (!query || !rep) {
+            return;
         }
+
+        localSparseSearch(query).then(setSearchedAnnotations);
+        // vectorSearch(rep, query).then(setSearchedAnnotations);
+
+        reportEvent("highlightsSearch");
     }, [queryDebounced]);
 
     return (
         <div className="flex flex-col gap-4">
             <div className="filter-list flex justify-start gap-3">
-                {!activeCurrentFilter && (
+                {userInfo?.aiEnabled && (
                     <FilterButton
-                        title={onlyFavorites ? "Favorites" : "All highlights"}
+                        title={onlyManualHighlights ? "Manual highlights" : "All highlights"}
                         icon={
-                            onlyFavorites ? (
+                            onlyManualHighlights ? (
                                 <svg className="h-4" viewBox="0 0 576 512">
                                     <path
                                         fill="currentColor"
@@ -140,37 +108,11 @@ export default function HighlightsTab({
                             )
                         }
                         onClick={() => {
-                            setOnlyFavorites(!onlyFavorites);
-                            reportEvent("changeListFilter", { onlyFavorites });
+                            setOnlyManualHighlights(!onlyManualHighlights);
+                            reportEvent("changeListFilter", { onlyManualHighlights });
                         }}
                     />
                 )}
-
-                <FilterButton
-                    title={lastFirst ? "Last added" : "Oldest first"}
-                    icon={
-                        lastFirst ? (
-                            <svg className="h-4" viewBox="0 0 512 512">
-                                <path
-                                    fill="currentColor"
-                                    d="M416 320h-96c-17.6 0-32 14.4-32 32v96c0 17.6 14.4 32 32 32h96c17.6 0 32-14.4 32-32v-96C448 334.4 433.6 320 416 320zM400 432h-64v-64h64V432zM480 32h-160c-17.67 0-32 14.33-32 32v160c0 17.67 14.33 32 32 32h160c17.67 0 32-14.33 32-32V64C512 46.33 497.7 32 480 32zM464 208h-128v-128h128V208zM145.6 39.37c-9.062-9.82-26.19-9.82-35.25 0L14.38 143.4c-9 9.758-8.406 24.96 1.344 33.94C20.35 181.7 26.19 183.8 32 183.8c6.469 0 12.91-2.594 17.62-7.719L104 117.1v338.9C104 469.2 114.8 480 128 480s24-10.76 24-24.02V117.1l54.37 58.95C215.3 185.8 230.5 186.5 240.3 177.4C250 168.4 250.6 153.2 241.6 143.4L145.6 39.37z"
-                                />
-                            </svg>
-                        ) : (
-                            <svg className="h-4" viewBox="0 0 512 512">
-                                <path
-                                    fill="currentColor"
-                                    d="M480 32h-160c-17.67 0-32 14.33-32 32v160c0 17.67 14.33 32 32 32h160c17.67 0 32-14.33 32-32V64C512 46.33 497.7 32 480 32zM464 208h-128v-128h128V208zM416 320h-96c-17.6 0-32 14.4-32 32v96c0 17.6 14.4 32 32 32h96c17.6 0 32-14.4 32-32v-96C448 334.4 433.6 320 416 320zM400 432h-64v-64h64V432zM206.4 335.1L152 394.9V56.02C152 42.76 141.3 32 128 32S104 42.76 104 56.02v338.9l-54.37-58.95c-4.719-5.125-11.16-7.719-17.62-7.719c-5.812 0-11.66 2.094-16.28 6.375c-9.75 8.977-10.34 24.18-1.344 33.94l95.1 104.1c9.062 9.82 26.19 9.82 35.25 0l95.1-104.1c9-9.758 8.406-24.96-1.344-33.94C230.5 325.5 215.3 326.2 206.4 335.1z"
-                                />
-                            </svg>
-                        )
-                    }
-                    onClick={() => {
-                        setLastFirst(!lastFirst);
-                        reportEvent("changeListFilter", { lastFirst });
-                    }}
-                />
-
                 {activeCurrentFilter && (
                     <FilterButton
                         title={
@@ -191,10 +133,10 @@ export default function HighlightsTab({
                             setDomainFilter();
                             reportEvent("changeListFilter", { activeCurrentFilter: null });
                         }}
-                        color={getRandomLightColor(
-                            domainFilter || currentArticle || "",
-                            darkModeEnabled
-                        )}
+                        // color={getRandomLightColor(
+                        //     domainFilter || currentArticle || "",
+                        //     darkModeEnabled
+                        // )}
                     />
                 )}
 
@@ -204,7 +146,7 @@ export default function HighlightsTab({
                     placeholder={
                         annotations === null
                             ? ""
-                            : `Search across ${annotations.length} highlight${
+                            : `Search across your ${annotations.length} highlight${
                                   annotations.length !== 1 ? "s" : ""
                               }...`
                     }
@@ -231,3 +173,46 @@ export default function HighlightsTab({
         </div>
     );
 }
+
+async function localSparseSearch(query: string): Promise<AnnotationWithArticle[]> {
+    let hits = await getBrowser().runtime.sendMessage(getUnclutterExtensionId(), {
+        event: "searchLibrary",
+        type: "annotations",
+        query,
+    });
+    if (!hits) {
+        hits = [];
+    }
+
+    return hits.map((h) => {
+        h.annotation.article = h.article;
+        return h.annotation;
+    });
+}
+
+// async function vectorSearch(
+//     rep: RuntimeReplicache,
+//     query: string
+// ): Promise<AnnotationWithArticle[]> {
+//     const userId = "";
+//     const hits = await fetchRelatedAnnotations(userId, undefined, [query], 0.0, false);
+
+//     const annotations = await Promise.all(
+//         hits[0].map(async (hit) => {
+//             const annotation = await rep.query.getAnnotation(hit.id);
+//             const article =
+//                 annotation?.article_id && (await rep.query.getArticle(annotation.article_id));
+//             return {
+//                 ...hit,
+//                 ...annotation,
+//                 text: hit.excerpt,
+//                 ai_score: hit.score,
+//                 article,
+//             };
+//         })
+//     );
+//     console.log(annotations);
+
+//     // @ts-ignore
+//     return annotations;
+// }

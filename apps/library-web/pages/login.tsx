@@ -13,6 +13,7 @@ export default function LoginPage({ isSignup = false }) {
     const { user, error } = useUser();
 
     useEffect(() => {
+        // on login success
         if (user) {
             setUnclutterLibraryAuth(user.id);
             posthog.identify(user.id, { email: user.email });
@@ -24,15 +25,15 @@ export default function LoginPage({ isSignup = false }) {
     const origin = typeof window !== "undefined" ? window.location.origin : "";
 
     return (
-        <div className="bg-background min-h-screen p-10">
+        <div className="min-h-screen bg-white p-10 text-stone-800 dark:bg-[#212121] dark:text-[rgb(232,230,227)]">
             <Head>
-                <title>Unclutter Library Login</title>
+                <title>Unclutter Login</title>
             </Head>
 
             <div className="mx-auto max-w-md">
-                <div className="font-title flex cursor-pointer items-center justify-center gap-3 text-3xl font-bold dark:text-stone-900">
-                    <LindyIcon className="w-11" />
-                    <h1>Unclutter Library</h1>
+                <div className="font-title flex items-center justify-center gap-3 text-4xl font-bold dark:text-stone-800">
+                    <LindyIcon className="w-14" />
+                    <h1>Unclutter</h1>
                 </div>
 
                 <div className="mt-20">

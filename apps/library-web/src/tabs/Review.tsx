@@ -18,7 +18,7 @@ export default function ReviewTestTab({}) {
                 />
             </div>
             <div className="mt-5">
-                <ArticleBottomReview articleId={getUrlHash(url)} />
+                <ArticleBottomReview articleId={getUrlHash(url)} darkModeEnabled={false} />
             </div>
         </div>
     );

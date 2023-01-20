@@ -1,6 +1,6 @@
+import { getDomain } from "@unclutter/library-components/dist/common/util";
 import { defaultExcludedDomains } from "./defaultStorage";
 import { getUserSettingForDomain } from "./storage";
-import { getDomainFrom } from "./util";
 
 /*
 TODO: the following urls should be enabled but are not:
@@ -62,7 +62,7 @@ export function isNonLeafPage(url) {
         "xkcd.com",
         "ourworldindata.org",
     ];
-    if (excludedDomains.includes(getDomainFrom(url))) {
+    if (excludedDomains.includes(getDomain(url))) {
         return false;
     }
 

@@ -1,14 +1,13 @@
 import clsx from "clsx";
-import React, { ReactNode } from "react";
-import { getRandomLightColor } from "../../../common";
+import React, { useContext, useState } from "react";
+import { ModalStateContext } from "../context";
+import { ImportProgress, indexLibraryArticles } from "../../../common/import";
+import { ReplicacheContext } from "../../../store";
 
-export default function SyncModalTab({
-    darkModeEnabled,
-    reportEvent = () => {},
-}: {
-    darkModeEnabled: boolean;
-    reportEvent?: (event: string, data?: any) => void;
-}) {
+export default function SyncModalTab({}: {}) {
+    const { userInfo, reportEvent } = useContext(ModalStateContext);
+    const rep = useContext(ReplicacheContext);
+
     // const [hypothesisEnabled, setHypothesisEnabled] = React.useState(null);
     // React.useEffect(() => {
     //     (async function () {
@@ -20,42 +19,58 @@ export default function SyncModalTab({
     //     setHypothesisEnabled(enabled);
     // }
 
+    const [progress, setProgress] = useState<ImportProgress>();
+    const progressPercentage =
+        progress?.currentArticles !== undefined &&
+        progress?.targetArticles &&
+        progress.currentArticles / progress.targetArticles;
+
+    function generateHighlights() {
+        if (!rep || !userInfo?.aiEnabled) {
+            return;
+        }
+
+        indexLibraryArticles(rep, userInfo, setProgress);
+    }
+
     return (
         <div className="flex min-h-full flex-col gap-4">
-            <div className="grid list-disc grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-4">
                 {Object.entries(importOptions).map(([id, option]) => (
                     <div
                         key={id}
                         className={clsx(
-                            "rounded-md bg-stone-50 p-3 transition-transform hover:scale-[99%] dark:bg-neutral-800",
+                            "relative flex select-none flex-col gap-4 overflow-hidden rounded-md bg-stone-50 p-4 transition-transform hover:scale-[99%] dark:bg-neutral-800",
                             option.backgroundColor
                         )}
+                        onClick={generateHighlights}
                     >
-                        <h2 className="mb-3 flex items-center gap-2 px-1 font-medium">
+                        <h2 className="flex items-center gap-2 font-medium">
                             <img
-                                className="mr-2 inline-block h-5 w-5"
-                                src={`https://unclutter.lindylearn.io/logos/${option.iconFile}`}
+                                className="inline-block h-4 w-4"
+                                src={`https://library.lindylearn.io/logos/${option.iconFile}`}
                             />
                             {option.name}
                         </h2>
 
-                        <div className="flex h-32 flex-col justify-between gap-2 rounded-lg p-3 transition-all">
-                            {/* <FeatureFlagSwitch
-                                featureFlagKey={hypothesisSyncFeatureFlag}
-                                onChange={onChangeHypothesisSync}
-                            >
-                                Back-up notes to my{" "}
-                                <a
-                                    href="https://web.hypothes.is"
-                                    className="underline"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    Hypothes.is
-                                </a>{" "}
-                                account
-                            </FeatureFlagSwitch> */}
+                        <div className="flex h-24 flex-col gap-2 transition-all">
+                            <p>Create AI annotations for your saved articles.</p>
+
+                            {progress && progressPercentage && progressPercentage < 1 && (
+                                <p>
+                                    {progress.targetArticles - (progress?.currentArticles || 0)}{" "}
+                                    articles left...
+                                </p>
+                            )}
+                            {progressPercentage === 1 && <p>Finished!</p>}
                         </div>
+
+                        <div
+                            className="bg-lindy dark:bg-lindyDark absolute bottom-0 left-0 h-4 transition-all"
+                            style={{
+                                width: `${(progressPercentage || 0) * 100}%`,
+                            }}
+                        />
                     </div>
                 ))}
             </div>
@@ -69,10 +84,10 @@ type ImportOption = {
     backgroundColor: string;
 };
 const importOptions: { [id: string]: ImportOption } = {
-    bookmarks: {
-        name: "Sync highlights with hypothes.is",
-        iconFile: "hypothesis.svg",
-        backgroundColor: "bg-rose-400 dark:bg-rose-900",
+    library: {
+        name: "Generate highlights",
+        iconFile: "",
+        backgroundColor: "bg-amber-400 dark:bg-yellow-800",
     },
     // bookmarks: {
     //     name: "Import bookmarks",
@@ -88,6 +103,11 @@ const importOptions: { [id: string]: ImportOption } = {
     //     name: "Import Instapaper",
     //     iconFile: "instapaper.png",
     //     backgroundColor: "bg-gray-100 dark:bg-gray-800",
+    // },
+    // hypothesis: {
+    //     name: "Sync with hypothes.is",
+    //     iconFile: "hypothesis.svg",
+    //     backgroundColor: "bg-rose-400 dark:bg-rose-900",
     // },
     // raindrop: {
     //     name: "Import Raindrop",

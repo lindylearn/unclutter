@@ -1,13 +1,13 @@
 import React, { useEffect, useMemo, useState } from "react";
 import {
     DraggableContext,
-    LocalScreenshotContext,
-    ModalContext,
     useTabInfos,
     useArticleListsCache,
     ArticleGroup,
     getActivityColor,
 } from "@unclutter/library-components/dist/components";
+import { ModalVisibilityContext } from "@unclutter/library-components/dist/components/Modal/context";
+import { LocalScreenshotContext } from "@unclutter/library-components/dist/components/ArticlePreview";
 import {
     ReadingProgress as ReadingProgressType,
     ReplicacheContext,
@@ -16,11 +16,11 @@ import {
 } from "@unclutter/library-components/dist/store";
 import {
     reportEventContentScript,
-    ReplicacheProxy,
     getUnclutterExtensionId,
     getLocalScreenshot,
     useAutoDarkMode,
 } from "@unclutter/library-components/dist/common";
+import { ReplicacheProxy } from "@unclutter/library-components/dist/common/replicache";
 import { settingsStore, useSettings } from "../common/settings";
 import NewTabModal from "./Modal";
 
@@ -40,17 +40,7 @@ export default function App() {
 
     const [userInfo, setUserInfo] = useState<UserInfo>();
     useEffect(() => {
-        rep?.query.getUserInfo().then((userInfo) => {
-            setUserInfo(
-                userInfo || {
-                    id: null,
-                    email: null,
-                    signinProvider: null,
-                    accountEnabled: false,
-                    onPaidPlan: false,
-                }
-            );
-        });
+        rep?.query.getUserInfo().then(setUserInfo);
     }, [rep]);
     const readingProgress = useSubscribe(rep, rep.subscribe.getReadingProgress(), null);
 
@@ -67,8 +57,7 @@ export default function App() {
 
         if (showModal) {
             reportEvent("openLibraryModal", {
-                onPaidPlan: userInfo?.onPaidPlan,
-                trialEnabled: userInfo?.trialEnabled,
+                aiEnabled: userInfo?.aiEnabled,
                 articleCount: readingProgress?.articleCount,
                 completedCount: readingProgress?.completedCount,
                 annotationCount: readingProgress?.annotationCount,
@@ -89,12 +78,12 @@ export default function App() {
         <ReplicacheContext.Provider value={rep} darkModeEnabled={darkModeEnabled}>
             <LocalScreenshotContext.Provider
                 value={
-                    !userInfo.accountEnabled
+                    !userInfo?.accountEnabled
                         ? (articleId) => getLocalScreenshot(articleId, getUnclutterExtensionId())
                         : null
                 }
             >
-                <ModalContext.Provider
+                <ModalVisibilityContext.Provider
                     value={{ isVisible: showModal, closeModal: () => setShowModal(false) }}
                 >
                     <ArticleSection
@@ -109,7 +98,7 @@ export default function App() {
                         darkModeEnabled={darkModeEnabled}
                         reportEvent={reportEvent}
                     />
-                </ModalContext.Provider>
+                </ModalVisibilityContext.Provider>
             </LocalScreenshotContext.Provider>
         </ReplicacheContext.Provider>
     );

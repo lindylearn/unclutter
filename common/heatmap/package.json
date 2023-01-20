@@ -1,0 +1,20 @@
+{
+    "name": "@unclutter/heatmap",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "watch": "yarn tsc -w",
+        "build": "yarn tsc"
+    },
+    "dependencies": {
+        "@tensorflow-models/universal-sentence-encoder": "^1.3.3",
+        "@tensorflow/tfjs": "4.1.0",
+        "approx-string-match": "^2.0.0",
+        "wink-eng-lite-web-model": "^1.4.3",
+        "wink-nlp": "^1.13.0"
+    },
+    "peerDependencies": {},
+    "devDependencies": {
+        "typescript": "^4.8.2"
+    }
+}

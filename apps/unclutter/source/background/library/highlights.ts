@@ -168,33 +168,30 @@ async function watchLocalAnnotations() {
 
 async function importAnnotations(annotations: LindyAnnotation[]) {
     // fetch article state
-    const annotationsPerArticle = groupBy(annotations, (a) => a.url);
-    const urls = Object.keys(annotationsPerArticle);
+    const annotationsPerArticle = groupBy(annotations, (a) => a.article_id);
 
-    let articleInfos = urls.map((url) =>
-        constructLocalArticleInfo(url, getUrlHash(url), normalizeUrl(url))
-    );
+    const articles = Object.values(annotationsPerArticle)
+        .map((list) => list[0].article)
+        .map((article) => {
+            article.reading_progress = 1.0;
 
-    articleInfos = articleInfos.map((articleInfo) => {
-        articleInfo.article.reading_progress = 1.0;
+            const articleAnnotations = annotationsPerArticle[article.url];
+            if (articleAnnotations.length > 0) {
+                article.time_added = Math.round(
+                    new Date(articleAnnotations[0].created_at).getTime() / 1000
+                );
+            }
 
-        const articleAnnotations = annotationsPerArticle[articleInfo.article.url];
-        if (articleAnnotations.length > 0) {
-            articleInfo.article.time_added = Math.round(
-                new Date(articleAnnotations[0].created_at).getTime() / 1000
-            );
-        }
-
-        return articleInfo;
-    });
+            return article;
+        });
 
     // insert articles
     await Promise.all(
-        articleInfos.map((articleInfo) =>
+        articles.map((article) =>
             processReplicacheMessage({
                 type: "mutate",
                 methodName: "putArticleIfNotExists",
-                args: articleInfo.article,
+                args: article,
             })
         )
     );

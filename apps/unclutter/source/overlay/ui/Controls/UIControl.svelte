@@ -75,7 +75,7 @@
     .lindy-tooltp.lindy-fade:after,
     .lindy-tooltp.lindy-fade:before {
         transform: translate3d(10px, 0, 0) !important;
-        transition: all 200ms ease-out 50ms !important;
+        transition: all 200ms ease-out !important;
     }
     .lindy-tooltp.lindy-fade:hover:after,
     .lindy-tooltp.lindy-fade:hover:before {

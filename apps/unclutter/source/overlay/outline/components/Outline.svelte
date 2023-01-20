@@ -31,7 +31,7 @@
         <div class="">
             {#if readingTimeLeft !== null}
                 <div
-                    class="reading-time mt-1 text-sm tabular-nums text-gray-400 dark:text-stone-600"
+                    class="reading-time mt-1 text-sm tabular-nums text-stone-400 dark:text-stone-600"
                 >
                     <span class="reading-time-count" style={`--num: ${readingTimeLeft}`} /> min left
                 </div>

@@ -8,20 +8,16 @@ const sidebarOffsetTopPx = 8;
 
 interface AnnotationsListProps {
     groupedAnnotations: LindyAnnotation[][];
-    deleteHideAnnotation: (annotation: LindyAnnotation, threadStart: LindyAnnotation) => void;
-    onAnnotationHoverUpdate: (annotation: LindyAnnotation, hoverActive: boolean) => void;
-    unfocusAnnotation: (annotation: LindyAnnotation) => void;
-    updateAnnotation: (annotation: LindyAnnotation) => void;
+    unfocusAnnotation: () => void;
+    fetchRelatedLater: (annotation: LindyAnnotation) => Promise<void>;
 }
 
-const annotationMarginPx = 8;
+const annotationMarginPx = 6;
 
 function AnnotationsList({
     groupedAnnotations,
-    deleteHideAnnotation,
-    onAnnotationHoverUpdate,
     unfocusAnnotation,
-    updateAnnotation,
+    fetchRelatedLater,
 }: AnnotationsListProps) {
     const itemsRef = useRef({}); // annotation id -> ref of rendered annotation node
 
@@ -112,7 +108,7 @@ function AnnotationsList({
                                 className="annotation-list-item absolute w-full"
                                 style={{
                                     top: groupTopOffset + innerGroupOffset,
-                                    maxWidth: "300px",
+                                    maxWidth: "275px",
                                 }}
                                 ref={(el) => {
                                     if (el) {
@@ -124,16 +120,11 @@ function AnnotationsList({
                             >
                                 <AnnotationThread
                                     annotation={annotation}
-                                    deleteHideAnnotation={deleteHideAnnotation}
                                     // heightLimitPx={
                                     //     groupHeightLimitPx / group.length
                                     // } // give each item equal share -- always avoids overflows
-                                    onHoverUpdate={(hoverActive: boolean) =>
-                                        // call hover on top level annotation
-                                        onAnnotationHoverUpdate(annotation, hoverActive)
-                                    }
                                     unfocusAnnotation={unfocusAnnotation}
-                                    updateAnnotation={updateAnnotation}
+                                    fetchRelatedLater={fetchRelatedLater}
                                 />
                             </div>
                         </CSSTransition>

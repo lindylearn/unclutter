@@ -17,28 +17,29 @@ export interface SearchResult {
 
 export class SearchIndex {
     private isLoaded = false;
-    private index = new Document({
-        document: {
-            id: "id",
-            index: ["paragraph", "title"],
-            store: ["docId", "paragraph"],
-        },
-        // cache: true,
-        optimize: true,
-        charset: "latin:advanced",
-        tokenize: "forward",
-        context: {
-            resolution: 5,
-            depth: 3,
-            bidirectional: true,
-        },
-        // worker: true,
-    });
+    private index: Document<unknown, string[]>;
     private indexVersion = 1;
 
     private idSuffix: string;
     constructor(idSuffix: string) {
         this.idSuffix = idSuffix;
+        this.index = new Document({
+            document: {
+                id: "id",
+                index: ["paragraph", "title"],
+                store: ["docId", "paragraph"],
+            },
+            // cache: true,
+            optimize: true,
+            charset: "latin:advanced",
+            tokenize: "forward",
+            context: {
+                resolution: 5,
+                depth: 3,
+                bidirectional: true,
+            },
+            // worker: true,
+        });
     }
 
     private indexStore: UseStore;
@@ -133,7 +134,7 @@ export class SearchIndex {
     }
 
     async addAnnotations(annotations: Annotation[]) {
-        if (annotations.length === 0) {
+        if (!annotations?.length) {
             return;
         }
 
@@ -167,7 +168,7 @@ export class SearchIndex {
     }
 
     async removeAnnotations(annotations: Annotation[]) {
-        if (annotations.length === 0) {
+        if (!annotations?.length) {
             return;
         }
 
