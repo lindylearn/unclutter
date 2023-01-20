@@ -67,6 +67,8 @@ export type ArticleImportSchema = {
 };
 
 export default function ImportTab({}) {
+    const { user } = useUser();
+
     useEffect(() => {
         if (getBrowserType() === "firefox") {
             importOptions["bookmarks"].iconFile = "firefox.svg";
