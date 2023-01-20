@@ -3,9 +3,8 @@ import {
     LibraryModalPage,
     constructGraphData,
     CustomGraphData,
-    ModalContext,
-    FeedbackModalPage,
 } from "@unclutter/library-components/dist/components";
+import { ModalVisibilityContext } from "@unclutter/library-components/dist/components/Modal/context";
 import {
     Article,
     ArticleLink,
@@ -50,7 +49,7 @@ export default function ModalTestTab({}) {
     const userInfo = useSubscribe(rep, rep?.subscribe.getUserInfo(), null);
     if (userInfo) {
         userInfo.accountEnabled = false;
-        userInfo.trialEnabled = false;
+        userInfo.aiEnabled = false;
     }
 
     if (!userInfo) {
@@ -58,11 +57,11 @@ export default function ModalTestTab({}) {
     }
 
     // return (
-    //     <ModalContext.Provider
+    //     <ModalVisibilityContext.Provider
     //         value={{ isVisible: showModal, closeModal: () => setShowModal(false) }}
     //     >
     //         <FeedbackModalPage />
-    //     </ModalContext.Provider>
+    //     </ModalVisibilityContext.Provider>
     // );
 
     return (
@@ -74,7 +73,7 @@ export default function ModalTestTab({}) {
                 Open Library
             </div>
 
-            <ModalContext.Provider
+            <ModalVisibilityContext.Provider
                 value={{ isVisible: showModal, closeModal: () => setShowModal(false) }}
             >
                 <LibraryModalPage
@@ -83,10 +82,9 @@ export default function ModalTestTab({}) {
                     showSignup={true}
                     // currentArticle={article?.url}
                     initialTopic={topic}
-                    graph={graph}
                     // relatedLinkCount={2}
                 />
-            </ModalContext.Provider>
+            </ModalVisibilityContext.Provider>
         </div>
     );
 }

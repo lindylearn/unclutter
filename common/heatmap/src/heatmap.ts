@@ -3,21 +3,29 @@ import { Tensor2D } from "@tensorflow/tfjs";
 
 import { getEmbeddingsUSE, loadEmbeddingsModelUSE } from "./embeddings_use";
 import { getParagraphSentences } from "./sentences";
-import type { RankedSentence } from "../../content-script/modifications/DOM/smartHighlights";
 import textRank from "./textrank";
 
-export async function loadHeatmapModel(embeddingsType = "use") {
-    if (embeddingsType === "onnx") {
-        // await loadEmbeddingsModelONNX();
-    } else if (embeddingsType === "use") {
-        await loadEmbeddingsModelUSE();
+export interface RankedSentence {
+    id: string;
+    score: number;
+    sentence: string;
+}
+
+let loadingPromise: Promise<void> | undefined;
+export async function loadHeatmapModel() {
+    if (loadingPromise) {
+        await loadingPromise;
+        return;
     }
+    loadingPromise = loadEmbeddingsModelUSE(true, true);
+    await loadingPromise;
+    loadingPromise = undefined;
 }
 
 export async function getHeatmap(
     paragraphs: string[],
-    embeddingsType = "use",
-    maxSentences = 300
+    maxSentences = 300,
+    batchSize = 10
 ): Promise<RankedSentence[][]> {
     const t0 = performance.now();
 
@@ -32,7 +40,7 @@ export async function getHeatmap(
     }
 
     // compute embeddings
-    let embeddings: Tensor2D = await getEmbeddingsUSE(sentences);
+    let embeddings: Tensor2D = await getEmbeddingsUSE(sentences, batchSize);
     const matrix = (await tf.matMul(embeddings, embeddings, false, true).array()) as number[][];
 
     // get sentence scores
@@ -297,7 +305,7 @@ function groupSentenceScores(
     sentenceScores: number[],
     sentence_paragraph: number[]
 ): RankedSentence[][] {
-    const groupedSentenceScores = [];
+    const groupedSentenceScores: RankedSentence[][] = [];
     for (let i = 0; i < sentence_paragraph.length; i++) {
         const paragraph = sentence_paragraph[i];
         if (groupedSentenceScores[paragraph] === undefined) {

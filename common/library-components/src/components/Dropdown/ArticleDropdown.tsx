@@ -3,23 +3,23 @@ import clsx from "clsx";
 import { useContext } from "react";
 
 import { ReplicacheContext } from "../../store";
-import { reportBrokenPage } from "../../common/api";
+import { deleteAnnotationVectors, reportBrokenPage } from "../../common/api";
 import { Article, readingProgressFullClamp } from "../../store";
 import { Dropdown, DropdownItem } from "./Dropdown";
+import { ModalStateContext } from "../Modal/context";
 
 export function ArticleDropdown({
     article,
     open,
     setOpen,
     small,
-    reportEvent = () => {},
 }: {
     article: Article;
     open: boolean;
     setOpen: (open: boolean) => void;
     small?: boolean;
-    reportEvent?: (event: string, properties?: any) => void;
 }) {
+    const { userInfo, reportEvent } = useContext(ModalStateContext);
     const rep = useContext(ReplicacheContext);
 
     // async function toggleFavorite(e) {
@@ -62,6 +62,11 @@ export function ArticleDropdown({
 
     async function deleteArticle() {
         await rep?.mutate.deleteArticle(article.id);
+
+        if (userInfo?.aiEnabled) {
+            await deleteAnnotationVectors(userInfo.id, article.id);
+        }
+
         reportEvent("deleteArticle");
     }
     async function reportPage() {
@@ -97,7 +102,7 @@ export function ArticleDropdown({
             /> */}
 
             <DropdownItem
-                title={article.is_queued ? "Read later" : "Add to Queue"}
+                title={article.is_queued ? "De-queue" : "Queue"}
                 svg={
                     <svg className="mr-1.5 inline-block h-4 w-4" viewBox="0 0 640 512">
                         <path
@@ -136,7 +141,7 @@ export function ArticleDropdown({
                 onSelect={toggleCompleted}
             />
             <DropdownItem
-                title="Remove"
+                title="Delete"
                 svg={
                     <svg
                         viewBox="0 0 576 512"
@@ -150,7 +155,7 @@ export function ArticleDropdown({
                 }
                 onSelect={deleteArticle}
             />
-            <DropdownItem
+            {/* <DropdownItem
                 title="Report"
                 svg={
                     <svg
@@ -165,7 +170,7 @@ export function ArticleDropdown({
                 }
                 onSelect={reportPage}
                 bottom
-            />
+            /> */}
         </Dropdown>
     );
 }

@@ -74,7 +74,7 @@ export function NodeTooltip({
                 </div>
                 <div className="mt-0.5 mb-1 flex justify-between">
                     <div className="text-neutral-500 dark:text-stone-400">{domain}</div>
-                    {readingProgress !== 1 && word_count >= 200 && domain.length < 19 && (
+                    {readingProgress !== 1 && word_count >= 200 && domain && domain.length < 19 && (
                         <div className="text-neutral-500 dark:text-stone-400">
                             {Math.round((word_count / 200) * (1 - readingProgress))} min left
                         </div>

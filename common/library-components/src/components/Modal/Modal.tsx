@@ -1,45 +1,15 @@
-import React, { createContext, useRef } from "react";
+import React, { useRef } from "react";
 import clsx from "clsx";
 import { useContext, useEffect, useState } from "react";
 
 import StatsModalTab from "./Stats";
 import Sidebar from "./Sidebar";
-import { GraphPage } from "./Graph/GraphPage";
-import { CustomGraphData } from "./Graph/data";
 import { FeedSubscription, ReplicacheContext, Topic, UserInfo } from "../../store";
 import RecentModalTab from "./Recent";
 import { LindyIcon } from "../Icons";
 import HighlightsTab from "./Highlights";
-import FeedsDetailsTab from "./Feed/FeedDetails";
-import UpgradeModalTab from "./Upgrade";
 import SettingsModalTab from "./Settings";
-import FeedListTab from "./Feed/FeedList";
-
-export const ModalContext = createContext<{
-    isVisible: boolean;
-    closeModal?: () => void;
-}>({
-    isVisible: false,
-    closeModal: () => {},
-});
-export const FilterContext = createContext<{
-    currentArticle?: string;
-    currentTopic?: Topic;
-    changedTopic?: boolean;
-    domainFilter?: string;
-    currentSubscription?: FeedSubscription;
-    showTopic: (topicId: string) => void;
-    showDomain: (domain: string) => void;
-    setDomainFilter: (domain?: string) => void;
-    setCurrentSubscription: (subscription?: FeedSubscription) => void;
-    relatedLinkCount?: number;
-    currentAnnotationsCount?: number;
-}>({
-    showTopic: () => {},
-    showDomain: () => {},
-    setDomainFilter: () => {},
-    setCurrentSubscription: () => {},
-});
+import { ModalVisibilityContext, FilterContext, ModalStateContext } from "./context";
 
 export function LibraryModalPage({
     userInfo,
@@ -49,7 +19,6 @@ export function LibraryModalPage({
     initialSubscription,
     initialTopic,
     initialTab,
-    graph,
     relatedLinkCount,
     reportEvent = () => {},
 }: {
@@ -60,12 +29,11 @@ export function LibraryModalPage({
     initialSubscription?: FeedSubscription;
     initialTopic?: Topic;
     initialTab?: string;
-    graph?: CustomGraphData;
     relatedLinkCount?: number;
     closeModal?: () => void;
     reportEvent?: (event: string, data?: any) => void;
 }) {
-    const { isVisible, closeModal } = useContext(ModalContext);
+    const { isVisible, closeModal } = useContext(ModalVisibilityContext);
 
     const rep = useContext(ReplicacheContext);
     const [articleCount, setArticleCount] = useState<number>();
@@ -90,31 +58,28 @@ export function LibraryModalPage({
         } else {
             reportEvent("changeModalTab", { tab: currentTab });
         }
+
+        if (currentTab !== "highlights") {
+            setDomainFilter(undefined);
+        }
     }, [currentTab]);
 
-    const [currentTopic, setCurrentTopic] = useState<Topic | undefined>(initialTopic);
     const [currentSubscription, setCurrentSubscription] = useState<FeedSubscription | undefined>(
         initialSubscription
     );
     const [domainFilter, setDomainFilter] = useState<string>();
-    useEffect(() => {
-        setCurrentTopic(initialTopic);
-    }, [initialTopic]);
 
-    async function showTopic(topicId: string) {
-        const topic = await rep?.query.getTopic(topicId);
-        setCurrentTopic(topic);
-        setCurrentTab("graph");
-        reportEvent("showTopicGraph");
-    }
     async function showDomain(domain: string) {
-        const subscriptions = await rep?.query.listSubscriptions();
-        const domainSubscription = subscriptions?.find((s) => s.domain === domain);
-        if (domainSubscription) {
-            setCurrentSubscription(domainSubscription);
-            setCurrentTab("feeds");
-            reportEvent("showDomainFeed");
-        }
+        // const subscriptions = await rep?.query.listSubscriptions();
+        // const domainSubscription = subscriptions?.find((s) => s.domain === domain);
+        // if (domainSubscription) {
+        //     setCurrentSubscription(domainSubscription);
+        //     setCurrentTab("feeds");
+        //     reportEvent("showDomainFeed");
+        // }
+
+        setDomainFilter(domain);
+        setCurrentTab("highlights");
 
         reportEvent("showDomainDetails");
     }
@@ -144,27 +109,23 @@ export function LibraryModalPage({
                     value={{
                         currentArticle,
                         currentSubscription,
-                        currentTopic,
-                        changedTopic: currentTopic !== initialTopic?.id,
                         domainFilter,
                         setDomainFilter,
-                        showTopic,
                         showDomain,
                         setCurrentSubscription,
                         relatedLinkCount,
                         currentAnnotationsCount,
                     }}
                 >
-                    <ModalContent
-                        userInfo={userInfo}
-                        articleCount={articleCount}
-                        darkModeEnabled={darkModeEnabled}
-                        showSignup={showSignup}
-                        graph={graph}
-                        currentTab={currentTab}
-                        setCurrentTab={setCurrentTab}
-                        reportEvent={reportEvent}
-                    />
+                    <ModalStateContext.Provider
+                        value={{ darkModeEnabled, showSignup, userInfo, reportEvent }}
+                    >
+                        <ModalContent
+                            articleCount={articleCount}
+                            currentTab={currentTab}
+                            setCurrentTab={setCurrentTab}
+                        />
+                    </ModalStateContext.Provider>
                 </FilterContext.Provider>
             </div>
         </div>
@@ -172,23 +133,13 @@ export function LibraryModalPage({
 }
 
 function ModalContent({
-    userInfo,
     articleCount,
-    showSignup,
-    darkModeEnabled,
-    graph,
     currentTab,
     setCurrentTab,
-    reportEvent = () => {},
 }: {
-    userInfo: UserInfo;
     articleCount?: number;
-    darkModeEnabled: boolean;
-    showSignup: boolean;
-    graph?: CustomGraphData;
     currentTab: string;
     setCurrentTab: (tab: string) => void;
-    reportEvent?: (event: string, data?: any) => void;
 }) {
     const { currentArticle, currentAnnotationsCount, currentSubscription } =
         useContext(FilterContext);
@@ -204,7 +155,7 @@ function ModalContent({
                         <LindyIcon className="w-8" />
 
                         <h1
-                            className="font-title text-2xl font-bold"
+                            className="font-title select-none text-2xl font-bold"
                             // bg-gradient-to-b from-yellow-300 to-amber-400 bg-clip-text text-transparent
                             // style={{ WebkitBackgroundClip: "text" }}
                         >
@@ -212,14 +163,7 @@ function ModalContent({
                         </h1>
                     </div>
 
-                    <Sidebar
-                        userInfo={userInfo}
-                        currentTab={currentTab}
-                        setCurrentTab={setCurrentTab}
-                        darkModeEnabled={darkModeEnabled}
-                        showSignup={showSignup}
-                        reportEvent={reportEvent}
-                    />
+                    <Sidebar currentTab={currentTab} setCurrentTab={setCurrentTab} />
                 </div>
             </aside>
             <div
@@ -229,36 +173,10 @@ function ModalContent({
                     currentTab === "graph" ? "" : "p-4"
                 )}
             >
-                {currentTab === "list" && (
-                    <RecentModalTab
-                        userInfo={userInfo}
-                        darkModeEnabled={darkModeEnabled}
-                        reportEvent={reportEvent}
-                    />
-                )}
-                {currentTab === "graph" && (
-                    <GraphPage
-                        graph={graph}
-                        darkModeEnabled={darkModeEnabled}
-                        reportEvent={reportEvent}
-                    />
-                )}
-                {currentTab === "stats" && (
-                    <StatsModalTab
-                        userInfo={userInfo}
-                        articleCount={articleCount}
-                        darkModeEnabled={darkModeEnabled}
-                        reportEvent={reportEvent}
-                    />
-                )}
-                {currentTab === "highlights" && (
-                    <HighlightsTab
-                        userInfo={userInfo}
-                        darkModeEnabled={darkModeEnabled}
-                        reportEvent={reportEvent}
-                    />
-                )}
-                {currentTab === "feeds" &&
+                {currentTab === "list" && <RecentModalTab />}
+                {currentTab === "stats" && <StatsModalTab articleCount={articleCount} />}
+                {currentTab === "highlights" && <HighlightsTab />}
+                {/* {currentTab === "feeds" &&
                     (currentSubscription ? (
                         <FeedsDetailsTab
                             darkModeEnabled={darkModeEnabled}
@@ -266,18 +184,12 @@ function ModalContent({
                         />
                     ) : (
                         <FeedListTab darkModeEnabled={darkModeEnabled} reportEvent={reportEvent} />
-                    ))}
-                {currentTab === "signup" && (
+                    ))} */}
+                {/* {currentTab === "signup" && (
                     <UpgradeModalTab darkModeEnabled={darkModeEnabled} reportEvent={reportEvent} />
-                )}
-                {currentTab === "settings" && (
-                    <SettingsModalTab
-                        userInfo={userInfo}
-                        darkModeEnabled={darkModeEnabled}
-                        showSignup={showSignup}
-                        reportEvent={reportEvent}
-                    />
-                )}
+                )} */}
+                {/* {currentTab === "sync" && <SyncModalTab />} */}
+                {currentTab === "settings" && <SettingsModalTab />}
             </div>
         </div>
     );

@@ -45,9 +45,9 @@ export function ArticleGroup({
             ? getActivityColor(3, darkModeEnabled)
             : getRandomLightColor(groupKey, darkModeEnabled));
 
-    const readCount = articles?.filter(
-        (a) => a.reading_progress >= readingProgressFullClamp
-    )?.length;
+    // const readCount = articles?.filter(
+    //     (a) => a.reading_progress >= readingProgressFullClamp
+    // )?.length;
 
     return (
         <div className={clsx("topic relative", className)} style={style}>
@@ -71,7 +71,6 @@ export function ArticleGroup({
                     <ReadingProgress
                         className="relative px-1.5 py-0.5"
                         articleCount={articles?.length}
-                        readCount={readCount}
                         color={color}
                     />
                 )}
@@ -124,6 +123,6 @@ const emptyListMessage = {
     new: "Follow website feeds to see new articles here.",
     past: "No past feed articles found.",
     list: "Open articles with Unclutter to automatically save them.",
-    // uncompleted: "No uncompleted articles found.",
-    // completed: "No completed articles found.",
+    uncompleted: "Your unread articles will appear here.",
+    completed: "Every article you read with Unclutter will appear here.",
 };

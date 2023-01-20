@@ -1,36 +1,38 @@
 import clsx from "clsx";
-import ky from "ky";
 import debounce from "lodash/debounce";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
 import TextareaAutosize from "react-textarea-autosize";
 
 import { LindyAnnotation } from "../../common/annotations/create";
-import { getAnnotationColor } from "../../common/annotations/styling";
-import { updateAnnotation as updateAnnotationApi } from "../common/CRUD";
+import { deleteAnnotation, updateAnnotation } from "../common/CRUD";
+import { SidebarContext } from "../context";
 
 interface AnnotationDraftProps {
     annotation: LindyAnnotation;
     className?: string;
     heightLimitPx?: number;
     isFetchingRelated?: boolean;
+    relatedCount?: number;
 
-    deleteHide: () => void;
-    onHoverUpdate: (hoverActive: boolean) => void;
-    updateAnnotation: (annotation: LindyAnnotation) => void;
-    unfocusAnnotation: (annotation: LindyAnnotation) => void;
+    color: string;
+    colorDark?: string;
+
+    unfocusAnnotation: () => void;
 }
 
 function AnnotationDraft({
     annotation,
     className,
-    deleteHide,
     heightLimitPx,
     isFetchingRelated,
-    updateAnnotation,
-    onHoverUpdate,
+    relatedCount,
+    color,
+    colorDark,
     unfocusAnnotation,
 }: AnnotationDraftProps) {
+    // const ref = useBlurRef(annotation, unfocusAnnotation);
     const inputRef = useRef<HTMLTextAreaElement>();
+    const { userInfo } = useContext(SidebarContext);
 
     // focus on initial render
     useEffect(() => {
@@ -39,15 +41,13 @@ function AnnotationDraft({
         }
     }, [inputRef, annotation.focused]);
 
-    const ref = useBlurRef(annotation, unfocusAnnotation);
-
     // debounce local state and remote updates
     // debounce instead of throttle so that newest call eventually runs
+    // @ts-ignore
     const debouncedUpdateApi: (annotation: LindyAnnotation) => Promise<LindyAnnotation> =
         useCallback(
             debounce((a) => {
-                updateAnnotation(a); // update app root state
-                updateAnnotationApi(a);
+                updateAnnotation(a);
             }, 1000),
             []
         );
@@ -62,9 +62,8 @@ function AnnotationDraft({
             // immediately update if added first text or removed text (impacts visibility)
             if (newAnnotation.text) {
                 updateAnnotation(newAnnotation);
-                updateAnnotationApi(newAnnotation);
             } else {
-                deleteHide();
+                deleteAnnotation(userInfo, newAnnotation);
             }
         } else {
             // call with newAnnotation as localAnnotation takes once loop iteration to update
@@ -83,20 +82,20 @@ function AnnotationDraft({
         //         .json()
         //         .then((question: any) => setQuestion(question));
         // }
-        if (!annotation.tags || annotation.tags.length === 0) {
-            ky.post("https://assistant-two.vercel.app/api/tag", {
-                json: {
-                    text: annotation.quote_text.replace("\n", " "),
-                },
-            })
-                .json()
-                .then((tags: any) => {
-                    updateAnnotationLocalFirst({
-                        ...localAnnotation,
-                        tags,
-                    });
-                });
-        }
+        // if (!annotation.tags || annotation.tags.length === 0) {
+        //     ky.post("https://assistant-two.vercel.app/api/tag", {
+        //         json: {
+        //             text: annotation.quote_text.replace("\n", " "),
+        //         },
+        //     })
+        //         .json()
+        //         .then((tags: any) => {
+        //             updateAnnotationLocalFirst({
+        //                 ...localAnnotation,
+        //                 tags,
+        //             });
+        //         });
+        // }
     }, []);
 
     return (
@@ -107,18 +106,26 @@ function AnnotationDraft({
                 className
             )}
             style={{
-                borderLeft: `8px solid ${getAnnotationColor(annotation)}`,
+                borderLeft: `8px solid ${color}`,
+                // @ts-ignore
+                "--dark-border-color": colorDark || color,
                 maxHeight: heightLimitPx,
             }}
-            ref={ref}
+            // ref={ref}
         >
             <TextareaAutosize
-                className="w-full select-none resize-none overflow-hidden bg-transparent align-top outline-none placeholder:select-none placeholder:text-stone-600 placeholder:opacity-50"
-                // placeholder={"What to remember?"}
-                placeholder={localAnnotation.tags
-                    ?.slice(0, 3)
-                    .map((t) => `#${t.replace(" ", "-")}`)
-                    .join(" ")}
+                className="w-full select-none resize-none overflow-hidden bg-transparent align-top outline-none placeholder:select-none placeholder:text-stone-400 placeholder:opacity-50 dark:placeholder:text-stone-600"
+                placeholder={
+                    isFetchingRelated
+                        ? ""
+                        : relatedCount
+                        ? `${relatedCount} related highlight${relatedCount !== 1 ? "s" : ""}`
+                        : "Saved highlight"
+                }
+                // placeholder={localAnnotation.tags
+                //     ?.slice(0, 3)
+                //     .map((t) => `#${t.replace(" ", "-")}`)
+                //     .join(" ")}
                 value={localAnnotation.text}
                 onChange={(e) =>
                     updateAnnotationLocalFirst({
@@ -128,7 +135,7 @@ function AnnotationDraft({
                 }
                 onKeyDown={(e) => {
                     if (!localAnnotation.text && (e.key === "Backspace" || e.key === "Delete")) {
-                        deleteHide();
+                        deleteAnnotation(userInfo, localAnnotation);
                     }
                     // if (!localAnnotation.text && e.key === "Tab" && question) {
                     //     updateAnnotationLocalFirst({
@@ -143,8 +150,7 @@ function AnnotationDraft({
                 maxRows={6}
                 spellCheck={false}
                 ref={inputRef}
-                onFocus={() => onHoverUpdate(true)}
-                onBlur={() => onHoverUpdate(false)}
+                onBlur={unfocusAnnotation}
             />
 
             {isFetchingRelated && (
@@ -168,10 +174,7 @@ function AnnotationDraft({
 }
 export default AnnotationDraft;
 
-export function useBlurRef(
-    annotation: LindyAnnotation,
-    unfocusAnnotation: (annotation: LindyAnnotation) => void
-) {
+export function useBlurRef(annotation: LindyAnnotation, unfocusAnnotation: () => void) {
     // if annotation focused, detect clicks to unfocus it
     const ref = useRef<HTMLDivElement>();
     useEffect(() => {
@@ -180,12 +183,15 @@ export function useBlurRef(
                 const clickTarget: HTMLElement = e.target;
 
                 // ignore actions performed on other annotations (e.g. deletes)
-                if (clickTarget.classList.contains("icon")) {
+                if (
+                    clickTarget?.classList.contains("annotation") ||
+                    clickTarget?.parentElement?.classList.contains("annotation")
+                ) {
                     return;
                 }
 
                 if (ref.current && !ref.current.contains(clickTarget)) {
-                    unfocusAnnotation(annotation);
+                    unfocusAnnotation();
                 }
             };
 

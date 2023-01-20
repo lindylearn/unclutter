@@ -21,8 +21,8 @@ export function BigNumber({
     return (
         <div
             className={clsx(
-                "relative flex select-none flex-col items-center overflow-hidden rounded-md bg-stone-50 p-3 dark:bg-neutral-800",
-                onClick && "cursor-pointer transition-all hover:scale-[97%]"
+                "relative flex select-none flex-col items-center overflow-hidden rounded-md bg-stone-50 p-3 transition-all hover:scale-[97%] dark:bg-neutral-800",
+                onClick && "cursor-pointer"
             )}
             style={{ background: colorOverride }}
             onClick={onClick}
@@ -113,7 +113,7 @@ export function ReadingProgress({
     onClick?: () => void;
 }) {
     // const unreadCount = (articleCount || 0) - (readCount || 0);
-    const progress = ((readCount || 0) / (articleCount || 1)) * 100;
+    // const progress = ((readCount || 0) / (articleCount || 1)) * 100;
 
     return (
         <div
@@ -126,15 +126,7 @@ export function ReadingProgress({
             onClick={onClick}
         >
             {/* <ResourceStat type="articles_completed" value={readCount} large={large} /> */}
-            <ResourceStat
-                type="articles"
-                value={
-                    articleCount !== undefined && readCount !== undefined
-                        ? articleCount - readCount
-                        : undefined
-                }
-                large={large}
-            />
+            <ResourceStat type="articles" value={articleCount} large={large} />
             {/* <div
                 className="bg-lindy dark:bg-lindyDark absolute top-0 left-0 h-full"
                 style={{

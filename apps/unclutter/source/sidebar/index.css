@@ -47,28 +47,26 @@ svg.icon > path {
 }
 .annotation-list-item-enter {
     opacity: 0;
-    transform: translate(150px);
+    transform: scale(95%);
 }
 .annotation-list-item-enter-active {
     opacity: 1;
-    transform: translate(0);
+    transform: scale(100%);
 
-    transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-        transform 0.2s cubic-bezier(0.16, 1, 0.3, 1); /* easeOutExpo */
+    transition: opacity 0.15s cubic-bezier(0.33, 1, 0.68, 1) 10ms,
+        transform 0.15s cubic-bezier(0.33, 1, 0.68, 1) 10ms; /* easeOutCubic */
 }
 .annotation-list-item-exit {
     opacity: 1;
-    transform: translate(0);
 }
 .annotation-list-item-exit-active {
     opacity: 0;
-    transform: translate(50px);
 
     transition: opacity 0.1s cubic-bezier(0.32, 0, 0.67, 0),
         transform 0.1s cubic-bezier(0.32, 0, 0.67, 0); /* easeInCubic */
 }
-.related-annotation {
-    animation: relatedAnnotationIn 0.2s cubic-bezier(0.33, 1, 0.68, 1) 10ms; /* easeOutCubic */
+/* .related-annotation {
+    animation: relatedAnnotationIn 0.2s cubic-bezier(0.33, 1, 0.68, 1) 10ms;
     animation-fill-mode: backwards;
 }
 @keyframes relatedAnnotationIn {
@@ -80,7 +78,7 @@ svg.icon > path {
         opacity: 1;
         transform: scale(100%);
     }
-}
+} */
 
 .animated-number > .before-value {
     display: none;

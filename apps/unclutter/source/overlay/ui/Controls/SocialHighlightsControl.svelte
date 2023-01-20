@@ -38,14 +38,6 @@
     }
 
     $: socialHighlightsCount = anchoredSocialHighlightsCount;
-    // display cached count before highlights anchored
-    browser.runtime
-        .sendMessage({ event: "getSocialAnnotationsCount" })
-        .then((initialCount: number) => {
-            if (!socialHighlightsCount) {
-                socialHighlightsCount = initialCount;
-            }
-        });
 </script>
 
 {#if socialHighlightsCount}

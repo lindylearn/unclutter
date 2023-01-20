@@ -19,4 +19,4 @@ window.addEventListener("message", ({ data }) => {
     }
 });
 
-window.top.postMessage({ event: "sidebarIframeLoaded" }, "*");
+window.top.postMessage({ event: "bottomIframeLoaded" }, "*");

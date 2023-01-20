@@ -18,6 +18,7 @@ import {
 // send user text selections to the sidebar iframe, in order to create an annotation
 const listeners: [string, () => void][] = [];
 export function createSelectionListener(
+    articleId: string,
     sidebarIframe: HTMLIFrameElement,
     onAnnotationUpdate: AnnotationListener
 ) {
@@ -76,18 +77,16 @@ export function createSelectionListener(
             return;
         }
 
-        createPaintNewAnnotation(
-            selector,
-            (annotation) => {
-                sendIframeEvent(sidebarIframe, {
-                    event: "createHighlight",
-                    annotation,
-                });
-                onAnnotationUpdate("add", [annotation]);
-            },
-            sidebarIframe,
-            activeAnnotationId
-        );
+        let annotation = createDraftAnnotation(articleId, selector);
+        annotation.id = activeAnnotationId;
+
+        sendIframeEvent(sidebarIframe, {
+            event: "createHighlight",
+            annotation,
+        });
+        onAnnotationUpdate("add", [annotation]);
+
+        copyTextToClipboard(`"${annotation.quote_text}"`);
 
         selection.removeAllRanges();
     }
@@ -157,42 +156,4 @@ function _expandRangeToWordBoundary(range: Range, direction: "forwards" | "backw
     }
 
     return range;
-}
-
-export async function createPaintNewAnnotation(
-    selector: any,
-    callback: (newAnnotation: LindyAnnotation) => void,
-    sidebarIframe: HTMLIFrameElement,
-    activeAnnotationId: string
-) {
-    // use id created during selection to keep same color
-    let annotation = createDraftAnnotation(window.location.href, selector);
-    annotation.id = activeAnnotationId;
-    annotation.focused = true;
-
-    annotation = await wrapPaintAnnotation(annotation, sidebarIframe);
-
-    // notify sidebar and upload logic
-    callback(annotation);
-
-    copyTextToClipboard(`"${annotation.quote_text}"`);
-}
-
-export async function wrapPaintAnnotation(
-    annotation: LindyAnnotation,
-    sidebarIframe: HTMLIFrameElement
-): Promise<LindyAnnotation> {
-    // wrap with custom html node and get offsets
-    const offsets = await anchorAnnotations([annotation]);
-    if (!offsets.length) {
-        return null;
-    }
-    annotation.displayOffset = offsets[0].displayOffset;
-    annotation.displayOffsetEnd = offsets[0].displayOffsetEnd;
-
-    // add styling
-    const highlightedNodes = getAnnotationNodes(annotation);
-    paintHighlight(annotation, sidebarIframe, highlightedNodes);
-
-    return annotation;
 }

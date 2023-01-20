@@ -1,65 +1,85 @@
-import React, { useEffect, useState } from "react";
+import { ReplicacheProxy } from "@unclutter/library-components/dist/common/replicache";
+import React, { useContext, useEffect, useState } from "react";
 import type { LindyAnnotation } from "../../common/annotations/create";
+import {
+    fetchRelatedAnnotations,
+    RelatedHighlight,
+} from "@unclutter/library-components/dist/common/api";
 // import { getAnnotationColor } from "../../common/annotations/styling";
 import Annotation from "./Annotation";
 import AnnotationDraft from "./AnnotationDraft";
+import clsx from "clsx";
+import { getAIAnnotationColor } from "@unclutter/library-components/dist/common/styling";
+import { getAnnotationColor } from "../../common/annotations/styling";
+import { SidebarContext } from "../context";
+// import SummaryAnnotation from "./Summary";
 
 interface AnnotationThreadProps {
     annotation: LindyAnnotation;
     heightLimitPx?: number;
 
-    deleteHideAnnotation: (annotation: LindyAnnotation, threadStart: LindyAnnotation) => void;
-    onHoverUpdate: (hoverActive: boolean) => void;
-    unfocusAnnotation: (annotation: LindyAnnotation) => void;
-    updateAnnotation: (annotation: LindyAnnotation) => void;
+    unfocusAnnotation: () => void;
+    fetchRelatedLater: (annotation: LindyAnnotation) => Promise<void>;
 }
 
-function AnnotationThread(props: AnnotationThreadProps) {
+export default function AnnotationThread(props: AnnotationThreadProps) {
+    const { userInfo } = useContext(SidebarContext);
+    const annotation = props.annotation;
+
+    // trigger related annotations fetch if not already done
     const [isFetchingRelated, setIsFetchingRelated] = useState(false);
-    const [related, setRelated] = useState<LindyAnnotation[]>();
     useEffect(() => {
-        if (props.annotation.isMyAnnotation) {
-            setIsFetchingRelated(true);
-            fetch("https://api2.lindylearn.io/related/get_related", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    title: "",
-                    url: props.annotation.url,
-                    highlights: [props.annotation.quote_text],
-                    score_threshold: 0.5,
-                    save_highlights: false, // testing
-                }),
-            }).then(async (response) => {
-                const data = await response.json();
-
-                setIsFetchingRelated(false);
-                setRelated(data.related[0]);
-            });
+        if (
+            !userInfo?.aiEnabled ||
+            !annotation.isMyAnnotation ||
+            annotation.related !== undefined
+        ) {
+            return;
         }
-    }, []);
 
-    const deleteHide = () => props.deleteHideAnnotation(props.annotation, null);
+        setIsFetchingRelated(true);
+        props.fetchRelatedLater(annotation).then(() => setIsFetchingRelated(false));
+    }, [userInfo]);
+
+    let color: string;
+    let colorDark: string;
+    if (annotation.ai_created) {
+        color = getAIAnnotationColor(annotation.ai_score);
+        colorDark = getAIAnnotationColor(annotation.ai_score, true);
+    } else if (annotation.platform === "hn") {
+        color = "rgba(255, 102, 0, 0.5)";
+    } else if (annotation.platform === "h") {
+        color = "rgba(189, 28, 43, 0.5)";
+    } else {
+        color = getAnnotationColor(annotation);
+    }
 
     return (
         <>
-            {!props.annotation.isMyAnnotation && <Annotation {...props} deleteHide={deleteHide} />}
-            {props.annotation.isMyAnnotation && (
+            {/* {annotation.platform === "summary" && (
+                <SummaryAnnotation summaryInfo={annotation.summaryInfo!} />
+            )} */}
+
+            {annotation.isMyAnnotation && (
                 <AnnotationDraft
                     {...props}
                     isFetchingRelated={isFetchingRelated}
-                    deleteHide={deleteHide}
+                    relatedCount={annotation.related?.length}
+                    color={color}
+                    colorDark={colorDark}
                 />
             )}
 
-            {/* {props.annotation.isMyAnnotation && (
+            {!annotation.isMyAnnotation && annotation.platform !== "summary" && (
+                <Annotation {...props} color={color} colorDark={colorDark} />
+            )}
+
+            {/* {annotation.isMyAnnotation && (
                 <div
                     className="annotation-bar relative flex cursor-pointer items-center gap-2 rounded-sm rounded-tr-md px-3 py-2 text-sm shadow transition-transform hover:scale-[99%] md:text-base"
                     style={{
-                        // borderLeft: `8px solid ${getAnnotationColor(props.annotation)}`,
-                        backgroundColor: getAnnotationColor(props.annotation),
+                        // borderLeft: `8px solid ${getAnnotationColor(annotation)}`,
+                        backgroundColor: getAnnotationColor(annotation),
                     }}
                 >
                     <svg className="-mt-0.5 w-4" viewBox="0 0 512 512">
@@ -75,26 +95,6 @@ function AnnotationThread(props: AnnotationThreadProps) {
                     )}
                 </div>
             )} */}
-
-            {related?.length > 0 && (
-                <div className="mt-[6px] flex flex-col gap-[6px]">
-                    {related?.slice(0, 2).map((r: any, i) => (
-                        <Annotation
-                            key={r.id}
-                            className="related-annotation"
-                            style={{ animationDelay: `${i * 50}ms` }}
-                            {...props}
-                            annotation={{
-                                ...r,
-                                platform: "related",
-                                relatedId: props.annotation.id,
-                            }}
-                            deleteHide={deleteHide}
-                        />
-                    ))}
-                </div>
-            )}
         </>
     );
 }
-export default AnnotationThread;

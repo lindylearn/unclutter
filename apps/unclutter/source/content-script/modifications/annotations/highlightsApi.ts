@@ -10,12 +10,13 @@ import {
 } from "../../../common/annotator/highlighter";
 import { overrideClassname } from "../../../common/stylesheets";
 import { sendIframeEvent } from "../../../common/reactIframe";
+import { getAIAnnotationColor } from "@unclutter/library-components/dist/common/styling";
 
 // highlight text for every passed annotation on the active webpage
 export async function anchorAnnotations(annotations: LindyAnnotation[]) {
     const body = document.body;
 
-    const anchoredAnnotations = [];
+    const nodes: HTMLElement[] = [];
     await Promise.all(
         annotations.map(async (annotation) => {
             try {
@@ -36,27 +37,18 @@ export async function anchorAnnotations(annotations: LindyAnnotation[]) {
                     throw Error("Includes no highlighted nodes");
                 }
 
-                // get position on page
-                const displayOffset = getNodeOffset(highlightedNodes[0]);
-                const displayOffsetEnd = getNodeOffset(
-                    highlightedNodes[highlightedNodes.length - 1],
-                    "bottom"
-                );
-
-                anchoredAnnotations.push({
-                    ...annotation,
-                    displayOffset,
-                    displayOffsetEnd,
-                });
+                nodes.push(highlightedNodes[0]);
             } catch (err) {
                 console.error(`Could not anchor annotation with id`, annotation.id);
             }
         })
     );
 
+    const [offsetById, offsetEndById] = getHighlightOffsets(nodes);
+
     // insertMarginBar(anchoredAnnotations);
 
-    return anchoredAnnotations;
+    return [offsetById, offsetEndById];
 }
 
 export function paintHighlight(
@@ -71,7 +63,10 @@ export function paintHighlight(
     // set color variables
     let annotationColor: string;
     let darkerAnnotationColor: string;
-    if (annotation.isMyAnnotation) {
+    if (annotation.ai_created) {
+        annotationColor = getAIAnnotationColor(annotation.ai_score, false);
+        darkerAnnotationColor = getAIAnnotationColor(annotation.ai_score, true);
+    } else if (annotation.isMyAnnotation) {
         annotationColor = getAnnotationColor(annotation);
         darkerAnnotationColor = annotationColor.replace("0.3", "0.5");
     } else {
@@ -97,23 +92,23 @@ export function paintHighlight(
 
             sendIframeEvent(sidebarIframe, {
                 event: "focusAnnotation",
-                annotation,
+                annotationId: annotation.id,
             });
 
             // unfocus on next click for social comments
             // for annotations this is handled without duplicate events by the textarea onBlur
-            if (!annotation.isMyAnnotation || annotation.platform !== "info") {
-                const onNextClick = () => {
-                    hoverUpdateHighlight(annotation, false);
-                    sendIframeEvent(sidebarIframe, {
-                        event: "focusAnnotation",
-                        annotation: null,
-                    });
+            // if (!annotation.isMyAnnotation || annotation.platform !== "info") {
+            //     const onNextClick = () => {
+            //         hoverUpdateHighlight(annotation, false);
+            //         sendIframeEvent(sidebarIframe, {
+            //             event: "focusAnnotation",
+            //             annotationId: null,
+            //         });
 
-                    document.removeEventListener("click", onNextClick, true);
-                };
-                document.addEventListener("click", onNextClick, true);
-            }
+            //         document.removeEventListener("click", onNextClick, true);
+            //     };
+            //     document.addEventListener("click", onNextClick, true);
+            // }
 
             if (annotation.isMyAnnotation) {
                 copyTextToClipboard(`"${annotation.quote_text}"`);
@@ -137,9 +132,9 @@ export function insertMarginBar(
 
     const bodyOffset = getNodeOffset(document.body);
     anchoredAnnotations.map((annotation, index) => {
-        // if (annotation.isMyAnnotation) {
-        //     return;
-        // }
+        if (!annotation.displayOffset) {
+            return;
+        }
 
         const barElement = document.createElement("div");
         barElement.style.top = `${annotation.displayOffset - bodyOffset}px`;
@@ -166,18 +161,20 @@ export function insertMarginBar(
         // barElement.innerText = `${Math.ceil(Math.random() * 5)}`;
 
         // icon style
-        barElement.style.width = "16px";
-        barElement.style.height = "16px";
-        const img = document.createElement("img");
-        img.src = browser.runtime.getURL("assets/related.svg");
-        barElement.appendChild(img);
+        barElement.style.width = "18px";
+        barElement.style.height = "18px";
+        const svg = document.createElement("svg");
+        // use inline SVG to fill with current color depending on color theme
+        svg.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M512 288c0 35.35-21.49 64-48 64c-32.43 0-31.72-32-55.64-32C394.9 320 384 330.9 384 344.4V480c0 17.67-14.33 32-32 32h-71.64C266.9 512 256 501.1 256 487.6C256 463.1 288 464.4 288 432c0-26.51-28.65-48-64-48s-64 21.49-64 48c0 32.43 32 31.72 32 55.64C192 501.1 181.1 512 167.6 512H32c-17.67 0-32-14.33-32-32v-135.6C0 330.9 10.91 320 24.36 320C48.05 320 47.6 352 80 352C106.5 352 128 323.3 128 288S106.5 223.1 80 223.1c-32.43 0-31.72 32-55.64 32C10.91 255.1 0 245.1 0 231.6v-71.64c0-17.67 14.33-31.1 32-31.1h135.6C181.1 127.1 192 117.1 192 103.6c0-23.69-32-23.24-32-55.64c0-26.51 28.65-47.1 64-47.1s64 21.49 64 47.1c0 32.43-32 31.72-32 55.64c0 13.45 10.91 24.36 24.36 24.36H352c17.67 0 32 14.33 32 31.1v71.64c0 13.45 10.91 24.36 24.36 24.36c23.69 0 23.24-32 55.64-32C490.5 223.1 512 252.7 512 288z"/></svg>`;
+        svg.style.marginTop = "1px";
+        barElement.appendChild(svg);
 
         // barElement.onmouseenter = () => {
         //     hoverUpdateHighlight(annotation, true);
 
         //     sendIframeEvent(sidebarIframe, {
         //         event: "focusAnnotation",
-        //         id: annotation.id,
+        //         annotationId: annotation.id,
         //     });
         // };
 

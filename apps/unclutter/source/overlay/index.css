@@ -17,7 +17,7 @@
 
 .lindy-page-settings-toprght {
     all: revert !important;
-    position: fixed !important;
+    position: absolute !important;
     top: 0 !important;
     right: 0 !important;
     z-index: 3000 !important;
@@ -172,7 +172,7 @@
     /* margin-left: var(--side-width) !important; */
     /* width: calc(var(--lindy-pagewidth) + 10px) !important; */
     width: 100% !important;
-    z-index: 1000 !important;
+    z-index: -1000 !important;
 
     /* must equal document bottom padding */
     height: calc(134.5px) !important;
@@ -210,9 +210,8 @@
 
     left: unset !important;
     right: 0 !important;
-    /* background-color: rgba(250, 204, 21, 0.260838) !important; */
 }
-#lindy-annotations-marginbar > div {
+#lindy-annotations-marginbar > * {
     position: absolute !important;
     right: 15px !important;
     /* top and height set via JS */
@@ -221,8 +220,7 @@
         Roboto !important;
     font-size: 18px !important;
     font-weight: 700 !important;
-    /* color: rgb(41 37 36) !important; */
-    color: rgba(250, 204, 21, 1) !important;
+    opacity: 50% !important;
 }
 .lindy-marginbar-dot {
     content: "" !important;

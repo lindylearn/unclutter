@@ -2,7 +2,7 @@ import {
     constructGraphData,
     CustomGraphData,
     LibraryModalPage,
-    ModalContext,
+    ModalVisibilityContext,
 } from "@unclutter/library-components/dist/components";
 import {
     Article,
@@ -41,7 +41,7 @@ export default function NewTabModal({
 
     // prevent initial fade-out animation
     // @ts-ignore
-    const { isVisible } = useContext(ModalContext);
+    const { isVisible } = useContext(ModalVisibilityContext);
     if (isVisible === null) {
         return <></>;
     }

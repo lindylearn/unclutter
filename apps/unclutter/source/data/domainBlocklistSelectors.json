@@ -6,6 +6,7 @@
         ".aalto-content-bottom-wrapper.content-container"
     ],
     "about.gitlab.com": ["#on-this-page", ".hidden-md.hidden-lg"],
+    "actu.fr": [".ac-articles-toread-section", ".ac-article-to-read"],
     "aecmag.com": [
         ".relpost-thumb-wrapper",
         ".size-full.wp-image-5967",
@@ -14,12 +15,14 @@
     "aftershock.news": [
         ".field.field-name-field-image.field-type-image.field-label-hidden"
     ],
+    "aftonbladet.se": [".hyperion-css-1ntarj8"],
     "ansage.org": ["#ansag-1918435765"],
     "apnews.com": [
         ".Component-apps-0-2-57",
         ".Component-followAp-0-2-59",
         ".Component-title-0-2-62"
     ],
+    "appjdykyxmp5257.h5.xiaoeknow.com": ["#xePreview"],
     "apple.com": [
         "#ac-localeswitcher",
         ".sharesheet.component",
@@ -65,7 +68,11 @@
         ".ssrcss-2z3pjz-SectionWrapper.e1nh2i2l2",
         ".gel-long-primer",
         ".gs-o-table__head.gel-brevier",
-        ".story-body__internal-link"
+        ".story-body__internal-link",
+        ".swimlane__content",
+        ".around-the-bbc-swimlane",
+        ".article-end__share-tools",
+        ".article__end"
     ],
     "be.marketscreener.com": [
         "#myHeader",
@@ -87,6 +94,7 @@
         ".partners-top__outer-wrapper"
     ],
     "biblegateway.com": [".default-tooltip", ".passage-scroller.no-sidebar"],
+    "bikepacking.com": [".BPC", ".sponsors", ".conversation-policy", ".filed"],
     "biobiochile.cl": [
         ".ad-aside.bbcl-app",
         ".post-aside",
@@ -138,10 +146,21 @@
         ".col-xs-12.col-md-9.col-lg-10.text-center.text-md-left",
         ".row.post-top-meta"
     ],
+    "blogs.20minutos.es": [
+        ".alignright.size-medium.wp-image-18628",
+        ".iframe-responsive",
+        ".postmetadata"
+    ],
     "bloomberg.com": [
         ".skiplink__hide-until-focus",
         ".postr-recirc.postr-recirc--citylab.paywall"
     ],
+    "bloomberglinea.com": [
+        ".flex.items-center.justify-start.flex-1",
+        ".new-blocks-wrap.markets-block-wrap",
+        ".hide-container"
+    ],
+    "bmpi.dev": [".giscus"],
     "bostonherald.com": [".connext-modal-backdrop.fade"],
     "builtin.com": [
         ".field.field--name-field-oc-name.field--type-string.field--label-hidden.field__item",
@@ -157,6 +176,15 @@
         ".tp-iframe-wrapper.tp-active"
     ],
     "businessinsider.de": [".tp-container-inner"],
+    "calcalist.co.il": [
+        ".articleItem",
+        ".mediaArea",
+        ".ArticleCalcalistSlider",
+        ".slick-slider.slider.slick-initialized",
+        ".commertialSlider",
+        ".CommertialComponenta",
+        ".slotTitle"
+    ],
     "cbc.ca": [".logo", ".sideMenu"],
     "chaincatcher.com": [
         ".title",
@@ -215,6 +243,9 @@
         "#job-application-form",
         ".section-wrapper.hilight-career",
         ".career-wraper"
+    ],
+    "coindesk.com": [
+        ".featured-imagestyles__FeaturedImageWrapper-ojmof1-0.ecyZhm"
     ],
     "collabfund.com": [".card", ".more-posts"],
     "coursera.org": [
@@ -294,6 +325,7 @@
         ".title-content.clearfix.first",
         ".title-content.clearfix"
     ],
+    "earth.org": [".lazyloaded"],
     "earthly.dev": [
         ".author__avatar_top.flex.mb-4",
         ".align-right",
@@ -351,6 +383,7 @@
         ".tvfksri0.ozuftl9m",
         ".cwj9ozl2.tvmbv18p"
     ],
+    "fararu.com": [".item_News"],
     "fedoramagazine.org": [".header-wrapper"],
     "fenbi.com": [".mokaodasai-title", ".mokaodasai"],
     "fiercehealthcare.com": ["[style*='height: 0px;']"],
@@ -403,7 +436,15 @@
         ".header-social-button.fl-fb",
         "#ad",
         ".sbn",
-        "#header"
+        "#header",
+        "#div-gpt-ad-1664264689307-0",
+        "#aswift_1_host",
+        "#EndFooter",
+        "#LT",
+        "#LB",
+        ".list-1",
+        ".google-auto-placed",
+        "#RB"
     ],
     "gist.github.com": [".d-block.d-md-none.px-3.px-md-3.px-lg-5.mb-3"],
     "github.blog": [
@@ -444,9 +485,23 @@
         ".brandmenu-v2.light.l-box.clearfix",
         ".sidebar.col.left"
     ],
+    "guernicamag.com": [".each-top-story"],
     "haaretz.com": [".a.ce.cr"],
     "hackster.io": ["#hello-world"],
     "hdvietnam.org": ["#likes-post-10851880", ".sharePage"],
+    "healthy.walla.co.il": [
+        ".ob_sf_loader",
+        "#ob-explore-more",
+        ".level-0",
+        ".promotions",
+        ".css-12qql9u",
+        ".ob-cards",
+        ".css-js53d3.walla-ob-wrapper.AR_1.top-border.noprint-hidden",
+        ".share-panel.noprint.css-kxiwjn.vertical-view.only-mobile.bottom-share-panel",
+        ".css-gcmf5r.breadcrumb.noprint",
+        ".tags-and-breadcrumbs",
+        "#main-footer"
+    ],
     "heise.de": [
         ".a-u-show-from-tablet",
         ".a-u-hide-from-tablet",
@@ -465,6 +520,8 @@
         ".bottom_up"
     ],
     "hellahealth.com": [".ads_a1_hhp_imgs"],
+    "himasoku.com": ["#blog-title-image"],
+    "hogetatu.hatenablog.com": [".entry-inner"],
     "hope-rehab-center-thailand.com": [
         ".perfmatters-lazy.entered.pmloaded",
         ".elementor-post.elementor-grid-item.post-42337.post.type-post.status-publish.format-standard.has-post-thumbnail.hentry.category-uncategorized",
@@ -603,6 +660,17 @@
         ".q-click-wrapper.qu-p--tiny.qu-pl--small.qu-alignItems--center.qu-userSelect--none.qu-display--flex.qu-tapHighlight--white.qu-cursor--pointer.qu-hover--bg--darken.ClickWrapper___StyledClickWrapperBox-zoqi4f-0.iyYUZT",
         ".q-fixed.qu-bg--raised.qu-display--flex.qu-flexDirection--column.qu-borderTopLeftRadius--small.qu-borderTopRightRadius--small.DesktopMessagesDock___StyledFixed-sc-1bh1698-0.gWVrmC"
     ],
+    "kaden.watch.impress.co.jp": [
+        "#extra",
+        "#group-sites",
+        ".links.outer.old",
+        ".link",
+        ".title",
+        ".paginate.corner",
+        "#footer",
+        "#breadcrumb",
+        ".corner-title"
+    ],
     "kaggle.com": [
         ".sc-jfmDQi.hfJycS",
         ".sc-ddcaxn.iTnbhq",
@@ -617,6 +685,7 @@
         ".h1.g-color-black.g-font-weight-700.mb-4",
         ".row.g-mb-20"
     ],
+    "kentcdodds.com": [".underlined"],
     "kinsta.com": [
         ".skip-to-content",
         ".site-menu__logo",
@@ -690,6 +759,7 @@
         "#preface-top-wrapper"
     ],
     "loversmagazine.com": [".interview-photo", ".section-header", ".interview"],
+    "lowtechmagazine.com": ["#beta", "#all-comments", "#atp-comments"],
     "lwn.net": [".FeatureByline", ".IndexEntries"],
     "macrumors.com": [
         ".textRow--3IWlPgCD.content--24wu6sGS",
@@ -698,6 +768,7 @@
     ],
     "majorgeeks.com": [".centerborder", ".alford", "[data-ref='vm-preloader']"],
     "makandracards.com": ["#tail", ".text_ad__more"],
+    "maketecheasier.com": [".lazyload.alignleft.size-full.wp-image-20581"],
     "makeuseof.com": [".a__sc-np32r2-0.dLwzoc.using-keyboard"],
     "markmanson.net": [".mf-monday-opt-in"],
     "mcgill.ca": [
@@ -825,6 +896,7 @@
         ".myBoxBG",
         ".pulldown-wrap"
     ],
+    "nones-leonard.medium.com": [".mk.l"],
     "notes.cloudcat.ca": [
         ".ui-infobar.container-fluid.unselectable.hidden-print"
     ],
@@ -859,7 +931,8 @@
     "obsidianroundup.org": [".gh-toc"],
     "oglobo.globo.com": [
         ".tp-container-inner",
-        ".tbl-feed-header.tbl-logo-right-position.tbl-header-with-text"
+        ".tbl-feed-header.tbl-logo-right-position.tbl-header-with-text",
+        ".navigation"
     ],
     "ole.com.ar": [
         ".sc-ded1e020-0.gvAvuc",
@@ -875,6 +948,7 @@
         ".box.green.grunge"
     ],
     "osrp.lanl.gov": ["#backband", "#backband2", "#lanlbar", "#toolbar"],
+    "phileweb.com": ["#header", ".topicPath", "#entryUtility", "#submidashi"],
     "phoronix.com": [".node", "#about-author", "#sharebar", ".after-article"],
     "popsci.com.tr": [
         ".td-crumb-container",
@@ -885,6 +959,14 @@
     ],
     "pureinfotech.com": [
         ".attachment-large.size-large.wp-post-image.jetpack-lazy-image.jetpack-lazy-image--handled"
+    ],
+    "pv-magazine.com": [
+        "#mid-article-bibblio",
+        ".bib__image",
+        ".bib__link.bib__link--2.bib__link--image",
+        ".bib__link.bib__link--1.bib__link--image",
+        ".bib--rcm-init",
+        ".pv-bibblio-events"
     ],
     "radreads.co": [".tcb-flex-col"],
     "realpython.com": [".small.text-muted"],
@@ -940,6 +1022,7 @@
     "semiengineering.com": [".col-xs-12.col-sm-6.col-md-7"],
     "shopify.com": ["#GlobalIconSymbols", "#SiteNavContainer"],
     "slatestarcodex.com": ["#left-sidebar", "#primary"],
+    "smashingmagazine.com": [".global-header.header"],
     "smithsonianmag.com": [".author-headshot.smart-news", ".tag-list"],
     "snclavalin.com": [".top-content-item.read-time", ".top-content-item"],
     "sozcu.com.tr": [
@@ -1006,6 +1089,7 @@
         ".name",
         ".blocks"
     ],
+    "stratechery.com": ["#daily-updates"],
     "sueddeutsche.de": [
         ".css-wlr69t",
         ".css-1t38pmg",
@@ -1016,6 +1100,7 @@
     ],
     "swrfernsehen.de": [".container.breadcrumbs", ".sharing", "#footer"],
     "tarjomaan.com": ["#head_div1", "#header"],
+    "techdirt.com": [".details"],
     "technologyreview.com": [
         "#piano__post_body-desktop-1",
         "#piano__post_body-desktop-2"
@@ -1024,10 +1109,15 @@
         ".pretty-verdict__heading-container",
         ".read-more-container"
     ],
+    "techwalla.com": [".image-container"],
     "telegram.hr": [
         ".full.center-text.column-full-pad.subsection-title",
         ".full.flex.article-pad",
         ".slick-slide.slick-cloned"
+    ],
+    "tfos.co": [
+        ".flex.flex-col.items-center.text-center.px-3.text-white",
+        ".h-5"
     ],
     "theatlantic.com": [
         ".ArticleShare_root__BqVqF",
@@ -1173,6 +1263,7 @@
         ".width_common.topic-detail.gaBoxLinkDisplay"
     ],
     "voxeu.org": [".bookmarks.autoclear", ".slogan", "#header"],
+    "wacom.com": ["#pop-div3009872991070867543"],
     "web.archive.org": [
         "#wm-ipp-base",
         "#menu-item-328",
@@ -1205,6 +1296,15 @@
         ".article-metadata-container",
         ".article-asset.article-asset-normal.article-asset-center",
         ".desvio-container"
+    ],
+    "xtech.nikkei.com": [
+        ".p-article_header_bar",
+        ".l-header_container",
+        ".l-topicsPath",
+        ".l-categoryNavi_menu",
+        ".globalNaviContainer",
+        ".p-headerInfo",
+        ".p-article_action"
     ],
     "zdnet.com": [".c-socialSharebar"],
     "zeit.de": [
