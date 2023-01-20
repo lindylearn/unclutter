@@ -234,6 +234,10 @@
     ],
     "christianitytoday.com": [".article-embed"],
     "ciechanow.ski": ["#hero"],
+    "cleanmyspace.com": [
+        ".size-full.wp-image-2023.alignleft.td-animation-stack-type0-2",
+        ".article-footsy"
+    ],
     "cloud.tencent.com": [".layout-side"],
     "cloudemployee.co.uk": [
         ".scroll.btn.btn-orange-split",
