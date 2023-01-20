@@ -67,7 +67,11 @@
         ".ssrcss-2z3pjz-SectionWrapper.e1nh2i2l2",
         ".gel-long-primer",
         ".gs-o-table__head.gel-brevier",
-        ".story-body__internal-link"
+        ".story-body__internal-link",
+        ".swimlane__content",
+        ".around-the-bbc-swimlane",
+        ".article-end__share-tools",
+        ".article__end"
     ],
     "be.marketscreener.com": [
         "#myHeader",
