@@ -138,6 +138,11 @@
         ".col-xs-12.col-md-9.col-lg-10.text-center.text-md-left",
         ".row.post-top-meta"
     ],
+    "blogs.20minutos.es": [
+        ".alignright.size-medium.wp-image-18628",
+        ".iframe-responsive",
+        ".postmetadata"
+    ],
     "bloomberg.com": [
         ".skiplink__hide-until-focus",
         ".postr-recirc.postr-recirc--citylab.paywall"
