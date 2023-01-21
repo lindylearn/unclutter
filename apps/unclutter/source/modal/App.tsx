@@ -96,9 +96,7 @@ export default function App({
     return (
         // @ts-ignore
         <ReplicacheContext.Provider value={rep}>
-            <LocalScreenshotContext.Provider
-                value={!libraryState?.userInfo?.accountEnabled ? getLocalScreenshot : null}
-            >
+            <LocalScreenshotContext.Provider value={getLocalScreenshot}>
                 <ModalVisibilityContext.Provider value={{ isVisible: showModal, closeModal }}>
                     <LibraryModalPage
                         userInfo={libraryState?.userInfo}

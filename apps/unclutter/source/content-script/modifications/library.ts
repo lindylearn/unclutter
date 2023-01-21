@@ -1,9 +1,4 @@
 import throttle from "lodash/throttle";
-
-import type { Article, ArticleLink } from "@unclutter/library-components/dist/store/_schema";
-import { constructGraphData } from "@unclutter/library-components/dist/components/Modal/Graph";
-import { getDomain } from "@unclutter/library-components/dist/common/util";
-
 import { PageModifier, trackModifierExecution } from "./_interface";
 import { getLibraryUser } from "../../common/storage";
 import {
@@ -16,8 +11,6 @@ import { showLibrarySignupFlag } from "../../common/featureFlags";
 import { constructLocalArticleInfo, LibraryInfo, LibraryState } from "../../common/schema";
 import ReadingTimeModifier from "./DOM/readingTime";
 import AnnotationsModifier from "./annotations/annotationsModifier";
-import { discoverFeedsInDocument, extractTags } from "@unclutter/library-components/dist/feeds";
-import browser from "../../common/polyfill";
 import { readingProgressFullClamp } from "@unclutter/library-components/dist/store/constants";
 
 @trackModifierExecution
@@ -327,8 +320,12 @@ export default class LibraryModifier implements PageModifier {
 
     // capture a screenshot of the current article page to display as thumbnail inside the library UI
     captureScreenshot() {
-        if (this.libraryState.userInfo?.accountEnabled) {
-            // can use remote screenshot fetch
+        // if (this.libraryState.userInfo?.accountEnabled) {
+        //     // can use remote screenshot fetch
+        //     return;
+        // }
+
+        if (this.libraryState?.wasAlreadyPresent) {
             return;
         }
 

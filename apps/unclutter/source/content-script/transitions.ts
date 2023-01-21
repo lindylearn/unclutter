@@ -222,6 +222,8 @@ export default class TransitionManager implements PageModifier {
         // wait until ui fade-in done
         await new Promise((r) => setTimeout(r, 300));
 
+        this.libraryModifier.captureScreenshot();
+
         // *** read DOM phase ***
         // *** write DOM phase ***
         this.bodyStyleModifier.afterTransitionIn();
@@ -236,7 +238,6 @@ export default class TransitionManager implements PageModifier {
         // *** read DOM phase ***
 
         // *** write DOM phase ***
-        this.libraryModifier.captureScreenshot(); // after dark mode enable
 
         // insert annotations sidebar, start fetch
         // this.linkAnnotationsModifier.parseArticle(); // reads page, wraps link elems

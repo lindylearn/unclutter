@@ -77,11 +77,7 @@ export default function App() {
         // @ts-ignore
         <ReplicacheContext.Provider value={rep} darkModeEnabled={darkModeEnabled}>
             <LocalScreenshotContext.Provider
-                value={
-                    !userInfo?.accountEnabled
-                        ? (articleId) => getLocalScreenshot(articleId, getUnclutterExtensionId())
-                        : null
-                }
+                value={(articleId) => getLocalScreenshot(articleId, getUnclutterExtensionId())}
             >
                 <ModalVisibilityContext.Provider
                     value={{ isVisible: showModal, closeModal: () => setShowModal(false) }}
