@@ -69,10 +69,6 @@ export default function App() {
 
     const settings = useSettings(settingsStore);
 
-    if (!userInfo) {
-        return <></>;
-    }
-
     return (
         // @ts-ignore
         <ReplicacheContext.Provider value={rep} darkModeEnabled={darkModeEnabled}>
@@ -107,7 +103,7 @@ function ArticleSection({
     setShowModal,
     reportEvent = () => {},
 }: {
-    userInfo: UserInfo;
+    userInfo?: UserInfo;
     readingProgress?: ReadingProgressType;
     darkModeEnabled: boolean;
     setShowModal: (showModal: boolean) => void;

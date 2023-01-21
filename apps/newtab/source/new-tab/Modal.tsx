@@ -1,16 +1,7 @@
-import {
-    constructGraphData,
-    CustomGraphData,
-    LibraryModalPage,
-    ModalVisibilityContext,
-} from "@unclutter/library-components/dist/components";
-import {
-    Article,
-    ArticleLink,
-    ReplicacheContext,
-    UserInfo,
-} from "@unclutter/library-components/dist/store";
-import React, { useContext, useEffect, useState } from "react";
+import { LibraryModalPage } from "@unclutter/library-components/dist/components/Modal";
+import { ModalVisibilityContext } from "@unclutter/library-components/dist/components/Modal/context";
+import { UserInfo } from "@unclutter/library-components/dist/store";
+import React, { useContext } from "react";
 
 export default function NewTabModal({
     userInfo,
@@ -21,24 +12,6 @@ export default function NewTabModal({
     darkModeEnabled: boolean;
     reportEvent?: (event: string, properties?: any) => void;
 }) {
-    // @ts-ignore
-    const rep = useContext(ReplicacheContext);
-    const [graph, setGraph] = useState<CustomGraphData>();
-    useEffect(() => {
-        if (!rep) {
-            return;
-        }
-        (async () => {
-            await new Promise((resolve) => setTimeout(resolve, 200));
-
-            const nodes: Article[] = await rep.query.listRecentArticles();
-            const links: ArticleLink[] = await rep.query.listArticleLinks();
-
-            const [graph, linkCount] = await constructGraphData(nodes, links);
-            setGraph(graph);
-        })();
-    }, [rep]);
-
     // prevent initial fade-out animation
     // @ts-ignore
     const { isVisible } = useContext(ModalVisibilityContext);
@@ -51,8 +24,7 @@ export default function NewTabModal({
             userInfo={userInfo}
             darkModeEnabled={darkModeEnabled}
             showSignup={false}
-            graph={graph}
-            initialTab="stats"
+            initialTab="list"
             reportEvent={reportEvent}
         />
     );
