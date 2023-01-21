@@ -141,12 +141,6 @@ function ModalContent({
     currentTab: string;
     setCurrentTab: (tab: string) => void;
 }) {
-    const { currentArticle, currentAnnotationsCount, currentSubscription } =
-        useContext(FilterContext);
-    if (currentArticle && currentAnnotationsCount === undefined) {
-        return <></>;
-    }
-
     return (
         <div className="font-text flex h-full items-stretch overflow-hidden text-base">
             <aside className="left-side p-4">

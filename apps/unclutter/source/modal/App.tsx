@@ -93,28 +93,22 @@ export default function App({
         );
     }
 
-    // TODO move userInfo to query params to render faster?
-    if (!libraryState?.userInfo || (isFeedbackModal && !feedbackUserInfo)) {
-        return <></>;
-    }
-
     return (
         // @ts-ignore
         <ReplicacheContext.Provider value={rep}>
             <LocalScreenshotContext.Provider
-                value={!libraryState.userInfo?.accountEnabled ? getLocalScreenshot : null}
+                value={!libraryState?.userInfo?.accountEnabled ? getLocalScreenshot : null}
             >
                 <ModalVisibilityContext.Provider value={{ isVisible: showModal, closeModal }}>
                     <LibraryModalPage
                         userInfo={libraryState?.userInfo}
                         darkModeEnabled={darkModeEnabled === "true"} // convert string to bool
-                        showSignup={libraryState.showLibrarySignup}
+                        showSignup={libraryState?.showLibrarySignup}
                         relatedLinkCount={libraryState?.linkCount}
                         currentArticle={libraryState?.libraryInfo?.article.id}
                         initialSubscription={libraryState?.feed}
                         initialTopic={libraryState?.libraryInfo?.topic}
                         initialTab={initialTab}
-                        graph={libraryState?.graph}
                         reportEvent={reportEventContentScript}
                     />
                 </ModalVisibilityContext.Provider>
