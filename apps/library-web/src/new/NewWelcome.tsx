@@ -126,11 +126,11 @@ export default function NewWelcomeTab() {
                 <p></p>
             </SettingsGroup> */}
 
-            <SmartReadingPreview
+            {/* <SmartReadingPreview
                 userInfo={userInfo}
                 darkModeEnabled={darkModeEnabled}
                 reportEvent={reportEventPosthog}
-            />
+            /> */}
         </div>
     );
 }
