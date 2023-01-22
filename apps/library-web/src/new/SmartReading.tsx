@@ -27,9 +27,9 @@ export default function SmartReadingDetails() {
     }, [userInfo]);
 
     return (
-        <div className="animate-fadein flex flex-col gap-4">
+        <div className="animate-fadein flex flex-col gap-6">
             <SettingsGroup
-                title="AI Smart Reading"
+                title="AI Smart reading"
                 icon={
                     <svg className="h-4 w-4" viewBox="0 0 512 512">
                         <path
@@ -41,13 +41,9 @@ export default function SmartReadingDetails() {
             >
                 <p>
                     To help you make sense of what you read, Unclutter can automatically create,
-                    organize, and surface article highlights for you.
+                    index, organize, and surface article highlights for you.
                 </p>
-                <p>
-                    That means you'll see related perspectives and facts from your knowledge base
-                    right next to each article. You do the reading and thinking, Unclutter does the
-                    information retrieval and organization.
-                </p>
+                <p>Here's what that means concretely:</p>
             </SettingsGroup>
 
             <SettingsGroup
@@ -60,8 +56,17 @@ export default function SmartReadingDetails() {
                         />
                     </svg>
                 }
+                videoSrc="1"
             >
-                <p></p>
+                <p>
+                    Unclutter automatically highlights the most important sentences on each article
+                    you open, helping you focus on what matters.
+                </p>
+                <p>
+                    All highlights are saved in your library just like any quotes you select
+                    manually.
+                    {/* The AI model for this runs in your local browser for privacy. */}
+                </p>
             </SettingsGroup>
 
             <SettingsGroup
@@ -74,8 +79,16 @@ export default function SmartReadingDetails() {
                         />
                     </svg>
                 }
+                videoSrc="1"
             >
-                <p></p>
+                <p>
+                    Next to each highlight, you'll see related quotes that you saved previously.
+                    Make up your own mind and understand more by seeing ideas in different contexts.
+                </p>
+                <p>
+                    Combined with the automatic highlights feature above, you just have to click the
+                    Unclutter icon on a page to integrate it into your knowledge base.
+                </p>
             </SettingsGroup>
 
             <SettingsGroup
@@ -88,8 +101,13 @@ export default function SmartReadingDetails() {
                         />
                     </svg>
                 }
+                videoSrc="1"
             >
-                <p></p>
+                <p>
+                    All collected information is yours -- search across your saved highlights at any
+                    time to find everything you know about a topic.
+                </p>
+                <p>Or sync your highlights with Hypothes.is and note-taking apps.</p>
             </SettingsGroup>
 
             <SettingsGroup
@@ -98,14 +116,12 @@ export default function SmartReadingDetails() {
                     <svg className="h-4 w-4" viewBox="0 0 512 512">
                         <path
                             fill="currentColor"
-                            d="M504.1 471l-134-134C399.1 301.5 415.1 256.8 415.1 208c0-114.9-93.13-208-208-208S-.0002 93.13-.0002 208S93.12 416 207.1 416c48.79 0 93.55-16.91 129-45.04l134 134C475.7 509.7 481.9 512 488 512s12.28-2.344 16.97-7.031C514.3 495.6 514.3 480.4 504.1 471zM48 208c0-88.22 71.78-160 160-160s160 71.78 160 160s-71.78 160-160 160S48 296.2 48 208z"
+                            d="M244 84L255.1 96L267.1 84.02C300.6 51.37 347 36.51 392.6 44.1C461.5 55.58 512 115.2 512 185.1V190.9C512 232.4 494.8 272.1 464.4 300.4L283.7 469.1C276.2 476.1 266.3 480 256 480C245.7 480 235.8 476.1 228.3 469.1L47.59 300.4C17.23 272.1 0 232.4 0 190.9V185.1C0 115.2 50.52 55.58 119.4 44.1C164.1 36.51 211.4 51.37 244 84C243.1 84 244 84.01 244 84L244 84zM255.1 163.9L210.1 117.1C188.4 96.28 157.6 86.4 127.3 91.44C81.55 99.07 48 138.7 48 185.1V190.9C48 219.1 59.71 246.1 80.34 265.3L256 429.3L431.7 265.3C452.3 246.1 464 219.1 464 190.9V185.1C464 138.7 430.4 99.07 384.7 91.44C354.4 86.4 323.6 96.28 301.9 117.1L255.1 163.9z"
                         />
                     </svg>
                 }
-            >
-                <p></p>
-                <div className="flex gap-3">
-                    {userInfo?.aiEnabled ? (
+                buttons={
+                    userInfo?.aiEnabled ? (
                         <>
                             <SettingsButton
                                 title="Manage subscription"
@@ -124,8 +140,14 @@ export default function SmartReadingDetails() {
                                 reportEvent={reportEventPosthog}
                             />
                         </>
-                    )}
-                </div>
+                    )
+                }
+            >
+                {/* <p>Try this out by supporting the Unclutter open-source development.</p> */}
+                <p>
+                    Make use of the knowledge you've already accumulated by importing articles from
+                    your Pocket, Instapaper, Raindrop, or browser bookmarks.
+                </p>
             </SettingsGroup>
         </div>
     );

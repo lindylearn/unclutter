@@ -60,9 +60,9 @@ export default function NewWelcomeTab() {
                 setUnclutterLibraryAuth(user.id);
             }
 
-            // await rep.mutate.updateUserInfo({
-            //     aiEnabled: false,
-            // });
+            await rep.mutate.updateUserInfo({
+                aiEnabled: false,
+            });
         })();
     }, [rep, user, userInfo]);
 
@@ -80,6 +80,25 @@ export default function NewWelcomeTab() {
                         />
                     </svg>
                 }
+                buttons={
+                    <>
+                        <SettingsButton
+                            title="Export data"
+                            onClick={() => generateCSV(rep!)}
+                            darkModeEnabled={darkModeEnabled}
+                            reportEvent={reportEventPosthog}
+                        />
+                        <SettingsButton
+                            title="Sign out"
+                            onClick={async () => {
+                                await supabaseClient.auth.signOut();
+                                router.push("/");
+                            }}
+                            darkModeEnabled={darkModeEnabled}
+                            reportEvent={reportEventPosthog}
+                        />
+                    </>
+                }
             >
                 <p>Hey {userInfo?.email}, welcome to your Unclutter account!</p>
 
@@ -92,24 +111,6 @@ export default function NewWelcomeTab() {
                         every browser where you sign in to this website.
                     </p>
                 )}
-
-                <div className="flex gap-3">
-                    <SettingsButton
-                        title="Export data"
-                        onClick={() => generateCSV(rep!)}
-                        darkModeEnabled={darkModeEnabled}
-                        reportEvent={reportEventPosthog}
-                    />
-                    <SettingsButton
-                        title="Sign out"
-                        onClick={async () => {
-                            await supabaseClient.auth.signOut();
-                            router.push("/");
-                        }}
-                        darkModeEnabled={darkModeEnabled}
-                        reportEvent={reportEventPosthog}
-                    />
-                </div>
             </SettingsGroup>
 
             {/* <SettingsGroup

@@ -6,25 +6,34 @@ export function SettingsGroup({
     title,
     icon,
     children,
+    buttons,
     className,
+    videoSrc,
 }: {
     title: string;
     icon: ReactNode;
     children: ReactNode;
+    buttons?: ReactNode;
     className?: string;
+    videoSrc?: string;
 }) {
     return (
         <div
             className={clsx(
-                "animate-fadein relative z-20 overflow-hidden rounded-md bg-stone-50 p-3 px-4 dark:bg-neutral-800",
+                "animate-fadein relative z-20 overflow-hidden rounded-md bg-stone-50 dark:bg-neutral-800",
                 className
             )}
         >
-            <h2 className="mb-2 flex items-center gap-2 font-medium">
+            <h2 className="flex items-center gap-2 py-3 px-4 font-medium">
                 {icon}
                 {title}
             </h2>
-            <div className="flex max-w-2xl flex-col gap-3">{children}</div>
+            <div className="flex max-w-2xl flex-col gap-2 px-4 pb-3">
+                {children}
+                {buttons && <div className="mt-1 flex gap-3">{buttons}</div>}
+            </div>
+
+            {videoSrc && <video className="h-56 w-full bg-red-200" />}
         </div>
     );
 }

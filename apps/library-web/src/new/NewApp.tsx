@@ -1,7 +1,6 @@
 import { LindyIcon } from "@unclutter/library-components/dist/components";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
 
 import NewWelcomeTab from "./NewWelcome";
 import SmartReadingOnboarding from "./Onboarding";
@@ -11,7 +10,7 @@ export default function App() {
     const router = useRouter();
 
     return (
-        <div className="font-text h-screen w-screen bg-white p-6 text-stone-800 dark:bg-[#212121] dark:text-[rgb(232,230,227)]">
+        <div className="font-text bg-white p-6 text-stone-800 dark:bg-[#212121] dark:text-[rgb(232,230,227)]">
             <Head>
                 <title>Your Unclutter Account</title>
             </Head>

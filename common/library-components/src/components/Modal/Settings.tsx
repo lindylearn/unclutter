@@ -81,6 +81,35 @@ export default function SettingsModalTab({}: {}) {
                         />
                     </svg>
                 }
+                buttons={
+                    userInfo?.accountEnabled ? (
+                        <>
+                            <SettingsButton
+                                title="Manage account"
+                                href="https://my.unclutter.it/login"
+                                darkModeEnabled={darkModeEnabled}
+                                reportEvent={reportEvent}
+                            />
+                        </>
+                    ) : (
+                        <>
+                            <SettingsButton
+                                title="Export data"
+                                onClick={() => generateCSV(rep!)}
+                                darkModeEnabled={darkModeEnabled}
+                                reportEvent={reportEvent}
+                            />
+                            {showSignup && (
+                                <SettingsButton
+                                    title="Create account"
+                                    href="https://my.unclutter.it/signup"
+                                    darkModeEnabled={darkModeEnabled}
+                                    reportEvent={reportEvent}
+                                />
+                            )}
+                        </>
+                    )
+                }
             >
                 <>
                     {userInfo?.accountEnabled ? (
@@ -91,36 +120,6 @@ export default function SettingsModalTab({}: {}) {
                     ) : (
                         <p>Your articles and highlights are saved in your local browser.</p>
                     )}
-
-                    <div className="flex gap-3">
-                        {userInfo?.accountEnabled ? (
-                            <>
-                                <SettingsButton
-                                    title="Manage account"
-                                    href="https://my.unclutter.it/login"
-                                    darkModeEnabled={darkModeEnabled}
-                                    reportEvent={reportEvent}
-                                />
-                            </>
-                        ) : (
-                            <>
-                                <SettingsButton
-                                    title="Export data"
-                                    onClick={() => generateCSV(rep!)}
-                                    darkModeEnabled={darkModeEnabled}
-                                    reportEvent={reportEvent}
-                                />
-                                {showSignup && (
-                                    <SettingsButton
-                                        title="Create account"
-                                        href="https://my.unclutter.it/signup"
-                                        darkModeEnabled={darkModeEnabled}
-                                        reportEvent={reportEvent}
-                                    />
-                                )}
-                            </>
-                        )}
-                    </div>
                 </>
             </SettingsGroup>
 
@@ -142,27 +141,28 @@ export default function SettingsModalTab({}: {}) {
                         />
                     </svg>
                 }
+                buttons={
+                    <>
+                        <SettingsButton
+                            title="Join Discord"
+                            href="https://unclutter.it/discord"
+                            darkModeEnabled={darkModeEnabled}
+                            primary
+                            reportEvent={reportEvent}
+                        />
+                        <SettingsButton
+                            title="Open GitHub"
+                            href="https://github.com/lindylearn/unclutter"
+                            darkModeEnabled={darkModeEnabled}
+                            reportEvent={reportEvent}
+                        />
+                    </>
+                }
             >
                 <p>
                     Unclutter is open-source! Join our Discord server to help improve reading on the
                     web for everyone. Or post about issues on GitHub!
                 </p>
-
-                <div className="flex gap-3">
-                    <SettingsButton
-                        title="Join Discord"
-                        href="https://unclutter.it/discord"
-                        darkModeEnabled={darkModeEnabled}
-                        primary
-                        reportEvent={reportEvent}
-                    />
-                    <SettingsButton
-                        title="Open GitHub"
-                        href="https://github.com/lindylearn/unclutter"
-                        darkModeEnabled={darkModeEnabled}
-                        reportEvent={reportEvent}
-                    />
-                </div>
             </SettingsGroup>
 
             {/* <SettingsGroup
