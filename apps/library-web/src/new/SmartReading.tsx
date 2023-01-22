@@ -56,7 +56,7 @@ export default function SmartReadingDetails() {
                         />
                     </svg>
                 }
-                videoSrc="1"
+                imageSrc="media/1.png"
             >
                 <p>
                     Unclutter automatically highlights the most important sentences on each article
@@ -79,7 +79,7 @@ export default function SmartReadingDetails() {
                         />
                     </svg>
                 }
-                videoSrc="1"
+                imageSrc="media/2.png"
             >
                 <p>
                     Next to each highlight, you'll see related quotes that you saved previously.
@@ -101,7 +101,7 @@ export default function SmartReadingDetails() {
                         />
                     </svg>
                 }
-                videoSrc="1"
+                imageSrc="media/3.png"
             >
                 <p>
                     All collected information is yours -- search across your saved highlights at any

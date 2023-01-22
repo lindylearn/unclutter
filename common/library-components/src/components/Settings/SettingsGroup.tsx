@@ -8,14 +8,14 @@ export function SettingsGroup({
     children,
     buttons,
     className,
-    videoSrc,
+    imageSrc,
 }: {
     title: string;
     icon: ReactNode;
     children: ReactNode;
     buttons?: ReactNode;
     className?: string;
-    videoSrc?: string;
+    imageSrc?: string;
 }) {
     return (
         <div
@@ -33,7 +33,12 @@ export function SettingsGroup({
                 {buttons && <div className="mt-1 flex gap-3">{buttons}</div>}
             </div>
 
-            {videoSrc && <video className="h-56 w-full bg-red-200" />}
+            {imageSrc && (
+                <img
+                    src={imageSrc}
+                    className="mt-1 h-60 w-full bg-stone-100 object-cover object-right-top"
+                />
+            )}
         </div>
     );
 }
