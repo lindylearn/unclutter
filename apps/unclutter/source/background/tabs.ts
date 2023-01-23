@@ -7,6 +7,7 @@ export class TabStateManager {
     private userInfo: UserInfo;
     private tabReaderModeActive: { [tabId: number]: boolean } = {};
     private tabAnnotations: { [tabId: string]: Annotation[] } = {};
+    private unsavedAnnotations: { [tabId: string]: boolean } = {};
     private relatedAnnotationsCount: { [tabId: string]: number } = {};
 
     onChangeActiveTab(tabId: number) {
@@ -56,6 +57,9 @@ export class TabStateManager {
         // highlights.ts may be injected by reader mode itself, so immediately save annotations once available
         if (this.tabReaderModeActive[tabId]) {
             saveAIAnnotations(this.userInfo, annotations);
+            this.unsavedAnnotations[tabId] = false;
+        } else {
+            this.unsavedAnnotations[tabId] = true;
         }
 
         this.tabAnnotations[tabId] = annotations;
@@ -71,8 +75,9 @@ export class TabStateManager {
         this.tabReaderModeActive[tabId] = true;
 
         const annotations = this.tabAnnotations[tabId];
-        if (annotations?.length) {
+        if (this.unsavedAnnotations[tabId] && annotations?.length) {
             await saveAIAnnotations(this.userInfo, annotations);
+            this.unsavedAnnotations[tabId] = false;
         }
     }
 

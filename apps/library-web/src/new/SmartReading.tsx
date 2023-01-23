@@ -134,6 +134,13 @@ export default function SmartReadingDetails() {
                                 darkModeEnabled={darkModeEnabled}
                                 reportEvent={reportEventPosthog}
                             />
+                            <SettingsButton
+                                title="Import articles"
+                                href="/import"
+                                inNewTab={false}
+                                darkModeEnabled={darkModeEnabled}
+                                reportEvent={reportEventPosthog}
+                            />
                         </>
                     ) : (
                         <>

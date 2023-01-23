@@ -2,6 +2,7 @@ import React from "react";
 import { SettingsButton, SettingsGroup } from "./SettingsGroup";
 
 export function SmartReadingPreview({ userInfo, darkModeEnabled, reportEvent }) {
+    const isWeb = ["unclutter.it", "localhost:3001"].includes(window?.location?.host);
     return (
         <SettingsGroup
             title="AI Smart reading"
@@ -25,8 +26,8 @@ export function SmartReadingPreview({ userInfo, darkModeEnabled, reportEvent }) 
                             />
                             <SettingsButton
                                 title="Import articles"
-                                href="https://my.unclutter.it/import"
-                                inNewTab={false}
+                                href={(!isWeb ? "https://my.unclutter.it" : "") + "/import"}
+                                inNewTab={!isWeb}
                                 darkModeEnabled={darkModeEnabled}
                                 reportEvent={reportEvent}
                             />
@@ -37,8 +38,8 @@ export function SmartReadingPreview({ userInfo, darkModeEnabled, reportEvent }) 
                         <>
                             <SettingsButton
                                 title="Learn more"
-                                href="https://my.unclutter.it/smart-reading"
-                                inNewTab={false}
+                                href={(!isWeb ? "https://my.unclutter.it" : "") + "/smart-reading"}
+                                inNewTab={!isWeb}
                                 darkModeEnabled={darkModeEnabled}
                                 reportEvent={reportEvent}
                             />
