@@ -93,6 +93,12 @@ function listenForPageEvents() {
             browser.runtime.sendMessage(event.data);
         }
     });
+    // return browser bookmarks to import into the extension's companion website, if the user triggered it
+    browser.runtime.onMessage.addListener((message) => {
+        if (message.event === "returnBrowserBookmarks") {
+            window.postMessage(message, "*");
+        }
+    });
 }
 
 async function waitUntilDomLoaded(): Promise<void> {

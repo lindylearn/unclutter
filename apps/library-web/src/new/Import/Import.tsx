@@ -4,7 +4,7 @@ import { SettingsGroup } from "@unclutter/library-components/dist/components/Set
 import clsx from "clsx";
 import { useEffect, useState } from "react";
 
-import { BookmarksImportText } from "./Bookmarks";
+import { BookmarksImportButtons, BookmarksImportText } from "./Bookmarks";
 import { CSVImportText, CSVImportButtons } from "./CSV";
 import { InstapaperImportButtons, InstapaperImportText } from "./Instapaper";
 import { RaindropImportText, RaindropImportButtons } from "./Raindrop";
@@ -18,6 +18,27 @@ export function ImportSection({ darkModeEnabled }) {
     }, []);
 
     const [activeOption, setActiveOption] = useState<keyof typeof importOptions>();
+    // handle url params
+    const [isRedirect, setIsRedirect] = useState(false);
+    useEffect(() => {
+        const from = new URLSearchParams(window.location.search).get("from");
+        if (from) {
+            setActiveOption(from);
+        } else {
+            setActiveOption(Object.keys(importOptions)[0]);
+        }
+
+        const isRedirect = new URLSearchParams(window.location.search).has("auth_redirect");
+        if (isRedirect) {
+            setIsRedirect(isRedirect);
+            history.replaceState({}, "", `/import?from=${activeOption}`);
+        }
+    }, []);
+
+    // update url, e.g. for the browser import to work
+    useEffect(() => {
+        history.replaceState({}, "", `/import?from=${activeOption}`);
+    }, [activeOption]);
 
     const [error, setError] = useState<string>();
     const [generateProgress, setGenerateProgress] = useState<ImportProgress>();
@@ -67,6 +88,12 @@ export function ImportSection({ darkModeEnabled }) {
                     className={importOptions[activeOption].backgroundColor}
                     buttons={
                         <>
+                            {activeOption === "bookmarks" && (
+                                <BookmarksImportButtons
+                                    startImport={startImport}
+                                    onError={setError}
+                                />
+                            )}
                             {activeOption === "csv" && (
                                 <CSVImportButtons startImport={startImport} onError={setError} />
                             )}

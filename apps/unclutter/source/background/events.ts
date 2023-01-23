@@ -1,4 +1,3 @@
-import { clusterLibraryArticles } from "@unclutter/library-components/dist/common/api";
 import { fetchRssFeed } from "@unclutter/library-components/dist/feeds";
 import type { Runtime, Tabs } from "webextension-polyfill";
 import { extensionSupportsUrl } from "../common/articleDetection";
@@ -9,7 +8,7 @@ import {
     setFeatureFlag,
 } from "../common/featureFlags";
 import browser from "../common/polyfill";
-import { getLibraryAuth, getLibraryUser, setLibraryAuth } from "../common/storage";
+import { setLibraryAuth } from "../common/storage";
 import { saveInitialInstallVersionIfMissing } from "../common/updateMessages";
 import { fetchCss } from "./actions";
 import { getAllBookmarks, requestBookmarksPermission } from "./bookmarks";
@@ -45,15 +44,14 @@ browser.action.onClicked.addListener((tab: Tabs.Tab) => {
     if (url.href === "https://my.unclutter.it/import?from=bookmarks") {
         // Support importing browser bookmarks into the extension companion website (which allows the user to organize & easily open articles with the extension).
         // This code only runs if the user explicitly triggered it: they selected the browser import on the companion website, clicked the extension icon as stated in the instructions, then granted the optional bookmarks permission.
-        // lindylearn.io is the official publisher domain for this browser extension.
-
         requestBookmarksPermission().then(async (granted: boolean) => {
-            const libraryUser = await getLibraryUser();
-
-            if (granted && libraryUser) {
+            if (granted) {
                 console.log("Starting bookmarks library import");
                 const bookmarks = await getAllBookmarks();
-                clusterLibraryArticles(bookmarks, libraryUser);
+                await browser.tabs.sendMessage(tab.id, {
+                    event: "returnBrowserBookmarks",
+                    bookmarks,
+                });
             }
         });
     } else if (extensionSupportsUrl(url)) {

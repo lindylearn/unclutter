@@ -8,6 +8,7 @@ import SmartReadingTab from "./SmartReading";
 
 export default function App() {
     const router = useRouter();
+    const pathName = router.asPath.split("?")[0];
 
     return (
         <div className="font-text bg-white p-6 text-stone-800 dark:bg-[#212121] dark:text-[rgb(232,230,227)]">
@@ -29,9 +30,9 @@ export default function App() {
             </aside>
 
             <main className="mx-auto max-w-2xl">
-                {router.asPath === "/" && <NewWelcomeTab />}
-                {router.asPath === "/smart-reading" && <SmartReadingTab />}
-                {router.asPath === "/import" && <SmartReadingOnboarding />}
+                {pathName === "/" && <NewWelcomeTab />}
+                {pathName === "/smart-reading" && <SmartReadingTab />}
+                {pathName === "/import" && <SmartReadingOnboarding />}
             </main>
         </div>
     );
