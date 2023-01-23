@@ -1,29 +1,30 @@
-import { ArticleImportSchema } from "../Import";
-import CSVImportSettings from "./CSV";
+import { ArticleImportSchema } from "./Import";
+import { CSVImportButtons } from "./CSV";
 
-export default function RaindropImportSettings({ onError, startImport, disabled }) {
+export function RaindropImportText() {
     return (
-        <div className="px-3">
-            <div className="mb-3">
-                Create a new raindrop.io{" "}
-                <a
-                    className="inline-block cursor-pointer font-bold transition-all hover:rotate-2"
-                    href="https://app.raindrop.io/settings/backups"
-                    target="_blank"
-                    rel="noreferrer"
-                >
-                    file backup
-                </a>
-                , then upload the generated CSV file here once available.
-            </div>
-            <CSVImportSettings
-                onError={onError}
-                startImport={startImport}
-                disabled={disabled}
-                text="Please drop the generated .csv file here."
-                transformRows={transformCSVRows}
-            />
-        </div>
+        <p className="">
+            Create a new raindrop.io{" "}
+            <a
+                className="inline-block cursor-pointer font-bold transition-all hover:rotate-2"
+                href="https://app.raindrop.io/settings/backups"
+                target="_blank"
+                rel="noreferrer"
+            >
+                file backup
+            </a>
+            , then upload the generated CSV file here once available.
+        </p>
+    );
+}
+
+export function RaindropImportButtons({ onError, startImport, transformRows = transformCSVRows }) {
+    return (
+        <CSVImportButtons
+            onError={onError}
+            startImport={startImport}
+            transformRows={transformCSVRows}
+        />
     );
 }
 

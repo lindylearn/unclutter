@@ -1,16 +1,13 @@
-import clsx from "clsx";
-import { useCallback } from "react";
-import { useDropzone } from "react-dropzone";
-import { ArticleImportSchema } from "../Import";
+import { ArticleImportSchema } from "./Import";
 
-export default function CSVImportSettings({
-    onError,
-    startImport,
-    disabled,
-    text = "Drop your .csv files here. One article URL per line please.",
-    transformRows = defaultRowTransform,
-}) {
-    const onDrop = useCallback(async (acceptedFiles: File[]) => {
+export function CSVImportText({}) {
+    return <p>Drop your .csv files here. One article URL per line please.</p>;
+}
+
+export function CSVImportButtons({ onError, startImport, transformRows = defaultRowTransform }) {
+    const handleChange = async (event) => {
+        const acceptedFiles: File[] = event.target.files;
+
         if (acceptedFiles.length === 0) {
             onError("Invalid file selected");
             return;
@@ -40,26 +37,12 @@ export default function CSVImportSettings({
         }
 
         startImport(importData);
-    }, []);
-    const { getRootProps, getInputProps } = useDropzone({
-        onDrop,
-        accept: { "text/csv": [".csv"] },
-    });
+    };
 
     return (
-        <div
-            {...getRootProps({
-                className: clsx(
-                    "dropzone flex-grow",
-                    disabled ? "cursor-not-allowed" : "cursor-pointer"
-                ),
-            })}
-        >
-            <input {...getInputProps()} disabled={disabled} />
-            <p className="dark:bg-backgroundDark h-full rounded-lg bg-white p-5 text-center shadow-sm transition-all hover:scale-[98%]">
-                {text}
-            </p>
-        </div>
+        <>
+            <input className="" type="file" onChange={handleChange} accept="text/csv" />
+        </>
     );
 }
 

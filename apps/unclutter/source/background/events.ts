@@ -42,7 +42,7 @@ const tabsManager = new TabStateManager();
 browser.action.onClicked.addListener((tab: Tabs.Tab) => {
     const url = new URL(tab.url);
 
-    if (url.href === "https://library.lindylearn.io/import?provider=bookmarks") {
+    if (url.href === "https://my.unclutter.it/import?from=bookmarks") {
         // Support importing browser bookmarks into the extension companion website (which allows the user to organize & easily open articles with the extension).
         // This code only runs if the user explicitly triggered it: they selected the browser import on the companion website, clicked the extension icon as stated in the instructions, then granted the optional bookmarks permission.
         // lindylearn.io is the official publisher domain for this browser extension.

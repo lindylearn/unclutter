@@ -1,29 +1,37 @@
-import { ArticleImportSchema } from "../Import";
-import CSVImportSettings from "./CSV";
+import { SettingsButton } from "@unclutter/library-components/dist/components/Settings/SettingsGroup";
+import { ArticleImportSchema } from "./Import";
+import { CSVImportButtons } from "./CSV";
 
-export default function InstapaperImportSettings({ onError, startImport, disabled }) {
+export function InstapaperImportText() {
     return (
-        <div className="px-3">
-            <div className="mb-3">
-                Download your .CSV file export on the{" "}
-                <a
-                    className="inline-block cursor-pointer font-bold transition-all hover:rotate-1"
-                    href="https://www.instapaper.com/user"
-                    target="_blank"
-                    rel="noreferrer"
-                >
-                    Instapaper settings page
-                </a>
-                , then upload it here.
-            </div>
-            <CSVImportSettings
+        <p className="">
+            Download your .CSV file export on the{" "}
+            <a
+                className="inline-block cursor-pointer font-bold transition-all hover:rotate-1"
+                href="https://www.instapaper.com/user"
+                target="_blank"
+                rel="noreferrer"
+            >
+                Instapaper settings page
+            </a>
+            , then upload it here.
+        </p>
+    );
+}
+
+export function InstapaperImportButtons({
+    onError,
+    startImport,
+    transformRows = transformCSVRows,
+}) {
+    return (
+        <>
+            <CSVImportButtons
                 onError={onError}
                 startImport={startImport}
-                disabled={disabled}
-                text="Please drop the .csv file here."
-                transformRows={transformCSVRows}
+                transformRows={transformRows}
             />
-        </div>
+        </>
     );
 }
 

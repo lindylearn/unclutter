@@ -1,6 +1,6 @@
 import ky from "ky";
 import { useEffect } from "react";
-import { ArticleImportSchema } from "../Import";
+import { ArticleImportSchema } from "./Import";
 
 export const oauthRedirectUrl = "https://library.lindylearn.io/import?auth_redirect";
 // export const oauthRedirectUrl = "http://localhost:3000/import?auth_redirect";
