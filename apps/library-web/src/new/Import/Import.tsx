@@ -26,8 +26,6 @@ export function ImportSection({ rep, userInfo, darkModeEnabled }) {
         const from = new URLSearchParams(window.location.search).get("from");
         if (from) {
             setActiveOption(from);
-        } else {
-            setActiveOption(Object.keys(importOptions)[0]);
         }
 
         const isRedirect = new URLSearchParams(window.location.search).has("auth_redirect");
@@ -188,15 +186,15 @@ const importOptions: { [id: string]: ImportOption } = {
         iconFile: "instapaper.png",
         backgroundColor: "bg-gray-100 dark:bg-gray-800",
     },
-    bookmarks: {
-        name: "Import Bookmarks",
-        iconFile: "chrome.svg",
-        backgroundColor: "bg-gray-200 dark:bg-gray-700",
-    },
     raindrop: {
         name: "Import Raindrop",
         iconFile: "raindrop.svg",
         backgroundColor: "bg-blue-100 dark:bg-blue-900",
+    },
+    bookmarks: {
+        name: "Import Bookmarks",
+        iconFile: "chrome.svg",
+        backgroundColor: "bg-gray-200 dark:bg-gray-700",
     },
     csv: {
         name: "Import CSV",

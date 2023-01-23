@@ -8,6 +8,7 @@ import {
     UserInfo,
     useSubscribe,
 } from "@unclutter/library-components/dist/store";
+import Head from "next/head";
 import { useContext, useEffect, useState } from "react";
 import { reportEventPosthog } from "../../common/metrics";
 
@@ -28,6 +29,10 @@ export default function SmartReadingDetails() {
 
     return (
         <div className="animate-fadein flex flex-col gap-6">
+            <Head>
+                <title>AI Smart Reading</title>
+            </Head>
+
             <SettingsGroup
                 title="AI Smart reading"
                 icon={

@@ -11,7 +11,7 @@ export default function App() {
     const pathName = router.asPath.split("?")[0];
 
     return (
-        <div className="font-text bg-white p-6 text-stone-800 dark:bg-[#212121] dark:text-[rgb(232,230,227)]">
+        <div className="font-text min-h-screen bg-white p-6 text-stone-800 dark:bg-[#212121] dark:text-[rgb(232,230,227)]">
             <Head>
                 <title>Your Unclutter Account</title>
             </Head>

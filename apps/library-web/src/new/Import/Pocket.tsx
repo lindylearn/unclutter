@@ -4,8 +4,7 @@ import { useEffect } from "react";
 import { reportEventPosthog } from "../../../common/metrics";
 import { ArticleImportSchema } from "./Import";
 
-export const oauthRedirectUrl = "https://my.unclutter.it/import?auth_redirect";
-// export const oauthRedirectUrl = "http://localhost:3000/import?auth_redirect";
+export const oauthRedirectUrl = "https://my.unclutter.it/import?from=pocket&auth_redirect";
 
 const pocketImportBatchSize = 100000; // remove batching for now
 const pocketConsumerKey = "103045-348c15882b98fde8379db28";

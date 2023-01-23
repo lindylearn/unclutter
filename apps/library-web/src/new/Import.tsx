@@ -14,6 +14,7 @@ import {
 import { reportEventPosthog } from "../../common/metrics";
 import { GenerateSection } from "./Import/Generate";
 import { ImportSection } from "./Import/Import";
+import Head from "next/head";
 
 export default function SmartReadingOnboarding() {
     const rep = useContext(ReplicacheContext);
@@ -40,6 +41,10 @@ export default function SmartReadingOnboarding() {
 
     return (
         <div className="animate-fadein flex flex-col gap-4">
+            <Head>
+                <title>Import articles</title>
+            </Head>
+
             <SettingsGroup
                 title="Thank you!"
                 icon={
