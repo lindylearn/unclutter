@@ -255,9 +255,25 @@ export default function App({
         }
         console.log("Grouping annotations");
 
-        let visibleAnnotations = [];
+        // @ts-ignore
+        // const summary: LindyAnnotation = {
+        //     id: "summary",
+        //     platform: "summary",
+        //     displayOffset: 1,
+        //     displayOffsetEnd: 1,
+        //     summaryInfo: {
+        //         title: "",
+        //         aiAnnotations: storeAnnotations
+        //             .filter((a) => a.ai_created)
+        //             .map((a) => a.quote_text),
+        //         relatedCount: Object.values(relatedPerAnnotation).flat().length,
+        //     },
+        // };
+
+        let visibleAnnotations: LindyAnnotation[] = [];
         if (personalAnnotationsEnabled) {
             visibleAnnotations = visibleAnnotations.concat(
+                // @ts-ignore
                 storeAnnotations
                     .map(unpickleLocalAnnotation)
                     .map((a) => ({

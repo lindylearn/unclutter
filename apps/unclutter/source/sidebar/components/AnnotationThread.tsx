@@ -1,18 +1,11 @@
-import { ReplicacheProxy } from "@unclutter/library-components/dist/common/replicache";
 import React, { useContext, useEffect, useState } from "react";
 import type { LindyAnnotation } from "../../common/annotations/create";
-import {
-    fetchRelatedAnnotations,
-    RelatedHighlight,
-} from "@unclutter/library-components/dist/common/api";
-// import { getAnnotationColor } from "../../common/annotations/styling";
 import Annotation from "./Annotation";
 import AnnotationDraft from "./AnnotationDraft";
-import clsx from "clsx";
 import { getAIAnnotationColor } from "@unclutter/library-components/dist/common/styling";
 import { getAnnotationColor } from "../../common/annotations/styling";
 import { SidebarContext } from "../context";
-// import SummaryAnnotation from "./Summary";
+import SummaryAnnotation from "./Summary";
 
 interface AnnotationThreadProps {
     annotation: LindyAnnotation;
@@ -56,9 +49,9 @@ export default function AnnotationThread(props: AnnotationThreadProps) {
 
     return (
         <>
-            {/* {annotation.platform === "summary" && (
+            {annotation.platform === "summary" && (
                 <SummaryAnnotation summaryInfo={annotation.summaryInfo!} />
-            )} */}
+            )}
 
             {annotation.isMyAnnotation && (
                 <AnnotationDraft
