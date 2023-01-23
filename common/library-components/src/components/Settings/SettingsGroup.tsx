@@ -1,5 +1,6 @@
 import clsx from "clsx";
 import React, { ReactNode } from "react";
+import type { ImportProgress } from "../../common/import";
 import { getActivityColor } from "../Charts";
 
 export function SettingsGroup({
@@ -9,6 +10,7 @@ export function SettingsGroup({
     buttons,
     className,
     imageSrc,
+    progress,
 }: {
     title: string;
     icon: ReactNode;
@@ -16,6 +18,7 @@ export function SettingsGroup({
     buttons?: ReactNode;
     className?: string;
     imageSrc?: string;
+    progress?: ImportProgress;
 }) {
     return (
         <div
@@ -28,9 +31,25 @@ export function SettingsGroup({
                 {icon}
                 {title}
             </h2>
-            <div className="flex max-w-2xl flex-col gap-2 px-4 pb-3">
+            <div className={clsx("flex max-w-2xl flex-col gap-2 px-4 pb-3", progress && "mb-4")}>
                 {children}
-                {buttons && <div className="mt-1 flex flex-wrap gap-3">{buttons}</div>}
+                {buttons && !progress && <div className="mt-1 flex flex-wrap gap-3">{buttons}</div>}
+                {progress && (
+                    <p className="">
+                        {progress?.finished ? (
+                            <>
+                                Done! Unclutter generated {progress?.currentHighlights} highlights
+                                across your {progress?.targetArticles} articles!
+                            </>
+                        ) : (
+                            <>
+                                Generated {progress?.currentHighlights || 0} highlights across{" "}
+                                {progress?.currentArticles || 0} of your{" "}
+                                {progress?.targetArticles || 0} articles...
+                            </>
+                        )}
+                    </p>
+                )}
             </div>
 
             {imageSrc && (
@@ -38,6 +57,22 @@ export function SettingsGroup({
                     src={imageSrc}
                     className="mt-1 h-60 w-full bg-stone-100 object-cover object-right-top"
                 />
+            )}
+
+            {progress && (
+                <>
+                    <div
+                        className="absolute bottom-0 left-0 h-4 bg-gradient-to-b from-yellow-300 to-amber-400 transition-all"
+                        style={{
+                            width: `${Math.max(
+                                ((progress.currentArticles || 0) / progress.targetArticles) * 100,
+                                5
+                            )}%`,
+                            backgroundImage: "linear-gradient(130deg, var(--tw-gradient-stops))",
+                        }}
+                    />
+                    {/* <div className="absolute bottom-0 right-0">2 of 3 articles done</div> */}
+                </>
             )}
         </div>
     );
@@ -71,7 +106,9 @@ export function SettingsButton({
                 true && "dark:text-stone-800",
                 className
             )}
-            style={{ background: !className ? getActivityColor(primary ? 3 : 3, false) : "" }}
+            style={{
+                background: !className ? getActivityColor(primary ? 3 : 3, darkModeEnabled) : "",
+            }}
             onClick={() => {
                 onClick?.();
                 reportEvent("clickSettingsButton", { title });

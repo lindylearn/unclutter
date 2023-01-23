@@ -32,8 +32,6 @@ export default function SmartReadingOnboarding() {
 
         // rep.mutate.updateUserInfo({ aiEnabled: true });
         // setUnclutterLibraryAuth(user.id);
-
-        // generateHighlights();
     }, [rep, userInfo]);
 
     if (!userInfo) {
@@ -52,24 +50,24 @@ export default function SmartReadingOnboarding() {
                         />
                     </svg>
                 }
-                buttons={
-                    <>
-                        <SettingsButton
-                            title="Manage subscription"
-                            href="https://billing.stripe.com/p/login/5kA8x62Ap9y26v6144"
-                            darkModeEnabled={darkModeEnabled}
-                            reportEvent={reportEventPosthog}
-                        />
+                // buttons={
+                //     <>
+                //         <SettingsButton
+                //             title="Manage subscription"
+                //             href="https://billing.stripe.com/p/login/5kA8x62Ap9y26v6144"
+                //             darkModeEnabled={darkModeEnabled}
+                //             reportEvent={reportEventPosthog}
+                //         />
 
-                        <SettingsButton
-                            title="Learn more"
-                            href="https://my.unclutter.it/smart-reading"
-                            inNewTab={false}
-                            darkModeEnabled={darkModeEnabled}
-                            reportEvent={reportEventPosthog}
-                        />
-                    </>
-                }
+                //         <SettingsButton
+                //             title="Learn more"
+                //             href="https://my.unclutter.it/smart-reading"
+                //             inNewTab={false}
+                //             darkModeEnabled={darkModeEnabled}
+                //             reportEvent={reportEventPosthog}
+                //         />
+                //     </>
+                // }
             >
                 <p>
                     Thank you for supporting Unclutter! The AI Smart Reading features are now
@@ -77,7 +75,7 @@ export default function SmartReadingOnboarding() {
                 </p>
             </SettingsGroup>
 
-            <GenerateSection rep={rep} userInfo={userInfo} />
+            <GenerateSection rep={rep} userInfo={userInfo} darkModeEnabled={darkModeEnabled} />
 
             <ImportSection darkModeEnabled={darkModeEnabled} />
         </div>

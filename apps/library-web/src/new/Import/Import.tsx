@@ -1,5 +1,6 @@
 import { getBrowserType } from "@unclutter/library-components/dist/common";
 import { ImportProgress } from "@unclutter/library-components/dist/common/import";
+import { getActivityColor } from "@unclutter/library-components/dist/components";
 import { SettingsGroup } from "@unclutter/library-components/dist/components/Settings/SettingsGroup";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
@@ -38,7 +39,7 @@ export function ImportSection({ darkModeEnabled }) {
 
     // update url, e.g. for the browser import to work
     useEffect(() => {
-        history.replaceState({}, "", `/import?from=${activeOption}`);
+        history.replaceState({}, "", `/import${activeOption ? `?from=${activeOption}` : ""}`);
     }, [activeOption]);
 
     const [error, setError] = useState<string>();
@@ -64,8 +65,16 @@ export function ImportSection({ darkModeEnabled }) {
                         {Object.entries(importOptions).map(([id, option]) => (
                             <ImportButton
                                 key={id}
+                                active={!activeOption || id === activeOption}
                                 {...option}
-                                onClick={() => setActiveOption(id)}
+                                darkModeEnabled={darkModeEnabled}
+                                onClick={() => {
+                                    if (id === activeOption) {
+                                        setActiveOption(undefined);
+                                    } else {
+                                        setActiveOption(id);
+                                    }
+                                }}
                             />
                         ))}
                     </>
@@ -86,7 +95,7 @@ export function ImportSection({ darkModeEnabled }) {
                             src={`/logos/${importOptions[activeOption].iconFile}`}
                         />
                     }
-                    className={importOptions[activeOption].backgroundColor}
+                    // className={importOptions[activeOption].backgroundColor}
                     buttons={
                         <>
                             {activeOption === "pocket" && (
@@ -136,14 +145,16 @@ export function ImportSection({ darkModeEnabled }) {
     );
 }
 
-function ImportButton({ iconFile, name, backgroundColor, onClick }) {
+function ImportButton({ iconFile, name, backgroundColor, onClick, darkModeEnabled, active }) {
     return (
         <button
             className={clsx(
-                "relative flex cursor-pointer select-none items-center rounded-md py-1 px-2 font-medium transition-transform hover:scale-[97%]",
+                "relative flex cursor-pointer select-none items-center rounded-md py-1 px-2 font-medium transition-all hover:scale-[97%]",
                 true && "dark:text-stone-800",
-                backgroundColor
+                active ? "" : "opacity-50"
+                // backgroundColor
             )}
+            style={{ background: getActivityColor(3, darkModeEnabled) }}
             onClick={onClick}
         >
             <img className="mr-2 inline-block h-4 w-4" src={`/logos/${iconFile}`} />

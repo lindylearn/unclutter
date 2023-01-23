@@ -2,10 +2,14 @@ import {
     ImportProgress,
     indexLibraryArticles,
 } from "@unclutter/library-components/dist/common/import";
-import { SettingsGroup } from "@unclutter/library-components/dist/components/Settings/SettingsGroup";
+import {
+    SettingsButton,
+    SettingsGroup,
+} from "@unclutter/library-components/dist/components/Settings/SettingsGroup";
 import { useState } from "react";
+import { reportEventPosthog } from "../../../common/metrics";
 
-export function GenerateSection({ rep, userInfo }) {
+export function GenerateSection({ rep, userInfo, darkModeEnabled }) {
     const [generateProgress, setGenerateProgress] = useState<ImportProgress>();
     function generateHighlights() {
         if (!rep) {
@@ -26,35 +30,21 @@ export function GenerateSection({ rep, userInfo }) {
                     />
                 </svg>
             }
+            buttons={
+                <SettingsButton
+                    title="Generate highlights"
+                    onClick={generateHighlights}
+                    darkModeEnabled={darkModeEnabled}
+                    reportEvent={reportEventPosthog}
+                />
+            }
+            progress={generateProgress}
         >
             <p>
                 From now on, Unclutter automatically generates highlights whenever you read an
                 article using the browser extension.
             </p>
-            <p className="mb-3">
-                {generateProgress?.finished ? (
-                    <>
-                        Done! Unclutter generated {generateProgress?.currentHighlights} highlights
-                        across your {generateProgress?.targetArticles} saved articles!
-                    </>
-                ) : (
-                    <>
-                        Let's generate highlights for your {generateProgress?.targetArticles}{" "}
-                        previously saved articles now ({generateProgress?.currentArticles || 0}/
-                        {generateProgress?.targetArticles || 0} done).
-                    </>
-                )}
-            </p>
-            <div
-                className="bg-lindy dark:bg-lindyDark absolute bottom-0 left-0 h-2 transition-all"
-                style={{
-                    width: `${
-                        ((generateProgress?.currentArticles &&
-                            generateProgress.currentArticles / generateProgress.targetArticles) ||
-                            0) * 100
-                    }%`,
-                }}
-            />
+            <p className="">Let's generate highlights for your previously saved articles now.</p>
         </SettingsGroup>
     );
 }
