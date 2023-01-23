@@ -1,8 +1,9 @@
 import asyncPool from "tiny-async-pool";
+// import chunk from "lodash/chunk";
 import type { ArticleImportSchema } from "../components";
 
 import { Annotation, Article, RuntimeReplicache, UserInfo } from "../store";
-import { indexAnnotationVectors } from "./api";
+import { createScreenshots, indexAnnotationVectors } from "./api";
 import { getUrlHash } from "./url";
 import { constructLocalArticle } from "./util";
 
@@ -24,15 +25,19 @@ export async function importArticles(
 ) {
     const existingArticles = await rep.query.listArticles();
     const existingArticleIds = new Set(existingArticles.map((a) => a.id));
+    data.urls = data.urls.filter((url) => !existingArticleIds.has(getUrlHash(url)));
 
     console.log(`Backfilling AI annotations for ${data.urls.length} articles...`);
     onProgress?.({ targetArticles: data.urls.length });
+
+    // trigger screenshots in parallel
+    createScreenshots(data.urls);
 
     // batch for resilience
     const start = performance.now();
     let articleCount = 0;
     let highlightCount = 0;
-    for await (const newHighlights of asyncPool(concurrency, data.urls.slice(0, 2), (url, i) =>
+    for await (const newHighlights of asyncPool(concurrency, data.urls, (url, i) =>
         importArticle(
             rep,
             userInfo.id,
@@ -125,10 +130,14 @@ async function importArticle(
             return 0;
         }
 
-        console.log(url);
+        // generate heatmap and parse article metadata
         const article_id = getUrlHash(url);
         const { annotations, title, word_count } = await generateAnnotationsRemote(url, article_id);
+        if (!word_count || word_count < 4 * 200) {
+            return 0;
+        }
 
+        // save article
         const article = constructLocalArticle(url, article_id, title || "");
         article.time_added = time_added || 0;
         article.reading_progress = status || 0;
@@ -137,6 +146,7 @@ async function importArticle(
         // article.publication_date = ???
         await rep.mutate.putArticleIfNotExists(article);
 
+        // save highlights
         await Promise.all(annotations.map((a) => rep.mutate.putAnnotation(a)));
         await indexAnnotationVectors(
             user_id,
@@ -202,3 +212,16 @@ async function generateAnnotationsRemote(
     const data = await response.json();
     return data || { annotations: [] };
 }
+
+// service already does this
+// async function batchRemoteScreenshots(
+//     urls: string[],
+//     concurrency: number = 5,
+//     batchSize: number = 1
+// ) {
+//     const batches = chunk(urls, batchSize);
+
+//     for await (const batch of asyncPool(concurrency, batches, createScreenshots)) {
+//         console.log("Screenshot batch done");
+//     }
+// }
