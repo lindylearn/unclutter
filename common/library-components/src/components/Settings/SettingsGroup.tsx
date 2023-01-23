@@ -25,11 +25,15 @@ export function SettingsGroup({
     return (
         <div
             className={clsx(
-                "animate-slidein relative z-20 overflow-hidden rounded-md bg-stone-50 dark:bg-neutral-800",
-                className
+                "relative z-20 overflow-hidden rounded-md bg-stone-50 dark:bg-neutral-800",
+                className,
+                animationIndex ? "animate-slidein" : "animate-fadein"
             )}
             style={{
-                animationDelay: `${(animationIndex ? animationIndex * 50 : 0) + 50}ms`,
+                animationDelay:
+                    animationIndex !== undefined
+                        ? `${(animationIndex ? animationIndex * 50 : 0) + 50}ms`
+                        : "",
             }}
         >
             <h2 className="flex items-center gap-2 py-3 px-4 font-medium">

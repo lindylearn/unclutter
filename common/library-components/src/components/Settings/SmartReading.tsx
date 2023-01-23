@@ -1,4 +1,5 @@
 import React from "react";
+import type { UserInfo } from "../../store";
 import { SettingsButton, SettingsGroup } from "./SettingsGroup";
 
 export function SmartReadingPreview({
@@ -6,6 +7,11 @@ export function SmartReadingPreview({
     darkModeEnabled,
     reportEvent,
     animationIndex = undefined,
+}: {
+    userInfo: UserInfo;
+    darkModeEnabled: boolean;
+    reportEvent: (name: string, properties?: any) => void;
+    animationIndex?: number;
 }) {
     const isWeb =
         typeof window !== "undefined" &&
