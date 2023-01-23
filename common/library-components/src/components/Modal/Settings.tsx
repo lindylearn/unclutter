@@ -114,8 +114,8 @@ export default function SettingsModalTab({}: {}) {
                 <>
                     {userInfo?.accountEnabled ? (
                         <p>
-                            Hey {userInfo?.email}, your articles and highlights are securely
-                            backed-up to your account!
+                            Hey{userInfo?.email && ` ${userInfo?.email}`}, your articles and
+                            highlights are securely backed-up to your account!
                         </p>
                     ) : (
                         <p>Your articles and highlights are saved in your local browser.</p>

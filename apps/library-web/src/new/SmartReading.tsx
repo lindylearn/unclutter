@@ -23,7 +23,7 @@ export default function SmartReadingDetails() {
         if (!userInfo?.email || userInfo.aiEnabled) {
             return;
         }
-        // createPaymentsLink(userInfo.id, userInfo.email).then(setPaymentsLink);
+        createPaymentsLink(userInfo.id, userInfo.email).then(setPaymentsLink);
     }, [userInfo]);
 
     return (
@@ -43,7 +43,7 @@ export default function SmartReadingDetails() {
                     To help you make sense of what you read, Unclutter can automatically create,
                     index, organize, and surface article highlights for you.
                 </p>
-                <p>Here's what that means concretely:</p>
+                <p>Here's what that means exactly:</p>
             </SettingsGroup>
 
             <SettingsGroup
@@ -143,7 +143,7 @@ export default function SmartReadingDetails() {
                     )
                 }
             >
-                {/* <p>Try this out by supporting the Unclutter open-source development.</p> */}
+                <p>Support the Unclutter open-source development to try this out.</p>
                 <p>
                     Make use of the knowledge you've already accumulated by importing articles from
                     your Pocket, Instapaper, Raindrop, or browser bookmarks.

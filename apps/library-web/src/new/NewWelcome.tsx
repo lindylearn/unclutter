@@ -44,7 +44,6 @@ export default function NewWelcomeTab() {
                 setIsSignup(true);
                 console.log("Signing up new user", user);
 
-                // fetch email subscription status
                 await rep.mutate.updateUserInfo({
                     id: user.id,
                     name: user.user_metadata.name,
@@ -60,13 +59,12 @@ export default function NewWelcomeTab() {
                 setUnclutterLibraryAuth(user.id);
             }
 
-            await rep.mutate.updateUserInfo({
-                aiEnabled: false,
-            });
+            // await rep.mutate.updateUserInfo({
+            //     aiEnabled: false,
+            //     accountEnabled: true,
+            // });
         })();
     }, [rep, user, userInfo]);
-
-    // console.log(userInfo);
 
     return (
         <div className="animate-fadein flex flex-col gap-4">
@@ -100,7 +98,10 @@ export default function NewWelcomeTab() {
                     </>
                 }
             >
-                <p>Hey {userInfo?.email}, welcome to your Unclutter account!</p>
+                <p>
+                    Hey{userInfo?.email && ` ${userInfo?.email}`}, welcome to your Unclutter
+                    account!
+                </p>
 
                 {!articles?.length ? (
                     <p>Your library is synchronizing...</p>
@@ -127,11 +128,11 @@ export default function NewWelcomeTab() {
                 <p></p>
             </SettingsGroup> */}
 
-            {/* <SmartReadingPreview
+            <SmartReadingPreview
                 userInfo={userInfo}
                 darkModeEnabled={darkModeEnabled}
                 reportEvent={reportEventPosthog}
-            /> */}
+            />
         </div>
     );
 }

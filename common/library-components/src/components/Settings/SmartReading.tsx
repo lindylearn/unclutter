@@ -23,6 +23,13 @@ export function SmartReadingPreview({ userInfo, darkModeEnabled, reportEvent }) 
                                 darkModeEnabled={darkModeEnabled}
                                 reportEvent={reportEvent}
                             />
+                            <SettingsButton
+                                title="Import articles"
+                                href="https://my.unclutter.it/import"
+                                inNewTab={false}
+                                darkModeEnabled={darkModeEnabled}
+                                reportEvent={reportEvent}
+                            />
                         </>
                     )}
 
