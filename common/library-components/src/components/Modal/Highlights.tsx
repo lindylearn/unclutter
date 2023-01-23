@@ -152,17 +152,19 @@ export default function HighlightsTab({}: {}) {
                     />
                 )}
 
-                <SearchBox
-                    query={query}
-                    setQuery={setQuery}
-                    placeholder={
-                        annotations === null
-                            ? ""
-                            : `Search across your ${annotations.length} highlight${
-                                  annotations.length !== 1 ? "s" : ""
-                              }...`
-                    }
-                />
+                {userInfo?.aiEnabled && (
+                    <SearchBox
+                        query={query}
+                        setQuery={setQuery}
+                        placeholder={
+                            annotations === null
+                                ? ""
+                                : `Search across your ${annotations.length} highlight${
+                                      annotations.length !== 1 ? "s" : ""
+                                  }...`
+                        }
+                    />
+                )}
             </div>
 
             <div className="grid flex-grow auto-rows-max grid-cols-2 gap-4">

@@ -15,6 +15,13 @@ export interface SearchResult {
     article?: Article;
 }
 
+export async function deleteSearchIndex(idSuffix: string) {
+    try {
+        const indexStore = createStore(`flexsearch-index${idSuffix}`, "keyval");
+        await clear(indexStore);
+    } catch {}
+}
+
 export class SearchIndex {
     private isLoaded = false;
     private index = new Document({

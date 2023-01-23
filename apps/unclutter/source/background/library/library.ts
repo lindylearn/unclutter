@@ -24,6 +24,7 @@ import { refreshSubscriptions } from "@unclutter/library-components/dist/feeds";
 import { fetchRemoteAnnotations, initHighlightsSync } from "./highlights";
 import { getFeatureFlag, hypothesisSyncFeatureFlag } from "../../common/featureFlags";
 import type { UserInfo } from "@unclutter/library-components/dist/store";
+import { deleteSearchIndex } from "@unclutter/library-components/dist/common/search";
 
 // let loadingPromise: Promise<UserInfo | undefined> = undefined;
 export async function initLibraryOnce(isDev: boolean = false): Promise<UserInfo | undefined> {
@@ -62,6 +63,9 @@ async function initLibrary(isDev: boolean = false): Promise<UserInfo | undefined
     } else {
         // local replicache mock doesn't need initialization
     }
+
+    deleteSearchIndex("");
+    deleteSearchIndex("-articles");
 
     // if (isDev) {
     //     await rep.mutate.updateUserInfo({ id: "dev-user", aiEnabled: true });
