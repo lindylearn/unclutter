@@ -3,7 +3,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 
 import NewWelcomeTab from "./NewWelcome";
-import SmartReadingOnboarding from "./Onboarding";
+import SmartReadingOnboarding from "./Import";
 import SmartReadingTab from "./SmartReading";
 
 export default function App() {

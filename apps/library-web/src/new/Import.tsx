@@ -1,5 +1,5 @@
 import { useUser } from "@supabase/auth-helpers-react";
-import { useAutoDarkMode } from "@unclutter/library-components/dist/common";
+import { getBrowserType, useAutoDarkMode } from "@unclutter/library-components/dist/common";
 import { useContext, useEffect, useState } from "react";
 import {
     ReplicacheContext,
@@ -16,6 +16,12 @@ import {
     SettingsGroup,
 } from "@unclutter/library-components/dist/components/Settings/SettingsGroup";
 import { reportEventPosthog } from "../../common/metrics";
+import clsx from "clsx";
+import PocketImportSettings from "./Import/Pocket";
+import InstapaperImportSettings from "./Import/Instapaper";
+import BrowserBookmarksImportSettings from "./Import/Bookmarks";
+import RaindropImportSettings from "./Import/Raindrop";
+import CSVImportSettings from "./Import/CSV";
 
 export default function SmartReadingOnboarding() {
     const rep = useContext(ReplicacheContext);
@@ -41,6 +47,13 @@ export default function SmartReadingOnboarding() {
         // generateHighlights();
     }, [rep, userInfo]);
 
+    useEffect(() => {
+        if (getBrowserType() === "firefox") {
+            importOptions["bookmarks"].iconFile = "firefox.svg";
+            importOptions["bookmarks"].backgroundColor = "bg-orange-100 dark:bg-orange-900";
+        }
+    }, []);
+
     const [progress, setProgress] = useState<ImportProgress>();
     const progressPercentage =
         progress?.currentArticles && progress.currentArticles / progress.targetArticles;
@@ -52,6 +65,8 @@ export default function SmartReadingOnboarding() {
 
         indexLibraryArticles(rep, userInfo, setProgress);
     }
+
+    const [activeOption, setActiveOption] = useState<keyof typeof importOptions>();
 
     if (!userInfo) {
         return <></>;
@@ -117,8 +132,8 @@ export default function SmartReadingOnboarding() {
                         </>
                     ) : (
                         <>
-                            Let's also generate highlights for your {progress?.targetArticles}{" "}
-                            previously saved articles now ({progress?.currentArticles || 0}/
+                            Let's generate highlights for your {progress?.targetArticles} previously
+                            saved articles now ({progress?.currentArticles || 0}/
                             {progress?.targetArticles || 0} done).
                         </>
                     )}
@@ -141,12 +156,99 @@ export default function SmartReadingOnboarding() {
                         />
                     </svg>
                 }
+                buttons={
+                    <>
+                        {Object.entries(importOptions).map(([id, option]) => (
+                            <ImportButton
+                                key={id}
+                                {...option}
+                                onClick={() => setActiveOption(id)}
+                            />
+                        ))}
+                    </>
+                }
             >
                 <p>
                     The more articles in your library, the more related highlights you'll see inside
                     Unclutter. So import the articles you saved inside other apps!
                 </p>
             </SettingsGroup>
+
+            {activeOption && (
+                <SettingsGroup
+                    title={importOptions[activeOption].name}
+                    icon={
+                        <img
+                            className="h-4 w-4"
+                            src={`/logos/${importOptions[activeOption].iconFile}`}
+                        />
+                    }
+                    className={importOptions[activeOption].backgroundColor}
+                    buttons={<></>}
+                >
+                    {activeOption === "pocket" && <PocketImportSettings />}
+                    {activeOption === "instapaper" && <InstapaperImportSettings />}
+                    {activeOption === "bookmarks" && <BrowserBookmarksImportSettings />}
+                    {activeOption === "raindrop" && <RaindropImportSettings />}
+                    {activeOption === "csv" && <CSVImportSettings />}
+                </SettingsGroup>
+            )}
         </div>
     );
 }
+
+function ImportButton({ iconFile, name, backgroundColor, onClick }) {
+    return (
+        <button
+            className={clsx(
+                "relative flex cursor-pointer select-none items-center rounded-md py-1 px-2 font-medium transition-transform hover:scale-[97%]",
+                true && "dark:text-stone-800",
+                backgroundColor
+            )}
+            onClick={onClick}
+        >
+            <img className="mr-2 inline-block h-4 w-4" src={`/logos/${iconFile}`} />
+            {name}
+        </button>
+    );
+}
+
+export type ArticleImportSchema = {
+    urls: string[];
+    time_added?: number[];
+    status?: number[];
+    favorite?: number[];
+};
+
+type ImportOption = {
+    name: string;
+    iconFile: string;
+    backgroundColor: string;
+};
+const importOptions: { [id: string]: ImportOption } = {
+    pocket: {
+        name: "Import Pocket",
+        iconFile: "pocket.png",
+        backgroundColor: "bg-red-100 dark:bg-red-900",
+    },
+    instapaper: {
+        name: "Import Instapaper",
+        iconFile: "instapaper.png",
+        backgroundColor: "bg-gray-100 dark:bg-gray-800",
+    },
+    bookmarks: {
+        name: "Import Bookmarks",
+        iconFile: "chrome.svg",
+        backgroundColor: "bg-gray-200 dark:bg-gray-700",
+    },
+    raindrop: {
+        name: "Import Raindrop",
+        iconFile: "raindrop.svg",
+        backgroundColor: "bg-blue-100 dark:bg-blue-900",
+    },
+    csv: {
+        name: "Import CSV",
+        iconFile: "csv.svg",
+        backgroundColor: "bg-green-100 dark:bg-green-900",
+    },
+};

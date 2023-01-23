@@ -30,7 +30,7 @@ export function SettingsGroup({
             </h2>
             <div className="flex max-w-2xl flex-col gap-2 px-4 pb-3">
                 {children}
-                {buttons && <div className="mt-1 flex gap-3">{buttons}</div>}
+                {buttons && <div className="mt-1 flex flex-wrap gap-3">{buttons}</div>}
             </div>
 
             {imageSrc && (
@@ -50,6 +50,7 @@ export function SettingsButton({
     primary,
     darkModeEnabled,
     isNew,
+    className,
     inNewTab = true,
     reportEvent,
 }: {
@@ -60,15 +61,17 @@ export function SettingsButton({
     darkModeEnabled: boolean;
     isNew?: boolean;
     inNewTab?: boolean;
+    className?: string;
     reportEvent: (event: string, data?: any) => void;
 }) {
     return (
         <a
             className={clsx(
                 "relative cursor-pointer select-none rounded-md py-1 px-2 font-medium transition-transform hover:scale-[97%]",
-                true && "dark:text-stone-800"
+                true && "dark:text-stone-800",
+                className
             )}
-            style={{ background: getActivityColor(primary ? 3 : 3, false) }}
+            style={{ background: !className ? getActivityColor(primary ? 3 : 3, false) : "" }}
             onClick={() => {
                 onClick?.();
                 reportEvent("clickSettingsButton", { title });
@@ -79,11 +82,11 @@ export function SettingsButton({
         >
             {title}
 
-            {isNew && (
+            {/* {isNew && (
                 <div className="bg-lindy dark:bg-lindyDark absolute -top-2 -right-5 z-20 rounded-md px-1 text-sm leading-tight dark:text-[rgb(232,230,227)]">
                     New
                 </div>
-            )}
+            )} */}
         </a>
     );
 }
