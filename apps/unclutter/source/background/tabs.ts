@@ -34,10 +34,10 @@ export class TabStateManager {
         this.onCloseTab(tabId);
 
         this.tabAnnotations[tabId] = await rep.query.listArticleAnnotations(articleId);
-        // this.relatedAnnotationsCount[tabId] = await getRelatedAnnotationsCount(
-        //     this.userInfo,
-        //     this.tabAnnotations[tabId]
-        // );
+        this.relatedAnnotationsCount[tabId] = await getRelatedAnnotationsCount(
+            this.userInfo,
+            this.tabAnnotations[tabId]
+        );
         this.renderBadgeCount(tabId);
 
         return !!this.tabAnnotations[tabId]?.length;
@@ -59,10 +59,10 @@ export class TabStateManager {
         }
 
         this.tabAnnotations[tabId] = annotations;
-        // this.relatedAnnotationsCount[tabId] = await getRelatedAnnotationsCount(
-        //     this.userInfo,
-        //     annotations
-        // );
+        this.relatedAnnotationsCount[tabId] = await getRelatedAnnotationsCount(
+            this.userInfo,
+            annotations
+        );
 
         this.renderBadgeCount(tabId);
     }
@@ -77,8 +77,8 @@ export class TabStateManager {
     }
 
     private async renderBadgeCount(tabId: number) {
-        // const badgeCount = this.relatedAnnotationsCount[tabId];
-        const badgeCount = this.tabAnnotations[tabId]?.length;
+        const badgeCount = this.relatedAnnotationsCount[tabId];
+        // const badgeCount = this.tabAnnotations[tabId]?.length;
 
         const text = badgeCount ? badgeCount.toString() : "";
 
