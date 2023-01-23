@@ -92,6 +92,7 @@ async function uploadAnnotations() {
         : 0;
     annotations = annotations
         .filter((a) => a.updated_at > lastUploadUnix)
+        .filter((a) => !a.ai_created || a.text)
         .sort((a, b) => a.updated_at - b.updated_at); // sort with oldest first
     if (annotations.length === 0) {
         await updateHypothesisSyncState({
