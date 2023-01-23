@@ -19,7 +19,7 @@ import {
     processLocalReplicacheWatch,
 } from "./replicacheLocal";
 import { deleteAllLocalScreenshots } from "./screenshots";
-import { initSearchIndex } from "./search";
+// import { initSearchIndex } from "./search";
 import { refreshSubscriptions } from "@unclutter/library-components/dist/feeds";
 import { fetchRemoteAnnotations, initHighlightsSync } from "./highlights";
 import { getFeatureFlag, hypothesisSyncFeatureFlag } from "../../common/featureFlags";
@@ -57,7 +57,7 @@ async function initLibrary(isDev: boolean = false): Promise<UserInfo | undefined
         const migrated = await migrateToAccount();
         if (migrated) {
             // rebuild index after data migration
-            await initSearchIndex(true);
+            // await initSearchIndex(true);
         }
     } else {
         // local replicache mock doesn't need initialization
@@ -68,7 +68,7 @@ async function initLibrary(isDev: boolean = false): Promise<UserInfo | undefined
     // }
     const userInfo = await rep.query.getUserInfo();
 
-    await initSearchIndex();
+    // await initSearchIndex();
     await initHighlightsSync();
 
     return userInfo;

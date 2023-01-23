@@ -1,8 +1,20 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useDebounce } from "usehooks-ts";
 import { FilterButton } from "./Recent";
-import { getBrowser, getDomain, getRandomLightColor, getUnclutterExtensionId } from "../../common";
-import { AnnotationWithArticle, ReplicacheContext, UserInfo, useSubscribe } from "../../store";
+import {
+    fetchRelatedAnnotations,
+    getBrowser,
+    getDomain,
+    getRandomLightColor,
+    getUnclutterExtensionId,
+} from "../../common";
+import {
+    AnnotationWithArticle,
+    ReplicacheContext,
+    RuntimeReplicache,
+    UserInfo,
+    useSubscribe,
+} from "../../store";
 import { Highlight } from "../Highlight";
 import { SearchBox } from "./components/search";
 import { FilterContext, ModalStateContext } from "./context";
@@ -74,12 +86,12 @@ export default function HighlightsTab({}: {}) {
     }, [query]);
     const queryDebounced = useDebounce(query, 200);
     useEffect(() => {
-        if (!query || !rep) {
+        if (!query || !rep || !userInfo) {
             return;
         }
 
-        localSparseSearch(query).then(setSearchedAnnotations);
-        // vectorSearch(rep, query).then(setSearchedAnnotations);
+        // localSparseSearch(query).then(setSearchedAnnotations);
+        vectorSearch(rep, query, userInfo).then(setSearchedAnnotations);
 
         reportEvent("highlightsSearch");
     }, [queryDebounced]);
@@ -174,45 +186,44 @@ export default function HighlightsTab({}: {}) {
     );
 }
 
-async function localSparseSearch(query: string): Promise<AnnotationWithArticle[]> {
-    let hits = await getBrowser().runtime.sendMessage(getUnclutterExtensionId(), {
-        event: "searchLibrary",
-        type: "annotations",
-        query,
-    });
-    if (!hits) {
-        hits = [];
-    }
+// async function localSparseSearch(query: string): Promise<AnnotationWithArticle[]> {
+//     let hits = await getBrowser().runtime.sendMessage(getUnclutterExtensionId(), {
+//         event: "searchLibrary",
+//         type: "annotations",
+//         query,
+//     });
+//     if (!hits) {
+//         hits = [];
+//     }
 
-    return hits.map((h) => {
-        h.annotation.article = h.article;
-        return h.annotation;
-    });
-}
-
-// async function vectorSearch(
-//     rep: RuntimeReplicache,
-//     query: string
-// ): Promise<AnnotationWithArticle[]> {
-//     const userId = "";
-//     const hits = await fetchRelatedAnnotations(userId, undefined, [query], 0.0, false);
-
-//     const annotations = await Promise.all(
-//         hits[0].map(async (hit) => {
-//             const annotation = await rep.query.getAnnotation(hit.id);
-//             const article =
-//                 annotation?.article_id && (await rep.query.getArticle(annotation.article_id));
-//             return {
-//                 ...hit,
-//                 ...annotation,
-//                 text: hit.excerpt,
-//                 ai_score: hit.score,
-//                 article,
-//             };
-//         })
-//     );
-//     console.log(annotations);
-
-//     // @ts-ignore
-//     return annotations;
+//     return hits.map((h) => {
+//         h.annotation.article = h.article;
+//         return h.annotation;
+//     });
 // }
+
+async function vectorSearch(
+    rep: RuntimeReplicache,
+    query: string,
+    userInfo: UserInfo
+): Promise<AnnotationWithArticle[]> {
+    const hits = await fetchRelatedAnnotations(userInfo.id, undefined, [query], 0.0, false);
+
+    const annotations = await Promise.all(
+        hits[0].map(async (hit) => {
+            const annotation = await rep.query.getAnnotation(hit.id);
+            const article =
+                annotation?.article_id && (await rep.query.getArticle(annotation.article_id));
+            return {
+                ...hit,
+                ...annotation,
+                text: hit.excerpt,
+                ai_score: hit.score,
+                article,
+            };
+        })
+    );
+
+    // @ts-ignore
+    return annotations;
+}
