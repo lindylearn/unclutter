@@ -5,11 +5,7 @@ import { z } from "zod";
 import type { PullResponse } from "replicache";
 import partition from "lodash/partition";
 
-import {
-  PartialSyncState,
-  partialSyncStateSchema,
-  PARTIAL_SYNC_STATE_KEY,
-} from "@unclutter/library-components/dist/store";
+import { partialSyncStateSchema } from "@unclutter/library-components/dist/store";
 
 const cookieSchema = z.union([
   z.object({
@@ -77,108 +73,107 @@ export async function pull(
   // by default only process article entries
   entries = normalEntries;
 
-  const limit = 100;
+  // const limit = 100;
+  // const t1 = Date.now();
+  // let partialSyncState: PartialSyncState = "PARTIAL_SYNC_COMPLETE";
+  // if (!requestCookie) {
+  //   // initial pull: only return articles and set up partial sync
+  //   console.log(`Initial pull`);
+  //   partialSyncState = {
+  //     minVersion: 0,
+  //     maxVersion: responseCookieVersion,
+  //     endKey: "",
+  //   };
+  // } else if (
+  //   requestCookie.partialSync === "PARTIAL_SYNC_COMPLETE" &&
+  //   textEntries.length !== 0
+  // ) {
+  //   // changed entries include fulltext changes, otherwise client up-to-date
 
-  const t1 = Date.now();
-  let partialSyncState: PartialSyncState = "PARTIAL_SYNC_COMPLETE";
-  if (!requestCookie) {
-    // initial pull: only return articles and set up partial sync
-    console.log(`Initial pull`);
-    partialSyncState = {
-      minVersion: 0,
-      maxVersion: responseCookieVersion,
-      endKey: "",
-    };
-  } else if (
-    requestCookie.partialSync === "PARTIAL_SYNC_COMPLETE" &&
-    textEntries.length !== 0
-  ) {
-    // changed entries include fulltext changes, otherwise client up-to-date
+  //   if (textEntries.length < limit) {
+  //     // process few text entries in same pull (e.g. for single articles)
+  //     console.log(`Including ${textEntries.length} text entries in main pull`);
+  //     entries = entries.concat(textEntries);
+  //     partialSyncState = "PARTIAL_SYNC_COMPLETE";
+  //   } else {
+  //     // start new partial sync
+  //     console.log(`Queued partial pull for ${textEntries.length} text entries`);
+  //     partialSyncState = {
+  //       minVersion: requestCookie.version,
+  //       maxVersion: responseCookieVersion,
+  //       endKey: "",
+  //     };
+  //   }
+  // } else if (requestCookie.partialSync !== "PARTIAL_SYNC_COMPLETE") {
+  //   // finish ongoing partial sync
+  //   const partialMinVersion = requestCookie.partialSync.minVersion;
+  //   const partialMaxVersion = requestCookie.partialSync.maxVersion;
+  //   const partialStartKey = requestCookie.partialSync.endKey;
 
-    if (textEntries.length < limit) {
-      // process few text entries in same pull (e.g. for single articles)
-      console.log(`Including ${textEntries.length} text entries in main pull`);
-      entries = entries.concat(textEntries);
-      partialSyncState = "PARTIAL_SYNC_COMPLETE";
-    } else {
-      // start new partial sync
-      console.log(`Queued partial pull for ${textEntries.length} text entries`);
-      partialSyncState = {
-        minVersion: requestCookie.version,
-        maxVersion: responseCookieVersion,
-        endKey: "",
-      };
-    }
-  } else if (requestCookie.partialSync !== "PARTIAL_SYNC_COMPLETE") {
-    // finish ongoing partial sync
-    const partialMinVersion = requestCookie.partialSync.minVersion;
-    const partialMaxVersion = requestCookie.partialSync.maxVersion;
-    const partialStartKey = requestCookie.partialSync.endKey;
+  //   const incrementalEntries = await transact(async (executor) => {
+  //     // fetch all articles to sync
+  //     // TODO implement custom queries
+  //     const allEntries = await getChangedEntries(
+  //       executor,
+  //       spaceID,
+  //       partialMinVersion,
+  //       partialMaxVersion
+  //     );
+  //     const fulltextEntries = allEntries
+  //       .filter((e) => e[0].startsWith("text/"))
+  //       .filter((e) => e[0] > partialStartKey);
 
-    const incrementalEntries = await transact(async (executor) => {
-      // fetch all articles to sync
-      // TODO implement custom queries
-      const allEntries = await getChangedEntries(
-        executor,
-        spaceID,
-        partialMinVersion,
-        partialMaxVersion
-      );
-      const fulltextEntries = allEntries
-        .filter((e) => e[0].startsWith("text/"))
-        .filter((e) => e[0] > partialStartKey);
+  //     const incrementalEntries = fulltextEntries.slice(0, limit);
 
-      const incrementalEntries = fulltextEntries.slice(0, limit);
+  //     console.log(
+  //       `Continuing partial pull with ${incrementalEntries.length} entries (${
+  //         fulltextEntries.length - incrementalEntries.length
+  //       } left)`
+  //     );
+  //     return incrementalEntries;
+  //   });
 
-      console.log(
-        `Continuing partial pull with ${incrementalEntries.length} entries (${
-          fulltextEntries.length - incrementalEntries.length
-        } left)`
-      );
-      return incrementalEntries;
-    });
+  //   const endKey = incrementalEntries[incrementalEntries.length - 1]?.[0];
+  //   entries = entries.concat(incrementalEntries);
 
-    const endKey = incrementalEntries[incrementalEntries.length - 1]?.[0];
-    entries = entries.concat(incrementalEntries);
+  //   if (incrementalEntries.length === limit) {
+  //     // this partial sync not done
+  //     partialSyncState = {
+  //       minVersion: partialMinVersion,
+  //       maxVersion: partialMaxVersion,
+  //       endKey: endKey,
+  //     };
+  //   } else {
+  //     // this partial sync is done
 
-    if (incrementalEntries.length === limit) {
-      // this partial sync not done
-      partialSyncState = {
-        minVersion: partialMinVersion,
-        maxVersion: partialMaxVersion,
-        endKey: endKey,
-      };
-    } else {
-      // this partial sync is done
-
-      if (partialMaxVersion < responseCookieVersion) {
-        // but need to check newer versions
-        console.log(`Queued partial pull for newer version`);
-        partialSyncState = {
-          minVersion: partialMaxVersion,
-          maxVersion: responseCookieVersion,
-          endKey: "",
-        };
-      } else {
-        partialSyncState = "PARTIAL_SYNC_COMPLETE";
-      }
-    }
-  }
-  console.log(`Processed partial sync in ${Date.now() - t1}ms`);
+  //     if (partialMaxVersion < responseCookieVersion) {
+  //       // but need to check newer versions
+  //       console.log(`Queued partial pull for newer version`);
+  //       partialSyncState = {
+  //         minVersion: partialMaxVersion,
+  //         maxVersion: responseCookieVersion,
+  //         endKey: "",
+  //       };
+  //     } else {
+  //       partialSyncState = "PARTIAL_SYNC_COMPLETE";
+  //     }
+  //   }
+  // }
+  // console.log(`Processed partial sync in ${Date.now() - t1}ms`);
 
   // create sync state entry to re-trigger pull in frontend
-  if (requestCookie?.partialSync !== partialSyncState) {
-    entries.push([
-      PARTIAL_SYNC_STATE_KEY,
-      JSON.stringify(partialSyncState),
-      false,
-    ]);
-  }
+  // if (requestCookie?.partialSync !== partialSyncState) {
+  //   entries.push([
+  //     PARTIAL_SYNC_STATE_KEY,
+  //     JSON.stringify(partialSyncState),
+  //     false,
+  //   ]);
+  // }
 
   // set cookie for next pull
   const responseCookie = {
     version: responseCookieVersion,
-    partialSync: partialSyncState,
+    // partialSync: partialSyncState,
   };
 
   console.log("lastMutationID: ", lastMutationID);
