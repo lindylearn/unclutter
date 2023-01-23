@@ -8,7 +8,8 @@ import {
 } from "@unclutter/library-components/dist/common/messaging";
 import { ReplicacheProxy } from "@unclutter/library-components/dist/common/replicache";
 import { showLibrarySignupFlag } from "../../common/featureFlags";
-import { constructLocalArticleInfo, LibraryInfo, LibraryState } from "../../common/schema";
+import type { LibraryInfo, LibraryState } from "../../common/schema";
+import { constructLocalArticle } from "@unclutter/library-components/dist/common/util";
 import ReadingTimeModifier from "./DOM/readingTime";
 import AnnotationsModifier from "./annotations/annotationsModifier";
 import { readingProgressFullClamp } from "@unclutter/library-components/dist/store/constants";
@@ -98,11 +99,13 @@ export default class LibraryModifier implements PageModifier {
                 this.notifyLibraryStateListeners();
 
                 // immediately create rough local state to allow updates
-                this.libraryState.libraryInfo = constructLocalArticleInfo(
-                    this.articleUrl,
-                    this.articleId,
-                    this.articleTitle
-                );
+                this.libraryState.libraryInfo = {
+                    article: constructLocalArticle(
+                        this.articleUrl,
+                        this.articleId,
+                        this.articleTitle
+                    ),
+                };
             } else {
                 // use existing state
                 this.libraryState.wasAlreadyPresent = true;

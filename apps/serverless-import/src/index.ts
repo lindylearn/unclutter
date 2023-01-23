@@ -52,7 +52,7 @@ export async function main(req: Request, res: Response) {
         scoreThreshold
     );
 
-    res.send({ annotations });
+    res.send({ annotations, title: document.title, word_count: paragraphTexts.join(" ").length });
 }
 
 export function handledCors(req: Request, res: Response<any>): boolean {

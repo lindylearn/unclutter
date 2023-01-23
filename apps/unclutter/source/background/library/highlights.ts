@@ -4,7 +4,6 @@ import { debounce, groupBy } from "lodash";
 import { LindyAnnotation, pickleLocalAnnotation } from "../../common/annotations/create";
 import { getHypothesisUsername } from "../../common/annotations/storage";
 import { getFeatureFlag, hypothesisSyncFeatureFlag } from "../../common/featureFlags";
-import { constructLocalArticleInfo } from "../../common/schema";
 import { getHypothesisSyncState, updateHypothesisSyncState } from "../../common/storage";
 import {
     createRemoteAnnotation,

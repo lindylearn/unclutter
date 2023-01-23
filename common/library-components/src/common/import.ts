@@ -3,6 +3,8 @@ import type { ArticleImportSchema } from "../components";
 
 import { Annotation, Article, RuntimeReplicache, UserInfo } from "../store";
 import { indexAnnotationVectors } from "./api";
+import { getUrlHash } from "./url";
+import { constructLocalArticle } from "./util";
 
 export interface ImportProgress {
     finished?: boolean;
@@ -42,8 +44,6 @@ export async function importArticles(
     )) {
         articleCount += 1;
         highlightCount += newHighlights;
-
-        console.log(`${articleCount}/${data.urls.length}`);
         onProgress?.({
             currentArticles: articleCount,
             targetArticles: data.urls.length,
@@ -91,8 +91,6 @@ export async function backfillLibraryAnnotations(
     )) {
         articleCount += 1;
         highlightCount += newHighlights;
-
-        console.log(`${articleCount}/${articles.length}`);
         onProgress?.({
             currentArticles: articleCount,
             targetArticles: articles.length,
@@ -120,7 +118,39 @@ async function importArticle(
     status?: number,
     favorite?: number
 ) {
-    console.log(url);
+    try {
+        // filter out non-articles
+        const urlObj = new URL(url);
+        if (urlObj.pathname === "/") {
+            return 0;
+        }
+
+        console.log(url);
+        const article_id = getUrlHash(url);
+        const { annotations, title, word_count } = await generateAnnotationsRemote(url, article_id);
+
+        const article = constructLocalArticle(url, article_id, title || "");
+        article.time_added = time_added || 0;
+        article.reading_progress = status || 0;
+        article.is_favorite = favorite === 1;
+        article.word_count = word_count || 0;
+        // article.publication_date = ???
+        await rep.mutate.putArticleIfNotExists(article);
+
+        await Promise.all(annotations.map((a) => rep.mutate.putAnnotation(a)));
+        await indexAnnotationVectors(
+            user_id,
+            article.id,
+            annotations.map((a) => a.quote_text!),
+            annotations.map((a) => a.id),
+            false
+        );
+
+        return annotations.length;
+    } catch (err) {
+        console.error(err);
+        return 0;
+    }
 }
 
 async function generateAnnotations(
@@ -129,7 +159,7 @@ async function generateAnnotations(
     article: Article
 ): Promise<number> {
     try {
-        const annotations = await generateAnnotationsRemote(article.url, article.id);
+        const { annotations } = await generateAnnotationsRemote(article.url, article.id);
 
         await Promise.all(annotations.map((a) => rep.mutate.putAnnotation(a)));
         await indexAnnotationVectors(
@@ -151,7 +181,7 @@ async function generateAnnotationsRemote(
     url: string,
     article_id: string,
     score_threshold: number = 0.6
-): Promise<Annotation[]> {
+): Promise<{ annotations: Annotation[]; title?: string; word_count?: number }> {
     const response = await fetch("https://serverless-import-jumq7esahq-ue.a.run.app", {
         method: "POST",
         headers: {
@@ -164,9 +194,11 @@ async function generateAnnotationsRemote(
         }),
     });
     if (!response.ok) {
-        return [];
+        return {
+            annotations: [],
+        };
     }
 
     const data = await response.json();
-    return data.annotations || [];
+    return data || { annotations: [] };
 }

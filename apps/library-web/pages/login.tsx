@@ -23,7 +23,8 @@ export default function LoginPage({ isSignup = false }) {
     const origin = typeof window !== "undefined" ? window.location.origin : "";
 
     return (
-        <div className="min-h-screen bg-white p-10 text-stone-800 dark:bg-[#212121] dark:text-[rgb(232,230,227)]">
+        // dark:bg-[#212121] dark:text-[rgb(232,230,227)]
+        <div className="min-h-screen bg-white p-10 text-stone-800">
             <Head>
                 <title>Unclutter Login</title>
             </Head>

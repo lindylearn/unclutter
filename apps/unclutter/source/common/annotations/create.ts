@@ -1,7 +1,7 @@
 import type { RelatedHighlight } from "@unclutter/library-components/dist/common/api";
 import { getUrlHash } from "@unclutter/library-components/dist/common/url";
+import { constructLocalArticle } from "@unclutter/library-components/dist/common/util";
 import type { Annotation, Article } from "@unclutter/library-components/dist/store/_schema";
-import { constructLocalArticleInfo } from "../schema";
 
 export function createDraftAnnotation(
     article_id: string,
@@ -136,11 +136,7 @@ export function hypothesisToLindyFormat(annotation: any, currentUsername: string
         isPublic: annotation.permissions.read[0] === "group:__world__",
         reply_to: annotation.references?.[annotation.references.length - 1],
 
-        article: constructLocalArticleInfo(
-            annotation.uri,
-            article_id,
-            annotation.document.title?.[0]
-        ).article,
+        article: constructLocalArticle(annotation.uri, article_id, annotation.document.title?.[0]),
     };
 }
 
