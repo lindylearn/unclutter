@@ -71,12 +71,13 @@ export function handledCors(req: Request, res: Response<any>): boolean {
 // main(
 //     {
 //         body: {
-//             url: "https://stratechery.com/2015/netflix-and-the-conservation-of-attractive-profits/",
+//             url: "https://www.generalist.com/briefing/the-generalist-year-two",
 //             article_id: "test",
 //         },
 //     } as Request,
 //     {
-//         send: console.log,
+//         // send: console.log,
+//         send: (response) => console.log(response.annotations.map((a) => a.quote_text)),
 //         status: (code: number) => {
 //             console.log(code);
 //             return {

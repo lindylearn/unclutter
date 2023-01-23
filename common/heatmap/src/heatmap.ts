@@ -78,49 +78,49 @@ export async function getHeatmap(
     return groupedSentenceScores;
 }
 
-function tweakUSEMatrix(matrix: number[][]) {
-    for (let i = 0; i < matrix.length; i++) {
-        for (let j = 0; j < matrix.length; j++) {
-            matrix[i][j] = matrix[i][j] * 1.5;
-        }
-    }
-}
+// function tweakUSEMatrix(matrix: number[][]) {
+//     for (let i = 0; i < matrix.length; i++) {
+//         for (let j = 0; j < matrix.length; j++) {
+//             matrix[i][j] = matrix[i][j] * 1.5;
+//         }
+//     }
+// }
 
-function globalMMR(
-    sentences: string[],
-    sentenceScores: number[],
-    sentence_paragraph: number[],
-    matrix: number[][],
-    topN = 10,
-    diversity = 0.3
-) {
-    const mmrScores = sentenceScores.map((globalScore, i) => {
-        // const similaritySum = matrix[i].reduce(
-        //     (sum, similarity, j) => (i === j ? 0 : sum + similarity),
-        //     0
-        // );
-        // const diversityScore = similaritySum / sentences.length;
-        // const mmrScore = (1 - diversity) * globalScore - diversity * diversityScore;
-        // console.log(mmrScore, globalScore, diversityScore, sentences[i]);
+// function globalMMR(
+//     sentences: string[],
+//     sentenceScores: number[],
+//     sentence_paragraph: number[],
+//     matrix: number[][],
+//     topN = 10,
+//     diversity = 0.3
+// ) {
+//     const mmrScores = sentenceScores.map((globalScore, i) => {
+//         // const similaritySum = matrix[i].reduce(
+//         //     (sum, similarity, j) => (i === j ? 0 : sum + similarity),
+//         //     0
+//         // );
+//         // const diversityScore = similaritySum / sentences.length;
+//         // const mmrScore = (1 - diversity) * globalScore - diversity * diversityScore;
+//         // console.log(mmrScore, globalScore, diversityScore, sentences[i]);
 
-        return [globalScore, i];
-    });
+//         return [globalScore, i];
+//     });
 
-    const pickedIndexes = new Set(
-        mmrScores
-            .sort((a, b) => b[0] - a[0])
-            .slice(0, topN)
-            .map((e) => e[1])
-    );
+//     const pickedIndexes = new Set(
+//         mmrScores
+//             .sort((a, b) => b[0] - a[0])
+//             .slice(0, topN)
+//             .map((e) => e[1])
+//     );
 
-    for (let i = 0; i < sentences.length; i++) {
-        if (pickedIndexes.has(i)) {
-            continue;
-        } else {
-            sentenceScores[i] = 0.59;
-        }
-    }
-}
+//     for (let i = 0; i < sentences.length; i++) {
+//         if (pickedIndexes.has(i)) {
+//             continue;
+//         } else {
+//             sentenceScores[i] = 0.59;
+//         }
+//     }
+// }
 
 function combineRelatedSentences(
     sentences: string[],
@@ -160,7 +160,7 @@ function combineRelatedSentences(
         // console.log(scoreDifference, similarity, [currentSentences.join(" "), sentences[i]]);
         if (
             sentence_paragraph[i] === sentence_paragraph[i - 1] &&
-            (similarity > 0.6 || scoreDifference < 0.2)
+            (similarity >= 0.4 || scoreDifference <= 0.3)
         ) {
             // append to current group
             // console.log(scoreDifference, similarity, [currentSentences.join(" "), sentences[i]]);
