@@ -408,6 +408,10 @@
         ".header-legacy__direct-tv",
         ".c-signature-wrapper"
     ],
+    "futurism.com": [
+        "#empire-unit-sticky_footer__desktop-0",
+        ".remixd-audio-player"
+    ],
     "gamedev.stackexchange.com": [
         ".votecell.post-layout--left",
         ".d-flex.fd-column.ai-center.wmn3.hero-background",
@@ -990,7 +994,6 @@
     "pureinfotech.com": [
         ".attachment-large.size-large.wp-post-image.jetpack-lazy-image.jetpack-lazy-image--handled"
     ],
-    "quizlet.com": [".SetPageTerm-imageWrap"],
     "pv-magazine.com": [
         "#mid-article-bibblio",
         ".bib__image",
@@ -999,6 +1002,7 @@
         ".bib--rcm-init",
         ".pv-bibblio-events"
     ],
+    "quizlet.com": [".SetPageTerm-imageWrap"],
     "radreads.co": [".tcb-flex-col"],
     "realpython.com": [".small.text-muted"],
     "rebble.io": ["#index"],
