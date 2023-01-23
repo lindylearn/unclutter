@@ -8,7 +8,8 @@
     export let outline: OutlineItem[];
     export let activeOutlineIndex: number;
     export let annotationsEnabled: boolean;
-    export let totalAnnotationCount: number;
+    export let totalAnnotationCount: number | undefined;
+    export let totalRelatedCount: number | undefined;
     export let readingTimeLeft: number = null;
 </script>
 
@@ -17,7 +18,7 @@
     class="relative max-w-full cursor-auto rounded-lg bg-white p-3 px-4 shadow transition-all"
 >
     <div>
-        <div class="flex justify-between">
+        <div class="flex justify-between gap-2">
             <div
                 class="font-title cursor-pointer select-none text-base font-semibold leading-tight"
                 on:click={() => scrollToElement(outline[0].element)}
@@ -25,7 +26,11 @@
                 {outline[0]?.title}
             </div>
 
-            <!-- <ResourceStat type="highlights" value={totalAnnotationCount} /> -->
+            {#if totalRelatedCount === undefined}
+                <div class="loader h-4 w-4 shrink-0" />
+            {:else}
+                <ResourceStat type="related" value={totalRelatedCount} />
+            {/if}
         </div>
 
         <div class="">
@@ -87,6 +92,43 @@
         }
         100% {
             opacity: 1;
+        }
+    }
+
+    .loader {
+        border-radius: 50%;
+        position: relative;
+        animation: rotate 1s linear infinite;
+    }
+    .loader::before {
+        content: "";
+        box-sizing: border-box;
+        position: absolute;
+        inset: 0px;
+        border-radius: 50%;
+        border: 2px solid currentColor;
+        animation: prixClipFix 5s linear infinite;
+    }
+    @keyframes rotate {
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+    @keyframes prixClipFix {
+        0% {
+            clip-path: polygon(50% 50%, 0 0, 0 0, 0 0, 0 0, 0 0);
+        }
+        25% {
+            clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 0, 100% 0, 100% 0);
+        }
+        50% {
+            clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 100% 100%, 100% 100%);
+        }
+        75% {
+            clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 100%);
+        }
+        100% {
+            clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 0);
         }
     }
 </style>

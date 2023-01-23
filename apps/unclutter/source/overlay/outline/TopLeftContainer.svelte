@@ -9,13 +9,14 @@
     } from "../../common/updateMessages";
     import LibraryModalModifier from "../../content-script/modifications/libraryModal";
     import clsx from "clsx";
-    import SubscribeMessage from "./Library/SubscribeMessage.svelte";
+    // import SubscribeMessage from "./Library/SubscribeMessage.svelte";
     import LibraryModifier from "../../content-script/modifications/library";
 
     export let outline: OutlineItem[];
     export let activeOutlineIndex: number;
     export let annotationsEnabled: boolean;
-    export let totalAnnotationCount: number = 0;
+    export let totalAnnotationCount: number | undefined;
+    export let totalRelatedCount: number | undefined;
     export let readingTimeLeft: number = null;
     export let libraryState: LibraryState;
     export let darkModeEnabled: boolean;
@@ -54,6 +55,7 @@
         {activeOutlineIndex}
         {annotationsEnabled}
         {totalAnnotationCount}
+        {totalRelatedCount}
         {readingTimeLeft}
     />
 

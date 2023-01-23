@@ -7,8 +7,10 @@ export interface OutlineItem {
     level: number;
     element: Element;
     children: OutlineItem[];
+
     myAnnotationCount?: number;
     socialCommentsCount?: number;
+    relatedCount?: number;
 }
 
 const contentBlocklist = [

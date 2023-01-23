@@ -313,8 +313,9 @@ export default class OverlayManager implements PageModifier {
     }
 
     // listen to annotation updates and attribute to outline heading
-    private totalAnnotationCount = 0;
-    private totalSocialCommentsCount = 0;
+    private totalAnnotationCount?: number;
+    private totalSocialCommentsCount?: number;
+    private totalRelatedCount?: number;
     private async onAnnotationUpdate(
         action: "set" | "add" | "remove",
         annotations: LindyAnnotation[]
@@ -336,9 +337,11 @@ export default class OverlayManager implements PageModifier {
             // reset state
             this.totalAnnotationCount = 0;
             this.totalSocialCommentsCount = 0;
+            this.totalRelatedCount = 0;
             this.flatOutline.map((_, index) => {
                 this.flatOutline[index].myAnnotationCount = 0;
                 this.flatOutline[index].socialCommentsCount = 0;
+                this.flatOutline[index].relatedCount = 0;
             });
         }
 
@@ -346,6 +349,13 @@ export default class OverlayManager implements PageModifier {
             const outlineIndex = this.getOutlineIndexForAnnotation(annotation);
 
             if (annotation.ai_created) {
+                if (action === "set" || action === "add") {
+                    this.totalRelatedCount += 1;
+                    this.flatOutline[outlineIndex].relatedCount += 1;
+                } else if (action === "remove") {
+                    this.totalRelatedCount -= 1;
+                    this.flatOutline[outlineIndex].relatedCount -= 1;
+                }
             } else if (!annotation.isMyAnnotation) {
                 if (action === "set" || action === "add") {
                     this.totalSocialCommentsCount += 1;
@@ -367,6 +377,7 @@ export default class OverlayManager implements PageModifier {
 
         this.topleftSvelteComponent?.$set({
             totalAnnotationCount: this.totalAnnotationCount,
+            totalRelatedCount: this.totalRelatedCount,
             outline: this.outline,
         });
 
@@ -400,13 +411,17 @@ export default class OverlayManager implements PageModifier {
             return null;
         }
 
-        // TODO cache outline offsets?
+        const annotationNode = document.getElementById(annotation.id);
+        if (!annotationNode) {
+            return;
+        }
+        const annotationOffset = getElementYOffset(annotationNode);
 
         let lastIndex: number = 0;
         while (lastIndex + 1 < this.flatOutline.length) {
             const item = this.flatOutline[lastIndex + 1];
             const startOffset = getElementYOffset(item.element);
-            if (annotation.displayOffset < startOffset) {
+            if (annotationOffset < startOffset) {
                 break;
             }
 
