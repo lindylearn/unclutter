@@ -182,7 +182,6 @@ function ModalContent({
                 {/* {currentTab === "signup" && (
                     <UpgradeModalTab darkModeEnabled={darkModeEnabled} reportEvent={reportEvent} />
                 )} */}
-                {/* {currentTab === "sync" && <SyncModalTab />} */}
                 {currentTab === "settings" && <SettingsModalTab />}
             </div>
         </div>

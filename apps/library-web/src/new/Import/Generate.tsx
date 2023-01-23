@@ -1,6 +1,6 @@
 import {
     ImportProgress,
-    indexLibraryArticles,
+    backfillLibraryAnnotations,
 } from "@unclutter/library-components/dist/common/import";
 import {
     SettingsButton,
@@ -16,7 +16,7 @@ export function GenerateSection({ rep, userInfo, darkModeEnabled }) {
             return;
         }
 
-        indexLibraryArticles(rep, userInfo, setGenerateProgress);
+        backfillLibraryAnnotations(rep, userInfo, setGenerateProgress);
     }
 
     return (

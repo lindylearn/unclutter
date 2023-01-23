@@ -39,13 +39,13 @@ export function SettingsGroup({
                         {progress?.finished ? (
                             <>
                                 Done! Unclutter generated {progress?.currentHighlights} highlights
-                                across your {progress?.targetArticles} articles!
+                                across {progress?.targetArticles} articles!
                             </>
                         ) : (
                             <>
                                 Generated {progress?.currentHighlights || 0} highlights across{" "}
-                                {progress?.currentArticles || 0} of your{" "}
-                                {progress?.targetArticles || 0} articles...
+                                {progress?.currentArticles || 0} of {progress?.targetArticles || 0}{" "}
+                                articles...
                             </>
                         )}
                     </p>

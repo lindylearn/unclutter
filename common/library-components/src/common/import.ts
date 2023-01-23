@@ -12,17 +12,23 @@ export interface ImportProgress {
     currentHighlights?: number;
 }
 
-export async function indexLibraryArticles(
+export async function backfillLibraryAnnotations(
     rep: RuntimeReplicache,
     userInfo: UserInfo,
     onProgress?: (progress: ImportProgress) => void,
     concurrency: number = 5
 ) {
-    let articles = await rep.query.listArticles();
-    articles.sort((a, b) => b.time_added - a.time_added);
-    articles = articles.slice(0, 2);
+    const annotations = await rep.query.listAnnotations();
+    const articlesWithAIAnnotations = new Set(
+        annotations.filter((a) => a.ai_created).map((a) => a.article_id)
+    );
 
-    console.log(`Indexing ${articles.length} articles...`);
+    let articles = await rep.query.listArticles();
+    articles = articles
+        .filter((a) => !articlesWithAIAnnotations.has(a.id))
+        .sort((a, b) => b.time_added - a.time_added);
+
+    console.log(`Backfilling AI annotations for ${articles.length} articles...`);
     onProgress?.({ targetArticles: articles.length });
 
     // batch for resilience

@@ -12,7 +12,7 @@ const pocketConsumerKey = "103045-348c15882b98fde8379db28";
 
 export function PocketImportText({}) {
     return (
-        <p>Please authorize Unclutter to retrieve your Pocket list (the page will open twice).</p>
+        <p>Please authorize Unclutter to retrieve your Pocket list (the login will open twice).</p>
     );
 }
 
