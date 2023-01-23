@@ -31,7 +31,7 @@ export default function SmartReadingOnboarding() {
         //     router.push("/welcome");
         // }
 
-        // rep.mutate.updateUserInfo({ aiEnabled: true });
+        rep.mutate.updateUserInfo({ aiEnabled: true });
         // setUnclutterLibraryAuth(user.id);
     }, [rep, userInfo]);
 

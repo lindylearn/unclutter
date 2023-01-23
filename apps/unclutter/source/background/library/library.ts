@@ -63,9 +63,9 @@ async function initLibrary(isDev: boolean = false): Promise<UserInfo | undefined
         // local replicache mock doesn't need initialization
     }
 
-    if (isDev) {
-        await rep.mutate.updateUserInfo({ id: "dev-user", aiEnabled: true });
-    }
+    // if (isDev) {
+    //     await rep.mutate.updateUserInfo({ id: "dev-user", aiEnabled: true });
+    // }
     const userInfo = await rep.query.getUserInfo();
 
     await initSearchIndex();

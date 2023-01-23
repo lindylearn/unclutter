@@ -62,10 +62,12 @@ export function SettingsGroup({
             {progress && (
                 <>
                     <div
-                        className="absolute bottom-0 left-0 h-4 bg-gradient-to-b from-yellow-300 to-amber-400 transition-all"
+                        className="absolute bottom-0 left-0 h-4 bg-gradient-to-b from-yellow-300  to-amber-400 transition-all dark:opacity-70"
                         style={{
                             width: `${Math.max(
-                                ((progress.currentArticles || 0) / progress.targetArticles) * 100,
+                                ((progress.currentArticles || 0) / progress.targetArticles) * 100 ||
+                                    0,
+                                progress.finished ? 100 : 0,
                                 5
                             )}%`,
                             backgroundImage: "linear-gradient(130deg, var(--tw-gradient-stops))",

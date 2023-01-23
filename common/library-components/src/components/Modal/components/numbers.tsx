@@ -48,7 +48,7 @@ export function BigNumber({
                         <span className={clsx(diff && "")}>{(value || 0) - (diff || 0)}</span>
                     )}
 
-                    {diff ? (
+                    {diff !== undefined ? (
                         <>
                             <span className={clsx("mx-1", value === undefined && "-ml-1")}>+</span>
                             <span>{diff}</span>

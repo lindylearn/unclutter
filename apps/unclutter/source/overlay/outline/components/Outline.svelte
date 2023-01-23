@@ -31,31 +31,30 @@
                 {outline[0]?.title}
             </div>
 
-            <div class="">
-                {#if totalRelatedCount === undefined}
-                    <div class="loader h-4 w-4 shrink-0" />
-                {:else}
-                    <ResourceStat type="related" value={totalRelatedCount} />
-                {/if}
-            </div>
+            {#if userInfo?.aiEnabled}
+                <div class="">
+                    {#if totalRelatedCount === undefined}
+                        <div class="loader h-4 w-4 shrink-0" />
+                    {:else}
+                        <ResourceStat type="related" value={totalRelatedCount} />
+                    {/if}
+                </div>
+            {/if}
         </div>
 
-        {#if userInfo?.aiEnabled}
-            <div class="">
-                {#if readingTimeLeft !== null}
-                    <div
-                        class="reading-time mt-1 text-sm tabular-nums text-stone-400 dark:text-stone-600"
-                    >
-                        <span class="reading-time-count" style={`--num: ${readingTimeLeft}`} /> min
-                        left
-                    </div>
-                {/if}
+        <div class="">
+            {#if readingTimeLeft !== null}
+                <div
+                    class="reading-time mt-1 text-sm tabular-nums text-stone-400 dark:text-stone-600"
+                >
+                    <span class="reading-time-count" style={`--num: ${readingTimeLeft}`} /> min left
+                </div>
+            {/if}
 
-                {#if outline.length > 1}
-                    <div class="spacer-line -mx-4 mb-2 mt-1 border-b-2 border-gray-100" />
-                {/if}
-            </div>
-        {/if}
+            {#if outline.length > 1}
+                <div class="spacer-line -mx-4 mb-2 mt-1 border-b-2 border-gray-100" />
+            {/if}
+        </div>
 
         <ul class="flex list-none flex-col gap-1">
             {#each outline.slice(1) as child, i}

@@ -21,7 +21,7 @@ export async function importArticles(
     data: ArticleImportSchema,
     userInfo: UserInfo,
     onProgress?: (progress: ImportProgress) => void,
-    concurrency: number = 5
+    concurrency: number = 10
 ) {
     const existingArticles = await rep.query.listArticles();
     const existingArticleIds = new Set(existingArticles.map((a) => a.id));
