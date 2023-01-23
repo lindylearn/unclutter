@@ -1,5 +1,6 @@
 import ky from "ky-universal";
 import { withSentry } from "@sentry/nextjs";
+import { subYears } from "date-fns";
 
 // special handling for potentially large archive fetch
 async function handler(req, res) {
@@ -21,8 +22,18 @@ async function handler(req, res) {
         retry: 0,
     });
     const { list } = (await response.json()) as any;
-    // reduce to used article fields
+
+    const startTimeMillis = subYears(new Date(), 1).getTime();
     const articles = Object.values(list)
+        // filter very large libraries
+        // include all from last year plus favorited and read articles
+        .filter(
+            ({ time_updated, time_to_read, favorite, status }) =>
+                parseInt(time_updated) * 1000 >= startTimeMillis ||
+                favorite === "1" ||
+                status === "1"
+        )
+        // reduce to used article fields
         .map(({ resolved_url, time_added, status, favorite }) => ({
             url: resolved_url,
             time_added: parseInt(time_added),

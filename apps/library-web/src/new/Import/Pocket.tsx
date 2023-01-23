@@ -7,11 +7,13 @@ import { ArticleImportSchema } from "./Import";
 export const oauthRedirectUrl = "https://my.unclutter.it/import?auth_redirect";
 // export const oauthRedirectUrl = "http://localhost:3000/import?auth_redirect";
 
-const pocketImportBatchSize = 1000; // work around vercel functions timeout
+const pocketImportBatchSize = 100000; // remove batching for now
 const pocketConsumerKey = "103045-348c15882b98fde8379db28";
 
 export function PocketImportText({}) {
-    return <p>Please authorize Unclutter to retrieve your Pocket list.</p>;
+    return (
+        <p>Please authorize Unclutter to retrieve your Pocket list (the page will open twice).</p>
+    );
 }
 
 export function PocketImportButtons({
@@ -106,7 +108,7 @@ export function PocketImportButtons({
                                 count: pocketImportBatchSize,
                                 offset: import_data.urls.length,
                             },
-                            timeout: 10000, // max for vercel standard plan
+                            timeout: false, // 10s max for vercel standard plan
                             retry: 0,
                         })
                         .json()) as ArticleImportSchema;
@@ -116,7 +118,7 @@ export function PocketImportButtons({
                     import_data.status = import_data.status!.concat(batch.status!);
                     import_data.favorite = import_data.favorite!.concat(batch.favorite!);
 
-                    hasMore = batch.urls.length > 0;
+                    hasMore = false; // batch.urls.length > 0;
                 }
             } catch (err) {
                 onError(`Error fetching Pocket list: ${err.message}`);
