@@ -1,35 +1,30 @@
 import { SettingsButton } from "@unclutter/library-components/dist/components/Settings/SettingsGroup";
 import { ArticleImportSchema } from "./Import";
 import { CSVImportButtons } from "./CSV";
+import { reportEventPosthog } from "../../../common/metrics";
 
 export function InstapaperImportText() {
     return (
         <p className="">
-            Download your .CSV file export on the{" "}
-            <a
-                className="inline-block cursor-pointer font-bold transition-all hover:rotate-1"
-                href="https://www.instapaper.com/user"
-                target="_blank"
-                rel="noreferrer"
-            >
-                Instapaper settings page
-            </a>
-            , then upload it here.
+            Download your .CSV file export on the bottom of the Instapaper settings page, then
+            upload it here.
         </p>
     );
 }
 
-export function InstapaperImportButtons({
-    onError,
-    startImport,
-    transformRows = transformCSVRows,
-}) {
+export function InstapaperImportButtons({ onError, startImport, darkModeEnabled }) {
     return (
         <>
+            <SettingsButton
+                title="Open Instapaper settings"
+                href="https://www.instapaper.com/user"
+                darkModeEnabled={darkModeEnabled}
+                reportEvent={reportEventPosthog}
+            />
             <CSVImportButtons
                 onError={onError}
                 startImport={startImport}
-                transformRows={transformRows}
+                transformRows={transformCSVRows}
             />
         </>
     );

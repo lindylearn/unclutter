@@ -1,12 +1,22 @@
+import { SettingsButton } from "@unclutter/library-components/dist/components/Settings/SettingsGroup";
+import { reportEventPosthog } from "../../../common/metrics";
 import { ArticleImportSchema } from "./Import";
 
 export function CSVImportText({}) {
-    return <p>Drop your .csv files here. One article URL per line please.</p>;
+    return <p>Upload other .csv lists here. The first column in each row should contain a URL.</p>;
 }
 
-export function CSVImportButtons({ onError, startImport, transformRows = defaultRowTransform }) {
+export function CSVImportButtons({
+    onError,
+    startImport,
+    transformRows = defaultRowTransform,
+}: {
+    onError: (message: string) => void;
+    startImport: (importData: ArticleImportSchema) => void;
+    transformRows?: (rows: string[]) => ArticleImportSchema;
+}) {
     const handleChange = async (event) => {
-        const acceptedFiles: File[] = event.target.files;
+        const acceptedFiles: File[] = [...event.target.files];
 
         if (acceptedFiles.length === 0) {
             onError("Invalid file selected");
@@ -37,11 +47,29 @@ export function CSVImportButtons({ onError, startImport, transformRows = default
         }
 
         startImport(importData);
+
+        // reset
+        event.target.value = "";
     };
 
     return (
         <>
-            <input className="" type="file" onChange={handleChange} accept="text/csv" />
+            <input
+                id="file-input"
+                className="hidden"
+                type="file"
+                onChange={handleChange}
+                accept="text/csv"
+            />
+            <SettingsButton
+                title="Upload file"
+                onClick={() => {
+                    // can't properly style file input
+                    document.getElementById("file-input")?.click();
+                }}
+                darkModeEnabled={false}
+                reportEvent={reportEventPosthog}
+            />
         </>
     );
 }

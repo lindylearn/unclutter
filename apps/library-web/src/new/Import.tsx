@@ -79,7 +79,7 @@ export default function SmartReadingOnboarding() {
 
             <GenerateSection rep={rep} userInfo={userInfo} />
 
-            <ImportSection />
+            <ImportSection darkModeEnabled={darkModeEnabled} />
         </div>
     );
 }

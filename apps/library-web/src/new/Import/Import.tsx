@@ -1,4 +1,5 @@
 import { getBrowserType } from "@unclutter/library-components/dist/common";
+import { ImportProgress } from "@unclutter/library-components/dist/common/import";
 import { SettingsGroup } from "@unclutter/library-components/dist/components/Settings/SettingsGroup";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
@@ -8,7 +9,7 @@ import { CSVImportText, CSVImportButtons } from "./CSV";
 import { InstapaperImportButtons, InstapaperImportText } from "./Instapaper";
 import { RaindropImportText, RaindropImportButtons } from "./Raindrop";
 
-export function ImportSection({}) {
+export function ImportSection({ darkModeEnabled }) {
     useEffect(() => {
         if (getBrowserType() === "firefox") {
             importOptions["bookmarks"].iconFile = "firefox.svg";
@@ -17,6 +18,12 @@ export function ImportSection({}) {
     }, []);
 
     const [activeOption, setActiveOption] = useState<keyof typeof importOptions>();
+
+    const [error, setError] = useState<string>();
+    const [generateProgress, setGenerateProgress] = useState<ImportProgress>();
+    function startImport(data: ArticleImportSchema) {
+        console.log(data);
+    }
 
     return (
         <>
@@ -60,9 +67,23 @@ export function ImportSection({}) {
                     className={importOptions[activeOption].backgroundColor}
                     buttons={
                         <>
-                            {activeOption === "csv" && <CSVImportButtons />}
-                            {activeOption === "instapaper" && <InstapaperImportButtons />}
-                            {activeOption === "raindrop" && <RaindropImportButtons />}
+                            {activeOption === "csv" && (
+                                <CSVImportButtons startImport={startImport} onError={setError} />
+                            )}
+                            {activeOption === "instapaper" && (
+                                <InstapaperImportButtons
+                                    startImport={startImport}
+                                    onError={setError}
+                                    darkModeEnabled={darkModeEnabled}
+                                />
+                            )}
+                            {activeOption === "raindrop" && (
+                                <RaindropImportButtons
+                                    startImport={startImport}
+                                    onError={setError}
+                                    darkModeEnabled={darkModeEnabled}
+                                />
+                            )}
                         </>
                     }
                 >

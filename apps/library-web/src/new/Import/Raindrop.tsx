@@ -1,30 +1,32 @@
 import { ArticleImportSchema } from "./Import";
 import { CSVImportButtons } from "./CSV";
+import { SettingsButton } from "@unclutter/library-components/dist/components/Settings/SettingsGroup";
+import { reportEventPosthog } from "../../../common/metrics";
 
 export function RaindropImportText() {
     return (
         <p className="">
-            Create a new raindrop.io{" "}
-            <a
-                className="inline-block cursor-pointer font-bold transition-all hover:rotate-2"
-                href="https://app.raindrop.io/settings/backups"
-                target="_blank"
-                rel="noreferrer"
-            >
-                file backup
-            </a>
-            , then upload the generated CSV file here once available.
+            Create a new raindrop.io file backup, then upload the generated CSV file here once
+            available.
         </p>
     );
 }
 
-export function RaindropImportButtons({ onError, startImport, transformRows = transformCSVRows }) {
+export function RaindropImportButtons({ onError, startImport, darkModeEnabled }) {
     return (
-        <CSVImportButtons
-            onError={onError}
-            startImport={startImport}
-            transformRows={transformCSVRows}
-        />
+        <>
+            <SettingsButton
+                title="Open Raindrop settings"
+                href="https://app.raindrop.io/settings/backups"
+                darkModeEnabled={darkModeEnabled}
+                reportEvent={reportEventPosthog}
+            />
+            <CSVImportButtons
+                onError={onError}
+                startImport={startImport}
+                transformRows={transformCSVRows}
+            />
+        </>
     );
 }
 
