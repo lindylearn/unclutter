@@ -3,7 +3,7 @@ import asyncPool from "tiny-async-pool";
 import type { ArticleImportSchema } from "../components";
 
 import { Annotation, Article, RuntimeReplicache, UserInfo } from "../store";
-import { createScreenshots, indexAnnotationVectors } from "./api";
+import { createScreenshots, generateAnnotationsRemote, indexAnnotationVectors } from "./api";
 import { getUrlHash } from "./url";
 import { constructLocalArticle } from "./util";
 
@@ -185,32 +185,6 @@ async function generateAnnotations(
         console.error(err);
         return 0;
     }
-}
-
-async function generateAnnotationsRemote(
-    url: string,
-    article_id: string,
-    score_threshold: number = 0.6
-): Promise<{ annotations: Annotation[]; title?: string; word_count?: number }> {
-    const response = await fetch("https://serverless-import-jumq7esahq-ue.a.run.app", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            url,
-            article_id,
-            score_threshold,
-        }),
-    });
-    if (!response.ok) {
-        return {
-            annotations: [],
-        };
-    }
-
-    const data = await response.json();
-    return data || { annotations: [] };
 }
 
 // service already does this

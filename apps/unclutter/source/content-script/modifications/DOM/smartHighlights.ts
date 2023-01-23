@@ -28,7 +28,7 @@ export default class SmartHighlightsModifier implements PageModifier {
             return [];
         }
 
-        // run AI model on article text in extension background worker (no data is sent over the network)
+        // detect most important quotes on page using an AI model
         let rankedSentencesByParagraph: RankedSentence[][] | undefined;
         try {
             rankedSentencesByParagraph = await browser.runtime.sendMessage(null, {

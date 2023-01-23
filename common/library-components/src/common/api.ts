@@ -1,10 +1,10 @@
 import ky from "ky";
 
-import { Article } from "../store/_schema";
+import type { Annotation, Article } from "../store/_schema";
 import { getBrowserType, sendMessage } from "./extension";
 import { getNewTabVersion, getUnclutterVersion } from "./messaging";
 import type { ReplicacheProxy } from "./replicache";
-import { SearchResult } from "./search";
+import type { SearchResult } from "./search";
 import { getDomain } from "./util";
 
 const lindyApiUrl = "https://api2.lindylearn.io";
@@ -258,6 +258,54 @@ export async function deleteAnnotationVectors(
             highlight_id,
         }),
     });
+}
+
+export async function getHeatmapRemote(
+    paragraphs: string[],
+    score_threshold: number = 0.6
+): Promise<object[][] | undefined> {
+    const response = await fetch("https://serverless-import-jumq7esahq-ue.a.run.app", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            paragraphs,
+            score_threshold,
+        }),
+    });
+    if (!response.ok) {
+        return;
+    }
+
+    const data = await response.json();
+    return data?.sentences;
+}
+
+export async function generateAnnotationsRemote(
+    url: string,
+    article_id: string,
+    score_threshold: number = 0.6
+): Promise<{ annotations: Annotation[]; title?: string; word_count?: number }> {
+    const response = await fetch("https://serverless-import-jumq7esahq-ue.a.run.app", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            url,
+            article_id,
+            score_threshold,
+        }),
+    });
+    if (!response.ok) {
+        return {
+            annotations: [],
+        };
+    }
+
+    const data = await response.json();
+    return data || { annotations: [] };
 }
 
 async function fetchRetry(url: string, options: RequestInit, n: number = 1): Promise<Response> {

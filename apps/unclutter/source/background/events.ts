@@ -32,8 +32,9 @@ import {
     startMetrics,
 } from "./metrics";
 import { TabStateManager } from "./tabs";
-import { getHeatmap, loadHeatmapModel } from "@unclutter/heatmap/dist/heatmap";
+// import { getHeatmap, loadHeatmapModel } from "@unclutter/heatmap/dist/heatmap";
 import { getUrlHash } from "@unclutter/library-components/dist/common/url";
+import { getHeatmapRemote } from "@unclutter/library-components/dist/common/api";
 
 const tabsManager = new TabStateManager();
 
@@ -186,7 +187,8 @@ function handleMessage(
         fetchRssFeed(message.feedUrl).then(sendResponse);
         return true;
     } else if (message.event === "getHeatmap") {
-        getHeatmap(message.paragraphs).then(sendResponse);
+        // getHeatmap(message.paragraphs).then(sendResponse);
+        getHeatmapRemote(message.paragraphs).then(sendResponse);
         return true;
     } else if (message.event === "clearTabState") {
         tabsManager.onCloseTab(sender.tab.id);
@@ -261,12 +263,12 @@ async function initializeServiceWorker() {
     startMetrics(isDev);
     const userInfo = await initLibraryOnce(isDev);
 
-    if (userInfo?.aiEnabled) {
-        // load tensorflow model
-        // unfortunately cannot create nested service workers, see https://bugs.chromium.org/p/chromium/issues/detail?id=1219164
-        // another option: importScript()? https://stackoverflow.com/questions/66406672/how-do-i-import-scripts-into-a-service-worker-using-chrome-extension-manifest-ve
-        loadHeatmapModel();
-    }
+    // if (userInfo?.aiEnabled) {
+    //     // load tensorflow model
+    //     // unfortunately cannot create nested service workers, see https://bugs.chromium.org/p/chromium/issues/detail?id=1219164
+    //     // another option: importScript()? https://stackoverflow.com/questions/66406672/how-do-i-import-scripts-into-a-service-worker-using-chrome-extension-manifest-ve
+    //     loadHeatmapModel();
+    // }
 }
 
 initializeServiceWorker();
