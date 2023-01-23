@@ -2,7 +2,10 @@ import React from "react";
 import { SettingsButton, SettingsGroup } from "./SettingsGroup";
 
 export function SmartReadingPreview({ userInfo, darkModeEnabled, reportEvent }) {
-    const isWeb = ["unclutter.it", "localhost:3001"].includes(window?.location?.host);
+    const isWeb =
+        typeof window !== "undefined" &&
+        ["unclutter.it", "localhost:3001"].includes(window?.location?.host);
+
     return (
         <SettingsGroup
             title="AI Smart reading"
