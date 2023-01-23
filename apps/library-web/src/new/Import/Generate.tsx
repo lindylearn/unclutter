@@ -41,10 +41,12 @@ export function GenerateSection({ rep, userInfo, darkModeEnabled }) {
             progress={generateProgress}
         >
             <p>
-                From now on, Unclutter automatically generates highlights whenever you read an
-                article using the browser extension.
+                From now on, Unclutter automatically generates highlights whenever you activate the
+                browser extension on a page.
             </p>
-            <p className="">Let's generate highlights for your previously saved articles now.</p>
+            <p className="">
+                But before you go, let's generate highlights for your previously saved articles.
+            </p>
         </SettingsGroup>
     );
 }

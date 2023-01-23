@@ -1,5 +1,5 @@
 import { getBrowserType } from "@unclutter/library-components/dist/common";
-import { ImportProgress } from "@unclutter/library-components/dist/common/import";
+import { importArticles, ImportProgress } from "@unclutter/library-components/dist/common/import";
 import { getActivityColor } from "@unclutter/library-components/dist/components";
 import { SettingsGroup } from "@unclutter/library-components/dist/components/Settings/SettingsGroup";
 import clsx from "clsx";
@@ -11,7 +11,7 @@ import { InstapaperImportButtons, InstapaperImportText } from "./Instapaper";
 import { PocketImportButtons, PocketImportText } from "./Pocket";
 import { RaindropImportText, RaindropImportButtons } from "./Raindrop";
 
-export function ImportSection({ darkModeEnabled }) {
+export function ImportSection({ rep, userInfo, darkModeEnabled }) {
     useEffect(() => {
         if (getBrowserType() === "firefox") {
             importOptions["bookmarks"].iconFile = "firefox.svg";
@@ -39,13 +39,14 @@ export function ImportSection({ darkModeEnabled }) {
 
     // update url, e.g. for the browser import to work
     useEffect(() => {
+        setGenerateProgress(undefined);
         history.replaceState({}, "", `/import${activeOption ? `?from=${activeOption}` : ""}`);
     }, [activeOption]);
 
     const [error, setError] = useState<string>();
     const [generateProgress, setGenerateProgress] = useState<ImportProgress>();
     function startImport(data: ArticleImportSchema) {
-        console.log(data);
+        importArticles(rep, data, userInfo, setGenerateProgress);
     }
 
     return (
@@ -82,7 +83,7 @@ export function ImportSection({ darkModeEnabled }) {
             >
                 <p>
                     The more articles in your library, the more related highlights you'll see inside
-                    Unclutter. So also import the articles you saved inside other apps!
+                    Unclutter. So let's also import the articles you saved inside other apps!
                 </p>
             </SettingsGroup>
 
@@ -132,6 +133,7 @@ export function ImportSection({ darkModeEnabled }) {
                             )}
                         </>
                     }
+                    progress={generateProgress}
                 >
                     {activeOption === "pocket" && <PocketImportText />}
                     {activeOption === "bookmarks" && <BookmarksImportText />}

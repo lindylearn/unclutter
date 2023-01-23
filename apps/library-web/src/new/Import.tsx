@@ -71,13 +71,13 @@ export default function SmartReadingOnboarding() {
             >
                 <p>
                     Thank you for supporting Unclutter! The AI Smart Reading features are now
-                    activated for your account.
+                    activated for your account. Happy reading!
                 </p>
             </SettingsGroup>
 
             <GenerateSection rep={rep} userInfo={userInfo} darkModeEnabled={darkModeEnabled} />
 
-            <ImportSection darkModeEnabled={darkModeEnabled} />
+            <ImportSection rep={rep} userInfo={userInfo} darkModeEnabled={darkModeEnabled} />
         </div>
     );
 }

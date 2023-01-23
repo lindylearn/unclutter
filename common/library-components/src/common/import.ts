@@ -1,4 +1,5 @@
 import asyncPool from "tiny-async-pool";
+import type { ArticleImportSchema } from "../components";
 
 import { Annotation, Article, RuntimeReplicache, UserInfo } from "../store";
 import { indexAnnotationVectors } from "./api";
@@ -10,6 +11,56 @@ export interface ImportProgress {
     targetArticles: number;
 
     currentHighlights?: number;
+}
+
+export async function importArticles(
+    rep: RuntimeReplicache,
+    data: ArticleImportSchema,
+    userInfo: UserInfo,
+    onProgress?: (progress: ImportProgress) => void,
+    concurrency: number = 5
+) {
+    const existingArticles = await rep.query.listArticles();
+    const existingArticleIds = new Set(existingArticles.map((a) => a.id));
+
+    console.log(`Backfilling AI annotations for ${data.urls.length} articles...`);
+    onProgress?.({ targetArticles: data.urls.length });
+
+    // batch for resilience
+    const start = performance.now();
+    let articleCount = 0;
+    let highlightCount = 0;
+    for await (const newHighlights of asyncPool(concurrency, data.urls.slice(0, 2), (url, i) =>
+        importArticle(
+            rep,
+            userInfo.id,
+            url,
+            data.time_added?.[i],
+            data.status?.[i],
+            data.favorite?.[i]
+        )
+    )) {
+        articleCount += 1;
+        highlightCount += newHighlights;
+
+        console.log(`${articleCount}/${data.urls.length}`);
+        onProgress?.({
+            currentArticles: articleCount,
+            targetArticles: data.urls.length,
+            currentHighlights: highlightCount,
+        });
+    }
+
+    onProgress?.({
+        currentArticles: articleCount,
+        targetArticles: data.urls.length,
+        currentHighlights: highlightCount,
+        finished: true,
+    });
+
+    console.log(
+        `Imported ${data.urls.length} articles in ${Math.round(performance.now() - start)}ms.`
+    );
 }
 
 export async function backfillLibraryAnnotations(
@@ -36,7 +87,7 @@ export async function backfillLibraryAnnotations(
     let articleCount = 0;
     let highlightCount = 0;
     for await (const newHighlights of asyncPool(concurrency, articles, (article) =>
-        indexArticle(rep, userInfo.id, article)
+        generateAnnotations(rep, userInfo.id, article)
     )) {
         articleCount += 1;
         highlightCount += newHighlights;
@@ -57,11 +108,22 @@ export async function backfillLibraryAnnotations(
     });
 
     console.log(
-        `Created ${highlightCount} highlights in ${Math.round(performance.now() - start)}ms.`
+        `Backfilled ${highlightCount} highlights in ${Math.round(performance.now() - start)}ms.`
     );
 }
 
-async function indexArticle(
+async function importArticle(
+    rep: RuntimeReplicache,
+    user_id: string,
+    url: string,
+    time_added?: number,
+    status?: number,
+    favorite?: number
+) {
+    console.log(url);
+}
+
+async function generateAnnotations(
     rep: RuntimeReplicache,
     user_id: string,
     article: Article
