@@ -373,7 +373,7 @@ async function listAnnotationsWithArticles(tx: ReadTransaction): Promise<Annotat
     });
 }
 
-async function listArticleAnnotations(
+export async function listArticleAnnotations(
     tx: ReadTransaction,
     articleId: string
 ): Promise<Annotation[]> {
