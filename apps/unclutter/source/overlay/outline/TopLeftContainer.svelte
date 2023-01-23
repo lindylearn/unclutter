@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { LibraryState } from "../../common/schema";
+    import type { LibraryState } from "../../common/schema";
     import LibraryMessage from "./Library/LibraryMessage.svelte";
     import Outline from "./components/Outline.svelte";
     import { OutlineItem } from "./components/parse";
@@ -7,10 +7,10 @@
         getVersionMessagesToShow,
         saveDismissedVersionMessage,
     } from "../../common/updateMessages";
-    import LibraryModalModifier from "../../content-script/modifications/libraryModal";
+    import type LibraryModalModifier from "../../content-script/modifications/libraryModal";
     import clsx from "clsx";
     // import SubscribeMessage from "./Library/SubscribeMessage.svelte";
-    import LibraryModifier from "../../content-script/modifications/library";
+    import type LibraryModifier from "../../content-script/modifications/library";
 
     export let outline: OutlineItem[];
     export let activeOutlineIndex: number;
@@ -57,6 +57,7 @@
         {totalAnnotationCount}
         {totalRelatedCount}
         {readingTimeLeft}
+        userInfo={libraryState?.userInfo}
     />
 
     <!-- {#each updateMessages as { version, updateMessage }}
