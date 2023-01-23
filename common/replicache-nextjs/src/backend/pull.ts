@@ -5,7 +5,10 @@ import { z } from "zod";
 import type { PullResponse } from "replicache";
 import partition from "lodash/partition";
 
-import { partialSyncStateSchema } from "@unclutter/library-components/dist/store";
+import {
+  PartialSyncState,
+  partialSyncStateSchema,
+} from "@unclutter/library-components/dist/store";
 
 const cookieSchema = z.union([
   z.object({
@@ -75,7 +78,7 @@ export async function pull(
 
   // const limit = 100;
   // const t1 = Date.now();
-  // let partialSyncState: PartialSyncState = "PARTIAL_SYNC_COMPLETE";
+  let partialSyncState: PartialSyncState = "PARTIAL_SYNC_COMPLETE";
   // if (!requestCookie) {
   //   // initial pull: only return articles and set up partial sync
   //   console.log(`Initial pull`);
@@ -173,7 +176,7 @@ export async function pull(
   // set cookie for next pull
   const responseCookie = {
     version: responseCookieVersion,
-    // partialSync: partialSyncState,
+    partialSync: partialSyncState,
   };
 
   console.log("lastMutationID: ", lastMutationID);
