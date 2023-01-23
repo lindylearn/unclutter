@@ -78,6 +78,7 @@ export function ImportSection({ rep, userInfo, darkModeEnabled }) {
                         ))}
                     </>
                 }
+                animationIndex={2}
             >
                 <p>
                     The more articles in your library, the more related highlights you'll see inside

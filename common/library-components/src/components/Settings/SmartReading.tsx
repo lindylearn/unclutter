@@ -1,7 +1,12 @@
 import React from "react";
 import { SettingsButton, SettingsGroup } from "./SettingsGroup";
 
-export function SmartReadingPreview({ userInfo, darkModeEnabled, reportEvent }) {
+export function SmartReadingPreview({
+    userInfo,
+    darkModeEnabled,
+    reportEvent,
+    animationIndex = undefined,
+}) {
     const isWeb =
         typeof window !== "undefined" &&
         ["unclutter.it", "localhost:3001"].includes(window?.location?.host);
@@ -59,6 +64,7 @@ export function SmartReadingPreview({ userInfo, darkModeEnabled, reportEvent }) 
                     )}
                 </>
             }
+            animationIndex={animationIndex}
         >
             {userInfo?.aiEnabled ? (
                 <>

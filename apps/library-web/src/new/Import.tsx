@@ -55,6 +55,7 @@ export default function SmartReadingOnboarding() {
                         />
                     </svg>
                 }
+                animationIndex={0}
                 // buttons={
                 //     <>
                 //         <SettingsButton

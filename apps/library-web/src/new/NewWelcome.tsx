@@ -97,6 +97,7 @@ export default function NewWelcomeTab() {
                         />
                     </>
                 }
+                animationIndex={0}
             >
                 <p>
                     Hey{userInfo?.email && ` ${userInfo?.email}`}, welcome to your Unclutter
@@ -128,11 +129,12 @@ export default function NewWelcomeTab() {
                 <p></p>
             </SettingsGroup> */}
 
-            {/* <SmartReadingPreview
+            <SmartReadingPreview
                 userInfo={userInfo}
                 darkModeEnabled={darkModeEnabled}
                 reportEvent={reportEventPosthog}
-            /> */}
+                animationIndex={1}
+            />
         </div>
     );
 }

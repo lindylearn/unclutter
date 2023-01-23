@@ -11,6 +11,7 @@ export function SettingsGroup({
     className,
     imageSrc,
     progress,
+    animationIndex,
 }: {
     title: string;
     icon: ReactNode;
@@ -19,13 +20,17 @@ export function SettingsGroup({
     className?: string;
     imageSrc?: string;
     progress?: ImportProgress;
+    animationIndex?: number;
 }) {
     return (
         <div
             className={clsx(
-                "animate-fadein relative z-20 overflow-hidden rounded-md bg-stone-50 dark:bg-neutral-800",
+                "animate-slidein relative z-20 overflow-hidden rounded-md bg-stone-50 dark:bg-neutral-800",
                 className
             )}
+            style={{
+                animationDelay: `${(animationIndex ? animationIndex * 50 : 0) + 50}ms`,
+            }}
         >
             <h2 className="flex items-center gap-2 py-3 px-4 font-medium">
                 {icon}

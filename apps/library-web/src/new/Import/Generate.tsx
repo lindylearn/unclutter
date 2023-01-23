@@ -39,6 +39,7 @@ export function GenerateSection({ rep, userInfo, darkModeEnabled }) {
                 />
             }
             progress={generateProgress}
+            animationIndex={1}
         >
             <p>
                 From now on, Unclutter automatically generates highlights whenever you activate the

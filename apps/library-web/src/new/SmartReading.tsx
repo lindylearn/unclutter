@@ -43,6 +43,7 @@ export default function SmartReadingDetails() {
                         />
                     </svg>
                 }
+                animationIndex={0}
             >
                 <p>
                     To help you make sense of what you read, Unclutter can automatically create,
@@ -62,6 +63,7 @@ export default function SmartReadingDetails() {
                     </svg>
                 }
                 imageSrc="media/1.png"
+                animationIndex={1}
             >
                 <p>
                     Unclutter automatically highlights the most important sentences on each article
@@ -85,6 +87,7 @@ export default function SmartReadingDetails() {
                     </svg>
                 }
                 imageSrc="media/2.png"
+                animationIndex={2}
             >
                 <p>
                     Next to each highlight, you'll see related quotes that you saved previously.
@@ -107,6 +110,7 @@ export default function SmartReadingDetails() {
                     </svg>
                 }
                 imageSrc="media/3.png"
+                animationIndex={3}
             >
                 <p>
                     All collected information is yours -- search across your saved highlights at any
@@ -154,6 +158,7 @@ export default function SmartReadingDetails() {
                         </>
                     )
                 }
+                animationIndex={4}
             >
                 <p>Support the Unclutter open-source development to try this out.</p>
                 <p>
