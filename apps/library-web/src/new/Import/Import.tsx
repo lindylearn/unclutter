@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { BookmarksImportButtons, BookmarksImportText } from "./Bookmarks";
 import { CSVImportText, CSVImportButtons } from "./CSV";
 import { InstapaperImportButtons, InstapaperImportText } from "./Instapaper";
+import { PocketImportButtons, PocketImportText } from "./Pocket";
 import { RaindropImportText, RaindropImportButtons } from "./Raindrop";
 
 export function ImportSection({ darkModeEnabled }) {
@@ -88,6 +89,15 @@ export function ImportSection({ darkModeEnabled }) {
                     className={importOptions[activeOption].backgroundColor}
                     buttons={
                         <>
+                            {activeOption === "pocket" && (
+                                <PocketImportButtons
+                                    startImport={startImport}
+                                    onError={setError}
+                                    isRedirect={isRedirect}
+                                    darkModeEnabled={darkModeEnabled}
+                                    connectionStep={console.log}
+                                />
+                            )}
                             {activeOption === "bookmarks" && (
                                 <BookmarksImportButtons
                                     startImport={startImport}
@@ -114,7 +124,7 @@ export function ImportSection({ darkModeEnabled }) {
                         </>
                     }
                 >
-                    {/* {activeOption === "pocket" && <PocketImportSettings />} */}
+                    {activeOption === "pocket" && <PocketImportText />}
                     {activeOption === "bookmarks" && <BookmarksImportText />}
 
                     {activeOption === "csv" && <CSVImportText />}

@@ -1,18 +1,26 @@
+import { SettingsButton } from "@unclutter/library-components/dist/components/Settings/SettingsGroup";
 import ky from "ky";
 import { useEffect } from "react";
+import { reportEventPosthog } from "../../../common/metrics";
 import { ArticleImportSchema } from "./Import";
 
-export const oauthRedirectUrl = "https://library.lindylearn.io/import?auth_redirect";
+export const oauthRedirectUrl = "https://my.unclutter.it/import?auth_redirect";
 // export const oauthRedirectUrl = "http://localhost:3000/import?auth_redirect";
 
 const pocketImportBatchSize = 1000; // work around vercel functions timeout
 const pocketConsumerKey = "103045-348c15882b98fde8379db28";
-export default function PocketImportSettings({
+
+export function PocketImportText({}) {
+    return <p>Please authorize Unclutter to retrieve your Pocket list.</p>;
+}
+
+export function PocketImportButtons({
     connectionStep,
     onError,
     startImport,
     isRedirect,
-    disabled,
+    disabled = false,
+    darkModeEnabled,
 }) {
     // see https://getpocket.com/developer/docs/authentication
     async function login() {
@@ -120,14 +128,13 @@ export default function PocketImportSettings({
     }, [isRedirect]);
 
     return (
-        <div className="flex justify-center p-3">
-            <button
-                className="bg-background dark:bg-backgroundDark rounded-lg px-2 py-0.5 shadow-sm transition-all hover:scale-95 disabled:cursor-not-allowed"
+        <>
+            <SettingsButton
+                title="Log in with Pocket"
                 onClick={login}
-                disabled={disabled}
-            >
-                Log in with Pocket
-            </button>
-        </div>
+                darkModeEnabled={darkModeEnabled}
+                reportEvent={reportEventPosthog}
+            />
+        </>
     );
 }
