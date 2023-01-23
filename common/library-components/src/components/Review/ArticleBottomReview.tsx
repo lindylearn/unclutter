@@ -10,14 +10,13 @@ export default function ArticleBottomReview({
     articleId: string;
     darkModeEnabled: boolean;
 }) {
+    // subscribe to store data
     const rep = useContext(ReplicacheContext);
-
     const articleAnnotations: Annotation[] = useSubscribe(
         rep,
         rep?.subscribe.listArticleAnnotations(articleId),
         []
     );
-
     const [allArticles, setAllArticles] = useState<Article[]>();
     const [allAnnotations, setAllAnnotations] = useState<Annotation[]>();
     useEffect(() => {
@@ -27,6 +26,17 @@ export default function ArticleBottomReview({
         rep.query.listRecentArticles().then(setAllArticles);
         rep.query.listAnnotations().then(setAllAnnotations);
     }, [rep]);
+
+    // handle events
+    const [relatedCount, setRelatedCount] = useState<number>();
+    useEffect(() => {
+        window.onmessage = async function ({ data }) {
+            if (data.event === "updateRelatedCount") {
+                setRelatedCount(data.relatedCount);
+            }
+        };
+    }, []);
+    console.log(relatedCount);
 
     function openLibrary(initialTab: string) {
         window.top?.postMessage(
@@ -67,13 +77,12 @@ export default function ArticleBottomReview({
                         colorOverride={getActivityColor(1, darkModeEnabled)}
                         onClick={() => openLibrary("highlights")}
                     />
-                    {/* <BigNumber
-                        value={allAnnotationsCount && allAnnotationsCount * 2}
-                        diff={articleAnnotations && articleAnnotations?.length * 2}
+                    <BigNumber
+                        diff={relatedCount}
                         tag={`connected ideas`}
-                        icon={<ResourceIcon type="links" large />}
+                        icon={<ResourceIcon type="puzzle" large />}
                         colorOverride={getActivityColor(1, darkModeEnabled)}
-                    /> */}
+                    />
                 </div>
 
                 {/* <ArticleActivityCalendar

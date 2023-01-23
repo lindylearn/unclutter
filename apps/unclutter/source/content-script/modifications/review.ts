@@ -19,6 +19,17 @@ export default class ReviewModifier implements PageModifier {
     constructor(articleId: string, bodyStyleModifier: BodyStyleModifier) {
         this.articleId = articleId;
         this.bodyStyleModifier = bodyStyleModifier;
+
+        window.addEventListener("message", (event) => this.onMessage(event.data || {}));
+    }
+
+    private onMessage(message: any) {
+        if (message.event === "updateRelatedCount") {
+            sendIframeEvent(this.iframe, {
+                event: "updateRelatedCount",
+                relatedCount: message.relatedCount,
+            });
+        }
     }
 
     async afterTransitionIn() {

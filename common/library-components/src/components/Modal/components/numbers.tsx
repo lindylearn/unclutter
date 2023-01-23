@@ -39,15 +39,18 @@ export function BigNumber({
             <div
                 className={clsx(
                     "font-title flex h-[2rem] items-center gap-2 text-2xl font-bold transition-opacity",
-                    value === undefined && "opacity-0"
+                    value === undefined && diff === undefined && "opacity-0"
                 )}
             >
                 {icon}
                 <div>
-                    <span className={clsx(diff && "")}>{(value || 0) - (diff || 0)}</span>
+                    {value !== undefined && (
+                        <span className={clsx(diff && "")}>{(value || 0) - (diff || 0)}</span>
+                    )}
+
                     {diff ? (
                         <>
-                            <span className="mx-1">+</span>
+                            <span className={clsx("mx-1", value === undefined && "-ml-1")}>+</span>
                             <span>{diff}</span>
                         </>
                     ) : (

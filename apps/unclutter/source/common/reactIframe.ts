@@ -31,5 +31,5 @@ export async function waitUntilIframeLoaded(iframe: HTMLIFrameElement): Promise<
 }
 
 export function sendIframeEvent(iframe: HTMLIFrameElement, event: object) {
-    iframe.contentWindow?.postMessage(event, "*");
+    iframe?.contentWindow?.postMessage(event, "*");
 }

@@ -1,12 +1,16 @@
 <script lang="ts">
     import clsx from "clsx";
+    import { fade } from "svelte/transition";
     import AnimatedNumber from "./AnimatedNumber.svelte";
 
     export let type: "articles" | "articles_completed" | "highlights" | "links" | "related";
     export let value: number;
 </script>
 
-<div class={clsx("flex items-center transition-opacity gap-1", value === undefined && "opacity-0")}>
+<div
+    class={clsx("flex items-center transition-opacity gap-1", value === undefined && "opacity-0")}
+    in:fade
+>
     {#if type === "articles"}
         <svg class="h-4" viewBox="0 0 576 512">
             <path
