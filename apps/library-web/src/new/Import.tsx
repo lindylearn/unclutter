@@ -17,6 +17,7 @@ import { ImportSection } from "./Import/Import";
 import Head from "next/head";
 
 export default function SmartReadingOnboarding() {
+    const router = useRouter();
     const rep = useContext(ReplicacheContext);
     const { user } = useUser();
     // @ts-ignore
@@ -27,12 +28,18 @@ export default function SmartReadingOnboarding() {
         if (!rep || !userInfo || !user) {
             return;
         }
-        // if (!userInfo?.aiEnabled) {
-        //     router.push("/welcome");
-        // }
+        if (userInfo.aiEnabled) {
+            // everything set up
+            return;
+        }
 
-        // rep.mutate.updateUserInfo({ aiEnabled: true });
-        // setUnclutterLibraryAuth(user.id);
+        if (userInfo.stripeId) {
+            // user canceled subscription
+            router.push("/welcome");
+        } else {
+            // signup didn not work yet?
+            rep.mutate.updateUserInfo({ aiEnabled: true });
+        }
     }, [rep, userInfo]);
 
     if (!userInfo) {

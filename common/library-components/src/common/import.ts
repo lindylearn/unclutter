@@ -24,48 +24,52 @@ export async function importArticles(
     onProgress?: (progress: ImportProgress) => void,
     concurrency: number = 10
 ) {
+    // filter all columns
+    let dataRows = data.urls.map((url, i) => ({
+        url,
+        time_added: data.time_added?.[i],
+        status: data.status?.[i],
+        favorite: data.favorite?.[i],
+    }));
+
     const existingArticles = await rep.query.listArticles();
     const existingArticleIds = new Set(existingArticles.map((a) => a.id));
-    data.urls = data.urls.filter((url) => !existingArticleIds.has(getUrlHash(url)));
+    dataRows = dataRows.filter((row) => !existingArticleIds.has(getUrlHash(row.url)));
 
-    console.log(`Backfilling AI annotations for ${data.urls.length} articles...`);
-    onProgress?.({ targetArticles: data.urls.length });
+    console.log(`Backfilling AI annotations for ${dataRows.length} articles...`);
+    onProgress?.({ targetArticles: dataRows.length });
 
     // trigger screenshots in parallel
-    batchRemoteScreenshots(data.urls);
+    batchRemoteScreenshots(
+        dataRows.map((r) => r.url),
+        concurrency
+    );
 
     // batch for resilience
     const start = performance.now();
     let articleCount = 0;
     let highlightCount = 0;
-    for await (const newHighlights of asyncPool(concurrency, data.urls, (url, i) =>
-        importArticle(
-            rep,
-            userInfo.id,
-            url,
-            data.time_added?.[i],
-            data.status?.[i],
-            data.favorite?.[i]
-        )
+    for await (const newHighlights of asyncPool(concurrency, dataRows, (row) =>
+        importArticle(rep, userInfo.id, row.url, row.time_added, row.status, row.favorite)
     )) {
         articleCount += 1;
         highlightCount += newHighlights;
         onProgress?.({
             currentArticles: articleCount,
-            targetArticles: data.urls.length,
+            targetArticles: dataRows.length,
             currentHighlights: highlightCount,
         });
     }
 
     onProgress?.({
         currentArticles: articleCount,
-        targetArticles: data.urls.length,
+        targetArticles: dataRows.length,
         currentHighlights: highlightCount,
         finished: true,
     });
 
     console.log(
-        `Imported ${data.urls.length} articles in ${Math.round(performance.now() - start)}ms.`
+        `Imported ${dataRows.length} articles in ${Math.round(performance.now() - start)}ms.`
     );
 }
 
