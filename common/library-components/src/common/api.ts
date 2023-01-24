@@ -121,6 +121,22 @@ export async function checkHasSubscription(stripe_id: string): Promise<boolean> 
 export async function createScreenshots(urls: string[], direct = false): Promise<void> {
     try {
         if (direct) {
+            // check if screenshot already exists
+            // urls = await Promise.all(
+            //     urls.map(async (url) => {
+            //         const response = await fetch(
+            //             `https://storage.googleapis.com/unclutter-screenshots-serverless/articles/current/${encodeURIComponent(
+            //                 url
+            //             ).replaceAll("%", "%25")}.webp`
+            //         );
+            //         if (response.status === 200) {
+            //             return undefined;
+            //         } else {
+            //             return url;
+            //         }
+            //     })
+            // );
+
             await fetch(
                 `https://puppeteer-serverless-jumq7esahq-uw.a.run.app/screenshot?prefix=articles`,
                 {
