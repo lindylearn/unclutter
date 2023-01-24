@@ -730,6 +730,7 @@
     ],
     "kyobun.co.jp": [".tp-iframe-wrapper.tp-active"],
     "lavoz.com.ar": [".article.card.default"],
+    "learncpp.com": ["#CCPA_opt_out"],
     "lemonbin.com": ["#toc_container"],
     "lemonde.fr": [
         ".meta__date-reading",
@@ -990,7 +991,6 @@
     "pureinfotech.com": [
         ".attachment-large.size-large.wp-post-image.jetpack-lazy-image.jetpack-lazy-image--handled"
     ],
-    "quizlet.com": [".SetPageTerm-imageWrap"],
     "pv-magazine.com": [
         "#mid-article-bibblio",
         ".bib__image",
@@ -999,6 +999,7 @@
         ".bib--rcm-init",
         ".pv-bibblio-events"
     ],
+    "quizlet.com": [".SetPageTerm-imageWrap"],
     "radreads.co": [".tcb-flex-col"],
     "realpython.com": [".small.text-muted"],
     "rebble.io": ["#index"],
