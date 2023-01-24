@@ -2,7 +2,7 @@ import { useUser } from "@supabase/auth-helpers-react";
 import clsx from "clsx";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "wouter";
-import { getBrowserType } from "@unclutter/library-components/dist/common";
+import { getBrowserTypeWeb } from "@unclutter/library-components/dist/common";
 import { UITag } from "@unclutter/library-components/dist/components";
 import BrowserBookmarksImportSettings from "./Bookmarks";
 import CSVImportSettings from "./CSV";
@@ -70,7 +70,7 @@ export default function ImportTab({}) {
     const { user } = useUser();
 
     useEffect(() => {
-        if (getBrowserType() === "firefox") {
+        if (getBrowserTypeWeb() === "firefox") {
             importOptions["bookmarks"].iconFile = "firefox.svg";
             importOptions["bookmarks"].backgroundColor = "bg-orange-100 dark:bg-orange-900";
         }

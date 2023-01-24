@@ -12,6 +12,18 @@ export function getBrowserType(): BrowserType {
         return "chromium";
     }
 }
+export function getBrowserTypeWeb(): BrowserType {
+    // normal getBrowserType() stopped working on web?
+    // navigator.userAgentData only available in chrome & edge :(
+    try {
+        const isChrome =
+            // @ts-ignore
+            navigator.userAgentData?.brands.map((b) => b.brand).includes("Chromium") || false;
+        return isChrome ? "chromium" : "firefox";
+    } catch {
+        return "chromium";
+    }
+}
 
 export function getUnclutterExtensionId(): string {
     return getBrowserType() === "chromium"

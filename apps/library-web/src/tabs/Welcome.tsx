@@ -2,7 +2,7 @@ import { useUser } from "@supabase/auth-helpers-react";
 import {
     setUnclutterLibraryAuth,
     openArticleResilient,
-    getBrowserType,
+    getBrowserTypeWeb,
 } from "@unclutter/library-components/dist/common";
 import { getSettings } from "@unclutter/library-components/dist/store";
 import clsx from "clsx";
@@ -43,11 +43,11 @@ export default function WelcomeTab() {
     }
 
     const unclutterLink =
-        getBrowserType() === "firefox"
+        getBrowserTypeWeb() === "firefox"
             ? "https://addons.mozilla.org/en-GB/firefox/addon/lindylearn"
             : "https://chrome.google.com/webstore/detail/ibckhpijbdmdobhhhodkceffdngnglpk";
     const unclutterLibraryLink =
-        getBrowserType() === "firefox"
+        getBrowserTypeWeb() === "firefox"
             ? "https://addons.mozilla.org/en-GB/firefox/addon/unclutter-library"
             : "https://chrome.google.com/webstore/detail/bghgkooimeljolohebojceacblokenjn";
 

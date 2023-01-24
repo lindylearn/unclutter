@@ -62,6 +62,6 @@
     },
     "externally_connectable": {
         "ids": ["*"],
-        "matches": ["https://library.lindylearn.io/*", "http://localhost:3000/*"]
+        "matches": ["https://my.unclutter.it/*", "http://localhost:3000/*"]
     }
 }

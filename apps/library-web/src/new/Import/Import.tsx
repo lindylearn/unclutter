@@ -1,4 +1,4 @@
-import { getBrowserType } from "@unclutter/library-components/dist/common";
+import { getBrowserTypeWeb } from "@unclutter/library-components/dist/common";
 import { importArticles, ImportProgress } from "@unclutter/library-components/dist/common/import";
 import { getActivityColor } from "@unclutter/library-components/dist/components";
 import { SettingsGroup } from "@unclutter/library-components/dist/components/Settings/SettingsGroup";
@@ -13,7 +13,7 @@ import { RaindropImportText, RaindropImportButtons } from "./Raindrop";
 
 export function ImportSection({ rep, userInfo, darkModeEnabled }) {
     useEffect(() => {
-        if (getBrowserType() === "firefox") {
+        if (getBrowserTypeWeb() === "firefox") {
             importOptions["bookmarks"].iconFile = "firefox.svg";
             importOptions["bookmarks"].backgroundColor = "bg-orange-100 dark:bg-orange-900";
         }
