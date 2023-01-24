@@ -1,6 +1,6 @@
 import { JSONValue, Replicache } from "replicache";
 import { getLibraryUser, getLibraryUserJwt } from "../../common/storage";
-import { accessors, M, mutators } from "@unclutter/library-components/dist/store";
+import { accessors, M, mutators, PartialSyncState } from "@unclutter/library-components/dist/store";
 import type { ReplicacheProxyEventTypes } from "@unclutter/library-components/dist/common/replicache";
 import type { Runtime } from "webextension-polyfill";
 
@@ -40,8 +40,18 @@ export async function initReplicache(): Promise<Replicache> {
         allowEmpty: true,
     });
 
-    // TODO sync full-text search & enable poke
+    // TODO enable poke
     // use common package to avoid dealing with bundling issues again
+
+    // pull large data chunks in batches
+    rep.subscribe(accessors.getPartialSyncState, {
+        onData: (partialSync: PartialSyncState) => {
+            console.log("partialSync", partialSync);
+            if (partialSync !== "PARTIAL_SYNC_COMPLETE") {
+                rep?.pull();
+            }
+        },
+    });
 
     return rep;
 }

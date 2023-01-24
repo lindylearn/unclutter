@@ -20,19 +20,19 @@ export default function Index({ userId }: { userId: string }) {
         mutators,
         accessors,
     });
-    // // @ts-ignore
-    // const partialSync: PartialSyncState | "NOT_RECEIVED_FROM_SERVER" | undefined = useSubscribe(
-    //     rep,
-    //     // @ts-ignore
-    //     rep?.subscribe.getPartialSyncState(),
-    //     "NOT_RECEIVED_FROM_SERVER"
-    // );
-    // useEffect(() => {
-    //     console.log("partialSync", partialSync);
-    //     if (partialSync !== "PARTIAL_SYNC_COMPLETE") {
-    //         rep?.pull();
-    //     }
-    // }, [rep, partialSync]);
+    // @ts-ignore
+    const partialSync: PartialSyncState | "NOT_RECEIVED_FROM_SERVER" | undefined = useSubscribe(
+        rep,
+        // @ts-ignore
+        rep?.subscribe.getPartialSyncState(),
+        "NOT_RECEIVED_FROM_SERVER"
+    );
+    useEffect(() => {
+        console.log("partialSync", partialSync);
+        if (partialSync !== "PARTIAL_SYNC_COMPLETE") {
+            rep?.pull();
+        }
+    }, [rep, partialSync]);
 
     return (
         <ReplicacheContext.Provider value={rep}>
