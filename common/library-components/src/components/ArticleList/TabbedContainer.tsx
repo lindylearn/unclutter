@@ -182,7 +182,7 @@ export function useTabInfos(
                 listArticles,
                 (a) => a.reading_progress < readingProgressFullClamp
             );
-            const continueArticles = uncompletedArticles.filter((a) => a.reading_progress > 0);
+            const continueArticles = uncompletedArticles; //.filter((a) => a.reading_progress > 0);
 
             // construct tab infos
             const tabInfos: TabInfo[] = [
@@ -240,7 +240,7 @@ export function useTabInfos(
                         </svg>
                     ),
                     articles: completedArticles,
-                    articleLines: Math.max(2, Math.min(5, Math.ceil(completedArticles.length / 5))),
+                    articleLines: Math.max(1, Math.min(5, Math.ceil(completedArticles.length / 5))),
                 },
             ];
 
