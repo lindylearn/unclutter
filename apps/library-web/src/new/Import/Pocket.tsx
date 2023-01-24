@@ -61,7 +61,7 @@ export function PocketImportButtons({
 
             let access_token: string;
             try {
-                connectionStep("Connecting to Pocket...");
+                connectionStep("Authenticating to Pocket...");
 
                 const code = window.localStorage.getItem("oauth_code");
                 window.localStorage.removeItem("oauth_code");
@@ -96,7 +96,7 @@ export function PocketImportButtons({
                 favorite: [],
             };
             try {
-                connectionStep("Fetching Pocket list...");
+                connectionStep("Fetching your Pocket list...");
                 let hasMore = true;
                 while (hasMore) {
                     const batch = (await ky

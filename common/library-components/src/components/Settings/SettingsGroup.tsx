@@ -45,7 +45,9 @@ export function SettingsGroup({
                 {buttons && !progress && <div className="mt-1 flex flex-wrap gap-3">{buttons}</div>}
                 {progress && (
                     <p className="">
-                        {progress?.finished ? (
+                        {progress.customMessage ? (
+                            <>{progress.customMessage}</>
+                        ) : progress?.finished ? (
                             <>
                                 Done! Unclutter generated {progress?.currentHighlights} highlights
                                 across {progress?.targetArticles} articles!

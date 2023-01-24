@@ -104,7 +104,9 @@ export function ImportSection({ rep, userInfo, darkModeEnabled }) {
                                     onError={setError}
                                     isRedirect={isRedirect}
                                     darkModeEnabled={darkModeEnabled}
-                                    connectionStep={console.log}
+                                    connectionStep={(customMessage) =>
+                                        setGenerateProgress({ customMessage, targetArticles: 0 })
+                                    }
                                 />
                             )}
                             {activeOption === "bookmarks" && (

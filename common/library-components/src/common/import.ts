@@ -2,13 +2,14 @@ import asyncPool from "tiny-async-pool";
 // import chunk from "lodash/chunk";
 import type { ArticleImportSchema } from "../components";
 
-import { Annotation, Article, RuntimeReplicache, UserInfo } from "../store";
+import type { Annotation, Article, RuntimeReplicache, UserInfo } from "../store";
 import { createScreenshots, generateAnnotationsRemote, indexAnnotationVectors } from "./api";
 import { getUrlHash } from "./url";
 import { constructLocalArticle } from "./util";
 
 export interface ImportProgress {
     finished?: boolean;
+    customMessage?: string;
 
     currentArticles?: number;
     targetArticles: number;
