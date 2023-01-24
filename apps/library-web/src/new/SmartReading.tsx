@@ -47,7 +47,7 @@ export default function SmartReadingDetails() {
             >
                 <p>
                     To help you make sense of what you read, Unclutter can automatically create,
-                    index, organize, and surface article highlights for you.
+                    organize, and surface article highlights for you.
                 </p>
                 <p>Here's what that means exactly:</p>
             </SettingsGroup>
@@ -66,8 +66,8 @@ export default function SmartReadingDetails() {
                 animationIndex={1}
             >
                 <p>
-                    Unclutter automatically highlights the most important sentences on each article
-                    you open, helping you focus on what matters.
+                    Unclutter automatically highlights important sentences on each article you read,
+                    helping you focus on what matters.
                 </p>
                 <p>
                     All highlights are saved in your library just like any quotes you select
@@ -90,8 +90,8 @@ export default function SmartReadingDetails() {
                 animationIndex={2}
             >
                 <p>
-                    Next to each highlight, you'll see related quotes that you saved previously.
-                    Make up your own mind and understand more by seeing ideas in different contexts.
+                    Next to each highlight, you'll see related highlight that you saved previously.
+                    So you can make up your own mind by seeing ideas in different contexts.
                 </p>
                 <p>
                     Combined with the automatic highlights feature above, you just have to click the
@@ -113,8 +113,8 @@ export default function SmartReadingDetails() {
                 animationIndex={3}
             >
                 <p>
-                    All collected information is yours -- search across your saved highlights at any
-                    time to find everything you know about a topic.
+                    All saved knowledge is yours -- search across your highlights at any time to
+                    find everything you know about a topic.
                 </p>
                 <p>Or sync your highlights with Hypothes.is and note-taking apps.</p>
             </SettingsGroup>
