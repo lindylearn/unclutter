@@ -27,7 +27,7 @@ export async function importArticles(
     // filter all columns
     let dataRows = data.urls.map((url, i) => ({
         url,
-        time_added: data.time_added?.[i],
+        time_added: data.time_added?.[i] || 0,
         status: data.status?.[i],
         favorite: data.favorite?.[i],
     }));
@@ -35,6 +35,7 @@ export async function importArticles(
     const existingArticles = await rep.query.listArticles();
     const existingArticleIds = new Set(existingArticles.map((a) => a.id));
     dataRows = dataRows.filter((row) => !existingArticleIds.has(getUrlHash(row.url)));
+    dataRows.sort((a, b) => b.time_added - a.time_added);
 
     console.log(`Backfilling AI annotations for ${dataRows.length} articles...`);
     onProgress?.({ targetArticles: dataRows.length });
