@@ -118,19 +118,29 @@ export async function checkHasSubscription(stripe_id: string): Promise<boolean> 
     return data?.is_subscribed || false;
 }
 
-export async function createScreenshots(urls: string[]): Promise<string[]> {
+export async function createScreenshots(urls: string[], direct = false): Promise<void> {
     try {
-        const response = await fetch(`${lindyApiUrl}/library/create_screenshots`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ urls }),
-        });
-        return await response.json(); // returns new urls
-    } catch {
-        return [];
-    }
+        if (direct) {
+            await fetch(
+                `https://puppeteer-serverless-jumq7esahq-uw.a.run.app/screenshot?prefix=articles`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(urls),
+                }
+            );
+        } else {
+            await fetch(`${lindyApiUrl}/library/create_screenshots`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ urls }),
+            });
+        }
+    } catch {}
 }
 
 export interface BookmarkedPage {

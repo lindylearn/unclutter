@@ -135,6 +135,7 @@ export function ImportSection({ rep, userInfo, darkModeEnabled }) {
                         </>
                     }
                     progress={generateProgress}
+                    animationIndex={3}
                 >
                     {activeOption === "pocket" && <PocketImportText />}
                     {activeOption === "bookmarks" && <BookmarksImportText />}

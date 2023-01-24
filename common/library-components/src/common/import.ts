@@ -1,5 +1,5 @@
 import asyncPool from "tiny-async-pool";
-// import chunk from "lodash/chunk";
+import chunk from "lodash/chunk";
 import type { ArticleImportSchema } from "../components";
 
 import type { Annotation, Article, RuntimeReplicache, UserInfo } from "../store";
@@ -32,7 +32,7 @@ export async function importArticles(
     onProgress?.({ targetArticles: data.urls.length });
 
     // trigger screenshots in parallel
-    createScreenshots(data.urls);
+    batchRemoteScreenshots(data.urls);
 
     // batch for resilience
     const start = performance.now();
@@ -189,14 +189,16 @@ async function generateAnnotations(
 }
 
 // service already does this
-// async function batchRemoteScreenshots(
-//     urls: string[],
-//     concurrency: number = 5,
-//     batchSize: number = 1
-// ) {
-//     const batches = chunk(urls, batchSize);
+async function batchRemoteScreenshots(
+    urls: string[],
+    concurrency: number = 10,
+    batchSize: number = 10
+) {
+    const batches = chunk(urls, batchSize);
 
-//     for await (const batch of asyncPool(concurrency, batches, createScreenshots)) {
-//         console.log("Screenshot batch done");
-//     }
-// }
+    for await (const batch of asyncPool(concurrency, batches, (batch) =>
+        createScreenshots(batch, true)
+    )) {
+        console.log("Screenshot batch done");
+    }
+}
