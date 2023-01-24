@@ -27,7 +27,7 @@ export function SettingsGroup({
             className={clsx(
                 "relative z-20 overflow-hidden rounded-md bg-stone-50 dark:bg-neutral-800",
                 className,
-                animationIndex ? "animate-slidein" : "animate-fadein"
+                animationIndex !== undefined ? "animate-slidein" : "animate-fadein"
             )}
             style={{
                 animationDelay:
