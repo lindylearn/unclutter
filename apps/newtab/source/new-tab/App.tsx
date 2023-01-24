@@ -109,7 +109,8 @@ function ArticleSection({
     setShowModal: (showModal: boolean) => void;
     reportEvent?: (event: string, properties?: any) => void;
 }) {
-    const tabInfos = useTabInfos(3 + 4 + 1, false, true, null, userInfo);
+    const rowArticleCount = 6;
+    const tabInfos = useTabInfos(null, userInfo, rowArticleCount);
     const [articleListsCache, setArticleListsCache] = useArticleListsCache(tabInfos);
 
     const [showRest, setShowRest] = useState<boolean>(false);
@@ -154,6 +155,7 @@ function ArticleSection({
                     darkModeEnabled={darkModeEnabled}
                     className="animate-fadein"
                     reportEvent={reportEvent}
+                    rowArticleCount={rowArticleCount}
                 />
 
                 <div
@@ -205,6 +207,7 @@ function ArticleSection({
                             className={clsx(showRest ? "animate-slidein" : "opacity-0")}
                             // style={{ animationDelay: `${i * 50}ms` }}
                             reportEvent={reportEvent}
+                            rowArticleCount={rowArticleCount}
                         />
                     );
                 })}

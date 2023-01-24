@@ -8,7 +8,7 @@ export default function RecentModalTab({}: {}) {
     const { darkModeEnabled, userInfo, reportEvent } = useContext(ModalStateContext);
     const { domainFilter } = useContext(FilterContext);
 
-    const tabInfos = useTabInfos(3 + 4 + 1, false, true, domainFilter, userInfo);
+    const tabInfos = useTabInfos(domainFilter, userInfo);
     const [articleListsCache, setArticleListsCache] = useArticleListsCache(tabInfos);
 
     return (

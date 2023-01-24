@@ -137,11 +137,9 @@ export function TabbedContainer({
 }
 
 export function useTabInfos(
-    tabCount: number = 10,
-    onlyUnread: boolean = false,
-    lastFirst: boolean = false,
     domainFilter: string | undefined,
-    userInfo: UserInfo | undefined
+    userInfo: UserInfo | undefined,
+    rowArticleCount: number = 5
 ): TabInfo[] | undefined {
     const rep = useContext(ReplicacheContext);
 
@@ -164,17 +162,9 @@ export function useTabInfos(
             //     .filter((a) => !a.is_queued)
             //     .filter((a) => a.reading_progress < readingProgressFullClamp);
 
-            if (onlyUnread) {
-                listArticles = listArticles.filter(
-                    (a) => a.reading_progress < readingProgressFullClamp
-                );
-            }
             if (domainFilter) {
                 listArticles = listArticles.filter((a) => getDomain(a.url) === domainFilter);
                 sortArticlesPosition(listArticles, "domain_sort_position");
-            }
-            if (!lastFirst) {
-                listArticles.reverse();
             }
 
             listArticles = listArticles;
@@ -226,7 +216,10 @@ export function useTabInfos(
                         </svg>
                     ),
                     articles: continueArticles,
-                    articleLines: Math.max(1, Math.min(2, Math.ceil(continueArticles.length / 5))),
+                    articleLines: Math.max(
+                        1,
+                        Math.min(2, Math.ceil(continueArticles.length / rowArticleCount))
+                    ),
                 },
                 {
                     key: "completed",
@@ -240,14 +233,17 @@ export function useTabInfos(
                         </svg>
                     ),
                     articles: completedArticles,
-                    articleLines: Math.max(1, Math.min(5, Math.ceil(completedArticles.length / 5))),
+                    articleLines: Math.max(
+                        1,
+                        Math.min(5, Math.ceil(completedArticles.length / rowArticleCount))
+                    ),
                 },
             ];
 
             // update state
             setTabInfos(tabInfos);
         })();
-    }, [articles, onlyUnread, lastFirst, domainFilter]);
+    }, [articles, domainFilter, userInfo, rowArticleCount]);
 
     return tabInfos;
 }

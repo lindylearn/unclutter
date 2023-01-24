@@ -22,6 +22,7 @@ export function ArticleGroup({
     className,
     style,
     emptyMessage,
+    rowArticleCount = 5,
 }: {
     groupKey: string;
     title?: string;
@@ -38,6 +39,7 @@ export function ArticleGroup({
     className?: string;
     style?: React.CSSProperties;
     emptyMessage?: string;
+    rowArticleCount?: number;
 }) {
     color =
         color ||
@@ -106,12 +108,15 @@ export function ArticleGroup({
                 {enableDragging ? (
                     <DraggableArticleList
                         listId={groupKey}
-                        articlesToShow={articleLines * 5}
+                        articlesToShow={articleLines * rowArticleCount}
                         small
                         reportEvent={reportEvent}
                     />
                 ) : (
-                    <StaticArticleList articles={articles.slice(0, articleLines * 5)} small />
+                    <StaticArticleList
+                        articles={articles.slice(0, articleLines * rowArticleCount)}
+                        small
+                    />
                 )}
             </div>
         </div>
