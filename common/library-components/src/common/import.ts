@@ -41,10 +41,10 @@ export async function importArticles(
     onProgress?.({ targetArticles: dataRows.length });
 
     // trigger screenshots in parallel
-    batchRemoteScreenshots(
-        dataRows.map((r) => r.url),
-        concurrency
-    );
+    // batchRemoteScreenshots(
+    //     dataRows.map((r) => r.url),
+    //     concurrency
+    // );
 
     // batch for resilience
     const start = performance.now();
