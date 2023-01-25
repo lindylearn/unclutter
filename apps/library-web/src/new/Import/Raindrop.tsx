@@ -6,8 +6,8 @@ import { reportEventPosthog } from "../../../common/metrics";
 export function RaindropImportText() {
     return (
         <p className="">
-            Create a new raindrop.io file backup, then upload the generated CSV file here once
-            available.
+            Please create a new raindrop.io file backup, then upload the generated CSV file here
+            once available.
         </p>
     );
 }

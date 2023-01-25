@@ -6,8 +6,8 @@ import { reportEventPosthog } from "../../../common/metrics";
 export function InstapaperImportText() {
     return (
         <p className="">
-            Download your .CSV file export on the bottom of the Instapaper settings page, then
-            upload it here.
+            Please download your .CSV file export on the bottom of the Instapaper settings page,
+            then upload it here.
         </p>
     );
 }

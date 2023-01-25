@@ -47,9 +47,9 @@ export default function SmartReadingDetails() {
             >
                 <p>
                     To help you make sense of what you read, Unclutter can automatically create,
-                    organize, and surface article highlights for you.
+                    organize, and surface article highlights for you. Here's what that means
+                    exactly:
                 </p>
-                <p>Here's what that means exactly:</p>
             </SettingsGroup>
 
             <SettingsGroup
@@ -66,8 +66,8 @@ export default function SmartReadingDetails() {
                 animationIndex={1}
             >
                 <p>
-                    Unclutter automatically highlights important sentences on each article you read,
-                    helping you focus on what matters.
+                    Unclutter automatically highlights important sentences on each article you read
+                    in yellow, helping you focus on what matters.
                 </p>
                 <p>
                     All highlights are saved in your library just like any quotes you select
@@ -94,7 +94,7 @@ export default function SmartReadingDetails() {
                     So you can make up your own mind by seeing ideas in different contexts.
                 </p>
                 <p>
-                    Combined with the automatic highlights feature above, you just have to click the
+                    Combined with the automatic highlights feature, you just have to click the
                     Unclutter icon on a page to integrate it into your knowledge base.
                 </p>
             </SettingsGroup>
@@ -113,8 +113,8 @@ export default function SmartReadingDetails() {
                 animationIndex={3}
             >
                 <p>
-                    All saved knowledge is yours -- search across your highlights at any time to
-                    find everything you know about a topic.
+                    All knowledge is curated by you, not Google -- search across your highlights at
+                    any time to find everything you know about a topic.
                 </p>
                 <p>Or sync your highlights with Hypothes.is and note-taking apps.</p>
             </SettingsGroup>
@@ -149,7 +149,7 @@ export default function SmartReadingDetails() {
                     ) : (
                         <>
                             <SettingsButton
-                                title="Start trial"
+                                title="Support Unclutter"
                                 href={paymentsLink}
                                 inNewTab={false}
                                 darkModeEnabled={darkModeEnabled}
@@ -160,11 +160,11 @@ export default function SmartReadingDetails() {
                 }
                 animationIndex={4}
             >
-                <p>Support the Unclutter open-source development to try this out.</p>
                 <p>
                     Make use of the knowledge you've already accumulated by importing articles from
                     your Pocket, Instapaper, Raindrop, or browser bookmarks.
                 </p>
+                <p>Please support the Unclutter open-source development to try this out.</p>
             </SettingsGroup>
         </div>
     );

@@ -63,24 +63,24 @@ export default function SmartReadingOnboarding() {
                     </svg>
                 }
                 animationIndex={0}
-                // buttons={
-                //     <>
-                //         <SettingsButton
-                //             title="Manage subscription"
-                //             href="https://billing.stripe.com/p/login/5kA8x62Ap9y26v6144"
-                //             darkModeEnabled={darkModeEnabled}
-                //             reportEvent={reportEventPosthog}
-                //         />
+                buttons={
+                    <>
+                        <SettingsButton
+                            title="Manage subscription"
+                            href="https://billing.stripe.com/p/login/5kA8x62Ap9y26v6144"
+                            darkModeEnabled={darkModeEnabled}
+                            reportEvent={reportEventPosthog}
+                        />
 
-                //         <SettingsButton
-                //             title="Learn more"
-                //             href="https://my.unclutter.it/smart-reading"
-                //             inNewTab={false}
-                //             darkModeEnabled={darkModeEnabled}
-                //             reportEvent={reportEventPosthog}
-                //         />
-                //     </>
-                // }
+                        <SettingsButton
+                            title="Learn more"
+                            href="https://my.unclutter.it/smart-reading"
+                            inNewTab={false}
+                            darkModeEnabled={darkModeEnabled}
+                            reportEvent={reportEventPosthog}
+                        />
+                    </>
+                }
             >
                 <p>
                     Thank you for supporting Unclutter! The AI Smart Reading features are now
