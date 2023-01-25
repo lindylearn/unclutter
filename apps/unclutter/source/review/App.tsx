@@ -1,3 +1,4 @@
+import { reportEventContentScript } from "@unclutter/library-components/dist/common/messaging";
 import { ReplicacheProxy } from "@unclutter/library-components/dist/common/replicache";
 import ArticleBottomReview from "@unclutter/library-components/dist/components/Review/ArticleBottomReview";
 import SignupBottomMessage from "@unclutter/library-components/dist/components/Review/SignupBottomMessage";
@@ -23,12 +24,14 @@ export default function App({
                     <ArticleBottomReview
                         articleId={articleId}
                         darkModeEnabled={darkModeEnabled === "true"}
+                        reportEvent={reportEventContentScript}
                     />
                 )}
                 {type === "signup" && (
                     <SignupBottomMessage
                         articleId={articleId}
                         darkModeEnabled={darkModeEnabled === "true"}
+                        reportEvent={reportEventContentScript}
                     />
                 )}
             </ReplicacheContext.Provider>

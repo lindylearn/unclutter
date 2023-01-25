@@ -6,9 +6,11 @@ import { BigNumber, ResourceIcon } from "../Modal";
 export default function ArticleBottomReview({
     articleId,
     darkModeEnabled,
+    reportEvent = () => {},
 }: {
     articleId: string;
     darkModeEnabled: boolean;
+    reportEvent?: (event: string, data?: any) => void;
 }) {
     // subscribe to store data
     const rep = useContext(ReplicacheContext);
@@ -57,7 +59,7 @@ export default function ArticleBottomReview({
     );
 
     return (
-        <div className="bottom-review flex flex-col gap-[8px] text-stone-800 dark:text-[rgb(232,230,227)]">
+        <div className="bottom-review bottom-content flex flex-col gap-[8px] text-stone-800 dark:text-[rgb(232,230,227)]">
             <CardContainer>
                 <div className="relative grid grid-cols-4 gap-4">
                     <BigNumber

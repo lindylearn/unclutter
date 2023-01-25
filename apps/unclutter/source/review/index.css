@@ -14,7 +14,7 @@ body {
     .bottom-container {
         margin-left: 10px !important;
     }
-    .bottom-review > * {
+    .bottom-content > * {
         margin-left: 0 !important;
     }
 }
