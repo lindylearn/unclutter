@@ -94,7 +94,7 @@ export default function ArticleBottomReview({
     );
 }
 
-function CardContainer({ children }) {
+export function CardContainer({ children }) {
     return (
         <div className="relative mx-auto flex w-[var(--lindy-pagewidth)] flex-col gap-4 overflow-hidden rounded-lg bg-white p-4 shadow dark:bg-[#212121]">
             {children}

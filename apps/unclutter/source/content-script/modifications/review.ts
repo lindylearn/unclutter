@@ -34,9 +34,7 @@ export default class ReviewModifier implements PageModifier {
 
     async afterTransitionIn() {
         const userInfo = await getUserInfoSimple();
-        if (!userInfo?.aiEnabled) {
-            return;
-        }
+        const showSignupMessage = !userInfo?.aiEnabled;
 
         this.bodyStyleModifier.setBottomContainerPadding();
 
@@ -44,6 +42,7 @@ export default class ReviewModifier implements PageModifier {
         this.iframe = injectReactIframe("/review/index.html", "lindy-info-bottom", {
             articleId: this.articleId,
             darkModeEnabled: (this.darkModeEnabled || false).toString(),
+            showSignupMessage: showSignupMessage.toString(),
         });
         window.addEventListener("message", ({ data }) => {
             if (data.event === "bottomIframeLoaded") {
