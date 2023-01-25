@@ -195,7 +195,7 @@ export default class BodyStyleModifier implements PageModifier {
         // set padding for BottomContainer on documentElement for resilience against overflows
         this.unObserveStyleChanges();
 
-        this.bottomPadding = "134.5px";
+        this.bottomPadding = "140px";
         document.documentElement.style.setProperty(
             "padding",
             `0 0 ${this.bottomPadding} 0`,

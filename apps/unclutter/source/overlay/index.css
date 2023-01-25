@@ -175,7 +175,7 @@
     z-index: -1 !important; /* just behind body in case of overlaps */
 
     /* must equal document bottom padding */
-    height: calc(134.5px) !important;
+    height: 140px !important;
 
     user-select: none !important;
     contain: strict !important;

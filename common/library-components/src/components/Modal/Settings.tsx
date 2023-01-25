@@ -118,7 +118,16 @@ export default function SettingsModalTab({}: {}) {
                             highlights are securely backed-up to your account!
                         </p>
                     ) : (
-                        <p>Your articles and highlights are saved in your local browser.</p>
+                        <p>
+                            Your articles and highlights are saved in your local browser.
+                            {showSignup && (
+                                <>
+                                    {" "}
+                                    Create a free Unclutter account to sync your library across
+                                    devices.
+                                </>
+                            )}
+                        </p>
                     )}
                 </>
             </SettingsGroup>

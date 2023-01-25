@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { ReplicacheContext, UserInfo } from "../../store";
 import { LindyIcon } from "../Icons";
 
 export default function SignupBottomMessage({
@@ -10,11 +11,21 @@ export default function SignupBottomMessage({
     darkModeEnabled: boolean;
     reportEvent?: (event: string, data?: any) => void;
 }) {
+    const rep = useContext(ReplicacheContext);
+    const [userInfo, setUserInfo] = useState<UserInfo | null>();
+    useEffect(() => {
+        rep?.query.getUserInfo().then(setUserInfo);
+    }, [rep]);
+
     return (
         <a
             className="bottom-content bottom-review flex flex-col gap-[8px] text-stone-800 transition-all hover:scale-[99%] dark:text-[rgb(232,230,227)]"
             onClick={() => reportEvent("clickBottomSignupMessage")}
-            href="https://my.unclutter.it/signup"
+            href={
+                userInfo?.accountEnabled
+                    ? "https://my.unclutter.it/smart-reading"
+                    : "https://my.unclutter.it/signup"
+            }
             target="_blank"
             rel="noreferrer"
         >
@@ -26,8 +37,18 @@ export default function SignupBottomMessage({
                     </div>
                     <div className="">
                         Unclutter can automatically create, organize, and surface related article
-                        highlights for you. Create an account to enable the AI Smart Reading
-                        features and to back-up your library.
+                        highlights for you.{" "}
+                        {userInfo?.accountEnabled ? (
+                            <>
+                                Enable the AI Smart Reading features to make use of all the articles
+                                you've read.
+                            </>
+                        ) : (
+                            <>
+                                Create an account to enable the AI Smart Reading features and to
+                                back-up your library.
+                            </>
+                        )}
                     </div>
                 </div>
             </CardContainer>
