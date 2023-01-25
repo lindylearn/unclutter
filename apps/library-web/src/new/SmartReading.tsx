@@ -72,12 +72,13 @@ export default function SmartReadingDetails() {
                     </svg>
                 }
                 animationIndex={0}
-                buttons={buttons}
+                // buttons={buttons}
             >
                 <p>
                     To help you make sense of what you read, Unclutter can automatically create,
                     organize, and surface article highlights for you.
                 </p>
+                <p>Here's what that means exactly:</p>
             </SettingsGroup>
 
             <SettingsGroup
