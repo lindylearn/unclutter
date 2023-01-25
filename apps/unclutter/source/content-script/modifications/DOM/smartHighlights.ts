@@ -17,7 +17,7 @@ export default class SmartHighlightsModifier implements PageModifier {
     }
 
     async parseAnnotationsFromArticle(): Promise<Annotation[]> {
-        console.log(`Generating AI highlights for article...`);
+        // console.log(`Generating AI highlights for article...`);
         let start = performance.now();
 
         // parse DOM and extract significant text elements
@@ -51,7 +51,7 @@ export default class SmartHighlightsModifier implements PageModifier {
 
         // report diagnostics
         let durationMs = Math.round(performance.now() - start);
-        console.log(`Generated ${newAnnotations.length} AI highlights in ${durationMs}ms`);
+        // console.log(`Generated ${newAnnotations.length} AI highlights in ${durationMs}ms`);
         reportEventContentScript("generateAIHighlights", {
             paragraphCount: paragraphsElements.length,
             annotationsCount: newAnnotations.length,

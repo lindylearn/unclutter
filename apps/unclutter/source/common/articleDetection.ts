@@ -106,7 +106,7 @@ export function isArticleByTextContent(): boolean {
     const readingTimeMinutes = document.body.innerText.trim().split(/\s+/).length / 200;
     const linkCount = document.querySelectorAll("a").length;
     const linksPerMinute = linkCount / readingTimeMinutes;
-    console.log({ readingTimeMinutes, linkCount, linksPerMinute });
+    // console.log({ readingTimeMinutes, linkCount, linksPerMinute });
 
     return readingTimeMinutes >= 3;
 }
