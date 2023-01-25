@@ -44,11 +44,21 @@ export default function SmartReadingDetails() {
                     </svg>
                 }
                 animationIndex={0}
+                buttons={
+                    <>
+                        <SettingsButton
+                            title="Enable Smart Reading"
+                            href={paymentsLink}
+                            inNewTab={false}
+                            darkModeEnabled={darkModeEnabled}
+                            reportEvent={reportEventPosthog}
+                        />
+                    </>
+                }
             >
                 <p>
                     To help you make sense of what you read, Unclutter can automatically create,
-                    organize, and surface article highlights for you. Here's what that means
-                    exactly:
+                    organize, and surface article highlights for you.
                 </p>
             </SettingsGroup>
 
@@ -149,7 +159,7 @@ export default function SmartReadingDetails() {
                     ) : (
                         <>
                             <SettingsButton
-                                title="Support Unclutter"
+                                title="Enable Smart Reading"
                                 href={paymentsLink}
                                 inNewTab={false}
                                 darkModeEnabled={darkModeEnabled}
@@ -164,7 +174,7 @@ export default function SmartReadingDetails() {
                     Make use of the knowledge you've already accumulated by importing articles from
                     your Pocket, Instapaper, Raindrop, or browser bookmarks.
                 </p>
-                <p>Please support the Unclutter open-source development to try this out.</p>
+                <p>Support the Unclutter open-source development to try this out!</p>
             </SettingsGroup>
         </div>
     );

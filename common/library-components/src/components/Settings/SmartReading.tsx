@@ -51,7 +51,7 @@ export function SmartReadingPreview({
                     {userInfo?.accountEnabled ? (
                         <>
                             <SettingsButton
-                                title="Learn more"
+                                title="Enable Smart Reading"
                                 href={(!isWeb ? "https://my.unclutter.it" : "") + "/smart-reading"}
                                 inNewTab={!isWeb}
                                 darkModeEnabled={darkModeEnabled}
