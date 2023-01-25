@@ -123,8 +123,8 @@ export function SettingsButton({
                 background: !className ? getActivityColor(primary ? 3 : 3, darkModeEnabled) : "",
             }}
             onClick={() => {
-                onClick?.();
                 reportEvent("clickSettingsButton", { title });
+                onClick?.();
             }}
             href={href}
             target={inNewTab ? "_blank" : undefined}

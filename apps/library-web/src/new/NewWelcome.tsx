@@ -62,6 +62,7 @@ export default function NewWelcomeTab() {
             // await rep.mutate.updateUserInfo({
             //     aiEnabled: false,
             //     accountEnabled: true,
+            //     stripeId: undefined,
             // });
         })();
     }, [rep, user, userInfo]);

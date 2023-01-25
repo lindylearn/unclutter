@@ -36,7 +36,6 @@ export default function ArticleBottomReview({
             }
         };
     }, []);
-    console.log(relatedCount);
 
     function openLibrary(initialTab: string) {
         window.top?.postMessage(

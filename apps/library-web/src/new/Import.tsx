@@ -34,12 +34,20 @@ export default function SmartReadingOnboarding() {
         }
 
         if (userInfo.stripeId) {
-            // user canceled subscription
+            // user likely cancelled subscription
             router.push("/welcome");
+            return;
         } else {
             // signup didn not work yet?
             rep.mutate.updateUserInfo({ aiEnabled: true });
         }
+
+        reportEventPosthog("enableSmartReading", {
+            $set: {
+                aiEnabled: true,
+                stripeId: userInfo.stripeId,
+            },
+        });
     }, [rep, userInfo]);
 
     if (!userInfo) {

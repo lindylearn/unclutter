@@ -4,6 +4,7 @@ import { getActivityColor } from "@unclutter/library-components/dist/components"
 import { SettingsGroup } from "@unclutter/library-components/dist/components/Settings/SettingsGroup";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
+import { reportEventPosthog } from "../../../common/metrics";
 
 import { BookmarksImportButtons, BookmarksImportText } from "./Bookmarks";
 import { CSVImportText, CSVImportButtons } from "./CSV";
@@ -45,6 +46,10 @@ export function ImportSection({ rep, userInfo, darkModeEnabled }) {
     const [generateProgress, setGenerateProgress] = useState<ImportProgress>();
     function startImport(data: ArticleImportSchema) {
         importArticles(rep, data, userInfo, setGenerateProgress);
+        reportEventPosthog("startImport", {
+            type: activeOption,
+            articleCount: data.urls.length,
+        });
     }
 
     return (

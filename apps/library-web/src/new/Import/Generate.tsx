@@ -6,17 +6,30 @@ import {
     SettingsButton,
     SettingsGroup,
 } from "@unclutter/library-components/dist/components/Settings/SettingsGroup";
+import type { RuntimeReplicache, UserInfo } from "@unclutter/library-components/dist/store";
 import { useState } from "react";
 import { reportEventPosthog } from "../../../common/metrics";
 
-export function GenerateSection({ rep, userInfo, darkModeEnabled }) {
+export function GenerateSection({
+    rep,
+    userInfo,
+    darkModeEnabled,
+}: {
+    rep: RuntimeReplicache | null;
+    userInfo: UserInfo;
+    darkModeEnabled: boolean;
+}) {
     const [generateProgress, setGenerateProgress] = useState<ImportProgress>();
-    function generateHighlights() {
+    async function generateHighlights() {
         if (!rep) {
             return;
         }
 
         backfillLibraryAnnotations(rep, userInfo, setGenerateProgress);
+        reportEventPosthog("startImport", {
+            type: "highlights-backfill",
+            articleCount: await rep.query.getArticlesCount(),
+        });
     }
 
     return (
