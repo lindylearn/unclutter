@@ -30,7 +30,7 @@ export function SmartReadingPreview({
             }
             buttons={
                 <>
-                    {userInfo?.aiEnabled && (
+                    {userInfo?.aiEnabled ? (
                         <>
                             <SettingsButton
                                 title="Manage subscription"
@@ -46,9 +46,7 @@ export function SmartReadingPreview({
                                 reportEvent={reportEvent}
                             />
                         </>
-                    )}
-
-                    {userInfo?.accountEnabled ? (
+                    ) : (
                         <>
                             <SettingsButton
                                 title="Enable Smart Reading"
@@ -58,7 +56,9 @@ export function SmartReadingPreview({
                                 reportEvent={reportEvent}
                             />
                         </>
-                    ) : (
+                    )}
+
+                    {!userInfo?.accountEnabled && (
                         <>
                             <SettingsButton
                                 title="Create account"

@@ -27,6 +27,34 @@ export default function SmartReadingDetails() {
         createPaymentsLink(userInfo.id, userInfo.email).then(setPaymentsLink);
     }, [userInfo]);
 
+    const buttons = userInfo?.aiEnabled ? (
+        <>
+            <SettingsButton
+                title="Manage subscription"
+                href="https://billing.stripe.com/p/login/5kA8x62Ap9y26v6144"
+                darkModeEnabled={darkModeEnabled}
+                reportEvent={reportEventPosthog}
+            />
+            <SettingsButton
+                title="Import articles"
+                href="/import"
+                inNewTab={false}
+                darkModeEnabled={darkModeEnabled}
+                reportEvent={reportEventPosthog}
+            />
+        </>
+    ) : (
+        <>
+            <SettingsButton
+                title="Enable Smart Reading"
+                href={paymentsLink}
+                // inNewTab={false}
+                darkModeEnabled={darkModeEnabled}
+                reportEvent={reportEventPosthog}
+            />
+        </>
+    );
+
     return (
         <div className="animate-fadein flex flex-col gap-6">
             <Head>
@@ -44,17 +72,7 @@ export default function SmartReadingDetails() {
                     </svg>
                 }
                 animationIndex={0}
-                buttons={
-                    <>
-                        <SettingsButton
-                            title="Enable Smart Reading"
-                            href={paymentsLink}
-                            inNewTab={false}
-                            darkModeEnabled={darkModeEnabled}
-                            reportEvent={reportEventPosthog}
-                        />
-                    </>
-                }
+                buttons={buttons}
             >
                 <p>
                     To help you make sense of what you read, Unclutter can automatically create,
@@ -139,35 +157,7 @@ export default function SmartReadingDetails() {
                         />
                     </svg>
                 }
-                buttons={
-                    userInfo?.aiEnabled ? (
-                        <>
-                            <SettingsButton
-                                title="Manage subscription"
-                                href="https://billing.stripe.com/p/login/5kA8x62Ap9y26v6144"
-                                darkModeEnabled={darkModeEnabled}
-                                reportEvent={reportEventPosthog}
-                            />
-                            <SettingsButton
-                                title="Import articles"
-                                href="/import"
-                                inNewTab={false}
-                                darkModeEnabled={darkModeEnabled}
-                                reportEvent={reportEventPosthog}
-                            />
-                        </>
-                    ) : (
-                        <>
-                            <SettingsButton
-                                title="Enable Smart Reading"
-                                href={paymentsLink}
-                                inNewTab={false}
-                                darkModeEnabled={darkModeEnabled}
-                                reportEvent={reportEventPosthog}
-                            />
-                        </>
-                    )
-                }
+                buttons={buttons}
                 animationIndex={4}
             >
                 <p>

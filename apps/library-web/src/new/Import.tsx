@@ -71,14 +71,6 @@ export default function SmartReadingOnboarding() {
                             darkModeEnabled={darkModeEnabled}
                             reportEvent={reportEventPosthog}
                         />
-
-                        <SettingsButton
-                            title="Learn more"
-                            href="https://my.unclutter.it/smart-reading"
-                            inNewTab={false}
-                            darkModeEnabled={darkModeEnabled}
-                            reportEvent={reportEventPosthog}
-                        />
                     </>
                 }
             >
