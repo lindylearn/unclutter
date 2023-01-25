@@ -7,11 +7,11 @@ import React, { useMemo } from "react";
 export default function App({
     articleId,
     darkModeEnabled,
-    showSignupMessage,
+    type,
 }: {
     articleId: string;
     darkModeEnabled: string;
-    showSignupMessage: string;
+    type: string;
 }) {
     const rep = useMemo<ReplicacheProxy>(() => new ReplicacheProxy(), []);
 
@@ -19,13 +19,14 @@ export default function App({
         <div className="bottom-container font-text relative mt-[8px]">
             {/* @ts-ignore */}
             <ReplicacheContext.Provider value={rep}>
-                {showSignupMessage === "true" ? (
-                    <SignupBottomMessage
+                {type === "review" && (
+                    <ArticleBottomReview
                         articleId={articleId}
                         darkModeEnabled={darkModeEnabled === "true"}
                     />
-                ) : (
-                    <ArticleBottomReview
+                )}
+                {type === "signup" && (
+                    <SignupBottomMessage
                         articleId={articleId}
                         darkModeEnabled={darkModeEnabled === "true"}
                     />

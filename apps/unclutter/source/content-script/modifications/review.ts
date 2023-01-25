@@ -1,4 +1,8 @@
-import { getUserInfoSimple } from "@unclutter/library-components/dist/common/messaging";
+import {
+    getRemoteFeatureFlag,
+    getUserInfoSimple,
+} from "@unclutter/library-components/dist/common/messaging";
+import { showLibrarySignupFlag } from "../../common/featureFlags";
 import {
     injectReactIframe,
     removeReactIframe,
@@ -34,7 +38,17 @@ export default class ReviewModifier implements PageModifier {
 
     async afterTransitionIn() {
         const userInfo = await getUserInfoSimple();
-        const showSignupMessage = !userInfo?.aiEnabled;
+
+        let type: string;
+        if (userInfo?.aiEnabled) {
+            type = "review";
+        } else {
+            const showSignup = await getRemoteFeatureFlag(showLibrarySignupFlag);
+            if (!showSignup) {
+                return;
+            }
+            type = "signup";
+        }
 
         this.bodyStyleModifier.setBottomContainerPadding();
 
@@ -42,7 +56,7 @@ export default class ReviewModifier implements PageModifier {
         this.iframe = injectReactIframe("/review/index.html", "lindy-info-bottom", {
             articleId: this.articleId,
             darkModeEnabled: (this.darkModeEnabled || false).toString(),
-            showSignupMessage: showSignupMessage.toString(),
+            type,
         });
         window.addEventListener("message", ({ data }) => {
             if (data.event === "bottomIframeLoaded") {
