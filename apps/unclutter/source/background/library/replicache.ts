@@ -8,18 +8,22 @@ import type { Runtime } from "webextension-polyfill";
 const apiHost = "https://library.lindylearn.io";
 
 export let rep: Replicache<M> = null;
+export let usedRepUserId: string = null;
 export async function initReplicache(): Promise<Replicache> {
-    if (rep) {
-        return;
-    }
-
     const userId = await getLibraryUser();
     const jwt = await getLibraryUserJwt();
     if (!userId || !jwt) {
         return;
     }
 
+    if (rep && usedRepUserId === userId) {
+        // already initialized for this user
+        await rep.close();
+        return;
+    }
+
     console.log("Initializing replicache...");
+    usedRepUserId = userId;
     rep = new Replicache<M>({
         licenseKey: "l83e0df86778d44fba2909e3618d7965f",
         pushURL: `${apiHost || ""}/api/replicache/push?spaceID=${userId}`,
