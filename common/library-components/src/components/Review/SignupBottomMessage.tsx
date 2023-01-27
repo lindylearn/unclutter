@@ -45,7 +45,7 @@ export default function SignupBottomMessage({
                     <div className="w-full">
                         <div className="font-title mx-auto mb-2 flex w-max items-center gap-2 text-lg font-semibold">
                             <LindyIcon className="w-6 shrink-0" />
-                            Enable AI Smart Reading for Unclutter
+                            Try out AI Smart Reading for Unclutter
                         </div>
 
                         <ul className="mx-auto grid w-max grid-cols-2 items-center gap-y-1 gap-x-4">

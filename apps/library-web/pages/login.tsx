@@ -24,12 +24,12 @@ export default function LoginPage({ isSignup = false }) {
 
     return (
         // dark:bg-[#212121] dark:text-[rgb(232,230,227)]
-        <div className="grid min-h-screen text-stone-800 md:grid-cols-2">
+        <div className="grid min-h-screen text-stone-800 lg:grid-cols-2">
             <Head>
                 <title>Unclutter Login</title>
             </Head>
 
-            <aside className="flex flex-col items-center gap-8 bg-stone-50 p-4 pt-32">
+            <aside className="flex flex-col items-center gap-8 bg-stone-50 p-4 pt-10 lg:pt-32">
                 <div className="font-title flex items-center justify-center gap-3 text-4xl font-semibold dark:text-stone-800">
                     <LindyIcon className="w-10" />
                     <h1>Unclutter</h1>
@@ -40,10 +40,10 @@ export default function LoginPage({ isSignup = false }) {
                     your library.
                 </p>
 
-                <img className="max-w-2xl rounded-lg" src="/media/2.png" />
+                <img className="w-full max-w-2xl rounded-lg" src="/media/2.png" />
             </aside>
 
-            <main className="flex w-full flex-col justify-center">
+            <main className="mt-10 flex w-full flex-col justify-center lg:mt-0">
                 <div className="mx-auto w-full max-w-md">
                     {error && <p>{error.message}</p>}
 
