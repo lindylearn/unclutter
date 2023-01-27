@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
+import { useInView } from "react-intersection-observer";
 import { ReplicacheContext, UserInfo } from "../../store";
 import { LindyIcon } from "../Icons";
 
@@ -17,6 +18,15 @@ export default function SignupBottomMessage({
         rep?.query.getUserInfo().then(setUserInfo);
     }, [rep]);
 
+    const { ref } = useInView({
+        triggerOnce: true,
+        onChange: (inView) => {
+            if (inView) {
+                reportEvent("seeBottomSignupMessage");
+            }
+        },
+    });
+
     return (
         <a
             className="bottom-content bottom-review flex flex-col gap-[8px] text-stone-800 transition-all hover:scale-[99%] dark:text-[rgb(232,230,227)]"
@@ -28,6 +38,7 @@ export default function SignupBottomMessage({
             }
             target="_blank"
             rel="noreferrer"
+            ref={ref}
         >
             <CardContainer>
                 <LindyIcon className="mt-1 w-8 shrink-0" />
