@@ -6,6 +6,9 @@ body {
     font-size: 16px !important;
 }
 
+.bottom-content {
+    transition: background 0.3s ease-in-out 0.1s, transform 0.2s ease-in-out !important;
+}
 .bottom-review > * {
     background: var(--lindy-background-color) !important;
 }

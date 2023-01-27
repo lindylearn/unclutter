@@ -24,18 +24,27 @@ export default function LoginPage({ isSignup = false }) {
 
     return (
         // dark:bg-[#212121] dark:text-[rgb(232,230,227)]
-        <div className="min-h-screen bg-white p-10 text-stone-800">
+        <div className="grid min-h-screen text-stone-800 md:grid-cols-2">
             <Head>
                 <title>Unclutter Login</title>
             </Head>
 
-            <div className="mx-auto max-w-md">
-                <div className="font-title flex items-center justify-center gap-3 text-4xl font-bold dark:text-stone-800">
-                    <LindyIcon className="w-14" />
+            <aside className="flex flex-col items-center gap-8 bg-stone-50 p-4 pt-32">
+                <div className="font-title flex items-center justify-center gap-3 text-4xl font-semibold dark:text-stone-800">
+                    <LindyIcon className="w-10" />
                     <h1>Unclutter</h1>
                 </div>
 
-                <div className="mt-20">
+                <p className="max-w-md">
+                    Create an Unclutter account to enable AI Smart Reading features and to back-up
+                    your library.
+                </p>
+
+                <img className="max-w-2xl rounded-lg" src="/media/2.png" />
+            </aside>
+
+            <main className="flex w-full flex-col justify-center">
+                <div className="mx-auto w-full max-w-md">
                     {error && <p>{error.message}</p>}
 
                     <Auth
@@ -47,7 +56,7 @@ export default function LoginPage({ isSignup = false }) {
                         view={isSignup ? "sign_up" : "sign_in"}
                     />
                 </div>
-            </div>
+            </main>
         </div>
     );
 }
