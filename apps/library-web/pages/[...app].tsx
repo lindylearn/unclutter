@@ -11,6 +11,11 @@ import {
     PartialSyncState,
     useSubscribe,
 } from "@unclutter/library-components/dist/store";
+import { LocalScreenshotContext } from "@unclutter/library-components/dist/components";
+import {
+    getLocalScreenshot,
+    getUnclutterExtensionId,
+} from "@unclutter/library-components/dist/common";
 
 export const SearchWorkerContent = createContext<MessagePort | null>(null);
 
@@ -36,7 +41,11 @@ export default function Index({ userId }: { userId: string }) {
 
     return (
         <ReplicacheContext.Provider value={rep}>
-            <NewApp />
+            <LocalScreenshotContext.Provider
+                value={(articleId) => getLocalScreenshot(articleId, getUnclutterExtensionId())}
+            >
+                <NewApp />
+            </LocalScreenshotContext.Provider>
         </ReplicacheContext.Provider>
     );
 }

@@ -25,7 +25,7 @@ export function SettingsGroup({
     return (
         <div
             className={clsx(
-                "relative z-20 max-w-2xl overflow-hidden rounded-md bg-stone-50 dark:bg-neutral-800",
+                "relative z-20 max-w-2xl rounded-md bg-stone-50 dark:bg-neutral-800",
                 className,
                 animationIndex !== undefined ? "animate-slidein" : "animate-fadein"
             )}

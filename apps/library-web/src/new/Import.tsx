@@ -1,7 +1,8 @@
 import { useUser } from "@supabase/auth-helpers-react";
 import { useAutoDarkMode } from "@unclutter/library-components/dist/common";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
+    Article,
     ReplicacheContext,
     UserInfo,
     useSubscribe,
@@ -15,6 +16,7 @@ import { reportEventPosthog } from "../../common/metrics";
 import { GenerateSection } from "./Import/Generate";
 import { ImportSection } from "./Import/Import";
 import Head from "next/head";
+import { StaticArticleList } from "@unclutter/library-components/dist/components";
 
 export default function SmartReadingOnboarding() {
     const router = useRouter();
@@ -50,10 +52,14 @@ export default function SmartReadingOnboarding() {
         });
     }, [rep, userInfo]);
 
+    const [sampleArticles, setSampleArticles] = useState<Article[]>([]);
+    useEffect(() => {
+        rep?.query.listRecentArticles().then((articles) => setSampleArticles(articles.slice(0, 4)));
+    }, [rep]);
+
     if (!userInfo) {
         return <></>;
     }
-
     return (
         <div className="animate-fadein flex flex-col gap-4">
             <Head>
@@ -71,21 +77,23 @@ export default function SmartReadingOnboarding() {
                     </svg>
                 }
                 animationIndex={0}
-                buttons={
-                    <>
-                        <SettingsButton
-                            title="Manage subscription"
-                            href="https://billing.stripe.com/p/login/5kA8x62Ap9y26v6144"
-                            darkModeEnabled={darkModeEnabled}
-                            reportEvent={reportEventPosthog}
-                        />
-                    </>
-                }
+                // buttons={
+                //     <>
+                //         <SettingsButton
+                //             title="Manage subscription"
+                //             href="https://billing.stripe.com/p/login/5kA8x62Ap9y26v6144"
+                //             darkModeEnabled={darkModeEnabled}
+                //             reportEvent={reportEventPosthog}
+                //         />
+                //     </>
+                // }
             >
-                <p>
+                <p className="mb-2">
                     Thank you for supporting Unclutter! The AI Smart Reading features are now
                     activated for your account. Try it out on any web article!
                 </p>
+
+                <StaticArticleList articles={sampleArticles} />
             </SettingsGroup>
 
             <GenerateSection rep={rep} userInfo={userInfo} darkModeEnabled={darkModeEnabled} />

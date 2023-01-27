@@ -60,7 +60,7 @@ export function captureActiveTabScreenshot(
 }
 
 export async function getLocalScreenshot(articleId: string, targetExtension: string | null = null) {
-    return await getBrowser().runtime.sendMessage(targetExtension, {
+    return await getBrowser()?.runtime?.sendMessage(targetExtension, {
         event: "getLocalScreenshot",
         articleId,
     });

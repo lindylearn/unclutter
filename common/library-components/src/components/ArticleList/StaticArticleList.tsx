@@ -4,7 +4,7 @@ import { ArticlePreview } from "../ArticlePreview";
 export function StaticArticleList({
     articles,
     disableFavoriteShadow = false,
-    small = false,
+    small = true,
     paddingElements = 0,
 }) {
     return (
