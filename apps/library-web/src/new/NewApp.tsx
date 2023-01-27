@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import NewWelcomeTab from "./NewWelcome";
 import SmartReadingOnboarding from "./Import";
 import SmartReadingTab from "./SmartReading";
+import ReviewTestTab from "../tabs/Review";
 
 export default function App() {
     const router = useRouter();
@@ -33,6 +34,9 @@ export default function App() {
                 {pathName === "/" && <NewWelcomeTab />}
                 {pathName === "/smart-reading" && <SmartReadingTab />}
                 {pathName === "/import" && <SmartReadingOnboarding />}
+
+                {/* {pathName === "/modal" && <ModalTestTab />} */}
+                {pathName === "/review" && <ReviewTestTab />}
             </main>
         </div>
     );
