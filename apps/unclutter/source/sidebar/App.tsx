@@ -218,7 +218,7 @@ export default function App({
             userInfo.id,
             articleId,
             [annotation.quote_text],
-            isSourceAnnotation ? 0.4 : 0.5
+            isSourceAnnotation ? 0.4 : undefined
         );
 
         let related = groups[0];

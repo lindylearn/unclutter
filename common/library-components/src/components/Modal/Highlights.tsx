@@ -209,7 +209,7 @@ async function vectorSearch(
     query: string,
     userInfo: UserInfo
 ): Promise<AnnotationWithArticle[]> {
-    const hits = await fetchRelatedAnnotations(userInfo.id, undefined, [query], 0.0, false);
+    const hits = await fetchRelatedAnnotations(userInfo.id, undefined, [query], 0.0, 20);
 
     const annotations = await Promise.all(
         hits[0].map(async (hit) => {

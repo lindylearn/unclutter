@@ -23,11 +23,7 @@ export async function saveAIAnnotations(userInfo: UserInfo, annotations: Annotat
     );
 }
 
-export async function getRelatedAnnotationsCount(
-    userInfo: UserInfo,
-    annotations: Annotation[],
-    relatedThreshold = 0.5
-) {
+export async function getRelatedAnnotationsCount(userInfo: UserInfo, annotations: Annotation[]) {
     if (!annotations?.length) {
         return;
     }
@@ -36,9 +32,7 @@ export async function getRelatedAnnotationsCount(
     const relatedPerAnnotation = await fetchRelatedAnnotations(
         userInfo.id,
         annotations[0].article_id,
-        annotations.map((a) => a.quote_text),
-        relatedThreshold,
-        false
+        annotations.map((a) => a.quote_text)
     );
 
     let relatedCount = 0;
