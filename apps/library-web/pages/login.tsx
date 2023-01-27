@@ -43,7 +43,7 @@ export default function LoginPage({ isSignup = false }) {
                 <img className="w-full max-w-2xl rounded-lg" src="/media/2.png" />
             </aside>
 
-            <main className="mt-10 flex w-full flex-col justify-center lg:mt-0">
+            <main className="mt-10 flex w-full flex-col lg:pt-32">
                 <div className="mx-auto w-full max-w-md">
                     {error && <p>{error.message}</p>}
 

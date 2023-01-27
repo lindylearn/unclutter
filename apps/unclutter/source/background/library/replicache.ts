@@ -16,10 +16,13 @@ export async function initReplicache(): Promise<Replicache> {
         return;
     }
 
-    if (rep && usedRepUserId === userId) {
-        // already initialized for this user
-        await rep.close();
-        return;
+    if (rep) {
+        if (usedRepUserId === userId) {
+            // already initialized for this user
+            return;
+        } else {
+            await rep.close();
+        }
     }
 
     console.log("Initializing replicache...");

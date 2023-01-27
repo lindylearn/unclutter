@@ -80,7 +80,7 @@ export function SmartReadingPreview({
                 </>
             }
             animationIndex={animationIndex}
-            imageSrc="media/2.png"
+            imageSrc={userInfo?.aiEnabled ? undefined : "https://my.unclutter.it/media/2.png"}
         >
             {userInfo?.aiEnabled ? (
                 <>
