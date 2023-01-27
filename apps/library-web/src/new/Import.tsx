@@ -54,7 +54,14 @@ export default function SmartReadingOnboarding() {
 
     const [sampleArticles, setSampleArticles] = useState<Article[]>([]);
     useEffect(() => {
-        rep?.query.listRecentArticles().then((articles) => setSampleArticles(articles.slice(0, 4)));
+        rep?.query.listRecentArticles().then((articles) => {
+            const queueArticles = articles.filter((a) => a.is_queued);
+            if (queueArticles.length >= 3) {
+                setSampleArticles(queueArticles.slice(0, 4));
+            } else {
+                setSampleArticles(articles.slice(0, 4));
+            }
+        });
     }, [rep]);
 
     if (!userInfo) {
