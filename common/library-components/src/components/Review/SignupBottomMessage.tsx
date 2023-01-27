@@ -43,12 +43,12 @@ export default function SignupBottomMessage({
             <CardContainer>
                 <div className="flex w-full items-start gap-2">
                     <div className="w-full">
-                        <div className="font-title mb-2 flex items-center gap-2 text-lg font-semibold ">
-                            {/* <LindyIcon className="w-8 shrink-0" /> */}
-                            Try out Unclutter AI Smart Reading
+                        <div className="font-title mx-auto mb-2 flex w-max items-center gap-2 text-lg font-semibold">
+                            <LindyIcon className="w-6 shrink-0" />
+                            Enable AI Smart Reading for Unclutter
                         </div>
 
-                        <ul className="grid w-full grid-cols-2 items-center gap-y-1 gap-x-4">
+                        <ul className="mx-auto grid w-max grid-cols-2 items-center gap-y-1 gap-x-4">
                             <BulletPoint
                                 icon={
                                     <svg className="h-4 w-4" viewBox="0 0 576 512">
@@ -113,10 +113,10 @@ function BulletPoint({ icon, text }) {
 function CardContainer({ children }) {
     return (
         <div
-            className="relative mx-auto flex w-[var(--lindy-pagewidth)] items-start gap-4 overflow-hidden rounded-lg bg-gradient-to-b from-amber-300 via-yellow-400 to-amber-400 p-4 pt-3 shadow "
+            className="relative mx-auto flex w-[var(--lindy-pagewidth)] items-start gap-4 overflow-hidden rounded-lg bg-white p-4 py-3 shadow dark:bg-[#212121] "
             // bg-white dark:bg-[#212121]
-            // bg-gradient-to-b from-amber-300 via-yellow-400 to-amber-400
-            style={{ backgroundImage: "linear-gradient(120deg, var(--tw-gradient-stops))" }}
+            // bg-gradient-to-b from-yellow-300 to-amber-400
+            // style={{ backgroundImage: "linear-gradient(150deg, var(--tw-gradient-stops))" }}
         >
             {children}
         </div>
