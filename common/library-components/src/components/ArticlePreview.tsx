@@ -4,7 +4,7 @@ import { useContext, useLayoutEffect, useState } from "react";
 
 import { Article } from "../store/_schema";
 import { ArticleDropdown } from "./Dropdown";
-import { openArticleResilient } from "../common";
+import { getDomain, openArticleResilient } from "../common";
 import { ResourceIcon } from "./Modal";
 import { readingProgressFullClamp } from "../store/constants";
 
@@ -17,6 +17,7 @@ interface ArticlePreviewProps {
     listIndex?: number;
     small?: boolean;
     disableFavoriteShadow?: boolean;
+    disableDropdown?: boolean;
     style?: object;
     className?: string;
     setNodeRef?: (el: HTMLElement) => void;
@@ -30,6 +31,7 @@ export function ArticlePreview({
     style = {},
     small = false,
     disableFavoriteShadow = false,
+    disableDropdown = false,
     setNodeRef = (el) => {},
     className = "",
     reportEvent = () => {},
@@ -86,6 +88,8 @@ export function ArticlePreview({
         }
     }, [localScreenshotFetcher]);
 
+    const domain = getDomain(article.url);
+
     return (
         <a
             className={clsx(
@@ -128,22 +132,26 @@ export function ArticlePreview({
                     style={{
                         display: "-webkit-box",
                         WebkitBoxOrient: "vertical",
-                        WebkitLineClamp: 2,
+                        WebkitLineClamp: 3,
                     }}
                 >
                     {article.title}
                 </div>
 
-                <div className="font-text shrink-0 select-none text-xs font-normal leading-tight">
+                <div className="font-text select-none overflow-hidden overflow-ellipsis whitespace-nowrap text-xs font-normal leading-tight">
+                    {domain}
+                </div>
+
+                {/* <div className="font-text shrink-0 select-none text-xs font-normal leading-tight">
                     {article.publication_date
                         ? new Date(article.publication_date).toLocaleString("en-us", {
                               day: "numeric",
                               month: "long",
                           })
                         : " "}
-                </div>
+                </div> */}
 
-                {article.description && (
+                {/* {article.description && (
                     <div
                         className="font-text select-none overflow-hidden text-xs font-normal leading-tight"
                         style={{
@@ -154,7 +162,7 @@ export function ArticlePreview({
                     >
                         {article.description}
                     </div>
-                )}
+                )} */}
             </div>
             <div
                 className="article-image absolute top-0 left-0 h-full w-full"
@@ -170,7 +178,7 @@ export function ArticlePreview({
                 )}
             ></div> */}
 
-            {!article.is_temporary && (
+            {!disableDropdown && !article.is_temporary && (
                 <ArticleDropdown
                     article={article}
                     open={dropdownOpen}

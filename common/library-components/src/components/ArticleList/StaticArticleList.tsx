@@ -18,6 +18,7 @@ export function StaticArticleList({
                         listIndex={listIndex}
                         disableFavoriteShadow={disableFavoriteShadow}
                         small={small}
+                        disableDropdown={true}
                     />
                 );
             })}
