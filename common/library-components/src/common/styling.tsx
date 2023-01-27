@@ -65,7 +65,7 @@ function _randomInRange(seed, min, max) {
 
 export function getAIAnnotationColor(ai_score?: number, darkModeEnabled: boolean = false) {
     const baseColor = "rgba(250, 204, 21, 1.0)";
-    let score = (ai_score || 0.6) ** 3;
+    let score = (ai_score || 0.6) ** 2;
     let multiplier = darkModeEnabled ? 0.6 : 0.8;
 
     return baseColor.replace("1.0", `${multiplier * score}`);
