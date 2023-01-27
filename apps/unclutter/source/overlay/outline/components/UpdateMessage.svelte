@@ -18,7 +18,7 @@
     }}
 >
     <svg
-        class="close-message absolute top-1.5 right-2 w-2.5 text-gray-400 opacity-70 transition-all hover:scale-110 hover:text-gray-700"
+        class="close-message absolute top-1.5 right-2 w-2.5 text-stone-400 opacity-70 transition-all hover:scale-110 hover:text-stone-800"
         viewBox="0 0 320 512"
         on:click={(e) => {
             e.preventDefault();

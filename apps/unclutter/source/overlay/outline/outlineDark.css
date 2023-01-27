@@ -16,7 +16,7 @@ svg.message-icon {
 }
 
 .close-message {
-    color: #9ca3af !important; /* text-gray-400 */
+    color: #a8a29e !important; /* text-stone-400 */
 }
 .close-message:hover {
     color: white !important;

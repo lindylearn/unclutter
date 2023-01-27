@@ -74,7 +74,7 @@
 
     #lindy-info-topleft-content {
         margin: 8px;
-        color: #1f2937; /* text-gray-800 */
+        color: #292524; /* text-stone-800 */
         transition: width 0.2s cubic-bezier(0.33, 1, 0.68, 1); /* same as #lindy-info-topleft outside */
     }
     #lindy-info-topleft-content > * {
@@ -92,7 +92,7 @@
         position: relative;
 
         --background-color: var(--lindy-background-color);
-        --text-color: #1f2937; /* text-gray-800 */
+        --text-color: #292524; /* text-stone-800 */
     }
     .lindy-tooltp:before,
     .lindy-tooltp:after {

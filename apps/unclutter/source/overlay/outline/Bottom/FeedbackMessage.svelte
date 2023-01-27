@@ -7,7 +7,7 @@
 </script>
 
 <div
-    class="bottom-container font-text relative m-[5px] mt-[8px] cursor-pointer rounded-lg bg-gradient-to-b from-amber-300 via-yellow-400 to-amber-400 p-4 text-gray-800 shadow hover:scale-[99%]"
+    class="bottom-container font-text relative m-[5px] mt-[8px] cursor-pointer rounded-lg bg-gradient-to-b from-amber-300 via-yellow-400 to-amber-400 p-4 text-stone-800 shadow hover:scale-[99%]"
     style:background-image="linear-gradient(120deg, var(--tw-gradient-stops))"
     on:click={() => libraryModalModifier.showModal(undefined, true)}
     in:fade

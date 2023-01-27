@@ -53,7 +53,7 @@
     on:click={openPage}
 >
     <div class="article-fallback p-2">
-        <div class="select-none font-bold leading-tight text-gray-700">
+        <div class="select-none font-bold leading-tight text-stone-800">
             {article.title}
         </div>
     </div>

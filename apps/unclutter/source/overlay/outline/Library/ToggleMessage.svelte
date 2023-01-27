@@ -12,7 +12,7 @@
 </script>
 
 <div
-    class="toggle-message relative flex max-w-full cursor-pointer items-center justify-between gap-2 rounded-lg text-gray-800 shadow transition-transform hover:scale-[98%]"
+    class="toggle-message relative flex max-w-full cursor-pointer items-center justify-between gap-2 rounded-lg text-stone-800 shadow transition-transform hover:scale-[98%]"
     transition:slide={{ duration: 300, easing: cubicOut }}
 >
     <div

@@ -136,7 +136,7 @@
         /* padding-right: 0; */
     }
     .visited > .title {
-        color: #9ca3af;
+        color: #a8a29e;
     }
     .heading-text.is-active > .active-dot {
         display: inline-block;

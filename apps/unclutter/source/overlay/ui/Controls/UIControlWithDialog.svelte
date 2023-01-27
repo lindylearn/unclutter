@@ -31,7 +31,7 @@
         z-index: 3000 !important;
 
         background-color: var(--background-color) !important;
-        color: #9ca3af !important;
+        color: #a8a29e !important;
         border-radius: 6px !important;
         filter: drop-shadow(0 1px 2px rgb(0 0 0 / 0.1)) drop-shadow(0 1px 1px rgb(0 0 0 / 0.06)) !important; /* drop-shadow */
 

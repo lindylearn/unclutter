@@ -10,8 +10,8 @@
 .lindy-page-settings-toprght,
 .lindy-page-settings-pageadjacent {
     --background-color: white !important;
-    --text-color: #1f2937 !important; /* text-gray-800 */
-    --color-muted: #9ca3af !important; /* text-gray-400 */
+    --text-color: #292524 !important; /* text-stone-800 */
+    --color-muted: #a8a29e !important; /* text-stone-400 */
     visibility: visible !important; /* show only once CSS applies */
 }
 
