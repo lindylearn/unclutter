@@ -86,8 +86,11 @@ export function ImportSection({ rep, userInfo, darkModeEnabled }) {
                 animationIndex={2}
             >
                 <p>
-                    The more articles in your library, the more related highlights you'll see inside
-                    Unclutter. So let's also import the articles you saved inside other apps!
+                    Next to each highlight, you'll see related highlight that you saved previously.
+                </p>
+                <p>
+                    The more articles in your library, the more connected ideas you'll see. So
+                    import all the articles you already saved inside other apps!
                 </p>
             </SettingsGroup>
 

@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { createPaymentsLink } from "../../common";
 import type { UserInfo } from "../../store";
 import { SettingsButton, SettingsGroup } from "./SettingsGroup";
 
@@ -16,6 +17,14 @@ export function SmartReadingPreview({
     const isWeb =
         typeof window !== "undefined" &&
         ["unclutter.it", "localhost:3001"].includes(window?.location?.host);
+
+    const [paymentsLink, setPaymentsLink] = useState<string>();
+    useEffect(() => {
+        if (!userInfo?.email || userInfo.aiEnabled) {
+            return;
+        }
+        createPaymentsLink(userInfo.id, userInfo.email).then(setPaymentsLink);
+    }, [userInfo]);
 
     return (
         <SettingsGroup
@@ -49,9 +58,9 @@ export function SmartReadingPreview({
                     ) : (
                         <>
                             <SettingsButton
-                                title="Enable Smart Reading"
-                                href={(!isWeb ? "https://my.unclutter.it" : "") + "/smart-reading"}
-                                inNewTab={!isWeb}
+                                title="Try it out"
+                                href={paymentsLink}
+                                // inNewTab={false}
                                 darkModeEnabled={darkModeEnabled}
                                 reportEvent={reportEvent}
                             />
@@ -61,7 +70,7 @@ export function SmartReadingPreview({
                     {!userInfo?.accountEnabled && (
                         <>
                             <SettingsButton
-                                title="Create account"
+                                title="Try it out"
                                 href="https://my.unclutter.it/signup"
                                 darkModeEnabled={darkModeEnabled}
                                 reportEvent={reportEvent}
@@ -71,6 +80,7 @@ export function SmartReadingPreview({
                 </>
             }
             animationIndex={animationIndex}
+            imageSrc="media/2.png"
         >
             {userInfo?.aiEnabled ? (
                 <>
@@ -82,13 +92,13 @@ export function SmartReadingPreview({
             ) : (
                 <>
                     <p>
-                        To help you make sense of what you read, Unclutter can automatically create,
-                        organize, and surface article highlights for you.
+                        To help you make sense of what you read, Unclutter can automatically
+                        highlight and save quotes, and connect them to ideas you've read about in
+                        the past.
                     </p>
                     <p>
-                        See related ideas and facts from your knowledge base whenever you read, and
-                        make use of the articles you've already saved with Unclutter, Pocket, or
-                        more.
+                        Grow your knowledge base whenever you read, and make use of the articles you
+                        already saved with Unclutter, Pocket, or other apps.
                     </p>
                 </>
             )}

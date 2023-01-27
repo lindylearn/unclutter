@@ -40,8 +40,14 @@ export function SettingsGroup({
                 {icon}
                 {title}
             </h2>
-            <div className={clsx("flex flex-col gap-2 px-4 pb-3", progress && "mb-4")}>
+            <div className={clsx("flex flex-col gap-2 px-4 pb-3", progress && "mb-3")}>
                 {children}
+                {imageSrc && buttons && (
+                    <img
+                        src={imageSrc}
+                        className="mt-1 h-60 w-full bg-stone-100 object-cover object-right-top"
+                    />
+                )}
                 {buttons && !progress && <div className="mt-1 flex flex-wrap gap-3">{buttons}</div>}
                 {progress && (
                     <p className="">
@@ -63,7 +69,7 @@ export function SettingsGroup({
                 )}
             </div>
 
-            {imageSrc && (
+            {imageSrc && !buttons && (
                 <img
                     src={imageSrc}
                     className="mt-1 h-60 w-full bg-stone-100 object-cover object-right-top"
@@ -73,7 +79,7 @@ export function SettingsGroup({
             {progress && (
                 <>
                     <div
-                        className="absolute bottom-0 left-0 h-4 bg-gradient-to-b from-yellow-300  to-amber-400 transition-all dark:opacity-70"
+                        className="absolute bottom-0 left-0 h-3 bg-gradient-to-b from-yellow-300  to-amber-400 transition-all dark:opacity-70"
                         style={{
                             width: `${Math.max(
                                 ((progress.currentArticles || 0) / progress.targetArticles) * 100 ||

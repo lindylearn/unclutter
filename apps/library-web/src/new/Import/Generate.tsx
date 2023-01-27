@@ -7,7 +7,7 @@ import {
     SettingsGroup,
 } from "@unclutter/library-components/dist/components/Settings/SettingsGroup";
 import type { RuntimeReplicache, UserInfo } from "@unclutter/library-components/dist/store";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { reportEventPosthog } from "../../../common/metrics";
 
 export function GenerateSection({
@@ -32,9 +32,13 @@ export function GenerateSection({
         });
     }
 
+    // useEffect(() => {
+    //     generateHighlights();
+    // }, []);
+
     return (
         <SettingsGroup
-            title="Generate highlights"
+            title="Automatic highlights"
             icon={
                 <svg className="h-4 w-4" viewBox="0 0 576 512">
                     <path
@@ -55,13 +59,10 @@ export function GenerateSection({
             animationIndex={1}
         >
             <p>
-                From now on, Unclutter automatically generates highlights whenever you activate the
-                browser extension on a page.
+                From now on, Unclutter automatically creates highlights whenever you activate the
+                browser extension. These work just like quotes you save manually.
             </p>
-            <p>
-                Before you try this out, let's generate highlights for your previously saved
-                articles.
-            </p>
+            <p>Let's also generate highlights for your previously saved articles now.</p>
         </SettingsGroup>
     );
 }

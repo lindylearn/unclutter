@@ -84,7 +84,7 @@ export default function SmartReadingOnboarding() {
             >
                 <p>
                     Thank you for supporting Unclutter! The AI Smart Reading features are now
-                    activated for your account. Happy reading!
+                    activated for your account. Try it out on any web article!
                 </p>
             </SettingsGroup>
 
