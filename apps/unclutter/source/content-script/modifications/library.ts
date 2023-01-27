@@ -125,7 +125,7 @@ export default class LibraryModifier implements PageModifier {
 
             // subscribe to reading progress updates before mutating data store
             this.lastReadingProgress = this.libraryState.libraryInfo.article.reading_progress;
-            rep.subscribe.getReadingProgress(this.libraryState.libraryInfo.topic?.id)({
+            rep.subscribe.getReadingProgress()({
                 onData: (readingProgress) => {
                     this.libraryState.readingProgress = readingProgress;
                     this.notifyLibraryStateListeners();
@@ -223,10 +223,8 @@ export default class LibraryModifier implements PageModifier {
             return null;
         }
 
-        const topic = await rep.query.getTopic(article.topic_id);
         return {
             article,
-            topic,
         };
     }
 

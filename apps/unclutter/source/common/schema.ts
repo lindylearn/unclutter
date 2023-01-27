@@ -7,7 +7,6 @@ import type {
 } from "@unclutter/library-components/dist/store/_schema";
 import type { ReadingProgress } from "@unclutter/library-components/dist/store/accessors";
 import type { CustomGraphData } from "@unclutter/library-components/dist/components/Modal/Graph";
-import { cleanTitle } from "@unclutter/library-components/dist/common/util";
 
 export type LibraryState = {
     libraryEnabled: boolean;
@@ -33,7 +32,7 @@ export type LibraryState = {
 // returned from API
 export type LibraryInfo = {
     article: Article;
-    topic?: Topic;
+    // topic?: Topic;
 
-    new_links?: ArticleLink[];
+    // new_links?: ArticleLink[];
 };

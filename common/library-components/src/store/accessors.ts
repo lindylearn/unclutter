@@ -263,20 +263,9 @@ export type ReadingProgress = {
     queueCount: number;
     annotationCount: number;
 };
-export async function getReadingProgress(
-    tx: ReadTransaction,
-    forTopicId: string | null = null
-): Promise<ReadingProgress> {
-    let articles: Article[];
-    if (forTopicId) {
-        articles = await listTopicArticles(tx, forTopicId);
-        if (!articles) {
-            articles = [];
-        }
-    } else {
-        const start = subtractWeeks(getWeekStart(), 3);
-        articles = await listRecentArticles(tx, start.getTime());
-    }
+export async function getReadingProgress(tx: ReadTransaction): Promise<ReadingProgress> {
+    const start = subtractWeeks(getWeekStart(), 3);
+    let articles = await listRecentArticles(tx, start.getTime());
 
     const articleIds = new Set(articles.map((a) => a.id));
     const annotations = (await listAnnotations(tx)).filter((a) => articleIds.has(a.article_id));

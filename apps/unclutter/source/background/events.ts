@@ -146,13 +146,8 @@ function handleMessage(
         // direct message back to listeners in same tab
         browser.tabs.sendMessage(sender.tab.id, message);
     } else if (message.event === "openLibrary") {
-        let urlToOpen = `https://library.lindylearn.io/`;
-        if (message.topicId !== undefined) {
-            urlToOpen = `https://library.lindylearn.io/topics/${message.topicId}`;
-        }
-
         browser.tabs.create({
-            url: urlToOpen,
+            url: `https://library.lindylearn.io/`,
             active: true,
         });
     } else if (message.event === "setLibraryAuth") {

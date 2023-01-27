@@ -105,7 +105,6 @@ export default function App({
                         relatedLinkCount={libraryState?.linkCount}
                         currentArticle={libraryState?.libraryInfo?.article.id}
                         initialSubscription={libraryState?.feed}
-                        initialTopic={libraryState?.libraryInfo?.topic}
                         initialTab={initialTab}
                         reportEvent={reportEventContentScript}
                     />
