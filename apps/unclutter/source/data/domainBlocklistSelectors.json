@@ -72,7 +72,8 @@
         ".swimlane__content",
         ".around-the-bbc-swimlane",
         ".article-end__share-tools",
-        ".article__end"
+        ".article__end",
+        ".gs-u-display-block.story-body__media.gs-u-mb-alt+.qa-story-body-media"
     ],
     "be.marketscreener.com": [
         "#myHeader",
