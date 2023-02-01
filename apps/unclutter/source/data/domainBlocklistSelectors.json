@@ -499,6 +499,11 @@
         ".bxm4mm-2.hKBnez",
         "#mgid-container"
     ],
+    "glassmagazine.com": [
+        ".visually-hidden.focusable",
+        ".terms.text-center",
+        ".post-date.text-center"
+    ],
     "grammarly.com": [".F0u0G-container", "._16iRt-container"],
     "gsmarena.com": [
         ".pad",
