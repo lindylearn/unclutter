@@ -56,6 +56,10 @@
         ".class__active-el",
         ".visually-hidden.focusable"
     ],
+    "aykiri.com.tr": [
+        ".fix-socials_btm.d-flex.d-md-none",
+        ".text-muted.text-sm.py-2.d-md-none.align-items-center.d-flex.text-nowrap"
+    ],
     "baomoi.com": [".bm_FA", ".bm_AM", ".bm_FB"],
     "bbc.co.uk": [
         ".gel-long-primer",
