@@ -984,6 +984,13 @@
         ".box.green.grunge"
     ],
     "osrp.lanl.gov": ["#backband", "#backband2", "#lanlbar", "#toolbar"],
+    "oyungezer.com.tr": [
+        ".toolbar-top",
+        ".content-info.d-flex.mb-3",
+        ".block-content-top",
+        ".icontent-image",
+        "#blog"
+    ],
     "phileweb.com": ["#header", ".topicPath", "#entryUtility", "#submidashi"],
     "phoronix.com": [".node", "#about-author", "#sharebar", ".after-article"],
     "polygon.com": [".c-entry-hero__logo"],
