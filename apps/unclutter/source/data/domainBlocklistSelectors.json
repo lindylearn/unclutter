@@ -983,6 +983,12 @@
         ".OSAd_top",
         ".box.green.grunge"
     ],
+    "onmsft.com": [
+        ".gb-container.gb-container-2ddeb061",
+        ".gb-container.gb-container-91e722e1",
+        ".gb-container.gb-container-8a25fc79.inline-post-meta-area",
+        "#pwDeskSkyBtf1"
+    ],
     "osrp.lanl.gov": ["#backband", "#backband2", "#lanlbar", "#toolbar"],
     "phileweb.com": ["#header", ".topicPath", "#entryUtility", "#submidashi"],
     "phoronix.com": [".node", "#about-author", "#sharebar", ".after-article"],
