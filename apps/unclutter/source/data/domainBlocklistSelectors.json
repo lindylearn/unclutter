@@ -238,7 +238,11 @@
         ".size-full.wp-image-2023.alignleft.td-animation-stack-type0-2",
         ".article-footsy"
     ],
-    "cloud.tencent.com": [".layout-side"],
+    "cloud.tencent.com": [
+        ".layout-side",
+        ".cdc-header.cdc-header--block",
+        ".col-2-article-opts"
+    ],
     "cloudemployee.co.uk": [
         ".scroll.btn.btn-orange-split",
         ".right-side",
