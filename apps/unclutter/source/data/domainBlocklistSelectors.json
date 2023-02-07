@@ -403,6 +403,14 @@
     "fedoramagazine.org": [".header-wrapper"],
     "fenbi.com": [".mokaodasai-title", ".mokaodasai"],
     "fiercehealthcare.com": ["[style*='height: 0px;']"],
+    "fizikist.com": [
+        ".axil-single-widget.widget.widget_video.mb--30",
+        ".axil-single-widget.widget.widget_postlist",
+        ".about-author",
+        ".axil-more-stories-area.axil-section-gap.bg-color-grey",
+        ".tagcloud",
+        ".post-meta-wrapper"
+    ],
     "forest.watch.impress.co.jp": [".list.latest", "#extra"],
     "forwardobserver.com": [".attachment-large.size-large.wp-post-image"],
     "francetvinfo.fr": [
