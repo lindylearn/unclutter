@@ -1157,6 +1157,7 @@
         ".read-more-container"
     ],
     "techwalla.com": [".image-container"],
+    "tedgioia.substack.com": [".single-post-section"],
     "telegram.hr": [
         ".full.center-text.column-full-pad.subsection-title",
         ".full.flex.article-pad",
