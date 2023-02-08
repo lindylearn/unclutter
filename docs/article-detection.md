@@ -24,7 +24,7 @@ To detect article pages, Unclutter uses the following heuristics:
     -   Motivation: most articles contain their title in the URLs, whereas directory pages do not.
     -   However, this check does not apply to URLs that contain `/posts/`, `/wiki/`, `/blog/`, or `/articles/`.
 
-See the implementation and URL examples in [common/articleDetection.js](https://github.com/lindylearn/unclutter/blob/main/source/common/articleDetection.js).
+See the implementation and URL examples in [apps/unclutter/source/common/articleDetection.js](https://github.com/lindylearn/unclutter/blob/main/apps/unclutter/source/common/articleDetection.ts).
 
 | 🐛     **Is this not working as expected or could be better? Please [open an issue](https://github.com/lindylearn/unclutter/issues/new) for it!** |
 | ------------------------------------------------------------------------------------------------------------------------------------------------- |
