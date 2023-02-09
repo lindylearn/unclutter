@@ -75,3 +75,10 @@ export function constructLocalArticle(
         is_favorite: false,
     };
 }
+
+export async function copyTextToClipboard(text: string) {
+    // only works as part of user gesture
+    try {
+        navigator.clipboard.writeText(text);
+    } catch {}
+}

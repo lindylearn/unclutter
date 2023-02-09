@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import type { LindyAnnotation } from "../../common/annotations/create";
 import { reportEventContentScript } from "@unclutter/library-components/dist/common/messaging";
 import { openArticleResilient } from "@unclutter/library-components/dist/common/extension";
 import clsx from "clsx";
+import { HighlightDropdown } from "@unclutter/library-components/dist/components/Dropdown/HighlightDowndown";
 
 interface AnnotationProps {
     className?: string;
@@ -23,6 +24,8 @@ function Annotation({
     colorDark,
 }: AnnotationProps) {
     const { excerpt, text, platform, infoType, score, author } = annotation;
+
+    const [dropdownOpen, setDropdownOpen] = useState(false);
 
     return (
         <a
@@ -48,6 +51,11 @@ function Annotation({
                 reportEventContentScript("expandAnnotation", {
                     platform: annotation.platform,
                 });
+            }}
+            onContextMenu={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setDropdownOpen(true);
             }}
             href={annotation.link || annotation.article?.url}
             target="_blank"
@@ -82,7 +90,7 @@ function Annotation({
                     }
                     return token;
                 })} */}
-                {score?.toFixed(2)} {annotation.score2?.toFixed(2)}
+                {/* {score?.toFixed(2)} {annotation.score2?.toFixed(2)} */}
                 {excerpt || text}
             </div>
 
@@ -116,6 +124,12 @@ function Annotation({
                     </div>
                 )}
             </div>
+
+            <HighlightDropdown
+                annotation={annotation}
+                open={dropdownOpen}
+                setOpen={setDropdownOpen}
+            />
         </a>
     );
 }

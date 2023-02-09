@@ -8,12 +8,6 @@ import { describe as describeAnnotation } from "../../../common/annotator/anchor
 import { sendIframeEvent } from "../../../common/reactIframe";
 import { createStylesheetText } from "../../../common/stylesheets";
 import type { AnnotationListener } from "./annotationsModifier";
-import {
-    anchorAnnotations,
-    copyTextToClipboard,
-    getAnnotationNodes,
-    paintHighlight,
-} from "./highlightsApi";
 
 // send user text selections to the sidebar iframe, in order to create an annotation
 const listeners: [string, () => void][] = [];
@@ -85,8 +79,6 @@ export function createSelectionListener(
             annotation,
         });
         onAnnotationUpdate("add", [annotation]);
-
-        copyTextToClipboard(`"${annotation.quote_text}"`);
 
         selection.removeAllRanges();
     }

@@ -131,7 +131,7 @@ export default function App({
                 }
 
                 // create in data store
-                // setFocusedAnnotationId(data.annotation.id);
+                setFocusedAnnotationId(data.annotation.id);
                 await createAnnotation(userInfo, data.annotation);
             } else if (data.event === "anchoredAnnotations") {
                 // TODO re-add social filtering

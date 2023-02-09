@@ -109,10 +109,6 @@ export function paintHighlight(
             //     };
             //     document.addEventListener("click", onNextClick, true);
             // }
-
-            if (annotation.isMyAnnotation) {
-                copyTextToClipboard(`"${annotation.quote_text}"`);
-            }
         };
     });
 
@@ -230,11 +226,4 @@ export function hoverUpdateHighlight(annotation: LindyAnnotation, hoverActive: b
             node.classList.remove("lindy-hover");
         });
     }
-}
-
-export async function copyTextToClipboard(text: string) {
-    // only works as part of user gesture
-    try {
-        navigator.clipboard.writeText(text);
-    } catch {}
 }

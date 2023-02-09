@@ -21,10 +21,10 @@ export function Dropdown({
                 e.stopPropagation();
             }}
         >
-            <DropdownMenu.Root open={open} onOpenChange={setOpen}>
+            <DropdownMenu.Root open={open} onOpenChange={setOpen} modal={false}>
                 <DropdownMenu.Trigger
                     className={clsx(
-                        "dropdown-icon cursor-pointer outline-none transition-all hover:scale-110",
+                        "dropdown-icon cursor-pointer outline-none transition-all",
                         small ? "p-1" : "p-1.5"
                     )}
                 >
@@ -56,7 +56,7 @@ export function DropdownItem({ title, svg, onSelect, top = false, bottom = false
     return (
         <DropdownMenu.Item
             className={clsx(
-                "dropdown-elem px-2 py-0.5 outline-none transition-all hover:bg-stone-100 dark:hover:bg-stone-600",
+                "dropdown-elem flex items-center gap-2 px-2 py-0.5 outline-none transition-all hover:bg-stone-100 dark:hover:bg-stone-600",
                 top && "rounded-t pt-1",
                 bottom && "rounded-b pb-1"
             )}
