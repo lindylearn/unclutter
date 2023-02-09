@@ -239,22 +239,23 @@
 .lindy-highlight:not(#fakeID#fakeID#fakeID#fakeID) {
     cursor: pointer !important;
     background-color: var(--annotation-color) !important;
-    transition: background-color 0.15s linear !important;
+    transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out !important;
 }
-.lindy-highlight {
-    /* -webkit-box-decoration-break: clone;
+/* .lindy-highlight {
+    -webkit-box-decoration-break: clone;
     -ms-box-decoration-break: clone;
     -o-box-decoration-break: clone;
-    box-decoration-break: clone; */
-    /* padding: 0.25em 0px !important; */
-    /* border-radius: 2px !important; */
+    box-decoration-break: clone;
+    padding: 0 0px !important;
+    border-radius: 0.125em !important;
 
-    /* box-shadow: 0.25em 0 0 var(--annotation-color), -0.25em 0 0 var(--annotation-color) !important; */
-}
-.lindy-highlight.lindy-hover {
-    /* background-color: var(--darker-annotation-color) !important; */
-    /* box-shadow: 0.25em 0 0 var(--darker-annotation-color), -0.25em 0 0 var(--darker-annotation-color) !important; */
-}
+    box-shadow: 0.25em 0 0 var(--annotation-color), -0.25em 0 0 var(--annotation-color) !important;
+} */
+/* .lindy-highlight:not(#fakeID#fakeID#fakeID#fakeID):hover {
+    background-color: var(--darker-annotation-color) !important;
+    box-shadow: 0.25em 0 0 var(--darker-annotation-color),
+        -0.25em 0 0 var(--darker-annotation-color) !important;
+} */
 .lindy-smart-highlight:not(#fakeID#fakeID#fakeID#fakeID),
 .lindy-smart-highlight-scroll:not(#fakeID#fakeID#fakeID#fakeID) {
     display: block !important;

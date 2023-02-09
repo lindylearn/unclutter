@@ -131,7 +131,7 @@ export default function App({
                 }
 
                 // create in data store
-                setFocusedAnnotationId(data.annotation.id);
+                // setFocusedAnnotationId(data.annotation.id);
                 await createAnnotation(userInfo, data.annotation);
             } else if (data.event === "anchoredAnnotations") {
                 // TODO re-add social filtering
@@ -167,6 +167,7 @@ export default function App({
     const usedRelatedIds = useRef(new Set<string>());
     const batchRelatedFetchDone = useRef(false);
     async function fetchRelatedBatch(storeAnnotations: Annotation[]) {
+        return;
         if (!userInfo?.aiEnabled) {
             return;
         }
@@ -284,6 +285,12 @@ export default function App({
         //         relatedCount: Object.values(relatedPerAnnotation).flat().length,
         //     },
         // };
+        // console.log(
+        //     storeAnnotations
+        //         .filter((a) => a.ai_created)
+        //         .map((a) => a.quote_text)
+        //         .join("\n")
+        // );
 
         let visibleAnnotations: LindyAnnotation[] = [];
         if (personalAnnotationsEnabled) {

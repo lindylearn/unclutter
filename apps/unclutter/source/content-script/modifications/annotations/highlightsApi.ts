@@ -64,8 +64,8 @@ export function paintHighlight(
     let annotationColor: string;
     let darkerAnnotationColor: string;
     if (annotation.ai_created) {
-        annotationColor = getAIAnnotationColor(annotation.ai_score, false);
-        darkerAnnotationColor = getAIAnnotationColor(annotation.ai_score, true);
+        annotationColor = "rgba(250, 204, 21, 0.3)";
+        darkerAnnotationColor = "rgba(250, 204, 21, 0.6)";
     } else if (annotation.isMyAnnotation) {
         annotationColor = getAnnotationColor(annotation);
         darkerAnnotationColor = annotationColor.replace("0.3", "0.5");
