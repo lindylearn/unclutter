@@ -1,5 +1,11 @@
 {
     "2bobs.com": [".Header-branding-logo", ".Header.Header--top"],
+    "3djuegos.com": [
+        ".special-post-bg-img",
+        ".section-deeplinking-container.m-deeplinking-news.m-deeplinking-post.o-deeplinking-section",
+        ".article-asset-video.article-asset-normal",
+        ".section-content"
+    ],
     "aalto.fi": [
         ".aalto-tiles-layout__items-container",
         ".aalto-component-wrapper.lindy-clean-margin-bottom",
