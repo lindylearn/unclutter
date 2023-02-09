@@ -65,13 +65,8 @@
                 d="M320 256C320 344.4 248.4 416 160 416C71.63 416 0 344.4 0 256C0 167.6 71.63 96 160 96C248.4 96 320 167.6 320 256z"
             />
         </svg> -->
-        <div class="title relative flex-grow overflow-hidden whitespace-nowrap">
-            <div class="default-title overflow-hidden overflow-ellipsis">{title}</div>
-            <div
-                class="active-title font-title absolute top-0 left-0 w-full overflow-hidden overflow-ellipsis"
-            >
-                {title}
-            </div>
+        <div class="title relative flex-grow overflow-hidden overflow-ellipsis whitespace-nowrap">
+            {title}
         </div>
 
         <svg
@@ -132,7 +127,7 @@
         /* padding-right: 1.5em; */
     }
     .is-active > .title {
-        font-weight: 600;
+        /* font-weight: 600; */
         /* padding-right: 0; */
     }
     .visited > .title {
@@ -143,28 +138,6 @@
         right: calc(100% + 5px);
         top: 25%;
         transition: all 0.1s;
-    }
-
-    /* animate font-family change with 2 text elements */
-    .default-title {
-        opacity: 1;
-        visibility: visible;
-        transition: all 0.05s;
-        letter-spacing: 0px;
-    }
-    .active-title {
-        opacity: 0;
-        visibility: hidden;
-        transition: all 0.05s;
-    }
-    .is-active .default-title {
-        opacity: 0;
-        visibility: hidden;
-        letter-spacing: 0.2px;
-    }
-    .is-active .active-title {
-        opacity: 1;
-        visibility: visible;
     }
 
     /* reserve space in each row so private & public annotations look nice together */

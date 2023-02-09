@@ -167,7 +167,6 @@ export default function App({
     const usedRelatedIds = useRef(new Set<string>());
     const batchRelatedFetchDone = useRef(false);
     async function fetchRelatedBatch(storeAnnotations: Annotation[]) {
-        return;
         if (!userInfo?.aiEnabled) {
             return;
         }
