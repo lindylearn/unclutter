@@ -7,6 +7,7 @@ import { getAnnotationColor } from "../../common/annotations/styling";
 import { SidebarContext } from "../context";
 import SummaryAnnotation from "./Summary";
 import SearchBox from "./Searchbox";
+import AnnotationDraftNew from "./AnnotationDraftNew";
 
 interface AnnotationThreadProps {
     annotation: LindyAnnotation;
@@ -57,11 +58,18 @@ export default function AnnotationThread(props: AnnotationThreadProps) {
                 </>
             )}
 
-            {annotation.isMyAnnotation && (
+            {annotation.isMyAnnotation && !userInfo?.aiEnabled && (
                 <AnnotationDraft
                     {...props}
                     isFetchingRelated={isFetchingRelated}
-                    relatedCount={annotation.related?.length}
+                    color={color}
+                    colorDark={colorDark}
+                />
+            )}
+            {annotation.isMyAnnotation && userInfo?.aiEnabled && (
+                <AnnotationDraftNew
+                    {...props}
+                    isFetchingRelated={isFetchingRelated}
                     color={color}
                     colorDark={colorDark}
                 />

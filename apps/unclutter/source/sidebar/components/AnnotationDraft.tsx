@@ -7,7 +7,7 @@ import { LindyAnnotation } from "../../common/annotations/create";
 import { deleteAnnotation, updateAnnotation } from "../common/CRUD";
 import { SidebarContext } from "../context";
 
-interface AnnotationDraftProps {
+export interface AnnotationDraftProps {
     annotation: LindyAnnotation;
     className?: string;
     heightLimitPx?: number;
@@ -20,7 +20,7 @@ interface AnnotationDraftProps {
     unfocusAnnotation: () => void;
 }
 
-function AnnotationDraft({
+export default function AnnotationDraft({
     annotation,
     className,
     heightLimitPx,
@@ -71,33 +71,6 @@ function AnnotationDraft({
         }
     }
 
-    // const [question, setQuestion] = useState<string>();
-    useEffect(() => {
-        // if (!annotation.text) {
-        //     ky.post("https://assistant-two.vercel.app/api/question", {
-        //         json: {
-        //             text: annotation.quote_text,
-        //         },
-        //     })
-        //         .json()
-        //         .then((question: any) => setQuestion(question));
-        // }
-        // if (!annotation.tags || annotation.tags.length === 0) {
-        //     ky.post("https://assistant-two.vercel.app/api/tag", {
-        //         json: {
-        //             text: annotation.quote_text.replace("\n", " "),
-        //         },
-        //     })
-        //         .json()
-        //         .then((tags: any) => {
-        //             updateAnnotationLocalFirst({
-        //                 ...localAnnotation,
-        //                 tags,
-        //             });
-        //         });
-        // }
-    }, []);
-
     return (
         <div
             className={clsx(
@@ -122,10 +95,6 @@ function AnnotationDraft({
                         ? `${relatedCount} related highlight${relatedCount !== 1 ? "s" : ""}`
                         : "Saved highlight"
                 }
-                // placeholder={localAnnotation.tags
-                //     ?.slice(0, 3)
-                //     .map((t) => `#${t.replace(" ", "-")}`)
-                //     .join(" ")}
                 value={localAnnotation.text}
                 onChange={(e) =>
                     updateAnnotationLocalFirst({
@@ -137,14 +106,6 @@ function AnnotationDraft({
                     if (!localAnnotation.text && (e.key === "Backspace" || e.key === "Delete")) {
                         deleteAnnotation(userInfo, localAnnotation);
                     }
-                    // if (!localAnnotation.text && e.key === "Tab" && question) {
-                    //     updateAnnotationLocalFirst({
-                    //         ...localAnnotation,
-                    //         text: question,
-                    //     });
-                    //     e.preventDefault();
-                    //     e.stopPropagation();
-                    // }
                 }}
                 minRows={1}
                 maxRows={6}
@@ -156,23 +117,9 @@ function AnnotationDraft({
             {isFetchingRelated && (
                 <div className="loader absolute top-2 right-2 flex h-4 w-4 gap-2"></div>
             )}
-
-            {/* <div className="mb-1 ml-1 flex min-h-[20px] gap-2 overflow-hidden text-xs text-stone-400 opacity-50">
-                {localAnnotation.tags?.slice(0, 3).map((tag, i) => (
-                    <div
-                        className="annotation-tag flex shrink cursor-pointer gap-0.5 overflow-ellipsis whitespace-nowrap rounded-lg transition-all hover:scale-[98%]"
-                        style={{ animationDelay: `${i * 50}ms` }}
-                    >
-                        <div className="name">#{tag}</div>
-                    </div>
-                ))}
-            </div> */}
-            {/* {Math.ceil(seedrandom(tag)() * 10)} */}
-            {/* <AnimatedNumber value={Math.ceil(seedrandom(tag)() * 10)} diff={1} /> */}
         </div>
     );
 }
-export default AnnotationDraft;
 
 export function useBlurRef(annotation: LindyAnnotation, unfocusAnnotation: () => void) {
     // if annotation focused, detect clicks to unfocus it
