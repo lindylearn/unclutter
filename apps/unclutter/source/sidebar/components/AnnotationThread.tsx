@@ -6,6 +6,7 @@ import { getAIAnnotationColor } from "@unclutter/library-components/dist/common/
 import { getAnnotationColor } from "../../common/annotations/styling";
 import { SidebarContext } from "../context";
 import SummaryAnnotation from "./Summary";
+import SearchBox from "./Searchbox";
 
 interface AnnotationThreadProps {
     annotation: LindyAnnotation;
@@ -50,7 +51,10 @@ export default function AnnotationThread(props: AnnotationThreadProps) {
     return (
         <>
             {annotation.platform === "summary" && (
-                <SummaryAnnotation summaryInfo={annotation.summaryInfo!} />
+                <>
+                    <SummaryAnnotation summaryInfo={annotation.summaryInfo!} />
+                    <SearchBox />
+                </>
             )}
 
             {annotation.isMyAnnotation && (
