@@ -795,6 +795,10 @@
         ".textRow--3IWlPgCD.noUnderline--3ZXKqsHt.textRow__minor--1ftgA2JY.meta--TIuZ8fDU",
         ".block--2_RlJqhg"
     ],
+    "magnet.xataka.com": [
+        ".article-asset.article-asset-normal.article-asset-center",
+        ".article-metadata-container"
+    ],
     "majorgeeks.com": [".centerborder", ".alford", "[data-ref='vm-preloader']"],
     "makandracards.com": ["#tail", ".text_ad__more"],
     "maketecheasier.com": [".lazyload.alignleft.size-full.wp-image-20581"],
