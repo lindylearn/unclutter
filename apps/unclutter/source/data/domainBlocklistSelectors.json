@@ -295,6 +295,12 @@
         ".ilce_side",
         ".ap.ap-615.ap-xpe"
     ],
+    "devops.com": [
+        ".marquee-outer-container",
+        ".su-expand-content.su-u-trim",
+        ".sue-panel",
+        ".addtoany_share_save_container.addtoany_content.addtoany_content_bottom"
+    ],
     "dict.leo.org": [
         ".p-left",
         ".va-t.p-top",
