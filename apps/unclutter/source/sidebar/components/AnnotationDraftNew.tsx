@@ -109,24 +109,20 @@ export default function AnnotationDraftNew({
             // ref={ref}
         >
             <div className="flex min-h-[33.750px] overflow-hidden">
-                {localAnnotation.tags
-                    ?.slice(0, 3)
-                    .map((t) => t.replace(" ", "-"))
-                    .slice(0, 3)
-                    .map((tag, i) => (
-                        <div
-                            className={clsx(
-                                "font-title annotation-tag flex shrink cursor-pointer gap-0.5 overflow-ellipsis whitespace-nowrap py-2 px-1 transition-all hover:scale-[98%]",
-                                i === 0 && "pl-3"
-                            )}
-                            style={{
-                                animationDelay: `${i * 50}ms`,
-                                // backgroundColor: color, // getRandomColor(tag),
-                            }}
-                        >
-                            <div className="name">#{tag}</div>
-                        </div>
-                    ))}
+                {localAnnotation.tags?.slice(0, 3).map((tag, i) => (
+                    <div
+                        className={clsx(
+                            "font-title annotation-tag flex shrink cursor-pointer gap-0.5 overflow-ellipsis whitespace-nowrap py-2 px-1 transition-all hover:scale-[98%]",
+                            i === 0 && "pl-3"
+                        )}
+                        style={{
+                            animationDelay: `${i * 50}ms`,
+                            // backgroundColor: color, // getRandomColor(tag),
+                        }}
+                    >
+                        <div className="name">#{tag}</div>
+                    </div>
+                ))}
             </div>
             {/* {Math.ceil(seedrandom(tag)() * 10)} */}
             {/* <AnimatedNumber value={Math.ceil(seedrandom(tag)() * 10)} diff={1} /> */}

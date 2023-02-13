@@ -345,11 +345,7 @@ export default class OverlayManager implements PageModifier {
                 return;
             }
 
-            if (
-                action === "set" ||
-                action === "add" ||
-                (action === "update" && annotation.ai_created)
-            ) {
+            if (action === "set" || action === "add" || action === "update") {
                 const existingIndex = heading.annotations.findIndex((a) => a.id === annotation.id);
                 if (existingIndex !== -1) {
                     heading.annotations[existingIndex] = annotation;
@@ -362,7 +358,7 @@ export default class OverlayManager implements PageModifier {
         });
 
         this.topleftSvelteComponent?.$set({
-            outline: this.outline,
+            outline: this.flatOutline,
         });
     }
 

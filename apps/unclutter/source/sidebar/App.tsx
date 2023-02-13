@@ -255,13 +255,14 @@ export default function App({
         });
     }
     async function fetchTagsLater(annotation: LindyAnnotation) {
-        const tags: string[] = await ky
+        let tags: string[] = await ky
             .post("https://assistant-two.vercel.app/api/tag", {
                 json: {
                     text: annotation.quote_text.replace("\n", " "),
                 },
             })
             .json();
+        tags = tags?.slice(0, 3).map((t) => t.split(" ")[0]) || [];
 
         rep.mutate.updateAnnotation({
             id: annotation.id,
