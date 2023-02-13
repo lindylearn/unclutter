@@ -5,7 +5,7 @@ import React, { useCallback, useContext, useEffect, useRef, useState } from "rea
 import { LindyAnnotation } from "../../common/annotations/create";
 import { deleteAnnotation, updateAnnotation } from "../common/CRUD";
 import { SidebarContext } from "../context";
-import { AnnotationDraftProps } from "./AnnotationDraft";
+import { AnnotationDraftProps, useBlurRef } from "./AnnotationDraft";
 import { HighlightDropdown } from "@unclutter/library-components/dist/components/Dropdown/HighlightDowndown";
 import { getRandomColor } from "../../common/annotations/styling";
 
@@ -19,9 +19,9 @@ export default function AnnotationDraftNew({
     colorDark,
     unfocusAnnotation,
 }: AnnotationDraftProps) {
-    // const ref = useBlurRef(annotation, unfocusAnnotation);
+    const ref = useBlurRef(annotation, unfocusAnnotation);
     const inputRef = useRef<HTMLTextAreaElement>();
-    const { userInfo } = useContext(SidebarContext);
+    // const { userInfo } = useContext(SidebarContext);
 
     // focus on initial render
     useEffect(() => {
@@ -33,13 +33,13 @@ export default function AnnotationDraftNew({
     // debounce local state and remote updates
     // debounce instead of throttle so that newest call eventually runs
     // @ts-ignore
-    const debouncedUpdateApi: (annotation: LindyAnnotation) => Promise<LindyAnnotation> =
-        useCallback(
-            debounce((a) => {
-                updateAnnotation(a);
-            }, 1000),
-            []
-        );
+    // const debouncedUpdateApi: (annotation: LindyAnnotation) => Promise<LindyAnnotation> =
+    //     useCallback(
+    //         debounce((a) => {
+    //             updateAnnotation(a);
+    //         }, 1000),
+    //         []
+    //     );
 
     // keep local state for faster updates
     const localAnnotation = annotation;
@@ -106,16 +106,16 @@ export default function AnnotationDraftNew({
                 e.stopPropagation();
                 setDropdownOpen(true);
             }}
-            // ref={ref}
+            ref={ref}
         >
             <div className="flex gap-2 overflow-hidden">
                 {localAnnotation.tags?.slice(0, 2).map((tag, i) => (
                     <div
                         className={clsx(
-                            "annotation-tag font-title shrink cursor-pointer overflow-ellipsis whitespace-nowrap rounded-md px-1 py-0.5 text-center transition-all hover:scale-[98%]"
+                            "annotation-tag font-title shrink cursor-pointer overflow-ellipsis whitespace-nowrap text-center transition-all hover:scale-[98%]"
                         )}
                         style={{
-                            animationDelay: `${i * 25}ms`,
+                            animationDelay: `${i * 50}ms`,
                             // @ts-ignore
                             // "--hover-color": getRandomColor(tag),
                         }}

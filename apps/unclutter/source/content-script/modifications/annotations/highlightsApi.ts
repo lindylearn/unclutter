@@ -76,19 +76,19 @@ export function paintHighlight(
             });
 
             // unfocus on next click for social comments
-            // for annotations this is handled without duplicate events by the textarea onBlur
-            // if (!annotation.isMyAnnotation || annotation.platform !== "info") {
-            //     const onNextClick = () => {
-            //         hoverUpdateHighlight(annotation, false);
-            //         sendIframeEvent(sidebarIframe, {
-            //             event: "focusAnnotation",
-            //             annotationId: null,
-            //         });
-
-            //         document.removeEventListener("click", onNextClick, true);
-            //     };
-            //     document.addEventListener("click", onNextClick, true);
-            // }
+            // for old annotation drafts this is handled without duplicate events by the textarea onBlur
+            const onNextClick = (event: Event) => {
+                // @ts-ignore
+                if (!event.target.classList.contains("lindy-highlight")) {
+                    hoverUpdateHighlight(annotation, false);
+                    sendIframeEvent(sidebarIframe, {
+                        event: "focusAnnotation",
+                        annotationId: null,
+                    });
+                }
+                document.removeEventListener("click", onNextClick, true);
+            };
+            document.addEventListener("click", onNextClick, true);
         };
     });
 

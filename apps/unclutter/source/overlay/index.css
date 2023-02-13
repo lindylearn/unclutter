@@ -241,6 +241,9 @@
     background-color: var(--annotation-color) !important;
     transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out !important;
 }
+.lindy-highlight.lindy-hover:not(#fakeID#fakeID#fakeID#fakeID) {
+    background-color: var(--darker-annotation-color) !important;
+}
 /* .lindy-highlight {
     -webkit-box-decoration-break: clone;
     -ms-box-decoration-break: clone;

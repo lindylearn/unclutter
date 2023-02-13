@@ -99,13 +99,10 @@ export default function App({
             );
         }
 
-        // fetch related in batch when first annotations added, and when AI annotations added
-        // if (
-        //     newAnnotations.length > 0 &&
-        //     (lastAnnotations.current.length === 0 || newAnnotations.some((a) => a.ai_created))
-        // ) {
-        //     fetchRelatedBatch(storeAnnotations);
-        // }
+        // fetch related in batch when first annotations added
+        if (newAnnotations.length > 0) {
+            fetchRelatedBatch(storeAnnotations);
+        }
 
         lastAnnotations.current = storeAnnotations.map(unpickleLocalAnnotation);
     }, [storeAnnotations, personalAnnotationsEnabled]);
@@ -173,7 +170,9 @@ export default function App({
         }
         console.log("Fetching related annotations in batch");
         const start = performance.now();
-        const fetchedAnnotations = storeAnnotations.filter((a) => a.id !== sourceAnnotationId);
+        const fetchedAnnotations = storeAnnotations
+            .filter((a) => a.tags?.length)
+            .filter((a) => a.id !== sourceAnnotationId);
         let groups = await fetchRelatedAnnotations(
             userInfo.id,
             articleId,
@@ -349,8 +348,8 @@ export default function App({
                     .filter(
                         (a) =>
                             a.focused ||
-                            // a.platform === "related" ||
-                            a.tags?.length ||
+                            a.platform === "related" ||
+                            // a.tags?.length ||
                             (a.isMyAnnotation && a.text)
                     )
             );

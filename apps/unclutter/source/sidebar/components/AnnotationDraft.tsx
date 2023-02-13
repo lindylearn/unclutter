@@ -141,8 +141,11 @@ export function useBlurRef(annotation: LindyAnnotation, unfocusAnnotation: () =>
             };
 
             document.addEventListener("click", onClick, true);
+            window.addEventListener("blur", onClick, true);
+
             return () => {
                 document.removeEventListener("click", onClick, true);
+                window.removeEventListener("blur", onClick, true);
             };
         }
     }, [annotation.focused]);
