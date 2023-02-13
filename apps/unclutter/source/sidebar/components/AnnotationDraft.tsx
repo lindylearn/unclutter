@@ -126,10 +126,12 @@ export function useBlurRef(annotation: LindyAnnotation, unfocusAnnotation: () =>
         if (annotation.focused) {
             const onClick = (e) => {
                 const clickTarget: HTMLElement = e.target;
+                console.log("useBlurRef", clickTarget);
 
                 // ignore actions performed on other annotations (e.g. deletes)
                 if (
-                    clickTarget?.classList.contains("annotation") ||
+                    clickTarget?.className.includes("annotation") ||
+                    clickTarget?.className.includes("dropdown") ||
                     clickTarget?.parentElement?.classList.contains("annotation")
                 ) {
                     return;
@@ -141,11 +143,11 @@ export function useBlurRef(annotation: LindyAnnotation, unfocusAnnotation: () =>
             };
 
             document.addEventListener("click", onClick, true);
-            window.addEventListener("blur", onClick, true);
+            // window.addEventListener("blur", onClick, true);
 
             return () => {
                 document.removeEventListener("click", onClick, true);
-                window.removeEventListener("blur", onClick, true);
+                // window.removeEventListener("blur", onClick, true);
             };
         }
     }, [annotation.focused]);

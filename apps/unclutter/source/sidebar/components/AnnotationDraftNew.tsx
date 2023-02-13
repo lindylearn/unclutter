@@ -61,31 +61,6 @@ export default function AnnotationDraftNew({
     //     }
     // }
 
-    // const keyboardListenerRef = useRef<(e: KeyboardEvent) => void>();
-    // useEffect(() => {
-    //     if (!annotation.focused) {
-    //         if (keyboardListenerRef.current) {
-    //             document.removeEventListener("keydown", keyboardListenerRef.current);
-    //         }
-    //         keyboardListenerRef.current = undefined;
-    //         return;
-    //     }
-
-    //     keyboardListenerRef.current = (e: KeyboardEvent) => {
-    //         console.log(e)
-    //         if (e.key === "Escape") {
-    //             unfocusAnnotation();
-    //         } else if (e.key === "Delete") {
-    //             deleteAnnotation(userInfo, annotation);
-    //         }
-    //     };
-    //     document.addEventListener("keydown", keyboardListenerRef.current);
-
-    //     return () => {
-    //         document.removeEventListener("keydown", keyboardListenerRef.current);
-    //     };
-    // }, [annotation.focused]);
-
     const [dropdownOpen, setDropdownOpen] = useState(false);
 
     return (
