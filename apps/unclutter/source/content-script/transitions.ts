@@ -68,7 +68,6 @@ export default class TransitionManager implements PageModifier {
     );
     private overlayManager = new OverlayManager(
         this.domain,
-        this.articleId,
         this.themeModifier,
         this.annotationsModifier,
         this.textContainerModifier,
