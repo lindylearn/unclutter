@@ -45,10 +45,10 @@ export function createAnnotationListener(
                 offsetById,
                 offsetEndById,
             });
+
+            onAnnotationUpdate(data.removePrevious ? "set" : "add", data.annotations);
         } else if (data.event === "paintHighlights") {
             data.annotations.map((a) => paintHighlight(a, sidebarIframe));
-
-            onAnnotationUpdate("set", data.annotations);
         } else if (data.event === "removeHighlights") {
             data.annotations.map(removeHighlight);
 

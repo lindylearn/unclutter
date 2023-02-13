@@ -11,11 +11,7 @@ import type { AnnotationListener } from "./annotationsModifier";
 
 // send user text selections to the sidebar iframe, in order to create an annotation
 const listeners: [string, () => void][] = [];
-export function createSelectionListener(
-    articleId: string,
-    sidebarIframe: HTMLIFrameElement,
-    onAnnotationUpdate: AnnotationListener
-) {
+export function createSelectionListener(articleId: string, sidebarIframe: HTMLIFrameElement) {
     // reset state on new user selection / click
     let activeAnnotationId: string | null = null;
     let processedStart = false;
@@ -78,7 +74,6 @@ export function createSelectionListener(
             event: "createHighlight",
             annotation,
         });
-        onAnnotationUpdate("add", [annotation]);
 
         selection.removeAllRanges();
     }
