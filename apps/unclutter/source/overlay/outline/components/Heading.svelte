@@ -4,9 +4,9 @@
     import { OutlineItem } from "./parse";
     import { getRandomColor } from "../../../common/annotations/styling";
     import clsx from "clsx";
+    import type { Annotation } from "@unclutter/library-components/dist/store";
 
     export let annotationsEnabled: boolean;
-    export let totalAnnotationCount: number;
     export let socialAnnotationsEnabled: boolean;
     export let activeOutlineIndex: number;
 
@@ -14,9 +14,8 @@
     export let title: string;
     export let element: Element;
     export let children: OutlineItem[];
-    export let myAnnotationCount: number = null;
-    export let socialCommentsCount: number = null;
-    export let relatedCount: number = null;
+
+    export let annotations: Annotation[];
 
     let activateStateClass = "";
     $: if (
@@ -99,13 +98,13 @@
                 //     socialCommentsCount &&
                 //     index !== -1 &&
                 //     "icon-padding",
-                myAnnotationCount && "visible-icon"
+                annotations.length && "visible-icon"
             )}
             style={`min-width: 1.4em; padding: 0 0.4em; background-color: ${getRandomColor(
                 title
             )};`}
         >
-            {myAnnotationCount}
+            {annotations.length}
         </div>
     </div>
     {#if children.length > 0}

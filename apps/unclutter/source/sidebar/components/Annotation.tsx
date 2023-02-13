@@ -125,11 +125,11 @@ function Annotation({
                 )}
             </div>
 
-            <HighlightDropdown
+            {/* <HighlightDropdown
                 annotation={annotation}
                 open={dropdownOpen}
                 setOpen={setDropdownOpen}
-            />
+            /> */}
         </a>
     );
 }

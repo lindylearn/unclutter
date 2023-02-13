@@ -30,6 +30,7 @@ import { setUserSettingsForDomain } from "../../common/storage";
 import LibraryModifier from "./library";
 import BodyStyleModifier from "./bodyStyle";
 import SmartHighlightsProxy from "./DOM/smartHighlightsProxy";
+import type { Annotation } from "@unclutter/library-components/dist/store";
 
 @trackModifierExecution
 export default class OverlayManager implements PageModifier {
@@ -321,96 +322,52 @@ export default class OverlayManager implements PageModifier {
     }
 
     // listen to annotation updates and attribute to outline heading
-    private totalAnnotationCount?: number;
-    private totalSocialCommentsCount?: number;
-    private totalRelatedCount?: number;
     private async onAnnotationUpdate(
-        action: "set" | "add" | "remove",
-        annotations: LindyAnnotation[]
+        action: "set" | "add" | "remove" | "update",
+        annotations: Annotation[]
     ) {
         if (!this.flatOutline || this.flatOutline.length === 0) {
             return;
         }
 
-        if (
-            action === "remove" &&
-            this.totalAnnotationCount === 0 &&
-            this.totalSocialCommentsCount === 0
-        ) {
-            // removing overlapping annotations before displaying them -- ignore this
-            return;
-        }
-
-        // treat first add as set
-        if (action === "add" && this.totalAnnotationCount === undefined) {
-            action = "set";
-        }
-
         // reset state
         if (action === "set") {
-            this.totalAnnotationCount = 0;
-            this.totalSocialCommentsCount = 0;
-            this.totalRelatedCount = 0;
             this.flatOutline.map((_, index) => {
-                this.flatOutline[index].myAnnotationCount = 0;
+                this.flatOutline[index].annotations = [];
                 this.flatOutline[index].socialCommentsCount = 0;
-                this.flatOutline[index].relatedCount = 0;
             });
         }
 
         annotations.map((annotation) => {
             const outlineIndex = this.getOutlineIndexForAnnotation(annotation);
+            const heading = this.flatOutline[outlineIndex];
+            if (!heading) {
+                return;
+            }
 
-            if (annotation.ai_created) {
-                if (action === "set" || action === "add") {
-                    this.totalRelatedCount += 1;
-                    this.flatOutline[outlineIndex].relatedCount += 1;
-                } else if (action === "remove") {
-                    this.totalRelatedCount -= 1;
-                    this.flatOutline[outlineIndex].relatedCount -= 1;
+            if (
+                action === "set" ||
+                action === "add" ||
+                (action === "update" && annotation.ai_created)
+            ) {
+                const existingIndex = heading.annotations.findIndex((a) => a.id === annotation.id);
+                if (existingIndex !== -1) {
+                    heading.annotations[existingIndex] = annotation;
+                } else {
+                    heading.annotations.push(annotation);
                 }
-            } else if (!annotation.isMyAnnotation) {
-                if (action === "set" || action === "add") {
-                    this.totalSocialCommentsCount += 1;
-                    this.flatOutline[outlineIndex].socialCommentsCount += 1;
-                } else if (action === "remove") {
-                    this.totalSocialCommentsCount -= 1;
-                    this.flatOutline[outlineIndex].socialCommentsCount -= 1;
-                }
-            } else {
-                if (action === "set" || action === "add") {
-                    this.totalAnnotationCount += 1;
-                    this.flatOutline[outlineIndex].myAnnotationCount += 1;
-                } else if (action === "remove") {
-                    this.totalAnnotationCount -= 1;
-                    this.flatOutline[outlineIndex].myAnnotationCount -= 1;
-                }
+            } else if (action === "remove") {
+                heading.annotations = heading.annotations.filter((a) => a.id !== annotation.id);
             }
         });
 
         this.topleftSvelteComponent?.$set({
-            totalAnnotationCount: this.totalAnnotationCount,
-            totalRelatedCount: this.totalRelatedCount,
             outline: this.outline,
         });
-
-        if (this.totalSocialCommentsCount === 0) {
-            const socialAnnotationsEnabled = await getFeatureFlag(enableSocialCommentsFeatureFlag);
-            if (!socialAnnotationsEnabled) {
-                // expected to find 0 displayed social annotations
-                // don't update counts, we might still want to show them
-                return;
-            }
-        }
-        setTimeout(() => {
-            this.toprightSvelteComponent?.$set({
-                anchoredSocialHighlightsCount: this.totalSocialCommentsCount,
-            });
-        }, 4000);
     }
 
     private cachedAnnotationOutlineIndex: { [annotationId: string]: number } = {};
-    private getOutlineIndexForAnnotation(annotation: LindyAnnotation): number {
+    private getOutlineIndexForAnnotation(annotation: Annotation): number {
         if (!this.flatOutline) {
             return null;
         }

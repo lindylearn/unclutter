@@ -100,12 +100,12 @@ export default function App({
         }
 
         // fetch related in batch when first annotations added, and when AI annotations added
-        if (
-            newAnnotations.length > 0 &&
-            (lastAnnotations.current.length === 0 || newAnnotations.some((a) => a.ai_created))
-        ) {
-            fetchRelatedBatch(storeAnnotations);
-        }
+        // if (
+        //     newAnnotations.length > 0 &&
+        //     (lastAnnotations.current.length === 0 || newAnnotations.some((a) => a.ai_created))
+        // ) {
+        //     fetchRelatedBatch(storeAnnotations);
+        // }
 
         lastAnnotations.current = storeAnnotations.map(unpickleLocalAnnotation);
     }, [storeAnnotations, personalAnnotationsEnabled]);
@@ -348,7 +348,7 @@ export default function App({
                     .filter(
                         (a) =>
                             a.focused ||
-                            a.platform === "related" ||
+                            // a.platform === "related" ||
                             a.tags?.length ||
                             (a.isMyAnnotation && a.text)
                     )

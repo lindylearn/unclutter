@@ -169,7 +169,10 @@ export default class AnnotationsModifier implements PageModifier {
     // private fn passed to selection listener (added) and annotations side events listener (anchored, removed)
     // cannot easily use store subscribe instead, because need annotation offsets e.g. for outline
     public annotationListeners: AnnotationListener[] = [];
-    onAnnotationUpdate(action: "set" | "add" | "remove", annotations: LindyAnnotation[]) {
+    onAnnotationUpdate(
+        action: "set" | "add" | "remove" | "update",
+        annotations: LindyAnnotation[]
+    ) {
         // console.log(action, annotations);
 
         this.onAnnotationsVisible(annotations);
@@ -237,6 +240,6 @@ export default class AnnotationsModifier implements PageModifier {
 }
 
 export type AnnotationListener = (
-    action: "set" | "add" | "remove",
+    action: "set" | "add" | "remove" | "update",
     annotation: LindyAnnotation[]
 ) => void;

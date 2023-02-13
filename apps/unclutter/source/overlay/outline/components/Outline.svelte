@@ -3,14 +3,11 @@
     import Heading from "./Heading.svelte";
     import { OutlineItem } from "./parse";
     import { scrollToElement } from "./common";
-    import ResourceStat from "../Library/ResourceStat.svelte";
     import type { UserInfo } from "@unclutter/library-components/dist/store";
 
     export let outline: OutlineItem[];
     export let activeOutlineIndex: number;
     export let annotationsEnabled: boolean;
-    export let totalAnnotationCount: number | undefined;
-    export let totalRelatedCount: number | undefined;
     export let readingTimeLeft: number = null;
     export let userInfo: UserInfo | undefined;
 </script>
@@ -33,11 +30,9 @@
 
             {#if userInfo?.aiEnabled}
                 <div class="">
-                    {#if totalRelatedCount === undefined}
+                    <!-- {#if totalRelatedCount === undefined}
                         <div class="loader h-4 w-4 shrink-0" />
-                    {:else if totalRelatedCount}
-                        <!-- <ResourceStat type="related" value={totalRelatedCount} /> -->
-                    {/if}
+                    {/if} -->
                 </div>
             {/if}
         </div>
@@ -62,7 +57,6 @@
                     {...child}
                     {activeOutlineIndex}
                     {annotationsEnabled}
-                    {totalAnnotationCount}
                     socialAnnotationsEnabled={outline.slice(1).some((h) => h.socialCommentsCount)}
                 />
             {/each}
