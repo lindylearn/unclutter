@@ -96,10 +96,7 @@ export default class AnnotationsModifier implements PageModifier {
         // listeners need to be configured before rendering iframe to anchor annotations?
 
         // selection is only user interface for annotations
-        createSelectionListener(
-            this.articleId,
-            this.sidebarIframe,
-        );
+        createSelectionListener(this.articleId, this.sidebarIframe);
 
         sendIframeEvent(this.sidebarIframe, {
             event: "setEnablePersonalAnnotations",
@@ -173,7 +170,7 @@ export default class AnnotationsModifier implements PageModifier {
     focusedAnnotation: string | null = null;
     private async onRuntimeMessage(message, sender, sendResponse) {
         if (message.event === "focusAnnotation") {
-            console.log("focus", message, this.annotationsVisible)
+            console.log("focus", message, this.annotationsVisible);
             if (this.annotationsVisible) {
                 if (message.source === "modal") {
                     // wait until modal scroll-lock disabled
@@ -189,10 +186,9 @@ export default class AnnotationsModifier implements PageModifier {
     }
 
     private async onAnnotationsVisible(annotations: LindyAnnotation[]) {
-        console.log("anchored", annotations)
         if (this.annotationsVisible) {
             // run only once
-            return
+            return;
         }
         if (annotations.length === 0) {
             // more annotations might get fetched later (and there is nothing to focus anyways)
