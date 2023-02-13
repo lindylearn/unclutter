@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useMemo, useState } from "react";
+import { getRandomColor } from "../../common";
 import { Annotation, Article, ReplicacheContext, useSubscribe } from "../../store";
 import { getActivityColor } from "../Charts";
 import { BigNumber, ResourceIcon } from "../Modal";
@@ -19,25 +20,25 @@ export default function ArticleBottomReview({
         rep?.subscribe.listArticleAnnotations(articleId),
         []
     );
-    const [allArticles, setAllArticles] = useState<Article[]>();
-    const [allAnnotations, setAllAnnotations] = useState<Annotation[]>();
-    useEffect(() => {
-        if (!rep) {
-            return;
-        }
-        rep.query.listRecentArticles().then(setAllArticles);
-        rep.query.listAnnotations().then(setAllAnnotations);
-    }, [rep]);
+    // const [allArticles, setAllArticles] = useState<Article[]>();
+    // const [allAnnotations, setAllAnnotations] = useState<Annotation[]>();
+    // useEffect(() => {
+    //     if (!rep) {
+    //         return;
+    //     }
+    //     rep.query.listRecentArticles().then(setAllArticles);
+    //     rep.query.listAnnotations().then(setAllAnnotations);
+    // }, [rep]);
 
     // handle events
-    const [relatedCount, setRelatedCount] = useState<number>();
-    useEffect(() => {
-        window.onmessage = async function ({ data }) {
-            if (data.event === "updateRelatedCount") {
-                setRelatedCount(data.relatedCount);
-            }
-        };
-    }, []);
+    // const [relatedCount, setRelatedCount] = useState<number>();
+    // useEffect(() => {
+    //     window.onmessage = async function ({ data }) {
+    //         if (data.event === "updateRelatedCount") {
+    //             setRelatedCount(data.relatedCount);
+    //         }
+    //     };
+    // }, []);
 
     function openLibrary(initialTab: string) {
         window.top?.postMessage(
@@ -49,41 +50,43 @@ export default function ArticleBottomReview({
         );
     }
 
-    const allAnnotationsCount = useMemo(
-        () =>
-            allAnnotations &&
-            articleAnnotations &&
-            allAnnotations.filter((a) => a.article_id !== articleId).length +
-                articleAnnotations.length,
-        [allAnnotations, articleAnnotations]
-    );
+    // const allAnnotationsCount = useMemo(
+    //     () =>
+    //         allAnnotations &&
+    //         articleAnnotations &&
+    //         allAnnotations.filter((a) => a.article_id !== articleId).length +
+    //             articleAnnotations.length,
+    //     [allAnnotations, articleAnnotations]
+    // );
+
+    const [tagCountList, setTagCountList] = useState<[string, number][]>([]);
+    useEffect(() => {
+        const tagCounts: { [tag: string]: number } = {};
+        for (const annotation of articleAnnotations) {
+            for (const tag of annotation.tags?.slice(0, 1) || []) {
+                if (tagCounts[tag]) {
+                    tagCounts[tag]++;
+                } else {
+                    tagCounts[tag] = 1;
+                }
+            }
+        }
+
+        setTagCountList(Object.entries(tagCounts).sort((a, b) => b[1] - a[1]));
+    }, [articleAnnotations]);
 
     return (
         <div className="bottom-review bottom-content flex flex-col gap-[8px] text-stone-800 dark:text-[rgb(232,230,227)]">
             <CardContainer>
-                <div className="relative grid grid-cols-4 gap-4">
-                    <BigNumber
-                        value={allArticles?.length}
-                        diff={1}
-                        tag={`saved articles`}
-                        icon={<ResourceIcon type="articles" large />}
-                        colorOverride={getActivityColor(1, darkModeEnabled)}
-                        onClick={() => openLibrary("list")}
-                    />
-                    <BigNumber
-                        value={allAnnotationsCount}
-                        diff={articleAnnotations?.length}
-                        tag={`saved highlights`}
-                        icon={<ResourceIcon type="highlights" large />}
-                        colorOverride={getActivityColor(1, darkModeEnabled)}
-                        onClick={() => openLibrary("highlights")}
-                    />
-                    <BigNumber
-                        diff={relatedCount}
-                        tag={`connected ideas`}
-                        icon={<ResourceIcon type="puzzle" large />}
-                        colorOverride={getActivityColor(1, darkModeEnabled)}
-                    />
+                <div className="relative grid grid-cols-5 gap-4">
+                    {tagCountList.map(([tag, count]) => (
+                        <BigNumber
+                            diff={count}
+                            tag={`#${tag}`}
+                            colorOverride={getRandomColor(tag)}
+                            onClick={() => openLibrary("highlights")}
+                        />
+                    ))}
                 </div>
 
                 {/* <ArticleActivityCalendar
