@@ -14,7 +14,6 @@ const listeners: [string, () => void][] = [];
 export function createSelectionListener(
     articleId: string,
     sidebarIframe: HTMLIFrameElement,
-    onAnnotationUpdate: AnnotationListener
 ) {
     // reset state on new user selection / click
     let activeAnnotationId: string | null = null;
@@ -78,7 +77,6 @@ export function createSelectionListener(
             event: "createHighlight",
             annotation,
         });
-        onAnnotationUpdate("add", [annotation]);
 
         selection.removeAllRanges();
     }

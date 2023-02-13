@@ -1,5 +1,4 @@
 import throttle from "lodash/throttle";
-import { AnnotationListener } from "./annotationsModifier";
 import {
     anchorAnnotations,
     getHighlightOffsets,
@@ -9,11 +8,12 @@ import {
     removeHighlight,
 } from "./highlightsApi";
 import { sendIframeEvent } from "../../../common/reactIframe";
+import { LindyAnnotation } from "../../../common/annotations/create";
 
 let listenerRef;
 export function createAnnotationListener(
     sidebarIframe: HTMLIFrameElement,
-    onAnnotationUpdate: AnnotationListener
+    onAnchored: (annotations: LindyAnnotation[]) => void
 ) {
     // highlight new sent annotations, and send back display offsets
     const onMessage = async function ({ data }) {
@@ -45,14 +45,11 @@ export function createAnnotationListener(
                 offsetById,
                 offsetEndById,
             });
+            onAnchored(data.annotations);
         } else if (data.event === "paintHighlights") {
             data.annotations.map((a) => paintHighlight(a, sidebarIframe));
-
-            onAnnotationUpdate("set", data.annotations);
         } else if (data.event === "removeHighlights") {
             data.annotations.map(removeHighlight);
-
-            onAnnotationUpdate("remove", data.annotations);
         } else if (data.event === "onAnnotationHoverUpdate") {
             hoverUpdateHighlight(data.annotation, data.hoverActive);
         }
