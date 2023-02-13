@@ -16,6 +16,7 @@
     export let activeOutlineIndex: number;
     export let annotationsEnabled: boolean;
     export let readingTimeLeft: number = null;
+    export let totalRelatedCount: number | undefined;
     export let libraryState: LibraryState;
     export let darkModeEnabled: boolean;
     export let libraryModifier: LibraryModifier;
@@ -50,6 +51,7 @@
         {outline}
         {activeOutlineIndex}
         {annotationsEnabled}
+        {totalRelatedCount}
         {readingTimeLeft}
         userInfo={libraryState?.userInfo}
     />

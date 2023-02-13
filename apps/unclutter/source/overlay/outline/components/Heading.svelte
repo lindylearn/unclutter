@@ -125,18 +125,18 @@
             {annotations.length}
         </div> -->
 
-        <div class="flex shrink-0 items-center gap-1 overflow-hidden">
-            {#each tagCountList as [tag, count]}
-                <div
-                    class="h-3 w-3 shrink-0 rounded-full"
-                    style={`background-color: ${getRandomColor(tag).replace("0.3", "0.6")};`}
-                />
+        <div class="-mr-2 flex shrink-0 gap-1 overflow-hidden">
+            {#each tagCountList?.slice(0, 3) as [tag, count]}
                 <!-- <div
-                    class="shrink-0 rounded-md px-1 text-center text-sm"
+                    class="h-full w-2 shrink-0 rounded-sm"
+                    style={`background-color: ${getRandomColor(tag).replace("0.3", "0.6")};`}
+                /> -->
+                <div
+                    class="rounded px-1.5 text-center font-bold"
                     style={`background-color: ${getRandomColor(tag)};`}
                 >
-                    #{tag}
-                </div> -->
+                    {count}
+                </div>
             {/each}
         </div>
     </div>

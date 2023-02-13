@@ -9,6 +9,7 @@
     export let activeOutlineIndex: number;
     export let annotationsEnabled: boolean;
     export let readingTimeLeft: number = null;
+    export let totalRelatedCount: number | undefined;
     export let userInfo: UserInfo | undefined;
 </script>
 
@@ -30,9 +31,9 @@
 
             {#if userInfo?.aiEnabled}
                 <div class="">
-                    <!-- {#if totalRelatedCount === undefined}
+                    {#if totalRelatedCount === undefined}
                         <div class="loader h-4 w-4 shrink-0" />
-                    {/if} -->
+                    {/if}
                 </div>
             {/if}
         </div>
