@@ -54,7 +54,7 @@ export default class AnnotationsModifier implements PageModifier {
         });
 
         // always created anchor listener to handle social comments
-        createAnnotationListener(this.sidebarIframe, this.onAnnotationsVisible.bind(this));
+        createAnnotationListener(this.sidebarIframe, this.onAnnotationUpdate.bind(this));
         this.pageResizeObserver = updateOffsetsOnHeightChange(
             this.sidebarIframe,
             this.initialScollHeight
@@ -99,6 +99,7 @@ export default class AnnotationsModifier implements PageModifier {
         createSelectionListener(
             this.articleId,
             this.sidebarIframe,
+            this.onAnnotationUpdate.bind(this)
         );
 
         sendIframeEvent(this.sidebarIframe, {
@@ -169,11 +170,22 @@ export default class AnnotationsModifier implements PageModifier {
         });
     }
 
+    public annotationListeners: AnnotationListener[] = [];
+
+    // private fn passed to selection listener (added) and annotations side events listener (anchored, removed)
+    onAnnotationUpdate(action: "set" | "add" | "remove", annotations: LindyAnnotation[]) {
+        if (action === "set") {
+            // called after paintHighlights event
+            this.onAnnotationsVisible(annotations);
+        }
+
+        this.annotationListeners.map((listener) => listener(action, annotations));
+    }
+
     private annotationsVisible: boolean = false;
     focusedAnnotation: string | null = null;
     private async onRuntimeMessage(message, sender, sendResponse) {
         if (message.event === "focusAnnotation") {
-            console.log("focus", message, this.annotationsVisible)
             if (this.annotationsVisible) {
                 if (message.source === "modal") {
                     // wait until modal scroll-lock disabled
@@ -189,11 +201,6 @@ export default class AnnotationsModifier implements PageModifier {
     }
 
     private async onAnnotationsVisible(annotations: LindyAnnotation[]) {
-        console.log("anchored", annotations)
-        if (this.annotationsVisible) {
-            // run only once
-            return
-        }
         if (annotations.length === 0) {
             // more annotations might get fetched later (and there is nothing to focus anyways)
             return;
