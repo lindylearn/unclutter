@@ -36,7 +36,7 @@
                     {#if totalRelatedCount === undefined}
                         <div class="loader h-4 w-4 shrink-0" />
                     {:else if totalRelatedCount}
-                        <ResourceStat type="related" value={totalRelatedCount} />
+                        <!-- <ResourceStat type="related" value={totalRelatedCount} /> -->
                     {/if}
                 </div>
             {/if}
