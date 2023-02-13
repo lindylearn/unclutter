@@ -1,7 +1,6 @@
 import clsx from "clsx";
 import debounce from "lodash/debounce";
 import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
-import ky from "ky";
 
 import { LindyAnnotation } from "../../common/annotations/create";
 import { deleteAnnotation, updateAnnotation } from "../common/CRUD";
@@ -43,51 +42,49 @@ export default function AnnotationDraftNew({
         );
 
     // keep local state for faster updates
-    const [localAnnotation, setLocalAnnotation] = React.useState(annotation);
-    async function updateAnnotationLocalFirst(newAnnotation: LindyAnnotation) {
-        setLocalAnnotation(newAnnotation);
+    const localAnnotation = annotation;
+    // const [localAnnotation, setLocalAnnotation] = React.useState(annotation);
+    // async function updateAnnotationLocalFirst(newAnnotation: LindyAnnotation) {
+    //     setLocalAnnotation(newAnnotation);
 
-        if (!!annotation.text !== !!newAnnotation.text) {
-            // changed visiblity
-            // immediately update if added first text or removed text (impacts visibility)
-            if (newAnnotation.text) {
-                updateAnnotation(newAnnotation);
-            } else {
-                deleteAnnotation(userInfo, newAnnotation);
-            }
-        } else {
-            // call with newAnnotation as localAnnotation takes once loop iteration to update
-            await debouncedUpdateApi(newAnnotation);
-        }
-    }
+    //     if (!!annotation.text !== !!newAnnotation.text) {
+    //         // changed visiblity
+    //         // immediately update if added first text or removed text (impacts visibility)
+    //         if (newAnnotation.text) {
+    //             updateAnnotation(newAnnotation);
+    //         } else {
+    //             deleteAnnotation(userInfo, newAnnotation);
+    //         }
+    //     } else {
+    //         // call with newAnnotation as localAnnotation takes once loop iteration to update
+    //         await debouncedUpdateApi(newAnnotation);
+    //     }
+    // }
 
-    // const [question, setQuestion] = useState<string>();
-    useEffect(() => {
-        // if (!annotation.text) {
-        //     ky.post("https://assistant-two.vercel.app/api/question", {
-        //         json: {
-        //             text: annotation.quote_text,
-        //         },
-        //     })
-        //         .json()
-        //         .then((question: any) => setQuestion(question));
-        // }
-        if (!annotation.tags || annotation.tags.length === 0) {
-            console.log("fetching tags");
-            ky.post("https://assistant-two.vercel.app/api/tag", {
-                json: {
-                    text: annotation.quote_text.replace("\n", " "),
-                },
-            })
-                .json()
-                .then((tags: any) => {
-                    updateAnnotationLocalFirst({
-                        ...localAnnotation,
-                        tags,
-                    });
-                });
-        }
-    }, []);
+    // const keyboardListenerRef = useRef<(e: KeyboardEvent) => void>();
+    // useEffect(() => {
+    //     if (!annotation.focused) {
+    //         if (keyboardListenerRef.current) {
+    //             document.removeEventListener("keydown", keyboardListenerRef.current);
+    //         }
+    //         keyboardListenerRef.current = undefined;
+    //         return;
+    //     }
+
+    //     keyboardListenerRef.current = (e: KeyboardEvent) => {
+    //         console.log(e)
+    //         if (e.key === "Escape") {
+    //             unfocusAnnotation();
+    //         } else if (e.key === "Delete") {
+    //             deleteAnnotation(userInfo, annotation);
+    //         }
+    //     };
+    //     document.addEventListener("keydown", keyboardListenerRef.current);
+
+    //     return () => {
+    //         document.removeEventListener("keydown", keyboardListenerRef.current);
+    //     };
+    // }, [annotation.focused]);
 
     const [dropdownOpen, setDropdownOpen] = useState(false);
 
@@ -111,7 +108,7 @@ export default function AnnotationDraftNew({
             }}
             // ref={ref}
         >
-            <div className="flex min-h-[20px] overflow-hidden">
+            <div className="flex min-h-[33.750px] overflow-hidden">
                 {localAnnotation.tags
                     ?.slice(0, 3)
                     .map((t) => t.replace(" ", "-"))
@@ -139,6 +136,7 @@ export default function AnnotationDraftNew({
             )} */}
 
             <HighlightDropdown
+                // @ts-ignore
                 annotation={annotation}
                 open={dropdownOpen}
                 setOpen={setDropdownOpen}

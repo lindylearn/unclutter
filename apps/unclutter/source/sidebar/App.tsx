@@ -18,6 +18,7 @@ import { groupAnnotations } from "./common/grouping";
 import { useAnnotationSettings } from "./common/hooks";
 import AnnotationsList from "./components/AnnotationsList";
 import { SidebarContext } from "./context";
+import ky from "ky";
 
 const maxRelatedCount = 2;
 
@@ -253,6 +254,32 @@ export default function App({
             };
         });
     }
+    async function fetchTagsLater(annotation: LindyAnnotation) {
+        const tags: string[] = await ky
+            .post("https://assistant-two.vercel.app/api/tag", {
+                json: {
+                    text: annotation.quote_text.replace("\n", " "),
+                },
+            })
+            .json();
+
+        rep.mutate.updateAnnotation({
+            id: annotation.id,
+            tags,
+        });
+        window.top.postMessage(
+            {
+                event: "paintHighlights",
+                annotations: [
+                    {
+                        ...annotation,
+                        tags,
+                    },
+                ],
+            },
+            "*"
+        );
+    }
 
     useEffect(() => {
         if (!batchRelatedFetchDone.current) {
@@ -319,7 +346,11 @@ export default function App({
                         })) || []),
                     ])
                     .filter(
-                        (a) => a.focused || a.platform === "related" || (a.isMyAnnotation && a.text)
+                        (a) =>
+                            a.focused ||
+                            a.platform === "related" ||
+                            a.tags?.length ||
+                            (a.isMyAnnotation && a.text)
                     )
             );
         }
@@ -346,6 +377,7 @@ export default function App({
                         groupedAnnotations={groupedAnnotations}
                         unfocusAnnotation={() => setFocusedAnnotationId(null)}
                         fetchRelatedLater={fetchRelatedLater}
+                        fetchTagsLater={fetchTagsLater}
                     />
                 </div>
             </SidebarContext.Provider>

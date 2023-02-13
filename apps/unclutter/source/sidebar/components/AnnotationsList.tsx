@@ -10,6 +10,7 @@ interface AnnotationsListProps {
     groupedAnnotations: LindyAnnotation[][];
     unfocusAnnotation: () => void;
     fetchRelatedLater: (annotation: LindyAnnotation) => Promise<void>;
+    fetchTagsLater: (annotation: LindyAnnotation) => Promise<void>;
 }
 
 const annotationMarginPx = 6;
@@ -18,6 +19,7 @@ function AnnotationsList({
     groupedAnnotations,
     unfocusAnnotation,
     fetchRelatedLater,
+    fetchTagsLater,
 }: AnnotationsListProps) {
     const itemsRef = useRef({}); // annotation id -> ref of rendered annotation node
 
@@ -125,6 +127,7 @@ function AnnotationsList({
                                     // } // give each item equal share -- always avoids overflows
                                     unfocusAnnotation={unfocusAnnotation}
                                     fetchRelatedLater={fetchRelatedLater}
+                                    fetchTagsLater={fetchTagsLater}
                                 />
                             </div>
                         </CSSTransition>

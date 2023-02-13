@@ -34,7 +34,7 @@ export function createSelectionListener(articleId: string, sidebarIframe: HTMLIF
             activeAnnotationId = generateId();
             document.documentElement.style.setProperty(
                 "--selection-background",
-                getRandomColor(activeAnnotationId)
+                "rgba(250, 204, 21, 0.3)" // yellow
             );
 
             const range = selection.getRangeAt(0);

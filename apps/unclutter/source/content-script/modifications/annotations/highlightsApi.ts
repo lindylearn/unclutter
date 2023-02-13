@@ -1,7 +1,6 @@
-import browser from "../../../common/polyfill";
 import { LindyAnnotation } from "../../../common/annotations/create";
 import { getNodeOffset } from "../../../common/annotations/offset";
-import { getAnnotationColor } from "../../../common/annotations/styling";
+import { getAnnotationColorNew } from "../../../common/annotations/styling";
 import { anchor as anchorHTML } from "../../../common/annotator/anchoring/html";
 import {
     highlightRange,
@@ -10,7 +9,6 @@ import {
 } from "../../../common/annotator/highlighter";
 import { overrideClassname } from "../../../common/stylesheets";
 import { sendIframeEvent } from "../../../common/reactIframe";
-import { getAIAnnotationColor } from "@unclutter/library-components/dist/common/styling";
 
 // highlight text for every passed annotation on the active webpage
 export async function anchorAnnotations(annotations: LindyAnnotation[]) {
@@ -61,25 +59,7 @@ export function paintHighlight(
     }
 
     // set color variables
-    let annotationColor: string;
-    let darkerAnnotationColor: string;
-    if (annotation.ai_created) {
-        annotationColor = "rgba(250, 204, 21, 0.3)";
-        darkerAnnotationColor = "rgba(250, 204, 21, 0.6)";
-    } else if (annotation.isMyAnnotation) {
-        annotationColor = getAnnotationColor(annotation);
-        darkerAnnotationColor = annotationColor.replace("0.3", "0.5");
-    } else {
-        if (annotation.platform === "hn") {
-            annotationColor = "rgba(255, 102, 0, 0.5)";
-        } else if (annotation.platform === "h") {
-            annotationColor = "rgba(189, 28, 43, 0.5)";
-        } else if (annotation.platform === "info") {
-            annotationColor = "rgba(250, 204, 21, 0.2)";
-        }
-
-        darkerAnnotationColor = annotationColor.replace("0.5", "0.8");
-    }
+    const [annotationColor, darkerAnnotationColor] = getAnnotationColorNew(annotation);
     highlightedNodes.map((node) => {
         node.style.setProperty("--annotation-color", annotationColor, "important");
         node.style.setProperty("--darker-annotation-color", darkerAnnotationColor, "important");
