@@ -129,7 +129,7 @@
             {#each tagCountList as [tag, count]}
                 <div
                     class="h-3 w-3 shrink-0 rounded-full"
-                    style={`background-color: ${getRandomColor(tag)};`}
+                    style={`background-color: ${getRandomColor(tag).replace("0.3", "0.6")};`}
                 />
                 <!-- <div
                     class="shrink-0 rounded-md px-1 text-center text-sm"

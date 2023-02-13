@@ -6,14 +6,14 @@ import { LindyAnnotation } from "../../common/annotations/create";
 import { deleteAnnotation, updateAnnotation } from "../common/CRUD";
 import { SidebarContext } from "../context";
 import { AnnotationDraftProps } from "./AnnotationDraft";
-import { getRandomColor } from "@unclutter/library-components/dist/common/styling";
 import { HighlightDropdown } from "@unclutter/library-components/dist/components/Dropdown/HighlightDowndown";
+import { getRandomColor } from "../../common/annotations/styling";
 
 export default function AnnotationDraftNew({
     annotation,
     className,
     heightLimitPx,
-    isFetchingRelated,
+    isFetching,
     relatedCount,
     color,
     colorDark,
@@ -91,7 +91,7 @@ export default function AnnotationDraftNew({
     return (
         <div
             className={clsx(
-                `annotation annotation-draft relative rounded-l-sm rounded-r-md text-sm shadow`,
+                `annotation annotation-draft relative flex min-h-[33.750px] items-center rounded-l-sm rounded-r-md py-1 px-2 text-sm shadow`,
                 annotation.focused && "focused",
                 className
             )}
@@ -108,35 +108,34 @@ export default function AnnotationDraftNew({
             }}
             // ref={ref}
         >
-            <div className="flex min-h-[33.750px] overflow-hidden">
-                {localAnnotation.tags?.slice(0, 3).map((tag, i) => (
+            <div className="flex gap-2 overflow-hidden">
+                {localAnnotation.tags?.slice(0, 2).map((tag, i) => (
                     <div
                         className={clsx(
-                            "font-title annotation-tag flex shrink cursor-pointer gap-0.5 overflow-ellipsis whitespace-nowrap py-2 px-1 transition-all hover:scale-[98%]",
-                            i === 0 && "pl-3"
+                            "annotation-tag font-title shrink cursor-pointer overflow-ellipsis whitespace-nowrap rounded-md px-1 py-0.5 text-center transition-all hover:scale-[98%]"
                         )}
                         style={{
-                            animationDelay: `${i * 50}ms`,
-                            // backgroundColor: color, // getRandomColor(tag),
+                            animationDelay: `${i * 25}ms`,
+                            // @ts-ignore
+                            // "--hover-color": getRandomColor(tag),
                         }}
                     >
-                        <div className="name">#{tag}</div>
+                        #{tag}
                     </div>
                 ))}
             </div>
             {/* {Math.ceil(seedrandom(tag)() * 10)} */}
             {/* <AnimatedNumber value={Math.ceil(seedrandom(tag)() * 10)} diff={1} /> */}
-
-            {/* {isFetchingRelated && (
+            {isFetching ? (
                 <div className="loader absolute top-2 right-2 flex h-4 w-4 gap-2"></div>
-            )} */}
-
-            <HighlightDropdown
-                // @ts-ignore
-                annotation={annotation}
-                open={dropdownOpen}
-                setOpen={setDropdownOpen}
-            />
+            ) : (
+                <HighlightDropdown
+                    // @ts-ignore
+                    annotation={annotation}
+                    open={dropdownOpen}
+                    setOpen={setDropdownOpen}
+                />
+            )}
         </div>
     );
 }

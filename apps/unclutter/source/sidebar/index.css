@@ -108,8 +108,10 @@ svg.icon > path {
     }
 }
 .annotation-tag {
-    animation: animateNumberIn 0.2s cubic-bezier(0.5, 1, 0.89, 1); /* easeOutQuad */
-    animation-fill-mode: both;
+    background: transparent;
+}
+.annotation-tag:hover {
+    background: var(--hover-color);
 }
 
 /* 3rd spinner on https://cssloaders.github.io/ */

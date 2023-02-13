@@ -11,7 +11,7 @@ export interface AnnotationDraftProps {
     annotation: LindyAnnotation;
     className?: string;
     heightLimitPx?: number;
-    isFetchingRelated?: boolean;
+    isFetching?: boolean;
     relatedCount?: number;
 
     color: string;
@@ -24,7 +24,7 @@ export default function AnnotationDraft({
     annotation,
     className,
     heightLimitPx,
-    isFetchingRelated,
+    isFetching,
     relatedCount,
     color,
     colorDark,
@@ -89,7 +89,7 @@ export default function AnnotationDraft({
             <TextareaAutosize
                 className="w-full select-none resize-none overflow-hidden bg-transparent align-top outline-none placeholder:select-none placeholder:text-stone-400 placeholder:opacity-50 dark:placeholder:text-stone-600"
                 placeholder={
-                    isFetchingRelated
+                    isFetching
                         ? ""
                         : relatedCount
                         ? `${relatedCount} related highlight${relatedCount !== 1 ? "s" : ""}`
@@ -114,9 +114,7 @@ export default function AnnotationDraft({
                 onBlur={unfocusAnnotation}
             />
 
-            {isFetchingRelated && (
-                <div className="loader absolute top-2 right-2 flex h-4 w-4 gap-2"></div>
-            )}
+            {isFetching && <div className="loader absolute top-2 right-2 flex h-4 w-4 gap-2"></div>}
         </div>
     );
 }

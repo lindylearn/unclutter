@@ -60,7 +60,7 @@ export default function AnnotationThread(props: AnnotationThreadProps) {
             {annotation.isMyAnnotation && !userInfo?.aiEnabled && (
                 <AnnotationDraft
                     {...props}
-                    isFetchingRelated={isFetchingRelated}
+                    isFetching={isFetchingRelated || isFetchingTags}
                     color={color}
                     colorDark={colorDark}
                 />
@@ -68,7 +68,7 @@ export default function AnnotationThread(props: AnnotationThreadProps) {
             {annotation.isMyAnnotation && userInfo?.aiEnabled && (
                 <AnnotationDraftNew
                     {...props}
-                    isFetchingRelated={isFetchingRelated}
+                    isFetching={isFetchingRelated || isFetchingTags}
                     color={color}
                     colorDark={colorDark}
                 />
