@@ -834,6 +834,7 @@
         ".Header-item",
         ".Layout-header"
     ],
+    "meta.stackexchange.com": [".votecell.post-layout--left"],
     "mirum.naturalfiberwelding.com": [".parallax-slider"],
     "mmazurek.dev": [
         ".wp-block-separator",
