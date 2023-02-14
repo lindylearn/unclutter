@@ -31,7 +31,7 @@ export function getAnnotationColorNew(annotation: LindyAnnotation): [string, str
 
     if (annotation.tags && annotation.tags.length > 0) {
         color = getRandomColor(annotation.tags[0]);
-        colorDark = color.replace("0.3", "0.6");
+        colorDark = color.replace("0.3", "0.5");
     } else if (annotation.platform === "hn") {
         color = "rgba(255, 102, 0, 0.5)";
         colorDark = color.replace("0.5", "0.8");
@@ -41,7 +41,7 @@ export function getAnnotationColorNew(annotation: LindyAnnotation): [string, str
     } else {
         // yellow
         color = "rgba(250, 204, 21, 0.3)";
-        colorDark = color.replace("0.3", "0.6");
+        colorDark = color.replace("0.3", "0.5");
     }
 
     return [color, colorDark];

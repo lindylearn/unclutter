@@ -5,6 +5,8 @@
     box-shadow: none !important;
     color-scheme: auto !important;
     width: auto !important;
+    max-width: none !important;
+    max-height: none !important;
 }
 
 .lindy-page-settings-toprght,

@@ -261,7 +261,7 @@ export default function App({
                 },
             })
             .json();
-        tags = tags?.slice(0, 3).map((t) => t.split(" ")[0]) || [];
+        tags = tags?.slice(0, 3) || [];
 
         rep.mutate.updateAnnotation({
             id: annotation.id,
