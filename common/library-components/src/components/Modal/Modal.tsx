@@ -17,7 +17,7 @@ export function LibraryModalPage({
     showSignup = false,
     currentArticle,
     initialSubscription,
-    initialTag,
+    initialTagFilter,
     initialTab,
     relatedLinkCount,
     reportEvent = () => {},
@@ -27,7 +27,7 @@ export function LibraryModalPage({
     showSignup?: boolean;
     currentArticle?: string;
     initialSubscription?: FeedSubscription;
-    initialTag?: string;
+    initialTagFilter?: string;
     initialTab?: string;
     relatedLinkCount?: number;
     closeModal?: () => void;
@@ -69,7 +69,7 @@ export function LibraryModalPage({
         initialSubscription
     );
     const [domainFilter, setDomainFilter] = useState<string>();
-    const [tagFilter, setTagFilter] = useState<string | undefined>(initialTag);
+    const [tagFilter, setTagFilter] = useState<string | undefined>(initialTagFilter);
 
     async function showDomain(domain: string) {
         setDomainFilter(domain);

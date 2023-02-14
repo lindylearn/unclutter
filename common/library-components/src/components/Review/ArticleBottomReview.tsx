@@ -40,11 +40,12 @@ export default function ArticleBottomReview({
     //     };
     // }, []);
 
-    function openLibrary(initialTab: string) {
+    function openLibrary(initialTab: string, initialTagFilter?: string) {
         window.top?.postMessage(
             {
                 event: "showModal",
                 initialTab,
+                initialTagFilter,
             },
             "*"
         );
@@ -84,7 +85,7 @@ export default function ArticleBottomReview({
                             diff={count}
                             tag={`#${tag}`}
                             colorOverride={getRandomColor(tag)}
-                            onClick={() => openLibrary("highlights")}
+                            onClick={() => openLibrary("highlights", tag)}
                         />
                     ))}
                 </div>

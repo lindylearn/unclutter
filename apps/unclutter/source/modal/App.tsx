@@ -21,11 +21,13 @@ export default function App({
     darkModeEnabled,
     articleUrl,
     initialTab,
+    initialTagFilter,
     isFeedbackModal,
 }: {
     darkModeEnabled: string;
     articleUrl: string;
     initialTab?: string;
+    initialTagFilter?: string;
     isFeedbackModal?: string;
 }) {
     const rep = useMemo<ReplicacheProxy>(() => new ReplicacheProxy(), []);
@@ -106,6 +108,7 @@ export default function App({
                         currentArticle={libraryState?.libraryInfo?.article.id}
                         initialSubscription={libraryState?.feed}
                         initialTab={initialTab}
+                        initialTagFilter={initialTagFilter}
                         reportEvent={reportEventContentScript}
                     />
                 </ModalVisibilityContext.Provider>

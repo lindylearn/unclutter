@@ -22,7 +22,7 @@ import { FilterContext, ModalStateContext } from "./context";
 export default function HighlightsTab({}: {}) {
     const { darkModeEnabled, userInfo, reportEvent } = useContext(ModalStateContext);
 
-    const { currentArticle, currentTopic, domainFilter, setDomainFilter, currentAnnotationsCount } =
+    const { currentArticle, domainFilter, setDomainFilter, currentAnnotationsCount } =
         useContext(FilterContext);
 
     const rep = useContext(ReplicacheContext);
@@ -66,7 +66,6 @@ export default function HighlightsTab({}: {}) {
         activeCurrentFilter,
         currentArticle,
         currentAnnotationsCount,
-        currentTopic,
         domainFilter,
         onlyManualHighlights,
     ]);

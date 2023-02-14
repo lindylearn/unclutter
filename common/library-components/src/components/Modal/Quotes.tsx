@@ -65,7 +65,8 @@ export default function QuotesTab({}: {}) {
             return;
         }
 
-        let filteredAnnotations = searchedAnnotations || annotations;
+        let filteredAnnotations =
+            searchedAnnotations || annotations.filter((a) => !a.ai_created || a.tags?.length);
         filteredAnnotations.sort((a, b) => b.created_at - a.created_at);
         if (activeCurrentFilter) {
             if (domainFilter) {
@@ -185,7 +186,7 @@ function TagGroup({
         <div className="tag-group relative">
             <div className="mx-0.5 mb-2 flex justify-between">
                 <h2
-                    className="title flex cursor-pointer select-none items-center gap-2 font-medium transition-all hover:scale-[97%]"
+                    className="title flex cursor-pointer select-none items-center gap-2 font-medium transition-all hover:scale-[95%]"
                     onClick={() => setTagFilter(tag)}
                 >
                     #{tag}

@@ -97,6 +97,7 @@ export default function AnnotationDraftNew({
                             // @ts-ignore
                             // "--hover-color": getRandomColor(tag),
                         }}
+                        onClick={() => openLibrary("highlights", tag)}
                     >
                         #{tag}
                     </div>
@@ -127,5 +128,16 @@ export default function AnnotationDraftNew({
                 </svg>
             </div>
         </div>
+    );
+}
+
+function openLibrary(initialTab: string, initialTagFilter?: string) {
+    window.top?.postMessage(
+        {
+            event: "showModal",
+            initialTab,
+            initialTagFilter,
+        },
+        "*"
     );
 }

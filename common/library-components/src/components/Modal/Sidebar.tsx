@@ -12,8 +12,7 @@ export default function Sidebar({
     setCurrentTab: (tab: string) => void;
 }) {
     const { darkModeEnabled, userInfo, showSignup, reportEvent } = useContext(ModalStateContext);
-    const { currentTopic, changedTopic, currentAnnotationsCount, relatedLinkCount } =
-        useContext(FilterContext);
+    const { currentAnnotationsCount, relatedLinkCount } = useContext(FilterContext);
     const rep = useContext(ReplicacheContext);
 
     // fetch settings initially and after changing tab away
@@ -39,7 +38,6 @@ export default function Sidebar({
         settings,
         showSignup,
         newTabInstalled,
-        !changedTopic ? relatedLinkCount : undefined,
         currentAnnotationsCount
     );
 
@@ -53,7 +51,6 @@ export default function Sidebar({
                         key={option.value}
                         isActive={currentTab === option.value}
                         onClick={() => updateTab(option.value)}
-                        currentTopic={currentTopic}
                         darkModeEnabled={darkModeEnabled}
                     />
                 ))}
@@ -92,7 +89,6 @@ export default function Sidebar({
                                 updateTab(option.value);
                             }
                         }}
-                        currentTopic={currentTopic}
                         darkModeEnabled={darkModeEnabled}
                     />
                 ))}
@@ -113,7 +109,6 @@ function getModalTabOptions(
     settings: Settings | null,
     showSignup: boolean,
     newTabInstalled: boolean,
-    new_link_count?: number,
     currentAnnotationsCount?: number
 ): ModalTabOptions[] {
     const options: (ModalTabOptions | false | undefined)[] = [
@@ -273,7 +268,6 @@ function SidebarFilterOption({
     unavailable,
     svg,
     onClick = () => {},
-    currentTopic,
     darkModeEnabled,
 }: ModalTabOptions & {
     isActive: boolean;
