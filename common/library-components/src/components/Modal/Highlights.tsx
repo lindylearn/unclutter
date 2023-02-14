@@ -204,7 +204,7 @@ export default function HighlightsTab({}: {}) {
 //     });
 // }
 
-async function vectorSearch(
+export async function vectorSearch(
     rep: RuntimeReplicache,
     query: string,
     userInfo: UserInfo

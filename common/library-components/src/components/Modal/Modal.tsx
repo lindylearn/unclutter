@@ -10,6 +10,7 @@ import { LindyIcon } from "../Icons";
 import HighlightsTab from "./Highlights";
 import SettingsModalTab from "./Settings";
 import { ModalVisibilityContext, FilterContext, ModalStateContext } from "./context";
+import QuotesTab from "./Quotes";
 
 export function LibraryModalPage({
     userInfo,
@@ -51,7 +52,7 @@ export function LibraryModalPage({
     }, [rep]);
 
     const initialRender = useRef<boolean>(true);
-    const [currentTab, setCurrentTab] = useState(initialTab || "list");
+    const [currentTab, setCurrentTab] = useState(initialTab || "quotes");
     useEffect(() => {
         if (initialRender.current) {
             initialRender.current = false;
@@ -169,7 +170,8 @@ function ModalContent({
             >
                 {currentTab === "list" && <RecentModalTab />}
                 {currentTab === "stats" && <StatsModalTab articleCount={articleCount} />}
-                {currentTab === "highlights" && <HighlightsTab />}
+                {currentTab === "quotes" && <QuotesTab />}
+                {/* {currentTab === "highlights" && <HighlightsTab />} */}
                 {/* {currentTab === "feeds" &&
                     (currentSubscription ? (
                         <FeedsDetailsTab
