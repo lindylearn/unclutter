@@ -1,8 +1,7 @@
 import clsx from "clsx";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { getDomain, getRandomLightColor, openArticleResilient, sendMessage } from "../common";
 import { Annotation, Article } from "../store";
-import { getActivityColor } from "./Charts";
 import { HighlightDropdown } from "./Dropdown/HighlightDowndown";
 import { ModalVisibilityContext } from "./Modal/context";
 
@@ -39,35 +38,9 @@ export function Highlight({
         reportEvent("openHighlight", { isCurrentArticle });
     }
 
-    // const [localText, setLocalText] = useState(annotation.text);
-    // useEffect(() => {
-    //     setLocalText(annotation.text);
-    // }, [annotation.text]);
-    // const localTextDebounced = useDebounce(localText, 500);
-    // useEffect(() => {
-    //     if (localTextDebounced !== annotation.text) {
-    //         rep?.mutate.updateAnnotation({
-    //             id: annotation.id,
-    //             text: localTextDebounced,
-    //         });
-    //     }
-    // }, [localTextDebounced]);
-
-    // if (annotation.tags?.length === 0) {
-    //     annotation.tags = ["tag1", "tag2"];
-    // }
-
     return (
         <div
-            className="highlight animate-fadein relative flex cursor-pointer select-none flex-col gap-4 overflow-hidden rounded-md bg-white p-4 text-sm text-stone-900 transition-transform hover:scale-[99%] dark:text-white"
-            style={{
-                background: getRandomLightColor(
-                    annotation.article_id || annotation.id,
-                    darkModeEnabled
-                ),
-                // maxHeight: "calc(177px+2*8px)",
-            }}
-            // href={article?.url}
+            className="highlight animate-fadein relative flex cursor-pointer select-none flex-col gap-2 overflow-hidden rounded-md bg-white px-4 py-3 text-sm text-stone-900 shadow transition-transform hover:scale-[99%] dark:text-white"
             onClick={openHighlight}
             onContextMenu={(e) => {
                 e.preventDefault();
@@ -82,38 +55,15 @@ export function Highlight({
                 setOpen={setDropdownOpen}
             />
 
-            {/* <h2 className="tags flex gap-2 overflow-hidden px-2 leading-normal">
-                {annotation.tags?.slice(0, 2)?.map((tag) => (
-                    <div key={tag} className="tag font-title whitespace-nowrap text-base">
-                        #{tag}
-                    </div>
-                ))}
-            </h2> */}
-
             <LimitedText
                 className={clsx("flex-grow leading-normal")}
                 text={annotation.text || annotation.quote_text}
-                rows={8}
+                rows={6}
             />
 
             {/* <div>
                 {annotation.score?.toFixed(2)}
                 {annotation.score2?.toFixed(2)}
-            </div> */}
-
-            {/* <div className="flex items-center gap-2">
-                <TextareaAutosize
-                    className="w-full select-none resize-none rounded-md bg-stone-100 p-2 align-top text-sm outline-none placeholder:select-none placeholder:text-stone-900 placeholder:opacity-50 dark:placeholder:text-white"
-                    style={{
-                        background: "rgba(255,255,255,30%)",
-                    }}
-                    placeholder="Add a note..."
-                    value={localText}
-                    onChange={(e) => setLocalText(e.target.value)}
-                    minRows={localText ? 5 : 1}
-                    maxRows={10}
-                    onClick={(e) => e.stopPropagation()}
-                />
             </div> */}
 
             {article ? (
