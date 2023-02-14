@@ -155,7 +155,7 @@ function getModalTabOptions(
         // },
         {
             label: "Quotes",
-            value: "quotes",
+            value: "highlights",
             // tag: (settings?.seen_highlights_version || 0) < latestHighlightsVersion && "New",
             // need to update count or track visited to show highlights count after delete
             // || (currentAnnotationsCount ? `${currentAnnotationsCount}` : undefined),

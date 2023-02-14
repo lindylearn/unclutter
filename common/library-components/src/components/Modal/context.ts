@@ -22,18 +22,17 @@ export const ModalStateContext = createContext<{
 
 export const FilterContext = createContext<{
     currentArticle?: string;
-    currentTopic?: Topic;
-    changedTopic?: boolean;
+    tagFilter?: string;
     domainFilter?: string;
     currentSubscription?: FeedSubscription;
-    showTopic?: (topicId: string) => void;
+    setTagFilter: (tag?: string) => void;
     showDomain: (domain: string) => void;
     setDomainFilter: (domain?: string) => void;
     setCurrentSubscription: (subscription?: FeedSubscription) => void;
     relatedLinkCount?: number;
     currentAnnotationsCount?: number;
 }>({
-    showTopic: () => {},
+    setTagFilter: () => {},
     showDomain: () => {},
     setDomainFilter: () => {},
     setCurrentSubscription: () => {},

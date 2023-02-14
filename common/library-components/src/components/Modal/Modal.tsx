@@ -7,7 +7,6 @@ import Sidebar from "./Sidebar";
 import { FeedSubscription, ReplicacheContext, Topic, UserInfo } from "../../store";
 import RecentModalTab from "./Recent";
 import { LindyIcon } from "../Icons";
-import HighlightsTab from "./Highlights";
 import SettingsModalTab from "./Settings";
 import { ModalVisibilityContext, FilterContext, ModalStateContext } from "./context";
 import QuotesTab from "./Quotes";
@@ -18,7 +17,7 @@ export function LibraryModalPage({
     showSignup = false,
     currentArticle,
     initialSubscription,
-    initialTopic,
+    initialTag,
     initialTab,
     relatedLinkCount,
     reportEvent = () => {},
@@ -28,7 +27,7 @@ export function LibraryModalPage({
     showSignup?: boolean;
     currentArticle?: string;
     initialSubscription?: FeedSubscription;
-    initialTopic?: Topic;
+    initialTag?: string;
     initialTab?: string;
     relatedLinkCount?: number;
     closeModal?: () => void;
@@ -52,7 +51,7 @@ export function LibraryModalPage({
     }, [rep]);
 
     const initialRender = useRef<boolean>(true);
-    const [currentTab, setCurrentTab] = useState(initialTab || "quotes");
+    const [currentTab, setCurrentTab] = useState(initialTab || "highlights");
     useEffect(() => {
         if (initialRender.current) {
             initialRender.current = false;
@@ -62,6 +61,7 @@ export function LibraryModalPage({
 
         if (currentTab !== "highlights") {
             setDomainFilter(undefined);
+            setTagFilter(undefined);
         }
     }, [currentTab]);
 
@@ -69,16 +69,9 @@ export function LibraryModalPage({
         initialSubscription
     );
     const [domainFilter, setDomainFilter] = useState<string>();
+    const [tagFilter, setTagFilter] = useState<string | undefined>(initialTag);
 
     async function showDomain(domain: string) {
-        // const subscriptions = await rep?.query.listSubscriptions();
-        // const domainSubscription = subscriptions?.find((s) => s.domain === domain);
-        // if (domainSubscription) {
-        //     setCurrentSubscription(domainSubscription);
-        //     setCurrentTab("feeds");
-        //     reportEvent("showDomainFeed");
-        // }
-
         setDomainFilter(domain);
         setCurrentTab("highlights");
 
@@ -111,8 +104,10 @@ export function LibraryModalPage({
                         currentArticle,
                         currentSubscription,
                         domainFilter,
+                        tagFilter,
                         setDomainFilter,
                         showDomain,
+                        setTagFilter,
                         setCurrentSubscription,
                         relatedLinkCount,
                         currentAnnotationsCount,
@@ -170,7 +165,7 @@ function ModalContent({
             >
                 {currentTab === "list" && <RecentModalTab />}
                 {currentTab === "stats" && <StatsModalTab articleCount={articleCount} />}
-                {currentTab === "quotes" && <QuotesTab />}
+                {currentTab === "highlights" && <QuotesTab />}
                 {/* {currentTab === "highlights" && <HighlightsTab />} */}
                 {/* {currentTab === "feeds" &&
                     (currentSubscription ? (
