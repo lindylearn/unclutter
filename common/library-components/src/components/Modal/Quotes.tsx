@@ -8,6 +8,7 @@ import { FilterContext, ModalStateContext } from "./context";
 import { vectorSearch } from "./Highlights";
 import { ResourceStat } from "../Modal/components/numbers";
 import { FilterButton } from "./Recent";
+import { getActivityColor } from "../Charts";
 
 export default function QuotesTab({}: {}) {
     const { userInfo, reportEvent, darkModeEnabled } = useContext(ModalStateContext);
@@ -68,16 +69,15 @@ export default function QuotesTab({}: {}) {
         let filteredAnnotations =
             searchedAnnotations || annotations.filter((a) => !a.ai_created || a.tags?.length);
         filteredAnnotations.sort((a, b) => b.created_at - a.created_at);
-        if (activeCurrentFilter) {
-            if (domainFilter) {
-                filteredAnnotations = filteredAnnotations.filter(
-                    (a) => getDomain(a.article?.url) === domainFilter
-                );
-            } else if (currentArticle && currentAnnotationsCount) {
-                filteredAnnotations = filteredAnnotations.filter(
-                    (a) => a.article_id === currentArticle
-                );
-            }
+        if (tagFilter) {
+            filteredAnnotations = filteredAnnotations.filter((a) => a.tags?.includes(tagFilter));
+            setAnnotationGroups([[tagFilter, filteredAnnotations]]);
+            return;
+        }
+        if (domainFilter) {
+            filteredAnnotations = filteredAnnotations.filter(
+                (a) => getDomain(a.article?.url) === domainFilter
+            );
         }
 
         const tagAnnotations: { [tag: string]: Annotation[] } = {};
@@ -96,7 +96,7 @@ export default function QuotesTab({}: {}) {
             (a, b) => b[1][0].created_at - a[1][0].created_at
         );
         setAnnotationGroups(annotationGroups);
-    }, [annotations, activeCurrentFilter, searchedAnnotations]);
+    }, [annotations, tagFilter, domainFilter, searchedAnnotations]);
 
     return (
         <div className="flex flex-col gap-4">
@@ -146,18 +146,15 @@ export default function QuotesTab({}: {}) {
                 />
             </div>
 
-            {annotationGroups
-                .filter(([tag, annotations]) => !tagFilter || tag === tagFilter)
-                .slice(0, 20)
-                .map(([tag, annotations]) => (
-                    <TagGroup
-                        key={tag}
-                        tag={tag}
-                        annotations={annotations}
-                        annotationLimit={tagFilter ? 100 : 4}
-                        setTagFilter={setTagFilter}
-                    />
-                ))}
+            {annotationGroups.slice(0, 20).map(([tag, annotations]) => (
+                <TagGroup
+                    key={tag}
+                    tag={tag}
+                    annotations={annotations}
+                    annotationLimit={tagFilter ? 100 : 4}
+                    setTagFilter={setTagFilter}
+                />
+            ))}
 
             {annotations !== null && annotations.length === 0 && (
                 <div className="animate-fadein col-span-3 flex w-full select-none items-center gap-2">
@@ -192,16 +189,19 @@ function TagGroup({
                     #{tag}
                 </h2>
 
-                <div className="relative px-1.5 py-0.5">
+                {/* <div className="relative px-1.5 py-0.5">
                     <ResourceStat type="highlights" value={annotations?.length} large={false} />
-                </div>
+                </div> */}
             </div>
 
             <div
-                className="relative grid grid-cols-2 gap-3 rounded-md p-3 transition-colors"
-                style={{
-                    background: color,
-                }}
+                className="relative grid grid-cols-2 gap-3 rounded-md bg-white p-3 transition-colors dark:bg-neutral-800"
+                style={
+                    {
+                        // background: color,
+                        // background: getActivityColor(1, darkModeEnabled),
+                    }
+                }
             >
                 {annotations.slice(0, annotationLimit).map((annotation) => (
                     <Highlight

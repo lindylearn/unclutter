@@ -81,7 +81,7 @@ export default function AnnotationDraftNew({
             ref={ref}
         >
             {isFetching && !localAnnotation.tags?.length ? (
-                <div className="loader absolute left-2 h-4 w-4" />
+                <div className="loader absolute left-3 h-4 w-4" />
             ) : (
                 <></>
             )}
@@ -105,7 +105,7 @@ export default function AnnotationDraftNew({
             </div>
             {/* {Math.ceil(seedrandom(tag)() * 10)} */}
             {/* <AnimatedNumber value={Math.ceil(seedrandom(tag)() * 10)} diff={1} /> */}
-            <div className="flex gap-2 text-stone-400 dark:text-stone-600">
+            <div className="flex gap-3 text-stone-400 dark:text-stone-600">
                 <svg
                     className="h-4 cursor-pointer transition-all hover:scale-[95%]"
                     viewBox="0 0 512 512"

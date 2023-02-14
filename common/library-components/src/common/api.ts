@@ -226,7 +226,7 @@ export async function fetchRelatedAnnotations(
         }),
     });
     if (!response.ok) {
-        return [];
+        return [[]];
     }
 
     const json = await response.json();

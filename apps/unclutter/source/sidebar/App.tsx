@@ -264,6 +264,9 @@ export default function App({
             })
             .json();
         tags = tags?.slice(0, 3) || [];
+        if (tags.length === 0) {
+            tags = ["other"];
+        }
 
         rep.mutate.updateAnnotation({
             id: annotation.id,
