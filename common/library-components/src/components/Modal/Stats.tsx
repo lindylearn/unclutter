@@ -220,7 +220,7 @@ function ArticleGroupStat({
     return (
         <div
             className={clsx(
-                "flex cursor-pointer select-none flex-col items-center gap-1 overflow-hidden rounded-md bg-stone-50 p-3 transition-all hover:scale-[97%] dark:bg-neutral-800",
+                "flex cursor-pointer select-none flex-col items-center gap-1 overflow-hidden rounded-md bg-stone-50 px-3 py-2 transition-all hover:scale-[97%] dark:bg-neutral-800",
                 activityLevel === 4 && "dark:text-stone-800"
             )}
             style={{

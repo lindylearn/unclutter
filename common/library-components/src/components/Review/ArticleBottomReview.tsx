@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useMemo, useState } from "react";
-import { getRandomColor } from "../../common";
+import { getAnnotationColorNew, getRandomColor } from "../../common";
 import { Annotation, Article, ReplicacheContext, useSubscribe } from "../../store";
 import { getActivityColor } from "../Charts";
 import { BigNumber, ResourceIcon } from "../Modal";
@@ -31,14 +31,14 @@ export default function ArticleBottomReview({
     // }, [rep]);
 
     // handle events
-    // const [relatedCount, setRelatedCount] = useState<number>();
-    // useEffect(() => {
-    //     window.onmessage = async function ({ data }) {
-    //         if (data.event === "updateRelatedCount") {
-    //             setRelatedCount(data.relatedCount);
-    //         }
-    //     };
-    // }, []);
+    const [relatedCount, setRelatedCount] = useState<number>();
+    useEffect(() => {
+        window.onmessage = async function ({ data }) {
+            if (data.event === "updateRelatedCount") {
+                setRelatedCount(data.relatedCount);
+            }
+        };
+    }, []);
 
     function openLibrary(initialTab: string, initialTagFilter?: string) {
         window.top?.postMessage(
@@ -62,13 +62,18 @@ export default function ArticleBottomReview({
 
     const [tagCountList, setTagCountList] = useState<[string, number][]>([]);
     useEffect(() => {
-        const tagCounts: { [tag: string]: number } = { uncategorized: 0 };
+        const tagCounts: { [tag: string]: number } = {};
         for (const annotation of articleAnnotations) {
             if (!annotation.tags?.length) {
-                tagCounts["uncategorized"]++;
+                if (tagCounts["uncategorized"]) {
+                    tagCounts["uncategorized"]++;
+                } else {
+                    tagCounts["uncategorized"] = 1;
+                }
                 continue;
             }
-            for (const tag of annotation.tags?.slice(0, 1)) {
+            for (let tag of annotation.tags?.slice(0, 1)) {
+                tag = `#${tag}`;
                 if (tagCounts[tag]) {
                     tagCounts[tag]++;
                 } else {
@@ -87,12 +92,29 @@ export default function ArticleBottomReview({
                     {tagCountList.map(([tag, count]) => (
                         <BigNumber
                             diff={count}
-                            tag={`#${tag}`}
-                            colorOverride={getRandomColor(tag)}
-                            onClick={() => openLibrary("highlights", tag)}
+                            tag={tag}
+                            colorOverride={
+                                // @ts-ignore
+                                getAnnotationColorNew({
+                                    tags: tag !== "uncategorized" ? [tag] : [],
+                                })[0]
+                            }
+                            onClick={() =>
+                                tag !== "uncategorized" && openLibrary("highlights", tag.slice(1))
+                            }
                         />
                     ))}
                 </div>
+
+                {articleAnnotations.length === 0 && (
+                    <div className="animate-fadein absolute top-0 left-0 flex h-full w-full select-none items-center justify-center">
+                        {relatedCount === undefined ? (
+                            <>Generating AI highlights...</>
+                        ) : (
+                            <>Save quotes by selecting any article text.</>
+                        )}
+                    </div>
+                )}
 
                 {/* <ArticleActivityCalendar
                     articles={allArticles}
@@ -106,7 +128,7 @@ export default function ArticleBottomReview({
 
 export function CardContainer({ children }) {
     return (
-        <div className="relative mx-auto flex w-[var(--lindy-pagewidth)] flex-col gap-4 overflow-hidden rounded-lg bg-white p-4 shadow dark:bg-[#212121]">
+        <div className="relative mx-auto flex min-h-[104px] w-[var(--lindy-pagewidth)] flex-col gap-4 overflow-hidden rounded-lg bg-white p-4 shadow dark:bg-[#212121]">
             {children}
         </div>
     );

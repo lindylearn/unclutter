@@ -68,7 +68,7 @@ function Annotation({
                     // restrict text height by whole lines
                     // assumes 20px font size and py-1.5 padding
                     WebkitLineClamp: Math.min(
-                        6
+                        4
                         // heightLimitPx ? Math.floor((heightLimitPx - 6 * 2 - 20) / 20) : Infinity,
                     ),
                     WebkitBoxOrient: "vertical",
@@ -94,7 +94,7 @@ function Annotation({
                 {excerpt || text}
             </div>
 
-            {/* <div className="annotation-bar relative flex select-none items-center gap-2 overflow-hidden whitespace-nowrap font-medium opacity-75">
+            <div className="annotation-bar relative flex select-none items-center gap-2 overflow-hidden whitespace-nowrap font-medium opacity-75">
                 {(platform === "info" || platform === "related") && annotation.article?.url && (
                     // <svg className="h-4" viewBox="0 0 640 512">
                     //     <path
@@ -129,7 +129,7 @@ function Annotation({
                         {annotation.reply_count === 1 ? " reply" : " replies"}
                     </div>
                 )}
-            </div> */}
+            </div>
 
             {/* <HighlightDropdown
                 annotation={annotation}

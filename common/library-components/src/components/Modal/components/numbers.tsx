@@ -9,6 +9,7 @@ export function BigNumber({
     colorOverride,
     icon,
     onClick,
+    small = false,
 }: {
     value?: number;
     diff?: number;
@@ -17,11 +18,12 @@ export function BigNumber({
     colorOverride?: string;
     icon?: ReactNode;
     onClick?: () => void;
+    small?: boolean;
 }) {
     return (
         <div
             className={clsx(
-                "relative flex select-none flex-col items-center overflow-hidden rounded-md bg-stone-50 p-3 transition-all hover:scale-[97%] dark:bg-neutral-800",
+                "relative flex select-none flex-col items-center overflow-hidden rounded-md bg-stone-50 px-3 py-2 transition-all hover:scale-[97%] dark:bg-neutral-800",
                 onClick && "cursor-pointer"
             )}
             style={{ background: colorOverride }}

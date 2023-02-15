@@ -102,7 +102,7 @@ export function Highlight({
                 </div>
             </div> */}
 
-            {/* {article ? (
+            {article ? (
                 <div className="info-bar gap-42 flex items-center justify-between whitespace-nowrap font-medium opacity-75">
                     <div className="flex items-center gap-2 overflow-hidden">
                         <img
@@ -117,7 +117,7 @@ export function Highlight({
                 </div>
             ) : (
                 <div className="text-base"> </div>
-            )} */}
+            )}
         </a>
     );
 }
