@@ -63,7 +63,7 @@ export default function AnnotationDraftNew({
     return (
         <div
             className={clsx(
-                `annotation annotation-draft relative flex min-h-[33.750px] items-center rounded-l-sm rounded-r-md py-1 px-2 text-sm shadow`,
+                `annotation annotation-draft relative flex min-h-[33.750px] items-center rounded-md p-2 pl-3 text-sm shadow`,
                 annotation.focused && "focused",
                 className
             )}
@@ -90,7 +90,7 @@ export default function AnnotationDraftNew({
                 {localAnnotation.tags?.slice(0, 2).map((tag, i) => (
                     <div
                         className={clsx(
-                            "annotation-tag font-title shrink cursor-pointer overflow-ellipsis whitespace-nowrap text-center transition-all hover:scale-[98%]"
+                            "annotation-tag shrink cursor-pointer overflow-ellipsis whitespace-nowrap text-center font-bold transition-all hover:scale-[98%]"
                         )}
                         style={{
                             animationDelay: `${i * 50}ms`,

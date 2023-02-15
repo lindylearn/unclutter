@@ -71,7 +71,7 @@
 
 <li class="heading">
     <div
-        class={"heading-text relative text-sm cursor-pointer flex w-full gap-2 items-stretch transition-all " +
+        class={"heading-text relative text-sm cursor-pointer flex w-full gap-2 items-center transition-all " +
             activateStateClass}
         on:click={focusHeading}
     >
@@ -128,7 +128,7 @@
         <div class="-mr-2 flex shrink-0 gap-1 overflow-hidden">
             {#each tagCountList?.slice(0, 3) as [tag, count]}
                 <div
-                    class="h-full w-2 shrink-0 rounded-sm"
+                    class="h-3 w-3 shrink-0 rounded-full"
                     style={`background-color: ${getRandomColor(tag).replace("0.3", "0.6")};`}
                 />
                 <!-- <div

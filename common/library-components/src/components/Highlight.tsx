@@ -39,9 +39,12 @@ export function Highlight({
         reportEvent("openHighlight", { isCurrentArticle });
     }
 
+    const color = getRandomLightColor(annotation.tags?.[0] || annotation.id, darkModeEnabled);
+
     return (
-        <div
+        <a
             className="highlight animate-fadein relative flex cursor-pointer select-none flex-col gap-2 overflow-hidden rounded-md bg-white px-4 py-3 text-sm text-stone-900 shadow transition-transform hover:scale-[99%] dark:bg-neutral-800 dark:text-white"
+            href={article?.url}
             onClick={openHighlight}
             onContextMenu={(e) => {
                 e.preventDefault();
@@ -49,10 +52,8 @@ export function Highlight({
                 setDropdownOpen(true);
             }}
             style={{
-                background: getRandomLightColor(
-                    annotation.tags?.[0] || annotation.id,
-                    darkModeEnabled
-                ),
+                // background: color,
+                borderLeft: `8px solid ${color}`,
             }}
         >
             <HighlightDropdown
@@ -65,7 +66,7 @@ export function Highlight({
             <LimitedText
                 className={clsx("flex-grow leading-normal")}
                 text={annotation.text || annotation.quote_text}
-                rows={6}
+                rows={8}
             />
 
             {/* <div>
@@ -95,8 +96,8 @@ export function Highlight({
                 </div>
             </div> */}
 
-            {article ? (
-                <div className="info-bar gap-42 flex items-center justify-between whitespace-nowrap font-medium opacity-50">
+            {/* {article ? (
+                <div className="info-bar gap-42 flex items-center justify-between whitespace-nowrap font-medium opacity-75">
                     <div className="flex items-center gap-2 overflow-hidden">
                         <img
                             className="w-4 shrink-0 rounded-sm"
@@ -110,8 +111,8 @@ export function Highlight({
                 </div>
             ) : (
                 <div className="text-base"> </div>
-            )}
-        </div>
+            )} */}
+        </a>
     );
 }
 
@@ -133,7 +134,14 @@ function LimitedText({
                 WebkitLineClamp: rows,
             }}
         >
-            &quot;{text}&quot;
+            {/* <svg className="inline-block w-4" viewBox="0 0 448 512">
+                <path
+                    fill="currentColor"
+                    d="m 296,160 c -30.93,0 -56,25.07 -56,56 0,30.93 25.07,56 56,56 2.74,0 5.365,-0.4258 8,-0.8066 V 280 c 0,13.23 -10.77,24 -24,24 -13.2,0 -24,10.8 -24,24 0,13.2 10.8,24 24,24 39.7,0 72,-32.3 72,-72 v -64 c 0,-30.9 -25.1,-56 -56,-56 z m -144,0 c -30.9,0 -56,25.1 -56,56 0,30.9 25.1,56 56,56 2.7,0 5.4,-0.4 8,-0.8 v 8.8 c 0,13.2 -10.8,24 -24,24 -13.25,0 -24,10.75 -24,24 0,13.25 10.8,24 24,24 39.7,0 72,-32.3 72,-72 v -64 c 0,-30.9 -25.1,-56 -56,-56 z"
+                />
+            </svg> */}
+            {text}
+            {/* &quot; */}
         </div>
     );
 }
