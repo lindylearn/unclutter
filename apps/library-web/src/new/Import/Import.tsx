@@ -100,7 +100,7 @@ export function ImportSection({ rep, userInfo, darkModeEnabled }) {
                     icon={
                         <img
                             className="h-4 w-4"
-                            src={`/logos/${importOptions[activeOption].iconFile}`}
+                            src={`logos/${importOptions[activeOption].iconFile}`}
                         />
                     }
                     // className={importOptions[activeOption].backgroundColor}
@@ -169,7 +169,7 @@ function ImportButton({ iconFile, name, backgroundColor, onClick, darkModeEnable
             style={{ background: getActivityColor(3, darkModeEnabled) }}
             onClick={onClick}
         >
-            <img className="mr-2 inline-block h-4 w-4" src={`/logos/${iconFile}`} />
+            <img className="mr-2 inline-block h-4 w-4" src={`logos/${iconFile}`} />
             {name}
         </button>
     );

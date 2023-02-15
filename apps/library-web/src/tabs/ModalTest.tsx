@@ -82,7 +82,6 @@ export default function ModalTestTab({}) {
                     darkModeEnabled={darkModeEnabled}
                     showSignup={true}
                     // currentArticle={article?.url}
-                    initialTopic={topic}
                     // relatedLinkCount={2}
                 />
             </ModalVisibilityContext.Provider>

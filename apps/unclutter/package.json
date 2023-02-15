@@ -5,8 +5,8 @@
     "dependencies": {
         "@rocicorp/rails": "^0.2.2",
         "@types/offscreencanvas": "^2019.7.0",
-        "@unclutter/library-components": "*",
         "@unclutter/heatmap": "*",
+        "@unclutter/library-components": "*",
         "approx-string-match": "^2.0.0",
         "clsx": "^1.2.1",
         "crypto-js": "^4.1.1",
@@ -32,6 +32,7 @@
         "twemoji": "^14.0.2",
         "webext-options-sync": "^2.0.1",
         "webextension-polyfill": "^0.8.0",
+        "wouter": "^2.10.0",
         "zod": "^3.19.1"
     },
     "devDependencies": {

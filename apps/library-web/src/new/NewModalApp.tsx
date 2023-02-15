@@ -9,7 +9,7 @@ import {
 } from "@unclutter/library-components/dist/components/Modal/context";
 import { useAutoDarkMode } from "@unclutter/library-components/dist/common";
 import { ReplicacheContext, useSubscribe } from "@unclutter/library-components/dist/store";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import RecentModalTab from "@unclutter/library-components/dist/components/Modal/Recent";
 import StatsModalTab from "@unclutter/library-components/dist/components/Modal/Stats";
 import QuotesTab from "@unclutter/library-components/dist/components/Modal/Quotes";
@@ -20,7 +20,7 @@ import AboutModalTab from "@unclutter/library-components/dist/components/Modal/A
 
 export default function NewModalApp() {
     const router = useRouter();
-    const pathName = router.asPath.split("?")[0];
+    const initialRoute = router.asPath.split("?")[0].slice(1);
 
     const darkModeEnabled = useAutoDarkMode();
     const {
@@ -33,7 +33,11 @@ export default function NewModalApp() {
         tagFilter,
         setTagFilter,
         showDomain,
-    } = useModalState("about", undefined, undefined, reportEventPosthog);
+    } = useModalState(initialRoute, undefined, undefined, reportEventPosthog);
+
+    useEffect(() => {
+        history.replaceState({}, "", `/${currentTab}`);
+    }, [currentTab]);
 
     const rep = useContext(ReplicacheContext);
     const userInfo = useSubscribe(rep, rep?.subscribe.getUserInfo(), null);
