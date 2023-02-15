@@ -1,7 +1,7 @@
 import { getUser, withPageAuth } from "@supabase/auth-helpers-nextjs";
 import { createContext, useEffect } from "react";
 import { createSpace, spaceExists } from "@unclutter/replicache-nextjs/lib/backend";
-import NewApp from "../src/new/NewApp";
+import NewModalApp from "../src/new/NewModalApp";
 
 import { useReplicache } from "@unclutter/replicache-nextjs/lib/frontend";
 import {
@@ -44,7 +44,7 @@ export default function Index({ userId }: { userId: string }) {
             <LocalScreenshotContext.Provider
                 value={(articleId) => getLocalScreenshot(articleId, getUnclutterExtensionId())}
             >
-                <NewApp />
+                <NewModalApp />
             </LocalScreenshotContext.Provider>
         </ReplicacheContext.Provider>
     );

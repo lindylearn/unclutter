@@ -7,15 +7,16 @@ import SmartReadingOnboarding from "./Import";
 import SmartReadingTab from "./SmartReading";
 import ReviewTestTab from "../tabs/Review";
 import ModalTestTab from "../tabs/ModalTest";
+import { reportEventPosthog } from "../../common/metrics";
 
-export default function App() {
+export default function NewApp() {
     const router = useRouter();
     const pathName = router.asPath.split("?")[0];
 
     return (
         <div className="font-text min-h-screen bg-white p-6 text-stone-800 dark:bg-[#212121] dark:text-[rgb(232,230,227)]">
             <Head>
-                <title>Your Unclutter Account</title>
+                <title>Unclutter</title>
             </Head>
 
             <aside className="absolute">
