@@ -34,6 +34,9 @@ export async function getRelatedAnnotationsCount(userInfo: UserInfo, annotations
         annotations[0].article_id,
         annotations.map((a) => a.quote_text)
     );
+    if (!relatedPerAnnotation?.length) {
+        return [];
+    }
 
     let relatedCount = 0;
     relatedPerAnnotation.forEach((related) => {
