@@ -64,7 +64,7 @@ export default function AboutModalTab({}: {}) {
                         />
                     </svg>
                 }
-                imageSrc="media/1.png"
+                imageSrc="https://my.unclutter.it/media/1.png"
                 animationIndex={1}
             >
                 <p>
@@ -83,11 +83,11 @@ export default function AboutModalTab({}: {}) {
                         />
                     </svg>
                 }
-                imageSrc="media/3.png"
+                imageSrc="https://my.unclutter.it/media/3.png"
             >
                 <p>
-                    Click on any yellow highlight (or manually select text) to save it to your
-                    library.
+                    Click on any yellow highlight to save it to your library, or manually select
+                    text.
                 </p>
                 <p>
                     All such quotes are tagged and organized automatically. On the Quotes page you
@@ -105,15 +105,15 @@ export default function AboutModalTab({}: {}) {
                         />
                     </svg>
                 }
-                imageSrc="media/2.png"
+                imageSrc="https://my.unclutter.it/media/2.png"
             >
                 <p>
-                    Quotes from your library will also automatically appear whenever you save a
-                    related quote on another article.
+                    Quotes from your library also automatically appear whenever you save a related
+                    quote on another article, helping you connect similar ideas.
                 </p>
                 <p>
                     For example, if a text mentions Google's business model, you'll see everything
-                    you've read about that topic before.
+                    you've read about that topic right next to it.
                 </p>
             </SettingsGroup>
 
@@ -130,8 +130,8 @@ export default function AboutModalTab({}: {}) {
             >
                 <p>The more you read, the more value you'll get out of Unclutter.</p>
                 <p>
-                    You can also import articles to make use of the knowledge you've already saved
-                    with Pocket, Instapaper, Raindrop, or your browser bookmarks.
+                    On the Import page you can import articles to make use of the knowledge you've
+                    already saved with Pocket, Instapaper, Raindrop, or your browser bookmarks.
                 </p>
             </SettingsGroup>
         </div>

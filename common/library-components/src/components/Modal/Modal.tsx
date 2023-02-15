@@ -10,6 +10,7 @@ import { LindyIcon } from "../Icons";
 import SettingsModalTab from "./Settings";
 import { ModalVisibilityContext, FilterContext, ModalStateContext } from "./context";
 import QuotesTab from "./Quotes";
+import AboutModalTab from "./About";
 
 export function LibraryModalPage({
     userInfo,
@@ -179,6 +180,7 @@ function ModalContent({
                 {currentTab === "stats" && <StatsModalTab />}
                 {currentTab === "highlights" && <QuotesTab />}
                 {currentTab === "settings" && <SettingsModalTab />}
+                {currentTab === "about" && <AboutModalTab />}
             </div>
         </div>
     );

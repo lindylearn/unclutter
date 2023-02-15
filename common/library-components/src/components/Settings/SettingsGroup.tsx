@@ -72,7 +72,7 @@ export function SettingsGroup({
             {imageSrc && !buttons && (
                 <img
                     src={imageSrc}
-                    className="mt-1 h-60 w-full bg-stone-100 object-cover object-right-top"
+                    className="mt-1 h-60 w-full bg-stone-100 object-cover object-right-top dark:brightness-90"
                 />
             )}
 

@@ -33,7 +33,7 @@ export default function Sidebar({
             .catch(() => setNewTabInstalled(false));
     }, []);
 
-    const modalTabs = getModalTabOptions(isWeb, userInfo);
+    const modalTabs = getModalTabOptions(userInfo);
 
     return (
         <div className="flex h-full flex-col items-stretch justify-between gap-1 rounded-lg">
@@ -88,7 +88,7 @@ export interface ModalTabOptions {
     atEnd?: boolean;
     svg: React.ReactNode;
 }
-function getModalTabOptions(isWeb: boolean, userInfo: UserInfo | undefined): ModalTabOptions[] {
+function getModalTabOptions(userInfo: UserInfo | undefined): ModalTabOptions[] {
     const options: (ModalTabOptions | false | undefined)[] = [
         {
             label: "Stats",

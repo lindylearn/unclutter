@@ -17,6 +17,7 @@ export const ModalStateContext = createContext<{
     reportEvent: (event: string, data?: any) => void;
 }>({
     darkModeEnabled: false,
+    isWeb: false,
     showSignup: false,
     reportEvent: () => {},
 });
