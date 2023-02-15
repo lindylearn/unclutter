@@ -30,9 +30,9 @@
         "timeago.js": "^4.0.2",
         "tinycolor2": "^1.4.2",
         "twemoji": "^14.0.2",
+        "web-ext": "^7.5.0",
         "webext-options-sync": "^2.0.1",
         "webextension-polyfill": "^0.8.0",
-        "wouter": "^2.10.0",
         "zod": "^3.19.1"
     },
     "devDependencies": {
