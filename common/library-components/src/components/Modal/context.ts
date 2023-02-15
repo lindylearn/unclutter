@@ -30,7 +30,6 @@ export const FilterContext = createContext<{
     setDomainFilter: (domain?: string) => void;
     setCurrentSubscription: (subscription?: FeedSubscription) => void;
     relatedLinkCount?: number;
-    currentAnnotationsCount?: number;
 }>({
     setTagFilter: () => {},
     showDomain: () => {},

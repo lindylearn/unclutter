@@ -4,7 +4,7 @@ import { useContext, useEffect, useState } from "react";
 
 import StatsModalTab from "./Stats";
 import Sidebar from "./Sidebar";
-import { FeedSubscription, ReplicacheContext, Topic, UserInfo } from "../../store";
+import type { FeedSubscription, UserInfo } from "../../store";
 import RecentModalTab from "./Recent";
 import { LindyIcon } from "../Icons";
 import SettingsModalTab from "./Settings";
@@ -34,49 +34,22 @@ export function LibraryModalPage({
     reportEvent?: (event: string, data?: any) => void;
 }) {
     const { isVisible, closeModal } = useContext(ModalVisibilityContext);
-
-    const rep = useContext(ReplicacheContext);
-    const [articleCount, setArticleCount] = useState<number>();
-    const [currentAnnotationsCount, setCurrentAnnotationsCount] = useState<number>();
-    useEffect(() => {
-        rep?.query.getArticlesCount().then(setArticleCount);
-        if (currentArticle) {
-            rep?.query.listArticleAnnotations(currentArticle).then((annotations) => {
-                setCurrentAnnotationsCount(annotations.length);
-                // if (annotations.length > 0) {
-                //     setCurrentTab("highlights");
-                // }
-            });
-        }
-    }, [rep]);
-
-    const initialRender = useRef<boolean>(true);
-    const [currentTab, setCurrentTab] = useState(initialTab || "highlights");
-    useEffect(() => {
-        if (initialRender.current) {
-            initialRender.current = false;
-        } else {
-            reportEvent("changeModalTab", { tab: currentTab });
-        }
-
-        if (currentTab !== "highlights") {
-            setDomainFilter(undefined);
-            setTagFilter(undefined);
-        }
-    }, [currentTab]);
-
-    const [currentSubscription, setCurrentSubscription] = useState<FeedSubscription | undefined>(
-        initialSubscription
+    const {
+        currentTab,
+        setCurrentTab,
+        currentSubscription,
+        setCurrentSubscription,
+        domainFilter,
+        setDomainFilter,
+        tagFilter,
+        setTagFilter,
+        showDomain,
+    } = useModalState(
+        initialTab || "highlights",
+        initialSubscription,
+        initialTagFilter,
+        reportEvent
     );
-    const [domainFilter, setDomainFilter] = useState<string>();
-    const [tagFilter, setTagFilter] = useState<string | undefined>(initialTagFilter);
-
-    async function showDomain(domain: string) {
-        setDomainFilter(domain);
-        setCurrentTab("highlights");
-
-        reportEvent("showDomainDetails");
-    }
 
     return (
         <div
@@ -110,17 +83,12 @@ export function LibraryModalPage({
                         setTagFilter,
                         setCurrentSubscription,
                         relatedLinkCount,
-                        currentAnnotationsCount,
                     }}
                 >
                     <ModalStateContext.Provider
                         value={{ darkModeEnabled, showSignup, userInfo, reportEvent }}
                     >
-                        <ModalContent
-                            articleCount={articleCount}
-                            currentTab={currentTab}
-                            setCurrentTab={setCurrentTab}
-                        />
+                        <ModalContent currentTab={currentTab} setCurrentTab={setCurrentTab} />
                     </ModalStateContext.Provider>
                 </FilterContext.Provider>
             </div>
@@ -128,12 +96,56 @@ export function LibraryModalPage({
     );
 }
 
+export function useModalState(
+    initialTab: string,
+    initialSubscription?: FeedSubscription,
+    initialTagFilter?: string,
+    reportEvent: (event: string, data?: any) => void = () => {}
+) {
+    const initialRender = useRef<boolean>(true);
+    const [currentTab, setCurrentTab] = useState(initialTab);
+    useEffect(() => {
+        if (initialRender.current) {
+            initialRender.current = false;
+        } else {
+            reportEvent("changeModalTab", { tab: currentTab });
+        }
+
+        if (currentTab !== "highlights") {
+            setDomainFilter(undefined);
+            setTagFilter(undefined);
+        }
+    }, [currentTab]);
+
+    const [currentSubscription, setCurrentSubscription] = useState<FeedSubscription | undefined>(
+        initialSubscription
+    );
+    const [domainFilter, setDomainFilter] = useState<string>();
+    const [tagFilter, setTagFilter] = useState<string | undefined>(initialTagFilter);
+    async function showDomain(domain: string) {
+        setDomainFilter(domain);
+        setCurrentTab("highlights");
+
+        reportEvent("showDomainDetails");
+    }
+
+    return {
+        currentTab,
+        setCurrentTab,
+        currentSubscription,
+        setCurrentSubscription,
+        domainFilter,
+        setDomainFilter,
+        tagFilter,
+        setTagFilter,
+        showDomain,
+    };
+}
+
 function ModalContent({
-    articleCount,
     currentTab,
     setCurrentTab,
 }: {
-    articleCount?: number;
     currentTab: string;
     setCurrentTab: (tab: string) => void;
 }) {
@@ -164,21 +176,8 @@ function ModalContent({
                 )}
             >
                 {currentTab === "list" && <RecentModalTab />}
-                {currentTab === "stats" && <StatsModalTab articleCount={articleCount} />}
+                {currentTab === "stats" && <StatsModalTab />}
                 {currentTab === "highlights" && <QuotesTab />}
-                {/* {currentTab === "highlights" && <HighlightsTab />} */}
-                {/* {currentTab === "feeds" &&
-                    (currentSubscription ? (
-                        <FeedsDetailsTab
-                            darkModeEnabled={darkModeEnabled}
-                            reportEvent={reportEvent}
-                        />
-                    ) : (
-                        <FeedListTab darkModeEnabled={darkModeEnabled} reportEvent={reportEvent} />
-                    ))} */}
-                {/* {currentTab === "signup" && (
-                    <UpgradeModalTab darkModeEnabled={darkModeEnabled} reportEvent={reportEvent} />
-                )} */}
                 {currentTab === "settings" && <SettingsModalTab />}
             </div>
         </div>

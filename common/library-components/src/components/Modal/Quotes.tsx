@@ -13,14 +13,8 @@ import clsx from "clsx";
 
 export default function QuotesTab({}: {}) {
     const { userInfo, reportEvent, darkModeEnabled } = useContext(ModalStateContext);
-    const {
-        currentArticle,
-        domainFilter,
-        setDomainFilter,
-        currentAnnotationsCount,
-        tagFilter,
-        setTagFilter,
-    } = useContext(FilterContext);
+    const { currentArticle, domainFilter, setDomainFilter, tagFilter, setTagFilter } =
+        useContext(FilterContext);
 
     const [activeCurrentFilter, setActiveCurrentFilter] = useState<boolean>(
         !!domainFilter && !!tagFilter

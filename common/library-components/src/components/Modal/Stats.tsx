@@ -6,24 +6,20 @@ import clsx from "clsx";
 import { BigNumber, ResourceIcon, ResourceStat } from "./components/numbers";
 import { FilterContext, ModalStateContext } from "./context";
 
-export default function StatsModalTab({
-    articleCount,
-    defaultWeekOverlay = 3,
-}: {
-    articleCount?: number;
-    defaultWeekOverlay?: number;
-}) {
+export default function StatsModalTab({ defaultWeekOverlay = 3 }: { defaultWeekOverlay?: number }) {
     const { darkModeEnabled, userInfo, reportEvent } = useContext(ModalStateContext);
     const { showDomain } = useContext(FilterContext);
 
     const rep = useContext(ReplicacheContext);
 
+    const [articleCount, setArticleCount] = useState<number>();
     const [allArticles, setAllArticles] = useState<Article[]>();
     const [allAnnotations, setAllAnnotations] = useState<Annotation[]>();
     useEffect(() => {
         if (!rep) {
             return;
         }
+        rep?.query.getArticlesCount().then(setArticleCount);
         rep.query.listRecentArticles().then(setAllArticles);
         rep.query.listAnnotations().then(setAllAnnotations);
     }, [rep]);

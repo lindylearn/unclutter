@@ -12,7 +12,6 @@ export default function Sidebar({
     setCurrentTab: (tab: string) => void;
 }) {
     const { darkModeEnabled, userInfo, showSignup, reportEvent } = useContext(ModalStateContext);
-    const { currentAnnotationsCount, relatedLinkCount } = useContext(FilterContext);
     const rep = useContext(ReplicacheContext);
 
     // fetch settings initially and after changing tab away
@@ -33,13 +32,7 @@ export default function Sidebar({
             .catch(() => setNewTabInstalled(false));
     }, []);
 
-    const modalTabs = getModalTabOptions(
-        userInfo,
-        settings,
-        showSignup,
-        newTabInstalled,
-        currentAnnotationsCount
-    );
+    const modalTabs = getModalTabOptions(userInfo, settings, showSignup, newTabInstalled);
 
     return (
         <div className="flex h-full flex-col items-stretch justify-between gap-1 rounded-lg">

@@ -22,8 +22,7 @@ import { FilterContext, ModalStateContext } from "./context";
 export default function HighlightsTab({}: {}) {
     const { darkModeEnabled, userInfo, reportEvent } = useContext(ModalStateContext);
 
-    const { currentArticle, domainFilter, setDomainFilter, currentAnnotationsCount } =
-        useContext(FilterContext);
+    const { currentArticle, domainFilter, setDomainFilter } = useContext(FilterContext);
 
     const rep = useContext(ReplicacheContext);
     const annotations = useSubscribe(rep, rep?.subscribe.listAnnotationsWithArticles(), null);
@@ -49,7 +48,7 @@ export default function HighlightsTab({}: {}) {
                 filteredAnnotations = filteredAnnotations.filter(
                     (a) => getDomain(a.article?.url) === domainFilter
                 );
-            } else if (currentArticle && currentAnnotationsCount) {
+            } else if (currentArticle) {
                 filteredAnnotations = filteredAnnotations.filter(
                     (a) => a.article_id === currentArticle
                 );
@@ -61,14 +60,7 @@ export default function HighlightsTab({}: {}) {
 
         filteredAnnotations.sort((a, b) => b.created_at - a.created_at);
         setFilteredAnnotations(filteredAnnotations);
-    }, [
-        annotations,
-        activeCurrentFilter,
-        currentArticle,
-        currentAnnotationsCount,
-        domainFilter,
-        onlyManualHighlights,
-    ]);
+    }, [annotations, activeCurrentFilter, currentArticle, domainFilter, onlyManualHighlights]);
 
     const [searchedAnnotations, setSearchedAnnotations] = useState<AnnotationWithArticle[] | null>(
         null
@@ -126,11 +118,7 @@ export default function HighlightsTab({}: {}) {
                 )}
                 {activeCurrentFilter && (
                     <FilterButton
-                        title={
-                            domainFilter ||
-                            (currentArticle && currentAnnotationsCount && "Current article") ||
-                            ""
-                        }
+                        title={domainFilter || (currentArticle && "Current article") || ""}
                         icon={
                             <svg className="h-4" viewBox="0 0 512 512">
                                 <path
