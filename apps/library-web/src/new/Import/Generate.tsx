@@ -59,8 +59,8 @@ export function GenerateSection({
             animationIndex={1}
         >
             <p>
-                From now on, Unclutter automatically creates highlights whenever you activate the
-                browser extension. These work just like quotes you save manually.
+                From now on, Unclutter automatically creates AI highlights whenever you activate the
+                browser extension.
             </p>
             <p>Let's also generate highlights for your previously saved articles now.</p>
         </SettingsGroup>

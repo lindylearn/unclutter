@@ -85,9 +85,9 @@ export function ImportSection({ rep, userInfo, darkModeEnabled }) {
                 }
                 animationIndex={2}
             >
-                <p>
+                {/* <p>
                     Next to each highlight, you'll see related highlight that you saved previously.
-                </p>
+                </p> */}
                 <p>
                     The more articles in your library, the more connected ideas you'll see. So
                     import all the articles you already saved inside other apps!

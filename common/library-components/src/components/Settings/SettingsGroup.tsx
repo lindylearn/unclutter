@@ -26,15 +26,15 @@ export function SettingsGroup({
         <div
             className={clsx(
                 "relative z-20 max-w-2xl rounded-md bg-stone-50 dark:bg-neutral-800",
-                className,
-                animationIndex !== undefined ? "animate-slidein" : "animate-fadein"
+                className
+                // animationIndex !== undefined ? "animate-slidein" : "animate-fadein"
             )}
-            style={{
-                animationDelay:
-                    animationIndex !== undefined
-                        ? `${(animationIndex ? animationIndex * 50 : 0) + 50}ms`
-                        : "",
-            }}
+            // style={{
+            //     animationDelay:
+            //         animationIndex !== undefined
+            //             ? `${(animationIndex ? animationIndex * 50 : 0) + 50}ms`
+            //             : "",
+            // }}
         >
             <h2 className="flex items-center gap-2 py-3 px-4 font-medium">
                 {icon}

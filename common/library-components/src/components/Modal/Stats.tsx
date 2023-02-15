@@ -99,7 +99,7 @@ function NumberStats({
             />
             <BigNumber
                 value={allAnnotations?.length}
-                tag={`saved highlight${allAnnotations?.length !== 1 ? "s" : ""}`}
+                tag={`saved quote${allAnnotations?.length !== 1 ? "s" : ""}`}
                 icon={<ResourceIcon type="highlights" large />}
             />
         </div>
