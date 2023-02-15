@@ -36,8 +36,8 @@ export default function LoginPage({ isSignup = false }) {
                 </div>
 
                 <p className="max-w-md">
-                    Create an Unclutter account to enable AI Smart Reading features for Unclutter,
-                    and to back-up your library.
+                    Create an Unclutter account to enable the article library and AI smart reading
+                    features.
                 </p>
 
                 <img className="w-full max-w-2xl rounded-lg" src="/media/2.png" />

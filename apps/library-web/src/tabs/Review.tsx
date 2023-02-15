@@ -25,8 +25,8 @@ export default function ReviewTestTab({}) {
                     "--lindy-pagewidth": "780px",
                 }}
             >
-                <ArticleBottomReview articleId={getUrlHash(url)} darkModeEnabled={false} />
-                {/* <SignupBottomMessage articleId={getUrlHash(url)} darkModeEnabled={false} /> */}
+                {/* <ArticleBottomReview articleId={getUrlHash(url)} darkModeEnabled={false} /> */}
+                <SignupBottomMessage articleId={getUrlHash(url)} darkModeEnabled={false} />
             </div>
         </div>
     );
