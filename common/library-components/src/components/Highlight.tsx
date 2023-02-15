@@ -1,6 +1,12 @@
 import clsx from "clsx";
 import React, { useContext, useState } from "react";
-import { getDomain, getRandomLightColor, openArticleResilient, sendMessage } from "../common";
+import {
+    getAnnotationColorNew,
+    getDomain,
+    getRandomLightColor,
+    openArticleResilient,
+    sendMessage,
+} from "../common";
 import { Annotation, Article } from "../store";
 import { getActivityColor } from "./Charts";
 import { HighlightDropdown } from "./Dropdown/HighlightDowndown";
@@ -39,11 +45,11 @@ export function Highlight({
         reportEvent("openHighlight", { isCurrentArticle });
     }
 
-    const color = getRandomLightColor(annotation.tags?.[0] || annotation.id, darkModeEnabled);
+    const [color, colorDark] = getAnnotationColorNew(annotation);
 
     return (
         <a
-            className="highlight animate-fadein relative flex cursor-pointer select-none flex-col gap-2 overflow-hidden rounded-md bg-white px-4 py-3 text-sm text-stone-900 shadow transition-transform hover:scale-[99%] dark:bg-neutral-800 dark:text-white"
+            className="highlight animate-fadein relative flex cursor-pointer select-none flex-col gap-2 overflow-hidden rounded-md bg-white px-4 py-3 text-sm text-stone-900 shadow transition-transform hover:scale-[99%] dark:bg-neutral-700 dark:text-white"
             href={article?.url}
             onClick={openHighlight}
             onContextMenu={(e) => {

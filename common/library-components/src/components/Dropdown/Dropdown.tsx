@@ -38,7 +38,7 @@ export function Dropdown({
 
                 <DropdownMenu.Portal>
                     <DropdownMenu.Content
-                        className="dropdown-content z-100 font-text z-50 cursor-pointer rounded bg-white text-sm font-medium text-stone-800 drop-shadow dark:bg-stone-700 dark:text-stone-300"
+                        className="dropdown-content z-100 font-text z-50 cursor-pointer rounded bg-white text-sm font-medium text-stone-800 drop-shadow dark:bg-neutral-700 dark:text-stone-300"
                         side="right"
                         align="start"
                         sideOffset={6}

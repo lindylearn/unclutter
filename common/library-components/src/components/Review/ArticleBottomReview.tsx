@@ -62,9 +62,13 @@ export default function ArticleBottomReview({
 
     const [tagCountList, setTagCountList] = useState<[string, number][]>([]);
     useEffect(() => {
-        const tagCounts: { [tag: string]: number } = {};
+        const tagCounts: { [tag: string]: number } = { uncategorized: 0 };
         for (const annotation of articleAnnotations) {
-            for (const tag of annotation.tags?.slice(0, 1) || []) {
+            if (!annotation.tags?.length) {
+                tagCounts["uncategorized"]++;
+                continue;
+            }
+            for (const tag of annotation.tags?.slice(0, 1)) {
                 if (tagCounts[tag]) {
                     tagCounts[tag]++;
                 } else {

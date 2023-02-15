@@ -9,6 +9,7 @@ import { vectorSearch } from "./Highlights";
 import { ResourceStat } from "../Modal/components/numbers";
 import { FilterButton } from "./Recent";
 import { getActivityColor } from "../Charts";
+import clsx from "clsx";
 
 export default function QuotesTab({}: {}) {
     const { userInfo, reportEvent, darkModeEnabled } = useContext(ModalStateContext);
@@ -61,6 +62,7 @@ export default function QuotesTab({}: {}) {
     }, [queryDebounced]);
 
     const [annotationGroups, setAnnotationGroups] = useState<[string, Annotation[]][]>([]);
+    const [untaggedAnnotations, setUntaggedAnnotations] = useState<Annotation[]>([]);
     useEffect(() => {
         if (annotations === null) {
             return;
@@ -71,6 +73,7 @@ export default function QuotesTab({}: {}) {
         filteredAnnotations.sort((a, b) => b.created_at - a.created_at);
         if (tagFilter) {
             filteredAnnotations = filteredAnnotations.filter((a) => a.tags?.includes(tagFilter));
+            filteredAnnotations.forEach((a) => (a.tags = [tagFilter])); // ignore other tags
             setAnnotationGroups([[tagFilter, filteredAnnotations]]);
             return;
         }
@@ -81,9 +84,11 @@ export default function QuotesTab({}: {}) {
         }
 
         const tagAnnotations: { [tag: string]: Annotation[] } = {};
+        const untaggedAnnotations: Annotation[] = [];
         for (const annotation of filteredAnnotations) {
-            if (annotation.tags === undefined) {
-                annotation.tags = ["other"];
+            if (!annotation.tags?.length) {
+                untaggedAnnotations.push(annotation);
+                continue;
             }
             for (const tag of annotation.tags.slice(0, 1)) {
                 if (tagAnnotations[tag] === undefined) {
@@ -96,6 +101,7 @@ export default function QuotesTab({}: {}) {
             (a, b) => b[1][0].created_at - a[1][0].created_at
         );
         setAnnotationGroups(annotationGroups);
+        setUntaggedAnnotations(untaggedAnnotations);
     }, [annotations, tagFilter, domainFilter, searchedAnnotations]);
 
     return (
@@ -149,12 +155,20 @@ export default function QuotesTab({}: {}) {
             {annotationGroups.slice(0, 20).map(([tag, annotations]) => (
                 <TagGroup
                     key={tag}
-                    tag={tag}
+                    tag={`#${tag}`}
                     annotations={annotations}
                     annotationLimit={tagFilter ? 100 : 4}
                     setTagFilter={setTagFilter}
                 />
             ))}
+            {(searchedAnnotations?.length || domainFilter) && (
+                <TagGroup
+                    key="untagged"
+                    tag="untagged"
+                    annotations={untaggedAnnotations}
+                    annotationLimit={100}
+                />
+            )}
 
             {annotations !== null && annotations.length === 0 && (
                 <div className="animate-fadein col-span-3 flex w-full select-none items-center gap-2">
@@ -174,7 +188,7 @@ function TagGroup({
     tag: string;
     annotations: Annotation[];
     annotationLimit: number;
-    setTagFilter: (tag?: string) => void;
+    setTagFilter?: (tag?: string) => void;
 }) {
     const { darkModeEnabled, reportEvent } = useContext(ModalStateContext);
     const color = getRandomLightColor(tag, darkModeEnabled);
@@ -183,10 +197,13 @@ function TagGroup({
         <div className="tag-group relative">
             <div className="mx-0.5 mb-2 flex justify-between">
                 <h2
-                    className="title flex cursor-pointer select-none items-center gap-2 font-medium transition-all hover:scale-[95%]"
-                    onClick={() => setTagFilter(tag)}
+                    className={clsx(
+                        "title flex select-none items-center gap-2 font-medium",
+                        setTagFilter && "cursor-pointer transition-all hover:scale-[95%]"
+                    )}
+                    onClick={() => setTagFilter?.(tag.slice(1))}
                 >
-                    #{tag}
+                    {tag}
                 </h2>
 
                 {/* <div className="relative px-1.5 py-0.5">
