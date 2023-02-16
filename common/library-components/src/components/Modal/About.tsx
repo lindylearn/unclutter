@@ -92,8 +92,8 @@ export default function AboutModalTab({}: {}) {
                     <>
                         <p>Thank you for supporting the Unclutter open-source project!</p>
                         <p>
-                            See below for the features you unlocked! Try them out on any article in
-                            your library, and make sure to visit the Import page too.
+                            Try out the new features on any article in your library, and make sure
+                            to visit the Import page too.
                         </p>
                     </>
                 ) : (
@@ -124,8 +124,8 @@ export default function AboutModalTab({}: {}) {
                     Every article you open with Unclutter automatically gets saved in your library.
                 </p>
                 <p>
-                    Get back to articles you didn't finish yet, access your reading queue on another
-                    device, or see what you've read recently via the Stats and Articles pages.
+                    Save articles for later, access your reading queue on your mobile phone, or find
+                    any article you've read in the past.
                 </p>
             </SettingsGroup>
 
@@ -145,6 +145,7 @@ export default function AboutModalTab({}: {}) {
                     Unclutter automatically highlights the most important sentences on each article
                     you read in yellow, helping you focus on what matters.
                 </p>
+                <p>Just click on any such highlight to save in your library.</p>
             </SettingsGroup>
 
             <SettingsGroup
@@ -159,13 +160,10 @@ export default function AboutModalTab({}: {}) {
                 }
                 imageSrc="media/quotes.png"
             >
+                <p>All your highlights are tagged and organized automatically.</p>
                 <p>
-                    Click on any such highlight to save it to your library, or manually select any
-                    text.
-                </p>
-                <p>
-                    All quotes are tagged and organized automatically. On the Quotes page you can
-                    browse and search across all information you've collected.
+                    Browse your collected quotes by topic or find all information you've seen about
+                    a specific idea or fact. Your library remembers it for you.
                 </p>
             </SettingsGroup>
 
@@ -182,8 +180,8 @@ export default function AboutModalTab({}: {}) {
                 imageSrc="media/connect_ideas.png"
             >
                 <p>
-                    Quotes from your library also automatically appear whenever you save a related
-                    quote on another article.
+                    Quotes from your library also automatically appear whenever you create a related
+                    highlight on another article, helping you connect different ideas.
                 </p>
                 <p>
                     For example, if a text mentions Google and AI search, you'll see everything
@@ -205,8 +203,8 @@ export default function AboutModalTab({}: {}) {
             >
                 <p>The more you read, the smarter your library becomes.</p>
                 <p>
-                    You can also import articles on the Import page to make use of the knowledge
-                    you've already saved with Pocket, Instapaper, or other apps.
+                    You can also import articles to make use of the knowledge you've already
+                    accumulated with Pocket, Instapaper, Raindrop, or your browser bookmarks.
                 </p>
             </SettingsGroup>
         </div>
