@@ -65,11 +65,11 @@ export default function ArticleBottomReview({
         const tagCounts: { [tag: string]: number } = {};
         for (const annotation of articleAnnotations) {
             if (!annotation.tags?.length) {
-                if (tagCounts["untagged"]) {
-                    tagCounts["untagged"]++;
-                } else {
-                    tagCounts["untagged"] = 1;
-                }
+                // if (tagCounts["untagged"]) {
+                //     tagCounts["untagged"]++;
+                // } else {
+                //     tagCounts["untagged"] = 1;
+                // }
                 continue;
             }
             for (let tag of annotation.tags?.slice(0, 1)) {
@@ -113,7 +113,10 @@ export default function ArticleBottomReview({
                         {relatedCount === undefined ? (
                             <>Generating AI highlights...</>
                         ) : (
-                            <>Save quotes by selecting any article text.</>
+                            <>
+                                Save quotes by clicking any yellow highlight, or manually selecting
+                                any article text.
+                            </>
                         )}
                     </div>
                 )}

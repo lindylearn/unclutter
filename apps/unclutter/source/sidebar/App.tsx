@@ -303,7 +303,7 @@ export default function App({
         if (!storeAnnotations) {
             return;
         }
-        console.log("Grouping annotations");
+        // console.log("Grouping annotations");
 
         // @ts-ignore
         // const summary: LindyAnnotation = {
@@ -365,8 +365,6 @@ export default function App({
                     )
             );
         }
-
-        console.log(visibleAnnotations);
 
         // use large grouping margin to display every annotation properly
         const groupedAnnotations = groupAnnotations(visibleAnnotations, 75);

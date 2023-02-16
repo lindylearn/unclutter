@@ -157,7 +157,9 @@ export default function QuotesTab({}: {}) {
                     setTagFilter={setTagFilter}
                 />
             ))}
-            {(searchedAnnotations?.length || domainFilter || annotationGroups.length === 0) && (
+            {(searchedAnnotations?.length ||
+                (domainFilter && untaggedAnnotations.length) ||
+                annotationGroups.length === 0) && (
                 <TagGroup
                     key="untagged"
                     tag="untagged"

@@ -37,20 +37,19 @@
         activateStateClass = "";
     }
 
-    let tagCountList: [string, number][] = [];
-    $: if (annotations?.length) {
-        const tagCounts: { [tag: string]: number } = {};
+    $: tagCounts = getTagCounts(annotations);
+    function getTagCounts(annotations: Annotation[]): { [tag: string]: number } {
+        const newTagCounts = {};
         for (const annotation of annotations) {
             for (const tag of annotation.tags.slice(0, 1)) {
-                if (tagCounts[tag]) {
-                    tagCounts[tag]++;
+                if (newTagCounts[tag]) {
+                    newTagCounts[tag]++;
                 } else {
-                    tagCounts[tag] = 1;
+                    newTagCounts[tag] = 1;
                 }
             }
         }
-
-        tagCountList = Object.entries(tagCounts).sort((a, b) => b[1] - a[1]);
+        return newTagCounts;
     }
 
     function focusHeading() {
@@ -110,39 +109,37 @@
 
         <!-- <div
             class={clsx(
-                "hidden px-1 rounded-md text-center",
-                // annotationsEnabled &&
-                //     totalAnnotationCount &&
-                //     socialCommentsCount &&
-                //     index !== -1 &&
-                //     "icon-padding",
-                annotations.length && "visible-icon"
+                "hidden px-1 rounded text-center font-bold",
+                annotations.length && tagCountList[0]?.[0] && "visible-icon"
             )}
-            style={`min-width: 1.4em; padding: 0 0.4em; background-color: ${getRandomColor(
-                tagCountList[0]?.[0] || title
+            style={`min-width: 1.2em; background-color: ${getRandomColor(
+                tagCountList[0]?.[0]
             )};`}
         >
             {annotations.length}
         </div> -->
 
-        <div class="-mr-2 flex shrink-0 gap-1 overflow-hidden">
-            {#each tagCountList?.slice(0, 3) as [tag, count]}
-                <div
+        <div class="flex shrink-0 gap-1 overflow-hidden">
+            {#each Object.entries(tagCounts)
+                .sort((a, b) => a[1] - b[1])
+                ?.slice(0, 3) as [tag, count]}
+                <!-- <div
                     class="h-3 w-3 shrink-0 rounded-full"
                     style={`background-color: ${getRandomColor(tag).replace("0.3", "0.6")};`}
-                />
-                <!-- <div
-                    class="rounded px-1.5 text-center font-bold"
-                    style={`background-color: ${getRandomColor(tag)};`}
+                /> -->
+
+                <div
+                    class="rounded px-1 text-center font-bold"
+                    style={`min-width: 1.2em; background-color: ${getRandomColor(tag)};`}
                 >
                     {count}
-                </div> -->
+                </div>
             {/each}
         </div>
     </div>
-    {#if children.length > 0 || (false && tagCountList?.length)}
-        <ul class="m-0 ml-5 mt-1 flex w-full list-none flex-col gap-1 overflow-hidden p-0">
-            <!-- <div class="flex justify-end gap-1 overflow-hidden">
+    <!-- {#if children.length > 0 || (false && tagCountList?.length)}
+        <ul class="m-0 ml-5 mt-1 flex w-full list-none flex-col gap-1 overflow-hidden p-0"> -->
+    <!-- <div class="flex justify-end gap-1 overflow-hidden">
                 {#each tagCountList as [tag, count]}
                     <span
                         class="rounded-md px-1 text-center text-sm"
@@ -153,7 +150,7 @@
                 {/each}
             </div> -->
 
-            <!-- {#each children as child, i}
+    <!-- {#each children as child, i}
                 <svelte:self
                     {activeOutlineIndex}
                     {annotationsEnabled}
@@ -161,8 +158,8 @@
                     {...child}
                 />
             {/each} -->
-        </ul>
-    {/if}
+    <!-- </ul>
+    {/if} -->
 </li>
 
 <style lang="postcss">
