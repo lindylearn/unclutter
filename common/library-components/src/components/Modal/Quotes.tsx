@@ -133,17 +133,19 @@ export default function QuotesTab({}: {}) {
                     />
                 )}
 
-                <SearchBox
-                    query={query}
-                    setQuery={setQuery}
-                    placeholder={
-                        annotations === null
-                            ? ""
-                            : `Search across your ${annotations.length} quote${
-                                  annotations.length !== 1 ? "s" : ""
-                              }...`
-                    }
-                />
+                {userInfo?.aiEnabled && (
+                    <SearchBox
+                        query={query}
+                        setQuery={setQuery}
+                        placeholder={
+                            annotations === null
+                                ? ""
+                                : `Search across your ${annotations.length} quote${
+                                      annotations.length !== 1 ? "s" : ""
+                                  }...`
+                        }
+                    />
+                )}
             </div>
 
             {annotationGroups.slice(0, 20).map(([tag, annotations]) => (
@@ -155,7 +157,7 @@ export default function QuotesTab({}: {}) {
                     setTagFilter={setTagFilter}
                 />
             ))}
-            {(searchedAnnotations?.length || domainFilter) && (
+            {(searchedAnnotations?.length || domainFilter || annotationGroups.length === 0) && (
                 <TagGroup
                     key="untagged"
                     tag="untagged"
@@ -185,25 +187,27 @@ function TagGroup({
     setTagFilter?: (tag?: string) => void;
 }) {
     const { darkModeEnabled, reportEvent } = useContext(ModalStateContext);
-    const color = getRandomLightColor(tag, darkModeEnabled);
+    // const color = getRandomLightColor(tag, darkModeEnabled);
 
     return (
         <div className="tag-group relative">
-            <div className="mx-0.5 mb-2 flex justify-between">
-                <h2
-                    className={clsx(
-                        "title flex select-none items-center gap-2 font-medium",
-                        setTagFilter && "cursor-pointer transition-all hover:scale-[95%]"
-                    )}
-                    onClick={() => setTagFilter?.(tag.slice(1))}
-                >
-                    {tag}
-                </h2>
+            {tag !== "untagged" && (
+                <div className="mx-0.5 mb-2 flex justify-between">
+                    <h2
+                        className={clsx(
+                            "title flex select-none items-center gap-2 font-medium",
+                            setTagFilter && "cursor-pointer transition-all hover:scale-[95%]"
+                        )}
+                        onClick={() => setTagFilter?.(tag.slice(1))}
+                    >
+                        {tag}
+                    </h2>
 
-                {/* <div className="relative px-1.5 py-0.5">
+                    {/* <div className="relative px-1.5 py-0.5">
                     <ResourceStat type="highlights" value={annotations?.length} large={false} />
                 </div> */}
-            </div>
+                </div>
+            )}
 
             <div
                 className="relative grid grid-cols-2 gap-4 rounded-md bg-stone-100 p-4 transition-colors dark:bg-neutral-800"
