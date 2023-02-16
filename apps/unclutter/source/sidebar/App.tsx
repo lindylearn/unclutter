@@ -99,8 +99,11 @@ export default function App({
             );
         }
 
-        // fetch related in batch when first annotations added
-        if (newAnnotations.length > 0) {
+        // fetch related in batch when first annotations added, and when AI annotations added
+        if (
+            newAnnotations.length > 0 &&
+            (lastAnnotations.current.length === 0 || newAnnotations.some((a) => a.ai_created))
+        ) {
             fetchRelatedBatch(storeAnnotations);
         }
 
@@ -228,9 +231,9 @@ export default function App({
             // so make sure we show all of its related annotations for a nicer UX
             console.log("Showing all related annotations for source annotation.");
 
-            removeFromOtherThreads = related
-                .filter((r) => usedRelatedIds.current.has(r.id))
-                .map((r) => r.id);
+            // removeFromOtherThreads = related
+            //     .filter((r) => usedRelatedIds.current.has(r.id))
+            //     .map((r) => r.id);
         } else {
             related = related.filter((r) => !usedRelatedIds.current.has(r.id));
         }
@@ -241,11 +244,11 @@ export default function App({
         // populate relatedPerAnnotation even with empty list to avoid fetching again
         await populateRelatedArticles(rep, [related]);
         setRelatedPerAnnotation((prev) => {
-            if (removeFromOtherThreads.length > 0) {
-                for (const [id, other] of Object.entries(prev)) {
-                    prev[id] = other.filter((r) => !removeFromOtherThreads.includes(r.id));
-                }
-            }
+            // if (removeFromOtherThreads.length > 0) {
+            //     for (const [id, other] of Object.entries(prev)) {
+            //         prev[id] = other.filter((r) => !removeFromOtherThreads.includes(r.id));
+            //     }
+            // }
 
             return {
                 ...prev,
@@ -331,6 +334,7 @@ export default function App({
                     .map(unpickleLocalAnnotation)
                     .map((a) => ({
                         ...a,
+                        listId: a.id,
                         focused: a.id === focusedAnnotationId,
                         displayOffset: displayOffsets[a.id],
                         displayOffsetEnd: displayOffsetEnds[a.id],
@@ -343,11 +347,13 @@ export default function App({
                         ...(a.related?.map((r, i) => ({
                             ...a,
                             ...r,
+                            listId: `${a.id}-${r.id}`, // allow related duplicates in list
                             relatedToId: a.id,
                             isMyAnnotation: false,
                             platform: "related",
                             displayOffset: a.displayOffset + i,
                             displayOffsetEnd: a.displayOffsetEnd + i,
+                            related: [],
                         })) || []),
                     ])
                     .filter(
@@ -359,6 +365,8 @@ export default function App({
                     )
             );
         }
+
+        console.log(visibleAnnotations);
 
         // use large grouping margin to display every annotation properly
         const groupedAnnotations = groupAnnotations(visibleAnnotations, 75);

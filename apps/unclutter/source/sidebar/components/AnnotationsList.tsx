@@ -53,7 +53,7 @@ function AnnotationsList({
             .flatMap((group) => group)
             .filter((a) => a.isMyAnnotation)
             .map((a) => {
-                const ref = itemsRef.current[a.id];
+                const ref = itemsRef.current[a.listId];
                 observer.observe(ref);
             });
 
@@ -80,7 +80,9 @@ function AnnotationsList({
 
                 return group.map((annotation, i) => {
                     // items are in flat list, so must track previous group items for correct absolute position
-                    const prevSiblingsRefs = group.slice(0, i).map((a) => itemsRef.current?.[a.id]);
+                    const prevSiblingsRefs = group
+                        .slice(0, i)
+                        .map((a) => itemsRef.current?.[a.listId]);
 
                     // get absolute offset after the group start
                     let innerGroupOffset: number;
@@ -101,12 +103,12 @@ function AnnotationsList({
 
                     return (
                         <CSSTransition
-                            key={annotation.id}
+                            key={annotation.listId}
                             timeout={500} // must be larger than animation duration
                             classNames="annotation-list-item"
                         >
                             <div
-                                key={annotation.id}
+                                key={annotation.listId}
                                 className="annotation-list-item absolute w-full"
                                 style={{
                                     top: groupTopOffset + innerGroupOffset,
@@ -114,9 +116,9 @@ function AnnotationsList({
                                 }}
                                 ref={(el) => {
                                     if (el) {
-                                        itemsRef.current[annotation.id] = el;
+                                        itemsRef.current[annotation.listId] = el;
                                     } else {
-                                        delete itemsRef.current[annotation.id];
+                                        delete itemsRef.current[annotation.listId];
                                     }
                                 }}
                             >
