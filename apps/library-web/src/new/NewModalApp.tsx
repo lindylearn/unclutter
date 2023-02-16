@@ -51,6 +51,35 @@ export default function NewModalApp() {
         }
     }, [currentTab, router]);
 
+    useEffect(() => {
+        (async () => {
+            if (!rep || !user || !user.email) {
+                return;
+            }
+
+            if (userInfo === null) {
+                console.log("Signing up new user", user);
+                await rep.mutate.updateUserInfo({
+                    id: user.id,
+                    name: user.user_metadata.name,
+                    signinProvider: user.app_metadata.provider as any,
+                    email: user.email,
+                    accountEnabled: true,
+                });
+
+                await new Promise((resolve) => setTimeout(resolve, 2000));
+                setUnclutterLibraryAuth(user.id);
+            } else {
+                console.log("Logging in existing user");
+                setUnclutterLibraryAuth(user.id);
+            }
+
+            // await rep.mutate.updateUserInfo({
+            //     aiEnabled: false,
+            // });
+        })();
+    }, [rep, user, userInfo]);
+
     if (!userInfo) {
         return <></>;
     }

@@ -10,30 +10,12 @@ import clsx from "clsx";
 export default function AboutModalTab({}: {}) {
     const { darkModeEnabled, userInfo, showSignup, reportEvent } = useContext(ModalStateContext);
     const rep = useContext(ReplicacheContext);
-    const { user } = useUser();
 
     const [justEnabled, setJustEnabled] = useState(false);
     useEffect(() => {
         (async () => {
-            if (!rep || !user || !user.email) {
+            if (!rep) {
                 return;
-            }
-
-            if (userInfo === null) {
-                console.log("Signing up new user", user);
-                await rep.mutate.updateUserInfo({
-                    id: user.id,
-                    name: user.user_metadata.name,
-                    signinProvider: user.app_metadata.provider as any,
-                    email: user.email,
-                    accountEnabled: true,
-                });
-
-                await new Promise((resolve) => setTimeout(resolve, 2000));
-                setUnclutterLibraryAuth(user.id);
-            } else {
-                console.log("Logging in existing user");
-                setUnclutterLibraryAuth(user.id);
             }
 
             // immediately enable on stripe payments redirect
@@ -54,12 +36,8 @@ export default function AboutModalTab({}: {}) {
                     },
                 });
             }
-
-            // await rep.mutate.updateUserInfo({
-            //     aiEnabled: false,
-            // });
         })();
-    }, [rep, user, userInfo]);
+    }, [rep, userInfo]);
 
     const paymentsLink = usePaymentsLink(userInfo);
 
@@ -114,8 +92,8 @@ export default function AboutModalTab({}: {}) {
                     <>
                         <p>Thank you for supporting the Unclutter open-source project!</p>
                         <p>
-                            See below for the features you just unlocked! Try them out on any
-                            article in your library, and make sure to visit the Import page too.
+                            See below for the features you unlocked! Try them out on any article in
+                            your library, and make sure to visit the Import page too.
                         </p>
                     </>
                 ) : (
