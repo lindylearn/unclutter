@@ -1,16 +1,18 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { ModalStateContext } from "./context";
 import { SettingsButton, SettingsGroup } from "../Settings/SettingsGroup";
 import { ReplicacheContext } from "../../store";
 import { useUser } from "@supabase/auth-helpers-react";
 import { setUnclutterLibraryAuth } from "../../common";
 import { usePaymentsLink } from "../Settings/SmartReading";
+import clsx from "clsx";
 
 export default function AboutModalTab({}: {}) {
     const { darkModeEnabled, userInfo, showSignup, reportEvent } = useContext(ModalStateContext);
     const rep = useContext(ReplicacheContext);
     const { user } = useUser();
 
+    const [justEnabled, setJustEnabled] = useState(false);
     useEffect(() => {
         (async () => {
             if (!rep || !user || !user.email) {
@@ -43,6 +45,7 @@ export default function AboutModalTab({}: {}) {
                 await rep.mutate.updateUserInfo({
                     aiEnabled: true,
                 });
+                setJustEnabled(true);
 
                 reportEvent("enableSmartReading", {
                     $set: {
@@ -95,33 +98,24 @@ export default function AboutModalTab({}: {}) {
                     </svg>
                 }
                 buttons={
-                    <>
-                        {userInfo?.aiEnabled ? (
-                            <SettingsButton
-                                title="Manage subscription"
-                                href="https://billing.stripe.com/p/login/5kA8x62Ap9y26v6144"
-                                darkModeEnabled={darkModeEnabled}
-                                reportEvent={reportEvent}
-                            />
-                        ) : (
-                            <SettingsButton
-                                title="Start free trial"
-                                href={paymentsLink}
-                                // inNewTab={false}
-                                darkModeEnabled={darkModeEnabled}
-                                reportEvent={reportEvent}
-                            />
-                        )}
-                    </>
+                    !userInfo?.aiEnabled && (
+                        <SettingsButton
+                            title="Start free trial"
+                            href={paymentsLink}
+                            // inNewTab={false}
+                            darkModeEnabled={darkModeEnabled}
+                            reportEvent={reportEvent}
+                        />
+                    )
                 }
+                className={clsx(justEnabled && "bg-amber-100")}
             >
                 {userInfo?.aiEnabled ? (
                     <>
                         <p>Thank you for supporting the Unclutter open-source project!</p>
                         <p>
-                            See below for an overview of the features you just unlocked! Try them
-                            out on any article in your library, and make sure to visit the Import
-                            page.
+                            See below for the features you just unlocked! Try them out on any
+                            article in your library, and make sure to visit the Import page too.
                         </p>
                     </>
                 ) : (

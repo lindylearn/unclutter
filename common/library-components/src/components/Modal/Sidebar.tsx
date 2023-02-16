@@ -158,7 +158,7 @@ function getModalTabOptions(
             ),
         },
 
-        userInfo?.accountEnabled && {
+        requireSupport && {
             label: "About",
             value: "about",
             atEnd: true,
@@ -172,7 +172,7 @@ function getModalTabOptions(
                 </svg>
             ),
         },
-        userInfo?.accountEnabled && {
+        requireSupport && {
             label: "Import",
             value: "import",
             atEnd: true,
