@@ -49,7 +49,7 @@ export function Highlight({
 
     return (
         <a
-            className="highlight animate-fadein relative flex cursor-pointer select-none flex-col gap-2 overflow-hidden rounded-md bg-white px-3 py-2 text-sm text-stone-900 shadow transition-transform hover:scale-[99%] dark:bg-neutral-700 dark:text-white"
+            className="highlight animate-fadein relative flex cursor-pointer select-none flex-col gap-2 overflow-hidden rounded-l-sm rounded-r-md bg-white px-3 py-2 text-sm text-stone-900 shadow transition-transform hover:scale-[99%] dark:bg-neutral-700 dark:text-white"
             href={article?.url}
             onClick={openHighlight}
             onContextMenu={(e) => {
@@ -103,10 +103,10 @@ export function Highlight({
             </div> */}
 
             {article ? (
-                <div className="info-bar gap-42 flex items-center justify-between whitespace-nowrap font-medium opacity-75">
+                <div className="info-bar gap-42 flex items-center justify-between whitespace-nowrap text-stone-400 dark:text-stone-600">
                     <div className="flex items-center gap-2 overflow-hidden">
                         <img
-                            className="w-4 shrink-0 rounded-sm"
+                            className="w-4 shrink-0 rounded-sm opacity-75"
                             src={`https://www.google.com/s2/favicons?sz=128&domain=https://${getDomain(
                                 article.url
                             )}`}

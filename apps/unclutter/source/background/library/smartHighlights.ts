@@ -23,7 +23,10 @@ export async function saveAIAnnotations(userInfo: UserInfo, annotations: Annotat
     );
 }
 
-export async function getRelatedAnnotationsCount(userInfo: UserInfo, annotations: Annotation[]) {
+export async function getRelatedAnnotationsCount(
+    userInfo: UserInfo,
+    annotations: Annotation[]
+): Promise<number> {
     if (!annotations?.length) {
         return;
     }
@@ -35,7 +38,7 @@ export async function getRelatedAnnotationsCount(userInfo: UserInfo, annotations
         annotations.map((a) => a.quote_text)
     );
     if (!relatedPerAnnotation?.length) {
-        return [];
+        return 0;
     }
 
     let relatedCount = 0;

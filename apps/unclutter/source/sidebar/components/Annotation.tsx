@@ -30,7 +30,7 @@ function Annotation({
     return (
         <a
             className={clsx(
-                "annotation relative flex cursor-pointer flex-col gap-2 overflow-hidden rounded-md p-2 pl-3 text-sm shadow transition-transform hover:scale-[99%]",
+                "annotation relative flex cursor-pointer flex-col gap-2 overflow-hidden rounded-l-sm rounded-r-md p-2 pl-3 text-sm shadow transition-transform hover:scale-[99%]",
                 className
             )}
             style={{
@@ -94,7 +94,7 @@ function Annotation({
                 {excerpt || text}
             </div>
 
-            <div className="annotation-bar relative flex select-none items-center gap-2 overflow-hidden whitespace-nowrap font-medium opacity-75">
+            <div className="annotation-bar relative flex select-none items-center gap-2 overflow-hidden whitespace-nowrap text-stone-400 dark:text-stone-600">
                 {(platform === "info" || platform === "related") && annotation.article?.url && (
                     // <svg className="h-4" viewBox="0 0 640 512">
                     //     <path
@@ -103,7 +103,7 @@ function Annotation({
                     //     />
                     // </svg>
                     <img
-                        className="w-4 shrink-0 rounded-sm"
+                        className="w-4 shrink-0 rounded-sm opacity-75"
                         src={`https://www.google.com/s2/favicons?sz=128&domain=https://${getDomain(
                             annotation.article.url
                         )}`}

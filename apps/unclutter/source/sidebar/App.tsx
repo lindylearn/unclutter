@@ -263,7 +263,7 @@ export default function App({
                 timeout: 10 * 1000,
             })
             .json();
-        tags = tags?.slice(0, 3) || [];
+        tags = tags?.slice(0, 2) || [];
         if (tags.length === 0) {
             tags = ["other"];
         }

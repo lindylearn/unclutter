@@ -17,15 +17,14 @@ export default function AnnotationDraftNew({
     unfocusAnnotation,
 }: AnnotationDraftProps) {
     const ref = useBlurRef(annotation, unfocusAnnotation);
-    const inputRef = useRef<HTMLTextAreaElement>();
     const { userInfo } = useContext(SidebarContext);
 
     // focus on initial render
     useEffect(() => {
         if (annotation.focused) {
-            inputRef.current?.focus();
+            ref.current?.focus();
         }
-    }, [inputRef, annotation.focused]);
+    }, [ref, annotation.focused]);
 
     // debounce local state and remote updates
     // debounce instead of throttle so that newest call eventually runs
@@ -63,7 +62,7 @@ export default function AnnotationDraftNew({
     return (
         <div
             className={clsx(
-                `annotation annotation-draft relative flex min-h-[33.750px] items-center rounded-md p-2 pl-3 text-sm shadow`,
+                `annotation annotation-draft relative flex min-h-[33.750px] items-center rounded-l-sm rounded-r-md p-2 pl-3 text-sm shadow`,
                 annotation.focused && "focused",
                 className
             )}

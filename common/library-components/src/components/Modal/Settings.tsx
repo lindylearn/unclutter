@@ -139,7 +139,7 @@ export default function SettingsModalTab({}: {}) {
 
             {userInfo?.accountEnabled && (
                 <SettingsGroup
-                    title="Multiple devices"
+                    title="Sync"
                     icon={
                         <svg className="h-4 w-4" viewBox="0 0 512 512">
                             <path
