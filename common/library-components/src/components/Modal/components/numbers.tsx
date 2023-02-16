@@ -10,6 +10,7 @@ export function BigNumber({
     icon,
     onClick,
     small = false,
+    style,
 }: {
     value?: number;
     diff?: number;
@@ -19,17 +20,18 @@ export function BigNumber({
     icon?: ReactNode;
     onClick?: () => void;
     small?: boolean;
+    style?: React.CSSProperties;
 }) {
     return (
         <div
             className={clsx(
-                "relative flex select-none flex-col items-center overflow-hidden rounded-md bg-stone-50 px-3 py-2 transition-all hover:scale-[97%] dark:bg-neutral-800",
+                "big-number relative flex select-none flex-col items-center overflow-hidden rounded-md bg-stone-50 px-3 py-2 transition-all hover:scale-[97%] dark:bg-neutral-800",
                 onClick && "cursor-pointer"
             )}
-            style={{ background: colorOverride }}
+            style={{ background: colorOverride, ...style }}
             onClick={onClick}
         >
-            {value !== undefined && target !== undefined && (
+            {/* {value !== undefined && target !== undefined && (
                 <div
                     className="absolute top-0 left-0 h-full w-full opacity-90"
                     style={{
@@ -37,11 +39,12 @@ export function BigNumber({
                         width: `${Math.min(1, value / target) * 100}%`,
                     }}
                 />
-            )}
+            )} */}
             <div
                 className={clsx(
-                    "font-title flex h-[2rem] items-center gap-2 text-2xl font-bold transition-opacity",
-                    value === undefined && diff === undefined && "opacity-0"
+                    "font-title flex items-center gap-2 font-bold transition-opacity",
+                    value === undefined && diff === undefined && "opacity-0",
+                    small ? "text-xl" : "h-[2rem] text-2xl"
                 )}
             >
                 {icon}
@@ -63,7 +66,12 @@ export function BigNumber({
                     {/* {value && diff && <AnimatedNumber value={value} diff={diff} />} */}
                 </div>
             </div>
-            <div className="font-text max-w-full overflow-hidden overflow-ellipsis whitespace-nowrap">
+            <div
+                className={clsx(
+                    "font-text max-w-full overflow-hidden overflow-ellipsis whitespace-nowrap",
+                    small ? "text-sm" : ""
+                )}
+            >
                 {tag}
             </div>
         </div>

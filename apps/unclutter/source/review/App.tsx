@@ -3,7 +3,7 @@ import { ReplicacheProxy } from "@unclutter/library-components/dist/common/repli
 import ArticleBottomReview from "@unclutter/library-components/dist/components/Review/ArticleBottomReview";
 import SignupBottomMessage from "@unclutter/library-components/dist/components/Review/SignupBottomMessage";
 import { ReplicacheContext } from "@unclutter/library-components/dist/store/replicache";
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 
 export default function App({
     articleId,
@@ -16,8 +16,21 @@ export default function App({
 }) {
     const rep = useMemo<ReplicacheProxy>(() => new ReplicacheProxy(), []);
 
+    useEffect(() => {
+        const resizeObserver = new ResizeObserver(() => {
+            console.log(`Review container resized to ${document.body.scrollHeight}px`);
+            window.top?.postMessage(
+                { event: "bottomIframeSetHeight", height: `${document.body.scrollHeight}px` },
+                "*"
+            );
+        });
+        resizeObserver.observe(document.body);
+
+        return () => resizeObserver.disconnect();
+    }, []);
+
     return (
-        <div className="bottom-container font-text relative mt-2 mb-4">
+        <div className="bottom-container font-text relative pt-2 pb-4">
             {/* @ts-ignore */}
             <ReplicacheContext.Provider value={rep}>
                 {type === "review" && (

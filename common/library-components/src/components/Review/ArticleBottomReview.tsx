@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { getAnnotationColorNew, getRandomColor } from "../../common";
 import { Annotation, Article, ReplicacheContext, useSubscribe } from "../../store";
-import { getActivityColor } from "../Charts";
+import { getActivityColor, getActivityLevel } from "../Charts";
 import { BigNumber, ResourceIcon } from "../Modal";
 
 export default function ArticleBottomReview({
@@ -65,15 +65,14 @@ export default function ArticleBottomReview({
         const tagCounts: { [tag: string]: number } = {};
         for (const annotation of articleAnnotations) {
             if (!annotation.tags?.length) {
-                if (tagCounts["uncategorized"]) {
-                    tagCounts["uncategorized"]++;
+                if (tagCounts["untagged"]) {
+                    tagCounts["untagged"]++;
                 } else {
-                    tagCounts["uncategorized"] = 1;
+                    tagCounts["untagged"] = 1;
                 }
                 continue;
             }
             for (let tag of annotation.tags?.slice(0, 1)) {
-                tag = `#${tag}`;
                 if (tagCounts[tag]) {
                     tagCounts[tag]++;
                 } else {
@@ -86,22 +85,25 @@ export default function ArticleBottomReview({
     }, [articleAnnotations]);
 
     return (
-        <div className="bottom-review bottom-content flex flex-col gap-[8px] text-stone-800 dark:text-[rgb(232,230,227)]">
+        <div className="bottom-review bottom-content flex flex-col gap-2 text-stone-800 dark:text-[rgb(232,230,227)]">
             <CardContainer>
-                <div className="relative grid grid-cols-5 gap-4">
+                <div className="relative grid grid-cols-5 gap-3">
                     {tagCountList.map(([tag, count]) => (
                         <BigNumber
                             diff={count}
-                            tag={tag}
+                            tag={tag !== "untagged" ? `#${tag}` : "untagged"}
                             colorOverride={
                                 // @ts-ignore
                                 getAnnotationColorNew({
-                                    tags: tag !== "uncategorized" ? [tag] : [],
+                                    tags: tag !== "untagged" ? [tag] : [],
                                 })[0]
+                                //     getActivityColor(
+                                //     getActivityLevel(count),
+                                //     darkModeEnabled
+                                // )
                             }
-                            onClick={() =>
-                                tag !== "uncategorized" && openLibrary("highlights", tag.slice(1))
-                            }
+                            onClick={() => tag !== "untagged" && openLibrary("highlights", tag)}
+                            small
                         />
                     ))}
                 </div>
@@ -128,7 +130,7 @@ export default function ArticleBottomReview({
 
 export function CardContainer({ children }) {
     return (
-        <div className="relative mx-auto flex min-h-[104px] w-[var(--lindy-pagewidth)] flex-col gap-4 overflow-hidden rounded-lg bg-white p-4 shadow dark:bg-[#212121]">
+        <div className="relative mx-auto flex min-h-[96px] w-[var(--lindy-pagewidth)] flex-col gap-4 overflow-hidden rounded-lg bg-white p-4 shadow dark:bg-[#212121]">
             {children}
         </div>
     );
