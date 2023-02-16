@@ -38,7 +38,7 @@ export default function Sidebar({
     const modalTabs = getModalTabOptions(userInfo, requireSupport);
 
     return (
-        <div className="flex h-full flex-col items-stretch justify-between gap-1 rounded-lg">
+        <div className="flex h-full items-stretch justify-center gap-1 rounded-lg lg:flex-col lg:justify-between">
             {modalTabs
                 .filter((t) => !t.atEnd)
                 .map((option) => (
@@ -51,7 +51,7 @@ export default function Sidebar({
                     />
                 ))}
 
-            <div className="flex-grow" />
+            <div className="hidden flex-grow lg:block" />
 
             {modalTabs
                 .filter((t) => t.atEnd)
@@ -87,6 +87,7 @@ export interface ModalTabOptions {
     value: string;
     tag?: string | false;
     unavailable?: boolean;
+    hiddenOnMobile?: boolean;
     atEnd?: boolean;
     svg: React.ReactNode;
 }
@@ -163,6 +164,7 @@ function getModalTabOptions(
             label: "About",
             value: "about",
             atEnd: true,
+            hiddenOnMobile: true,
             svg: (
                 <svg className="h-4 w-4" viewBox="0 0 512 512">
                     <path
@@ -176,6 +178,7 @@ function getModalTabOptions(
             label: "Import",
             value: "import",
             atEnd: true,
+            hiddenOnMobile: true,
             unavailable: requireSupport && !userInfo?.aiEnabled,
             svg: (
                 <svg className="h-4 w-4" viewBox="0 0 512 512">
@@ -190,6 +193,7 @@ function getModalTabOptions(
             label: "Settings",
             value: "settings",
             atEnd: true,
+            hiddenOnMobile: true,
             svg: (
                 <svg viewBox="0 0 512 512" className="h-4">
                     <path
@@ -210,6 +214,7 @@ function SidebarFilterOption({
     label,
     tag,
     unavailable,
+    hiddenOnMobile,
     svg,
     onClick = () => {},
     darkModeEnabled,
@@ -222,12 +227,13 @@ function SidebarFilterOption({
     return (
         <div
             className={clsx(
-                "relative flex select-none items-center gap-2 rounded-md px-2 py-1 font-medium outline-none transition-all hover:scale-[97%]",
+                "relative select-none items-center gap-2 rounded-md px-2 py-1 font-medium outline-none transition-all hover:scale-[97%]",
                 isActive
                     ? "bg-stone-100 dark:bg-neutral-800"
                     : "hover:bg-stone-100 dark:text-neutral-500 hover:dark:bg-neutral-800",
                 unavailable && (isActive ? "bg-stone-100" : "opacity-50"),
-                unavailable ? "" : "cursor-pointer"
+                unavailable ? "" : "cursor-pointer",
+                hiddenOnMobile ? "hidden lg:flex" : "flex"
             )}
             onClick={unavailable ? undefined : onClick}
         >

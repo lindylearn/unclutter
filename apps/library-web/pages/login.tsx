@@ -43,7 +43,7 @@ export default function LoginPage({ isSignup = false }) {
                 <img className="w-full max-w-2xl rounded-lg" src="/media/2.png" />
             </aside>
 
-            <main className="flex w-full flex-col bg-white pt-10 lg:pt-32">
+            <main className="flex w-full flex-col bg-white p-4 py-10 lg:pt-32">
                 <div className="mx-auto w-full max-w-md">
                     {error && <p>{error.message}</p>}
 

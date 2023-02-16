@@ -52,9 +52,9 @@ export default function NewModalApp() {
     }
 
     return (
-        <div className="font-text min-h-screen bg-stone-100 text-stone-800 dark:bg-[rgb(19,21,22)] dark:text-[rgb(232,230,227)]">
+        <div className="font-text min-h-screen bg-white text-stone-800 dark:bg-[rgb(19,21,22)] dark:text-[rgb(232,230,227)] lg:bg-stone-100 lg:dark:bg-[#212121]">
             <Head>
-                <title>Unclutter</title>
+                <title>Unclutter Library</title>
             </Head>
 
             <FilterContext.Provider
@@ -79,10 +79,10 @@ export default function NewModalApp() {
                         reportEvent: reportEventPosthog,
                     }}
                 >
-                    <div className="font-text flex h-screen items-stretch overflow-hidden text-base">
-                        <aside className="left-side m-4 w-60">
-                            <div className="flex h-full flex-col rounded-lg bg-white p-4 shadow-sm dark:bg-[#212121]">
-                                <div className="mb-4 flex w-full items-center gap-2">
+                    <div className="font-text flex h-screen flex-col items-stretch overflow-hidden text-base lg:flex-row">
+                        <aside className="left-side w-full md:m-4 lg:w-60">
+                            <div className="flex h-full flex-col bg-white p-4 shadow-sm dark:bg-[#212121] md:rounded-lg">
+                                <div className="mb-4 hidden w-full items-center gap-2 lg:flex">
                                     <LindyIcon className="w-8" />
 
                                     <h1
@@ -98,7 +98,7 @@ export default function NewModalApp() {
                             </div>
                         </aside>
                         <div className="right-side h-screen w-full overflow-y-auto">
-                            <div className="m-4 mx-auto max-w-5xl rounded-lg bg-white px-8 py-6 shadow-sm dark:bg-[#212121]">
+                            <div className="max-w-5xl bg-white p-4 pt-0 dark:bg-[#212121] md:m-4 md:rounded-lg md:py-6 md:px-8 lg:shadow-sm">
                                 {currentTab === "list" && <RecentModalTab />}
                                 {currentTab === "stats" && <StatsModalTab />}
                                 {currentTab === "highlights" && <QuotesTab />}

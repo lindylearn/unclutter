@@ -34,11 +34,11 @@ export default function AboutModalTab({}: {}) {
                 setUnclutterLibraryAuth(user.id);
             }
 
-            // await rep.mutate.updateUserInfo({
-            //     aiEnabled: false,
-            //     accountEnabled: true,
-            //     stripeId: undefined,
-            // });
+            await rep.mutate.updateUserInfo({
+                aiEnabled: true,
+                accountEnabled: true,
+                stripeId: undefined,
+            });
         })();
     }, [rep, user, userInfo]);
 
@@ -101,8 +101,8 @@ export default function AboutModalTab({}: {}) {
                 }
             >
                 <p>
-                    Using the Unclutter library features costs $5.99 per month. This money is used
-                    to pay contributors to the Unclutter open-source project.
+                    Using the Unclutter library features costs $5.99 per month. Your money will be
+                    used to pay contributors to the Unclutter open-source project.
                 </p>
                 <p>See below for an overview of the features!</p>
             </SettingsGroup>

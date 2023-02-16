@@ -37,6 +37,16 @@ export default function SettingsModalTab({}: {}) {
     //     reportEvent("sendFeedback");
     // }
 
+    const [articleCount, setArticleCount] = useState<number>();
+    const [annotationCount, setAnnotationCount] = useState<number>();
+    useEffect(() => {
+        if (!rep) {
+            return;
+        }
+        rep.query.getArticlesCount().then(setArticleCount);
+        rep.query.getAnnotationsCount().then(setAnnotationCount);
+    }, [rep]);
+
     return (
         <div className="animate-fadein flex flex-col gap-4">
             <SettingsGroup
@@ -62,11 +72,14 @@ export default function SettingsModalTab({}: {}) {
             >
                 {userInfo?.accountEnabled ? (
                     <p>
-                        Hey{userInfo?.email && ` ${userInfo?.email}`}, your articles and highlights
-                        are backed-up to your account!
+                        Hey{userInfo?.email && ` ${userInfo?.email}`}, your {articleCount} articles
+                        and {annotationCount} highlights are backed-up to your account!
                     </p>
                 ) : (
-                    <p>Your articles and highlights are saved in your local browser.</p>
+                    <p>
+                        Your {articleCount} articles and {annotationCount} highlights are saved in
+                        your local browser.
+                    </p>
                 )}
             </SettingsGroup>
 
