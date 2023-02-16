@@ -108,14 +108,14 @@ export default function ArticleBottomReview({
                     ))}
                 </div>
 
-                {articleAnnotations.length === 0 && (
+                {Object.keys(tagCountList).length === 0 && (
                     <div className="animate-fadein absolute top-0 left-0 flex h-full w-full select-none items-center justify-center">
                         {relatedCount === undefined ? (
                             <>Generating AI highlights...</>
                         ) : (
                             <>
-                                Save quotes by clicking any yellow highlight, or manually selecting
-                                any article text.
+                                Save quotes by clicking on yellow AI highlights or by manually
+                                selecting any article text.
                             </>
                         )}
                     </div>

@@ -198,7 +198,11 @@ export default function App({
         setRelatedPerAnnotation((prev) => {
             groups.forEach((group, i) => {
                 const annotation = fetchedAnnotations[i];
-                prev[annotation.id] = group;
+
+                // only set if not populated yet by manual fetch
+                if (!prev[annotation.id]?.length) {
+                    prev[annotation.id] = group;
+                }
             });
 
             return { ...prev };
