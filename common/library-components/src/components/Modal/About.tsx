@@ -79,9 +79,8 @@ export default function AboutModalTab({}: {}) {
                 </p>
 
                 <p>
-                    You can access your library at any time by visiting my.unclutter.it, pressing
-                    TAB inside the reader mode, right-clicking the Unclutter extension icon, or by
-                    installing the Unclutter New Tab extension.
+                    Your library helps you to read smarter by automatically saving, organizing, and
+                    connecting information from the articles you read.
                 </p>
             </SettingsGroup>
 
@@ -189,12 +188,12 @@ export default function AboutModalTab({}: {}) {
                 imageSrc="media/quotes.png"
             >
                 <p>
-                    Click on any yellow highlight to save it to your library, or manually select
+                    Click on any such highlight to save it to your library, or manually select any
                     text.
                 </p>
                 <p>
-                    All such quotes are tagged and organized automatically. On the Quotes page you
-                    can browse and search across all information you've collected while reading.
+                    All quotes are tagged and organized automatically. On the Quotes page you can
+                    browse and search across all information you've collected.
                 </p>
             </SettingsGroup>
 
@@ -211,8 +210,8 @@ export default function AboutModalTab({}: {}) {
                 imageSrc="media/connect_ideas.png"
             >
                 <p>
-                    Quotes from your library automatically appear whenever you save a related quote
-                    on another article, helping you connect similar ideas.
+                    Quotes from your library also automatically appear whenever you save a related
+                    quote on another article.
                 </p>
                 <p>
                     For example, if a text mentions Google and AI search, you'll see everything
@@ -232,10 +231,10 @@ export default function AboutModalTab({}: {}) {
                 }
                 imageSrc="/media/import.png"
             >
-                <p>The more you read, the more value you'll get out of Unclutter.</p>
+                <p>The more you read, the smarter your library becomes.</p>
                 <p>
                     You can also import articles on the Import page to make use of the knowledge
-                    you've already saved with Pocket, Instapaper or other apps.
+                    you've already saved with Pocket, Instapaper, or other apps.
                 </p>
             </SettingsGroup>
         </div>

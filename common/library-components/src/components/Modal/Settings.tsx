@@ -71,10 +71,18 @@ export default function SettingsModalTab({}: {}) {
                 }
             >
                 {userInfo?.accountEnabled ? (
-                    <p>
-                        Hey{userInfo?.email && ` ${userInfo?.email}`}, your {articleCount} articles
-                        and {annotationCount} highlights are backed-up to your account!
-                    </p>
+                    <>
+                        <p>
+                            Hey{userInfo?.email && ` ${userInfo?.email}`}, your {articleCount}{" "}
+                            articles and {annotationCount} highlights are backed-up to your account!
+                        </p>
+
+                        <p>
+                            You can access your library at any time by visiting my.unclutter.it,
+                            pressing TAB inside the reader mode, right-clicking the Unclutter
+                            extension icon, or by installing the Unclutter New Tab extension.
+                        </p>
+                    </>
                 ) : (
                     <p>
                         Your {articleCount} articles and {annotationCount} highlights are saved in

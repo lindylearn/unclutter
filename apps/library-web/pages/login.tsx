@@ -36,11 +36,12 @@ export default function LoginPage({ isSignup = false }) {
                 </div>
 
                 <p className="max-w-md">
-                    Start your free trial of the Unclutter article organization, AI reading, quote
-                    tagging, reading statistics, and more features.
+                    Start your free trial of the new Unclutter Library to read smarter by
+                    automatically saving, organizing, and connecting information from the articles
+                    you read.
                 </p>
 
-                <img className="w-full max-w-2xl rounded-lg" src="/media/2.png" />
+                <img className="w-full max-w-2xl rounded-lg" src="/media/connect_ideas.png" />
             </aside>
 
             <main className="flex w-full flex-col bg-white p-4 py-10 lg:pt-32">

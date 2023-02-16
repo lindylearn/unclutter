@@ -40,17 +40,20 @@ export default class ReviewModifier implements PageModifier {
         const userInfo = await getUserInfoSimple();
 
         let type: string;
+        let height: string;
         if (userInfo?.aiEnabled) {
             type = "review";
+            height = "140px";
         } else {
             const showSignup = await getRemoteFeatureFlag(showLibrarySignupFlag);
             if (!showSignup) {
                 return;
             }
             type = "signup";
+            height = "164px";
         }
 
-        this.bodyStyleModifier.setBottomContainerPadding();
+        this.bodyStyleModifier.setBottomContainerPadding(height);
 
         // always enable sidebar
         this.iframe = injectReactIframe("/review/index.html", "lindy-info-bottom", {
@@ -58,6 +61,7 @@ export default class ReviewModifier implements PageModifier {
             darkModeEnabled: (this.darkModeEnabled || false).toString(),
             type,
         });
+        this.iframe.style.setProperty("height", height, "important");
         window.addEventListener("message", ({ data }) => {
             if (data.event === "bottomIframeLoaded") {
                 // ready for css inject

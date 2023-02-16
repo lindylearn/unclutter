@@ -16,26 +16,24 @@ export default function Sidebar({
     const rep = useContext(ReplicacheContext);
 
     // fetch settings initially and after changing tab away
-    const [settings, setSettings] = useState<Settings | null>(null);
-    useEffect(() => {
-        rep?.query.getSettings().then(setSettings);
-    }, [rep]);
+    // const [settings, setSettings] = useState<Settings | null>(null);
+    // useEffect(() => {
+    //     rep?.query.getSettings().then(setSettings);
+    // }, [rep]);
     function updateTab(id: string) {
         setCurrentTab(id);
 
-        rep?.query.getSettings().then(setSettings);
+        // rep?.query.getSettings().then(setSettings);
     }
 
-    const [newTabInstalled, setNewTabInstalled] = useState(true);
-    useEffect(() => {
-        getNewTabVersion()
-            .then((version) => setNewTabInstalled(version !== null))
-            .catch(() => setNewTabInstalled(false));
-    }, []);
+    // const [newTabInstalled, setNewTabInstalled] = useState(true);
+    // useEffect(() => {
+    //     getNewTabVersion()
+    //         .then((version) => setNewTabInstalled(version !== null))
+    //         .catch(() => setNewTabInstalled(false));
+    // }, []);
 
-    const requireSupport = true;
-
-    const modalTabs = getModalTabOptions(userInfo, requireSupport);
+    const modalTabs = getModalTabOptions(userInfo, showSignup);
 
     return (
         <div className="flex h-full items-stretch justify-center gap-1 rounded-lg lg:flex-col lg:justify-between">

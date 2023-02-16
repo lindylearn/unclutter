@@ -37,6 +37,14 @@ export default class LibraryModalModifier implements PageModifier {
     private iframeLoaded: boolean = false;
     private appLoaded: boolean = false;
     async showModal(initialTab?: string, isFeedbackModal?: boolean, initialTagFilter?: string) {
+        if (
+            !isFeedbackModal &&
+            this.libraryState.showLibrarySignup &&
+            !this.libraryState.userInfo?.aiEnabled
+        ) {
+            return;
+        }
+
         // create iframe on demand
         this.createIframe(initialTab, isFeedbackModal, initialTagFilter);
 
