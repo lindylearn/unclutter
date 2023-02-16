@@ -108,7 +108,7 @@ export default function ArticleBottomReview({
                     ))}
                 </div>
 
-                {Object.keys(tagCountList).length === 0 && (
+                {tagCountList.length === 0 && (
                     <div className="animate-fadein absolute top-0 left-0 flex h-full w-full select-none items-center justify-center">
                         {relatedCount === undefined ? (
                             <>Generating AI highlights...</>

@@ -228,7 +228,7 @@ export default function App({
             isSourceAnnotation ? 0.4 : undefined
         );
 
-        let related = groups[0];
+        let related = groups[0] || [];
         let removeFromOtherThreads: string[] = [];
         if (isSourceAnnotation) {
             // the user navigated to the article via this annotation
@@ -305,7 +305,7 @@ export default function App({
         }
         const relatedCount = Object.values(relatedPerAnnotation).flat().length;
         window.top.postMessage({ event: "updateRelatedCount", relatedCount }, "*");
-    }, [relatedPerAnnotation]);
+    }, [batchRelatedFetchDone.current, relatedPerAnnotation]);
 
     // group and filter annotations on every local state change (e.g. added, focused)
     const [groupedAnnotations, setGroupedAnnotations] = useState<LindyAnnotation[][]>([]);
