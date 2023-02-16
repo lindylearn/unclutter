@@ -75,7 +75,7 @@ export default function AnnotationDraft({
     return (
         <div
             className={clsx(
-                `annotation annotation-draft relative flex flex-col gap-1 rounded-l-sm rounded-r-md p-2 px-3 text-sm shadow`,
+                `annotation annotation-draft relative rounded-l-sm rounded-r-md p-2 px-3 text-sm shadow`,
                 annotation.focused && "focused",
                 className
             )}

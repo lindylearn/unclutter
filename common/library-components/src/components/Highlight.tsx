@@ -49,7 +49,7 @@ export function Highlight({
 
     return (
         <a
-            className="highlight animate-fadein relative flex cursor-pointer select-none flex-col gap-2 overflow-hidden rounded-l-sm rounded-r-md bg-white px-3 py-2 text-sm text-stone-900 shadow transition-transform hover:scale-[99%] dark:bg-neutral-700 dark:text-white"
+            className="highlight animate-fadein relative flex cursor-pointer select-none flex-col gap-2 overflow-hidden rounded-l-sm rounded-r-md bg-white px-3 py-2 text-sm text-stone-900 shadow transition-transform hover:scale-[99%] dark:bg-neutral-800 dark:text-white"
             href={article?.url}
             onClick={openHighlight}
             onContextMenu={(e) => {

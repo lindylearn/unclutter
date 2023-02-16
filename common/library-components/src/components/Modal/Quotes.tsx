@@ -212,7 +212,7 @@ function TagGroup({
             )}
 
             <div
-                className="relative grid grid-cols-2 gap-4 rounded-md bg-stone-100 p-4 transition-colors dark:bg-neutral-800"
+                className="relative grid grid-cols-2 gap-4 rounded-md bg-stone-100 p-4 transition-colors dark:bg-transparent dark:p-2"
                 style={
                     {
                         // background: color,

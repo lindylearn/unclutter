@@ -30,7 +30,7 @@ function Annotation({
     return (
         <a
             className={clsx(
-                "annotation relative flex cursor-pointer flex-col gap-2 overflow-hidden rounded-l-sm rounded-r-md p-2 pl-3 text-sm shadow transition-transform hover:scale-[99%]",
+                "annotation relative flex cursor-pointer flex-col gap-1 overflow-hidden rounded-l-sm rounded-r-md p-2 pl-3 text-sm shadow transition-transform hover:scale-[99%]",
                 className
             )}
             style={{

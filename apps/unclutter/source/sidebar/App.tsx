@@ -261,15 +261,21 @@ export default function App({
         });
     }
     async function fetchTagsLater(annotation: LindyAnnotation) {
-        let tags: string[] = await ky
-            .post("https://assistant-two.vercel.app/api/tag", {
-                // .post("http://localhost:3001/api/tag", {
-                json: {
-                    text: annotation.quote_text.replace("\n", " "),
-                },
-                timeout: 10 * 1000,
-            })
-            .json();
+        let tags: string[] = [];
+        try {
+            tags = await ky
+                .post("https://assistant-two.vercel.app/api/tag", {
+                    // .post("http://localhost:3001/api/tag", {
+                    json: {
+                        text: annotation.quote_text.replace("\n", " "),
+                    },
+                    timeout: 10 * 1000,
+                })
+                .json();
+        } catch (err) {
+            console.error("Failed to fetch tags", err);
+        }
+
         tags = tags?.slice(0, 2) || [];
         if (tags.length === 0) {
             tags = ["other"];
