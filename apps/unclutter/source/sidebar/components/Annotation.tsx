@@ -94,7 +94,7 @@ function Annotation({
                 {excerpt || text}
             </div>
 
-            <div className="annotation-bar relative flex select-none items-center gap-2 overflow-hidden whitespace-nowrap text-stone-400 dark:text-stone-600">
+            <div className="annotation-bar relative flex select-none items-center gap-2 overflow-hidden whitespace-nowrap font-medium text-stone-400 dark:text-neutral-500">
                 {(platform === "info" || platform === "related") && annotation.article?.url && (
                     // <svg className="h-4" viewBox="0 0 640 512">
                     //     <path
