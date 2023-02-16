@@ -78,7 +78,7 @@ export async function backfillLibraryAnnotations(
     rep: RuntimeReplicache,
     userInfo: UserInfo,
     onProgress?: (progress: ImportProgress) => void,
-    concurrency: number = 5
+    concurrency: number = 10
 ) {
     const annotations = await rep.query.listAnnotations();
     const articlesWithAIAnnotations = new Set(
@@ -92,6 +92,12 @@ export async function backfillLibraryAnnotations(
 
     console.log(`Backfilling AI annotations for ${articles.length} articles...`);
     onProgress?.({ targetArticles: articles.length });
+
+    // trigger screenshots in parallel
+    batchRemoteScreenshots(
+        articles.map((r) => r.url),
+        concurrency
+    );
 
     // batch for resilience
     const start = performance.now();
