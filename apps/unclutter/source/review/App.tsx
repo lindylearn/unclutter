@@ -17,6 +17,8 @@ export default function App({
     const rep = useMemo<ReplicacheProxy>(() => new ReplicacheProxy(), []);
 
     useEffect(() => {
+        window.top.postMessage({ event: "bottomAppReady" }, "*");
+
         const resizeObserver = new ResizeObserver(() => {
             console.log(`Review container resized to ${document.body.scrollHeight}px`);
             window.top?.postMessage(

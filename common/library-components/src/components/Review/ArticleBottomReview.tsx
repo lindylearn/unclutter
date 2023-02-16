@@ -111,7 +111,7 @@ export default function ArticleBottomReview({
                 {tagCountList.length === 0 && (
                     <div className="animate-fadein absolute top-0 left-0 flex h-full w-full select-none items-center justify-center">
                         {relatedCount === undefined ? (
-                            <>Generating AI highlights...</>
+                            <>Generating AI highlights and fetching related quotes...</>
                         ) : (
                             <>
                                 Save quotes by clicking on yellow AI highlights or by manually

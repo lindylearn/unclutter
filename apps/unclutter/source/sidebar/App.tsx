@@ -166,7 +166,7 @@ export default function App({
         [id: string]: RelatedHighlight[];
     }>({});
     const usedRelatedIds = useRef(new Set<string>());
-    const batchRelatedFetchDone = useRef(false);
+    const [batchRelatedFetchDone, setBatchRelatedFetchDone] = useState(false);
     async function fetchRelatedBatch(storeAnnotations: Annotation[]) {
         if (!userInfo?.aiEnabled) {
             return;
@@ -207,7 +207,7 @@ export default function App({
 
             return { ...prev };
         });
-        batchRelatedFetchDone.current = true;
+        setBatchRelatedFetchDone(true);
 
         const dutationMs = Math.round(performance.now() - start);
         console.log(`Fetched related annotations in ${dutationMs}ms`);
@@ -300,12 +300,12 @@ export default function App({
     }
 
     useEffect(() => {
-        if (!batchRelatedFetchDone.current) {
+        if (!batchRelatedFetchDone) {
             return;
         }
         const relatedCount = Object.values(relatedPerAnnotation).flat().length;
         window.top.postMessage({ event: "updateRelatedCount", relatedCount }, "*");
-    }, [batchRelatedFetchDone.current, relatedPerAnnotation]);
+    }, [batchRelatedFetchDone, relatedPerAnnotation]);
 
     // group and filter annotations on every local state change (e.g. added, focused)
     const [groupedAnnotations, setGroupedAnnotations] = useState<LindyAnnotation[][]>([]);

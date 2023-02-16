@@ -116,9 +116,9 @@ export default function AnnotationDraft({
             {isFetching ? (
                 <div className="loader absolute right-3 top-[9px] h-4 w-4" />
             ) : (
-                <div className="annotation-buttons animate-fadein absolute top-[1px] right-1 flex gap-0 text-stone-400 dark:text-stone-600">
+                <div className="animate-fadein absolute top-[1px] right-1 flex gap-0 text-stone-400 dark:text-stone-600">
                     <svg
-                        className="h-8 cursor-pointer p-2"
+                        className="annotation-button h-8 cursor-pointer p-2"
                         viewBox="0 0 512 512"
                         onClick={() => copyTextToClipboard(`"${annotation.quote_text}"`)}
                     >
@@ -128,7 +128,7 @@ export default function AnnotationDraft({
                         />
                     </svg>
                     <svg
-                        className="h-8 cursor-pointer p-2"
+                        className="annotation-button h-8 cursor-pointer p-2"
                         viewBox="0 0 448 512"
                         onClick={() => deleteAnnotation(userInfo, annotation)}
                     >
