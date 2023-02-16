@@ -77,7 +77,7 @@ export default function NewModalApp() {
                 <ModalStateContext.Provider
                     value={{
                         darkModeEnabled,
-                        showSignup: false,
+                        showSignup: true,
                         isWeb: true,
                         userInfo,
                         reportEvent: reportEventPosthog,

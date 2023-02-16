@@ -46,7 +46,7 @@ export default function SignupBottomMessage({
                         <div className="font-title mx-auto mb-2 flex w-max items-center gap-2 text-lg font-semibold">
                             <LindyIcon className="w-6 shrink-0" />
                             {userInfo?.accountEnabled
-                                ? "Try out more features for free"
+                                ? "Try out the new Unclutter Library for free"
                                 : "Sign up to enable more features"}
                         </div>
 
