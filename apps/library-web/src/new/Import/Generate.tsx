@@ -38,7 +38,7 @@ export function GenerateSection({
 
     return (
         <SettingsGroup
-            title="Automatic highlights"
+            title="Generate highlights"
             icon={
                 <svg className="h-4 w-4" viewBox="0 0 576 512">
                     <path
@@ -60,7 +60,7 @@ export function GenerateSection({
         >
             <p>
                 From now on, Unclutter automatically creates AI highlights whenever you activate the
-                browser extension.
+                reader mode. These are saved as untagged quotes in your library.
             </p>
             <p>Let's also generate highlights for your previously saved articles now.</p>
         </SettingsGroup>

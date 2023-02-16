@@ -44,8 +44,12 @@ export default function NewModalApp() {
     } = useModalState(initialRoute, undefined, undefined, reportEventPosthog);
 
     useEffect(() => {
-        history.replaceState({}, "", `/${currentTab}`);
-    }, [currentTab]);
+        // update urls on navigation, but keep initial url params
+        const currentRoute = router.asPath.split("?")[0].slice(1);
+        if (currentRoute !== currentTab) {
+            history.replaceState({}, "", `/${currentTab}`);
+        }
+    }, [currentTab, router]);
 
     if (!userInfo) {
         return <></>;

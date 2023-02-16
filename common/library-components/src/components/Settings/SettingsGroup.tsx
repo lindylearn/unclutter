@@ -3,6 +3,9 @@ import React, { ReactNode } from "react";
 import type { ImportProgress } from "../../common/import";
 import { getActivityColor } from "../Charts";
 
+// const imageHost = "http://localhost:3000";
+const imageHost = "https://my.unclutter.it";
+
 export function SettingsGroup({
     title,
     icon,
@@ -22,6 +25,8 @@ export function SettingsGroup({
     progress?: ImportProgress;
     animationIndex?: number;
 }) {
+    const imagePath = `${imageHost}/${imageSrc}`;
+
     return (
         <div
             className={clsx(
@@ -44,8 +49,8 @@ export function SettingsGroup({
                 {children}
                 {imageSrc && buttons && (
                     <img
-                        src={imageSrc}
-                        className="mt-1 h-60 w-full bg-stone-100 object-cover object-right-top"
+                        src={imagePath}
+                        className="mt-1 h-60 w-full bg-stone-100 object-cover object-left-top dark:brightness-90"
                     />
                 )}
                 {buttons && !progress && <div className="mt-1 flex flex-wrap gap-3">{buttons}</div>}
@@ -71,8 +76,8 @@ export function SettingsGroup({
 
             {imageSrc && !buttons && (
                 <img
-                    src={imageSrc}
-                    className="mt-1 h-60 w-full bg-stone-100 object-cover object-right-top dark:brightness-90"
+                    src={imagePath}
+                    className="mt-1 h-60 w-full bg-stone-100 object-cover object-left-top dark:brightness-90"
                 />
             )}
 

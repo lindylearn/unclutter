@@ -34,11 +34,27 @@ export default function AboutModalTab({}: {}) {
                 setUnclutterLibraryAuth(user.id);
             }
 
-            await rep.mutate.updateUserInfo({
-                aiEnabled: true,
-                accountEnabled: true,
-                stripeId: undefined,
-            });
+            // immediately enable on stripe payments redirect
+            const paymentSuccess = new URLSearchParams(window.location.search).get(
+                "stripe_success"
+            );
+            if (paymentSuccess && !userInfo?.stripeId) {
+                history.replaceState({}, "", `/about`);
+                await rep.mutate.updateUserInfo({
+                    aiEnabled: true,
+                });
+
+                reportEvent("enableSmartReading", {
+                    $set: {
+                        aiEnabled: true,
+                        stripeId: userInfo?.stripeId,
+                    },
+                });
+            }
+
+            // await rep.mutate.updateUserInfo({
+            //     aiEnabled: false,
+            // });
         })();
     }, [rep, user, userInfo]);
 
@@ -58,14 +74,14 @@ export default function AboutModalTab({}: {}) {
                 }
             >
                 <p>
-                    Hey{userInfo?.email && ` ${userInfo?.email}`}, welcome to your Unclutter library
+                    Hey{userInfo?.name && ` ${userInfo?.name}`}, welcome to your Unclutter library
                     account!
                 </p>
 
                 <p>
-                    You can access your library by visiting my.unclutter.it, pressing TAB inside the
-                    reader mode, right-clicking the Unclutter extension icon, or by installing the
-                    Unclutter New Tab extension.
+                    You can access your library at any time by visiting my.unclutter.it, pressing
+                    TAB inside the reader mode, right-clicking the Unclutter extension icon, or by
+                    installing the Unclutter New Tab extension.
                 </p>
             </SettingsGroup>
 
@@ -100,11 +116,25 @@ export default function AboutModalTab({}: {}) {
                     </>
                 }
             >
-                <p>
-                    Using the Unclutter library features costs $5.99 per month. Your money will be
-                    used to pay contributors to the Unclutter open-source project.
-                </p>
-                <p>See below for an overview of the features!</p>
+                {userInfo?.aiEnabled ? (
+                    <>
+                        <p>Thank you for supporting the Unclutter open-source project!</p>
+                        <p>
+                            See below for an overview of the features you just unlocked! Try them
+                            out on any article in your library, and make sure to visit the Import
+                            page.
+                        </p>
+                    </>
+                ) : (
+                    <>
+                        <p>
+                            Using the Unclutter library requires a financial support of $4.99 per
+                            month. This money is used to pay contributors to the Unclutter
+                            open-source project.
+                        </p>
+                        <p>See below for an overview of the features you'll unlock!</p>
+                    </>
+                )}
             </SettingsGroup>
 
             <SettingsGroup
@@ -117,6 +147,7 @@ export default function AboutModalTab({}: {}) {
                         />
                     </svg>
                 }
+                imageSrc="/media/articles.png"
             >
                 <p>
                     Every article you open with Unclutter automatically gets saved in your library.
@@ -137,8 +168,7 @@ export default function AboutModalTab({}: {}) {
                         />
                     </svg>
                 }
-                imageSrc="https://my.unclutter.it/media/1.png"
-                animationIndex={1}
+                imageSrc="media/ai_highlights.png"
             >
                 <p>
                     Unclutter automatically highlights the most important sentences on each article
@@ -156,7 +186,7 @@ export default function AboutModalTab({}: {}) {
                         />
                     </svg>
                 }
-                imageSrc="https://my.unclutter.it/media/3.png"
+                imageSrc="media/quotes.png"
             >
                 <p>
                     Click on any yellow highlight to save it to your library, or manually select
@@ -178,7 +208,7 @@ export default function AboutModalTab({}: {}) {
                         />
                     </svg>
                 }
-                imageSrc="https://my.unclutter.it/media/2.png"
+                imageSrc="media/connect_ideas.png"
             >
                 <p>
                     Quotes from your library automatically appear whenever you save a related quote
@@ -200,6 +230,7 @@ export default function AboutModalTab({}: {}) {
                         />
                     </svg>
                 }
+                imageSrc="/media/import.png"
             >
                 <p>The more you read, the more value you'll get out of Unclutter.</p>
                 <p>

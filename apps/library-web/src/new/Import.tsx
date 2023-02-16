@@ -29,35 +29,19 @@ export default function NewImportTab() {
             // everything set up
             return;
         }
-
-        if (userInfo.stripeId) {
-            // user likely cancelled subscription
-            router.push("/about");
-            return;
-        } else {
-            // signup didn not work yet?
-            rep.mutate.updateUserInfo({ aiEnabled: true });
-        }
-
-        reportEventPosthog("enableSmartReading", {
-            $set: {
-                aiEnabled: true,
-                stripeId: userInfo.stripeId,
-            },
-        });
     }, [rep, userInfo]);
 
-    const [sampleArticles, setSampleArticles] = useState<Article[]>([]);
-    useEffect(() => {
-        rep?.query.listRecentArticles().then((articles) => {
-            const queueArticles = articles.filter((a) => a.is_queued);
-            if (queueArticles.length >= 3) {
-                setSampleArticles(queueArticles.slice(0, 4));
-            } else {
-                setSampleArticles(articles.slice(0, 4));
-            }
-        });
-    }, [rep]);
+    // const [sampleArticles, setSampleArticles] = useState<Article[]>([]);
+    // useEffect(() => {
+    //     rep?.query.listRecentArticles().then((articles) => {
+    //         const queueArticles = articles.filter((a) => a.is_queued);
+    //         if (queueArticles.length >= 3) {
+    //             setSampleArticles(queueArticles.slice(0, 4));
+    //         } else {
+    //             setSampleArticles(articles.slice(0, 4));
+    //         }
+    //     });
+    // }, [rep]);
 
     if (!userInfo) {
         return <></>;
@@ -65,7 +49,7 @@ export default function NewImportTab() {
     return (
         <div className="animate-fadein flex flex-col gap-4">
             <Head>
-                <title>Import articles</title>
+                <title>Import</title>
             </Head>
 
             <GenerateSection rep={rep} userInfo={userInfo} darkModeEnabled={darkModeEnabled} />

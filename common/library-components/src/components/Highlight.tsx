@@ -49,7 +49,7 @@ export function Highlight({
 
     return (
         <a
-            className="highlight animate-fadein relative flex cursor-pointer select-none flex-col gap-2 overflow-hidden rounded-md bg-white px-4 py-3 text-sm text-stone-900 shadow transition-transform hover:scale-[99%] dark:bg-neutral-700 dark:text-white"
+            className="highlight animate-fadein relative flex cursor-pointer select-none flex-col gap-2 overflow-hidden rounded-md bg-white px-3 py-2 text-sm text-stone-900 shadow transition-transform hover:scale-[99%] dark:bg-neutral-700 dark:text-white"
             href={article?.url}
             onClick={openHighlight}
             onContextMenu={(e) => {
@@ -72,7 +72,7 @@ export function Highlight({
             <LimitedText
                 className={clsx("flex-grow leading-normal")}
                 text={annotation.text || annotation.quote_text}
-                rows={8}
+                rows={6}
             />
 
             {/* <div>
