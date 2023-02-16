@@ -90,7 +90,7 @@ export default function AnnotationDraftNew({
                 {localAnnotation.tags?.slice(0, 2).map((tag, i) => (
                     <div
                         className={clsx(
-                            "annotation-tag shrink cursor-pointer overflow-ellipsis whitespace-nowrap text-center font-bold transition-all hover:scale-[98%]"
+                            "annotation-tag shrink cursor-pointer overflow-ellipsis whitespace-nowrap text-center font-medium transition-all hover:scale-[98%]"
                         )}
                         style={{
                             animationDelay: `${i * 50}ms`,
