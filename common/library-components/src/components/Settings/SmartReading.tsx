@@ -18,13 +18,7 @@ export function SmartReadingPreview({
         typeof window !== "undefined" &&
         ["unclutter.it", "localhost:3001"].includes(window?.location?.host);
 
-    const [paymentsLink, setPaymentsLink] = useState<string>();
-    useEffect(() => {
-        if (!userInfo?.email || userInfo.aiEnabled) {
-            return;
-        }
-        createPaymentsLink(userInfo.id, userInfo.email).then(setPaymentsLink);
-    }, [userInfo]);
+    const paymentsLink = usePaymentsLink(userInfo);
 
     return (
         <SettingsGroup
@@ -111,4 +105,16 @@ export function SmartReadingPreview({
             )}
         </SettingsGroup>
     );
+}
+
+export function usePaymentsLink(userInfo: UserInfo | undefined) {
+    const [paymentsLink, setPaymentsLink] = useState<string>();
+    useEffect(() => {
+        if (!userInfo?.email || userInfo.aiEnabled) {
+            return;
+        }
+        createPaymentsLink(userInfo.id, userInfo.email).then(setPaymentsLink);
+    }, [userInfo]);
+
+    return paymentsLink;
 }

@@ -8,15 +8,10 @@ import {
     useSubscribe,
 } from "@unclutter/library-components/dist/store";
 import { useRouter } from "next/router";
-import {
-    SettingsButton,
-    SettingsGroup,
-} from "@unclutter/library-components/dist/components/Settings/SettingsGroup";
 import { reportEventPosthog } from "../../common/metrics";
 import { GenerateSection } from "./Import/Generate";
 import { ImportSection } from "./Import/Import";
 import Head from "next/head";
-import { StaticArticleList } from "@unclutter/library-components/dist/components";
 
 export default function NewImportTab() {
     const router = useRouter();
@@ -37,7 +32,7 @@ export default function NewImportTab() {
 
         if (userInfo.stripeId) {
             // user likely cancelled subscription
-            router.push("/welcome");
+            router.push("/about");
             return;
         } else {
             // signup didn not work yet?

@@ -63,7 +63,9 @@ export function BigNumber({
                     {/* {value && diff && <AnimatedNumber value={value} diff={diff} />} */}
                 </div>
             </div>
-            <div className="font-text max-w-full overflow-hidden">{tag}</div>
+            <div className="font-text max-w-full overflow-hidden overflow-ellipsis whitespace-nowrap">
+                {tag}
+            </div>
         </div>
     );
 }

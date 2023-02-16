@@ -1,13 +1,17 @@
 import { LindyIcon, useModalState } from "@unclutter/library-components/dist/components";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import { useUser } from "@supabase/auth-helpers-react";
 
 import { reportEventPosthog } from "../../common/metrics";
 import {
     FilterContext,
     ModalStateContext,
 } from "@unclutter/library-components/dist/components/Modal/context";
-import { useAutoDarkMode } from "@unclutter/library-components/dist/common";
+import {
+    setUnclutterLibraryAuth,
+    useAutoDarkMode,
+} from "@unclutter/library-components/dist/common";
 import { ReplicacheContext, useSubscribe } from "@unclutter/library-components/dist/store";
 import { useContext, useEffect } from "react";
 import RecentModalTab from "@unclutter/library-components/dist/components/Modal/Recent";
@@ -20,7 +24,11 @@ import AboutModalTab from "@unclutter/library-components/dist/components/Modal/A
 
 export default function NewModalApp() {
     const router = useRouter();
-    const initialRoute = router.asPath.split("?")[0].slice(1);
+    const initialRoute = router.asPath.split("?")[0].slice(1) || "about";
+
+    const rep = useContext(ReplicacheContext);
+    const { user } = useUser();
+    const userInfo = useSubscribe(rep, rep?.subscribe.getUserInfo(), null);
 
     const darkModeEnabled = useAutoDarkMode();
     const {
@@ -39,8 +47,6 @@ export default function NewModalApp() {
         history.replaceState({}, "", `/${currentTab}`);
     }, [currentTab]);
 
-    const rep = useContext(ReplicacheContext);
-    const userInfo = useSubscribe(rep, rep?.subscribe.getUserInfo(), null);
     if (!userInfo) {
         return <></>;
     }
@@ -84,7 +90,7 @@ export default function NewModalApp() {
                                         // bg-gradient-to-b from-yellow-300 to-amber-400 bg-clip-text text-transparent
                                         // style={{ WebkitBackgroundClip: "text" }}
                                     >
-                                        Unclutter
+                                        Library
                                     </h1>
                                 </div>
 

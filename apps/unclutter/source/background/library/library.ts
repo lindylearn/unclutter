@@ -67,9 +67,9 @@ async function initLibrary(isDev: boolean = false): Promise<UserInfo | undefined
     deleteSearchIndex("");
     deleteSearchIndex("-articles");
 
-    if (isDev) {
-        await rep.mutate.updateUserInfo({ id: "dev-user", aiEnabled: true });
-    }
+    // if (isDev) {
+    //     await rep.mutate.updateUserInfo({ id: "dev-user", aiEnabled: true });
+    // }
     const userInfo = await rep.query.getUserInfo();
 
     // await initSearchIndex();

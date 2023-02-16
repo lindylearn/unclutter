@@ -33,7 +33,9 @@ export default function Sidebar({
             .catch(() => setNewTabInstalled(false));
     }, []);
 
-    const modalTabs = getModalTabOptions(userInfo);
+    const requireSupport = true;
+
+    const modalTabs = getModalTabOptions(userInfo, requireSupport);
 
     return (
         <div className="flex h-full flex-col items-stretch justify-between gap-1 rounded-lg">
@@ -88,11 +90,15 @@ export interface ModalTabOptions {
     atEnd?: boolean;
     svg: React.ReactNode;
 }
-function getModalTabOptions(userInfo: UserInfo | undefined): ModalTabOptions[] {
+function getModalTabOptions(
+    userInfo: UserInfo | undefined,
+    requireSupport: boolean
+): ModalTabOptions[] {
     const options: (ModalTabOptions | false | undefined)[] = [
         {
             label: "Stats",
             value: "stats",
+            unavailable: requireSupport && !userInfo?.aiEnabled,
             svg: (
                 <svg className="h-4" viewBox="0 0 448 512">
                     <path
@@ -105,6 +111,7 @@ function getModalTabOptions(userInfo: UserInfo | undefined): ModalTabOptions[] {
         {
             label: "Articles",
             value: "list",
+            unavailable: requireSupport && !userInfo?.aiEnabled,
             svg: (
                 <svg className="h-4" viewBox="0 0 576 512">
                     <path
@@ -129,6 +136,7 @@ function getModalTabOptions(userInfo: UserInfo | undefined): ModalTabOptions[] {
         {
             label: "Quotes",
             value: "highlights",
+            unavailable: requireSupport && !userInfo?.aiEnabled,
             svg: (
                 // <svg className="h-4" viewBox="0 0 512 512" >
                 //     <path
@@ -151,7 +159,7 @@ function getModalTabOptions(userInfo: UserInfo | undefined): ModalTabOptions[] {
             ),
         },
 
-        {
+        userInfo?.accountEnabled && {
             label: "About",
             value: "about",
             atEnd: true,
@@ -164,10 +172,11 @@ function getModalTabOptions(userInfo: UserInfo | undefined): ModalTabOptions[] {
                 </svg>
             ),
         },
-        {
+        userInfo?.accountEnabled && {
             label: "Import",
             value: "import",
             atEnd: true,
+            unavailable: requireSupport && !userInfo?.aiEnabled,
             svg: (
                 <svg className="h-4 w-4" viewBox="0 0 512 512">
                     <path
@@ -213,13 +222,14 @@ function SidebarFilterOption({
     return (
         <div
             className={clsx(
-                "relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2 py-1 font-medium outline-none transition-all hover:scale-[97%]",
+                "relative flex select-none items-center gap-2 rounded-md px-2 py-1 font-medium outline-none transition-all hover:scale-[97%]",
                 isActive
                     ? "bg-stone-100 dark:bg-neutral-800"
                     : "hover:bg-stone-100 dark:text-neutral-500 hover:dark:bg-neutral-800",
-                unavailable && (isActive ? "bg-stone-100" : "opacity-50")
+                unavailable && (isActive ? "bg-stone-100" : "opacity-50"),
+                unavailable ? "" : "cursor-pointer"
             )}
-            onClick={onClick}
+            onClick={unavailable ? undefined : onClick}
         >
             <div className="flex w-5 justify-center">{svg}</div>
             <div className="relative">
