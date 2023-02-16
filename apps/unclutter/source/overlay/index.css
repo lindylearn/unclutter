@@ -23,15 +23,7 @@
     top: 0 !important;
     right: 0 !important;
     z-index: 3000 !important;
-    padding: 10px !important;
     contain: layout style !important;
-
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    line-height: 1 !important;
-    gap: 8px !important;
-    width: 26px !important;
 }
 .lindy-page-settings-pageadjacent {
     all: revert !important;

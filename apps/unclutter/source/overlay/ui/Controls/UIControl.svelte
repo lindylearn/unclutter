@@ -121,4 +121,11 @@
     .hover-icon-change:hover > .lindy-ui-icon:nth-child(2) {
         opacity: 1 !important;
     }
+
+    /* dark styles */
+    .dark .lindy-tooltp.lindy-tooltp:before,
+    .dark .lindy-tooltp.lindy-tooltp:hover > .lindy-ui-icon,
+    .dark .lindy-theme-container.lindy-theme-container:hover > .lindy-ui-icon {
+        filter: none !important;
+    }
 </style>
