@@ -62,6 +62,7 @@
         ".visually-hidden.focusable"
     ],
     "baomoi.com": [".bm_FA", ".bm_AM", ".bm_FB"],
+    "bastionland.com": ["#comments"],
     "bbc.co.uk": [
         ".gel-long-primer",
         ".gs-o-table.story-body__table",
