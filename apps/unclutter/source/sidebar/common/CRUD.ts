@@ -70,14 +70,16 @@ export async function createAnnotation(
 ): Promise<LindyAnnotation> {
     await rep.mutate.putAnnotation(pickleLocalAnnotation(annotation));
 
-    if (userInfo?.aiEnabled) {
-        indexAnnotationVectors(
-            userInfo.id,
-            annotation.article_id,
-            [annotation.quote_text],
-            [annotation.id]
-        );
-    }
+    // vector already saved in the related fetch
+    // TODO do it async again here? but use lindy API.
+    // if (userInfo?.aiEnabled) {
+    //     indexAnnotationVectors(
+    //         userInfo.id,
+    //         annotation.article_id,
+    //         [annotation.quote_text],
+    //         [annotation.id]
+    //     );
+    // }
 
     reportEventContentScript("createAnnotation");
 

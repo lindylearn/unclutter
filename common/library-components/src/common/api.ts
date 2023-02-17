@@ -10,6 +10,10 @@ import { getDomain } from "./util";
 const lindyApiUrl = "https://api2.lindylearn.io";
 // const lindyApiUrl = "http://localhost:8000";
 
+const vectorsTestUser = undefined;
+// const vectorsTestUser = "vectors-test-qa";
+// const vectorsTestUser = "vectors-test-base";
+
 export async function getPageHistory(url: string) {
     const response = await fetch(
         `${lindyApiUrl}/annotations/get_page_history?${new URLSearchParams({
@@ -207,9 +211,9 @@ export async function fetchRelatedAnnotations(
     user_id: string,
     article_id: string | undefined,
     highlights: string[],
-    score_threshold?: number,
-    results_per_query?: number,
-    save_highlights?: boolean
+    score_threshold: number | undefined = undefined,
+    results_per_query: number | undefined = undefined,
+    save_highlights: boolean = false
 ): Promise<RelatedHighlight[][]> {
     const response = await fetch(`${lindyApiUrl}/related/fetch`, {
         method: "POST",
@@ -217,7 +221,7 @@ export async function fetchRelatedAnnotations(
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            user_id,
+            user_id: vectorsTestUser || user_id,
             for_article_id: article_id,
             highlights,
             score_threshold,
@@ -248,6 +252,8 @@ export async function populateRelatedArticles(
     );
 }
 
+// should only be used for batch article imports
+// new annotations are indexed through the fetchRelatedAnnotations() call
 export async function indexAnnotationVectors(
     user_id: string,
     article_id: string,
@@ -255,19 +261,23 @@ export async function indexAnnotationVectors(
     highlight_ids: string[] | undefined = undefined,
     delete_previous: boolean = false
 ) {
-    await fetch(`https://related4-jumq7esahq-ue.a.run.app?action=insert`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            user_id,
-            article_id,
-            highlights,
-            highlight_ids,
-            delete_previous,
-        }),
-    });
+    await fetch(
+        `https://related4-jumq7esahq-ue.a.run.app?action=insert`,
+        // `${lindyApiUrl}/related/insert`,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                user_id: vectorsTestUser || user_id,
+                article_id,
+                highlights,
+                highlight_ids,
+                delete_previous,
+            }),
+        }
+    );
 }
 
 export async function deleteAnnotationVectors(
@@ -281,7 +291,7 @@ export async function deleteAnnotationVectors(
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            user_id,
+            user_id: vectorsTestUser || user_id,
             article_id,
             highlight_id,
         }),
