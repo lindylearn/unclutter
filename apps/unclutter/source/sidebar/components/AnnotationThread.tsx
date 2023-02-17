@@ -2,10 +2,11 @@ import React, { useContext, useEffect, useState } from "react";
 import type { LindyAnnotation } from "../../common/annotations/create";
 import Annotation from "./Annotation";
 import AnnotationDraft from "./AnnotationDraft";
-import { getAIAnnotationColor } from "@unclutter/library-components/dist/common/styling";
-import { getAnnotationColor } from "../../common/annotations/styling";
+import { getAnnotationColorNew } from "../../common/annotations/styling";
 import { SidebarContext } from "../context";
 import SummaryAnnotation from "./Summary";
+import SearchBox from "./Searchbox";
+import AnnotationDraftNew from "./AnnotationDraftNew";
 
 interface AnnotationThreadProps {
     annotation: LindyAnnotation;
@@ -13,6 +14,7 @@ interface AnnotationThreadProps {
 
     unfocusAnnotation: () => void;
     fetchRelatedLater: (annotation: LindyAnnotation) => Promise<void>;
+    fetchTagsLater: (annotation: LindyAnnotation) => Promise<void>;
 }
 
 export default function AnnotationThread(props: AnnotationThreadProps) {
@@ -34,30 +36,31 @@ export default function AnnotationThread(props: AnnotationThreadProps) {
         props.fetchRelatedLater(annotation).then(() => setIsFetchingRelated(false));
     }, [userInfo]);
 
-    let color: string;
-    let colorDark: string;
-    if (annotation.ai_created) {
-        color = getAIAnnotationColor(annotation.ai_score);
-        colorDark = getAIAnnotationColor(annotation.ai_score, true);
-    } else if (annotation.platform === "hn") {
-        color = "rgba(255, 102, 0, 0.5)";
-    } else if (annotation.platform === "h") {
-        color = "rgba(189, 28, 43, 0.5)";
-    } else {
-        color = getAnnotationColor(annotation);
-    }
+    const [isFetchingTags, setIsFetchingTags] = useState(false);
+    useEffect(() => {
+        if (!userInfo?.aiEnabled || !annotation.isMyAnnotation || annotation.tags?.length) {
+            return;
+        }
+
+        setIsFetchingTags(true);
+        props.fetchTagsLater(annotation).then(() => setIsFetchingTags(false));
+    }, [userInfo]);
+
+    const [color, colorDark] = getAnnotationColorNew(annotation);
 
     return (
         <>
             {annotation.platform === "summary" && (
-                <SummaryAnnotation summaryInfo={annotation.summaryInfo!} />
+                <>
+                    <SummaryAnnotation summaryInfo={annotation.summaryInfo!} />
+                    <SearchBox />
+                </>
             )}
 
             {annotation.isMyAnnotation && (
                 <AnnotationDraft
                     {...props}
-                    isFetchingRelated={isFetchingRelated}
-                    relatedCount={annotation.related?.length}
+                    isFetching={isFetchingRelated || isFetchingTags}
                     color={color}
                     colorDark={colorDark}
                 />

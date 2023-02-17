@@ -2,7 +2,7 @@ import clsx from "clsx";
 import { useContext } from "react";
 import { Link, useLocation } from "wouter";
 
-import { LibraryTab } from "../App";
+import { LibraryTab } from "../tabs/App";
 import { getRandomColor } from "@unclutter/library-components/dist/common";
 import { ReplicacheContext, useSubscribe } from "@unclutter/library-components/dist/store";
 import { LindyIcon, TopicEmoji } from "@unclutter/library-components/dist/components";

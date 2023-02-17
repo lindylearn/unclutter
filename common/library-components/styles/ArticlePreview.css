@@ -141,7 +141,12 @@
 }
 
 /* highlight */
-/* .highlight:hover > .info-bar > .time {
+/* .highlight > .info-bar {
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 200ms cubic-bezier(0.33, 1, 0.68, 1);
+}
+.highlight:hover > .info-bar {
     visibility: visible;
     opacity: 1;
 } */

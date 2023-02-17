@@ -10,3 +10,5 @@
 playwright-report
 playwright/.cache
 tests/*.spec.ts-snapshots
+
+.buildt

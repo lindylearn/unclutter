@@ -2,31 +2,49 @@ import React, { useEffect, useState } from "react";
 import type { ArticleSummaryInfo } from "../../common/annotations/create";
 
 export default function SummaryAnnotation({ summaryInfo }: { summaryInfo: ArticleSummaryInfo }) {
-    // const [summaryText, setSummaryText] = useState<string>();
-    // useEffect(() => {
-    //     if (!summaryInfo.aiAnnotations?.length) {
-    //         return;
-    //     }
-    //     fetch("https://assistant-two.vercel.app/api/summary", {
-    //         method: "POST",
-    //         headers: {
-    //             "Content-Type": "application/json",
-    //         },
-    //         body: JSON.stringify({
-    //             title: summaryInfo.title,
-    //             highlights: summaryInfo.aiAnnotations,
-    //         }),
-    //     }).then(async (res) => {
-    //         const text = await res.json();
-    //         setSummaryText(text);
-    //     });
-    // }, [summaryInfo.aiAnnotations?.length]);
+    const [summaryText, setSummaryText] = useState<string>();
+    useEffect(() => {
+        if (!summaryInfo.aiAnnotations?.length) {
+            return;
+        }
+        fetch("https://assistant-two.vercel.app/api/summary", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                title: summaryInfo.title,
+                highlights: summaryInfo.aiAnnotations,
+            }),
+        }).then(async (res) => {
+            const text = await res.json();
+            setSummaryText(text);
+        });
+    }, [summaryInfo.aiAnnotations?.length]);
 
     return (
-        <div className="annotation relative flex cursor-pointer flex-col gap-2 overflow-hidden rounded-md p-2 px-3 text-sm shadow transition-transform hover:scale-[99%]">
-            {/* <div>{summaryText}</div> */}
+        <div className="annotation relative flex flex-col gap-2 overflow-hidden rounded-md text-sm shadow">
+            <div className="px-3 pt-2">{summaryText}</div>
 
-            <div className="font-title relative flex select-none items-center gap-2 overflow-hidden whitespace-nowrap">
+            {/* <div className="flex flex-col gap-2 px-3 pt-2">
+                {summaryInfo.aiAnnotations.slice(0, 3).map((annotation, index) => (
+                    <div
+                        key={index}
+                        className="bg-gray-50 transition-transform hover:scale-[99%]"
+                        style={{
+                            display: "-webkit-box",
+                            WebkitLineClamp: 3,
+                            WebkitBoxOrient: "vertical",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                        }}
+                    >
+                        {annotation}
+                    </div>
+                ))}
+            </div> */}
+
+            <div className="font-title relative flex select-none items-center gap-2 overflow-hidden whitespace-nowrap px-3 pb-2">
                 <div className="flex items-center gap-1">
                     <svg className="w-4" viewBox="0 0 576 512">
                         <path
