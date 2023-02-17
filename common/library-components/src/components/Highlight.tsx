@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import React, { useContext, useState } from "react";
+import React, { useContext, useMemo, useState } from "react";
 import {
     getAnnotationColorNew,
     getDomain,
@@ -15,12 +15,14 @@ import { ModalVisibilityContext } from "./Modal/context";
 export function Highlight({
     annotation,
     article,
+    searchExcerpt,
     isCurrentArticle,
     darkModeEnabled,
     reportEvent = () => {},
 }: {
     annotation: Annotation;
     article: Article | undefined;
+    searchExcerpt?: string;
     isCurrentArticle: boolean;
     darkModeEnabled: boolean;
     reportEvent?: (event: string, properties?: any) => void;
@@ -71,7 +73,8 @@ export function Highlight({
 
             <LimitedText
                 className={clsx("flex-grow leading-normal")}
-                text={annotation.text || annotation.quote_text}
+                text={annotation.text || annotation.quote_text || ""}
+                searchExcerpt={searchExcerpt}
                 rows={6}
             />
 
@@ -112,7 +115,11 @@ export function Highlight({
                             )}`}
                         />
 
-                        <div className="overflow-hidden text-ellipsis">{article?.title}</div>
+                        <div className="overflow-hidden text-ellipsis">
+                            {/* @ts-ignore */}
+                            {/* {annotation.score2?.toFixed(2)}  */}
+                            {article?.title}
+                        </div>
                     </div>
                 </div>
             ) : (
@@ -125,10 +132,12 @@ export function Highlight({
 function LimitedText({
     className,
     text,
+    searchExcerpt,
     rows = 8,
 }: {
     className?: string;
-    text?: string;
+    text: string;
+    searchExcerpt?: string;
     rows?: number;
 }) {
     return (
@@ -146,8 +155,30 @@ function LimitedText({
                     d="m 296,160 c -30.93,0 -56,25.07 -56,56 0,30.93 25.07,56 56,56 2.74,0 5.365,-0.4258 8,-0.8066 V 280 c 0,13.23 -10.77,24 -24,24 -13.2,0 -24,10.8 -24,24 0,13.2 10.8,24 24,24 39.7,0 72,-32.3 72,-72 v -64 c 0,-30.9 -25.1,-56 -56,-56 z m -144,0 c -30.9,0 -56,25.1 -56,56 0,30.9 25.1,56 56,56 2.7,0 5.4,-0.4 8,-0.8 v 8.8 c 0,13.2 -10.8,24 -24,24 -13.25,0 -24,10.75 -24,24 0,13.25 10.8,24 24,24 39.7,0 72,-32.3 72,-72 v -64 c 0,-30.9 -25.1,-56 -56,-56 z"
                 />
             </svg> */}
-            {text}
             {/* &quot; */}
+
+            <LimitedTextInner text={text} searchExcerpt={searchExcerpt} />
         </div>
     );
+}
+
+function LimitedTextInner({ text, searchExcerpt }: { text: string; searchExcerpt?: string }) {
+    const excerptStart = useMemo(() => {
+        if (searchExcerpt && text.length > searchExcerpt.length) {
+            return text.toLowerCase().indexOf(searchExcerpt.toLowerCase());
+        }
+        return -1;
+    }, [text, searchExcerpt]);
+
+    if (excerptStart === -1) {
+        return <span>{text}</span>;
+    } else {
+        return (
+            <span>
+                {text.slice(0, excerptStart)}
+                <b>{searchExcerpt}</b>
+                {text.slice(excerptStart + searchExcerpt!.length)}
+            </span>
+        );
+    }
 }

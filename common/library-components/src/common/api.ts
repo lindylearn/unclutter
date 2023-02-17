@@ -213,7 +213,8 @@ export async function fetchRelatedAnnotations(
     highlights: string[],
     score_threshold: number | undefined = undefined,
     results_per_query: number | undefined = undefined,
-    save_highlights: boolean = false
+    save_highlights: boolean = false,
+    is_search: boolean = false
 ): Promise<RelatedHighlight[][]> {
     const response = await fetch(`${lindyApiUrl}/related/fetch`, {
         method: "POST",
@@ -227,6 +228,7 @@ export async function fetchRelatedAnnotations(
             score_threshold,
             results_per_query,
             save_highlights,
+            is_search,
         }),
     });
     if (!response.ok) {

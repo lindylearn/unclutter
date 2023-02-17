@@ -344,7 +344,7 @@ export const { get: getAnnotation, list: listAnnotations } = generate(
     annotationSchema
 );
 
-export type AnnotationWithArticle = Annotation & { article: Article };
+export type AnnotationWithArticle = Annotation & { article: Article; searchExcerpt?: string };
 async function listAnnotationsWithArticles(tx: ReadTransaction): Promise<AnnotationWithArticle[]> {
     const annotations = await listAnnotations(tx);
     const articles = await listArticles(tx);

@@ -1,11 +1,17 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useDebounce } from "usehooks-ts";
-import { getDomain, getRandomLightColor } from "../../common";
-import { Annotation, AnnotationWithArticle, ReplicacheContext, useSubscribe } from "../../store";
+import { fetchRelatedAnnotations, getDomain, getRandomLightColor } from "../../common";
+import {
+    Annotation,
+    AnnotationWithArticle,
+    ReplicacheContext,
+    RuntimeReplicache,
+    UserInfo,
+    useSubscribe,
+} from "../../store";
 import { Highlight } from "../Highlight";
 import { SearchBox } from "./components/search";
 import { FilterContext, ModalStateContext } from "./context";
-import { vectorSearch } from "./Highlights";
 import { ResourceStat } from "../Modal/components/numbers";
 import { FilterButton } from "./Recent";
 import { getActivityColor } from "../Charts";
@@ -55,16 +61,24 @@ export default function QuotesTab({}: {}) {
         reportEvent("highlightsSearch");
     }, [queryDebounced]);
 
-    const [annotationGroups, setAnnotationGroups] = useState<[string, Annotation[]][]>([]);
-    const [untaggedAnnotations, setUntaggedAnnotations] = useState<Annotation[]>([]);
+    const [annotationGroups, setAnnotationGroups] = useState<[string, AnnotationWithArticle[]][]>(
+        []
+    );
+    const [untaggedAnnotations, setUntaggedAnnotations] = useState<AnnotationWithArticle[]>([]);
     useEffect(() => {
         if (annotations === null) {
             return;
         }
 
-        let filteredAnnotations =
-            searchedAnnotations || annotations.filter((a) => !a.ai_created || a.tags?.length);
-        filteredAnnotations.sort((a, b) => b.created_at - a.created_at);
+        let filteredAnnotations: AnnotationWithArticle[];
+        if (searchedAnnotations) {
+            filteredAnnotations = searchedAnnotations;
+        } else {
+            filteredAnnotations = annotations
+                .filter((a) => !a.ai_created || a.tags?.length)
+                .sort((a, b) => b.created_at - a.created_at);
+        }
+
         if (tagFilter) {
             filteredAnnotations = filteredAnnotations.filter((a) => a.tags?.includes(tagFilter));
             filteredAnnotations.forEach((a) => (a.tags = [tagFilter])); // ignore other tags
@@ -77,8 +91,8 @@ export default function QuotesTab({}: {}) {
             );
         }
 
-        const tagAnnotations: { [tag: string]: Annotation[] } = {};
-        const untaggedAnnotations: Annotation[] = [];
+        const tagAnnotations: { [tag: string]: AnnotationWithArticle[] } = {};
+        const untaggedAnnotations: AnnotationWithArticle[] = [];
         for (const annotation of filteredAnnotations) {
             if (!annotation.tags?.length) {
                 untaggedAnnotations.push(annotation);
@@ -178,7 +192,7 @@ function TagGroup({
     setTagFilter,
 }: {
     tag: string;
-    annotations: Annotation[];
+    annotations: AnnotationWithArticle[];
     annotationLimit: number;
     setTagFilter?: (tag?: string) => void;
 }) {
@@ -218,7 +232,7 @@ function TagGroup({
                     <Highlight
                         key={annotation.id}
                         annotation={annotation}
-                        // @ts-ignore
+                        searchExcerpt={annotation.searchExcerpt}
                         article={annotation.article}
                         isCurrentArticle={false}
                         darkModeEnabled={darkModeEnabled}
@@ -234,4 +248,43 @@ function TagGroup({
             </div>
         </div>
     );
+}
+
+export async function vectorSearch(
+    rep: RuntimeReplicache,
+    query: string,
+    userInfo: UserInfo
+): Promise<AnnotationWithArticle[]> {
+    const hits = await fetchRelatedAnnotations(
+        userInfo.id,
+        undefined,
+        [query],
+        0.0,
+        50,
+        false,
+        true
+    );
+    if (!hits?.length) {
+        return [];
+    }
+
+    const annotations = await Promise.all(
+        hits[0].map(async (hit) => {
+            const annotation = await rep.query.getAnnotation(hit.id);
+            const article =
+                annotation?.article_id && (await rep.query.getArticle(annotation.article_id));
+
+            return {
+                ...hit,
+                ...annotation,
+                text: hit.text,
+                searchExcerpt: hit.excerpt,
+                ai_score: hit.score,
+                article,
+            };
+        })
+    );
+
+    // @ts-ignore
+    return annotations;
 }
