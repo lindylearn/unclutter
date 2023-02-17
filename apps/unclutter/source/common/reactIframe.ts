@@ -16,6 +16,7 @@ export function injectReactIframe(
     iframe.id = id;
     iframe.setAttribute("scrolling", "no");
     iframe.setAttribute("frameBorder", "0");
+    iframe.setAttribute("allow", "clipboard-write");
 
     document.documentElement.append(iframe);
     return iframe;

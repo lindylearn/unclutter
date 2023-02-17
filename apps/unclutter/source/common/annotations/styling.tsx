@@ -25,6 +25,28 @@ export function getAnnotationColor(annotation: LindyAnnotation): string {
     return getRandomColor(annotation.relatedToId || annotation.id);
 }
 
+export function getAnnotationColorNew(annotation: LindyAnnotation): [string, string] {
+    let color: string;
+    let colorDark: string;
+
+    if (annotation.tags && annotation.tags.length > 0) {
+        color = getRandomColor(annotation.tags[0]);
+        colorDark = color.replace("0.3", "0.5");
+    } else if (annotation.platform === "hn") {
+        color = "rgba(255, 102, 0, 0.5)";
+        colorDark = color.replace("0.5", "0.8");
+    } else if (annotation.platform === "h") {
+        color = "rgba(189, 28, 43, 0.5)";
+        colorDark = color.replace("0.5", "0.8");
+    } else {
+        // yellow
+        color = "rgba(250, 204, 21, 0.3)";
+        colorDark = color.replace("0.3", "0.5");
+    }
+
+    return [color, colorDark];
+}
+
 export function getRandomColor(seed: string) {
     return drawFromArray(seed, colors);
 }

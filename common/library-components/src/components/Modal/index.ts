@@ -5,3 +5,5 @@ export * from "./Sidebar";
 export * from "./Stats";
 export * from "./components/numbers";
 export * from "./FeedbackModal";
+export * from "./SignupModal";
+export * from "./About";

@@ -13,7 +13,10 @@ import {
 } from "@unclutter/library-components/dist/store";
 import { reportEventPosthog } from "../../common/metrics";
 import { useRouter } from "next/router";
-import { SmartReadingPreview } from "@unclutter/library-components/dist/components/Settings/SmartReading";
+import {
+    SmartReadingPreview,
+    usePaymentsLink,
+} from "@unclutter/library-components/dist/components/Settings/SmartReading";
 import {
     SettingsButton,
     SettingsGroup,

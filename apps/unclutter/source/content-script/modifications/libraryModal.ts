@@ -28,7 +28,7 @@ export default class LibraryModalModifier implements PageModifier {
             } else if (data.event === "onSubmitFeedback") {
                 setFeatureFlag(submittedFeedbackFlag, true);
             } else if (data.event === "showModal") {
-                this.showModal(data.initialTab, data.isFeedbackModal);
+                this.showModal(data.initialTab, data.isFeedbackModal, data.initialTagFilter);
             }
         });
     }
@@ -36,9 +36,17 @@ export default class LibraryModalModifier implements PageModifier {
     private modalIframe: HTMLIFrameElement;
     private iframeLoaded: boolean = false;
     private appLoaded: boolean = false;
-    async showModal(initialTab?: string, isFeedbackModal?: boolean) {
+    async showModal(initialTab?: string, isFeedbackModal?: boolean, initialTagFilter?: string) {
+        if (
+            !isFeedbackModal &&
+            this.libraryState.showLibrarySignup &&
+            !this.libraryState.userInfo?.aiEnabled
+        ) {
+            return;
+        }
+
         // create iframe on demand
-        this.createIframe(initialTab, isFeedbackModal);
+        this.createIframe(initialTab, isFeedbackModal, initialTagFilter);
 
         // set theme variables once html ready, before react rendered
         await waitUntilIframeLoaded(this.modalIframe);
@@ -55,7 +63,11 @@ export default class LibraryModalModifier implements PageModifier {
         this.bodyStyleModifier.enableScrollLock();
     }
 
-    private createIframe(initialTab?: string, isFeedbackModal?: boolean) {
+    private createIframe(
+        initialTab?: string,
+        isFeedbackModal?: boolean,
+        initialTagFilter?: string
+    ) {
         const iframeUrl = new URL(browser.runtime.getURL("/modal/index.html"));
         iframeUrl.searchParams.append("articleUrl", window.location.href);
         iframeUrl.searchParams.append(
@@ -65,6 +77,9 @@ export default class LibraryModalModifier implements PageModifier {
         iframeUrl.searchParams.append("isFeedbackModal", (isFeedbackModal || false).toString());
         if (initialTab) {
             iframeUrl.searchParams.append("initialTab", initialTab);
+        }
+        if (initialTagFilter) {
+            iframeUrl.searchParams.append("initialTagFilter", initialTagFilter);
         }
 
         this.modalIframe = createIframeNode("lindy-library-modal");

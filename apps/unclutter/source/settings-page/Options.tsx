@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
     allowlistDomainOnManualActivationFeatureFlag,
     getFeatureFlag,
     hypothesisSyncFeatureFlag,
 } from "../common/featureFlags";
+import { getUserInfoSimple } from "@unclutter/library-components/dist/common/messaging";
 import browser, { getBrowserType } from "../common/polyfill";
 import { reportEventContentScript } from "@unclutter/library-components/dist/common/messaging";
 import ContributionStats from "./ContributionStats";
@@ -14,6 +15,7 @@ import { useAutoDarkMode } from "@unclutter/library-components/dist/common/hooks
 import clsx from "clsx";
 import { getHypothesisSyncState, SyncState } from "../common/storage";
 import { getRelativeTime } from "../common/time";
+import type { UserInfo } from "@unclutter/library-components/dist/store";
 
 function OptionsPage({}) {
     React.useEffect(() => {
@@ -60,6 +62,11 @@ function OptionsPage({}) {
             : "https://chrome.google.com/webstore/detail/bghgkooimeljolohebojceacblokenjn";
 
     const darkModeEnabled = useAutoDarkMode();
+
+    const [userInfo, setUserInfo] = React.useState<UserInfo>();
+    useEffect(() => {
+        getUserInfoSimple().then(setUserInfo);
+    }, []);
 
     return (
         <div className={clsx(darkModeEnabled && "dark")}>
@@ -127,7 +134,7 @@ function OptionsPage({}) {
                     <DomainSettingsList />
                 </OptionsGroup>
 
-                <OptionsGroup
+                {/* <OptionsGroup
                     headerText="Your Library"
                     iconSvg={
                         <svg className="w-5" viewBox="0 0 640 512">
@@ -163,7 +170,7 @@ function OptionsPage({}) {
                         </a>{" "}
                         to access your reading queue from your new tab page.
                     </p>
-                </OptionsGroup>
+                </OptionsGroup> */}
 
                 {/* <OptionsGroup
                     headerText="AI Smart Reading"

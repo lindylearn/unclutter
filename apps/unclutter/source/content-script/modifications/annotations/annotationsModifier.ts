@@ -96,11 +96,7 @@ export default class AnnotationsModifier implements PageModifier {
         // listeners need to be configured before rendering iframe to anchor annotations?
 
         // selection is only user interface for annotations
-        createSelectionListener(
-            this.articleId,
-            this.sidebarIframe,
-            this.onAnnotationUpdate.bind(this)
-        );
+        createSelectionListener(this.articleId, this.sidebarIframe);
 
         sendIframeEvent(this.sidebarIframe, {
             event: "setEnablePersonalAnnotations",
@@ -170,15 +166,16 @@ export default class AnnotationsModifier implements PageModifier {
         });
     }
 
-    public annotationListeners: AnnotationListener[] = [];
-
     // private fn passed to selection listener (added) and annotations side events listener (anchored, removed)
-    onAnnotationUpdate(action: "set" | "add" | "remove", annotations: LindyAnnotation[]) {
-        if (action === "set") {
-            // called after paintHighlights event
-            this.onAnnotationsVisible(annotations);
-        }
+    // cannot easily use store subscribe instead, because need annotation offsets e.g. for outline
+    public annotationListeners: AnnotationListener[] = [];
+    onAnnotationUpdate(
+        action: "set" | "add" | "remove" | "update",
+        annotations: LindyAnnotation[]
+    ) {
+        // console.log(action, annotations);
 
+        this.onAnnotationsVisible(annotations);
         this.annotationListeners.map((listener) => listener(action, annotations));
     }
 
@@ -201,6 +198,10 @@ export default class AnnotationsModifier implements PageModifier {
     }
 
     private async onAnnotationsVisible(annotations: LindyAnnotation[]) {
+        if (this.annotationsVisible) {
+            // run only once
+            return;
+        }
         if (annotations.length === 0) {
             // more annotations might get fetched later (and there is nothing to focus anyways)
             return;
@@ -239,6 +240,6 @@ export default class AnnotationsModifier implements PageModifier {
 }
 
 export type AnnotationListener = (
-    action: "set" | "add" | "remove",
+    action: "set" | "add" | "remove" | "update",
     annotation: LindyAnnotation[]
 ) => void;
