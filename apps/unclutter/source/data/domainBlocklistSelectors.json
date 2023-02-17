@@ -1307,6 +1307,14 @@
         ".media",
         ".section__sidebar.col-lg-4"
     ],
+    "turkcetarih.com": [
+        ".block-heading",
+        ".post__thumb",
+        ".mnmd-offcanvas__title",
+        ".same-category-posts.single-entry-section",
+        ".mnmd-offcanvas__section.visible-xs.visible-sm",
+        "#mnmd-offcanvas-primary"
+    ],
     "tutorialspoint.com": [".rounded-img", "#divResources"],
     "twinview.com": [
         ".c-section--default.c-section.c-section--pad-x-small.c-section--pad-y-default.u-bg-purple-1",
