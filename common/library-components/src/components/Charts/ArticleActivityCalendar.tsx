@@ -24,7 +24,7 @@ export function ArticleActivityCalendar({
 }) {
     const weekStart = useMemo(() => getWeekStartByLocale(navigator.language), []);
     const data = useMemo(() => {
-        if (!articles || !weekStart) {
+        if (!articles || weekStart === undefined) {
             return null;
         }
         return getActivityData(articles, weekStart);

@@ -167,12 +167,6 @@ export default function QuotesTab({}: {}) {
                     annotationLimit={100}
                 />
             )}
-
-            {annotations !== null && annotations.length === 0 && (
-                <div className="animate-fadein col-span-3 flex w-full select-none items-center gap-2">
-                    Select any article text to create a highlight.
-                </div>
-            )}
         </div>
     );
 }
@@ -231,6 +225,12 @@ function TagGroup({
                         reportEvent={reportEvent}
                     />
                 ))}
+
+                {tag === "untagged" && annotations !== null && annotations.length === 0 && (
+                    <div className="animate-fadein col-span-3 flex w-full select-none items-center gap-2">
+                        Select any article text to create a highlight.
+                    </div>
+                )}
             </div>
         </div>
     );
