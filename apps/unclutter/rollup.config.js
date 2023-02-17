@@ -60,7 +60,7 @@ const contentScriptConfigs = [
             preventAssignment: true,
             "process.env.NODE_ENV": JSON.stringify(isProduction ? "production" : "development"),
         }),
-        json(),
+        json({ compact: true }),
     ],
 }));
 
@@ -111,7 +111,7 @@ const esModuleConfig = {
             preventAssignment: true,
             "process.env.NODE_ENV": JSON.stringify(isProduction ? "production" : "development"),
         }),
-        json(),
+        json({ compact: true }),
     ],
 };
 
