@@ -74,6 +74,8 @@ export async function importArticles(
     );
 }
 
+// this also re-indexes existing annotations for articles without AI highlights
+// TODO figure out how to re-index if vector db updated
 export async function backfillLibraryAnnotations(
     rep: RuntimeReplicache,
     userInfo: UserInfo,
@@ -90,7 +92,7 @@ export async function backfillLibraryAnnotations(
         .filter((a) => !articlesWithAIAnnotations.has(a.id))
         .sort((a, b) => b.time_added - a.time_added);
 
-    console.log(`Backfilling AI annotations for ${articles.length} articles...`);
+    console.log(`Generating AI annotations for ${articles.length} articles...`);
     onProgress?.({ targetArticles: articles.length });
 
     // trigger screenshots in parallel
@@ -181,9 +183,15 @@ async function generateAnnotations(
     article: Article
 ): Promise<number> {
     try {
-        const { annotations } = await generateAnnotationsRemote(article.url, article.id);
+        const manualAnnotations = await rep.query.listArticleAnnotations(article.id);
 
-        await Promise.all(annotations.map((a) => rep.mutate.putAnnotation(a)));
+        const { annotations: newAnnotations } = await generateAnnotationsRemote(
+            article.url,
+            article.id
+        );
+        await Promise.all(newAnnotations.map((a) => rep.mutate.putAnnotation(a)));
+
+        const annotations = manualAnnotations.concat(newAnnotations);
         await indexAnnotationVectors(
             user_id,
             article.id,
@@ -192,7 +200,7 @@ async function generateAnnotations(
             false
         );
 
-        return annotations.length;
+        return newAnnotations.length;
     } catch (err) {
         console.error(err);
         return 0;
