@@ -867,7 +867,8 @@
         ".block--2_RlJqhg"
     ],
     "magnet.xataka.com": [
-        ".article-asset.article-asset-normal.article-asset-center"
+        ".article-asset.article-asset-normal.article-asset-center",
+        ".article-metadata-container"
     ],
     "majorgeeks.com": [".centerborder", ".alford", "[data-ref='vm-preloader']"],
     "makandracards.com": ["#tail", ".text_ad__more"],
