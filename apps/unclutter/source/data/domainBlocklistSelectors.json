@@ -324,6 +324,12 @@
         ".Layout-module--bottom--c6f94",
         ".BlogPost-module--backLinkWrapper--4e781"
     ],
+    "droid-life.com": [
+        ".share-buttons.align-right",
+        ".l--inline-heading.t-letter-spacing-small",
+        ".entry-taxonomy.entry-taxonomies__categories",
+        ".entry-taxonomies"
+    ],
     "dtf.ru": [
         ".site-header__section.site-header__section--right.s42-karma-shown",
         ".content-header",
