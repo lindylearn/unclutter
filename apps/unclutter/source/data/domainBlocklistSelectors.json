@@ -1434,6 +1434,11 @@
         ".p-headerInfo",
         ".p-article_action"
     ],
+    "ynet.co.il": [
+        ".audio-play-button-wrapper",
+        "#ArticleAudioIframeScriptComponenta_5031138946959897",
+        ".iframeWidth.textboxSize"
+    ],
     "zdnet.com": [".c-socialSharebar"],
     "zeit.de": [
         ".article-player.article-player--has-player",
