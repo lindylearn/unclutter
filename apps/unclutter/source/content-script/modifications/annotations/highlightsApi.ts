@@ -1,7 +1,6 @@
-import browser from "../../../common/polyfill";
 import { LindyAnnotation } from "../../../common/annotations/create";
 import { getNodeOffset } from "../../../common/annotations/offset";
-import { getAnnotationColor } from "../../../common/annotations/styling";
+import { getAnnotationColorNew } from "../../../common/annotations/styling";
 import { anchor as anchorHTML } from "../../../common/annotator/anchoring/html";
 import {
     highlightRange,
@@ -10,7 +9,9 @@ import {
 } from "../../../common/annotator/highlighter";
 import { overrideClassname } from "../../../common/stylesheets";
 import { sendIframeEvent } from "../../../common/reactIframe";
-import { getAIAnnotationColor } from "@unclutter/library-components/dist/common/styling";
+import { ReplicacheProxy } from "@unclutter/library-components/dist/common/replicache";
+import { deleteAnnotationVectors } from "@unclutter/library-components/dist/common/api";
+import { reportEventContentScript } from "@unclutter/library-components/dist/common/messaging";
 
 // highlight text for every passed annotation on the active webpage
 export async function anchorAnnotations(annotations: LindyAnnotation[]) {
@@ -61,25 +62,7 @@ export function paintHighlight(
     }
 
     // set color variables
-    let annotationColor: string;
-    let darkerAnnotationColor: string;
-    if (annotation.ai_created) {
-        annotationColor = getAIAnnotationColor(annotation.ai_score, false);
-        darkerAnnotationColor = getAIAnnotationColor(annotation.ai_score, true);
-    } else if (annotation.isMyAnnotation) {
-        annotationColor = getAnnotationColor(annotation);
-        darkerAnnotationColor = annotationColor.replace("0.3", "0.5");
-    } else {
-        if (annotation.platform === "hn") {
-            annotationColor = "rgba(255, 102, 0, 0.5)";
-        } else if (annotation.platform === "h") {
-            annotationColor = "rgba(189, 28, 43, 0.5)";
-        } else if (annotation.platform === "info") {
-            annotationColor = "rgba(250, 204, 21, 0.2)";
-        }
-
-        darkerAnnotationColor = annotationColor.replace("0.5", "0.8");
-    }
+    const [annotationColor, darkerAnnotationColor] = getAnnotationColorNew(annotation);
     highlightedNodes.map((node) => {
         node.style.setProperty("--annotation-color", annotationColor, "important");
         node.style.setProperty("--darker-annotation-color", darkerAnnotationColor, "important");
@@ -95,24 +78,47 @@ export function paintHighlight(
                 annotationId: annotation.id,
             });
 
-            // unfocus on next click for social comments
-            // for annotations this is handled without duplicate events by the textarea onBlur
-            // if (!annotation.isMyAnnotation || annotation.platform !== "info") {
-            //     const onNextClick = () => {
+            // handle keyboard events for focused annotation
+            // the focus is still on the main page, so can't handle events there
+            // const keyboardListener = async (e: KeyboardEvent) => {
+            //     if (e.key === "Escape") {
             //         hoverUpdateHighlight(annotation, false);
             //         sendIframeEvent(sidebarIframe, {
             //             event: "focusAnnotation",
             //             annotationId: null,
             //         });
+            //         document.removeEventListener("keydown", keyboardListener);
+            //     } else if (e.key === "Delete" || e.key === "Backspace") {
+            //         const rep = new ReplicacheProxy();
+            //         const userInfo = await rep?.query.getUserInfo();
 
-            //         document.removeEventListener("click", onNextClick, true);
-            //     };
-            //     document.addEventListener("click", onNextClick, true);
-            // }
+            //         await rep.mutate.deleteAnnotation(annotation.id);
+            //         if (userInfo?.aiEnabled) {
+            //             deleteAnnotationVectors(userInfo.id, undefined, annotation.id);
+            //         }
+            //         reportEventContentScript("deleteAnnotation");
 
-            if (annotation.isMyAnnotation) {
-                copyTextToClipboard(`"${annotation.quote_text}"`);
-            }
+            //         document.removeEventListener("keydown", keyboardListener);
+            //     }
+            // };
+            // document.addEventListener("keydown", keyboardListener);
+
+            // unfocus on next click for social comments
+            // for old annotation drafts this is handled without duplicate events by the textarea onBlur
+            // const onNextClick = (event: Event) => {
+            //     console.log("onNextClick", event.target);
+            //     // @ts-ignore
+            //     if (!event.target.classList.contains("lindy-highlight")) {
+            //         hoverUpdateHighlight(annotation, false);
+            //         sendIframeEvent(sidebarIframe, {
+            //             event: "focusAnnotation",
+            //             annotationId: null,
+            //         });
+            //     }
+            //     document.removeEventListener("click", onNextClick, true);
+            //     document.removeEventListener("keydown", keyboardListener);
+            // };
+            // document.addEventListener("click", onNextClick, true);
         };
     });
 
@@ -230,11 +236,4 @@ export function hoverUpdateHighlight(annotation: LindyAnnotation, hoverActive: b
             node.classList.remove("lindy-hover");
         });
     }
-}
-
-export async function copyTextToClipboard(text: string) {
-    // only works as part of user gesture
-    try {
-        navigator.clipboard.writeText(text);
-    } catch {}
 }

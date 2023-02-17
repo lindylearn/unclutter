@@ -9,6 +9,8 @@ export function BigNumber({
     colorOverride,
     icon,
     onClick,
+    small = false,
+    style,
 }: {
     value?: number;
     diff?: number;
@@ -17,17 +19,19 @@ export function BigNumber({
     colorOverride?: string;
     icon?: ReactNode;
     onClick?: () => void;
+    small?: boolean;
+    style?: React.CSSProperties;
 }) {
     return (
         <div
             className={clsx(
-                "relative flex select-none flex-col items-center overflow-hidden rounded-md bg-stone-50 p-3 transition-all hover:scale-[97%] dark:bg-neutral-800",
+                "big-number relative flex select-none flex-col items-center overflow-hidden rounded-md bg-stone-50 px-3 py-2 transition-all hover:scale-[97%] dark:bg-neutral-800",
                 onClick && "cursor-pointer"
             )}
-            style={{ background: colorOverride }}
+            style={{ background: colorOverride, ...style }}
             onClick={onClick}
         >
-            {value !== undefined && target !== undefined && (
+            {/* {value !== undefined && target !== undefined && (
                 <div
                     className="absolute top-0 left-0 h-full w-full opacity-90"
                     style={{
@@ -35,11 +39,12 @@ export function BigNumber({
                         width: `${Math.min(1, value / target) * 100}%`,
                     }}
                 />
-            )}
+            )} */}
             <div
                 className={clsx(
-                    "font-title flex h-[2rem] items-center gap-2 text-2xl font-bold transition-opacity",
-                    value === undefined && diff === undefined && "opacity-0"
+                    "font-title flex items-center gap-2 font-bold transition-opacity",
+                    value === undefined && diff === undefined && "opacity-0",
+                    small ? "text-xl" : "h-[2rem] text-2xl"
                 )}
             >
                 {icon}
@@ -61,7 +66,14 @@ export function BigNumber({
                     {/* {value && diff && <AnimatedNumber value={value} diff={diff} />} */}
                 </div>
             </div>
-            <div className="font-text max-w-full overflow-hidden">{tag}</div>
+            <div
+                className={clsx(
+                    "font-text max-w-full overflow-hidden overflow-ellipsis whitespace-nowrap",
+                    small ? "text-sm" : ""
+                )}
+            >
+                {tag}
+            </div>
         </div>
     );
 }
@@ -71,12 +83,14 @@ export function ResourceStat({
     type,
     large = false,
     showPlus = false,
+    hideIcon = false,
     className,
 }: {
     value?: number;
     type: "articles" | "articles_completed" | "highlights";
     large?: boolean;
     showPlus?: boolean;
+    hideIcon?: boolean;
     className?: string;
 }) {
     return (
@@ -88,7 +102,7 @@ export function ResourceStat({
                 className
             )}
         >
-            <ResourceIcon type={type} large={large} />
+            {!hideIcon && <ResourceIcon type={type} large={large} />}
             <div className={clsx("font-title select-none font-bold", large ? "text-xl" : "")}>
                 {showPlus && "+"}
                 {value || 0}
@@ -171,10 +185,10 @@ export function ResourceIcon({
                 </svg>
             )}
             {type === "highlights" && (
-                <svg className={clsx("-mr-0.5", innerClass)} viewBox="0 0 512 512">
+                <svg className={innerClass} viewBox="0 0 448 512">
                     <path
                         fill="currentColor"
-                        d="M320 62.06L362.7 19.32C387.7-5.678 428.3-5.678 453.3 19.32L492.7 58.75C517.7 83.74 517.7 124.3 492.7 149.3L229.5 412.5C181.5 460.5 120.3 493.2 53.7 506.5L28.71 511.5C20.84 513.1 12.7 510.6 7.03 504.1C1.356 499.3-1.107 491.2 .4662 483.3L5.465 458.3C18.78 391.7 51.52 330.5 99.54 282.5L286.1 96L272.1 82.91C263.6 73.54 248.4 73.54 239 82.91L136.1 184.1C127.6 194.3 112.4 194.3 103 184.1C93.66 175.6 93.66 160.4 103 151L205.1 48.97C233.2 20.85 278.8 20.85 306.9 48.97L320 62.06zM320 129.9L133.5 316.5C94.71 355.2 67.52 403.1 54.85 457.2C108 444.5 156.8 417.3 195.5 378.5L382.1 192L320 129.9z"
+                        d="M296 160c-30.93 0-56 25.07-56 56s25.07 56 56 56c2.74 0 5.365-.4258 8-.8066V280c0 13.23-10.77 24-24 24C266.8 304 256 314.8 256 328S266.8 352 280 352C319.7 352 352 319.7 352 280v-64C352 185.1 326.9 160 296 160zM152 160C121.1 160 96 185.1 96 216S121.1 272 152 272C154.7 272 157.4 271.6 160 271.2V280C160 293.2 149.2 304 136 304c-13.25 0-24 10.75-24 24S122.8 352 136 352C175.7 352 208 319.7 208 280v-64C208 185.1 182.9 160 152 160zM384 32H64C28.65 32 0 60.65 0 96v320c0 35.35 28.65 64 64 64h320c35.35 0 64-28.65 64-64V96C448 60.65 419.3 32 384 32zM400 416c0 8.822-7.178 16-16 16H64c-8.822 0-16-7.178-16-16V96c0-8.822 7.178-16 16-16h320c8.822 0 16 7.178 16 16V416z"
                     />
                 </svg>
             )}

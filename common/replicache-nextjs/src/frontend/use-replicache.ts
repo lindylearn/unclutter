@@ -52,6 +52,14 @@ export function useReplicache<A extends AccessorDefs, M extends MutatorDefs>({
       ...options,
     });
 
+    r.createIndex({
+      name: "annotationsPerArticle",
+      // @ts-ignore
+      keyPrefix: "/annotations/",
+      jsonPointer: "/article_id",
+      allowEmpty: true,
+    });
+
     // Replicache uses an empty "poke" message sent over some pubsub channel
     // to know when to pull changes from the server. There are many ways to
     // implement pokes. This sample app implements two different ways.
