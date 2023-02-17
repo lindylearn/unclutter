@@ -69,13 +69,13 @@ export function ArticleGroup({
                     {title}
                 </h2>
 
-                {showProgress && (
+                {/* {showProgress && (
                     <ReadingProgress
                         className="relative px-1.5 py-0.5"
                         articleCount={articles?.length}
                         color={color}
                     />
-                )}
+                )} */}
             </div>
 
             {/* {!isTopic && groupKey !== "search" && (

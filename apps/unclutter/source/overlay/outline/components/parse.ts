@@ -1,5 +1,6 @@
 import { scrollToElement } from "./common";
 import { cleanTitle } from "@unclutter/library-components/dist/common/util";
+import type { Annotation } from "@unclutter/library-components/dist/store";
 
 export interface OutlineItem {
     index: number;
@@ -8,9 +9,8 @@ export interface OutlineItem {
     element: Element;
     children: OutlineItem[];
 
-    myAnnotationCount?: number;
+    annotations: Annotation[];
     socialCommentsCount?: number;
-    relatedCount?: number;
 }
 
 const contentBlocklist = [
@@ -104,6 +104,7 @@ export function getOutline(headingItems: OutlineItem[]): OutlineItem[] {
             title: "Introduction",
             element: document.body,
             children: [],
+            annotations: [],
         },
         ...outlineRoot.children,
     ];
@@ -132,6 +133,7 @@ export function getHeadingItems(): OutlineItem[] {
     let index = 1;
     for (const node of nodes) {
         // Ignore invisible or removed elements
+        // @ts-ignore
         if (node.offsetHeight === 0) {
             continue;
         }
@@ -231,6 +233,7 @@ function getHeadingNodeItem(node: Element, headingIndex: number): OutlineItem | 
         level,
         element: node,
         children: [], // populated later
+        annotations: [],
     };
 }
 
@@ -315,6 +318,7 @@ function getSoftNodeItem(node: Element): OutlineItem | null {
         level,
         element: node,
         children: [], // populated below
+        annotations: [],
     };
 }
 
@@ -369,6 +373,7 @@ export function createRootItem(headingItems: OutlineItem[]): OutlineItem {
         title: cleanTitle(document.title) || cleanTitle(headingItems?.[0]?.title || ""),
         element: document.body,
         children: [],
+        annotations: [],
     };
 }
 

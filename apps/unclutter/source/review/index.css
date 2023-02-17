@@ -13,7 +13,9 @@ body {
     background: var(--lindy-background-color) !important;
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 1190px) {
+    /* -15px because page scrollbar is part of outer viewport */
+
     .bottom-container {
         margin-left: 10px !important;
     }

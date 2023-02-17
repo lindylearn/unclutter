@@ -9,51 +9,10 @@
     --color-muted: #525252 !important;
 }
 
-.lindy-tooltp.lindy-tooltp:hover > .lindy-ui-icon,
-.lindy-theme-container.lindy-theme-container:hover > .lindy-ui-icon {
-    filter: none !important;
-}
-
-.lindy-tooltp.lindy-tooltp:before {
-    filter: none !important;
-}
-
-.lindy-theme-ui.lindy-theme-ui {
-    filter: none !important;
-}
-
-.lindy-plusminus.lindy-plusminus > div:hover > svg {
-    color: #d1d5db !important;
-}
-.lindy-plusminus.lindy-plusminus > div:hover {
-    background-color: #262626 !important;
-}
-.lindy-theme-ui-row-spacer {
-    border-top: 2px solid #262626 !important;
-}
-.lindy-theme-button {
-    border: 2.5px solid #525252 !important;
-}
-.lindy-active-theme {
-    border: 2.5px solid var(--text-color) !important;
-}
-
-.lindy-bugreport-button {
-    background-color: #404040 !important;
-}
-.lindy-bugreport-flag,
-.lindy-bugreport-flag > .lindy-ui-icon {
-    background-color: #edd75b !important;
-    color: #374151 !important;
-}
-.lindy-bugreport-button:not(.lindy-pressed):hover {
-    filter: brightness(120%) !important;
-}
-
-.lindy-highlight:not(#fakeID#fakeID#fakeID#fakeID) {
+/* .lindy-highlight:not(#fakeID#fakeID#fakeID#fakeID) {
     background-color: var(--darker-annotation-color) !important;
 }
 .lindy-smart-highlight:not(#fakeID#fakeID#fakeID#fakeID),
 .lindy-smart-highlight-scroll:not(#fakeID#fakeID#fakeID#fakeID) {
     --active-color: var(--darker-annotation-color) !important;
-}
+} */

@@ -3,27 +3,27 @@ import { cloneElement, useContext, useEffect, useState } from "react";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import { Redirect, Route, Switch, useLocation } from "wouter";
 
-import HeaderBar from "./components/HeaderBar";
+import HeaderBar from "../components/HeaderBar";
 import {
     ReplicacheContext,
     Settings,
     UserInfo,
     useSubscribe,
 } from "@unclutter/library-components/dist/store";
-import DashboardTab from "./tabs/Dashboard";
-import ExportTab from "./tabs/Export";
-import FavoritesTab from "./tabs/Favorites";
-import SearchTab from "./tabs/Search";
-import SettingsTab from "./tabs/Settings";
-import TopicsListTab from "./tabs/TopicsList";
-import WelcomeTab from "./tabs/Welcome";
-import ModalTestTab from "./tabs/ModalTest";
-import Welcome2Tab from "./new/NewWelcome";
-import { reportEventPosthog } from "../common/metrics";
-import Import2Tab from "./tabs/Import2";
-import ImportTab from "./tabs/Import/_Import";
-import FeedTest from "./tabs/FeedTest";
-import ReviewTestTab from "./tabs/Review";
+import DashboardTab from "./Dashboard";
+import ExportTab from "./Export";
+import FavoritesTab from "./Favorites";
+import SearchTab from "./Search";
+import SettingsTab from "./Settings";
+import TopicsListTab from "./TopicsList";
+import WelcomeTab from "./Welcome";
+import ModalTestTab from "./ModalTest";
+import Welcome2Tab from "../new/NewWelcome";
+import { reportEventPosthog } from "../../common/metrics";
+import Import2Tab from "./Import2";
+import ImportTab from "./Import/_Import";
+import FeedTest from "./FeedTest";
+import ReviewTestTab from "./Review";
 
 export interface LibraryTab {
     id: string;

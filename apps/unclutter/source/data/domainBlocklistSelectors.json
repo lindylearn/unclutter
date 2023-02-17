@@ -49,6 +49,12 @@
         ".BlockHeader__Container-sc-55bvnf-0.iVdrIt",
         ".ArticleShare__ArticleShareWrapper-dyxdoz-0.jPximb"
     ],
+    "arkeofili.com": [".post-tags"],
+    "arretsurimages.net": [
+        ".page-section.theme-light",
+        ".page-section.theme-dark",
+        ".article-bottom"
+    ],
     "audio-heritage.jp": ["#aswift_4_host", "#aswift_3_host", ".adsbygoogle"],
     "augmentingcognition.com": [".marginnote"],
     "autodesk.com": [
@@ -56,7 +62,12 @@
         ".class__active-el",
         ".visually-hidden.focusable"
     ],
+    "aykiri.com.tr": [
+        ".fix-socials_btm.d-flex.d-md-none",
+        ".text-muted.text-sm.py-2.d-md-none.align-items-center.d-flex.text-nowrap"
+    ],
     "baomoi.com": [".bm_FA", ".bm_AM", ".bm_FB"],
+    "bastionland.com": ["#comments"],
     "bbc.co.uk": [
         ".gel-long-primer",
         ".gs-o-table.story-body__table",
@@ -72,7 +83,8 @@
         ".swimlane__content",
         ".around-the-bbc-swimlane",
         ".article-end__share-tools",
-        ".article__end"
+        ".article__end",
+        ".gs-u-display-block.story-body__media.gs-u-mb-alt+.qa-story-body-media"
     ],
     "be.marketscreener.com": [
         "#myHeader",
@@ -83,6 +95,7 @@
         ".tabElemNoBor"
     ],
     "beyazperde.com": [".light.titlebar-subtile", ".cms-see-also", ".section"],
+    "beachcam.co.il": ["#aswift_1_host"],
     "bezprawnik.pl": [
         ".ad_slot_height_manager_wrapper_bp_sdh2",
         "#oa-360-1666305713099_aa6xa65xr",
@@ -313,6 +326,12 @@
         ".Layout-module--bottom--c6f94",
         ".BlogPost-module--backLinkWrapper--4e781"
     ],
+    "droid-life.com": [
+        ".share-buttons.align-right",
+        ".l--inline-heading.t-letter-spacing-small",
+        ".entry-taxonomy.entry-taxonomies__categories",
+        ".entry-taxonomies"
+    ],
     "dtf.ru": [
         ".site-header__section.site-header__section--right.s42-karma-shown",
         ".content-header",
@@ -392,6 +411,7 @@
         ".app_header"
     ],
     "euronews.com": [".editor-tv-wrapper.editor-tv-active"],
+    "express.co.uk": [".sharebar", ".t.cc", ".newsletter-pure", ".box.left"],
     "facebook.com": [
         ".rq0escxv.l9j0dhe7.du4w35lb.obtkqiv7.sv5sfqaa.sj5x9vvc.cxgpxx05",
         ".rq0escxv.l9j0dhe7.du4w35lb.j83agx80.cbu4d94t.pfnyh3mw.d2edcug0.sj5x9vvc.jb3vyjys",
@@ -500,6 +520,7 @@
         ".bxm4mm-2.hKBnez",
         "#mgid-container"
     ],
+    "goal.com": [".fc-player_label__Tbo_y", ".fc-player_fc-player__9GMrL"],
     "grammarly.com": [".F0u0G-container", "._16iRt-container"],
     "gsmarena.com": [
         ".pad",
@@ -662,6 +683,7 @@
         ".lazyloaded"
     ],
     "isvle.neu.edu.ph": ["#yui_3_17_2_1_1669620055107_31"],
+    "itsfoss.com": [".apester-unit"],
     "jamanetwork.com": ["[style*='height: 0px;']"],
     "jamesclear.com": [".post__next"],
     "jamie-berrier.medium.com": [
@@ -671,6 +693,7 @@
         ".qj.l",
         ".o.ao.u"
     ],
+    "japantoday.com": [".img-responsive.full"],
     "johncarlosbaez.wordpress.com": [
         ".widgettitle",
         "#categories-2",
@@ -984,6 +1007,12 @@
         ".OSAd_top",
         ".box.green.grunge"
     ],
+    "onmsft.com": [
+        ".gb-container.gb-container-2ddeb061",
+        ".gb-container.gb-container-91e722e1",
+        ".gb-container.gb-container-8a25fc79.inline-post-meta-area",
+        "#pwDeskSkyBtf1"
+    ],
     "osrp.lanl.gov": ["#backband", "#backband2", "#lanlbar", "#toolbar"],
     "phileweb.com": ["#header", ".topicPath", "#entryUtility", "#submidashi"],
     "phoronix.com": [".node", "#about-author", "#sharebar", ".after-article"],
@@ -994,6 +1023,14 @@
         ".td-search-btns-wrap",
         "#td-header-menu",
         ".td-pb-span4"
+    ],
+    "project-syndicate.org": [
+        ".u-tos.u-tos-focusable.u-noprint",
+        ".image.image--ratio-c",
+        ".special__title",
+        ".special__description",
+        ".listing.special.asize.inlay.special--generic",
+        ".listing.asize.asize--c.cur__el"
     ],
     "pureinfotech.com": [
         ".attachment-large.size-large.wp-post-image.jetpack-lazy-image.jetpack-lazy-image--handled"
@@ -1271,6 +1308,14 @@
         ".footer.footer--dark.footer--left",
         ".media",
         ".section__sidebar.col-lg-4"
+    ],
+    "turkcetarih.com": [
+        ".block-heading",
+        ".post__thumb",
+        ".mnmd-offcanvas__title",
+        ".same-category-posts.single-entry-section",
+        ".mnmd-offcanvas__section.visible-xs.visible-sm",
+        "#mnmd-offcanvas-primary"
     ],
     "tutorialspoint.com": [".rounded-img", "#divResources"],
     "twinview.com": [
