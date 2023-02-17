@@ -36,14 +36,15 @@ export default function LoginPage({ isSignup = false }) {
                 </div>
 
                 <p className="max-w-md">
-                    Create an Unclutter account to enable AI Smart Reading features for Unclutter,
-                    and to back-up your library.
+                    Start your free trial of the new Unclutter Library to read smarter by
+                    automatically saving, organizing, and connecting information from the articles
+                    you read.
                 </p>
 
-                <img className="w-full max-w-2xl rounded-lg" src="/media/2.png" />
+                <img className="w-full max-w-2xl rounded-lg" src="/media/connect_ideas.png" />
             </aside>
 
-            <main className="mt-10 flex w-full flex-col lg:pt-32">
+            <main className="flex w-full flex-col bg-white p-4 py-10 lg:pt-32">
                 <div className="mx-auto w-full max-w-md">
                     {error && <p>{error.message}</p>}
 

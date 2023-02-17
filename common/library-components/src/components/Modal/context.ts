@@ -11,29 +11,29 @@ export const ModalVisibilityContext = createContext<{
 
 export const ModalStateContext = createContext<{
     darkModeEnabled: boolean;
+    isWeb?: boolean;
     showSignup: boolean;
     userInfo?: UserInfo;
     reportEvent: (event: string, data?: any) => void;
 }>({
     darkModeEnabled: false,
+    isWeb: false,
     showSignup: false,
     reportEvent: () => {},
 });
 
 export const FilterContext = createContext<{
     currentArticle?: string;
-    currentTopic?: Topic;
-    changedTopic?: boolean;
+    tagFilter?: string;
     domainFilter?: string;
     currentSubscription?: FeedSubscription;
-    showTopic?: (topicId: string) => void;
+    setTagFilter: (tag?: string) => void;
     showDomain: (domain: string) => void;
     setDomainFilter: (domain?: string) => void;
     setCurrentSubscription: (subscription?: FeedSubscription) => void;
     relatedLinkCount?: number;
-    currentAnnotationsCount?: number;
 }>({
-    showTopic: () => {},
+    setTagFilter: () => {},
     showDomain: () => {},
     setDomainFilter: () => {},
     setCurrentSubscription: () => {},

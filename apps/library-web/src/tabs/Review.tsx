@@ -4,7 +4,9 @@ import SignupBottomMessage from "@unclutter/library-components/dist/components/R
 import { useState } from "react";
 
 export default function ReviewTestTab({}) {
-    const [url, setUrl] = useState<string>("http://paulgraham.com/users.html");
+    const [url, setUrl] = useState<string>(
+        "https://stratechery.com/2015/netflix-and-the-conservation-of-attractive-profits"
+    );
 
     return (
         <div className="fixed top-0 left-0 mx-auto h-screen w-screen bg-gray-100">
@@ -25,8 +27,8 @@ export default function ReviewTestTab({}) {
                     "--lindy-pagewidth": "780px",
                 }}
             >
-                {/* <ArticleBottomReview articleId={getUrlHash(url)} darkModeEnabled={false} /> */}
-                <SignupBottomMessage articleId={getUrlHash(url)} darkModeEnabled={false} />
+                <ArticleBottomReview articleId={getUrlHash(url)} darkModeEnabled={false} />
+                {/* <SignupBottomMessage articleId={getUrlHash(url)} darkModeEnabled={false} /> */}
             </div>
         </div>
     );

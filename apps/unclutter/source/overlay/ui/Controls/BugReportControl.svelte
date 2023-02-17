@@ -170,4 +170,17 @@
     .lindy-bugreport-flag.lindy-pressed {
         cursor: default !important;
     }
+
+    /* dark style */
+    .dark .lindy-bugreport-button {
+        background-color: #404040 !important;
+    }
+    .dark .lindy-bugreport-flag,
+    .dark .lindy-bugreport-flag > .lindy-ui-icon {
+        background-color: #edd75b !important;
+        color: #374151 !important;
+    }
+    .dark .lindy-bugreport-button:not(.lindy-pressed):hover {
+        filter: brightness(120%) !important;
+    }
 </style>

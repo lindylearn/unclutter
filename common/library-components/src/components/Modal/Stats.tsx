@@ -6,24 +6,20 @@ import clsx from "clsx";
 import { BigNumber, ResourceIcon, ResourceStat } from "./components/numbers";
 import { FilterContext, ModalStateContext } from "./context";
 
-export default function StatsModalTab({
-    articleCount,
-    defaultWeekOverlay = 3,
-}: {
-    articleCount?: number;
-    defaultWeekOverlay?: number;
-}) {
+export default function StatsModalTab({ defaultWeekOverlay = 3 }: { defaultWeekOverlay?: number }) {
     const { darkModeEnabled, userInfo, reportEvent } = useContext(ModalStateContext);
     const { showDomain } = useContext(FilterContext);
 
     const rep = useContext(ReplicacheContext);
 
+    const [articleCount, setArticleCount] = useState<number>();
     const [allArticles, setAllArticles] = useState<Article[]>();
     const [allAnnotations, setAllAnnotations] = useState<Annotation[]>();
     useEffect(() => {
         if (!rep) {
             return;
         }
+        rep?.query.getArticlesCount().then(setArticleCount);
         rep.query.listRecentArticles().then(setAllArticles);
         rep.query.listAnnotations().then(setAllAnnotations);
     }, [rep]);
@@ -103,7 +99,7 @@ function NumberStats({
             />
             <BigNumber
                 value={allAnnotations?.length}
-                tag={`saved highlight${allAnnotations?.length !== 1 ? "s" : ""}`}
+                tag={`saved quote${allAnnotations?.length !== 1 ? "s" : ""}`}
                 icon={<ResourceIcon type="highlights" large />}
             />
         </div>
@@ -220,7 +216,7 @@ function ArticleGroupStat({
     return (
         <div
             className={clsx(
-                "flex cursor-pointer select-none flex-col items-center gap-1 overflow-hidden rounded-md bg-stone-50 p-3 transition-all hover:scale-[97%] dark:bg-neutral-800",
+                "flex cursor-pointer select-none flex-col items-center gap-1 overflow-hidden rounded-md bg-stone-50 px-3 py-2 transition-all hover:scale-[97%] dark:bg-neutral-800",
                 activityLevel === 4 && "dark:text-stone-800"
             )}
             style={{
