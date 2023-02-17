@@ -68,7 +68,7 @@ function Annotation({
                     // restrict text height by whole lines
                     // assumes 20px font size and py-1.5 padding
                     WebkitLineClamp: Math.min(
-                        4
+                        6
                         // heightLimitPx ? Math.floor((heightLimitPx - 6 * 2 - 20) / 20) : Infinity,
                     ),
                     WebkitBoxOrient: "vertical",
@@ -90,7 +90,6 @@ function Annotation({
                     }
                     return token;
                 })} */}
-                {/* {score?.toFixed(2)} {annotation.score2?.toFixed(2)} */}
                 {excerpt || text}
             </div>
 
@@ -118,6 +117,8 @@ function Annotation({
 
                 {annotation.article && (
                     <div className="flex-grow overflow-hidden overflow-ellipsis">
+                        {/* {score?.toFixed(2)}  */}
+                        {/* {annotation.score2?.toFixed(2)}  */}
                         {annotation.article.title}
                     </div>
                 )}

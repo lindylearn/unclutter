@@ -84,7 +84,10 @@ export function SettingsGroup({
             {progress && (
                 <>
                     <div
-                        className="absolute bottom-0 left-0 h-3 bg-gradient-to-b from-yellow-300  to-amber-400 transition-all dark:opacity-70"
+                        className={clsx(
+                            "absolute bottom-0 left-0 h-3 rounded-bl-md bg-gradient-to-b  from-yellow-300 to-amber-400 transition-all dark:opacity-70",
+                            progress.finished && "rounded-br-md"
+                        )}
                         style={{
                             width: `${Math.max(
                                 ((progress.currentArticles || 0) / progress.targetArticles) * 100 ||
