@@ -521,6 +521,11 @@
         ".bxm4mm-2.hKBnez",
         "#mgid-container"
     ],
+    "glassmagazine.com": [
+        ".visually-hidden.focusable",
+        ".terms.text-center",
+        ".post-date.text-center"
+    ],
     "goal.com": [".fc-player_label__Tbo_y", ".fc-player_fc-player__9GMrL"],
     "grammarly.com": [".F0u0G-container", "._16iRt-container"],
     "gsmarena.com": [
