@@ -90,7 +90,7 @@ export default function AnnotationDraft({
             <TextareaAutosize
                 className="w-full select-none resize-none overflow-hidden bg-transparent align-top outline-none placeholder:select-none placeholder:text-stone-400 dark:placeholder:text-stone-600"
                 placeholder={
-                    userInfo.aiEnabled
+                    userInfo?.aiEnabled
                         ? annotation.tags.map((t) => `#${t}`).join(" ")
                         : "Saved highlight"
                 }

@@ -21,10 +21,10 @@ export default function SmartReadingDetails() {
 
     const [paymentsLink, setPaymentsLink] = useState<string>();
     useEffect(() => {
-        if (!userInfo?.email || userInfo.aiEnabled) {
+        if (!userInfo?.email || userInfo?.aiEnabled) {
             return;
         }
-        createPaymentsLink(userInfo.id, userInfo.email).then(setPaymentsLink);
+        createPaymentsLink(userInfo?.id, userInfo?.email).then(setPaymentsLink);
     }, [userInfo]);
 
     const buttons = userInfo?.aiEnabled ? (

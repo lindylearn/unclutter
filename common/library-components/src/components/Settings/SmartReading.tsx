@@ -110,7 +110,7 @@ export function SmartReadingPreview({
 export function usePaymentsLink(userInfo: UserInfo | undefined) {
     const [paymentsLink, setPaymentsLink] = useState<string>();
     useEffect(() => {
-        if (!userInfo?.email || userInfo.aiEnabled) {
+        if (!userInfo?.email || userInfo?.aiEnabled) {
             return;
         }
         createPaymentsLink(userInfo.id, userInfo.email).then(setPaymentsLink);

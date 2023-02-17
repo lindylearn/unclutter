@@ -25,7 +25,7 @@ export default function NewImportTab() {
         if (!rep || !userInfo || !user) {
             return;
         }
-        if (userInfo.aiEnabled) {
+        if (userInfo?.aiEnabled) {
             // everything set up
             return;
         }

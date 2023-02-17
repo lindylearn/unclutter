@@ -36,9 +36,8 @@ export default function LoginPage({ isSignup = false }) {
                 </div>
 
                 <p className="max-w-md">
-                    Start your free trial of the new Unclutter Library to read smarter by
-                    automatically saving, organizing, and connecting information from the articles
-                    you read.
+                    Read smarter by automatically saving, organizing, and connecting information
+                    from the articles you read.
                 </p>
 
                 <img className="w-full max-w-2xl rounded-lg" src="/media/connect_ideas.png" />

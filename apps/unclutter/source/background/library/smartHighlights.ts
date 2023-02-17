@@ -6,7 +6,7 @@ import { Annotation, UserInfo } from "@unclutter/library-components/dist/store";
 import { rep } from "./library";
 
 export async function saveAIAnnotations(userInfo: UserInfo, annotations: Annotation[]) {
-    if (!annotations?.length) {
+    if (!userInfo || !annotations?.length) {
         return;
     }
     console.log(`Saving ${annotations.length} AI highlights...`);
@@ -27,7 +27,7 @@ export async function getRelatedAnnotationsCount(
     userInfo: UserInfo,
     annotations: Annotation[]
 ): Promise<number> {
-    if (!annotations?.length) {
+    if (!userInfo || !annotations?.length) {
         return;
     }
 
