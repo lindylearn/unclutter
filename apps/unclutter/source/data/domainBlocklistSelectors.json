@@ -418,6 +418,21 @@
         ".app_header"
     ],
     "euronews.com": [".editor-tv-wrapper.editor-tv-active"],
+    "evrimagaci.org": [
+        ".figure-bottom",
+        ".left",
+        ".contributors-container.count-3",
+        ".info-card.hide-print",
+        ".more-contents",
+        ".history-info",
+        ".content-end-qna",
+        ".row.mb-15",
+        ".section-title.hide-print",
+        ".section-title",
+        "#keywords",
+        ".p-20-r.mb-10.content-references",
+        ".sharp-blur-svg"
+    ],
     "express.co.uk": [".sharebar", ".t.cc", ".newsletter-pure", ".box.left"],
     "facebook.com": [
         ".rq0escxv.l9j0dhe7.du4w35lb.obtkqiv7.sv5sfqaa.sj5x9vvc.cxgpxx05",
