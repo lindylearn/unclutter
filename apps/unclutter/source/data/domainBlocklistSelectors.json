@@ -1350,6 +1350,9 @@
         ".story",
         ".article__tag"
     ],
+    "time.com": [
+        ".zit-widget-wrapper.zit-widget-wrapper--new-panel.zit-widget-wrapper--new-panel-top-center.wid-3668.zit-widget-wrapper--new-panel-show"
+    ],
     "timharek.no": [".header__logo", ".header"],
     "tinhte.vn": [
         ".jsx-3147581474.info-block--right",
