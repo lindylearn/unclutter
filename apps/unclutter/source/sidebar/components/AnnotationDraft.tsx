@@ -120,6 +120,7 @@ export default function AnnotationDraft({
                     <svg
                         className="annotation-button h-8 cursor-pointer p-2"
                         viewBox="0 0 512 512"
+                        onMouseDown={(e) => e.preventDefault()}
                         onClick={() => copyTextToClipboard(`"${annotation.quote_text}"`)}
                     >
                         <path
@@ -130,6 +131,7 @@ export default function AnnotationDraft({
                     <svg
                         className="annotation-button h-8 cursor-pointer p-2"
                         viewBox="0 0 448 512"
+                        onMouseDown={(e) => e.preventDefault()}
                         onClick={() => deleteAnnotation(userInfo, annotation)}
                     >
                         <path
