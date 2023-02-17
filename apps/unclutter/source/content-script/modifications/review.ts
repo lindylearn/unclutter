@@ -17,7 +17,6 @@ export default class ReviewModifier implements PageModifier {
     private articleId: string;
 
     private iframe: HTMLIFrameElement;
-    private loaded: boolean = false;
     private bodyStyleModifier: BodyStyleModifier;
 
     constructor(articleId: string, bodyStyleModifier: BodyStyleModifier) {
@@ -27,15 +26,24 @@ export default class ReviewModifier implements PageModifier {
         window.addEventListener("message", (event) => this.onMessage(event.data || {}));
     }
 
+    private relatedCount?: number;
     private onMessage(message: any) {
         if (message.event === "updateRelatedCount") {
-            sendIframeEvent(this.iframe, {
-                event: "updateRelatedCount",
-                relatedCount: message.relatedCount,
-            });
+            this.relatedCount = message.relatedCount;
+
+            if (this.appLoaded) {
+                sendIframeEvent(this.iframe, {
+                    event: "updateRelatedCount",
+                    relatedCount: this.relatedCount,
+                });
+            } else {
+                // deliver once loaded below
+            }
         }
     }
 
+    private iframeLoaded: boolean = false;
+    private appLoaded: boolean = false;
     async afterTransitionIn() {
         const userInfo = await getUserInfoSimple();
 
@@ -50,18 +58,30 @@ export default class ReviewModifier implements PageModifier {
             type = "signup";
         }
 
-        this.bodyStyleModifier.setBottomContainerPadding();
-
         // always enable sidebar
         this.iframe = injectReactIframe("/review/index.html", "lindy-info-bottom", {
             articleId: this.articleId,
             darkModeEnabled: (this.darkModeEnabled || false).toString(),
             type,
         });
+
         window.addEventListener("message", ({ data }) => {
             if (data.event === "bottomIframeLoaded") {
                 // ready for css inject
-                this.loaded = true;
+                this.iframeLoaded = true;
+            } else if (data.event === "bottomAppReady") {
+                // react loaded
+                this.appLoaded = true;
+
+                if (this.relatedCount !== undefined) {
+                    sendIframeEvent(this.iframe, {
+                        event: "updateRelatedCount",
+                        relatedCount: this.relatedCount,
+                    });
+                }
+            } else if (data.event === "bottomIframeSetHeight") {
+                this.iframe.style.setProperty("height", data.height, "important");
+                this.bodyStyleModifier.setBottomContainerPadding(data.height);
             }
         });
 
@@ -76,7 +96,7 @@ export default class ReviewModifier implements PageModifier {
         if (this.iframe) {
             removeReactIframe("lindy-info-bottom");
         }
-        this.loaded = false;
+        this.iframeLoaded = false;
     }
 
     private cssVariables: { [key: string]: string } = {};
@@ -86,7 +106,7 @@ export default class ReviewModifier implements PageModifier {
         if (!this.iframe) {
             return;
         }
-        if (!this.loaded) {
+        if (!this.iframeLoaded) {
             await waitUntilIframeLoaded(this.iframe);
         }
 
@@ -105,7 +125,7 @@ export default class ReviewModifier implements PageModifier {
         if (!this.iframe) {
             return;
         }
-        if (!this.loaded) {
+        if (!this.iframeLoaded) {
             await waitUntilIframeLoaded(this.iframe);
         }
 

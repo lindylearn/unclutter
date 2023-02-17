@@ -380,6 +380,11 @@ async function listTopicAnnotations(tx: ReadTransaction, topic_id: string): Prom
     return annotations.filter((a) => selectedArticleIds.has(a.article_id));
 }
 
+export async function getAnnotationsCount(tx: ReadTransaction): Promise<number> {
+    const annotations = await listAnnotations(tx);
+    return annotations.length;
+}
+
 /* ***** partialSyncState ***** */
 
 export async function getPartialSyncState(
@@ -446,6 +451,7 @@ export const accessors = {
     listAnnotations,
     listAnnotationsWithArticles,
     listArticleAnnotations,
+    getAnnotationsCount,
     listTopicAnnotations,
     getPartialSyncState,
     getSettings,

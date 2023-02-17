@@ -57,10 +57,10 @@ function installContextMenu() {
     if (getBrowserType() === "firefox") {
         context = "browser_action";
     }
-    // createOrUpdateContextMenu("open-library", {
-    //     title: "Open Unclutter Library",
-    //     contexts: [context],
-    // });
+    createOrUpdateContextMenu("open-library", {
+        title: "Open Library",
+        contexts: [context],
+    });
 
     // throws error if no permission
     browser.contextMenus.onClicked.addListener((info, tab) => {
@@ -74,7 +74,7 @@ function installContextMenu() {
             });
         } else if (info.menuItemId === "open-library") {
             browser.tabs.create({
-                url: "https://library.lindylearn.io/",
+                url: "https://my.unclutter.it/",
                 active: true,
             });
         }

@@ -226,4 +226,24 @@
     #lindy-dark-theme-button {
         background-color: #212121 !important;
     }
+
+    /* dark styles */
+    .dark .lindy-theme-ui.lindy-theme-ui {
+        filter: none !important;
+    }
+    .dark .lindy-plusminus.lindy-plusminus > div:hover > svg {
+        color: #d1d5db !important;
+    }
+    .dark .lindy-plusminus.lindy-plusminus > div:hover {
+        background-color: #262626 !important;
+    }
+    .dark .lindy-theme-ui-row-spacer {
+        border-top: 2px solid #262626 !important;
+    }
+    .dark .lindy-theme-button {
+        border: 2.5px solid #525252 !important;
+    }
+    .dark .lindy-active-theme {
+        border: 2.5px solid var(--text-color) !important;
+    }
 </style>
