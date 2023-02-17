@@ -21,7 +21,9 @@ export function GraphPage({
     darkModeEnabled: boolean;
     reportEvent?: (event: string, data?: any) => void;
 }) {
-    const { currentTopic, changedTopic } = useContext(FilterContext);
+    // const { currentTopic, changedTopic } = useContext(FilterContext);
+    const currentTopic: any = undefined;
+    const changedTopic: any = undefined;
 
     const rep = useContext(ReplicacheContext);
     const [renderDone, setRenderDone] = useState(false);

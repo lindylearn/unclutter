@@ -3,6 +3,7 @@ import {
     LibraryModalPage,
     constructGraphData,
     CustomGraphData,
+    SignupModalPage,
 } from "@unclutter/library-components/dist/components";
 import { ModalVisibilityContext } from "@unclutter/library-components/dist/components/Modal/context";
 import {
@@ -60,7 +61,7 @@ export default function ModalTestTab({}) {
     //     <ModalVisibilityContext.Provider
     //         value={{ isVisible: showModal, closeModal: () => setShowModal(false) }}
     //     >
-    //         <FeedbackModalPage />
+    //         <SignupModalPage />
     //     </ModalVisibilityContext.Provider>
     // );
 
@@ -81,7 +82,6 @@ export default function ModalTestTab({}) {
                     darkModeEnabled={darkModeEnabled}
                     showSignup={true}
                     // currentArticle={article?.url}
-                    initialTopic={topic}
                     // relatedLinkCount={2}
                 />
             </ModalVisibilityContext.Provider>

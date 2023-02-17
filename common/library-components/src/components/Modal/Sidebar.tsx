@@ -11,40 +11,32 @@ export default function Sidebar({
     currentTab: string;
     setCurrentTab: (tab: string) => void;
 }) {
-    const { darkModeEnabled, userInfo, showSignup, reportEvent } = useContext(ModalStateContext);
-    const { currentTopic, changedTopic, currentAnnotationsCount, relatedLinkCount } =
-        useContext(FilterContext);
+    const { darkModeEnabled, userInfo, showSignup, isWeb, reportEvent } =
+        useContext(ModalStateContext);
     const rep = useContext(ReplicacheContext);
 
     // fetch settings initially and after changing tab away
-    const [settings, setSettings] = useState<Settings | null>(null);
-    useEffect(() => {
-        rep?.query.getSettings().then(setSettings);
-    }, [rep]);
+    // const [settings, setSettings] = useState<Settings | null>(null);
+    // useEffect(() => {
+    //     rep?.query.getSettings().then(setSettings);
+    // }, [rep]);
     function updateTab(id: string) {
         setCurrentTab(id);
 
-        rep?.query.getSettings().then(setSettings);
+        // rep?.query.getSettings().then(setSettings);
     }
 
-    const [newTabInstalled, setNewTabInstalled] = useState(true);
-    useEffect(() => {
-        getNewTabVersion()
-            .then((version) => setNewTabInstalled(version !== null))
-            .catch(() => setNewTabInstalled(false));
-    }, []);
+    // const [newTabInstalled, setNewTabInstalled] = useState(true);
+    // useEffect(() => {
+    //     getNewTabVersion()
+    //         .then((version) => setNewTabInstalled(version !== null))
+    //         .catch(() => setNewTabInstalled(false));
+    // }, []);
 
-    const modalTabs = getModalTabOptions(
-        userInfo,
-        settings,
-        showSignup,
-        newTabInstalled,
-        !changedTopic ? relatedLinkCount : undefined,
-        currentAnnotationsCount
-    );
+    const modalTabs = getModalTabOptions(userInfo, showSignup);
 
     return (
-        <div className="flex h-full flex-col items-stretch justify-between gap-1 rounded-lg">
+        <div className="flex h-full items-stretch justify-center gap-1 rounded-lg lg:flex-col lg:justify-between">
             {modalTabs
                 .filter((t) => !t.atEnd)
                 .map((option) => (
@@ -53,25 +45,12 @@ export default function Sidebar({
                         key={option.value}
                         isActive={currentTab === option.value}
                         onClick={() => updateTab(option.value)}
-                        currentTopic={currentTopic}
                         darkModeEnabled={darkModeEnabled}
                     />
                 ))}
 
-            <div className="h-2" />
-            {/* {tabInfos?.slice(1).map((tabInfo) => (
-                <SidebarFilterOption
-                    key={tabInfo.key}
-                    label={tabInfo.title}
-                    svg={tabInfo.icon}
-                    color={getRandomColor(tabInfo.key).replace(
-                        "0.4)",
-                        false ? "0.3)" : "0.15)"
-                    )}
-                />
-            ))} */}
+            <div className="hidden flex-grow lg:block" />
 
-            <div className="flex-grow" />
             {modalTabs
                 .filter((t) => t.atEnd)
                 .map((option) => (
@@ -88,11 +67,12 @@ export default function Sidebar({
 
                                 window.open(unclutterLibraryLink, "_blank");
                                 reportEvent("clickNewTabLink", { source: "modal" });
+                            } else if (option.value === "import" && !isWeb) {
+                                window.open("https://my.unclutter.it/import", "_blank");
                             } else {
                                 updateTab(option.value);
                             }
                         }}
-                        currentTopic={currentTopic}
                         darkModeEnabled={darkModeEnabled}
                     />
                 ))}
@@ -105,21 +85,19 @@ export interface ModalTabOptions {
     value: string;
     tag?: string | false;
     unavailable?: boolean;
+    hiddenOnMobile?: boolean;
     atEnd?: boolean;
     svg: React.ReactNode;
 }
 function getModalTabOptions(
     userInfo: UserInfo | undefined,
-    settings: Settings | null,
-    showSignup: boolean,
-    newTabInstalled: boolean,
-    new_link_count?: number,
-    currentAnnotationsCount?: number
+    requireSupport: boolean
 ): ModalTabOptions[] {
     const options: (ModalTabOptions | false | undefined)[] = [
         {
             label: "Stats",
             value: "stats",
+            unavailable: requireSupport && !userInfo?.aiEnabled,
             svg: (
                 <svg className="h-4" viewBox="0 0 448 512">
                     <path
@@ -132,6 +110,7 @@ function getModalTabOptions(
         {
             label: "Articles",
             value: "list",
+            unavailable: requireSupport && !userInfo?.aiEnabled,
             svg: (
                 <svg className="h-4" viewBox="0 0 576 512">
                     <path
@@ -154,91 +133,65 @@ function getModalTabOptions(
         //     ),
         // },
         {
-            label: "Highlights",
+            label: "Quotes",
             value: "highlights",
-            // tag: (settings?.seen_highlights_version || 0) < latestHighlightsVersion && "New",
-            // need to update count or track visited to show highlights count after delete
-            // || (currentAnnotationsCount ? `${currentAnnotationsCount}` : undefined),
+            unavailable: requireSupport && !userInfo?.aiEnabled,
             svg: (
-                <svg viewBox="0 0 512 512" className="h-4">
+                // <svg className="h-4" viewBox="0 0 512 512" >
+                //     <path
+                //         fill="currentColor"
+                //         d="M320 62.06L362.7 19.32C387.7-5.678 428.3-5.678 453.3 19.32L492.7 58.75C517.7 83.74 517.7 124.3 492.7 149.3L229.5 412.5C181.5 460.5 120.3 493.2 53.7 506.5L28.71 511.5C20.84 513.1 12.7 510.6 7.03 504.1C1.356 499.3-1.107 491.2 .4662 483.3L5.465 458.3C18.78 391.7 51.52 330.5 99.54 282.5L286.1 96L272.1 82.91C263.6 73.54 248.4 73.54 239 82.91L136.1 184.1C127.6 194.3 112.4 194.3 103 184.1C93.66 175.6 93.66 160.4 103 151L205.1 48.97C233.2 20.85 278.8 20.85 306.9 48.97L320 62.06zM320 129.9L133.5 316.5C94.71 355.2 67.52 403.1 54.85 457.2C108 444.5 156.8 417.3 195.5 378.5L382.1 192L320 129.9z"
+                //     />
+                // </svg>
+                // <svg className="w-4" viewBox="0 0 448 512">
+                //     <path
+                //         fill="currentColor"
+                //         d="M96 416c53.02 0 96-42.98 96-96S149 224 96 224C78.42 224 62.17 229.1 48 237.3V216c0-39.7 32.31-72 72-72h16C149.3 144 160 133.3 160 120S149.3 96 136 96h-16C53.84 96 0 149.8 0 216V320C0 373 42.98 416 96 416zM96 272c26.47 0 48 21.53 48 48S122.5 368 96 368S48 346.5 48 320S69.53 272 96 272zM352 416c53.02 0 96-42.98 96-96s-42.98-96-96-96c-17.58 0-33.83 5.068-48 13.31V216c0-39.7 32.31-72 72-72h16C405.3 144 416 133.3 416 120S405.3 96 392 96h-16C309.8 96 256 149.8 256 216V320C256 373 298.1 416 352 416zM352 272c26.47 0 48 21.53 48 48s-21.53 48-48 48s-48-21.53-48-48S325.5 272 352 272z"
+                //     />
+                // </svg>
+                <svg className="w-4" viewBox="0 0 448 512">
                     <path
                         fill="currentColor"
-                        d="M320 62.06L362.7 19.32C387.7-5.678 428.3-5.678 453.3 19.32L492.7 58.75C517.7 83.74 517.7 124.3 492.7 149.3L229.5 412.5C181.5 460.5 120.3 493.2 53.7 506.5L28.71 511.5C20.84 513.1 12.7 510.6 7.03 504.1C1.356 499.3-1.107 491.2 .4662 483.3L5.465 458.3C18.78 391.7 51.52 330.5 99.54 282.5L286.1 96L272.1 82.91C263.6 73.54 248.4 73.54 239 82.91L136.1 184.1C127.6 194.3 112.4 194.3 103 184.1C93.66 175.6 93.66 160.4 103 151L205.1 48.97C233.2 20.85 278.8 20.85 306.9 48.97L320 62.06zM320 129.9L133.5 316.5C94.71 355.2 67.52 403.1 54.85 457.2C108 444.5 156.8 417.3 195.5 378.5L382.1 192L320 129.9z"
+                        d="M296 160c-30.93 0-56 25.07-56 56s25.07 56 56 56c2.74 0 5.365-.4258 8-.8066V280c0 13.23-10.77 24-24 24C266.8 304 256 314.8 256 328S266.8 352 280 352C319.7 352 352 319.7 352 280v-64C352 185.1 326.9 160 296 160zM152 160C121.1 160 96 185.1 96 216S121.1 272 152 272C154.7 272 157.4 271.6 160 271.2V280C160 293.2 149.2 304 136 304c-13.25 0-24 10.75-24 24S122.8 352 136 352C175.7 352 208 319.7 208 280v-64C208 185.1 182.9 160 152 160zM384 32H64C28.65 32 0 60.65 0 96v320c0 35.35 28.65 64 64 64h320c35.35 0 64-28.65 64-64V96C448 60.65 419.3 32 384 32zM400 416c0 8.822-7.178 16-16 16H64c-8.822 0-16-7.178-16-16V96c0-8.822 7.178-16 16-16h320c8.822 0 16 7.178 16 16V416z"
                     />
                 </svg>
             ),
         },
-        // showSignup &&
-        //     !(userInfo?.aiEnabled && {
-        //         label: "More",
-        //         value: "signup",
-        //         unavailable: true,
-        //         svg: (
-        //             <svg className="h-4" viewBox="0 0 640 512">
-        //                 <path
-        //                     fill="currentColor"
-        //                     d="M288 64C288 80.85 281.5 96.18 270.8 107.6L297.7 165.2C309.9 161.8 322.7 160 336 160C374.1 160 410.4 175.5 436.3 200.7L513.9 143.7C512.7 138.7 512 133.4 512 128C512 92.65 540.7 64 576 64C611.3 64 640 92.65 640 128C640 163.3 611.3 192 576 192C563.7 192 552.1 188.5 542.3 182.4L464.7 239.4C474.5 258.8 480 280.8 480 304C480 322.5 476.5 340.2 470.1 356.5L537.5 396.9C548.2 388.8 561.5 384 576 384C611.3 384 640 412.7 640 448C640 483.3 611.3 512 576 512C540.7 512 512 483.3 512 448C512 444.6 512.3 441.3 512.8 438.1L445.4 397.6C418.1 428.5 379.8 448 336 448C264.6 448 205.4 396.1 193.1 328H123.3C113.9 351.5 90.86 368 64 368C28.65 368 0 339.3 0 304C0 268.7 28.65 240 64 240C90.86 240 113.9 256.5 123.3 280H193.1C200.6 240.9 222.9 207.1 254.2 185.5L227.3 127.9C226.2 127.1 225.1 128 224 128C188.7 128 160 99.35 160 64C160 28.65 188.7 0 224 0C259.3 0 288 28.65 288 64V64zM336 400C389 400 432 357 432 304C432 250.1 389 208 336 208C282.1 208 240 250.1 240 304C240 357 282.1 400 336 400z"
-        //                 />
-        //             </svg>
-        //         ),
-        //     },
 
-        // userInfo?.aiEnabled && {
-        //     label: "Sync",
-        //     value: "sync",
-        //     atEnd: true,
-        //     unavailable: false,
-        //     svg: (
-        //         <svg viewBox="0 0 512 512" className="h-4">
-        //             <path
-        //                 fill="currentColor"
-        //                 d="M481.2 33.81c-8.938-3.656-19.31-1.656-26.16 5.219l-50.51 50.51C364.3 53.81 312.1 32 256 32C157 32 68.53 98.31 40.91 193.3C37.19 206 44.5 219.3 57.22 223c12.81 3.781 26.06-3.625 29.75-16.31C108.7 132.1 178.2 80 256 80c43.12 0 83.35 16.42 114.7 43.4l-59.63 59.63c-6.875 6.875-8.906 17.19-5.219 26.16c3.719 8.969 12.47 14.81 22.19 14.81h143.9C485.2 223.1 496 213.3 496 200v-144C496 46.28 490.2 37.53 481.2 33.81zM454.7 288.1c-12.78-3.75-26.06 3.594-29.75 16.31C403.3 379.9 333.8 432 255.1 432c-43.12 0-83.38-16.42-114.7-43.41l59.62-59.62c6.875-6.875 8.891-17.03 5.203-26C202.4 294 193.7 288 183.1 288H40.05c-13.25 0-24.11 10.74-24.11 23.99v144c0 9.719 5.844 18.47 14.81 22.19C33.72 479.4 36.84 480 39.94 480c6.25 0 12.38-2.438 16.97-7.031l50.51-50.52C147.6 458.2 199.9 480 255.1 480c99 0 187.4-66.31 215.1-161.3C474.8 305.1 467.4 292.7 454.7 288.1z"
-        //             />
-        //         </svg>
-        //     ),
-        // },
-
-        // !newTabInstalled && {
-        //     label: "New Tab",
-        //     value: "newtab",
-        //     atEnd: true,
-        //     svg:
-        //         getBrowserType() === "firefox" ? (
-        //             <svg className="h-4" viewBox="0 0 512 512">
-        //                 <path
-        //                     fill="currentColor"
-        //                     d="M503.52,241.48c-.12-1.56-.24-3.12-.24-4.68v-.12l-.36-4.68v-.12a245.86,245.86,0,0,0-7.32-41.15c0-.12,0-.12-.12-.24l-1.08-4c-.12-.24-.12-.48-.24-.6-.36-1.2-.72-2.52-1.08-3.72-.12-.24-.12-.6-.24-.84-.36-1.2-.72-2.4-1.08-3.48-.12-.36-.24-.6-.36-1-.36-1.2-.72-2.28-1.2-3.48l-.36-1.08c-.36-1.08-.84-2.28-1.2-3.36a8.27,8.27,0,0,0-.36-1c-.48-1.08-.84-2.28-1.32-3.36-.12-.24-.24-.6-.36-.84-.48-1.2-1-2.28-1.44-3.48,0-.12-.12-.24-.12-.36-1.56-3.84-3.24-7.68-5-11.4l-.36-.72c-.48-1-.84-1.8-1.32-2.64-.24-.48-.48-1.08-.72-1.56-.36-.84-.84-1.56-1.2-2.4-.36-.6-.6-1.2-1-1.8s-.84-1.44-1.2-2.28c-.36-.6-.72-1.32-1.08-1.92s-.84-1.44-1.2-2.16a18.07,18.07,0,0,0-1.2-2c-.36-.72-.84-1.32-1.2-2s-.84-1.32-1.2-2-.84-1.32-1.2-1.92-.84-1.44-1.32-2.16a15.63,15.63,0,0,0-1.2-1.8L463.2,119a15.63,15.63,0,0,0-1.2-1.8c-.48-.72-1.08-1.56-1.56-2.28-.36-.48-.72-1.08-1.08-1.56l-1.8-2.52c-.36-.48-.6-.84-1-1.32-1-1.32-1.8-2.52-2.76-3.72a248.76,248.76,0,0,0-23.51-26.64A186.82,186.82,0,0,0,412,62.46c-4-3.48-8.16-6.72-12.48-9.84a162.49,162.49,0,0,0-24.6-15.12c-2.4-1.32-4.8-2.52-7.2-3.72a254,254,0,0,0-55.43-19.56c-1.92-.36-3.84-.84-5.64-1.2h-.12c-1-.12-1.8-.36-2.76-.48a236.35,236.35,0,0,0-38-4H255.14a234.62,234.62,0,0,0-45.48,5c-33.59,7.08-63.23,21.24-82.91,39-1.08,1-1.92,1.68-2.4,2.16l-.48.48H124l-.12.12.12-.12a.12.12,0,0,0,.12-.12l-.12.12a.42.42,0,0,1,.24-.12c14.64-8.76,34.92-16,49.44-19.56l5.88-1.44c.36-.12.84-.12,1.2-.24,1.68-.36,3.36-.72,5.16-1.08.24,0,.6-.12.84-.12C250.94,20.94,319.34,40.14,367,85.61a171.49,171.49,0,0,1,26.88,32.76c30.36,49.2,27.48,111.11,3.84,147.59-34.44,53-111.35,71.27-159,24.84a84.19,84.19,0,0,1-25.56-59,74.05,74.05,0,0,1,6.24-31c1.68-3.84,13.08-25.67,18.24-24.59-13.08-2.76-37.55,2.64-54.71,28.19-15.36,22.92-14.52,58.2-5,83.28a132.85,132.85,0,0,1-12.12-39.24c-12.24-82.55,43.31-153,94.31-170.51-27.48-24-96.47-22.31-147.71,15.36-29.88,22-51.23,53.16-62.51,90.36,1.68-20.88,9.6-52.08,25.8-83.88-17.16,8.88-39,37-49.8,62.88-15.6,37.43-21,82.19-16.08,124.79.36,3.24.72,6.36,1.08,9.6,19.92,117.11,122,206.38,244.78,206.38C392.77,503.42,504,392.19,504,255,503.88,250.48,503.76,245.92,503.52,241.48Z"
-        //                 />
-        //             </svg>
-        //         ) : (
-        //             <svg className="h-4" viewBox="0 0 496 512">
-        //                 <path
-        //                     fill="currentColor"
-        //                     d="M131.5 217.5L55.1 100.1c47.6-59.2 119-91.8 192-92.1 42.3-.3 85.5 10.5 124.8 33.2 43.4 25.2 76.4 61.4 97.4 103L264 133.4c-58.1-3.4-113.4 29.3-132.5 84.1zm32.9 38.5c0 46.2 37.4 83.6 83.6 83.6s83.6-37.4 83.6-83.6-37.4-83.6-83.6-83.6-83.6 37.3-83.6 83.6zm314.9-89.2L339.6 174c37.9 44.3 38.5 108.2 6.6 157.2L234.1 503.6c46.5 2.5 94.4-7.7 137.8-32.9 107.4-62 150.9-192 107.4-303.9zM133.7 303.6L40.4 120.1C14.9 159.1 0 205.9 0 256c0 124 90.8 226.7 209.5 244.9l63.7-124.8c-57.6 10.8-113.2-20.8-139.5-72.5z"
-        //                 />
-        //             </svg>
-        //         ),
-        // },
-
-        // {
-        //     label: "Feedback",
-        //     value: "feedback",
-        //     atEnd: true,
-        //     svg: (
-        //         <svg className="h-4 w-4" viewBox="0 0 512 512">
-        //             <path
-        //                 fill="currentColor"
-        //                 d="M244 84L255.1 96L267.1 84.02C300.6 51.37 347 36.51 392.6 44.1C461.5 55.58 512 115.2 512 185.1V190.9C512 232.4 494.8 272.1 464.4 300.4L283.7 469.1C276.2 476.1 266.3 480 256 480C245.7 480 235.8 476.1 228.3 469.1L47.59 300.4C17.23 272.1 0 232.4 0 190.9V185.1C0 115.2 50.52 55.58 119.4 44.1C164.1 36.51 211.4 51.37 244 84C243.1 84 244 84.01 244 84L244 84zM255.1 163.9L210.1 117.1C188.4 96.28 157.6 86.4 127.3 91.44C81.55 99.07 48 138.7 48 185.1V190.9C48 219.1 59.71 246.1 80.34 265.3L256 429.3L431.7 265.3C452.3 246.1 464 219.1 464 190.9V185.1C464 138.7 430.4 99.07 384.7 91.44C354.4 86.4 323.6 96.28 301.9 117.1L255.1 163.9z"
-        //             />
-        //         </svg>
-        //     ),
-        // },
-
+        requireSupport && {
+            label: "About",
+            value: "about",
+            atEnd: true,
+            hiddenOnMobile: true,
+            svg: (
+                <svg className="h-4 w-4" viewBox="0 0 512 512">
+                    <path
+                        fill="currentColor"
+                        d="M256 0C114.6 0 0 114.6 0 256s114.6 256 256 256s256-114.6 256-256S397.4 0 256 0zM256 464c-114.7 0-208-93.31-208-208S141.3 48 256 48s208 93.31 208 208S370.7 464 256 464zM296 336h-16V248C280 234.8 269.3 224 256 224H224C210.8 224 200 234.8 200 248S210.8 272 224 272h8v64h-16C202.8 336 192 346.8 192 360S202.8 384 216 384h80c13.25 0 24-10.75 24-24S309.3 336 296 336zM256 192c17.67 0 32-14.33 32-32c0-17.67-14.33-32-32-32S224 142.3 224 160C224 177.7 238.3 192 256 192z"
+                    />
+                </svg>
+            ),
+        },
+        requireSupport && {
+            label: "Import",
+            value: "import",
+            atEnd: true,
+            hiddenOnMobile: true,
+            unavailable: requireSupport && !userInfo?.aiEnabled,
+            svg: (
+                <svg className="-ml-1 h-4 w-4" viewBox="0 0 512 512">
+                    <path
+                        fill="currentColor"
+                        d="M263 383C258.3 387.7 256 393.8 256 400s2.344 12.28 7.031 16.97c9.375 9.375 24.56 9.375 33.94 0l80-80c9.375-9.375 9.375-24.56 0-33.94l-80-80c-9.375-9.375-24.56-9.375-33.94 0s-9.375 24.56 0 33.94L302.1 296H24C10.75 296 0 306.8 0 320s10.75 24 24 24h278.1L263 383zM493.3 93.38l-74.63-74.64C406.6 6.742 390.3 0 373.4 0H192C156.7 0 127.1 28.66 128 64l.0078 168c.002 13.26 10.75 24 24 24s24-10.75 23.1-24L176 64.13c0-8.836 7.162-16 16-16h160L352 128c0 17.67 14.33 32 32 32h79.1v288c0 8.836-7.164 16-16 16H192c-8.838 0-16-7.164-16-16l-.002-40C176 394.7 165.3 384 152 384s-24 10.75-23.1 24L128 448c.002 35.34 28.65 64 64 64H448c35.2 0 64-28.8 64-64V138.6C512 121.7 505.3 105.4 493.3 93.38z"
+                    />
+                </svg>
+            ),
+        },
         {
             label: "Settings",
             value: "settings",
-            // tag: (settings?.seen_settings_version || 0) < latestSettingsVersion && "New",
             atEnd: true,
+            hiddenOnMobile: true,
             svg: (
                 <svg viewBox="0 0 512 512" className="h-4">
                     <path
@@ -259,9 +212,9 @@ function SidebarFilterOption({
     label,
     tag,
     unavailable,
+    hiddenOnMobile,
     svg,
     onClick = () => {},
-    currentTopic,
     darkModeEnabled,
 }: ModalTabOptions & {
     isActive: boolean;
@@ -272,13 +225,15 @@ function SidebarFilterOption({
     return (
         <div
             className={clsx(
-                "relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2 py-1 font-medium outline-none transition-all hover:scale-[97%]",
+                "relative select-none items-center gap-2 rounded-md px-2 py-1 font-medium outline-none transition-all hover:scale-[97%]",
                 isActive
                     ? "bg-stone-100 dark:bg-neutral-800"
                     : "hover:bg-stone-100 dark:text-neutral-500 hover:dark:bg-neutral-800",
-                unavailable && (isActive ? "bg-stone-100" : "opacity-50")
+                unavailable && (isActive ? "bg-stone-100" : "opacity-50"),
+                unavailable ? "" : "cursor-pointer",
+                hiddenOnMobile ? "hidden lg:flex" : "flex"
             )}
-            onClick={onClick}
+            onClick={unavailable ? undefined : onClick}
         >
             <div className="flex w-5 justify-center">{svg}</div>
             <div className="relative">

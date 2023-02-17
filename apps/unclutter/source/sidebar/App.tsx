@@ -18,6 +18,7 @@ import { groupAnnotations } from "./common/grouping";
 import { useAnnotationSettings } from "./common/hooks";
 import AnnotationsList from "./components/AnnotationsList";
 import { SidebarContext } from "./context";
+import ky from "ky";
 
 const maxRelatedCount = 2;
 
@@ -165,14 +166,16 @@ export default function App({
         [id: string]: RelatedHighlight[];
     }>({});
     const usedRelatedIds = useRef(new Set<string>());
-    const batchRelatedFetchDone = useRef(false);
+    const [batchRelatedFetchDone, setBatchRelatedFetchDone] = useState(false);
     async function fetchRelatedBatch(storeAnnotations: Annotation[]) {
         if (!userInfo?.aiEnabled) {
             return;
         }
         console.log("Fetching related annotations in batch");
         const start = performance.now();
-        const fetchedAnnotations = storeAnnotations.filter((a) => a.id !== sourceAnnotationId);
+        const fetchedAnnotations = storeAnnotations
+            // .filter((a) => a.tags?.length)
+            .filter((a) => a.id !== sourceAnnotationId);
         let groups = await fetchRelatedAnnotations(
             userInfo.id,
             articleId,
@@ -195,12 +198,16 @@ export default function App({
         setRelatedPerAnnotation((prev) => {
             groups.forEach((group, i) => {
                 const annotation = fetchedAnnotations[i];
-                prev[annotation.id] = group;
+
+                // only set if not populated yet by manual fetch
+                if (!prev[annotation.id]?.length) {
+                    prev[annotation.id] = group;
+                }
             });
 
             return { ...prev };
         });
-        batchRelatedFetchDone.current = true;
+        setBatchRelatedFetchDone(true);
 
         const dutationMs = Math.round(performance.now() - start);
         console.log(`Fetched related annotations in ${dutationMs}ms`);
@@ -221,16 +228,16 @@ export default function App({
             isSourceAnnotation ? 0.4 : undefined
         );
 
-        let related = groups[0];
+        let related = groups[0] || [];
         let removeFromOtherThreads: string[] = [];
         if (isSourceAnnotation) {
             // the user navigated to the article via this annotation
             // so make sure we show all of its related annotations for a nicer UX
             console.log("Showing all related annotations for source annotation.");
 
-            removeFromOtherThreads = related
-                .filter((r) => usedRelatedIds.current.has(r.id))
-                .map((r) => r.id);
+            // removeFromOtherThreads = related
+            //     .filter((r) => usedRelatedIds.current.has(r.id))
+            //     .map((r) => r.id);
         } else {
             related = related.filter((r) => !usedRelatedIds.current.has(r.id));
         }
@@ -241,11 +248,11 @@ export default function App({
         // populate relatedPerAnnotation even with empty list to avoid fetching again
         await populateRelatedArticles(rep, [related]);
         setRelatedPerAnnotation((prev) => {
-            if (removeFromOtherThreads.length > 0) {
-                for (const [id, other] of Object.entries(prev)) {
-                    prev[id] = other.filter((r) => !removeFromOtherThreads.includes(r.id));
-                }
-            }
+            // if (removeFromOtherThreads.length > 0) {
+            //     for (const [id, other] of Object.entries(prev)) {
+            //         prev[id] = other.filter((r) => !removeFromOtherThreads.includes(r.id));
+            //     }
+            // }
 
             return {
                 ...prev,
@@ -253,14 +260,52 @@ export default function App({
             };
         });
     }
+    async function fetchTagsLater(annotation: LindyAnnotation) {
+        let tags: string[] = [];
+        try {
+            tags = await ky
+                .post("https://assistant-two.vercel.app/api/tag", {
+                    // .post("http://localhost:3001/api/tag", {
+                    json: {
+                        text: annotation.quote_text.replace("\n", " "),
+                    },
+                    timeout: 10 * 1000,
+                })
+                .json();
+        } catch (err) {
+            console.error("Failed to fetch tags", err);
+        }
+
+        tags = tags?.slice(0, 2) || [];
+        if (tags.length === 0) {
+            tags = ["other"];
+        }
+
+        rep.mutate.updateAnnotation({
+            id: annotation.id,
+            tags,
+        });
+        window.top.postMessage(
+            {
+                event: "paintHighlights",
+                annotations: [
+                    {
+                        ...annotation,
+                        tags,
+                    },
+                ],
+            },
+            "*"
+        );
+    }
 
     useEffect(() => {
-        if (!batchRelatedFetchDone.current) {
+        if (!batchRelatedFetchDone) {
             return;
         }
         const relatedCount = Object.values(relatedPerAnnotation).flat().length;
         window.top.postMessage({ event: "updateRelatedCount", relatedCount }, "*");
-    }, [relatedPerAnnotation]);
+    }, [batchRelatedFetchDone, relatedPerAnnotation]);
 
     // group and filter annotations on every local state change (e.g. added, focused)
     const [groupedAnnotations, setGroupedAnnotations] = useState<LindyAnnotation[][]>([]);
@@ -268,7 +313,7 @@ export default function App({
         if (!storeAnnotations) {
             return;
         }
-        console.log("Grouping annotations");
+        // console.log("Grouping annotations");
 
         // @ts-ignore
         // const summary: LindyAnnotation = {
@@ -284,6 +329,12 @@ export default function App({
         //         relatedCount: Object.values(relatedPerAnnotation).flat().length,
         //     },
         // };
+        // console.log(
+        //     storeAnnotations
+        //         .filter((a) => a.ai_created)
+        //         .map((a) => a.quote_text)
+        //         .join("\n")
+        // );
 
         let visibleAnnotations: LindyAnnotation[] = [];
         if (personalAnnotationsEnabled) {
@@ -293,6 +344,7 @@ export default function App({
                     .map(unpickleLocalAnnotation)
                     .map((a) => ({
                         ...a,
+                        listId: a.id,
                         focused: a.id === focusedAnnotationId,
                         displayOffset: displayOffsets[a.id],
                         displayOffsetEnd: displayOffsetEnds[a.id],
@@ -305,15 +357,21 @@ export default function App({
                         ...(a.related?.map((r, i) => ({
                             ...a,
                             ...r,
+                            listId: `${a.id}-${r.id}`, // allow related duplicates in list
                             relatedToId: a.id,
                             isMyAnnotation: false,
                             platform: "related",
                             displayOffset: a.displayOffset + i,
                             displayOffsetEnd: a.displayOffsetEnd + i,
+                            related: [],
                         })) || []),
                     ])
                     .filter(
-                        (a) => a.focused || a.platform === "related" || (a.isMyAnnotation && a.text)
+                        (a) =>
+                            a.focused ||
+                            a.platform === "related" ||
+                            // a.tags?.length ||
+                            (a.isMyAnnotation && a.text)
                     )
             );
         }
@@ -340,6 +398,7 @@ export default function App({
                         groupedAnnotations={groupedAnnotations}
                         unfocusAnnotation={() => setFocusedAnnotationId(null)}
                         fetchRelatedLater={fetchRelatedLater}
+                        fetchTagsLater={fetchTagsLater}
                     />
                 </div>
             </SidebarContext.Provider>

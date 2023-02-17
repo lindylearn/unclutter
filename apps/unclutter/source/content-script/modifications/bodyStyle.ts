@@ -191,11 +191,11 @@ export default class BodyStyleModifier implements PageModifier {
         this.scrollLockEnabled = false;
     }
 
-    setBottomContainerPadding() {
+    setBottomContainerPadding(bottomPadding: string) {
         // set padding for BottomContainer on documentElement for resilience against overflows
         this.unObserveStyleChanges();
 
-        this.bottomPadding = "140px";
+        this.bottomPadding = bottomPadding;
         document.documentElement.style.setProperty(
             "padding",
             `0 0 ${this.bottomPadding} 0`,

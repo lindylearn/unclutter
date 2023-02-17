@@ -30,6 +30,7 @@ import { setUserSettingsForDomain } from "../../common/storage";
 import LibraryModifier from "./library";
 import BodyStyleModifier from "./bodyStyle";
 import SmartHighlightsProxy from "./DOM/smartHighlightsProxy";
+import type { Annotation } from "@unclutter/library-components/dist/store";
 
 @trackModifierExecution
 export default class OverlayManager implements PageModifier {
@@ -75,7 +76,7 @@ export default class OverlayManager implements PageModifier {
         this.bodyStyleModifier = bodyStyleModifier;
         this.smartHighlightsProxy = smartHighlightsProxy;
 
-        // annotationsModifer.annotationListeners.push(this.onAnnotationUpdate.bind(this));
+        annotationsModifer.annotationListeners.push(this.onAnnotationUpdate.bind(this));
         readingTimeModifier.readingTimeLeftListeners.push(this.onReadingTimeUpdate.bind(this));
         libraryModifier.libraryStateListeners.push(this.updateLibraryState.bind(this));
 
@@ -321,113 +322,75 @@ export default class OverlayManager implements PageModifier {
     }
 
     // listen to annotation updates and attribute to outline heading
-    // private totalAnnotationCount?: number;
-    // private totalSocialCommentsCount?: number;
-    // private totalRelatedCount?: number;
-    // private async onAnnotationUpdate(
-    //     action: "set" | "add" | "remove",
-    //     annotations: LindyAnnotation[]
-    // ) {
-    //     if (!this.flatOutline || this.flatOutline.length === 0) {
-    //         return;
-    //     }
+    private async onAnnotationUpdate(
+        action: "set" | "add" | "remove" | "update",
+        annotations: Annotation[]
+    ) {
+        if (!this.flatOutline || this.flatOutline.length === 0) {
+            return;
+        }
 
-    //     if (
-    //         action === "remove" &&
-    //         this.totalAnnotationCount === 0 &&
-    //         this.totalSocialCommentsCount === 0
-    //     ) {
-    //         // removing overlapping annotations before displaying them -- ignore this
-    //         return;
-    //     }
+        // reset state
+        if (action === "set") {
+            this.flatOutline.map((_, index) => {
+                this.flatOutline[index].annotations = [];
+                this.flatOutline[index].socialCommentsCount = 0;
+            });
+        }
 
-    //     if (action === "set") {
-    //         // reset state
-    //         this.totalAnnotationCount = 0;
-    //         this.totalSocialCommentsCount = 0;
-    //         this.totalRelatedCount = 0;
-    //         this.flatOutline.map((_, index) => {
-    //             this.flatOutline[index].myAnnotationCount = 0;
-    //             this.flatOutline[index].socialCommentsCount = 0;
-    //             this.flatOutline[index].relatedCount = 0;
-    //         });
-    //     }
+        annotations.map((annotation) => {
+            const outlineIndex = this.getOutlineIndexForAnnotation(annotation);
+            const heading = this.flatOutline[outlineIndex];
+            if (!heading) {
+                return;
+            }
 
-    //     annotations.map((annotation) => {
-    //         const outlineIndex = this.getOutlineIndexForAnnotation(annotation);
+            if (action === "set" || action === "add" || action === "update") {
+                const existingIndex = heading.annotations.findIndex((a) => a.id === annotation.id);
+                if (existingIndex !== -1) {
+                    heading.annotations[existingIndex] = annotation;
+                } else {
+                    heading.annotations.push(annotation);
+                }
+            } else if (action === "remove") {
+                heading.annotations = heading.annotations.filter((a) => a.id !== annotation.id);
+            }
+        });
 
-    //         if (annotation.ai_created) {
-    //             if (action === "set" || action === "add") {
-    //                 this.totalRelatedCount += 1;
-    //                 this.flatOutline[outlineIndex].relatedCount += 1;
-    //             } else if (action === "remove") {
-    //                 this.totalRelatedCount -= 1;
-    //                 this.flatOutline[outlineIndex].relatedCount -= 1;
-    //             }
-    //         } else if (!annotation.isMyAnnotation) {
-    //             if (action === "set" || action === "add") {
-    //                 this.totalSocialCommentsCount += 1;
-    //                 this.flatOutline[outlineIndex].socialCommentsCount += 1;
-    //             } else if (action === "remove") {
-    //                 this.totalSocialCommentsCount -= 1;
-    //                 this.flatOutline[outlineIndex].socialCommentsCount -= 1;
-    //             }
-    //         } else {
-    //             if (action === "set" || action === "add") {
-    //                 this.totalAnnotationCount += 1;
-    //                 this.flatOutline[outlineIndex].myAnnotationCount += 1;
-    //             } else if (action === "remove") {
-    //                 this.totalAnnotationCount -= 1;
-    //                 this.flatOutline[outlineIndex].myAnnotationCount -= 1;
-    //             }
-    //         }
-    //     });
+        this.topleftSvelteComponent?.$set({
+            outline: this.flatOutline,
+        });
+    }
 
-    //     this.topleftSvelteComponent?.$set({
-    //         totalAnnotationCount: this.totalAnnotationCount,
-    //         totalRelatedCount: this.totalRelatedCount,
-    //         outline: this.outline,
-    //     });
+    private cachedAnnotationOutlineIndex: { [annotationId: string]: number } = {};
+    private getOutlineIndexForAnnotation(annotation: Annotation): number {
+        if (!this.flatOutline) {
+            return null;
+        }
+        if (this.cachedAnnotationOutlineIndex[annotation.id] !== undefined) {
+            return this.cachedAnnotationOutlineIndex[annotation.id];
+        }
 
-    //     if (this.totalSocialCommentsCount === 0) {
-    //         const socialAnnotationsEnabled = await getFeatureFlag(enableSocialCommentsFeatureFlag);
-    //         if (!socialAnnotationsEnabled) {
-    //             // expected to find 0 displayed social annotations
-    //             // don't update counts, we might still want to show them
-    //             return;
-    //         }
-    //     }
-    //     setTimeout(() => {
-    //         this.toprightSvelteComponent?.$set({
-    //             anchoredSocialHighlightsCount: this.totalSocialCommentsCount,
-    //         });
-    //     }, 4000);
-    // }
+        const annotationNode = document.getElementById(annotation.id);
+        if (!annotationNode) {
+            return;
+        }
+        const annotationOffset = getElementYOffset(annotationNode);
 
-    // private getOutlineIndexForAnnotation(annotation: LindyAnnotation): number {
-    //     if (!this.flatOutline) {
-    //         return null;
-    //     }
+        let lastIndex: number = 0;
+        while (lastIndex + 1 < this.flatOutline.length) {
+            const item = this.flatOutline[lastIndex + 1];
+            const startOffset = getElementYOffset(item.element);
+            if (annotationOffset < startOffset) {
+                break;
+            }
 
-    //     const annotationNode = document.getElementById(annotation.id);
-    //     if (!annotationNode) {
-    //         return;
-    //     }
-    //     const annotationOffset = getElementYOffset(annotationNode);
+            lastIndex += 1;
+        }
 
-    //     let lastIndex: number = 0;
-    //     while (lastIndex + 1 < this.flatOutline.length) {
-    //         const item = this.flatOutline[lastIndex + 1];
-    //         const startOffset = getElementYOffset(item.element);
-    //         if (annotationOffset < startOffset) {
-    //             break;
-    //         }
-
-    //         lastIndex += 1;
-    //     }
-
-    //     return lastIndex;
-    // }
+        this.cachedAnnotationOutlineIndex[annotation.id] = lastIndex;
+        return lastIndex;
+    }
 
     disableSocialAnnotations() {
         this.flatOutline.map((_, index) => {
@@ -489,6 +452,7 @@ export default class OverlayManager implements PageModifier {
         this.topleftSvelteComponent?.$set({
             darkModeEnabled: this.darkModeEnabled,
         });
+        this.toprightSvelteComponent?.$set({ darkModeEnabled });
         this.libraryModalModifier.setDarkMode(darkModeEnabled);
     }
 }
