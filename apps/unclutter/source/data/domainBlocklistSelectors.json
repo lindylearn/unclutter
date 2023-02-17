@@ -1005,6 +1005,14 @@
         "#td-header-menu",
         ".td-pb-span4"
     ],
+    "project-syndicate.org": [
+        ".u-tos.u-tos-focusable.u-noprint",
+        ".image.image--ratio-c",
+        ".special__title",
+        ".special__description",
+        ".listing.special.asize.inlay.special--generic",
+        ".listing.asize.asize--c.cur__el"
+    ],
     "pureinfotech.com": [
         ".attachment-large.size-large.wp-post-image.jetpack-lazy-image.jetpack-lazy-image--handled"
     ],
