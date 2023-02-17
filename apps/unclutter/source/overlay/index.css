@@ -5,6 +5,8 @@
     box-shadow: none !important;
     color-scheme: auto !important;
     width: auto !important;
+    max-width: none !important;
+    max-height: none !important;
 }
 
 .lindy-page-settings-toprght,
@@ -21,15 +23,7 @@
     top: 0 !important;
     right: 0 !important;
     z-index: 3000 !important;
-    padding: 10px !important;
     contain: layout style !important;
-
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    line-height: 1 !important;
-    gap: 8px !important;
-    width: 26px !important;
 }
 .lindy-page-settings-pageadjacent {
     all: revert !important;
@@ -174,9 +168,6 @@
     width: 100% !important;
     z-index: -1 !important; /* just behind body in case of overlaps */
 
-    /* must equal document bottom padding */
-    height: 140px !important;
-
     user-select: none !important;
     contain: strict !important;
     will-change: transform !important;
@@ -239,22 +230,26 @@
 .lindy-highlight:not(#fakeID#fakeID#fakeID#fakeID) {
     cursor: pointer !important;
     background-color: var(--annotation-color) !important;
-    transition: background-color 0.15s linear !important;
+    transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out !important;
 }
-.lindy-highlight {
-    /* -webkit-box-decoration-break: clone;
+/* .lindy-highlight.lindy-hover:not(#fakeID#fakeID#fakeID#fakeID) {
+    background-color: var(--darker-annotation-color) !important;
+} */
+/* .lindy-highlight {
+    -webkit-box-decoration-break: clone;
     -ms-box-decoration-break: clone;
     -o-box-decoration-break: clone;
-    box-decoration-break: clone; */
-    /* padding: 0.25em 0px !important; */
-    /* border-radius: 2px !important; */
+    box-decoration-break: clone;
+    padding: 0 0px !important;
+    border-radius: 0.125em !important;
 
-    /* box-shadow: 0.25em 0 0 var(--annotation-color), -0.25em 0 0 var(--annotation-color) !important; */
-}
-.lindy-highlight.lindy-hover {
-    /* background-color: var(--darker-annotation-color) !important; */
-    /* box-shadow: 0.25em 0 0 var(--darker-annotation-color), -0.25em 0 0 var(--darker-annotation-color) !important; */
-}
+    box-shadow: 0.25em 0 0 var(--annotation-color), -0.25em 0 0 var(--annotation-color) !important;
+} */
+/* .lindy-highlight:not(#fakeID#fakeID#fakeID#fakeID):hover {
+    background-color: var(--darker-annotation-color) !important;
+    box-shadow: 0.25em 0 0 var(--darker-annotation-color),
+        -0.25em 0 0 var(--darker-annotation-color) !important;
+} */
 .lindy-smart-highlight:not(#fakeID#fakeID#fakeID#fakeID),
 .lindy-smart-highlight-scroll:not(#fakeID#fakeID#fakeID#fakeID) {
     display: block !important;

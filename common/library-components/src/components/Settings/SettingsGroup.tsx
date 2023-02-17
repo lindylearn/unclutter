@@ -3,6 +3,9 @@ import React, { ReactNode } from "react";
 import type { ImportProgress } from "../../common/import";
 import { getActivityColor } from "../Charts";
 
+// const imageHost = "http://localhost:3000";
+const imageHost = "https://my.unclutter.it";
+
 export function SettingsGroup({
     title,
     icon,
@@ -22,19 +25,21 @@ export function SettingsGroup({
     progress?: ImportProgress;
     animationIndex?: number;
 }) {
+    const imagePath = `${imageHost}/${imageSrc}`;
+
     return (
         <div
             className={clsx(
-                "relative z-20 max-w-2xl rounded-md bg-stone-50 dark:bg-neutral-800",
-                className,
-                animationIndex !== undefined ? "animate-slidein" : "animate-fadein"
+                "relative z-20 max-w-2xl rounded-md bg-stone-50 shadow-sm dark:bg-neutral-800",
+                className
+                // animationIndex !== undefined ? "animate-slidein" : "animate-fadein"
             )}
-            style={{
-                animationDelay:
-                    animationIndex !== undefined
-                        ? `${(animationIndex ? animationIndex * 50 : 0) + 50}ms`
-                        : "",
-            }}
+            // style={{
+            //     animationDelay:
+            //         animationIndex !== undefined
+            //             ? `${(animationIndex ? animationIndex * 50 : 0) + 50}ms`
+            //             : "",
+            // }}
         >
             <h2 className="flex items-center gap-2 py-3 px-4 font-medium">
                 {icon}
@@ -44,8 +49,8 @@ export function SettingsGroup({
                 {children}
                 {imageSrc && buttons && (
                     <img
-                        src={imageSrc}
-                        className="mt-1 h-60 w-full bg-stone-100 object-cover object-right-top"
+                        src={imagePath}
+                        className="mt-1 h-60 w-full bg-stone-100 object-cover object-left-top dark:brightness-90"
                     />
                 )}
                 {buttons && !progress && <div className="mt-1 flex flex-wrap gap-3">{buttons}</div>}
@@ -71,8 +76,8 @@ export function SettingsGroup({
 
             {imageSrc && !buttons && (
                 <img
-                    src={imageSrc}
-                    className="mt-1 h-60 w-full bg-stone-100 object-cover object-right-top"
+                    src={imagePath}
+                    className="mt-1 h-60 w-full bg-stone-100 object-cover object-left-top dark:brightness-90"
                 />
             )}
 

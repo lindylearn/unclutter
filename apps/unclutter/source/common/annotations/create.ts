@@ -101,6 +101,7 @@ export interface LindyAnnotation {
     summaryInfo?: ArticleSummaryInfo;
     related?: RelatedHighlight[];
     relatedToId?: string;
+    listId?: string;
 }
 
 export interface ArticleSummaryInfo {

@@ -1,23 +1,24 @@
 import seedrandom from "seedrandom";
+import { Annotation } from "../store";
 
 // material UI colors A4XX from https://materialui.co/colors/ with 40% opacity
 export const colors = [
-    "rgba(255, 23, 68, 0.4)",
-    "rgba(245, 0, 87, 0.4)",
-    "rgba(213, 0, 249, 0.4)",
-    "rgba(101, 31, 255, 0.4)",
-    "rgba(61, 90, 254, 0.4)",
-    "rgba(41, 121, 255, 0.4)",
-    "rgba(0, 176, 255, 0.4)",
-    "rgba(0, 229, 255, 0.4)",
-    "rgba(29, 233, 182, 0.4)",
-    "rgba(0, 230, 118, 0.4)",
-    "rgba(118, 255, 3, 0.4)",
-    "rgba(198, 255, 0, 0.4)",
-    "rgba(255, 234, 0, 0.4)",
-    "rgba(255, 196, 0, 0.4)",
-    "rgba(255, 145, 0, 0.4)",
-    "rgba(255, 61, 0, 0.4)",
+    "rgba(255, 23, 68, 0.3)",
+    "rgba(245, 0, 87, 0.3)",
+    "rgba(213, 0, 249, 0.3)",
+    "rgba(101, 31, 255, 0.3)",
+    "rgba(61, 90, 254, 0.3)",
+    "rgba(41, 121, 255, 0.3)",
+    "rgba(0, 176, 255, 0.3)",
+    "rgba(0, 229, 255, 0.3)",
+    "rgba(29, 233, 182, 0.3)",
+    "rgba(0, 230, 118, 0.3)",
+    "rgba(118, 255, 3, 0.3)",
+    // "rgba(198, 255, 0, 0.3)",
+    // "rgba(255, 234, 0, 0.3)",
+    // "rgba(255, 196, 0, 0.3)",
+    // "rgba(255, 145, 0, 0.3)",
+    "rgba(255, 61, 0, 0.3)",
 ];
 
 // material UI colors A1XX from https://materialui.co/colors/
@@ -47,6 +48,22 @@ export function getRandomColor(seed: string): string {
 export function getRandomLightColor(seed: string, darkModeEnabled: boolean = false): string {
     const color = _drawFromArray(seed, lightColors);
     return darkModeEnabled ? color.replace("1.0", "0.6") : color;
+}
+
+export function getAnnotationColorNew(annotation: Annotation): [string, string] {
+    let color: string;
+    let colorDark: string;
+
+    if (annotation.tags && annotation.tags.length > 0) {
+        color = getRandomColor(annotation.tags[0]);
+        colorDark = color.replace("0.3", "0.5");
+    } else {
+        // yellow
+        color = "rgba(250, 204, 21, 0.3)";
+        colorDark = color.replace("0.3", "0.5");
+    }
+
+    return [color, colorDark];
 }
 
 // *** helpers ***
