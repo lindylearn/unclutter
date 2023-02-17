@@ -49,7 +49,7 @@ export function Highlight({
 
     return (
         <a
-            className="highlight animate-fadein relative flex cursor-pointer select-none flex-col gap-2 overflow-hidden rounded-l-sm rounded-r-md bg-white px-3 py-2 text-sm text-stone-900 shadow transition-transform hover:scale-[99%] dark:bg-neutral-800 dark:text-white"
+            className="highlight animate-fadein relative flex cursor-pointer select-none flex-col gap-2 overflow-hidden rounded-l-sm rounded-r-md bg-white px-3 py-2 text-sm text-stone-800 shadow transition-transform hover:scale-[99%] dark:bg-neutral-800 dark:text-white"
             href={article?.url}
             onClick={openHighlight}
             onContextMenu={(e) => {
@@ -80,7 +80,7 @@ export function Highlight({
                 {annotation.score2?.toFixed(2)}
             </div> */}
             {/* 
-            <div className="info-bar flex gap-4 whitespace-nowrap font-medium text-stone-400 dark:text-neutral-500">
+            <div className="info-bar flex gap-4 whitespace-nowrap font-medium text-neutral-400 dark:text-neutral-500">
                 <div className="flex items-center gap-1">
                     <svg className="h-4 w-4" viewBox="0 0 576 512">
                         <path
@@ -103,7 +103,7 @@ export function Highlight({
             </div> */}
 
             {article ? (
-                <div className="info-bar gap-42 flex items-center justify-between whitespace-nowrap font-medium text-stone-400 dark:text-neutral-500">
+                <div className="info-bar gap-42 flex items-center justify-between whitespace-nowrap font-medium text-neutral-400 dark:text-neutral-500">
                     <div className="flex items-center gap-2 overflow-hidden">
                         <img
                             className="w-4 shrink-0 rounded-sm opacity-75"

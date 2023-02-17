@@ -16,7 +16,7 @@ export function SearchBox({
 
     return (
         <input
-            className="font-text w-full rounded-md bg-stone-100 px-3 py-1.5 font-medium leading-none placeholder-stone-400 outline-none dark:bg-neutral-800 dark:placeholder-neutral-500"
+            className="font-text w-full rounded-md bg-stone-100 px-3 py-1.5 font-medium leading-none placeholder-neutral-400 outline-none dark:bg-neutral-800 dark:placeholder-neutral-500"
             spellCheck="false"
             autoFocus
             placeholder={placeholder}

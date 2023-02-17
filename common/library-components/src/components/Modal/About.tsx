@@ -54,10 +54,12 @@ export default function AboutModalTab({}: {}) {
                     </svg>
                 }
             >
-                <p>
-                    Hey{userInfo?.name && ` ${userInfo?.name}`}, welcome to your Unclutter library
-                    account!
-                </p>
+                {!userInfo?.aiEnabled && (
+                    <p>
+                        Hey{userInfo?.name && ` ${userInfo?.name}`}, welcome to your Unclutter
+                        library account!
+                    </p>
+                )}
 
                 <p>
                     Your library helps you to read smarter by automatically saving, organizing, and
