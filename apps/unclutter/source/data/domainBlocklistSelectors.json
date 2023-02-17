@@ -139,6 +139,7 @@
         ".js-auto-scroll-to-id-offset.height-gutter-big.pointer-event-none.absolute.top-full",
         ".visually-hidden"
     ],
+    "bizportal.co.il": [".video-wrap"],
     "blog.csdn.net": [
         ".article-bar-top",
         ".article-info-box",
