@@ -94,6 +94,7 @@
         ".slm-instream-player-container",
         ".tabElemNoBor"
     ],
+    "beyazperde.com": [".light.titlebar-subtile", ".cms-see-also", ".section"],
     "beachcam.co.il": ["#aswift_1_host"],
     "bezprawnik.pl": [
         ".ad_slot_height_manager_wrapper_bp_sdh2",
