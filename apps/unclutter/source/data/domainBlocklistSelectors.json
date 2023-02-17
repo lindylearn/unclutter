@@ -1256,6 +1256,7 @@
         ".paybox",
         ".pay-furtherreading"
     ],
+    "superuser.com": [".votecell.post-layout--left"],
     "swrfernsehen.de": [".container.breadcrumbs", ".sharing", "#footer"],
     "tarjomaan.com": ["#head_div1", "#header"],
     "techdirt.com": [".details"],
