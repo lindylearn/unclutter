@@ -26,18 +26,18 @@ export default function LoginPage({ isSignup = false }) {
         // dark:bg-[#212121] dark:text-[rgb(232,230,227)]
         <div className="grid min-h-screen text-stone-800 lg:grid-cols-2">
             <Head>
-                <title>Unclutter Login</title>
+                <title>Unclutter Library</title>
             </Head>
 
             <aside className="flex flex-col items-center gap-8 bg-stone-50 p-4 pt-10 lg:pt-32">
                 <div className="font-title flex items-center justify-center gap-3 text-4xl font-semibold dark:text-stone-800">
                     <LindyIcon className="w-10" />
-                    <h1>Unclutter</h1>
+                    <h1>Unclutter Library</h1>
                 </div>
 
                 <p className="max-w-md">
-                    Read smarter by automatically saving, organizing, and connecting information
-                    from the articles you read.
+                    Read smarter by automatically saving, organizing, and connecting quotes from the
+                    articles you read.
                 </p>
 
                 <img className="w-full max-w-2xl rounded-lg" src="/media/connect_ideas.png" />

@@ -62,8 +62,8 @@ export default function AboutModalTab({}: {}) {
                 )}
 
                 <p>
-                    Your library helps you to read smarter by automatically saving, organizing, and
-                    connecting information from the articles you read.
+                    Your Unclutter library helps you to read smarter by automatically saving,
+                    organizing, and connecting quotes from the articles you read.
                 </p>
             </SettingsGroup>
 
@@ -94,8 +94,9 @@ export default function AboutModalTab({}: {}) {
                     <>
                         <p>Thank you for supporting the Unclutter open-source project!</p>
                         <p>
-                            Try out the new features on any article in your library, and make sure
-                            to visit the Import page too.
+                            Try out the new library features on any article you got saved. And visit
+                            the Import page to make use of the knowledge you've already accumulated
+                            elsewhere!
                         </p>
                     </>
                 ) : (
@@ -126,8 +127,8 @@ export default function AboutModalTab({}: {}) {
                     Every article you open with Unclutter automatically gets saved in your library.
                 </p>
                 <p>
-                    Save articles for later, access your reading queue on your mobile phone, or find
-                    any article you've read in the past.
+                    You can easily save articles for later, access your reading queue on your mobile
+                    phone, or find any article you've seen in the past.
                 </p>
             </SettingsGroup>
 
@@ -145,9 +146,9 @@ export default function AboutModalTab({}: {}) {
             >
                 <p>
                     Unclutter automatically highlights the most important sentences on each article
-                    you read in yellow, helping you focus on what matters.
+                    you read in yellow, helping you focus on what matters faster.
                 </p>
-                <p>Just click on any such highlight to save in your library.</p>
+                <p>Just click on any such highlight to save a quote in your library.</p>
             </SettingsGroup>
 
             <SettingsGroup
@@ -162,10 +163,10 @@ export default function AboutModalTab({}: {}) {
                 }
                 imageSrc="media/quotes.png"
             >
-                <p>All your highlights are tagged and organized automatically.</p>
+                <p>All saved quotes are tagged and organized automatically for you.</p>
                 <p>
-                    Browse your collected quotes by topic or find all information you've seen about
-                    a specific idea or fact. Your library remembers it for you.
+                    You can browse your collected quotes by topic, or find all information you've
+                    seen about a specific idea or fact. Your library remembers it for you.
                 </p>
             </SettingsGroup>
 
@@ -182,8 +183,8 @@ export default function AboutModalTab({}: {}) {
                 imageSrc="media/connect_ideas.png"
             >
                 <p>
-                    Quotes from your library also automatically appear whenever you create a related
-                    highlight on another article, helping you connect different ideas.
+                    Quotes from your library also automatically appear whenever you save a related
+                    quote on another article.
                 </p>
                 <p>
                     For example, if a text mentions Google and AI search, you'll see everything
@@ -203,7 +204,7 @@ export default function AboutModalTab({}: {}) {
                 }
                 imageSrc="/media/import.png"
             >
-                <p>The more you read, the smarter your library becomes.</p>
+                <p>The more you read, the more your library can help you.</p>
                 <p>
                     You can also import articles to make use of the knowledge you've already
                     accumulated with Pocket, Instapaper, Raindrop, or your browser bookmarks.

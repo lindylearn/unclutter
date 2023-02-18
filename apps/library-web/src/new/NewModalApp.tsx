@@ -43,6 +43,7 @@ export default function NewModalApp() {
         setTagFilter,
         showDomain,
     } = useModalState(initialRoute, undefined, undefined, reportEventPosthog);
+    const currentTabTitle = currentTab[0].toUpperCase() + currentTab.slice(1);
 
     useEffect(() => {
         // update urls on navigation, but keep initial url params
@@ -93,7 +94,7 @@ export default function NewModalApp() {
     return (
         <div className="font-text min-h-screen bg-white text-stone-800 dark:bg-[#212121] dark:text-[rgb(232,230,227)] lg:bg-stone-100 lg:dark:bg-stone-900">
             <Head>
-                <title>Unclutter Library</title>
+                <title>Unclutter Library | {currentTabTitle}</title>
             </Head>
 
             <FilterContext.Provider

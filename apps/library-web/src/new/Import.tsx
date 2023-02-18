@@ -48,12 +48,7 @@ export default function NewImportTab() {
     }
     return (
         <div className="animate-fadein flex flex-col gap-4">
-            <Head>
-                <title>Import</title>
-            </Head>
-
             <GenerateSection rep={rep} userInfo={userInfo} darkModeEnabled={darkModeEnabled} />
-
             <ImportSection rep={rep} userInfo={userInfo} darkModeEnabled={darkModeEnabled} />
         </div>
     );
