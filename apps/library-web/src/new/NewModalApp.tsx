@@ -141,7 +141,7 @@ export default function NewModalApp() {
                             <div className="max-w-5xl bg-white p-4 pt-0 dark:bg-[#212121] md:m-4 md:rounded-lg md:py-6 md:px-8 lg:shadow-sm">
                                 {currentTab === "articles" && <RecentModalTab />}
                                 {currentTab === "stats" && <StatsModalTab />}
-                                {currentTab === "highlights" && <QuotesTab />}
+                                {currentTab === "quotes" && <QuotesTab />}
                                 {currentTab === "settings" && <SettingsModalTab />}
                                 {currentTab === "about" && <AboutModalTab />}
                                 {currentTab === "import" && <NewImportTab />}

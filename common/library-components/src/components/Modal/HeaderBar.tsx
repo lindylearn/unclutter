@@ -74,7 +74,7 @@ function StatsHeader({ onClick }: { onClick: () => void }) {
                 }
                 large
             /> */}
-            <ResourceStat value={0} type="highlights" large />
+            <ResourceStat value={0} type="quotes" large />
         </div>
     );
 }

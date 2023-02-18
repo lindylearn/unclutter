@@ -81,7 +81,7 @@ export function NodeTooltip({
                     )}
 
                     {/* {readingProgress === 1 && (
-                    <ResourceStat type="highlights" value={2} />
+                    <ResourceStat type="quotes" value={2} />
                 )} */}
                 </div>
 

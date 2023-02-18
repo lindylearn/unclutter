@@ -102,7 +102,7 @@ export default function ArticleBottomReview({
                                 //     darkModeEnabled
                                 // )
                             }
-                            onClick={() => tag !== "untagged" && openLibrary("highlights", tag)}
+                            onClick={() => tag !== "untagged" && openLibrary("quotes", tag)}
                             small
                         />
                     ))}

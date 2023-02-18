@@ -45,12 +45,7 @@ export function LibraryModalPage({
         tagFilter,
         setTagFilter,
         showDomain,
-    } = useModalState(
-        initialTab || "highlights",
-        initialSubscription,
-        initialTagFilter,
-        reportEvent
-    );
+    } = useModalState(initialTab || "quotes", initialSubscription, initialTagFilter, reportEvent);
 
     return (
         <div
@@ -112,7 +107,7 @@ export function useModalState(
             reportEvent("changeModalTab", { tab: currentTab });
         }
 
-        if (currentTab !== "highlights") {
+        if (currentTab !== "quotes") {
             setDomainFilter(undefined);
             setTagFilter(undefined);
         }
@@ -125,7 +120,7 @@ export function useModalState(
     const [tagFilter, setTagFilter] = useState<string | undefined>(initialTagFilter);
     async function showDomain(domain: string) {
         setDomainFilter(domain);
-        setCurrentTab("highlights");
+        setCurrentTab("quotes");
 
         reportEvent("showDomainDetails");
     }
@@ -178,7 +173,7 @@ function ModalContent({
             >
                 {currentTab === "articles" && <RecentModalTab />}
                 {currentTab === "stats" && <StatsModalTab />}
-                {currentTab === "highlights" && <QuotesTab />}
+                {currentTab === "quotes" && <QuotesTab />}
                 {currentTab === "settings" && <SettingsModalTab />}
                 {currentTab === "about" && <AboutModalTab />}
             </div>

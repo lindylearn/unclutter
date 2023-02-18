@@ -214,7 +214,7 @@ function TagGroup({
                     </h2>
 
                     {/* <div className="relative px-1.5 py-0.5">
-                    <ResourceStat type="highlights" value={annotations?.length} large={false} />
+                    <ResourceStat type="quotes" value={annotations?.length} large={false} />
                 </div> */}
                 </div>
             )}

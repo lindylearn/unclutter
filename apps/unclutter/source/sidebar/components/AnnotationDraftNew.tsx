@@ -96,7 +96,7 @@ export default function AnnotationDraftNew({
                             // @ts-ignore
                             // "--hover-color": getRandomColor(tag),
                         }}
-                        onClick={() => openLibrary("highlights", tag)}
+                        onClick={() => openLibrary("quotes", tag)}
                     >
                         #{tag}
                     </div>

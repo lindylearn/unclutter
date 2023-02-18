@@ -100,7 +100,7 @@ function NumberStats({
             <BigNumber
                 value={allAnnotations?.length}
                 tag={`saved quote${allAnnotations?.length !== 1 ? "s" : ""}`}
-                icon={<ResourceIcon type="highlights" large />}
+                icon={<ResourceIcon type="quotes" large />}
             />
         </div>
     );
@@ -243,7 +243,7 @@ function ArticleGroupStat({
                     className={clsx(addedCount === 0 && "opacity-0")}
                 />
                 <ResourceStat
-                    type="highlights"
+                    type="quotes"
                     value={annotationsCount}
                     className={clsx(annotationsCount === 0 && "opacity-0")}
                 />

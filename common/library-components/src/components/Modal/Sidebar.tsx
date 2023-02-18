@@ -134,7 +134,7 @@ function getModalTabOptions(
         // },
         {
             label: "Quotes",
-            value: "highlights",
+            value: "quotes",
             unavailable: requireSupport && !userInfo?.aiEnabled,
             svg: (
                 // <svg className="h-4" viewBox="0 0 512 512" >

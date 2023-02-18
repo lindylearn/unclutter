@@ -87,7 +87,7 @@ export function ResourceStat({
     className,
 }: {
     value?: number;
-    type: "articles" | "articles_completed" | "highlights";
+    type: "articles" | "articles_completed" | "quotes";
     large?: boolean;
     showPlus?: boolean;
     hideIcon?: boolean;
@@ -160,7 +160,7 @@ export function ResourceIcon({
     large = false,
     className,
 }: {
-    type: "articles" | "articles_completed" | "highlights" | "links" | "puzzle";
+    type: "articles" | "articles_completed" | "quotes" | "links" | "puzzle";
     large?: boolean;
     className?: string;
 }) {
@@ -184,7 +184,7 @@ export function ResourceIcon({
                     />
                 </svg>
             )}
-            {type === "highlights" && (
+            {type === "quotes" && (
                 <svg className={innerClass} viewBox="0 0 448 512">
                     <path
                         fill="currentColor"
