@@ -174,7 +174,7 @@ export default function App({
         console.log("Fetching related annotations in batch");
         const start = performance.now();
         const fetchedAnnotations = storeAnnotations
-            // .filter((a) => a.tags?.length)
+            .filter((a) => a.tags?.length)
             .filter((a) => a.id !== sourceAnnotationId);
         let groups = await fetchRelatedAnnotations(
             userInfo.id,
