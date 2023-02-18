@@ -225,8 +225,6 @@ export default function App({
             userInfo.id,
             articleId,
             [annotation.quote_text],
-            isSourceAnnotation ? 0.4 : undefined,
-            undefined,
             true // save vector
         );
 

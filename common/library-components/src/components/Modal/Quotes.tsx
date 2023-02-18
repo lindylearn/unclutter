@@ -255,15 +255,7 @@ export async function vectorSearch(
     query: string,
     userInfo: UserInfo
 ): Promise<AnnotationWithArticle[]> {
-    const hits = await fetchRelatedAnnotations(
-        userInfo.id,
-        undefined,
-        [query],
-        0.0,
-        50,
-        false,
-        true
-    );
+    const hits = await fetchRelatedAnnotations(userInfo.id, undefined, [query], false, true);
     if (!hits?.length) {
         return [];
     }

@@ -211,8 +211,6 @@ export async function fetchRelatedAnnotations(
     user_id: string,
     article_id: string | undefined,
     highlights: string[],
-    score_threshold: number | undefined = undefined,
-    results_per_query: number | undefined = undefined,
     save_highlights: boolean = false,
     is_search: boolean = false
 ): Promise<RelatedHighlight[][]> {
@@ -225,8 +223,6 @@ export async function fetchRelatedAnnotations(
             user_id: vectorsTestUser || user_id,
             for_article_id: article_id,
             highlights,
-            score_threshold,
-            results_per_query,
             save_highlights,
             is_search,
         }),
