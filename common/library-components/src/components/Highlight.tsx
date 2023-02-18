@@ -164,7 +164,7 @@ function LimitedText({
 
 function LimitedTextInner({ text, searchExcerpt }: { text: string; searchExcerpt?: string }) {
     const excerptStart = useMemo(() => {
-        if (searchExcerpt && text.length > searchExcerpt.length) {
+        if (searchExcerpt && searchExcerpt.length !== text.length && searchExcerpt.length < 250) {
             return text.toLowerCase().indexOf(searchExcerpt.toLowerCase());
         }
         return -1;
@@ -176,7 +176,7 @@ function LimitedTextInner({ text, searchExcerpt }: { text: string; searchExcerpt
         return (
             <span>
                 {text.slice(0, excerptStart)}
-                <b>{searchExcerpt}</b>
+                <b className="font-medium">{searchExcerpt}</b>
                 {text.slice(excerptStart + searchExcerpt!.length)}
             </span>
         );

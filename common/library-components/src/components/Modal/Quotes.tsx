@@ -61,9 +61,7 @@ export default function QuotesTab({}: {}) {
         reportEvent("highlightsSearch");
     }, [queryDebounced]);
 
-    const [annotationGroups, setAnnotationGroups] = useState<[string, AnnotationWithArticle[]][]>(
-        []
-    );
+    const [annotationGroups, setAnnotationGroups] = useState<[string, AnnotationWithArticle[]][]>();
     const [untaggedAnnotations, setUntaggedAnnotations] = useState<AnnotationWithArticle[]>([]);
     useEffect(() => {
         if (annotations === null) {
@@ -114,7 +112,7 @@ export default function QuotesTab({}: {}) {
 
     return (
         <div className="flex flex-col gap-4">
-            <div className="filter-list flex justify-start gap-3">
+            <div className="filter-list animate-fadein flex justify-start gap-3">
                 {activeCurrentFilter ? (
                     <FilterButton
                         title={domainFilter || `#${tagFilter}`}
@@ -162,7 +160,7 @@ export default function QuotesTab({}: {}) {
                 )}
             </div>
 
-            {annotationGroups.slice(0, 20).map(([tag, annotations]) => (
+            {annotationGroups?.slice(0, 20).map(([tag, annotations]) => (
                 <TagGroup
                     key={tag}
                     tag={`#${tag}`}
@@ -171,9 +169,8 @@ export default function QuotesTab({}: {}) {
                     setTagFilter={setTagFilter}
                 />
             ))}
-            {(searchedAnnotations?.length ||
-                (domainFilter && untaggedAnnotations.length) ||
-                annotationGroups.length === 0) && (
+            {((untaggedAnnotations.length && (domainFilter || searchedAnnotations?.length)) ||
+                (annotationGroups !== undefined && annotationGroups?.length === 0)) && (
                 <TagGroup
                     key="untagged"
                     tag="untagged"

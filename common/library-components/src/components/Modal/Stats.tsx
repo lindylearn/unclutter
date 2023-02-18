@@ -91,7 +91,7 @@ function NumberStats({
     darkModeEnabled: boolean;
 }) {
     return (
-        <div className="grid grid-cols-5 gap-4">
+        <div className="grid grid-cols-5 gap-4 2xl:grid-cols-6">
             <BigNumber
                 value={allArticles?.length}
                 tag={`saved article${allArticles?.length !== 1 ? "s" : ""}`}
@@ -178,7 +178,7 @@ function WeekDetails({
 
     return (
         <div className="animate-fadein">
-            <div className="grid grid-cols-5 gap-4">
+            <div className="grid grid-cols-5 gap-4 2xl:grid-cols-6">
                 {groups?.map(([groupKey, groupArticles]) => (
                     <ArticleGroupStat
                         userInfo={userInfo}
