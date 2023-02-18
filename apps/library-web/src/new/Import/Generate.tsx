@@ -49,7 +49,7 @@ export function GenerateSection({
             }
             buttons={
                 <SettingsButton
-                    title="Generate highlights"
+                    title="Generate quotes"
                     onClick={generateHighlights}
                     darkModeEnabled={darkModeEnabled}
                     reportEvent={reportEventPosthog}
@@ -59,10 +59,10 @@ export function GenerateSection({
             animationIndex={1}
         >
             <p>
-                From now on, Unclutter automatically creates AI highlights whenever you activate the
-                reader mode. These are saved as untagged quotes in your library.
+                From now on, Unclutter automatically creates yellow AI highlights whenever you
+                activate the reader mode. These are saved as untagged quotes in your library.
             </p>
-            <p>Let's also generate highlights for your previously saved articles now.</p>
+            <p>Let's also generate quotes for your previously saved articles now.</p>
         </SettingsGroup>
     );
 }

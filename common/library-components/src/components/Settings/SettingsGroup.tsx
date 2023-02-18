@@ -12,6 +12,7 @@ export function SettingsGroup({
     children,
     buttons,
     className,
+    style,
     imageSrc,
     progress,
     animationIndex,
@@ -21,6 +22,7 @@ export function SettingsGroup({
     children: ReactNode;
     buttons?: ReactNode;
     className?: string;
+    style?: React.CSSProperties;
     imageSrc?: string;
     progress?: ImportProgress;
     animationIndex?: number;
@@ -34,12 +36,13 @@ export function SettingsGroup({
                 className
                 // animationIndex !== undefined ? "animate-slidein" : "animate-fadein"
             )}
-            // style={{
-            //     animationDelay:
-            //         animationIndex !== undefined
-            //             ? `${(animationIndex ? animationIndex * 50 : 0) + 50}ms`
-            //             : "",
-            // }}
+            style={{
+                ...style,
+                // animationDelay:
+                //     animationIndex !== undefined
+                //         ? `${(animationIndex ? animationIndex * 50 : 0) + 50}ms`
+                //         : "",
+            }}
         >
             <h2 className="flex items-center gap-2 py-3 px-4 font-medium">
                 {icon}
@@ -60,12 +63,12 @@ export function SettingsGroup({
                             <>{progress.customMessage}</>
                         ) : progress?.finished ? (
                             <>
-                                Done! Unclutter generated {progress?.currentHighlights} highlights
+                                Done! Unclutter generated {progress?.currentHighlights} quotes
                                 across {progress?.targetArticles} articles!
                             </>
                         ) : (
                             <>
-                                Generated {progress?.currentHighlights || 0} highlights across{" "}
+                                Generated {progress?.currentHighlights || 0} quotes across{" "}
                                 {progress?.currentArticles || 0} of {progress?.targetArticles || 0}{" "}
                                 articles...
                             </>

@@ -137,8 +137,8 @@ export default function NewModalApp() {
                                 <Sidebar currentTab={currentTab} setCurrentTab={setCurrentTab} />
                             </div>
                         </aside>
-                        <div className="right-side h-screen w-full overflow-y-auto">
-                            <div className="min-h-screen max-w-5xl bg-white p-4 pt-0 dark:bg-[#212121] md:m-4 md:rounded-lg md:py-6 md:px-8 lg:shadow-sm">
+                        <div className="right-side h-screen w-full overflow-y-auto md:p-4">
+                            <div className="min-h-full max-w-5xl bg-white p-4 pt-0 dark:bg-[#212121] md:rounded-lg md:py-6 md:px-8 lg:shadow-sm">
                                 {currentTab === "articles" && <RecentModalTab />}
                                 {currentTab === "stats" && <StatsModalTab />}
                                 {currentTab === "quotes" && <QuotesTab />}

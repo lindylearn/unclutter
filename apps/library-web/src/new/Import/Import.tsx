@@ -85,12 +85,10 @@ export function ImportSection({ rep, userInfo, darkModeEnabled }) {
                 }
                 animationIndex={2}
             >
-                {/* <p>
-                    Next to each highlight, you'll see related highlight that you saved previously.
-                </p> */}
+                <p>The more you read, the more your library can help you.</p>
                 <p>
-                    The more articles in your library, the more value you'll get out Unclutter. So
-                    import all the articles you already saved inside other apps!
+                    Let's import articles from your other accounts to make use of the knowledge
+                    you've already accumulated elsewhere!
                 </p>
             </SettingsGroup>
 

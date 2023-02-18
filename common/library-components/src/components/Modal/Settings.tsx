@@ -124,7 +124,8 @@ export default function SettingsModalTab({}: {}) {
                         <p>
                             Hey{userInfo?.email && ` ${userInfo?.email}`}, your {articleCount}{" "}
                             article{articleCount !== 1 ? "s" : ""} and {annotationCount} quote
-                            {annotationCount !== 1 ? "s" : ""} are backed-up to your account!
+                            {annotationCount !== 1 ? "s" : ""} are backed-up to your Unclutter
+                            library account!
                         </p>
                     </>
                 ) : (
@@ -171,9 +172,10 @@ export default function SettingsModalTab({}: {}) {
                 >
                     <p>
                         You can access your library at any time by visiting my.unclutter.it,
-                        pressing TAB inside the reader mode, right-clicking the Unclutter extension
-                        icon, or by installing the Unclutter New Tab extension.
+                        pressing TAB inside the reader mode, or right-clicking the Unclutter
+                        extension icon.
                     </p>
+                    <p>Install the New Tab extension to more easily access your reading queue.</p>
                 </SettingsGroup>
             )}
 
