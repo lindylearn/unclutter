@@ -31,6 +31,9 @@ export async function getRelatedAnnotationsCount(
         return;
     }
 
+    // disabled for now
+    return 0;
+
     // fetch user highlights that are related to the found article annotations
     const relatedPerAnnotation = await fetchRelatedAnnotations(
         userInfo.id,
