@@ -176,7 +176,7 @@ function ModalContent({
                     currentTab === "graph" ? "" : "p-4"
                 )}
             >
-                {currentTab === "list" && <RecentModalTab />}
+                {currentTab === "articles" && <RecentModalTab />}
                 {currentTab === "stats" && <StatsModalTab />}
                 {currentTab === "highlights" && <QuotesTab />}
                 {currentTab === "settings" && <SettingsModalTab />}

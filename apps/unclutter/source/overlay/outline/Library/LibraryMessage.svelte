@@ -27,7 +27,7 @@
     activeColor={getActivityColor(1, darkModeEnabled)}
     isActive={libraryState?.libraryInfo?.article.is_queued || isCompleted}
     onToggle={() => libraryModifier.toggleArticleInQueue()}
-    onClick={() => libraryModalModifier.showModal("list")}
+    onClick={() => libraryModalModifier.showModal("articles")}
     {darkModeEnabled}
 >
     <div slot="title">

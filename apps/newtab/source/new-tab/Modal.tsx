@@ -24,7 +24,7 @@ export default function NewTabModal({
             userInfo={userInfo}
             darkModeEnabled={darkModeEnabled}
             showSignup={false}
-            initialTab="list"
+            initialTab="articles"
             reportEvent={reportEvent}
         />
     );
