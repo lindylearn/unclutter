@@ -40,7 +40,6 @@ export function sendMessage(message: object, toLibrary: boolean = false): Promis
         try {
             // preferrable send message to extension directly (https://developer.chrome.com/docs/extensions/mv3/messaging/#external-webpage)
             // this is the only way to send data from extension to extension
-            throw new Error("disabled");
             getBrowser().runtime.sendMessage(
                 toLibrary ? getNewTabExtensionId() : getUnclutterExtensionId(),
                 message,
