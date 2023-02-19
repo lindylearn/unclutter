@@ -1,46 +1,40 @@
 import type { UserInfo } from "../store";
-import { getBrowser, getNewTabExtensionId, getUnclutterExtensionId } from "./extension";
+import { sendMessage } from "./extension";
 
 export async function getUserInfoSimple(): Promise<UserInfo | undefined> {
-    return await getBrowser().runtime.sendMessage(getUnclutterExtensionId(), {
-        event: "getUserInfo",
-    });
+    return await sendMessage({ event: "getUserInfo" });
 }
 
-export async function reportEventContentScript(
-    name: string,
-    data = {},
-    targetExtension: string | null = null
-) {
-    getBrowser().runtime.sendMessage(targetExtension, {
+export function reportEventContentScript(name: string, data = {}) {
+    sendMessage({
         event: "reportEvent",
         name,
         data,
     });
 }
 
-export async function getRemoteFeatureFlag(key: string, targetExtension: string | null = null) {
-    const featureFlags = await getBrowser().runtime.sendMessage(targetExtension, {
+export async function getRemoteFeatureFlag(key: string) {
+    const featureFlags = await sendMessage({
         event: "getRemoteFeatureFlags",
     });
     return featureFlags?.[key];
 }
 
-export function openArticle(url: string, targetExtension: string | null = null) {
-    getBrowser().runtime.sendMessage(targetExtension, {
+export function openArticle(url: string) {
+    sendMessage({
         event: "openLinkWithUnclutter",
         url: url,
         newTab: true,
     });
 }
 
-export async function getUnclutterVersion(): Promise<string> {
-    return await getBrowser().runtime.sendMessage(getUnclutterExtensionId(), {
+export async function getUnclutterVersion(): Promise<string | undefined> {
+    return await sendMessage({
         event: "getUnclutterVersion",
     });
 }
-export async function getNewTabVersion(): Promise<string> {
-    return await getBrowser().runtime.sendMessage(getNewTabExtensionId(), {
+export async function getNewTabVersion(): Promise<string | undefined> {
+    return await sendMessage({
         event: "getNewTabVersion",
     });
 }
@@ -48,10 +42,9 @@ export async function getNewTabVersion(): Promise<string> {
 export function captureActiveTabScreenshot(
     articleId: string,
     bodyRect: DOMRect,
-    devicePixelRatio: number,
-    targetExtension: string | null = null
+    devicePixelRatio: number
 ) {
-    getBrowser().runtime.sendMessage(targetExtension, {
+    sendMessage({
         event: "captureActiveTabScreenshot",
         articleId,
         bodyRect,
@@ -59,8 +52,8 @@ export function captureActiveTabScreenshot(
     });
 }
 
-export async function getLocalScreenshot(articleId: string, targetExtension: string | null = null) {
-    return await getBrowser()?.runtime?.sendMessage(targetExtension, {
+export async function getLocalScreenshot(articleId: string): Promise<string | undefined> {
+    return await sendMessage({
         event: "getLocalScreenshot",
         articleId,
     });

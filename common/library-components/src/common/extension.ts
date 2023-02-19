@@ -37,24 +37,29 @@ export function getNewTabExtensionId(): string {
 }
 
 // send a message to the Unclutter or Unclutter library extension
-export function sendMessage(message: object, toLibrary: boolean = false) {
-    try {
-        // preferrable send message to extension directly (https://developer.chrome.com/docs/extensions/mv3/messaging/#external-webpage)
-        // this is the only way to send data from extension to extension
-        return getBrowser().runtime.sendMessage(
-            toLibrary ? getNewTabExtensionId() : getUnclutterExtensionId(),
-            message
-        );
-    } catch (err) {
-        // content script fallback
-        window.postMessage(message, "*");
-        // work around naming inconsistency in Unclutter 0.18.1
-        window.postMessage(
-            // @ts-ignore
-            { ...message, type: message.event, event: null },
-            "*"
-        );
-    }
+// can't always return a response
+export function sendMessage(message: object, toLibrary: boolean = false): Promise<any> {
+    return new Promise((resolve, reject) => {
+        try {
+            // preferrable send message to extension directly (https://developer.chrome.com/docs/extensions/mv3/messaging/#external-webpage)
+            // this is the only way to send data from extension to extension
+            getBrowser().runtime.sendMessage(
+                toLibrary ? getNewTabExtensionId() : getUnclutterExtensionId(),
+                message,
+                resolve
+            );
+        } catch (err) {
+            // content script fallback
+            window.postMessage(message, "*");
+            // work around naming inconsistency in Unclutter 0.18.1
+            window.postMessage(
+                // @ts-ignore
+                { ...message, type: message.event, event: null },
+                "*"
+            );
+            resolve(undefined);
+        }
+    });
 }
 
 export function openArticleResilient(url: string, newTab: boolean = true, annotationId?: string) {
