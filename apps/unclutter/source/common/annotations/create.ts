@@ -2,6 +2,7 @@ import type { RelatedHighlight } from "@unclutter/library-components/dist/common
 import { getUrlHash } from "@unclutter/library-components/dist/common/url";
 import { constructLocalArticle } from "@unclutter/library-components/dist/common/util";
 import type { Annotation, Article } from "@unclutter/library-components/dist/store/_schema";
+import { nanoid } from "nanoid";
 
 export function createDraftAnnotation(
     article_id: string,
@@ -56,7 +57,7 @@ export function createAnnotation(
 }
 
 export function generateId(): string {
-    return Math.random().toString(36).slice(-20);
+    return nanoid();
 }
 
 export interface LindyAnnotation {

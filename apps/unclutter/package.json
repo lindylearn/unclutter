@@ -17,6 +17,7 @@
         "iframe-resizer-react": "^1.1.0",
         "linkedom": "^0.14.19",
         "lodash": "^4.17.21",
+        "nanoid": "^4.0.1",
         "patch-package": "^6.4.7",
         "react": "18.2.0",
         "react-dom": "18.2.0",
