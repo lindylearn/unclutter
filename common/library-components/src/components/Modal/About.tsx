@@ -70,7 +70,7 @@ export default function AboutModalTab({}: {}) {
     return (
         <div className="animate-fadein flex flex-col gap-4">
             <SettingsGroup
-                title={userInfo?.aiEnabled ? "Getting started" : "Unlock your library"}
+                title={userInfo?.aiEnabled ? "Read smarter" : "Read smarter"}
                 icon={
                     <svg className="h-4 w-4" viewBox="0 0 512 512">
                         <path
@@ -116,11 +116,14 @@ export default function AboutModalTab({}: {}) {
                 ) : (
                     <>
                         <p>
-                            Using the Unclutter library requires a financial support of $4.99 per
-                            month. This money is used to pay contributors to the Unclutter
-                            open-source project.
+                            Unclutter can help you to read smarter by automatically saving,
+                            organizing, and surfacing quotes from the articles you read using AI.
                         </p>
-                        <p>See below for the features you'll unlock!</p>
+                        {/* <p>
+                            This requires a financial support of $4.99 per month, used to pay
+                            contributors to the Unclutter open-source project.
+                        </p> */}
+                        <p>See below for all the features you'll unlock!</p>
                     </>
                 )}
             </SettingsGroup>
@@ -230,12 +233,10 @@ export default function AboutModalTab({}: {}) {
                 }
                 imageSrc="/media/articles.png"
             >
+                <p>Every article you open automatically gets saved in your library.</p>
                 <p>
-                    Every article you open with Unclutter automatically gets saved in your library.
-                </p>
-                <p>
-                    You can easily save articles for later, access your reading queue on your mobile
-                    phone, or find any article you've seen in the past.
+                    Organize your reading queue with drag & drop, read on your mobile phone, or find
+                    anything you've seen in the past.
                 </p>
             </SettingsGroup>
 
@@ -252,14 +253,14 @@ export default function AboutModalTab({}: {}) {
                 imageSrc="media/ai_highlights.png"
             >
                 <p>
-                    Unclutter automatically highlights the most important sentences on each article
-                    you read in yellow, helping you focus on what matters faster.
+                    Read faster and focus on what matters by seeing the most important sentences on
+                    each article highlighted in yellow.
                 </p>
-                <p>Just click on any such highlight to save a quote in your library.</p>
+                <p>Click on any highlight to save it in your library.</p>
             </SettingsGroup>
 
             <SettingsGroup
-                title="Save quotes"
+                title="Collect quotes"
                 icon={
                     <svg className="w-4" viewBox="0 0 448 512">
                         <path
@@ -270,10 +271,10 @@ export default function AboutModalTab({}: {}) {
                 }
                 imageSrc="media/quotes.png"
             >
-                <p>All saved quotes are tagged and organized automatically for you.</p>
+                <p>All saved highlights are tagged and organized automatically.</p>
                 <p>
-                    You can browse your collected quotes by topic, or find all information you've
-                    seen about a specific idea or fact. Your library remembers it for you.
+                    Browse your knowledge base by topic, review your recent notes, or AI search for
+                    everything you've seen about a specific idea.
                 </p>
             </SettingsGroup>
 
@@ -289,10 +290,7 @@ export default function AboutModalTab({}: {}) {
                 }
                 imageSrc="media/connect_ideas.png"
             >
-                <p>
-                    Quotes from your library also automatically appear whenever you save a related
-                    quote on another article.
-                </p>
+                <p>Quotes automatically appear next to related quotes.</p>
                 <p>
                     For example, if a text mentions Google and AI search, you'll see everything
                     you've read about Google's AI research and chatGPT right next to it.
@@ -300,7 +298,7 @@ export default function AboutModalTab({}: {}) {
             </SettingsGroup>
 
             <SettingsGroup
-                title="Import articles"
+                title="Import bookmarks"
                 icon={
                     <svg className="h-4 w-4" viewBox="0 0 512 512">
                         <path
@@ -311,10 +309,10 @@ export default function AboutModalTab({}: {}) {
                 }
                 imageSrc="/media/import.png"
             >
-                <p>The more you read, the more your library can help you.</p>
+                <p>The larger your library, the more it helps you read smarter.</p>
                 <p>
-                    You can also import articles to make use of the knowledge you've already
-                    accumulated with Pocket, Instapaper, Raindrop, or your browser bookmarks.
+                    Make use of the knowledge you've already accumulated by importing your Pocket,
+                    Instapaper, Raindrop, or browser bookmarks.
                 </p>
             </SettingsGroup>
         </div>

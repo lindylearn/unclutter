@@ -141,7 +141,7 @@ export default function NewModalApp() {
                                         // bg-gradient-to-b from-yellow-300 to-amber-400 bg-clip-text text-transparent
                                         // style={{ WebkitBackgroundClip: "text" }}
                                     >
-                                        Library
+                                        Unclutter
                                     </h1>
                                 </div>
 
