@@ -33,7 +33,7 @@ export default function SignupBottomMessage({
             onClick={() => reportEvent("clickBottomSignupMessage")}
             href={
                 userInfo?.accountEnabled
-                    ? "https://my.unclutter.it/smart-reading"
+                    ? "https://my.unclutter.it/"
                     : "https://my.unclutter.it/signup"
             }
             target="_blank"

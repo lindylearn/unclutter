@@ -29,7 +29,12 @@ import ReviewTestTab from "../tabs/Review";
 
 export default function NewModalApp() {
     const router = useRouter();
-    const initialRoute = router.asPath.split("?")[0].slice(1) || "about";
+    let initialRoute = router.asPath.split("?")[0].slice(1) || "about";
+
+    // 1.7.1 signup message for registered users
+    if (initialRoute === "smart-reading") {
+        initialRoute = "about";
+    }
 
     const rep = useContext(ReplicacheContext);
     const { user } = useUser();
