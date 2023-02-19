@@ -229,12 +229,13 @@ browser.runtime.onInstalled.addListener(async ({ reason }) => {
 
     saveInitialInstallVersionIfMissing(extensionInfo.version);
 
-    // show opt shortcut icon on mac
-    browser.runtime.getPlatformInfo().then(({ os }) =>
+    // update default shortcut based on os
+    browser.runtime.getPlatformInfo().then(({ os }) => {
+        const shortcut = os === "mac" ? "⌥+C" : "Alt+C";
         browser.action.setTitle({
-            title: "Unclutter Current Article (⌥+C)",
-        })
-    );
+            title: `Unclutter Current Article (${shortcut})`,
+        });
+    });
 });
 
 // track tab changes to update extension icon badge
