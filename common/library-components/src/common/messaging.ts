@@ -1,5 +1,34 @@
 import type { UserInfo } from "../store";
-import { sendMessage } from "./extension";
+import { getBrowser, sendMessage } from "./extension";
+
+// handle events from the browser extension install page & integrated article library
+// adding externally_connectable may not work for existing installs, and isn't supported on firefox
+export function listenForPageEvents() {
+    window.addEventListener("message", function (event) {
+        if (event.data.event === "proxyUnclutterMessage") {
+            const messageId = event.data.messageId;
+
+            getBrowser().runtime.sendMessage(event.data.message, (response) => {
+                window.postMessage(
+                    {
+                        event: "proxyUnclutterMessageResponse",
+                        messageId,
+                        response,
+                    },
+                    "*"
+                );
+            });
+        }
+    });
+
+    // return browser bookmarks to import into the extension's companion website
+    // this is triggered when the user clicks the extension icon on the Unclutter import website
+    getBrowser().runtime.onMessage.addListener((message) => {
+        if (message.event === "returnBrowserBookmarks") {
+            window.postMessage(message, "*");
+        }
+    });
+}
 
 export async function getUserInfoSimple(): Promise<UserInfo | undefined> {
     return await sendMessage({ event: "getUserInfo" });

@@ -10,11 +10,7 @@ import browser from "../common/polyfill";
 browser.runtime.onInstalled.addListener(async () => {
     const extensionInfo = await browser.management.getSelf();
 
-    reportEventContentScript(
-        "reportSettingsNewTab",
-        { version: extensionInfo.version },
-        getUnclutterExtensionId()
-    );
+    reportEventContentScript("reportSettingsNewTab", { version: extensionInfo.version });
 });
 
 browser.runtime.onMessage.addListener(handleMessage);

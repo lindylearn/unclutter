@@ -1,4 +1,3 @@
-// browser is not defined in server-side next.js code
 export function getBrowser(): any {
     // @ts-ignore
     return typeof browser !== "undefined" ? browser : chrome;
@@ -13,8 +12,7 @@ export function getBrowserType(): BrowserType {
     }
 }
 export function getBrowserTypeWeb(): BrowserType {
-    // normal getBrowserType() stopped working on web?
-    // navigator.userAgentData only available in chrome & edge :(
+    // navigator.userAgentData only available in chrome & edge
     try {
         const isChrome =
             // @ts-ignore
@@ -37,27 +35,46 @@ export function getNewTabExtensionId(): string {
 }
 
 // send a message to the Unclutter or Unclutter library extension
-// can't always return a response
 export function sendMessage(message: object, toLibrary: boolean = false): Promise<any> {
     return new Promise((resolve, reject) => {
         try {
             // preferrable send message to extension directly (https://developer.chrome.com/docs/extensions/mv3/messaging/#external-webpage)
             // this is the only way to send data from extension to extension
+            throw new Error("disabled");
             getBrowser().runtime.sendMessage(
                 toLibrary ? getNewTabExtensionId() : getUnclutterExtensionId(),
                 message,
                 resolve
             );
         } catch (err) {
-            // content script fallback
-            window.postMessage(message, "*");
-            // work around naming inconsistency in Unclutter 0.18.1
+            if (toLibrary) {
+                return;
+            }
+
+            // proxy with boot.js content script, e.g. for Firefox (see listenForPageEvents())
+            const messageId = Math.random().toString(36).slice(2);
+            const listener = (event: MessageEvent) => {
+                if (
+                    event.data.event === "proxyUnclutterMessageResponse" &&
+                    event.data.messageId === messageId
+                ) {
+                    resolve(event.data.response);
+
+                    window.removeEventListener("message", listener);
+                }
+            };
+            window.addEventListener("message", listener);
             window.postMessage(
-                // @ts-ignore
-                { ...message, type: message.event, event: null },
+                {
+                    event: "proxyUnclutterMessage",
+                    messageId,
+                    message,
+                },
                 "*"
             );
-            resolve(undefined);
+
+            // pre 1.7.1 fallback, does not support responses
+            window.postMessage(message, "*");
         }
     });
 }
@@ -72,13 +89,9 @@ export function openArticleResilient(url: string, newTab: boolean = true, annota
 }
 
 export function setUnclutterLibraryAuth(userId: string) {
-    const message = {
+    sendMessage({
         event: "setLibraryAuth",
         userId,
         webJwt: document.cookie, // requires disabled httpOnly flag, set via patch-package
-    };
-
-    // send to both extensions
-    sendMessage(message);
-    sendMessage(message, true);
+    });
 }

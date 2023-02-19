@@ -12,7 +12,11 @@ import {
     setUnclutterLibraryAuth,
     useAutoDarkMode,
 } from "@unclutter/library-components/dist/common";
-import { ReplicacheContext, useSubscribe } from "@unclutter/library-components/dist/store";
+import {
+    ReplicacheContext,
+    UserInfo,
+    useSubscribe,
+} from "@unclutter/library-components/dist/store";
 import { useContext, useEffect } from "react";
 import RecentModalTab from "@unclutter/library-components/dist/components/Modal/Recent";
 import StatsModalTab from "@unclutter/library-components/dist/components/Modal/Stats";
@@ -29,7 +33,13 @@ export default function NewModalApp() {
 
     const rep = useContext(ReplicacheContext);
     const { user } = useUser();
-    const userInfo = useSubscribe(rep, rep?.subscribe.getUserInfo(), null);
+    // @ts-ignore
+    const userInfo: UserInfo | undefined | null = useSubscribe(
+        rep,
+        rep?.subscribe.getUserInfo(),
+        // @ts-ignore
+        undefined
+    );
 
     const darkModeEnabled = useAutoDarkMode();
     const {
@@ -55,7 +65,7 @@ export default function NewModalApp() {
 
     useEffect(() => {
         (async () => {
-            if (!rep || !user || !user.email) {
+            if (!rep || !user || !user.email || userInfo === undefined) {
                 return;
             }
 
@@ -75,10 +85,6 @@ export default function NewModalApp() {
                 console.log("Logging in existing user");
                 setUnclutterLibraryAuth(user.id);
             }
-
-            // await rep.mutate.updateUserInfo({
-            //     aiEnabled: false,
-            // });
         })();
     }, [rep, user, userInfo]);
 

@@ -1,4 +1,7 @@
-import { getUserInfoSimple } from "@unclutter/library-components/dist/common/messaging";
+import {
+    getUserInfoSimple,
+    listenForPageEvents,
+} from "@unclutter/library-components/dist/common/messaging";
 import {
     extensionSupportsUrl,
     isConfiguredToEnable,
@@ -78,26 +81,6 @@ function requestEnhance(trigger: string, type = "full") {
         event: "requestEnhance",
         trigger,
         type,
-    });
-}
-
-// handle events from the browser extension install page & integrated article library
-// adding externally_connectable may not work for existing installs, and isn't supported on firefox
-function listenForPageEvents() {
-    window.addEventListener("message", function (event) {
-        if (
-            ["openOptionsPage", "openLinkWithUnclutter", "setLibraryAuth"].includes(
-                event.data.event
-            )
-        ) {
-            browser.runtime.sendMessage(event.data);
-        }
-    });
-    // return browser bookmarks to import into the extension's companion website, if the user triggered it
-    browser.runtime.onMessage.addListener((message) => {
-        if (message.event === "returnBrowserBookmarks") {
-            window.postMessage(message, "*");
-        }
     });
 }
 
