@@ -52,9 +52,10 @@ export function captureActiveTabScreenshot(
     });
 }
 
-export async function getLocalScreenshot(articleId: string): Promise<string | undefined> {
-    return await sendMessage({
+export async function getLocalScreenshot(articleId: string): Promise<string | null> {
+    const response = await sendMessage({
         event: "getLocalScreenshot",
         articleId,
     });
+    return response || null;
 }

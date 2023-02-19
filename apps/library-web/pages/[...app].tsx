@@ -42,9 +42,7 @@ export default function Index({ userId }: { userId: string }) {
 
     return (
         <ReplicacheContext.Provider value={rep}>
-            <LocalScreenshotContext.Provider
-                value={(articleId) => getLocalScreenshot(articleId, getUnclutterExtensionId())}
-            >
+            <LocalScreenshotContext.Provider value={getLocalScreenshot}>
                 <NewModalApp />
             </LocalScreenshotContext.Provider>
         </ReplicacheContext.Provider>
