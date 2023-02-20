@@ -70,7 +70,7 @@ export default function AboutModalTab({}: {}) {
     return (
         <div className="animate-fadein flex flex-col gap-4">
             <SettingsGroup
-                title={userInfo?.aiEnabled ? "Read smarter" : "Read smarter"}
+                title="Make use of what you read"
                 icon={
                     <svg className="h-4 w-4" viewBox="0 0 512 512">
                         <path
@@ -116,8 +116,8 @@ export default function AboutModalTab({}: {}) {
                 ) : (
                     <>
                         <p>
-                            Unclutter can help you to read smarter by automatically saving,
-                            organizing, and surfacing quotes from the articles you read using AI.
+                            Unclutter can help you to make use of what you read by automatically
+                            saving, organizing, and connecting article quotes using AI.
                         </p>
                         {/* <p>
                             This requires a financial support of $4.99 per month, used to pay

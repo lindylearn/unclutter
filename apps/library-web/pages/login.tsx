@@ -36,8 +36,8 @@ export default function LoginPage({ isSignup = false }) {
                 </div>
 
                 <p className="max-w-md">
-                    Read smarter by automatically saving, organizing, and surfacing quotes from the
-                    articles you read using AI.
+                    Make use of what you read by automatically saving, organizing, and connecting
+                    article quotes using AI.
                 </p>
 
                 <img className="w-full max-w-2xl rounded-lg" src="/media/connect_ideas.png" />
