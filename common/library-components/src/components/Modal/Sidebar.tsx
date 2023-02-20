@@ -49,7 +49,7 @@ export default function Sidebar({
                     />
                 ))}
 
-            <div className="hidden flex-grow lg:block" />
+            <div className="hidden w-20 md:block lg:flex-grow" />
 
             {modalTabs
                 .filter((t) => t.atEnd)
@@ -226,10 +226,10 @@ function SidebarFilterOption({
     return (
         <div
             className={clsx(
-                "relative select-none items-center gap-2 rounded-md px-2 py-1 font-medium outline-none transition-all hover:scale-[97%]",
+                "desktop:hover:scale-[97%] relative select-none items-center gap-2 rounded-md px-2 py-1 font-medium outline-none transition-all",
                 isActive
                     ? "bg-stone-100 dark:bg-neutral-800"
-                    : "hover:bg-stone-100 dark:text-neutral-500 hover:dark:bg-neutral-800",
+                    : "desktop:hover:bg-stone-100 desktop:hover:dark:bg-neutral-800 dark:text-neutral-500",
                 unavailable && (isActive ? "bg-stone-100" : "opacity-50"),
                 unavailable ? "" : "cursor-pointer",
                 hiddenOnMobile ? "hidden md:flex" : "flex"

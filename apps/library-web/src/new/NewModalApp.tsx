@@ -109,7 +109,7 @@ export default function NewModalApp() {
     }
 
     return (
-        <div className="font-text min-h-screen bg-white text-stone-800 dark:bg-[#212121] dark:text-[rgb(232,230,227)] lg:bg-stone-100 lg:dark:bg-stone-900">
+        <div className="font-text h-screen bg-white text-stone-800 dark:bg-[#212121] dark:text-[rgb(232,230,227)] lg:bg-stone-100 lg:dark:bg-stone-900">
             <Head>
                 <title>Unclutter Library | {currentTabTitle}</title>
             </Head>
@@ -137,8 +137,8 @@ export default function NewModalApp() {
                         reportEvent: reportEventPosthog,
                     }}
                 >
-                    <div className="font-text flex h-screen flex-col-reverse items-stretch overflow-hidden text-base lg:flex-row">
-                        <aside className="left-side z-20 w-full border-t-[1px] border-stone-100 md:border-0 lg:m-4 lg:w-60">
+                    <div className="font-text flex h-screen flex-row items-stretch overflow-hidden pb-16 text-base lg:pb-0">
+                        <aside className="left-side fixed bottom-0 z-[100] w-full border-t-[1px] border-stone-100 lg:static lg:m-4 lg:w-60 lg:border-0">
                             <div className="flex h-full flex-col bg-white p-3 shadow-lg dark:bg-[#212121] md:rounded-lg md:p-4 md:shadow-sm">
                                 <div className="mb-4 hidden w-full items-center gap-2 lg:flex">
                                     <LindyIcon className="w-8" />
@@ -155,8 +155,8 @@ export default function NewModalApp() {
                                 <Sidebar currentTab={currentTab} setCurrentTab={setCurrentTab} />
                             </div>
                         </aside>
-                        <div className="right-side z-10 w-full overflow-y-auto pt-4 md:h-screen md:p-4">
-                            <div className="min-h-full max-w-5xl bg-white pt-0 dark:bg-[#212121] md:rounded-lg md:p-4 md:py-6 md:px-8 lg:shadow-sm">
+                        <div className="right-side w-full grow overflow-y-auto pt-4 md:pt-0 lg:h-full lg:p-4">
+                            <div className="min-h-full max-w-5xl bg-white pt-0 dark:bg-[#212121] md:p-4 lg:rounded-lg lg:py-6 lg:px-8 lg:shadow-sm">
                                 {currentTab === "articles" && <RecentModalTab />}
                                 {currentTab === "stats" && <StatsModalTab />}
                                 {currentTab === "quotes" && <QuotesTab />}

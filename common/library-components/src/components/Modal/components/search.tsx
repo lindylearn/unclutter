@@ -13,8 +13,10 @@ export function SearchBox({
 }) {
     const searchRef = useRef<HTMLInputElement>(null);
     useEffect(() => {
-        searchRef.current?.focus();
-    }, [searchRef]);
+        if (autoFocus) {
+            searchRef.current?.focus();
+        }
+    }, [searchRef, autoFocus]);
 
     return (
         <input

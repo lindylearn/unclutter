@@ -1,4 +1,5 @@
 import React, { ReactNode, useContext, useEffect, useRef, useState } from "react";
+import clsx from "clsx";
 import { latestSettingsVersion, ReplicacheContext, RuntimeReplicache, Settings } from "../../store";
 import { ModalStateContext } from "./context";
 import { SettingsButton, SettingsGroup } from "../Settings/SettingsGroup";
@@ -56,7 +57,12 @@ export default function SettingsModalTab({}: {}) {
             : "https://chrome.google.com/webstore/detail/bghgkooimeljolohebojceacblokenjn";
 
     return (
-        <div className="animate-fadein flex flex-col gap-4">
+        <div
+            className={clsx(
+                "animate-fadein flex flex-col gap-4",
+                isWeb && "mx-auto max-w-2xl lg:mx-0"
+            )}
+        >
             {!showSignup && (
                 <SettingsGroup
                     title="About"

@@ -68,7 +68,12 @@ export default function AboutModalTab({}: {}) {
     }, []);
 
     return (
-        <div className="animate-fadein flex flex-col gap-4">
+        <div
+            className={clsx(
+                "animate-fadein flex flex-col gap-4",
+                isWeb && "mx-auto max-w-2xl lg:mx-0"
+            )}
+        >
             <SettingsGroup
                 title="Make use of what you read"
                 icon={
