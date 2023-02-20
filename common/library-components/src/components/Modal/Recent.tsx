@@ -37,6 +37,7 @@ export default function RecentModalTab({}: {}) {
                     articleLines={isMobile ? 2 : 1}
                     rowArticleCount={rowArticleCount}
                     darkModeEnabled={darkModeEnabled}
+                    enableDragging={!isMobile}
                     reportEvent={reportEvent}
                 />
 
@@ -50,6 +51,7 @@ export default function RecentModalTab({}: {}) {
                             articles={articleListsCache?.[tabInfo.key] || []}
                             rowArticleCount={rowArticleCount}
                             darkModeEnabled={darkModeEnabled}
+                            enableDragging={!isMobile}
                             reportEvent={reportEvent}
                         />
                     );
