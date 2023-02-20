@@ -7,6 +7,7 @@ import { ArticleDropdown } from "./Dropdown";
 import { getDomain, openArticleResilient } from "../common";
 import { ResourceIcon } from "./Modal";
 import { readingProgressFullClamp } from "../store/constants";
+import { ModalStateContext } from "./Modal/context";
 
 export type LocalScreenshotFetcher = ((articleId: string) => Promise<string | null>) | null;
 export const LocalScreenshotContext = createContext<LocalScreenshotFetcher>(null);
@@ -36,6 +37,7 @@ export function ArticlePreview({
     ...props
 }: ArticlePreviewProps) {
     // const [ref, setRef] = useState<HTMLAnchorElement | null>(null);
+    const { isMobile } = useContext(ModalStateContext);
 
     let readingProgress = article.reading_progress;
     if (readingProgress > readingProgressFullClamp) {
@@ -43,6 +45,10 @@ export function ArticlePreview({
     }
 
     function openPage(e) {
+        if (isMobile) {
+            return;
+        }
+
         e.preventDefault();
         e.stopPropagation();
         if (listState === "static") {
@@ -102,6 +108,8 @@ export function ArticlePreview({
             )}
             onClick={openPage}
             href={article.url}
+            target="_blank"
+            rel="noopener noreferrer"
             // onMouseEnter={(el) => {
             //     const target = el.target as HTMLElement;
             //     if (!target.classList.contains("dropdown-elem")) {

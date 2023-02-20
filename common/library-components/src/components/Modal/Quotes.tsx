@@ -161,7 +161,7 @@ export default function QuotesTab({}: {}) {
                 )}
             </div>
 
-            {annotationGroups?.slice(0, 20).map(([tag, annotations]) => (
+            {annotationGroups?.slice(0, isMobile ? 10 : 20).map(([tag, annotations]) => (
                 <TagGroup
                     key={tag}
                     tag={`#${tag}`}
