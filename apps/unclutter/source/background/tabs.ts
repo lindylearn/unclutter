@@ -98,3 +98,5 @@ export class TabStateManager {
         return this.userInfo?.aiEnabled;
     }
 }
+
+export const tabsManager = new TabStateManager();

@@ -2,7 +2,9 @@ import browser, { getBrowserType } from "../common/polyfill";
 import { injectScript } from "./inject";
 import { reportEnablePageView } from "./metrics";
 import type { Alarms } from "webextension-polyfill";
-import { syncPull } from "./library/library";
+import { rep, syncPull, userInfo } from "./library/library";
+import { constructLocalArticle } from "@unclutter/library-components/dist/common/util";
+import { getUrlHash } from "@unclutter/library-components/dist/common/url";
 
 export function onNewInstall(version: string) {
     browser.tabs.create({
@@ -53,18 +55,19 @@ function installContextMenu() {
         contexts: ["link"],
     });
 
-    let context = "action";
+    let rightClickContext = "action";
     if (getBrowserType() === "firefox") {
-        context = "browser_action";
+        rightClickContext = "browser_action";
     }
     createOrUpdateContextMenu("open-library", {
-        title: "Open Library",
-        contexts: [context],
+        title: "Open library",
+        contexts: [rightClickContext],
     });
-    // createOrUpdateContextMenu("save-article", {
-    //     title: "Save article for later",
-    //     contexts: [context],
-    // });
+    createOrUpdateContextMenu("save-article", {
+        title: "Save article for later",
+        contexts: [rightClickContext],
+    });
+    // TODO use seperate entries for unregistered users?
 
     // throws error if no permission
     browser.contextMenus.onClicked.addListener((info, tab) => {
@@ -81,14 +84,28 @@ function installContextMenu() {
                 url: "https://my.unclutter.it/articles",
                 active: true,
             });
+        } else if (info.menuItemId === "open-signup") {
+            browser.tabs.create({
+                url: "https://my.unclutter.it/signup",
+                active: true,
+            });
         } else if (info.menuItemId === "save-article") {
-            // TODO figure out how to access tab url + title
-            // const article = constructLocalArticle(
-            //     this.articleUrl,
-            //     this.articleId,
-            //     this.articleTitle
-            // )
-            // rep.mutate.putArticleIfNotExists(article)
+            (async () => {
+                const activeTab = (
+                    await browser.tabs.query({ currentWindow: true, active: true })
+                )?.[0];
+                if (!activeTab) {
+                    console.error("No active tab found");
+                    return;
+                }
+
+                const article = constructLocalArticle(
+                    activeTab.url,
+                    getUrlHash(activeTab.url),
+                    activeTab.title
+                );
+                await rep.mutate.putArticleIfNotExists(article);
+            })();
         }
     });
 }

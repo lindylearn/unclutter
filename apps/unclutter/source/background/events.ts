@@ -16,7 +16,7 @@ import { enableInTab, injectScript, togglePageViewMessage } from "./inject";
 import { createAlarmListeners, onNewInstall, setupWithPermissions } from "./install";
 import { discoverRssFeed } from "./library/feeds";
 import {
-    initLibraryOnce,
+    initLibrary,
     processReplicacheMessage,
     processReplicacheSubscribe,
     rep,
@@ -31,12 +31,10 @@ import {
     reportSettings,
     startMetrics,
 } from "./metrics";
-import { TabStateManager } from "./tabs";
 // import { getHeatmap, loadHeatmapModel } from "@unclutter/heatmap/dist/heatmap";
 import { getUrlHash } from "@unclutter/library-components/dist/common/url";
 import { getHeatmapRemote } from "@unclutter/library-components/dist/common/api";
-
-const tabsManager = new TabStateManager();
+import { tabsManager } from "./tabs";
 
 // toggle page view on extension icon click
 browser.action.onClicked.addListener((tab: Tabs.Tab) => {
@@ -146,11 +144,9 @@ function handleMessage(
         // direct message back to listeners in same tab
         browser.tabs.sendMessage(sender.tab.id, message);
     } else if (message.event === "setLibraryAuth") {
-        setLibraryAuth(message.userId, message.webJwt).then(() => {
-            initLibraryOnce();
-        });
+        setLibraryAuth(message.userId, message.webJwt).then(() => initLibrary());
     } else if (message.event === "initLibrary") {
-        initLibraryOnce();
+        initLibrary();
     } else if (message.event === "getUserInfo") {
         rep?.query.getUserInfo().then(sendResponse);
         return true;
@@ -252,7 +248,7 @@ async function initializeServiceWorker() {
     const isDev = extensionInfo.installType === "development";
 
     startMetrics(isDev);
-    const userInfo = await initLibraryOnce(isDev);
+    await initLibrary(isDev);
 
     // if (userInfo?.aiEnabled) {
     //     // load tensorflow model

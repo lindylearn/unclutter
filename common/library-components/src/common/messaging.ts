@@ -4,6 +4,7 @@ import { getBrowser, sendMessage } from "./extension";
 // handle events from the browser extension install page & integrated article library
 // adding externally_connectable may not work for existing installs, and isn't supported on firefox
 export function listenForPageEvents() {
+    // events from unclutter companion website
     window.addEventListener("message", function (event) {
         if (event.data.event === "proxyUnclutterMessage") {
             const messageId = event.data.messageId;
@@ -21,12 +22,15 @@ export function listenForPageEvents() {
         }
     });
 
-    // return browser bookmarks to import into the extension's companion website
-    // this is triggered when the user clicks the extension icon on the Unclutter import website
-    getBrowser().runtime.onMessage.addListener((message) => {
+    // events from background worker
+    getBrowser().runtime.onMessage.addListener((message, sender, sendResponse) => {
         if (message.event === "returnBrowserBookmarks") {
+            // return browser bookmarks to import into the extension's companion website
+            // this is triggered when the user clicks the extension icon on the Unclutter import website
             window.postMessage(message, "*");
         }
+
+        return false;
     });
 }
 
