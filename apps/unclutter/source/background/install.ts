@@ -6,11 +6,11 @@ import { refreshLibraryFeeds, syncPull } from "./library/library";
 
 export function onNewInstall(version: string) {
     browser.tabs.create({
-        url: "https://unclutter.lindylearn.io/welcome",
+        url: "https://unclutter.it/welcome",
         active: true,
     });
 
-    browser.runtime.setUninstallURL("https://unclutter.lindylearn.io/uninstalled");
+    browser.runtime.setUninstallURL("https://unclutter.it/uninstalled");
 }
 
 // only run one time after each update
