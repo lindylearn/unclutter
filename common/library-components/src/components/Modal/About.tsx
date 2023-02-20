@@ -9,7 +9,7 @@ import clsx from "clsx";
 import { getActivityColor } from "../Charts";
 
 export default function AboutModalTab({}: {}) {
-    const { darkModeEnabled, userInfo, showSignup, reportEvent, isWeb } =
+    const { darkModeEnabled, userInfo, showSignup, reportEvent, isWeb, isMobile } =
         useContext(ModalStateContext);
     const rep = useContext(ReplicacheContext);
 
@@ -199,7 +199,7 @@ export default function AboutModalTab({}: {}) {
             )}
             {unclutterVersion === null && browserType !== "firefox" && (
                 <SettingsGroup
-                    title="Install Unclutter"
+                    title={isMobile ? "Install Unclutter" : "Install Unclutter on desktop"}
                     icon={
                         <svg className="h-4 w-4" viewBox="0 0 512 512">
                             <path
@@ -209,19 +209,28 @@ export default function AboutModalTab({}: {}) {
                         </svg>
                     }
                     buttons={
-                        <SettingsButton
-                            title="Install Unclutter"
-                            href={unclutterLink}
-                            darkModeEnabled={darkModeEnabled}
-                            reportEvent={reportEvent}
-                        />
+                        !isMobile && (
+                            <SettingsButton
+                                title="Install Unclutter"
+                                href={unclutterLink}
+                                darkModeEnabled={darkModeEnabled}
+                                reportEvent={reportEvent}
+                            />
+                        )
                     }
                     style={{ background: getActivityColor(1, darkModeEnabled) }}
                 >
-                    <p>
-                        Do you have the Unclutter browser extension installed? You'll need it to use
-                        the reader mode and the library features.
-                    </p>
+                    {isMobile ? (
+                        <p>
+                            The Unclutter browser extension only works on desktop for now. On mobile
+                            you can browse and search across your saved articles and quotes.
+                        </p>
+                    ) : (
+                        <p>
+                            Do you have the Unclutter browser extension installed? You'll need it to
+                            use the reader mode and the library features.
+                        </p>
+                    )}
                 </SettingsGroup>
             )}
 
