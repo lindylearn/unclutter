@@ -145,11 +145,6 @@ function handleMessage(
     } else if (message.event === "focusAnnotation") {
         // direct message back to listeners in same tab
         browser.tabs.sendMessage(sender.tab.id, message);
-    } else if (message.event === "openLibrary") {
-        browser.tabs.create({
-            url: `https://library.lindylearn.io/`,
-            active: true,
-        });
     } else if (message.event === "setLibraryAuth") {
         setLibraryAuth(message.userId, message.webJwt).then(() => {
             initLibraryOnce();

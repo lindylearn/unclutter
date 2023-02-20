@@ -33,7 +33,6 @@ async function boot() {
     if (
         [
             "unclutter.lindylearn.io",
-            "library.lindylearn.io",
             "my.unclutter.it",
             "localhost", // dev testing
         ].includes(domain)
