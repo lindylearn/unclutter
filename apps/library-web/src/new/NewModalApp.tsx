@@ -25,7 +25,8 @@ import SettingsModalTab from "@unclutter/library-components/dist/components/Moda
 import Sidebar from "@unclutter/library-components/dist/components/Modal/Sidebar";
 import NewImportTab from "./Import";
 import AboutModalTab from "@unclutter/library-components/dist/components/Modal/About";
-import ReviewTestTab from "../tabs/Review";
+import ReviewDevTab from "../dev/Review";
+import ModalDevTab from "../dev/Modal";
 
 export default function NewModalApp() {
     const router = useRouter();
@@ -97,9 +98,12 @@ export default function NewModalApp() {
         return <></>;
     }
 
-    // test routes
+    // dev routes
+    if (initialRoute === "modal") {
+        return <ModalDevTab />;
+    }
     if (initialRoute === "review") {
-        return <ReviewTestTab />;
+        return <ReviewDevTab />;
     }
 
     return (

@@ -3,7 +3,7 @@ import ArticleBottomReview from "@unclutter/library-components/dist/components/R
 import SignupBottomMessage from "@unclutter/library-components/dist/components/Review/SignupBottomMessage";
 import { useState } from "react";
 
-export default function ReviewTestTab({}) {
+export default function ReviewDevTab({}) {
     const [url, setUrl] = useState<string>(
         "https://stratechery.com/2015/netflix-and-the-conservation-of-attractive-profits"
     );

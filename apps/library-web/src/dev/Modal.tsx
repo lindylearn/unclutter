@@ -15,7 +15,7 @@ import {
 } from "@unclutter/library-components/dist/store";
 import { useContext, useEffect, useState } from "react";
 
-export default function ModalTestTab({}) {
+export default function ModalDevTab({}) {
     const articleId = "7e265e0ad2f1585e0268181143260537597756925ba18d05772322224a44ecb6";
     const [article, setArticle] = useState<Article>();
     const [topic, setTopic] = useState<Topic>();
