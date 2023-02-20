@@ -4,6 +4,7 @@ import {
     DndContext,
     KeyboardSensor,
     PointerSensor,
+    TouchSensor,
     useSensor,
     useSensors,
     DragStartEvent,
@@ -44,6 +45,7 @@ export function DraggableContext({
 
     const sensors = useSensors(
         useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+        useSensor(TouchSensor, { activationConstraint: { distance: 5 } }),
         useSensor(KeyboardSensor, {
             coordinateGetter: sortableKeyboardCoordinates,
         })
@@ -251,7 +253,7 @@ export function DraggableContext({
                             duration: 300,
                             easing: "cubic-bezier(0.65, 0, 0.35, 1)",
                         }}
-                        className="article-drag-overlay"
+                        className="article-drag-overlay touch-manipulation"
                     >
                         {activeArticle && (
                             <ArticlePreview listState="dragging" article={activeArticle} />

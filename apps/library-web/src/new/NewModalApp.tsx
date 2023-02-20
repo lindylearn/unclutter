@@ -2,6 +2,7 @@ import { LindyIcon, useModalState } from "@unclutter/library-components/dist/com
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useUser } from "@supabase/auth-helpers-react";
+import { useMediaQuery } from "usehooks-ts";
 
 import { reportEventPosthog } from "../../common/metrics";
 import {
@@ -48,6 +49,7 @@ export default function NewModalApp() {
     );
 
     const darkModeEnabled = useAutoDarkMode();
+    const isMobile = useMediaQuery("(max-width: 767px)");
     const {
         currentTab,
         setCurrentTab,
@@ -130,6 +132,7 @@ export default function NewModalApp() {
                         darkModeEnabled,
                         showSignup: true,
                         isWeb: true,
+                        isMobile,
                         userInfo,
                         reportEvent: reportEventPosthog,
                     }}

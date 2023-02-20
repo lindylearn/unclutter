@@ -10,7 +10,7 @@ import {
 import { Annotation, Article } from "../store";
 import { getActivityColor } from "./Charts";
 import { HighlightDropdown } from "./Dropdown/HighlightDowndown";
-import { ModalVisibilityContext } from "./Modal/context";
+import { ModalStateContext, ModalVisibilityContext } from "./Modal/context";
 
 export function Highlight({
     annotation,
@@ -29,10 +29,15 @@ export function Highlight({
 }) {
     // const rep = useContext(ReplicacheContext);
     const { closeModal } = useContext(ModalVisibilityContext);
+    const { isMobile } = useContext(ModalStateContext);
 
     const [dropdownOpen, setDropdownOpen] = useState(false);
 
     function openHighlight(e) {
+        if (isMobile) {
+            return;
+        }
+
         e.preventDefault();
         e.stopPropagation();
 
@@ -51,7 +56,10 @@ export function Highlight({
 
     return (
         <a
-            className="highlight animate-fadein relative flex cursor-pointer select-none flex-col gap-2 overflow-hidden rounded-l-sm rounded-r-md bg-white px-3 py-2 text-sm text-stone-800 shadow transition-transform hover:scale-[99%] dark:bg-neutral-800 dark:text-white"
+            className={clsx(
+                "highlight animate-fadein desktop:hover:scale-[99%] relative flex cursor-pointer touch-manipulation select-none flex-col gap-2 overflow-hidden rounded-l-sm rounded-r-md bg-white px-3 py-2 text-sm text-stone-800 shadow transition-transform dark:bg-neutral-800 dark:text-white",
+                dropdownOpen && "scale-[99%]"
+            )}
             href={article?.url}
             onClick={openHighlight}
             onContextMenu={(e) => {
@@ -63,6 +71,8 @@ export function Highlight({
                 // background: color,
                 borderLeft: `8px solid ${color}`,
             }}
+            target="_blank"
+            rel="noopener noreferrer"
         >
             <HighlightDropdown
                 annotation={annotation}

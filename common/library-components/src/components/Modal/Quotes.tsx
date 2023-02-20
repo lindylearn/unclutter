@@ -18,7 +18,7 @@ import { getActivityColor } from "../Charts";
 import clsx from "clsx";
 
 export default function QuotesTab({}: {}) {
-    const { userInfo, reportEvent, darkModeEnabled } = useContext(ModalStateContext);
+    const { userInfo, reportEvent, darkModeEnabled, isMobile } = useContext(ModalStateContext);
     const { currentArticle, domainFilter, setDomainFilter, tagFilter, setTagFilter } =
         useContext(FilterContext);
 
@@ -112,7 +112,7 @@ export default function QuotesTab({}: {}) {
 
     return (
         <div className="flex flex-col gap-4">
-            <div className="filter-list animate-fadein mx-auto flex w-full max-w-xs justify-start gap-3 md:mx-0 md:max-w-none">
+            <div className="filter-list animate-fadein flex justify-start gap-3 px-4 md:px-0">
                 {activeCurrentFilter ? (
                     <FilterButton
                         title={domainFilter || `#${tagFilter}`}
@@ -152,10 +152,11 @@ export default function QuotesTab({}: {}) {
                         placeholder={
                             annotations === null
                                 ? ""
-                                : `Search across your ${annotations.length} quote${
-                                      annotations.length !== 1 ? "s" : ""
-                                  }...`
+                                : `Search ${!isMobile ? "across " : ""}your ${
+                                      annotations.length
+                                  } quote${annotations.length !== 1 ? "s" : ""}...`
                         }
+                        autoFocus={!isMobile}
                     />
                 )}
             </div>

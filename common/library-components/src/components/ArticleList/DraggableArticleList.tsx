@@ -36,7 +36,7 @@ export function DraggableArticleList({
         <SortableContext id={listId} items={articles} strategy={rectSortingStrategy}>
             <div
                 className={clsx(
-                    "article-list animate-fadein flex h-full flex-wrap content-start gap-3",
+                    "article-list animate-fadein flex h-full touch-manipulation flex-wrap content-start gap-3",
                     centerGrid ? "justify-center" : ""
                 )}
                 ref={setNodeRef}

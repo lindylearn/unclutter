@@ -32,7 +32,7 @@ export function SettingsGroup({
     return (
         <div
             className={clsx(
-                "relative z-20 max-w-2xl bg-stone-50 text-sm shadow-sm dark:bg-neutral-800 md:rounded-md md:text-base",
+                "relative z-20 max-w-2xl bg-stone-50  shadow-sm dark:bg-neutral-800 md:rounded-md",
                 className
                 // animationIndex !== undefined ? "animate-slidein" : "animate-fadein"
             )}
@@ -44,11 +44,16 @@ export function SettingsGroup({
                 //         : "",
             }}
         >
-            <h2 className="flex items-center gap-2 py-3 px-4 font-medium">
+            <h2 className="flex items-center gap-2 px-4 pb-2 pt-3 font-medium md:pb-3">
                 {icon}
                 {title}
             </h2>
-            <div className={clsx("flex flex-col gap-1 px-4 pb-3 md:gap-2", progress && "mb-3")}>
+            <div
+                className={clsx(
+                    "flex flex-col gap-2 px-4 pb-3 text-sm md:gap-2 md:text-base",
+                    progress && "mb-3"
+                )}
+            >
                 {children}
                 {imageSrc && buttons && (
                     <img

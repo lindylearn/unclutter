@@ -46,6 +46,9 @@ module.exports = {
                 articleSmallHover:
                     "0 0px 2px 0px rgb(0 0 0 / 0.15), 0 20px 25px -5px rgb(0 0 0 / 0.1)",
             },
+            screens: {
+                desktop: { raw: "(hover: hover)" },
+            },
         },
         fontFamily: {
             title: ["Poppins", "sans-serif"],

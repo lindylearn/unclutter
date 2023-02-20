@@ -12,12 +12,14 @@ export const ModalVisibilityContext = createContext<{
 export const ModalStateContext = createContext<{
     darkModeEnabled: boolean;
     isWeb?: boolean;
+    isMobile?: boolean;
     showSignup: boolean;
     userInfo?: UserInfo;
     reportEvent: (event: string, data?: any) => void;
 }>({
     darkModeEnabled: false,
     isWeb: false,
+    isMobile: false,
     showSignup: false,
     reportEvent: () => {},
 });
