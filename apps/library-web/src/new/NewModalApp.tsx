@@ -63,6 +63,13 @@ export default function NewModalApp() {
     } = useModalState(initialRoute, undefined, undefined, reportEventPosthog);
     const currentTabTitle = currentTab[0].toUpperCase() + currentTab.slice(1);
 
+    // only allow access to some tabs before trial enabled
+    useEffect(() => {
+        if (userInfo && !userInfo?.aiEnabled && !["about", "settings"].includes(currentTab)) {
+            setCurrentTab("about");
+        }
+    }, [userInfo, currentTab]);
+
     useEffect(() => {
         // update urls on navigation, but keep initial url params
         const currentRoute = router.asPath.split("?")[0].slice(1);
