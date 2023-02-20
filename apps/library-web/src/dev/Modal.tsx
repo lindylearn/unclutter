@@ -48,10 +48,10 @@ export default function ModalDevTab({}) {
     const darkModeEnabled = useAutoDarkMode();
 
     const userInfo = useSubscribe(rep, rep?.subscribe.getUserInfo(), null);
-    if (userInfo) {
-        userInfo.accountEnabled = false;
-        userInfo.aiEnabled = false;
-    }
+    // if (userInfo) {
+    //     userInfo.accountEnabled = false;
+    //     userInfo.aiEnabled = false;
+    // }
 
     if (!userInfo) {
         return <></>;

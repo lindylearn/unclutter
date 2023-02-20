@@ -1,5 +1,5 @@
 import { DraggableArticleList, StaticArticleList } from "../../components";
-import React, { ReactNode } from "react";
+import React, { ReactNode, useMemo } from "react";
 import clsx from "clsx";
 import { getRandomLightColor } from "../../common";
 import { Article, readingProgressFullClamp } from "../../store";
@@ -51,9 +51,12 @@ export function ArticleGroup({
     //     (a) => a.reading_progress >= readingProgressFullClamp
     // )?.length;
 
+    // article height + padding to prevent size change
+    const articleHeightRem = 11.5 * articleLines - 0.75 * (articleLines - 1);
+
     return (
         <div className={clsx("topic relative", className)} style={style}>
-            <div className="topic-header mx-0.5 mb-2 flex justify-between">
+            <div className="topic-header mb-2 ml-3 flex justify-between md:ml-0.5">
                 <h2
                     className={clsx(
                         "title flex select-none items-center gap-2 font-medium",
@@ -88,9 +91,8 @@ export function ArticleGroup({
             )} */}
 
             <div
-                className="topic-articles relative rounded-md p-3 transition-colors"
+                className={`topic-articles relative p-3 transition-colors md:rounded-md md:min-h-[${articleHeightRem}rem]`}
                 style={{
-                    height: `${11.5 * articleLines - 0.75 * (articleLines - 1)}rem`, // article height + padding to prevent size change
                     background: color,
                 }}
             >
@@ -129,3 +131,24 @@ const emptyListMessage = {
     uncompleted: "Your unread articles will appear here.",
     completed: "Every article you finsh reading will appear here.",
 };
+
+export function useScreenArticleRowCount(isWeb?: boolean) {
+    // only calculated on initial width for now, otherwise need to re-group tab infos
+    const articleRowCount = useMemo(() => {
+        // hard code for modal
+        if (!isWeb) {
+            return 5;
+        }
+
+        // this is not always accurate for web
+        const availableSpace =
+            window.innerWidth >= 768
+                ? Math.min(960 - 2 * 12, window.innerWidth - 2 * 12)
+                : window.innerWidth - 2 * 12;
+
+        const articleWidth = window.innerWidth >= 768 ? 144 + 12 : 112 + 12;
+
+        return Math.floor(availableSpace / articleWidth);
+    }, []);
+    return articleRowCount;
+}

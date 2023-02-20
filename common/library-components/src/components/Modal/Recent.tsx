@@ -1,14 +1,16 @@
 import { useTabInfos, useArticleListsCache } from "../../components";
 import React, { ReactNode, useContext } from "react";
 import { DraggableContext } from "../ArticleList/DraggableContext";
-import { ArticleGroup } from "../ArticleList/ArticleGroup";
+import { ArticleGroup, useScreenArticleRowCount } from "../ArticleList/ArticleGroup";
 import { FilterContext, ModalStateContext } from "./context";
 
 export default function RecentModalTab({}: {}) {
-    const { darkModeEnabled, userInfo, reportEvent } = useContext(ModalStateContext);
+    const { darkModeEnabled, userInfo, reportEvent, isWeb } = useContext(ModalStateContext);
     const { domainFilter } = useContext(FilterContext);
 
-    const tabInfos = useTabInfos(domainFilter, userInfo);
+    const rowArticleCount = useScreenArticleRowCount(isWeb);
+
+    const tabInfos = useTabInfos(domainFilter, userInfo, rowArticleCount);
     const [articleListsCache, setArticleListsCache] = useArticleListsCache(tabInfos);
 
     return (
@@ -32,6 +34,7 @@ export default function RecentModalTab({}: {}) {
                     }
                     articles={articleListsCache?.["queue"] || []}
                     articleLines={1}
+                    rowArticleCount={rowArticleCount}
                     darkModeEnabled={darkModeEnabled}
                     reportEvent={reportEvent}
                 />
@@ -44,6 +47,7 @@ export default function RecentModalTab({}: {}) {
                             key={tabInfo.key}
                             groupKey={tabInfo.key}
                             articles={articleListsCache?.[tabInfo.key] || []}
+                            rowArticleCount={rowArticleCount}
                             darkModeEnabled={darkModeEnabled}
                             reportEvent={reportEvent}
                         />
