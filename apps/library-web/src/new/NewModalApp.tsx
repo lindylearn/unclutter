@@ -134,9 +134,9 @@ export default function NewModalApp() {
                         reportEvent: reportEventPosthog,
                     }}
                 >
-                    <div className="font-text flex h-screen flex-col items-stretch overflow-hidden text-base lg:flex-row">
-                        <aside className="left-side w-full lg:m-4 lg:w-60">
-                            <div className="flex h-full flex-col bg-white p-4 shadow-sm dark:bg-[#212121] md:rounded-lg">
+                    <div className="font-text flex h-screen flex-col-reverse items-stretch overflow-hidden text-base lg:flex-row">
+                        <aside className="left-side z-20 w-full border-t-[1px] border-stone-100 md:border-0 lg:m-4 lg:w-60">
+                            <div className="flex h-full flex-col bg-white p-3 shadow-lg dark:bg-[#212121] md:rounded-lg md:p-4 md:shadow-sm">
                                 <div className="mb-4 hidden w-full items-center gap-2 lg:flex">
                                     <LindyIcon className="w-8" />
 
@@ -152,7 +152,7 @@ export default function NewModalApp() {
                                 <Sidebar currentTab={currentTab} setCurrentTab={setCurrentTab} />
                             </div>
                         </aside>
-                        <div className="right-side h-screen w-full overflow-y-auto md:p-4">
+                        <div className="right-side z-10 w-full overflow-y-auto pt-4 md:h-screen md:p-4">
                             <div className="min-h-full max-w-5xl bg-white pt-0 dark:bg-[#212121] md:rounded-lg md:p-4 md:py-6 md:px-8 lg:shadow-sm">
                                 {currentTab === "articles" && <RecentModalTab />}
                                 {currentTab === "stats" && <StatsModalTab />}

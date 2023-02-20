@@ -112,7 +112,7 @@ export default function QuotesTab({}: {}) {
 
     return (
         <div className="flex flex-col gap-4">
-            <div className="filter-list animate-fadein mx-auto flex w-full max-w-sm justify-start gap-3 md:mx-0 md:max-w-none">
+            <div className="filter-list animate-fadein mx-auto flex w-full max-w-xs justify-start gap-3 md:mx-0 md:max-w-none">
                 {activeCurrentFilter ? (
                     <FilterButton
                         title={domainFilter || `#${tagFilter}`}
