@@ -15,7 +15,6 @@ interface ArticlePreviewProps {
     article: Article;
     listState: "static" | "active" | "dragging";
     listIndex?: number;
-    small?: boolean;
     disableFavoriteShadow?: boolean;
     disableDropdown?: boolean;
     style?: object;
@@ -29,7 +28,6 @@ export function ArticlePreview({
     listState,
     listIndex = 0,
     style = {},
-    small = false,
     disableFavoriteShadow = false,
     disableDropdown = false,
     setNodeRef = (el) => {},
@@ -93,10 +91,7 @@ export function ArticlePreview({
     return (
         <a
             className={clsx(
-                "article-container relative block flex-shrink-0 cursor-pointer overflow-hidden bg-white text-base text-stone-800 transition-shadow dark:text-black dark:brightness-90",
-                small
-                    ? "hover:shadow-articleSmallHover shadow-articleSmall h-40 w-36 rounded-md"
-                    : "hover:shadow-articleHover shadow-article h-52 w-44 rounded-lg",
+                "hover:shadow-articleSmallHover shadow-articleSmall article-container relative block h-32 w-28 flex-shrink-0 cursor-pointer overflow-hidden rounded-md bg-white text-base text-stone-800 transition-shadow dark:text-black dark:brightness-90 md:h-40 md:w-36",
                 listState === "active" && "article-active opacity-0 transition-none",
                 // listState === "static" && "article-static",
                 // listState === "dragging" && "article-dragging",
@@ -183,7 +178,7 @@ export function ArticlePreview({
                     article={article}
                     open={dropdownOpen}
                     setOpen={setDropdownOpen}
-                    small={small}
+                    small={true}
                 />
             )}
 

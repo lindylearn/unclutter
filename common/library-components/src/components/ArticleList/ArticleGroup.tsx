@@ -109,13 +109,11 @@ export function ArticleGroup({
                     <DraggableArticleList
                         listId={groupKey}
                         articlesToShow={articleLines * rowArticleCount}
-                        small
                         reportEvent={reportEvent}
                     />
                 ) : (
                     <StaticArticleList
                         articles={articles.slice(0, articleLines * rowArticleCount)}
-                        small
                     />
                 )}
             </div>

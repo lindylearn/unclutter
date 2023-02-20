@@ -254,7 +254,7 @@ export function DraggableContext({
                         className="article-drag-overlay"
                     >
                         {activeArticle && (
-                            <ArticlePreview listState="dragging" article={activeArticle} small />
+                            <ArticlePreview listState="dragging" article={activeArticle} />
                         )}
                     </DragOverlay>,
                     document.body

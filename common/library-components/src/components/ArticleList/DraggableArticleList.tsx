@@ -84,7 +84,6 @@ function SortableItem(props) {
             article={props.article}
             listIndex={props.listIndex}
             disableFavoriteShadow={props.disableFavoriteShadow}
-            small={props.small}
             reportEvent={props.reportEvent}
         />
     );

@@ -110,7 +110,7 @@ export function TabbedContainer({
                 ref={listRef}
             >
                 {activeIndex !== undefined && activeIndex !== null && articlesPerRow !== 0 && (
-                    <StaticArticleList articles={tabInfos[activeIndex].articles || []} small />
+                    <StaticArticleList articles={tabInfos[activeIndex].articles || []} />
                     // <DraggableContext
                     //     articleLists={{
                     //         default: tabInfos[activeIndex].articles || [],
