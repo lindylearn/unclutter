@@ -53,7 +53,7 @@ export function SettingsGroup({
                 {imageSrc && buttons && (
                     <img
                         src={imagePath}
-                        className="mt-1 h-60 w-full bg-stone-100 object-cover object-left-top dark:brightness-90"
+                        className="h-64 w-full rounded-md object-cover object-left-top p-3 pt-1 dark:brightness-90"
                     />
                 )}
                 {buttons && !progress && <div className="mt-1 flex flex-wrap gap-3">{buttons}</div>}
@@ -80,7 +80,7 @@ export function SettingsGroup({
             {imageSrc && !buttons && (
                 <img
                     src={imagePath}
-                    className="mt-1 h-60 w-full bg-stone-100 object-cover object-left-top dark:brightness-90"
+                    className="h-64 w-full rounded-md object-cover object-left-top p-3 pt-1 dark:brightness-90"
                 />
             )}
 
