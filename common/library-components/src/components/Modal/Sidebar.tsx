@@ -98,6 +98,7 @@ function getModalTabOptions(
             label: "Stats",
             value: "stats",
             unavailable: requireSupport && !userInfo?.aiEnabled,
+            hiddenOnMobile: true,
             svg: (
                 <svg className="h-4" viewBox="0 0 448 512">
                     <path
@@ -162,7 +163,7 @@ function getModalTabOptions(
             label: "About",
             value: "about",
             atEnd: true,
-            hiddenOnMobile: true,
+            hiddenOnMobile: userInfo?.aiEnabled,
             svg: (
                 <svg className="h-4 w-4" viewBox="0 0 512 512">
                     <path

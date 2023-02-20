@@ -24,23 +24,26 @@ export default function LoginPage({ isSignup = false }) {
 
     return (
         // dark:bg-[#212121] dark:text-[rgb(232,230,227)]
-        <div className="grid min-h-screen text-stone-800 lg:grid-cols-2">
+        <div className="min-h-screen text-stone-800 lg:grid lg:grid-cols-2">
             <Head>
                 <title>Unclutter Library</title>
             </Head>
 
-            <aside className="flex flex-col items-center gap-8 bg-stone-50 p-4 pt-10 lg:pt-32">
-                <div className="font-title flex items-center justify-center gap-3 text-4xl font-semibold dark:text-stone-800">
+            <aside className="flex flex-col items-center gap-5 bg-stone-50 p-5 lg:pt-32">
+                <div className="font-title flex items-center justify-center gap-3 text-3xl font-semibold dark:text-stone-800 md:text-4xl">
                     <LindyIcon className="w-10" />
                     <h1>Unclutter Library</h1>
                 </div>
 
-                <p className="max-w-md">
+                <p className="max-w-md text-center">
                     Make use of what you read by automatically saving, organizing, and connecting
                     article quotes using AI.
                 </p>
 
-                <img className="w-full max-w-2xl rounded-lg" src="/media/connect_ideas.png" />
+                <img
+                    className="mt-5 hidden w-full max-w-2xl rounded-lg md:block"
+                    src="/media/connect_ideas.png"
+                />
             </aside>
 
             <main className="flex w-full flex-col bg-white p-4 py-10 lg:pt-32">
