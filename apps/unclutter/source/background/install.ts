@@ -2,7 +2,7 @@ import browser, { getBrowserType } from "../common/polyfill";
 import { injectScript } from "./inject";
 import { reportEnablePageView } from "./metrics";
 import type { Alarms } from "webextension-polyfill";
-import { refreshLibraryFeeds, syncPull } from "./library/library";
+import { syncPull } from "./library/library";
 
 export function onNewInstall(version: string) {
     browser.tabs.create({
@@ -61,6 +61,10 @@ function installContextMenu() {
         title: "Open Library",
         contexts: [context],
     });
+    // createOrUpdateContextMenu("save-article", {
+    //     title: "Save article for later",
+    //     contexts: [context],
+    // });
 
     // throws error if no permission
     browser.contextMenus.onClicked.addListener((info, tab) => {
@@ -74,9 +78,17 @@ function installContextMenu() {
             });
         } else if (info.menuItemId === "open-library") {
             browser.tabs.create({
-                url: "https://my.unclutter.it/",
+                url: "https://my.unclutter.it/articles",
                 active: true,
             });
+        } else if (info.menuItemId === "save-article") {
+            // TODO figure out how to access tab url + title
+            // const article = constructLocalArticle(
+            //     this.articleUrl,
+            //     this.articleId,
+            //     this.articleTitle
+            // )
+            // rep.mutate.putArticleIfNotExists(article)
         }
     });
 }
