@@ -5,7 +5,8 @@ import { ArticleGroup, useScreenArticleRowCount } from "../ArticleList/ArticleGr
 import { FilterContext, ModalStateContext } from "./context";
 
 export default function RecentModalTab({}: {}) {
-    const { darkModeEnabled, userInfo, reportEvent, isWeb } = useContext(ModalStateContext);
+    const { darkModeEnabled, userInfo, reportEvent, isWeb, isMobile } =
+        useContext(ModalStateContext);
     const { domainFilter } = useContext(FilterContext);
 
     const rowArticleCount = useScreenArticleRowCount(isWeb);
@@ -33,7 +34,7 @@ export default function RecentModalTab({}: {}) {
                         </svg>
                     }
                     articles={articleListsCache?.["queue"] || []}
-                    articleLines={1}
+                    articleLines={isMobile ? 2 : 1}
                     rowArticleCount={rowArticleCount}
                     darkModeEnabled={darkModeEnabled}
                     reportEvent={reportEvent}

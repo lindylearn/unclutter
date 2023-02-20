@@ -146,13 +146,13 @@ export function useScreenArticleRowCount(isWeb?: boolean) {
 
         // this is not always accurate for web
         const availableSpace =
-            window.innerWidth >= 768
-                ? Math.min(960 - 2 * 12, window.innerWidth - 2 * 12)
+            window.innerWidth >= 1024
+                ? window.innerWidth - 187 - 2 * 16 - 2 * 32
                 : window.innerWidth - 2 * 12;
+        const articleWidth = window.innerWidth >= 768 ? 144 : 112;
+        const gap = 12;
 
-        const articleWidth = window.innerWidth >= 768 ? 144 + 12 : 112 + 12;
-
-        return Math.floor(availableSpace / articleWidth);
+        return Math.floor((availableSpace + gap) / (articleWidth + gap));
     }, []);
     return articleRowCount;
 }

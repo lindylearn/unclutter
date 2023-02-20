@@ -22,6 +22,7 @@ import {
     ReplicacheContext,
 } from "../../store";
 import { getDomain } from "../../common";
+import { ModalStateContext } from "../Modal/context";
 
 export type ArticleListsCache = { [listId: string]: Article[] };
 export const CustomDraggableContext = createContext<{
@@ -41,14 +42,18 @@ export function DraggableContext({
     children: ReactNode;
     reportEvent?: (event: string, properties?: any) => void;
 }) {
+    const { isMobile } = useContext(ModalStateContext);
     const rep = useContext(ReplicacheContext);
 
     const sensors = useSensors(
-        useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
-        useSensor(TouchSensor, { activationConstraint: { distance: 5 } }),
-        useSensor(KeyboardSensor, {
-            coordinateGetter: sortableKeyboardCoordinates,
-        })
+        ...(isMobile
+            ? [useSensor(TouchSensor)]
+            : [
+                  useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+                  useSensor(KeyboardSensor, {
+                      coordinateGetter: sortableKeyboardCoordinates,
+                  }),
+              ])
     );
 
     // set active (dragging) article for drag overlay
