@@ -232,7 +232,7 @@ function SidebarFilterOption({
                     : "hover:bg-stone-100 dark:text-neutral-500 hover:dark:bg-neutral-800",
                 unavailable && (isActive ? "bg-stone-100" : "opacity-50"),
                 unavailable ? "" : "cursor-pointer",
-                hiddenOnMobile ? "hidden lg:flex" : "flex"
+                hiddenOnMobile ? "hidden md:flex" : "flex"
             )}
             onClick={unavailable ? undefined : onClick}
         >

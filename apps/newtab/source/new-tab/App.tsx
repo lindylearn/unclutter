@@ -35,7 +35,7 @@ export default function App() {
     const rep = useMemo<ReplicacheProxy>(() => new ReplicacheProxy(getUnclutterExtensionId()), []);
 
     function reportEvent(name: string, data: object = {}) {
-        reportEventContentScript(name, { ...data, onNewTab: true }, getUnclutterExtensionId());
+        reportEventContentScript(name, { ...data, onNewTab: true });
     }
 
     const [userInfo, setUserInfo] = useState<UserInfo>();
@@ -72,9 +72,7 @@ export default function App() {
     return (
         // @ts-ignore
         <ReplicacheContext.Provider value={rep} darkModeEnabled={darkModeEnabled}>
-            <LocalScreenshotContext.Provider
-                value={(articleId) => getLocalScreenshot(articleId, getUnclutterExtensionId())}
-            >
+            <LocalScreenshotContext.Provider value={getLocalScreenshot}>
                 <ModalVisibilityContext.Provider
                     value={{ isVisible: showModal, closeModal: () => setShowModal(false) }}
                 >

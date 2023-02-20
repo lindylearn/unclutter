@@ -131,7 +131,7 @@ export default function NewModalApp() {
                     }}
                 >
                     <div className="font-text flex h-screen flex-col items-stretch overflow-hidden text-base lg:flex-row">
-                        <aside className="left-side w-full md:m-4 lg:w-60">
+                        <aside className="left-side w-full lg:m-4 lg:w-60">
                             <div className="flex h-full flex-col bg-white p-4 shadow-sm dark:bg-[#212121] md:rounded-lg">
                                 <div className="mb-4 hidden w-full items-center gap-2 lg:flex">
                                     <LindyIcon className="w-8" />

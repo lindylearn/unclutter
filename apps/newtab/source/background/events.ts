@@ -1,5 +1,4 @@
 import {
-    getUnclutterExtensionId,
     getUnclutterVersion,
     reportEventContentScript,
 } from "@unclutter/library-components/dist/common";

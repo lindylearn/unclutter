@@ -81,14 +81,15 @@ export default function AboutModalTab({}: {}) {
                 }
                 buttons={
                     userInfo?.aiEnabled ? (
-                        <SettingsButton
-                            title="Join Discord"
-                            href="https://unclutter.it/discord"
-                            darkModeEnabled={darkModeEnabled}
-                            primary
-                            reportEvent={reportEvent}
-                        />
+                        <></>
                     ) : (
+                        // <SettingsButton
+                        //     title="Join Discord"
+                        //     href="https://unclutter.it/discord"
+                        //     darkModeEnabled={darkModeEnabled}
+                        //     primary
+                        //     reportEvent={reportEvent}
+                        // />
                         <SettingsButton
                             title="Start free trial"
                             href={paymentsLink}
@@ -108,10 +109,10 @@ export default function AboutModalTab({}: {}) {
                             saved. Then start an import to make use of the knowledge you've already
                             accumulated.
                         </p>
-                        <p>
+                        {/* <p>
                             Join our Discord server for any questions, feedback, or improvement
                             ideas!
-                        </p>
+                        </p> */}
                     </>
                 ) : (
                     <>

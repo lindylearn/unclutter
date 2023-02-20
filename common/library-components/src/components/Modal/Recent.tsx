@@ -69,7 +69,7 @@ export function FilterButton({
 }) {
     return (
         <a
-            className="flex flex-shrink-0 cursor-pointer select-none items-center gap-2 rounded-md bg-stone-100 px-2 py-1 font-medium transition-all hover:scale-[97%] dark:bg-neutral-800"
+            className="hidden flex-shrink-0 cursor-pointer select-none items-center gap-2 rounded-md bg-stone-100 px-2 py-1 font-medium transition-all hover:scale-[97%] dark:bg-neutral-800 md:flex"
             onClick={onClick}
             href={href}
             style={{
