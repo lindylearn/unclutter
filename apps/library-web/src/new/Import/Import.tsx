@@ -1,5 +1,9 @@
 import { getBrowserTypeWeb } from "@unclutter/library-components/dist/common";
-import { importArticles, ImportProgress } from "@unclutter/library-components/dist/common/import";
+import {
+    ArticleImportSchema,
+    importArticles,
+    ImportProgress,
+} from "@unclutter/library-components/dist/common/import";
 import { getActivityColor } from "@unclutter/library-components/dist/components";
 import { SettingsGroup } from "@unclutter/library-components/dist/components/Settings/SettingsGroup";
 import clsx from "clsx";
@@ -172,13 +176,6 @@ function ImportButton({ iconFile, name, backgroundColor, onClick, darkModeEnable
         </button>
     );
 }
-
-export type ArticleImportSchema = {
-    urls: string[];
-    time_added?: number[];
-    status?: number[];
-    favorite?: number[];
-};
 
 type ImportOption = {
     name: string;

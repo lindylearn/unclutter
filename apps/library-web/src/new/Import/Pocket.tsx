@@ -1,8 +1,8 @@
+import type { ArticleImportSchema } from "@unclutter/library-components/dist/common/import";
 import { SettingsButton } from "@unclutter/library-components/dist/components/Settings/SettingsGroup";
 import ky from "ky";
 import { useEffect } from "react";
 import { reportEventPosthog } from "../../../common/metrics";
-import { ArticleImportSchema } from "./Import";
 
 export const oauthRedirectUrl = "https://my.unclutter.it/import?from=pocket&auth_redirect";
 

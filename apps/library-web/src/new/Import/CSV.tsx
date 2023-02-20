@@ -1,6 +1,6 @@
+import type { ArticleImportSchema } from "@unclutter/library-components/dist/common/import";
 import { SettingsButton } from "@unclutter/library-components/dist/components/Settings/SettingsGroup";
 import { reportEventPosthog } from "../../../common/metrics";
-import { ArticleImportSchema } from "./Import";
 
 export function CSVImportText({}) {
     return <p>Upload other .csv lists here. The first column in each row should contain a URL.</p>;

@@ -1,7 +1,7 @@
-import { ArticleImportSchema } from "./Import";
 import { CSVImportButtons } from "./CSV";
 import { SettingsButton } from "@unclutter/library-components/dist/components/Settings/SettingsGroup";
 import { reportEventPosthog } from "../../../common/metrics";
+import type { ArticleImportSchema } from "@unclutter/library-components/dist/common/import";
 
 export function RaindropImportText() {
     return (
