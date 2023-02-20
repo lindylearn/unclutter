@@ -80,9 +80,7 @@ export default function AboutModalTab({}: {}) {
                     </svg>
                 }
                 buttons={
-                    userInfo?.aiEnabled ? (
-                        <></>
-                    ) : (
+                    userInfo?.aiEnabled ? undefined : (
                         // <SettingsButton
                         //     title="Join Discord"
                         //     href="https://unclutter.it/discord"

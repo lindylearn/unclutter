@@ -112,7 +112,7 @@ export default function QuotesTab({}: {}) {
 
     return (
         <div className="flex flex-col gap-4">
-            <div className="filter-list animate-fadein flex justify-start gap-3">
+            <div className="filter-list animate-fadein mx-auto flex w-full max-w-sm justify-start gap-3 md:mx-0 md:max-w-none">
                 {activeCurrentFilter ? (
                     <FilterButton
                         title={domainFilter || `#${tagFilter}`}
@@ -199,7 +199,7 @@ function TagGroup({
     return (
         <div className="tag-group relative">
             {tag !== "untagged" && (
-                <div className="mx-0.5 mb-2 flex justify-between">
+                <div className="ml-4 mb-2 flex justify-between md:ml-0.5">
                     <h2
                         className={clsx(
                             "title flex select-none items-center gap-2 font-medium",
@@ -217,7 +217,7 @@ function TagGroup({
             )}
 
             <div
-                className="relative grid gap-4 rounded-md bg-stone-100 p-4 transition-colors dark:bg-transparent dark:p-2 md:grid-cols-2"
+                className="relative grid gap-4 bg-stone-100 p-4 transition-colors dark:bg-transparent dark:p-2 md:grid-cols-2 md:rounded-md"
                 style={
                     {
                         // background: color,

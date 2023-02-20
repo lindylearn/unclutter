@@ -52,7 +52,8 @@ export function ArticleGroup({
     // )?.length;
 
     // article height + padding to prevent size change
-    const articleHeightRem = 11.5 * articleLines - 0.75 * (articleLines - 1);
+    const articleHeightRem = (10 + 2 * 0.75) * articleLines - 0.75 * (articleLines - 1);
+    const articleHeightMobileRem = (8 + 2 * 0.75) * articleLines - 0.75 * (articleLines - 1);
 
     return (
         <div className={clsx("topic relative", className)} style={style}>
@@ -91,8 +92,11 @@ export function ArticleGroup({
             )} */}
 
             <div
-                className={`topic-articles relative p-3 transition-colors md:rounded-md md:min-h-[${articleHeightRem}rem]`}
+                className={`topic-articles relative h-[var(--min-height-mobile)] p-3 transition-colors md:h-[var(--min-height)] md:rounded-md`}
                 style={{
+                    // @ts-ignore
+                    "--min-height": `${articleHeightRem}rem`,
+                    "--min-height-mobile": `${articleHeightMobileRem}rem`,
                     background: color,
                 }}
             >
