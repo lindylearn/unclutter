@@ -74,7 +74,7 @@ export default function AboutModalTab({}: {}) {
             )}
         >
             <SettingsGroup
-                title="Make use of what you read"
+                title="Get more value out of reading"
                 icon={
                     <svg className="h-4 w-4" viewBox="0 0 512 512">
                         <path
@@ -119,8 +119,8 @@ export default function AboutModalTab({}: {}) {
                 ) : (
                     <>
                         <p>
-                            Unclutter can help you to make use of what you read by automatically
-                            saving, organizing, and connecting article quotes using AI.
+                            Unclutter can help get more value out of reading by automatically
+                            saving, organizing, and connecting article quotes.
                         </p>
                         {/* <p>
                             This requires a financial support of $4.99 per month, used to pay
@@ -252,7 +252,7 @@ export default function AboutModalTab({}: {}) {
             </SettingsGroup>
 
             <SettingsGroup
-                title="Save quotes"
+                title="Organize highlights"
                 icon={
                     <svg className="w-4" viewBox="0 0 448 512">
                         <path
@@ -264,16 +264,13 @@ export default function AboutModalTab({}: {}) {
                 imageSrc="media/quotes.png"
             >
                 <p>
-                    Click on any highlight to save it in your library, or manually select any text.
-                </p>
-                <p>
-                    All highlights are tagged automatically. Browse your saved quotes by topic,
+                    All highlights you save are tagged automatically. Browse your quotes by topic,
                     review your recent notes, or AI search across everything you've read.
                 </p>
             </SettingsGroup>
 
             <SettingsGroup
-                title="Connect ideas"
+                title="Connect similar ideas"
                 icon={
                     <svg className="h-4 w-4" viewBox="0 0 512 512">
                         <path
@@ -284,10 +281,10 @@ export default function AboutModalTab({}: {}) {
                 }
                 imageSrc="media/connect_ideas.png"
             >
-                <p>Saved quotes automatically appear next to related quotes.</p>
+                <p>Make use of all your highlights by connecting similar ideas automatically.</p>
                 <p>
-                    For example, if a text mentions Google and AI search, you'll see everything
-                    you've read about Google's AI research and chatGPT right next to it.
+                    If a text mentions AI search engines, you'll see everything you've read about
+                    Google's AI research and chatGPT right next to it.
                 </p>
             </SettingsGroup>
 
@@ -303,10 +300,9 @@ export default function AboutModalTab({}: {}) {
                 }
                 imageSrc="/media/articles.png"
             >
-                <p>Every article you open automatically gets saved in your library.</p>
                 <p>
-                    Organize your reading queue with drag & drop, read on your mobile phone, or find
-                    anything you've seen in the past.
+                    Every article gets saved in your library. Organize your reading queue with drag
+                    & drop, read on your mobile phone, or find anything you've seen in the past.
                 </p>
             </SettingsGroup>
 
@@ -322,10 +318,9 @@ export default function AboutModalTab({}: {}) {
                 }
                 imageSrc="/media/import.png"
             >
-                <p>The larger your library, the more it helps you read smarter.</p>
                 <p>
-                    Make use of the knowledge you've already accumulated by importing your Pocket,
-                    Instapaper, Raindrop, or browser bookmarks.
+                    Make use of the knowledge you've already accumulated by importing articles from
+                    your Pocket, Instapaper, Raindrop, or browser bookmarks.
                 </p>
             </SettingsGroup>
         </div>
