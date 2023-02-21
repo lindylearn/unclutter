@@ -120,7 +120,7 @@ export default function AboutModalTab({}: {}) {
                     <>
                         <p>
                             Unclutter can help get more value out of reading by automatically
-                            saving, organizing, and connecting article quotes.
+                            saving, organizing, and connecting related article quotes.
                         </p>
                         {/* <p>
                             This requires a financial support of $4.99 per month, used to pay
@@ -270,7 +270,7 @@ export default function AboutModalTab({}: {}) {
             </SettingsGroup>
 
             <SettingsGroup
-                title="Connect similar ideas"
+                title="Connect related ideas"
                 icon={
                     <svg className="h-4 w-4" viewBox="0 0 512 512">
                         <path
@@ -281,7 +281,7 @@ export default function AboutModalTab({}: {}) {
                 }
                 imageSrc="media/connect_ideas.png"
             >
-                <p>Make use of all your highlights by connecting similar ideas automatically.</p>
+                <p>Make use of all your highlights by connecting related ideas automatically.</p>
                 <p>
                     If a text mentions AI search engines, you'll see everything you've read about
                     Google's AI research and chatGPT right next to it.

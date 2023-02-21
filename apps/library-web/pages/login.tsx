@@ -37,7 +37,7 @@ export default function LoginPage({ isSignup = false }) {
 
                 <p className="max-w-md text-center">
                     Get more value out of reading by automatically saving, organizing, and
-                    connecting article quotes.
+                    connecting related article quotes.
                 </p>
 
                 <img
