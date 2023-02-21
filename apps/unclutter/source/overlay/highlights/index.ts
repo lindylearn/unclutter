@@ -27,7 +27,7 @@ export function renderHighlightsLayer(
         setReaderModeSettings();
     } else {
         const font = document.createElement("link");
-        font.href = "https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap";
+        font.href = "https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap";
         // &family=Work+Sans:wght@400
         font.rel = "stylesheet";
         document.head.appendChild(font);
