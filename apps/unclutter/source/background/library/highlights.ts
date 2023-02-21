@@ -10,16 +10,9 @@ import {
     getHypothesisAnnotationsSince,
     updateRemoteAnnotation,
 } from "../../sidebar/common/api";
-import { deleteAllLegacyAnnotations, getAllLegacyAnnotations } from "../../sidebar/common/legacy";
 import { processReplicacheMessage, rep } from "./library";
 
 export async function initHighlightsSync() {
-    try {
-        await importLegacyAnnotations();
-    } catch (err) {
-        console.error(err);
-    }
-
     const hypothesisSyncEnabled = await getFeatureFlag(hypothesisSyncFeatureFlag);
     const hypothesisUsername = await getHypothesisUsername();
     if (hypothesisSyncEnabled && hypothesisUsername) {
@@ -39,18 +32,6 @@ export async function initHighlightsSync() {
     }
 
     console.log("Annotations sync done");
-}
-
-async function importLegacyAnnotations() {
-    const annotations = await getAllLegacyAnnotations();
-    if (annotations.length === 0) {
-        return;
-    }
-
-    console.log(`Migrating ${annotations.length} legacy annotations...`);
-    await importAnnotations(annotations);
-
-    await deleteAllLegacyAnnotations();
 }
 
 export async function fetchRemoteAnnotations() {
