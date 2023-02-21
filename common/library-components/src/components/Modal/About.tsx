@@ -93,7 +93,7 @@ export default function AboutModalTab({}: {}) {
                         //     reportEvent={reportEvent}
                         // />
                         <SettingsButton
-                            title="Start free trial"
+                            title="Try it out for free"
                             href={paymentsLink}
                             // inNewTab={false}
                             darkModeEnabled={darkModeEnabled}
