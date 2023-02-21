@@ -147,7 +147,7 @@ export function useScreenArticleRowCount(isWeb?: boolean) {
         // this is not always accurate for web
         const availableSpace =
             window.innerWidth >= 1024
-                ? window.innerWidth - 187 - 2 * 16 - 2 * 32
+                ? Math.min(window.innerWidth - 187 - 2 * 16 - 2 * 32, 960)
                 : window.innerWidth - 2 * 12;
         const articleWidth = window.innerWidth >= 768 ? 144 : 112;
         const gap = 12;
