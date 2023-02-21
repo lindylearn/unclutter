@@ -1,4 +1,3 @@
-import { getUrlHash, normalizeUrl } from "@unclutter/library-components/dist/common/url";
 import type { Annotation, Article } from "@unclutter/library-components/dist/store";
 import { debounce, groupBy } from "lodash";
 import { LindyAnnotation, pickleLocalAnnotation } from "../../common/annotations/create";
@@ -175,7 +174,7 @@ async function importAnnotations(annotations: LindyAnnotation[]) {
         .map((article) => {
             article.reading_progress = 1.0;
 
-            const articleAnnotations = annotationsPerArticle[article.url];
+            const articleAnnotations = annotationsPerArticle[article.id];
             if (articleAnnotations.length > 0) {
                 article.time_added = Math.round(
                     new Date(articleAnnotations[0].created_at).getTime() / 1000
