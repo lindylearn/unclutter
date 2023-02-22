@@ -52,6 +52,8 @@ export function ImportSection({ userInfo, darkModeEnabled }) {
     const [error, setError] = useState<string>();
     const [generateProgress, setGenerateProgress] = useState<ImportProgress>();
     function startImport(data: ArticleImportSchema) {
+        if (!rep) return;
+
         importArticles(rep, data, userInfo, setGenerateProgress);
         reportEventPosthog("startImport", {
             type: activeOption,

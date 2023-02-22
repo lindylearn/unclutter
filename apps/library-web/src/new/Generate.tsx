@@ -18,7 +18,6 @@ export function GenerateSection({
     userInfo,
     darkModeEnabled,
 }: {
-    rep: RuntimeReplicache | null;
     userInfo: UserInfo;
     darkModeEnabled: boolean;
 }) {
