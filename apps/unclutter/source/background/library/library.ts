@@ -21,10 +21,11 @@ import {
 import { deleteAllLocalScreenshots } from "./screenshots";
 // import { initSearchIndex } from "./search";
 import { refreshSubscriptions } from "@unclutter/library-components/dist/feeds";
-import { fetchRemoteAnnotations, initHighlightsSync } from "./highlights";
+import { initHighlightsSync } from "./highlights";
 import { getFeatureFlag, hypothesisSyncFeatureFlag } from "../../common/featureFlags";
 import type { UserInfo } from "@unclutter/library-components/dist/store";
 import { deleteSearchIndex } from "@unclutter/library-components/dist/common/search";
+import { downloadHypothesisAnnotations } from "@unclutter/library-components/dist/common/sync/highlights";
 
 export let userId: string; // actual replicache id, don't change in dev
 export let userInfo: UserInfo | undefined;
@@ -64,7 +65,7 @@ export async function syncPull() {
     const hypothesisSyncEnabled = await getFeatureFlag(hypothesisSyncFeatureFlag);
     if (hypothesisSyncEnabled) {
         try {
-            await fetchRemoteAnnotations();
+            await downloadHypothesisAnnotations(rep);
         } catch (err) {
             console.error(err);
         }

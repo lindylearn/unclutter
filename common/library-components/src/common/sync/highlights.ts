@@ -140,7 +140,7 @@ export async function watchLocalAnnotations(rep: ReplicacheProxy) {
             uploadAnnotationsToHypothesisDebounced(rep);
         }
         if (removed.length > 0) {
-            console.log(`Deleting ${removed.length} annotation remotely...`);
+            console.log(`Deleting ${removed.length} annotations on hypothesis`);
             const syncState = await rep.query.getSyncState("hypothesis");
             if (!syncState) {
                 return;

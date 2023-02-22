@@ -74,9 +74,9 @@ export function parseHypothesisAnnotation(annotation: any): Annotation {
         id: annotation.id,
         h_id: annotation.id,
         article_id,
-        created_at: Math.round(new Date(annotation.created_at).getTime() / 1000),
+        created_at: Math.round(new Date(annotation.created).getTime() / 1000),
         updated_at: annotation.updated_at
-            ? Math.round(new Date(annotation.updated_at).getTime() / 1000)
+            ? Math.round(new Date(annotation.updated).getTime() / 1000)
             : undefined,
         quote_text: annotation.target?.[0].selector?.filter((s) => s.type == "TextQuoteSelector")[0]
             .exact,

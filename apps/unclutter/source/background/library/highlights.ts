@@ -38,6 +38,7 @@ export async function initHighlightsSync() {
         // TODO delete after migration?
     }
 
+    console.log("Starting annotations sync");
     try {
         // upload before download to not endlessly loop
         await uploadAnnotationsToHypothesis(rep);
