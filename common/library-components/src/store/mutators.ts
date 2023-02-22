@@ -404,6 +404,7 @@ const {
     get: getSyncState,
     put: putSyncState,
     update: updateSyncState,
+    delete: deleteSyncState,
 } = generate("sync", syncStateSchema);
 
 export const mutators = {
@@ -435,6 +436,7 @@ export const mutators = {
     getSyncState,
     putSyncState,
     updateSyncState,
+    deleteSyncState,
 };
 export type M = typeof mutators;
 export type ArticleUpdate = Update<Article>;
