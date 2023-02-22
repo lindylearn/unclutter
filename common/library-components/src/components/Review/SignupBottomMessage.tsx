@@ -92,7 +92,7 @@ export default function SignupBottomMessage({
                                         />
                                     </svg>
                                 }
-                                text="Integrate with Pocket, Hypothes.is & more"
+                                text="Sync with Pocket, Hypothes.is & more"
                             />
                         </ul>
                     </div>
