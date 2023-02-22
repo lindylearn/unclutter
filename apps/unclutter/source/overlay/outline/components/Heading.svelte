@@ -40,7 +40,7 @@
     $: tagCounts = getTagCounts(annotations);
     function getTagCounts(annotations: Annotation[]): { [tag: string]: number } {
         const newTagCounts = {};
-        for (const annotation of annotations) {
+        for (const annotation of annotations || []) {
             for (const tag of annotation.tags.slice(0, 1)) {
                 if (newTagCounts[tag]) {
                     newTagCounts[tag]++;
