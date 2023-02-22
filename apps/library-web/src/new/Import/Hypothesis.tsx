@@ -121,7 +121,7 @@ export default function HypothesisSyncSection({ userInfo, darkModeEnabled }) {
             {(syncState || isOpen) && (
                 <>
                     <input
-                        className="flex-grow rounded-md py-1 px-2 outline-none"
+                        className="flex-grow rounded-md bg-white py-1 px-2 outline-none dark:bg-[#212121]"
                         placeholder="Your hypothes.is API token"
                         spellCheck="false"
                         value={token}

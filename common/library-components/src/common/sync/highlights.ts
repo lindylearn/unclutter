@@ -34,6 +34,7 @@ export async function downloadHypothesisAnnotations(rep: ReplicacheProxy) {
         await rep.mutate.importArticles({ articles });
     }
     if (annotations?.length) {
+        // handles updating remote ids
         await rep.mutate.mergeRemoteAnnotations(annotations);
     }
 
@@ -61,6 +62,11 @@ export async function uploadAnnotationsToHypothesis(rep: ReplicacheProxy) {
         .filter((a) => (a.updated_at || a.created_at) * 1000 > lastUploadUnix)
         .filter((a) => !a.ai_created || a.text);
 
+    // if the syncState got lost, we'd try to patch all previously uploaded annotations
+    if (!lastUpload) {
+        annotations = annotations.filter((a) => !a.h_id);
+    }
+
     // short circuit if nothing to upload
     if (annotations.length === 0) {
         await rep.mutate.updateSyncState({
@@ -71,10 +77,10 @@ export async function uploadAnnotationsToHypothesis(rep: ReplicacheProxy) {
         return;
     }
 
+    const createdCount = annotations.filter((a) => !a.h_id).length;
+    const updatedCount = annotations.filter((a) => a.h_id).length;
     console.log(
-        `Uploading ${
-            annotations.length
-        } changed annotations since ${lastUpload?.toUTCString()} to hypothes.is`
+        `Uploading ${createdCount} new and ${updatedCount} updated annotations since ${lastUpload?.toUTCString()} to hypothes.is`
     );
 
     // fetch articles
@@ -99,7 +105,7 @@ export async function uploadAnnotationsToHypothesis(rep: ReplicacheProxy) {
 
             if (annotation.h_id) {
                 // already exists remotely
-                return updateHypothesisAnnotation(
+                await updateHypothesisAnnotation(
                     syncState.username,
                     syncState.api_token,
                     annotation
@@ -113,7 +119,8 @@ export async function uploadAnnotationsToHypothesis(rep: ReplicacheProxy) {
                     article.url,
                     article.title || ""
                 );
-                await rep.mutate.updateAnnotation({
+                // don't change updated_at
+                await rep.mutate.updateAnnotationRaw({
                     id: annotation.id,
                     h_id: remoteId,
                 });
@@ -137,11 +144,14 @@ export async function watchLocalAnnotations(rep: ReplicacheProxy) {
     }
     watchActive = true;
 
+    console.log("Watching annotations for changes...");
     rep.watch("annotations/", async (changed: Annotation[], removed: Annotation[]) => {
         if (changed.length > 0) {
             // process based on edit timestamp for resilience
             uploadAnnotationsToHypothesisDebounced(rep);
         }
+
+        removed = removed.filter((a) => a.h_id);
         if (removed.length > 0) {
             console.log(`Deleting ${removed.length} annotations on hypothesis`);
             const syncState = await rep.query.getSyncState("hypothesis");

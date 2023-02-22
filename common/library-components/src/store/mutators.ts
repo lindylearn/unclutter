@@ -345,11 +345,14 @@ async function mergeRemoteAnnotations(tx: WriteTransaction, annotations: Annotat
                 existing = allAnnotations.find((a) => a.id === annotation.id);
             }
 
-            if (existing) {
-                await updateAnnotationRaw(tx, annotation);
-            } else {
+            if (!existing) {
                 await putAnnotation(tx, annotation);
+                return;
             }
+
+            // setting .h_id will trigger another PATCH request
+            // this is ok for manually created annotations, but not for all existing
+            await updateAnnotationRaw(tx, annotation);
         })
     );
 }
@@ -425,6 +428,7 @@ export const mutators = {
     putAnnotation,
     mergeRemoteAnnotations,
     updateAnnotation,
+    updateAnnotationRaw,
     deleteAnnotation,
     updateSettings,
     importEntries,

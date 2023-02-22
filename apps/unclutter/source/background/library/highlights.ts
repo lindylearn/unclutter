@@ -9,7 +9,7 @@ import {
 } from "@unclutter/library-components/dist/common/sync/highlights";
 import type { SyncState } from "@unclutter/library-components/dist/store";
 
-export async function initHighlightsSync(setSyncState: SyncState) {
+export async function initHighlightsSync(setSyncState: SyncState = undefined) {
     let syncState = await rep.query.getSyncState("hypothesis");
     console.log("Starting highlights sync", syncState, setSyncState);
 
