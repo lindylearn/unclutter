@@ -24,7 +24,7 @@ import StatsModalTab from "@unclutter/library-components/dist/components/Modal/S
 import QuotesTab from "@unclutter/library-components/dist/components/Modal/Quotes";
 import SettingsModalTab from "@unclutter/library-components/dist/components/Modal/Settings";
 import Sidebar from "@unclutter/library-components/dist/components/Modal/Sidebar";
-import NewImportTab from "./Import";
+import SyncTab from "./Sync";
 import AboutModalTab from "@unclutter/library-components/dist/components/Modal/About";
 import ReviewDevTab from "../dev/Review";
 import ModalDevTab from "../dev/Modal";
@@ -36,6 +36,10 @@ export default function NewModalApp() {
     // 1.7.1 signup message for registered users
     if (initialRoute === "smart-reading") {
         initialRoute = "about";
+    }
+    // 1.7.2 modal sidebar link
+    if (initialRoute === "import") {
+        initialRoute = "sync";
     }
 
     const rep = useContext(ReplicacheContext);
@@ -169,7 +173,7 @@ export default function NewModalApp() {
                                 {currentTab === "quotes" && <QuotesTab />}
                                 {currentTab === "settings" && <SettingsModalTab />}
                                 {currentTab === "about" && <AboutModalTab />}
-                                {currentTab === "import" && <NewImportTab />}
+                                {currentTab === "sync" && <SyncTab />}
                             </div>
                         </div>
                     </div>

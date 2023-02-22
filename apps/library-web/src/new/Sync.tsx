@@ -8,12 +8,10 @@ import {
     useSubscribe,
 } from "@unclutter/library-components/dist/store";
 import { useRouter } from "next/router";
-import { reportEventPosthog } from "../../common/metrics";
 import { GenerateSection } from "./Import/Generate";
 import { ImportSection } from "./Import/Import";
-import Head from "next/head";
 
-export default function NewImportTab() {
+export default function SyncTab() {
     const router = useRouter();
     const rep = useContext(ReplicacheContext);
     const { user } = useUser();

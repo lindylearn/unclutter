@@ -36,14 +36,14 @@ export function ImportSection({ rep, userInfo, darkModeEnabled }) {
         const isRedirect = new URLSearchParams(window.location.search).has("auth_redirect");
         if (isRedirect) {
             setIsRedirect(isRedirect);
-            history.replaceState({}, "", `/import?from=${activeOption}`);
+            history.replaceState({}, "", `/sync?from=${activeOption}`);
         }
     }, []);
 
     // update url, e.g. for the browser import to work
     useEffect(() => {
         setGenerateProgress(undefined);
-        history.replaceState({}, "", `/import${activeOption ? `?from=${activeOption}` : ""}`);
+        history.replaceState({}, "", `/sync${activeOption ? `?from=${activeOption}` : ""}`);
     }, [activeOption]);
 
     const [error, setError] = useState<string>();
