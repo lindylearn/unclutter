@@ -28,8 +28,8 @@ export async function initHighlightsSync(setSyncState: SyncState = undefined) {
             return;
         }
 
-        console.log("Migrating legacy hypothesis sync state");
         const oldSyncState = await getHypothesisSyncState();
+        console.log("Migrating legacy hypothesis sync state", oldSyncState);
         syncState = {
             id: "hypothesis",
             username,
