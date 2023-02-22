@@ -21,6 +21,7 @@ import {
     articleTextSchema,
     feedSubscriptionSchema,
     Settings,
+    syncStateSchema,
     Topic,
     topicSchema,
     UserInfo,
@@ -398,6 +399,13 @@ async function toggleSubscriptionActive(tx: WriteTransaction, subscriptionId: st
     });
 }
 
+/* ***** sync state ***** */
+const {
+    get: getSyncState,
+    put: putSyncState,
+    update: updateSyncState,
+} = generate("sync", syncStateSchema);
+
 export const mutators = {
     updateArticle,
     articleSetFavorite,
@@ -424,6 +432,9 @@ export const mutators = {
     updateSubscription,
     toggleSubscriptionActive,
     deleteSubscription,
+    getSyncState,
+    putSyncState,
+    updateSyncState,
 };
 export type M = typeof mutators;
 export type ArticleUpdate = Update<Article>;

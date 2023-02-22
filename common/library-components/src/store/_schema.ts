@@ -131,3 +131,16 @@ export const feedSubscriptionSchema = entitySchema.extend({
     last_fetched: z.optional(z.number()),
 });
 export type FeedSubscription = z.infer<typeof feedSubscriptionSchema>;
+
+// *** SyncState ***
+export const syncStateSchema = z.object({
+    id: z.enum(["pocket", "hypothesis"]),
+
+    username: z.optional(z.string()),
+    api_token: z.optional(z.string()),
+
+    is_syncing: z.optional(z.boolean()),
+    last_download: z.optional(z.number()), // unix milliseconds
+    last_upload: z.optional(z.number()), // unix milliseconds
+});
+export type SyncState = z.infer<typeof syncStateSchema>;

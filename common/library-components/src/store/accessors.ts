@@ -17,6 +17,7 @@ import {
     PARTIAL_SYNC_STATE_KEY,
     Settings,
     settingsSchema,
+    syncStateSchema,
     Topic,
     topicSchema,
     UserInfo,
@@ -426,6 +427,9 @@ async function getDomainSubscriptions(
     return subscriptions.filter((s) => s.domain === domain);
 }
 
+/* ***** sync state ***** */
+const { get: getSyncState, list: listSyncStates } = generate("sync", syncStateSchema);
+
 export const accessors = {
     getArticle,
     listArticles,
@@ -459,5 +463,7 @@ export const accessors = {
     getSubscription,
     getDomainSubscriptions,
     listSubscriptions,
+    getSyncState,
+    listSyncStates,
 };
 export type A = typeof accessors;
