@@ -45,7 +45,7 @@ export default function SignupBottomMessage({
                     <div className="w-full">
                         <div className="font-title mx-auto mb-2 flex w-max items-center gap-2 text-lg font-semibold">
                             <LindyIcon className="w-6 shrink-0" />
-                            Make use of what you read with the Unclutter Library
+                            Get more value out of reading with the Unclutter Library
                         </div>
 
                         <ul className="mx-auto grid w-max grid-cols-2 items-center gap-y-1 gap-x-4">
