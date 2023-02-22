@@ -1,6 +1,5 @@
 import type { Annotation, Article } from "@unclutter/library-components/dist/store";
 import { debounce, groupBy } from "lodash";
-import { LindyAnnotation, pickleLocalAnnotation } from "../../common/annotations/create";
 import { getHypothesisUsername, getHypothesisToken } from "../../common/annotations/storage";
 import { getFeatureFlag, hypothesisSyncFeatureFlag } from "../../common/featureFlags";
 import { getHypothesisSyncState, updateHypothesisSyncState } from "../../common/storage";
@@ -44,7 +43,7 @@ export async function downloadHypothesisAnnotations(username: string, apiToken: 
     // use current time instead of last download to display time ago
     const newUploadTimestamp = new Date().toUTCString();
 
-    let [annotations, newDownloadTimestamp] = await getHypothesisAnnotationsSince(
+    let [annotations, articles, newDownloadTimestamp] = await getHypothesisAnnotationsSince(
         username,
         apiToken,
         syncState.lastDownloadTimestamp && new Date(syncState.lastDownloadTimestamp),
@@ -54,7 +53,23 @@ export async function downloadHypothesisAnnotations(username: string, apiToken: 
     console.log(
         `Downloading ${annotations.length} hypothes.is annotations since ${syncState.lastDownloadTimestamp}...`
     );
-    await importAnnotations(annotations);
+    // insert articles
+    await Promise.all(
+        articles.map((article) =>
+            processReplicacheMessage({
+                type: "mutate",
+                methodName: "putArticleIfNotExists",
+                args: article,
+            })
+        )
+    );
+
+    // merge remote changes
+    processReplicacheMessage({
+        type: "mutate",
+        methodName: "mergeRemoteAnnotations",
+        args: annotations,
+    });
 
     await updateHypothesisSyncState({
         lastDownloadTimestamp: newUploadTimestamp,
@@ -153,43 +168,5 @@ async function watchLocalAnnotations(username: string, apiToken: string) {
                 )
             );
         }
-    });
-}
-
-async function importAnnotations(annotations: LindyAnnotation[]) {
-    // fetch article state
-    const annotationsPerArticle = groupBy(annotations, (a) => a.article_id);
-
-    const articles = Object.values(annotationsPerArticle)
-        .map((list) => list[0].article)
-        .map((article) => {
-            article.reading_progress = 1.0;
-
-            const articleAnnotations = annotationsPerArticle[article.id];
-            if (articleAnnotations.length > 0) {
-                article.time_added = Math.round(
-                    new Date(articleAnnotations[0].created_at).getTime() / 1000
-                );
-            }
-
-            return article;
-        });
-
-    // insert articles
-    await Promise.all(
-        articles.map((article) =>
-            processReplicacheMessage({
-                type: "mutate",
-                methodName: "putArticleIfNotExists",
-                args: article,
-            })
-        )
-    );
-
-    // merge remote changes
-    processReplicacheMessage({
-        type: "mutate",
-        methodName: "mergeRemoteAnnotations",
-        args: annotations.map(pickleLocalAnnotation),
     });
 }

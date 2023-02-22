@@ -1,41 +1,9 @@
 import ky from "ky-universal";
-import { Annotation } from "../../store";
+import type { Annotation, Article } from "../../store";
 import { getUrlHash } from "../url";
 import { constructLocalArticle } from "../util";
 
 const hypothesisApi = "https://api.hypothes.is/api";
-
-type LindyAnnotation = any;
-// only used when importing from hypothesis
-// TODO serialize to Annotation type directly
-export function hypothesisToLindyFormat(annotation: any, currentUsername: string): LindyAnnotation {
-    const article_id = getUrlHash(annotation.uri);
-    const author: string = annotation.user.match(/([^:]+)@/)[1];
-    return {
-        id: annotation.id,
-        h_id: annotation.id,
-        article_id,
-        author,
-        isMyAnnotation: author === currentUsername,
-        platform: "h",
-        link: `https://hypothes.is/a/${annotation.id}`,
-        created_at: annotation.created,
-        updated_at: annotation.updated,
-        reply_count: 0,
-        quote_text: annotation.target?.[0].selector?.filter((s) => s.type == "TextQuoteSelector")[0]
-            .exact,
-        text: annotation.text,
-        replies: [],
-        upvote_count: 0,
-        tags: annotation.tags,
-        quote_html_selector: annotation.target[0].selector,
-        user_upvoted: false,
-        isPublic: annotation.permissions.read[0] === "group:__world__",
-        reply_to: annotation.references?.[annotation.references.length - 1],
-
-        article: constructLocalArticle(annotation.uri, article_id, annotation.document.title?.[0]),
-    };
-}
 
 // from https://github.com/lindylearn/obsidian-annotations/blob/master/src/api/api.ts
 export async function getHypothesisAnnotationsSince(
@@ -43,14 +11,14 @@ export async function getHypothesisAnnotationsSince(
     apiToken: string,
     lastSyncDate?: Date,
     limit = 5000
-): Promise<[LindyAnnotation[], string]> {
-    let annotations: LindyAnnotation[] = [];
+): Promise<[Annotation[], Article[], string]> {
+    let hypothesisAnnotations: any[] = [];
 
     let newestTimestamp = lastSyncDate?.toUTCString() || "1970-01-01";
     try {
         // Paginate API calls via search_after param
         // search_after=null starts with the earliest annotations
-        while (annotations.length < limit) {
+        while (hypothesisAnnotations.length < limit) {
             const response: any = await ky
                 .get(`${hypothesisApi}/search`, {
                     headers: { Authorization: `Bearer ${apiToken}` },
@@ -69,14 +37,53 @@ export async function getHypothesisAnnotationsSince(
                 break;
             }
 
-            annotations = [...annotations, ...newAnnotations];
+            hypothesisAnnotations.push(...newAnnotations);
             newestTimestamp = newAnnotations[newAnnotations.length - 1].updated;
         }
     } catch (e) {
         console.error(e);
     }
 
-    return [annotations.map((a) => hypothesisToLindyFormat(a, username)), newestTimestamp];
+    const annotations = hypothesisAnnotations.map(parseHypothesisAnnotation);
+
+    const articles: Article[] = [];
+    const seenArticleIds = new Set();
+    for (let i = 0; i < annotations.length; i++) {
+        const annotation = annotations[i];
+        const hypothesisAnnotation = hypothesisAnnotations[i];
+
+        if (!seenArticleIds.has(annotation.article_id)) {
+            seenArticleIds.add(annotation.article_id);
+            articles.push(
+                constructLocalArticle(
+                    hypothesisAnnotation.uri,
+                    annotation.article_id,
+                    hypothesisAnnotation.document.title?.[0]
+                )
+            );
+        }
+    }
+
+    return [annotations, articles, newestTimestamp];
+}
+
+export function parseHypothesisAnnotation(annotation: any): Annotation {
+    const article_id = getUrlHash(annotation.uri);
+
+    return {
+        id: annotation.id,
+        h_id: annotation.id,
+        article_id,
+        created_at: Math.round(new Date(annotation.created_at).getTime() / 1000),
+        updated_at: annotation.updated_at
+            ? Math.round(new Date(annotation.updated_at).getTime() / 1000)
+            : undefined,
+        quote_text: annotation.target?.[0].selector?.filter((s) => s.type == "TextQuoteSelector")[0]
+            .exact,
+        text: annotation.text,
+        tags: annotation.tags,
+        quote_html_selector: annotation.target[0].selector,
+    };
 }
 
 export async function createHypothesisAnnotation(
