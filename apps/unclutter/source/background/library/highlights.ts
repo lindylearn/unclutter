@@ -3,39 +3,41 @@ import { debounce, groupBy } from "lodash";
 import { getHypothesisUsername, getHypothesisToken } from "../../common/annotations/storage";
 import { getFeatureFlag, hypothesisSyncFeatureFlag } from "../../common/featureFlags";
 import { getHypothesisSyncState, updateHypothesisSyncState } from "../../common/storage";
-import { processReplicacheMessage, rep } from "./library";
+import { rep } from "./library";
 import {
     createHypothesisAnnotation,
     deleteHypothesisAnnotation,
     getHypothesisAnnotationsSince,
     updateHypothesisAnnotation,
 } from "@unclutter/library-components/dist/common/sync/hypothesis";
+import { ReplicacheProxy } from "@unclutter/library-components/dist/common/replicache";
 
 export async function initHighlightsSync() {
     const hypothesisSyncEnabled = await getFeatureFlag(hypothesisSyncFeatureFlag);
     const username = await getHypothesisUsername();
     const apiToken = await getHypothesisToken();
+    if (!hypothesisSyncEnabled || !username || !apiToken) {
+        return;
+    }
 
-    if (hypothesisSyncEnabled && username) {
-        try {
-            // upload local changes,
-            // sets last updated time to now (so pulled changes are not uploaded again)
-            await uploadAnnotationsToHypothesis(username, apiToken);
+    try {
+        // upload before download to not endlessly loop
+        await uploadAnnotationsToHypothesis(rep, username, apiToken);
+        await downloadHypothesisAnnotations(rep, username, apiToken);
 
-            // pull remote changes
-            await downloadHypothesisAnnotations(username, apiToken);
-
-            // watch updates
-            await watchLocalAnnotations(username, apiToken);
-        } catch (err) {
-            console.error(err);
-        }
+        await watchLocalAnnotations(rep, username, apiToken);
+    } catch (err) {
+        console.error(err);
     }
 
     console.log("Annotations sync done");
 }
 
-export async function downloadHypothesisAnnotations(username: string, apiToken: string) {
+export async function downloadHypothesisAnnotations(
+    rep: ReplicacheProxy,
+    username: string,
+    apiToken: string
+) {
     const syncState = await getHypothesisSyncState();
     await updateHypothesisSyncState({ isSyncing: true });
 
@@ -53,23 +55,9 @@ export async function downloadHypothesisAnnotations(username: string, apiToken: 
     console.log(
         `Downloading ${annotations.length} hypothes.is annotations since ${syncState.lastDownloadTimestamp}...`
     );
-    // insert articles
-    await Promise.all(
-        articles.map((article) =>
-            processReplicacheMessage({
-                type: "mutate",
-                methodName: "putArticleIfNotExists",
-                args: article,
-            })
-        )
-    );
 
-    // merge remote changes
-    processReplicacheMessage({
-        type: "mutate",
-        methodName: "mergeRemoteAnnotations",
-        args: annotations,
-    });
+    await rep.mutate.importArticles({ articles });
+    await rep.mutate.mergeRemoteAnnotations(annotations);
 
     await updateHypothesisSyncState({
         lastDownloadTimestamp: newUploadTimestamp,
@@ -77,7 +65,11 @@ export async function downloadHypothesisAnnotations(username: string, apiToken: 
     });
 }
 
-async function uploadAnnotationsToHypothesis(username: string, apiToken: string) {
+async function uploadAnnotationsToHypothesis(
+    rep: ReplicacheProxy,
+    username: string,
+    apiToken: string
+) {
     const syncState = await getHypothesisSyncState();
     await updateHypothesisSyncState({ isSyncing: true });
 
@@ -131,13 +123,9 @@ async function uploadAnnotationsToHypothesis(username: string, apiToken: string)
                     article.url,
                     article.title
                 );
-                await processReplicacheMessage({
-                    type: "mutate",
-                    methodName: "updateAnnotation",
-                    args: {
-                        id: annotation.id,
-                        h_id: remoteId,
-                    },
+                await rep.mutate.updateAnnotation({
+                    id: annotation.id,
+                    h_id: remoteId,
                 });
             }
         })
@@ -149,7 +137,7 @@ const uploadAnnotationsToHypothesisDebounced = debounce(uploadAnnotationsToHypot
 
 // only handle deletes using store watch for reslience
 let watchActive = false;
-async function watchLocalAnnotations(username: string, apiToken: string) {
+async function watchLocalAnnotations(rep: ReplicacheProxy, username: string, apiToken: string) {
     if (watchActive) {
         return;
     }
@@ -158,7 +146,7 @@ async function watchLocalAnnotations(username: string, apiToken: string) {
     rep.watch("annotations/", async (changed: Annotation[], removed: Annotation[]) => {
         if (changed.length > 0) {
             // process based on edit timestamp for resilience
-            uploadAnnotationsToHypothesisDebounced(username, apiToken);
+            uploadAnnotationsToHypothesisDebounced(rep, username, apiToken);
         }
         if (removed.length > 0) {
             console.log(`Deleting ${removed.length} annotation remotely...`);
