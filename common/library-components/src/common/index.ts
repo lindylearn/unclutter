@@ -8,3 +8,4 @@ export * from "./search";
 export * from "./url";
 export * from "./messaging";
 export * from "./hooks";
+export * from "./sync";

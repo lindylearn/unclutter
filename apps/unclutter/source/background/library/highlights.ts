@@ -1,31 +1,33 @@
 import type { Annotation, Article } from "@unclutter/library-components/dist/store";
 import { debounce, groupBy } from "lodash";
 import { LindyAnnotation, pickleLocalAnnotation } from "../../common/annotations/create";
-import { getHypothesisUsername } from "../../common/annotations/storage";
+import { getHypothesisUsername, getHypothesisToken } from "../../common/annotations/storage";
 import { getFeatureFlag, hypothesisSyncFeatureFlag } from "../../common/featureFlags";
 import { getHypothesisSyncState, updateHypothesisSyncState } from "../../common/storage";
-import {
-    createRemoteAnnotation,
-    deleteRemoteAnnotation,
-    getHypothesisAnnotationsSince,
-    updateRemoteAnnotation,
-} from "../../sidebar/common/api";
 import { processReplicacheMessage, rep } from "./library";
+import {
+    createHypothesisAnnotation,
+    deleteHypothesisAnnotation,
+    getHypothesisAnnotationsSince,
+    updateHypothesisAnnotation,
+} from "@unclutter/library-components/dist/common/sync/hypothesis";
 
 export async function initHighlightsSync() {
     const hypothesisSyncEnabled = await getFeatureFlag(hypothesisSyncFeatureFlag);
-    const hypothesisUsername = await getHypothesisUsername();
-    if (hypothesisSyncEnabled && hypothesisUsername) {
+    const username = await getHypothesisUsername();
+    const apiToken = await getHypothesisToken();
+
+    if (hypothesisSyncEnabled && username) {
         try {
             // upload local changes,
             // sets last updated time to now (so pulled changes are not uploaded again)
-            await uploadAnnotations();
+            await uploadAnnotationsToHypothesis(username, apiToken);
 
             // pull remote changes
-            await fetchRemoteAnnotations();
+            await downloadHypothesisAnnotations(username, apiToken);
 
             // watch updates
-            await watchLocalAnnotations();
+            await watchLocalAnnotations(username, apiToken);
         } catch (err) {
             console.error(err);
         }
@@ -34,7 +36,7 @@ export async function initHighlightsSync() {
     console.log("Annotations sync done");
 }
 
-export async function fetchRemoteAnnotations() {
+export async function downloadHypothesisAnnotations(username: string, apiToken: string) {
     const syncState = await getHypothesisSyncState();
     await updateHypothesisSyncState({ isSyncing: true });
 
@@ -43,6 +45,8 @@ export async function fetchRemoteAnnotations() {
     const newUploadTimestamp = new Date().toUTCString();
 
     let [annotations, newDownloadTimestamp] = await getHypothesisAnnotationsSince(
+        username,
+        apiToken,
         syncState.lastDownloadTimestamp && new Date(syncState.lastDownloadTimestamp),
         10000
     );
@@ -58,7 +62,7 @@ export async function fetchRemoteAnnotations() {
     });
 }
 
-async function uploadAnnotations() {
+async function uploadAnnotationsToHypothesis(username: string, apiToken: string) {
     const syncState = await getHypothesisSyncState();
     await updateHypothesisSyncState({ isSyncing: true });
 
@@ -102,10 +106,12 @@ async function uploadAnnotations() {
 
             if (annotation.h_id) {
                 // already exists remotely
-                return updateRemoteAnnotation(annotation);
+                return updateHypothesisAnnotation(username, apiToken, annotation);
             } else {
                 // create remotely, then save id
-                const remoteId = await createRemoteAnnotation(
+                const remoteId = await createHypothesisAnnotation(
+                    username,
+                    apiToken,
                     annotation,
                     article.url,
                     article.title
@@ -124,11 +130,11 @@ async function uploadAnnotations() {
 
     await updateHypothesisSyncState({ isSyncing: false, lastUploadTimestamp: newUploadTimestamp });
 }
-const uploadAnnotationsDebounced = debounce(uploadAnnotations, 10000);
+const uploadAnnotationsToHypothesisDebounced = debounce(uploadAnnotationsToHypothesis, 10 * 1000);
 
 // only handle deletes using store watch for reslience
 let watchActive = false;
-async function watchLocalAnnotations() {
+async function watchLocalAnnotations(username: string, apiToken: string) {
     if (watchActive) {
         return;
     }
@@ -137,11 +143,15 @@ async function watchLocalAnnotations() {
     rep.watch("annotations/", async (changed: Annotation[], removed: Annotation[]) => {
         if (changed.length > 0) {
             // process based on edit timestamp for resilience
-            uploadAnnotationsDebounced();
+            uploadAnnotationsToHypothesisDebounced(username, apiToken);
         }
         if (removed.length > 0) {
             console.log(`Deleting ${removed.length} annotation remotely...`);
-            await Promise.all(removed.map((annotation) => deleteRemoteAnnotation(annotation)));
+            await Promise.all(
+                removed.map((annotation) =>
+                    deleteHypothesisAnnotation(username, apiToken, annotation)
+                )
+            );
         }
     });
 }

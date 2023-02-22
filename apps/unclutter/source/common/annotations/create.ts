@@ -111,37 +111,6 @@ export interface ArticleSummaryInfo {
     relatedCount: number;
 }
 
-// only used when importing from hypothesis
-// TODO serialize to Annotation type directly
-export function hypothesisToLindyFormat(annotation: any, currentUsername: string): LindyAnnotation {
-    const article_id = getUrlHash(annotation.uri);
-    const author: string = annotation.user.match(/([^:]+)@/)[1];
-    return {
-        id: annotation.id,
-        h_id: annotation.id,
-        article_id,
-        author,
-        isMyAnnotation: author === currentUsername,
-        platform: "h",
-        link: `https://hypothes.is/a/${annotation.id}`,
-        created_at: annotation.created,
-        updated_at: annotation.updated,
-        reply_count: 0,
-        quote_text: annotation.target?.[0].selector?.filter((s) => s.type == "TextQuoteSelector")[0]
-            .exact,
-        text: annotation.text,
-        replies: [],
-        upvote_count: 0,
-        tags: annotation.tags,
-        quote_html_selector: annotation.target[0].selector,
-        user_upvoted: false,
-        isPublic: annotation.permissions.read[0] === "group:__world__",
-        reply_to: annotation.references?.[annotation.references.length - 1],
-
-        article: constructLocalArticle(annotation.uri, article_id, annotation.document.title?.[0]),
-    };
-}
-
 // strip locally saved annotation from unneccessary state, to reduce used storage
 export function pickleLocalAnnotation(annotation: LindyAnnotation): Annotation {
     return {
