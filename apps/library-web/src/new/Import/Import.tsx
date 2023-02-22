@@ -6,8 +6,9 @@ import {
 } from "@unclutter/library-components/dist/common/import";
 import { getActivityColor } from "@unclutter/library-components/dist/components";
 import { SettingsGroup } from "@unclutter/library-components/dist/components/Settings/SettingsGroup";
+import { ReplicacheContext } from "@unclutter/library-components/dist/store";
 import clsx from "clsx";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { reportEventPosthog } from "../../../common/metrics";
 
 import { BookmarksImportButtons, BookmarksImportText } from "./Bookmarks";
@@ -16,7 +17,9 @@ import { InstapaperImportButtons, InstapaperImportText } from "./Instapaper";
 import { PocketImportButtons, PocketImportText } from "./Pocket";
 import { RaindropImportText, RaindropImportButtons } from "./Raindrop";
 
-export function ImportSection({ rep, userInfo, darkModeEnabled }) {
+export function ImportSection({ userInfo, darkModeEnabled }) {
+    const rep = useContext(ReplicacheContext);
+
     useEffect(() => {
         if (getBrowserTypeWeb() === "firefox") {
             importOptions["bookmarks"].iconFile = "firefox.svg";
@@ -89,10 +92,9 @@ export function ImportSection({ rep, userInfo, darkModeEnabled }) {
                 }
                 animationIndex={2}
             >
-                <p>The more you read, the more your library can help you.</p>
                 <p>
-                    Let's import articles from your other accounts to make use of the knowledge
-                    you've already accumulated elsewhere!
+                    You can also do a one-time article import to make use of the knowledge you've
+                    already accumulated elsewhere.
                 </p>
             </SettingsGroup>
 

@@ -7,9 +7,17 @@ import {
     uploadAnnotationsToHypothesis,
     watchLocalAnnotations,
 } from "@unclutter/library-components/dist/common/sync/highlights";
+import type { SyncState } from "@unclutter/library-components/dist/store";
 
-export async function initHighlightsSync() {
+export async function initHighlightsSync(setSyncState: SyncState) {
     let syncState = await rep.query.getSyncState("hypothesis");
+    console.log("Starting highlights sync", syncState, setSyncState);
+
+    if (!syncState && setSyncState) {
+        // in case not pulled yet
+        syncState = setSyncState;
+        await rep.mutate.putSyncState(syncState);
+    }
 
     // try migration from extension settings
     if (!syncState) {
@@ -38,7 +46,6 @@ export async function initHighlightsSync() {
         // TODO delete after migration?
     }
 
-    console.log("Starting annotations sync");
     try {
         // upload before download to not endlessly loop
         await uploadAnnotationsToHypothesis(rep);

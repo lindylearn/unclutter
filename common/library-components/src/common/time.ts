@@ -1,12 +1,16 @@
 import { format as formatRelativeTime } from "timeago.js";
 
-export function getRelativeTime(timestamp: number): string {
+export function getRelativeTime(timestamp: number, floorToday = true, removeAgo = true): string {
     const date = new Date(timestamp);
-    if (date.toDateString() === new Date().toDateString()) {
+    if (floorToday && date.toDateString() === new Date().toDateString()) {
         return "today";
     }
 
-    return formatRelativeTime(date).replace(" ago", "");
+    let string = formatRelativeTime(date);
+    if (removeAgo) {
+        string = string.replace(" ago", "");
+    }
+    return string;
 }
 
 export function getWeekNumber(date: Date): number {

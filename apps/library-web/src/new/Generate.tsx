@@ -6,12 +6,15 @@ import {
     SettingsButton,
     SettingsGroup,
 } from "@unclutter/library-components/dist/components/Settings/SettingsGroup";
-import type { RuntimeReplicache, UserInfo } from "@unclutter/library-components/dist/store";
-import { useEffect, useState } from "react";
-import { reportEventPosthog } from "../../../common/metrics";
+import {
+    ReplicacheContext,
+    RuntimeReplicache,
+    UserInfo,
+} from "@unclutter/library-components/dist/store";
+import { useContext, useEffect, useState } from "react";
+import { reportEventPosthog } from "../../common/metrics";
 
 export function GenerateSection({
-    rep,
     userInfo,
     darkModeEnabled,
 }: {
@@ -19,6 +22,8 @@ export function GenerateSection({
     userInfo: UserInfo;
     darkModeEnabled: boolean;
 }) {
+    const rep = useContext(ReplicacheContext);
+
     const [generateProgress, setGenerateProgress] = useState<ImportProgress>();
     async function generateHighlights() {
         if (!rep) {
@@ -31,10 +36,6 @@ export function GenerateSection({
             articleCount: await rep.query.getArticlesCount(),
         });
     }
-
-    // useEffect(() => {
-    //     generateHighlights();
-    // }, []);
 
     return (
         <SettingsGroup
@@ -49,7 +50,7 @@ export function GenerateSection({
             }
             buttons={
                 <SettingsButton
-                    title="Generate quotes"
+                    title="Generate highlights"
                     onClick={generateHighlights}
                     darkModeEnabled={darkModeEnabled}
                     reportEvent={reportEventPosthog}
@@ -59,8 +60,8 @@ export function GenerateSection({
             animationIndex={1}
         >
             <p>
-                From now on, Unclutter automatically creates yellow AI highlights whenever you
-                activate the reader mode. These are saved as untagged quotes in your library.
+                From now on, Unclutter automatically creates AI highlights whenever you activate the
+                reader mode. These are saved as untagged quotes in your library.
             </p>
             <p>Let's also generate quotes for your previously saved articles now.</p>
         </SettingsGroup>

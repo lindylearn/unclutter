@@ -7,12 +7,11 @@ import {
     UserInfo,
     useSubscribe,
 } from "@unclutter/library-components/dist/store";
-import { useRouter } from "next/router";
-import { GenerateSection } from "./Import/Generate";
+import { GenerateSection } from "./Generate";
 import { ImportSection } from "./Import/Import";
+import HypothesisSyncSection from "./Import/Hypothesis";
 
 export default function SyncTab() {
-    const router = useRouter();
     const rep = useContext(ReplicacheContext);
     const { user } = useUser();
     // @ts-ignore
@@ -46,8 +45,9 @@ export default function SyncTab() {
     }
     return (
         <div className="animate-fadein flex flex-col gap-4">
-            <GenerateSection rep={rep} userInfo={userInfo} darkModeEnabled={darkModeEnabled} />
-            <ImportSection rep={rep} userInfo={userInfo} darkModeEnabled={darkModeEnabled} />
+            <GenerateSection userInfo={userInfo} darkModeEnabled={darkModeEnabled} />
+            <HypothesisSyncSection userInfo={userInfo} darkModeEnabled={darkModeEnabled} />
+            <ImportSection userInfo={userInfo} darkModeEnabled={darkModeEnabled} />
         </div>
     );
 }

@@ -63,7 +63,7 @@ export function SettingsGroup({
                 )}
                 {buttons && !progress && <div className="mt-1 flex flex-wrap gap-3">{buttons}</div>}
                 {progress && (
-                    <p className="">
+                    <p className="text-neutral-400 dark:text-neutral-500">
                         {progress.customMessage ? (
                             <>{progress.customMessage}</>
                         ) : progress?.finished ? (

@@ -153,3 +153,18 @@ export async function updateHypothesisAnnotation(
     // const json = await response.json();
     // return json;
 }
+
+export async function getHypothesisUsername(apiToken: string): Promise<string | null> {
+    try {
+        const response = await fetch(`https://api.hypothes.is/api/profile`, {
+            headers: {
+                Authorization: `Bearer ${apiToken}`,
+            },
+        });
+        const json = await response.json();
+        const fullUserId = json.userid; // e.g. acct:remikalir@hypothes.is
+        return fullUserId.match(/([^:]+)@/)[1];
+    } catch {
+        return null;
+    }
+}

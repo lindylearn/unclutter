@@ -62,13 +62,10 @@ export async function refreshLibraryFeeds() {
     await refreshSubscriptions(rep);
 }
 export async function syncPull() {
-    const hypothesisSyncEnabled = await getFeatureFlag(hypothesisSyncFeatureFlag);
-    if (hypothesisSyncEnabled) {
-        try {
-            await downloadHypothesisAnnotations(rep);
-        } catch (err) {
-            console.error(err);
-        }
+    try {
+        await downloadHypothesisAnnotations(rep);
+    } catch (err) {
+        console.error(err);
     }
 }
 

@@ -126,7 +126,7 @@ function createOrUpdateContextMenu(id, menuOptions) {
 async function installAlarms() {
     console.log("Registering periodic alarms...");
 
-    createAlarmIfNotExists("unclutter-library-feed-refresh", 12);
+    // createAlarmIfNotExists("unclutter-library-feed-refresh", 12);
     createAlarmIfNotExists("unclutter-library-sync-pull", 4);
 
     createAlarmListeners();

@@ -35,12 +35,13 @@ import {
 import { getUrlHash } from "@unclutter/library-components/dist/common/url";
 import { getHeatmapRemote } from "@unclutter/library-components/dist/common/api";
 import { tabsManager } from "./tabs";
+import { initHighlightsSync } from "./library/highlights";
 
 // toggle page view on extension icon click
 browser.action.onClicked.addListener((tab: Tabs.Tab) => {
     const url = new URL(tab.url);
 
-    if (url.href === "https://my.unclutter.it/import?from=bookmarks") {
+    if (url.href === "https://my.unclutter.it/sync?from=bookmarks") {
         // Support importing browser bookmarks into the extension companion website (which allows the user to organize & easily open articles with the extension).
         // This code only runs if the user explicitly triggered it: they selected the browser import on the companion website, clicked the extension icon as stated in the instructions, then granted the optional bookmarks permission.
         requestBookmarksPermission().then(async (granted: boolean) => {
@@ -147,6 +148,8 @@ function handleMessage(
         setLibraryAuth(message.userId, message.webJwt).then(() => initLibrary());
     } else if (message.event === "initLibrary") {
         initLibrary();
+    } else if (message.event === "initSync") {
+        initHighlightsSync(message.syncState);
     } else if (message.event === "getUserInfo") {
         rep?.query.getUserInfo().then(sendResponse);
         return true;

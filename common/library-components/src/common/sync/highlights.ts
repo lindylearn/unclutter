@@ -78,7 +78,7 @@ export async function uploadAnnotationsToHypothesis(rep: ReplicacheProxy) {
     );
 
     // fetch articles
-    const articleIds = Object.keys(groupBy(annotations, (a) => a.article_id));
+    const articleIds = [...new Set(annotations.map((a) => a.article_id))];
     const articles = await Promise.all(
         articleIds.map((articleId) => rep.query.getArticle(articleId))
     );
@@ -93,6 +93,9 @@ export async function uploadAnnotationsToHypothesis(rep: ReplicacheProxy) {
     await Promise.all(
         annotations.map(async (annotation) => {
             const article = articleMap[annotation.article_id];
+            if (!article) {
+                return;
+            }
 
             if (annotation.h_id) {
                 // already exists remotely
