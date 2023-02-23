@@ -17,7 +17,7 @@ import { InstapaperImportButtons, InstapaperImportText } from "./Instapaper";
 import { PocketImportButtons, PocketImportText } from "./Pocket";
 import { RaindropImportText, RaindropImportButtons } from "./Raindrop";
 
-export function ImportSection({ userInfo, darkModeEnabled }) {
+export function ImportSection({ userInfo, darkModeEnabled, pocketSyncSupported }) {
     const rep = useContext(ReplicacheContext);
 
     useEffect(() => {
@@ -75,21 +75,23 @@ export function ImportSection({ userInfo, darkModeEnabled }) {
                 }
                 buttons={
                     <>
-                        {Object.entries(importOptions).map(([id, option]) => (
-                            <ImportButton
-                                key={id}
-                                active={!activeOption || id === activeOption}
-                                {...option}
-                                darkModeEnabled={darkModeEnabled}
-                                onClick={() => {
-                                    if (id === activeOption) {
-                                        setActiveOption(undefined);
-                                    } else {
-                                        setActiveOption(id);
-                                    }
-                                }}
-                            />
-                        ))}
+                        {Object.entries(importOptions)
+                            .filter(([id]) => !pocketSyncSupported || id !== "pocket")
+                            .map(([id, option]) => (
+                                <ImportButton
+                                    key={id}
+                                    active={!activeOption || id === activeOption}
+                                    {...option}
+                                    darkModeEnabled={darkModeEnabled}
+                                    onClick={() => {
+                                        if (id === activeOption) {
+                                            setActiveOption(undefined);
+                                        } else {
+                                            setActiveOption(id);
+                                        }
+                                    }}
+                                />
+                            ))}
                     </>
                 }
                 animationIndex={2}

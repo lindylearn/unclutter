@@ -1,5 +1,5 @@
 import { useUser } from "@supabase/auth-helpers-react";
-import { useAutoDarkMode } from "@unclutter/library-components/dist/common";
+import { getUnclutterVersion, useAutoDarkMode } from "@unclutter/library-components/dist/common";
 import { useContext, useEffect, useState } from "react";
 import {
     Article,
@@ -10,6 +10,7 @@ import {
 import { GenerateSection } from "./Generate";
 import { ImportSection } from "./Import/Import";
 import HypothesisSyncSection from "./Import/Hypothesis";
+import PocketSyncSection from "./Import/PocketSync";
 
 export default function SyncTab() {
     const rep = useContext(ReplicacheContext);
@@ -28,17 +29,12 @@ export default function SyncTab() {
         }
     }, [rep, userInfo]);
 
-    // const [sampleArticles, setSampleArticles] = useState<Article[]>([]);
-    // useEffect(() => {
-    //     rep?.query.listRecentArticles().then((articles) => {
-    //         const queueArticles = articles.filter((a) => a.is_queued);
-    //         if (queueArticles.length >= 3) {
-    //             setSampleArticles(queueArticles.slice(0, 4));
-    //         } else {
-    //             setSampleArticles(articles.slice(0, 4));
-    //         }
-    //     });
-    // }, [rep]);
+    const [unclutterVersion, setUnclutterVersion] = useState<string>();
+    useEffect(() => {
+        getUnclutterVersion().then(setUnclutterVersion);
+    }, []);
+
+    const pocketSyncSupported = unclutterVersion && unclutterVersion >= "1.7.1";
 
     if (!userInfo) {
         return <></>;
@@ -46,8 +42,18 @@ export default function SyncTab() {
     return (
         <div className="animate-fadein flex flex-col gap-4">
             <GenerateSection userInfo={userInfo} darkModeEnabled={darkModeEnabled} />
+
+            {pocketSyncSupported && (
+                <PocketSyncSection userInfo={userInfo} darkModeEnabled={darkModeEnabled} />
+            )}
+
             <HypothesisSyncSection userInfo={userInfo} darkModeEnabled={darkModeEnabled} />
-            <ImportSection userInfo={userInfo} darkModeEnabled={darkModeEnabled} />
+
+            <ImportSection
+                userInfo={userInfo}
+                darkModeEnabled={darkModeEnabled}
+                pocketSyncSupported={pocketSyncSupported}
+            />
         </div>
     );
 }
