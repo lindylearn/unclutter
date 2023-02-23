@@ -1,6 +1,8 @@
-import { getRelativeTime, sendMessage } from "@unclutter/library-components/dist/common";
-import { ImportProgress } from "@unclutter/library-components/dist/common/import";
-import { getHypothesisUsername } from "@unclutter/library-components/dist/common/sync/hypothesis";
+import ky from "ky";
+import {
+    ArticleImportSchema,
+    ImportProgress,
+} from "@unclutter/library-components/dist/common/import";
 import {
     SettingsButton,
     SettingsGroup,
@@ -12,6 +14,10 @@ import {
 } from "@unclutter/library-components/dist/store";
 import { useContext, useEffect, useState } from "react";
 import { reportEventPosthog } from "../../../common/metrics";
+import { getPocketArticles, pocketConsumerKey } from "@unclutter/library-components/dist/common";
+
+// export const oauthRedirectUrl = "https://my.unclutter.it/sync?pocket_auth_redirect";
+export const oauthRedirectUrl = "http://localhost:3000/sync?pocket_auth_redirect";
 
 export default function PocketSyncSection({ userInfo, darkModeEnabled }) {
     const rep = useContext(ReplicacheContext);
@@ -25,7 +31,104 @@ export default function PocketSyncSection({ userInfo, darkModeEnabled }) {
         undefined
     );
 
-    let progress: ImportProgress | undefined = undefined;
+    const [progress, setProgress] = useState<ImportProgress>();
+
+    // see https://getpocket.com/developer/docs/authentication
+    async function login() {
+        if (syncState) {
+            return;
+        }
+
+        const pocketRedirectUrl = `${oauthRedirectUrl}&provider=pocket`;
+        let code: string;
+        try {
+            const response = (await ky
+                .post(`/api/pocket/oauth/request`, {
+                    json: {
+                        consumer_key: pocketConsumerKey,
+                        redirect_uri: pocketRedirectUrl,
+                    },
+                    retry: 0,
+                })
+                .json()) as any;
+            code = response.code;
+        } catch (err) {
+            setProgress({ customMessage: `Error connecting to Pocket`, targetArticles: 0 });
+            return;
+        }
+
+        window.localStorage.setItem("oauth_code", code);
+        window.open(
+            `https://getpocket.com/auth/authorize?request_token=${code}&redirect_uri=${encodeURIComponent(
+                pocketRedirectUrl
+            )}`,
+            "_self"
+        );
+    }
+
+    const [isRedirect, setIsRedirect] = useState(false);
+    useEffect(() => {
+        const isRedirect = new URLSearchParams(window.location.search).has("pocket_auth_redirect");
+        setIsRedirect(isRedirect);
+        if (isRedirect) {
+            setIsRedirect(isRedirect);
+            history.replaceState({}, "", `/sync`);
+        }
+    }, []);
+    useEffect(() => {
+        (async () => {
+            if (!isRedirect) {
+                return;
+            }
+
+            let access_token: string;
+            try {
+                setProgress({ customMessage: `Authenticating to Pocket...`, targetArticles: 0 });
+
+                const code = window.localStorage.getItem("oauth_code");
+                window.localStorage.removeItem("oauth_code");
+
+                const response = (await ky
+                    .post(`/api/pocket/oauth/authorize`, {
+                        json: {
+                            consumer_key: pocketConsumerKey,
+                            code: code,
+                        },
+                        retry: 0,
+                    })
+                    .json()) as any;
+                access_token = response.access_token;
+            } catch (err) {
+                // the first request may return a 500 error
+                if (window.localStorage.getItem("is_pocket_retry")) {
+                    setProgress({ customMessage: `Error authorizing user`, targetArticles: 0 });
+                    return;
+                }
+
+                window.localStorage.setItem("is_pocket_retry", "true");
+
+                login();
+                return;
+            }
+
+            setProgress({ customMessage: `Fetching your Pocket list...`, targetArticles: 0 });
+
+            const articles = await getPocketArticles(access_token);
+            if (!articles) {
+                setProgress({ customMessage: `Error fetching Pocket list`, targetArticles: 0 });
+                return;
+            }
+
+            const importData: ArticleImportSchema = {
+                urls: articles.map(({ url }) => url),
+                time_added: articles.map(({ time_added }) => time_added),
+                status: articles.map(({ reading_progress }) => reading_progress),
+                favorite: articles.map(({ is_favorite }) => (is_favorite ? 1 : 0)),
+            };
+            // startImport(importData);
+            console.log(importData);
+        })();
+    }, [isRedirect]);
 
     return (
         <SettingsGroup
@@ -36,6 +139,7 @@ export default function PocketSyncSection({ userInfo, darkModeEnabled }) {
                     <>
                         <SettingsButton
                             title="Log in with Pocket"
+                            onClick={login}
                             darkModeEnabled={darkModeEnabled}
                             reportEvent={reportEventPosthog}
                         />
@@ -45,7 +149,8 @@ export default function PocketSyncSection({ userInfo, darkModeEnabled }) {
             progress={progress}
         >
             <p>
-                Please authorize Unclutter to retrieve your Pocket list (the login will open twice).
+                Save articles outside of Unclutter, read on mobile, and import articles you've
+                already got saved in your Pocket account.
             </p>
         </SettingsGroup>
     );

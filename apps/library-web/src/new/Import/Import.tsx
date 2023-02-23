@@ -27,7 +27,7 @@ export function ImportSection({ userInfo, darkModeEnabled, pocketSyncSupported }
         }
     }, []);
 
-    const [activeOption, setActiveOption] = useState<keyof typeof importOptions>();
+    const [activeOption, setActiveOption] = useState<keyof typeof importOptions | null>();
     // handle url params
     const [isRedirect, setIsRedirect] = useState(false);
     useEffect(() => {
@@ -45,6 +45,8 @@ export function ImportSection({ userInfo, darkModeEnabled, pocketSyncSupported }
 
     // update url, e.g. for the browser import to work
     useEffect(() => {
+        if (activeOption === undefined) return;
+
         setGenerateProgress(undefined);
         history.replaceState({}, "", `/sync${activeOption ? `?from=${activeOption}` : ""}`);
     }, [activeOption]);
@@ -85,7 +87,7 @@ export function ImportSection({ userInfo, darkModeEnabled, pocketSyncSupported }
                                     darkModeEnabled={darkModeEnabled}
                                     onClick={() => {
                                         if (id === activeOption) {
-                                            setActiveOption(undefined);
+                                            setActiveOption(null);
                                         } else {
                                             setActiveOption(id);
                                         }

@@ -118,8 +118,8 @@ export default function HypothesisSyncSection({ userInfo, darkModeEnabled }) {
             progress={progress}
         >
             <p>
-                Synchronize highlights with your hypothes.is account to annotate outside of
-                Unclutter and to import highlights into note-taking apps including Obsidian.
+                Annotate any web page and import highlights into note-taking apps including Obsidian
+                and Roam.
             </p>
             {(syncState || isOpen) && (
                 <>
