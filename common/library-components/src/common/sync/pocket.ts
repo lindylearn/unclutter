@@ -1,13 +1,13 @@
 import { subYears } from "date-fns";
 import ky from "ky-universal";
-import type { Annotation, Article } from "../../store";
+import { Annotation, Article, readingProgressFullClamp } from "../../store";
 import { getUrlHash } from "../url";
 import { constructLocalArticle } from "../util";
 
 // const apiHost = "https://my.lindylearn.io";
 const apiHost = "http://localhost:3000";
 
-export const pocketConsumerKey = "103045-348c15882b98fde8379db28";
+export const pocketConsumerKey = "106099-bc04e91092ca30bacd08f96";
 
 export async function getPocketArticles(
     apiToken: string,
@@ -21,7 +21,7 @@ export async function getPocketArticles(
                 json: {
                     consumer_key: pocketConsumerKey,
                     access_token: apiToken,
-                    since: lastSyncDate?.getTime() || 0,
+                    since: Math.round((lastSyncDate?.getTime() || 0) / 1000),
                 },
                 timeout: false,
                 retry: 0,
@@ -60,7 +60,7 @@ export async function getPocketArticles(
                     time_added: parseInt(time_added),
                     is_favorite: favorite === "1",
                     reading_progress: status === "1" ? 1 : 0,
-                    word_count: word_count || 0,
+                    word_count: parseInt(word_count) || 0,
                 })
             );
 
@@ -72,9 +72,52 @@ export async function getPocketArticles(
 }
 
 export async function addPocketArticle(apiToken: string, article: Article): Promise<string> {
-    return "";
+    const response: any = (await ky
+        .post(`${apiHost}/api/pocket/add`, {
+            json: {
+                consumer_key: pocketConsumerKey,
+                access_token: apiToken,
+
+                url: article.url,
+                title: article.title,
+            },
+            timeout: false,
+            retry: 0,
+        })
+        .json()) as any[];
+
+    console.log(response);
+    return response?.item?.item_id;
 }
 
-export async function deletePocketArticle(apiToken: string, article: Article): Promise<void> {}
+export async function deletePocketArticle(apiToken: string, article: Article): Promise<void> {
+    await ky.post(`${apiHost}/api/pocket/send`, {
+        json: {
+            consumer_key: pocketConsumerKey,
+            access_token: apiToken,
+            actions: [
+                {
+                    action: "delete",
+                    item_id: article.pocket_id,
+                },
+            ],
+        },
+    });
+}
 
-export async function updatePocketArticle(apiToken: string, article: Article): Promise<void> {}
+export async function updatePocketArticle(apiToken: string, article: Article): Promise<void> {
+    const isArchived = article.reading_progress >= readingProgressFullClamp;
+
+    await ky.post(`${apiHost}/api/pocket/send`, {
+        json: {
+            consumer_key: pocketConsumerKey,
+            access_token: apiToken,
+            actions: [
+                {
+                    action: isArchived ? "archive" : "readd",
+                    item_id: article.pocket_id,
+                },
+            ],
+        },
+    });
+}

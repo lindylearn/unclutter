@@ -21,8 +21,13 @@ export async function syncDownloadArticles(rep: ReplicacheProxy) {
     const newDownload = new Date(); // get last updated time before async fetching & uploading
 
     let articles = await getPocketArticles(syncState.api_token, lastDownload);
+    if (articles === null) {
+        return;
+    }
 
-    console.log(`Downloading ${articles} pocket articles since ${lastDownload?.toUTCString()}`);
+    console.log(
+        `Downloading ${articles?.length} pocket articles since ${lastDownload?.toUTCString()}`
+    );
     if (articles?.length) {
         await rep.mutate.importArticles({ articles });
     }

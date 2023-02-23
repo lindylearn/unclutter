@@ -21,7 +21,7 @@ export async function syncDownloadAnnotations(rep: ReplicacheProxy) {
     const newDownload = new Date(); // get last updated time before async fetching & uploading
 
     let [annotations, articles, newDownloadTimestamp] = await getHypothesisAnnotationsSince(
-        syncState.username,
+        syncState.username!,
         syncState.api_token,
         lastDownload,
         10000
@@ -124,11 +124,11 @@ async function uploadAnnotation(
     try {
         if (annotation.h_id) {
             // already exists remotely
-            await updateHypothesisAnnotation(syncState.username, syncState.api_token, annotation);
+            await updateHypothesisAnnotation(syncState.username!, syncState.api_token, annotation);
         } else {
             // create remotely, then save id
             const remoteId = await createHypothesisAnnotation(
-                syncState.username,
+                syncState.username!,
                 syncState.api_token,
                 annotation,
                 article.url,
@@ -171,7 +171,7 @@ export async function syncWatchAnnotations(rep: ReplicacheProxy) {
             }
             await Promise.all(
                 removed.map((annotation) =>
-                    deleteHypothesisAnnotation(syncState.username, syncState.api_token, annotation)
+                    deleteHypothesisAnnotation(syncState.username!, syncState.api_token, annotation)
                 )
             );
         }
