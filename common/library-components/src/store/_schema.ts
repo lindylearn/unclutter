@@ -138,7 +138,7 @@ export type FeedSubscription = z.infer<typeof feedSubscriptionSchema>;
 export const syncStateSchema = z.object({
     id: z.enum(["pocket", "hypothesis"]),
 
-    username: z.string(),
+    username: z.optional(z.string()),
     api_token: z.string(),
 
     is_syncing: z.optional(z.boolean()),

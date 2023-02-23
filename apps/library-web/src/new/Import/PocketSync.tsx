@@ -14,13 +14,20 @@ import {
 } from "@unclutter/library-components/dist/store";
 import { useContext, useEffect, useState } from "react";
 import { reportEventPosthog } from "../../../common/metrics";
-import { getPocketArticles, pocketConsumerKey } from "@unclutter/library-components/dist/common";
+import {
+    getPocketArticles,
+    getRelativeTime,
+    pocketConsumerKey,
+    sendMessage,
+} from "@unclutter/library-components/dist/common";
 
 // export const oauthRedirectUrl = "https://my.unclutter.it/sync?pocket_auth_redirect";
 export const oauthRedirectUrl = "http://localhost:3000/sync?pocket_auth_redirect";
 
 export default function PocketSyncSection({ userInfo, darkModeEnabled }) {
     const rep = useContext(ReplicacheContext);
+
+    const [progress, setProgress] = useState<ImportProgress>();
 
     // fetch saved info
     // @ts-ignore
@@ -30,9 +37,22 @@ export default function PocketSyncSection({ userInfo, darkModeEnabled }) {
         rep?.subscribe.getSyncState("pocket"),
         undefined
     );
+    useEffect(() => {
+        if (!syncState) {
+            return;
+        }
+        setProgress({
+            finished: !!syncState.last_download,
+            targetArticles: 0,
+            customMessage: !syncState.last_download
+                ? "Synchronizing your highlights..."
+                : `Last synchronized ${getRelativeTime(syncState.last_download, false, false)}`,
+        });
 
-    const [progress, setProgress] = useState<ImportProgress>();
+        // rep?.mutate.deleteSyncState("pocket");
+    }, [syncState]);
 
+    // first auth click
     // see https://getpocket.com/developer/docs/authentication
     async function login() {
         if (syncState) {
@@ -66,6 +86,7 @@ export default function PocketSyncSection({ userInfo, darkModeEnabled }) {
         );
     }
 
+    // on redirect from pocket auth
     const [isRedirect, setIsRedirect] = useState(false);
     useEffect(() => {
         const isRedirect = new URLSearchParams(window.location.search).has("pocket_auth_redirect");
@@ -77,7 +98,7 @@ export default function PocketSyncSection({ userInfo, darkModeEnabled }) {
     }, []);
     useEffect(() => {
         (async () => {
-            if (!isRedirect) {
+            if (!isRedirect || !rep) {
                 return;
             }
 
@@ -111,22 +132,30 @@ export default function PocketSyncSection({ userInfo, darkModeEnabled }) {
                 return;
             }
 
-            setProgress({ customMessage: `Fetching your Pocket list...`, targetArticles: 0 });
-
-            const articles = await getPocketArticles(access_token);
-            if (!articles) {
-                setProgress({ customMessage: `Error fetching Pocket list`, targetArticles: 0 });
-                return;
-            }
-
-            const importData: ArticleImportSchema = {
-                urls: articles.map(({ url }) => url),
-                time_added: articles.map(({ time_added }) => time_added),
-                status: articles.map(({ reading_progress }) => reading_progress),
-                favorite: articles.map(({ is_favorite }) => (is_favorite ? 1 : 0)),
+            const newSyncState: SyncState = {
+                id: "pocket",
+                api_token: access_token,
             };
-            // startImport(importData);
-            console.log(importData);
+            await rep.mutate.putSyncState(newSyncState);
+
+            await sendMessage({ event: "initSync", syncState: newSyncState });
+
+            // initial import
+            // setProgress({ customMessage: `Fetching your Pocket list...`, targetArticles: 0 });
+            // const articles = await getPocketArticles(newSyncState.api_token);
+            // if (!articles) {
+            //     setProgress({ customMessage: `Error fetching Pocket list`, targetArticles: 0 });
+            //     return;
+            // }
+
+            // const importData: ArticleImportSchema = {
+            //     urls: articles.map(({ url }) => url),
+            //     time_added: articles.map(({ time_added }) => time_added),
+            //     status: articles.map(({ reading_progress }) => reading_progress),
+            //     favorite: articles.map(({ is_favorite }) => (is_favorite ? 1 : 0)),
+            // };
+            // // startImport(importData);
+            // console.log(importData);
         })();
     }, [isRedirect]);
 
