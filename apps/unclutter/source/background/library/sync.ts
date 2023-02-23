@@ -3,17 +3,22 @@ import { getFeatureFlag, hypothesisSyncFeatureFlag } from "../../common/featureF
 import { getHypothesisSyncState } from "../../common/storage";
 import { rep } from "./library";
 import {
-    downloadHypothesisAnnotations,
-    uploadAnnotationsToHypothesis,
-    watchLocalAnnotations,
+    syncDownloadAnnotations,
+    syncUploadAnnotations,
+    syncWatchAnnotations,
 } from "@unclutter/library-components/dist/common/sync/highlights";
 import type { SyncState } from "@unclutter/library-components/dist/store";
+import {
+    syncDownloadArticles,
+    syncUploadArticles,
+    syncWatchArticles,
+} from "@unclutter/library-components/dist/common/sync/articles";
 
 export async function initHighlightsSync(setSyncState: SyncState = undefined) {
     let syncState = await rep.query.getSyncState("hypothesis");
     console.log("Starting highlights sync", syncState, setSyncState);
 
-    if (!syncState && setSyncState) {
+    if (!syncState && setSyncState && setSyncState.id === "hypothesis") {
         // in case not pulled yet
         syncState = setSyncState;
         await rep.mutate.putSyncState(syncState);
@@ -48,13 +53,39 @@ export async function initHighlightsSync(setSyncState: SyncState = undefined) {
 
     try {
         // upload before download to not endlessly loop
-        await uploadAnnotationsToHypothesis(rep);
-        await downloadHypothesisAnnotations(rep);
+        await syncUploadAnnotations(rep);
+        await syncDownloadAnnotations(rep);
 
-        await watchLocalAnnotations(rep);
+        await syncWatchAnnotations(rep);
     } catch (err) {
         console.error(err);
     }
 
     console.log("Annotations sync done");
+}
+
+export async function initArticlesSync(setSyncState: SyncState = undefined) {
+    let syncState = await rep.query.getSyncState("pocket");
+    console.log("Starting articles sync", syncState, setSyncState);
+
+    if (!syncState && setSyncState && setSyncState.id === "pocket") {
+        // in case not pulled yet
+        syncState = setSyncState;
+        await rep.mutate.putSyncState(syncState);
+    }
+    if (!syncState) {
+        return;
+    }
+
+    try {
+        // upload before download to not endlessly loop
+        await syncUploadArticles(rep);
+        await syncDownloadArticles(rep);
+
+        await syncWatchArticles(rep);
+    } catch (err) {
+        console.error(err);
+    }
+
+    console.log("Articles sync done");
 }

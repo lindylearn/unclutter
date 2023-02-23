@@ -1,4 +1,4 @@
-import { debounce, groupBy } from "lodash";
+import { debounce } from "lodash";
 import asyncPool from "tiny-async-pool";
 
 import type { Annotation, Article, SyncState } from "../../store";
@@ -10,7 +10,7 @@ import {
     updateHypothesisAnnotation,
 } from "./hypothesis";
 
-export async function downloadHypothesisAnnotations(rep: ReplicacheProxy) {
+export async function syncDownloadAnnotations(rep: ReplicacheProxy) {
     const syncState = await rep.query.getSyncState("hypothesis");
     if (!syncState) {
         return;
@@ -47,7 +47,7 @@ export async function downloadHypothesisAnnotations(rep: ReplicacheProxy) {
     });
 }
 
-export async function uploadAnnotationsToHypothesis(rep: ReplicacheProxy) {
+export async function syncUploadAnnotations(rep: ReplicacheProxy) {
     const syncState = await rep.query.getSyncState("hypothesis");
     if (!syncState) {
         return;
@@ -98,13 +98,11 @@ export async function uploadAnnotationsToHypothesis(rep: ReplicacheProxy) {
     }, {});
 
     // upload changes
-    for await (const newHighlights of asyncPool(5, annotations, (annotation) =>
+    for await (const _ of asyncPool(5, annotations, (annotation) =>
         uploadAnnotation(rep, syncState, annotation, articleMap[annotation.article_id])
     )) {
         // TODO add progress indication?
     }
-
-    await Promise.all(annotations.map(async (annotation) => {}));
 
     await rep.mutate.updateSyncState({
         id: "hypothesis",
@@ -147,11 +145,11 @@ async function uploadAnnotation(
     }
 }
 
-const uploadAnnotationsToHypothesisDebounced = debounce(uploadAnnotationsToHypothesis, 10 * 1000);
+const syncUploadAnnotationsDebounced = debounce(syncUploadAnnotations, 10 * 1000);
 
 // only handle deletes using store watch for reslience
 let watchActive = false;
-export async function watchLocalAnnotations(rep: ReplicacheProxy) {
+export async function syncWatchAnnotations(rep: ReplicacheProxy) {
     if (watchActive) {
         return;
     }
@@ -161,7 +159,7 @@ export async function watchLocalAnnotations(rep: ReplicacheProxy) {
     rep.watch("annotations/", async (changed: Annotation[], removed: Annotation[]) => {
         if (changed.length > 0) {
             // process based on edit timestamp for resilience
-            uploadAnnotationsToHypothesisDebounced(rep);
+            syncUploadAnnotationsDebounced(rep);
         }
 
         removed = removed.filter((a) => a.h_id);

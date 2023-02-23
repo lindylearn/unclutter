@@ -28,8 +28,6 @@ export async function getPocketArticles(
             })
             .json()) as any[];
 
-        console.log(pocketArticles);
-
         const startTimeMillis = subYears(new Date(), 1).getTime();
         const articles: Article[] = pocketArticles
             // filter very large libraries
@@ -66,8 +64,6 @@ export async function getPocketArticles(
                 })
             );
 
-        console.log(articles);
-
         return articles;
     } catch (err) {
         console.error(err);
@@ -75,70 +71,10 @@ export async function getPocketArticles(
     }
 }
 
-export async function addPocketArticle(
-    username: string,
-    apiToken: string,
-    localAnnotation: Annotation,
-    page_url: string,
-    page_title: string
-): Promise<string> {
-    const response = await fetch(`${apiHost}/annotations`, {
-        headers: { Authorization: `Bearer ${apiToken}` },
-        method: "POST",
-        body: JSON.stringify({
-            uri: page_url,
-            text: localAnnotation.text,
-            target: [
-                {
-                    source: page_url,
-                    ...(localAnnotation.quote_html_selector
-                        ? {
-                              selector: localAnnotation.quote_html_selector,
-                          }
-                        : {}),
-                },
-            ],
-            document: {
-                title: [page_title],
-            },
-            tags: localAnnotation.tags,
-            permissions: {
-                read: [false ? "group:__world__" : `acct:${username}@hypothes.is`],
-            },
-            references: [], // localAnnotation.reply_to ? [localAnnotation.reply_to] : [],
-        }),
-    });
-    const json = await response.json();
-    return json.id;
+export async function addPocketArticle(apiToken: string, article: Article): Promise<string> {
+    return "";
 }
 
-export async function deletePocketArticle(
-    username: string,
-    apiToken: string,
-    annotation: Annotation
-): Promise<void> {
-    await fetch(`${apiHost}/annotations/${annotation.h_id}`, {
-        headers: { Authorization: `Bearer ${apiToken}` },
-        method: "DELETE",
-    });
-}
+export async function deletePocketArticle(apiToken: string, article: Article): Promise<void> {}
 
-export async function updatePocketArticle(
-    username: string,
-    apiToken: string,
-    annotation: Annotation
-): Promise<void> {
-    const response = await fetch(`${apiHost}/annotations/${annotation.h_id}`, {
-        headers: { Authorization: `Bearer ${apiToken}` },
-        method: "PATCH",
-        body: JSON.stringify({
-            text: annotation.text,
-            tags: annotation.tags,
-            permissions: {
-                read: [false ? "group:__world__" : `acct:${username}@hypothes.is`],
-            },
-        }),
-    });
-    // const json = await response.json();
-    // return json;
-}
+export async function updatePocketArticle(apiToken: string, article: Article): Promise<void> {}

@@ -35,7 +35,7 @@ import {
 import { getUrlHash } from "@unclutter/library-components/dist/common/url";
 import { getHeatmapRemote } from "@unclutter/library-components/dist/common/api";
 import { tabsManager } from "./tabs";
-import { initHighlightsSync } from "./library/highlights";
+import { initArticlesSync, initHighlightsSync } from "./library/sync";
 
 // toggle page view on extension icon click
 browser.action.onClicked.addListener((tab: Tabs.Tab) => {
@@ -149,7 +149,11 @@ function handleMessage(
     } else if (message.event === "initLibrary") {
         initLibrary();
     } else if (message.event === "initSync") {
-        initHighlightsSync(message.syncState);
+        if (message.syncState.id === "hypothesis") {
+            initHighlightsSync(message.syncState);
+        } else {
+            initArticlesSync(message.syncState);
+        }
     } else if (message.event === "getUserInfo") {
         rep?.query.getUserInfo().then(sendResponse);
         return true;

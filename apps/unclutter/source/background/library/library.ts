@@ -19,13 +19,12 @@ import {
     processLocalReplicacheWatch,
 } from "./replicacheLocal";
 import { deleteAllLocalScreenshots } from "./screenshots";
-// import { initSearchIndex } from "./search";
 import { refreshSubscriptions } from "@unclutter/library-components/dist/feeds";
-import { initHighlightsSync } from "./highlights";
-import { getFeatureFlag, hypothesisSyncFeatureFlag } from "../../common/featureFlags";
+import { initArticlesSync, initHighlightsSync } from "./sync";
 import type { UserInfo } from "@unclutter/library-components/dist/store";
 import { deleteSearchIndex } from "@unclutter/library-components/dist/common/search";
-import { downloadHypothesisAnnotations } from "@unclutter/library-components/dist/common/sync/highlights";
+import { syncDownloadAnnotations } from "@unclutter/library-components/dist/common/sync/highlights";
+import { syncDownloadArticles } from "@unclutter/library-components/dist/common/sync/articles";
 
 export let userId: string; // actual replicache id, don't change in dev
 export let userInfo: UserInfo | undefined;
@@ -46,16 +45,16 @@ export async function initLibrary(isDev: boolean = false): Promise<void> {
         // local replicache mock doesn't need initialization
     }
 
-    deleteSearchIndex("");
-    deleteSearchIndex("-articles");
+    // deleteSearchIndex("");
+    // deleteSearchIndex("-articles");
 
     // if (isDev) {
     //     await rep.mutate.updateUserInfo({ id: "dev-user", aiEnabled: true });
     // }
     userInfo = await rep.query.getUserInfo();
 
-    // await initSearchIndex();
     await initHighlightsSync();
+    await initArticlesSync();
 }
 
 export async function refreshLibraryFeeds() {
@@ -63,7 +62,8 @@ export async function refreshLibraryFeeds() {
 }
 export async function syncPull() {
     try {
-        await downloadHypothesisAnnotations(rep);
+        await syncDownloadAnnotations(rep);
+        await syncDownloadArticles(rep);
     } catch (err) {
         console.error(err);
     }
