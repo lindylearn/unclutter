@@ -1,5 +1,7 @@
-import type { Annotation, Article } from "../../store";
 import { debounce, groupBy } from "lodash";
+import asyncPool from "tiny-async-pool";
+
+import type { Annotation, Article, SyncState } from "../../store";
 import type { ReplicacheProxy } from "../replicache";
 import {
     createHypothesisAnnotation,
@@ -96,37 +98,13 @@ export async function uploadAnnotationsToHypothesis(rep: ReplicacheProxy) {
     }, {});
 
     // upload changes
-    await Promise.all(
-        annotations.map(async (annotation) => {
-            const article = articleMap[annotation.article_id];
-            if (!article) {
-                return;
-            }
+    for await (const newHighlights of asyncPool(5, annotations, (annotation) =>
+        uploadAnnotation(rep, syncState, annotation, articleMap[annotation.article_id])
+    )) {
+        // TODO add progress indication?
+    }
 
-            if (annotation.h_id) {
-                // already exists remotely
-                await updateHypothesisAnnotation(
-                    syncState.username,
-                    syncState.api_token,
-                    annotation
-                );
-            } else {
-                // create remotely, then save id
-                const remoteId = await createHypothesisAnnotation(
-                    syncState.username,
-                    syncState.api_token,
-                    annotation,
-                    article.url,
-                    article.title || ""
-                );
-                // don't change updated_at
-                await rep.mutate.updateAnnotationRaw({
-                    id: annotation.id,
-                    h_id: remoteId,
-                });
-            }
-        })
-    );
+    await Promise.all(annotations.map(async (annotation) => {}));
 
     await rep.mutate.updateSyncState({
         id: "hypothesis",
@@ -134,6 +112,41 @@ export async function uploadAnnotationsToHypothesis(rep: ReplicacheProxy) {
         last_upload: newUpload.getTime(),
     });
 }
+
+async function uploadAnnotation(
+    rep: ReplicacheProxy,
+    syncState: SyncState,
+    annotation: Annotation,
+    article: Article | undefined
+) {
+    if (!article) {
+        return;
+    }
+
+    try {
+        if (annotation.h_id) {
+            // already exists remotely
+            await updateHypothesisAnnotation(syncState.username, syncState.api_token, annotation);
+        } else {
+            // create remotely, then save id
+            const remoteId = await createHypothesisAnnotation(
+                syncState.username,
+                syncState.api_token,
+                annotation,
+                article.url,
+                article.title || ""
+            );
+            // don't change updated_at
+            await rep.mutate.updateAnnotationRaw({
+                id: annotation.id,
+                h_id: remoteId,
+            });
+        }
+    } catch (err) {
+        console.error(err);
+    }
+}
+
 const uploadAnnotationsToHypothesisDebounced = debounce(uploadAnnotationsToHypothesis, 10 * 1000);
 
 // only handle deletes using store watch for reslience
