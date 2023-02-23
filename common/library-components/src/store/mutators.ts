@@ -34,7 +34,7 @@ const {
     get: getArticle,
     list: listArticles,
     put: putArticle,
-    update: updateArticle,
+    update: updateArticleRaw,
     delete: deleteArticleRaw,
 } = generate("articles", articleSchema);
 const {
@@ -60,6 +60,13 @@ async function putArticleIfNotExists(
     fullArticle.topic_sort_position = fullArticle.time_added * 1000;
 
     await putArticle(tx, fullArticle);
+}
+
+async function updateArticle(tx: WriteTransaction, article: Partial<Article>) {
+    await updateArticleRaw(tx, {
+        ...article,
+        time_updated: Math.round(new Date().getTime() / 1000),
+    } as Article);
 }
 
 // batch large inserts to have fewer mutations to sync
@@ -412,6 +419,7 @@ const {
 
 export const mutators = {
     updateArticle,
+    updateArticleRaw,
     articleSetFavorite,
     articleTrackOpened,
     deleteArticle,

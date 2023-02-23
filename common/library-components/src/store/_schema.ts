@@ -9,6 +9,8 @@ export const articleSchema = entitySchema.extend({
     publication_date: z.nullable(z.string()),
 
     time_added: z.number(), // unix seconds, 0 for missing value
+    time_updated: z.optional(z.number()), // unix seconds, 0 for missing value
+
     reading_progress: z.number(),
     is_favorite: z.boolean(),
     is_queued: z.optional(z.boolean()),

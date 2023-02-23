@@ -86,7 +86,7 @@ async function uploadArticle(rep: ReplicacheProxy, syncState: SyncState, article
             const remoteId = await addPocketArticle(syncState.api_token, article);
 
             // don't change updated_at
-            await rep.mutate.updateArticle({
+            await rep.mutate.updateArticleRaw({
                 id: article.id,
                 pocket_id: remoteId,
             });

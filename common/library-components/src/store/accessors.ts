@@ -58,7 +58,7 @@ export async function listRecentArticles(
 
     const sinceSeconds = sinceMs ? sinceMs / 1000 : 0;
     const filteredArticles = allArticles
-        .filter((a) => a.time_added >= sinceSeconds)
+        .filter((a) => (a.time_updated || a.time_added) >= sinceSeconds)
         .filter((a) => allowedTopicIds === null || allowedTopicIds.has(a.topic_id!))
         .filter(
             (a) =>
