@@ -1,7 +1,12 @@
 import ky from "ky-universal";
 import { withSentry } from "@sentry/nextjs";
+import { handleCors } from "../../../common/cors";
 
 async function handler(req, res) {
+    if (handleCors(req, res)) {
+        return;
+    }
+
     const { method } = req.query;
 
     try {

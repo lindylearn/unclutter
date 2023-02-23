@@ -1,3 +1,4 @@
+import { getPocketArticles, pocketConsumerKey } from "@unclutter/library-components/dist/common";
 import type { ArticleImportSchema } from "@unclutter/library-components/dist/common/import";
 import { SettingsButton } from "@unclutter/library-components/dist/components/Settings/SettingsGroup";
 import ky from "ky";
@@ -5,9 +6,6 @@ import { useEffect } from "react";
 import { reportEventPosthog } from "../../../common/metrics";
 
 export const oauthRedirectUrl = "https://my.unclutter.it/sync?from=pocket&auth_redirect";
-
-const pocketImportBatchSize = 100000; // remove batching for now
-const pocketConsumerKey = "103045-348c15882b98fde8379db28";
 
 export function PocketImportText({}) {
     return (
@@ -89,42 +87,21 @@ export function PocketImportButtons({
                 return;
             }
 
-            let import_data: ArticleImportSchema = {
-                urls: [],
-                time_added: [],
-                status: [],
-                favorite: [],
-            };
-            try {
-                connectionStep("Fetching your Pocket list...");
-                let hasMore = true;
-                while (hasMore) {
-                    const batch = (await ky
-                        .post(`/api/pocket/get`, {
-                            json: {
-                                consumer_key: pocketConsumerKey,
-                                access_token: access_token,
-                                count: pocketImportBatchSize,
-                                offset: import_data.urls.length,
-                            },
-                            timeout: false, // 10s max for vercel standard plan
-                            retry: 0,
-                        })
-                        .json()) as ArticleImportSchema;
+            connectionStep("Fetching your Pocket list...");
 
-                    import_data.urls = import_data.urls.concat(batch.urls);
-                    import_data.time_added = import_data.time_added!.concat(batch.time_added!);
-                    import_data.status = import_data.status!.concat(batch.status!);
-                    import_data.favorite = import_data.favorite!.concat(batch.favorite!);
-
-                    hasMore = false; // batch.urls.length > 0;
-                }
-            } catch (err) {
-                onError(`Error fetching Pocket list: ${err.message}`);
+            const articles = await getPocketArticles(access_token);
+            if (!articles) {
+                onError("Error fetching Pocket list");
                 return;
             }
 
-            startImport(import_data);
+            const importData: ArticleImportSchema = {
+                urls: articles.map(({ url }) => url),
+                time_added: articles.map(({ time_added }) => time_added),
+                status: articles.map(({ reading_progress }) => reading_progress),
+                favorite: articles.map(({ is_favorite }) => (is_favorite ? 1 : 0)),
+            };
+            startImport(importData);
         })();
     }, [isRedirect]);
 

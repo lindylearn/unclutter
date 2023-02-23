@@ -26,6 +26,8 @@ export const articleSchema = entitySchema.extend({
 
     annotation_count: z.optional(z.number()), // set when querying
     description: z.optional(z.string()), // set for non-library feed articles
+
+    pocket_id: z.optional(z.string()), // remote id if synced with Pocket
 });
 export type Article = z.infer<typeof articleSchema>;
 
