@@ -92,8 +92,8 @@
         ".slm-instream-player-container",
         ".tabElemNoBor"
     ],
-    "beyazperde.com": [".light.titlebar-subtile", ".cms-see-also", ".section"],
     "beachcam.co.il": ["#aswift_1_host"],
+    "beyazperde.com": [".light.titlebar-subtile", ".cms-see-also", ".section"],
     "bezprawnik.pl": [
         ".ad_slot_height_manager_wrapper_bp_sdh2",
         "#oa-360-1666305713099_aa6xa65xr",
@@ -1050,7 +1050,13 @@
     "realpython.com": [".small.text-muted"],
     "rebble.io": ["#index"],
     "rebekahbarnett.substack.com": [".captioned-image-container", ".single-post-section"],
-    "reddit.com": ["._23h0-EcaBUorIHC-JZyh6J"],
+    "reddit.com": [
+        "._23h0-EcaBUorIHC-JZyh6J",
+        ".Mh_Wl6YioFfBc9O1SQ4Jp.u0UgpXN5r-VO6PP9OAViq",
+        "._1gVVmSnHZpkUgVShsn7-ua._15Pk_bZ2XZNa9zBvnxq6HX",
+        "._2I_YJCANrzkY2DZkeu2nht",
+        "._33aRtz9JtW0dIrBNKFAl0y"
+    ],
     "reuters.com": [
         ".base-widget-body__list__22w1C",
         ".article-body__top-toolbar-container__12IAp",
@@ -1094,7 +1100,6 @@
     ],
     "ruanyifeng.com": [".wwads-cn.wwads-horizontal"],
     "sandboxx.us": [".content#genesis-content::before"],
-    "scitechdaily.com": [".entry-tags.clearfix"],
     "sciencenews.org": [
         ".header-default__terms___y7T55",
         ".single__byline-container___3EW6e",
@@ -1102,6 +1107,7 @@
         "#id_00i937xrshdaq",
         "#emailConversion"
     ],
+    "scitechdaily.com": [".entry-tags.clearfix"],
     "semiengineering.com": [".col-xs-12.col-sm-6.col-md-7"],
     "shopify.com": ["#GlobalIconSymbols", "#SiteNavContainer"],
     "slatestarcodex.com": ["#left-sidebar", "#primary"],
