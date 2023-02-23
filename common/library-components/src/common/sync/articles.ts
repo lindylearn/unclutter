@@ -50,8 +50,8 @@ export async function syncUploadArticles(rep: ReplicacheProxy) {
     const newUpload = new Date(); // get before async fetching & uploading
 
     // filter annotations to upload
-    const lastUploadUnix = lastUpload?.getTime() || 0;
-    let articles = await rep.query.listRecentArticles(lastUploadUnix * 1000);
+    const lastUploadUnixMillis = lastUpload?.getTime() || 0;
+    let articles = await rep.query.listRecentArticles(lastUploadUnixMillis);
 
     // if the syncState got lost, we'd try to patch all previously uploaded annotations
     if (!lastUpload) {

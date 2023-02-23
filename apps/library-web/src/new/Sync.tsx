@@ -34,7 +34,7 @@ export default function SyncTab() {
         getUnclutterVersion().then(setUnclutterVersion);
     }, []);
 
-    const pocketSyncSupported = unclutterVersion && unclutterVersion >= "1.7.1";
+    const pocketSyncSupported = unclutterVersion && unclutterVersion >= "1.7.3";
 
     if (!userInfo) {
         return <></>;

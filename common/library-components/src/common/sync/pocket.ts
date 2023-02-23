@@ -86,7 +86,6 @@ export async function addPocketArticle(apiToken: string, article: Article): Prom
         })
         .json()) as any[];
 
-    console.log(response);
     return response?.item?.item_id;
 }
 
@@ -116,6 +115,7 @@ export async function updatePocketArticle(apiToken: string, article: Article): P
                 {
                     action: isArchived ? "archive" : "readd",
                     item_id: article.pocket_id,
+                    time: article.time_updated?.toString(),
                 },
             ],
         },

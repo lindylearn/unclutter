@@ -59,9 +59,9 @@ export async function syncUploadAnnotations(rep: ReplicacheProxy) {
 
     // filter annotations to upload
     let annotations = await rep.query.listAnnotations();
-    const lastUploadUnix = lastUpload?.getTime() || 0;
+    const lastUploadUnixMillis = lastUpload?.getTime() || 0;
     annotations = annotations
-        .filter((a) => (a.updated_at || a.created_at) * 1000 > lastUploadUnix)
+        .filter((a) => (a.updated_at || a.created_at) > lastUploadUnixMillis / 1000)
         .filter((a) => !a.ai_created || a.text);
 
     // if the syncState got lost, we'd try to patch all previously uploaded annotations
