@@ -71,22 +71,42 @@ export async function getPocketArticles(
     }
 }
 
-export async function addPocketArticle(apiToken: string, article: Article): Promise<string> {
+export async function addUpdateArticles(apiToken: string, articles: Article[]): Promise<string[]> {
+    // send actions in batch to pass time_added
+    // see https://getpocket.com/developer/docs/v3/modify
+    const actions: any[] = [];
+    articles.forEach((article) => {
+        if (article.pocket_id) {
+            // already exists remotely
+            const isArchived = article.reading_progress >= readingProgressFullClamp;
+            actions.push({
+                action: isArchived ? "archive" : "readd",
+                item_id: article.pocket_id,
+                time: article.time_updated?.toString(),
+            });
+        } else {
+            actions.push({
+                action: "add",
+                url: article.url,
+                title: article.title,
+                time: article.time_added?.toString(),
+            });
+        }
+    });
+
     const response: any = (await ky
-        .post(`${apiHost}/api/pocket/add`, {
+        .post(`${apiHost}/api/pocket/send`, {
             json: {
                 consumer_key: pocketConsumerKey,
                 access_token: apiToken,
-
-                url: article.url,
-                title: article.title,
+                actions,
             },
             timeout: false,
             retry: 0,
         })
         .json()) as any[];
 
-    return response?.item?.item_id;
+    return response.action_results.map((result: any, i: number) => result?.item_id || undefined);
 }
 
 export async function deletePocketArticle(apiToken: string, article: Article): Promise<void> {
@@ -98,24 +118,6 @@ export async function deletePocketArticle(apiToken: string, article: Article): P
                 {
                     action: "delete",
                     item_id: article.pocket_id,
-                },
-            ],
-        },
-    });
-}
-
-export async function updatePocketArticle(apiToken: string, article: Article): Promise<void> {
-    const isArchived = article.reading_progress >= readingProgressFullClamp;
-
-    await ky.post(`${apiHost}/api/pocket/send`, {
-        json: {
-            consumer_key: pocketConsumerKey,
-            access_token: apiToken,
-            actions: [
-                {
-                    action: isArchived ? "archive" : "readd",
-                    item_id: article.pocket_id,
-                    time: article.time_updated?.toString(),
                 },
             ],
         },

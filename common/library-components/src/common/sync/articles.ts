@@ -1,14 +1,9 @@
-import { debounce } from "lodash";
+import { debounce, chunk } from "lodash";
 import asyncPool from "tiny-async-pool";
 
 import type { Article, SyncState } from "../../store";
 import type { ReplicacheProxy } from "../replicache";
-import {
-    addPocketArticle,
-    deletePocketArticle,
-    getPocketArticles,
-    updatePocketArticle,
-} from "./pocket";
+import { addUpdateArticles, deletePocketArticle, getPocketArticles } from "./pocket";
 
 export async function syncDownloadArticles(rep: ReplicacheProxy) {
     const syncState = await rep.query.getSyncState("pocket");
@@ -58,15 +53,17 @@ export async function syncUploadArticles(rep: ReplicacheProxy) {
         articles = articles.filter((a) => !a.pocket_id);
     }
 
-    console.log(
-        `Uploading ${articles.length} articles since ${lastUpload?.toUTCString()} to Pocket`
-    );
-
-    // upload changes
-    for await (const _ of asyncPool(5, articles, (article) =>
-        uploadArticle(rep, syncState, article)
-    )) {
-        // TODO add progress indication?
+    if (articles?.length) {
+        console.log(
+            `Uploading ${articles.length} articles since ${lastUpload?.toUTCString()} to Pocket`
+        );
+        // upload changes
+        const remoteIds = await addUpdateArticles(syncState.api_token, articles);
+        await Promise.all(
+            remoteIds.map((remoteId, i) =>
+                rep.mutate.updateArticleRaw({ id: articles[i].id, pocket_id: remoteId })
+            )
+        );
     }
 
     await rep.mutate.updateSyncState({
@@ -75,27 +72,6 @@ export async function syncUploadArticles(rep: ReplicacheProxy) {
         last_upload: newUpload.getTime(),
     });
 }
-
-async function uploadArticle(rep: ReplicacheProxy, syncState: SyncState, article: Article) {
-    try {
-        if (article.pocket_id) {
-            // already exists remotely
-            await updatePocketArticle(syncState.api_token, article);
-        } else {
-            // create remotely, then save id
-            const remoteId = await addPocketArticle(syncState.api_token, article);
-
-            // don't change updated_at
-            await rep.mutate.updateArticleRaw({
-                id: article.id,
-                pocket_id: remoteId,
-            });
-        }
-    } catch (err) {
-        console.error(err);
-    }
-}
-
 const syncUploadArticlesDebounced = debounce(syncUploadArticles, 10 * 1000);
 
 // only handle deletes using store watch for reslience
