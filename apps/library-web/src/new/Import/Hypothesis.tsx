@@ -32,16 +32,19 @@ export default function HypothesisSyncSection({ userInfo, darkModeEnabled }) {
         if (!token) {
             setToken(syncState.api_token);
         }
-
-        // rep?.mutate.deleteSyncState("hypothesis");
     }, [syncState]);
 
     const [error, setError] = useState<string>();
     async function changeToken(token: string) {
+        setToken(token);
         if (!rep) {
             return;
         }
-        setToken(token);
+        if (!token) {
+            await rep?.mutate.deleteSyncState("hypothesis");
+            setIsOpen(true); // keep open
+            return;
+        }
 
         const userName = await getHypothesisUsername(token);
         if (userName) {
