@@ -57,13 +57,15 @@ export async function syncUploadArticles(rep: ReplicacheProxy) {
         console.log(
             `Uploading ${articles.length} articles since ${lastUpload?.toUTCString()} to Pocket`
         );
-        // upload changes
-        const remoteIds = await addUpdateArticles(syncState.api_token, articles);
-        await Promise.all(
-            remoteIds.map((remoteId, i) =>
-                rep.mutate.updateArticleRaw({ id: articles[i].id, pocket_id: remoteId })
-            )
-        );
+        // pocket api can't handle more than ~ 100 articles at once
+        for (const chunkedArticles of chunk(articles, 50)) {
+            const remoteIds = await addUpdateArticles(syncState.api_token, chunkedArticles);
+            await Promise.all(
+                remoteIds.map((remoteId, i) =>
+                    rep.mutate.updateArticleRaw({ id: chunkedArticles[i].id, pocket_id: remoteId })
+                )
+            );
+        }
     }
 
     await rep.mutate.updateSyncState({
