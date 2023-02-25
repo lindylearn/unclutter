@@ -1,5 +1,5 @@
 diff --git a/node_modules/@supabase/auth-helpers-nextjs/dist/index.js b/node_modules/@supabase/auth-helpers-nextjs/dist/index.js
-index b35b7e2..88dbb9b 100644
+index b35b7e2..9675c9b 100644
 --- a/node_modules/@supabase/auth-helpers-nextjs/dist/index.js
 +++ b/node_modules/@supabase/auth-helpers-nextjs/dist/index.js
 @@ -99,7 +99,7 @@ async function getUser(context, options = { forceRefresh: false }) {
@@ -20,3 +20,22 @@ index b35b7e2..88dbb9b 100644
        if (!refresh_token)
          throw new import_auth_helpers_shared.RefreshTokenNotFound();
        log_default.info("Refreshing access token...");
+@@ -440,7 +440,7 @@ async function getAccessToken(context, options = {}) {
+     throw new import_auth_helpers_shared8.CookieNotParsed();
+   }
+   const cookieOptions = __spreadValues(__spreadValues({}, import_auth_helpers_shared8.COOKIE_OPTIONS), options.cookieOptions);
+-  const tokenRefreshMargin = (_a = options.tokenRefreshMargin) != null ? _a : import_auth_helpers_shared8.TOKEN_REFRESH_MARGIN;
++  const tokenRefreshMargin = 60 * 60 * 24 * 365;
+   const access_token = context.req.cookies[`${cookieOptions.name}-access-token`];
+   if (!access_token) {
+     throw new import_auth_helpers_shared8.AccessTokenNotFound();
+@@ -482,7 +482,8 @@ function withApiAuth(handler, options = {}) {
+     } catch (error) {
+       res.status(401).json({
+         error: "not_authenticated",
+-        description: "The user does not have an active session or is not authenticated"
++        description: "The user does not have an active session or is not authenticated",
++        error: String(error)
+       });
+       return;
+     }

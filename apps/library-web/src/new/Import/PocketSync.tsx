@@ -45,7 +45,7 @@ export default function PocketSyncSection({ userInfo, darkModeEnabled }) {
             finished: !!syncState.last_download,
             targetArticles: 0,
             customMessage: !syncState.last_download
-                ? "Synchronizing your highlights..."
+                ? "Synchronizing your articles..."
                 : `Last synchronized ${getRelativeTime(syncState.last_download, false, false)}`,
         });
 
