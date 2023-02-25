@@ -20,7 +20,7 @@ export function formatDate(date: Date): string {
 }
 
 export function cleanTitle(title: string): string {
-    title = title.trim().split("\n")[0];
+    title = title?.trim().split("\n")[0] || "";
 
     while (title.includes("  ")) {
         title = title.replace(/  /g, " ");
