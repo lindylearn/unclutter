@@ -21,8 +21,8 @@ import {
     sendMessage,
 } from "@unclutter/library-components/dist/common";
 
-// export const oauthRedirectUrl = "https://my.unclutter.it/sync?pocket_auth_redirect";
-export const oauthRedirectUrl = "http://localhost:3000/sync?pocket_auth_redirect";
+export const oauthRedirectUrl = "https://my.unclutter.it/sync?pocket_auth_redirect";
+// export const oauthRedirectUrl = "http://localhost:3000/sync?pocket_auth_redirect";
 
 export default function PocketSyncSection({ userInfo, darkModeEnabled }) {
     const rep = useContext(ReplicacheContext);
