@@ -2977,7 +2977,7 @@
     remark "^13.0.0"
     unist-util-find-all-after "^3.0.2"
 
-"@supabase/auth-helpers-nextjs@^0.2.5":
+"@supabase/auth-helpers-nextjs@0.2.7":
   version "0.2.7"
   resolved "https://registry.yarnpkg.com/@supabase/auth-helpers-nextjs/-/auth-helpers-nextjs-0.2.7.tgz#27f89aed8eed365222edf66ab7372d1770fd846a"
   integrity sha512-3+UMfE+wXBKswnzVL/hg1IYt3+POay+/B/Fn2hV8MaiffRpDdOG8zDSOIwsiNUz4KVZYOVa8IPvyh2AJqXwfMQ==
