@@ -4,8 +4,8 @@ import { Annotation, Article, readingProgressFullClamp } from "../../store";
 import { getUrlHash } from "../url";
 import { constructLocalArticle } from "../util";
 
-// const apiHost = "https://my.lindylearn.io";
-const apiHost = "http://localhost:3000";
+const apiHost = "https://my.lindylearn.io";
+// const apiHost = "http://localhost:3000";
 
 export const pocketConsumerKey = "106099-bc04e91092ca30bacd08f96";
 
