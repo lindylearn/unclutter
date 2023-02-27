@@ -22,9 +22,6 @@ import { deleteAllLocalScreenshots } from "./screenshots";
 import { refreshSubscriptions } from "@unclutter/library-components/dist/feeds";
 import { initArticlesSync, initHighlightsSync } from "./sync";
 import type { UserInfo } from "@unclutter/library-components/dist/store";
-import { deleteSearchIndex } from "@unclutter/library-components/dist/common/search";
-import { syncDownloadAnnotations } from "@unclutter/library-components/dist/common/sync/highlights";
-import { syncDownloadArticles } from "@unclutter/library-components/dist/common/sync/articles";
 
 export let userId: string; // actual replicache id, don't change in dev
 export let userInfo: UserInfo | undefined;
@@ -59,14 +56,6 @@ export async function initLibrary(isDev: boolean = false): Promise<void> {
 
 export async function refreshLibraryFeeds() {
     await refreshSubscriptions(rep);
-}
-export async function syncPull() {
-    try {
-        await syncDownloadAnnotations(rep);
-        await syncDownloadArticles(rep);
-    } catch (err) {
-        console.error(err);
-    }
 }
 
 function getBackgroundReplicacheProxy(): ReplicacheProxy {

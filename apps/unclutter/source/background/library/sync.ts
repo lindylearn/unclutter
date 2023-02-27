@@ -14,7 +14,13 @@ import {
     syncWatchArticles,
 } from "@unclutter/library-components/dist/common/sync/articles";
 
+let highlightsSyncActive = false;
 export async function initHighlightsSync(setSyncState: SyncState = undefined) {
+    if (highlightsSyncActive) {
+        return;
+    }
+    highlightsSyncActive = true;
+
     let syncState = await rep.query.getSyncState("hypothesis");
     console.log("Starting highlights sync", syncState, setSyncState);
 
@@ -30,6 +36,7 @@ export async function initHighlightsSync(setSyncState: SyncState = undefined) {
         const username = await getHypothesisUsername();
         const api_token = await getHypothesisToken();
         if (!hypothesisSyncEnabled || !username || !api_token) {
+            highlightsSyncActive = false;
             return;
         }
 
@@ -62,9 +69,16 @@ export async function initHighlightsSync(setSyncState: SyncState = undefined) {
     }
 
     console.log("Annotations sync done");
+    highlightsSyncActive = false;
 }
 
+let articlesSyncActive = false;
 export async function initArticlesSync(setSyncState: SyncState = undefined) {
+    if (articlesSyncActive) {
+        return;
+    }
+    articlesSyncActive = true;
+
     let syncState = await rep.query.getSyncState("pocket");
     console.log("Starting articles sync", syncState, setSyncState);
 
@@ -74,6 +88,7 @@ export async function initArticlesSync(setSyncState: SyncState = undefined) {
         await rep.mutate.putSyncState(syncState);
     }
     if (!syncState) {
+        articlesSyncActive = false;
         return;
     }
 
@@ -88,4 +103,23 @@ export async function initArticlesSync(setSyncState: SyncState = undefined) {
     }
 
     console.log("Articles sync done");
+    articlesSyncActive = false;
+}
+
+export async function syncPull() {
+    try {
+        if (!highlightsSyncActive) {
+            highlightsSyncActive = true;
+            await syncUploadAnnotations(rep);
+        }
+        if (!articlesSyncActive) {
+            articlesSyncActive = true;
+            await syncUploadArticles(rep);
+        }
+    } catch (err) {
+        console.error(err);
+    }
+
+    highlightsSyncActive = false;
+    articlesSyncActive = false;
 }

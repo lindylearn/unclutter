@@ -2,9 +2,10 @@ import browser, { getBrowserType } from "../common/polyfill";
 import { injectScript } from "./inject";
 import { reportEnablePageView } from "./metrics";
 import type { Alarms } from "webextension-polyfill";
-import { rep, syncPull, userInfo } from "./library/library";
+import { rep } from "./library/library";
 import { constructLocalArticle } from "@unclutter/library-components/dist/common/util";
 import { getUrlHash } from "@unclutter/library-components/dist/common/url";
+import { syncPull } from "./library/sync";
 
 export function onNewInstall(version: string) {
     browser.tabs.create({
