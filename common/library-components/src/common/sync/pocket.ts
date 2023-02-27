@@ -1,10 +1,7 @@
-import { subYears } from "date-fns";
 import ky from "ky-universal";
-import { Annotation, Article, readingProgressFullClamp } from "../../store";
-import { getUrlHash } from "../url";
-import { constructLocalArticle } from "../util";
+import { Article, readingProgressFullClamp } from "../../store";
 
-const apiHost = "https://my.lindylearn.io";
+const apiHost = "https://library.lindylearn.io"; // my. somehow doesn't work inside firefox extension?
 // const apiHost = "http://localhost:3000";
 
 export const pocketConsumerKey = "106099-bc04e91092ca30bacd08f96";
@@ -16,7 +13,7 @@ export async function getPocketArticles(
     try {
         // see https://getpocket.com/developer/docs/v3/retrieve
         // proxy via api function to avoid CORS and other issues
-        const pocketArticles = (await ky
+        const articles = (await ky
             .post(`${apiHost}/api/pocket/get`, {
                 json: {
                     consumer_key: pocketConsumerKey,
@@ -27,42 +24,6 @@ export async function getPocketArticles(
                 retry: 0,
             })
             .json()) as any[];
-
-        const startTimeMillis = subYears(new Date(), 1).getTime();
-        const articles: Article[] = pocketArticles
-            // filter very large libraries
-            // include all from last year plus favorited and read articles
-            .filter(
-                ({ time_updated, favorite, status }) =>
-                    parseInt(time_updated) * 1000 >= startTimeMillis ||
-                    favorite === "1" ||
-                    status === "1"
-            )
-            // filter out non-articles
-            .filter(({ resolved_url }) => !(new URL(resolved_url).pathname === "/"))
-            // map format
-            .map(
-                ({
-                    item_id,
-                    resolved_url,
-                    resolved_title,
-                    time_added,
-                    status,
-                    favorite,
-                    word_count,
-                }) => ({
-                    ...constructLocalArticle(
-                        resolved_url,
-                        getUrlHash(resolved_url),
-                        resolved_title
-                    ),
-                    pocket_id: item_id,
-                    time_added: parseInt(time_added),
-                    is_favorite: favorite === "1",
-                    reading_progress: status === "1" ? 1 : 0,
-                    word_count: parseInt(word_count) || 0,
-                })
-            );
 
         return articles;
     } catch (err) {

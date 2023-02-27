@@ -39,6 +39,13 @@ export default function PocketSyncSection({ userInfo, darkModeEnabled }) {
         undefined
     );
     useEffect(() => {
+        // dev test
+        // rep?.mutate.putSyncState({
+        //     id: "pocket",
+        //     api_token: ""
+        // });
+        // rep?.mutate.deleteSyncState("pocket");
+
         if (!syncState) {
             return;
         }
@@ -50,7 +57,7 @@ export default function PocketSyncSection({ userInfo, darkModeEnabled }) {
                 : `Last synchronized ${getRelativeTime(syncState.last_download, false, false)}`,
         });
 
-        // rep?.mutate.deleteSyncState("pocket");
+        // getPocketArticles(syncState?.api_token).then(console.log);
     }, [syncState]);
 
     // first auth click
