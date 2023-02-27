@@ -192,6 +192,10 @@ export async function syncWatchAnnotations(rep: ReplicacheProxy) {
         }
 
         removed = removed.filter((a) => a.h_id);
+        if (removed.length > 100) {
+            // is trying to replace entries?
+            return;
+        }
         if (removed.length > 0) {
             console.log(`Deleting ${removed.length} annotations on hypothesis`);
             const syncState = await rep.query.getSyncState("hypothesis");

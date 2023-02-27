@@ -1,6 +1,7 @@
 import ky from "ky";
 import {
     ArticleImportSchema,
+    importArticles,
     ImportProgress,
 } from "@unclutter/library-components/dist/common/import";
 import {
@@ -132,30 +133,31 @@ export default function PocketSyncSection({ userInfo, darkModeEnabled }) {
                 return;
             }
 
+            // do initial import manually with progress updates
+            setProgress({ customMessage: `Fetching your Pocket list...`, targetArticles: 0 });
+            const newDownload = new Date();
+            const articles = await getPocketArticles(access_token);
+            if (!articles) {
+                setProgress({ customMessage: `Error fetching Pocket list`, targetArticles: 0 });
+                return;
+            }
+
+            const importData: ArticleImportSchema = {
+                urls: articles.map(({ url }) => url),
+                time_added: articles.map(({ time_added }) => time_added),
+                status: articles.map(({ reading_progress }) => reading_progress),
+                favorite: articles.map(({ is_favorite }) => (is_favorite ? 1 : 0)),
+            };
+            await importArticles(rep, importData, userInfo, setProgress);
+
+            // now set state and trigger sync
             const newSyncState: SyncState = {
                 id: "pocket",
                 api_token: access_token,
+                last_download: newDownload.getTime(),
             };
             await rep.mutate.putSyncState(newSyncState);
-
             await sendMessage({ event: "initSync", syncState: newSyncState });
-
-            // initial import
-            // setProgress({ customMessage: `Fetching your Pocket list...`, targetArticles: 0 });
-            // const articles = await getPocketArticles(newSyncState.api_token);
-            // if (!articles) {
-            //     setProgress({ customMessage: `Error fetching Pocket list`, targetArticles: 0 });
-            //     return;
-            // }
-
-            // const importData: ArticleImportSchema = {
-            //     urls: articles.map(({ url }) => url),
-            //     time_added: articles.map(({ time_added }) => time_added),
-            //     status: articles.map(({ reading_progress }) => reading_progress),
-            //     favorite: articles.map(({ is_favorite }) => (is_favorite ? 1 : 0)),
-            // };
-            // // startImport(importData);
-            // console.log(importData);
         })();
     }, [isRedirect]);
 
