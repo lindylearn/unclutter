@@ -54,13 +54,14 @@ export async function getHypothesisAnnotationsSince(
 
         if (!seenArticleIds.has(annotation.article_id)) {
             seenArticleIds.add(annotation.article_id);
-            articles.push(
-                constructLocalArticle(
+            articles.push({
+                ...constructLocalArticle(
                     hypothesisAnnotation.uri,
                     annotation.article_id,
                     hypothesisAnnotation.document.title?.[0]
-                )
-            );
+                ),
+                reading_progress: 1,
+            });
         }
     }
 
