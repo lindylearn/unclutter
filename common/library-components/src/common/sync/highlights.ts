@@ -1,4 +1,4 @@
-import { debounce } from "lodash";
+import { debounce, chunk } from "lodash";
 import asyncPool from "tiny-async-pool";
 
 import type { Annotation, Article, SyncState } from "../../store";
@@ -34,10 +34,25 @@ export async function syncDownloadAnnotations(rep: ReplicacheProxy) {
     );
     if (articles?.length) {
         await rep.mutate.importArticles({ articles });
+
+        if (articles.length >= 10) {
+            // wait for replicache push to stay below vercel 4.5mb request limit
+            await new Promise((resolve) => setTimeout(resolve, 10 * 1000));
+        }
     }
     if (annotations?.length) {
         // handles updating remote ids
-        await rep.mutate.mergeRemoteAnnotations(annotations);
+
+        if (annotations.length >= 1000) {
+            for (const annotationsChunk of chunk(annotations, 1000)) {
+                await rep.mutate.mergeRemoteAnnotations(annotationsChunk);
+
+                // wait for replicache push to stay below vercel 4.5mb request limit
+                await new Promise((resolve) => setTimeout(resolve, 10 * 1000));
+            }
+        } else {
+            await rep.mutate.mergeRemoteAnnotations(annotations);
+        }
     }
 
     await rep.mutate.updateSyncState({
