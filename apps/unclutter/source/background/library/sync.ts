@@ -60,8 +60,8 @@ export async function initHighlightsSync(setSyncState: SyncState = undefined) {
 
     try {
         // upload before download to not endlessly loop
-        await syncUploadAnnotations(rep);
-        await syncDownloadAnnotations(rep);
+        const uploadedIds = await syncUploadAnnotations(rep);
+        await syncDownloadAnnotations(rep, uploadedIds);
 
         await syncWatchAnnotations(rep);
     } catch (err) {
@@ -94,8 +94,8 @@ export async function initArticlesSync(setSyncState: SyncState = undefined) {
 
     try {
         // upload before download to not endlessly loop
-        await syncUploadArticles(rep);
-        await syncDownloadArticles(rep);
+        const uploadedIds = await syncUploadArticles(rep);
+        await syncDownloadArticles(rep, uploadedIds);
 
         await syncWatchArticles(rep);
     } catch (err) {

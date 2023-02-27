@@ -10,7 +10,10 @@ import {
     updateHypothesisAnnotation,
 } from "./hypothesis";
 
-export async function syncDownloadAnnotations(rep: ReplicacheProxy) {
+export async function syncDownloadAnnotations(
+    rep: ReplicacheProxy,
+    ignoreAnnotationsIds: Set<string> = new Set()
+) {
     const syncState = await rep.query.getSyncState("hypothesis");
     if (!syncState) {
         return;
@@ -33,26 +36,22 @@ export async function syncDownloadAnnotations(rep: ReplicacheProxy) {
         } hypothes.is annotations since ${lastDownload?.toUTCString()}`
     );
     if (articles?.length) {
-        await rep.mutate.importArticles({ articles });
-
         if (articles.length >= 10) {
-            // wait for replicache push to stay below vercel 4.5mb request limit
-            await new Promise((resolve) => setTimeout(resolve, 10 * 1000));
+            // reduce mutation size to stay below vercel 4.5mb request limit
+            const existingArticles = await rep.query.listArticles();
+            const existingArticleIds = new Set(existingArticles.map((a) => a.id));
+            articles = articles.filter((a) => !existingArticleIds.has(a.id));
         }
+
+        await rep.mutate.importArticles({ articles });
     }
     if (annotations?.length) {
         // handles updating remote ids
+        annotations = annotations.filter((a) => !ignoreAnnotationsIds.has(a.id));
 
-        if (annotations.length >= 1000) {
-            for (const annotationsChunk of chunk(annotations, 1000)) {
-                await rep.mutate.mergeRemoteAnnotations(annotationsChunk);
+        // can't easily exclude locally present annotations, since updated time set remotely
 
-                // wait for replicache push to stay below vercel 4.5mb request limit
-                await new Promise((resolve) => setTimeout(resolve, 10 * 1000));
-            }
-        } else {
-            await rep.mutate.mergeRemoteAnnotations(annotations);
-        }
+        await rep.mutate.mergeRemoteAnnotations(annotations);
     }
 
     await rep.mutate.updateSyncState({
@@ -62,10 +61,10 @@ export async function syncDownloadAnnotations(rep: ReplicacheProxy) {
     });
 }
 
-export async function syncUploadAnnotations(rep: ReplicacheProxy) {
+export async function syncUploadAnnotations(rep: ReplicacheProxy): Promise<Set<string>> {
     const syncState = await rep.query.getSyncState("hypothesis");
     if (!syncState) {
-        return;
+        return new Set();
     }
     await rep.mutate.updateSyncState({ id: "hypothesis", is_syncing: true });
 
@@ -91,7 +90,7 @@ export async function syncUploadAnnotations(rep: ReplicacheProxy) {
             is_syncing: false,
             last_upload: newUpload.getTime(),
         });
-        return;
+        return new Set();
     }
 
     const createdCount = annotations.filter((a) => !a.h_id).length;
@@ -124,6 +123,8 @@ export async function syncUploadAnnotations(rep: ReplicacheProxy) {
         is_syncing: false,
         last_upload: newUpload.getTime(),
     });
+
+    return new Set(annotations.map((a) => a.id));
 }
 
 async function uploadAnnotation(

@@ -5,7 +5,10 @@ import type { Article, SyncState } from "../../store";
 import type { ReplicacheProxy } from "../replicache";
 import { addUpdateArticles, deletePocketArticle, getPocketArticles } from "./pocket";
 
-export async function syncDownloadArticles(rep: ReplicacheProxy) {
+export async function syncDownloadArticles(
+    rep: ReplicacheProxy,
+    ignoreArticleIds: Set<string> = new Set()
+) {
     const syncState = await rep.query.getSyncState("pocket");
     if (!syncState) {
         return;
@@ -19,6 +22,9 @@ export async function syncDownloadArticles(rep: ReplicacheProxy) {
     if (articles === null) {
         return;
     }
+
+    // can't easily exclude locally present articles, since updated time set remotely
+    articles = articles.filter((a) => !ignoreArticleIds.has(a.id));
 
     console.log(
         `Downloading ${articles?.length} pocket articles since ${lastDownload?.toUTCString()}`
@@ -34,10 +40,10 @@ export async function syncDownloadArticles(rep: ReplicacheProxy) {
     });
 }
 
-export async function syncUploadArticles(rep: ReplicacheProxy) {
+export async function syncUploadArticles(rep: ReplicacheProxy): Promise<Set<string>> {
     const syncState = await rep.query.getSyncState("pocket");
     if (!syncState) {
-        return;
+        return new Set();
     }
     await rep.mutate.updateSyncState({ id: "pocket", is_syncing: true });
 
@@ -73,6 +79,8 @@ export async function syncUploadArticles(rep: ReplicacheProxy) {
         is_syncing: false,
         last_upload: newUpload.getTime(),
     });
+
+    return new Set(articles.map((a) => a.id));
 }
 const syncUploadArticlesDebounced = debounce(syncUploadArticles, 10 * 1000);
 
