@@ -62,3 +62,11 @@ const authenticatedHandler = withApiAuth(
 );
 
 export default handler;
+
+export const config = {
+    api: {
+        bodyParser: {
+            sizeLimit: "5mb",
+        },
+    },
+};
