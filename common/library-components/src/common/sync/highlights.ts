@@ -44,6 +44,10 @@ export async function syncDownloadAnnotations(
         }
 
         await rep.mutate.importArticles({ articles });
+
+        if (articles.length >= 10) {
+            await new Promise((resolve) => setTimeout(resolve, 10 * 1000));
+        }
     }
     if (annotations?.length) {
         // handles updating remote ids
@@ -51,7 +55,16 @@ export async function syncDownloadAnnotations(
 
         // can't easily exclude locally present annotations, since updated time set remotely
 
-        await rep.mutate.mergeRemoteAnnotations(annotations);
+        if (annotations.length >= 1000) {
+            for (const annotationsChunk of chunk(annotations, 1000)) {
+                await rep.mutate.mergeRemoteAnnotations(annotationsChunk);
+
+                // wait for replicache push to stay below vercel 4.5mb request limit
+                await new Promise((resolve) => setTimeout(resolve, 10 * 1000));
+            }
+        } else {
+            await rep.mutate.mergeRemoteAnnotations(annotations);
+        }
     }
 
     await rep.mutate.updateSyncState({
