@@ -110,11 +110,11 @@ export async function syncPull() {
     try {
         if (!highlightsSyncActive) {
             highlightsSyncActive = true;
-            await syncUploadAnnotations(rep);
+            await syncDownloadAnnotations(rep);
         }
         if (!articlesSyncActive) {
             articlesSyncActive = true;
-            await syncUploadArticles(rep);
+            await syncDownloadArticles(rep);
         }
     } catch (err) {
         console.error(err);
