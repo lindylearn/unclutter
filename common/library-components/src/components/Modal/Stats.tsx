@@ -20,7 +20,7 @@ export default function StatsModalTab({ defaultWeekOverlay = 3 }: { defaultWeekO
             return;
         }
         rep?.query.getArticlesCount().then(setArticleCount);
-        rep.query.listRecentArticles().then(setAllArticles);
+        rep.query.listRecentArticles(undefined, undefined, undefined, true).then(setAllArticles);
         rep.query.listAnnotations().then(setAllAnnotations);
     }, [rep]);
 
