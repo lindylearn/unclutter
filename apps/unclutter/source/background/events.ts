@@ -288,5 +288,5 @@ async function initializeServiceWorker() {
 }
 
 initializeServiceWorker();
-setupWithPermissions(); // needs to run after every reload to configure event handlers
+setupWithPermissions(false); // needs to run after every reload to configure event handlers
 createAlarmListeners();

@@ -18,33 +18,29 @@ export function onNewInstall(version: string) {
 
 // only run one time after each update
 let installed = false;
-export function setupWithPermissions() {
+export function setupWithPermissions(requestPermissions = true) {
     if (installed) {
         return;
     }
 
-    try {
-        // test if already have permissions
+    if (browser.contextMenus && browser.alarms) {
         installContextMenu();
         installAlarms();
         installed = true;
-        return;
-    } catch {}
-
-    // need to request permissions as part of user action, so can't use async functions
-    try {
+    } else if (requestPermissions) {
         console.log("Requesting optional permissions ...");
         browser.permissions
             .request({
                 permissions: ["contextMenus", "alarms"],
             })
             .then(() => {
+                // need to request permissions as part of user action, can't use async functions
                 installContextMenu();
                 installAlarms();
                 installed = true;
             });
-    } catch (err) {
-        console.error(err);
+        // don't log permissions errors during initial service worker startup
+        // .catch(() => {});
     }
 }
 
@@ -134,9 +130,11 @@ async function installAlarms() {
 }
 
 async function createAlarmIfNotExists(id: string, everyXHour: number) {
-    if (await browser.alarms.get()) {
+    if (await browser.alarms.get(id)) {
+        // already exists
         return;
     }
+
     browser.alarms.create(id, {
         delayInMinutes: 1,
         periodInMinutes: 60 * everyXHour,
