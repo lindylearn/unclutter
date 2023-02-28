@@ -94,6 +94,11 @@ function handleMessage(
             // browser apis are only available in scripts injected from background scripts or manifest.json
             console.log(`Requested ${message.type} script injection`);
 
+            if (!sender.tab) {
+                console.error(`Cannot inject script due to undefined sender.tab`);
+                return;
+            }
+
             if (message.type === "full") {
                 injectScript(sender.tab.id, "content-script/enhance.js");
                 tabsManager.onActivateReaderMode(sender.tab.id);
@@ -130,7 +135,7 @@ function handleMessage(
                 await new Promise((resolve) => setTimeout(resolve, 100));
 
                 await injectScript(tab.id, "content-script/enhance.js");
-                tabsManager.onActivateReaderMode(sender.tab.id);
+                tabsManager.onActivateReaderMode(sender.tab?.id);
 
                 if (message.annotationId) {
                     await new Promise((resolve) => setTimeout(resolve, 200));
@@ -147,7 +152,9 @@ function handleMessage(
             }
         } else if (message.event === "focusAnnotation") {
             // direct message back to listeners in same tab
-            browser.tabs.sendMessage(sender.tab.id, message);
+            if (sender.tab) {
+                browser.tabs.sendMessage(sender.tab.id, message);
+            }
         } else if (message.event === "setLibraryAuth") {
             setLibraryAuth(message.userId, message.webJwt).then(() => initLibrary());
         } else if (message.event === "initLibrary") {
@@ -196,16 +203,16 @@ function handleMessage(
             getHeatmapRemote(message.paragraphs).then(sendResponse);
             return true;
         } else if (message.event === "clearTabState") {
-            tabsManager.onCloseTab(sender.tab.id);
+            tabsManager.onCloseTab(sender.tab?.id);
         } else if (message.event === "checkHasLocalAnnotations") {
-            const articleId = getUrlHash(sender.tab.url);
-            tabsManager.checkHasLocalAnnotations(sender.tab.id, articleId).then(sendResponse);
+            const articleId = getUrlHash(sender.tab?.url);
+            tabsManager.checkHasLocalAnnotations(sender.tab?.id, articleId).then(sendResponse);
             return true;
         } else if (message.event === "setParsedAnnotations") {
-            tabsManager.setParsedAnnotations(sender.tab.id, message.annotations);
+            tabsManager.setParsedAnnotations(sender.tab?.id, message.annotations);
         }
 
-        return false;
+        return;
     });
 }
 

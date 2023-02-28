@@ -10,11 +10,18 @@ export class TabStateManager {
     private unsavedAnnotations: { [tabId: string]: boolean } = {};
     private relatedAnnotationsCount: { [tabId: string]: number } = {};
 
-    onChangeActiveTab(tabId: number) {
+    onChangeActiveTab(tabId?: number) {
+        if (tabId === undefined) {
+            return;
+        }
         this.renderBadgeCount(tabId);
     }
 
-    onCloseTab(tabId: number) {
+    onCloseTab(tabId?: number) {
+        if (tabId === undefined) {
+            return;
+        }
+
         // release storage
         delete this.tabReaderModeActive[tabId];
         delete this.tabAnnotations[tabId];
@@ -26,8 +33,8 @@ export class TabStateManager {
 
     // check saved annotations for a given url (without any network requests), to
     // determine if the user previously used the extension on this page
-    async checkHasLocalAnnotations(tabId: number, articleId: string) {
-        if (!(await this.checkAIEnabled())) {
+    async checkHasLocalAnnotations(tabId?: number, articleId?: string) {
+        if (tabId === undefined || !articleId || !(await this.checkAIEnabled())) {
             return;
         }
 
@@ -44,13 +51,17 @@ export class TabStateManager {
         return !!this.tabAnnotations[tabId]?.length;
     }
 
-    hasAIAnnotations(tabId: number) {
+    hasAIAnnotations(tabId?: number) {
+        if (tabId === undefined) {
+            return;
+        }
+
         const aiAnnotations = this.tabAnnotations[tabId]?.filter((a) => a.ai_created) || [];
         return !!aiAnnotations?.length;
     }
 
     async setParsedAnnotations(tabId: number, annotations: Annotation[]) {
-        if (!(await this.checkAIEnabled())) {
+        if (tabId === undefined || !(await this.checkAIEnabled())) {
             return;
         }
 
@@ -71,7 +82,11 @@ export class TabStateManager {
         this.renderBadgeCount(tabId);
     }
 
-    async onActivateReaderMode(tabId: number) {
+    async onActivateReaderMode(tabId?: number) {
+        if (tabId === undefined) {
+            return;
+        }
+
         this.tabReaderModeActive[tabId] = true;
 
         const annotations = this.tabAnnotations[tabId];
@@ -81,7 +96,11 @@ export class TabStateManager {
         }
     }
 
-    private async renderBadgeCount(tabId: number) {
+    private async renderBadgeCount(tabId?: number) {
+        if (tabId === undefined) {
+            return;
+        }
+
         const badgeCount = this.relatedAnnotationsCount[tabId];
         // const badgeCount = this.tabAnnotations[tabId]?.length;
 

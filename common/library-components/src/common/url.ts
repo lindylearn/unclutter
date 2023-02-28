@@ -2,35 +2,42 @@ import sha256 from "crypto-js/sha256";
 
 export function getUrlHash(url: string): string {
     const normalizedUrl = normalizeUrl(url);
-    const hash = sha256(normalizedUrl).toString();
+    if (!normalizedUrl) {
+        return "";
+    }
 
+    const hash = sha256(normalizedUrl).toString();
     return hash;
 }
 
 // NOTE: Keep in sync with backend WebpageConstuctor.normalize_url()
-export function normalizeUrl(url: string): string {
-    // remove protocol
-    url = url.toLowerCase().replace("www.", "").replace(".html", "").replace(".htm", "");
+export function normalizeUrl(url: string): string | undefined {
+    try {
+        // remove protocol
+        url = url.toLowerCase().replace("www.", "").replace(".html", "").replace(".htm", "");
 
-    // remove url params
-    // NOTE: be careful here -- e.g. substack adds ?s=r
-    const url_obj = new URL(url);
-    Object.entries(url_obj.searchParams).map(([param, _]) => {
-        if (param.includes("id")) {
-            return;
-        }
-        if (["p", "q", "t", "e"].includes(param)) {
-            return;
-        }
-        delete url_obj.searchParams[param];
-    });
+        // remove url params
+        // NOTE: be careful here -- e.g. substack adds ?s=r
+        const url_obj = new URL(url);
+        Object.entries(url_obj.searchParams).map(([param, _]) => {
+            if (param.includes("id")) {
+                return;
+            }
+            if (["p", "q", "t", "e"].includes(param)) {
+                return;
+            }
+            delete url_obj.searchParams[param];
+        });
 
-    url_obj.pathname = trimRight(url_obj.pathname, "/");
+        url_obj.pathname = trimRight(url_obj.pathname, "/");
 
-    // convert back to string
-    url = url_obj.toString().replace("https://", "").replace("http://", "");
+        // convert back to string
+        url = url_obj.toString().replace("https://", "").replace("http://", "");
 
-    return url;
+        return url;
+    } catch {
+        return undefined;
+    }
 }
 
 function trimRight(s: string, chars: string): string {

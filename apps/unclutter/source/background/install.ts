@@ -111,7 +111,9 @@ function createOrUpdateContextMenu(id, menuOptions) {
     // try update first
     try {
         browser.contextMenus.update(id, menuOptions);
-    } catch {}
+    } catch {
+        const _ = browser.runtime.lastError;
+    }
 
     try {
         browser.contextMenus.create({ ...menuOptions, id });
