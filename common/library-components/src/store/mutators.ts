@@ -129,9 +129,13 @@ async function updateArticleReadingProgress(
     tx: WriteTransaction,
     { articleId, readingProgress }: { articleId: string; readingProgress: number }
 ) {
+    const timeNow = new Date().getTime();
     const diff: Partial<Article> = {
         id: articleId,
         reading_progress: readingProgress,
+        recency_sort_position: timeNow,
+        topic_sort_position: timeNow,
+        domain_sort_position: timeNow,
     };
     // dequeue if completed article
     if (readingProgress >= readingProgressFullClamp) {
