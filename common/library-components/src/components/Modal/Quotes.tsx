@@ -32,7 +32,11 @@ export default function QuotesTab({}: {}) {
     }, [domainFilter, tagFilter]);
 
     const rep = useContext(ReplicacheContext);
-    const annotations = useSubscribe(rep, rep?.subscribe.listAnnotationsWithArticles(), null);
+    const annotations = useSubscribe<AnnotationWithArticle[] | null>(
+        rep,
+        rep?.subscribe.listAnnotationsWithArticles(),
+        null
+    );
 
     const [searchedAnnotations, setSearchedAnnotations] = useState<AnnotationWithArticle[] | null>(
         null

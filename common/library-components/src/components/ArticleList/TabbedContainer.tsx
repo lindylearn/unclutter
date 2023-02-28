@@ -143,7 +143,7 @@ export function useTabInfos(
 ): TabInfo[] | undefined {
     const rep = useContext(ReplicacheContext);
 
-    const articles = useSubscribe(rep, rep?.subscribe.listRecentArticles(), null);
+    const articles = useSubscribe<Article[] | null>(rep, rep?.subscribe.listRecentArticles(), null);
 
     let [tabInfos, setTabInfos] = useState<TabInfo[]>();
     useEffect(() => {

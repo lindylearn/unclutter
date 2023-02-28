@@ -7,12 +7,12 @@ export default function FeedListTab({ darkModeEnabled, reportEvent }) {
     const { setCurrentSubscription } = useContext(FilterContext);
     const rep = useContext(ReplicacheContext);
 
-    const allSubscriptions = useSubscribe(
+    const allSubscriptions = useSubscribe<FeedSubscription[] | null>(
         rep,
         rep?.subscribe.listSubscriptions(),
         null,
         []
-    ) as FeedSubscription[];
+    );
 
     const displayedSubscriptions = allSubscriptions
         ?.filter((s) => s.is_subscribed)

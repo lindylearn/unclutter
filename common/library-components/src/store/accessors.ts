@@ -85,95 +85,94 @@ export async function listRecentArticles(
     return sortArticlesPosition(filteredArticles, "recency_sort_position");
 }
 
-export interface ArticleBucket {
-    key: string;
-    title: string;
-    articles?: Article[];
-    children?: ArticleBucket[];
-}
-export interface ArticleBucketMap {
-    [key: string]: ArticleBucket;
-}
+// export interface ArticleBucket {
+//     key: string;
+//     title: string;
+//     articles?: Article[];
+//     children?: ArticleBucket[];
+// }
+// export interface ArticleBucketMap {
+//     [key: string]: ArticleBucket;
+// }
+// export async function groupRecentArticles(
+//     tx: ReadTransaction,
+//     sinceMs?: number,
+//     stateFilter?: StateFilter,
+//     selectedTopicId?: string | null,
+//     aggregateYears: boolean = true
+//     // returning 'object' due to replicache type issues
+// ): Promise<object> {
+//     const recentArticles = await listRecentArticles(tx, sinceMs, stateFilter, selectedTopicId);
 
-export async function groupRecentArticles(
-    tx: ReadTransaction,
-    sinceMs?: number,
-    stateFilter?: StateFilter,
-    selectedTopicId?: string | null,
-    aggregateYears: boolean = true
-    // returning 'object' due to replicache type issues
-): Promise<object> {
-    const recentArticles = await listRecentArticles(tx, sinceMs, stateFilter, selectedTopicId);
+//     const currentYear = new Date().getFullYear();
+//     const currentWeek = `${currentYear}-99${getWeekNumber(new Date())}`;
+//     const lastWeek = `${currentYear}-99${getWeekNumber(new Date()) - 1}`;
+//     const currentMonth = `${currentYear}-${new Date().getMonth()}`;
 
-    const currentYear = new Date().getFullYear();
-    const currentWeek = `${currentYear}-99${getWeekNumber(new Date())}`;
-    const lastWeek = `${currentYear}-99${getWeekNumber(new Date()) - 1}`;
-    const currentMonth = `${currentYear}-${new Date().getMonth()}`;
+//     // group into time buckets
+//     // const weekBuckets: { [week: number]: Article[] } = {};
+//     const monthBuckets: ArticleBucketMap = {};
+//     recentArticles.forEach((article) => {
+//         const date = new Date(article.time_added * 1000);
+//         const year = date.getFullYear();
+//         const week = `${year}-99${getWeekNumber(date)}`;
+//         const month = `${year}-${date.getMonth()}`;
 
-    // group into time buckets
-    // const weekBuckets: { [week: number]: Article[] } = {};
-    const monthBuckets: ArticleBucketMap = {};
-    recentArticles.forEach((article) => {
-        const date = new Date(article.time_added * 1000);
-        const year = date.getFullYear();
-        const week = `${year}-99${getWeekNumber(date)}`;
-        const month = `${year}-${date.getMonth()}`;
+//         if (week === currentWeek || week === lastWeek) {
+//             if (!monthBuckets[week]) {
+//                 monthBuckets[week] = {
+//                     key: week,
+//                     title: week === currentWeek ? "This week" : "Last week",
+//                     articles: [],
+//                 };
+//             }
 
-        if (week === currentWeek || week === lastWeek) {
-            if (!monthBuckets[week]) {
-                monthBuckets[week] = {
-                    key: week,
-                    title: week === currentWeek ? "This week" : "Last week",
-                    articles: [],
-                };
-            }
+//             monthBuckets[week].articles!.push(article);
+//         } else {
+//             if (!monthBuckets[month]) {
+//                 const monthName = date.toLocaleString("en-us", {
+//                     month: "long",
+//                 });
+//                 monthBuckets[month] = {
+//                     key: month,
+//                     title: `${monthName}`,
+//                     articles: [],
+//                 };
+//             }
 
-            monthBuckets[week].articles!.push(article);
-        } else {
-            if (!monthBuckets[month]) {
-                const monthName = date.toLocaleString("en-us", {
-                    month: "long",
-                });
-                monthBuckets[month] = {
-                    key: month,
-                    title: `${monthName}`,
-                    articles: [],
-                };
-            }
+//             monthBuckets[month].articles!.push(article);
+//         }
+//     });
 
-            monthBuckets[month].articles!.push(article);
-        }
-    });
+//     if (aggregateYears) {
+//         const yearBuckets: ArticleBucketMap = {};
+//         Object.values(monthBuckets)
+//             .sort((a, b) => (parseInt(b.key.slice(5)) > parseInt(a.key.slice(5)) ? 1 : -1)) // newest month first
+//             .forEach((monthBucket) => {
+//                 const [year, month] = monthBucket.key.split("-");
 
-    if (aggregateYears) {
-        const yearBuckets: ArticleBucketMap = {};
-        Object.values(monthBuckets)
-            .sort((a, b) => (parseInt(b.key.slice(5)) > parseInt(a.key.slice(5)) ? 1 : -1)) // newest month first
-            .forEach((monthBucket) => {
-                const [year, month] = monthBucket.key.split("-");
+//                 if (!yearBuckets[year]) {
+//                     yearBuckets[year] = {
+//                         key: year,
+//                         title: year,
+//                         children: [],
+//                     };
+//                 }
+//                 yearBuckets[year].children!.push(monthBucket);
+//             });
 
-                if (!yearBuckets[year]) {
-                    yearBuckets[year] = {
-                        key: year,
-                        title: year,
-                        children: [],
-                    };
-                }
-                yearBuckets[year].children!.push(monthBucket);
-            });
-
-        if (yearBuckets["1970"]) {
-            yearBuckets["1970"] = {
-                key: "1970",
-                title: "Imported",
-                articles: yearBuckets["1970"].children![0].articles,
-            };
-        }
-        return yearBuckets;
-    } else {
-        return monthBuckets;
-    }
-}
+//         if (yearBuckets["1970"]) {
+//             yearBuckets["1970"] = {
+//                 key: "1970",
+//                 title: "Imported",
+//                 articles: yearBuckets["1970"].children![0].articles,
+//             };
+//         }
+//         return yearBuckets;
+//     } else {
+//         return monthBuckets;
+//     }
+// }
 
 export async function listFavoriteArticles(tx: ReadTransaction): Promise<Article[]> {
     const allArticles = await listArticles(tx);
@@ -442,7 +441,7 @@ export const accessors = {
     listArticleLinks,
     getArticlesCount,
     listRecentArticles,
-    groupRecentArticles,
+    // groupRecentArticles,
     listFavoriteArticles,
     listQueueArticles,
     listDomainArticles,

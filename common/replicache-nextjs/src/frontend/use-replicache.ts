@@ -81,7 +81,7 @@ export function useReplicache<A extends AccessorDefs, M extends MutatorDefs>({
       // @ts-ignore
       r.subscribe[fnName] =
         (...args: any[]) =>
-        (subscribeOptions: SubscribeOptions<any, Error>) =>
+        (subscribeOptions: SubscribeOptions<any>) =>
           r?.subscribe(
             (tx) => options.accessors[fnName](tx, ...args),
             subscribeOptions

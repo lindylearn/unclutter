@@ -24,7 +24,7 @@ function doCallback() {
 
 export function useSubscribe<R extends ReadonlyJSONValue>(
     rep: Subscribable | null | undefined,
-    subscribeQuery: ((options: SubscribeOptions<R, Error>) => void) | undefined,
+    subscribeQuery: ((options: SubscribeOptions<R>) => void) | undefined,
     def: R,
     deps: Array<unknown> = []
 ): R {
