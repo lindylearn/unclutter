@@ -92,8 +92,8 @@
         ".slm-instream-player-container",
         ".tabElemNoBor"
     ],
-    "beyazperde.com": [".light.titlebar-subtile", ".cms-see-also", ".section"],
     "beachcam.co.il": ["#aswift_1_host"],
+    "beyazperde.com": [".light.titlebar-subtile", ".cms-see-also", ".section"],
     "bezprawnik.pl": [
         ".ad_slot_height_manager_wrapper_bp_sdh2",
         "#oa-360-1666305713099_aa6xa65xr",
@@ -1094,7 +1094,6 @@
     ],
     "ruanyifeng.com": [".wwads-cn.wwads-horizontal"],
     "sandboxx.us": [".content#genesis-content::before"],
-    "scitechdaily.com": [".entry-tags.clearfix"],
     "sciencenews.org": [
         ".header-default__terms___y7T55",
         ".single__byline-container___3EW6e",
@@ -1102,6 +1101,7 @@
         "#id_00i937xrshdaq",
         "#emailConversion"
     ],
+    "scitechdaily.com": [".entry-tags.clearfix"],
     "semiengineering.com": [".col-xs-12.col-sm-6.col-md-7"],
     "shopify.com": ["#GlobalIconSymbols", "#SiteNavContainer"],
     "slatestarcodex.com": ["#left-sidebar", "#primary"],
@@ -1201,6 +1201,11 @@
         ".slick-slide.slick-cloned"
     ],
     "tfos.co": [".flex.flex-col.items-center.text-center.px-3.text-white", ".h-5"],
+    "theathletic.com": [
+        ".sc-9e0fc4d0-2.jKtoII",
+        ".sc-917a014c-24.LYUSa",
+        ".sc-917a014c-2.sc-917a014c-3.gQPNJU.btEDuR"
+    ],
     "theatlantic.com": [
         ".ArticleShare_root__BqVqF",
         ".ArticleHero_articleUtilityBar__OtFEE",
