@@ -14,7 +14,7 @@ export async function handleRequest<M extends MutatorDefs>(
     return;
   }
   const op = req.query["op"] as string;
-  console.log(`Handling request ${req.url}, op: ${op}`);
+  console.log(`\nHandling request ${req.url}, op: ${op}`);
 
   switch (op) {
     case "push":

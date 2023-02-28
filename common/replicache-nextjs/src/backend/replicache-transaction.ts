@@ -72,7 +72,7 @@ export class ReplicacheTransaction implements WriteTransaction {
 
   scan(options: ScanOptions = {} as ScanNoIndexOptions) {
     if (isScanIndexOptions(options)) {
-      throw new Error("not implemented");
+      throw new Error(`index ${options.indexName} not implemented`);
     }
 
     const { _executor: executor, _spaceID: spaceID, _cache: cache } = this;

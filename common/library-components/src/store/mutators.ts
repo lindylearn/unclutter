@@ -8,7 +8,7 @@ import {
     getSafeArticleSortPosition,
     getSettings,
     getUserInfo,
-    listArticleAnnotations,
+    listArticleAnnotationsServer,
 } from "./accessors";
 import {
     Annotation,
@@ -118,7 +118,7 @@ async function importArticleLinks(
 }
 
 async function deleteArticle(tx: WriteTransaction, articleId: string) {
-    const articleAnnotations = await listArticleAnnotations(tx, articleId);
+    const articleAnnotations = await listArticleAnnotationsServer(tx, articleId);
     await Promise.all(articleAnnotations.map((a) => deleteAnnotation(tx, a.id)));
 
     await deleteArticleRaw(tx, articleId);

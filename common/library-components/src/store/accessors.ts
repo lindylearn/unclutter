@@ -210,17 +210,6 @@ export async function listTopicArticles(tx: ReadTransaction, topic_id: string): 
     return articles;
 }
 
-// can't use scan() on server
-export async function listTopicArticlesServer(
-    tx: ReadTransaction,
-    topic_id: string
-): Promise<Article[]> {
-    const allArticles = await listArticles(tx);
-    const topicArticles = allArticles.filter((a) => a.topic_id === topic_id);
-    sortArticlesPosition(topicArticles, "topic_sort_position");
-    return topicArticles;
-}
-
 export type ArticleSortPosition =
     | "queue_sort_position"
     | "recency_sort_position"
@@ -366,7 +355,7 @@ async function listAnnotationsWithArticles(tx: ReadTransaction): Promise<Annotat
     });
 }
 
-export async function listArticleAnnotations(
+async function listArticleAnnotations(
     tx: ReadTransaction,
     articleId: string
 ): Promise<Annotation[]> {
@@ -376,6 +365,15 @@ export async function listArticleAnnotations(
     });
     return (await result.values().toArray()) as Annotation[];
 }
+// can't use index scan on server
+export async function listArticleAnnotationsServer(
+    tx: ReadTransaction,
+    articleId: string
+): Promise<Annotation[]> {
+    const annotations = await listAnnotations(tx);
+    return annotations.filter((a) => a.article_id === articleId);
+}
+
 async function listTopicAnnotations(tx: ReadTransaction, topic_id: string): Promise<Annotation[]> {
     const selectedArticles = await listTopicArticles(tx, topic_id);
     const selectedArticleIds = new Set(selectedArticles.map((a) => a.id));
@@ -446,7 +444,6 @@ export const accessors = {
     listQueueArticles,
     listDomainArticles,
     listTopicArticles,
-    listTopicArticlesServer,
     getTopicArticlesCount,
     getReadingProgress,
     getTopic,
