@@ -109,17 +109,12 @@ function installContextMenu() {
 
 function createOrUpdateContextMenu(id, menuOptions) {
     // try update first
-    try {
-        browser.contextMenus.update(id, menuOptions);
-    } catch {
+    browser.contextMenus.update(id, menuOptions, () => {
         const _ = browser.runtime.lastError;
-    }
-
-    try {
-        browser.contextMenus.create({ ...menuOptions, id });
-    } catch {
+    });
+    browser.contextMenus.create({ ...menuOptions, id }, () => {
         const _ = browser.runtime.lastError;
-    }
+    });
 }
 
 async function installAlarms() {
