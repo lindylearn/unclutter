@@ -26,8 +26,7 @@ export default function Index({ userId }: { userId: string }) {
         accessors,
     });
 
-    // @ts-ignore
-    const partialSync: PartialSyncState | "NOT_RECEIVED_FROM_SERVER" | undefined = useSubscribe(
+    const partialSync = useSubscribe<PartialSyncState | "NOT_RECEIVED_FROM_SERVER">(
         rep,
         // @ts-ignore
         rep?.subscribe.getPartialSyncState(),

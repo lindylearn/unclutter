@@ -11,6 +11,7 @@ import {
     ArticleLink,
     ReplicacheContext,
     Topic,
+    UserInfo,
     useSubscribe,
 } from "@unclutter/library-components/dist/store";
 import { useContext, useEffect, useState } from "react";
@@ -47,7 +48,7 @@ export default function ModalDevTab({}) {
 
     const darkModeEnabled = useAutoDarkMode();
 
-    const userInfo = useSubscribe(rep, rep?.subscribe.getUserInfo(), null);
+    const userInfo = useSubscribe<UserInfo>(rep, rep?.subscribe.getUserInfo());
     // if (userInfo) {
     //     userInfo.accountEnabled = false;
     //     userInfo.aiEnabled = false;

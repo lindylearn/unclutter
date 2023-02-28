@@ -27,15 +27,15 @@ export function TopicTag({
     className?: string;
 }) {
     const rep = useContext(ReplicacheContext);
-    const topic: any = useSubscribe(rep, rep?.subscribe.getTopic(topic_id), null);
+    const topic = useSubscribe<Topic>(rep, rep?.subscribe.getTopic(topic_id));
 
-    let topicColor = getRandomColor(colorSeed || topic?.group_id);
+    let topicColor = getRandomColor(colorSeed || topic?.group_id || "");
     if (fadedOut) {
         topicColor = topicColor.replace("0.4)", "0.15)");
     }
 
     // TODO optimize performance by batching counting?
-    const articleCount = useSubscribe(rep, rep?.subscribe.getTopicArticlesCount(topic_id), null);
+    const articleCount = useSubscribe<number>(rep, rep?.subscribe.getTopicArticlesCount(topic_id));
 
     const innerComponent = (
         <UITag

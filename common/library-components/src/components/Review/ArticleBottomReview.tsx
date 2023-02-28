@@ -15,10 +15,9 @@ export default function ArticleBottomReview({
 }) {
     // subscribe to store data
     const rep = useContext(ReplicacheContext);
-    const articleAnnotations: Annotation[] = useSubscribe(
+    const articleAnnotations = useSubscribe<Annotation[]>(
         rep,
-        rep?.subscribe.listArticleAnnotations(articleId),
-        []
+        rep?.subscribe.listArticleAnnotations(articleId)
     );
     // const [allArticles, setAllArticles] = useState<Article[]>();
     // const [allAnnotations, setAllAnnotations] = useState<Annotation[]>();
@@ -63,7 +62,7 @@ export default function ArticleBottomReview({
     const [tagCountList, setTagCountList] = useState<[string, number][]>([]);
     useEffect(() => {
         const tagCounts: { [tag: string]: number } = {};
-        for (const annotation of articleAnnotations) {
+        for (const annotation of articleAnnotations || []) {
             if (!annotation.tags?.length) {
                 // if (tagCounts["untagged"]) {
                 //     tagCounts["untagged"]++;

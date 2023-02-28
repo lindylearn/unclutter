@@ -44,13 +44,7 @@ export default function NewModalApp() {
 
     const rep = useContext(ReplicacheContext);
     const { user } = useUser();
-    // @ts-ignore
-    const userInfo: UserInfo | undefined | null = useSubscribe(
-        rep,
-        rep?.subscribe.getUserInfo(),
-        // @ts-ignore
-        undefined
-    );
+    const userInfo = useSubscribe<UserInfo>(rep, rep?.subscribe.getUserInfo());
 
     const darkModeEnabled = useAutoDarkMode();
     const isMobile = useMediaQuery("(max-width: 767px)");

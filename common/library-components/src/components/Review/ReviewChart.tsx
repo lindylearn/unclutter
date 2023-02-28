@@ -6,12 +6,12 @@ import { eachDayOfInterval, subWeeks } from "date-fns";
 
 export function ReviewChart({}: {}) {
     const rep = useContext(ReplicacheContext);
-    const annotations: Annotation[] = useSubscribe(rep, rep?.subscribe.listAnnotations(), []);
+    const annotations = useSubscribe<Annotation[]>(rep, rep?.subscribe.listAnnotations());
 
     const [keys, setKeys] = useState<string[]>();
     const [data, setData] = useState<StreamDatum[]>();
     useEffect(() => {
-        if (annotations.length === 0) {
+        if (!annotations || annotations.length === 0) {
             return;
         }
 
@@ -22,7 +22,7 @@ export function ReviewChart({}: {}) {
 
         setData(data);
         setKeys(keys);
-    }, [annotations.length]);
+    }, [annotations?.length]);
 
     const randomColors = useMemo(() => lightColors.sort(() => (Math.random() > 0.5 ? 1 : -1)), []);
 

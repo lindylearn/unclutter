@@ -7,6 +7,8 @@ import {
 } from "@unclutter/library-components/dist/common";
 import { useContext, useEffect, useState } from "react";
 import {
+    Annotation,
+    Article,
     ReplicacheContext,
     UserInfo,
     useSubscribe,
@@ -30,11 +32,9 @@ export default function NewWelcomeTab() {
     const darkModeEnabled = useAutoDarkMode();
     const router = useRouter();
 
-    // @ts-ignore
-    const userInfo = useSubscribe<UserInfo>(rep, rep?.subscribe.getUserInfo(), undefined);
-
-    const articles = useSubscribe(rep, rep?.subscribe.listArticles(), null);
-    const annotations = useSubscribe(rep, rep?.subscribe.listAnnotations(), null);
+    const userInfo = useSubscribe<UserInfo>(rep, rep?.subscribe.getUserInfo());
+    const articles = useSubscribe<Article[]>(rep, rep?.subscribe.listArticles());
+    const annotations = useSubscribe<Annotation[]>(rep, rep?.subscribe.listAnnotations());
 
     const [isSignup, setIsSignup] = useState(false);
     useEffect(() => {

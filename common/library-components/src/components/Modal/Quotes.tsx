@@ -32,10 +32,9 @@ export default function QuotesTab({}: {}) {
     }, [domainFilter, tagFilter]);
 
     const rep = useContext(ReplicacheContext);
-    const annotations = useSubscribe<AnnotationWithArticle[] | null>(
+    const annotations = useSubscribe<AnnotationWithArticle[]>(
         rep,
-        rep?.subscribe.listAnnotationsWithArticles(),
-        null
+        rep?.subscribe.listAnnotationsWithArticles()
     );
 
     const [searchedAnnotations, setSearchedAnnotations] = useState<AnnotationWithArticle[] | null>(
@@ -68,7 +67,7 @@ export default function QuotesTab({}: {}) {
     const [annotationGroups, setAnnotationGroups] = useState<[string, AnnotationWithArticle[]][]>();
     const [untaggedAnnotations, setUntaggedAnnotations] = useState<AnnotationWithArticle[]>([]);
     useEffect(() => {
-        if (annotations === null) {
+        if (!annotations) {
             return;
         }
 
@@ -154,7 +153,7 @@ export default function QuotesTab({}: {}) {
                         query={query}
                         setQuery={setQuery}
                         placeholder={
-                            annotations === null
+                            !annotations
                                 ? ""
                                 : `Search ${!isMobile ? "across " : ""}your ${
                                       annotations.length

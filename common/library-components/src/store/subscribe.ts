@@ -25,10 +25,10 @@ function doCallback() {
 export function useSubscribe<R extends ReadonlyJSONValue>(
     rep: Subscribable | null | undefined,
     subscribeQuery: ((options: SubscribeOptions<R>) => void) | undefined,
-    def: R,
+    def: R | undefined = undefined,
     deps: Array<unknown> = []
-): R {
-    const [snapshot, setSnapshot] = useState<R>(def);
+): R | undefined {
+    const [snapshot, setSnapshot] = useState<R | undefined>(def);
     useEffect(() => {
         if (!rep || !subscribeQuery) {
             return;

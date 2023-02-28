@@ -15,8 +15,7 @@ import PocketSyncSection from "./Import/PocketSync";
 export default function SyncTab() {
     const rep = useContext(ReplicacheContext);
     const { user } = useUser();
-    // @ts-ignore
-    const userInfo = useSubscribe<UserInfo>(rep, rep?.subscribe.getUserInfo(), undefined);
+    const userInfo = useSubscribe<UserInfo>(rep, rep?.subscribe.getUserInfo());
     const darkModeEnabled = useAutoDarkMode();
 
     useEffect(() => {

@@ -17,13 +17,7 @@ export default function HypothesisSyncSection({ userInfo, darkModeEnabled }) {
     const rep = useContext(ReplicacheContext);
 
     // fetch saved info
-    // @ts-ignore
-    const syncState: SyncState | undefined = useSubscribe(
-        rep,
-        // @ts-ignore
-        rep?.subscribe.getSyncState("hypothesis"),
-        undefined
-    );
+    const syncState = useSubscribe<SyncState>(rep, rep?.subscribe.getSyncState("hypothesis"));
     const [token, setToken] = useState("");
     useEffect(() => {
         if (!syncState) {

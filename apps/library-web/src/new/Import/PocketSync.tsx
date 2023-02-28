@@ -31,13 +31,7 @@ export default function PocketSyncSection({ userInfo, darkModeEnabled }) {
     const [progress, setProgress] = useState<ImportProgress>();
 
     // fetch saved info
-    // @ts-ignore
-    const syncState: SyncState | undefined = useSubscribe(
-        rep,
-        // @ts-ignore
-        rep?.subscribe.getSyncState("pocket"),
-        undefined
-    );
+    const syncState = useSubscribe<SyncState>(rep, rep?.subscribe.getSyncState("pocket"));
     useEffect(() => {
         // dev test
         // rep?.mutate.putSyncState({

@@ -11,10 +11,10 @@ export default function FeedDetailsTab({ darkModeEnabled, reportEvent }) {
     const { currentSubscription, setCurrentSubscription } = useContext(FilterContext);
     const rep = useContext(ReplicacheContext);
 
-    const filteredSubscription = useSubscribe<FeedSubscription | null>(
+    const filteredSubscription = useSubscribe<FeedSubscription>(
         rep,
         rep?.subscribe.getSubscription(currentSubscription?.id || ""),
-        null,
+        undefined,
         [currentSubscription?.id]
     );
 
@@ -31,10 +31,10 @@ export default function FeedDetailsTab({ darkModeEnabled, reportEvent }) {
 
     const [articleListCache, setArticleListCache] = useState<ArticleListsCache>({});
 
-    const libraryArticles = useSubscribe<Article[] | null>(
+    const libraryArticles = useSubscribe<Article[]>(
         rep,
         rep?.subscribe.listDomainArticles(filteredSubscription?.domain || ""),
-        null,
+        undefined,
         [filteredSubscription?.domain]
     );
 
