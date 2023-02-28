@@ -2743,6 +2743,11 @@
   resolved "https://registry.yarnpkg.com/@rocicorp/rails/-/rails-0.2.2.tgz#d8977049d49f7c8ce63a2837e420400e4bea5f3a"
   integrity sha512-G4ChEdzHi/9HiweGGm6Jv+sJrhWyL0L8WL720Ut43wwP9jWkX26vCRcnT06tW5NpX0OouypFbCzIpw3Q7vwTxQ==
 
+"@rocicorp/rails@^0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@rocicorp/rails/-/rails-0.3.0.tgz#1fb8e8eb9d496b36adaaf2190aefd2f07f53865b"
+  integrity sha512-7I+bmQsg3VJu7ZXKZuaEGGjaNmB+DUOGX4h0Um6UWMULR+FaX3EAzqLwkAoo1YciAUxFFzR61ihK8XHfUkHjww==
+
 "@rollup/plugin-babel@^5.3.1":
   version "5.3.1"
   resolved "https://registry.yarnpkg.com/@rollup/plugin-babel/-/plugin-babel-5.3.1.tgz#04bc0608f4aa4b2e4b1aebf284344d0f68fda283"
@@ -12725,15 +12730,20 @@ repeat-string@^1.0.0, repeat-string@^1.6.1:
   resolved "https://registry.yarnpkg.com/repeat-string/-/repeat-string-1.6.1.tgz#8dcae470e1c88abc2d600fff4a776286da75e637"
   integrity sha512-PV0dzCYDNfRi1jCDbJzpW7jNNDRuCOG/jI5ctQcGKt/clZD+YcPS3yIlWuTJMmESC8aevCFmWJy5wjAFgNqN6w==
 
-replicache-react@^2.8.0:
-  version "2.8.0"
-  resolved "https://registry.yarnpkg.com/replicache-react/-/replicache-react-2.8.0.tgz#8f26aa3627e6fa6735d95e91a43cbb5c88868225"
-  integrity sha512-oS3UAcluQPdyi3m0o8o1d9GenXS9GdQBqAzaTxlCbjvbATVlkCqLHFgD6NFMbh0AukNF/UzgWrFm6i3iMK3Avg==
+replicache-react@^2.10.0:
+  version "2.10.0"
+  resolved "https://registry.yarnpkg.com/replicache-react/-/replicache-react-2.10.0.tgz#c1289375d9f9d7cb6383f92db7244b1294bb08e8"
+  integrity sha512-n/DdPK+07tTnlYdPHDSEbQ4mEH8B5jR1nSKqR/u5dt5fqL1WN0bxNq3J8P1gWKk65I8cbS3N+/wEbkPW4ksg3A==
 
 replicache@^11.2.0:
   version "11.2.0"
   resolved "https://registry.yarnpkg.com/replicache/-/replicache-11.2.0.tgz#0eed354fb2906497456f6c9f09e27334c15808f5"
   integrity sha512-LK2wv3OIxNzAe4JNePC8mj9u4jC3+piSfxRTd/e+gTS7xSoSrI7eo5lDrFbS0NLgpD3nT8OoitIJUyE0wlLZ9g==
+
+replicache@^12.2.0:
+  version "12.2.0"
+  resolved "https://registry.yarnpkg.com/replicache/-/replicache-12.2.0.tgz#14ead2adb7d0f1ce5f100e05c3878ad2b3dcd7f2"
+  integrity sha512-tM3IfM/7pi5N00WhSyNpFWEJE+mFpVd4U9ZJ9VYerv8CsK5HIRJuHr8MrUjYPqNPUMgg1jCgOx81LnJ548eyeg==
 
 request@2.88.2:
   version "2.88.2"
