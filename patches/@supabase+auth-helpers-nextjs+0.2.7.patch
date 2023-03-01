@@ -1,17 +1,49 @@
 diff --git a/node_modules/@supabase/auth-helpers-nextjs/dist/index.js b/node_modules/@supabase/auth-helpers-nextjs/dist/index.js
-index b35b7e2..9675c9b 100644
+index b35b7e2..93d7680 100644
 --- a/node_modules/@supabase/auth-helpers-nextjs/dist/index.js
 +++ b/node_modules/@supabase/auth-helpers-nextjs/dist/index.js
-@@ -99,7 +99,7 @@ async function getUser(context, options = { forceRefresh: false }) {
+@@ -83,6 +83,21 @@ var log_default = logger;
+ var PKG_NAME = "@supabase/auth-helpers-nextjs";
+ var PKG_VERSION = "0.2.7";
+ 
++function parseAuthHeaderCookie(req) {
++  const authHeader = req.headers?.authorization;
++  if (!authHeader) {
++    return {}
++  }
++
++  const cookieEntries = authHeader.split(";").map((entry) => entry.trim().split("="));
++  const cookie = cookieEntries.reduce((acc, [key, value]) => {
++    acc[key] = value;
++    return acc
++  }, {});
++
++  return cookie
++}
++
+ // src/utils/getUser.ts
+ async function getUser(context, options = { forceRefresh: false }) {
+   var _a;
+@@ -98,10 +113,15 @@ async function getUser(context, options = { forceRefresh: false }) {
+         "X-Client-Info": `${PKG_NAME}@${PKG_VERSION}`
        }
      });
++
      const cookieOptions = __spreadValues(__spreadValues({}, import_auth_helpers_shared.COOKIE_OPTIONS), options.cookieOptions);
 -    const tokenRefreshMargin = (_a = options.tokenRefreshMargin) != null ? _a : import_auth_helpers_shared.TOKEN_REFRESH_MARGIN;
-+    const tokenRefreshMargin = 60 * 60 * 24 * 365
-     const access_token = context.req.cookies[`${cookieOptions.name}-access-token`];
-     const refresh_token = context.req.cookies[`${cookieOptions.name}-refresh-token`];
+-    const access_token = context.req.cookies[`${cookieOptions.name}-access-token`];
+-    const refresh_token = context.req.cookies[`${cookieOptions.name}-refresh-token`];
++    const req = context.req;
++
++    const tokenRefreshMargin = 60 * 60 * 24 * 365;
++    const authHeaderCookie = parseAuthHeaderCookie(req);
++    const access_token = req.cookies[`${cookieOptions.name}-access-token`] || authHeaderCookie[`${cookieOptions.name}-access-token`];
++    const refresh_token = req.cookies[`${cookieOptions.name}-refresh-token`] || authHeaderCookie[`${cookieOptions.name}-refresh-token`];
++
      if (!access_token) {
-@@ -110,7 +110,7 @@ async function getUser(context, options = { forceRefresh: false }) {
+       throw new import_auth_helpers_shared.AccessTokenNotFound();
+     }
+@@ -110,7 +130,7 @@ async function getUser(context, options = { forceRefresh: false }) {
        throw new import_auth_helpers_shared.JWTPayloadFailed();
      }
      const timeNow = Math.round(Date.now() / 1e3);
@@ -20,16 +52,75 @@ index b35b7e2..9675c9b 100644
        if (!refresh_token)
          throw new import_auth_helpers_shared.RefreshTokenNotFound();
        log_default.info("Refreshing access token...");
-@@ -440,7 +440,7 @@ async function getAccessToken(context, options = {}) {
+@@ -210,9 +230,14 @@ async function handleUser(req, res, options = {}) {
+     if (!req.cookies) {
+       throw new import_auth_helpers_shared3.CookieNotFound();
+     }
++
+     const cookieOptions = __spreadValues(__spreadValues({}, import_auth_helpers_shared3.COOKIE_OPTIONS), options.cookieOptions);
+-    const tokenRefreshMargin = (_a = options.tokenRefreshMargin) != null ? _a : import_auth_helpers_shared3.TOKEN_REFRESH_MARGIN;
+-    const access_token = req.cookies[`${cookieOptions.name}-access-token`];
++
++    const tokenRefreshMargin = 60 * 60 * 24 * 365;
++    const authHeaderCookie = parseAuthHeaderCookie(req);
++    const access_token = req.cookies[`${cookieOptions.name}-access-token`] || authHeaderCookie[`${cookieOptions.name}-access-token`];
++    const refresh_token = req.cookies[`${cookieOptions.name}-refresh-token`] || authHeaderCookie[`${cookieOptions.name}-refresh-token`];
++
+     if (!access_token) {
+       throw new import_auth_helpers_shared3.AccessTokenNotFound();
+     }
+@@ -286,8 +311,14 @@ function handleLogout(req, res, options = {}) {
+     returnTo = (_a = options == null ? void 0 : options.returnTo) != null ? _a : "/";
+   returnTo = Array.isArray(returnTo) ? returnTo[0] : returnTo;
+   returnTo = returnTo.charAt(0) === "/" ? returnTo : `/${returnTo}`;
++
+   const cookieOptions = __spreadValues(__spreadValues({}, import_auth_helpers_shared4.COOKIE_OPTIONS), options.cookieOptions);
+-  const access_token = req.cookies[`${cookieOptions.name}-access-token`];
++
++  const tokenRefreshMargin = 60 * 60 * 24 * 365;
++  const authHeaderCookie = parseAuthHeaderCookie(req);
++  const access_token = req.cookies[`${cookieOptions.name}-access-token`] || authHeaderCookie[`${cookieOptions.name}-access-token`];
++  const refresh_token = req.cookies[`${cookieOptions.name}-refresh-token`] || authHeaderCookie[`${cookieOptions.name}-refresh-token`];
++
+   if (access_token)
+     supabaseClient.auth.api.signOut(access_token);
+   (0, import_auth_helpers_shared4.setCookies)(new import_auth_helpers_shared4.NextRequestAdapter(req), new import_auth_helpers_shared4.NextResponseAdapter(res), ["access-token", "refresh-token", "provider-token"].map((key) => ({
+@@ -352,8 +383,15 @@ function withPageAuth({
+       if (!context.req.cookies) {
+         throw new import_auth_helpers_shared7.CookieNotParsed();
+       }
++
+       cookieOptions = __spreadValues(__spreadValues({}, import_auth_helpers_shared7.COOKIE_OPTIONS), cookieOptions);
+-      const access_token = context.req.cookies[`${cookieOptions.name}-access-token`];
++      const req = context.req;
++
++      const tokenRefreshMargin = 60 * 60 * 24 * 365;
++      const authHeaderCookie = parseAuthHeaderCookie(req);
++      const access_token = req.cookies[`${cookieOptions.name}-access-token`] || authHeaderCookie[`${cookieOptions.name}-access-token`];
++      const refresh_token = req.cookies[`${cookieOptions.name}-refresh-token`] || authHeaderCookie[`${cookieOptions.name}-refresh-token`];
++
+       if (!access_token) {
+         throw new import_auth_helpers_shared7.AccessTokenNotFound();
+       }
+@@ -439,9 +477,15 @@ async function getAccessToken(context, options = {}) {
+   if (!context.req.cookies) {
      throw new import_auth_helpers_shared8.CookieNotParsed();
    }
++
    const cookieOptions = __spreadValues(__spreadValues({}, import_auth_helpers_shared8.COOKIE_OPTIONS), options.cookieOptions);
 -  const tokenRefreshMargin = (_a = options.tokenRefreshMargin) != null ? _a : import_auth_helpers_shared8.TOKEN_REFRESH_MARGIN;
+-  const access_token = context.req.cookies[`${cookieOptions.name}-access-token`];
++  const req = context.req;
++
 +  const tokenRefreshMargin = 60 * 60 * 24 * 365;
-   const access_token = context.req.cookies[`${cookieOptions.name}-access-token`];
++  const authHeaderCookie = parseAuthHeaderCookie(req);
++  const access_token = req.cookies[`${cookieOptions.name}-access-token`] || authHeaderCookie[`${cookieOptions.name}-access-token`];
++  const refresh_token = req.cookies[`${cookieOptions.name}-refresh-token`] || authHeaderCookie[`${cookieOptions.name}-refresh-token`];
++
    if (!access_token) {
      throw new import_auth_helpers_shared8.AccessTokenNotFound();
-@@ -482,7 +482,8 @@ function withApiAuth(handler, options = {}) {
+   }
+@@ -482,7 +526,8 @@ function withApiAuth(handler, options = {}) {
      } catch (error) {
        res.status(401).json({
          error: "not_authenticated",
@@ -39,3 +130,19 @@ index b35b7e2..9675c9b 100644
        });
        return;
      }
+@@ -496,7 +541,14 @@ function supabaseServerClient(context, cookieOptions = {
+   if (!context.req.cookies) {
+     return supabaseClient;
+   }
+-  const access_token = context.req.cookies[`${cookieOptions.name}-access-token`];
++
++  const req = context.req;
++
++  const tokenRefreshMargin = 60 * 60 * 24 * 365;
++  const authHeaderCookie = parseAuthHeaderCookie(req);
++  const access_token = req.cookies[`${cookieOptions.name}-access-token`] || authHeaderCookie[`${cookieOptions.name}-access-token`];
++  const refresh_token = req.cookies[`${cookieOptions.name}-refresh-token`] || authHeaderCookie[`${cookieOptions.name}-refresh-token`];
++
+   supabaseClient.auth.setAuth(access_token);
+   return supabaseClient;
+ }
