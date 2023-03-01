@@ -92,14 +92,24 @@ export default function AboutModalTab({}: {}) {
                     </svg>
                 }
                 buttons={
-                    !!userInfo?.trialEnd && (
-                        <SettingsButton
-                            title={trialExpired ? "Support Unclutter" : "Manage free trial"}
-                            href={paymentsLink}
-                            darkModeEnabled={darkModeEnabled}
-                            reportEvent={reportEvent}
-                        />
-                    )
+                    <>
+                        {!!userInfo?.trialEnd && (
+                            <SettingsButton
+                                title={trialExpired ? "Support Unclutter" : "Manage free trial"}
+                                href={paymentsLink}
+                                darkModeEnabled={darkModeEnabled}
+                                reportEvent={reportEvent}
+                            />
+                        )}
+                        {!isWeb && !userInfo?.aiEnabled && (
+                            <SettingsButton
+                                title="Sign up"
+                                href="https://my.unclutter.it/signup"
+                                darkModeEnabled={darkModeEnabled}
+                                reportEvent={reportEvent}
+                            />
+                        )}
+                    </>
                 }
                 style={{ background: getActivityColor(1, darkModeEnabled) }}
             >

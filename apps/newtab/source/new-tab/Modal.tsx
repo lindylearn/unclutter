@@ -23,7 +23,7 @@ export default function NewTabModal({
         <LibraryModalPage
             userInfo={userInfo}
             darkModeEnabled={darkModeEnabled}
-            showSignup={false}
+            showSignup={true}
             initialTab="articles"
             reportEvent={reportEvent}
         />

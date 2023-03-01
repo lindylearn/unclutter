@@ -163,6 +163,15 @@ function getModalTabOptions(
             ),
         },
 
+        trialDaysLeft !== undefined && {
+            label: "days left",
+            value: "about",
+            atEnd: true,
+            hiddenOnMobile: true,
+            progress: getTrialProgress(trialDaysLeft),
+            svg: <div className="relative">{trialDaysLeft}</div>,
+        },
+
         requireSupport && {
             label: "About",
             value: "about",
@@ -205,15 +214,6 @@ function getModalTabOptions(
                     />
                 </svg>
             ),
-        },
-
-        trialDaysLeft !== undefined && {
-            label: "Trial days left",
-            value: "about",
-            atEnd: true,
-            hiddenOnMobile: true,
-            progress: getTrialProgress(trialDaysLeft),
-            svg: <div className="relative">{trialDaysLeft}</div>,
         },
     ];
 
