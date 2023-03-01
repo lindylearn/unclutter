@@ -3,7 +3,6 @@
     "version": "0.1.0",
     "private": true,
     "dependencies": {
-        "@rocicorp/rails": "^0.2.2",
         "@sentry/browser": "^7.39.0",
         "@types/offscreencanvas": "^2019.7.0",
         "@unclutter/heatmap": "*",
@@ -25,14 +24,12 @@
         "react-textarea-autosize": "^8.3.3",
         "react-transition-group": "^4.4.2",
         "recharts": "^2.1.9",
-        "replicache": "^11.2.0",
         "sbd": "^1.0.19",
         "seedrandom": "^3.0.5",
         "svelte": "^3.46.6",
         "timeago.js": "^4.0.2",
         "tinycolor2": "^1.4.2",
         "twemoji": "^14.0.2",
-        "web-ext": "^7.5.0",
         "webext-options-sync": "^2.0.1",
         "webextension-polyfill": "^0.8.0",
         "zod": "^3.19.1"
@@ -80,7 +77,7 @@
         "ts-node": "^10.8.1",
         "typescript": "^4.6.3",
         "url": "^0.11.0",
-        "web-ext": "^7.2.0",
+        "web-ext": "^7.5.0",
         "xo": "^0.44.0"
     },
     "scripts": {
@@ -91,8 +88,7 @@
         "install-v2-manifest": "cp source/manifest_v2.json distribution/manifest.json",
         "chrome": "yarn web-ext run -t chromium --start-url https://stratechery.com/2015/netflix-and-the-conservation-of-attractive-profits/ --watch-file distribution/package.json",
         "firefox": "yarn web-ext run -t firefox-desktop --start-url news.ycombinator.com --watch-file distribution/package.json",
-        "package": "rm -rf distribution && yarn build && yarn web-ext build -o -n extension_manifest-v3.zip --ignore-files '!node_modules' '!node_modules/**' && yarn install-v2-manifest && yarn web-ext build -o -n extension_manifest-v2.zip --ignore-files '!node_modules' '!node_modules/**'",
-        "package-test": "yarn firefox && yarn install-v3-manifest",
+        "package": "rm -rf distribution && yarn build && yarn web-ext build -o -n extension_manifest-v3.zip --ignore-files '!**/node_modules' '!**/node_modules/**' && yarn install-v2-manifest && yarn web-ext build -o -n extension_manifest-v2.zip --ignore-files '!**/node_modules' '!**/node_modules/**' && yarn install-v3-manifest",
         "postinstall": "patch-package"
     },
     "browserslist": "last 1 version",

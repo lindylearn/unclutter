@@ -12735,11 +12735,6 @@ replicache-react@^2.10.0:
   resolved "https://registry.yarnpkg.com/replicache-react/-/replicache-react-2.10.0.tgz#c1289375d9f9d7cb6383f92db7244b1294bb08e8"
   integrity sha512-n/DdPK+07tTnlYdPHDSEbQ4mEH8B5jR1nSKqR/u5dt5fqL1WN0bxNq3J8P1gWKk65I8cbS3N+/wEbkPW4ksg3A==
 
-replicache@^11.2.0:
-  version "11.2.0"
-  resolved "https://registry.yarnpkg.com/replicache/-/replicache-11.2.0.tgz#0eed354fb2906497456f6c9f09e27334c15808f5"
-  integrity sha512-LK2wv3OIxNzAe4JNePC8mj9u4jC3+piSfxRTd/e+gTS7xSoSrI7eo5lDrFbS0NLgpD3nT8OoitIJUyE0wlLZ9g==
-
 replicache@^12.2.0:
   version "12.2.0"
   resolved "https://registry.yarnpkg.com/replicache/-/replicache-12.2.0.tgz#14ead2adb7d0f1ce5f100e05c3878ad2b3dcd7f2"
