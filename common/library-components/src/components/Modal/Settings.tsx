@@ -6,6 +6,7 @@ import { SettingsButton, SettingsGroup } from "../Settings/SettingsGroup";
 import { generateCSV } from "../Settings/account";
 import { getActivityColor } from "../Charts";
 import { getBrowserTypeWeb } from "../../common";
+import { useSubscriptionManagementLink } from "../../common/trial";
 
 export default function SettingsModalTab({}: {}) {
     const { darkModeEnabled, userInfo, showSignup, reportEvent, isWeb } =
@@ -55,6 +56,8 @@ export default function SettingsModalTab({}: {}) {
         getBrowserTypeWeb() === "firefox"
             ? "https://addons.mozilla.org/en-GB/firefox/addon/unclutter-library"
             : "https://chrome.google.com/webstore/detail/bghgkooimeljolohebojceacblokenjn";
+
+    const paymentsLink = useSubscriptionManagementLink(userInfo);
 
     return (
         <div
@@ -148,8 +151,10 @@ export default function SettingsModalTab({}: {}) {
                     <>
                         {userInfo?.aiEnabled && (
                             <SettingsButton
-                                title="Manage subscription"
-                                href="https://billing.stripe.com/p/login/5kA8x62Ap9y26v6144"
+                                title={
+                                    userInfo?.trialEnd ? "Manage free trial" : "Manage subscription"
+                                }
+                                href={paymentsLink}
                                 darkModeEnabled={darkModeEnabled}
                                 reportEvent={reportEvent}
                             />
@@ -179,7 +184,10 @@ export default function SettingsModalTab({}: {}) {
                         local browser.
                     </p>
                 )}
-                {userInfo?.aiEnabled && (
+                {userInfo?.trialEnd && (
+                    <p>Thank you for trying out the Unclutter Library features!</p>
+                )}
+                {userInfo?.aiEnabled && !userInfo?.trialEnd && (
                     <p>Thank you for supporting the Unclutter open-source project financially!</p>
                 )}
             </SettingsGroup>

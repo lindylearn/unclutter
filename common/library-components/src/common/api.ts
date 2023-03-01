@@ -103,13 +103,13 @@ export async function startTrial(
         .json();
 }
 
-export async function createPaymentsLink(
+export async function getSubscriptionManagementLink(
     user_id: string,
     email: string
 ): Promise<string | undefined> {
     try {
         let data: any = await ky
-            .get(`${lindyApiUrl}/subscriptions/create_link`, {
+            .get(`${lindyApiUrl}/subscriptions/get_management_link`, {
                 searchParams: {
                     user_id,
                     email,

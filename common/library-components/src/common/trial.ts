@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import type { UserInfo } from "../store";
-import { createPaymentsLink } from "./api";
+import { getSubscriptionManagementLink } from "./api";
 
 export function getTrialDaysLeft(userInfo?: UserInfo): number | undefined {
     if (!userInfo?.trialEnd) {
@@ -21,14 +21,13 @@ export function getTrialProgress(daysLeft?: number): number {
     return Math.max(0.1, Math.min(1, (trialLength - daysLeft) / trialLength));
 }
 
-export function usePaymentsLink(userInfo?: UserInfo) {
-    return "";
+export function useSubscriptionManagementLink(userInfo?: UserInfo) {
     const [paymentsLink, setPaymentsLink] = useState<string>();
     useEffect(() => {
-        if (!userInfo?.email || userInfo?.aiEnabled) {
+        if (!userInfo?.email) {
             return;
         }
-        createPaymentsLink(userInfo.id, userInfo.email).then(setPaymentsLink);
+        getSubscriptionManagementLink(userInfo.id, userInfo.email).then(setPaymentsLink);
     }, [userInfo]);
 
     return paymentsLink;

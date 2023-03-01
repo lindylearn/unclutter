@@ -5,7 +5,7 @@ import { ReplicacheContext } from "../../store";
 import { getBrowserTypeWeb, getUnclutterVersion, startTrial } from "../../common";
 import clsx from "clsx";
 import { getActivityColor } from "../Charts";
-import { getTrialDaysLeft, usePaymentsLink } from "../../common/trial";
+import { getTrialDaysLeft, useSubscriptionManagementLink } from "../../common/trial";
 
 export default function AboutModalTab({}: {}) {
     const { darkModeEnabled, userInfo, showSignup, reportEvent, isWeb, isMobile } =
@@ -50,7 +50,7 @@ export default function AboutModalTab({}: {}) {
         })();
     }, [rep, userInfo]);
 
-    const paymentsLink = usePaymentsLink(userInfo);
+    const paymentsLink = useSubscriptionManagementLink(userInfo);
 
     const browserType = getBrowserTypeWeb();
     const unclutterLink =
@@ -94,7 +94,7 @@ export default function AboutModalTab({}: {}) {
                 buttons={
                     !!userInfo?.trialEnd && (
                         <SettingsButton
-                            title="Support Unclutter"
+                            title={trialExpired ? "Support Unclutter" : "Manage free trial"}
                             href={paymentsLink}
                             darkModeEnabled={darkModeEnabled}
                             reportEvent={reportEvent}
