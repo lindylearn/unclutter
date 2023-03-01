@@ -89,6 +89,20 @@ export async function searchArticles(user_id: string, query: string): Promise<Se
     return data.filter((d) => d.sentences?.[0]?.length);
 }
 
+export async function startTrial(
+    user_id: string,
+    email: string
+): Promise<{ stripe_id: string; trial_end: number; is_active: boolean }> {
+    return await ky
+        .get(`${lindyApiUrl}/subscriptions/start_trial`, {
+            searchParams: {
+                user_id,
+                email,
+            },
+        })
+        .json();
+}
+
 export async function createPaymentsLink(
     user_id: string,
     email: string

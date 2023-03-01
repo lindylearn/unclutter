@@ -109,7 +109,7 @@ export const userInfoSchema = z.object({
     email: z.optional(z.string()),
 
     aiEnabled: z.optional(z.boolean()),
-    stripeId: z.optional(z.string()),
+    trialEnd: z.optional(z.number()), // unix seconds, 0 if paid
 });
 export type UserInfo = z.infer<typeof userInfoSchema>;
 

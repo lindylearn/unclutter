@@ -3,6 +3,7 @@ import clsx from "clsx";
 import { ReplicacheContext, Settings, Topic, UserInfo } from "../../store";
 import { FilterContext, ModalStateContext } from "./context";
 import { getBrowserType, getNewTabVersion } from "../../common";
+import { getTrialDaysLeft, getTrialProgress } from "../../common/trial";
 
 export default function Sidebar({
     currentTab,
@@ -53,10 +54,10 @@ export default function Sidebar({
 
             {modalTabs
                 .filter((t) => t.atEnd)
-                .map((option) => (
+                .map((option, i) => (
                     <SidebarFilterOption
                         {...option}
-                        key={option.value}
+                        key={i}
                         isActive={currentTab === option.value}
                         onClick={() => {
                             if (option.value === "newtab") {
@@ -86,13 +87,17 @@ export interface ModalTabOptions {
     tag?: string | false;
     unavailable?: boolean;
     hiddenOnMobile?: boolean;
+    progress?: number;
     atEnd?: boolean;
-    svg: React.ReactNode;
+    svg?: React.ReactNode;
 }
 function getModalTabOptions(
     userInfo: UserInfo | undefined,
     requireSupport: boolean
 ): ModalTabOptions[] {
+    const trialExpired = !!userInfo?.trialEnd && userInfo?.trialEnd < Date.now() / 1000;
+    const trialDaysLeft = getTrialDaysLeft(userInfo);
+
     const options: (ModalTabOptions | false | undefined)[] = [
         {
             label: "Stats",
@@ -202,6 +207,15 @@ function getModalTabOptions(
                 </svg>
             ),
         },
+
+        trialDaysLeft !== undefined && {
+            label: "Trial days left",
+            value: "about",
+            atEnd: true,
+            hiddenOnMobile: true,
+            progress: getTrialProgress(trialDaysLeft),
+            svg: <div className="relative">{trialDaysLeft}</div>,
+        },
     ];
 
     // @ts-ignore
@@ -214,6 +228,7 @@ function SidebarFilterOption({
     tag,
     unavailable,
     hiddenOnMobile,
+    progress,
     svg,
     onClick = () => {},
     darkModeEnabled,
@@ -231,19 +246,29 @@ function SidebarFilterOption({
                     ? "bg-stone-100 dark:bg-neutral-800"
                     : "desktop:hover:bg-stone-100 desktop:hover:dark:bg-neutral-800 dark:text-neutral-500",
                 unavailable && (isActive ? "bg-stone-100" : "opacity-50"),
-                unavailable ? "" : "cursor-pointer",
-                hiddenOnMobile ? "hidden md:flex" : "flex"
+                !unavailable && !progress && "cursor-pointer",
+                hiddenOnMobile ? "hidden md:flex" : "flex",
+                progress && "desktop:hover:bg-transparent bg-transparent"
             )}
             onClick={unavailable ? undefined : onClick}
         >
-            <div className="flex w-5 justify-center">{svg}</div>
+            {progress && (
+                <div
+                    className={clsx(
+                        "bg-lindy absolute top-0 left-0 h-full w-full rounded-l-md opacity-90",
+                        progress === 1 && "rounded-md"
+                    )}
+                    style={{ width: `${progress * 100}%` }}
+                />
+            )}
+            {svg && <div className="flex w-5 justify-center">{svg}</div>}
             <div className="relative">
                 {label}
-                {tag && (
+                {/* {tag && (
                     <div className="bg-lindy dark:bg-lindyDark absolute -top-1 left-[calc(100%+0.25rem)] z-20 w-max rounded-md px-1 text-sm leading-tight dark:text-[rgb(232,230,227)]">
                         {tag}
                     </div>
-                )}
+                )} */}
             </div>
         </div>
     );

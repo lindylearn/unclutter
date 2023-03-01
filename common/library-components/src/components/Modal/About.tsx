@@ -2,40 +2,48 @@ import React, { useContext, useEffect, useState } from "react";
 import { ModalStateContext } from "./context";
 import { SettingsButton, SettingsGroup } from "../Settings/SettingsGroup";
 import { ReplicacheContext } from "../../store";
-import { getBrowserTypeWeb, getUnclutterVersion } from "../../common";
-import { usePaymentsLink } from "../Settings/SmartReading";
+import { getBrowserTypeWeb, getUnclutterVersion, startTrial } from "../../common";
 import clsx from "clsx";
 import { getActivityColor } from "../Charts";
+import { getTrialDaysLeft, usePaymentsLink } from "../../common/trial";
 
 export default function AboutModalTab({}: {}) {
     const { darkModeEnabled, userInfo, showSignup, reportEvent, isWeb, isMobile } =
         useContext(ModalStateContext);
     const rep = useContext(ReplicacheContext);
 
+    const trialExpired = !!userInfo?.trialEnd && userInfo?.trialEnd < Date.now() / 1000;
+
     const [justEnabled, setJustEnabled] = useState(false);
     useEffect(() => {
         (async () => {
-            if (!rep) {
+            if (!rep || !userInfo?.email) {
                 return;
             }
 
-            // immediately enable on stripe payments redirect
-            const paymentSuccess = new URLSearchParams(window.location.search).get(
-                "stripe_success"
-            );
-            if (paymentSuccess && !userInfo?.stripeId) {
-                const aiEnabled = paymentSuccess === "true";
+            // await rep.mutate.updateUserInfo({
+            //     id: userInfo.id,
+            //     aiEnabled: false,
+            //     trialEnd: 0,
+            // });
 
-                history.replaceState({}, "", `/about`);
+            if (trialExpired) {
+                console.log("Trial expired");
+            } else if (!userInfo.aiEnabled) {
+                // enable trial without payment details
+                const trialInfo = await startTrial(userInfo.id, userInfo.email);
+                console.log("Starting free trial", trialInfo);
+
                 await rep.mutate.updateUserInfo({
-                    aiEnabled,
+                    id: userInfo.id,
+                    aiEnabled: trialInfo.is_active,
+                    trialEnd: trialInfo.trial_end,
                 });
-                setJustEnabled(aiEnabled);
+                setJustEnabled(true);
 
                 reportEvent("enableSmartReading", {
                     $set: {
-                        aiEnabled,
-                        stripeId: userInfo?.stripeId,
+                        aiEnabled: trialInfo.is_active,
                     },
                 });
             }
@@ -84,18 +92,10 @@ export default function AboutModalTab({}: {}) {
                     </svg>
                 }
                 buttons={
-                    userInfo?.aiEnabled ? undefined : (
-                        // <SettingsButton
-                        //     title="Join Discord"
-                        //     href="https://unclutter.it/discord"
-                        //     darkModeEnabled={darkModeEnabled}
-                        //     primary
-                        //     reportEvent={reportEvent}
-                        // />
+                    !!userInfo?.trialEnd && (
                         <SettingsButton
-                            title="Try it out for free"
+                            title="Support Unclutter"
                             href={paymentsLink}
-                            // inNewTab={false}
                             darkModeEnabled={darkModeEnabled}
                             reportEvent={reportEvent}
                         />
@@ -103,31 +103,26 @@ export default function AboutModalTab({}: {}) {
                 }
                 style={{ background: getActivityColor(1, darkModeEnabled) }}
             >
-                {userInfo?.aiEnabled ? (
-                    <>
-                        <p>Thank you for supporting the Unclutter open-source project!</p>
-                        <p>
-                            To get started, try out the new AI features on any article you got
-                            saved. Then start an import to make use of the knowledge you've already
-                            accumulated.
-                        </p>
-                        {/* <p>
-                            Join our Discord server for any questions, feedback, or improvement
-                            ideas!
-                        </p> */}
-                    </>
-                ) : (
-                    <>
-                        <p>
-                            Unclutter can help get more value out of reading by automatically
-                            saving, organizing, and connecting related article quotes.
-                        </p>
-                        {/* <p>
-                            This requires a financial support of $4.99 per month, used to pay
-                            contributors to the Unclutter open-source project.
-                        </p> */}
-                        <p>See below for all the features you'll unlock!</p>
-                    </>
+                <p>
+                    Unclutter can help get more value out of reading by automatically saving,
+                    organizing, and connecting related article quotes.
+                </p>
+
+                {trialExpired && (
+                    <p>
+                        Your free trial has expired. Support Unclutter with $4.99 per month to
+                        unlock the library features again.
+                    </p>
+                )}
+                {userInfo?.aiEnabled && !!userInfo?.trialEnd && (
+                    <p>
+                        You have {getTrialDaysLeft(userInfo)} days left in your free trial. After
+                        that, using the Unclutter library features described below costs $4.99 per
+                        month.
+                    </p>
+                )}
+                {userInfo?.aiEnabled && !userInfo?.trialEnd && (
+                    <p>Thank you for supporting Unclutter!</p>
                 )}
             </SettingsGroup>
 
