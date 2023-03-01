@@ -71,7 +71,7 @@
         "install-v2-manifest": "cp source/manifest_v2.json distribution/manifest.json",
         "chrome": "yarn web-ext run -t chromium --start-url news.ycombinator.com --watch-file distribution/package.json",
         "firefox": "yarn web-ext run -t firefox-desktop --start-url news.ycombinator.com --watch-file distribution/package.json",
-        "package": "yarn build && yarn web-ext build -o -n extension_manifest-v3.zip --ignore-files '!node_modules' '!node_modules/**' && yarn install-v2-manifest && yarn web-ext build -o -n extension_manifest-v2.zip --ignore-files '!node_modules' '!node_modules/**' && yarn install-v3-manifest",
+        "package": "rm -rf distribution && yarn build && yarn web-ext build -o -n extension_manifest-v3.zip --ignore-files '!**/node_modules' '!**/node_modules/**' && yarn install-v2-manifest && yarn web-ext build -o -n extension_manifest-v2.zip --ignore-files '!**/node_modules' '!**/node_modules/**' && yarn install-v3-manifest",
         "postinstall": "patch-package"
     },
     "browserslist": "last 1 version",
