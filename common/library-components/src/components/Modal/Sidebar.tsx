@@ -116,7 +116,6 @@ function getModalTabOptions(
         {
             label: "Articles",
             value: "articles",
-            unavailable: requireSupport && !userInfo?.aiEnabled,
             svg: (
                 <svg className="h-4" viewBox="0 0 576 512">
                     <path
