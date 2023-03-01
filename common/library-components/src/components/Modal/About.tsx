@@ -103,7 +103,7 @@ export default function AboutModalTab({}: {}) {
                         )}
                         {!isWeb && !userInfo?.aiEnabled && (
                             <SettingsButton
-                                title="Sign up"
+                                title="Create account"
                                 href="https://my.unclutter.it/signup"
                                 darkModeEnabled={darkModeEnabled}
                                 reportEvent={reportEvent}
