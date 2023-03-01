@@ -78,19 +78,25 @@ export default function NewModalApp() {
 
     useEffect(() => {
         (async () => {
-            if (!rep || !user || !user.email || userInfo === undefined) {
+            if (!rep || !user || !user?.email || userInfo === undefined) {
                 return;
             }
 
             if (userInfo === null) {
                 console.log("Signing up new user", user);
-                await rep.mutate.updateUserInfo({
+                const userInfo: UserInfo = {
                     id: user.id,
-                    name: user.user_metadata.name,
-                    signinProvider: user.app_metadata.provider as any,
                     email: user.email,
                     accountEnabled: true,
-                });
+                };
+                // replicache has issues with undefined values
+                if (user.user_metadata.name) {
+                    userInfo.name = user.user_metadata.name;
+                }
+                if (user.app_metadata.provider) {
+                    userInfo.signinProvider = user.app_metadata.provider as any;
+                }
+                await rep.mutate.updateUserInfo(userInfo);
 
                 await new Promise((resolve) => setTimeout(resolve, 2000));
                 setUnclutterLibraryAuth(user.id);
