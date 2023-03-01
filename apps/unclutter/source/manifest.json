@@ -1,7 +1,7 @@
 {
     "name": "Unclutter — Modern Reader Mode",
     "version": "1.7.6",
-    "description": "Read, bookmark, and highlight articles with style.",
+    "description": "Read and highlight articles with style.",
     "homepage_url": "https://github.com/lindylearn/unclutter",
     "manifest_version": 3,
     "action": {
