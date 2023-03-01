@@ -1,6 +1,6 @@
 {
     "name": "Unclutter Tab",
-    "version": "0.7.0",
+    "version": "0.7.1",
     "description": "Access your Unclutter reading queue from your new tab page.",
     "homepage_url": "https://github.com/lindylearn/unclutter",
     "icons": {
@@ -25,11 +25,5 @@
     ],
     "chrome_url_overrides": {
         "newtab": "new-tab/index-firefox.html"
-    },
-    "content_scripts": [
-        {
-            "matches": ["https://my.unclutter.it/*"],
-            "js": ["background/firefox-content-script.js"]
-        }
-    ]
+    }
 }

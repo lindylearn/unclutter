@@ -17,7 +17,7 @@ const isProduction = !process.env.ROLLUP_WATCH;
 
 // bundle content scripts
 // absolute path imports (starting with "source/") seems to break this.
-const contentScriptConfigs = ["source/background/firefox-content-script.ts"].map((entryPoint) => ({
+const contentScriptConfigs = [].map((entryPoint) => ({
     input: entryPoint,
     output: {
         file: entryPoint
