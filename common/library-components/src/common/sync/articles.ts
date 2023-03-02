@@ -67,9 +67,14 @@ export async function syncUploadArticles(rep: ReplicacheProxy): Promise<Set<stri
         for (const chunkedArticles of chunk(articles, 50)) {
             const remoteIds = await addUpdateArticles(syncState.api_token, chunkedArticles);
             await Promise.all(
-                remoteIds.map((remoteId, i) =>
-                    rep.mutate.updateArticleRaw({ id: chunkedArticles[i].id, pocket_id: remoteId })
-                )
+                remoteIds.map(async (remoteId, i) => {
+                    if (remoteId) {
+                        await rep.mutate.updateArticleRaw({
+                            id: chunkedArticles[i].id,
+                            pocket_id: remoteId,
+                        });
+                    }
+                })
             );
         }
     }
