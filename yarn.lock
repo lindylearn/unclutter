@@ -12730,10 +12730,15 @@ repeat-string@^1.0.0, repeat-string@^1.6.1:
   resolved "https://registry.yarnpkg.com/repeat-string/-/repeat-string-1.6.1.tgz#8dcae470e1c88abc2d600fff4a776286da75e637"
   integrity sha512-PV0dzCYDNfRi1jCDbJzpW7jNNDRuCOG/jI5ctQcGKt/clZD+YcPS3yIlWuTJMmESC8aevCFmWJy5wjAFgNqN6w==
 
-replicache-react@^2.10.0:
+replicache-react@^2.10.0, replicache-react@^2.8.0:
   version "2.10.0"
   resolved "https://registry.yarnpkg.com/replicache-react/-/replicache-react-2.10.0.tgz#c1289375d9f9d7cb6383f92db7244b1294bb08e8"
   integrity sha512-n/DdPK+07tTnlYdPHDSEbQ4mEH8B5jR1nSKqR/u5dt5fqL1WN0bxNq3J8P1gWKk65I8cbS3N+/wEbkPW4ksg3A==
+
+replicache@<12.0.0:
+  version "11.3.2"
+  resolved "https://registry.yarnpkg.com/replicache/-/replicache-11.3.2.tgz#d1ea1974dcbca733636973e903cbde47ab0ef129"
+  integrity sha512-3s9NjXnyJfX+JtaApTEoFIOkpGLN+N8CvXrGtqfHnRpLmmZ/FzBk85u7R7rfHNJCocrgZ/iwZqOBok6ixzKOyw==
 
 replicache@^12.2.0:
   version "12.2.0"
