@@ -59,7 +59,7 @@ export class ReplicacheProxy implements RuntimeReplicache {
         (obj, fnName: keyof A) => {
             obj[fnName] =
                 (...args: any[]) =>
-                (subscribeOptions: SubscribeOptions<any, any>) => {
+                (subscribeOptions: SubscribeOptions<any>) => {
                     const port: Runtime.Port = getBrowser().runtime.connect(this.targetExtension, {
                         name: `replicache-subscribe`,
                     });

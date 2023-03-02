@@ -77,19 +77,16 @@ export class ReplicacheTransaction implements WriteTransaction {
 
     const { _executor: executor, _spaceID: spaceID, _cache: cache } = this;
 
-    return makeScanResult<ScanNoIndexOptions, any>(
-      options,
-      (fromKey: string) => {
-        const source = getEntries(executor, spaceID, fromKey);
-        const pending = getCacheEntries(cache, fromKey);
-        const merged = mergeAsyncIterables(source, pending, entryCompare);
-        const filtered = filterAsyncIterable(
-          merged,
-          (entry) => entry[1] !== undefined
-        ) as AsyncIterable<readonly [string, JSONValue]>;
-        return filtered;
-      }
-    );
+    return makeScanResult<ScanNoIndexOptions>(options, (fromKey: string) => {
+      const source = getEntries(executor, spaceID, fromKey);
+      const pending = getCacheEntries(cache, fromKey);
+      const merged = mergeAsyncIterables(source, pending, entryCompare);
+      const filtered = filterAsyncIterable(
+        merged,
+        (entry) => entry[1] !== undefined
+      ) as AsyncIterable<readonly [string, JSONValue]>;
+      return filtered;
+    });
   }
 
   async flush(): Promise<void> {
