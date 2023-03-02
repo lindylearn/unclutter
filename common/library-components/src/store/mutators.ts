@@ -28,6 +28,12 @@ import {
 } from "./_schema";
 import { readingProgressFullClamp } from "./constants";
 
+// replicache v12 doesn't support explicit undefined values
+export function stripUndefined<T extends object>(obj: T): T {
+    Object.keys(obj).forEach((key) => obj[key] === undefined && delete obj[key]);
+    return obj;
+}
+
 /* ***** articles & topics ***** */
 
 const {
@@ -59,12 +65,12 @@ async function putArticleIfNotExists(
     fullArticle.recency_sort_position = fullArticle.time_added * 1000;
     fullArticle.topic_sort_position = fullArticle.time_added * 1000;
 
-    await putArticle(tx, fullArticle);
+    await putArticle(tx, stripUndefined(fullArticle));
 }
 
 async function updateArticle(tx: WriteTransaction, article: Partial<Article>) {
     await updateArticleRaw(tx, {
-        ...article,
+        ...stripUndefined(article),
         time_updated: Math.round(new Date().getTime() / 1000),
     } as Article);
 }
@@ -276,9 +282,10 @@ async function articleAddMoveToQueue(
     const articleDiff: Partial<Article> = {
         id: articleId,
         is_queued: isQueued,
-        queue_sort_position: isQueued ? new Date().getTime() : undefined,
     };
     if (isQueued) {
+        articleDiff["queue_sort_position"] = new Date().getTime();
+
         // reset reading progress if completed article is queued
         const article = await getArticle(tx, articleId);
         if (article && article.reading_progress >= readingProgressFullClamp) {
@@ -336,7 +343,7 @@ const {
 
 async function putAnnotation(tx: WriteTransaction, annotation: Annotation) {
     await putAnnotationRaw(tx, {
-        ...annotation,
+        ...stripUndefined(annotation),
         updated_at: annotation.updated_at || annotation.created_at,
     });
 }
@@ -363,14 +370,14 @@ async function mergeRemoteAnnotations(tx: WriteTransaction, annotations: Annotat
 
             // setting .h_id will trigger another PATCH request
             // this is ok for manually created annotations, but not for all existing
-            await updateAnnotationRaw(tx, annotation);
+            await updateAnnotationRaw(tx, stripUndefined(annotation));
         })
     );
 }
 
 async function updateAnnotation(tx: WriteTransaction, annotation: Partial<Annotation>) {
     await updateAnnotationRaw(tx, {
-        ...annotation,
+        ...stripUndefined(annotation),
         updated_at: Math.round(new Date().getTime() / 1000),
     } as Annotation);
 }
