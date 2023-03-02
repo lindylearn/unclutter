@@ -7,9 +7,7 @@ import {
     Annotation,
     annotationSchema,
     Article,
-    articleLinkSchema,
     articleSchema,
-    articleTextSchema,
     FeedSubscription,
     feedSubscriptionSchema,
     PartialSyncState,
@@ -26,8 +24,6 @@ import {
 /* ***** articles ***** */
 
 export const { get: getArticle, list: listArticles } = generate("articles", articleSchema);
-export const { get: getArticleText, list: listArticleTexts } = generate("text", articleTextSchema);
-export const { list: listArticleLinks } = generate("link", articleLinkSchema);
 
 export async function getArticlesCount(tx: ReadTransaction): Promise<number> {
     const articles = await listArticles(tx);
@@ -434,9 +430,6 @@ const { get: getSyncState, list: listSyncStates } = generate("sync", syncStateSc
 export const accessors = {
     getArticle,
     listArticles,
-    getArticleText,
-    listArticleTexts,
-    listArticleLinks,
     getArticlesCount,
     listRecentArticles,
     // groupRecentArticles,

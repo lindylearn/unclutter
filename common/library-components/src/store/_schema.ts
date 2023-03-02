@@ -42,13 +42,6 @@ export const topicSchema = entitySchema.extend({
 });
 export type Topic = z.infer<typeof topicSchema>;
 
-// *** ArticleText ***
-export const articleTextSchema = entitySchema.extend({
-    title: z.nullable(z.string()),
-    paragraphs: z.array(z.string()),
-});
-export type ArticleText = z.infer<typeof articleTextSchema>;
-
 // *** ArticleLink ***
 export const articleLinkSchema = entitySchema.extend({
     source: z.string(),

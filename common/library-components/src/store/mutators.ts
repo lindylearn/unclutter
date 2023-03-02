@@ -1,7 +1,6 @@
 import { JSONValue } from "replicache";
 import { generate, Update } from "@rocicorp/rails";
 import { WriteTransaction } from "replicache";
-import sha256 from "crypto-js/sha256";
 
 import {
     ArticleSortPosition,
@@ -14,16 +13,10 @@ import {
     Annotation,
     annotationSchema,
     Article,
-    ArticleLink,
-    articleLinkSchema,
     articleSchema,
-    ArticleText,
-    articleTextSchema,
     feedSubscriptionSchema,
     Settings,
     syncStateSchema,
-    Topic,
-    topicSchema,
     UserInfo,
 } from "./_schema";
 import { readingProgressFullClamp } from "./constants";
@@ -43,13 +36,6 @@ const {
     update: updateArticleRaw,
     delete: deleteArticleRaw,
 } = generate("articles", articleSchema);
-const {
-    put: putArticleText,
-    update: updateArticleText,
-    delete: deleteArticleText,
-} = generate("text", articleTextSchema);
-const { put: putArticleLink } = generate("link", articleLinkSchema);
-const { put: putTopic, list: listTopics, delete: deleteTopic } = generate("topics", topicSchema);
 
 async function putArticleIfNotExists(
     tx: WriteTransaction,
@@ -90,45 +76,12 @@ async function importArticles(
         })
     );
 }
-async function importArticleTexts(
-    tx: WriteTransaction,
-    {
-        article_texts,
-    }: {
-        article_texts: ArticleText[];
-    }
-) {
-    await Promise.all(
-        article_texts.map(async (article_text) => {
-            await putArticleText(tx, article_text);
-        })
-    );
-}
-
-async function importArticleLinks(
-    tx: WriteTransaction,
-    {
-        links,
-    }: {
-        links: Omit<ArticleLink, "id">[];
-    }
-) {
-    await Promise.all(
-        links.map(async (link: ArticleLink) => {
-            // use one entry for both directions
-            const nodeIds = [link.source, link.target].sort();
-            link.id = sha256(`${nodeIds.join("-")}-${link.type}`).toString();
-            await putArticleLink(tx, link);
-        })
-    );
-}
 
 async function deleteArticle(tx: WriteTransaction, articleId: string) {
     const articleAnnotations = await listArticleAnnotationsServer(tx, articleId);
     await Promise.all(articleAnnotations.map((a) => deleteAnnotation(tx, a.id)));
 
     await deleteArticleRaw(tx, articleId);
-    await deleteArticleText(tx, articleId);
 }
 
 async function updateArticleReadingProgress(
@@ -176,46 +129,6 @@ async function articleTrackOpened(tx: WriteTransaction, articleId: string) {
         topic_sort_position: timeNow,
         domain_sort_position: timeNow,
     });
-}
-
-// noted: this may be batched into multiple mutations in backend
-async function updateAllTopics(
-    tx: WriteTransaction,
-    {
-        newTopics,
-        articleTopics,
-        skip_topics_delete = false,
-    }: {
-        newTopics: Topic[];
-        articleTopics: { [articleId: string]: string };
-        skip_topics_delete?: boolean;
-    }
-) {
-    // replace existing topic entries
-    if (!skip_topics_delete) {
-        const existingTopics = await listTopics(tx);
-        await Promise.all(existingTopics.map((t) => deleteTopic(tx, t.id)));
-    }
-    await Promise.all(newTopics.map((t) => putTopic(tx, t)));
-
-    // update article topic ids
-    const articleTopicEntries = Object.entries(articleTopics);
-    // read before write
-    const existingArticles = await Promise.all(
-        articleTopicEntries.map(([articleId, topicId]) => getArticle(tx, articleId))
-    );
-    await Promise.all(
-        articleTopicEntries.map(async ([articleId, topicId], index) => {
-            const existing = existingArticles[index];
-            if (existing?.topic_id !== topicId) {
-                console.log(`update ${existing?.topic_id} -> ${topicId}`);
-                await updateArticle(tx, {
-                    id: articleId,
-                    topic_id: topicId,
-                });
-            }
-        })
-    );
 }
 
 async function moveArticlePosition(
@@ -437,10 +350,6 @@ export const mutators = {
     updateArticleReadingProgress,
     putArticleIfNotExists,
     importArticles,
-    importArticleTexts,
-    importArticleLinks,
-    putTopic,
-    updateAllTopics,
     moveArticlePosition,
     articleAddMoveToQueue,
     articleAddMoveToLibrary,

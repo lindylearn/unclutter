@@ -8,7 +8,6 @@ import {
 import { ModalVisibilityContext } from "@unclutter/library-components/dist/components/Modal/context";
 import {
     Article,
-    ArticleLink,
     ReplicacheContext,
     Topic,
     UserInfo,
@@ -22,23 +21,16 @@ export default function ModalDevTab({}) {
     const [topic, setTopic] = useState<Topic>();
 
     const rep = useContext(ReplicacheContext);
-    const [graph, setGraph] = useState<CustomGraphData>();
     const [showModal, setShowModal] = useState(false);
     useEffect(() => {
         if (!rep) {
             return;
         }
         (async () => {
-            const nodes: Article[] = await rep.query.listRecentArticles();
-            const links: ArticleLink[] = await rep.query.listArticleLinks();
-
             const article = await rep.query.getArticle(articleId);
             const topic = await rep.query.getTopic(article?.topic_id!);
             setArticle(article);
             setTopic(topic);
-
-            const [graph, linkCount] = await constructGraphData(nodes, links, article?.url, topic);
-            setGraph(graph);
         })();
 
         setTimeout(() => {
