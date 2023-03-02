@@ -270,7 +270,7 @@ async function mergeRemoteAnnotations(tx: WriteTransaction, annotations: Annotat
             if (annotation.h_id) {
                 existing = allAnnotations.find((a) => a.h_id === annotation.h_id);
                 if (existing) {
-                    annotation.id = existing.id;
+                    annotation = { ...annotation, id: existing.id };
                 }
             } else {
                 existing = allAnnotations.find((a) => a.id === annotation.id);
