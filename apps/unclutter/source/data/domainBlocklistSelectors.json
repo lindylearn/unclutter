@@ -92,8 +92,8 @@
         ".slm-instream-player-container",
         ".tabElemNoBor"
     ],
-    "beyazperde.com": [".light.titlebar-subtile", ".cms-see-also", ".section"],
     "beachcam.co.il": ["#aswift_1_host"],
+    "beyazperde.com": [".light.titlebar-subtile", ".cms-see-also", ".section"],
     "bezprawnik.pl": [
         ".ad_slot_height_manager_wrapper_bp_sdh2",
         "#oa-360-1666305713099_aa6xa65xr",
@@ -574,6 +574,11 @@
         ".elementor-section.elementor-top-section.elementor-element.elementor-element-f51e5cc.elementor-section-boxed.elementor-section-height-default",
         ".elementor-column.elementor-col-50.elementor-top-column.elementor-element.elementor-element-5801ea69",
         ".elementor.elementor-10.elementor-location-header"
+    ],
+    "horajaen.com": [
+        ".addoor_tw_slot",
+        ".td-a-rec.td-a-rec-id-content_bottom.td_uid_20_64028fe15cf27_rand.td_block_template_1",
+        ".td-a-rec.td-a-rec-id-content_bottom.td_uid_20_6404ac91e6559_rand.td_block_template_1"
     ],
     "houzz.com": [
         ".hz-editorial-gallery-action-bar.hz-track-me",
@@ -1094,7 +1099,6 @@
     ],
     "ruanyifeng.com": [".wwads-cn.wwads-horizontal"],
     "sandboxx.us": [".content#genesis-content::before"],
-    "scitechdaily.com": [".entry-tags.clearfix"],
     "sciencenews.org": [
         ".header-default__terms___y7T55",
         ".single__byline-container___3EW6e",
@@ -1102,6 +1106,7 @@
         "#id_00i937xrshdaq",
         "#emailConversion"
     ],
+    "scitechdaily.com": [".entry-tags.clearfix"],
     "semiengineering.com": [".col-xs-12.col-sm-6.col-md-7"],
     "shopify.com": ["#GlobalIconSymbols", "#SiteNavContainer"],
     "slatestarcodex.com": ["#left-sidebar", "#primary"],
