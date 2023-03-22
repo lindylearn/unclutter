@@ -53,9 +53,44 @@ export default function AnnotationDraft({
             []
         );
 
+    function extractHashtags(str: string): string[] {
+        const words: string[] = str.split(' ');
+        const hashtags: string[] = [];
+        
+        words.forEach((word: string, index: number) => {
+            if (word.startsWith('#') && (!str.endsWith(word) || index !== words.length - 1)) {
+            hashtags.push(word);
+            }
+        });
+        
+        return hashtags;
+    }
+
+    function updateTagsFromText(newAnnotation: LindyAnnotation) {
+        // Check if there's possibly any hashtags in the text
+        if (newAnnotation.text.indexOf('#') !== -1) {
+            // Attempt to extract hashtags, but ignore one at the end of the text as that's where the user is
+            // probably typing, and we want to ingore incomplete tags
+            const extractedHashtags = extractHashtags(newAnnotation.text).map(s => s.substring(1));
+            //console.log(`Extracted tags: ${extractedHashtags}`);
+
+            const existingTags = newAnnotation.tags || [];
+            const mergedTags = Array.from(new Set(existingTags.concat(extractedHashtags)));
+
+            // Update the tags - if we didn't find any then we will fall back on existing tags
+            // This could make untagging items an issue - another approach would be to simply rely
+            // on the tags set in the text
+            newAnnotation.tags = mergedTags;
+        }
+    }
+          
+
     // keep local state for faster updates
     const [localAnnotation, setLocalAnnotation] = React.useState(annotation);
+
     async function updateAnnotationLocalFirst(newAnnotation: LindyAnnotation) {
+        updateTagsFromText(newAnnotation);
+        console.log(`New Annotation`, newAnnotation);
         setLocalAnnotation(newAnnotation);
 
         if (!!annotation.text !== !!newAnnotation.text) {
