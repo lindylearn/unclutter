@@ -90,7 +90,6 @@ export default function AnnotationDraft({
 
     async function updateAnnotationLocalFirst(newAnnotation: LindyAnnotation) {
         updateTagsFromText(newAnnotation);
-        console.log(`New Annotation`, newAnnotation);
         setLocalAnnotation(newAnnotation);
 
         if (!!annotation.text !== !!newAnnotation.text) {
