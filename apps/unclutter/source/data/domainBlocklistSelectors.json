@@ -92,8 +92,8 @@
         ".slm-instream-player-container",
         ".tabElemNoBor"
     ],
-    "beyazperde.com": [".light.titlebar-subtile", ".cms-see-also", ".section"],
     "beachcam.co.il": ["#aswift_1_host"],
+    "beyazperde.com": [".light.titlebar-subtile", ".cms-see-also", ".section"],
     "bezprawnik.pl": [
         ".ad_slot_height_manager_wrapper_bp_sdh2",
         "#oa-360-1666305713099_aa6xa65xr",
@@ -1094,7 +1094,6 @@
     ],
     "ruanyifeng.com": [".wwads-cn.wwads-horizontal"],
     "sandboxx.us": [".content#genesis-content::before"],
-    "scitechdaily.com": [".entry-tags.clearfix"],
     "sciencenews.org": [
         ".header-default__terms___y7T55",
         ".single__byline-container___3EW6e",
@@ -1102,6 +1101,7 @@
         "#id_00i937xrshdaq",
         "#emailConversion"
     ],
+    "scitechdaily.com": [".entry-tags.clearfix"],
     "semiengineering.com": [".col-xs-12.col-sm-6.col-md-7"],
     "shopify.com": ["#GlobalIconSymbols", "#SiteNavContainer"],
     "slatestarcodex.com": ["#left-sidebar", "#primary"],
@@ -1369,6 +1369,7 @@
         ".thumbnail-container.animate-lazy.size-500",
         ".elementor-element.elementor-element-42c086c.single_post_thumbnail.elementor-widget.elementor-widget-epic_post_feature_elementor"
     ],
+    "world.kbs.co.kr": [".view_tit", ".img_box.top.no-print"],
     "wsj.com": [
         ".bigTop__media.bigTop__media--image.bigTop--8-16u",
         ".media-object.type-InsetRichText.wrap.scope-web.article__inset.article__inset--type-InsetRichText.article__inset--wrap",
