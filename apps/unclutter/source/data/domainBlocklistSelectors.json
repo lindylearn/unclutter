@@ -92,8 +92,8 @@
         ".slm-instream-player-container",
         ".tabElemNoBor"
     ],
-    "beyazperde.com": [".light.titlebar-subtile", ".cms-see-also", ".section"],
     "beachcam.co.il": ["#aswift_1_host"],
+    "beyazperde.com": [".light.titlebar-subtile", ".cms-see-also", ".section"],
     "bezprawnik.pl": [
         ".ad_slot_height_manager_wrapper_bp_sdh2",
         "#oa-360-1666305713099_aa6xa65xr",
@@ -825,6 +825,18 @@
     "maketecheasier.com": [".lazyload.alignleft.size-full.wp-image-20581"],
     "makeuseof.com": [".a__sc-np32r2-0.dLwzoc.using-keyboard"],
     "markmanson.net": [".mf-monday-opt-in"],
+    "masterclass.com": [
+        ".mc-text--center.mc-text-h4",
+        ".container.mc-py-10",
+        ".fresnel-container.fresnel-greaterThanOrEqual-sm",
+        ".row.no-gutters.mc-bg-gray-700",
+        ".col-md-5.d-flex.flex-column.justify-content-center.mc-text--center.mc-text-md--left",
+        ".mc-form-group.mc-form-group--default",
+        "#email-capture",
+        ".col-12.col-sm-3.col-md-2",
+        "#KLCAVy6HqFZKOlj4wWwzq",
+        ".row.mc-my-10.mc-text--center.mc-text-sm--left"
+    ],
     "materialdistrict.com": [".backstretch"],
     "mcgill.ca": [
         ".field.field-name-field-single-link.field-type-link-field.field-label-hidden",
@@ -1094,7 +1106,6 @@
     ],
     "ruanyifeng.com": [".wwads-cn.wwads-horizontal"],
     "sandboxx.us": [".content#genesis-content::before"],
-    "scitechdaily.com": [".entry-tags.clearfix"],
     "sciencenews.org": [
         ".header-default__terms___y7T55",
         ".single__byline-container___3EW6e",
@@ -1102,6 +1113,7 @@
         "#id_00i937xrshdaq",
         "#emailConversion"
     ],
+    "scitechdaily.com": [".entry-tags.clearfix"],
     "semiengineering.com": [".col-xs-12.col-sm-6.col-md-7"],
     "shopify.com": ["#GlobalIconSymbols", "#SiteNavContainer"],
     "slatestarcodex.com": ["#left-sidebar", "#primary"],
