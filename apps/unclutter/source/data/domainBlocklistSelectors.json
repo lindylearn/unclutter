@@ -92,8 +92,8 @@
         ".slm-instream-player-container",
         ".tabElemNoBor"
     ],
-    "beyazperde.com": [".light.titlebar-subtile", ".cms-see-also", ".section"],
     "beachcam.co.il": ["#aswift_1_host"],
+    "beyazperde.com": [".light.titlebar-subtile", ".cms-see-also", ".section"],
     "bezprawnik.pl": [
         ".ad_slot_height_manager_wrapper_bp_sdh2",
         "#oa-360-1666305713099_aa6xa65xr",
@@ -887,6 +887,7 @@
     "nationalpost.com": [".visually-hidden", ".more-topic"],
     "nautil.us": [".article-action-list", ".a__sc-np32r2-0.dalZPh"],
     "nazory.pravda.sk": ["#rmpPlayer", ".container.no-padding-advert"],
+    "ndla.no": [".article_introduction", ".css-dbah3l-xsmall-pill-buttonStyle"],
     "neowin.net": [
         ".nav-mobile.nav-item-deals.mega-parent",
         ".nav-item-news.active.mega-parent",
@@ -1094,7 +1095,6 @@
     ],
     "ruanyifeng.com": [".wwads-cn.wwads-horizontal"],
     "sandboxx.us": [".content#genesis-content::before"],
-    "scitechdaily.com": [".entry-tags.clearfix"],
     "sciencenews.org": [
         ".header-default__terms___y7T55",
         ".single__byline-container___3EW6e",
@@ -1102,6 +1102,7 @@
         "#id_00i937xrshdaq",
         "#emailConversion"
     ],
+    "scitechdaily.com": [".entry-tags.clearfix"],
     "semiengineering.com": [".col-xs-12.col-sm-6.col-md-7"],
     "shopify.com": ["#GlobalIconSymbols", "#SiteNavContainer"],
     "slatestarcodex.com": ["#left-sidebar", "#primary"],
