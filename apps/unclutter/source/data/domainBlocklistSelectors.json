@@ -1403,6 +1403,11 @@
         ".lrv-a-crop-16x9",
         ".lrv-u-padding-tb-1"
     ],
+    "vidaextra.com": [
+        ".article-date",
+        ".article-metadata-container",
+        ".article-asset.article-asset-normal.article-asset-center"
+    ],
     "vnexpress.net": [
         ".section.page-detail.bottom-detail",
         ".width_common.box-tinlienquanv2",
