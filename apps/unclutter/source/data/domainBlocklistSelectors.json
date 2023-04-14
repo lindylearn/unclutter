@@ -430,6 +430,7 @@
         ".app_header"
     ],
     "euronews.com": [".editor-tv-wrapper.editor-tv-active"],
+    "europapress.es": ["#sc_intxt_container"],
     "evrimagaci.org": [
         ".figure-bottom",
         ".left",
