@@ -24,6 +24,11 @@
     ],
     "appjdykyxmp5257.h5.xiaoeknow.com": ["#xePreview"],
     "apple.com": ["#ac-localeswitcher", ".sharesheet.component", ".nr-article-share"],
+    "applesfera.com": [
+        ".article-date",
+        ".article-metadata-container",
+        ".article-asset.article-asset-normal.article-asset-center"
+    ],
     "aripaev.ee": [
         ".PreviewWrapper-sc-1tmhfjt-0.ArticlePreview__ArticlePreviewWrapper-sc-52bjrr-4.iCjoyF.cuUJRm",
         ".EditorArticle__ImageHolder-sc-1l7s435-1.gfhXfy",
