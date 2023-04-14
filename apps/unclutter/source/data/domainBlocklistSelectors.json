@@ -1128,7 +1128,13 @@
     "realpython.com": [".small.text-muted"],
     "rebble.io": ["#index"],
     "rebekahbarnett.substack.com": [".captioned-image-container", ".single-post-section"],
-    "reddit.com": ["._23h0-EcaBUorIHC-JZyh6J"],
+    "reddit.com": [
+        "._23h0-EcaBUorIHC-JZyh6J",
+        ".Mh_Wl6YioFfBc9O1SQ4Jp.u0UgpXN5r-VO6PP9OAViq",
+        "._1gVVmSnHZpkUgVShsn7-ua._15Pk_bZ2XZNa9zBvnxq6HX",
+        "._2I_YJCANrzkY2DZkeu2nht",
+        "._33aRtz9JtW0dIrBNKFAl0y"
+    ],
     "reuters.com": [
         ".base-widget-body__list__22w1C",
         ".article-body__top-toolbar-container__12IAp",
