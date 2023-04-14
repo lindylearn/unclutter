@@ -1026,6 +1026,7 @@
     "phileweb.com": ["#header", ".topicPath", "#entryUtility", "#submidashi"],
     "phoronix.com": [".node", "#about-author", "#sharebar", ".after-article"],
     "polygon.com": [".c-entry-hero__logo"],
+    "popsci.com": ["#empire-unit-recurrent_outstream_video-0"],
     "popsci.com.tr": [
         ".td-crumb-container",
         ".td-category",
