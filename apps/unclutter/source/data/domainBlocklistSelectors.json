@@ -1413,6 +1413,7 @@
         ".lrv-a-crop-16x9",
         ".lrv-u-padding-tb-1"
     ],
+    "version2.dk": [".jobs-wrapper"],
     "vidaextra.com": [
         ".article-date",
         ".article-metadata-container",
