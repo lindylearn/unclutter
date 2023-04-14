@@ -574,6 +574,7 @@
     "guernicamag.com": [".each-top-story"],
     "haaretz.com": [".a.ce.cr"],
     "hackster.io": ["#hello-world"],
+    "haipo.co.il": [".owfs-image"],
     "hdvietnam.org": ["#likes-post-10851880", ".sharePage"],
     "healthy.walla.co.il": [
         ".ob_sf_loader",
