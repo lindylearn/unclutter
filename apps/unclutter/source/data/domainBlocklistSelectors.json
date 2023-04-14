@@ -771,6 +771,7 @@
     ],
     "kyobun.co.jp": [".tp-iframe-wrapper.tp-active"],
     "lavoz.com.ar": [".article.card.default"],
+    "learn.microsoft.com": [".xp-tag-hexagon"],
     "learncpp.com": ["#CCPA_opt_out"],
     "lemonbin.com": ["#toc_container"],
     "lemonde.fr": [
