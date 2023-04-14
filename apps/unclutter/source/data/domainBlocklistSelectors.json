@@ -180,6 +180,7 @@
     "bmpi.dev": [".giscus"],
     "bookriot.com": ["#top_fold"],
     "bostonherald.com": [".connext-modal-backdrop.fade"],
+    "braceability.com": ["#fc_frame"],
     "builtin.com": [
         ".field.field--name-field-oc-name.field--type-string.field--label-hidden.field__item",
         ".info",
