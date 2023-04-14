@@ -1207,7 +1207,7 @@
         ".name",
         ".blocks"
     ],
-    "stratechery.com": ["#daily-updates"],
+    "stratechery.com": ["#daily-updates", ".posted-on"],
     "substack.com": [".button-wrapper"],
     "sueddeutsche.de": [
         ".css-wlr69t",
