@@ -605,7 +605,8 @@
         ".a-box.a-box--collapsable.a-box--no-border-bottom.a-u-show-from-desktop.article-sidebar__item.a-toc",
         ".article-sidebar",
         ".a-article-header__label",
-        ".bottom_up"
+        ".bottom_up",
+        ".group-open.group-closed.group-disabled"
     ],
     "hellahealth.com": [".ads_a1_hhp_imgs"],
     "himasoku.com": ["#blog-title-image"],
