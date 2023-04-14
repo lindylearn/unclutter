@@ -235,6 +235,7 @@
         ".ad--skyscraper",
         "[data-vars-tracking-title='Weitere Rezepte von']"
     ],
+    "chinapower.csis.org": [".row.explore-container", ".megaphone-mini-container"],
     "christianitytoday.com": [".article-embed"],
     "ciechanow.ski": ["#hero"],
     "cleanmyspace.com": [
