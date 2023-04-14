@@ -1226,7 +1226,8 @@
         "#gpt-unit-2",
         ".ArticleLeadArt_root__3PEn8.ArticleLeadArt_twoCol__C5HFK",
         ".ArticleBooksModule_disclosure__TLkKV",
-        ".ArticleBooksModule_book__ZbUdS"
+        ".ArticleBooksModule_book__ZbUdS",
+        ".ArticleLegacyHtml_root__oTAAd.ArticleLegacyHtml_standard__Qfi5x"
     ],
     "theblock.co": [".newsletterModal"],
     "theconstructor.org": [".cs-estimated-reading-time", "#toc_container"],
