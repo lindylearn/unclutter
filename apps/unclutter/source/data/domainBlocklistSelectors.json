@@ -931,6 +931,7 @@
     ],
     "mrmoneymustache.com": ["#text-22"],
     "mullvad.net": ["#connection-status"],
+    "mzv.cz": [".articleDate"],
     "nationalgeographic.com": [
         ".Share.flex.flex-no-wrap.Article__Header__Share",
         ".Byline__TimestampWrapper",
