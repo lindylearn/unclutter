@@ -1115,7 +1115,7 @@
     "shopify.com": ["#GlobalIconSymbols", "#SiteNavContainer"],
     "slatestarcodex.com": ["#left-sidebar", "#primary"],
     "smashingmagazine.com": [".global-header.header"],
-    "smithsonianmag.com": [".author-headshot.smart-news", ".tag-list"],
+    "smithsonianmag.com": [".author-headshot.smart-news", ".tag-list", ".binding-box"],
     "snclavalin.com": [".top-content-item.read-time", ".top-content-item"],
     "sozcu.com.tr": [
         ".content-meta.author-img._1x1",
