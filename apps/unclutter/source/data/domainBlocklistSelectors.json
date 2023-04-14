@@ -385,6 +385,17 @@
         ".ds-layout-grid.css-7x1gx3.ejuxbu30"
     ],
     "edition.cnn.com": [".ticker-ribbon"],
+    "edmontonjournal.com": [
+        ".visually-hidden",
+        "#ds_cpp_inner",
+        ".video-placeholder",
+        ".conversation-starter-icon",
+        ".vf-conversation-starter_text-title",
+        ".js-widget-content.article-content__widget-group.article-content__widget-group--content-slot11",
+        ".ds_sponsorbox",
+        ".article-card__time",
+        ".article-card__meta-bottom"
+    ],
     "eff.org": [".element-invisible.element-focusable"],
     "emeatribune.com": ["#vuukle-emote", ".vuukle-powerbar.powerbarBoxDiv"],
     "en.wikipedia.org": [".wiki-logo", "#wiki_header"],
