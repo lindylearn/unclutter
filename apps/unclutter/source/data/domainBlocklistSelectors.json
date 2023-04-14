@@ -281,6 +281,14 @@
         ".column-content.cleared"
     ],
     "daringfireball.net": [".smallprint", "#SiteSearch", "#Sidebar"],
+    "dazeddigital.com": [
+        ".read-more-header",
+        ".read-more-item",
+        ".gallery-thumbs",
+        ".article-list.item-list",
+        ".article-list-container.standard-article-list-container",
+        ".linkblock"
+    ],
     "davidepstein.substack.com": [
         ".captioned-image-container",
         ".button-wrapper",
