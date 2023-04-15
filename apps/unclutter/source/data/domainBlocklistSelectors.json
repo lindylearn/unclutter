@@ -180,6 +180,14 @@
     "bmpi.dev": [".giscus"],
     "bookriot.com": ["#top_fold"],
     "bostonherald.com": [".connext-modal-backdrop.fade"],
+    "bpando.org": [
+        ".block.w-full.text-center.mt-5",
+        ".relative.flex.items-center.justify-center",
+        ".text-center",
+        ".opacity-60",
+        ".mr-2",
+        "#plus"
+    ],
     "braceability.com": ["#fc_frame"],
     "builtin.com": [
         ".field.field--name-field-oc-name.field--type-string.field--label-hidden.field__item",
@@ -289,6 +297,13 @@
         ".column-content.cleared"
     ],
     "daringfireball.net": [".smallprint", "#SiteSearch", "#Sidebar"],
+    "davidepstein.substack.com": [
+        ".captioned-image-container",
+        ".button-wrapper",
+        ".post-preview.portable-archive-post.has-image",
+        ".portable-archive-tabs",
+        ".single-post-section"
+    ],
     "dazeddigital.com": [
         ".read-more-header",
         ".read-more-item",
@@ -296,13 +311,6 @@
         ".article-list.item-list",
         ".article-list-container.standard-article-list-container",
         ".linkblock"
-    ],
-    "davidepstein.substack.com": [
-        ".captioned-image-container",
-        ".button-wrapper",
-        ".post-preview.portable-archive-post.has-image",
-        ".portable-archive-tabs",
-        ".single-post-section"
     ],
     "dekoder.org": [
         ".ph-header",
