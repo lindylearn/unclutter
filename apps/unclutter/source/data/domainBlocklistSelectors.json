@@ -201,6 +201,17 @@
         ".CommertialComponenta",
         ".slotTitle"
     ],
+    "caranddriver.com": [
+        ".css-o0wq4v.e19xk9rq3",
+        ".css-2ok9l4.e13rjwo40",
+        ".css-1ch4inn.enk2x9t1",
+        ".css-1eaihnq.ewdt5k42",
+        ".css-79elbk.eg8z2o90",
+        ".css-w49rx1.e1tz1z2e1",
+        ".css-t5n28o.e1tz1z2e1",
+        ".css-bh6pra.e1tz1z2e0",
+        ".css-0.e1tai4jr0"
+    ],
     "cbc.ca": [".logo", ".sideMenu"],
     "chaincatcher.com": [
         ".title",
@@ -289,6 +300,13 @@
         ".column-content.cleared"
     ],
     "daringfireball.net": [".smallprint", "#SiteSearch", "#Sidebar"],
+    "davidepstein.substack.com": [
+        ".captioned-image-container",
+        ".button-wrapper",
+        ".post-preview.portable-archive-post.has-image",
+        ".portable-archive-tabs",
+        ".single-post-section"
+    ],
     "dazeddigital.com": [
         ".read-more-header",
         ".read-more-item",
@@ -296,13 +314,6 @@
         ".article-list.item-list",
         ".article-list-container.standard-article-list-container",
         ".linkblock"
-    ],
-    "davidepstein.substack.com": [
-        ".captioned-image-container",
-        ".button-wrapper",
-        ".post-preview.portable-archive-post.has-image",
-        ".portable-archive-tabs",
-        ".single-post-section"
     ],
     "dekoder.org": [
         ".ph-header",
