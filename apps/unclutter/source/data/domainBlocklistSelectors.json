@@ -141,6 +141,7 @@
         "#colgauche",
         ".spip_document_134.spip_documents.spip_documents_right"
     ],
+    "bioscriptionblog.com": [".entry-header", ".has-text-align-center"],
     "biron.com": [
         ".padding-vertical-gutter-small.flexbox.margin-left-minus-gutter-small.children-padding-left-gutter-small.children-border-box.margin-top-minus-gutter-small.children-padding-top-gutter-small.flex-wrap.transition-buttons-ctn",
         ".width-full.width-1_2-from-sm.width-3_4-from-sm",
@@ -289,6 +290,13 @@
         ".column-content.cleared"
     ],
     "daringfireball.net": [".smallprint", "#SiteSearch", "#Sidebar"],
+    "davidepstein.substack.com": [
+        ".captioned-image-container",
+        ".button-wrapper",
+        ".post-preview.portable-archive-post.has-image",
+        ".portable-archive-tabs",
+        ".single-post-section"
+    ],
     "dazeddigital.com": [
         ".read-more-header",
         ".read-more-item",
@@ -296,13 +304,6 @@
         ".article-list.item-list",
         ".article-list-container.standard-article-list-container",
         ".linkblock"
-    ],
-    "davidepstein.substack.com": [
-        ".captioned-image-container",
-        ".button-wrapper",
-        ".post-preview.portable-archive-post.has-image",
-        ".portable-archive-tabs",
-        ".single-post-section"
     ],
     "dekoder.org": [
         ".ph-header",
