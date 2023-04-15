@@ -289,13 +289,9 @@
         ".column-content.cleared"
     ],
     "daringfireball.net": [".smallprint", "#SiteSearch", "#Sidebar"],
-    "dazeddigital.com": [
-        ".read-more-header",
-        ".read-more-item",
-        ".gallery-thumbs",
-        ".article-list.item-list",
-        ".article-list-container.standard-article-list-container",
-        ".linkblock"
+    "davidduchemin.com": [
+        ".wp-image-19136.size-full",
+        ".wp-block-media-text.alignwide.is-stacked-on-mobile"
     ],
     "davidepstein.substack.com": [
         ".captioned-image-container",
@@ -303,6 +299,14 @@
         ".post-preview.portable-archive-post.has-image",
         ".portable-archive-tabs",
         ".single-post-section"
+    ],
+    "dazeddigital.com": [
+        ".read-more-header",
+        ".read-more-item",
+        ".gallery-thumbs",
+        ".article-list.item-list",
+        ".article-list-container.standard-article-list-container",
+        ".linkblock"
     ],
     "dekoder.org": [
         ".ph-header",
