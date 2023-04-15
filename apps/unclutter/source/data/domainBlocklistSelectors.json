@@ -289,6 +289,13 @@
         ".column-content.cleared"
     ],
     "daringfireball.net": [".smallprint", "#SiteSearch", "#Sidebar"],
+    "davidepstein.substack.com": [
+        ".captioned-image-container",
+        ".button-wrapper",
+        ".post-preview.portable-archive-post.has-image",
+        ".portable-archive-tabs",
+        ".single-post-section"
+    ],
     "dazeddigital.com": [
         ".read-more-header",
         ".read-more-item",
@@ -296,13 +303,6 @@
         ".article-list.item-list",
         ".article-list-container.standard-article-list-container",
         ".linkblock"
-    ],
-    "davidepstein.substack.com": [
-        ".captioned-image-container",
-        ".button-wrapper",
-        ".post-preview.portable-archive-post.has-image",
-        ".portable-archive-tabs",
-        ".single-post-section"
     ],
     "dekoder.org": [
         ".ph-header",
@@ -459,6 +459,10 @@
         ".cwj9ozl2.tvmbv18p"
     ],
     "fararu.com": [".item_News"],
+    "fashionista.com": [
+        ".m-component-header.m-component-stack--header.mm-component-header--inverted",
+        ".m-brand-engagement.m-component-stack.mm-component-stack--is-stacked.mm-component-stack--has-header.mm-component-stack--has-background.mm-brand-engagement--premium.mm-brand-engagement--has-background-image"
+    ],
     "fdrive.cz": [".articleDetail__about", ".articleDetail__assets"],
     "fedoramagazine.org": [".header-wrapper"],
     "fenbi.com": [".mokaodasai-title", ".mokaodasai"],
