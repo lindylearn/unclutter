@@ -289,6 +289,13 @@
         ".column-content.cleared"
     ],
     "daringfireball.net": [".smallprint", "#SiteSearch", "#Sidebar"],
+    "davidepstein.substack.com": [
+        ".captioned-image-container",
+        ".button-wrapper",
+        ".post-preview.portable-archive-post.has-image",
+        ".portable-archive-tabs",
+        ".single-post-section"
+    ],
     "dazeddigital.com": [
         ".read-more-header",
         ".read-more-item",
@@ -296,13 +303,6 @@
         ".article-list.item-list",
         ".article-list-container.standard-article-list-container",
         ".linkblock"
-    ],
-    "davidepstein.substack.com": [
-        ".captioned-image-container",
-        ".button-wrapper",
-        ".post-preview.portable-archive-post.has-image",
-        ".portable-archive-tabs",
-        ".single-post-section"
     ],
     "dekoder.org": [
         ".ph-header",
@@ -372,6 +372,13 @@
         ".author__avatar_top.flex.mb-4",
         ".align-right",
         ".page__meta-readtime.text-gray-500"
+    ],
+    "econlib.org": [
+        "#bc-wrap",
+        ".card-block",
+        ".article-btn-block",
+        ".card.grid-card",
+        "#econlog-single-article-cards"
     ],
     "economictimes.indiatimes.com": [
         ".primeSWrapper",
