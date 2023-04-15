@@ -289,6 +289,13 @@
         ".column-content.cleared"
     ],
     "daringfireball.net": [".smallprint", "#SiteSearch", "#Sidebar"],
+    "davidepstein.substack.com": [
+        ".captioned-image-container",
+        ".button-wrapper",
+        ".post-preview.portable-archive-post.has-image",
+        ".portable-archive-tabs",
+        ".single-post-section"
+    ],
     "dazeddigital.com": [
         ".read-more-header",
         ".read-more-item",
@@ -296,13 +303,6 @@
         ".article-list.item-list",
         ".article-list-container.standard-article-list-container",
         ".linkblock"
-    ],
-    "davidepstein.substack.com": [
-        ".captioned-image-container",
-        ".button-wrapper",
-        ".post-preview.portable-archive-post.has-image",
-        ".portable-archive-tabs",
-        ".single-post-section"
     ],
     "dekoder.org": [
         ".ph-header",
@@ -574,6 +574,16 @@
     "grammarly.com": [".F0u0G-container", "._16iRt-container"],
     "gsmarena.com": [".pad", ".brandmenu-v2.light.l-box.clearfix", ".sidebar.col.left"],
     "guernicamag.com": [".each-top-story"],
+    "guytal.blog": [
+        "#like-post-wrapper-160627554-10651-643a9aedde584",
+        ".author-bio",
+        ".post-tags",
+        ".post-categories",
+        ".post-meta.clear",
+        ".credits-inner.section-inner.clear",
+        ".post-meta-container.clear",
+        ".credits.section.bg-dark.small-padding"
+    ],
     "haaretz.com": [".a.ce.cr"],
     "hackster.io": ["#hello-world"],
     "haipo.co.il": [".owfs-image"],
