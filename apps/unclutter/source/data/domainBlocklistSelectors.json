@@ -289,6 +289,13 @@
         ".column-content.cleared"
     ],
     "daringfireball.net": [".smallprint", "#SiteSearch", "#Sidebar"],
+    "davidepstein.substack.com": [
+        ".captioned-image-container",
+        ".button-wrapper",
+        ".post-preview.portable-archive-post.has-image",
+        ".portable-archive-tabs",
+        ".single-post-section"
+    ],
     "dazeddigital.com": [
         ".read-more-header",
         ".read-more-item",
@@ -296,13 +303,6 @@
         ".article-list.item-list",
         ".article-list-container.standard-article-list-container",
         ".linkblock"
-    ],
-    "davidepstein.substack.com": [
-        ".captioned-image-container",
-        ".button-wrapper",
-        ".post-preview.portable-archive-post.has-image",
-        ".portable-archive-tabs",
-        ".single-post-section"
     ],
     "dekoder.org": [
         ".ph-header",
@@ -330,6 +330,7 @@
     ],
     "diariojaen.es": ["#ebDefaultImg_1089757970_02203854674015071"],
     "dict.leo.org": [".p-left", ".va-t.p-top", ".ta-l.gray", "#topBranding", ".m-v-large"],
+    "digiday.com": [".stories", ".top-stories-module"],
     "dignitas.gg": [".styles_flag__cDqK_", ".styles_indicatorBar__Ewr_H"],
     "diit.cz": [
         "#carodaOutstream992952Container",
