@@ -35,6 +35,10 @@
         ".article-metadata-container",
         ".article-asset.article-asset-normal.article-asset-center"
     ],
+    "architecturaldigest.com": [
+        ".SpanWrapper-kFvfwm.cdAqQo.responsive-asset.ContentHeaderResponsiveAsset-LOaxf.llPacv",
+        ".ContentHeaderLeadAsset-kzhdvT.jIAbyX.lead-asset.ContentHeaderLeadAssetWrapper-eYNONg.HtxZi.lead-asset--width-fullbleed"
+    ],
     "aripaev.ee": [
         ".PreviewWrapper-sc-1tmhfjt-0.ArticlePreview__ArticlePreviewWrapper-sc-52bjrr-4.iCjoyF.cuUJRm",
         ".EditorArticle__ImageHolder-sc-1l7s435-1.gfhXfy",
@@ -289,6 +293,13 @@
         ".column-content.cleared"
     ],
     "daringfireball.net": [".smallprint", "#SiteSearch", "#Sidebar"],
+    "davidepstein.substack.com": [
+        ".captioned-image-container",
+        ".button-wrapper",
+        ".post-preview.portable-archive-post.has-image",
+        ".portable-archive-tabs",
+        ".single-post-section"
+    ],
     "dazeddigital.com": [
         ".read-more-header",
         ".read-more-item",
@@ -296,13 +307,6 @@
         ".article-list.item-list",
         ".article-list-container.standard-article-list-container",
         ".linkblock"
-    ],
-    "davidepstein.substack.com": [
-        ".captioned-image-container",
-        ".button-wrapper",
-        ".post-preview.portable-archive-post.has-image",
-        ".portable-archive-tabs",
-        ".single-post-section"
     ],
     "dekoder.org": [
         ".ph-header",
