@@ -289,6 +289,13 @@
         ".column-content.cleared"
     ],
     "daringfireball.net": [".smallprint", "#SiteSearch", "#Sidebar"],
+    "davidepstein.substack.com": [
+        ".captioned-image-container",
+        ".button-wrapper",
+        ".post-preview.portable-archive-post.has-image",
+        ".portable-archive-tabs",
+        ".single-post-section"
+    ],
     "dazeddigital.com": [
         ".read-more-header",
         ".read-more-item",
@@ -296,13 +303,6 @@
         ".article-list.item-list",
         ".article-list-container.standard-article-list-container",
         ".linkblock"
-    ],
-    "davidepstein.substack.com": [
-        ".captioned-image-container",
-        ".button-wrapper",
-        ".post-preview.portable-archive-post.has-image",
-        ".portable-archive-tabs",
-        ".single-post-section"
     ],
     "dekoder.org": [
         ".ph-header",
@@ -881,6 +881,13 @@
     "maketecheasier.com": [".lazyload.alignleft.size-full.wp-image-20581"],
     "makeuseof.com": [".a__sc-np32r2-0.dLwzoc.using-keyboard"],
     "markmanson.net": [".mf-monday-opt-in"],
+    "markmcguire.substack.com": [
+        ".pencraft.frontend-pencraft-Box-module__flexGrow--2TZzh.frontend-pencraft-Box-module__display-flex--379wL.frontend-pencraft-Box-module__flex-justify-space-between--2plan.frontend-pencraft-Box-module__flex-align-center--2Hbzh.frontend-pencraft-Box-module__flex-gap-16--1-GDy.frontend-pencraft-Box-module__padding-y-16--4Q7bU.frontend-pencraft-Box-module__border-top-detail-themed--1lxH2.frontend-pencraft-Box-module__border-bottom-detail-themed--2d6rB.post-ufi",
+        ".navbar-title-link",
+        ".button-wrapper",
+        ".single-post-section.comments-section",
+        ".single-post-section"
+    ],
     "masterclass.com": [
         ".mc-text--center.mc-text-h4",
         ".container.mc-py-10",
