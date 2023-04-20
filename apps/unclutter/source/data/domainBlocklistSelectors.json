@@ -289,6 +289,13 @@
         ".column-content.cleared"
     ],
     "daringfireball.net": [".smallprint", "#SiteSearch", "#Sidebar"],
+    "davidepstein.substack.com": [
+        ".captioned-image-container",
+        ".button-wrapper",
+        ".post-preview.portable-archive-post.has-image",
+        ".portable-archive-tabs",
+        ".single-post-section"
+    ],
     "dazeddigital.com": [
         ".read-more-header",
         ".read-more-item",
@@ -296,13 +303,6 @@
         ".article-list.item-list",
         ".article-list-container.standard-article-list-container",
         ".linkblock"
-    ],
-    "davidepstein.substack.com": [
-        ".captioned-image-container",
-        ".button-wrapper",
-        ".post-preview.portable-archive-post.has-image",
-        ".portable-archive-tabs",
-        ".single-post-section"
     ],
     "dekoder.org": [
         ".ph-header",
@@ -1092,6 +1092,17 @@
         ".block-content-top",
         ".icontent-image",
         "#blog"
+    ],
+    "pcworld.com": [
+        ".entry-meta",
+        ".wp-block-product-widget-block.product-widget.is-half-width.is-float-right",
+        ".product-widget__image-outer-wrapper",
+        ".product-widget__title-wrapper",
+        ".price-comparison",
+        ".product-widget__block-title-wrapper",
+        ".product-widget__pricing-details--label",
+        ".product-widget__information--rrp-value",
+        ".wp-block-product-widget-block.product-widget"
     ],
     "phileweb.com": ["#header", ".topicPath", "#entryUtility", "#submidashi"],
     "phoronix.com": [".node", "#about-author", "#sharebar", ".after-article"],
