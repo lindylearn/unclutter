@@ -289,20 +289,21 @@
         ".column-content.cleared"
     ],
     "daringfireball.net": [".smallprint", "#SiteSearch", "#Sidebar"],
-    "dazeddigital.com": [
-        ".read-more-header",
-        ".read-more-item",
-        ".gallery-thumbs",
-        ".article-list.item-list",
-        ".article-list-container.standard-article-list-container",
-        ".linkblock"
-    ],
     "davidepstein.substack.com": [
         ".captioned-image-container",
         ".button-wrapper",
         ".post-preview.portable-archive-post.has-image",
         ".portable-archive-tabs",
         ".single-post-section"
+    ],
+    "dazeddigital.com": [
+        ".read-more-header",
+        ".read-more-item",
+        ".gallery-thumbs",
+        ".article-list.item-list",
+        ".article-list-container.standard-article-list-container",
+        ".linkblock",
+        ".BeOpWidget-27265e35-3a3f-4a0c-a06a-ddbf085ffa17"
     ],
     "dekoder.org": [
         ".ph-header",
