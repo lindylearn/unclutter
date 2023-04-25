@@ -289,6 +289,13 @@
         ".column-content.cleared"
     ],
     "daringfireball.net": [".smallprint", "#SiteSearch", "#Sidebar"],
+    "davidepstein.substack.com": [
+        ".captioned-image-container",
+        ".button-wrapper",
+        ".post-preview.portable-archive-post.has-image",
+        ".portable-archive-tabs",
+        ".single-post-section"
+    ],
     "dazeddigital.com": [
         ".read-more-header",
         ".read-more-item",
@@ -296,13 +303,6 @@
         ".article-list.item-list",
         ".article-list-container.standard-article-list-container",
         ".linkblock"
-    ],
-    "davidepstein.substack.com": [
-        ".captioned-image-container",
-        ".button-wrapper",
-        ".post-preview.portable-archive-post.has-image",
-        ".portable-archive-tabs",
-        ".single-post-section"
     ],
     "dekoder.org": [
         ".ph-header",
@@ -1185,6 +1185,12 @@
         ".more-on-topic__wrapper___3f7Jt",
         "#id_00i937xrshdaq",
         "#emailConversion"
+    ],
+    "sciencetimes.com": [
+        ".clearfix",
+        ".block-title",
+        ".col-sm-6.col-md-3",
+        ".col-sm-5.col-md-4.col-lg-3"
     ],
     "scitechdaily.com": [".entry-tags.clearfix"],
     "semiengineering.com": [".col-xs-12.col-sm-6.col-md-7"],
