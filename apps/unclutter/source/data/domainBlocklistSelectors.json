@@ -289,6 +289,13 @@
         ".column-content.cleared"
     ],
     "daringfireball.net": [".smallprint", "#SiteSearch", "#Sidebar"],
+    "davidepstein.substack.com": [
+        ".captioned-image-container",
+        ".button-wrapper",
+        ".post-preview.portable-archive-post.has-image",
+        ".portable-archive-tabs",
+        ".single-post-section"
+    ],
     "dazeddigital.com": [
         ".read-more-header",
         ".read-more-item",
@@ -296,13 +303,6 @@
         ".article-list.item-list",
         ".article-list-container.standard-article-list-container",
         ".linkblock"
-    ],
-    "davidepstein.substack.com": [
-        ".captioned-image-container",
-        ".button-wrapper",
-        ".post-preview.portable-archive-post.has-image",
-        ".portable-archive-tabs",
-        ".single-post-section"
     ],
     "dekoder.org": [
         ".ph-header",
@@ -1279,6 +1279,22 @@
     "techdirt.com": [".details"],
     "technologyreview.com": ["#piano__post_body-desktop-1", "#piano__post_body-desktop-2"],
     "techradar.com": [".pretty-verdict__heading-container", ".read-more-container"],
+    "techspot.com": [
+        ".container-wrapper",
+        "#bordeaux-static-slot-6",
+        "#bordeaux-static-slot-16",
+        "#bordeaux-static-slot-22",
+        "#bordeaux-static-slot-28",
+        "#bordeaux-static-slot-34",
+        "#bordeaux-static-slot-38",
+        "#bordeaux-static-slot-44",
+        ".bulll",
+        ".defuncttechli",
+        ".defuncttechsub.tsadinc",
+        ".defuncttechindex",
+        ".subDriveRevBot.b-lazy.entered.b-loaded",
+        ".category-chicklets"
+    ],
     "techwalla.com": [".image-container"],
     "tedgioia.substack.com": [".single-post-section"],
     "telegram.hr": [
