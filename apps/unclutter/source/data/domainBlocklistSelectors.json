@@ -289,6 +289,13 @@
         ".column-content.cleared"
     ],
     "daringfireball.net": [".smallprint", "#SiteSearch", "#Sidebar"],
+    "davidepstein.substack.com": [
+        ".captioned-image-container",
+        ".button-wrapper",
+        ".post-preview.portable-archive-post.has-image",
+        ".portable-archive-tabs",
+        ".single-post-section"
+    ],
     "dazeddigital.com": [
         ".read-more-header",
         ".read-more-item",
@@ -296,13 +303,6 @@
         ".article-list.item-list",
         ".article-list-container.standard-article-list-container",
         ".linkblock"
-    ],
-    "davidepstein.substack.com": [
-        ".captioned-image-container",
-        ".button-wrapper",
-        ".post-preview.portable-archive-post.has-image",
-        ".portable-archive-tabs",
-        ".single-post-section"
     ],
     "dekoder.org": [
         ".ph-header",
@@ -1287,6 +1287,13 @@
         ".slick-slide.slick-cloned"
     ],
     "tfos.co": [".flex.flex-col.items-center.text-center.px-3.text-white", ".h-5"],
+    "the-scientist.com": [
+        ".left",
+        ".h6.summary.max-2-lines.l-h-1",
+        ".articleTabList.odd",
+        ".articleTab",
+        "#Marketplace"
+    ],
     "theathletic.com": [
         ".sc-9e0fc4d0-2.jKtoII",
         ".sc-917a014c-24.LYUSa",
