@@ -289,6 +289,13 @@
         ".column-content.cleared"
     ],
     "daringfireball.net": [".smallprint", "#SiteSearch", "#Sidebar"],
+    "davidepstein.substack.com": [
+        ".captioned-image-container",
+        ".button-wrapper",
+        ".post-preview.portable-archive-post.has-image",
+        ".portable-archive-tabs",
+        ".single-post-section"
+    ],
     "dazeddigital.com": [
         ".read-more-header",
         ".read-more-item",
@@ -296,13 +303,6 @@
         ".article-list.item-list",
         ".article-list-container.standard-article-list-container",
         ".linkblock"
-    ],
-    "davidepstein.substack.com": [
-        ".captioned-image-container",
-        ".button-wrapper",
-        ".post-preview.portable-archive-post.has-image",
-        ".portable-archive-tabs",
-        ".single-post-section"
     ],
     "dekoder.org": [
         ".ph-header",
@@ -1189,6 +1189,14 @@
     "scitechdaily.com": [".entry-tags.clearfix"],
     "semiengineering.com": [".col-xs-12.col-sm-6.col-md-7"],
     "shopify.com": ["#GlobalIconSymbols", "#SiteNavContainer"],
+    "singularityhub.com": [
+        "#tdi_37",
+        ".td-header-template-wrap",
+        ".td_module_flex.td_module_flex_1.td_module_wrap.td-animation-stack.td-cpt-post",
+        ".td-next-prev-wrap",
+        ".td_block_wrap.td_flex_block_1.tdi_101.td_with_ajax_pagination.td-pb-border-top.td_block_template_3.td_flex_block",
+        ".td_block_wrap.td_flex_block_1.tdi_102.td_with_ajax_pagination.td-pb-border-top.td_block_template_3.td_flex_block"
+    ],
     "slatestarcodex.com": ["#left-sidebar", "#primary"],
     "smashingmagazine.com": [".global-header.header"],
     "smithsonianmag.com": [".author-headshot.smart-news", ".tag-list", ".binding-box"],
