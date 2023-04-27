@@ -265,6 +265,7 @@
         ".section-wrapper.hilight-career",
         ".career-wraper"
     ],
+    "cmoney.tw": [".pt__social", ".status-msg-wrap", ".aboutStock"],
     "cnet.com": [".c-globalHero_imageContainer.g-outer-spacing-bottom-large"],
     "coinbase.com": [
         ".cds-flex-f1g67tkn.sc-5a16025b-0.sc-d0466418-0.iTNcqp.iuswYJ",
@@ -289,6 +290,13 @@
         ".column-content.cleared"
     ],
     "daringfireball.net": [".smallprint", "#SiteSearch", "#Sidebar"],
+    "davidepstein.substack.com": [
+        ".captioned-image-container",
+        ".button-wrapper",
+        ".post-preview.portable-archive-post.has-image",
+        ".portable-archive-tabs",
+        ".single-post-section"
+    ],
     "dazeddigital.com": [
         ".read-more-header",
         ".read-more-item",
@@ -296,13 +304,6 @@
         ".article-list.item-list",
         ".article-list-container.standard-article-list-container",
         ".linkblock"
-    ],
-    "davidepstein.substack.com": [
-        ".captioned-image-container",
-        ".button-wrapper",
-        ".post-preview.portable-archive-post.has-image",
-        ".portable-archive-tabs",
-        ".single-post-section"
     ],
     "dekoder.org": [
         ".ph-header",
