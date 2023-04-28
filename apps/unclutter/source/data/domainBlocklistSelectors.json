@@ -289,6 +289,13 @@
         ".column-content.cleared"
     ],
     "daringfireball.net": [".smallprint", "#SiteSearch", "#Sidebar"],
+    "davidepstein.substack.com": [
+        ".captioned-image-container",
+        ".button-wrapper",
+        ".post-preview.portable-archive-post.has-image",
+        ".portable-archive-tabs",
+        ".single-post-section"
+    ],
     "dazeddigital.com": [
         ".read-more-header",
         ".read-more-item",
@@ -296,13 +303,6 @@
         ".article-list.item-list",
         ".article-list-container.standard-article-list-container",
         ".linkblock"
-    ],
-    "davidepstein.substack.com": [
-        ".captioned-image-container",
-        ".button-wrapper",
-        ".post-preview.portable-archive-post.has-image",
-        ".portable-archive-tabs",
-        ".single-post-section"
     ],
     "dekoder.org": [
         ".ph-header",
@@ -479,7 +479,12 @@
         ".c-signature-wrapper"
     ],
     "ft.com": [".concept-list"],
-    "futurism.com": ["#empire-unit-sticky_footer__desktop-0", ".remixd-audio-player"],
+    "futurism.com": [
+        "#empire-unit-sticky_footer__desktop-0",
+        ".remixd-audio-player",
+        "#empire-unit-recurrent_outstream_video-0",
+        ".flex.items-center.justify-center.pt-3.space-x-3"
+    ],
     "gamedev.stackexchange.com": [
         ".votecell.post-layout--left",
         ".d-flex.fd-column.ai-center.wmn3.hero-background",
