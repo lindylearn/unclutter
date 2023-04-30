@@ -289,6 +289,13 @@
         ".column-content.cleared"
     ],
     "daringfireball.net": [".smallprint", "#SiteSearch", "#Sidebar"],
+    "davidepstein.substack.com": [
+        ".captioned-image-container",
+        ".button-wrapper",
+        ".post-preview.portable-archive-post.has-image",
+        ".portable-archive-tabs",
+        ".single-post-section"
+    ],
     "dazeddigital.com": [
         ".read-more-header",
         ".read-more-item",
@@ -296,13 +303,6 @@
         ".article-list.item-list",
         ".article-list-container.standard-article-list-container",
         ".linkblock"
-    ],
-    "davidepstein.substack.com": [
-        ".captioned-image-container",
-        ".button-wrapper",
-        ".post-preview.portable-archive-post.has-image",
-        ".portable-archive-tabs",
-        ".single-post-section"
     ],
     "dekoder.org": [
         ".ph-header",
@@ -1509,7 +1509,12 @@
         "#ArticleAudioIframeScriptComponenta_5031138946959897",
         ".iframeWidth.textboxSize"
     ],
-    "zdnet.com": [".c-socialSharebar"],
+    "zdnet.com": [
+        ".c-socialSharebar",
+        ".c-globalDisclosure.g-outer-spacing-bottom-medium",
+        ".c-listingCarouselHorizontal_item.g-text-small",
+        ".c-sectionHeading"
+    ],
     "zeit.de": [
         ".article-player.article-player--has-player",
         ".header",
