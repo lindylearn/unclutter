@@ -289,6 +289,13 @@
         ".column-content.cleared"
     ],
     "daringfireball.net": [".smallprint", "#SiteSearch", "#Sidebar"],
+    "davidepstein.substack.com": [
+        ".captioned-image-container",
+        ".button-wrapper",
+        ".post-preview.portable-archive-post.has-image",
+        ".portable-archive-tabs",
+        ".single-post-section"
+    ],
     "dazeddigital.com": [
         ".read-more-header",
         ".read-more-item",
@@ -296,13 +303,6 @@
         ".article-list.item-list",
         ".article-list-container.standard-article-list-container",
         ".linkblock"
-    ],
-    "davidepstein.substack.com": [
-        ".captioned-image-container",
-        ".button-wrapper",
-        ".post-preview.portable-archive-post.has-image",
-        ".portable-archive-tabs",
-        ".single-post-section"
     ],
     "dekoder.org": [
         ".ph-header",
@@ -1329,6 +1329,15 @@
         ".share__items.u-clearfix",
         ".p-article__side-left.l-col-12.l-col-lg-3",
         ".c-global-footer"
+    ],
+    "theladders.com": [
+        ".right-rail-article",
+        ".publication-social-media-container-desktop",
+        ".right-rail-articles-header",
+        ".news-job",
+        ".more-publication-articles-list",
+        ".news-jobs-list",
+        ".more-publication-articles-container"
     ],
     "theleader.vn": [
         ".mangsec-bold",
