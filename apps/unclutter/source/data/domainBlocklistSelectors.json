@@ -289,6 +289,13 @@
         ".column-content.cleared"
     ],
     "daringfireball.net": [".smallprint", "#SiteSearch", "#Sidebar"],
+    "davidepstein.substack.com": [
+        ".captioned-image-container",
+        ".button-wrapper",
+        ".post-preview.portable-archive-post.has-image",
+        ".portable-archive-tabs",
+        ".single-post-section"
+    ],
     "dazeddigital.com": [
         ".read-more-header",
         ".read-more-item",
@@ -296,13 +303,6 @@
         ".article-list.item-list",
         ".article-list-container.standard-article-list-container",
         ".linkblock"
-    ],
-    "davidepstein.substack.com": [
-        ".captioned-image-container",
-        ".button-wrapper",
-        ".post-preview.portable-archive-post.has-image",
-        ".portable-archive-tabs",
-        ".single-post-section"
     ],
     "dekoder.org": [
         ".ph-header",
@@ -962,6 +962,13 @@
         ".InsertedAd"
     ],
     "nationalpost.com": [".visually-hidden", ".more-topic"],
+    "nature.com": [
+        "#Bib1-content",
+        "#references",
+        ".c-list-group__item.u-display-flex",
+        ".c-section-heading",
+        ".c-article-subjects.u-clearfix.u-hide-print"
+    ],
     "nautil.us": [".article-action-list", ".a__sc-np32r2-0.dalZPh"],
     "nazory.pravda.sk": ["#rmpPlayer", ".container.no-padding-advert"],
     "ndla.no": [".article_introduction", ".css-dbah3l-xsmall-pill-buttonStyle"],
