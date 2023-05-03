@@ -251,6 +251,17 @@
     "chinapower.csis.org": [".row.explore-container", ".megaphone-mini-container"],
     "christianitytoday.com": [".article-embed"],
     "ciechanow.ski": ["#hero"],
+    "cirium.com": [
+        ".wp-block-image.size-large.is-resized",
+        ".is-style-secondary",
+        ".wp-block-spacer",
+        ".wp-block-separator.has-alpha-channel-opacity",
+        ".mt-4.font-bold",
+        ".is-style-default",
+        ".is-layout-flex.wp-block-buttons",
+        ".wp-block-separator.has-css-opacity",
+        ".addtoany_shortcode"
+    ],
     "cleanmyspace.com": [
         ".size-full.wp-image-2023.alignleft.td-animation-stack-type0-2",
         ".article-footsy"
@@ -289,6 +300,13 @@
         ".column-content.cleared"
     ],
     "daringfireball.net": [".smallprint", "#SiteSearch", "#Sidebar"],
+    "davidepstein.substack.com": [
+        ".captioned-image-container",
+        ".button-wrapper",
+        ".post-preview.portable-archive-post.has-image",
+        ".portable-archive-tabs",
+        ".single-post-section"
+    ],
     "dazeddigital.com": [
         ".read-more-header",
         ".read-more-item",
@@ -296,13 +314,6 @@
         ".article-list.item-list",
         ".article-list-container.standard-article-list-container",
         ".linkblock"
-    ],
-    "davidepstein.substack.com": [
-        ".captioned-image-container",
-        ".button-wrapper",
-        ".post-preview.portable-archive-post.has-image",
-        ".portable-archive-tabs",
-        ".single-post-section"
     ],
     "dekoder.org": [
         ".ph-header",
