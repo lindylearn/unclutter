@@ -289,6 +289,13 @@
         ".column-content.cleared"
     ],
     "daringfireball.net": [".smallprint", "#SiteSearch", "#Sidebar"],
+    "davidepstein.substack.com": [
+        ".captioned-image-container",
+        ".button-wrapper",
+        ".post-preview.portable-archive-post.has-image",
+        ".portable-archive-tabs",
+        ".single-post-section"
+    ],
     "dazeddigital.com": [
         ".read-more-header",
         ".read-more-item",
@@ -296,13 +303,6 @@
         ".article-list.item-list",
         ".article-list-container.standard-article-list-container",
         ".linkblock"
-    ],
-    "davidepstein.substack.com": [
-        ".captioned-image-container",
-        ".button-wrapper",
-        ".post-preview.portable-archive-post.has-image",
-        ".portable-archive-tabs",
-        ".single-post-section"
     ],
     "dekoder.org": [
         ".ph-header",
@@ -1378,7 +1378,8 @@
     "tienphong.vn": [".article__story.cms-relate", ".box-heading", ".story", ".article__tag"],
     "time.com": [
         ".zit-widget-wrapper.zit-widget-wrapper--new-panel.zit-widget-wrapper--new-panel-top-center.wid-3668.zit-widget-wrapper--new-panel-show",
-        ".zit-widget-wrapper.zit-widget-wrapper--new-panel.zit-widget-wrapper--new-panel-top-center.wid-3663.zit-widget-wrapper--new-panel-show"
+        ".zit-widget-wrapper.zit-widget-wrapper--new-panel.zit-widget-wrapper--new-panel-top-center.wid-3663.zit-widget-wrapper--new-panel-show",
+        ".component.video-jw"
     ],
     "timeforkids.com": [".image"],
     "timharek.no": [".header__logo", ".header"],
