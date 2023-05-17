@@ -289,6 +289,13 @@
         ".column-content.cleared"
     ],
     "daringfireball.net": [".smallprint", "#SiteSearch", "#Sidebar"],
+    "davidepstein.substack.com": [
+        ".captioned-image-container",
+        ".button-wrapper",
+        ".post-preview.portable-archive-post.has-image",
+        ".portable-archive-tabs",
+        ".single-post-section"
+    ],
     "dazeddigital.com": [
         ".read-more-header",
         ".read-more-item",
@@ -296,13 +303,6 @@
         ".article-list.item-list",
         ".article-list-container.standard-article-list-container",
         ".linkblock"
-    ],
-    "davidepstein.substack.com": [
-        ".captioned-image-container",
-        ".button-wrapper",
-        ".post-preview.portable-archive-post.has-image",
-        ".portable-archive-tabs",
-        ".single-post-section"
     ],
     "dekoder.org": [
         ".ph-header",
@@ -1035,6 +1035,7 @@
     ],
     "nones-leonard.medium.com": [".mk.l"],
     "notes.cloudcat.ca": [".ui-infobar.container-fluid.unselectable.hidden-print"],
+    "npr.org": [".slug-wrap", "#res1170179587", ".podcast-tools.podcast-tools--510351"],
     "nyheder.tv2.dk": [
         ".tc_deck.tc_deck--color-100.tc_deck--col3center",
         ".tc_video",
