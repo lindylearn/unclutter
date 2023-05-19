@@ -660,6 +660,7 @@
         ".header-legacy__direct-tv",
         ".c-signature-wrapper"
     ],
+    "freethink.com": [".f-block__content", ".f-block__inner"],
     "ft.com": [".concept-list"],
     "futurism.com": [
         "#empire-unit-sticky_footer__desktop-0",
