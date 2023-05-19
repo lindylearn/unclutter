@@ -302,7 +302,8 @@
         ".ArticleHeader-authorAndShareInline",
         ".ArticleHeader-eyebrow",
         ".WatchLiveRightRail-contents",
-        ".undefined.PlayButton-container"
+        ".undefined.PlayButton-container",
+        "#RegularArticle-WatchLiveRightRail-7"
     ],
     "cmswire.com": [
         ".learning-opportunities-card__image.image__wrapper",
