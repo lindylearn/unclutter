@@ -1682,6 +1682,7 @@
         ".feature.feature-01"
     ],
     "theblock.co": [".newsletterModal"],
+    "thecinemaarchives.com": [".attachment-full.size-full"],
     "thebookseller.com": ["#aoc-102-1", ".aos-RotatingImages.aos-PosR.aos-OFH", "#aor-110-1"],
     "theconstructor.org": [".cs-estimated-reading-time", "#toc_container"],
     "thedrive.com": ["#empire-unit-sticky_footer__desktop-0"],
