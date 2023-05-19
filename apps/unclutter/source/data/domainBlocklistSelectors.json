@@ -381,8 +381,8 @@
         ".gallery-thumbs",
         ".article-list.item-list",
         ".article-list-container.standard-article-list-container",
-        ".linkblock",
-        ".BeOpWidget-27265e35-3a3f-4a0c-a06a-ddbf085ffa17"
+        ".BeOpWidget-27265e35-3a3f-4a0c-a06a-ddbf085ffa17",
+        ".linkblock"
     ],
     "dekoder.org": [
         ".ph-header",
@@ -1199,6 +1199,7 @@
         ".nav-item-deals.mega-parent",
         ".nav-menu.menu"
     ],
+    "newatlas.com": ["#trendmd-suggestions", ".ArticlePage-tags"],
     "news.cnyes.com": [
         "._2YiB",
         "._3BGA",
