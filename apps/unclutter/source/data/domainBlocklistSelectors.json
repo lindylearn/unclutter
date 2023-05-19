@@ -1069,7 +1069,8 @@
         ".card",
         ".article-topics.article-topics--row",
         ".box-out.box-out--standard",
-        ".social__button-container"
+        ".social__button-container",
+        ".ArticleHeader__SocialWrapper"
     ],
     "newspunch.com": [
         ".code-block.code-block-1",
