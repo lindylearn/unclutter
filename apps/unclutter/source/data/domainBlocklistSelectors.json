@@ -1338,6 +1338,7 @@
         ".myBoxBG",
         ".pulldown-wrap"
     ],
+    "noemamag.com": [".bio-block.bio-block--default", "#loom-companion-mv3"],
     "nones-leonard.medium.com": [".mk.l"],
     "notes.cloudcat.ca": [".ui-infobar.container-fluid.unselectable.hidden-print"],
     "novel.munpia.com": [".title.col-xs-6"],
