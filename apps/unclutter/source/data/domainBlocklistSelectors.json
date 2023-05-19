@@ -378,6 +378,14 @@
         "#mc_embed_signup"
     ],
     "denizlihaber.com": ["#topbtns", ".combox", ".passbnd", ".ilce_side", ".ap.ap-615.ap-xpe"],
+    "design-milk.com": [
+        "#single-image-section",
+        "#cls-video-container-R1Lcxwgn",
+        ".author-thumbnail",
+        ".author-bio",
+        ".author-link",
+        ".author-box"
+    ],
     "designweek.co.uk": [".widget-title", ".sub-content"],
     "dergigi.com": [".post__img"],
     "detroitnews.com": ["#flippxp-frame"],
