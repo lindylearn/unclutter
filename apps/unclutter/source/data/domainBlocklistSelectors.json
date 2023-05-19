@@ -418,6 +418,7 @@
         ".article-card__meta-bottom"
     ],
     "eff.org": [".element-invisible.element-focusable"],
+    "eiko-fried.com": ["#like-post-wrapper-55574272-4983-6456a6c739139"],
     "emeatribune.com": ["#vuukle-emote", ".vuukle-powerbar.powerbarBoxDiv"],
     "en.wikipedia.org": [".wiki-logo", "#wiki_header"],
     "en.yna.co.kr": [
