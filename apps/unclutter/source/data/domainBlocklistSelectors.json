@@ -375,7 +375,8 @@
         ".gallery-thumbs",
         ".article-list.item-list",
         ".article-list-container.standard-article-list-container",
-        ".linkblock"
+        ".linkblock",
+        ".BeOpWidget-27265e35-3a3f-4a0c-a06a-ddbf085ffa17"
     ],
     "dekoder.org": [
         ".ph-header",
