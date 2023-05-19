@@ -62,6 +62,7 @@
         ".page-section.theme-dark",
         ".article-bottom"
     ],
+    "art.art": [".socials--fullsize"],
     "audio-heritage.jp": ["#aswift_4_host", "#aswift_3_host", ".adsbygoogle"],
     "augmentingcognition.com": [".marginnote"],
     "autodesk.com": [
