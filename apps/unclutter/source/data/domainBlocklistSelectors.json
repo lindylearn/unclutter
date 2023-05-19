@@ -428,6 +428,12 @@
         ".title-content.clearfix.first",
         ".title-content.clearfix"
     ],
+    "dw.com": [
+        "#high-priority-stories-63895289",
+        "#more-on-topic",
+        "#top-story-57855135",
+        ".top-img-wrapper"
+    ],
     "durham.ac.uk": [".u-mt-3"],
     "earth.org": [".lazyloaded"],
     "earthly.dev": [
