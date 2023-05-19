@@ -1683,7 +1683,12 @@
         "#ArticleAudioIframeScriptComponenta_5031138946959897",
         ".iframeWidth.textboxSize"
     ],
-    "zdnet.com": [".c-socialSharebar"],
+    "zdnet.com": [
+        ".c-socialSharebar",
+        ".c-globalDisclosure.g-outer-spacing-bottom-medium",
+        ".c-listingCarouselHorizontal_item.g-text-small",
+        ".c-sectionHeading"
+    ],
     "zeit.de": [
         ".article-player.article-player--has-player",
         ".header",
