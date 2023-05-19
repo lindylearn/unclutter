@@ -1009,6 +1009,7 @@
         ".nav",
         ".infoblock"
     ],
+    "lionsroar.com": ["#donations__inline-view-2", "#donations"],
     "litreactor.com": [
         ".imagecache.imagecache-header-square-tiny.imagecache-default.imagecache-header-square-tiny_default",
         ".imagecache.imagecache-staff-headshot-small.imagecache-linked.imagecache-staff-headshot-small_linked",
