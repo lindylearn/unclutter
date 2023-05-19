@@ -264,6 +264,7 @@
     "chinapower.csis.org": [".row.explore-container", ".megaphone-mini-container"],
     "christianitytoday.com": [".article-embed"],
     "ciechanow.ski": ["#hero"],
+    "cinephiliabeyond.org": [".single-box.tag-box.clearfix"],
     "cirium.com": [
         ".wp-block-image.size-large.is-resized",
         ".is-style-secondary",
