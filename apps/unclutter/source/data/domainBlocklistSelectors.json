@@ -430,7 +430,9 @@
         ".ultp-block-excerpt",
         ".ultp-heading-filter",
         ".ultp-block-item.post-id-35089",
-        ".is-layout-constrained.wp-block-group.alignwide"
+        ".is-layout-constrained.wp-block-group.alignwide",
+        ".in-this-article-excerpt.wp-block-post-excerpt",
+        ".taxonomy-category.has-text-align-left.wp-block-post-terms"
     ],
     "dolthub.com": [".Layout-module--bottom--c6f94", ".BlogPost-module--backLinkWrapper--4e781"],
     "droid-life.com": [
