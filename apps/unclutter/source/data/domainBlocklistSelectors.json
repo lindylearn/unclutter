@@ -1249,6 +1249,7 @@
     ],
     "phileweb.com": ["#header", ".topicPath", "#entryUtility", "#submidashi"],
     "phoronix.com": [".node", "#about-author", "#sharebar", ".after-article"],
+    "planetplanet.net": [".header-bg"],
     "planetary.org": [
         ".flex.justify-center.mx-auto.py-8",
         ".bg-gray-200.p-6.mb-10.text-2xl",
