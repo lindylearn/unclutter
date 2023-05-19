@@ -1792,6 +1792,12 @@
         ".lrv-a-crop-16x9",
         ".lrv-u-padding-tb-1"
     ],
+    "venturebeat.com": [
+        ".ICCta__main-container",
+        ".ICCta",
+        "#boilerplate_2803147",
+        ".tude-cw-wrap"
+    ],
     "version2.dk": [".jobs-wrapper"],
     "vice.com": [
         ".remixd-audio-player",
