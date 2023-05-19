@@ -1384,6 +1384,11 @@
         ".ev-article-social",
         ".meta-block"
     ],
+    "petapixel.com": [
+        ".video-aspect-wrapper",
+        "#PetaPixel_728x90_300x250_BTF_Instream-posts-full_static",
+        ".instream_ad"
+    ],
     "phileweb.com": ["#header", ".topicPath", "#entryUtility", "#submidashi"],
     "phoronix.com": [".node", "#about-author", "#sharebar", ".after-article"],
     "planetplanet.net": [".header-bg"],
