@@ -35,6 +35,7 @@
         ".article-metadata-container",
         ".article-asset.article-asset-normal.article-asset-center"
     ],
+    "archinect.com": [".HeaderBottom.clearfix"],
     "aripaev.ee": [
         ".PreviewWrapper-sc-1tmhfjt-0.ArticlePreview__ArticlePreviewWrapper-sc-52bjrr-4.iCjoyF.cuUJRm",
         ".EditorArticle__ImageHolder-sc-1l7s435-1.gfhXfy",
