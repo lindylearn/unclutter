@@ -344,6 +344,16 @@
         "#carodaOutstream982035Container",
         ".seznam-adds.zone19.row.column.block.block-openx-async"
     ],
+    "discogs.com": [
+        ".wp-block-spacer",
+        ".ultp-block-item.post-id-34813",
+        ".ultp-block-item.post-id-34845",
+        ".ultp-block-image.ultp-block-image-opacity",
+        ".ultp-block-excerpt",
+        ".ultp-heading-filter",
+        ".ultp-block-item.post-id-35089",
+        ".is-layout-constrained.wp-block-group.alignwide"
+    ],
     "dolthub.com": [".Layout-module--bottom--c6f94", ".BlogPost-module--backLinkWrapper--4e781"],
     "droid-life.com": [
         ".share-buttons.align-right",
