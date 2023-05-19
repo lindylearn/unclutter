@@ -1614,6 +1614,7 @@
         ".p-article__side-left.l-col-12.l-col-lg-3",
         ".c-global-footer"
     ],
+    "theintercept.com": [".Cta"],
     "theladders.com": [
         ".right-rail-article",
         ".publication-social-media-container-desktop",
