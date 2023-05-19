@@ -297,6 +297,11 @@
         ".column-content.cleared"
     ],
     "daringfireball.net": [".smallprint", "#SiteSearch", "#Sidebar"],
+    "dataforprogress.org": [
+        ".col.sqs-col-2.span-2",
+        "#yui_3_17_2_1_1683276275267_122",
+        "#yui_3_17_2_1_1683276275267_142"
+    ],
     "davidepstein.substack.com": [
         ".captioned-image-container",
         ".button-wrapper",
