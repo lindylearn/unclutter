@@ -1495,6 +1495,13 @@
         ".js-subscription-wrapper.cards-container.cards-container-default.cards-center"
     ],
     "thenewstack.io": [".sponsor_note_rss"],
+    "thenextweb.com": [
+        ".c-header__tags.c-tags.c-tags--centered",
+        ".wistia_embed",
+        "#nl-container",
+        ".c-header__tags.c-tags.c-tags--left",
+        ".alsoTaggedIn"
+    ],
     "theregister.com": [".srow.rt-1b", "#story-bot-col"],
     "thesaigontimes.vn": [
         ".vc_row_inner.tdi_167.vc_row.vc_inner.wpb_row.td-pb-row",
