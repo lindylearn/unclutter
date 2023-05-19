@@ -1368,6 +1368,14 @@
     ],
     "semiengineering.com": [".col-xs-12.col-sm-6.col-md-7"],
     "shopify.com": ["#GlobalIconSymbols", "#SiteNavContainer"],
+    "singularityhub.com": [
+        "#tdi_37",
+        ".td-header-template-wrap",
+        ".td_module_flex.td_module_flex_1.td_module_wrap.td-animation-stack.td-cpt-post",
+        ".td-next-prev-wrap",
+        ".td_block_wrap.td_flex_block_1.tdi_101.td_with_ajax_pagination.td-pb-border-top.td_block_template_3.td_flex_block",
+        ".td_block_wrap.td_flex_block_1.tdi_102.td_with_ajax_pagination.td-pb-border-top.td_block_template_3.td_flex_block"
+    ],
     "skift.com": [".skift-take", "#up-next"],
     "slatestarcodex.com": ["#left-sidebar", "#primary"],
     "smashingmagazine.com": [".global-header.header"],
