@@ -159,6 +159,7 @@
         ".js-auto-scroll-to-id-offset.height-gutter-big.pointer-event-none.absolute.top-full",
         ".visually-hidden"
     ],
+    "bitcoinmagazine.com": [".m-detail--tml-image.m-image.mm-image--link"],
     "bizportal.co.il": [".video-wrap"],
     "blog.asmartbear.com": [".rt", ".has-text-align-center"],
     "blog.csdn.net": [
