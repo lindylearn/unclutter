@@ -1596,6 +1596,7 @@
         "#nativendo-rochen-taboola-mobile-4"
     ],
     "tarjomaan.com": ["#head_div1", "#header"],
+    "taz.de": [".hide", ".sect_text.tziBottom", ".full.community.page.last.odd.n3"],
     "techdirt.com": [".details"],
     "technologyreview.com": ["#piano__post_body-desktop-1", "#piano__post_body-desktop-2"],
     "techradar.com": [".pretty-verdict__heading-container", ".read-more-container"],
