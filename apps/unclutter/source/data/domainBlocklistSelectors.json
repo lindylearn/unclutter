@@ -1214,6 +1214,14 @@
     ],
     "phileweb.com": ["#header", ".topicPath", "#entryUtility", "#submidashi"],
     "phoronix.com": [".node", "#about-author", "#sharebar", ".after-article"],
+    "planetary.org": [
+        ".flex.justify-center.mx-auto.py-8",
+        ".bg-gray-200.p-6.mb-10.text-2xl",
+        ".m-0.text-lg",
+        ".flex-none.rounded-full.h-24.w-24.mr-6",
+        ".bg-gray-200.p-6.mb-10",
+        ".p-6"
+    ],
     "polygon.com": [".c-entry-hero__logo"],
     "popsci.com": ["#empire-unit-recurrent_outstream_video-0"],
     "popsci.com.tr": [
