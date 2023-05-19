@@ -952,6 +952,14 @@
     ],
     "japancamerahunter.com": ["#main-header-wrapper"],
     "japantoday.com": [".img-responsive.full"],
+    "joelredman.substack.com": [
+        ".main-menu.animated",
+        ".pencraft.frontend-pencraft-Box-module__flexGrow--2TZzh.frontend-pencraft-Box-module__display-flex--379wL.frontend-pencraft-Box-module__flex-justify-space-between--2plan.frontend-pencraft-Box-module__flex-align-center--2Hbzh.frontend-pencraft-Box-module__flex-gap-16--1-GDy.frontend-pencraft-Box-module__padding-y-16--4Q7bU.frontend-pencraft-Box-module__border-top-detail-themed--1lxH2.frontend-pencraft-Box-module__border-bottom-detail-themed--2d6rB.post-ufi",
+        ".single-post-section.comments-section",
+        ".button-wrapper",
+        ".portable-archive-list",
+        ".single-post-section"
+    ],
     "johncarlosbaez.wordpress.com": [
         ".widgettitle",
         "#categories-2",
