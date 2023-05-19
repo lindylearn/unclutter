@@ -1533,6 +1533,7 @@
         ".block-list-news"
     ],
     "themarginalian.org": ["#social", "#article_share"],
+    "themillions.com": [".addtoany_share_save_container.addtoany_content.addtoany_content_bottom"],
     "thenewslens.com": [
         ".header.js-header",
         ".tnl-header",
