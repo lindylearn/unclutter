@@ -1486,6 +1486,7 @@
         ".c-section--default.c-section.c-section--pad-x-small.c-section--pad-y-default.u-bg-purple-1",
         ".c-form__columns.no-margin"
     ],
+    "ukessays.com": [".table.border-0.bg-light", ".my-3", ".mb-0"],
     "unix.stackexchange.com": [
         ".votecell.post-layout--left",
         ".d-flex.fd-column.ai-center.wmn3.hero-background"
