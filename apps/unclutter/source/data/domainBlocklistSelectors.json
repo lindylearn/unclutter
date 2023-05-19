@@ -1374,6 +1374,11 @@
         ".ArticleBooksModule_book__ZbUdS",
         ".ArticleLegacyHtml_root__oTAAd.ArticleLegacyHtml_standard__Qfi5x"
     ],
+    "theb1m.com": [
+        ".row.justify-content-center.mb-3.no-gutters",
+        ".article__author",
+        ".feature.feature-01"
+    ],
     "theblock.co": [".newsletterModal"],
     "theconstructor.org": [".cs-estimated-reading-time", "#toc_container"],
     "thedrive.com": ["#empire-unit-sticky_footer__desktop-0"],
