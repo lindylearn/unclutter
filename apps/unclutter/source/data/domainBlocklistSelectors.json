@@ -1285,6 +1285,7 @@
         ".listing.special.asize.inlay.special--generic",
         ".listing.asize.asize--c.cur__el"
     ],
+    "propublica.org": [".opener__topics.opener__topics--vertical-rule"],
     "pureinfotech.com": [
         ".attachment-large.size-large.wp-post-image.jetpack-lazy-image.jetpack-lazy-image--handled"
     ],
