@@ -550,6 +550,7 @@
         ".tagcloud",
         ".post-meta-wrapper"
     ],
+    "flowingdata.com": ["#tutorials-list"],
     "forest.watch.impress.co.jp": [".list.latest", "#extra"],
     "forwardobserver.com": [".attachment-large.size-large.wp-post-image"],
     "francetvinfo.fr": [
