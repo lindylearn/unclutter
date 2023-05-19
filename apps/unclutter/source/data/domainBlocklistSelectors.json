@@ -869,6 +869,12 @@
         ".PostsPage-commentsSection"
     ],
     "leveragethoughts.substack.com": [".button-wrapper"],
+    "levernews.com": [
+        ".remixd-audio-player",
+        ".kg-product-card-image",
+        ".kg-card.kg-product-card",
+        ".kg-card.kg-button-card.kg-align-center"
+    ],
     "lifehacker.com": [
         "#replies",
         ".ynugv2-2.xruw5r-3.sbLJP",
