@@ -1710,6 +1710,12 @@
         ".lrv-u-padding-tb-1"
     ],
     "version2.dk": [".jobs-wrapper"],
+    "vice.com": [
+        ".remixd-audio-player",
+        ".article__header__rubric",
+        ".ac-w-ph",
+        ".adph.adph--border"
+    ],
     "vidaextra.com": [
         ".article-date",
         ".article-metadata-container",
