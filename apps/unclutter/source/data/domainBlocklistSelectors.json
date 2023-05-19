@@ -171,6 +171,14 @@
         ".iframe-responsive",
         ".postmetadata"
     ],
+    "blogs.loc.gov": [
+        ".link-blogs",
+        ".logo-blogs",
+        ".description",
+        ".title",
+        "#share-header",
+        "#site-header"
+    ],
     "bloomberg.com": [".skiplink__hide-until-focus", ".postr-recirc.postr-recirc--citylab.paywall"],
     "bloomberglinea.com": [
         ".flex.items-center.justify-start.flex-1",
