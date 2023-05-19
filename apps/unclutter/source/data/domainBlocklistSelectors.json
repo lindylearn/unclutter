@@ -838,6 +838,7 @@
     "lavoz.com.ar": [".article.card.default"],
     "learn.microsoft.com": [".xp-tag-hexagon"],
     "learncpp.com": ["#CCPA_opt_out"],
+    "leidenmedievalistsblog.nl": [".tags", ".share"],
     "lemonbin.com": ["#toc_container"],
     "lemonde.fr": [
         ".meta__date-reading",
