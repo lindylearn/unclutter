@@ -1315,6 +1315,11 @@
         "#emailConversion"
     ],
     "scitechdaily.com": [".entry-tags.clearfix"],
+    "scmagazine.com": [
+        ".py-2.mt-1",
+        ".DailyScanMarketoForm_wrapper__Y7glP.px-3.daily-scan-form",
+        ".Regions_contentColumn___jGDh.content-column.col-md-3"
+    ],
     "semiengineering.com": [".col-xs-12.col-sm-6.col-md-7"],
     "shopify.com": ["#GlobalIconSymbols", "#SiteNavContainer"],
     "slatestarcodex.com": ["#left-sidebar", "#primary"],
