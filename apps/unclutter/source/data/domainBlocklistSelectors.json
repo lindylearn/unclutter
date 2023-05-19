@@ -1360,6 +1360,17 @@
         ".icontent-image",
         "#blog"
     ],
+    "pcworld.com": [
+        ".entry-meta",
+        ".wp-block-product-widget-block.product-widget.is-half-width.is-float-right",
+        ".product-widget__image-outer-wrapper",
+        ".product-widget__title-wrapper",
+        ".price-comparison",
+        ".product-widget__block-title-wrapper",
+        ".product-widget__pricing-details--label",
+        ".product-widget__information--rrp-value",
+        ".wp-block-product-widget-block.product-widget"
+    ],
     "pentawards.com": [
         ".ev-menu-logo.position-left",
         ".burger-button.color-none-bg.body-bg",
