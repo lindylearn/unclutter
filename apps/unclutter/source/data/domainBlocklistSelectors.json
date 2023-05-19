@@ -1869,6 +1869,11 @@
         ".width_common.btn_guicauhoi_detail.mb20",
         ".width_common.topic-detail.gaBoxLinkDisplay"
     ],
+    "voacambodia.com": [
+        ".img-wrap",
+        ".col-xs-12.col-sm-6.col-md-4.col-lg-4.mb-grid",
+        "#youmaylike"
+    ],
     "vox.com": [".c-social-buttons.c-social-buttons--popover.main-social"],
     "voxeu.org": [".bookmarks.autoclear", ".slogan", "#header"],
     "wacom.com": ["#pop-div3009872991070867543"],
