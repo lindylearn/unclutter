@@ -171,6 +171,14 @@
         ".iframe-responsive",
         ".postmetadata"
     ],
+    "blogs.loc.gov": [
+        ".link-blogs",
+        ".logo-blogs",
+        ".description",
+        ".title",
+        "#share-header",
+        "#site-header"
+    ],
     "bloomberg.com": [".skiplink__hide-until-focus", ".postr-recirc.postr-recirc--citylab.paywall"],
     "bloomberglinea.com": [
         ".flex.items-center.justify-start.flex-1",
@@ -322,6 +330,7 @@
     ],
     "denizlihaber.com": ["#topbtns", ".combox", ".passbnd", ".ilce_side", ".ap.ap-615.ap-xpe"],
     "dergigi.com": [".post__img"],
+    "designweek.co.uk": [".sub-content"],
     "detroitnews.com": ["#flippxp-frame"],
     "devops.com": [
         ".marquee-outer-container",
@@ -336,6 +345,22 @@
         "#carodaOutstream992952Container",
         "#carodaOutstream982035Container",
         ".seznam-adds.zone19.row.column.block.block-openx-async"
+    ],
+    "dirt.fyi": [
+        ".PostTemplate_article-header__category__yK1b4",
+        ".type-headline-s",
+        ".stack",
+        ".NewsletterSignup_newsletter-signup__heading__l0q2R.type-display-s"
+    ],
+    "discogs.com": [
+        ".wp-block-spacer",
+        ".ultp-block-item.post-id-34813",
+        ".ultp-block-item.post-id-34845",
+        ".ultp-block-image.ultp-block-image-opacity",
+        ".ultp-block-excerpt",
+        ".ultp-heading-filter",
+        ".ultp-block-item.post-id-35089",
+        ".is-layout-constrained.wp-block-group.alignwide"
     ],
     "dolthub.com": [".Layout-module--bottom--c6f94", ".BlogPost-module--backLinkWrapper--4e781"],
     "droid-life.com": [
@@ -368,11 +393,16 @@
         ".title-content.clearfix.first",
         ".title-content.clearfix"
     ],
+    "durham.ac.uk": [".u-mt-3"],
     "earth.org": [".lazyloaded"],
     "earthly.dev": [
         ".author__avatar_top.flex.mb-4",
         ".align-right",
         ".page__meta-readtime.text-gray-500"
+    ],
+    "ec.europa.eu": [
+        "#globan",
+        ".article--category.tw-text-center.tw-text-blue.tw-uppercase.tw-py-12"
     ],
     "economictimes.indiatimes.com": [
         ".primeSWrapper",
@@ -407,6 +437,7 @@
         ".article-card__meta-bottom"
     ],
     "eff.org": [".element-invisible.element-focusable"],
+    "eiko-fried.com": ["#like-post-wrapper-55574272-4983-6456a6c739139"],
     "emeatribune.com": ["#vuukle-emote", ".vuukle-powerbar.powerbarBoxDiv"],
     "en.wikipedia.org": [".wiki-logo", "#wiki_header"],
     "en.yna.co.kr": [
@@ -435,6 +466,7 @@
     ],
     "euronews.com": [".editor-tv-wrapper.editor-tv-active"],
     "europapress.es": ["#sc_intxt_container"],
+    "evonomics.com": [".bottom-stuff"],
     "evrimagaci.org": [
         ".figure-bottom",
         ".left",
@@ -450,6 +482,7 @@
         ".p-20-r.mb-10.content-references",
         ".sharp-blur-svg"
     ],
+    "expmag.com": [".tz__link.tz__media", ".tz__link", ".tz.tz--sm"],
     "express.co.uk": [".sharebar", ".t.cc", ".newsletter-pure", ".box.left"],
     "facebook.com": [
         ".rq0escxv.l9j0dhe7.du4w35lb.obtkqiv7.sv5sfqaa.sj5x9vvc.cxgpxx05",
@@ -460,6 +493,9 @@
         ".cwj9ozl2.tvmbv18p"
     ],
     "fararu.com": [".item_News"],
+    "fashionunited.uk": [
+        ".MuiGrid-root.MuiGrid-item.MuiGrid-grid-xs-12.MuiGrid-grid-sm-12.MuiGrid-grid-lg-12.e1vq9p600.css-13jxnk1"
+    ],
     "fdrive.cz": [".articleDetail__about", ".articleDetail__assets"],
     "fedoramagazine.org": [".header-wrapper"],
     "fenbi.com": [".mokaodasai-title", ".mokaodasai"],
@@ -572,9 +608,20 @@
         ".post-date.text-center"
     ],
     "goal.com": [".fc-player_label__Tbo_y", ".fc-player_fc-player__9GMrL"],
+    "google.de": [".zeJi9d"],
     "grammarly.com": [".F0u0G-container", "._16iRt-container"],
     "gsmarena.com": [".pad", ".brandmenu-v2.light.l-box.clearfix", ".sidebar.col.left"],
     "guernicamag.com": [".each-top-story"],
+    "haaretz.co.il": [
+        ".ab.be.bf.bg.ak.an.ao.at.au",
+        ".ta.tb.sw.sz",
+        ".um.hq",
+        ".ur.uh.lc",
+        ".a.b.di.ul.fg.hj.al.am.d.e",
+        ".uv.uw.pk.ux.uy.uz.va.ak.an.ao",
+        ".rw.rx.ey.pb.ab.ry.rz.sa.ml.mm.og.oh.sb.sc.rd.re",
+        ".rh.ri"
+    ],
     "haaretz.com": [".a.ce.cr"],
     "hackster.io": ["#hello-world"],
     "haipo.co.il": [".owfs-image"],
@@ -612,6 +659,7 @@
     ],
     "hellahealth.com": [".ads_a1_hhp_imgs"],
     "himasoku.com": ["#blog-title-image"],
+    "historylink.org": [".share", "#loom-companion-mv3"],
     "hltv.org": [".streams-section.gtSmartphone-only", ".rightCol", ".news-read-more-1"],
     "hogetatu.hatenablog.com": [".entry-inner"],
     "hope-rehab-center-thailand.com": [
@@ -739,6 +787,7 @@
     "itsfoss.com": [".apester-unit"],
     "jamanetwork.com": ["[style*='height: 0px;']"],
     "jamesclear.com": [".post__next"],
+    "jamesmsama.medium.com": [".nj.nk.nl.nm.nn.l.bw", ".fe.ach.aci.acj.ack.acl.acm.acn"],
     "jamie-berrier.medium.com": [
         ".h.k.aj.ak.cu",
         ".xz.ya.yb.yc.yd.l",
@@ -765,6 +814,7 @@
         ".q-fixed.qu-bg--raised.qu-display--flex.qu-flexDirection--column.qu-borderTopLeftRadius--small.qu-borderTopRightRadius--small.DesktopMessagesDock___StyledFixed-sc-1bh1698-0.gWVrmC"
     ],
     "jstaf.github.io": [".post-cover"],
+    "juejin.cn": [".author-info-block"],
     "kaden.watch.impress.co.jp": [
         "#extra",
         "#group-sites",
@@ -815,6 +865,7 @@
     "lavoz.com.ar": [".article.card.default"],
     "learn.microsoft.com": [".xp-tag-hexagon"],
     "learncpp.com": ["#CCPA_opt_out"],
+    "leidenmedievalistsblog.nl": [".tags", ".share"],
     "lemonbin.com": ["#toc_container"],
     "lemonde.fr": [
         ".meta__date-reading",
@@ -843,12 +894,24 @@
         ".BottomNavigation-post.BottomNavigation-prevPost",
         ".PostsPage-commentsSection"
     ],
+    "letterboxd.com": [
+        ".article-body-block.-intermission.journal-intermission",
+        ".article-body-block.-tags",
+        ".article-body-block.-author"
+    ],
     "leveragethoughts.substack.com": [".button-wrapper"],
+    "levernews.com": [
+        ".remixd-audio-player",
+        ".kg-product-card-image",
+        ".kg-card.kg-product-card",
+        ".kg-card.kg-button-card.kg-align-center"
+    ],
     "lifehacker.com": [
         "#replies",
         ".ynugv2-2.xruw5r-3.sbLJP",
         ".xruw5r-7.uFmbC.js_footer-container"
     ],
+    "lifeofanarchitect.com": ["#blubrryplayer-1", ".relpost-thumb-wrapper"],
     "lightnovelworld.com": [".MRBtHBPL.OGtiqFda.MRBtHBPL_"],
     "linux.just4fun.biz": [".google-auto-placed"],
     "linux.org.ru": [
@@ -923,7 +986,11 @@
         ".ne.qb.l.gu",
         ".l.kg",
         ".ab.q.fv",
-        ".l.nd"
+        ".l.nd",
+        ".ab.co.hi.hj.hk.hl.hm.hn.ho.hp.hq.hr.hs.ht.hu.hv.hw.hx",
+        ".ab.cm.hd.he.hf",
+        ".yd.ye.yf.yg.yh",
+        ".qf.qg.qh.qi.qj.l.bw"
     ],
     "meduza.io": [
         ".Layout-bannerTop",
@@ -1009,7 +1076,8 @@
         ".card",
         ".article-topics.article-topics--row",
         ".box-out.box-out--standard",
-        ".social__button-container"
+        ".social__button-container",
+        ".ArticleHeader__SocialWrapper"
     ],
     "newspunch.com": [
         ".code-block.code-block-1",
@@ -1036,6 +1104,7 @@
     ],
     "nones-leonard.medium.com": [".mk.l"],
     "notes.cloudcat.ca": [".ui-infobar.container-fluid.unselectable.hidden-print"],
+    "npr.org": [".slug-wrap", "#res1170179587", ".podcast-tools.podcast-tools--510351"],
     "nyheder.tv2.dk": [
         ".tc_deck.tc_deck--color-100.tc_deck--col3center",
         ".tc_video",
