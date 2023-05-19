@@ -37,6 +37,7 @@
         ".article-metadata-container",
         ".article-asset.article-asset-normal.article-asset-center"
     ],
+    "architectural-review.com": [".issue_block"],
     "architecturetoday.co.uk": ["#archi-1396502048", ".fusion-text.fusion-text-2", ".tagcloud"],
     "archinect.com": [".HeaderBottom.clearfix"],
     "aripaev.ee": [
