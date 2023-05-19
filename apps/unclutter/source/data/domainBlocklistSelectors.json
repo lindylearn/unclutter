@@ -1240,6 +1240,7 @@
         ".nav-item-deals.mega-parent",
         ".nav-menu.menu"
     ],
+    "newlinesmag.com": [".single_post__meta"],
     "newatlas.com": ["#trendmd-suggestions", ".ArticlePage-tags"],
     "news.cnyes.com": [
         "._2YiB",
