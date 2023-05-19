@@ -886,6 +886,11 @@
         ".BottomNavigation-post.BottomNavigation-prevPost",
         ".PostsPage-commentsSection"
     ],
+    "letterboxd.com": [
+        ".article-body-block.-intermission.journal-intermission",
+        ".article-body-block.-tags",
+        ".article-body-block.-author"
+    ],
     "leveragethoughts.substack.com": [".button-wrapper"],
     "levernews.com": [
         ".remixd-audio-player",
