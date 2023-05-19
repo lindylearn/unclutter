@@ -442,6 +442,7 @@
     ],
     "euronews.com": [".editor-tv-wrapper.editor-tv-active"],
     "europapress.es": ["#sc_intxt_container"],
+    "evonomics.com": [".bottom-stuff"],
     "evrimagaci.org": [
         ".figure-bottom",
         ".left",
