@@ -31,6 +31,7 @@
     ],
     "appjdykyxmp5257.h5.xiaoeknow.com": ["#xePreview"],
     "apple.com": ["#ac-localeswitcher", ".sharesheet.component", ".nr-article-share"],
+    "appleinsider.com": [".push", "#hero-cap"],
     "applesfera.com": [
         ".article-date",
         ".article-metadata-container",
