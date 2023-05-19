@@ -109,6 +109,12 @@
         ".tabElemNoBor"
     ],
     "beachcam.co.il": ["#aswift_1_host"],
+    "ben-evans.com": [
+        ".BlogItem-pagination-link-label",
+        ".BlogItem-pagination-link-title",
+        ".BlogItem-pagination-link-content",
+        ".Blog-meta.BlogItem-meta"
+    ],
     "beyazperde.com": [".light.titlebar-subtile", ".cms-see-also", ".section"],
     "bezprawnik.pl": [
         ".ad_slot_height_manager_wrapper_bp_sdh2",
