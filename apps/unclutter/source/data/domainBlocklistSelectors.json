@@ -1112,6 +1112,9 @@
         ".iframe-fragment.x-type-center",
         ".f-content-column.f-content-column-1"
     ],
+    "news.un.org": [
+        ".align-center.context-un_news_large_credit.type-soundcloud.media.media--type-soundcloud.media--view-mode-un-news-large-credit"
+    ],
     "news.yahoo.co.jp": [
         ".CommentFloatingCommentItem__Link-gktzXW.dormMx",
         "#snavi",
