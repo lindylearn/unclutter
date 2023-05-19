@@ -1729,6 +1729,14 @@
         ".mb-16.font-polysans-mono.text-16.font-light.tracking-2.leading-120.text-gray-13"
     ],
     "thewalrus.ca": ["._form-content", ".code-block.code-block-4"],
+    "theweek.com": [
+        ".polaris__article-group.polaris__article-group__row-4.-default.-with-border-top",
+        ".polaris__article-card--media",
+        ".polaris__article-group--header",
+        ".polaris__article-card.-layout-default.-default.polaris__article-group--single",
+        ".polaris__tags",
+        ".-tags-social.-list-article"
+    ],
     "thoughtcatalog.com": [".tcf-article-md-thumb", ".g-col", ".section-title"],
     "tienphong.vn": [".article__story.cms-relate", ".box-heading", ".story", ".article__tag"],
     "time.com": [
