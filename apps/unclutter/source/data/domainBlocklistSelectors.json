@@ -296,6 +296,7 @@
         ".section-wrapper.hilight-career",
         ".career-wraper"
     ],
+    "cmoney.tw": [".pt__social", ".status-msg-wrap", ".aboutStock"],
     "cnbc.com": [
         "#social-buttons-transporter",
         ".ArticleHeader-authorAndShareInline",
