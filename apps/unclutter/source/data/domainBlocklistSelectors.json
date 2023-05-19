@@ -574,6 +574,16 @@
     "grammarly.com": [".F0u0G-container", "._16iRt-container"],
     "gsmarena.com": [".pad", ".brandmenu-v2.light.l-box.clearfix", ".sidebar.col.left"],
     "guernicamag.com": [".each-top-story"],
+    "haaretz.co.il": [
+        ".ab.be.bf.bg.ak.an.ao.at.au",
+        ".ta.tb.sw.sz",
+        ".um.hq",
+        ".ur.uh.lc",
+        ".a.b.di.ul.fg.hj.al.am.d.e",
+        ".uv.uw.pk.ux.uy.uz.va.ak.an.ao",
+        ".rw.rx.ey.pb.ab.ry.rz.sa.ml.mm.og.oh.sb.sc.rd.re",
+        ".rh.ri"
+    ],
     "haaretz.com": [".a.ce.cr"],
     "hackster.io": ["#hello-world"],
     "haipo.co.il": [".owfs-image"],
