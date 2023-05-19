@@ -1102,6 +1102,13 @@
         "#sbi_images",
         "#mailpoet_form_3"
     ],
+    "mnacommunity.com": [
+        ".other-events-block--item.past",
+        ".other-insights-block--insight-image.mobile.lazyloaded",
+        ".other-insights-block--item",
+        ".other-insights-block",
+        ".other-events-block"
+    ],
     "modularhomesource.com": [".elementor-shape-fill", ".wp-block-image"],
     "moneycontrol.com": [
         ".leftcol.clearfix",
