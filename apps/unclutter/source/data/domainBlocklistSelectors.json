@@ -1486,6 +1486,15 @@
         ".p-article__side-left.l-col-12.l-col-lg-3",
         ".c-global-footer"
     ],
+    "theladders.com": [
+        ".right-rail-article",
+        ".publication-social-media-container-desktop",
+        ".right-rail-articles-header",
+        ".news-job",
+        ".more-publication-articles-list",
+        ".news-jobs-list",
+        ".more-publication-articles-container"
+    ],
     "theleader.vn": [
         ".mangsec-bold",
         ".news-detail-other-news-title",
