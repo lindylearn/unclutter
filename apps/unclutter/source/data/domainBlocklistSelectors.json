@@ -1487,7 +1487,8 @@
     "tienphong.vn": [".article__story.cms-relate", ".box-heading", ".story", ".article__tag"],
     "time.com": [
         ".zit-widget-wrapper.zit-widget-wrapper--new-panel.zit-widget-wrapper--new-panel-top-center.wid-3668.zit-widget-wrapper--new-panel-show",
-        ".zit-widget-wrapper.zit-widget-wrapper--new-panel.zit-widget-wrapper--new-panel-top-center.wid-3663.zit-widget-wrapper--new-panel-show"
+        ".zit-widget-wrapper.zit-widget-wrapper--new-panel.zit-widget-wrapper--new-panel-top-center.wid-3663.zit-widget-wrapper--new-panel-show",
+        ".component.video-jw"
     ],
     "timeforkids.com": [".image"],
     "timharek.no": [".header__logo", ".header"],
