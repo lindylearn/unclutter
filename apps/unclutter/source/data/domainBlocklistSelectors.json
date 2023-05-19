@@ -416,7 +416,9 @@
         ".author-thumbnail",
         ".author-bio",
         ".author-link",
-        ".author-box"
+        ".author-box",
+        ".share-buttons",
+        ".category"
     ],
     "designweek.co.uk": [".widget-title", ".sub-content"],
     "dergigi.com": [".post__img"],
