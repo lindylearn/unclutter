@@ -1153,6 +1153,18 @@
         ".iframe-fragment.x-type-center",
         ".f-content-column.f-content-column-1"
     ],
+    "news.tvbs.com.tw": [
+        ".guangxuan",
+        ".lazyimage",
+        ".title_div",
+        ".time",
+        ".article_extended_btn2",
+        ".article_next",
+        ".txt",
+        ".article_community_box",
+        ".article_keyword",
+        ".article_issue"
+    ],
     "news.un.org": [
         ".align-center.context-un_news_large_credit.type-soundcloud.media.media--type-soundcloud.media--view-mode-un-news-large-credit"
     ],
