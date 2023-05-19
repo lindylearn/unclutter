@@ -1589,6 +1589,7 @@
         "#mnmd-offcanvas-primary"
     ],
     "tutorialspoint.com": [".rounded-img", "#divResources"],
+    "tw.news.yahoo.com": [".sa-aria-live-region", ".caas-logo"],
     "twinview.com": [
         ".c-section--default.c-section.c-section--pad-x-small.c-section--pad-y-default.u-bg-purple-1",
         ".c-form__columns.no-margin"
