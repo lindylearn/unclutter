@@ -1383,6 +1383,14 @@
         ".author-item",
         ".ss-portrait.avatar"
     ],
+    "stackoverflow.blog": [
+        "#post-22051",
+        ".fs-body3.mb24.lh-excerpt",
+        ".fs-headline1",
+        ".mt-auto.bb.bc-black-1.pb16",
+        "#post-21839",
+        "#post-21717"
+    ],
     "stackoverflow.com": [".votecell.post-layout--left", ".bottom-notice"],
     "standard.co.uk": [".apester-media.apester-unit", "#indy-top-container-wrapper"],
     "steveblank.com": [
