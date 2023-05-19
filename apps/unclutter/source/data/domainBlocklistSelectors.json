@@ -916,6 +916,7 @@
         ".ifw-player.expanded",
         ".wp-block-separator"
     ],
+    "insights.som.yale.edu": [".paragraph.paragraph--sign-up-widget"],
     "investor.vanguard.com": [".cmp-articleaspot__pills"],
     "invistaspiti.com.br": [".btn.btn-gray-dark.dropdown-toggle", ".d-none.d-sm-block", ".mb-5"],
     "iphone-mania.jp": [
