@@ -381,6 +381,10 @@
         ".align-right",
         ".page__meta-readtime.text-gray-500"
     ],
+    "ec.europa.eu": [
+        "#globan",
+        ".article--category.tw-text-center.tw-text-blue.tw-uppercase.tw-py-12"
+    ],
     "economictimes.indiatimes.com": [
         ".primeSWrapper",
         ".clearfix.relTopics.raltedTopics",
