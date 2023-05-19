@@ -310,6 +310,14 @@
         ".section-wrapper.hilight-career",
         ".career-wraper"
     ],
+    "cnn.com": [
+        ".sc-gzVnrw.pui_control-bar.sc-jhAzac.ktRndm",
+        ".video-resource__headline",
+        ".video-resource__details",
+        ".image__lede.article__lede-wrapper",
+        "#bx-campaign-2104712",
+        ".layout__rail.layout-with-rail__rail"
+    ],
     "cmoney.tw": [".pt__social", ".status-msg-wrap", ".aboutStock"],
     "cnbc.com": [
         "#social-buttons-transporter",
