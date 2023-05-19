@@ -1333,6 +1333,14 @@
         ".icontent-image",
         "#blog"
     ],
+    "pentawards.com": [
+        ".ev-menu-logo.position-left",
+        ".burger-button.color-none-bg.body-bg",
+        ".row.header-menu-bkg.sticky.sticky-fixed",
+        "#header",
+        ".ev-article-social",
+        ".meta-block"
+    ],
     "phileweb.com": ["#header", ".topicPath", "#entryUtility", "#submidashi"],
     "phoronix.com": [".node", "#about-author", "#sharebar", ".after-article"],
     "planetplanet.net": [".header-bg"],
