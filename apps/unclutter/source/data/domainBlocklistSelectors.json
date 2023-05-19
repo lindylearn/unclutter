@@ -230,6 +230,13 @@
         ".CommertialComponenta",
         ".slotTitle"
     ],
+    "cam.ac.uk": [
+        "#section-JOgUnlpz5E",
+        "#stcpDiv",
+        ".title.cam-page-title",
+        ".cam-row.cam-page-header.cam-sub-section-page",
+        "#block-views-more-like-this-block-1"
+    ],
     "cbc.ca": [".logo", ".sideMenu"],
     "chaincatcher.com": [
         ".title",
