@@ -322,7 +322,13 @@
         ".crux-wrapper.styles_article-body__crux-widget__3T-TJ",
         ".styles_articles-grid__header__1tK5H.styles_articles-grid__mobile__13_pI"
     ],
-    "cnet.com": [".c-globalHero_imageContainer.g-outer-spacing-bottom-large"],
+    "cnet.com": [
+        ".c-globalHero_imageContainer.g-outer-spacing-bottom-large",
+        ".c-globalDisclosure_top.g-outer-spacing-bottom-medium.g-inner-spacing-bottom-medium",
+        ".c-globalDisclosure.g-outer-spacing-top-large.c-globalDisclosure_hasText.g-text-xxxsmall",
+        ".c-shortcodeListicle_dek.c-shortcodeListicle_dek-inline.g-outer-spacing-bottom-medium",
+        ".c-shortcodeListicle.g-outer-spacing-bottom-large.g-border-thin-light-top.g-border-thin-light-bottom.g-inner-spacing-bottom-medium.g-inner-spacing-left-large.g-inner-spacing-right-large.g-border-thin-light-right.g-border-thin-light-left"
+    ],
     "codastory.com": [".big-idea__info"],
     "coinbase.com": [
         ".cds-flex-f1g67tkn.sc-5a16025b-0.sc-d0466418-0.iTNcqp.iuswYJ",
