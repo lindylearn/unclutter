@@ -65,6 +65,7 @@
         ".page-section.theme-dark",
         ".article-bottom"
     ],
+    "arstechnica.com": ["#bx-campaign-1643624"],
     "atlasobscura.com": [
         ".Card__content-wrap.--content-card-text",
         ".article-gastro-copies",
