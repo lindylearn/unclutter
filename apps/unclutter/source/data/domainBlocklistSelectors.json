@@ -1557,6 +1557,13 @@
         ".slick-slide.slick-cloned"
     ],
     "tfos.co": [".flex.flex-col.items-center.text-center.px-3.text-white", ".h-5"],
+    "the-scientist.com": [
+        ".left",
+        ".h6.summary.max-2-lines.l-h-1",
+        ".articleTabList.odd",
+        ".articleTab",
+        "#Marketplace"
+    ]
     "the-brandidentity.com": [".bookmark", ".details.times-14"],
     "theathletic.com": [
         ".sc-9e0fc4d0-2.jKtoII",
