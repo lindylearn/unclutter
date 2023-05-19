@@ -565,6 +565,10 @@
     ],
     "flowingdata.com": ["#tutorials-list"],
     "forest.watch.impress.co.jp": [".list.latest", "#extra"],
+    "forourposterity.com": [
+        ".c-post-card.js-post-card.post.featured.no-image.c-post-card--no-image",
+        ".c-title-bar"
+    ],
     "forwardobserver.com": [".attachment-large.size-large.wp-post-image"],
     "francetvinfo.fr": [
         ".header-legacy__direct-radio",
