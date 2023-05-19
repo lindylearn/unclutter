@@ -290,6 +290,13 @@
         ".section-wrapper.hilight-career",
         ".career-wraper"
     ],
+    "cnbc.com": [
+        "#social-buttons-transporter",
+        ".ArticleHeader-authorAndShareInline",
+        ".ArticleHeader-eyebrow",
+        ".WatchLiveRightRail-contents",
+        ".undefined.PlayButton-container"
+    ],
     "cmswire.com": [
         ".learning-opportunities-card__image.image__wrapper",
         ".styles_learning-opportunities-block__header__25Uzx",
