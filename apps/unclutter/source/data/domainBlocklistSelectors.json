@@ -379,6 +379,13 @@
         "#mc_embed_signup"
     ],
     "denizlihaber.com": ["#topbtns", ".combox", ".passbnd", ".ilce_side", ".ap.ap-615.ap-xpe"],
+    "designboom.com": [
+        ".p--p.unhero",
+        ".bg-ahover.bg-ahover-yellow",
+        ".block--title",
+        ".text-thin.mb-15.mt-0",
+        ".layout-box.archive.mb-40"
+    ],
     "design-milk.com": [
         "#single-image-section",
         "#cls-video-container-R1Lcxwgn",
