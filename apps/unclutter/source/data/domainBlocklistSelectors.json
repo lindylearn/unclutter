@@ -271,6 +271,10 @@
     "chinapower.csis.org": [".row.explore-container", ".megaphone-mini-container"],
     "christianitytoday.com": [".article-embed"],
     "ciechanow.ski": ["#hero"],
+    "clashmusic.com": [
+        ".panel-pane.pane-block.pane-block-96",
+        ".panel-pane.pane-block.pane-block-37"
+    ],
     "cinephiliabeyond.org": [".single-box.tag-box.clearfix"],
     "cirium.com": [
         ".wp-block-image.size-large.is-resized",
