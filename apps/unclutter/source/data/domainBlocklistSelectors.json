@@ -375,6 +375,7 @@
         ".title-content.clearfix.first",
         ".title-content.clearfix"
     ],
+    "durham.ac.uk": [".u-mt-3"],
     "earth.org": [".lazyloaded"],
     "earthly.dev": [
         ".author__avatar_top.flex.mb-4",
