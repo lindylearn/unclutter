@@ -783,6 +783,7 @@
         ".portable-archive-tabs",
         ".single-post-section"
     ],
+    "icff.com": [".share-post.share-post--post-builder", ".copy-url"],
     "ifun.de": [
         "[id*='div-gpt-ad-']",
         ".aligncenter.size-medium.wp-image-199270.lazy.loaded",
