@@ -566,7 +566,12 @@
         ".c-signature-wrapper"
     ],
     "ft.com": [".concept-list"],
-    "futurism.com": ["#empire-unit-sticky_footer__desktop-0", ".remixd-audio-player"],
+    "futurism.com": [
+        "#empire-unit-sticky_footer__desktop-0",
+        ".remixd-audio-player",
+        "#empire-unit-recurrent_outstream_video-0",
+        ".flex.items-center.justify-center.pt-3.space-x-3"
+    ],
     "gamedev.stackexchange.com": [
         ".votecell.post-layout--left",
         ".d-flex.fd-column.ai-center.wmn3.hero-background",
