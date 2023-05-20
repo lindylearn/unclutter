@@ -982,7 +982,12 @@
     ],
     "isvle.neu.edu.ph": ["#yui_3_17_2_1_1669620055107_31"],
     "itsfoss.com": [".apester-unit"],
-    "jamanetwork.com": ["[style*='height: 0px;']"],
+    "jamanetwork.com": [
+        "[style*='height: 0px;']",
+        ".toolbar-trigger.magazine",
+        ".meta-article-type-wrap",
+        ".section-jump-link.back-to-top"
+    ],
     "jamesclear.com": [".post__next"],
     "jamesmsama.medium.com": [".nj.nk.nl.nm.nn.l.bw", ".fe.ach.aci.acj.ack.acl.acm.acn"],
     "jamie-berrier.medium.com": [
