@@ -402,6 +402,10 @@
         ".column-content.cleared"
     ],
     "daringfireball.net": [".smallprint", "#SiteSearch", "#Sidebar"],
+    "davidduchemin.com": [
+        ".wp-image-19136.size-full",
+        ".wp-block-media-text.alignwide.is-stacked-on-mobile"
+    ],
     "davidepstein.substack.com": [
         ".captioned-image-container",
         ".button-wrapper",
