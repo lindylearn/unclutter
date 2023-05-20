@@ -21,6 +21,7 @@
         ".aalto-content-bottom-wrapper.content-container"
     ],
     "about.gitlab.com": ["#on-this-page", ".hidden-md.hidden-lg"],
+    "acoup.blog": ["#like-post-wrapper-161773962-18270-6439ce114e867", ".entry-author"],
     "actu.fr": [".ac-articles-toread-section", ".ac-article-to-read"],
     "adplist.substack.com": [".single-post-section"],
     "aecmag.com": [".relpost-thumb-wrapper", ".size-full.wp-image-5967", ".inarticlead728-end"],
