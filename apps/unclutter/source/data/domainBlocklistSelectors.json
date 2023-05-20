@@ -461,6 +461,7 @@
         ".sue-panel",
         ".addtoany_share_save_container.addtoany_content.addtoany_content_bottom"
     ],
+    "dezeen.com": [".read-more"],
     "diariojaen.es": ["#ebDefaultImg_1089757970_02203854674015071"],
     "dict.leo.org": [".p-left", ".va-t.p-top", ".ta-l.gray", "#topBranding", ".m-v-large"],
     "digiday.com": [".stories", ".top-stories-module"],
