@@ -183,6 +183,7 @@
         ".js-auto-scroll-to-id-offset.height-gutter-big.pointer-event-none.absolute.top-full",
         ".visually-hidden"
     ],
+    "bitsaboutmoney.com": [".box.mt4.tc"],
     "bitcoinmagazine.com": [".m-detail--tml-image.m-image.mm-image--link"],
     "bizportal.co.il": [".video-wrap"],
     "blindfiveyearold.com": [".meta", ".moretag", "#comments"],
