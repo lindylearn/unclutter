@@ -1440,6 +1440,7 @@
     ],
     "phileweb.com": ["#header", ".topicPath", "#entryUtility", "#submidashi"],
     "phoronix.com": [".node", "#about-author", "#sharebar", ".after-article"],
+    "physicstoday.scitation.org": [".pto-metric-badge.left-border", ".article-tools"],
     "planetplanet.net": [".header-bg"],
     "planetary.org": [
         ".flex.justify-center.mx-auto.py-8",
