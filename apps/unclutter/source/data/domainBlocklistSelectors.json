@@ -748,6 +748,9 @@
         ".cwj9ozl2.tvmbv18p"
     ],
     "fararu.com": [".item_News"],
+    "fashionista.com": [
+        ".m-component-header.m-component-stack--header.mm-component-header--inverted",
+        ".m-brand-engagement.m-component-stack.mm-component-stack--is-stacked.mm-component-stack--has-header.mm-component-stack--has-background.mm-brand-engagement--premium.mm-brand-engagement--has-background-image"
     "fashionmagazine.com": [".slug"],
     "fashionunited.uk": [
         ".MuiGrid-root.MuiGrid-item.MuiGrid-grid-xs-12.MuiGrid-grid-sm-12.MuiGrid-grid-lg-12.e1vq9p600.css-13jxnk1"
