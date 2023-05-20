@@ -665,6 +665,16 @@
     "fedoramagazine.org": [".header-wrapper"],
     "fenbi.com": [".mokaodasai-title", ".mokaodasai"],
     "fiercehealthcare.com": ["[style*='height: 0px;']"],
+    "fivethirtyeight.com": [
+        ".video-placeholder.videoplayer.abc",
+        ".ornamental-rule",
+        ".video-title",
+        ".filed-under",
+        ".flex-item",
+        ".interactive-section",
+        ".tags",
+        ".single-metadata.single-topic"
+    ],
     "fizikist.com": [
         ".axil-single-widget.widget.widget_video.mb--30",
         ".axil-single-widget.widget.widget_postlist",
