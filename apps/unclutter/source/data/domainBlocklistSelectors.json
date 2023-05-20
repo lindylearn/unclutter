@@ -702,6 +702,7 @@
         ".header-legacy__direct-tv",
         ".c-signature-wrapper"
     ],
+    "fs.blog": [".entry-meta.entry-meta-before-content"],
     "freethink.com": [".f-block__content", ".f-block__inner"],
     "ft.com": [".concept-list"],
     "futurism.com": [
