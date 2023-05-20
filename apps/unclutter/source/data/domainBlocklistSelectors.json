@@ -11,6 +11,10 @@
         ".desvio-summary",
         ".desvio-figure.js-desvio-figure"
     ],
+    "6amgroup.com": [
+        ".addtoany_share_save_container.addtoany_content.addtoany_content_bottom",
+        ".entered.lazyloaded"
+    ],
     "aalto.fi": [
         ".aalto-tiles-layout__items-container",
         ".aalto-component-wrapper.lindy-clean-margin-bottom",
