@@ -37,6 +37,12 @@
         ".article-metadata-container",
         ".article-asset.article-asset-normal.article-asset-center"
     ],
+    "archello.com": [
+        ".btn.btn-sm.btn-rounded.btn-light.view-btn.text-lg",
+        ".scroll-to.text-center.text-light",
+        "#popover-brand-short-info-logo-122263",
+        ".container"
+    ],
     "architecturaldigest.com": [
         ".SpanWrapper-kFvfwm.cdAqQo.responsive-asset.ContentHeaderResponsiveAsset-LOaxf.llPacv",
         ".ContentHeaderLeadAsset-kzhdvT.jIAbyX.lead-asset.ContentHeaderLeadAssetWrapper-eYNONg.HtxZi.lead-asset--width-fullbleed"
