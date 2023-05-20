@@ -41,6 +41,7 @@
         ".article-metadata-container",
         ".article-asset.article-asset-normal.article-asset-center"
     ],
+    "archis.org": [".cta.link--inline", ".title", ".header__checkout.snipcart-checkout"],
     "archello.com": [
         ".btn.btn-sm.btn-rounded.btn-light.view-btn.text-lg",
         ".scroll-to.text-center.text-light",
