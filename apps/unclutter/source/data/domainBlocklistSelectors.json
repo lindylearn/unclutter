@@ -401,11 +401,8 @@
         ".column-content.cleared.narrow",
         ".column-content.cleared"
     ],
+    "dailynous.com": [".alignnone.wp-image-45569.aligncenter"],
     "daringfireball.net": [".smallprint", "#SiteSearch", "#Sidebar"],
-    "davidduchemin.com": [
-        ".wp-image-19136.size-full",
-        ".wp-block-media-text.alignwide.is-stacked-on-mobile"
-    ],
     "davidepstein.substack.com": [
         ".captioned-image-container",
         ".button-wrapper",
@@ -419,8 +416,11 @@
         ".gallery-thumbs",
         ".article-list.item-list",
         ".article-list-container.standard-article-list-container",
-        ".BeOpWidget-27265e35-3a3f-4a0c-a06a-ddbf085ffa17",
         ".linkblock"
+    ],
+    "davidduchemin.com": [
+        ".wp-image-19136.size-full",
+        ".wp-block-media-text.alignwide.is-stacked-on-mobile"
     ],
     "dekoder.org": [
         ".ph-header",
