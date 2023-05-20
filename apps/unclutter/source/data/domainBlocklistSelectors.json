@@ -1014,6 +1014,12 @@
         "#linkcat-20924250",
         ".size-small"
     ],
+    "johnhawks.net": [
+        ".c-post-card__media",
+        ".c-post-card__excerpt",
+        ".c-post-card.js-post-card.post",
+        ".c-tags"
+    ],
     "jp.quora.com": [
         ".q-fixed.qu-fullX.qu-zIndex--header.qu-bg--raised.qu-borderBottom.qu-boxShadow--medium.qu-borderColor--raised",
         ".q-click-wrapper.qu-p--tiny.qu-pl--small.qu-alignItems--center.qu-userSelect--none.qu-display--flex.qu-tapHighlight--white.qu-cursor--pointer.qu-hover--bg--darken.ClickWrapper___StyledClickWrapperBox-zoqi4f-0.iyYUZT",
