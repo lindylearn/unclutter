@@ -865,6 +865,7 @@
         ".rh.ri"
     ],
     "haaretz.com": [".a.ce.cr"],
+    "hackaday.com": [".content-ads-holder"],
     "hackster.io": ["#hello-world"],
     "haipo.co.il": [".owfs-image"],
     "harpers.org": [".section-tags"],
