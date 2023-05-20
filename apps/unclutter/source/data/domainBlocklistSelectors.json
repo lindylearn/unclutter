@@ -1725,7 +1725,11 @@
     "tarjomaan.com": ["#head_div1", "#header"],
     "taz.de": [".hide", ".sect_text.tziBottom", ".full.community.page.last.odd.n3"],
     "techdirt.com": [".details"],
-    "technologyreview.com": ["#piano__post_body-desktop-1", "#piano__post_body-desktop-2"],
+    "technologyreview.com": [
+        "#piano__post_body-desktop-1",
+        "#piano__post_body-desktop-2",
+        ".tp-container-inner"
+    ],
     "techradar.com": [".pretty-verdict__heading-container", ".read-more-container"],
     "techspot.com": [
         ".container-wrapper",
