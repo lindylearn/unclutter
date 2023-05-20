@@ -1553,6 +1553,7 @@
         ".has--dimensions.lazyLoad.entered.loaded"
     ],
     "ruanyifeng.com": [".wwads-cn.wwads-horizontal"],
+    "sacks.substack.com": [".portable-archive-list", ".single-post-section"],
     "salon.com": [
         ".topic_explore_box",
         "#rc-widget-58399f",
