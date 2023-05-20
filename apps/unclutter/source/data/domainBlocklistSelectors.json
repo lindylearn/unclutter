@@ -807,6 +807,14 @@
     "haaretz.com": [".a.ce.cr"],
     "hackster.io": ["#hello-world"],
     "haipo.co.il": [".owfs-image"],
+    "hbr.org": [
+        ".content-rec-header",
+        ".content-rec-item.article",
+        ".content-rec-wrapper",
+        ".partner-center__ads-container",
+        ".mvm.description-text.hbrgray,.line-height-tight",
+        ".slug-container"
+    ],
     "hcn.org": [".kicker"],
     "harpersbazaar.com": [
         ".css-1obr2fh.enfs9c50",
