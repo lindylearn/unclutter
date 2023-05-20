@@ -631,6 +631,10 @@
     ],
     "euronews.com": [".editor-tv-wrapper.editor-tv-active"],
     "europapress.es": ["#sc_intxt_container"],
+    "everydayastronaut.com": [
+        ".post-likes-widget.jetpack-likes-widget",
+        "#like-post-wrapper-182546481-43013-643a95f8e0b4a"
+    ],
     "evonomics.com": [".bottom-stuff"],
     "evrimagaci.org": [
         ".figure-bottom",
