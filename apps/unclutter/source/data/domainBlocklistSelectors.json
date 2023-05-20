@@ -1147,6 +1147,14 @@
         ".imagecache.imagecache-staff-headshot-small.imagecache-linked.imagecache-staff-headshot-small_linked",
         "#preface-top-wrapper"
     ],
+    "lofficielusa.com": [
+        ".hover-underline",
+        ".section-header__title",
+        ".wrap",
+        ".tags-list",
+        ".grid__item.lap-4-12",
+        ".grid__item.lap-6-12.hd-3-12"
+    ],
     "loversmagazine.com": [".interview-photo", ".section-header", ".interview"],
     "lowtechmagazine.com": ["#beta", "#all-comments", "#atp-comments"],
     "lwn.net": [".FeatureByline", ".IndexEntries"],
