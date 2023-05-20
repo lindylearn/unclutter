@@ -987,6 +987,13 @@
         ".group-open.group-closed.group-disabled"
     ],
     "hellahealth.com": [".ads_a1_hhp_imgs"],
+    "highsnobiety.com": [
+        ".alignmentContainer___z_LTH",
+        ".placeholder___ISiS0",
+        ".headerContainer___PfCEP.scrolledUp___zJPjK",
+        ".headerContainer___PfCEP",
+        ".infiniteScroll___vHbY9"
+    ],
     "himasoku.com": ["#blog-title-image"],
     "historylink.org": [".share", "#loom-companion-mv3"],
     "hltv.org": [".streams-section.gtSmartphone-only", ".rightCol", ".news-read-more-1"],
