@@ -550,6 +550,13 @@
         ".align-right",
         ".page__meta-readtime.text-gray-500"
     ],
+    "econlib.org": [
+        "#bc-wrap",
+        ".card-block",
+        ".article-btn-block",
+        ".card.grid-card",
+        "#econlog-single-article-cards"
+    ],
     "ec.europa.eu": [
         "#globan",
         ".article--category.tw-text-center.tw-text-blue.tw-uppercase.tw-py-12"
