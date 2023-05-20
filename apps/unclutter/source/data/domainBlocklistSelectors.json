@@ -81,6 +81,13 @@
         ".page-section.theme-dark",
         ".article-bottom"
     ],
+    "artnews.com": [
+        ".pmc-adm-boomerang-pub-div",
+        "#section-heading",
+        ".c-lazy-image.lrv-a-hover-effect.lrv-a-hover-effect--fade",
+        ".o-card.lrv-u-flex.lrv-u-flex-direction-column.lrv-u-height-100p.u-color-brand-primary:hover",
+        ".c-span.lrv-u-whitespace-nowrap.lrv-u-display-block.lrv-u-font-size-14.lrv-u-font-weight-bold.lrv-u-margin-tb-050.u-display-block.u-text-transform-initial.lrv-u-color-grey"
+    ],
     "arstechnica.com": ["#bx-campaign-1643624"],
     "atlasobscura.com": [
         ".Card__content-wrap.--content-card-text",
