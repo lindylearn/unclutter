@@ -942,6 +942,7 @@
         ".ads__container.inline-story-add",
         "#story-recommended-chunk"
     ],
+    "indiegamesplus.com": [".wp-post-author-wrap.wp-post-author-shortcode.left"],
     "indiewire.com": [".alignnone.size-full.wp-image-511", ".article-singup-link"],
     "info.blackswanltd.com": [
         ".span6.widget-span.widget-type-linked_image",
