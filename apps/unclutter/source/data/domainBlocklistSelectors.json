@@ -550,6 +550,10 @@
         ".align-right",
         ".page__meta-readtime.text-gray-500"
     ],
+    "eater.com": [
+        ".c-entry-group-labels.c-entry-group-labels--article",
+        ".c-social-buttons.c-social-buttons--popover.main-social"
+    ],
     "econlib.org": [
         "#bc-wrap",
         ".card-block",
