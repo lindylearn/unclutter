@@ -22,6 +22,7 @@
     ],
     "about.gitlab.com": ["#on-this-page", ".hidden-md.hidden-lg"],
     "actu.fr": [".ac-articles-toread-section", ".ac-article-to-read"],
+    "adplist.substack.com": [".single-post-section"],
     "aecmag.com": [".relpost-thumb-wrapper", ".size-full.wp-image-5967", ".inarticlead728-end"],
     "aftershock.news": [".field.field-name-field-image.field-type-image.field-label-hidden"],
     "aftonbladet.se": [".hyperion-css-1ntarj8"],
