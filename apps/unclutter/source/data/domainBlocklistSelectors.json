@@ -20,6 +20,7 @@
         ".aalto-component-wrapper.lindy-clean-margin-bottom",
         ".aalto-content-bottom-wrapper.content-container"
     ],
+    "abduzeedo.com": ["#block-abdz15-broughttoyoubyads"],
     "about.gitlab.com": ["#on-this-page", ".hidden-md.hidden-lg"],
     "acoup.blog": ["#like-post-wrapper-161773962-18270-6439ce114e867", ".entry-author"],
     "actu.fr": [".ac-articles-toread-section", ".ac-article-to-read"],
