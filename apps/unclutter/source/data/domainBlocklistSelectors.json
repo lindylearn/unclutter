@@ -586,6 +586,10 @@
         ".article-card__time",
         ".article-card__meta-bottom"
     ],
+    "edmunds.com": [
+        ".aspect-ratio-container.pos-r.w-100",
+        ".list-inline-item.d-block.hidden-md-up"
+    ],
     "eff.org": [".element-invisible.element-focusable"],
     "eiko-fried.com": ["#like-post-wrapper-55574272-4983-6456a6c739139"],
     "emeatribune.com": ["#vuukle-emote", ".vuukle-powerbar.powerbarBoxDiv"],
