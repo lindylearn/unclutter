@@ -37,6 +37,10 @@
         ".article-metadata-container",
         ".article-asset.article-asset-normal.article-asset-center"
     ],
+    "architecturaldigest.com": [
+        ".SpanWrapper-kFvfwm.cdAqQo.responsive-asset.ContentHeaderResponsiveAsset-LOaxf.llPacv",
+        ".ContentHeaderLeadAsset-kzhdvT.jIAbyX.lead-asset.ContentHeaderLeadAssetWrapper-eYNONg.HtxZi.lead-asset--width-fullbleed"
+    ],
     "architectural-review.com": [".issue_block"],
     "architecturetoday.co.uk": ["#archi-1396502048", ".fusion-text.fusion-text-2", ".tagcloud"],
     "archinect.com": [".HeaderBottom.clearfix"],
