@@ -25,6 +25,13 @@
     "aecmag.com": [".relpost-thumb-wrapper", ".size-full.wp-image-5967", ".inarticlead728-end"],
     "aftershock.news": [".field.field-name-field-image.field-type-image.field-label-hidden"],
     "aftonbladet.se": [".hyperion-css-1ntarj8"],
+    "ama-assn.org": [
+        ".visually-hidden.focusable",
+        ".link",
+        ".article_stub_as_inline-10361.article_stub_as_inline--wrapper",
+        ".article_stub_as_inline-22751.article_stub_as_inline--wrapper",
+        "#tools-resources"
+    ],
     "amplify.nabshow.com": [
         ".wp-block-heading",
         ".wp-block-jetpack-slideshow_pagination.swiper-pagination.swiper-pagination-white.swiper-pagination-custom",
