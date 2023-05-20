@@ -185,6 +185,7 @@
     ],
     "bitcoinmagazine.com": [".m-detail--tml-image.m-image.mm-image--link"],
     "bizportal.co.il": [".video-wrap"],
+    "blindfiveyearold.com": [".meta", ".moretag", "#comments"],
     "blog.asmartbear.com": [".rt", ".has-text-align-center"],
     "blog.csdn.net": [
         ".article-bar-top",
