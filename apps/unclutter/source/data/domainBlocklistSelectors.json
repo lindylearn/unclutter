@@ -703,6 +703,9 @@
         ".d-flex.fd-column.ai-center.wmn3.hero-background",
         ".px12.d-flex.ai-center.jc-center.mx-auto.wmx12"
     ],
+    "gameinformer.com": [
+        ".field.field--name-dynamic-block-fieldnode-content-bug.field--type-ds.field--label-hidden.gi5-dynamic-block-fieldnode-content-bug.gi5-ds.field__item"
+    ],
     "gamesindustry.biz": [".thumbnail", ".shelf", "#newsletters"],
     "genbeta.com": [
         ".menu-external.foot-menu-external",
