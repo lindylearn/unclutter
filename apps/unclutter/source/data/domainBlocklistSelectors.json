@@ -101,6 +101,7 @@
         ".fix-socials_btm.d-flex.d-md-none",
         ".text-muted.text-sm.py-2.d-md-none.align-items-center.d-flex.text-nowrap"
     ],
+    "azuremagazine.com": [".ZYVgyp4CVqdXazoa", ".hero__metadata-container", ".hero__deck"],
     "bankless.com": [".mobileOnly", ".continueJourneyHeader"],
     "baomoi.com": [".bm_FA", ".bm_AM", ".bm_FB"],
     "bastionland.com": ["#comments"],
