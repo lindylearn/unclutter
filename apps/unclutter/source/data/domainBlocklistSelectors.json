@@ -176,6 +176,7 @@
         "#colgauche",
         ".spip_document_134.spip_documents.spip_documents_right"
     ],
+    "bioscriptionblog.com": [".entry-header", ".has-text-align-center"],
     "biron.com": [
         ".padding-vertical-gutter-small.flexbox.margin-left-minus-gutter-small.children-padding-left-gutter-small.children-border-box.margin-top-minus-gutter-small.children-padding-top-gutter-small.flex-wrap.transition-buttons-ctn",
         ".width-full.width-1_2-from-sm.width-3_4-from-sm",
