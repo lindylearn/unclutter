@@ -225,6 +225,14 @@
     "bmpi.dev": [".giscus"],
     "bookriot.com": ["#top_fold"],
     "bostonherald.com": [".connext-modal-backdrop.fade"],
+    "bpando.org": [
+        ".block.w-full.text-center.mt-5",
+        ".relative.flex.items-center.justify-center",
+        ".text-center",
+        ".opacity-60",
+        ".mr-2",
+        "#plus"
+    ],
     "braceability.com": ["#fc_frame"],
     "brookings.edu": [
         ".inline-widget.alignright",
