@@ -942,6 +942,7 @@
         ".ads__container.inline-story-add",
         "#story-recommended-chunk"
     ],
+    "indiewire.com": [".alignnone.size-full.wp-image-511", ".article-singup-link"],
     "info.blackswanltd.com": [
         ".span6.widget-span.widget-type-linked_image",
         "[href='#intro']",
