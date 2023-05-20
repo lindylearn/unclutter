@@ -184,6 +184,7 @@
         ".partners-top__outer-wrapper"
     ],
     "biblegateway.com": [".default-tooltip", ".passage-scroller.no-sidebar"],
+    "bigthink.com": [".flex.flex-col.gap-4.mt-10"],
     "bikepacking.com": [".BPC", ".sponsors", ".conversation-policy", ".filed"],
     "biobiochile.cl": [
         ".ad-aside.bbcl-app",
