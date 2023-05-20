@@ -1553,6 +1553,12 @@
         ".has--dimensions.lazyLoad.entered.loaded"
     ],
     "ruanyifeng.com": [".wwads-cn.wwads-horizontal"],
+    "salon.com": [
+        ".topic_explore_box",
+        "#rc-widget-58399f",
+        "#bx-group-1731197-KTu8jl8",
+        "#bx-campaign-1731197"
+    ],
     "sandboxx.us": [".content#genesis-content::before"],
     "sciencedaily.com": [
         ".pull-left.head-left",
