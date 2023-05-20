@@ -1055,6 +1055,7 @@
         ".widget-share__title",
         ".mb--50.mt--50"
     ],
+    "knowablemagazine.org": [".eyebrow", ".more-from"],
     "kommersant.ru": [
         ".actual__nav_button.actual__nav_button--next.slider-next",
         ".actual__list.slider-canvas",
