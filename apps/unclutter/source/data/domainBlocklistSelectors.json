@@ -794,6 +794,16 @@
     "grammarly.com": [".F0u0G-container", "._16iRt-container"],
     "gsmarena.com": [".pad", ".brandmenu-v2.light.l-box.clearfix", ".sidebar.col.left"],
     "guernicamag.com": [".each-top-story"],
+    "guytal.blog": [
+        "#like-post-wrapper-160627554-10651-643a9aedde584",
+        ".author-bio",
+        ".post-tags",
+        ".post-categories",
+        ".post-meta.clear",
+        ".credits-inner.section-inner.clear",
+        ".post-meta-container.clear",
+        ".credits.section.bg-dark.small-padding"
+    ],
     "haaretz.co.il": [
         ".ab.be.bf.bg.ak.an.ao.at.au",
         ".ta.tb.sw.sz",
