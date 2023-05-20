@@ -1075,6 +1075,7 @@
         "#comments",
         "#postcomment",
         ".postmeta",
+        "#header",
         ".nav_title"
     ],
     "lavoz.com.ar": [".article.card.default"],
