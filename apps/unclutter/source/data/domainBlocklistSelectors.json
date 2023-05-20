@@ -717,6 +717,12 @@
         ".article-links",
         ".article-asset.article-asset-normal.article-asset-center"
     ],
+    "genengnews.com": [
+        ".td-crumb-container",
+        ".td-category",
+        ".td-module-meta-info",
+        ".wp-caption-text.gen-wp-caption-text"
+    ],
     "genk.vn": [".kbwc-socials"],
     "geo.fr": [
         ".discoverBlock",
