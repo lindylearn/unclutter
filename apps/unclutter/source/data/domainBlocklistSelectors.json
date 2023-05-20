@@ -1062,6 +1062,15 @@
         ".bxm4mm-3.eCMXYG"
     ],
     "kyobun.co.jp": [".tp-iframe-wrapper.tp-active"],
+    "languagelog.ldc.upenn.edu": [
+        "#commentlist",
+        ".small",
+        "#sidebar",
+        "#comments",
+        "#postcomment",
+        ".postmeta",
+        ".nav_title"
+    ],
     "lavoz.com.ar": [".article.card.default"],
     "learn.microsoft.com": [".xp-tag-hexagon"],
     "learncpp.com": ["#CCPA_opt_out"],
