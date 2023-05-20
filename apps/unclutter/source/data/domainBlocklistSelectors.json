@@ -982,12 +982,15 @@
     ],
     "isvle.neu.edu.ph": ["#yui_3_17_2_1_1669620055107_31"],
     "itsfoss.com": [".apester-unit"],
-    "jamanetwork.com": [
-        "[style*='height: 0px;']",
-        ".toolbar-trigger.magazine",
-        ".meta-article-type-wrap",
-        ".section-jump-link.back-to-top"
+    "itsnicethat.com": [
+        ".col.col-12.sm-col-6.md-col-10-2",
+        ".block.link-reset.py4.px4.sm-px4.md-px3.lg-px4",
+        ".relative.overflow-hidden",
+        ".clearfix.mxn4.sm-mxn0",
+        ".module-cluster",
+        ".h5.sans.dove-grey.mb2.mt0"
     ],
+    "jamanetwork.com": ["[style*='height: 0px;']"],
     "jamesclear.com": [".post__next"],
     "jamesmsama.medium.com": [".nj.nk.nl.nm.nn.l.bw", ".fe.ach.aci.acj.ack.acl.acm.acn"],
     "jamie-berrier.medium.com": [
