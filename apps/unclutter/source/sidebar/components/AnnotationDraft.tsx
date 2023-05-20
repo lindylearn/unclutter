@@ -53,15 +53,54 @@ export default function AnnotationDraft({
             []
         );
 
+    function extractHashtags(str: string): string[] {
+        const words: string[] = str.split(' ');
+        const hashtags: string[] = [];
+        
+        words.forEach((word: string, index: number) => {
+            if (word.startsWith('#') && word.length > 1 && (!str.endsWith(word) || index !== words.length - 1)) {
+            hashtags.push(word);
+            }
+        });
+        
+        return hashtags;
+    }
+
+    function updateTagsFromText(newAnnotation: LindyAnnotation) {
+        // Check if there's possibly any hashtags in the text
+        if (newAnnotation.text.indexOf('#') !== -1) {
+            // Attempt to extract hashtags, but ignore one at the end of the text as that's where the user is
+            // probably typing, and we want to ingore incomplete tags
+            const extractedHashtags = extractHashtags(newAnnotation.text).map(s => s.substring(1));
+            //console.log(`Extracted tags: ${extractedHashtags}`);
+
+            const existingTags = newAnnotation.tags || [];
+            const mergedTags = Array.from(new Set(existingTags.concat(extractedHashtags)));
+
+            // Update the tags - if we didn't find any then we will fall back on existing tags
+            newAnnotation.tags = mergedTags;
+        }
+    }
+          
+
     // keep local state for faster updates
     const [localAnnotation, setLocalAnnotation] = React.useState(annotation);
+
     async function updateAnnotationLocalFirst(newAnnotation: LindyAnnotation) {
+        updateTagsFromText(newAnnotation);
+        // Ensure we remove hashtags from the text if they are aleady in there, but not if they occur at the end of the text (as we might be typing a new one)
+        newAnnotation.tags.forEach(tagname => {
+            const tagString = `#${tagname}`;
+            if (newAnnotation.text.indexOf(tagString) !== -1 && !newAnnotation.text.endsWith(tagString)) {
+                newAnnotation.text = newAnnotation.text.replace(new RegExp(`(\\s|^)${tagString}\\s`, 'gi'), ' ').trim();
+            }
+        });
         setLocalAnnotation(newAnnotation);
 
         if (!!annotation.text !== !!newAnnotation.text) {
             // changed visiblity
             // immediately update if added first text or removed text (impacts visibility)
-            if (newAnnotation.text) {
+            if (newAnnotation.text || newAnnotation.tags.length > 0) {
                 updateAnnotation(newAnnotation);
             } else {
                 deleteAnnotation(userInfo, newAnnotation);
@@ -91,8 +130,8 @@ export default function AnnotationDraft({
                 className="w-full select-none resize-none overflow-hidden bg-transparent align-top outline-none placeholder:select-none placeholder:text-stone-400 dark:placeholder:text-stone-600"
                 placeholder={
                     userInfo?.aiEnabled
-                        ? annotation.tags.map((t) => `#${t}`).join(" ")
-                        : "Saved highlight"
+                        ? ""
+                        : "Saved highlight text"
                 }
                 value={localAnnotation.text}
                 onChange={(e) =>
@@ -112,6 +151,23 @@ export default function AnnotationDraft({
                 ref={inputRef}
                 onBlur={unfocusAnnotation}
             />
+            <hr/>
+            <div className="leading-8">
+                <br />
+                {localAnnotation.tags.length > 0 ? "Tags: " : null}
+                {localAnnotation.tags.map((tag) => (
+                    <span key={tag} className="inline-block py-1 px-3 text-sm font-semibold text-white bg-gray-500 rounded-full break-words">
+                        <span >#{tag} </span>
+                        <button
+                        onClick={() => updateAnnotationLocalFirst(
+                            {
+                                ...localAnnotation,
+                                tags: localAnnotation.tags.filter(t => t !== tag),
+                            }
+                        )}><sup className="font-semibold text-red-900">X</sup></button>
+                    </span>
+                ))}
+            </div>
 
             {isFetching ? (
                 <div className="loader absolute right-3 top-[9px] h-4 w-4" />
