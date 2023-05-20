@@ -1843,6 +1843,7 @@
         ".block-list-news-item",
         ".block-list-news"
     ],
+    "thelocal.de": [".article-single__social"],
     "themarginalian.org": ["#social", "#article_share"],
     "themillions.com": [".addtoany_share_save_container.addtoany_content.addtoany_content_bottom"],
     "thenewslens.com": [
