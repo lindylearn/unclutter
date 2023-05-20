@@ -254,6 +254,11 @@
         "#block-views-more-like-this-block-1"
     ],
     "cbc.ca": [".logo", ".sideMenu"],
+    "cfr.org": [
+        ".icon-fill",
+        ".article-header-backgrounder__metadata-content",
+        ".card-group-related"
+    ],
     "chaincatcher.com": [
         ".title",
         ".time",
@@ -417,10 +422,6 @@
         ".article-list.item-list",
         ".article-list-container.standard-article-list-container",
         ".linkblock"
-    ],
-    "davidduchemin.com": [
-        ".wp-image-19136.size-full",
-        ".wp-block-media-text.alignwide.is-stacked-on-mobile"
     ],
     "dekoder.org": [
         ".ph-header",
