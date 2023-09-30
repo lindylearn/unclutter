@@ -15,7 +15,7 @@ import { getDomain } from "@unclutter/library-components/dist/common/util";
 // script injected into every tab before dom construction
 // if configured by the user, initialize the extension functionality
 
-async function boot() {
+export async function boot() {
     const url = new URL(window.location.href);
     const domain = getDomain(window.location.href);
 

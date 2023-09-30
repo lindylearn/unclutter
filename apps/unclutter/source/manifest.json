@@ -27,6 +27,12 @@
             "js": ["content-script/boot.js"],
             "css": ["content-script/pageview/content.css"],
             "run_at": "document_start"
+        },
+        {
+            "matches": ["*://webcache.googleusercontent.com/*"],
+            "js": ["content-script/directEnhance.js"],
+            "css": ["content-script/pageview/content.css"],
+            "run_at": "document_start"
         }
     ],
     "web_accessible_resources": [

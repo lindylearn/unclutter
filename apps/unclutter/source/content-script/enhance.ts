@@ -94,8 +94,33 @@ export async function togglePageView() {
     }
 }
 
+function bypassMedium() {
+    const siteUrl = window.location.href;
+
+    const googleCacheUrl = "http://webcache.googleusercontent.com/search?q=cache:";
+    const textOnlyOption = "&sca_esv=569725060&strip=1&vwsrc=0";
+
+    // Only continue if the page is from Medium
+    if (!siteUrl.includes("medium.com")) {
+        console.log("Not medium");
+        return;
+    }
+
+    // Ignore if the page is already loaded from Google cache
+    if (siteUrl.includes("webcache.googleusercontent.com")) {
+        console.log("Already in Google cache");
+        return;
+    }
+
+    // Redirect to Google cache
+    window.location.replace(googleCacheUrl + siteUrl + textOnlyOption);
+}
+
 // perform style changes if pageview was already triggered by boot.js
-async function enhance() {
+export async function enhance() {
+    // Add custom logic to handle Medium url only
+    bypassMedium();
+
     // accessed in highlights.ts
     // @ts-ignore
     window.unclutterEnhanceLoaded = true;

@@ -27,6 +27,7 @@ const contentScriptConfigs = [
     "source/content-script/boot.ts",
     "source/content-script/highlights.ts",
     "source/content-script/enhance.ts",
+    "source/content-script/directEnhance.ts",
     "source/sidebar/index.tsx",
     "source/sidebar/messaging.ts",
     "source/review/index.tsx",
