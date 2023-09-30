@@ -4,6 +4,10 @@
 
 Unclutter is a modern reader mode and article library for your browser.
 
+Well, I have added a few twists compare to the original Unclutter
+
+Medium now have paywall, so called "member-only story", which make me annoyed. So I create this as a workaround for mentioned problem.
+
 [![Latest release](https://img.shields.io/github/v/release/givemesomething/unmedium?color=facc15)](https://github.com/GiveMeSomething/unmedium/releases)
 
 <p align="center">
