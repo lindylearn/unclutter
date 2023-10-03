@@ -1,12 +1,10 @@
 <img src="./docs/media/icon2.png" align="left" width="80" />
 
-# Unclutter — Modern Reader Mode
+# Un-Medium — Modern Reader Mode
 
-Unclutter is a modern reader mode and article library for your browser.
+Un-Medium is a modern reader mode and article library for your browser, with a few twists!
 
-Well, I have added a few twists compare to the original Unclutter
-
-Medium now have paywall, so called "member-only story", which make me annoyed. So I create this as a workaround for the mentioned problem.
+Thank you [Unclutter](https://github.com/lindylearn/unclutter) for the code base of a great reader
 
 [![Latest release](https://img.shields.io/github/v/release/givemesomething/unmedium?color=facc15)](https://github.com/GiveMeSomething/unmedium/releases)
 
@@ -33,31 +31,37 @@ Other features include:
 -   [Integrated social comments](https://github.com/lindylearn/unclutter/blob/main/docs/social-highlights.md) from Hacker News and Hypothes.is
 -   [Easily saving highlights](https://github.com/lindylearn/unclutter/blob/main/docs/annotations.md) by simply selecting text
 
-## Get involved
-
-The mission of Unclutter is to improve reading on the web. You should decide what, when, and how to read.
-
-**[Join our Discord server](https://unclutter.it/discord) to help out and follow the progress!**
-
-Here's how you can contribute:
-
--   [Report broken articles](https://github.com/lindylearn/unclutter/blob/main/docs/element-blocking.md) or submit element block selectors from within the extension.
--   [Use the open roadmap](https://unclutter.canny.io/) to suggest new features or to vote on existing ideas.
--   [Open GitHub issues](https://github.com/lindylearn/unclutter/issues) for bugs or any other issue.
--   [Contribute code](https://github.com/lindylearn/unclutter/blob/main/DEVELOPMENT.md) to implement your favorite new feature.
-
-<!-- [<img src="./docs/media/canny.png">](https://unclutter.canny.io/) -->
-
-<!-- Also, please consider [supporting the project financially](https://opencollective.com/unclutter) if it is useful to you. All raised money will be split across all open-source contributors, administered by the Open Source Collective. This also unlocks additional features for your article library like AI categorization or a graph view of your captured information.
-
-[![Contributors](https://opencollective.com/unclutter/tiers/sponsors.svg)](https://opencollective.com/unclutter) -->
-
-## Documentation
-
-See the [docs pages](https://github.com/lindylearn/unclutter/blob/main/docs), or the [technical README](DEVELOPMENT.md). Please open an issue for any question you have!
-
 ## Licence
 
 This project uses [GNU AGPLv3](https://choosealicense.com/licenses/gpl-3.0/), which requires commercial projects that use it to be open-source as well.
 
 Unclutter exists thanks to everyone who contributes ideas or code, reports bugs, or simply uses the extension. Thank you!
+
+## DISCLAIMER
+
+Use of this service is limited only to **non-sensitive and publicly available
+data**. Users must not use, share, or store any kind of sensitive data like
+health status, provision or payment of healthcare, Personally Identifiable
+Information (PII) and/or Protected Health Information (PHI), etc. under **ANY**
+circumstance.
+
+Administrators for this service reserve the right to moderate all information
+used, shared, or stored with this service at any time. Any user that cannot
+abide by this disclaimer and Code of Conduct may be subject to action, up to
+and including revoking access to services.
+
+The material embodied in this software is provided to you "as-is" and without
+warranty of any kind, express, implied or otherwise, including without
+limitation, any warranty of fitness for a particular purpose. In no event shall
+the Centers for Disease Control and Prevention (CDC) or the United States (U.S.)
+government be liable to you or anyone else for any direct, special, incidental,
+indirect or consequential damages of any kind, or any damages whatsoever,
+including without limitation, loss of profit, loss of use, savings or revenue,
+or the claims of third parties, whether or not CDC or the U.S. government has
+been advised of the possibility of such loss, however caused and on any theory
+of liability, arising out of or in connection with the possession, use or
+performance of this software.
+
+## Disclaimer of Liability:
+
+The information provided in Un-Medium Learning Project is for general informational purposes only. GiveMeSomething assumes no responsibility for errors or omissions in the contents of the project. In no event shall GiveMeSomething be liable for any special, direct, indirect,
