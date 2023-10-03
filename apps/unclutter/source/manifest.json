@@ -10,7 +10,7 @@
     "icons": {
         "128": "assets/icon.png"
     },
-    "permissions": ["storage", "scripting"],
+    "permissions": ["storage", "scripting", "contentSettings", "tabs", "activeTab"],
     "optional_permissions": ["contextMenus", "bookmarks", "alarms"],
     "host_permissions": ["<all_urls>"],
     "options_ui": {
