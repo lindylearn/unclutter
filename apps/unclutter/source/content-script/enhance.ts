@@ -113,7 +113,7 @@ function bypassMedium() {
     }
 
     // Redirect to Google cache
-    window.location.replace(googleCacheUrl + siteUrl + textOnlyOption);
+    window.location.replace(googleCacheUrl + siteUrl);
 }
 
 // perform style changes if pageview was already triggered by boot.js
