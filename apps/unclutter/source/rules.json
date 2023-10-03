@@ -1,0 +1,12 @@
+[
+    {
+        "id": 1,
+        "priority": 1,
+        "action": { "type": "block" },
+        "condition": {
+            "urlFilter": "medium",
+            "initiatorDomains": ["webcache.googleusercontent.com", "cdn-client.medium.com"],
+            "resourceTypes": ["script", "main_frame", "sub_frame"]
+        }
+    }
+]

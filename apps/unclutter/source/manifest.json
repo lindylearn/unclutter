@@ -10,7 +10,24 @@
     "icons": {
         "128": "assets/icon.png"
     },
-    "permissions": ["storage", "scripting"],
+    "declarative_net_request": {
+        "rule_resources": [
+            {
+                "id": "ruleset_1",
+                "enabled": true,
+                "path": "rules.json"
+            }
+        ]
+    },
+    "permissions": [
+        "storage",
+        "scripting",
+        "contentSettings",
+        "webRequest",
+        "webRequestBlocking",
+        "declarativeNetRequest",
+        "declarativeNetRequestFeedback"
+    ],
     "optional_permissions": ["contextMenus", "bookmarks", "alarms"],
     "host_permissions": ["<all_urls>"],
     "options_ui": {
