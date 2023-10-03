@@ -86,7 +86,7 @@
         "watch": "rollup -c rollup.config.js -w",
         "install-v3-manifest": "cp source/manifest.json distribution/manifest.json",
         "install-v2-manifest": "cp source/manifest_v2.json distribution/manifest.json",
-        "chrome": "yarn web-ext run -t chromium --start-url https://stratechery.com/2015/netflix-and-the-conservation-of-attractive-profits/ --watch-file distribution/package.json",
+        "chrome": "yarn web-ext run -t chromium --start-url https://medium.com/crows-feet/psst-ask-me-how-old-i-am-906c8b40865e --watch-file distribution/package.json",
         "firefox": "yarn web-ext run -t firefox-desktop --start-url news.ycombinator.com --watch-file distribution/package.json",
         "package": "rm -rf distribution && yarn build && yarn web-ext build -o -n extension_manifest-v3.zip --ignore-files '!**/node_modules' '!**/node_modules/**' && yarn install-v2-manifest && yarn web-ext build -o -n extension_manifest-v2.zip --ignore-files '!**/node_modules' '!**/node_modules/**' && yarn install-v3-manifest",
         "postinstall": "patch-package"
