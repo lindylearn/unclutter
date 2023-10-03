@@ -37,7 +37,6 @@ import { getHeatmapRemote } from "@unclutter/library-components/dist/common/api"
 import { tabsManager } from "./tabs";
 import { initArticlesSync, initHighlightsSync } from "./library/sync";
 import { captureErrors, initErrorLogs } from "./sentry";
-import { blockScriptWithHeaders, disableJavaScript } from "./background";
 
 // toggle page view on extension icon click
 browser.action.onClicked.addListener((tab: Tabs.Tab) =>
@@ -298,7 +297,3 @@ async function initializeServiceWorker() {
 initializeServiceWorker();
 setupWithPermissions(false); // needs to run after every reload to configure event handlers
 createAlarmListeners();
-
-// blockAllMediumScripts();
-// disableJavaScript();
-blockScriptWithHeaders();
