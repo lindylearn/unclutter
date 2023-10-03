@@ -24,7 +24,6 @@
         "scripting",
         "contentSettings",
         "webRequest",
-        "webRequestBlocking",
         "declarativeNetRequest",
         "declarativeNetRequestFeedback"
     ],

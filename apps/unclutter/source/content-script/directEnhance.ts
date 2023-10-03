@@ -1,14 +1,7 @@
 import { boot } from "./boot";
 import { enhance } from "./enhance";
 
-// function addHeader(details: WebRequest.OnHeadersReceivedDetailsType) {
-//     var headers = details.responseHeaders;
-//     headers.push({
-//         name: "Content-Security-Policy",
-//         value: "script-src 'none';",
-//     });
-// }
-
+// NOTES: Cannot directly update HTML contents
 // function blockMediumScript() {
 //     const scripts = document.getElementsByTagName("script");
 //     const mediumCDN = "cdn-client.medium.com";
@@ -22,6 +15,7 @@ import { enhance } from "./enhance";
 //     }
 // }
 
+// NOTES: MutationObserver not defined, maybe this is used in the wrong place
 // const observer = new MutationObserver((mutations: MutationRecord[], observer) => {
 //     for (let mutation of mutations) {
 //         const addedNodes = Array.from(mutation.addedNodes);
@@ -32,6 +26,8 @@ import { enhance } from "./enhance";
 //     }
 // });
 
+// NOTES: Block scripts/requests using webRequests not working with manifestV3
+// Manifest v3 have changed this to be managed by rules
 // export function blockAllMediumScripts() {
 //     blockMediumScript();
 //     observer.observe(document, { childList: true, subtree: true });
@@ -46,6 +42,7 @@ import { enhance } from "./enhance";
 //     );
 // }
 
+// NOTES: Settings contentSettings to disable JS not working as expected
 // const disableJavaScript = () => {
 //     chrome.contentSettings.javascript.set({
 //         primaryPattern: "*://http://webcache.googleusercontent.com/*",

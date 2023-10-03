@@ -98,7 +98,6 @@ function bypassMedium() {
     const siteUrl = window.location.href;
 
     const googleCacheUrl = "http://webcache.googleusercontent.com/search?q=cache:";
-    const textOnlyOption = "&sca_esv=569725060&strip=1&vwsrc=0";
 
     // Only continue if the page is from Medium
     if (!siteUrl.includes("medium.com")) {
