@@ -1,32 +1,49 @@
+import { WebRequest, webRequest } from "webextension-polyfill";
 import { boot } from "./boot";
 import { enhance } from "./enhance";
 
-chrome.contentSettings.javascript.set(
-    {
-        primaryPattern: "<all_urls>",
-        secondaryPattern: "<all_urls>",
-        setting: "block",
-    },
-    () => {
-        console.log("JS Blocked");
-    }
+webRequest.onHeadersReceived.addListener(
+    addHeader,
+    { urls: ["<all_urls>"], types: ["main_frame", "sub_frame"] },
+    ["blocking", "responseHeaders"]
 );
 
-const updateCurrentTab = (): void => {
-    const queryOptions = { active: true, lastFocusedWindow: true };
-    chrome.tabs.query(queryOptions).then(([tab]) => {
-        if (tab == null) {
-            return;
-        }
-
-        chrome.tabs.update(tab.id, { url: tab.url });
+function addHeader(details: WebRequest.OnHeadersReceivedDetailsType) {
+    var headers = details.responseHeaders;
+    headers.push({
+        name: "Content-Security-Policy",
+        value: "script-src 'none';",
     });
-};
+}
+
+function blockMediumScript() {
+    const scripts = document.getElementsByTagName("script");
+    const mediumCDN = "cdn-client.medium.com";
+
+    for (let script of scripts) {
+        if (script.src.includes(mediumCDN)) {
+            document.head.removeChild(script);
+            script.remove();
+        }
+    }
+}
+
+const observer = new MutationObserver((mutations: MutationRecord[], observer) => {
+    for (let mutation of mutations) {
+        const addedNodes = Array.from(mutation.addedNodes);
+        if (addedNodes && addedNodes.some((node) => node.nodeName === "SCRIPT")) {
+            blockMediumScript();
+        }
+        observer.disconnect();
+    }
+});
+
+blockMediumScript();
+observer.observe(document, { childList: true, subtree: true });
 
 // Boot up unclutter then enhance the current page using unclutter
 boot()
     .then(() => {
-        updateCurrentTab();
         enhance();
     })
     .catch((err: any) => {
