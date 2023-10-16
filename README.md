@@ -6,6 +6,8 @@ Un-Medium is a modern reader mode and article library for your browser, with a f
 
 Thank you [Unclutter](https://github.com/lindylearn/unclutter) for the code base of a great reader
 
+Check out [Unmedium Core](https://github.com/GiveMeSomething/unmedium-core) for just the core function (without the web reader)
+
 [![Latest release](https://img.shields.io/github/v/release/givemesomething/unmedium?color=facc15)](https://github.com/GiveMeSomething/unmedium/releases)
 
 <p align="center">
