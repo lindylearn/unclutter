@@ -10,6 +10,12 @@ Check out [Unmedium Core](https://github.com/GiveMeSomething/unmedium-core) for 
 
 [![Latest release](https://img.shields.io/github/v/release/givemesomething/unmedium?color=facc15)](https://github.com/GiveMeSomething/unmedium/releases)
 
+# How to use
+
+-   Go to [Releases] section and download the ZIP file included with the release (unmedium.zip), then unzip.
+-   Open `Manage extension` and turn on `Developer Mode`.
+-   `Load unpacked` the folder that you have unzip earlier
+
 <p align="center">
 <img src="./docs/media/intro.png" width="100%" />
 </p>
